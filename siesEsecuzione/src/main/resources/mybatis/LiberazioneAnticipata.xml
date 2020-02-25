@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.LiberazioneAnticipata">
+
+    <select id="lookupTenori" parameterType="long" resultType="it.mig.sies.model.LiberazioneAnticipata">
+with TENORI as (
+select TN.*
+  from EVENTO                EV
+      ,DEPOSITO_ORDINANZA_PC DO
+      ,TENORE                TN
+ where EV.ID_EVENTO = DO.ID_EVENTO_GENERATO
+   and DO.ID_DEPOSITO_ORDINANZA_PC = TN.DEP_OPID_DEPOSITO_ORDINANZA_PC
+   and TN.COD_ESITO_TENORE = '0020'
+   and EV.COD_ESITO = '0020'
+   and EV.ID_EVENTO = #{idEvento}
+           ) 
+select (select count(*) from TENORI) totale
+      ,(select count(*) from TENORI where TENORI.COD_OGGETTO_TENORE = 2130) anticipata
+      ,(select count(*) from TENORI where TENORI.COD_OGGETTO_TENORE = 2131) speciale
+      ,(select count(*) from TENORI where TENORI.COD_OGGETTO_TENORE = 2132) integrazione
+from DUAL
+    </select>
+
+    <select id="lookupLicenza" parameterType="long" resultType="it.mig.sies.model.LiberazioneAnticipata">
+with LICENZA as (
+select LL.*
+  from LICENZA_LIBANTICIPATA LL
+ where LL.FLAG_CONCESSO = 'C'
+   and LL.COD_TIPO_LICENZA = 'LA'
+   and LL.EVE_ID_EVENTO = #{idEvento}
+           ) 
+select (select NVL(SUM(LICENZA.NUMERO_GIORNI),0) from LICENZA) totale
+      ,(select NVL(SUM(LICENZA.NUMERO_GIORNI),0) from LICENZA where LICENZA.DESCR_STATO_PERMESSO like 'LA%') anticipata
+      ,(select NVL(SUM(LICENZA.NUMERO_GIORNI),0) from LICENZA where LICENZA.DESCR_STATO_PERMESSO like 'LS%') speciale
+      ,(select NVL(SUM(LICENZA.NUMERO_GIORNI),0) from LICENZA where LICENZA.DESCR_STATO_PERMESSO like 'LI%') integrazione
+from DUAL
+    </select>
+
+</mapper>

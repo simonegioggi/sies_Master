@@ -1,0 +1,198 @@
+package siap.siep.misuraalternativa.action;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Vector;
+
+import f3b.util.F3BException;
+import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.model.DecodificheModel;
+import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
+import siap.sico.misuraalternativa.controller.IMisuraAlternativaIndultino;
+import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
+import siap.sico.security.action.ICostantiSecurity;
+import siap.sico.ufficio.controller.IUfficio;
+import siap.sico.ufficio.model.UfficioModel;
+import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
+
+/**
+ * <p>
+ * Title: ActLoadInserisciMACessazioneAffProva
+ * </p>
+ * <p>
+ * Description: Classe Action per la load inserisci di Cessazione Affidamento in Prova
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
+ * @version 1.0
+ */
+public class ActLoadInserisciMACessazioneAffProva extends ActRevoca {
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public String processRequest() throws F3BException {
+
+		// tutti i controlli e la maggior parte delle request si trovano nel padre
+		String lRitorno = this.getRevocaConCalcolo();
+		if (!lRitorno.equals(""))
+			return lRitorno;
+
+		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+
+		// misura alternativa
+		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
+		IUfficio lCtrlUffEmi = SICOLookupRemote.getUfficioRemote();
+
+		MisuraAlternativaModel lrevoca = null;
+		if (!isRequestParameterNullObj(CAMPO_ID_DOCUMENTO_SIUS)) {
+			BigDecimal lIdOrdinanza = getRequestBigDecimalParameter(
+					ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS);
+			if (lIdOrdinanza != null && !lIdOrdinanza.toString().equals(""))
+				lrevoca = lMisAltCtrl.ExRicercaMisuraAlternativaByIdEvento(lIdOrdinanza);
+		}
+		/*
+		 * ricerca misura alternativa sospesa deve assolutamente cercare l'ultima prima di entrare nella
+		 * revoca. Inoltre se esiste la misura di revoca chiamata lrevoca devo cercare una misura precedente
+		 * di tipo sospensione affidamento mentre se lrevoca non esiste vuol dire che è la prima volta che ci
+		 * passo e quindi cerco la corrente misura.
+		 */
+		MisuraAlternativaModel lMisAlModSospesa = null;
+		IMisuraAlternativaIndultino lMisCtrl = SICOLookupRemote.getMisuraAlternativaRemoteIndultino();
+		if (lrevoca != null && lrevoca.getIdMisuraAlternativa() != null) {
+			UfficioModel lUffMod = new UfficioModel();
+			lUffMod = lCtrlUffEmi.getUfficioByKey(lrevoca.getChiaveUfficioFascicoloSius());
+
+			setRequestAttribute("UfficioEmittente", lUffMod);
+			// MEV10-s3: aggiunta impostazione attributo nella richiesta
+			UtenteModel lUtenteMod = new UtenteModel(
+					(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
+			String lCodTipoUfficio = lUtenteMod.getUfficioUtente().getCodTipoUfficio();
+			setRequestAttribute("codiceTipoUfficio", lCodTipoUfficio);
+			setRequestAttribute("misuraalternativa", lrevoca);
+
+			// la seconda volta che ci passo la revoca esite!
+			lMisAlModSospesa = lMisCtrl
+					.ExRicercaMisuraAlternativaPrecedenteByIdFascicolo(lFascMod.getIdFascicoloSiep());
+		} else {
+			// la prima volta che ci passo la revoca non esite!
+			lMisAlModSospesa = lMisAltCtrl
+					.ExRicercaMisuraAlternativaCorrenteByIdFascicolo(lFascMod.getIdFascicoloSiep());
+		}
+
+		// istanzio un nuovo di tipo per concessione per sapere se
+		// l'ultima misura in questione è una concessione
+		MisuraAlternativaModel lMisAlModConcessa = null;
+
+		// istanzio un nuovo di tipo per concessione per sapere se
+		// l'ultima misura in questione è una concessione
+		MisuraAlternativaModel lMisAlModAmmissioneProvv = null;
+
+		if (lMisAlModSospesa != null)
+			lMisAlModConcessa = new MisuraAlternativaModel(lMisAlModSospesa);
+
+		if (lMisAlModSospesa != null)
+			lMisAlModAmmissioneProvv = new MisuraAlternativaModel(lMisAlModSospesa);
+
+		// ==========================================================================
+		// Verifica se l'ultima MA a sistema è una sospensione Provvisoria 51 ter.
+		// In caso contrario la ignoro.
+		// ==========================================================================
+		if (lMisAlModSospesa != null && lMisAlModSospesa.getIdMisuraAlternativa() != null) {
+			if (lMisAlModSospesa.getCodTipoDecisione() == null
+					|| !lMisAlModSospesa.getCodTipoDecisione().equals("02")
+					|| lMisAlModSospesa.getCodNaturaDecisione() == null
+					|| !lMisAlModSospesa.getCodNaturaDecisione().equals("SP")
+					|| lMisAlModSospesa.getCodTipoMisura() == null
+					|| (!lMisAlModSospesa.getCodTipoMisura().equals("2145")
+							&& !lMisAlModSospesa.getCodTipoMisura().equals("2146")
+							&& !lMisAlModSospesa.getCodTipoMisura().equals("2147"))) {
+				lMisAlModSospesa = null;
+			}
+		}
+
+		setRequestAttribute("misurasospesa", lMisAlModSospesa);
+
+		// ==========================================================================
+		// Verifica se l'ultima MA a sistema è una Concessione dell'Affidamento in prova
+		// In caso contrario la ignoro.
+		// ==========================================================================
+		if (lMisAlModConcessa != null && lMisAlModConcessa.getIdMisuraAlternativa() != null) {
+			if (lMisAlModConcessa.getCodTipoDecisione() == null
+					|| !lMisAlModConcessa.getCodTipoDecisione().equals("03")
+					|| lMisAlModConcessa.getCodNaturaDecisione() == null
+					|| !lMisAlModConcessa.getCodNaturaDecisione().equals("CO")
+					|| lMisAlModConcessa.getCodTipoMisura() == null
+					|| (!lMisAlModConcessa.getCodTipoMisura().equals("0001")
+							&& !lMisAlModConcessa.getCodTipoMisura().equals("0002")
+							&& !lMisAlModConcessa.getCodTipoMisura().equals("0003"))) {
+				lMisAlModConcessa = null;
+			}
+		}
+
+		setRequestAttribute("misuraconcessa", lMisAlModConcessa);
+
+		// ==========================================================================
+		// Verifica se l'ultima MA è un Decreto di Ammissione Provvisoria dell'Affidamento
+		// in prova. In caso contrario la ignoro.
+		// ==========================================================================
+		if (lMisAlModAmmissioneProvv != null && lMisAlModAmmissioneProvv.getIdMisuraAlternativa() != null) {
+			if (lMisAlModAmmissioneProvv.getCodTipoDecisione() == null
+					|| !lMisAlModAmmissioneProvv.getCodTipoDecisione().equals("02")
+					|| lMisAlModAmmissioneProvv.getCodNaturaDecisione() == null
+					|| !lMisAlModAmmissioneProvv.getCodNaturaDecisione().equals("CO")
+					|| lMisAlModAmmissioneProvv.getCodTipoMisura() == null
+					|| (!lMisAlModAmmissioneProvv.getCodTipoMisura().equals("2006"))) {
+				lMisAlModAmmissioneProvv = null;
+			}
+		}
+
+		setRequestAttribute("misuraammissioneprovv", lMisAlModAmmissioneProvv);
+
+		// setto il campo codice motivo
+		// Option lOption = new
+		// Option(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffP());
+		// ==========================================================================
+		// Codice per il caricamento dinamico delle combo oggetto: TDS/UDS
+		// La cessazione è disposta dal TDS anche su Reclamo del PM. In questo caso
+		// i codici oggetto sono gli stessi dell'UDS (U
+		// ==========================================================================
+		Collection<DecodificheModel> lOggettoTDS = new Vector(
+				DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffP());
+		Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
+				DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffPTDS51bis());
+		Collection<DecodificheModel> lOggettoMDS51bis = new Vector(
+				DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffPMDS51bis());
+		// Collection <DecodificheModel> lOggettoMDS51bis = new
+		// Vector(DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAAffPro());
+
+		lOggettoTDS.addAll(lOggettoTDS51BisSuReclamo);
+
+		setRequestAttribute("oggettiMDS", lOggettoMDS51bis); // new!
+		setRequestAttribute("oggettiTDS", lOggettoTDS);
+
+		Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficioSIUS());
+		lOption.setFilter("TDS");
+		setRequestAttribute("tipoUfficioSIUS", "" + lOption);
+
+		// Collection lOggetti = new Vector (lOggettoTDS);
+		// lOggetti.addAll(lOggettoMDS51bis);
+		//
+		// Option lOption = new Option(lOggetti);
+		// setRequestAttribute("motivoProvv", "" + lOption);
+
+		setRequestAttribute("tipoRevoca", "AFFIDAMENTO");
+
+		// MEV 10 - filtro sui minorenni
+		setRequestAttribute("filtroMinorenni", this.getFiltroMinorenni());
+
+		return PG_LOAD_INSERISCI_MA_CESSAZIONE_AFF_PROV;
+	}
+
+}

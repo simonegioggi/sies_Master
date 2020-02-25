@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.TitoloEsecutivo">
+    
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.TitoloEsecutivo">
+		SELECT DISTINCT
+		   DOCUMENTO_ALLEGATO.EVE_ID_EVENTO idEvento,
+           FASCICOLO_SIUS.CHIAVE_ANNO annoFascicolo,
+           FASCICOLO_SIUS.CHIAVE_PROGR numeroFascicolo,
+           UFFICIO.COD_TIPO_UFFICIO tipologiaUfficio,
+           EVENTO.DATA_EMISSIONE dataEmissione,
+           COMUNE.DESCRIZIONE comuneUfficio
+      FROM DOCUMENTO_ALLEGATO,
+           CG_REF_CODES CODTIPDOC,
+           EVENTO,
+           FASCICOLO_SIUS,
+           UFFICIO,
+           COMUNE
+     WHERE DOCUMENTO_ALLEGATO.COD_TIPO_DOCUMENTO = CODTIPDOC.RV_LOW_VALUE
+       AND CODTIPDOC.RV_DOMAIN = 'TIPO_DOCUMENTO_ALLEGATO'
+       AND COD_TIPO_DOCUMENTO = '06'
+       AND DATA_ANNULLAMENTO IS NULL
+       AND EVENTO.ID_EVENTO = DOCUMENTO_ALLEGATO.EVE_ID_EVENTO
+       AND FASCICOLO_SIUS.ID_FASCICOLO_SIUS = EVENTO.FAS_SIU_ID_FASCICOLO_SIUS
+       AND UFFICIO.COD_UFFICIO = DOCUMENTO_ALLEGATO.COD_UFFICIO_INSERIMENTO
+       AND UFFICIO.COD_COMUNE = COMUNE.COD_COMUNE
+       AND EVENTO.ID_EVENTO = #{idEvento}
+    </select>
+    
+    <select id="lookupTrasfer" parameterType="String" resultType="it.mig.sies.model.TitoloEsecutivo">
+		SELECT DOCUMENTO_ALLEGATO.EVE_ID_EVENTO idEvento,
+		       FASCICOLO_SIUS.CHIAVE_ANNO annoFascicolo,
+		       FASCICOLO_SIUS.CHIAVE_PROGR numeroFascicolo,
+		       UFFICIO.COD_TIPO_UFFICIO tipologiaUfficio
+		  FROM DOCUMENTO_ALLEGATO,
+		       CG_REF_CODES CODTIPDOC,
+		       EVENTO,
+		       FASCICOLO_SIUS,
+		       UFFICIO
+		 WHERE DOCUMENTO_ALLEGATO.COD_TIPO_DOCUMENTO = CODTIPDOC.RV_LOW_VALUE
+		   AND CODTIPDOC.RV_DOMAIN = 'TIPO_DOCUMENTO_ALLEGATO'
+		   AND COD_TIPO_DOCUMENTO = '06'
+		      --AND DOCUMENTO_ALLEGATO.eve_id_evento=751760032009
+		   AND EVENTO.ID_EVENTO = DOCUMENTO_ALLEGATO.EVE_ID_EVENTO
+		   AND FASCICOLO_SIUS.ID_FASCICOLO_SIUS = EVENTO.FAS_SIU_ID_FASCICOLO_SIUS
+		   AND UFFICIO.COD_UFFICIO = DOCUMENTO_ALLEGATO.COD_UFFICIO_INSERIMENTO
+		   AND UFFICIO.COD_TIPO_UFFICIO = #{tipologia}
+		   AND ROWNUM &lt;= 10
+    </select>
+    
+    <update id="updateDocAllegatoTras" parameterType="long">
+    	UPDATE DOCUMENTO_ALLEGATO A
+    	   SET A.DATA_EMISSIONE = SYSDATE,
+    	       A.DATA_TRASMISSIONE = SYSDATE
+  		 WHERE A.EVE_ID_EVENTO = #{idEvento}
+  		   AND A.COD_TIPO_DOCUMENTO = '06'
+    </update>
+    
+    <update id="updateDocAllegatoMod" parameterType="long">
+    	UPDATE DOCUMENTO_ALLEGATO A
+    	   SET A.DATA_ULT_INVIO = SYSDATE
+  		 WHERE A.EVE_ID_EVENTO = #{idEvento}
+  		   AND A.COD_TIPO_DOCUMENTO = '06'   
+    </update>
+
+    <update id="updateDocAllegatoCanc" parameterType="long">
+    	UPDATE DOCUMENTO_ALLEGATO A
+    	   SET A.DATA_TRASMISSIONE = NULL
+  		 WHERE A.EVE_ID_EVENTO = #{idEvento}
+  		   AND A.COD_TIPO_DOCUMENTO = '06'
+    </update>
+
+    <update id="updateDocAllegatoAnnul" parameterType="long">
+    	UPDATE DOCUMENTO_ALLEGATO A
+    	   SET A.DATA_ANNULLAMENTO = SYSDATE,
+    	       A.FLAG_DOCUMENTO_REGISTRATO = 'A'
+  		 WHERE A.EVE_ID_EVENTO = #{idEvento}
+  		   AND A.COD_TIPO_DOCUMENTO = '06'
+    </update>
+
+    <update id="updateEventoAnnul" parameterType="long">
+      	UPDATE EVENTO E
+           SET E.FLAG_DOCUMENTO_REGISTRATO = 'A'
+         WHERE E.ID_EVENTO = #{idEvento}
+    </update>
+    
+    <!-- MEV 16: aggiunta query estrazione dati titolo esecutivo per siep -->
+    <select id="getTitoloEsecutivoByID" parameterType="long" resultType="it.mig.sies.model.TitoloEsecutivo">
+		SELECT DISTINCT DOCUMENTO_ALLEGATO.EVE_ID_EVENTO idEvento,
+		                FASCICOLO_SIEP.CHIAVE_ANNO       annoFascicolo,
+		                FASCICOLO_SIEP.CHIAVE_PROGR      numeroFascicolo,
+		                UFFICIO.COD_TIPO_UFFICIO         tipologiaUfficio,
+		                EVENTO.DATA_EMISSIONE            dataEmissione,
+		                COMUNE.DESCRIZIONE               comuneUfficio
+		  FROM DOCUMENTO_ALLEGATO,
+		       CG_REF_CODES CODTIPDOC,
+		       EVENTO,
+		       FASCICOLO_SIEP,
+		       UFFICIO,
+		       COMUNE
+		 WHERE DOCUMENTO_ALLEGATO.COD_TIPO_DOCUMENTO = CODTIPDOC.RV_LOW_VALUE
+		   AND CODTIPDOC.RV_DOMAIN = 'TIPO_DOCUMENTO_ALLEGATO'
+		   AND COD_TIPO_DOCUMENTO = '06'
+		   AND DATA_ANNULLAMENTO IS NULL
+		   AND EVENTO.ID_EVENTO = DOCUMENTO_ALLEGATO.EVE_ID_EVENTO
+		   AND FASCICOLO_SIEP.ID_FASCICOLO_SIEP = EVENTO.FAS_SIE_ID_FASCICOLO_SIEP
+		   AND UFFICIO.COD_UFFICIO = DOCUMENTO_ALLEGATO.COD_UFFICIO_INSERIMENTO
+		   AND UFFICIO.COD_COMUNE = COMUNE.COD_COMUNE
+		   AND EVENTO.ID_EVENTO = #{idEvento}
+    </select>
+
+</mapper>

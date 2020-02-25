@@ -1,0 +1,509 @@
+package siap.siep.misuraalternativa.action;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import siap.sico.cssa.action.ICostantiCSSA;
+import siap.sico.decodifiche.model.ComuneModel;
+import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
+import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.notifica.model.NotificaModel;
+import siap.siep.penaresidua.action.ICostantiPenaResidua;
+import siap.siep.penaresidua.controller.IPenaResidua;
+import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.penaresidua.util.PenaResiduaUtil;
+import siap.siep.posizione.action.ICostantiPosizioneGiuridica;
+import siap.siep.posizione.controller.IPosizioneGiuridica;
+import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.util.SIEPLookupRemote;
+import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
+import siap.sius.tenore.model.TenoreModel;
+
+/**
+ * <p>
+ * Title: ActInserisciConcessione
+ * </p>
+ * <p>
+ * Description: Classe Action per l'inserimento di Concessione MisuraAlternativa
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
+ * @version 1.0
+ */
+public class ActInserisciConcessione extends ActConcessione {
+
+	/**
+	 * Azione di Inserimento del MisuraAlternativa
+	 *
+	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
+	 * @throws F3BException
+	 */
+	public String processRequest() throws Exception {
+
+		// questa classe java serve per l'inserimento della concessione delle seguenti misure alternative:
+		// affidamento in prova
+		// detenzione domiciliare
+		// Semilibertà
+		// L. 207
+		// Detenzione Domiciare a termine
+		// Esecuzione presso domicilio
+
+		// Partendo dalla posizione giuridica Libero si inserisce la Misura alternativa se non caricata da
+		// SIUS
+		// e si effettua la richiesta del verbale di sottoposizione agli obblighi
+		// Effettuando il verbale modifica la posizione giuridica cosi come sottoriportato
+		// affidamento in prova 13 (aff. In prova)
+		// detenzione domiciliare 12 (Det. Domiciliare)
+		// Semilibertà 14 (Semilibertà)
+		// L. 207 27 (sosp. Cond)
+		// Detenzione Domiciare a termine 12 (Det. Domiciliare)
+		// Esecuzione presso domicilio 50 (esec. Dom)
+		// poi riapre nuovamente la concessione che modifica la data inizio della misura alternativa inserendo
+		// la data di sottoposizione agli obblighi.
+
+		// Partendo dalla posizione giuridica Detenuto si inserisce la Misura alternativa se non caricata da
+		// SIUS
+		// non richiede il verbale quindi non cicla una seconda volta ma cambia immediatamente la posizione
+		// giuridica
+		// e la data inizio misura
+		// Affidamento in prova Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 13 (aff. In
+		// prova)
+		// Da scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 13 (aff. In prova)
+		// Detenzione Domiciare Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 12 (Det.
+		// Domiciliare)
+		// Da scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 12 (Det. Domiciliare)
+		// Semilibertà - Data Inizio Misura = Data Emissione PM pos. giu. 14 (Semilibertà)
+		// L. 207 Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 27 (sosp. Cond)
+		// Da Scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 27 (sosp. Cond)
+		// Det. Dom. a termine Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 12 (Det.
+		// Domiciliare)
+		// Da scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 12 (Det. Domiciliare)
+		// Esecu. presso domicilio Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 50 (esec. Dom)
+		// Da scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 50 (esec. Dom)
+
+		// Partendo dalla posizione giuridica Arresti Domiciliari si inserisce la Misura alternativa se non
+		// caricata da SIUS
+		// non richiede il verbale quindi non cicla una seconda volta ma cambia immediatamente la posizione
+		// giuridica
+		// e la data inizio misura
+		// Affidamento in prova Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 13 (aff. In
+		// prova)
+		// Da scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 13 (aff. In prova)
+		// Detenzione Domiciare Eseguito Data Inizio Misura = Data esecuzione pos. giu. 12 (Det. Domiciliare)
+		// Da eseguire Data Inizio Misura = Data Emissione PM pos. giu. 12 (Det. Domiciliare)
+		// Semilibertà - Data Inizio Misura = Data Emissione PM pos. giu. 14 (Semilibertà)
+		// L. 207 Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 27 (sosp. Cond)
+		// Da Scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 27 (sosp. Cond)
+		// Det. Dom. a termine Eseguito Data Inizio Misura = Data esecuzione pos. giu. 12 (Det. Domiciliare)
+		// Da eseguire Data Inizio Misura = Data Emissione PM pos. giu. 12 (Det. Domiciliare)
+		// Esecu. presso domicilio Scarcerato Data Inizio Misura = Data Scarcerazione pos. giu. 50 (esec. Dom)
+		// Da scarcerare Data Inizio Misura = Data Emissione PM pos. giu. 50 (esec. Dom)
+
+		// solo nel caso di annotazione affidamento in prova ossia sanzione sostitutiva
+		String lFlagSan = null;
+		if (!isRequestParameterNullObj("lFlagSanzione")
+				&& getRequestStringParameter("lFlagSanzione").equals("S")) {
+			lFlagSan = "S";
+		}
+
+		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		// setto la natura della MA
+		String tipoMisura = getRequestStringParameter("tipomisura");
+		String lPage = null;
+
+		String lPosizione = this
+				.getRequestStringParameter(ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA);
+		setRequestAttribute("posizionegiuridica", lPosizione);
+
+		PosizioneGiuridicaModel lPosMod = new PosizioneGiuridicaModel();
+		lPosMod.setCodPosizioneGiuridica(lPosizione);
+
+		MisuraAlternativaModel lMisMod = new MisuraAlternativaModel();
+		BigDecimal lIdPenaRes = getRequestBigDecimalParameter(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA);
+
+		// ricerco Pena residua
+		PenaResiduaModel lPenaResMod = new PenaResiduaModel();
+		IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
+		lPenaResMod = lPenResCtrl
+				.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
+
+		// ricerca posizione giuridica precedente
+		PosizioneGiuridicaModel lPosPre = new PosizioneGiuridicaModel();
+		IPosizioneGiuridica lCtrPos = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPosPre = lCtrPos
+				.ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(lFascicoloModel.getIdFascicoloSiep());
+
+		// cosa vuol dire lFlagAffi = "S";
+		// si parte da una posizione giuridica di libero e si concede una misura alternativa
+		// se la misura concessa corrisponde alla relativa misura alternativa vuol dire che stiamo ciclando
+		// la seconda volta sulla concessione dopo aver effettuato il verbale
+		String lFlagAffi = "N";
+		String lPosAtt = null;
+		if (tipoMisura.equals("AFFIDAMENTO"))
+			lPosAtt = "13";
+		else if (tipoMisura.equals("DETENZIONE"))
+			lPosAtt = "12";
+		else if (tipoMisura.equals("SEMILIBERTA"))
+			lPosAtt = "14";
+		else if (tipoMisura.equals("INDULTINO"))
+			lPosAtt = "27";
+		else if (tipoMisura.equals("ESP_PRESSO_DOM"))
+			lPosAtt = "50";
+		if (lPosPre != null && lPosPre.getCodPosizioneGiuridica() != null && lPosizione != null
+				&& lPosPre.isLibero() && lPosizione.equals(lPosAtt)) {
+			lFlagAffi = "S";
+		}
+		/*
+		 * // AMBROSINO - AFFIDAMENTO IN PROVA PROVVISORIA- la POSGIU cambia da 51 a 54 if
+		 * (lPosizione.equals("54"))lFlagAffi = "S";// --
+		 */
+
+		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
+		MisuraAlternativaModel lMisAlModConcessa = null;
+		BigDecimal lIdOrdinanza = getRequestBigDecimalParameter(
+				ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS);
+
+		if (lIdOrdinanza != null && !lIdOrdinanza.toString().equals(""))
+			lMisAlModConcessa = lMisAltCtrl.ExRicercaMisuraAlternativaByIdEvento(lIdOrdinanza);
+
+		if (lMisAlModConcessa == null) {
+			// INSERISCO EVENTO E NOTIFICA DEL TDS
+			// si accede qui quando la misura alternativa non è stata selezionata dalla lista
+			// siamo in questa condizione quando si accede la prima volta alla concessione indipendentemente
+			// dalla posizione giuridica
+			// e dal fatto che si richieda o no il verbale e che quindi ci sia o meno una seconda volta
+			EventoNotificaModel lEveMod = new EventoNotificaModel();
+			lEveMod.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
+			String lCodiceUffEmi = getCodUfficioByCodTipoUfficioDescrComune(
+					getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA),
+					getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT));
+			ComuneModel lComModAutEmi = new ComuneModel(getCodComuneByDescr(
+					getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT)));
+			Date lDataEmisTras = getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE,
+					ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
+					ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE);
+			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(), "03",
+					lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
+
+			// setto il deposito ordinanza
+			DepositoOrdinanzaPcModel lDepOrdMod = setDepositoOrdinanzaPc(lCodiceUffEmi);
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
+				lDepOrdMod.setLuogoSvolgimentoProva(
+						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
+
+			if (!this.isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA))
+				lDepOrdMod.setIdCssaComp(getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA));
+
+			// setto il tenore
+			TenoreModel lTenMod = setTenore(new BigDecimal(1), "0001");
+
+			lMisMod = setMisuraAlternativa("03", "CO", lCodiceUffEmi,
+					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), "-");
+
+			// fine composizione delle tabelle per la misura alternativa simulata da SIEP
+			// --------------------------------------------
+
+			Date lDataInizio = SettaDataInizioMisura(lPosMod, lFlagAffi, lFlagSan, tipoMisura);
+
+			if (lDataInizio != null)
+				lMisMod.setDataInizioMisura(lDataInizio);
+
+			lMisMod.setCodTipoUfficioScarcerazione("PROC");
+			// if
+			// (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE))
+			if (!this.isRequestParameterNullObj("tipo")
+					&& this.getRequestStringParameter("tipo").equals("scarcerato")) {
+				lMisMod.setDataScarcerazione(
+						getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE,
+								ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
+								ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE));
+				lMisMod.setCodTipoUfficioScarcerazione("SORV");
+			}
+			if (!this.isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA))
+				lMisMod.setCssIdCssa(getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA));
+
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
+				lMisMod.setDescrLuogoProva(
+						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
+
+			if (lPenaResMod != null && lPenaResMod.getDataFine() != null && !lPosMod.isLibero())
+				lMisMod.setDataFineMisura(lPenaResMod.getDataFine());
+
+			// se la data viaggia la prendo altrimenti no Paolo Cherubini 26/01/2001
+			if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE))
+				lPenaResMod.setDataFine(getRequestDateParameter(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE,
+						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
+						ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE));
+
+			if (!lPosMod.isLibero())
+				lMisMod = SettaReclusioneArresto(lPenaResMod, lMisMod);
+
+			// MEV10-s3: anticipo questo metodo per prevenire errore inserimento dati ufficio UDS / TDS
+			NotificaModel[] lNotificheMod = this.setNotificheMisuraAlternativa();
+
+			// inserisco la misura
+			IMisuraAlternativa lCtrlMisura = SICOLookupRemote.getMisuraAlternativaRemote();
+			MisuraAlternativaModel lMisuraModel = lCtrlMisura
+					.ExInserisciMisuraAlternativaEventoNotifica(lEveMod, lDepOrdMod, lTenMod, lMisMod);
+
+			// INSERISCO EVENTO E NOTIFICA DELL'UFFICIO EMITTENTE
+
+			EventoNotificaModel lEveNot = new EventoNotificaModel();
+			lEveNot = SettaProvvedimento(lFlagSan, tipoMisura, lPosizione, lFlagAffi,
+					getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO), lMisMod);
+			lEveNot.getEvento().setEveIdEvento(lMisuraModel.getEveIdEvento());
+
+			// notifiche
+			// NotificaModel[] lNotificheMod = this.setNotificheMisuraAlternativa();
+			lEveNot.setNotifiche(lNotificheMod);
+
+			PenaResiduaModel lPenaRes = new PenaResiduaModel();
+			lPenaRes.setIdPenaResidua(lIdPenaRes);
+			if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE))
+				lPenaRes.setDataFine(getRequestDateParameter(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE,
+						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
+						ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE));
+
+			IMisuraAlternativa lCtrlMisuraAlt = SICOLookupRemote.getMisuraAlternativaRemote();
+			EventoNotificaModel lEveNotModel = lCtrlMisuraAlt.ExInserisciOModificaMANotifica(lEveNot,
+					lPenaRes, null, null);
+
+			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+					+ "=siap.siep.misuraalternativa.action.ActDettaglioConcessione&"
+					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNotModel.getEvento().getIdEvento();
+
+		} else // la misura alternativa esiste (NEL CASO DEI MINORENNI GIA' ESISTE PERCHE' INSERITA DALLA SORVEGLIANZA)
+		{
+			// MEV_62 [EC] 15/05/2018 - INIZIO
+			if(lMisAlModConcessa.getCodTipoUfficioScarcerazione() == null || "".equals(lMisAlModConcessa.getCodTipoUfficioScarcerazione())){
+				lMisAlModConcessa.setCodTipoUfficioScarcerazione("PROC");
+			}
+			//MEV_62 [EC] 15/05/2018 - FINE
+			EventoNotificaModel lEveNot = new EventoNotificaModel();
+			lEveNot = SettaProvvedimento(lFlagSan, tipoMisura, lPosizione, lFlagAffi,
+					lMisAlModConcessa.getCodTipoMisura(), lMisAlModConcessa);
+			lEveNot.getEvento().setEveIdEvento(lIdOrdinanza);
+
+			// Inserisco l'array di Notifiche nell'Evento
+			NotificaModel[] lNotifiche = this.setNotificheMisuraAlternativa();
+			lEveNot.setNotifiche(lNotifiche);
+
+			PenaResiduaModel lPenaRes = new PenaResiduaModel();
+			lPenaRes.setIdPenaResidua(lIdPenaRes);
+			if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE))
+				lPenaRes.setDataFine(getRequestDateParameter(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE,
+						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
+						ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE));
+
+			// paolo cherubini 24/11/2010 caso "misura da SIUS"
+			// se esiste un fine pena quindi è un detenuto metto la fine misura
+			if (lPenaResMod != null && lPenaResMod.getDataFine() != null && !lPosMod.isLibero()) {
+				lMisAlModConcessa.setDataFineMisura(lPenaResMod.getDataFine());
+				// fine paolo cherubini 24/11/2010
+			}
+
+			// setto la misura alternativa che deve essere modificata
+			EventoNotificaModel lRetModel = new EventoNotificaModel();
+
+			Date lDataInizio = SettaDataInizioMisura(lPosMod, lFlagAffi, lFlagSan, tipoMisura);
+			if (lDataInizio != null)
+				lMisAlModConcessa.setDataInizioMisura(lDataInizio);
+			if (!lPosMod.isLibero())
+				lMisAlModConcessa = SettaReclusioneArresto(lPenaResMod, lMisAlModConcessa);
+
+			lMisAlModConcessa.setCodTipoUfficioScarcerazione("PROC");
+			// if
+			// (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE))
+			if (!this.isRequestParameterNullObj("tipo")
+					&& this.getRequestStringParameter("tipo").equals("scarcerato")) {
+				lMisAlModConcessa.setDataScarcerazione(
+						getRequestDateParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE,
+								ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
+								ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE));
+				lMisAlModConcessa.setCodTipoUfficioScarcerazione("SORV");
+			}
+
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
+				lMisAlModConcessa.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
+
+			lRetModel = lMisAltCtrl.ExInserisciOModificaMANotifica(lEveNot, lPenaRes, lMisAlModConcessa,
+					null);
+			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+					+ "=siap.siep.misuraalternativa.action.ActDettaglioConcessione&"
+					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lRetModel.getEvento().getIdEvento();
+		}
+		return lPage;
+	}
+
+	/**
+	 *
+	 * @param aPenaResMod
+	 * @param aMisMod
+	 * @return
+	 * @throws Exception
+	 */
+	public MisuraAlternativaModel SettaReclusioneArresto(PenaResiduaModel aPenaResMod,
+			MisuraAlternativaModel aMisMod) throws Exception {
+
+		if (aPenaResMod != null && aPenaResMod.getDataFine() != null) {
+			// aggiunga questa if Paolo Cherubini 26/01/2011 - Corretta il 21/11/2011
+			PenaResiduaModel lPenaModel = null;
+			lPenaModel = PenaResiduaUtil.calcolaPenaNuovaDataInizio(aMisMod.getDataInizioMisura(),
+					aPenaResMod, false);
+			if (lPenaModel != null) {
+				if (lPenaModel.getNumAnniArresto() != null && lPenaModel.getNumAnniArresto().intValue() > 99)
+					aMisMod.setNumAnniRevocaArresto(new BigDecimal("99"));
+				else
+					aMisMod.setNumAnniRevocaArresto(lPenaModel.getNumAnniArresto());
+				aMisMod.setNumGiorniRevocaArresto(lPenaModel.getNumGiorniArresto());
+				aMisMod.setNumMesiRevocaArresto(lPenaModel.getNumMesiArresto());
+
+				if (lPenaModel.getNumAnniReclusione() != null
+						&& lPenaModel.getNumAnniReclusione().intValue() > 99)
+					aMisMod.setNumAnniRevocaReclusione(new BigDecimal("99"));
+				else
+					aMisMod.setNumAnniRevocaReclusione(lPenaModel.getNumAnniReclusione());
+				aMisMod.setNumGiorniRevocaReclusione(lPenaModel.getNumGiorniReclusione());
+				aMisMod.setNumMesiRevocaReclusione(lPenaModel.getNumMesiReclusione());
+			}
+		}
+
+		return aMisMod;
+	}
+
+	/**
+	 *
+	 * @param aFlagSan
+	 * @param atipoMisura
+	 * @param aPosizione
+	 * @param aFlagAffi
+	 * @param aCodice
+	 * @param aMisMod
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel SettaProvvedimento(String aFlagSan, String atipoMisura, String aPosizione,
+			String aFlagAffi, String aCodice, MisuraAlternativaModel aMisMod) throws F3BException {
+
+		EventoNotificaModel aEveNot = new EventoNotificaModel();
+		if (atipoMisura.equals("AFFIDAMENTO")) {
+			aEveNot = this.getProvvedimentoMotivoAffidamento(aFlagSan, aPosizione, aFlagAffi,
+					aMisMod.getCodTipoUfficioScarcerazione(), aCodice, ICostantiEvento.CAMPO_ID_EVENTO);
+		} else if (atipoMisura.equals("DETENZIONE"))
+			aEveNot = this.getProvvedimentoMotivoDetDom(aPosizione, aFlagAffi,
+					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
+		else if (atipoMisura.equals("SEMILIBERTA"))
+			aEveNot = this.getProvvedimentoMotivoSemiliberta(aPosizione, aFlagAffi);
+		else if (atipoMisura.equals("INDULTINO"))
+			aEveNot = this.getProvvedimentoMotivoIndultino(aPosizione, aFlagAffi,
+					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
+		else if (atipoMisura.equals("ESP_PRESSO_DOM"))
+			aEveNot = this.getProvvedimentoMotivoIndultino(aPosizione, aFlagAffi,
+					aMisMod.getCodTipoUfficioScarcerazione(), aCodice);
+
+		aEveNot.getEvento().setCodEsito("0112");
+		aEveNot.setEvento(setEventoProvvedimentoMisuraAlternativa(aEveNot.getEvento()));
+
+		return aEveNot;
+	}
+
+	/**
+	 *
+	 * @param aPosMod
+	 * @param aFlagAffi
+	 * @param aFlagSan
+	 * @param atipoMisura
+	 * @return
+	 * @throws F3BException
+	 */
+	public Date SettaDataInizioMisura(PosizioneGiuridicaModel aPosMod, String aFlagAffi, String aFlagSan,
+			String atipoMisura) throws F3BException {
+
+		Date aDataInizio = null;
+
+		// Controlla che la posizione giuridica sia "29"
+		// se il soggetto è in detenzione domiciliare provvisoria (29) e viene concessa la detenzione
+		// mantengo la stessa data inizio misura della detenzione domiciliare provvisoria (precedentemente
+		// caricata in maschera)
+		if (aPosMod.getCodPosizioneGiuridica().equals("29") && atipoMisura.equals("DETENZIONE")) {
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
+				aDataInizio = getRequestDateParameter(
+						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA,
+						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA,
+						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA);
+		}
+
+		// Controlla che la posizione giuridica sia "13" o "54"
+		// premessa: inizialmente affidamento in prova provvisorio è stato registrato come posizione giuridica
+		// 13 per distinguerla quindi
+		// dalla concessione che è sempre 13 controllo che esista l'evento di ammissione provvisoria
+		// se il soggetto è in affidamento in prova provvisorio (54 o 13 + evento ammissione) e viene concessa
+		// affidamento in prova
+		// mantengo la stessa data inizio misura affidamento in prova provvisorio (precedentemente caricata in
+		// maschera)
+		else if ((this.getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO) != null
+				&& !this.getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO).equals(""))
+				&& (aPosMod.getCodPosizioneGiuridica().equals("13") // Affidamento in prova
+						|| aPosMod.getCodPosizioneGiuridica().equals("54") // Affidamento Provvisorio
+				) && atipoMisura.equals("AFFIDAMENTO")) {
+			if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA))
+				aDataInizio = getRequestDateParameter(
+						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA,
+						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA,
+						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA);
+		}
+
+		// occorre avvalorare la data inizio misura alternativa le regole sono specificate ampiamente ad
+		// inizio pagina
+		// comunque non si inserisce la data per libero poichè poi occorre fare il verbale e il riciclo II
+		// volta sulla concessione
+		// per la semilibertà la data inizio misura è sempre la data emissione PM (naturalmente se non è
+		// libero)
+		// quando il soggetto non è libero sicuramente lFlagAffi.equals("N")
+		// lFlagAffi.equals("N") potrebbe indicare anche un soggetto gia in misura e viene concessa un'altra
+		// misura
+		else if (!(aPosMod.isLibero()) && aFlagAffi.equals("N")) // && !atipoMisura.equals("SEMILIBERTA"))
+		{
+			// se non è libero compare la possibilità di inserire la data di scarcerazione o data esecuzione
+			// per i domiciliari
+			// se si indica la data di scarcerazione si inserisce questa data come data inizio misura e come
+			// ufficio "SORV" per sorveglianza
+			if (!this.isRequestParameterNullObj("tipo")
+					&& this.getRequestStringParameter("tipo").equals("scarcerato")) {
+				// lTipoUffScar = "SORV";
+				aDataInizio = getRequestDateParameter(
+						ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE,
+						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE,
+						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE);
+			} else // if (!this.isRequestParameterNullObj("tipo") &&
+					// this.getRequestStringParameter("tipo").equals("scarcerare"))
+			{
+				// se non è libero compare la possibilità di inserire la data di scarcerazione o data
+				// esecuzione per i domiciliari
+				// se non si indica la data di scarcerazione si inserisce la data di emissione provvedimento
+				// del PM come data inizio misura
+				// e come ufficio "PROC" per procura
+				// lTipoUffScar = "PROC";
+				// if (aPosMod.getCodPosizioneGiuridica().equals("03") ||
+				// (aPosMod.getCodPosizioneGiuridica().equals("19") && "S".equals(aFlagSan) &&
+				// atipoMisura.equals("AFFIDAMENTO")))
+				aDataInizio = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+						ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE,
+						ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
+			}
+		}
+		return aDataInizio;
+	}
+
+}

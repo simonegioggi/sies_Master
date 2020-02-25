@@ -1,0 +1,83 @@
+package siap.bdmc.notifichesies.action;
+
+import siap.bdmc.BDMCLookupRemote;
+import siap.bdmc.notifichesies.controller.INotificheSies;
+import siap.bdmc.notifichesies.model.NotificheSiesModel;
+import siap.sico.web.ActionSiap;
+import siap.web.ISIAPCostantiWeb;
+import f3b.util.F3BException;
+
+/**
+ * <p>
+ * Title: ActModificaNotificheSies
+ * </p>
+ * <p>
+ * Description: Classe Action per la modifica di NotificheSies
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
+ * @version 1.0
+ */
+public class ActModificaNotificheSies extends ActionSiap implements ICostantiNotificheSies {
+
+	/*****************************************************************************
+	 * Azione di Modifica del NotificheSies
+	 * 
+	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
+	 * @throws F3BException
+	 *****************************************************************************/
+	public String processRequest() throws F3BException {
+
+		// =====================================================
+		// Riempie il model con i campi recuperati dalla form
+		// n.b. per i campi del model non valorizzati, i corrispondenti
+		// campi della tabella verranno impostati a null
+		// Il campo chiave è obbligatorio perchè utilizzato nelle clausola where
+		// per individuare il record da aggiornare
+		// =====================================================
+		NotificheSiesModel lNotMod = new NotificheSiesModel();
+
+		lNotMod.setIdNotificheSies(getRequestBigDecimalParameter(CAMPO_ID_NOTIFICHE_SIES));
+		lNotMod.setAnnoSiep(getRequestBigDecimalParameter(CAMPO_ANNO_SIEP));
+		lNotMod.setProgSiep(getRequestBigDecimalParameter(CAMPO_PROG_SIEP));
+		lNotMod.setUfficioSiep(getRequestStringParameter(CAMPO_UFFICIO_SIEP));
+		lNotMod.setAnnoFascBdmc(getRequestBigDecimalParameter(CAMPO_ANNO_FASC_BDMC));
+		lNotMod.setUfficioFascBdmc(getRequestStringParameter(CAMPO_UFFICIO_FASC_BDMC));
+		lNotMod.setNumeroFascBdmc(getRequestBigDecimalParameter(CAMPO_NUMERO_FASC_BDMC));
+		lNotMod.setTipoNotifica(getRequestStringParameter(CAMPO_TIPO_NOTIFICA));
+		lNotMod.setDataNotifica(getRequestDateParameter(CAMPO_ANNO_DATA_NOTIFICA, CAMPO_MESE_DATA_NOTIFICA,
+				CAMPO_GIORNO_DATA_NOTIFICA));
+		lNotMod.setStatoTrasmissione(getRequestStringParameter(CAMPO_STATO_TRASMISSIONE));
+		lNotMod.setDataTrasmissione(getRequestDateParameter(CAMPO_ANNO_DATA_TRASMISSIONE,
+				CAMPO_MESE_DATA_TRASMISSIONE, CAMPO_GIORNO_DATA_TRASMISSIONE));
+		lNotMod.setIdPren(getRequestBigDecimalParameter(CAMPO_ID_PREN));
+		lNotMod.setProgPeriPres(getRequestBigDecimalParameter(CAMPO_PROG_PERI_PRES));
+		lNotMod.setCodOperatoreInserimento(getRequestStringParameter(CAMPO_COD_OPERATORE_INSERIMENTO));
+		lNotMod.setDataInserimento(getRequestDateParameter(CAMPO_ANNO_DATA_INSERIMENTO,
+				CAMPO_MESE_DATA_INSERIMENTO, CAMPO_GIORNO_DATA_INSERIMENTO));
+		lNotMod.setCodUfficioInserimento(getRequestStringParameter(CAMPO_COD_UFFICIO_INSERIMENTO));
+
+		// ===================================================
+		// Recupera il controller ed effettua la modifica
+		// ===================================================
+		INotificheSies lCtrl = BDMCLookupRemote.getNotificheSiesRemote();
+		lCtrl.ExModificaNotificheSies(lNotMod);
+
+		// ======================================================================
+		// Prepara la pagina di destinazione
+		// Viene restituita la pagina di dettaglio con i dati appena inseriti
+		// ======================================================================
+		String lPage = "";
+		lPage = ISIAPCostantiWeb.PG_MAIN + "?" + ISIAPCostantiWeb.ACTION_FIELD
+				+ "=siap.bdmc.notifichesies.action.ActLoadDettaglioNotificheSies";
+		lPage += "&" + CAMPO_ID_NOTIFICHE_SIES + "=" + lNotMod.getIdNotificheSies().toString();
+
+		return lPage;
+	}
+
+}

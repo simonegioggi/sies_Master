@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.DettagliFascicolo">
+    
+    <update id="deleteLogica" parameterType="it.mig.sies.model.DatiUfficioSorveglianza">
+        UPDATE EVENTO set
+            KEY_ESEC_NSC = NULL
+        where ID_EVENTO = #{chiaveSies}
+    </update>
+    
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.DettagliFascicolo">
+		SELECT DISTINCT      
+			--MEV 42558 replace di caratteri  
+			replace(SENT.Numero_Rege_Pm,'NC')               numeroSentenza,
+			SENT.Anno_Rege_Pm                 annoSentenza,   
+			--fasc.chiave_anno annoSiep,
+			--fasc.chiave_progr numeroSiep,
+			fasc_s.chiave_anno annoSius,
+			fasc_s.chiave_progr numeroSius,
+			do.anno_s3 annoOrdinanza,
+			do.num_s3 numeroOrdinanza,
+			decode(SENT.cod_sede_notizia_reato,'-',null,SENT.cod_sede_notizia_reato) sedePm
+		FROM FASCICOLO_SIEP  FASC,
+			SENTENZA        SENT,
+			SOGGETTO        SOGG,
+			CG_REF_CODES    TIPO_PROVVEDIMENTO,
+			COMUNE          LUOGO_EMITTENTE,
+			UFFICIO         UFF,
+			CG_REF_CODES    DESCR_TIPO_UFF,
+			COMUNE          DESCR_COM_UFF,
+			CODICI_SIES_NSC AUT,
+			CODICI_SIES_NSC COD_COMUNE,
+			fascicolo_sius  fasc_s,
+			evento e,
+			deposito_ordinanza_pc do       
+		WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO
+			AND FASC.SEN_ID_SENTENZA = SENT.ID_SENTENZA
+			AND FASC.FLAG_VALIDATO = 'S'
+			AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+			AND TIPO_PROVVEDIMENTO.RV_LOW_VALUE = SENT.COD_TIPO_PROVVEDIMENTO
+			AND LUOGO_EMITTENTE.COD_COMUNE = SENT.COD_LUOGO_EMITTENTE
+			AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO
+			AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO'
+			AND UFF.COD_TIPO_UFFICIO = DESCR_TIPO_UFF.RV_LOW_VALUE
+			AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+			AND AUT.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+			AND AUT.CO_SIES = decode(fasc.flag_cumulante,'S','PM', SENT.COD_TIPO_AUTORITA_EMITTENTE)
+			AND AUT.CO_VAL2 = '-'
+			AND AUT.CO_VAL1 = nvl(decode(fasc.flag_cumulante,'S','-',sent.cod_tipo_rito),'-')
+			AND COD_COMUNE.CO_DOMAIN = 'COMUNE'
+			AND COD_COMUNE.CO_SIES = SENT.COD_LUOGO_EMITTENTE
+			AND fasc.id_fascicolo_siep=fasc_s.fas_sie_id_fascicolo_siep
+			AND e.fas_siu_id_fascicolo_sius=fasc_s.id_fascicolo_sius
+			AND e.id_evento=#{idEvento}
+			AND do.id_evento_generato=e.id_evento
+    </select>
+
+	<!-- MEV 16: aggiunta query estrazione dati fascicolo dato il suo ID -->
+    <select id="getFascicoloByID" parameterType="long" resultType="it.mig.sies.model.DettagliFascicolo">
+		SELECT DISTINCT REPLACE(SENT.NUMERO_REGE_PM, 'NC') NUMEROSENTENZA,
+		                SENT.ANNO_REGE_PM ANNOSENTENZA,
+		                FASC.CHIAVE_ANNO ANNOSIEP,
+		                FASC.CHIAVE_PROGR NUMEROSIEP,
+		                /*DO.ANNO_S3 ANNOORDINANZA,
+		                DO.NUM_S3 NUMEROORDINANZA,*/
+		                DECODE(SENT.COD_SEDE_NOTIZIA_REATO,
+		                       '-',
+		                       NULL,
+		                       SENT.COD_SEDE_NOTIZIA_REATO) SEDEPM,
+		                FASC.FLAG_CUMULANTE FLAGCUMULANTE,
+		                E.COD_MOTIVO CODMOTIVO
+		  FROM FASCICOLO_SIEP  FASC,
+		       SENTENZA        SENT,
+		       SOGGETTO        SOGG,
+		       CG_REF_CODES    TIPO_PROVVEDIMENTO,
+		       COMUNE          LUOGO_EMITTENTE,
+		       UFFICIO         UFF,
+		       CG_REF_CODES    DESCR_TIPO_UFF,
+		       COMUNE          DESCR_COM_UFF,
+		       CODICI_SIES_NSC AUT,
+		       CODICI_SIES_NSC COD_COMUNE,
+		       EVENTO          E /*,
+		       DEPOSITO_ORDINANZA_PC DO*/
+		 WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO
+		   AND FASC.SEN_ID_SENTENZA = SENT.ID_SENTENZA
+		   AND FASC.FLAG_VALIDATO = 'S'
+		   AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+		   AND TIPO_PROVVEDIMENTO.RV_LOW_VALUE = SENT.COD_TIPO_PROVVEDIMENTO
+		   AND LUOGO_EMITTENTE.COD_COMUNE = SENT.COD_LUOGO_EMITTENTE
+		   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO
+		   AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND UFF.COD_TIPO_UFFICIO = DESCR_TIPO_UFF.RV_LOW_VALUE
+		   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+		   AND AUT.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND AUT.CO_SIES = DECODE(FASC.FLAG_CUMULANTE,
+		                            'S',
+		                            'PM',
+		                            SENT.COD_TIPO_AUTORITA_EMITTENTE)
+		   AND AUT.CO_VAL2 = '-'
+		   AND AUT.CO_VAL1 =
+		       NVL(DECODE(FASC.FLAG_CUMULANTE, 'S', '-', SENT.COD_TIPO_RITO), '-')
+		   AND COD_COMUNE.CO_DOMAIN = 'COMUNE'
+		   AND COD_COMUNE.CO_SIES = SENT.COD_LUOGO_EMITTENTE
+		   AND FASC.ID_FASCICOLO_SIEP = E.FAS_SIE_ID_FASCICOLO_SIEP
+		   AND E.ID_EVENTO = #{idEvento}
+		/*AND DO.ID_EVENTO_GENERATO = E.ID_EVENTO*/
+    </select>
+
+</mapper>

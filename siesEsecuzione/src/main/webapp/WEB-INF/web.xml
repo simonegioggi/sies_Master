@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<display-name>SIESEsecuzione</display-name>
+	<servlet>
+		<servlet-name>EntryPointServlet</servlet-name>
+		<servlet-class>it.mig.sies.servlet.EntryPointServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>LoadDataServlet</servlet-name>
+		<servlet-class>it.mig.sies.servlet.LoadDataServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>SearchDataServlet</servlet-name>
+		<servlet-class>it.mig.sies.servlet.SearchDataServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>TransferServlet</servlet-name>
+		<servlet-class>it.mig.sies.servlet.TransferServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EntryPointServlet</servlet-name>
+		<url-pattern>/trasferimento</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LoadDataServlet</servlet-name>
+		<url-pattern>/load</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SearchDataServlet</servlet-name>
+		<url-pattern>/search</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TransferServlet</servlet-name>
+		<url-pattern>/trasferimentoMassivo</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<resource-ref id="ResourceRef1">
+		<res-ref-name>oracleds</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
+		<lookup-name>java:jboss/jdbc/oracleds</lookup-name>
+	</resource-ref>
+	<servlet>
+		<description></description>
+		<display-name>ContextualDeleteServlet</display-name>
+		<servlet-name>ContextualDeleteServlet</servlet-name>
+		<servlet-class>it.mig.sies.servlet.ContextualDeleteServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ContextualDeleteServlet</servlet-name>
+		<url-pattern>/cancellazioneContestuale</url-pattern>
+	</servlet-mapping>
+	<!-- MEV 16: trasferimento foglio complementare -->
+	<servlet>
+		<description>Trasmissione Foglio Complementare al SIC</description>
+		<display-name>TrasferisciFoglioComplementareSIEPServlet</display-name>
+		<servlet-name>TrasferisciFoglioComplementareSIEPServlet</servlet-name>
+		<servlet-class>it.mig.sies.servlet.TrasferisciFoglioComplementareSIEPServlet</servlet-class>
+		<init-param>
+			<description>Parametro iniziale per differenziare dal WS di SIUS</description>
+			<param-name>tipoWS</param-name>
+			<param-value>siepToNsc</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TrasferisciFoglioComplementareSIEPServlet</servlet-name>
+		<url-pattern>/trasferisciFoglioComplementareSIEP</url-pattern>
+	</servlet-mapping>
+	<!-- FINE MEV 16 -->
+</web-app>

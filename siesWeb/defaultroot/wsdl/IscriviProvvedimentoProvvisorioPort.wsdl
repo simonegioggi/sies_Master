@@ -1,0 +1,3405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="http://it/mig/sies/type" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:conv="http://www.openuri.org/2002/04/wsdl/conversation/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap12enc="http://www.w3.org/2003/05/soap-encoding" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://it/mig/sies/type" xmlns:wsr="http://www.openuri.org/2002/10/soap/reliability/">
+ <types>
+  <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://it/mig/sies/type" xmlns="http://it/mig/sies/type" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="ANAGRAFICA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento che contiene i dati relativi al Soggetto.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_ANAGRAFICI">
+       <xs:annotation>
+        <xs:appinfo>E' l'elemento che contiene i dati anagrafici del Soggetto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="PROCEDIMENTO">
+       <xs:annotation>
+        <xs:appinfo>E’ l’elemento che contiene tutte le informazioni relative alla sentenza.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="CERTIFICATO">
+       <xs:annotation>
+        <xs:appinfo>E' l'elemento che contiene il certificato del Soggetto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayBenefici">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="BENEFICIO">
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayCassazione">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore di una lista di sentenze di cassazione.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="CASSAZIONE">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore di sentenze di Cassazione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayCircostanze">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di Circostanze.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="CIRCOSTANZA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di una circostanza.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayImpugnazioni">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di impugnazioni.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="IMPUGNAZIONE">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di un'impugnazione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayMisureSicurezza">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di misure di sicurezza.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="MISURA_DI_SICUREZZA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di una Misura di Sicurezza.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayOmonimi">
+    <xs:annotation>
+     <xs:appinfo>Rappresenta una lista di elementi omonimi.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="OMONIMO">
+       <xs:annotation>
+        <xs:appinfo>E' l'elemento contenitore di un soggetto omonimo.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayPenaComplessiva">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di reati di pena complessiva.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="DISPOSITIVO_PENA_COMPLESSIVA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di una dispositivo di Pena Complessiva.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayPeneAccessorie">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di pene accessorie.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="PENA_ACCESSORIA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di una Pena Accessoria.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayPeneAggiunte">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di pene aggiunte.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="PENA_AGGIUNTA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di un provvedimento di Pena Aggiunta.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayPrimoGrado">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore di una lista di sentenze di primo grado.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="PRIMO_GRADO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore di una sentenza di Primo Grado</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayProgressiviReati">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore di una lista di progressivi dei reati.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="Numero">
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayReati">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di reati.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="REATO">
+       <xs:annotation>
+        <xs:documentation>
+        </xs:documentation>
+        <xs:documentation>Elemento contenitore dei dati del reato.</xs:documentation>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArrayRevoche">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una lista di revoche.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="REVOCA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di un provvedimento di revoca.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ArraySecondoGrado">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore di una lista di sentenze di secondo grado.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" ref="SECONDO_GRADO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore di una sentenza di Secondo Grado.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="BENEFICIO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati di un beneficio diverso dal condono e dalla sostituzione pena.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Identificativo del beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Codice del tipo beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_RECLUSIONE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di reclusione beneficiati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_ARRESTO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di arresto beneficiati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_MULTA">
+       <xs:annotation>
+        <xs:appinfo>Importo della multa del beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_AMMENDA" type="xs:decimal">
+       <xs:annotation>
+        <xs:appinfo>Importo dell'ammenda del beneficio.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_LIBERTA_CONTROLLATA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di libertà controllata beneficiati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_SEMIDETENZIONE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di semidetenzione beneficiati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_PERMANENZA_DOMICILIARE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di permanenza domiciliare beneficiati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="CASSAZIONE">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore delle sentenze della cassazione.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="IMPUGNAZIONE">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dell'impugnazione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="CERTIFICATO" type="xs:base64Binary">
+    <xs:annotation>
+     <xs:appinfo>E' il certificato del Soggetto iscritto nel casellario giudiziale.</xs:appinfo>
+    </xs:annotation>
+   </xs:element>
+   <xs:element name="CHIAVI">
+    <xs:annotation>
+     <xs:appinfo>Rappresenta il tipo 'contenitore' degli identificativi, del soggetto e del provvedimento, sul sistema NSC e SIES.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element minOccurs="0" name="K_A_NSC">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo del soggetto sul sistema NSC.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="K_A_SIES">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo del soggetto sul sistema SIES.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="K_P_NSC">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo del provvedimento sul sistema NSC.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="K_P_SIES">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo del provvedimento sul sistema SIES.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="CIRCOSTANZA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elmento contenitore dei dati della circostanza.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_CIRCOSTANZE">
+       <xs:annotation>
+        <xs:appinfo>Identificativo della circostanza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL">
+       <xs:annotation>
+        <xs:appinfo>Codice del testo legislativo.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_LS">
+       <xs:annotation>
+        <xs:appinfo>Anno della legge speciale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_LS">
+       <xs:annotation>
+        <xs:appinfo>Numero della legge speciale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="4">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_LS">
+       <xs:annotation>
+        <xs:appinfo>Articolo della Legge Speciale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="4">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_BTQ">
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_COMMA">
+       <xs:annotation>
+        <xs:appinfo>Comma della circostanza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_COMMA_BTQ">
+       <xs:annotation>
+        <xs:appinfo>bis, ter.. del comma.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_LETTERA">
+       <xs:annotation>
+        <xs:appinfo>Lettera della circostanza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_LETTERA_BTQ">
+       <xs:annotation>
+        <xs:appinfo>bis, ter.. della lettera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_ARTICOLO">
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_ARTICOLO_BTQ">
+       <xs:annotation>
+        <xs:appinfo>bis, ter.. del numero.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_RELAZ_SOST_MODIF_RSM">
+       <xs:annotation>
+        <xs:appinfo>Indica se la circostanza è in relazione, sostituito o modificato rispetto all’articolo.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_CIRC_GENERICHE">
+       <xs:annotation>
+        <xs:appinfo>Flag per estrarre nella stampa la descrizione senza indicare l’articolo,comma etc</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_CONC_CIRC">
+       <xs:annotation>
+        <xs:appinfo>Descrizione del concorso in circostanze concorrenti.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="40">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_IPOTESI_REATO">
+       <xs:annotation>
+        <xs:appinfo>Descrizione dell'ipotesi di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="500">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_REATO">
+       <xs:annotation>
+        <xs:appinfo>Descrizione completo del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="70">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_QTA_FLAG_IPO_REATO">
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="15">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_QTA_FLAG_IPO_REATO">
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="2">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_DECR_MINIS" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data del decreto ministeriale.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="CONDONO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati del beneficio di condono.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Identificativo del beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Codice tipo beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL">
+       <xs:annotation>
+        <xs:appinfo>Codice del testo legislativo per cui è emesso il condono.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_RECLUSIONE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorno di reclusione condonati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_ARRESTO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorno di arresto condonati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_MULTA">
+       <xs:annotation>
+        <xs:appinfo>Importo della multa condonata.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_AMMENDA">
+       <xs:annotation>
+        <xs:appinfo>Importo dell'ammenda condonata.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Articolo della legge per cui viene emesso il beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Numero della legge per cui viene emesso il beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL_2">
+       <xs:annotation>
+        <xs:appinfo>Codice del testo legislativo ulteriore per cui è emesso il condono.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_BENEFICIO_2">
+       <xs:annotation>
+        <xs:appinfo>Articolo ulteriore della legge per cui viene emesso il beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_BENEFICIO_2">
+       <xs:annotation>
+        <xs:appinfo>Numero ulteriore della legge per cui viene emesso il beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_ESPUL_STATO_SN">
+       <xs:annotation>
+        <xs:appinfo>Indica se è esiste o meno l'espulsione dallo stato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="GP_DURATA_PERMANENZA_DOMICILIARE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorno di permanenza domiciliare emessa dal Giudice di Pace condonati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="GP_DURATA_LAVORO_PUBBLICA_UTILITA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorno di pubblica utilità emessa dal Giudice di Pace condonati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_PERMANENZA_DOMICILIARE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorno di permanenza domiciliare condonati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_LAVORO_PUBBLICA_UTILITA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>nni, mesi e giorno di pubblica utilità condonati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_RATE">
+       <xs:annotation>
+        <xs:appinfo>Numero di rate per importi per cui è permessa la rateizzazione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="3">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_VALUTA">
+       <xs:annotation>
+        <xs:appinfo>Codice della valuta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_SANZ_SOST_COND">
+       <xs:annotation>
+        <xs:appinfo>Importo multa/ammenda emesso come sanzione sostitutiva.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_TUTTE_PAC_SN">
+       <xs:annotation>
+        <xs:appinfo>Flag che indica se esistono pene accessorie condonate.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" ref="PENA_ACCESSORIA_CONDONATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati della pena accessoria condonata.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_ANAGRAFICI">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento che contiene i dati anagrafici del Soggetto.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_ANAGRAFICA">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo dell'anagrafica.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="PERS_COGNOME">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il cognome del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="PERS_NOME">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il nome del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_LUOGO_NASCITA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice corrispondente al luogo di nascita del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_STATO_ESTERO_NAS" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice corrispondente allo stato estero di nascita del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_COMUNE_ESTERO" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>E' il comune estero di nascita del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="60">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DATA_NASCITA" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta  la data di nascita del Soggetto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="FLAG_SESSO_MF">
+       <xs:annotation>
+        <xs:appinfo>Flag che indica il sesso del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_FISCALE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice fiscale del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="16">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_IMPRONTA_DIGITALE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice alfanumerico dell'impronta digitale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="7">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="PERS_PATERNITA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>E' il nome della paternità del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="PERS_COGNOME_MADRE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta  il cognome materno del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="PERS_NOME_MADRE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta  il nome materno del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_ATTO_NASCITA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>E' il numero dell'atto di nascita del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="9">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_ANNOTAZIONE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>E' un campo note per il Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2000">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element default="N" name="FLAG_DECEDUTO_SN">
+       <xs:annotation>
+        <xs:appinfo>E' un flag che indica che il soggetto è deceduto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_LUOGO_MORTE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice del luogo di decesso del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_STATO_ESTERO_MORTE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice dello stato estero di decesso del Soggetto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_ATTO_MORTE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il numero dell' atto di morte.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="9">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_MORTE" nillable="true" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta la data di decesso del Soggetto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_CHIAMATA_TRASFERIMENTO">
+    <xs:annotation>
+     <xs:documentation>Elemento contentente i dati per la chiamata al servizio</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_UTENTE">
+      </xs:element>
+      <xs:element ref="CHIAVI">
+      </xs:element>
+      <xs:element ref="DATI_OPERAZIONE">
+      </xs:element>
+      <xs:element ref="ANAGRAFICA">
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_OPERAZIONE">
+    <xs:annotation>
+     <xs:appinfo>Rappresenta l'elemento contenitore di informazioni circa le operazione da eseguire.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="OPERAZIONE">
+       <xs:annotation>
+        <xs:appinfo>Contiene le informazioni circa  l’operazione specifica da effettuare nella chiamata. I possibili valori sono:
+1) INSERT
+2) UPDATE
+3) READ
+4) DELETE</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="ENTITA">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'entità, Soggetto o Provvedimento, coinvolta nella chiamata.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_PROVVEDIMENTO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento che contiene i dati relativi alla sentenza.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_PROVV">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo del provvedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_PROVV">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice del tipo di provvedimento emesso.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DATA_PROVVEDIMENTO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data in cui un provvedimento è stato emesso.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="CODI_AUTORITA">
+       <xs:annotation>
+        <xs:appinfo>Codice dell'autorità che ha emesso il provvedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_SEDE_AUTORITA_PRIN_DIST" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice della sede dell’autorità principale o distaccata che ha emesso il provvedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_SEDE_AUTORITA_PRIN" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice della sede principale dell’autorità che ha emessoil provvedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUMERO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Numero della sentenza emessa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="9">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Anno della sentenza emessa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUMERO_REGISTRO_GENERALE">
+       <xs:annotation>
+        <xs:appinfo>Numero del registro dell’autorità giudicante (riferito al provvedimento)</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="6">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_REGISTRO_GENERALE">
+       <xs:annotation>
+        <xs:appinfo>Anno del registro dell’autorità giudicante (riferito al provvedimento)</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_FORMA_PROC" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Forma del procedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_ELEMENTO">
+       <xs:annotation>
+        <xs:appinfo>Codice elemento del provvedimento emesso.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_CLASSE_PROVV">
+       <xs:annotation>
+        <xs:appinfo>Classe del provvedimento emesso.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_SOTTOCLASSE_PROVV">
+       <xs:annotation>
+        <xs:appinfo>Sottoclasse del provvedimento emesso.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_NON_MENZIONE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice di non menzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PENA_SOSPESA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice della pena sospesa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_SEDE_AUTORITA_PROC" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice della sede dell’autorità che ha emesso il procedimento a cui il provvedimento si riferisce.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_SEDE_AUTORITA_PROC">
+       <xs:annotation>
+        <xs:appinfo>Descrizione della sede dell'autorità che ha emesso il provvedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_STATO_AUTORITA_STRANIERA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice dello Stato dell’autorità straniera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_ISCRIZIONE_REG_PM" nillable="true" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data di iscrizione nel registro da parte del PM.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_LUOGO_RESID" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice del comune di residenza del soggetto iscritto nel casellario giudiziale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_LUOGO_COND_ESTERO" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice dello stato di residenza del soggetto iscritto nel casellario giudiziale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_CITTADINANZA_ISD" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Indica se il soggetto iscrittonel casellario giudiziale è o meno cittadino italiano.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PAESE_CITTAD" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice del paese di cittadinanza del soggetto iscritto nel casellario giudiziale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PAESE_CITTAD_2" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice del paese della seconda cittadinanza del soggetto iscritto nel casellario giudiziale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_STATO_RESID" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Codice dello stato di residenza del soggetto iscritto nel casellario giudiziale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_NOTE" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Campo note per il provvedimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2000">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element ref="ArrayReati">
+       <xs:annotation>
+        <xs:appinfo>E' l'elemento contenitore di una lista di reati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayRevoche">
+       <xs:annotation>
+        <xs:appinfo>E' l'elemento contenitore di una lista di revoche.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayPenaComplessiva">
+       <xs:annotation>
+        <xs:appinfo>E' l'elemento contenitore di una lista di reati di pena complessiva.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_SENTENZA_RIUNITA">
+       <xs:annotation>
+        <xs:appinfo>Flag che indica se la sentenza è una sentenza riunita.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_RISPOSTA_TRASFERIMENTO">
+    <xs:annotation>
+     <xs:documentation>Elemento contentente i dati risposta alla chiamata al servizio</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="CHIAVI">
+      </xs:element>
+      <xs:element ref="ESITO">
+      </xs:element>
+      <xs:element ref="DATI_OPERAZIONE">
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayOmonimi">
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_UFFICIO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati dell'ufficio.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="CODICE_TIPO_UFFICIO">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice identificativo della tipologia di ufficio presso cui è impiegato l'utente.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="10">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODICE_SEDE_UFFICIO">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il codice indentificativo della sede dell'ufficio presso cui è impiegato l'utente.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DATI_UTENTE">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_UFFICIO">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta un tipo 'contenitore' di informazioni relative all'ufficio in cui è impiegato un utente.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="USERNAME">
+       <xs:annotation>
+        <xs:appinfo>Definisce il nome con il quale l'utente viene riconosciuto dal sistema</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="128">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="COGNOME_UTENTE">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il cognome dell'utente.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="NOME_UTENTE">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta il nome dell'utente.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DISPOSITIVO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati del dispositivo.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_DISPOSITIVO">
+       <xs:annotation>
+        <xs:appinfo>Identificativo de dispositivo.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="ISOLAMENTO_DIURNO" type="DURATA">
+      </xs:element>
+      <xs:element minOccurs="0" name="RECLUSIONE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della pena di reclusione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARRESTO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della pena di arresto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_MULTA">
+       <xs:annotation>
+        <xs:appinfo>Importo della multa inflitta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_AMMENDA">
+       <xs:annotation>
+        <xs:appinfo>Importo dell'ammenda inflitta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_ERGASTOLO">
+       <xs:annotation>
+        <xs:appinfo>Flag che indica se è stato o meno inflitto l'estratto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_VALUTA">
+       <xs:annotation>
+        <xs:appinfo>Codice della valuta usata per le pene pecuniarie.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PROSC">
+       <xs:annotation>
+        <xs:appinfo>Codice del proscioglimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TIPO_PROSC">
+       <xs:annotation>
+        <xs:appinfo>Codice del tipo proscioglimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_NON_MENZIONE">
+       <xs:annotation>
+        <xs:appinfo>Codice di non menzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PENA_SOSPESA">
+       <xs:annotation>
+        <xs:appinfo>Codice della pena sospesa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="PERMANENZA_DOMICILIARE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della pena di permanenza domicialiare.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="LAVORO_PUBBLICA_UTILITA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della pena di pubblica utilità.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DIMINUENTI_RITO">
+       <xs:annotation>
+        <xs:appinfo>Diminuenti del rito.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PERICOLOSITA">
+       <xs:annotation>
+        <xs:appinfo>Codice della pericolosità.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_PENA_CONGRUA_SN">
+       <xs:annotation>
+        <xs:appinfo>Indica se la pena è congrua con la pena del dispositivo di pena aggiunta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNOT_SENT_STRAN">
+       <xs:annotation>
+        <xs:appinfo>Annotazione per le sentenze straniere.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="500">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayCircostanze">
+       <xs:annotation>
+        <xs:appinfo>Lista di Circostanze.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayMisureSicurezza">
+       <xs:annotation>
+        <xs:appinfo>Lista di Misure di Sicurezza.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayPeneAggiunte">
+       <xs:annotation>
+        <xs:appinfo>Lista di Pene Aggiunte.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayPeneAccessorie">
+       <xs:annotation>
+        <xs:appinfo>Lista di Pene Accessorie.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="SOSTITUZIONE_PENA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore del beneficio di Sostituzione Pena.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="CONDONO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore del beneficio di Condono.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayBenefici">
+      </xs:element>
+      <xs:element ref="ArrayProgressiviReati">
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="DISPOSITIVO_PENA_COMPLESSIVA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementoche rappresenta il dispositivo di pena complessiva.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DISPOSITIVO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati dispositivo.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="ENTITA">
+    <xs:simpleType>
+     <xs:restriction base="xs:string">
+      <xs:enumeration value="P">
+      </xs:enumeration>
+      <xs:enumeration value="S">
+      </xs:enumeration>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+   <xs:element name="ESITO">
+    <xs:annotation>
+     <xs:appinfo>E' l’elemento che contiene il codice e la descrizione dell’esito del servizio chiamato. </xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="CODICE">
+       <xs:annotation>
+        <xs:appinfo>Contiene il codice dell’esito del servizio chiamato. </xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+         <xs:enumeration value="0">
+         </xs:enumeration>
+         <xs:enumeration value="1">
+         </xs:enumeration>
+         <xs:enumeration value="2">
+         </xs:enumeration>
+         <xs:enumeration value="100">
+         </xs:enumeration>
+         <xs:enumeration value="200">
+         </xs:enumeration>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DESCRIZIONE">
+       <xs:annotation>
+        <xs:appinfo>Contiene la descrizione dell’esito del servizio chiamato. </xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="60">
+         </xs:maxLength>
+         <xs:enumeration value="OK">
+         </xs:enumeration>
+         <xs:enumeration value="PRESENZA OMONIMI">
+         </xs:enumeration>
+         <xs:enumeration value="TITOLO PRESENTE">
+         </xs:enumeration>
+         <xs:enumeration value="ERRORE INTERNO GENERICO">
+         </xs:enumeration>
+         <xs:enumeration value="ERRORE SISTEMA GENERICO">
+         </xs:enumeration>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="IMPUGNAZIONE">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati dell'impugnazione.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="IDENTIFICATIVO">
+       <xs:annotation>
+        <xs:appinfo>Rappresenta l'identificativo dell'impugnazione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_RIFERIMENTO">
+       <xs:annotation>
+        <xs:appinfo>Tipo del riferimento emanato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DATA_PROVVEDIMENTO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data in cui un provvedimento a cui l’impugnazione fa riferimento, è emanato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="CODI_SEDE_AUTORITA_PRIN_DIST">
+       <xs:annotation>
+        <xs:appinfo>Sede principale o distaccata dell’autorità che ha emesso il provvedimento c he è indicato nel riferimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_SEDE_AUTORITA_PRIN">
+       <xs:annotation>
+        <xs:appinfo>Sede principale dell’autorità che ha emesso provvedimento che è indicato nel riferimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_AUTORITA">
+       <xs:annotation>
+        <xs:appinfo>Codice dell’autorità che ha emesso il provvedimento che è indicato nel riferimento.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUMERO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Numero della sentenza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="9">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Anno della sentenza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUMERO_REGISTRO_GENERALE">
+       <xs:annotation>
+        <xs:appinfo>Numero registro della sentenza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="6">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_REGISTRO_GENERALE">
+       <xs:annotation>
+        <xs:appinfo>Anno registro della sentenza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_SEDE_AUTORITA_ESTERA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Descrizione della sede estera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="MISURA_DI_SICUREZZA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati della misura di sicurezza.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_MIS_SICUREZZA">
+       <xs:annotation>
+        <xs:appinfo>Identificativo della misura di sicurezza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_MS">
+       <xs:annotation>
+        <xs:appinfo>Codice tipologia di misura di sicurezza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DURATA_MISURA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Durata della misura di sicurezza.
+</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="FLAG_DURATA_MISURA">
+       <xs:annotation>
+        <xs:appinfo>Flag che indica se la misura di sicurezza e temporanea o perpetua.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PERICOLOSITA">
+       <xs:annotation>
+        <xs:appinfo>Codice di pericolosità.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="Numero" nillable="true">
+    <xs:simpleType>
+     <xs:restriction base="xs:int">
+      <xs:totalDigits value="9">
+      </xs:totalDigits>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+   <xs:element name="OMONIMO">
+    <xs:annotation>
+     <xs:appinfo>Rappresenta un soggetto omonimo.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_ANAGRAFICI">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati anagrafici del Soggetto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="CERTIFICATO">
+       <xs:annotation>
+        <xs:appinfo>Certificato del Soggetto iscritto nel casellario centrale.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="OPERAZIONE">
+    <xs:annotation>
+     <xs:appinfo>L'operazione FORCE-INSERT-S e SKIP-INSERT-S sono valide solo in caso di presenze di omonimie. L'operazione SKIP-INSERT-S indica che è stato scelto un soggetto presente tra la lista degli omonimi per cui si richiede solo l'inserimento del provvedimento. L'operazione FORCE-INSERT-S indica che è richiesto l'inserimento di un nuovo soggetto non ritrovato tra la lista degli omonimi</xs:appinfo>
+    </xs:annotation>
+    <xs:simpleType>
+     <xs:restriction base="xs:string">
+      <xs:enumeration value="INSERT">
+      </xs:enumeration>
+      <xs:enumeration value="UPDATE">
+      </xs:enumeration>
+      <xs:enumeration value="READ">
+      </xs:enumeration>
+      <xs:enumeration value="DELETE">
+      </xs:enumeration>
+      <xs:enumeration value="FORCE-INSERT-S">
+      </xs:enumeration>
+      <xs:enumeration value="SKIP-INSERT-S">
+      </xs:enumeration>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+   <xs:element name="PENA_ACCESSORIA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati della pena accessoria.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_PENA_ACCESSORIA">
+       <xs:annotation>
+        <xs:appinfo>Progressivo della Pena Accessoria.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_PENA_ACCESSORIA">
+       <xs:annotation>
+        <xs:appinfo>Codice Tipo Pena Accessoria.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="FLAG_DURATA_PENA_ACCESSORIA">
+       <xs:annotation>
+        <xs:appinfo>Flag durata della pena accessoria. Indica se è perpetua o temporanea.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_PENA_ACCESSORIA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Durata della Pena Accessoria.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_SCADENZA" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data di scadenza della pena accessoria.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="PENA_ACCESSORIA_CONDONATA">
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Progressivo del beneficio di condono.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="PROG_PENA_ACCESSORIA">
+       <xs:annotation>
+        <xs:appinfo>Identificativo della pena accessoria condonata.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DURATA_CONDONO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di condono della pena accessoria.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="FLAG_PAC">
+       <xs:annotation>
+        <xs:appinfo>Flag pena accessoria: temporanea o perpetua.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="PENA_AGGIUNTA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati della Pena Aggiunta.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_PENA_AGGIUNTA">
+       <xs:annotation>
+        <xs:appinfo>Identificativo del provvedimento di  pena aggiunta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_PENA_AGGIUNTA">
+       <xs:annotation>
+        <xs:appinfo>Codice tipo Pena Aggiunta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DATA_PROVVEDIMENTO_PA" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data del provvedimento di Pena Aggiunta.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="AUTORITA_GIUDIZIARIA_PA">
+       <xs:annotation>
+        <xs:appinfo>Autorità giudiziaria che ha emesso il provvedimento di Pena Aggiunta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="COD_SEDE_AUTORITA_GIUD">
+       <xs:annotation>
+        <xs:appinfo>Codice della sede dell'autorità giudiziaria che ha emesso il provvedimento di Pena Aggiunta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="COD_SEDE_AUT_GIUD_DISTACCATA">
+       <xs:annotation>
+        <xs:appinfo>Codice della sede principale o distaccata dell'autorità giudiziaria che ha emesso il provvedimento di Pena Aggiunta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="ANNO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Anno della sentenza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="4">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="NUMERO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Numero della sentenza.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="9">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" ref="ArrayProgressiviReati">
+       <xs:annotation>
+        <xs:appinfo>Lista di numero reati.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="PENA_BASE">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati della pena base.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="FLAG_TIPO_PENA_BASE">
+       <xs:annotation>
+        <xs:appinfo>Tipo di pena base.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_PENA_BASE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Durata della pena base per il reato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_PENA_BASE">
+       <xs:annotation>
+        <xs:appinfo>Importo multa/ammenda della pena base per il reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_ERGASTOLO_PENA_BASE_SN">
+       <xs:annotation>
+        <xs:appinfo>Flag della presenza della pena dell'ergastolo come pena base.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="PRIMO_GRADO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore delle sentenze di primo grado.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_PROVVEDIMENTO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati della sentenza.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="PROCEDIMENTO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore di dati relativi alla sentenza.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="DATA_PASSAGGIO_GIUDICATO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data di Passato in Giudicato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="NUME_NOTIZIA_REATO" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Numero di notizia del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="6">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="ANNO_NOTIZIA_REATO" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Anno notizia del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element ref="TITOLO_ESECUTIVO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati del Titolo Esecutivo.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="ArrayPrimoGrado">
+       <xs:annotation>
+        <xs:appinfo>Lista di sentenze di Primo Grado.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="ArraySecondoGrado">
+       <xs:annotation>
+        <xs:appinfo>Lista di sentenze di Secondo Grado.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="ArrayCassazione">
+       <xs:annotation>
+        <xs:appinfo>Lista di sentenze di Cassazione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="FLAG_SENTENZA_STRANIERA" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Flag che indica se il titolo esecutivo è una sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" ref="SENTENZA_STRANIERA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati di una sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="REATO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati del reato.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_REATO">
+       <xs:annotation>
+        <xs:appinfo>Elemento identificativo del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="NUME_ORDINE_REATO">
+       <xs:annotation>
+        <xs:appinfo>Numero ordine del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="3">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_REATO">
+       <xs:annotation>
+        <xs:appinfo>Codice tipo reato: Delitto o Contravvenzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DESC_ULTERIORE_LUOGO_REATO">
+       <xs:annotation>
+        <xs:appinfo>Descrizione del luogo del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="70">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_PERIODO_CONSUMAZIONE">
+       <xs:annotation>
+        <xs:appinfo>Indica in periodo in cui è avvenuto il reato: antecedente il, avvenuto il, etc</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_INIZIO_REATO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data di inizio del reato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_FINE_REATO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data di fine del reato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_LS">
+       <xs:annotation>
+        <xs:appinfo>Anno della legge speciale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_LS">
+       <xs:annotation>
+        <xs:appinfo>Numero della legge speciale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="ARTI_NUME">
+       <xs:annotation>
+        <xs:appinfo>Articolo del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_BTQ">
+       <xs:annotation>
+        <xs:appinfo>Bis, ter etc dell’articolo del reato</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_COMMA">
+       <xs:annotation>
+        <xs:appinfo>Comma del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_LETTERA">
+       <xs:annotation>
+        <xs:appinfo>Lettera del reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_LETTERA_COMMA">
+       <xs:annotation>
+        <xs:appinfo>Numero della lettera o del comma o dell’articolo di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DATA_REATO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data del reato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL">
+       <xs:annotation>
+        <xs:appinfo>Codice del testo legislativo.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_QUALIF">
+       <xs:annotation>
+        <xs:appinfo>Articolo qualificante dell'ipotesi di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="4">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_QUALIF_BTQ">
+       <xs:annotation>
+        <xs:appinfo>Bis, Ter....  qualificante dell'ipotesi di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_COMMA_BTQ">
+       <xs:annotation>
+        <xs:appinfo>Comma bis, ter.. dell'ipotesi di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_LETTERA_BTQ">
+       <xs:annotation>
+        <xs:appinfo>Lettea bis, ter.. dell'ipotesi di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_LETTERA_COMMA_BTQ">
+       <xs:annotation>
+        <xs:appinfo>Numero bis, ter.. dell'ipotesi di reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_RECIDIVO">
+       <xs:annotation>
+        <xs:appinfo>Codice recidivo.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_REATO_DEPEN">
+       <xs:annotation>
+        <xs:appinfo>Codice del reato depenalizzato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_LUOGO_STATO_ESTERO">
+       <xs:annotation>
+        <xs:appinfo>Codice stato estero in cui è stato commesso il reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_RECIDIVA_SN">
+       <xs:annotation>
+        <xs:appinfo>Flag recidiva.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_LUOGO_REATO">
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_LUOGO_ESTERO_COMMES_REATO">
+       <xs:annotation>
+        <xs:appinfo>Codice luogo estero in cui è stato commesso il reato.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element ref="ArrayCircostanze">
+       <xs:annotation>
+        <xs:appinfo>Lista di Circostanze.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" ref="PENA_BASE">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della Pena Base.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element ref="DISPOSITIVO">
+       <xs:annotation>
+        <xs:documentation>Questo oggetto è il dispositivo singolo riferito al reato</xs:documentation>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="DESC_IPOTESI_DI_REATO">
+       <xs:annotation>
+        <xs:appinfo>Descrizione dell'Ipotesi di Reato</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="500">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+     <xs:attribute name="ID_REATO_PC">
+      <xs:simpleType>
+       <xs:restriction base="xs:integer">
+        <xs:totalDigits value="15">
+        </xs:totalDigits>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:attribute>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="REVOCA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati della revoca.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_PC">
+       <xs:annotation>
+        <xs:appinfo>Progressivo del provvedimento di revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_PC">
+       <xs:annotation>
+        <xs:appinfo>Codice tipo del provvedimento di revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_PC" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Articolo del testo legislativo riferito alla revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Testo legislativo riferito alla revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_PC" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Numero del testo legislativo riferito alla revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_PC_2" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Articolo di un secondo testo legislativo riferito alla revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL_2" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Secondo testo legislativo riferito alla revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_PC_2" nillable="true">
+       <xs:annotation>
+        <xs:appinfo>Numero di un secondo testo legislativo riferito alla revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DATA_PROVVEDIMENTO_REVOCA" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data del provvedimento di revoca.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="AUTORITA_GIUDIZIARIA" type="xs:string">
+       <xs:annotation>
+        <xs:appinfo>Autorià giudiziaria che ha emesso la revoca.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODICE_SEDE_AUTORITA_GIUD" type="xs:string">
+       <xs:annotation>
+        <xs:appinfo>Sede dell'autorià giudiziaria che ha emesso la revoca.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="COD_SEDE_AUT_GIUD_DIST" type="xs:string">
+       <xs:annotation>
+        <xs:appinfo>Sede principale o distaccata dell'autorià giudiziaria che ha emesso la revoca.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUMERO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Numero della sentenza di revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="9">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ANNO_SENTENZA">
+       <xs:annotation>
+        <xs:appinfo>Anno della sentenza di revoca.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="4">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="SECONDO_GRADO">
+    <xs:annotation>
+     <xs:appinfo>E' l'elemento contenitore delle sentenze di secondo grado.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_PROVVEDIMENTO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati della sentenza.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="SENTENZA_STRANIERA">
+    <xs:annotation>
+     <xs:appinfo>Rappresenta la sentenza straniera.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="DATA_PROVVEDIMENTO" type="DATA">
+       <xs:annotation>
+        <xs:appinfo>Data del provvedimento della sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="CODI_AUTORITA">
+       <xs:annotation>
+        <xs:appinfo>Codice dell'autorità che ha emesso la sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_STATO_COND_ESTERO">
+       <xs:annotation>
+        <xs:appinfo>Codice stato estero in cui è stata emessa la sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="8">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="DESC_LUOGO_COND_ESTERO">
+       <xs:annotation>
+        <xs:appinfo>Codice luogo estero in cui è stata emessa la sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="35">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_RICONOSCIMENTO">
+       <xs:annotation>
+        <xs:appinfo>Codice di riconoscimento della sentenza straniera.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_LIV_DISP">
+       <xs:annotation>
+        <xs:appinfo>Livello del dispositivo.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_ERGASTOLO">
+       <xs:annotation>
+        <xs:appinfo>Codice che indica se è stata inflitto un ergastolo o pena di morte.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="ISOLAMENTO_DIURNO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della pena di isolamento diurno.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="RECLUSIONE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore della pena di reclusione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element name="IMPO_MULTA">
+       <xs:annotation>
+        <xs:appinfo>Importo della multa inflitta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_VALUTA">
+       <xs:annotation>
+        <xs:appinfo>Codice della valuta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_PENA_SOSPESA">
+       <xs:annotation>
+        <xs:appinfo>Codice della pena sospesa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="SOSTITUZIONE_PENA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati del beneficio di sostituzione pena.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element name="PROG_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Identificativo del beneficio di sostituzione pena.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="15">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element name="CODI_TIPO_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Codice tipo di beneficio.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL">
+       <xs:annotation>
+        <xs:appinfo>Codice del testo legislativo per il quale viene emessa la sostituzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_SEMIDET" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni di semidetenzione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_LIBERTA_CONTROLLATA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni della libertà controllata.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_ESPUL_STATO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni dell'espulsione della stato.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_RECLUSIONE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni della reclusione.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_ARRESTO" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni dell'arresto.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_MULTA">
+       <xs:annotation>
+        <xs:appinfo>Importo della multa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_AMMENDA">
+       <xs:annotation>
+        <xs:appinfo>Importo dell'ammenda.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_MULTA_SOST">
+       <xs:annotation>
+        <xs:appinfo>Importo della multa inflitta come pena sostitutiva.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_AMMENDA_SOST">
+       <xs:annotation>
+        <xs:appinfo>Importo dell'ammenda inflitta come pena sostitutiva.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Articolo del testo legislativo per il quale viene emessa la sostituzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_BENEFICIO">
+       <xs:annotation>
+        <xs:appinfo>Numero del testo legislativo per il quale viene emessa la sostituzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="FLAG_ESPUL_STATO">
+       <xs:annotation>
+        <xs:appinfo>Indica se  l'espulsione dallo stato è perpetua o temporanea.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="1">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_PERMANENZA_DOMICILIARE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni della permanenza domiciliare.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="GP_DURATA_PERMANENZA_DOMICILIARE" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni della permanenza domicialiare emessa dal Giudice di Pace.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="DURATA_LAVORO_PUBBLICA_UTILITA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni del lavoro di pubblica utilità.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="GP_DURATA_LAVORO_PUBBLICA_UTILITA" type="DURATA">
+       <xs:annotation>
+        <xs:appinfo>Anni, mesi e giorni della pubblica utilità emessa dal Giudice di Pace.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_TL_2">
+       <xs:annotation>
+        <xs:appinfo>Codice del testo legislativo per il quale viene emessa la sostituzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_BENEFICIO_2">
+       <xs:annotation>
+        <xs:appinfo>Articolo del testo legislativo per il quale viene emessa la sostituzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ARTI_NUME_BENEFICIO_2">
+       <xs:annotation>
+        <xs:appinfo>Numero del testo legislativo per il quale viene emessa la sostituzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="2">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_RECLUSIONE">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena della reclusione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_MULTA">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena della multa.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_ARRESTO">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena dell'arresto.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_AMMENDA">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena dell'ammenda.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_SANZIONI_GP">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  delle sanzioni del Giudice di Pace.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_LAV_PUB_UTIL">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena del lavoro di pubblica utilità.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_LAV_PUB_UTIL_GP">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena del lavoro di pubblica utilità emessi dal Giudice di Pace.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_PERM_DOMIC_GP">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena della permanenza domiciliare emessa dal Giudice di Pace.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_LIBERTA_CONTR">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena della libertà controllata.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_SEMIDET">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena della semidetenzione.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_MULTA_SOST">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena della multa sostitutiva.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_COND_AMMENDA_SOST">
+       <xs:annotation>
+        <xs:appinfo>Intera pena, pena residua, 1/3  della pena, 2/3  della pena dell'ammenda sostitutiva.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="NUME_RATE">
+       <xs:annotation>
+        <xs:appinfo>Numero delle rate ammesse per il pagamento rateale.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:integer">
+         <xs:totalDigits value="3">
+         </xs:totalDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CODI_VALUTA">
+       <xs:annotation>
+        <xs:appinfo>Codice della valuta.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="3">
+         </xs:maxLength>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="IMPO_SANZ_SOST_COND">
+       <xs:annotation>
+        <xs:appinfo>Importo della sanzione sostituiva condonata.</xs:appinfo>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:decimal">
+         <xs:totalDigits value="14">
+         </xs:totalDigits>
+         <xs:fractionDigits value="2">
+         </xs:fractionDigits>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="TITOLO_ESECUTIVO">
+    <xs:annotation>
+     <xs:appinfo>Rappresenta il titolo esecutivo.</xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_PROVVEDIMENTO">
+       <xs:annotation>
+        <xs:appinfo>Elemento contenitore dei dati del Titolo Esecutivo.</xs:appinfo>
+       </xs:annotation>
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:element name="TRASFERIMENTO">
+    <xs:annotation>
+     <xs:documentation>Nodo Radice del Servizio Trasferimento</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+     <xs:sequence>
+      <xs:element ref="DATI_CHIAMATA_TRASFERIMENTO">
+      </xs:element>
+      <xs:element ref="DATI_RISPOSTA_TRASFERIMENTO">
+      </xs:element>
+     </xs:sequence>
+    </xs:complexType>
+   </xs:element>
+   <xs:complexType name="DATA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore di una data composta da giorno, mese ed anno.</xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+     <xs:element name="GIORNO">
+      <xs:simpleType>
+       <xs:restriction base="xs:string">
+        <xs:maxLength value="2">
+        </xs:maxLength>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+     <xs:element name="MESE">
+      <xs:simpleType>
+       <xs:restriction base="xs:string">
+        <xs:maxLength value="2">
+        </xs:maxLength>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+     <xs:element name="ANNO">
+      <xs:simpleType>
+       <xs:restriction base="xs:string">
+        <xs:maxLength value="4">
+        </xs:maxLength>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="DURATA">
+    <xs:annotation>
+     <xs:appinfo>E' l'elementocontenitore dei dati di un durata. E' composto da anni, mesi, giorni ed ore</xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+     <xs:element minOccurs="0" name="ANNI_DURATA">
+      <xs:simpleType>
+       <xs:restriction base="xs:integer">
+        <xs:totalDigits value="2">
+        </xs:totalDigits>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+     <xs:element name="MESI_DURATA">
+      <xs:simpleType>
+       <xs:restriction base="xs:integer">
+        <xs:totalDigits value="3">
+        </xs:totalDigits>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+     <xs:element name="GIORNI_DURATA">
+      <xs:simpleType>
+       <xs:restriction base="xs:integer">
+        <xs:totalDigits value="3">
+        </xs:totalDigits>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+     <xs:element minOccurs="0" name="ORE_DURATA">
+      <xs:simpleType>
+       <xs:restriction base="xs:integer">
+        <xs:totalDigits value="4">
+        </xs:totalDigits>
+       </xs:restriction>
+      </xs:simpleType>
+     </xs:element>
+    </xs:sequence>
+   </xs:complexType>
+  </xs:schema>
+ </types>
+ <message name="iscriviProvvedimentoProvvisorio">
+  <part element="tns:DATI_CHIAMATA_TRASFERIMENTO" name="dATI_CHIAMATA_TRASFERIMENTO" xmlns:partns="http://it/mig/sies/type">
+  </part>
+ </message>
+ <message name="iscriviProvvedimentoProvvisorioResponse">
+  <part element="tns:DATI_RISPOSTA_TRASFERIMENTO" name="result" xmlns:partns="http://it/mig/sies/type">
+  </part>
+ </message>
+ <portType name="IscriviProvvedimentoProvvisorioPort">
+  <operation name="iscriviProvvedimentoProvvisorio">
+   <input message="tns:iscriviProvvedimentoProvvisorio">
+   </input>
+   <output message="tns:iscriviProvvedimentoProvvisorioResponse">
+   </output>
+  </operation>
+ </portType>
+ <binding name="IscriviProvvedimentoProvvisorioPort" type="tns:IscriviProvvedimentoProvvisorioPort">
+   <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="iscriviProvvedimentoProvvisorio">
+    <soap:operation soapAction="" style="rpc"/>
+   <input>
+     <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://it/mig/sies/type" use="encoded"/>
+   </input>
+   <output>
+     <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://it/mig/sies/type" use="encoded"/>
+   </output>
+  </operation>
+ </binding>
+ <service name="IscriviProvvedimentoProvvisorio">
+  <port binding="tns:IscriviProvvedimentoProvvisorioPort" name="IscriviProvvedimentoProvvisorioPort">
+    <soap:address location="http://tempuri.org/SIES/services/IscriviProvvedimentoProvvisorioPort"/>
+  </port>
+ </service>
+</definitions>

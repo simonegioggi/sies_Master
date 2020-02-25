@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <environments default="production">
+        <environment id="production">
+            <transactionManager type="JDBC"/>
+			<dataSource type="JNDI">
+				<property name="data_source" value="java:jboss/jdbc/oracleds"/>
+			</dataSource>
+        </environment>
+        <environment id="development">
+        	<transactionManager type="JDBC"/>
+        	<dataSource type="POOLED">
+        		<property name="driver" value="oracle.jdbc.OracleDriver"/>
+				<property name="url" value="jdbc:oracle:thin:@10.5.207.201:1521:siessvil"/>
+				<property name="username" value="siesto"/>
+				<property name="password" value="siesto"/>
+				<property name="poolMaximumActiveConnections" value="10"/>
+				<property name="poolMaximumIdleConnections" value="5"/>
+				<property name="poolMaximumCheckoutTime" value="400"/>
+			</dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="mybatis/Utente.xml"/>
+        <mapper resource="mybatis/ResponseData.xml"/>
+        <mapper resource="mybatis/Soggetto.xml"/>
+        <mapper resource="mybatis/DatiTribunaleSorveglianza.xml"/>
+        <mapper resource="mybatis/DatiUfficioSorveglianza.xml"/>
+        <mapper resource="mybatis/TitoloEsecutivo.xml"/>
+        <mapper resource="mybatis/TitoloGiudiziario.xml"/>
+        <mapper resource="mybatis/PeriodoLibertaAnticipata.xml"/>
+        <mapper resource="mybatis/LiberazioneAnticipata.xml"/>
+        <mapper resource="mybatis/DeclaratoriaEstinzionePena.xml"/>
+        <mapper resource="mybatis/DettagliFascicolo.xml"/>
+        <mapper resource="mybatis/MisuraSicurezza.xml"/>
+        <mapper resource="mybatis/DescrizioneProvvedimento.xml"/>
+        <!-- MEV 16: aggiunta mappatura -->
+        <mapper resource="mybatis/DatiPubblicoMinistero.xml"/>
+    </mappers>
+</configuration>

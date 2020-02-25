@@ -1,0 +1,2537 @@
+package siap.siep.sanzionesostitutiva.controller;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
+import siap.controller.SiapController;
+import siap.sico.camponota.dao.CampoNotaDAO;
+import siap.sico.camponota.model.CampoNotaModel;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.dao.EventoDAO;
+import siap.sico.evento.dao.EventoSqlDAO;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.stampa.controller.StampaSSController;
+import siap.sico.template.controller.TemplateManager;
+import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
+import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
+import siap.siep.nomeprovvedimento.dao.NomeProvvedimentoDAO;
+import siap.siep.notifica.dao.NotificaDAO;
+import siap.siep.notifica.dao.NotificaEventoSqlDAO;
+import siap.siep.notifica.model.NotificaModel;
+import siap.siep.parametro.controller.IParametro;
+import siap.siep.parametro.model.ParametroModel;
+import siap.siep.penaresidua.dao.PenaResiduaDAO;
+import siap.siep.penaresidua.dao.PenaResiduaSqlDAO;
+import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
+import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
+import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaDAO;
+import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaSqlDAO;
+import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
+import siap.siep.scadenzario.dao.ScadenzarioDAO;
+import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
+import siap.siep.scadenzario.model.ScadenzarioModel;
+import siap.siep.sospensione.dao.SospensioneDAO;
+import siap.siep.sospensione.dao.SospensioneSqlDAO;
+import siap.siep.sospensione.model.SospensioneModel;
+import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
+import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
+import siap.siep.util.SIEPLookupRemote;
+import siap.siep.verbale.dao.VerbaleDAO;
+import siap.siep.verbale.model.VerbaleModel;
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
+
+/**
+ * <p>Title: SanzioneSostitutivaController</p>
+ * <p>Description: Controller della SanzioniSostitutive</p>
+ */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva
+ {
+
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	/**
+	 * Metodo per registrare l'annotazione dell'avvenuta espulsione. Inserisce un evento Verbale, il verbale e
+	 * l'evento di Comunicazione/Annotazione Inserisce la PENA_RESIDUA il record SOSPENSIONE.
+	 * 
+	 * @param aEvVerbale
+	 * @param aEvComunicazione
+	 * @param aVerbale
+	 * @param aPenaResiduaMod
+	 *            - Pena residua calcolata al momento della sospensione
+	 * @param aSospMod
+	 *            - pena espiata e pena residua
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel exInserisciAnnotazioneEspulsione(EventoModel aEvVerbale,
+			EventoNotificaModel aEvNotComunicazione, VerbaleModel aVerbaleMod,
+			PenaResiduaModel aPenaResiduaMod, SospensioneModel aSospMod) throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		VerbaleDAO lVerbaleDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		PenaResiduaDAO lPenResDao = null;
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		SospensioneDAO lSospDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotComunicazione);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco l'evento verbale
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvVerbale);
+			BigDecimal lIdEventoVerbale = lEventoDao.insert();
+			lEventoDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdEventoVerbale = " + lIdEventoVerbale);
+
+			// =========================================
+			// Inserisco il Verbale
+			// =========================================
+			aVerbaleMod.setEveIdEvento(lIdEventoVerbale);
+			lVerbaleDao = new VerbaleDAO(lConn);
+			lVerbaleDao.setDAOFromModel(aVerbaleMod);
+			BigDecimal lIdVerbale = lVerbaleDao.insert();
+			lVerbaleDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdVerbale = " + lIdVerbale);
+
+			// =========================================
+			// Inserisco la Comunicazione/Annotazione
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			aEvNotComunicazione.getEvento().setEveIdEvento(lIdEventoVerbale); // Collego l'evento al verbale
+			lEventoDao.setDAOFromModel(aEvNotComunicazione.getEvento());
+			BigDecimal lIdEventoComunicazione = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEventoComunicazione);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdEventoComunicazione = " + lIdEventoComunicazione);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			BigDecimal lKeyAutorita = null;
+			int count = 0;
+
+			if (aEvNotComunicazione != null && aEvNotComunicazione.getNotifiche() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Presenti " + aEvNotComunicazione.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotComunicazione.getNotifiche().length) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("count = " + count);
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger
+							.debug("Notifica[" + count + "] = " + aEvNotComunicazione.getNotifiche()[count]);
+
+					if (aEvNotComunicazione.getNotifiche()[count] != null) {
+						// Inserisco autorità esterna se non presente
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserisco autorità esterna se non presente");
+						if (aEvNotComunicazione.getNotifiche()[count].getAutoritaEsterna() != null) {
+							lAutDao = new AutoritaEsternaDAO(lConn);
+
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.debug("Autorita = "
+									+ aEvNotComunicazione.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(aEvNotComunicazione.getNotifiche()[count]
+									.getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+							if (lAutMod == null) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("Inserisco AUTORITA");
+								lAutDao.setDAOFromModel(aEvNotComunicazione.getNotifiche()[count]
+										.getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
+								aEvNotComunicazione.getNotifiche()[count]
+										.setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("AUTORITA presente");
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotComunicazione.getNotifiche()[count]
+										.setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+
+							lAutDao.stop();
+						}
+
+						//
+						aEvNotComunicazione.getNotifiche()[count].setEveIdEvento(lIdEventoComunicazione);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotComunicazione.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserita Notifica" + lKeyNotifica);
+					}
+					count++;
+				}
+			}
+
+			// ========================================================================
+			// Inserisco la PENA_RESIDUA.
+			// n.b. se presente a sistema pena residua non validata e non collegata ad
+			// alcun evento, la cancello. Situazione possibile se l'espulsione è
+			// il primo evento ed è stato effettuato il primo calcolo della pena
+			// ========================================================================
+			if (aPenaResiduaMod != null) {
+				// Elimino la pena residua non validata rimasta appesa se esiste
+				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+				lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvVerbale.getFasSieIdFascicoloSiep());
+				PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+				lPenResSqlDao.stop();
+
+				if (lUltimaPenaNonValidata != null && lUltimaPenaNonValidata.getIdPenaResidua() != null
+						&& lUltimaPenaNonValidata.getEveIdEvento() == null) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Trovata pena residua (" + lUltimaPenaNonValidata.getIdPenaResidua()
+							+ ") non validata non agganciata da alcun evento. La cancello.");
+					lPenResDao = new PenaResiduaDAO(lConn);
+					lPenResDao.setCondizioneUpdate(lUltimaPenaNonValidata.getIdPenaResidua());
+					lPenResDao.delete();
+					lPenResDao.stop();
+				}
+
+				lPenResDao = new PenaResiduaDAO(lConn);
+				aPenaResiduaMod.setEveIdEvento(lIdEventoComunicazione);
+				lPenResDao.setDAOFromModel(aPenaResiduaMod);
+				BigDecimal lIdPenRes = lPenResDao.insert();
+				lPenResDao.stop();
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("lIdPenRes = " + lIdPenRes);
+
+				// =======================================================
+				// Inserisco la SOSPENSIONE
+				// =======================================================
+				if (aSospMod != null) {
+					lSospDao = new SospensioneDAO(lConn);
+					aSospMod.setPenResIdPenaResidua(lIdPenRes);
+					lSospDao.setDAOFromModel(aSospMod);
+					BigDecimal lIdSosp = lSospDao.insert();
+					lSospDao.stop();
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("lIdSosp = " + lIdSosp);
+				}
+			}
+
+			commit(lConn);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciAnnotazioneEspulsione: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exInserisciAnnotazioneEspulsione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lVerbaleDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+
+			cleanup(lPenResDao);
+			cleanup(lPenResSqlDao);
+			cleanup(lSospDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+
+	}
+
+	/**
+	 * Effettua la validazione della Cominucazione Scadenza Termini Espulsione e contestualmente del Verbale
+	 * di Avvenuta Espulsione - Valida la Pena Residua - Modifica la posizione giuridica (26 - Espulso) -
+	 * modifica lo stato procedimento (0240) - aggiorna lo scadenzario (15 - Espulsione)
+	 * 
+	 * @param aEvComunicazione
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoModel exUpdateAnnotazioneEspulsione(EventoModel aEvComunicazione) throws F3BException {
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("Validazione Comunicazione Espulsione");
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		PenaResiduaDAO lPenResDao = null;
+
+		SospensioneSqlDAO lSospSqlDao = null;
+
+		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
+		PosizioneGiuridicaDAO lPosDao = null;
+
+		StatoProcedimentoDAO lStatoDao = null;
+
+		NomeProvvedimentoDAO lNomProvvDAO = null;
+
+		ScadenzarioDAO lScaDao = null;
+
+		EventoModel lEveRet = new EventoModel(aEvComunicazione);
+
+		// Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvComunicazione.getIdEvento());
+
+			EventoModel lEveModelCom = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
+
+			// ====================================
+			// Recupero e valido l'evento verbale
+			// ====================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recupero e valido l'evento verbale");
+			lEveSqlDAO.ricercaEventoByKey(lEveModelCom.getEveIdEvento());
+			EventoModel lEveVerbale = (EventoModel) lEveSqlDAO.getModelByKey();
+
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setIdEvento(lEveVerbale.getIdEvento());
+			lEventoDao.setFlagDocumentoRegistrato("S");
+
+			lEventoDao.setDataAggiornamento(aEvComunicazione.getDataAggiornamento());
+			lEventoDao.setCodOperatoreAggiornamento(aEvComunicazione.getCodOperatoreAggiornamento());
+			lEventoDao.setCodUfficioAggiornamento(aEvComunicazione.getCodUfficioAggiornamento());
+
+			lEventoDao.selByKey();
+			lEventoDao.update();
+			lEventoDao.stop();
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Evento Verbale (" + lEveVerbale.getIdEvento() + ") Validato");
+
+			// ===================================
+			// Recupero e valido la pena residua
+			// ===================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recupero e valido la pena residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaByKeyEvento(lEveModelCom.getIdEvento());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Pena Residua da validare " + lPenResMod.getIdPenaResidua());
+
+			lPenResDao = new PenaResiduaDAO(lConn);
+			lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+			lPenResDao.setFlagValidato("S");
+			lPenResDao.setDataAggiornamento(aEvComunicazione.getDataAggiornamento());
+			lPenResDao.setCodUfficioAggiornamento(aEvComunicazione.getCodUfficioAggiornamento());
+			lPenResDao.setCodOperatoreAggiornamento(aEvComunicazione.getCodOperatoreAggiornamento());
+
+			lPenResDao.selByKey();
+			lPenResDao.update();
+			lPenResDao.stop();
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" update Pena Residua avvenuto");
+
+			// ========================================================================
+			// Modifico la Posizione Giuridica
+			// Aggiorno la data fine della vecchia Posizione Giuridica con la
+			// data dell'espulsione e inserisco la nuova posizione
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Modifico la Posizione Giuridica");
+			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
+			lPosSqlDao.ricercaPosizioneGiuridicaByIdFascicoloDesc(lEveModelCom.getFasSieIdFascicoloSiep());
+			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
+
+			lPosDao = new PosizioneGiuridicaDAO(lConn);
+			lPosDao.setIdPosizioneGiuridica(lPosMod.getIdPosizioneGiuridica());
+
+			lPosDao.setDataFine(lEveVerbale.getDataEspulsioneSanzSost());
+
+			lPosDao.selByKey();
+			lPosDao.update();
+			lPosDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornata vecchia Posizione giuridica " + lPosMod.getIdPosizioneGiuridica());
+
+			// ========================================================================
+			// Inserisco Nuova Posizione Giuridica (data_inizio = data espulsione)
+			// agganciandola all'evento che sto validando
+			// ========================================================================
+			PosizioneGiuridicaModel lPosizione = new PosizioneGiuridicaModel();
+
+			lPosizione.setCodPosizioneGiuridica("26"); // Espulso
+			lPosizione.setDataInizio(lEveVerbale.getDataEspulsioneSanzSost());
+
+			lPosizione.setCodOperatoreInserimento(aEvComunicazione.getCodOperatoreAggiornamento());
+			lPosizione.setDataInserimento(aEvComunicazione.getDataAggiornamento());
+			lPosizione.setCodUfficioInserimento(aEvComunicazione.getCodUfficioAggiornamento());
+
+			lPosizione.setCodPosizioneProcessuale("-");
+			lPosizione.setFasSieIdFascicoloSiep(lEveModelCom.getFasSieIdFascicoloSiep());
+			lPosizione.setIdEventoRiferimento(aEvComunicazione.getIdEvento());
+
+			lPosDao.setDAOFromModel(lPosizione);
+			lPosDao.insert();
+			lPosDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserita nuova posizione giuridica ");
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// e inserendo il nuovo stato
+			// n.b. data stato = data espulsione
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelCom.getFasSieIdFascicoloSiep());
+
+			lStatoProcMod.setData(lEveVerbale.getDataEspulsioneSanzSost());
+			lStatoProcMod.setCodStatoProcedimento("0240"); // Eseguito provvedimento di espulsione
+															// L.30.07.2002 n. 189 il
+
+			lStatoProcMod.setCodOperatoreInserimento(aEvComunicazione.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvComunicazione.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvComunicazione.getCodUfficioAggiornamento());
+
+			lStatoDao = new StatoProcedimentoDAO(lConn);
+
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelCom.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserito nuovo stato");
+
+			// ========================================================================
+			// Aggiorna tabella nome_provvedimento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiorna tabella nome_provvedimento");
+			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
+
+			lNomProvvDAO.setCodNomeProvvedimento("NP219"); // Comunicazione Scadenza Termini Espulsione
+															// L.30.07.2002 n. 189
+			lNomProvvDAO.setEveIdEvento(aEvComunicazione.getIdEvento());
+
+			lNomProvvDAO.insert();
+			lNomProvvDAO.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiorna tabella nome_provvedimento avvenuto");
+
+			// ================================
+			// Inserisco lo scadenzario
+			// ================================
+			// Recupero la sospensione per data inizio e data fine sospensione
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento scadenzario");
+			lSospSqlDao = new SospensioneSqlDAO(lConn);
+			lSospSqlDao.ricercaSospensioneByIdPenaResidua(lPenResMod.getIdPenaResidua());
+			SospensioneModel lSospMod = (SospensioneModel) lSospSqlDao.getModelByKey();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recuperata sospensione " + lSospMod.getIdSospensione());
+
+			// ========================================================================
+			// Cancella tutti gli scadenzari di tipo LEGGE SIMEONE ( Tipo = 01 )
+			// , come indicato nel Vision SIEP-Revisione Scadenzario Simeone
+			// ========================================================================
+			lScaDao = new ScadenzarioDAO(lConn);
+			lScaDao.setCondizioneByIdFascicoloSiepTipoScadenzario(lEveModelCom.getFasSieIdFascicoloSiep(),
+					"01");
+			lScaDao.delete();
+			lScaDao.stop();
+
+			// ===================================
+			lScaDao = new ScadenzarioDAO(lConn);
+			lScaDao.setCodTipoScadenzario("15"); // Espulsione
+
+			lScaDao.setDataInizioScadenza(lSospMod.getDataInizio());
+			lScaDao.setDataFineScadenza(lSospMod.getDataFine());
+
+			lScaDao.setFasSieIdFascicoloSiep(lEveModelCom.getFasSieIdFascicoloSiep());
+			lScaDao.setEveIdEvento(aEvComunicazione.getIdEvento());
+			lScaDao.setCodStatoNotifica("N");
+
+			lScaDao.setCodOperatoreInserimento(aEvComunicazione.getCodOperatoreAggiornamento());
+			lScaDao.setCodUfficioInserimento(aEvComunicazione.getCodUfficioAggiornamento());
+			lScaDao.setDataInserimento(aEvComunicazione.getDataAggiornamento());
+
+			lScaDao.insert();
+			lScaDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserito nuovo scadenzario");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvComunicazione);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvComunicazione.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+			// rollback(lConn);
+			// rollback(lConnBlob);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateAnnotazioneEspulsione: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exUpdateAnnotazioneEspulsione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lPenResSqlDao);
+			cleanup(lPenResDao);
+			cleanup(lSospSqlDao);
+			cleanup(lPosSqlDao);
+			cleanup(lPosDao);
+			cleanup(lStatoDao);
+			cleanup(lNomProvvDAO);
+			cleanup(lScaDao);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+			// cleanup(lConnBlob);
+
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Inserisce Evento Annotazione Mancata Espulsione e Notifiche Comunicazione Sollecito
+	 * 
+	 * @param aEvNotModel
+	 * @param aVerbaleMod
+	 *            - Verbale con i dati della nato mancata espulsione
+	 * @param aCampoNota
+	 *            - Eventuale nota scritta dall'utente
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel exInserisciMancataEspulsione(EventoNotificaModel aEvNotModel,
+			VerbaleModel aVerbaleMod, CampoNotaModel aCampoNota) throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		VerbaleDAO lVerbaleDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+		CampoNotaDAO lCampoNotaDao = null;
+
+		PenaResiduaDAO lPenResDao = null;
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco l'evento
+			// =========================================
+			// lEventoDao = new EventoDAO(lConn);
+			// lEventoDao.setDAOFromModel(aEvVerbale);
+			// BigDecimal lIdEventoVerbale = lEventoDao.insert();
+			// lEventoDao.stop();
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.debug("lIdEventoVerbale = "+lIdEventoVerbale);
+
+			// =========================================
+			// Inserisco la Comunicazione/Annotazione
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			// aEvNotModel.getEvento().setEveIdEvento(lIdEventoVerbale); // Collego l'evento al verbale
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================
+			// Inserisco il Verbale
+			// =========================================
+			aVerbaleMod.setEveIdEvento(lIdEvento);
+			lVerbaleDao = new VerbaleDAO(lConn);
+			lVerbaleDao.setDAOFromModel(aVerbaleMod);
+			BigDecimal lIdVerbale = lVerbaleDao.insert();
+			lVerbaleDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdVerbale = " + lIdVerbale);
+
+			// =========================================
+			// Inserisco eventuale Campo Nota
+			// =========================================
+			if (aCampoNota != null) {
+				lCampoNotaDao = new CampoNotaDAO(lConn);
+
+				aCampoNota.setEveIdEvento(lIdEvento);
+
+				lCampoNotaDao.setDAOFromModel(aCampoNota);
+
+				lCampoNotaDao.insert();
+				lCampoNotaDao.stop();
+
+			}
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			BigDecimal lKeyAutorita = null;
+			int count = 0;
+
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotModel.getNotifiche().length) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("count = " + count);
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						// Inserisco autorità esterna se non presente
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserisco autorità esterna se non presente");
+						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+							lAutDao = new AutoritaEsternaDAO(lConn);
+
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.debug("Autorita = "
+									+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count]
+									.getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+							if (lAutMod == null) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("Inserisco AUTORITA");
+								lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]
+										.getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("AUTORITA presente");
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+
+							lAutDao.stop();
+						}
+
+						//
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
+
+					count++;
+				}
+			}
+
+			// ========================================================================
+			// Inserisco la PENA_RESIDUA.
+			// n.b. La funzione non prevede il ricalcolo della pena
+			// n.b. se presente a sistema pena residua non validata e non collegata ad
+			// alcun evento, la aggancio. Altrimenti duplico l'ultima pena validata.
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserimento Pena Residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvNotModel.getEvento()
+					.getFasSieIdFascicoloSiep());
+			PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			lPenResSqlDao.stop();
+
+			if (lUltimaPenaNonValidata != null && lUltimaPenaNonValidata.getIdPenaResidua() != null
+					&& lUltimaPenaNonValidata.getEveIdEvento() == null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Trovata pena residua (" + lUltimaPenaNonValidata.getIdPenaResidua()
+						+ ") non validata non agganciata da alcun evento. La aggancio all'evento corrente");
+				lPenResDao = new PenaResiduaDAO(lConn);
+
+				lPenResDao.setEveIdEvento(lIdEvento);
+
+				lPenResDao.setCodOperatoreInserimento(aEvNotModel.getEvento().getCodOperatoreInserimento());
+				lPenResDao.setCodUfficioInserimento(aEvNotModel.getEvento().getCodUfficioInserimento());
+				lPenResDao.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
+
+				lPenResDao.setCondizioneUpdate(lUltimaPenaNonValidata.getIdPenaResidua());
+				lPenResDao.update();
+				lPenResDao.stop();
+			} else {
+				// Cerco l'ultima validata per duplicarla
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Nessuna pena non validata, duplico l'ultima pena validata");
+				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(aEvNotModel.getEvento()
+						.getFasSieIdFascicoloSiep());
+				PenaResiduaModel lUltimaPenaValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+				lPenResSqlDao.stop();
+
+				lUltimaPenaValidata.setIdPenaResidua(null);
+				lUltimaPenaValidata.setEveIdEvento(lIdEvento);
+				lUltimaPenaValidata.setFlagValidato("N");
+
+				lUltimaPenaValidata.setCodOperatoreInserimento(aEvNotModel.getEvento()
+						.getCodOperatoreInserimento());
+				lUltimaPenaValidata.setCodUfficioInserimento(aEvNotModel.getEvento()
+						.getCodUfficioInserimento());
+				lUltimaPenaValidata.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
+
+				// Inserisco
+				lPenResDao = new PenaResiduaDAO(lConn);
+				lPenResDao.setDAOFromModel(lUltimaPenaValidata);
+				BigDecimal lIdPenRes = lPenResDao.insert();
+				lPenResDao.stop();
+
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Pena Residua lIdPenRes = " + lIdPenRes);
+			}
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciMancataEspulsione: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exInserisciMancataEspulsione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lVerbaleDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+			cleanup(lPenResDao);
+			cleanup(lPenResSqlDao);
+			cleanup(lCampoNotaDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+
+	}
+
+	/**
+	 * Effettua la validazione della Annotazione Mancata Espulsione
+	 * 
+	 * @param aEvAnnotazione
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoModel exUpdateMancataEspulsione(EventoModel aEvAnnotazione) throws F3BException {
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("Validazione Annotazione Mancata Espulsione");
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		PenaResiduaDAO lPenResDao = null;
+
+		StatoProcedimentoDAO lStatoDao = null;
+
+		EventoModel lEveRet = new EventoModel(aEvAnnotazione);
+
+		// Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvAnnotazione.getIdEvento());
+
+			EventoModel lEveModelCom = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
+
+			// ===================================
+			// Recupero e valido la pena residua
+			// ===================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recupero e valido la pena residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaByKeyEvento(lEveModelCom.getIdEvento());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Pena Residua da validare " + lPenResMod.getIdPenaResidua());
+
+			lPenResDao = new PenaResiduaDAO(lConn);
+			lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+			lPenResDao.setFlagValidato("S");
+			lPenResDao.setDataAggiornamento(aEvAnnotazione.getDataAggiornamento());
+			lPenResDao.setCodUfficioAggiornamento(aEvAnnotazione.getCodUfficioAggiornamento());
+			lPenResDao.setCodOperatoreAggiornamento(aEvAnnotazione.getCodOperatoreAggiornamento());
+
+			lPenResDao.selByKey();
+			lPenResDao.update();
+			lPenResDao.stop();
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" update Pena Residua avvenuto");
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// e inserendo il nuovo stato
+			// n.b. data stato = data emissione provvedimento (decreto)
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelCom.getFasSieIdFascicoloSiep());
+
+			lStatoProcMod.setData(lEveModelCom.getDataEmissione());
+			lStatoProcMod.setCodStatoProcedimento("0241"); // Mancata Espulsione Straniero a Titolo di
+															// Sanzione Sostitutiva Alla Detenzione
+
+			lStatoProcMod.setCodOperatoreInserimento(aEvAnnotazione.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvAnnotazione.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvAnnotazione.getCodUfficioAggiornamento());
+
+			lStatoDao = new StatoProcedimentoDAO(lConn);
+
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelCom.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserito nuovo stato");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvAnnotazione);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvAnnotazione.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateMancataEspulsione: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exUpdateMancataEspulsione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lPenResSqlDao);
+			cleanup(lPenResDao);
+			cleanup(lStatoDao);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+			// cleanup(lConnBlob);
+
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Inserisce Evento Richieste Revoca Espulsione e Notifiche al GE
+	 * 
+	 * @param aEvNotModel
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel exInserisciRichiestaRevocaEspulsione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+
+		PenaResiduaDAO lPenResDao = null;
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco la Richiesta
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotModel.getNotifiche().length) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("count = " + count);
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						//
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
+
+					count++;
+				}
+			}
+
+			// ========================================================================
+			// Inserisco la PENA_RESIDUA.
+			// n.b. La funzione non prevede il ricalcolo della pena
+			// n.b. se presente a sistema pena residua non validata e non collegata ad
+			// alcun evento, la aggancio. Altrimenti duplico l'ultima pena validata.
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserimento Pena Residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvNotModel.getEvento()
+					.getFasSieIdFascicoloSiep());
+			PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			lPenResSqlDao.stop();
+
+			if (lUltimaPenaNonValidata != null && lUltimaPenaNonValidata.getIdPenaResidua() != null
+					&& lUltimaPenaNonValidata.getEveIdEvento() == null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Trovata pena residua (" + lUltimaPenaNonValidata.getIdPenaResidua()
+						+ ") non validata non agganciata da alcun evento. La aggancio all'evento corrente");
+				lPenResDao = new PenaResiduaDAO(lConn);
+
+				lPenResDao.setEveIdEvento(lIdEvento);
+
+				lPenResDao.setCodOperatoreInserimento(aEvNotModel.getEvento().getCodOperatoreInserimento());
+				lPenResDao.setCodUfficioInserimento(aEvNotModel.getEvento().getCodUfficioInserimento());
+				lPenResDao.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
+
+				lPenResDao.setCondizioneUpdate(lUltimaPenaNonValidata.getIdPenaResidua());
+				lPenResDao.update();
+				lPenResDao.stop();
+			} else {
+				// Cerco l'ultima validata per duplicarla
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Nessuna pena non validata, duplico l'ultima pena validata");
+				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(aEvNotModel.getEvento()
+						.getFasSieIdFascicoloSiep());
+				PenaResiduaModel lUltimaPenaValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+				lPenResSqlDao.stop();
+
+				lUltimaPenaValidata.setIdPenaResidua(null);
+				lUltimaPenaValidata.setEveIdEvento(lIdEvento);
+				lUltimaPenaValidata.setFlagValidato("N");
+
+				lUltimaPenaValidata.setCodOperatoreInserimento(aEvNotModel.getEvento()
+						.getCodOperatoreInserimento());
+				lUltimaPenaValidata.setCodUfficioInserimento(aEvNotModel.getEvento()
+						.getCodUfficioInserimento());
+				lUltimaPenaValidata.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
+
+				// Inserisco
+				lPenResDao = new PenaResiduaDAO(lConn);
+				lPenResDao.setDAOFromModel(lUltimaPenaValidata);
+				BigDecimal lIdPenRes = lPenResDao.insert();
+				lPenResDao.stop();
+
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Pena Residua lIdPenRes = " + lIdPenRes);
+			}
+
+			// rollback(lConn);
+			commit(lConn);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciRichiestaRevocaEspulsione: "
+					+ ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exInserisciRichiestaRevocaEspulsione: "
+					+ ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lPenResDao);
+			cleanup(lPenResSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+
+	}
+
+	/**
+	 * Effettua la validazione della Richiesta Revoca SS
+	 * 
+	 * @param aEvRichiesta
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoModel exUpdateRichiestaRevocaSS(EventoModel aEvRichiesta) throws F3BException {
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		PenaResiduaDAO lPenResDao = null;
+
+		StatoProcedimentoDAO lStatoDao = null;
+
+		EventoModel lEveRet = new EventoModel(aEvRichiesta);
+
+		// Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvRichiesta.getIdEvento());
+
+			EventoModel lEveModelRich = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
+
+			// ===================================
+			// Recupero e valido la pena residua
+			// ===================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recupero e valido la pena residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaByKeyEvento(lEveModelRich.getIdEvento());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Pena Residua da validare " + lPenResMod.getIdPenaResidua());
+
+			lPenResDao = new PenaResiduaDAO(lConn);
+			lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+			lPenResDao.setFlagValidato("S");
+			lPenResDao.setDataAggiornamento(aEvRichiesta.getDataAggiornamento());
+			lPenResDao.setCodUfficioAggiornamento(aEvRichiesta.getCodUfficioAggiornamento());
+			lPenResDao.setCodOperatoreAggiornamento(aEvRichiesta.getCodOperatoreAggiornamento());
+
+			lPenResDao.selByKey();
+			lPenResDao.update();
+			lPenResDao.stop();
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" update Pena Residua avvenuto");
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento stato procedimento");
+
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelRich.getFasSieIdFascicoloSiep());
+
+			lStatoProcMod.setData(lEveModelRich.getDataEmissione());
+			lStatoProcMod.setCodStatoProcedimento("0252");
+
+			lStatoProcMod.setCodOperatoreInserimento(aEvRichiesta.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvRichiesta.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvRichiesta.getCodUfficioAggiornamento());
+
+			lStatoDao = new StatoProcedimentoDAO(lConn);
+
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserito nuovo stato");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvRichiesta);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvRichiesta.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateRichiestaRevocaSS: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exUpdateRichiestaRevocaSS: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lPenResSqlDao);
+			cleanup(lPenResDao);
+			cleanup(lStatoDao);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+			// cleanup(lConnBlob);
+
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Effettua la validazione della Richiesta Revoca Espulsione
+	 * 
+	 * @param aEvRichiesta
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoModel exUpdateRichiestaRevocaEspulsione(EventoModel aEvRichiesta) throws F3BException {
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("Validazione Richiesta Revoca Espulsione");
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		PenaResiduaDAO lPenResDao = null;
+
+		StatoProcedimentoDAO lStatoDao = null;
+
+		EventoModel lEveRet = new EventoModel(aEvRichiesta);
+
+		// Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvRichiesta.getIdEvento());
+
+			EventoModel lEveModelRich = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
+
+			// ===================================
+			// Recupero e valido la pena residua
+			// ===================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recupero e valido la pena residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaByKeyEvento(lEveModelRich.getIdEvento());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Pena Residua da validare " + lPenResMod.getIdPenaResidua());
+
+			lPenResDao = new PenaResiduaDAO(lConn);
+			lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+			lPenResDao.setFlagValidato("S");
+			lPenResDao.setDataAggiornamento(aEvRichiesta.getDataAggiornamento());
+			lPenResDao.setCodUfficioAggiornamento(aEvRichiesta.getCodUfficioAggiornamento());
+			lPenResDao.setCodOperatoreAggiornamento(aEvRichiesta.getCodOperatoreAggiornamento());
+
+			lPenResDao.selByKey();
+			lPenResDao.update();
+			lPenResDao.stop();
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" update Pena Residua avvenuto");
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// e inserendo il nuovo stato
+			// n.b. data stato = data emissione provvedimento (decreto)
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento stato procedimento");
+			String lStatoProcedimento = "";
+			if (lEveModelRich.getCodMotivo().equals("0932")) {
+				lStatoProcedimento = "0246"; // Trasmessa richiesta di revoca espulsione per irreperibilità in
+												// data
+			} else if (lEveModelRich.getCodMotivo().equals("0933")) {
+				lStatoProcedimento = "0247"; // Trasmessa richiesta di revoca espulsione per sanzione
+												// applicata a cittadino comunitario
+			} else if (lEveModelRich.getCodMotivo().equals("0938")) {
+				lStatoProcedimento = "0250"; // Trasmessa richiesta di revoca espulsione per rientro nel
+												// territorio dello stato senza autorizzazione
+			} else if (lEveModelRich.getCodMotivo().equals("0939")) {
+				lStatoProcedimento = "0251"; // Trasmessa richiesta di revoca espulsione
+			}
+
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelRich.getFasSieIdFascicoloSiep());
+
+			lStatoProcMod.setData(lEveModelRich.getDataEmissione());
+			lStatoProcMod.setCodStatoProcedimento(lStatoProcedimento);
+
+			lStatoProcMod.setCodOperatoreInserimento(aEvRichiesta.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvRichiesta.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvRichiesta.getCodUfficioAggiornamento());
+
+			lStatoDao = new StatoProcedimentoDAO(lConn);
+
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserito nuovo stato");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvRichiesta);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvRichiesta.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+			// rollback(lConn);
+			// rollback(lConnBlob);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateRichiestaRevocaEspulsione: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exUpdateRichiestaRevocaEspulsione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lPenResSqlDao);
+			cleanup(lPenResDao);
+			cleanup(lStatoDao);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+			// cleanup(lConnBlob);
+
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Inserisce la comunicazione per il nuovo residuo pena
+	 * 
+	 * @param aEvNotModel
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel exInserisciComunicazioneNuovoResiduoPena(EventoNotificaModel aEvNotModel)
+			throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		PenaResiduaDAO lPenResDao = null;
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco la Comunicazione
+			// =========================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserimento la Comunicazione");
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserimento notifiche");
+			BigDecimal lKeyAutorita = null;
+			int count = 0;
+
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotModel.getNotifiche().length) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("count = " + count);
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						// Inserisco autorità esterna se non presente
+						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.debug("Inserisco autorità esterna se non presente");
+							lAutDao = new AutoritaEsternaDAO(lConn);
+
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.debug("Autorita = "
+									+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count]
+									.getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+							if (lAutMod == null) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("Inserisco AUTORITA");
+								lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]
+										.getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.debug("AUTORITA presente");
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+
+							lAutDao.stop();
+						}
+
+						// Inserisco la notifica
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
+
+					count++;
+				}
+			}
+
+			// ========================================================================
+			// Inserisco la PENA_RESIDUA.
+			// n.b. La funzione non prevede il ricalcolo della pena ma solo la sua comunicazione
+			// n.b. se presente a sistema pena residua non validata e non collegata ad
+			// alcun evento, la aggancio. Altrimenti duplico l'ultima pena validata.
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserimento Pena Residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvNotModel.getEvento()
+					.getFasSieIdFascicoloSiep());
+			PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			lPenResSqlDao.stop();
+
+			if (lUltimaPenaNonValidata != null && lUltimaPenaNonValidata.getIdPenaResidua() != null
+					&& lUltimaPenaNonValidata.getEveIdEvento() == null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Trovata pena residua (" + lUltimaPenaNonValidata.getIdPenaResidua()
+						+ ") non validata non agganciata da alcun evento. La aggancio all'evento corrente");
+				lPenResDao = new PenaResiduaDAO(lConn);
+
+				lPenResDao.setEveIdEvento(lIdEvento);
+
+				lPenResDao.setCodOperatoreInserimento(aEvNotModel.getEvento().getCodOperatoreInserimento());
+				lPenResDao.setCodUfficioInserimento(aEvNotModel.getEvento().getCodUfficioInserimento());
+				lPenResDao.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
+
+				lPenResDao.setCondizioneUpdate(lUltimaPenaNonValidata.getIdPenaResidua());
+				lPenResDao.update();
+				lPenResDao.stop();
+			} else {
+				// Cerco l'ultima validata per duplicarla
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Nessuna pena non validata, duplico l'ultima pena validata");
+				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(aEvNotModel.getEvento()
+						.getFasSieIdFascicoloSiep());
+				PenaResiduaModel lUltimaPenaValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+				lPenResSqlDao.stop();
+
+				lUltimaPenaValidata.setIdPenaResidua(null);
+				lUltimaPenaValidata.setEveIdEvento(lIdEvento);
+				lUltimaPenaValidata.setFlagValidato("N");
+
+				lUltimaPenaValidata.setCodOperatoreInserimento(aEvNotModel.getEvento()
+						.getCodOperatoreInserimento());
+				lUltimaPenaValidata.setCodUfficioInserimento(aEvNotModel.getEvento()
+						.getCodUfficioInserimento());
+				lUltimaPenaValidata.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
+
+				// Inserisco
+				lPenResDao = new PenaResiduaDAO(lConn);
+				lPenResDao.setDAOFromModel(lUltimaPenaValidata);
+				BigDecimal lIdPenRes = lPenResDao.insert();
+				lPenResDao.stop();
+
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Pena Residua lIdPenRes = " + lIdPenRes);
+			}
+
+			// rollback(lConn);
+			commit(lConn);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciComunicazioneNuovoResiduoPena: "
+					+ ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exInserisciComunicazioneNuovoResiduoPena: "
+					+ ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+			cleanup(lPenResDao);
+			cleanup(lPenResSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+
+	}
+
+	/**
+	 * Effettua la validazione della Comunicazione Nuovo Residuo Pena
+	 * 
+	 * @param aEvComunicazione
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoModel exUpdateComunicazioneNuovoResiduoPena(EventoModel aEvComunicazione)
+			throws F3BException {
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("Validazione Comunicazione Nuovo Residuo Pena");
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		PenaResiduaDAO lPenResDao = null;
+
+		EventoModel lEveRet = new EventoModel(aEvComunicazione);
+
+		// Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvComunicazione.getIdEvento());
+
+			EventoModel lEveModelCom = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
+
+			// ===================================
+			// Recupero e valido la pena residua
+			// ===================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Recupero e valido la pena residua");
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaByKeyEvento(lEveModelCom.getIdEvento());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Pena Residua da validare " + lPenResMod.getIdPenaResidua());
+
+			lPenResDao = new PenaResiduaDAO(lConn);
+			lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+			lPenResDao.setFlagValidato("S");
+			lPenResDao.setDataAggiornamento(aEvComunicazione.getDataAggiornamento());
+			lPenResDao.setCodUfficioAggiornamento(aEvComunicazione.getCodUfficioAggiornamento());
+			lPenResDao.setCodOperatoreAggiornamento(aEvComunicazione.getCodOperatoreAggiornamento());
+
+			lPenResDao.selByKey();
+			lPenResDao.update();
+			lPenResDao.stop();
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" update Pena Residua avvenuto");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvComunicazione);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvComunicazione.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+			// rollback(lConn);
+			// rollback(lConnBlob);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateComunicazioneNuovoResiduoPena: "
+					+ ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exUpdateComunicazioneNuovoResiduoPena: "
+					+ ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lPenResSqlDao);
+			cleanup(lPenResDao);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+			// cleanup(lConnBlob);
+
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Effettua l'inserimento dell'OE a seguito revoca/conversione SS su fascicolo con cumulo. Inserisce la
+	 * pena residua rideterminata
+	 * 
+	 * @param aEvNotModel
+	 * @param aPenResMod
+	 *            pena rideterminata
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel exInserisciOENuovoResiduoPena(EventoNotificaModel aEvNotModel,
+			PenaResiduaModel aPenResMod) throws F3BException {
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
+
+		PenaResiduaDAO lPenResDao = null;
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+
+		try {
+			lConn = getDBConnection();
+
+			// =========================================
+			// Inserisco l'OE
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("lIdEvento = " + lIdEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			BigDecimal lKeyAutorita = null;
+
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+
+				while (count < aEvNotModel.getNotifiche().length) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("count = " + count);
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count]
+									.getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+													// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di
+													// istanza siesLogger al posto di LogF3B.getLogger()
+								siesLogger.debug("Ins Aut Est = "
+										+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+								lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]
+										.getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+						}
+
+						// ===========================================
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+
+						lNotDao = new NotificaDAO(lConn);
+
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
+
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
+
+					count++;
+				}
+			}
+
+			// ========================================================================
+			// Inserisco la pena residua
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Inserimento Pena Residua");
+			lPenResDao = new PenaResiduaDAO(lConn);
+
+			aPenResMod.setEveIdEvento(lIdEvento);
+
+			lPenResDao.setDAOFromModel(aPenResMod);
+			BigDecimal lIdPenRes = lPenResDao.insert();
+			lPenResDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Pena Residua lIdPenRes = " + lIdPenRes);
+
+			// //========================================================================
+			// // Recupero la PENA_RESIDUA collegata all'annotazione che ha già
+			// // rideterminato la pena
+			// // n.b. La funzione non prevede il ricalcolo della pena
+			// //========================================================================
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.debug("Inserimento Pena Residua");
+			// lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			// lPenResSqlDao.ricercaPenaResiduaByKeyEvento(aEvNotModel.getEvento().getEveIdEvento());
+			// PenaResiduaModel lPenaGiàRideterminata = (PenaResiduaModel)lPenResSqlDao.getModelByKey();
+			// lPenResSqlDao.stop();
+			//
+			// if ( lPenaGiàRideterminata!=null
+			// && lPenaGiàRideterminata.getIdPenaResidua()!=null
+			// )
+			// {
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.debug("Recuperata pena residua ("+lPenaGiàRideterminata.getIdPenaResidua()+") non validata non agganciata da alcun evento. La aggancio all'evento corrente");
+			// lPenResDao = new PenaResiduaDAO(lConn);
+			//
+			// lPenaGiàRideterminata.setIdPenaResidua(null);
+			// lPenaGiàRideterminata.setEveIdEvento(lIdEvento);
+			// lPenaGiàRideterminata.setFlagValidato("N");
+			//
+			// lPenaGiàRideterminata.setCodOperatoreInserimento
+			// (aEvNotModel.getEvento().getCodOperatoreInserimento());
+			// lPenaGiàRideterminata.setCodUfficioInserimento
+			// (aEvNotModel.getEvento().getCodUfficioInserimento());
+			// lPenaGiàRideterminata.setDataInserimento (aEvNotModel.getEvento().getDataInserimento());
+			//
+			// // Inserisco
+			// lPenResDao = new PenaResiduaDAO(lConn);
+			// lPenResDao.setDAOFromModel(lPenaGiàRideterminata);
+			// BigDecimal lIdPenRes = lPenResDao.insert();
+			// lPenResDao.stop();
+			//
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.debug("Pena Residua lIdPenRes = "+lIdPenRes);
+			// }
+			// else
+			// {
+			// //
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.debug("Nessuna pena trovata su annotazione");
+			// }
+
+			// rollback(lConn);
+			commit(lConn);
+
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOENuovoResiduoPena: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOENuovoResiduoPena: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+			cleanup(lPenResDao);
+			cleanup(lPenResSqlDao);
+
+			cleanup(lConn);
+		}
+
+		return lEveRet;
+
+	}
+
+	/**
+	 * Effettua la validazione dell'OE a seguito revoca/conversione SS su fascicolo con cumulo
+	 * 
+	 * @param aEventoModel
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoModel exUpdateOENuovoResiduoPena(EventoModel aEventoModel) throws F3BException {
+
+		Connection lConn = null;
+
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaResiduaSqlDAO lPenResSqlDao = null;
+		PenaResiduaDAO lPenResDao = null;
+
+		StatoProcedimentoDAO lStatoDao = null;
+
+		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
+		PosizioneGiuridicaDAO lPosDao = null;
+
+		NotificaEventoSqlDAO lNotEveDao = null;
+		EventoModel lEveRet = new EventoModel(aEventoModel);
+
+		ScadenzarioDAO lScaDao = null;
+		ScadenzarioSqlDAO lScadeSqlDao = null;
+
+		// Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
+
+		try {
+			lConn = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEventoModel.getIdEvento());
+
+			EventoModel lEveModel = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
+
+			// ===================================
+			// Recupero e valido la pena residua
+			// ===================================
+
+			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+			lPenResSqlDao.ricercaPenaResiduaByKeyEvento(lEveModel.getIdEvento());
+			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+
+			lPenResDao = new PenaResiduaDAO(lConn);
+			lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+			lPenResDao.setFlagValidato("S");
+			lPenResDao.setDataAggiornamento(aEventoModel.getDataAggiornamento());
+			lPenResDao.setCodUfficioAggiornamento(aEventoModel.getCodUfficioAggiornamento());
+			lPenResDao.setCodOperatoreAggiornamento(aEventoModel.getCodOperatoreAggiornamento());
+
+			lPenResDao.selByKey();
+			lPenResDao.update();
+			lPenResDao.stop();
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// e inserendo il nuovo stato
+			// n.b. data stato = data emissione provvedimento (decreto)
+			// ========================================================================
+
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModel.getFasSieIdFascicoloSiep());
+
+			lStatoProcMod.setData(lEveModel.getDataEmissione());
+			if (lEveModel.getCodMotivo().equals("0397")) {
+				lStatoProcMod.setCodStatoProcedimento("0236"); // Emesso Ordine di Esecuzione con Arresto in
+																// seguito a Revoca Sanzione Sostitutiva il
+			} else if (lEveModel.getCodMotivo().equals("0398")) {
+				lStatoProcMod.setCodStatoProcedimento("0237"); // Emesso Ordine di Esecuzione in Carcere in
+																// seguito a Revoca Sanzione Sostitutiva il
+			} else if (lEveModel.getCodMotivo().equals("0399")) {
+				lStatoProcMod.setCodStatoProcedimento("0238"); // Emesso ordine di esecuzione per
+																// Rideterminazione Pena in seguito a Revoca
+																// Sanzione Sostitutiva il
+			} else if (lEveModel.getCodMotivo().equals("0935")) {
+				lStatoProcMod.setCodStatoProcedimento("0249"); // Emesso ordine di esecuzione per
+																// Rideterminazione Pena espiazione in Misura
+																// Alternativa in seguito a Revoca Sanzione
+																// Sostitutiva il
+			}
+
+			lStatoProcMod.setCodOperatoreInserimento(aEventoModel.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEventoModel.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEventoModel.getCodUfficioAggiornamento());
+
+			lStatoDao = new StatoProcedimentoDAO(lConn);
+
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModel.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+
+			// ========================================================================
+			// Modifico la Posizione Giuridica
+			// Aggiorno la data fine della vecchia Posizione Giuridica con la
+			// data provvedimento (data emissione) e inserisco la nuova posizione
+			// n.b. la Pos giu cambia solo se 07 (in 10) altrimenti resta invariata
+			// ========================================================================
+
+			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
+			lPosSqlDao.ricercaPosizioneGiuridicaByIdFascicoloDesc(lEveModel.getFasSieIdFascicoloSiep());
+			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
+
+			if (lPosMod.getCodPosizioneGiuridica().equals("07")) {
+				lPosDao = new PosizioneGiuridicaDAO(lConn);
+				lPosDao.setIdPosizioneGiuridica(lPosMod.getIdPosizioneGiuridica());
+
+				lPosDao.setDataFine(lEveModel.getDataEmissione());
+
+				lPosDao.selByKey();
+				lPosDao.update();
+				lPosDao.stop();
+
+				// ========================================================================
+				// Inserisco Nuova Posizione Giuridica (data_inizio = data espulsione)
+				// agganciandola all'evento che sto validando
+				// ========================================================================
+				PosizioneGiuridicaModel lPosizione = new PosizioneGiuridicaModel();
+
+				lPosizione.setCodPosizioneGiuridica("10"); // Libero (dopo OE)
+
+				lPosizione.setDataInizio(lEveModel.getDataEmissione());
+
+				lPosizione.setCodOperatoreInserimento(aEventoModel.getCodOperatoreAggiornamento());
+				lPosizione.setDataInserimento(aEventoModel.getDataAggiornamento());
+				lPosizione.setCodUfficioInserimento(aEventoModel.getCodUfficioAggiornamento());
+
+				lPosizione.setCodPosizioneProcessuale("-");
+				lPosizione.setFasSieIdFascicoloSiep(lEveModel.getFasSieIdFascicoloSiep());
+				lPosizione.setIdEventoRiferimento(lEveModel.getIdEvento());
+
+				lPosDao.setDAOFromModel(lPosizione);
+				lPosDao.insert();
+				lPosDao.stop();
+			} else {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("La Posizione Giuridica " + lPosMod.getCodPosizioneGiuridica()
+						+ " resta invariata");
+			}
+
+			// SCADENZARIO
+
+			// AMBROSINO 08-02-2011 Scrivi SCADENZARIO solo se se non esiste Data Inizio/Fine Pena residua
+			// (oppure la POSIZIONE_GIURIDICA LIBERO )
+
+			if (lPenResMod.getDataFine() == null) {
+
+				ParametroModel lParMod = new ParametroModel();
+
+				lParMod.setNomeParametro("VANE RICERCHE");
+				lParMod.setCodUfficioValidita(aEventoModel.getCodUfficioAggiornamento());
+
+				Vector lVectPar = null;
+				IParametro lCtrlPar = SIEPLookupRemote.getParametroRemote();
+				lVectPar = lCtrlPar.ExRicercaParametroScadenzario(lParMod);
+
+				ScadenzarioModel lScaMod = new ScadenzarioModel();
+
+				// a6-rr-238 - AMBROSINO Cerco NOTIFICA per prendere data trasmissione
+
+				lNotEveDao = new NotificaEventoSqlDAO(lConn);
+				lNotEveDao.ricercaNotificaByEvento(aEventoModel.getIdEvento());
+				Vector lNotifiche = new Vector(lNotEveDao.getModels());
+				NotificaModel lNotifica = (NotificaModel) lNotifiche.get(0);
+
+				lScaMod.setFasSieIdFascicoloSiep(lPenResMod.getFasSieIdFascicoloSiep());
+				lScaMod.setDataInizioScadenza(lNotifica.getDataInvio());
+
+				Iterator lIter = lVectPar.iterator();
+				Date lSommaAnni = null;
+				Date lSommaMesi = null;
+				Date lFineScadenza = null;
+
+				if (lIter.hasNext()) {
+					ParametroModel lParModel = (ParametroModel) lIter.next();
+					lSommaAnni = DateUtils.moveDateTo(lScaMod.getDataInizioScadenza(),
+							java.util.Calendar.YEAR, lParModel.getAnni().intValue());
+					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH, lParModel
+							.getMesi().intValue());
+					lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
+							lParModel.getGiorni().intValue());
+				}
+
+				// MODIFICA
+				lScaMod.setCodTipoScadenzario("03"); // Vane ricerche
+				Vector lScadenzarii = null;
+				lScadeSqlDao = new ScadenzarioSqlDAO(lConn);
+
+				// cerca un scadenzario per id fascicolo e per tipo scadenzario
+
+				lScadeSqlDao.ricercaScadenzarioVerbaleArresto(lScaMod);
+				lScadenzarii = new Vector(lScadeSqlDao.getModels());
+
+				lScaDao = new ScadenzarioDAO(lConn);
+
+				if (lScadenzarii.size() == 0) {
+					lScaMod.setFlagVisto("N");
+					lScaMod.setDataFineScadenza(lFineScadenza);
+					lScaMod.setCodOperatoreInserimento(aEventoModel.getCodOperatoreAggiornamento());
+					lScaMod.setCodUfficioInserimento(aEventoModel.getCodUfficioAggiornamento());
+					lScaMod.setDataInserimento(aEventoModel.getDataAggiornamento());
+					// a6-rr-238
+					lScaMod.setCodStatoNotifica("NP");
+					lScaMod.setEveIdEvento(aEventoModel.getIdEvento());
+
+					lScaDao.setDAOFromModel(lScaMod);
+//					BigDecimal lKeyScad = null;
+					/*lKeyScad = */lScaDao.insert();
+				} else {
+					ScadenzarioModel lScaModID = (ScadenzarioModel) lScadenzarii.get(0);
+					lScaMod.setIdScadenzario(lScaModID.getIdScadenzario());
+					lScaMod.setDataFineScadenza(lFineScadenza);
+					lScaMod.setCodOperatoreAggiornamento(aEventoModel.getCodOperatoreAggiornamento());
+					lScaMod.setCodUfficioAggiornamento(aEventoModel.getCodUfficioAggiornamento());
+					lScaMod.setDataAggiornamento(aEventoModel.getDataAggiornamento());
+					// a6-rr-238
+					lScaMod.setCodStatoNotifica("NP");
+					// AMBROSINO 30/06/2011
+					lScaMod.setEveIdEvento(aEventoModel.getIdEvento());
+
+					lScaDao.setDAOFromModelForUpdate(lScaMod);
+					lScaDao.update();
+				}
+			}
+
+			// END AMBROSINO
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
+
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEventoModel);
+
+			lEveDaoBlob.selCondizioneUpdate(aEventoModel.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Blob Aggiornato");
+
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+			// rollback(lConn);
+			// rollback(lConnBlob);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOENuovoResiduoPena: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			// rollback(lConnBlob);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOENuovoResiduoPena: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lPenResSqlDao);
+			cleanup(lPenResDao);
+			cleanup(lStatoDao);
+			cleanup(lPosSqlDao);
+			cleanup(lPosDao);
+			cleanup(lScadeSqlDao);
+			cleanup(lScaDao);
+			cleanup(lNotEveDao);
+
+			cleanup(lConn);
+
+			cleanup(lEveDaoBlob);
+			// cleanup(lConnBlob);
+
+		}
+
+		return lEveRet;
+	}
+
+	/**
+	 * Restituisce l'ultima Sanzione Sostitutiva Residua per il fascicolo passato in input se esiste
+	 * 
+	 * @param aIdFascicoloSiep
+	 * @param aFlagValidata
+	 *            . Se 'S' recupera l'ultima validata, se 'N' l'ultima non validata, se null l'ultima in
+	 *            assoluto
+	 * @return SanzioneSostResiduaModel o null se non presente una SS residua
+	 * @throws F3BException
+	 */
+	public SanzioneSostResiduaModel getUltimaSSResidua(BigDecimal aIdFascicoloSiep, String aFlagValidata)
+			throws F3BException {
+		Connection lConn = null;
+
+		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
+
+		SanzioneSostResiduaModel lSSResiduaModel = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lSSSqlDAO = new SanzioneSostResiduaSqlDAO(lConn);
+
+			lSSSqlDAO.ricercaUltimaSanzioneSostResiduaByIdFasc(aIdFascicoloSiep, aFlagValidata);
+
+			lSSResiduaModel = (SanzioneSostResiduaModel) lSSSqlDAO.getModelByKey();
+
+		} catch (DAOException ex) {
+			throw new F3BException("SanzioneSostitutivaController.getUltimaSSResidua: " + ex);
+		} catch (Exception ex) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.getUltimaSSResidua: " + ex);
+		} finally {
+			cleanup(lSSSqlDAO);
+
+			cleanup(lConn);
+
+		}
+
+		return lSSResiduaModel;
+	}
+
+	/**
+	 * Restituisce la SS residua collegata alla pena residua passata in input
+	 * 
+	 * @param aIdPenaResidua
+	 * @return
+	 * @throws F3BException
+	 */
+	public SanzioneSostResiduaModel getSSByIdPenaResidua(BigDecimal aIdPenaResidua) throws F3BException {
+		Connection lConn = null;
+
+		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
+
+		SanzioneSostResiduaModel lSSResiduaModel = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lSSSqlDAO = new SanzioneSostResiduaSqlDAO(lConn);
+
+			lSSSqlDAO.ricercaSanzioneSostResiduaByIdPenRes(aIdPenaResidua);
+
+			lSSResiduaModel = (SanzioneSostResiduaModel) lSSSqlDAO.getModelByKey();
+
+			lSSSqlDAO.stop();
+		} catch (DAOException ex) {
+			throw new F3BException("SanzioneSostitutivaController.getSSByIdPenaResidua: " + ex);
+		} catch (Exception ex) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("Eccezione Generica");
+			throw new F3BException("SanzioneSostitutivaController.getSSByIdPenaResidua: " + ex);
+		} finally {
+			cleanup(lSSSqlDAO);
+
+			cleanup(lConn);
+		}
+		return lSSResiduaModel;
+	}
+
+	/**
+   *
+   */
+	public ByteArrayOutputStream exStampaSS(EventoNotificaModel aEvento, UtenteModel aUtente)
+			throws F3BException {
+		Connection lConn = null;
+		EventoDAO lEveDao = null;
+
+		ByteArrayOutputStream lByteArrayOut = null;
+
+		try {
+			IEvento lEveCntrl = SICOLookupRemote.getEventoRemote();
+			EventoNotificaModel lEveMod = lEveCntrl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
+					.getIdEvento());
+
+			lEveMod.getEvento().setDescrUfficioEmittente(aEvento.getEvento().getDescrUfficioEmittente());
+			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aEvento.getNomeTemplate());
+			// QUI setto l'id del template con il nemo vero e proprio
+			lEveMod.getEvento().setTemIdTemplate(lNomeTemplate);
+
+			StampaSSController lStampaSS = new StampaSSController();
+			TreeModel lTree = lStampaSS.prelevaDatiSanzioniSostitutive(lEveMod, aUtente);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.info("NOME TEMPLATE >>>" + lNomeTemplate);
+
+			ReportGenerator lReport = new ReportGenerator();
+			lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocument(lTree, lNomeTemplate);
+
+			ByteArrayInputStream lByteArrayInput = new ByteArrayInputStream(lByteArrayOut.toByteArray());
+
+			aEvento.getEvento().setDocBlobIn(lByteArrayInput);
+			lConn = getDBConnection();
+			lEveDao = new EventoDAO(lConn);
+			lEveDao.setDAOFromModelForUpdateBlob(aEvento.getEvento());
+
+			lEveDao.selCondizioneUpdate(aEvento.getEvento().getIdEvento());
+			lEveDao.update();
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			rollback(lConn);
+			throw new F3BException(this.getClass().getName() + ".exStampaSS: Non posso leggere : " + daoEx);
+		} finally {
+			cleanup(lEveDao);
+			cleanup(lConn);
+		}
+		return lByteArrayOut;
+	}
+
+	// 25/03/2008
+	/**
+	 * Ricerca Sanzioni Sost. Residua tramite chiave Fascicolo
+	 * 
+	 * @param aIdFasicolo
+	 * @return
+	 * @throws F3BException
+	 */
+	public Vector ExRicercaSanzioneSostResiduaByIdFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+		Connection lConn = null;
+
+		Vector lSSResidua = new Vector();
+		SanzioneSostResiduaSqlDAO lSSRDao = null;
+
+		try {
+			lConn = getDBConnection();
+
+			lSSRDao = new SanzioneSostResiduaSqlDAO(lConn);
+			lSSRDao.ricercaSanzioneSostResiduaByIdFascicolo(aIdFascicolo);
+			lSSResidua = new Vector(lSSRDao.getModels());
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"SanzioneSostitutivaController.ExRicercaSanzioneSostResiduaByIdFascicolo: " + daoEx);
+		} finally {
+			cleanup(lSSRDao);
+			cleanup(lConn);
+		}
+		return lSSResidua;
+	}
+
+	/**
+	 * Inserisci i records di Sanzione Sost. Residua per JMS senza assegnare la sequence
+	 * 
+	 * @param aSanzioneSostResidua
+	 * @param lConn
+	 * @return lCodEsito
+	 * @throws F3BException
+	 */
+	public String ExInserisciSanzioniSostResidueWithoutSequence(ArrayList aSanzioneSostResidua,
+			Connection lConn) throws F3BException {
+		String lCodEsito = "00000";
+		SanzioneSostResiduaDAO lSSResDao = null;
+		SanzioneSostResiduaModel lSSResMod = null;
+
+		try {
+			lSSResDao = new SanzioneSostResiduaDAO(lConn);
+
+			if (aSanzioneSostResidua != null && aSanzioneSostResidua.size() > 0) {
+				for (int i = 0; i < aSanzioneSostResidua.size(); i++) {
+					lSSResMod = (SanzioneSostResiduaModel) aSanzioneSostResidua.get(i);
+					if (lSSResMod != null) {
+						if (lSSResMod.getIdSanzioneSostResidua() != null) {
+							lSSResDao.setDAOFromModel(lSSResMod);
+							lSSResDao.setWithoutSequence(true);
+							lSSResDao.insert();
+							lSSResDao.stop();
+						}
+					}
+				}
+			}
+		} catch (DAOException ex) {
+			if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+				siesLogger.error("Sanzione Sost. Residua gia' presente...");
+				lCodEsito = "00001";
+			} else {
+				lCodEsito = "01400";
+				throw new F3BException(F3BException.USER_MESSAGE,
+						"Impossibile inserire la Sanzione Sost. Residua! ");
+			}
+		} finally {
+			cleanup(lSSResDao);
+		}
+		return lCodEsito;
+	}
+
+}

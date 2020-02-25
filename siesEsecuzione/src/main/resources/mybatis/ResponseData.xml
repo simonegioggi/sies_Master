@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.ResponseData">
+    
+    <resultMap id="response" type="it.mig.sies.model.ResponseData" >
+        <id property="id" column="ID"/>
+        <result property="esito" column="ESITO" jdbcType="VARCHAR"/>
+        <result property="chiaveSies" column="CHIAVE_SIES"/>
+        <result property="chiaveNsc" column="CHIAVE_NSC"/>
+        <result property="estratto" column="ESTRATTO" jdbcType="BLOB"/>
+        <result property="dataOperazione" column="DATA_OPERAZIONE" jdbcType="DATE"/>
+        <result property="operazione" column="OPERAZIONE" jdbcType="VARCHAR"/>
+        <result property="completed" column="COMPLETATO" jdbcType="VARCHAR" 
+            typeHandler="it.mig.sies.util.StringBooleanTypeHandler"/>
+    </resultMap>
+    
+    <insert id="insert" parameterType="it.mig.sies.model.ResponseData">
+        <selectKey keyProperty="id" order="BEFORE"
+            resultType="long"> 
+            SELECT LOG_ESECUZIONE_SEQUENCE.nextval FROM dual
+        </selectKey>
+        INSERT INTO LOG_TRASFERIMENTO_ESECUZIONE (
+            ID, ESITO, CHIAVE_SIES, CHIAVE_NSC, 
+            <if test="estratto != null">
+                 ESTRATTO, 
+            </if>
+            DATA_OPERAZIONE, OPERAZIONE, COMPLETATO
+        )
+        values (
+            #{id}, #{esito}, #{chiaveSies}, #{chiaveNSC},
+            <if test="estratto != null">
+                 #{estratto},
+            </if>
+            sysdate, #{operazione}, #{completed}
+        )
+    </insert>
+    
+    <select id="lookup" parameterType="long" resultMap="response">
+        SELECT 
+            ID, ESITO, CHIAVE_SIES chiaveSies, CHIAVE_NSC chiaveNSC, 
+            ESTRATTO , DATA_OPERAZIONE dataOperazione, OPERAZIONE operazione, COMPLETATO completed 
+        FROM LOG_TRASFERIMENTO_ESECUZIONE
+        WHERE ID=#{id}
+    </select>
+    
+    <select id="search" parameterType="long" resultMap="response">
+        SELECT 
+            ID, ESITO, CHIAVE_SIES chiaveSies, CHIAVE_NSC chiaveNSC, 
+            ESTRATTO , DATA_OPERAZIONE dataOperazione, OPERAZIONE operazione, COMPLETATO completed 
+        FROM LOG_TRASFERIMENTO_ESECUZIONE
+        WHERE CHIAVE_SIES=#{idEvento} ORDER BY DATA_OPERAZIONE ASC
+    </select>
+    
+    <select id="verificaPresenza" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+		  FROM LOG_TRASFERIMENTO_ESECUZIONE A
+		 WHERE A.CHIAVE_SIES = #{idEvento}
+		   AND A.COMPLETATO = '1'
+		   AND A.OPERAZIONE &lt;&gt; 'DELETE'
+		   AND A.DATA_OPERAZIONE =
+		       (SELECT MAX(DATA_OPERAZIONE)
+		          FROM LOG_TRASFERIMENTO_ESECUZIONE B
+		         WHERE B.CHIAVE_SIES = #{idEvento})
+    </select>
+
+</mapper>

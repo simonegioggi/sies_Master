@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Emma (Engineering) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/dettaglioOrdinanza" targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/dettaglioOrdinanza" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DETTAGLIO_ORDINANZA">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_INPUT_DETTAGLIO"/>
+				<xs:element ref="type:OUTPUT_DETTAGLIO_ORDINANZA"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ERRORE">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CODICE_ERRORE" type="xs:string"/>
+				<xs:element name="DESCR_ERRORE" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_INPUT_DETTAGLIO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idEvento" type="xs:string"/>
+				<xs:element name="codiTipoProvvedimento" type="xs:string"/>
+				<xs:element name="tipoUfficio" type="xs:string"/>
+				<xs:element ref="type:DATI_AVVISO">
+					<xs:annotation>
+						<xs:documentation>elemento da valorizzare per richiesta di
+							dettaglio da elenco Avvisi. Serve per l'aggiornamento del
+							flagVisualizzazione
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_RIEPILOGO_PROCEDIMENTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annoProcedimentoSIUS" type="xs:integer"/>
+				<xs:element name="numeroProcedimentoSIUS" type="xs:integer"/>
+				<xs:element name="oggettoProcedimentoSIUS" type="xs:string"/>
+				<xs:element name="annoFascicoloSIEP" type="xs:integer"/>
+				<xs:element name="numeroFascicoloSIEP" type="xs:integer"/>
+				<xs:element name="ufficioFascicoloSIEP" type="xs:string"/>
+				<xs:element name="dataFascicoloSIEP" type="type:DATA_TYPE"/>
+				<xs:element name="nomeSoggetto" type="xs:string"/>
+				<xs:element name="cognomeSoggetto" type="xs:string"/>
+				<xs:element name="dataNascita" type="type:DATA_TYPE"/>
+				<xs:element name="luogoNascita" type="xs:string"/>
+				<xs:element name="codiceProvincia" type="xs:string"/>
+				<xs:element name="dataUdienza" type="type:DATA_TYPE"/>
+				<xs:element name="nomeMagistratoRelatore" type="xs:string"/>
+				<xs:element name="cognomeMagistratoRelatore" type="xs:string"/>
+				<xs:element name="etaPresuntaAnni" type="xs:integer" nillable="true"/>
+				<xs:element name="etaPresuntaMesi" type="xs:integer" nillable="true"/>
+				<xs:element name="sesso" type="xs:string"/>
+				<xs:element name="flagRinviata" type="xs:string"/>
+				<xs:element name="descrStatoFascicolo" type="xs:string"/>
+				<xs:element name="codiceStatoFascicolo" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="DATA_TYPE">
+		<xs:sequence>
+			<xs:element name="giorno" type="xs:int"/>
+			<xs:element name="mese" type="xs:int"/>
+			<xs:element name="anno" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="DATI_ORDINANZA">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="tipoOrdinanza" type="xs:string"/>
+				<xs:element name="dataEmissione" type="type:DATA_TYPE"/>
+				<xs:element name="annoOrdinanza" type="xs:integer"/>
+				<xs:element name="numeroOrdinanza" type="xs:integer"/>
+				<xs:element name="dataDepositoCancelleria" type="type:DATA_TYPE"/>
+				<xs:element name="statoProvvedimento" type="xs:string"/>
+				<xs:element name="descrDecisione" type="xs:string"/>
+				<xs:element name="totaleGiorniLibertaAnticipata" type="xs:integer"/>
+				<xs:element name="totaleGiorniRiduzionePena" type="xs:integer"/>
+				<xs:element name="sommaRisarcimento" type="xs:decimal"/>
+				<xs:element name="ufficioSorveglianzaCompetente" type="xs:string"/>
+				<xs:element name="ufficioConcessioneRiduzione" type="xs:string"/>
+				<xs:element name="dispositivo" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>è il valore di codiNaturaProvvedimento
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ulterioreDescrDecisione" type="xs:string"/>
+				<xs:element name="flagNominaCommissarioActa" type="xs:string"/>
+				<xs:element name="descrCommissarioActa" type="xs:string"/>
+				<xs:element name="dataCessazioneMisura" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>è il campo data fine misura</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataInizioRinvio" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>è il campo data inizio periodo
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataFineRinvio" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>data fine misura dell'ordinanza
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="durataSospensione" type="type:DURATA_TYPE"/>
+				<xs:element name="dataSospensioneOrdinanza" type="type:DATA_TYPE"/>
+				<xs:element name="durataResiduaAltraMisura" type="type:DURATA_TYPE"/>
+				<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+				<xs:element name="motivoRichiesta" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>è la descrizione del codNaturaProvvedimento
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ulterioreDescrizioneOrdinanza" type="xs:string"/>
+				<xs:element name="motivazioni" type="xs:string"/>
+				<xs:element name="dataDecorrenzaMisuraSicurezza" type="type:DATA_TYPE"/>
+				<xs:element name="durataMisuraSicurezza" type="type:DURATA_TYPE"/>
+				<xs:element name="elencoEsiti" type="type:ESITI_TYPE" maxOccurs="unbounded"/>
+				<xs:element name="totaleGiorniLibertaAnticipataSpeciale" type="xs:integer"/>
+				<xs:element name="totaleGiorniLibertaAnticipataIntegrazione" type="xs:integer"/>
+				<xs:element name="totaleGiorniLibertaAnticipataNormale" type="xs:integer"/>
+				<xs:element name="oggettoProcedimento" type="xs:string"/>
+				<xs:element name="codTipoRegistro" type="xs:string" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ESITI_TYPE">
+		<xs:sequence>
+			<xs:element name="descrOggettoTenore" type="xs:string"/>
+			<xs:element name="descrEsitoTenore" type="xs:string"/>
+			<xs:element name="codiceOggettoTenore" type="xs:string"/>
+			<xs:element name="codiceEsitoTenore" type="xs:string"/>
+			<xs:element name="oggettoProcedimento" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="OUTPUT_DETTAGLIO_ORDINANZA">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_RIEPILOGO_PROCEDIMENTO"/>
+				<xs:element ref="type:DATI_ORDINANZA"/>
+				<xs:element name="descrFormaMisuraMA" type="xs:string" nillable="true"/>
+				<xs:element name="descrComunitaMA" type="xs:string" nillable="true"/>
+				<xs:element name="descrFormaMisuraMS" type="xs:string" nillable="true"/>
+				<xs:element name="descrComunitaMS" type="xs:string" nillable="true"/>
+				<xs:element name="elencoMisureSicurezza" type="type:MISURA_SICUREZZA_TYPE" maxOccurs="unbounded"/>
+				<xs:element name="datiEsecuzioneMisureSicurezzaAttuali" type="type:MISURA_SICUREZZA_TYPE"/>
+				<xs:element name="datiEsecuzioneMisureSicurezzaPrecedenti" type="type:MISURA_SICUREZZA_TYPE"/>
+				<xs:element name="elencoMisureRideterminate" type="type:MISURA_SICUREZZA_TYPE" maxOccurs="unbounded"/>
+				<xs:element name="elencoPrescrizioni" type="type:PRESCRIZIONE_TYPE" maxOccurs="unbounded"/>
+				<xs:element name="datiLibertaAnticipata">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="licenzaPeriodiLibertaAnticipata" type="type:PERIODI_LIBERTA_ANTICIPATA_TYPE" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiLicenza">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="numeroMesiLicenza" type="xs:string"/>
+							<xs:element name="numeroGiorniLicenza" type="xs:string"/>
+							<xs:element name="numeroOreLicenza" type="xs:string"/>
+							<xs:element name="dataInizioLicenza" type="type:DATA_TYPE"/>
+							<xs:element name="oraInizioLicenza" type="xs:string"/>
+							<xs:element name="dataFineLicenza" type="type:DATA_TYPE"/>
+							<xs:element name="oraFineLicenza" type="xs:string"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiIndultino">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="flagEsistenzaReatoOstativo" type="xs:string"/>
+							<xs:element name="flagEspiazioneReatoOstativo" type="xs:string"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+							<xs:element name="descrUfficioMagistratoComp" type="xs:string"/>
+							<xs:element name="descrComuneCssaComp" type="xs:string"/>
+							<xs:element name="autoritaVigilante" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiMisuraAlternativa">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+							<xs:element name="descrComuneCssaComp" type="xs:string"/>
+							<xs:element name="servizioTerapeuticoComp" type="xs:string"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+							<xs:element name="descrComuneUssmComp" type="xs:string" nillable="true"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRevocaMisuraAlternativa">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrizioneDecisione" type="xs:string"/>
+							<xs:element name="DataEmissione" type="type:DATA_TYPE">
+								<xs:annotation>
+									<xs:documentation>è la data DataInizioPeriodo dell'ordinanza
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="descrTipoUfficio" type="xs:string"/>
+							<xs:element name="descrUffTdsConcessoRiduzione" type="xs:string"/>
+							<xs:element name="dataTrasmissione" type="type:DATA_TYPE"/>
+							<xs:element name="descrUfficioMagistratoComp" type="xs:string"/>
+							<xs:element name="dataDecorrenza" type="type:DATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+							<xs:element name="durataArresto" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="descrDiagnosiPsichiatrica" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>è il campo getCodNaturaProvvedimento
+							dell'ordinanza;
+							Questa Infomazine è relativa ad un'ordinanza di
+							ricovero ospedaliero
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="datiEstinzionePena">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataInizioPeriodo" type="type:DATA_TYPE"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiEstinzionePenaLibCondizionale">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataInizioPeriodo" type="type:DATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiConcessioneRinvio">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrTipoUfficio" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>"TDSM" || "UDSM"
+										labelUfficio = "Ufficio di
+										Sorveglianza presso il Tribunale per Minorenni
+										else
+										"Ufficio di
+										Sorveglianza emittente"
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataTrasmissione" type="type:DATA_TYPE"/>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="dataInizioPeriodo" type="type:DATA_TYPE"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiProrogaDetenDomicSpeciale">
+					<xs:annotation>
+						<xs:documentation>Label= Data Fine Beneficio</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiProrogaDetenDomic">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiOrdinanzaSospesa">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataInizioPeriodo" type="type:DATA_TYPE"/>
+							<xs:element name="descrUffTdsConcessoRiduzione" type="xs:string"/>
+							<xs:element name="codiTipoUfficio" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiReclamoPermesso">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataTrasmissione" type="type:DATA_TYPE"/>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="giorniPermesso" type="xs:string"/>
+							<xs:element name="orePermesso" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiReclamiCEDU">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="licenzaPeriodiLibertaAnticipata" type="type:PERIODI_LIBERTA_ANTICIPATA_TYPE" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiScomputo">
+					<xs:annotation>
+						<xs:documentation>Quantum Pena da Computare</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="numeroGiorni" type="xs:integer"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiOrdinanzaReclamata">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="codiTipoOrdinanza" type="xs:string"/>
+							<xs:element name="dataTrasmissione" type="type:DATA_TYPE"/>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRevocaLibertaAnticipata">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="licenzaPeriodiLibertaAnticipata" type="type:PERIODI_LIBERTA_ANTICIPATA_TYPE" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRevocaLiberazioneAnticipata">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataInizioPeriodo" type="type:DATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiSopravvenienzaNuovoTitolo">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="codiTipoUfficio" type="xs:string"/>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+							<xs:element name="descrUffTdsConcessoRiduzione" type="xs:string"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+							<xs:element name="servizioTerapeuticoComp" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRicoveri">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRevoca">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="tipoOrdinanza" type="xs:string"/>
+							<xs:element name="dataEmissione" type="type:DATA_TYPE"/>
+							<xs:element name="annoOrdinanza" type="xs:integer"/>
+							<xs:element name="numeroOrdinanza" type="xs:integer"/>
+							<xs:element name="dataDepositoCancelleria" type="type:DATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiSanzioneSostitutiva">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+							<xs:element name="desUfficioCompetente" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRicoveriOssPsich">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiEstinzioneSanzSost">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrUffTdsConcessoRiduzione" type="xs:string"/>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiModificaPermanSanziSost">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiSospEsecSanzSost">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="codTipoUfficio" type="xs:string"/>
+							<xs:element name="codiNaturaProvvedimento" type="xs:string"/>
+							<xs:element name="descrUffTdsConcessoRiduzione" type="xs:string"/>
+							<xs:element name="dataSospensione" type="type:DATA_TYPE"/>
+							<xs:element name="durataSospensione" type="type:DURATA_TYPE"/>
+							<xs:element name="dataScadenzaSospensioneSS" type="type:DATA_TYPE"/>
+							<xs:element name="giorniRecuperoSS" type="xs:string"/>
+							<xs:element name="durataSanzSostEspiata" type="type:DURATA_TYPE"/>
+							<xs:element name="durataSanzSostiResiduaEspiare" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiConversioneSanzSost">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="durataSanzSostEspiata" type="type:DURATA_TYPE"/>
+							<xs:element name="durataSanzSostiResiduaEspiare" type="type:DURATA_TYPE"/>
+							<xs:element name="durataDetenzioneDomiciliare" type="type:DURATA_TYPE"/>
+							<xs:element name="durataArrestoRev" type="type:DURATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="datiRinvioSanzSost">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="durataSospensione" type="type:DURATA_TYPE"/>
+							<xs:element name="descrDecisione" type="xs:string"/>
+							<xs:element name="dataInizioPeriodo" type="type:DATA_TYPE"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="elencoConversioniPecuniarie" type="type:CONVERSIONE_PENE_PECUNIARIE_TYPE" maxOccurs="unbounded"/>
+				<xs:element name="elencoDestinatariRimessionAtti" type="type:DESTINATARIO_TYPE" maxOccurs="unbounded"/>
+				<xs:element name="datiEsecuzDomicilio">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="codTipoUfficio" type="xs:string"/>
+							<xs:element name="flagEsistenzaReatoOstativo" type="xs:string"/>
+							<xs:element name="flagEspiazioneReatoOstativo" type="xs:string"/>
+							<xs:element name="dataFineMisura" type="type:DATA_TYPE"/>
+							<xs:element name="luogoSvolgimentoProva" type="xs:string"/>
+							<xs:element name="descrUfficioMagistratoCompetente" type="xs:string"/>
+							<xs:element name="descrComuneCssaComp" type="xs:string"/>
+							<xs:element name="autoritaVigilante" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="descTipoControlloEsecuzione" type="xs:string"/>
+				<xs:element name="elencoDestinatari" type="type:DESTINATARIO_TYPE" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>presente in RIMESSIONE_ATTI
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="type:ERRORE"/>
+				<xs:element name="datiFascicoloOrigine">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="annoProcedimentoSIUS" type="xs:integer"/>
+							<xs:element name="numeroProcedimentoSIUS" type="xs:integer"/>
+							<xs:element name="descrTipoUfficio" type="xs:string"/>
+							<xs:element name="descrComuneUfficio" type="xs:string"/>
+							<xs:element name="oggettoProcedimentoSIUS" type="xs:string"/>
+							<xs:element name="nomeSoggetto" type="xs:string"/>
+							<xs:element name="cognomeSoggetto" type="xs:string"/>
+							<xs:element name="sesso" type="xs:string"/>
+							<xs:element name="dataNascita" type="type:DATA_TYPE"/>
+							<xs:element name="descrComuneNascita" type="xs:string"/>
+							<xs:element name="codiceProvincia" type="xs:string"/>
+							<xs:element name="descrStatoNascita" type="xs:string"/>
+							<xs:element name="codiceStatoFascicolo" type="xs:string"/>
+							<xs:element name="descrStatoFascicolo" type="xs:string"/>
+							<xs:element name="dataCameraConsiglio" type="type:DATA_TYPE"/>
+							<xs:element name="flagRinviata" type="xs:string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="DURATA_TYPE">
+		<xs:sequence>
+			<xs:element name="anni" type="xs:integer"/>
+			<xs:element name="mesi" type="xs:integer"/>
+			<xs:element name="giorni" type="xs:integer"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PERIODI_LIBERTA_ANTICIPATA_TYPE">
+		<xs:sequence>
+			<xs:element name="flagConcesso" type="xs:string"/>
+			<xs:element name="flagScorta" type="xs:string"/>
+			<xs:element name="descrStatoPermesso" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>LS=
+						LI=
+						LA=
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codiTipoLicenza" type="xs:string"/>
+			<xs:element name="numeroGiorniRiduzione" type="xs:string"/>
+			<xs:element name="sommaRisarcimentoDanni" type="xs:decimal"/>
+			<xs:element name="elencoPeriodi" type="type:PERIODI_TYPE" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MISURA_SICUREZZA_TYPE">
+		<xs:sequence>
+			<xs:element name="codiceEsitoEvento" type="xs:string"/>
+			<xs:element name="descrNatura" type="xs:string"/>
+			<xs:element name="descrTipoMisura" type="xs:string"/>
+			<xs:element name="durataMisura" type="type:DURATA_TYPE"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PRESCRIZIONE_TYPE">
+		<xs:sequence>
+			<xs:element name="descrTipoPrescrizione" type="xs:string"/>
+			<xs:element name="descrAltraPrescrizione" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DESTINATARIO_TYPE">
+		<xs:sequence>
+			<xs:element name="descrTipoUfficio" type="xs:string"/>
+			<xs:element name="descrComuneUfficio" type="xs:string"/>
+			<xs:element name="descrTipoAutoritaEsterna" type="xs:string"/>
+			<xs:element name="note" type="xs:string"/>
+			<xs:element name="descrSedeAutoritaEsterna" type="xs:string"/>
+			<xs:element name="descrTipoIstitutoDeten" type="xs:string"/>
+			<xs:element name="descrComuneIstitutoDeten" type="xs:string"/>
+			<xs:element name="idSoggetto" type="xs:string"/>
+			<xs:element name="avvocatoSIEP" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>stringa cognome nome</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="avvocatoSIUS" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>stringa cognome nome</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tipoCuratore" type="xs:string"/>
+			<xs:element name="curatore" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>stringa cognome nome</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="indirizzoCSSA" type="xs:string"/>
+			<xs:element name="comuneCSSA" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="DATI_AVVISO" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idAvviso" type="xs:integer"/>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="CONVERSIONE_PENE_PECUNIARIE_TYPE">
+		<xs:sequence>
+			<xs:element name="annoFascSIEP" type="xs:integer"/>
+			<xs:element name="numeroFascSIEP" type="xs:integer"/>
+			<xs:element name="codTipoSanzione" type="xs:string"/>
+			<xs:element name="importoMulta" type="xs:decimal"/>
+			<xs:element name="importoAmmenda" type="xs:decimal"/>
+			<xs:element name="durataEsito" type="type:DURATA_TYPE"/>
+			<xs:element name="codOggettoTenore" type="xs:string"/>
+			<xs:element name="descrOggettoTenore" type="xs:string"/>
+			<xs:element name="valoreRata" type="xs:decimal"/>
+			<xs:element name="valoreUltimaRata" type="xs:decimal"/>
+			<xs:element name="dataInizioPagamento" type="type:DATA_TYPE"/>
+			<xs:element name="numeroGiorniInizioPagamento" type="xs:string"/>
+			<xs:element name="numeroRate" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PERIODI_TYPE">
+		<xs:sequence>
+			<xs:element name="dataInizio" type="type:DATA_TYPE"/>
+			<xs:element name="dataFine" type="type:DATA_TYPE"/>
+			<xs:element name="flagConcesso" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

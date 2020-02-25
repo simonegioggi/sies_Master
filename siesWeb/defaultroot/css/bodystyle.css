@@ -1,0 +1,237 @@
+/* sfondi 
+   ====== */
+
+/* sfondo corpo form */
+
+body.corpo
+{
+	background : #EEEEEE url("/images/sfondo.jpg") no-repeat fixed center;
+	top : 0px;
+	scrollbar-base-color : #BEC6FC;
+	scrollbar-3dlight-color : Blue;
+	scrollbar-arrow-color : Blue;
+	scrollbar-face-color : #BEC6FC;
+	scrollbar-shadow-color : #BEC6FC;
+	scrollbar-track-color : #BEC6FC;
+	scrollbar-highlight-color : #BEC6FC;
+}
+
+FORM {
+    position : relative;
+    top : 0px;
+    left : 0px;
+    padding :0px;
+}
+  
+
+/* sfondo frame header e frame menu */
+
+body.menu
+{
+    /*background-image: url("/images/web/back09.jpg")*/
+    background-color : #BEC6FC;
+}  
+
+/* tabelle elenchi 
+   =============== */
+
+table {
+	 text-align:left;
+}
+/* cella */
+
+td   
+{
+    color: navy;
+    font-family: 'Verdana';
+    font-size:11px;
+    font-weight:bold;
+
+}
+
+td.LBG
+{
+	border-width :thin thin thin thin ;
+	border-style:solid;
+	padding: 1px 1px 1px 1px;
+	text-align: left;
+	background : url("/images/fondoL.gif") bottom;
+	border-color : #8FBFC5;
+	text-transform : capitalize;
+}
+
+td.LBP
+{
+	border-width :thin thin thin thin ;
+	border-style:solid;
+	padding: 1px 1px 1px 1px;
+	text-align: left;
+	background : url("/images/fondoC.gif") bottom;
+	border-color : #8FBFC5;
+	text-transform : capitalize;
+}
+/* cella allineata a sinistra */
+
+td.l 
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: left;
+border-color :#DEDEDE;
+}
+
+/* cella allineata a destra */
+
+td.r 
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: right;
+border-color :#DEDEDE;
+}
+
+/* cella allineata al centro */
+ 
+td.c
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+}
+
+td.lNoBord
+{
+    border-style: none;
+    padding: 1px 1px 1px 1px;
+    text-align: left;
+}
+
+/* cella allineata a destra */
+
+td.rNoBord
+{
+border-style:none;
+padding: 1px 1px 1px 1px;
+text-align: right;
+}
+
+/* cella allineata al centro */
+ 
+td.cNoBord
+{
+    border-style:none;
+    padding: 1px 1px 1px 1px;
+    text-align: center;
+}
+
+/* intestazione di colonna tabella elenco */
+
+td.int 
+{
+font-family : 'Verdana';
+font-size : 11px;
+background-color : blue;
+color : white;
+font-weight : bold;
+border : White;
+text-align:center;
+}
+
+/* tabelle di form di dettaglio 
+   ============================ */
+
+
+
+/* intestazione campo */
+
+.label
+{
+color : navy;
+border : white;
+font-family: 'Verdana';
+font-size: 11px;
+
+text-align:left;
+}
+
+/* campo di output */
+
+.campo
+{
+    color : Blue;
+    border : white;
+    font-family: 'Verdana';
+    font-size: 11px;
+  
+    text-align:left;
+}
+
+.ob{
+	color: black;
+    font-size: 10px;
+    font: lighter;
+    font-family:  Verdana;
+}
+/* oggetti di form
+   =============== */
+
+/* combo box */
+
+select
+{
+font-family: 'Verdana';
+font-size: 11px;
+color : blue;
+}
+
+/* campo di input */
+
+input
+{
+    font-family: 'Verdana';
+    color : blue;
+    font-size : 11px;
+    /*text-transform : uppercase;
+    */
+  
+}
+TEXTAREA {
+	 font-family: 'Verdana';
+    color : navy;
+    font-weight: bold;
+    font-size : 11px;
+	scrollbar-base-color : Scrollbar;
+	scrollbar-3dlight-color : Scrollbar;
+	scrollbar-arrow-color : WindowText;
+	scrollbar-face-color : Scrollbar;
+	scrollbar-shadow-color : ThreedShadow;
+	scrollbar-track-color : Scrollbar;
+	scrollbar-highlight-color : ThreedLightShadow;
+}
+A, A:ACTIVE, A:FOCUS, A:HOVER, A:LINK, A:VISITED {
+	font-family: 'Tahoma';
+    color : blue;
+    font-weight: bold;
+    font-size : 11px;
+}
+
+.bottone
+{
+	border-width :thin thin thin thin ;
+	border-style:solid;
+	padding: 1px 1px 1px 1px;
+	text-align: left;
+	background : url("/images/fondoL.gif") bottom;
+	border-color : #4682B4;
+	font-family : Verdana;
+	font-size : 11px;
+	text-decoration : none;
+	text-transform : capitalize;
+	color:navy;
+	text-align: center;
+	cursor:hand;
+}

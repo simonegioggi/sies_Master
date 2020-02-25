@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/richiestaStampa"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/richiestaStampa">
+	<xs:element name="RICHIESTA_STAMPA">
+		<xs:annotation>
+			<xs:documentation>richiesta di download della stampa rtf
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_STAMPA_INPUT" />
+				<xs:element ref="type:DATI_STAMPA_OUTPUT" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_STAMPA_INPUT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string" />
+				<xs:element name="codTipoUfficio" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>UDS: Ufficio di Sorveglianza
+							TDS: Tribunale di
+							Sorveglianza
+							UDSM:Ufficio di Sorveglianza Minori
+							TDSM:Tribunale di
+							Sorveglianza Minori
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="codDistretto" type="xs:string" />
+				<xs:element name="idFascicoloSius" type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_STAMPA_OUTPUT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idFascicoloSius" nillable="true" type="xs:integer" />
+				<xs:element name="ALLEGATO_RTF" nillable="true"
+					type="xs:base64Binary" />
+				<xs:element ref="type:ERRORE" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ERRORE">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CODICE_ERRORE" type="xs:string" />
+				<xs:element name="DESCR_ERRORE" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

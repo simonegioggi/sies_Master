@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.PeriodoLibertaAnticipata">
+
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.PeriodoLibertaAnticipata">
+    	<!-- MEV 16: modificata query by BVN -->
+    	SELECT 	PL.DATA_INIZIO dataLibertaAnticipataInizio,
+            	PL.DATA_FINE dataLibertaAnticipataFine,
+            	decode(DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+            	DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+            	DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE, 'U10027900390','RR','U10027900392','RR','U10027900391','RR', A.DESCR_STATO_PERMESSO) statoPermesso,
+            	A.NUMERO_GIORNI numeroGiorni
+          FROM	PERIODO_LIBANTICIPATA PL,
+          		LICENZA_LIBANTICIPATA A,
+           		EVENTO                AA,
+            	GENERALE_PROCEDIMENTO GP,
+            	CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            	CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            	CG_REF_CODES          DESCR_COD_PROCEDIMENTO
+         WHERE	PL.LIC_ID_LICENZA_LIBANTICIPATA = A.ID_LICENZA_LIBANTICIPATA
+           AND 	A.EVE_ID_EVENTO =  #{idEvento}
+           AND 	PL.FLAG_CONCESSO='C'
+           AND 	A.eve_id_evento=AA.ID_EVENTO
+           AND 	AA.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS            
+           AND 	DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+           AND 	AA.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE            
+           AND 	DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+           AND 	NVL(AA.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE            
+           AND 	DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+           AND 	GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE            
+           AND 	AA.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+    </select>
+
+</mapper>

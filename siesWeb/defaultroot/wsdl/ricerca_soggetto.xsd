@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti">
+	<xs:include schemaLocation="dettaglio_procedimento.xsd" />
+	<xs:element name="RICERCA_SOGGETTO">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_SOGGETTO_INPUT" />
+				<xs:element ref="type:DATI_SOGGETTO_OUTPUT" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_SOGGETTO_INPUT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string" />
+				<xs:element name="codTipoUfficio" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>UDS: Ufficio di Sorveglianza
+							TDS: Tribunale di
+							Sorveglianza
+							UDSM:Ufficio di Sorveglianza Minori
+							TDSM:Tribunale di
+							Sorveglianza Minori
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="codDistretto" type="xs:string" />
+				<xs:element ref="type:SOGGETTO" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_SOGGETTO_OUTPUT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" name="elencoSoggetti"
+					type="type:SOGGETTO_TYPE" />
+				<xs:element ref="type:ERRORE" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

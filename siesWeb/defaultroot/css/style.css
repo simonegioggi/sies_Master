@@ -1,0 +1,645 @@
+/* sfondi
+   ====== */
+
+/* sfondo corpo form */
+
+body.corpo
+{
+        background : #EEEEEE url("/images/sfondo.jpg") no-repeat fixed top;
+        top : 0px;
+        scrollbar-base-color : #BEC6FC;
+        scrollbar-3dlight-color : Blue;
+        scrollbar-arrow-color : Blue;
+        scrollbar-face-color : #BEC6FC;
+        scrollbar-shadow-color : #BEC6FC;
+        scrollbar-track-color : #BEC6FC;
+        scrollbar-highlight-color : #BEC6FC;
+}
+
+FORM {
+    position : relative;
+    top : 0px;
+    left : 0px;
+    padding :0px;
+}
+
+
+/* sfondo frame header e frame menu */
+
+body.menu
+{
+    /*background-image: url("/images/web/back09.jpg")*/
+    background-color : #BEC6FC;
+}
+
+/* tabelle elenchi
+   =============== */
+
+table {
+         text-align:left;
+}
+/* cella */
+
+td
+{
+   color : navy;
+    font-family: 'Tahoma';
+    font-size: 11px;
+
+}
+
+td.LBG
+{
+font-size: 11px;
+        border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: left;
+background :  url("/images/fondoL.gif") bottom;
+border-color : #8FBFC5;
+text-transform : capitalize;
+}
+
+td.LBGIS
+{
+font-size: 11px;
+        border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+background :  url("/images/fondo6.gif") center;
+border-color : #8FBFC5;
+}
+td.LBGISI
+{
+color : Blue;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight: bold;
+text-align:left;
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+background :  url("/images/fondo6.gif") bottom;
+border-color : #8FBFC5;
+}
+
+td.LBGISIV
+{
+font-size: 11px;
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+background :  url("/images/fondo7.gif") bottom;
+border-color : #8FBFC5;
+}
+
+td.LBP
+{
+font-size: 11px;
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: left;
+background :  url("/images/fondoC.gif") bottom;
+border-color : #8FBFC5;
+text-transform : capitalize;
+}
+
+td.Titolo
+{
+        font-size: 11px;
+        /* border-width :thin thin thin thin ;
+        */
+        /* border-style:solid;
+        */
+        /* border-color : #696969;
+        */
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        background : url("/images/fondoL.gif") bottom;
+        text-transform : capitalize;
+        text-align : center;
+        font-weight : bold;
+}
+td.TitoloNoCap
+{
+        font-size: 11px;
+        /* border-width :thin thin thin thin ;
+        */
+        /* border-style:solid;
+        */
+        /* border-color : #696969;
+        */
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        background : url("/images/fondoL.gif") bottom;
+        text-align : center;
+        font-weight : bold;
+}
+td.Separa
+{
+        /* border-width :thin thin thin thin ;
+        */
+        /* border-style:solid;
+        */
+        /* border-color : #696969;
+        */
+        background : url("/images/greca.gif");
+}
+
+/* cella allineata a sinistra */
+
+td.l
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: left;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+}
+
+/* cella allineata a destra */
+
+td.r
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: right;
+border-color :#DEDEDE;
+ font-family: 'Tahoma';
+ font-size: 12px;
+ font-weight : bold;
+}
+
+/* cella allineata al centro */
+
+td.c
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+}
+
+td.orange
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+background-color : #FFA500;
+}
+
+td.lNoBord
+{
+
+    border-style: none;
+    padding: 1px 1px 1px 1px;
+    text-align: left;
+}
+
+/* cella allineata a destra */
+
+td.rNoBord
+{
+
+border-style:none;
+padding: 1px 1px 1px 1px;
+text-align: right;
+}
+
+/* cella allineata al centro */
+
+td.cNoBord
+{
+
+    border-style:none;
+    padding: 1px 1px 1px 1px;
+    text-align: center;
+}
+
+/* intestazione di colonna tabella elenco */
+
+td.int
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+font-family : 'Tahoma';
+font-size : 12px;
+background-color : blue;
+color : white;
+font-weight : bold;
+border : White;
+text-align:center;
+}
+
+/* cella allineata a sinistra */
+
+td.lVerde
+{
+        border-width :thin thin thin thin ;
+        border-style:solid;
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        border-color :#DEDEDE;
+        font-family: 'Tahoma';
+        font-size: 12px;
+        font-weight : bold;
+        color: #228B22;
+}
+
+/* cella Verde allineata a sinistra senza bordo */
+
+td.lVerdeNB
+{
+        border-style:none;
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        font-family: 'Tahoma';
+        font-size: 12px;
+        font-weight : bold;
+        color: #228B22;
+}
+
+td.lRosso
+{
+        border-width :thin thin thin thin ;
+        border-style:solid;
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        border-color :#DEDEDE;
+        font-family: 'Tahoma';
+        font-size: 12px;
+        font-weight : bold;
+        color: Red;
+}
+
+td.lRossoNB
+{
+        border-style:none;
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        font-family: 'Tahoma';
+        font-size: 12px;
+        font-weight : bold;
+        color: Red;
+}
+
+/* cella allineata al centro  Verde*/
+
+td.cVerde
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+color: #228B22;
+}
+
+td.cViola
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+color: #990066;
+}
+
+td.cRosso
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+color: Red;
+}
+
+/* cella allineata la centro Grigia */
+
+td.cGrigio
+{
+border-width :thin thin thin thin ;
+border-style:solid;
+padding: 1px 1px 1px 1px;
+text-align: center;
+border-color :#DEDEDE;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+color: #969B97;
+}
+
+
+
+/* tabelle di form di dettaglio
+   ============================ */
+
+
+
+/* intestazione campo */
+
+.label
+{
+color : navy;
+border : white;
+font-family: 'Tahoma';
+font-size: 12px;
+font-weight : bold;
+text-align:left;
+
+}
+
+/* campo di output */
+
+.campo
+{
+  color : Blue;
+  border : white;
+  font-family: 'Tahoma';
+  font-size: 12px;
+  font-weight : bold;
+  text-align:left;
+  text-transform : uppercase;
+}
+
+.campoLow
+{
+  color : Blue;
+  border : white;
+  font-family: 'Tahoma';
+  font-size: 12px;
+  font-weight : bold;
+  text-align:left;
+}
+
+.campoSmall
+{
+  color : Blue;
+  border : white;
+  font-family: 'Tahoma';
+  font-size: 9px;
+  font-weight : bold;
+  text-align:left;
+ /* text-transform : Capitalize;*/
+}
+
+.campoNoCap
+{
+  color : Blue;
+  border : white;
+  font-family: 'Tahoma';
+  font-size: 12px;
+  font-weight : bold;
+  text-align:left;
+  text-transform : none;
+}
+
+.ob
+{
+  color: black;
+  font-size: 10px;
+  font: lighter;
+  font-family:  Tahoma;
+}
+
+.obr
+{
+  color: red;
+  font-size: 10px;
+  font: lighter;
+  font-family:  Tahoma;
+}
+
+.descr{
+    color: Blue;
+    font-size: 10px;
+    font: lighter;
+    font-family: Tahoma;
+}
+
+.cVerde{
+    color: #228B22;
+    font-size: 12px;
+    font-weight : bold;
+    font-family: 'Tahoma';
+}
+.cRossoCumulo{
+    color: #FFFFFF;
+    background-color: #b22222;
+    font-size: 13px;
+    font-weight : bold;
+    font-family: 'Verdana';
+    font-style: 'normal'
+    border:1px solid Navy;
+
+}
+
+.cViola{
+    color: #990066;
+    font-size: 12px;
+    font-weight : bold;
+    font-family: 'Tahoma';
+}
+
+.cRosso{
+    color:red;
+    font-size: 12px;
+    font-weight : bold;
+    font-family: 'Tahoma';
+}
+
+.cGrigio{
+    color:#969B97;
+    font-size: 12px;
+    font-weight : bold;
+    font-family: 'Tahoma';
+}
+/* oggetti di form
+   =============== */
+
+/* combo box */
+
+select
+{
+font-family: Tahoma;
+font-size: 12px;
+color : blue;
+font-weight : bold;
+}
+
+select.small
+{
+font-family: Arial;
+font-size: 10px;
+color : blue;
+font-weight : normal;
+}
+
+/* campo di input */
+
+input
+{
+        font-family: Tahoma;
+        color : blue;
+        font-size : 12px;
+        font-weight : bold;
+
+}
+.iGrigio
+{
+         background-color:silver;
+         font-weight : bold;
+         font-family: Tahoma;
+
+
+        }
+TEXTAREA {
+        font-family: Tahoma;
+        color : navy;
+        font-size : 12px;
+        font-weight : bold;
+        scrollbar-base-color : Scrollbar;
+        scrollbar-3dlight-color : Scrollbar;
+        scrollbar-arrow-color : WindowText;
+        scrollbar-face-color : Scrollbar;
+        scrollbar-shadow-color : ThreedShadow;
+        scrollbar-track-color : Scrollbar;
+        scrollbar-highlight-color : ThreedLightShadow;
+
+}
+A.menu, A.menu:ACTIVE, A.menu:FOCUS, A.menu:HOVER, A.menu:LINK, A.menu:VISITED {
+        font-family: 'Tahoma';
+        color : Navy;
+        font-size : 12px;
+        text-decoration : none;
+}
+.bottone
+{
+        border-width :thin thin thin thin ;
+        border-style:solid;
+        padding: 1px 1px 1px 1px;
+        text-align: left;
+        background : url("/images/fondoL.gif") bottom;
+        border-color : #4682B4;
+        font-family : Tahoma;
+        font-size : 11px;
+        text-decoration : none;
+        text-transform : capitalize;
+        color:navy;
+        text-align: center;
+        cursor:hand;
+}
+
+a.Cliccabile {
+        text-decoration : underline;
+        font-weight : bold;
+        color : #CD5C5C;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:left;
+}
+a.CliccabileBlu {
+        text-decoration : underline;
+        font-weight : bold;
+        color : Blue;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:center;
+}
+a.CliccabileBlu:Hover {
+     font-style : italic;
+        text-decoration : underline;
+        font-weight : bold;
+        color : #CD5C5C;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:center;
+}
+
+
+a.Cliccabile:Hover {
+        font-style : italic;
+        text-decoration : none;
+        color : Blue;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:left;
+}
+a.CliccabileBluScuro {
+        text-decoration : underline;
+        font-weight : bold;
+        color : #000080;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:center;
+}
+a.CliccabileBluScuro:Hover {
+     font-style : italic;
+        text-decoration : underline;
+        font-weight : bold;
+        color : #CD5C5C;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:center;
+}
+a.CliccabileFermo {
+        text-decoration : underline;
+        font-weight : bold;
+        color : #CD5C5C;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:center;
+}
+a.CliccabileFermo:Hover {
+     font-style : normal;
+        text-decoration : underline;
+        font-weight : bold;
+        color : Blue;
+    border : white;
+    font-family: 'Tahoma';
+    font-size: 12px;
+        font-weight : bold;
+    text-align:center;
+}

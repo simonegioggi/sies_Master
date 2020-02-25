@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+	<context-root>/</context-root>
+    <resource-ref>
+        <res-ref-name>oracleds</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <jndi-name>java:jboss/jdbc/oracleds</jndi-name>
+    </resource-ref>
+</jboss-web>

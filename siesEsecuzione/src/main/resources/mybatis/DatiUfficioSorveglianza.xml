@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.DatiUfficioSorveglianza">
+    
+    <update id="deleteLogica" parameterType="it.mig.sies.model.DatiUfficioSorveglianza">
+        UPDATE EVENTO set
+            KEY_ESEC_NSC = NULL
+        where ID_EVENTO = #{chiaveSies}
+    </update>
+    
+    <update id="update" parameterType="it.mig.sies.model.DatiUfficioSorveglianza">
+        UPDATE EVENTO set
+            KEY_ESEC_NSC = #{chiaveNSC}
+        where ID_EVENTO = #{chiaveSies}
+    </update>
+    
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.DatiUfficioSorveglianza">
+        SELECT 
+          DISTINCT  chiaveSies,
+          chiaveNSC,
+          dataProvvedimento,
+          codiceAutorita,
+          sedeAutoritaPrinDist,
+          sedeAutoritaPrinc,
+          codiceUnivocoProvvedimento,
+          tipoProvvedimento,
+          SUM(nvl(numGiorniLibAnticipata,0))  OVER(PARTITION BY chiaveSies) numGiorniLibAnticipata,
+          arrayPeriodoLA,
+          SUM(nvl(importoAmmenda,0)) OVER(PARTITION BY chiaveSies) importoAmmenda,
+          SUM(nvl(importoMulta,0))    OVER(PARTITION BY chiaveSies) importoMulta,
+          SUM(nvl(anniDurataLibControllata,0))   OVER(PARTITION BY chiaveSies) anniDurataLibControllata,
+          SUM(nvl(mesiDurataLibControllata,0))   OVER(PARTITION BY chiaveSies) mesiDurataLibControllata,
+          SUM(nvl(giorniDurataLibControllata,0))  OVER(PARTITION BY chiaveSies) giorniDurataLibControllata,
+          SUM(nvl(anniDurataLavoroSost,0))    OVER(PARTITION BY chiaveSies) anniDurataLavoroSost,
+          SUM(nvl(mesiDurataLavoroSost,0))     OVER(PARTITION BY chiaveSies) mesiDurataLavoroSost,
+          SUM(nvl(giorniDurataLavoroSost,0))   OVER(PARTITION BY chiaveSies) giorniDurataLavoroSost,
+          testoLibero,
+          SUM(nvl(numeroRate,0))     OVER(PARTITION BY chiaveSies)  numeroRate,
+          SUM(nvl(importoRate,0))     OVER(PARTITION BY chiaveSies) importoRate,
+          SUM(nvl(importoUltimaRata,0))  OVER(PARTITION BY chiaveSies) importoUltimaRata,
+          MAX(dataDecorrenzaPrimaRata) OVER(PARTITION BY chiaveSies) dataDecorrenzaPrimaRata,
+          SUM(nvl(giorniDallaNotifica,0))  OVER(PARTITION BY chiaveSies) giorniDallaNotifica,
+          durataDifferimento,
+          dataDecorrenzaSospensione,
+          SUM(nvl(giorniSospensione,0)) OVER(PARTITION BY chiaveSies)   giorniSospensione,
+          SUM(nvl(mesiSospensione,0))  OVER(PARTITION BY chiaveSies)  mesiSospensione,
+          SUM(nvl(anniSospensione,0))  OVER(PARTITION BY chiaveSies)  anniSospensione,
+          dataFineSospensioneSS
+      FROM (
+        SELECT DISTINCT 
+            A.ID_EVENTO chiaveSies,
+            A.KEY_ESEC_NSC chiaveNSC,
+            A.DATA_EMISSIONE dataProvvedimento,
+            DECODE(UFF.COD_TIPO_UFFICIO, 'UDS', '50', 'TDS', '51') codiceAutorita,
+            COM_AUT.CO_CODCENTR sedeAutoritaPrinDist,
+            NULL sedeAutoritaPrinc,
+            --gp.cod_oggetto_procedimento||a.cod_motivo||a.cod_esito   CodiceUnivocoProvvedimento,
+            DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+            DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+            DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE codiceUnivocoProvvedimento,
+            C.CO_CODCENTR                tipoProvvedimento,
+            NUM_GIORNI_LIBANTICIPATA     numGiorniLibAnticipata,
+            NULL                         arrayPeriodoLA,
+            NULL                         importoAmmenda,
+            NULL                         importoMulta,
+            NULL                         anniDurataLibControllata,
+            NULL                         mesiDurataLibControllata,
+            NULL                         giorniDurataLibControllata,
+            NULL                         anniDurataLavoroSost,
+            NULL                         mesiDurataLavoroSost,
+            NULL                         giorniDurataLavoroSost,
+            NULL                         testoLibero,
+            NULL                         numeroRate,
+            NULL                         importoRate,
+            NULL                         importoUltimaRata,
+            NULL                         dataDecorrenzaPrimaRata,
+            NULL                         giorniDallaNotifica,
+            NULL                         durataDifferimento,
+            DATA_DECORRENZA              dataDecorrenzaSospensione,
+            SOSPENSIONE_GG               giorniSospensione,
+            SOSPENSIONE_MM               mesiSospensione,
+            SOSPENSIONE_AA               anniSospensione,
+            DATA_SCADENZA_SOSPENSIONE_SS dataFineSospensioneSS
+        FROM 
+            EVENTO                A,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+            DEPOSITO_ORDINANZA_PC LL,
+            CODICI_SIES_NSC       C,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            CODICI_SIES_NSC       COM_AUT
+        WHERE 
+            A.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+            AND A.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+            AND NVL(A.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND A.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+            AND LL.ID_EVENTO_GENERATO(+) = A.ID_EVENTO
+            AND C.CO_DOMAIN(+) = 'TIPO_PROVVEDIMENTO'
+            AND C.CO_SIES(+) = A.COD_TIPO_PROVVEDIMENTO
+            AND UFF.COD_UFFICIO = A.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND COM_AUT.CO_DOMAIN = 'COMUNE'
+            AND COM_AUT.CO_SIES = A.COD_LUOGO_EMITTENTE
+            AND A.ID_EVENTO= #{idEvento}
+            --MEV 42558 - Aggiunta flag data annullamento
+            AND A.FLAG_DOCUMENTO_REGISTRATO &lt;&gt; 'A'
+            --   AND A.FAS_SIU_ID_FASCICOLO_SIUS = ???
+        UNION
+        --SOLO PER IL MAGISTRATO!!
+        --comment on column RICHIESTA_CONVERSIONE.COD_TIPO_SANZIONE
+        --  is '01=Liberta controllata; 02=Lavoro Sostitutivo';
+        SELECT 
+            A.ID_EVENTO chiaveSies,
+            A.KEY_ESEC_NSC chiaveNSC,
+            A.DATA_EMISSIONE dataProvvedimento,
+            DECODE(UFF.COD_TIPO_UFFICIO, 'UDS', '50', 'TDS', '51') codiceAutorita,
+            COM_AUT.CO_CODCENTR sedeAutoritaPrinDist,
+            NULL sedeAutoritaPrinc,
+            --gp.cod_oggetto_procedimento||a.cod_motivo||a.cod_esito   CodiceUnivocoProvvedimento,
+            DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+            DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+            DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE codiceUnivocoProvvedimento,
+            C.CO_CODCENTR                  tipoProvvedimento,
+            NULL                           numGiorniLibAnticipata,
+            NULL                           arrayPeriodoLA,
+            IMPORTO_AMMENDA                importoAmmenda,
+            IMPORTO_MULTA                  importoMulta,
+            --DURATA_ESITO_ANNI              anniDurataLibControllata,
+            --DURATA_ESITO_MESI              mesiDurataLibControllata,
+            --DURATA_ESITO_GIORNI            giorniDurataLibControllata,
+            --DURATA_ESITO_ANNI              anniDurataLavoroSost,
+            --DURATA_ESITO_MESI              mesiDurataLavoroSost,
+            --DURATA_ESITO_GIORNI            giorniDurataLavoroSost,
+            decode(DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE,'0156',DURATA_ESITO_ANNI,NULL) anniDurataLibControllata,
+            decode(DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE,'0156',DURATA_ESITO_MESI,NULL) mesiDurataLibControllata,
+            decode(DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE,'0156',DURATA_ESITO_GIORNI,NULL) giorniDurataLibControllata,
+            decode(DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE,'0157',DURATA_ESITO_ANNI,NULL) anniDurataLavoroSost,
+            decode(DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE,'0157',DURATA_ESITO_MESI,NULL) mesiDurataLavoroSost,
+            decode(DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE,'0157',DURATA_ESITO_GIORNI,NULL) giorniDurataLavoroSost,
+            NULL                           testoLibero,
+            NUMERO_RATE                    numeroRate,
+            VALORE_RATA                    importoRate,
+            VALORE_ULTIMA_RATA             importoUltimaRata,
+            DATA_INIZIO_PAGAMENTO          dataDecorrenzaPrimaRata,
+            NUMERO_GIORNI_INIZIO_PAGAMENTO giorniDallaNotifica,
+            NULL                           durataDifferimento,
+            NULL                           dataDecorrenzaSospensione,
+            NULL                           giorniSospensione,
+            NULL                           mesiSospensione,
+            NULL                           anniSospensione,
+            NULL                           dataFineSospensioneSS
+        FROM 
+            EVENTO                A,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+            RICHIESTA_CONVERSIONE LL,
+            CODICI_SIES_NSC       C,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            CODICI_SIES_NSC       COM_AUT
+        WHERE 
+            A.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+            AND A.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+            AND NVL(A.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND A.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+            AND LL.EVE_ID_EVENTO = A.ID_EVENTO
+            AND LL.FAS_SIU_ID_FASCICOLO_SIUS = A.FAS_SIU_ID_FASCICOLO_SIUS
+            AND C.CO_DOMAIN(+) = 'TIPO_PROVVEDIMENTO'
+            AND C.CO_SIES(+) = A.COD_TIPO_PROVVEDIMENTO
+            AND UFF.COD_UFFICIO = A.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND COM_AUT.CO_DOMAIN = 'COMUNE'
+            AND COM_AUT.CO_SIES = A.COD_LUOGO_EMITTENTE
+            AND A.ID_EVENTO= #{idEvento}
+            --MEV 42558 - Aggiunta flag data annullamento
+            AND A.FLAG_DOCUMENTO_REGISTRATO &lt;&gt; 'A'
+            -- AND A.FAS_SIU_ID_FASCICOLO_SIUS = ???
+        UNION
+        --TRIBUNALE e SORVEGLIANZA 
+        SELECT 
+            A.ID_EVENTO chiaveSies,
+            A.KEY_ESEC_NSC chiaveNSC,
+            A.DATA_EMISSIONE dataProvvedimento,
+            DECODE(UFF.COD_TIPO_UFFICIO, 'UDS', '50', 'TDS', '51') codiceAutorita,
+            COM_AUT.CO_CODCENTR sedeAutoritaPrinDist,
+            NULL sedeAutoritaPrinc,
+            --gp.cod_oggetto_procedimento||a.cod_motivo||a.cod_esito   CodiceUnivocoProvvedimento,
+            DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+            DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+            DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE codiceUnivocoProvvedimento,
+            C.CO_CODCENTR tipoProvvedimento,
+            ll.numero_giorni        numGiorniLibAnticipata,
+            DATA_INIZIO   			arrayPeriodoLA,
+            NULL          			importoAmmenda,
+            ll.somma_risarc_danni 	importoMulta,
+            NULL          			anniDurataLibControllata,
+            NULL          			mesiDurataLibControllata,
+            NULL          			giorniDurataLibControllata,
+            NULL          			anniDurataLavoroSost,
+            NULL          			mesiDurataLavoroSost,
+            NULL          			giorniDurataLavoroSost,
+            NULL          			testoLibero,
+            NULL          			numeroRate,
+            NULL          			importoRate,
+            NULL          			importoUltimaRata,
+            NULL          			dataDecorrenzaPrimaRata,
+            NULL          			giorniDallaNotifica,
+            NULL          			durataDifferimento,
+            NULL          			dataDecorrenzaSospensione,
+            NULL          			giorniSospensione,
+            NULL          			mesiSospensione,
+            NULL          			anniSospensione,
+            NULL          			dataFineSospensioneSS
+        FROM 
+            EVENTO                A,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+            LICENZA_LIBANTICIPATA LL,
+            CODICI_SIES_NSC       C,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            CODICI_SIES_NSC       COM_AUT
+        WHERE 
+            A.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+            AND A.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+            AND NVL(A.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO =  DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND A.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+            AND LL.EVE_ID_EVENTO = A.ID_EVENTO
+            AND LL.FAS_SIU_ID_FASCICOLO_SIUS = A.FAS_SIU_ID_FASCICOLO_SIUS
+            AND C.CO_DOMAIN(+) = 'TIPO_PROVVEDIMENTO'
+            AND C.CO_SIES(+) = A.COD_TIPO_PROVVEDIMENTO
+            AND UFF.COD_UFFICIO = A.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND COM_AUT.CO_DOMAIN = 'COMUNE'
+            AND COM_AUT.CO_SIES = A.COD_LUOGO_EMITTENTE
+            AND A.ID_EVENTO= #{idEvento}
+            --MEV 42558 - Aggiunta flag data annullamento
+            AND A.FLAG_DOCUMENTO_REGISTRATO &lt;&gt; 'A'
+            )
+            -- AND A.FAS_SIU_ID_FASCICOLO_SIUS = ????
+    </select>
+    
+    <select id="lookupRevocato" parameterType="long" resultType="long">
+		SELECT --RFS.FAS_SIE_ID_FASCICOLO_SIEP KIAVE_SIEP,
+			       FAS_SIEP.KEY_PROVV_NSC KIAVE_NSC/*,       
+			       RFS.NUMERO_PROVVEDIMENTO NUMERO_SENTENZA,
+			       RFS.ANNO_PROVVEDIMENTO ANNO_SENTENZA,
+			       RFS.DATA_PROVVEDIMENTO DATA_PROVVEDIMENTO,
+			       AUT.CO_CODCENTR CODICE_AUTORITA_CENTRALE,
+			       rfs.COD_LUOGO_EMITTENTE Sede_Autorita*/
+			  FROM RIFERIMENTO_FASCICOLO_SIEP RFS,
+			       CG_REF_CODES               DESCR_TIPO_UFF,
+			       COMUNE                     DESCR_COM_UFF,
+			       UFFICIO                    UFF,
+			       CG_REF_CODES               DESCR_TIPO_PROVV,
+			       COMUNE                     DESCR_LUOGO_EMIT,
+			       CG_REF_CODES               DESCR_AUTORITA_EMIT,
+			       FASCICOLO_SIEP             FAS_SIEP,
+			       CODICI_SIES_NSC AUT,
+			       CG_REF_CODES    TIPO_AUTORITA_EMITTENTE,
+			       evento e,
+			       CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+			       CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+			       CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+			       GENERALE_PROCEDIMENTO GP
+			 WHERE DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO'
+			   --MEV 23010 Aggiunta condizione
+   			   AND FAS_SIEP.KEY_PROVV_NSC IS NOT NULL
+			   AND NVL(UFF.COD_TIPO_UFFICIO, '-') = DESCR_TIPO_UFF.RV_LOW_VALUE
+			   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+			   AND RFS.COD_UFF_FASCICOLO_SIEP = UFF.COD_UFFICIO
+			   AND DESCR_TIPO_PROVV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+			   AND RFS.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROVV.RV_LOW_VALUE
+			   AND DESCR_AUTORITA_EMIT.RV_DOMAIN = 'TIPO_UFFICIO'
+			   AND RFS.COD_TIPO_AUTORITA_EMITTENTE = DESCR_AUTORITA_EMIT.RV_LOW_VALUE
+			   AND RFS.COD_LUOGO_EMITTENTE = DESCR_LUOGO_EMIT.COD_COMUNE
+			   AND FAS_SIEP.ID_FASCICOLO_SIEP = RFS.FAS_SIE_ID_FASCICOLO_SIEP
+			   AND AUT.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+			   AND AUT.CO_SIES = rfs.COD_TIPO_AUTORITA_EMITTENTE
+			   AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = aut.CO_SIES
+			   AND AUT.CO_VAL2 = '-'
+			   AND AUT.CO_VAL1 = '-'
+			   AND TIPO_AUTORITA_EMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO'
+			   AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE =
+			       rfs.COD_TIPO_AUTORITA_EMITTENTE
+			   AND e.fas_siu_id_fascicolo_sius    =rfs.FAS_SIU_ID_FASCICOLO_SIUS
+			   AND e.id_evento=#{idEvento}
+			   AND E.Eve_Id_Evento is NULL   
+			   AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+			   AND e.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+			   AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'           
+			   AND NVL(e.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+			   AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+			   AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+			   AND E.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS     
+			   AND DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+			       DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+			       DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE IN (
+			       	'C00400920009',
+			       	'C00400940009',
+			       	'C00400200009',
+			       	'C00400950009',
+			       	'C00401000009',
+			       	'C00400930009',
+					'C00401010009',
+					'C00403170009',
+					'C00401980009',
+					'U03727020009',
+					'U03722990009',
+					'U03722810009')
+					-- MERGE v10: aggiunti tre codici	
+		       AND  DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+		        DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+		        DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE NOT IN
+		        --CESSAZIONI
+		          ('C00400200010',
+		        'C00400930010',
+		        'C00401000010',
+		        'C00401010010',
+		        'C00401020010',
+		        'C00401030010',
+		        'C00400920010',
+		        'C00401980010',
+		        'C00400940010',
+		        'C00403170010'
+		)
+		
+		UNION
+		
+		SELECT DISTINCT 
+				--FASC.ID_FASCICOLO_SIEP             ID_FASCICOLO_SIEP,
+		        FASC.KEY_PROVV_NSC                 KIAVE_PROVV_NSC
+		   FROM FASCICOLO_SIEP  FASC,
+		        SENTENZA        SENT,
+		        SOGGETTO        SOGG,
+		        CG_REF_CODES    TIPO_PROVVEDIMENTO,
+		        COMUNE          LUOGO_EMITTENTE,
+		        UFFICIO         UFF,
+		        CG_REF_CODES    DESCR_TIPO_UFF,
+		        COMUNE          DESCR_COM_UFF,
+		        CODICI_SIES_NSC AUT,
+		        CODICI_SIES_NSC COD_COMUNE,
+		        fascicolo_sius  fasc_s,
+		        evento e,
+		        CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+		        CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+		        CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+		        GENERALE_PROCEDIMENTO GP
+		  WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO
+		    --MEV 23010 Aggiunta condizione
+   			AND FASC.KEY_PROVV_NSC IS NOT NULL
+		    AND FASC.SEN_ID_SENTENZA = SENT.ID_SENTENZA
+		    AND FASC.FLAG_VALIDATO = 'S'
+		    AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+		    AND TIPO_PROVVEDIMENTO.RV_LOW_VALUE = SENT.COD_TIPO_PROVVEDIMENTO
+		    AND LUOGO_EMITTENTE.COD_COMUNE = SENT.COD_LUOGO_EMITTENTE
+		    AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO
+		    AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO'
+		    AND UFF.COD_TIPO_UFFICIO = DESCR_TIPO_UFF.RV_LOW_VALUE
+		    AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+		    AND AUT.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		    AND AUT.CO_SIES = decode(fasc.flag_cumulante,'S','PM', 
+		SENT.COD_TIPO_AUTORITA_EMITTENTE)
+		    AND AUT.CO_VAL2 = '-'
+		    AND AUT.CO_VAL1 = 
+		nvl(decode(fasc.flag_cumulante,'S','-',sent.cod_tipo_rito),'-')
+		    AND COD_COMUNE.CO_DOMAIN = 'COMUNE'
+		    AND COD_COMUNE.CO_SIES = SENT.COD_LUOGO_EMITTENTE
+		    AND fasc.id_fascicolo_siep=fasc_s.fas_sie_id_fascicolo_siep
+		    AND e.fas_siu_id_fascicolo_sius=fasc_s.id_fascicolo_sius
+		    AND e.id_evento=#{idEvento}
+		    AND E.Eve_Id_Evento is NULL
+		    AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+		    AND e.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+		    AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		    AND NVL(e.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+		    AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+		    AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+		    AND E.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+		    AND DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+		        DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+		        DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE  IN (
+		        --CESSAZIONI
+		        'C00400200010',
+		        'C00400930010',
+		        'C00401000010',
+		        'C00401010010',
+		        'C00401020010',
+		        'C00401030010',
+		        'C00400920010',
+		        'C00401980010',
+		        'C00400940010',
+		        'C00403170010'
+		)
+		UNION
+		SELECT DISTINCT 
+			--e1.id_evento             ID_FASCICOLO_SIEP,
+		    	e1.key_esec_nsc          KIAVE_PROVV_NSC
+		  FROM 
+		       fascicolo_sius  fasc_s,
+		       fascicolo_sius  fasc_s1,
+		       evento e,
+		       CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+		       CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+		       CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+		       GENERALE_PROCEDIMENTO GP,
+		       DOCUMENTO_ALLEGATO,
+		       CG_REF_CODES CODTIPDOC,
+		       evento e1
+		 WHERE fasc_s.id_fascicolo_sius_origine=fasc_s1.id_fascicolo_sius
+		   --MEV 23010 Aggiunta condizione
+   		   AND e1.key_esec_nsc IS NOT NULL
+		   AND e.fas_siu_id_fascicolo_sius=fasc_s.id_fascicolo_sius
+		   AND e.id_evento=#{idEvento}
+		   AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+		   AND e.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+		   AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'           
+		   AND NVL(e.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+		   AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+		   AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+		   AND E.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS    
+		   AND e1.fas_siu_id_fascicolo_sius=fasc_s.id_fascicolo_sius_origine
+		   AND DOCUMENTO_ALLEGATO.COD_TIPO_DOCUMENTO = CODTIPDOC.RV_LOW_VALUE
+		   AND CODTIPDOC.RV_DOMAIN = 'TIPO_DOCUMENTO_ALLEGATO'
+		   AND COD_TIPO_DOCUMENTO = '06'
+		   AND E1.ID_EVENTO = DOCUMENTO_ALLEGATO.EVE_ID_EVENTO 
+		   AND DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+		       DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+		       DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE  IN ('C02902580181','U02721350023')
+
+    </select>
+    
+    <select id="loadTrasfer" resultType="it.mig.sies.model.TrasferEntry">
+    	SELECT DISTINCT idEvento,
+            annoProtocollo,
+            numeroProtocollo
+      FROM (
+        SELECT DISTINCT 
+            A.ID_EVENTO idEvento,
+            GP.ANNO_S1 annoProtocollo,
+            GP.PROGR_S1 numeroProtocollo
+        FROM 
+            EVENTO                A,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+            DEPOSITO_ORDINANZA_PC LL,
+            CODICI_SIES_NSC       C,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            CODICI_SIES_NSC       COM_AUT
+        WHERE 
+            A.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+            AND A.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+            AND NVL(A.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND A.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+            AND LL.ID_EVENTO_GENERATO(+) = A.ID_EVENTO
+            AND C.CO_DOMAIN(+) = 'TIPO_PROVVEDIMENTO'
+            AND C.CO_SIES(+) = A.COD_TIPO_PROVVEDIMENTO
+            AND UFF.COD_UFFICIO = A.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND COM_AUT.CO_DOMAIN = 'COMUNE'
+            AND COM_AUT.CO_SIES = A.COD_LUOGO_EMITTENTE
+            AND A.KEY_ESEC_NSC IS NULL
+        UNION
+        SELECT 
+            A.ID_EVENTO idEvento,
+            GP.ANNO_S1 annoProtocollo,
+            GP.PROGR_S1 numeroProtocollo
+        FROM 
+            EVENTO                A,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+            RICHIESTA_CONVERSIONE LL,
+            CODICI_SIES_NSC       C,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            CODICI_SIES_NSC       COM_AUT
+        WHERE 
+            A.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+            AND A.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+            AND NVL(A.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND A.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+            AND LL.EVE_ID_EVENTO = A.ID_EVENTO
+            AND LL.FAS_SIU_ID_FASCICOLO_SIUS = A.FAS_SIU_ID_FASCICOLO_SIUS
+            AND C.CO_DOMAIN(+) = 'TIPO_PROVVEDIMENTO'
+            AND C.CO_SIES(+) = A.COD_TIPO_PROVVEDIMENTO
+            AND UFF.COD_UFFICIO = A.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND COM_AUT.CO_DOMAIN = 'COMUNE'
+            AND COM_AUT.CO_SIES = A.COD_LUOGO_EMITTENTE
+            AND A.KEY_ESEC_NSC IS NULL
+        UNION
+        --TRIBUNALE e SORVEGLIANZA 
+        SELECT 
+            A.ID_EVENTO idEvento,
+            GP.ANNO_S1 annoProtocollo,
+            GP.PROGR_S1 numeroProtocollo
+        FROM 
+            EVENTO                A,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+            LICENZA_LIBANTICIPATA LL,
+            CODICI_SIES_NSC       C,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            CODICI_SIES_NSC       COM_AUT
+        WHERE 
+            A.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+            AND A.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+            AND NVL(A.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO =  DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND A.COD_TIPO_PROVVEDIMENTO IN ('02', '03', '14')
+            AND LL.EVE_ID_EVENTO = A.ID_EVENTO
+            AND LL.FAS_SIU_ID_FASCICOLO_SIUS = A.FAS_SIU_ID_FASCICOLO_SIUS
+            AND C.CO_DOMAIN(+) = 'TIPO_PROVVEDIMENTO'
+            AND C.CO_SIES(+) = A.COD_TIPO_PROVVEDIMENTO
+            AND UFF.COD_UFFICIO = A.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND COM_AUT.CO_DOMAIN = 'COMUNE'
+            AND COM_AUT.CO_SIES = A.COD_LUOGO_EMITTENTE
+            AND A.KEY_ESEC_NSC IS NULL
+        )
+        WHERE ROWNUM &lt;= 10
+    </select>
+
+</mapper>
+

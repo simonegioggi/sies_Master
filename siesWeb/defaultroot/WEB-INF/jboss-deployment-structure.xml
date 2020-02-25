@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<deployment>
+		<dependencies>
+			<module name="oracle.jdbc" />
+			<module name="config.log" />
+			<system>
+				<paths>
+					<path name="com/sun/imageio/spi" />
+					<path name="com/sun/imageio/plugins/png" />
+					<path name="com/sun/org/apache/xml/internal/security" />
+				</paths>
+			</system>
+		</dependencies>
+		<exclusions>
+        	<module name="org.apache.log4j" />
+        	<module name="org.apache.commons.logging" />
+        	<module name="org.slf4j"/>
+    	</exclusions>
+	</deployment>
+</jboss-deployment-structure>

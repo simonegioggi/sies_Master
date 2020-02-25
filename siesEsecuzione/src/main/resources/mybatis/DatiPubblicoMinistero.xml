@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.DatiPubblicoMinistero">
+
+	<!-- MEV 16: recupero dati PM dato un ID evento -->
+    <select id="lookupAEP" parameterType="java.util.Map" resultType="it.mig.sies.model.DatiPubblicoMinistero">
+    	SELECT EV.ID_EVENTO CHIAVESIES,
+		       EV.KEY_ESEC_NSC CHIAVENSC,
+		       EV.DATA_EMISSIONE DATAPROVVEDIMENTO,
+		       SE.CO_CODCENTR CODICEAUTORITA,
+		       SN.CO_CODCENTR SEDEAUTORITAPRINDIST,
+		       SC.CO_CODCENTR SEDEAUTORITAPRINC,
+		       EV.COD_MOTIVO || RF.RV_HIGH_VALUE CODICEUNIVOCOPROVVEDIMENTO,
+		       1                               TIPOPROVVEDIMENTO,
+		       PR.NUM_GIORNI_ARRESTO           GIORNIARRESTO,
+		       PR.NUM_MESI_ARRESTO             MESIARRESTO,
+		       PR.NUM_ANNI_ARRESTO             ANNIARRESTO,
+		       PR.NUM_GIORNI_RECLUSIONE        GIORNIRECLUSIONE,
+		       PR.NUM_MESI_RECLUSIONE          MESIRECLUSIONE,
+		       PR.NUM_ANNI_RECLUSIONE          ANNIRECLUSIONE,
+		       PR.IMPORTO_AMMENDA              IMPORTOAMMENDA,
+		       PR.IMPORTO_MULTA                IMPORTOMULTA,
+		       NULL                            DATAFINEPENA,
+		       PR.DATA_INIZIO                  DATAFINEPENADAL,
+		       PR.DATA_FINE                    DATAFINEPENAAL,
+		       PR.FLAG_ERGASTOLO               ERGASTOLO,
+		       PR.NUM_GIORNI_ISOLAMENTO_DIURNO GIORNIISOLAMENTODIURNO,
+		       PR.NUM_MESI_ISOLAMENTO_DIURNO   MESIISOLAMENTODIURNO,
+		       PR.NUM_ANNI_ISOLAMENTO_DIURNO   ANNIISOLAMENTODIURNO
+		  FROM EVENTO                 EV,
+		       PENA_RESIDUA           PR,
+		       CG_REF_CODES           RC,
+		       UFFICIO                UF,
+		       COMUNE                 LU,
+		       CG_REF_CODES           RF,
+		       CODICI_SIES_NSC        SN,
+		       CODICI_SIES_NSC        SC,
+		       CODICI_SIES_NSC        SE,
+		       CODICI_UNIVOCI_MAPPATI CUM
+		 WHERE PR.EVE_ID_EVENTO = EV.ID_EVENTO
+		   AND RC.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND RC.RV_LOW_VALUE = UF.COD_TIPO_UFFICIO
+		   AND UF.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		   AND EV.COD_LUOGO_EMITTENTE = LU.COD_COMUNE
+		   AND EV.COD_MOTIVO = RF.RV_LOW_VALUE
+		   AND RF.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		   AND SN.CO_DOMAIN = 'COMUNE'
+		   AND SN.CO_SIES = EV.COD_LUOGO_EMITTENTE
+		   AND SC.CO_DOMAIN = 'COMUNE'
+		   AND SC.CO_SIES = LU.COD_COMUNE
+		   AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND SE.CO_SIES = UF.COD_TIPO_UFFICIO
+		   AND PR.FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		   AND NOT (PR.DATA_INIZIO IS NULL AND PR.DATA_FINE IS NULL)
+		   AND ((PR.DATA_INIZIO IS NOT NULL AND
+		       PR.DATA_INSERIMENTO =
+		       (SELECT MAX(DATA_INSERIMENTO)
+		            FROM PENA_RESIDUA
+		           WHERE FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		             AND DATA_INIZIO IS NOT NULL)) AND
+		       (RF.RV_HIGH_VALUE IN
+		       ('ESPIAZ', 'NLP', 'SC-LIBA', 'DEFI_SORV', 'SC-LIBARA') OR
+		       RF.RV_LOW_VALUE IN ('0063', '2245')))
+		   AND ((CUM.ID_CONTENUTO = RF.RV_HIGH_VALUE AND
+		       CUM.ID_OGGETTO = EV.COD_MOTIVO) OR
+		       (CUM.ID_CONTENUTO IS NULL AND CUM.ID_OGGETTO = RF.RV_LOW_VALUE))
+		UNION
+		SELECT A.ID_MISURA_CAUTELARE CHIAVESIES,
+		       KEY_ESEC_NSC CHIAVENSC,
+		       <!-- Dati fittizi inseriti poichè obbligatori per l'XML -->
+		       to_date('31/12/9999','dd/mm/yyyy') DATAPROVVEDIMENTO,
+		       '0' CODICEAUTORITA,
+		       NULL SEDEAUTORITAPRINDIST,
+		       NULL SEDEAUTORITAPRINC,
+		       'MISURECAUTE1' CODICEUNIVOCOPROVVEDIMENTO,
+		       1           TIPOPROVVEDIMENTO,
+		       NUM_GIORNI,
+		       NUM_MESI,
+		       NUM_ANNI,
+		       NULL        GIORNIRECLUSIONE,
+		       NULL        MESIRECLUSIONE,
+		       NULL        ANNIRECLUSIONE,
+		       NULL        IMPORTOAMMENDA,
+		       NULL        IMPORTOMULTA,
+		       NULL        DATAFINEPENA,
+		       DATA_INIZIO DATAFINEPENADAL,
+		       DATA_FINE   DATAFINEPENAAL,
+		       NULL        ERGASTOLO,
+		       NULL        GIORNIISOLAMENTODIURNO,
+		       NULL        MESIISOLAMENTODIURNO,
+		       NULL        ANNIISOLAMENTODIURNO
+		  FROM MISURA_CAUTELARE A,
+		       CG_REF_CODES     MIS,
+		       CG_REF_CODES     MOTNON,
+		       CG_REF_CODES     TIPUFFRIF,
+		       COMUNE           LUOGOUFFRIF
+		 WHERE MIS.RV_DOMAIN = 'TIPO_MISURA_CAUTELARE'
+		   AND MIS.RV_LOW_VALUE = COD_TIPO_MISURA
+		   AND MOTNON.RV_DOMAIN = 'MOTIVO_NON_COMPUTABILE'
+		   AND MOTNON.RV_LOW_VALUE = COD_MOTIVO_NON_COMPUTABILE
+		   AND TIPUFFRIF.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND TIPUFFRIF.RV_LOW_VALUE = COD_TIPO_UFFICIO_RIFER
+		   AND LUOGOUFFRIF.COD_COMUNE = COD_LUOGO_UFFICIO_RIFER
+		   AND FLAG_COMPUTABILE = 'S'
+		   AND DATA_FINE IS NOT NULL
+		   AND A.COD_TIPO_MISURA IN ('CA', 'AD')
+		   AND A.DATA_FINE IS NOT NULL
+		   AND A.FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		UNION
+		SELECT MAX(CHIAVESIES),
+		       MAX(CHIAVENSC),
+		       MAX(DATAPROVVEDIMENTO),
+		       MAX(CODICEAUTORITA),
+		       MAX(SEDEAUTORITAPRINDIST),
+		       MAX(SEDEAUTORITAPRINC),
+		       MAX(CODICEUNIVOCOPROVVEDIMENTO),
+		       MAX(TIPOPROVVEDIMENTO),
+		       MAX(GIORNIARRESTO),
+		       MAX(MESIARRESTO),
+		       MAX(ANNIARRESTO),
+		       MAX(GIORNIRECLUSIONE),
+		       MAX(MESIRECLUSIONE),
+		       MAX(ANNIRECLUSIONE),
+		       MAX(IMPORTOAMMENDA),
+		       MAX(IMPORTOMULTA),
+		       MAX(DATAFINEPENA),
+		       MAX(DATAFINEPENADAL),
+		       MAX(DATAFINEPENAAL),
+		       MAX(ERGASTOLO),
+		       MAX(GIORNIISOLAMENTODIURNO),
+		       MAX(MESIISOLAMENTODIURNO),
+		       MAX(ANNIISOLAMENTODIURNO)
+		  FROM (SELECT EV.ID_EVENTO CHIAVESIES,
+		               EV.KEY_ESEC_NSC CHIAVENSC,
+		               EV.DATA_EMISSIONE DATAPROVVEDIMENTO,
+		               SE.CO_CODCENTR CODICEAUTORITA,
+		               SN.CO_CODCENTR SEDEAUTORITAPRINDIST,
+		               SC.CO_CODCENTR SEDEAUTORITAPRINC,
+		               EV.COD_MOTIVO || RF.RV_HIGH_VALUE CODICEUNIVOCOPROVVEDIMENTO,
+		               1    TIPOPROVVEDIMENTO,
+		               NULL GIORNIARRESTO,
+		               NULL MESIARRESTO,
+		               NULL ANNIARRESTO,
+		               NULL GIORNIRECLUSIONE,
+		               NULL MESIRECLUSIONE,
+		               NULL ANNIRECLUSIONE,
+		               NULL IMPORTOAMMENDA,
+		               NULL IMPORTOMULTA,
+		               NULL DATAFINEPENA,
+		               NULL DATAFINEPENADAL,
+		               NULL DATAFINEPENAAL,
+		               NULL ERGASTOLO,
+		               NULL GIORNIISOLAMENTODIURNO,
+		               NULL MESIISOLAMENTODIURNO,
+		               NULL ANNIISOLAMENTODIURNO
+		          FROM EVENTO                 EV,
+		               PENA_RESIDUA           PR,
+		               CG_REF_CODES           RC,
+		               UFFICIO                UF,
+		               COMUNE                 LU,
+		               CG_REF_CODES           RF,
+		               CODICI_SIES_NSC        SN,
+		               CODICI_SIES_NSC        SC,
+		               CODICI_SIES_NSC        SE,
+		               CODICI_UNIVOCI_MAPPATI CUM
+		         WHERE PR.EVE_ID_EVENTO = EV.ID_EVENTO
+		           AND RC.RV_DOMAIN = 'TIPO_UFFICIO'
+		           AND RC.RV_LOW_VALUE = UF.COD_TIPO_UFFICIO
+		           AND UF.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		           AND EV.COD_LUOGO_EMITTENTE = LU.COD_COMUNE
+		           AND EV.COD_MOTIVO = RF.RV_LOW_VALUE
+		           AND RF.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		           AND SN.CO_DOMAIN = 'COMUNE'
+		           AND SN.CO_SIES = EV.COD_LUOGO_EMITTENTE
+		           AND SC.CO_DOMAIN = 'COMUNE'
+		           AND SC.CO_SIES = LU.COD_COMUNE
+		           AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		           AND SE.CO_SIES = UF.COD_TIPO_UFFICIO
+		           AND PR.FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		           AND PR.DATA_INIZIO IS NULL
+		           AND PR.DATA_FINE IS NULL
+		           AND RF.RV_HIGH_VALUE IN ('ESPIAZ')
+		           AND ((CUM.ID_CONTENUTO = RF.RV_HIGH_VALUE AND
+		               CUM.ID_OGGETTO = EV.COD_MOTIVO) OR
+		               (CUM.ID_CONTENUTO IS NULL AND
+		               CUM.ID_OGGETTO = RF.RV_LOW_VALUE))
+		        UNION
+		        SELECT NULL CHIAVESIES,
+		               NULL CHIAVENSC,
+		               NULL DATAPROVVEDIMENTO,
+		               NULL CODICEAUTORITA,
+		               NULL SEDEAUTORITAPRINDIST,
+		               NULL SEDEAUTORITAPRINC,
+		               NULL CODICEUNIVOCOPROVVEDIMENTO,
+		               1                               TIPOPROVVEDIMENTO,
+		               PR.NUM_GIORNI_ARRESTO           GIORNIARRESTO,
+		               PR.NUM_MESI_ARRESTO             MESIARRESTO,
+		               PR.NUM_ANNI_ARRESTO             ANNIARRESTO,
+		               PR.NUM_GIORNI_RECLUSIONE        GIORNIRECLUSIONE,
+		               PR.NUM_MESI_RECLUSIONE          MESIRECLUSIONE,
+		               PR.NUM_ANNI_RECLUSIONE          ANNIRECLUSIONE,
+		               PR.IMPORTO_AMMENDA              IMPORTOAMMENDA,
+		               PR.IMPORTO_MULTA                IMPORTOMULTA,
+		               NULL                            DATAFINEPENA,
+		               PR.DATA_INIZIO                  DATAFINEPENADAL,
+		               PR.DATA_FINE                    DATAFINEPENAAL,
+		               PR.FLAG_ERGASTOLO               ERGASTOLO,
+		               PR.NUM_GIORNI_ISOLAMENTO_DIURNO GIORNIISOLAMENTODIURNO,
+		               PR.NUM_MESI_ISOLAMENTO_DIURNO   MESIISOLAMENTODIURNO,
+		               PR.NUM_ANNI_ISOLAMENTO_DIURNO   ANNIISOLAMENTODIURNO
+		          FROM EVENTO                 EV,
+		               PENA_RESIDUA           PR,
+		               CG_REF_CODES           RC,
+		               UFFICIO                UF,
+		               COMUNE                 LU,
+		               CG_REF_CODES           RF,
+		               CODICI_SIES_NSC        SN,
+		               CODICI_SIES_NSC        SC,
+		               CODICI_SIES_NSC        SE
+		         WHERE PR.EVE_ID_EVENTO = EV.ID_EVENTO
+		           AND RC.RV_DOMAIN = 'TIPO_UFFICIO'
+		           AND RC.RV_LOW_VALUE = UF.COD_TIPO_UFFICIO
+		           AND UF.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		           AND EV.COD_LUOGO_EMITTENTE = LU.COD_COMUNE
+		           AND EV.COD_MOTIVO = RF.RV_LOW_VALUE
+		           AND RF.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		           AND SN.CO_DOMAIN = 'COMUNE'
+		           AND SN.CO_SIES = EV.COD_LUOGO_EMITTENTE
+		           AND SC.CO_DOMAIN = 'COMUNE'
+		           AND SC.CO_SIES = LU.COD_COMUNE
+		           AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		           AND SE.CO_SIES = UF.COD_TIPO_UFFICIO
+		           AND PR.FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		           AND NOT (PR.DATA_INIZIO IS NULL AND PR.DATA_FINE IS NULL)
+		           AND ((PR.DATA_INIZIO IS NOT NULL AND
+		               PR.DATA_INSERIMENTO =
+		               (SELECT MAX(DATA_INSERIMENTO)
+		                    FROM PENA_RESIDUA
+		                   WHERE FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		                     AND DATA_INIZIO IS NOT NULL))))
+    </select>
+
+	<select id="lookupSP" parameterType="long" resultType="it.mig.sies.model.DatiPubblicoMinistero">
+		<!-- MERGE v10: aggiunta distinct -->
+    	SELECT distinct EV.ID_EVENTO CHIAVESIES,
+		       EV.KEY_ESEC_NSC CHIAVENSC,
+		       EV.DATA_EMISSIONE DATAPROVVEDIMENTO,
+		       SE.CO_CODCENTR CODICEAUTORITA,
+		       SN.CO_CODCENTR SEDEAUTORITAPRINDIST,
+		       SC.CO_CODCENTR SEDEAUTORITAPRINC,
+		       EV.COD_MOTIVO || RF.RV_HIGH_VALUE CODICEUNIVOCOPROVVEDIMENTO,
+		       /*RF.RV_LOW_VALUE TIPOPROVVEDIMENTO,
+		       EV.COD_TIPO_PROVVEDIMENTO TIPOPROVVEDIMENTO,*/
+		       1                               TIPOPROVVEDIMENTO,
+		       PR.NUM_GIORNI_ARRESTO           GIORNIARRESTO,
+		       PR.NUM_MESI_ARRESTO             MESIARRESTO,
+		       PR.NUM_ANNI_ARRESTO             ANNIARRESTO,
+		       PR.NUM_GIORNI_RECLUSIONE        GIORNIRECLUSIONE,
+		       PR.NUM_MESI_RECLUSIONE          MESIRECLUSIONE,
+		       PR.NUM_ANNI_RECLUSIONE          ANNIRECLUSIONE,
+		       PR.IMPORTO_AMMENDA              IMPORTOAMMENDA,
+		       PR.IMPORTO_MULTA                IMPORTOMULTA,
+		       NULL                            DATAFINEPENA,
+		       PR.DATA_INIZIO                  DATAFINEPENADAL,
+		       PR.DATA_FINE                    DATAFINEPENAAL,
+		       PR.FLAG_ERGASTOLO               ERGASTOLO,
+		       PR.NUM_GIORNI_ISOLAMENTO_DIURNO GIORNIISOLAMENTODIURNO,
+		       PR.NUM_MESI_ISOLAMENTO_DIURNO   MESIISOLAMENTODIURNO,
+		       PR.NUM_ANNI_ISOLAMENTO_DIURNO   ANNIISOLAMENTODIURNO
+		  FROM EVENTO          		  EV,
+		       PENA_RESIDUA    		  PR,
+		       CG_REF_CODES    		  RC,
+		       UFFICIO         		  UF,
+		       COMUNE          		  LU,
+		       CG_REF_CODES    		  RF,
+		       CODICI_SIES_NSC 		  SN,
+		       CODICI_SIES_NSC 		  SC,
+		       CODICI_SIES_NSC 		  SE,
+       		   CODICI_UNIVOCI_MAPPATI CUM
+		 WHERE PR.EVE_ID_EVENTO = EV.ID_EVENTO
+		   AND EV.ID_EVENTO = #{idEvento}
+		   AND RC.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND RC.RV_LOW_VALUE = UF.COD_TIPO_UFFICIO
+		   AND UF.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		   AND EV.COD_LUOGO_EMITTENTE = LU.COD_COMUNE
+		   AND EV.COD_MOTIVO = RF.RV_LOW_VALUE
+		   AND RF.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		   AND SN.CO_DOMAIN = 'COMUNE'
+		   AND SN.CO_SIES = EV.COD_LUOGO_EMITTENTE
+		   AND SC.CO_DOMAIN = 'COMUNE'
+		   AND SC.CO_SIES = LU.COD_COMUNE
+		   AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND SE.CO_SIES = UF.COD_TIPO_UFFICIO
+		   AND CUM.ID_CONTENUTO = RF.RV_HIGH_VALUE
+   		   AND CUM.ID_OGGETTO = EV.COD_MOTIVO
+	</select>
+
+	<!-- MEV 16 CUMULO: modificata query di estrazione dati cumulo -->
+    <select id="lookupCumulo" parameterType="long" resultType="it.mig.sies.model.DatiPubblicoMinistero">
+    	SELECT PC.DATA_AGGIORNAMENTO,
+		       EV.ID_EVENTO CHIAVESIES,
+		       EV.KEY_ESEC_NSC CHIAVENSC,
+		       EV.DATA_EMISSIONE DATAPROVVEDIMENTO,
+		       SE.CO_CODCENTR CODICEAUTORITA,
+		       SN.CO_CODCENTR SEDEAUTORITAPRINDIST,
+		       SC.CO_CODCENTR SEDEAUTORITAPRINC,
+		       EV.COD_MOTIVO || RF.RV_HIGH_VALUE CODICEUNIVOCOPROVVEDIMENTO,
+		       /*RF.RV_LOW_VALUE TIPOPROVVEDIMENTO,
+		       EV.COD_TIPO_PROVVEDIMENTO TIPOPROVVEDIMENTO,*/
+		       8                               TIPOPROVVEDIMENTO,
+		       PC.NUM_GIORNI_ARRESTO           GIORNIARRESTO,
+		       PC.NUM_MESI_ARRESTO             MESIARRESTO,
+		       PC.NUM_ANNI_ARRESTO             ANNIARRESTO,
+		       PC.NUM_GIORNI_RECLUSIONE        GIORNIRECLUSIONE,
+		       PC.NUM_MESI_RECLUSIONE          MESIRECLUSIONE,
+		       PC.NUM_ANNI_RECLUSIONE          ANNIRECLUSIONE,
+		       PC.IMPORTO_AMMENDA              IMPORTOAMMENDA,
+		       PC.IMPORTO_MULTA                IMPORTOMULTA,
+		       PC.DATA_FINE_PRESUNTA           DATAFINEPENA,
+		       PC.DATA_INIZIO                  DATAFINEPENADAL,
+		       PC.DATA_FINE                    DATAFINEPENAAL,
+		       CASE PC.COD_TIPO_PENA_DETENTIVA
+		         WHEN '03' THEN
+		          'S'
+		         WHEN '04' THEN
+		          'S'
+		         ELSE
+		          'N'
+		       END ERGASTOLO,
+		       PC.NUM_GIORNI_ISOLAMENTO_DIURNO GIORNIISOLAMENTODIURNO,
+		       PC.NUM_MESI_ISOLAMENTO_DIURNO   MESIISOLAMENTODIURNO,
+		       PC.NUM_ANNI_ISOLAMENTO_DIURNO   ANNIISOLAMENTODIURNO
+		  FROM EVENTO                    EV,
+		       PENA_RIDETERMINATA_CUMULO PC,
+		       ISTRUTTORIA_CUMULO        IC,
+		       CG_REF_CODES              RC,
+		       UFFICIO                   UF,
+		       COMUNE                    LU,
+		       CG_REF_CODES              RF,
+		       CODICI_SIES_NSC           SN,
+		       CODICI_SIES_NSC           SC,
+		       CODICI_SIES_NSC           SE
+		 WHERE EV.ID_EVENTO = #{idEvento}
+		   AND RC.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND RC.RV_LOW_VALUE = UF.COD_TIPO_UFFICIO
+		   AND UF.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		   AND EV.COD_LUOGO_EMITTENTE = LU.COD_COMUNE
+		   AND EV.COD_MOTIVO = RF.RV_LOW_VALUE
+		   AND RF.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		   AND SN.CO_DOMAIN = 'COMUNE'
+		   AND SN.CO_SIES = EV.COD_LUOGO_EMITTENTE
+		   AND SC.CO_DOMAIN = 'COMUNE'
+		   AND SC.CO_SIES = LU.COD_COMUNE
+		   AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND SE.CO_SIES = UF.COD_TIPO_UFFICIO
+		   AND IC.EVE_ID_EVENTO_PROV = EV.ID_EVENTO
+		   AND PC.ISTR_ID_ISTRUTTORIA_CUMULO = IC.ID_ISTRUTTORIA_CUMULO
+		   AND FLAG_PENA_RESIDUA_CUMULO = 'S'
+    </select>
+
+	<update id="deleteLogica" parameterType="it.mig.sies.model.DatiPubblicoMinistero">
+        UPDATE EVENTO set
+            KEY_ESEC_NSC = NULL
+        where ID_EVENTO = #{chiaveSies}
+    </update>
+
+	<update id="update" parameterType="it.mig.sies.model.DatiPubblicoMinistero">
+        UPDATE EVENTO set
+            KEY_ESEC_NSC = #{chiaveNSC}
+        where ID_EVENTO = #{chiaveSies}
+    </update>
+
+	<update id="updateMisuraCautelare" parameterType="it.mig.sies.model.DatiPubblicoMinistero">
+        UPDATE MISURA_CAUTELARE set
+            KEY_ESEC_NSC = #{chiaveNSC}
+        where ID_MISURA_CAUTELARE = #{chiaveSies}
+    </update>
+
+	<update id="deleteLogicaMisuraCautelare" parameterType="it.mig.sies.model.DatiPubblicoMinistero">
+        UPDATE MISURA_CAUTELARE set
+            KEY_ESEC_NSC = NULL
+        where ID_MISURA_CAUTELARE = #{chiaveSies}
+    </update>
+
+	<!-- MEV 16 CUMULO: aggiunta query di estrazione dati MS cumulo -->
+    <select id="findMSCumulo" parameterType="long" resultType="it.mig.sies.model.MisuraSicurezzaCumulo">
+    	SELECT N.co_codcentr   	CODICETIPOMS,
+		       NULL            	CODICETIPODURATAMS,
+		       M.NUM_ANNI      	NUMEROANNIMS,
+		       M.NUM_MESI      	NUMEROMESIMS,
+		       M.NUM_GIORNI	    NUMEROGIORNIMS,
+		       E.ID_EVENTO     	CHIAVESIES,
+		       E.KEY_ESEC_NSC	CHIAVENSC
+		  FROM MISURA_SICUREZZA_CUMULO M, TITOLO_CUMULATO T, EVENTO E, CODICI_SIES_NSC N
+		 WHERE M.TIT_ID_TITOLO_CUMULATO = T.ID_TITOLO_CUMULATO
+		   AND T.ISTR_ID_ISTRUTTORIA_CUMULO = E.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND N.CO_SIES = M.COD_TIPO
+		   AND N.CO_DOMAIN = 'TIPO_MISURA_SICUREZZA'
+		   AND E.ID_EVENTO = #{idEvento}
+    </select>
+
+	<!-- MEV 16 CUMULO: aggiunta query di estrazione dati PA cumulo -->
+    <select id="findPACumulo" parameterType="long" resultType="it.mig.sies.model.PenaAccessoriaCumulo">
+    	SELECT N.co_codcentr		CODICETIPOPA,
+		       P.COD_TIPO_DURATA	CODICETIPODURATAPA,
+		       P.NUM_ANNI           NUMEROANNIPA,
+		       P.NUM_MESI           NUMEROMESIPA,
+		       P.NUM_GIORNI         NUMEROGIORNIPA,
+		       E.ID_EVENTO          CHIAVESIES,
+		       E.KEY_ESEC_NSC       CHIAVENSC
+		  FROM PENA_ACCESSORIA_CUMULO P, TITOLO_CUMULATO T, EVENTO E, CODICI_SIES_NSC N
+		 WHERE P.TIT_ID_TITOLO_CUMULATO = T.ID_TITOLO_CUMULATO
+		   AND T.ISTR_ID_ISTRUTTORIA_CUMULO = E.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND N.CO_SIES = P.COD_TIPO_PENA_ACCESSORIA
+		   AND N.CO_DOMAIN = 'TIPO_PENA_ACCESSORIA'
+		   AND E.ID_EVENTO = #{idEvento}
+		   /* 20170201: modifica bvn */
+		   and ((p.cod_tipo_durata=n.co_val1) or (p.cod_tipo_durata='-' and n.co_val1='P'))
+    </select>
+
+	<!-- MEV 16 CUMULO: estratti altri dati inerenti il cumulo -->
+	<select id="getLiberazioneAnticipataCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.LiberazioneAnticipataCumulo">
+		SELECT P.NUMERO_GIORNI_LA giorniLAOrdinaria,
+		       P.NUMERO_GIORNI_LS giorniLASpeciale,
+		       P.NUMERO_GIORNI_LI giorniLAIntegrazione,
+		       P.NUMERO_GIORNI_RIDUZIONE giorniLARisarcimento
+		  FROM PENA_RIDETERMINATA_CUMULO P, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = P.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND P.FLAG_PENA_RESIDUA_CUMULO = 'N'
+	</select>
+
+	<select id="getRichiesteGECumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.RichiesteGECumulo">
+		SELECT C.NUM_ANNI_RECLUSIONE anniReclusione,
+		       C.NUM_MESI_RECLUSIONE mesiReclusione,
+		       C.NUM_GIORNI_RECLUSIONE giorniReclusione,
+		       C.IMPORTO_MULTA importoMulta,
+		       C.NUM_ANNI_ARRESTO anniArresto,
+		       C.NUM_MESI_ARRESTO mesiArresto,
+		       C.NUM_GIORNI_ARRESTO giorniArresto,
+		       C.IMPORTO_AMMENDA importoAmmenda,
+		       C.COD_TIPO_ANNOTAZIONE codiceTipoRichiesta
+		  FROM COMPUTI_CUMULO C, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = C.ISTR_ID_ISTRUTTORIA_CUMULO
+	</select>
+
+	<!-- 1) semidetenzione -->
+	<select id="getSemidetenzioneSSCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniSostitutiveCumulo">
+		SELECT S.NUM_ANNI anniSemidetenzione, S.NUM_MESI mesiSemidetenzione, S.NUM_GIORNI giorniSemidetenzione
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 01
+	</select>
+
+	<!-- 2) liberta' controllata -->
+	<select id="getLibertaControllataSSCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniSostitutiveCumulo">
+		SELECT S.NUM_ANNI anniLibertaControllata, S.NUM_MESI mesiLibertaControllata, S.NUM_GIORNI giorniLibertaControllata
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 02
+	</select>
+
+	<!-- 3) espulsione stato -->
+	<select id="getEspulsioneStatoSSCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniSostitutiveCumulo">
+		SELECT S.NUM_ANNI anniEspulsioneStato, S.NUM_MESI mesiEspulsioneStato, S.NUM_GIORNI giorniEspulsioneStato, S.FLAG_ESPUL_PERP codiceTipoEspulsioneStato
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 03
+	</select>
+
+	<!-- 4) pena pecuniaria -->
+	<select id="getPenePecuniarieSSCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniSostitutiveCumulo">
+		SELECT S.MULTA importoMulta, S.AMMENDA importoAmmenda
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 04
+	</select>
+
+	<!-- 5) lavoro pubblica utilita' -->
+	<select id="getLavoroPubblicaUtilitaSSCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniSostitutiveCumulo">
+		SELECT S.NUM_ANNI anniLavoroPubblicaUtilita, S.NUM_MESI mesiLavoroPubblicaUtilita, S.NUM_GIORNI giorniLavoroPubblicaUtilita, S.COD_TIPO_LPU codTipoLavoroPubblicaUtilita, S.NUM_ORE_TOT oreLavoroPubblicaUtilita
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 11
+	</select>
+
+	<!-- 6) PDCPP - lavoro sostitutivo -->
+	<select id="getLavoroSostitutivoCPPCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.ConversionePPCumulo">
+		SELECT S.NUM_ANNI anniLavoroSostitutivo, S.NUM_MESI mesiLavoroSostitutivo, S.NUM_GIORNI giorniLavoroSostitutivo
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND I.EVE_ID_EVENTO_PROV = E.ID_EVENTO
+		   AND S.ISTR_ID_ISTRUTTORIA_CUMULO = I.ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 05
+	</select>
+
+	<!-- 7) PDCPP - liberta' controllata -->
+	<select id="getLibertaControllataCPPCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.ConversionePPCumulo">
+		SELECT S.NUM_ANNI anniLibertaControllata, S.NUM_MESI mesiLibertaControllata, S.NUM_GIORNI giorniLibertaControllata
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 12
+	</select>
+
+	<!-- 8) GP - permanenza domiciliare -->
+	<select id="getPermanenzaDomiciliareGPCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniGPCumulo">
+		SELECT S.NUM_ANNI anniPermanenzaDomiciliare, S.NUM_MESI mesiPermanenzaDomiciliare, S.NUM_GIORNI giorniPermanenzaDomiciliare
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 07
+	</select>
+
+	<!-- 9) GP - lavoro sostitutivo -->
+	<select id="getLavoroSostitutivoGPCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniGPCumulo">
+		SELECT S.NUM_ANNI anniLavoroSostitutivo, S.NUM_MESI mesiLavoroSostitutivo, S.NUM_GIORNI giorniLavoroSostitutivo
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 08
+	</select>
+
+	<!-- 10) GP - lavoro pubblica utilita' -->
+	<select id="getLavoroPubblicaUtilitaGPCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniGPCumulo">
+		SELECT S.NUM_ANNI anniLavoroPubblicaUtilita, S.NUM_MESI mesiLavoroPubblicaUtilita, S.NUM_GIORNI giorniLavoroPubblicaUtilita
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 09
+	</select>
+
+	<!-- 11) GP - espulsione stato -->
+	<select id="getEspulsioneStatoGPCumuloByIDEvento" parameterType="long" resultType="it.mig.sies.model.SanzioniGPCumulo">
+		SELECT S.NUM_ANNI anniEspulsioneStato, S.NUM_MESI mesiEspulsioneStato, S.NUM_GIORNI giorniEspulsioneStato, S.FLAG_ESPUL_PERP codiceTipoEspulsioneStato
+		  FROM DATI_FINALI_ULTERIORI_SANZIONI S, EVENTO E, ISTRUTTORIA_CUMULO I
+		 WHERE E.ID_EVENTO = #{idEvento}
+		   AND E.ID_EVENTO = I.EVE_ID_EVENTO_PROV
+		   AND I.ID_ISTRUTTORIA_CUMULO = S.ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND S.COD_TIPO_ULTERIORE_SANZIONE = 13
+	</select>
+
+</mapper>

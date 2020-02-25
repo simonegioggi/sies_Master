@@ -1,0 +1,27 @@
+
+DIV.clSlide {
+	PADDING-RIGHT: 3px; PADDING-LEFT: 3px; Z-INDEX: 10; LEFT: 0px; PADDING-BOTTOM: 3px; WIDTH: 138px; CLIP: rect(0px 138px 22px 0px); PADDING-TOP: 3px; POSITION: absolute; HEIGHT: 22px
+}
+DIV.clSlideSub {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; Z-INDEX: 10; LEFT: 8px; VISIBILITY: hidden; PADDING-BOTTOM: 2px; WIDTH: 138px; CLIP: rect(0px 127px 22px 0px); PADDING-TOP: 2px; POSITION: absolute; HEIGHT: 22px
+}
+DIV.clSlideSub2 {
+	PADDING-RIGHT: 2px; PADDING-LEFT: 2px; Z-INDEX: 10; LEFT: 8px; VISIBILITY: hidden; PADDING-BOTTOM: 2px; WIDTH: 138px; CLIP: rect(0px 127px 22px 0px); PADDING-TOP: 2px; POSITION: absolute; HEIGHT: 22px
+}
+#divSlideCont {
+	Z-INDEX: 10; LEFT: 0px; VISIBILITY: hidden; WIDTH: 127px; POSITION: absolute; TOP: 100px; HEIGHT: 200px
+}
+A.clSlideLinks {
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 12px;
+    COLOR: Navy;
+    FONT-FAMILY: Verdana,Tahoma;
+    TEXT-DECORATION: none
+}
+A.clSlideSubLinks {
+	FONT-SIZE: 12px; COLOR: Navy; FONT-FAMILY: Verdana,Tahoma; TEXT-DECORATION: none;
+}
+A.clSlideSub2Links {
+	FONT-SIZE: 12px; COLOR: Navy; FONT-FAMILY: Verdana,Tahoma; TEXT-DECORATION: none
+}
+

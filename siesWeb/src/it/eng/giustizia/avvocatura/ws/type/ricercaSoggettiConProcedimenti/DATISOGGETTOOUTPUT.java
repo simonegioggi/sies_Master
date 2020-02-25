@@ -1,0 +1,107 @@
+//
+// Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
+// Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+// Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
+// Generato il: 2016.09.27 alle 02:09:58 PM CEST 
+//
+
+
+package it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ * <p>Classe Java per anonymous complex type.
+ * 
+ * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
+ * 
+ * <pre>
+ * &lt;complexType>
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="elencoSoggetti" type="{http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti}SOGGETTO_TYPE" maxOccurs="unbounded"/>
+ *         &lt;element ref="{http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti}ERRORE"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+    "elencoSoggetti",
+    "errore"
+})
+@XmlRootElement(name = "DATI_SOGGETTO_OUTPUT")
+public class DATISOGGETTOOUTPUT {
+
+    @XmlElement(required = true)
+    protected List<SOGGETTOTYPE> elencoSoggetti;
+    @XmlElement(name = "ERRORE", required = true)
+    protected ERRORE errore;
+
+    /**
+     * Gets the value of the elencoSoggetti property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the elencoSoggetti property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getElencoSoggetti().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link SOGGETTOTYPE }
+     * 
+     * 
+     */
+    public List<SOGGETTOTYPE> getElencoSoggetti() {
+        if (elencoSoggetti == null) {
+            elencoSoggetti = new ArrayList<SOGGETTOTYPE>();
+        }
+        return this.elencoSoggetti;
+    }
+
+    /**
+     * Recupera il valore della proprietà errore.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ERRORE }
+     *     
+     */
+    public ERRORE getERRORE() {
+        return errore;
+    }
+
+    /**
+     * Imposta il valore della proprietà errore.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ERRORE }
+     *     
+     */
+    public void setERRORE(ERRORE value) {
+        this.errore = value;
+    }
+
+}

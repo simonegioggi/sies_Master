@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<deployment>
+		<dependencies>
+			<module name="oracle.jdbc" />
+			<system>
+				<paths>
+					<path name="com/sun/imageio/spi" />
+					<path name="com/sun/imageio/plugins/png" />
+					<path name="com/sun/org/apache/xml/internal/security" />
+				</paths>
+			</system>
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

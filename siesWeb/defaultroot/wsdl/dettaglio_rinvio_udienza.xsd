@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Emma (Engineering) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/dettaglioRinvioUdienza" targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/dettaglioRinvioUdienza" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DETTAGLIO_RINVIO_UDIENZA">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_INPUT_DETTAGLIO"/>
+				<xs:element ref="type:OUTPUT_RINVIO_UDIENZA"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_RIEPILOGO_PROCEDIMENTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="annoProcedimentoSIUS" type="xs:integer"/>
+				<xs:element name="numeroProcedimentoSIUS" type="xs:integer"/>
+				<xs:element name="oggettoProcedimentoSIUS" type="xs:string"/>
+				<xs:element name="annoFascicoloSIEP" type="xs:integer" nillable="true"/>
+				<xs:element name="numeroFascicoloSIEP" type="xs:integer" nillable="true"/>
+				<xs:element name="ufficioFascicoloSIEP" type="xs:string" nillable="true"/>
+				<xs:element name="dataFascicoloSIEP" type="type:DATA_TYPE" nillable="true"/>
+				<xs:element name="nomeSoggetto" type="xs:string"/>
+				<xs:element name="cognomeSoggetto" type="xs:string"/>
+				<xs:element name="dataNascita" type="type:DATA_TYPE" nillable="true"/>
+				<xs:element name="luogoNascita" type="xs:string" nillable="true"/>
+				<xs:element name="codiceProvincia" type="xs:string" nillable="true"/>
+				<xs:element name="dataUdienza" type="type:DATA_TYPE" nillable="true"/>
+				<xs:element name="nomeMagistratoRelatore" type="xs:string" nillable="true"/>
+				<xs:element name="cognomeMagistratoRelatore" type="xs:string" nillable="true"/>
+				<xs:element name="etaPresuntaAnni" type="xs:integer" nillable="true"/>
+				<xs:element name="etaPresuntaMesi" type="xs:integer" nillable="true"/>
+				<xs:element name="sesso" type="xs:string"/>
+				<xs:element name="flagRinviata" type="xs:string"/>
+				<xs:element name="descrStatoFascicolo" type="xs:string"/>
+				<xs:element name="codiceStatoFascicolo" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_INPUT_DETTAGLIO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idEvento" type="xs:string"/>
+				<xs:element name="codiTipoProvvedimento" type="xs:string"/>
+				<xs:element name="tipoUfficio" type="xs:string"/>
+				<xs:element ref="type:DATI_AVVISO">
+					<xs:annotation>
+						<xs:documentation>elemento da valorizzare per richiesta di
+							dettaglio da elenco Avvisi. Serve per l'aggiornamento del
+							flagVisualizzazione
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="DATA_TYPE">
+		<xs:sequence>
+			<xs:element name="giorno" type="xs:int"/>
+			<xs:element name="mese" type="xs:int"/>
+			<xs:element name="anno" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TENORE_TYPE">
+		<xs:sequence>
+			<xs:element name="descrOggettoTenore" type="xs:string"/>
+			<xs:element name="note" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="DATI_AVVISO" nillable="true">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idAvviso" type="xs:integer"/>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="OUTPUT_RINVIO_UDIENZA">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_RIEPILOGO_PROCEDIMENTO"/>
+				<xs:element ref="type:DATI_RINVIO_UDIENZA"/>
+				<xs:element ref="type:ERRORE"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_RINVIO_UDIENZA">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="elencoOggetti" type="type:TENORE_TYPE" nillable="true" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>é l'elenco dei tenori</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataEmissione" type="type:DATA_TYPE"/>
+				<xs:element name="luogoSvolgimentoUdienza" type="xs:string" nillable="true">
+					<xs:annotation>
+						<xs:documentation>Inserire Citta e via</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataUdienza" type="type:DATA_TYPE"/>
+				<xs:element name="dateUdienzePrecedenti" type="xs:string" nillable="true">
+					<xs:annotation>
+						<xs:documentation>contiente come stringe una lista di date
+													separate da virgola
+												</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ERRORE">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CODICE_ERRORE" type="xs:string"/>
+				<xs:element name="DESCR_ERRORE" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

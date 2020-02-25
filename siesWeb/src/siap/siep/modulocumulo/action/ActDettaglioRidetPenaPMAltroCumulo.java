@@ -1,0 +1,62 @@
+package siap.siep.modulocumulo.action;
+
+import java.math.BigDecimal;
+
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import siap.sico.ufficio.model.UfficioModel;
+import siap.siep.modulocumulo.controller.IReatoCumulo;
+import siap.siep.modulocumulo.controller.IStatoEsecTitoloCumulato;
+import siap.siep.modulocumulo.model.ReatoCumuloModel;
+import siap.siep.modulocumulo.model.StatoEsecTitoloCumulatoModel;
+import siap.siep.util.SIEPLookupRemote;
+
+/**
+ * Action per la visualizzazione del Dettaglio dell'annotazione di Ridet. Pena PM altro (modulo cumulo)
+ * 
+ * @author
+ *
+ */
+public class ActDettaglioRidetPenaPMAltroCumulo extends ActionModuloCumulo
+		implements ICostantiComputiCumulo, ICostantiStatoEsecTitoloCumulato {
+
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	public String processRequest() throws F3BException {
+		super.getDatiIstruttoria();
+		super.getDatiTitoloCumulato();
+
+		BigDecimal idStatoEsec = null;
+		if (!isRequestParameterNullObj(CAMPO_ID_STATO_ESEC_TITOLO_CUMULATO))
+			idStatoEsec = getRequestBigDecimalParameter(CAMPO_ID_STATO_ESEC_TITOLO_CUMULATO);
+
+		IStatoEsecTitoloCumulato lCtrlStato = SIEPLookupRemote.getStatoEsecTitoloCumulatoRemote();
+
+		StatoEsecTitoloCumulatoModel lStato = lCtrlStato
+				.ExRicercaStatoEsecTitoloCumulatoByIdFull(idStatoEsec);
+
+		siesLogger.debug("--XX-- PROVVEDIMENTO: " + lStato.toString());
+		setRequestAttribute("Provvedimento", lStato);
+
+		// Lettura dell'Ufficio Emittente del provvedimento
+		if (lStato.getListaComputi().get(0).getCodUfficioEmittenteProvv() != null) {
+			UfficioModel lUffEmittente = getUfficioByCodUfficio(
+					lStato.getListaComputi().get(0).getCodUfficioEmittenteProvv());
+			setRequestAttribute("UfficioEmittenteProvv", lUffEmittente);
+		}
+
+		// Lettura del ReatoCumulo
+		if (lStato.getListaComputi().get(0).getReaIdReatoCum() != null) {
+			IReatoCumulo lCtrl = SIEPLookupRemote.getReatoCumuloRemote();
+			ReatoCumuloModel lReaMod = lCtrl
+					.ExRicercaReatoCumuloByKey(lStato.getListaComputi().get(0).getReaIdReatoCum());
+
+			setRequestAttribute("lReato", lReaMod);
+		}
+
+		return PG_LOAD_DETTAGLIO_RIDET_PENA_PM_ALTRO;
+	}
+
+}

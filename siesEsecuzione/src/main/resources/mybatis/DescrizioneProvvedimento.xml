@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.DescrizioneProvvedimento">
+    
+    <select id="lookup" parameterType="java.util.Map" resultType="it.mig.sies.model.DescrizioneProvvedimento">
+		SELECT A.RV_MEANING AS oggetto, B.RV_MEANING AS motivo, C.RV_MEANING AS esito
+          FROM CG_REF_CODES A,
+               CG_REF_CODES B,
+               CG_REF_CODES C
+         WHERE A.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+           AND A.RV_LOW_VALUE = #{codiceOggetto}
+           AND B.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+           AND B.RV_LOW_VALUE = #{codiceMotivo}
+           AND C.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+           AND C.RV_LOW_VALUE = #{codiceEsito}
+    </select>
+
+</mapper>

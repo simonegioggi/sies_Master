@@ -1,0 +1,204 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>it.eng.mig</groupId>
+	<artifactId>siesEsecuzione</artifactId>
+	<packaging>war</packaging>
+	<version>1.0</version>
+
+	<name>SIESEsecuzione</name>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.0.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>1.12</version>
+				<configuration>
+					<sourceDestDir>
+						${basedir}/src/main/java/
+					</sourceDestDir>
+					<wsdlFiles>
+						<wsdlFile>esecuzione.wsdl</wsdlFile>
+					</wsdlFiles>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.8.0</version>
+				<configuration>
+					<removeOldOutput>false</removeOldOutput>
+					<generatePackage>
+						it.mig.sies.model.esecuzione
+					</generatePackage>
+					<generateDirectory>
+						${basedir}/src/main/java/
+					</generateDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>siesEsecuzione</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+	
+	<properties>
+		<netbeans.hint.deploy.server>
+			Tomcat60
+		</netbeans.hint.deploy.server>
+		<project.build.sourceEncoding>
+			UTF-8
+		</project.build.sourceEncoding>
+		<java.version>1.5</java.version>
+		<!-- MEV 16: aggiunto ws -->
+		<webservice.wsdl>
+			http://localhost:7001/siesEsecuzione/iscriviProvvedimentoEsecuzione_NEW?WSDL
+			http://localhost:7001/siesEsecuzione/trasferisciFoglioComplementare?WSDL
+		</webservice.wsdl>
+	</properties>
+
+	<!-- DEFINIZIONE PROFILI PER I DIVERSI AMBIENTI -->
+	<profiles>
+		<profile>
+			<id>PREESERCIZIO</id>
+			<properties>
+				<nsc.address>
+					https://collaudo.casellario.giustizia.it
+				</nsc.address>
+			</properties>
+		</profile>
+		<profile>
+			<id>MAC</id>
+			<properties>
+				<nsc.address>
+					http://10.5.193.155:15001
+				</nsc.address>
+			</properties>
+		</profile>
+		<profile>
+			<id>FORMAZIONE</id>
+			<properties>
+				<nsc.address>
+					http://formazione.casellario.giustizia.it:15001
+				</nsc.address>
+			</properties>
+		</profile>
+		<profile>
+			<id>COLLAUDO</id>
+			<properties>
+				<nsc.address>http://10.5.194.166:8001</nsc.address>
+			</properties> 
+		</profile>
+		<profile>
+			<id>LOCALE</id>
+			<properties>
+				<nsc.address>http://localhost:7001</nsc.address>
+			</properties>
+		</profile>
+		<profile>
+			<id>ESERCIZIO</id>
+			<properties>
+				<nsc.address>
+					https://casellario.giustizia.it
+				</nsc.address>
+			</properties>
+		</profile>
+		<!-- MEV 16: aggiunto profile -->
+		<profile>
+			<id>139</id>
+			<properties>
+				<nsc.address>http://10.5.207.139:7001</nsc.address>
+			</properties> 
+		</profile>
+		<profile>
+			<id>NUOVAINFRASTRUTTURA</id>
+			<properties>
+				<nsc.address>
+					http://10.5.207.202:8080
+				</nsc.address>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.DeclaratoriaEstinzionePena">
+
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.DeclaratoriaEstinzionePena">
+with TENORI as (
+select TN.*
+  from EVENTO                EV
+      ,DEPOSITO_ORDINANZA_PC DO
+      ,TENORE                TN
+ where EV.ID_EVENTO = DO.ID_EVENTO_GENERATO
+   and DO.ID_DEPOSITO_ORDINANZA_PC = TN.DEP_OPID_DEPOSITO_ORDINANZA_PC
+   and TN.COD_OGGETTO_TENORE = '0012'
+   and TN.COD_ESITO_TENORE in ('0107', '0108', '0109', '0200')
+   and EV.COD_ESITO in ('0107', '0108', '0109', '0200')
+   and EV.ID_EVENTO = #{idEvento}
+union
+select TN.*
+  from EVENTO                EV
+      ,DEPOSITO_ORDINANZA_PC DO
+      ,TENORE                TN
+ where EV.ID_EVENTO = DO.ID_EVENTO_GENERATO
+   and DO.ID_DEPOSITO_ORDINANZA_PC = TN.DEP_OPID_DEPOSITO_ORDINANZA_PC
+   and TN.COD_OGGETTO_TENORE = '0177'
+   and TN.COD_ESITO_TENORE in ('0209')
+   and EV.COD_ESITO in ('0209')
+   and EV.ID_EVENTO = #{idEvento}
+           ) 
+select (select count(*) from TENORI) totale
+      ,(select count(*) from TENORI where TENORI.COD_OGGETTO_TENORE = '0012') tipo_a
+      ,(select count(*) from TENORI where TENORI.COD_OGGETTO_TENORE = '0177') tipo_b
+from DUAL
+    </select>
+
+</mapper>

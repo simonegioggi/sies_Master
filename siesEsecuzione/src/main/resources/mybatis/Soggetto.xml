@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.Soggetto">
+    
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.Soggetto">
+        SELECT DISTINCT SOGG.ID_SOGGETTO chiaveSies,
+            SOGG.key_sogg_nsc chiaveNSC,
+            SOGG.COGNOME cognome,
+            SOGG.NOME nome,
+            C.CO_CODCENTR luogoNascita,
+            N.CO_CODCENTR nazioneNascita,
+            DESCR_NAZIONE.RV_MEANING descNazioneNascita,
+            SOGG.desc_comune_nascita_estero descComuneEsteroNascita,       
+            SOGG.DATA_NASCITA dataNascita,
+            SOGG.sesso sesso,              
+            SOGG.COD_FISCALE codiceFiscale,
+            SOGG.COD_AFIS codiceAfis,
+            SOGG.PATERNITA paternita,
+            DESCR_COM_NASCITA.DESCRIZIONE descComuneNascita
+        FROM FASCICOLO_SIUS        FASC,
+            SOGGETTO              SOGG,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_TIPO_PROCEDIMENTO,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            COMUNE                DESCR_COM_NASCITA,
+            EVENTO                EV,
+            CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+            CG_REF_CODES          DESCR_COD_PROCEDIMENTO ,
+            CG_REF_CODES		  DESCR_NAZIONE,
+            CODICI_SIES_NSC C, 
+            CODICI_SIES_NSC N
+        WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO
+        	AND SOGG.COD_STATO_NASCITA=DESCR_NAZIONE.RV_LOW_VALUE
+        	AND DESCR_NAZIONE.RV_DOMAIN='NAZIONE'
+            AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+            AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+            AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE
+            AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'
+            AND NVL(EV.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+            AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN ='MOTIVO_PROVVEDIMENTO' 
+            AND EV.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE  
+            AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'
+            AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+            AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') 
+            AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE
+            AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS
+            AND C.CO_DOMAIN(+) = 'COMUNE'
+            AND C.CO_SIES(+) = sogg.COD_COMUNE_NASCITA
+            AND N.CO_DOMAIN = 'NAZIONE'
+            AND N.CO_SIES = sogg.COD_STATO_NASCITA
+            --   AND FASC.CHIAVE_ANNO = 2009
+            --   AND FASC.CHIAVE_PROGR = 4068
+            --    AND DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE='C002'
+            ---   AND FASC.CHIAVE_UFFICIO = '00127201301'
+            AND EV.ID_EVENTO= #{idEvento}
+            -- AND fasc.id_fascicolo_sius=???
+    </select>
+    
+    <select id="lookupPrincipale" parameterType="long" resultType="it.mig.sies.model.Soggetto">
+        SELECT DISTINCT SOGG.ID_SOGGETTO chiaveSies,
+            SOGG.key_sogg_nsc chiaveNSC,
+            SOGG.COGNOME cognome,
+            SOGG.NOME nome,
+            C.CO_CODCENTR luogoNascita,
+            N.CO_CODCENTR nazioneNascita,
+            DESCR_NAZIONE.RV_MEANING descNazioneNascita, 
+            SOGG.desc_comune_nascita_estero descComuneEsteroNascita,
+            SOGG.DATA_NASCITA dataNascita,
+            SOGG.sesso sesso,
+            SOGG.COD_FISCALE codiceFiscale,
+            SOGG.COD_AFIS codiceAfis,
+            SOGG.PATERNITA paternita,
+            DESCR_COM_NASCITA.DESCRIZIONE descComuneNascita
+        FROM FASCICOLO_Siep        FASC,
+            SOGGETTO              SOGG,
+            GENERALE_PROCEDIMENTO GP,
+            CG_REF_CODES          DESCR_TIPO_PROCEDIMENTO,
+            UFFICIO               UFF,
+            COMUNE                DESCR_COM_UFF,
+            COMUNE                DESCR_COM_NASCITA,
+            CG_REF_CODES		  DESCR_NAZIONE,
+            EVENTO                EV,
+            CODICI_SIES_NSC C,
+            CODICI_SIES_NSC N
+        WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO
+        	AND SOGG.COD_STATO_NASCITA=DESCR_NAZIONE.RV_LOW_VALUE
+        	AND DESCR_NAZIONE.RV_DOMAIN='NAZIONE'
+            AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+            AND EV.COD_TIPO_PROVVEDIMENTO (+)= DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE
+            AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')
+            AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE
+            AND EV.Fas_Sie_Id_Fascicolo_Siep= FASC.ID_FASCICOLO_SIEP
+            AND C.CO_DOMAIN (+)= 'COMUNE'
+            AND C.CO_SIES (+)= sogg.COD_COMUNE_NASCITA
+            AND N.CO_DOMAIN = 'NAZIONE'
+            AND N.CO_SIES = sogg.COD_STATO_NASCITA
+            AND ev.id_evento = #{idEvento}
+    </select>
+    
+    <update id="update" parameterType="it.mig.sies.model.Soggetto">
+        UPDATE SOGGETTO set
+            key_sogg_nsc = #{chiaveNSC}
+        where ID_SOGGETTO = #{chiaveSies}
+    </update>
+    
+    <update id="deleteLogica" parameterType="it.mig.sies.model.Soggetto">
+        UPDATE SOGGETTO set
+            key_sogg_nsc = NULL
+        where ID_SOGGETTO = #{chiaveSies}
+    </update>
+
+	<!-- MEV 16: aggiunta query estrazione dati soggetto dato il suo ID -->
+    <select id="getSoggettoByID" parameterType="long" resultType="it.mig.sies.model.Soggetto">
+    	SELECT ID_SOGGETTO                chiaveSies,
+		       COD_FISCALE                codiceFiscale,
+		       COD_AFIS                   codiceAfis,
+		       COGNOME                    cognome,
+		       NOME                       nome,
+		       DATA_NASCITA               dataNascita,
+		       C.CO_CODCENTR              luogoNascita,
+		       N.CO_CODCENTR              nazioneNascita,
+		       COMU.DESCRIZIONE           descComuneNascita,
+		       NAZ.RV_MEANING             descNazioneNascita,
+		       DESC_COMUNE_NASCITA_ESTERO descComuneEsteroNascita,
+		       PATERNITA                  paternita,
+		       SESSO                      sesso,
+		       KEY_SOGG_NSC               chiaveNSC
+		  FROM SOGGETTO,
+		       CG_REF_CODES     NAZ,
+		       SEDE_GIUDIZIARIA SEDE_GIUD,
+		       COMUNE           COMU,
+		       CODICI_SIES_NSC  C,
+		       CODICI_SIES_NSC  N
+		 WHERE SEDE_GIUD.COD_SEDE_GIUDIZIARIA = COD_COMUNE_CASELLARIO
+		   AND NAZ.RV_LOW_VALUE = COD_STATO_NASCITA
+		   AND NAZ.RV_DOMAIN = 'NAZIONE'
+		   AND COD_COMUNE_NASCITA = COMU.COD_COMUNE
+		   AND C.CO_DOMAIN(+) = 'COMUNE'
+		   AND C.CO_SIES(+) = COD_COMUNE_NASCITA
+		   AND N.CO_DOMAIN = 'NAZIONE'
+		   AND N.CO_SIES = COD_STATO_NASCITA
+		   AND ID_SOGGETTO = #{idSoggetto}
+    </select>
+
+	<!-- MEV 16 + MEV 31: aggiunta query estrazione descrizione comune nascita sinonimo -->
+	<select id="getDescComune" parameterType="String" resultType="String">
+    	select c.co_sies_des
+		  from codici_sies_nsc c
+		 where c.co_domain = 'COMUNE'
+		   and c.co_codcentr = #{codiceLuogoNascita}
+    </select>
+
+	<!-- MEV 16 + MEV 31: aggiunta query estrazione descrizione nazione nascita sinonimo -->
+	<select id="getDescNazione" parameterType="String" resultType="String">
+    	select n.co_sies_des
+		  from codici_sies_nsc n
+		 where n.co_domain = 'NAZIONE'
+		   and n.co_codcentr = #{codiceNazioneNascita}
+    </select>
+
+</mapper>

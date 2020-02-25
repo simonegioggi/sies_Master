@@ -1,0 +1,73 @@
+package siap.siep.modulocumulo.action;
+
+import java.math.BigDecimal;
+import java.util.Vector;
+
+import f3b.util.F3BException;
+import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.ufficio.model.UfficioModel;
+import siap.siep.modulocumulo.controller.IRichiestePmInCumulo;
+import siap.siep.modulocumulo.model.ProvvedimentoGeSorvCumModel;
+import siap.siep.modulocumulo.model.RichiestePmInCumuloModel;
+import siap.siep.modulocumulo.model.TitoloCumulatoModel;
+import siap.siep.util.SIEPLookupRemote;
+
+/**
+ * Classe Action per il Load della Form di Inserimento della decisione del G.E. a fronte di una Richiesta del
+ * P.M. di: Sostituzione Pena Accessoria (gestione Cumulo)
+ * 
+ * @author Intersistemi Italia S.p.A.
+ *
+ */
+public class ActLoadInsDecisioneDelGERevocaPenaAccCum extends ActionModuloCumulo
+		implements ICostantiRichiestePmInCumulo {
+
+	public String processRequest() throws F3BException {
+
+		/* IstruttoriaCumuloModel lIstrCumulo = */super.getDatiIstruttoria();
+
+		String lModalita = "I"; // default inserimento
+		if (!isRequestParameterNullObj("modalita"))
+			lModalita = getRequestStringParameter("modalita");
+
+		// cerco la Richiesta
+		BigDecimal aIdRich = new BigDecimal(getRequestStringParameter(CAMPO_ID_RICHIESTE_PM_IN_CUMULO));
+		IRichiestePmInCumulo lCtrlRich = SIEPLookupRemote.getRichiestePmInCumuloRemote();
+		RichiestePmInCumuloModel lRicMod = lCtrlRich.ExRicercaRichiestePmInCumuloById(aIdRich);
+
+		setRequestAttribute("RichiestaGE", lRicMod);
+
+		// Ricerca dei Titoli e delle Pene Accessoria collegate alla Richiesta (tramite tabelle di Relazione
+		// RICHPM_TITOLO_CUM e RICHPM_PENACC_CUM)
+		Vector<TitoloCumulatoModel> lVecTitoliPA = new Vector<>();
+		lVecTitoliPA = lCtrlRich.ExRicercaTitoli_e_PeneAccCumByRichiestaGE(aIdRich);
+
+		setRequestAttribute("ListaTitoliPA", lVecTitoliPA);
+
+		// Distinzione tra INSERIMENTO e MODIFICA Decisione del GE
+		if (lRicMod.getDecisioneGeSorvCum() != null
+				&& lRicMod.getDecisioneGeSorvCum().getIdProvvedimentoGeSorvCum() != null) {
+			lModalita = "M";
+			setRequestAttribute("ProvvGECum", lRicMod.getDecisioneGeSorvCum());
+		}
+
+		setRequestAttribute("modalita", lModalita);
+
+		// Combo: Ufficio giudice dell'esecuzione Emittente
+		Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficioPerCodice());
+		lOption.setFilter(new String[] { "CAP", "CAS", "CASAP", "CSS", "GIP", "GIPM", "GUPM", "GUP", "TRIBSD",
+				"CAPSM", "DIB", "DIBM", "-" });
+		if (lRicMod != null && lRicMod.getDecisioneGeSorvCum() != null) {
+			ProvvedimentoGeSorvCumModel lProvvMod = lRicMod.getDecisioneGeSorvCum();
+			if (lProvvMod.getCodUfficioEmittente() != null) {
+				UfficioModel lUffMod = this.getUfficioByCodUfficio(lProvvMod.getCodUfficioEmittente());
+				lOption.setSelected(lUffMod.getCodTipoUfficio());
+			}
+		}
+
+		setRequestAttribute("UfficioEmittente", "" + lOption);
+
+		return PG_INSMOD_DEC_GE_REVOCA_PENA_ACC;
+	}
+}

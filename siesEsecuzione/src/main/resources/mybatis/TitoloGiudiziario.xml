@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.TitoloGiudiziario">
+    
+    <update id="deleteLogica" parameterType="java.util.Map">
+    	UPDATE FASCICOLO_SIEP A
+    	SET A.KEY_PROVV_NSC = NULL
+  		WHERE A.ID_FASCICOLO_SIEP = #{sies}
+    </update>
+    
+    <update id="update" parameterType="java.util.Map">
+    	UPDATE FASCICOLO_SIEP A
+    	SET A.KEY_PROVV_NSC = #{nsc}
+  		WHERE A.ID_FASCICOLO_SIEP = #{sies}
+    	AND A.KEY_PROVV_NSC IS NULL
+    </update>
+    
+    <select id="lookup" parameterType="long" resultType="it.mig.sies.model.TitoloGiudiziario">
+		SELECT RFS.FAS_SIE_ID_FASCICOLO_SIEP chiaveSies,
+		       FAS_SIEP.KEY_PROVV_NSC        chiaveNSC,
+		       RFS.NUMERO_PROVVEDIMENTO      numeroSentenza,
+		       RFS.ANNO_PROVVEDIMENTO        annoSentenza,
+		       RFS.DATA_PROVVEDIMENTO        dataProvvedimento,
+		       AUT.CO_CODCENTR               codiceAutoritaCentrale,
+		       AUT.CO_SIES_DES               descrizioneAutorita,
+		       DESCR_LUOGO_EMIT.DESCRIZIONE  descrizioneSedeAutorita,
+		       rfs.COD_LUOGO_EMITTENTE       sedeAutorita,
+		       NULL                          flagCumulante,
+		       -- MEV_ENG_31_BIS: aggiunto campo in estrazione
+		       null							 dataImpugnazione
+		  FROM RIFERIMENTO_FASCICOLO_SIEP RFS,
+		       CG_REF_CODES               DESCR_TIPO_UFF,
+		       COMUNE                     DESCR_COM_UFF,
+		       UFFICIO                    UFF,
+		       CG_REF_CODES               DESCR_TIPO_PROVV,
+		       COMUNE                     DESCR_LUOGO_EMIT,
+		       CG_REF_CODES               DESCR_AUTORITA_EMIT,
+		       FASCICOLO_SIEP             FAS_SIEP,
+		       CODICI_SIES_NSC            AUT,
+		       --CG_REF_CODES    TIPO_AUTORITA_EMITTENTE,
+		       evento                e,
+		       CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+		       CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+		       CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+		       GENERALE_PROCEDIMENTO GP
+		 WHERE DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND NVL(UFF.COD_TIPO_UFFICIO, '-') = DESCR_TIPO_UFF.RV_LOW_VALUE
+		   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+		   AND RFS.COD_UFF_FASCICOLO_SIEP = UFF.COD_UFFICIO
+		   AND DESCR_TIPO_PROVV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+		   AND RFS.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROVV.RV_LOW_VALUE
+		   AND DESCR_AUTORITA_EMIT.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND RFS.COD_TIPO_AUTORITA_EMITTENTE = DESCR_AUTORITA_EMIT.RV_LOW_VALUE
+		   AND RFS.COD_LUOGO_EMITTENTE = DESCR_LUOGO_EMIT.COD_COMUNE
+		   AND FAS_SIEP.ID_FASCICOLO_SIEP(+) = RFS.FAS_SIE_ID_FASCICOLO_SIEP
+		   AND AUT.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND AUT.CO_SIES = rfs.COD_TIPO_AUTORITA_EMITTENTE
+	       --AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = aut.CO_SIES
+		   AND AUT.CO_VAL2 = '-'
+		   AND AUT.CO_VAL1 = '-'
+		   --AND TIPO_AUTORITA_EMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO'
+		   --AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = rfs.COD_TIPO_AUTORITA_EMITTENTE
+		   AND e.fas_siu_id_fascicolo_sius = rfs.FAS_SIU_ID_FASCICOLO_SIUS
+		   AND e.id_evento = #{idEvento}
+		   AND e.Eve_Id_Evento is NULL
+		   AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+		   AND e.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+		   AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		   AND NVL(e.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+		   AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+		   AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+		   AND E.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+		   AND DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+		       DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+		       DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE NOT IN
+		       ('C00400920009',
+		        'C00400940009',
+		        'C00400200009',
+		        'C00400950009',
+		        'C00401000009',
+		        'C00401020009',
+		        'C00400930009',
+		        'C00401010009',
+		        'C00403170009',
+		        'C00401980009',
+		        'U03727020009',
+		        'U03722990009',
+		        'U03722810009')
+				-- MERGE v10: aggiunti tre codici
+		UNION
+		-- Nota Il fascicolo SIEP e SIUS hanno ID_SOGGETTO diverso anche se si tratta
+		-- dello stesso soggetto!!!!
+		SELECT DISTINCT FASC.ID_FASCICOLO_SIEP chiaveSies,
+		                FASC.KEY_PROVV_NSC     chiaveNSC,
+		                SENT.NUMERO_SENTENZA   numeroSentenza,
+		                SENT.ANNO_SENTENZA     annoSentenza,
+		                --MAC 30102003 FP
+		                decode(fasc.flag_cumulante,
+		                       'S',
+		                       NVL((SELECT max(evento.data_emissione)
+		                             FROM EVENTO
+		                            WHERE FAS_SIE_ID_FASCICOLO_SIEP =
+		                                  FASC.ID_FASCICOLO_SIEP
+		                              AND evento.cod_motivo IN
+		                              	  -- [SG]: 20190208 aggiunti altri codici motivo ('CUMULO', 'CUMULO_NEW')
+			                              --('0277', '0222', '0223', '0224', '0225')),
+	   		                              (select c.rv_low_value
+											 from cg_ref_codes c
+											where c.rv_high_value like 'CUMULO%'
+											  and c.rv_domain = 'MOTIVO_PROVVEDIMENTO')),
+		                           fasc.data_iscrizione),
+		                       SENT.DATA_PROVVEDIMENTO) dataProvvedimento,
+		                AUT.CO_CODCENTR codiceAutoritaCentrale,
+		                DECODE(fasc.flag_cumulante,
+		                       'S',
+		                       (SELECT distinct UFF_TIPO_EMI.RV_MEANING DESC_UFF_EMITTENTE
+		                          FROM EVENTO,
+		                               UFFICIO      UFF_EMI,
+		                               CG_REF_CODES UFF_TIPO_EMI,
+		                               COMUNE       LUOEMI
+		                         WHERE EVENTO.COD_LUOGO_EMITTENTE = LUOEMI.COD_COMUNE
+		                           AND UFF_EMI.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		                           AND UFF_TIPO_EMI.RV_DOMAIN = 'TIPO_UFFICIO'
+		                           AND UFF_TIPO_EMI.RV_LOW_VALUE =
+		                               UFF_EMI.COD_TIPO_UFFICIO
+		                           AND FAS_SIE_ID_FASCICOLO_SIEP =
+		                               FASC.ID_FASCICOLO_SIEP
+		                           AND cod_motivo IN
+		                           	   -- [SG]: 20190208 aggiunti altri codici motivo ('CUMULO', 'CUMULO_NEW')
+		                               --('0277', '0222', '0223', '0224', '0225')),
+   		                               (select c.rv_low_value
+										  from cg_ref_codes c
+										 where c.rv_high_value like 'CUMULO%'
+										   and c.rv_domain = 'MOTIVO_PROVVEDIMENTO')),
+		                       AUT.CO_SIES_DES) descrizioneAutorita,
+		                DECODE(fasc.flag_cumulante,
+		                       'S',
+		                       (SELECT distinct LUOEMI.DESCRIZIONE
+		                          FROM EVENTO,
+		                               UFFICIO      UFF_EMI,
+		                               CG_REF_CODES UFF_TIPO_EMI,
+		                               COMUNE       LUOEMI
+		                         WHERE EVENTO.COD_LUOGO_EMITTENTE = LUOEMI.COD_COMUNE
+		                           AND UFF_EMI.COD_UFFICIO = COD_UFFICIO_EMITTENTE
+		                           AND UFF_TIPO_EMI.RV_DOMAIN = 'TIPO_UFFICIO'
+		                           AND UFF_TIPO_EMI.RV_LOW_VALUE =
+		                               UFF_EMI.COD_TIPO_UFFICIO
+		                           AND FAS_SIE_ID_FASCICOLO_SIEP =
+		                               FASC.ID_FASCICOLO_SIEP
+		                           AND cod_motivo IN
+		                           	   -- [SG]: 20190208 aggiunti altri codici motivo ('CUMULO', 'CUMULO_NEW')
+		                               --('0277', '0222', '0223', '0224', '0225')),
+   		                               (select c.rv_low_value
+										  from cg_ref_codes c
+										 where c.rv_high_value like 'CUMULO%'
+										   and c.rv_domain = 'MOTIVO_PROVVEDIMENTO')),
+		                       COD_COMUNE.CO_SIES_DES) descrizioneSedeAutorita,
+		                COD_COMUNE.CO_CODCENTR sedeAutorita,
+		                FASC.flag_cumulante flagCumulante,
+		                -- MEV_ENG_31_BIS: aggiunto campo in estrazione
+		                sent.data_provv_rif
+		  FROM FASCICOLO_SIEP FASC,
+		       SENTENZA       SENT,
+		       SOGGETTO       SOGG,
+		       CG_REF_CODES   TIPO_PROVVEDIMENTO,
+		       --CG_REF_CODES    TIPO_AUTORITA_EMITTENTE,
+		       COMUNE                LUOGO_EMITTENTE,
+		       UFFICIO               UFF,
+		       CG_REF_CODES          DESCR_TIPO_UFF,
+		       COMUNE                DESCR_COM_UFF,
+		       CODICI_SIES_NSC       AUT,
+		       CODICI_SIES_NSC       COD_COMUNE,
+		       fascicolo_sius        fasc_s,
+		       evento                e,
+		       CG_REF_CODES          DESCR_ESITO_PROVVEDIMENTO,
+		       CG_REF_CODES          DESCR_MOTIVO_PROVVEDIMENTO,
+		       CG_REF_CODES          DESCR_COD_PROCEDIMENTO,
+		       GENERALE_PROCEDIMENTO GP
+		 WHERE FASC.SOG_ID_SOGGETTO = SOGG.ID_SOGGETTO
+		   AND FASC.SEN_ID_SENTENZA = SENT.ID_SENTENZA
+		   AND FASC.FLAG_VALIDATO = 'S'
+		   AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'
+		   AND TIPO_PROVVEDIMENTO.RV_LOW_VALUE = SENT.COD_TIPO_PROVVEDIMENTO
+		   --AND TIPO_AUTORITA_EMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO'
+		   --AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = SENT.COD_TIPO_AUTORITA_EMITTENTE
+		   AND LUOGO_EMITTENTE.COD_COMUNE = SENT.COD_LUOGO_EMITTENTE
+		   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO
+		   AND DESCR_TIPO_UFF.RV_DOMAIN = 'TIPO_UFFICIO'
+		   AND UFF.COD_TIPO_UFFICIO = DESCR_TIPO_UFF.RV_LOW_VALUE
+		   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+		   AND AUT.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND AUT.CO_SIES = SENT.COD_TIPO_AUTORITA_EMITTENTE
+		   --AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = AUT.CO_SIES
+		   AND AUT.CO_VAL2 = '-'
+		   AND (AUT.CO_VAL1 =
+		       nvl(decode(fasc.flag_cumulante, 'S', '-', sent.cod_tipo_rito), '-') OR
+		       (AUT.CO_VAL1 = '-' AND aut.co_codcentr = 1))
+		   AND COD_COMUNE.CO_DOMAIN = 'COMUNE'
+		   AND COD_COMUNE.CO_SIES = SENT.COD_LUOGO_EMITTENTE
+		   --AND FASC.CHIAVE_ANNO = '2005'
+		   --AND FASC.CHIAVE_PROGR = 246
+		   --AND FASC.ID_FASCICOLO_SIEP = 53913032006
+		   --AND fasc_s.id_fascicolo_sius=4973032006
+		   AND fasc.id_fascicolo_siep = fasc_s.fas_sie_id_fascicolo_siep
+		   AND e.fas_siu_id_fascicolo_sius = fasc_s.id_fascicolo_sius
+		   AND e.id_evento = #{idEvento}
+		   AND E.Eve_Id_Evento is NULL
+		   AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN = 'ESITO_PROVVEDIMENTO'
+		   AND e.COD_ESITO = DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE
+		   AND DESCR_MOTIVO_PROVVEDIMENTO.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'
+		   AND NVL(e.COD_MOTIVO, '-') = DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE
+		   AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'
+		   AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE
+		   AND E.FAS_SIU_ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS
+		   AND DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE ||
+		       DESCR_MOTIVO_PROVVEDIMENTO.RV_LOW_VALUE ||
+		       DESCR_ESITO_PROVVEDIMENTO.RV_LOW_VALUE NOT IN (
+		                                                      --CESSAZIONI
+		                                                      'C00400200010',
+		                                                      'C00400930010',
+		                                                      'C00401000010',
+		                                                      'C00401010010',
+		                                                      'C00401020010',
+		                                                      'C00401030010',
+		                                                      'C00400920010',
+		                                                      'C00401980010',
+		                                                      'C00400940010',
+		                                                      'C00403170010')
+		UNION
+		SELECT E.ID_EVENTO chiaveSies,
+		       E.KEY_ESEC_NSC chiaveNSC,
+		       NULL numeroSentenza,
+		       NULL annoSentenza,
+		       E.DATA_EMISSIONE dataProvvedimento,
+		       DECODE(UFF.COD_TIPO_UFFICIO, 'UDS', '50', 'TDS', '51') codiceAutoritaCentrale,
+		       NULL descrizioneAutorita,
+		       COM_AUT.CO_SIES_DES descrizioneSedeAutorita,
+		       COM_AUT.CO_CODCENTR sedeAutorita,
+		       NULL flagCumulante,
+		       -- MEV_ENG_31_BIS: aggiunto campo in estrazione
+		       null dataImpugnazione
+		  FROM EVENTO E, UFFICIO UFF, COMUNE DESCR_COM_UFF, CODICI_SIES_NSC COM_AUT
+		 WHERE E.Eve_Id_Evento_Revoca = #{idEvento}
+		   AND UFF.COD_UFFICIO = E.COD_UFFICIO_EMITTENTE
+		   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+		   AND COM_AUT.CO_DOMAIN = 'COMUNE'
+		   AND COM_AUT.CO_SIES = E.COD_LUOGO_EMITTENTE
+    </select>
+
+	<!-- MEV 16: aggiunte query estrazione dati titolo esecutivo per siep -->
+	<!-- MEV 16 CUMULO: aggiunto campo in estrazione -->
+    <select id="getTitoloGiudiziarioByID" parameterType="java.util.Map" resultType="it.mig.sies.model.TitoloGiudiziario">
+		SELECT FAS_SIEP.ID_FASCICOLO_SIEP 		  CHIAVESIES,
+		       FAS_SIEP.KEY_PROVV_NSC     		  CHIAVENSC,
+		       NUMERO_SENTENZA            		  NUMEROSENTENZA,
+		       ANNO_SENTENZA              		  ANNOSENTENZA,
+		       DATA_PROVVEDIMENTO         		  DATAPROVVEDIMENTO,
+		       /*COD_TIPO_AUTORITA_EMITTENTE      CODICEAUTORITACENTRALE,*/
+		       SE.CO_CODCENTR                     CODICEAUTORITACENTRALE,
+		       TIPO_AUTORITA_EMITTENTE.RV_MEANING DESCRIZIONEAUTORITA,
+		       LUOGO_EMITTENTE.DESCRIZIONE        DESCRIZIONESEDEAUTORITA,
+		       COD_LUOGO_EMITTENTE                SEDEAUTORITA,
+		       NULL                               FLAGCUMULANTE,
+		       TIPO_PROVVEDIMENTO.RV_MEANING 	  desctipoprovvedimento
+		  FROM SENTENZA,
+		       CG_REF_CODES      TIPO_PROVVEDIMENTO,
+		       CG_REF_CODES      TIPO_AUTORITA_EMITTENTE,
+		       COMUNE            LUOGO_EMITTENTE,
+		       CG_REF_CODES      TIPO_PROVV_RIF,
+		       CG_REF_CODES      TIPO_AUTORITA_PROVV_RIF,
+		       COMUNE            SEDE_NOTIZIA,
+		       CG_REF_CODES      TIPO_PROVVEDIMENTO_RIF,
+		       CG_REF_CODES      TIPO_PROVVEDIMENTO_ALTRO,
+		       COMUNE            LUOGO_PROVV_RIF,
+		       CG_REF_CODES      TIPO_DECISIONE_CASSAZIONE,
+		       CG_REF_CODES      DECOBILAN,
+		       UFFICIO_ACCORPATO UA,
+		       FASCICOLO_SIEP    FAS_SIEP,
+		       CODICI_SIES_NSC   SE
+		 WHERE (TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND
+		       TIPO_PROVVEDIMENTO.RV_LOW_VALUE = COD_TIPO_PROVVEDIMENTO)
+		   AND (TIPO_AUTORITA_EMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO' AND
+		       TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = COD_TIPO_AUTORITA_EMITTENTE)
+		   AND (LUOGO_EMITTENTE.COD_COMUNE = COD_LUOGO_EMITTENTE)
+		   AND (DECOBILAN.RV_DOMAIN = 'BILANCIAMENTO_CIRCOSTANZE' AND
+		       DECOBILAN.RV_LOW_VALUE = COD_BILANCIAMENTO_CIRCOSTANZE)
+		   AND (TIPO_PROVV_RIF.RV_DOMAIN = 'TIPO_PROVVEDIMENTO_RIF_P' AND
+		       TIPO_PROVV_RIF.RV_LOW_VALUE = COD_TIPO_PROVV_RIF)
+		   AND (TIPO_AUTORITA_PROVV_RIF.RV_DOMAIN = 'TIPO_UFFICIO' AND
+		       TIPO_AUTORITA_PROVV_RIF.RV_LOW_VALUE = COD_TIPO_AUTORITA_PROVV_RIF)
+		   AND (LUOGO_PROVV_RIF.COD_COMUNE = COD_LUOGO_PROVV_RIF)
+		   AND (TIPO_DECISIONE_CASSAZIONE.RV_DOMAIN = 'TIPO_DECISIONE_CASSAZIONE' AND
+		       TIPO_DECISIONE_CASSAZIONE.RV_LOW_VALUE =
+		       COD_TIPO_DECISIONE_CASSAZIONE)
+		   AND (TIPO_PROVVEDIMENTO_RIF.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND
+		       TIPO_PROVVEDIMENTO_RIF.RV_LOW_VALUE = COD_TIPO_PROVVEDIMENTO_RIF)
+		   AND (TIPO_PROVVEDIMENTO_ALTRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND
+		       TIPO_PROVVEDIMENTO_ALTRO.RV_LOW_VALUE =
+		       COD_TIPO_PROVVEDIMENTO_ALTRO)
+		   AND (SEDE_NOTIZIA.COD_COMUNE = COD_SEDE_NOTIZIA_REATO)
+		   AND (SENTENZA.COD_UFFICIO_INSERIMENTO = UA.COD_UFFICIO(+))
+		   AND ID_SENTENZA = #{idSentenza}
+		   AND FAS_SIEP.SEN_ID_SENTENZA = ID_SENTENZA
+		   AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND SE.CO_SIES = COD_TIPO_AUTORITA_EMITTENTE
+		   AND (SE.CO_VAL1 =
+		       NVL(DECODE(FAS_SIEP.FLAG_CUMULANTE, 'S', '-', COD_TIPO_RITO),
+		            '-') OR (SE.CO_VAL1 = '-' AND SE.CO_CODCENTR = 1))
+		   AND SE.CO_VAL2 = '-'
+		   AND FAS_SIEP.ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+    </select>
+
+	<!-- MEV 16 CUMULO: modificate queries -->
+<!--     <select id="getTitoliEsecutiviPerCumuloByID" parameterType="Long" resultType="it.mig.sies.model.TitoloGiudiziario"> -->
+<!-- 		SELECT FAS_SIEP.ID_FASCICOLO_SIEP         CHIAVESIES, -->
+<!-- 		       FAS_SIEP.KEY_PROVV_NSC             CHIAVENSC, -->
+<!-- 		       NUMERO_SENTENZA                    NUMEROSENTENZA, -->
+<!-- 		       ANNO_SENTENZA                      ANNOSENTENZA, -->
+<!-- 		       DATA_PROVVEDIMENTO                 DATAPROVVEDIMENTO, -->
+<!-- 		       /*COD_TIPO_AUTORITA_EMITTENTE        CODICEAUTORITACENTRALE,*/ -->
+<!-- 		       SE.CO_CODCENTR                     CODICEAUTORITACENTRALE, -->
+<!-- 		       TIPO_AUTORITA_EMITTENTE.RV_MEANING DESCRIZIONEAUTORITA, -->
+<!-- 		       LUOGO_EMITTENTE.DESCRIZIONE        DESCRIZIONESEDEAUTORITA, -->
+<!-- 		       COD_LUOGO_EMITTENTE                SEDEAUTORITA, -->
+<!-- 		       NULL            					  FLAGCUMULANTE -->
+<!-- 		  FROM CUMULO, -->
+<!-- 		       CG_REF_CODES   TISTAMPA, -->
+<!-- 		       SENTENZA       SENT, -->
+<!-- 		       COMUNE         LUOGO_EMITTENTE, -->
+<!-- 		       CG_REF_CODES   TIPO_AUTORITA_EMITTENTE, -->
+<!-- 		       CG_REF_CODES   TIPO_PROVVEDIMENTO, -->
+<!-- 		       FASCICOLO_SIEP FAS_SIEP, -->
+<!--        		   CODICI_SIES_NSC SE -->
+<!-- 		 WHERE TISTAMPA.RV_DOMAIN = 'STAMPE_CUMULO' -->
+<!-- 		   AND TISTAMPA.RV_HIGH_VALUE = FLAG_TIPO_STAMPA -->
+<!-- 		   AND CUMULO.SEN_ID_SENTENZA = SENT.ID_SENTENZA -->
+<!-- 		   AND TIPO_PROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' -->
+<!-- 		   AND TIPO_PROVVEDIMENTO.RV_LOW_VALUE = SENT.COD_TIPO_PROVVEDIMENTO -->
+<!-- 		   AND TIPO_AUTORITA_EMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO' -->
+<!-- 		   AND TIPO_AUTORITA_EMITTENTE.RV_LOW_VALUE = -->
+<!-- 		       SENT.COD_TIPO_AUTORITA_EMITTENTE -->
+<!-- 		   AND LUOGO_EMITTENTE.COD_COMUNE = SENT.COD_LUOGO_EMITTENTE -->
+<!-- 		   AND FAS_SIEP.ID_FASCICOLO_SIEP = CUMULO.FAS_SIE_ID_FASCICOLO_SIEP -->
+<!-- 		   AND CUMULO.FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep} -->
+<!-- 		   AND (CUMULO.FLAG_VALIDATO = 'S' OR CUMULO.FLAG_VALIDATO = 'N' OR -->
+<!-- 		       CUMULO.FLAG_VALIDATO IS NULL) -->
+<!-- 		   AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE' -->
+<!-- 		   AND SE.CO_SIES = SENT.COD_TIPO_AUTORITA_EMITTENTE -->
+<!-- 		   AND (SE.CO_VAL1 = -->
+<!-- 		       NVL(DECODE(FAS_SIEP.FLAG_CUMULANTE, 'S', '-', SENT.COD_TIPO_RITO), -->
+<!-- 		            '-') OR (SE.CO_VAL1 = '-' AND SE.CO_CODCENTR = 1)) -->
+<!-- 		   AND SE.CO_VAL2 = '-' -->
+<!--     </select> -->
+
+	<select id="getIdIstruttoriaCumuloByID" parameterType="java.util.Map" resultType="String">
+		SELECT ID_ISTRUTTORIA_CUMULO
+		  FROM ISTRUTTORIA_CUMULO
+		 WHERE FAS_SIE_ID_FASCICOLO_SIEP = #{idFascicoloSiep}
+		   AND EVE_ID_EVENTO_PROV = #{idEvento}
+		   AND DATA_CHIUSURA IS NOT NULL
+		   AND FLAG_STATO = 'C'
+	</select>
+
+	<select id="getTitoliEsecutiviPerCumuloByID" parameterType="long" resultType="it.mig.sies.model.TitoloGiudiziario">
+		SELECT /*FAS_SIEP.ID_FASCICOLO_SIEP          CHIAVESIES,
+		       FAS_SIEP.KEY_PROVV_NSC              CHIAVENSC,*/
+		       NVL((select min(ID_FASCICOLO_SIEP) from sentenza s, fascicolo_siep fs
+	           	     where s.id_sentenza=TITOLO_CUMULATO.Id_Sentenza_Origine
+	                   and FS.Sen_Id_Sentenza=s.id_sentenza), 0) CHIAVESIES,
+               NVL((select min(KEY_PROVV_NSC) from sentenza s, fascicolo_siep fs
+                     where s.id_sentenza=TITOLO_CUMULATO.Id_Sentenza_Origine
+                       and FS.Sen_Id_Sentenza=s.id_sentenza), 0) CHIAVENSC,
+		       NUMERO_SENTENZA                     NUMEROSENTENZA,
+		       ANNO_SENTENZA                       ANNOSENTENZA,
+		       DATA_PROVVEDIMENTO                  DATAPROVVEDIMENTO,
+		       SE.CO_CODCENTR                      CODICEAUTORITACENTRALE,
+		       CODTIPOAUTORITAEMITTENTE.RV_MEANING DESCRIZIONEAUTORITA,
+		       CODLUOGOEMITTENTE.DESCRIZIONE       DESCRIZIONESEDEAUTORITA,
+		       -- COD_LUOGO_EMITTENTE                 SEDEAUTORITA,
+		       SEDE.CO_CODCENTR 				   SEDEAUTORITA,
+		       NULL                                FLAGCUMULANTE,
+		       -- MEV 16 CUMULO: aggiunti 3 campi in estrazione
+		       decode(C.ID_SOGGETTO_ORIGINE,
+		              null,
+		              (select distinct aa.id_soggetto
+		                 from soggetto aa
+		                where aa.id_soggetto = fas_siep.sog_id_soggetto),
+		              c.ID_SOGGETTO_ORIGINE) chiaveAnagraficaSies,
+		       decode((select distinct aa.key_sogg_nsc
+		                from soggetto aa
+		               where aa.id_soggetto = c.ID_SOGGETTO_ORIGINE),
+		              null,
+		              (select distinct aa.key_sogg_nsc
+		                 from soggetto aa
+		                where aa.id_soggetto = fas_siep.sog_id_soggetto),
+		              (select distinct aa.key_sogg_nsc
+		                 from soggetto aa
+		                where aa.id_soggetto = c.ID_SOGGETTO_ORIGINE)) chiaveAnagraficaNSC,
+		       CODTIPOPROVVEDIMENTO.RV_MEANING desctipoprovvedimento
+		  FROM TITOLO_CUMULATO,
+		       CG_REF_CODES       CODTIPOAUTORITAEMITTENTE,
+		       COMUNE             CODLUOGOEMITTENTE,
+		       ISTRUTTORIA_CUMULO IST_CUMULO,
+		       FASCICOLO_SIEP     FAS_SIEP,
+		       CODICI_SIES_NSC    SE,
+		       CODICI_SIES_NSC    SEDE,
+		       SOGGETTO_CUMULATO  C,
+       		   CG_REF_CODES       CODTIPOPROVVEDIMENTO
+		 WHERE 1 = 1
+		   AND (nvl(TITOLO_CUMULATO.COD_TIPO_AUTORITA_EMITTENTE, '-') =
+		       CODTIPOAUTORITAEMITTENTE.RV_LOW_VALUE AND
+		       CODTIPOAUTORITAEMITTENTE.RV_DOMAIN = 'TIPO_UFFICIO')
+		   AND (nvl(TITOLO_CUMULATO.COD_LUOGO_EMITTENTE, '-') =
+		       CODLUOGOEMITTENTE.COD_COMUNE)
+		   AND FAS_SIEP.ID_FASCICOLO_SIEP = IST_CUMULO.FAS_SIE_ID_FASCICOLO_SIEP
+		   AND IST_CUMULO.ID_ISTRUTTORIA_CUMULO = ISTR_ID_ISTRUTTORIA_CUMULO
+		   AND ISTR_ID_ISTRUTTORIA_CUMULO = #{idIstruttoriaCumulo}
+		   AND SE.CO_DOMAIN = 'TIPO_UFFICIO_EMITTENTE'
+		   AND SE.CO_SIES = COD_TIPO_AUTORITA_EMITTENTE
+		   AND (SE.CO_VAL1 =
+		       NVL(DECODE(FAS_SIEP.FLAG_CUMULANTE, 'S', '-', COD_TIPO_RITO), '-') OR
+		       (SE.CO_VAL1 = '-' AND SE.CO_CODCENTR = 1))
+		   AND SE.CO_VAL2 = '-'
+		   and c.tit_id_titolo_cumulato(+) = TITOLO_CUMULATO.ID_TITOLO_CUMULATO
+		   and sede.co_domain = 'COMUNE'
+   		   and sede.co_sies = COD_LUOGO_EMITTENTE
+   		   AND (nvl(TITOLO_CUMULATO.COD_TIPO_PROVVEDIMENTO, '-') =
+       		   CODTIPOPROVVEDIMENTO.RV_LOW_VALUE AND
+       		   CODTIPOPROVVEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO')
+		 ORDER BY DATAPROVVEDIMENTO DESC
+	</select>
+
+	<!-- MEV 16 CUMULO: aggiunta query per identificare un cumulo -->
+	<select id="isCumulo" parameterType="String" resultType="int">
+        SELECT COUNT(*)
+		  from cg_ref_codes c
+		 where c.rv_domain = 'MOTIVO_PROVVEDIMENTO'
+		   and c.rv_high_value = 'CUMULO_NEW'
+		   and c.rv_low_value = #{codMotivo}
+    </select>
+
+	<!-- MEV 16 CUMULO: aggiunta query estrazione descrizione autorita -->
+	<select id="getDescAutorita" parameterType="String" resultType="String">
+    	select c.co_sies_des
+		  from codici_sies_nsc c
+		 where c.co_domain = 'TIPO_UFFICIO_EMITTENTE'
+		   and c.co_nsc = #{codiceAutorita}
+    </select>
+
+	<!-- MEV 16 CUMULO: aggiunta query estrazione descrizione comune sede autorita -->
+	<select id="getDescSedeAutorita" parameterType="String" resultType="String">
+    	select c.co_sies_des
+		  from codici_sies_nsc c
+		 where c.co_domain = 'COMUNE'
+		   and c.co_nsc = #{codiceSedeAutorita}
+    </select>
+
+</mapper>

@@ -1,0 +1,12 @@
+.menulines{
+font-family: 'Tahoma';
+width:100%;
+border:2.5px solid #F0F0F0;
+}
+
+.menulines a{
+font-family: 'Tahoma';
+width:100%;
+text-decoration:none;
+color:black;
+}

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Emma (Engineering) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/ricercaAvvisi" targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/ricercaAvvisi" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="RICERCA_AVVISO">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:DATI_AVVISO_INPUT"/>
+				<xs:element ref="type:DATI_AVVISO_OUTPUT"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="DATA_TYPE">
+		<xs:sequence>
+			<xs:element name="giorno" type="xs:int"/>
+			<xs:element name="mese" type="xs:int"/>
+			<xs:element name="anno" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AVVISO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="idAvviso" type="xs:integer"/>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string"/>
+				<xs:element name="descrTipoProvvedimento" type="xs:string"/>
+				<xs:element name="contenuto" type="xs:string"/>
+				<xs:element name="ufficioEmittente" type="xs:string"/>
+				<xs:element name="dataInserimento" type="type:DATA_TYPE"/>
+				<xs:element name="annoProcedimentoSIUS" type="xs:integer"/>
+				<xs:element name="numeroProcedimentoSIUS" type="xs:integer"/>
+				<xs:element name="nomeSoggetto" type="xs:string"/>
+				<xs:element name="cognomeSoggetto" type="xs:string"/>
+				<xs:element name="dataUdienza" type="type:DATA_TYPE"/>
+				<xs:element name="codStatoAvviso" type="xs:string"/>
+				<xs:element name="idEvento" type="xs:string"/>
+				<xs:element name="codTipoProvvedimento" type="xs:string"/>
+				<xs:element name="codiceEsito" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ERRORE">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CODICE_ERRORE" type="xs:string"/>
+				<xs:element name="DESCR_ERRORE" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_AVVISO_INPUT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="dataEmissioneInizio" type="type:DATA_TYPE" nillable="true"/>
+				<xs:element name="dataEmissioneFine" type="type:DATA_TYPE" nillable="true"/>
+				<xs:element name="codStatoAvviso" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>S=avviso visualizzato
+										N=avviso non
+										visualizzato
+										T=Tutti
+									</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="codDistretto" type="xs:string"/>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string"/>
+				<xs:element name="codTipoUfficio" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>UDS: Ufficio di Sorveglianza
+										TDS: Tribunale di
+										Sorveglianza
+										UDSM:Ufficio di Sorveglianza Minori
+										TDSM:Tribunale
+										di Sorveglianza Minori
+									</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DATI_AVVISO_OUTPUT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="type:AVVISO" maxOccurs="unbounded"/>
+				<xs:element ref="type:ERRORE"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

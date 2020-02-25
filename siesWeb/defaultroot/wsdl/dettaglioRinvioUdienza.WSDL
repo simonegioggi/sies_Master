@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://it/eng/giustizia/avvocatura/ws/dettaglioRinvioUdienza/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="dettaglioRinvioUdienza" targetNamespace="http://it/eng/giustizia/avvocatura/ws/dettaglioRinvioUdienza/">
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import
+				namespace="http://it/eng/giustizia/avvocatura/ws/type/dettaglioRinvioUdienza"
+				schemaLocation="dettaglio_rinvio_udienza.xsd" />
+		</xsd:schema>
+		<xsd:schema
+			targetNamespace="http://it/eng/giustizia/avvocatura/ws/dettaglioRinvioUdienza/">
+			<xsd:element name="DettaglioRinvioUdienza">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="datiRinvioUdienzaInput" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="DettaglioRinvioUdienzaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="datiRinvioUdienzaOutput" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="DettaglioRinvioUdienzaResponse">
+		<wsdl:part element="tns:DettaglioRinvioUdienzaResponse"
+			name="datiRinvioUdienzaOutput">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="DettaglioRinvioUdienzaRequest">
+		<wsdl:part element="tns:DettaglioRinvioUdienza" name="datiRinvioUdienzaInput">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="dettaglioRinvioUdienza">
+		<wsdl:operation name="DettaglioRinvioUdienza">
+			<wsdl:input message="tns:DettaglioRinvioUdienzaRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:DettaglioRinvioUdienzaResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="dettaglioRinvioUdienza" type="tns:dettaglioRinvioUdienza">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="DettaglioRinvioUdienza">
+			<soap:operation
+				soapAction="http://it/eng/giustizia/avvocatura/ws/dettaglioRinvioUdienza/DettaglioRinvioUdienza" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="dettaglioRinvioUdienza">
+		<wsdl:port binding="tns:dettaglioRinvioUdienza" name="dettaglioRinvioUdienza">
+			<soap:address location="http://localhost:8080/services/dettaglioRinvioUdienza" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

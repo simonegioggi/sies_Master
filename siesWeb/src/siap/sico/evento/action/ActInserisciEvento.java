@@ -1,0 +1,154 @@
+package siap.sico.evento.action;
+
+
+/**
+* <p>Title: ActInserisciEvento</p>
+* <p>Description: Classe Action per l'inserimento di Evento</p>
+* <p>Copyright: Copyright (c) 2002</p>
+* <p>Company: Bull</p>
+* @version 1.0
+*/
+
+import java.util.Date;
+
+import org.apache.log4j.Logger;
+
+import siap.sico.decodifiche.model.ComuneModel;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.security.action.ICostantiSecurity;
+import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.sico.web.ActionSiap;
+import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
+import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.notifica.action.ICostantiNotifica;
+import siap.siep.notifica.model.NotificaModel;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+
+public class ActInserisciEvento extends ActionSiap implements ICostantiEvento
+{
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+/**
+* Azione di Inserimento del Evento
+* @return Nome della pagina JSP da visualizzare
+* al termine dell'elaborazione
+* @throws F3BException
+*/
+public String processRequest() throws F3BException
+ 		 {
+
+ 		   EventoNotificaModel lEve = new EventoNotificaModel();
+
+       lEve.getEvento().setCodTipoEvento("01"); //Tipo Evento = Provvedimento
+      // lEve.getEvento().setCodTipoProvvedimento("03"); //Tipo Provvedimento = Ordinanza
+       //lEve.getEvento().setCodMotivo("OE-LIB");
+       //Codice motivo da CG_REF_CODES....
+
+       FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel)getSessionAttribute("fascicolo");
+
+       lEve.getEvento().setFasSieIdFascicoloSiep( lFascicoloModel.getIdFascicoloSiep() );
+       Date lDataEmissione = getRequestDateParameter( CAMPO_ANNO_DATA_EMISSIONE, CAMPO_MESE_DATA_EMISSIONE, CAMPO_GIORNO_DATA_EMISSIONE );
+       lEve.getEvento().setDataEmissione( lDataEmissione );
+
+       UtenteModel lUtenteMod = new UtenteModel((UtenteModel)getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
+
+       String lCodiceOperatore = lUtenteMod.getUserId();
+       String lCodiceUfficio = lUtenteMod.getUfficioUtente().getCodUfficio();
+
+       lEve.getEvento().setCodOperatoreInserimento(lCodiceOperatore);
+       lEve.getEvento().setCodLuogoEmittente(lUtenteMod.getUfficioUtente().getCodComune());
+       lEve.getEvento().setCodUfficioEmittente(lCodiceUfficio);
+		   lEve.getEvento().setDataInserimento(DateUtils.getSysDate());
+       lEve.getEvento().setCodMagistrato( getRequestStringParameter(CAMPO_COD_MAGISTRATO));
+       lEve.getMagistrato().setCodMagistrato( getRequestStringParameter(CAMPO_COD_MAGISTRATO));
+      //---GDV 30-06-2003 lEve.getMagistrato().getMagistratoCompetente().setMagCodMagistrato( getRequestStringParameter(CAMPO_COD_MAGISTRATO));
+
+       lEve.getEvento().setCodEsito("-");
+       lEve.getEvento().setCodMotivo("-");
+       lEve.getEvento().setCodLuogoDestinatario("-");
+			 lEve.getEvento().setCodTipoUfficioDestinatario("-");
+
+       //lEve.getEvento().setFlagDocumentoRegistrato("N");
+
+       String[] lArrayDestinatari = this.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+
+       String[] lArraySedeDestinatari = this.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+      // String[] lArrayTipoNotifica =  this.getRequestStringParameters(ICostantiNotifica.CAMPO_COD_TIPO_NOTIFICA);
+       String[] lArrayNote =  this.getRequestStringParameters(ICostantiNotifica.CAMPO_NOTE);
+
+     int lIndMisura = 0;
+     int lNumNotifiche = 2;
+
+     if (lArrayDestinatari[1].compareTo("-")==0)
+       lNumNotifiche = 1;
+
+     NotificaModel lNotifiche[] = new NotificaModel[lNumNotifiche];
+
+     while( lIndMisura < lArrayDestinatari.length )
+     {
+
+       if( lArrayDestinatari[lIndMisura].compareTo("-")==0)
+         break;
+
+       NotificaModel lNot = new NotificaModel();
+
+       if (lIndMisura == 0)
+           lNot.setCodTipoNotifica("E");
+         else
+           lNot.setCodTipoNotifica("N");
+
+       lNot.setNote(lArrayNote[lIndMisura]);
+       lNot.setDataInvio(lDataEmissione);
+       lNot.setCodEsito("-");
+       lNot.setCodOperatoreInserimento(lCodiceOperatore);
+       lNot.setDataInserimento(DateUtils.getSysDate());
+       lNot.setCodUfficioInserimento(lCodiceUfficio);
+
+       AutoritaEsternaModel lAut = new AutoritaEsternaModel();
+
+       //getCodUfficioByCodTipoUfficioDescrComune(lArrayDestinatari[lIndMisura],lArraySedeDestinatari[lIndMisura]);
+
+       lAut.setCodTipoAutorita(lArrayDestinatari[lIndMisura]);
+       //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+       //siesLogger.debug(lArrayDestinatari[lIndMisura]);
+
+       ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndMisura]) );
+       lAut.setCodSede( lComMod.getCodComune());
+
+       lAut.setCodOperatoreInserimento(lCodiceOperatore);
+       lAut.setCodUfficioInserimento(lCodiceUfficio);
+       lAut.setDataInserimento(DateUtils.getSysDate());
+
+       // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+       siesLogger.debug(lArraySedeDestinatari[lIndMisura]);
+
+       // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+       siesLogger.debug("Ciclo n." +lIndMisura +" --- "+ lAut.toString());
+       //Setto l'Autorita Esterna per la notifica corrente
+       lNot.setAutoritaEsterna(lAut);
+
+       lNotifiche[lIndMisura] = lNot;
+
+       lIndMisura++;
+     }
+
+    //Inserisco l'array di Notifiche nell'Evento
+     lEve.setNotifiche(lNotifiche);
+
+		 IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+	   EventoNotificaModel lRetModel = lCtrl.ExInserisciEventoNotifica(lEve);
+
+     String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.sico.evento.action.ActLoadDettaglioEventoNotifica&"+ CAMPO_ID_EVENTO +"="+lRetModel.getEvento().getIdEvento()+"&modalita=I";
+     return lPage;
+
+	 }
+
+
+
+}

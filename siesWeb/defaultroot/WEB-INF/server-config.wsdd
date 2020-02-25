@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+	<globalConfiguration>
+		<parameter name="sendMultiRefs" value="true" />
+		<parameter name="disablePrettyXML" value="true" />
+		<parameter name="adminPassword" value="admin" />
+		<!-- <parameter name="attachments.Directory" value="C:\Progetti\SIES\PRJ\SIES\defaultroot\WEB-INF\attachments"/> -->
+		<parameter name="dotNetSoapEncFix" value="true" />
+		<parameter name="enableNamespacePrefixOptimization" value="false" />
+		<parameter name="sendXMLDeclaration" value="true" />
+		<parameter name="sendXsiTypes" value="true" />
+		<parameter name="attachments.implementation"
+			value="org.apache.axis.attachments.AttachmentsImpl" />
+		<requestFlow>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="session" />
+			</handler>
+			<handler type="java:org.apache.axis.handlers.JWSHandler">
+				<parameter name="scope" value="request" />
+				<parameter name="extension" value=".jwr" />
+			</handler>
+		</requestFlow>
+	</globalConfiguration>
+	<handler name="LocalResponder"
+		type="java:org.apache.axis.transport.local.LocalResponder" />
+	<handler name="URLMapper" type="java:org.apache.axis.handlers.http.URLMapper" />
+	<handler name="Authenticate"
+		type="java:org.apache.axis.handlers.SimpleAuthenticationHandler" />
+	<service name="AdminService" provider="java:MSG">
+		<parameter name="allowedMethods" value="AdminService" />
+		<parameter name="enableRemoteAdmin" value="false" />
+		<parameter name="className" value="org.apache.axis.utils.Admin" />
+		<namespace>http://xml.apache.org/axis/wsdd/</namespace>
+	</service>
+	<service name="Version" provider="java:RPC">
+		<parameter name="allowedMethods" value="getVersion" />
+		<parameter name="className" value="org.apache.axis.Version" />
+	</service>
+	<service name="WSNscToSies" provider="java:RPC">
+		<parameter name="allowedMethods" value="importNscToSies" />
+		<parameter name="scope" value="Session" />
+		<parameter name="className" value="siap.sico.webservice.action.wsNscToSies" />
+	</service>
+
+	<!-- INIZIO WEB SERVICE PER AVVOCATURA -->
+	<service name="dettaglioProcedimento" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="wsdlPortType" value="dettaglioProcedimento"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.dettaglioProcedimento.DettaglioProcedimento_BindingSkeleton"/>
+		<parameter name="wsdlServicePort" value="dettaglioProcedimento"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/dettaglioProcedimento/"/>
+		<parameter name="wsdlServiceElement" value="dettaglioProcedimento"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/dettaglioProcedimento/"/>
+	</service>
+	<service name="dettaglioDecreto" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="dettaglioDecreto"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/dettaglioDecreto"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.dettaglioDecreto.DettaglioDecreto_BindingSkeleton"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="wsdlServiceElement" value="dettaglioDecreto"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/dettaglioDecreto/"/>
+		<parameter name="wsdlPortType" value="dettaglioDecreto"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/dettaglioDecreto/"/>
+	</service>
+	<service name="dettaglioSentenza" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="dettaglioSentenza"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/dettaglioSentenza"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.dettaglioSentenza.DettaglioSentenza_BindingSkeleton"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="wsdlServiceElement" value="dettaglioSentenza"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/dettaglioSentenza/"/>
+		<parameter name="wsdlPortType" value="dettaglioSentenza"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/dettaglioSentenza/"/>
+	</service>
+	<service name="dettaglioOrdinanza" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="dettaglioOrdinanza"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/dettaglioOrdinanza"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.dettaglioOrdinanza.DettaglioOrdinanza_BindingSkeleton"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="wsdlServiceElement" value="dettaglioOrdinanza"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/dettaglioOrdinanza/"/>
+		<parameter name="wsdlPortType" value="dettaglioOrdinanza"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/dettaglioOrdinanza/"/>
+	</service>
+	<service name="elencoProcedimentiDelSoggetto" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="elencoProcedimentiDelSoggetto"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/elencoProcedimenti"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.elencoProcedimentiDelSoggetto.ElencoProcedimentiDelSoggetto_BindingSkeleton"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="wsdlServiceElement" value="elencoProcedimentiDelSoggetto"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/elencoProcedimentiDelSoggetto/"/>
+		<parameter name="wsdlPortType" value="elencoProcedimentiDelSoggetto"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/elencoProcedimentiDelSoggetto/"/>
+	</service>
+	<service name="ricercaSoggettiConProcedimenti" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="ricercaSoggettiConProcedimenti"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.ricercaSoggettiConProcedimenti.RicercaSoggettiConProcedimenti_BindingSkeleton"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="wsdlServiceElement" value="ricercaSoggettiConProcedimenti"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/ricercaSoggettiConProcedimenti/"/>
+		<parameter name="wsdlPortType" value="ricercaSoggettiConProcedimenti"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/ricercaSoggettiConProcedimenti/"/>
+	</service>
+	<service name="dettaglioRinvioUdienza" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="dettaglioRinvioUdienza"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/dettaglioRinvioUdienza"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.dettaglioRinvioUdienza.DettaglioRinvioUdienza_BindingSkeleton"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="wsdlServiceElement" value="dettaglioRinvioUdienza"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/dettaglioRinvioUdienza/"/>
+		<parameter name="wsdlPortType" value="dettaglioRinvioUdienza"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/dettaglioRinvioUdienza/"/>
+	</service>
+	<service name="ricercaAvvisi" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="ricercaAvvisi"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/ricercaAvvisi"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.ricercaAvvisi.RicercaAvvisi_BindingSkeleton"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="wsdlServiceElement" value="ricercaAvvisi"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/ricercaAvvisi/"/>
+		<parameter name="wsdlPortType" value="ricercaAvvisi"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/ricercaAvvisi/"/>
+	</service>
+	<service name="richiestaStampa" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlServicePort" value="richiestaStampa"/>
+		<parameter name="schemaQualified" value="http://it/eng/giustizia/avvocatura/ws/type/richiestaStampa"/>
+		<parameter name="className" value="it.eng.giustizia.avvocatura.ws.richiestaStampa.RichiestaStampa_BindingSkeleton"/>
+		<parameter name="allowedMethods" value="*"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<parameter name="wsdlServiceElement" value="richiestaStampa"/>
+		<parameter name="wsdlTargetNamespace" value="http://it/eng/giustizia/avvocatura/ws/richiestaStampa/"/>
+		<parameter name="wsdlPortType" value="richiestaStampa"/>
+		<parameter name="schemaUnqualified" value="http://it/eng/giustizia/avvocatura/ws/richiestaStampa/"/>
+	</service>
+	<!-- FINE WEB SERVICE PER AVVOCATURA -->
+
+	<transport name="http">
+		<requestFlow>
+			<handler type="URLMapper" />
+			<handler type="java:org.apache.axis.handlers.http.HTTPAuthHandler" />
+		</requestFlow>
+		<parameter name="qs:list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs:wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+		<parameter name="qs.list"
+			value="org.apache.axis.transport.http.QSListHandler" />
+		<parameter name="qs.method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs:method"
+			value="org.apache.axis.transport.http.QSMethodHandler" />
+		<parameter name="qs.wsdl"
+			value="org.apache.axis.transport.http.QSWSDLHandler" />
+	</transport>
+	<transport name="local">
+		<responseFlow>
+			<handler type="LocalResponder" />
+		</responseFlow>
+	</transport>
+</deployment>

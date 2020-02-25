@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://it/eng/giustizia/avvocatura/ws/richiestaStampa/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="richiestaStampa" targetNamespace="http://it/eng/giustizia/avvocatura/ws/richiestaStampa/">
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import
+				namespace="http://it/eng/giustizia/avvocatura/ws/type/richiestaStampa"
+				schemaLocation="richiesta_stampa.xsd" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://it/eng/giustizia/avvocatura/ws/richiestaStampa/">
+			<xsd:element name="RichiestaStampa">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="datiStampaInput" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="RichiestaStampaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="datiStampaOutput" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RichiestaStampaRequest">
+		<wsdl:part element="tns:RichiestaStampa" name="datiStampaInput" />
+	</wsdl:message>
+	<wsdl:message name="RichiestaStampaResponse">
+		<wsdl:part element="tns:RichiestaStampaResponse" name="datiStampaOutput" />
+	</wsdl:message>
+	<wsdl:portType name="richiestaStampa">
+		<wsdl:operation name="RichiestaStampa">
+			<wsdl:input message="tns:RichiestaStampaRequest" />
+			<wsdl:output message="tns:RichiestaStampaResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="richiestaStampa" type="tns:richiestaStampa">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RichiestaStampa">
+			<soap:operation
+				soapAction="http://it/eng/giustizia/avvocatura/ws/richiestaStampa/RichiestaStampa" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="richiestaStampa">
+		<wsdl:port binding="tns:richiestaStampa" name="richiestaStampa">
+			<soap:address
+				location="http://localhost:8080/services/richiestaStampa" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

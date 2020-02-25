@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="it.mig.sies.model.Utente">
+
+    <select id="lookupOld" parameterType="long" resultType="it.mig.sies.model.Utente">
+        SELECT DISTINCT DECODE(UFF.COD_TIPO_UFFICIO, 'UDS', '304', 'TDS', '305') 
+            codiceTipoUfficio,
+            C.CO_CODCENTR sedeUfficio,
+            C1.CO_CODCENTR sedeDistretto,
+            -- UFF.COD_TIPO_UFFICIO codiceSistema,
+            'SIEP' codiceSistema,
+            E.COD_OPERATORE_INSERIMENTO username,
+            UTE.COGNOME cognome,
+            UTE.NOME nome,
+            NULL ipServer
+            FROM EVENTO          E,
+            UFFICIO         UFF,
+            COMUNE          DESCR_COM_UFF,
+            CODICI_SIES_NSC C,
+            JMS_CODE        J1,
+            COMUNE          DIS,
+            CODICI_SIES_NSC C1,
+            UTENTE          UTE
+        WHERE UFF.COD_UFFICIO = E.COD_UFFICIO_EMITTENTE
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND E.ID_EVENTO = #{idEvento}
+            AND C.CO_DOMAIN = 'COMUNE'
+            AND C.CO_SIES = E.COD_LUOGO_EMITTENTE      
+            AND J1.DOMINIO = 'BDI'
+            AND J1.CODICE = UFF.COD_DISTRETTO
+            AND DIS.DESCRIZIONE = J1.DESCRIZIONE
+            AND C1.CO_DOMAIN = 'COMUNE'
+            AND DIS.COD_COMUNE = C1.CO_SIES
+            AND UTE.COD_UTENTE = E.COD_OPERATORE_INSERIMENTO
+    </select>
+    
+    <select id="lookup" parameterType="String" resultType="it.mig.sies.model.Utente">
+        SELECT DISTINCT DECODE(UFF.COD_TIPO_UFFICIO, 'UDS', '304', 'TDS', '305') 
+            codiceTipoUfficio,
+            C.CO_CODCENTR sedeUfficio,
+            C1.CO_CODCENTR sedeDistretto,
+            -- UFF.COD_TIPO_UFFICIO codiceSistema,
+            'SIEP' codiceSistema,
+            #{idUtente} username,
+            UTE.COGNOME cognome,
+            UTE.NOME nome,
+            NULL ipServer
+            FROM UFFICIO         UFF,
+            COMUNE          DESCR_COM_UFF,
+            CODICI_SIES_NSC C,
+            JMS_CODE        J1,
+            COMUNE          DIS,
+            CODICI_SIES_NSC C1,
+            UTENTE          UTE,
+            UTENTE_UFFICIO UTE_UFF
+        WHERE UFF.COD_UFFICIO = UTE_UFF.UFF_COD_UFFICIO
+            AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+            AND UTE.COD_UTENTE = #{idUtente}
+            AND C.CO_DOMAIN = 'COMUNE'
+            AND C.CO_SIES = UFF.COD_COMUNE
+            AND J1.DOMINIO = 'BDI'
+            AND J1.CODICE = UFF.COD_DISTRETTO
+            AND DIS.DESCRIZIONE = J1.DESCRIZIONE
+            AND C1.CO_DOMAIN = 'COMUNE'
+            AND DIS.COD_COMUNE = C1.CO_SIES
+            AND UTE.COD_UTENTE = UTE_UFF.UTE_COD_UTENTE
+    </select>
+
+    <select id="verificaProfili" parameterType="String" resultType="String">
+        SELECT A.PRF_COD_PROFILO
+  		FROM UTENTE_PROFILO A
+ 		WHERE A.UTE_COD_UTENTE = #{idUtente}
+    </select>
+
+	<!-- MEV 16: recupero dati utente dato il suo ID -->
+	<select id="getUtenteByID" parameterType="String" resultType="it.mig.sies.model.Utente">
+		SELECT DISTINCT DECODE(UFF.COD_TIPO_UFFICIO, 'PM', '301', 'PGCAP', '302') codiceTipoUfficio,
+		                C.CO_CODCENTR sedeUfficio,
+		                C1.CO_CODCENTR sedeDistretto,
+		                'SIEP' codiceSistema,
+		                #{idUtente} username,
+		                UTE.COGNOME cognome,
+		                UTE.NOME nome,
+		                NULL ipServer
+		  FROM UFFICIO         UFF,
+		       COMUNE          DESCR_COM_UFF,
+		       CODICI_SIES_NSC C,
+		       JMS_CODE        J1,
+		       COMUNE          DIS,
+		       CODICI_SIES_NSC C1,
+		       UTENTE          UTE,
+		       UTENTE_UFFICIO  UTE_UFF
+		 WHERE UFF.COD_UFFICIO = UTE_UFF.UFF_COD_UFFICIO
+		   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE
+		   AND UTE.COD_UTENTE = #{idUtente}
+		   AND C.CO_DOMAIN = 'COMUNE'
+		   AND C.CO_SIES = UFF.COD_COMUNE
+		   AND J1.DOMINIO = 'BDI'
+		   AND J1.CODICE = UFF.COD_DISTRETTO
+		   AND DIS.DESCRIZIONE = J1.DESCRIZIONE
+		   AND C1.CO_DOMAIN = 'COMUNE'
+		   AND DIS.COD_COMUNE = C1.CO_SIES
+		   AND UTE.COD_UTENTE = UTE_UFF.UTE_COD_UTENTE
+    </select>
+
+</mapper>

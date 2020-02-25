@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://it/eng/giustizia/avvocatura/ws/ricercaAvvisi/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	name="ricercaAvvisi" targetNamespace="http://it/eng/giustizia/avvocatura/ws/ricercaAvvisi/">
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import
+				namespace="http://it/eng/giustizia/avvocatura/ws/type/ricercaAvvisi"
+				schemaLocation="ricerca_avviso.xsd" />
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://it/eng/giustizia/avvocatura/ws/ricercaAvvisi/">
+			<xsd:element name="RicercaAvvisi">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="datiAvvisoInput" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="RicercaAvvisiResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="datiAvvisoOutput" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="RicercaAvvisiResponse">
+		<wsdl:part element="tns:RicercaAvvisiResponse" name="datiAvvisoOutput">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="RicercaAvvisiRequest">
+		<wsdl:part element="tns:RicercaAvvisi" name="datiAvvisoInput">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="ricercaAvvisi">
+		<wsdl:operation name="RicercaAvvisi">
+			<wsdl:input message="tns:RicercaAvvisiRequest">
+			</wsdl:input>
+			<wsdl:output message="tns:RicercaAvvisiResponse">
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ricercaAvvisi" type="tns:ricercaAvvisi">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="RicercaAvvisi">
+			<soap:operation
+				soapAction="http://it/eng/giustizia/avvocatura/ws/ricercaAvvisi/RicercaAvvisi" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="ricercaAvvisi">
+		<wsdl:port binding="tns:ricercaAvvisi" name="ricercaAvvisi">
+			<soap:address location="http://localhost:8080/services/ricercaAvvisi" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

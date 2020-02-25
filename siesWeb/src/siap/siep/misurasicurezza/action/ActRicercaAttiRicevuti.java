@@ -1,0 +1,134 @@
+package siap.siep.misurasicurezza.action;
+
+import java.math.BigDecimal;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
+import siap.jms.ICostantiJMS;
+import siap.jms.SIAPReceiver;
+import siap.jms.config.JMSProperties;
+import siap.jms.messaggio.model.MessaggioModel;
+import siap.sico.web.ActionSiap;
+import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
+import siap.siep.util.SIEPLookupRemote;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+
+/**
+ * Action per la ricerca degli atti ricevuti per competenza Misure di Sicurezza 
+ * non ancora elaborati: FLAG_VISTO = 'N'.
+ * 
+ * Restituisce la jsl cone l'elenco degli atti
+ * 
+ * 
+ * @author d.fiorletta
+ *
+ */
+public class ActRicercaAttiRicevuti extends ActionSiap implements ICostantiMisuraSicurezza
+{
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+  public String processRequest() throws F3BException, Exception
+  {
+    
+    //
+    try {
+      if (   JMSProperties.getInstance().getProperty("LISTENER_NUOVA_GESTIONE")!=null
+          && JMSProperties.getInstance().getProperty("LISTENER_NUOVA_GESTIONE").trim().equalsIgnoreCase("true")
+         )
+      {
+        SIAPReceiver.getInstance().testInArrivo();
+        SIAPReceiver.getInstance().testInPartenza();
+        SIAPReceiver.getInstance().testStampa();
+      }
+      else{
+        SIAPReceiver.getInstance();
+      }
+    }
+    catch (Exception e){
+      // do nothing. La mancanza di connessione con il provider non è boccante
+      // in questa fase. L'utente potrà visualizzare solo i messaggi già scaricati
+      // ma non eventuali messaggi fermi in coda
+    }
+    
+    this.setLinkRitorno();    
+    setRequestAttribute(IWebConstants.LINK_RITORNO, "10");
+//    
+//    MessaggioModel lMessaggio = new MessaggioModel();
+//    
+//    lMessaggio.setCodUfficioDestinatario(getCodUfficioUtenteConnesso());
+//    lMessaggio.setCodTipoMessaggio   (ICostantiJMS.RICHIESTA);
+//    lMessaggio.setCodTipoOperazione  (ICostantiJMS.TRASFERIMENTO_COMPETENZA_MS);
+//    
+//    lMessaggio.setFlagVisto("N");
+    //lMessaggio.setCodUfficioMittente("");  
+    
+    // Ricerca Messaggi
+//    IMessaggio lCrtl = JMSLookupRemote.getMessaggioRemote();
+//    Vector lVect = lCrtl.ExRicercaMessaggio(lMessaggio);
+    
+    Vector <String> lListaTipoOperazione = new Vector <String> ();
+    lListaTipoOperazione.add (ICostantiJMS.TRASFERIMENTO_COMPETENZA_MS);
+    lListaTipoOperazione.add (ICostantiJMS.TRASFERIMENTO_ESECUZIONE_MS);
+    
+    
+    IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
+    Vector <MessaggioModel> lVect = lCtrl.ExRicercaMessaggi (ICostantiJMS.DELIVERY_MODE_RICEVUTO
+                                                           , ICostantiJMS.RICHIESTA
+                                                           , lListaTipoOperazione
+                                                           , null // lCodEsito
+                                                           , "N" // Flag_visto.
+                                                           , null // aChiaveAnnoSiep
+                                                           , null // aChiaveProgrSiep
+                                                           , null // aChiaveUfficioSiep
+                                                           , null   // aCodUfficioMitt
+                                                           , getCodUfficioUtenteConnesso() // ufficio dest
+                                                           , null //lDataTrasmissioneDal
+                                                           , null //lDataTrasmissioneAl 
+                                                           , 0);  
+    
+    //=======================================================
+    // Per ogni messaggio verifico se presente un sollecito
+    //=======================================================
+    if (lVect!=null){
+      for (int i=0;i<lVect.size(); i++) {
+        MessaggioModel lMessaggioRichiesta = lVect.elementAt(i);
+        
+        // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+        siesLogger.debug("Id Richiesta = "+lMessaggioRichiesta.getIdMessaggio());
+        
+        BigDecimal idMessaggioSollecitato = null;
+        if (lMessaggioRichiesta.getJmsCorrelationReplyTo()!=null)
+          idMessaggioSollecitato = new BigDecimal(lMessaggioRichiesta.getJmsCorrelationReplyTo());
+        else 
+          idMessaggioSollecitato = new BigDecimal(lMessaggioRichiesta.getJmsCorrelationIdMessage());
+          
+        Vector <MessaggioModel> lVectSoll = lCtrl.ExRicercaSollecitiByIdRich (ICostantiJMS.DELIVERY_MODE_RICEVUTO
+                                                                            , ICostantiJMS.RICHIESTA
+                                                                            , ICostantiJMS.SOLLECITO_TRASFERIMENTO_COMPETENZA_MS
+                                                                            , idMessaggioSollecitato
+                                                                            , null //"N" // Flag_visto.
+                                                                            , getCodUfficioUtenteConnesso() // ufficio dest
+                                                                            ); 
+        if (lVectSoll!=null)
+          // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+          siesLogger.debug("Solleciti trovati = "+lVectSoll.size());
+        else
+          // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+          siesLogger.debug("Solleciti trovati = 0");
+
+        lMessaggioRichiesta.setMessaggiCorrelati(lVectSoll);
+      }
+    }
+    
+    
+    setRequestAttribute("Messaggi", lVect);
+
+    
+    
+    return ICostantiMisuraSicurezza.PG_LISTA_ATTI_RICEVUTI_TRASMISSIONE_COMPETENZA_MS;
+    
+  }
+}
