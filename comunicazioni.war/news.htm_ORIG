@@ -1,0 +1,161 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="it">
+<title></title>
+<script language="JavaScript1.2">
+var message= new Array()
+
+message[0]="||"
+message[1]="e-m@il|Per ulteriori informazioni contattare ..., ... |mailto: ..."
+message[2]="visita il sito|Il sito del Ministero della Giustizia.|http://www.giustizia.it"
+message[3]="||"
+
+var scrollerheight=100
+
+var scrollerwidth=300
+
+var scrollertop=0
+
+var scrollerleft=0
+
+var scrollerpadding=0
+
+var backgroundborder=0
+
+var scrollerbgcolor="0383C0"
+
+var font_titleface="Verdana"
+var font_titlecolor="FFFFFF"
+var font_titlesize=2
+var font_titlestyle="bold"
+
+var font_copyface="Verdana"
+var font_copycolor="FFFFFF"
+var font_copysize=3
+var font_titlestyle="bold"
+
+var standstillfix=0
+
+var cliptop=0
+var clipbottom=scrollerheight-2*scrollerpadding
+var clipleft=0
+var clipright=scrollerwidth
+
+var i_message=0
+var mes_joined
+var mes_split
+var contenttext
+var contentbg
+
+var totalheight=scrollerheight*(message.length)
+var i_height=0
+var step=1
+var pause=60
+
+var standstillflex=0
+
+function initiate(){
+	contenttext="<table cellpadding=5 cellspacing=0 border=0 width="+(scrollerwidth-2*scrollerpadding)+">"
+	contenttext+="<tr valign='top'><td height='"+scrollerheight+"'><br></td></tr>"
+	for (i=0;i<=message.length-1;i++) {
+		mes_joined=message[i]
+		mes_split=mes_joined.split("|")
+		contenttext+="<tr valign='top'><td height='"+scrollerheight+"'><font face='"+font_copyface+"' color='"+font_copycolor+"' size='"+font_copysize+"'>"+mes_split[1]+"</font><br><a target='_blank' href='"+mes_split[2]+"'><font face='"+font_titleface+"' color='"+font_titlecolor+"' size='"+font_titlesize+"'>"+mes_split[0]+"</font></a></td></tr>"
+	}
+	contenttext+="</table>"
+	
+	contentbg="<table cellpadding=0 cellspacing=0 border="+backgroundborder+" width='"+scrollerwidth+"'><tr><td height='"+scrollerheight+"' bgcolor="+scrollerbgcolor+">&nbsp;</td></tr></table>"
+	
+	if (document.all) {
+		scrollertext.innerHTML=contenttext
+		scrollerbg.innerHTML=contentbg
+		document.all.scrollertext.style.posTop=scrollertop
+		document.all.scrollertext.style.posLeft=scrollerleft
+		document.all.scrollerbg.style.posTop=scrollertop-scrollerpadding
+		document.all.scrollerbg.style.posLeft=scrollerleft-scrollerpadding
+		document.all.scrollertext.style.clip="rect("+cliptop+" "+clipright+" "+clipbottom+" "+clipleft+")"
+	}
+	if (document.layers) {
+		document.scrollertext.document.write(contenttext)
+		document.scrollertext.document.close()
+		document.scrollerbg.document.write(contentbg)
+		document.scrollerbg.document.close()
+		document.scrollertext.top=scrollertop
+		document.scrollertext.left=scrollerleft
+		document.scrollerbg.top=scrollertop-scrollerpadding
+		document.scrollerbg.left=scrollerleft-scrollerpadding	
+		document.scrollertext.clip.left=clipleft
+        document.scrollertext.clip.right=clipright
+        document.scrollertext.clip.top=cliptop
+        document.scrollertext.clip.bottom=clipbottom
+	}
+	scroll()
+}
+
+function scroll(){
+	standstillflex=standstillfix
+	if (document.all){
+		if (i_height<scrollerheight) {
+			i_height+=step
+			cliptop+=step
+			clipbottom+=step
+			document.all.scrollertext.style.clip="rect("+cliptop+" "+clipright+" "+clipbottom+" "+clipleft+")"
+			document.all.scrollertext.style.posTop-=step
+			var timer=setTimeout("scroll()",pause)
+		}
+
+		else {
+			if (document.all.scrollertext.style.posTop<=-(totalheight)) {
+				document.all.scrollertext.style.posTop=scrollertop
+				cliptop=0
+				clipbottom=scrollerheight-2*scrollerpadding
+				document.all.scrollertext.style.clip="rect("+cliptop+" "+clipright+" "+clipbottom+" "+clipleft+")"
+				standstillflex=0
+			}
+			i_height=0
+			clearTimeout(timer)
+			var timer=setTimeout("scroll()",standstillflex)
+		}
+	}
+	
+		if (document.layers){
+			if (i_height<scrollerheight) {
+				i_height+=step
+				cliptop+=step
+				clipbottom+=step
+				document.scrollertext.clip.left=clipleft
+        		document.scrollertext.clip.right=clipright
+        		document.scrollertext.clip.top=cliptop
+        		document.scrollertext.clip.bottom=clipbottom
+				document.scrollertext.top-=step
+				var timer=setTimeout("scroll()",pause)
+			}
+
+		else {
+			if (document.scrollertext.top<=-(totalheight)) {
+				document.scrollertext.top=scrollertop
+				cliptop=0
+				clipbottom=scrollerheight-2*scrollerpadding
+				document.scrollertext.clip.left=clipleft
+        		document.scrollertext.clip.right=clipright
+        		document.scrollertext.clip.top=cliptop
+        		document.scrollertext.clip.bottom=clipbottom
+				standstillflex=0
+			}
+			i_height=0
+			clearTimeout(timer)
+			var timer=setTimeout("scroll()",standstillflex)
+		}
+	}
+}
+
+</script>
+</head>
+
+<body onLoad="initiate()" topmargin="0" leftmargin="0"> 
+
+<div id="scrollerbg" style="position:absolute;top:-1000px">&nbsp;</div>
+<div id="scrollertext" style="position:absolute;top:-1000px"></div>
+</body>
+</html>
