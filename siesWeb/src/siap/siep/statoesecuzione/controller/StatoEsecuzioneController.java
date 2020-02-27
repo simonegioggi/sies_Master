@@ -931,9 +931,17 @@ public class StatoEsecuzioneController extends SiapController {
 							// posto di LogF3B.getLogger()
 							siesLogger.debug("lDatFinCumulo = " + lDatFinCumulo);
 
-							if ("03".equals(lDatFinCumulo.getTipoUfficioEmissione())) {
-								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
-								// al posto di LogF3B.getLogger()
+							 /* 
+						 * ISSUE MAC : aggiunto il controllo su data finali cumulo != null
+						 * Numero MAC : 20200224011 
+						 * Autore    : monica
+						 * Data      : 25/feb/2020
+						 * Branch    : 12.1
+						 */
+			              if (lDatFinCumulo!= null 
+			            		  && "03".equals(lDatFinCumulo.getTipoUfficioEmissione())){
+			                // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			            	//***** FINE INTERVENTO MAC_numero_MAC *****//
 								siesLogger.debug("Provo a recuperare i dati dell'ufficio del GE");
 								IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
 
