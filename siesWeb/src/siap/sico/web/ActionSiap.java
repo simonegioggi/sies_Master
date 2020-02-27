@@ -1190,7 +1190,7 @@ public class ActionSiap extends Action {
 		EventoModel lEveMod = new EventoModel();
 		lEveMod = lCtrl.ExRicercaEventoByFascicoloSiepDescUfficioConnesso(lFas.getIdFascicoloSiep(),
 				this.getCodUfficioUtenteConnesso());
-
+  
 		if (lEveMod != null && lEveMod.getCodMotivo() != null && !lEveMod.getCodMotivo().equals("0222")
 				&& !lEveMod.getCodMotivo().equals("0223") && !lEveMod.getCodMotivo().equals("0224")
 				&& !lEveMod.getCodMotivo().equals("0277") && lEveMod.getCodTipoEvento() != null
