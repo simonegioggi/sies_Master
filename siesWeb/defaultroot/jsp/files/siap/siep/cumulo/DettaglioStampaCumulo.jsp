@@ -80,8 +80,8 @@ if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
   			<!-- Bottone per l'INSERIMENTO DEL FOGLIO COMPLEMENTARE -->
 <%
 	// MEV 16 CUMULO: gestite casistiche per cui far vedere l'icona del FC
-	boolean onOffIconFCCumulo = "true".equalsIgnoreCase(F3BProperties.getProperty("onOffIconFCCumulo")) ? true : false;
-	if (ModuloCumuloUtils.isCumulo(eventonotifica.getEvento().getCodMotivo()) && onOffIconFCCumulo) {
+	boolean onOffIconFCCumulo = "off".equalsIgnoreCase(F3BProperties.getProperty("onOffIconFCCumulo")) ? true : false;
+	if (ModuloCumuloUtils.isCumulo(eventonotifica.getEvento().getCodMotivo()) && !onOffIconFCCumulo) {
 		if (documentoAllegato != null && documentoAllegato.getIdDocumentoAllegato() != null
 				&& documentoAllegato.getDataAnnullamento() == null) {
 		// il foglio complementare esiste ==> azione: dettaglio foglio complementare

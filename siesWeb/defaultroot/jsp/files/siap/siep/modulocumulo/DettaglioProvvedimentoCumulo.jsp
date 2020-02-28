@@ -161,8 +161,8 @@ DatiFinaliCumuloModel lDatiFinali = datiFinaliAggregatoModel.getDatiFinaliCumulo
 
 <%-- MEV 16 CUMULO: gestite casistiche per cui far vedere l'icona del FC --%>
 <%
-boolean onOffIconFCCumulo = "true".equalsIgnoreCase(F3BProperties.getProperty("onOffIconFCCumulo")) ? true : false;
-if (ModuloCumuloUtils.isCumulo(lProvvedimentoCumulo.getEvento().getCodMotivo()) && onOffIconFCCumulo) {
+boolean onOffIconFCCumulo = "off".equalsIgnoreCase(F3BProperties.getProperty("onOffIconFCCumulo")) ? true : false;
+if (ModuloCumuloUtils.isCumulo(lProvvedimentoCumulo.getEvento().getCodMotivo()) && !onOffIconFCCumulo) {
 	if ("C".equals(IstruttoriaCumulo.getFlagStato())) {
 		// FlagDocumentoRegistrato=A  il provvedimento è annullato ==> il bottone "FC" non deve essere visibile
 		// FlagDocumentoRegistrato=N  il provvedimento non è validato ==> il bottone "FC" non deve essere visibile
