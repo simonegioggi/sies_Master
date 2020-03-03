@@ -1,14 +1,5 @@
 package siap.siep.modulocumulo.model;
 
-/**
-* <p>Title: PenaComplessivaumuloModel</p>
-* <p>Description: Classe Model che rappresenta il PenaComplessiva</p>
-* <p> in ambito Cumulo (Pena_complessiva_cumulo) </p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -17,11 +8,32 @@ import f3b.model.GenericModel;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 
+/**
+ * <p>
+ * Title: PenaComplessivaumuloModel
+ * </p>
+ * <p>
+ * Description: Classe Model che rappresenta il PenaComplessiva
+ * </p>
+ * <p>
+ * in ambito Cumulo (Pena_complessiva_cumulo)
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
+ * @version 1.0
+ */
 public class PenaComplessivaCumuloModel extends GenericModel {
+
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = -1844488789023834477L;
+
 	private BigDecimal mIdPenaComplessivaCum;
 	private String mCodTipoPenaDetentiva;
 	private String mDescrTipoPenaDetentiva;
@@ -212,11 +224,16 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 
 	/**
 	 * Costruttore di inizializzazione a partire da PenaComplessivaModel Inizializza solo i dati di interesse
-	 * 
+	 *
 	 * @param lPenMod
 	 */
 	public PenaComplessivaCumuloModel(PenaComplessivaModel lPenMod) {
-		this.mCodTipoPenaDetentiva = lPenMod.getCodTipoPenaDetentiva();
+
+		// this.mCodTipoPenaDetentiva = lPenMod.getCodTipoPenaDetentiva();
+		// Ticket 20200220018 (25/02/2020) il metodo getCodTipoPenaDetentiva non recupera
+		// l'effettiva tipologia di pena iniziale ma la tipologia legata all'ultima
+		// pena residua
+		this.mCodTipoPenaDetentiva = lPenMod.getCodTipoPenaDetentivaDB();
 
 		this.mNumAnniReclusione = lPenMod.getNumAnniReclusione();
 		this.mNumMesiReclusione = lPenMod.getNumMesiReclusione();
@@ -244,14 +261,14 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	 * fascicolo. L'ultima pena residua contiene il campo flag ergastolo, che viene valorizzato anche se
 	 * l'ergastolo viene dato in cumulo. Il nuovo attributo mPenaResidua viene valorizzato contestualemente
 	 * alla valorizzazione del PenaComplessivaModel.
-	 * 
+	 *
 	 * I metodi che attualmente in tutta l'applicazione (classi, jsp, template) vengono testati per
 	 * controllare se la pena è in ergastolo oppure no sono : getCodTipoPenaDetentiva() e
 	 * getDescrTipoPenaDetentiva(). In questi metodi il valore del flag ergastolo su pena residua è
 	 * prioritario sul tipo pena detentiva della pena complessiva
-	 * 
+	 *
 	 * @return il cod tipo pena detentiva "logico", non quello che sta sul DB ("fisico")
-	 * 
+	 *
 	 */
 
 	//
@@ -285,14 +302,14 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	 * fascicolo. L'ultima pena residua contiene il campo flag ergastolo, che viene valorizzato anche se
 	 * l'ergastolo viene dato in cumulo. Il nuovo attributo mPenaResidua viene valorizzato contestualemente
 	 * alla valorizzazione del PenaComplessivaModel.
-	 * 
+	 *
 	 * I metodi che attualmente in tutta l'applicazione (classi, jsp, template) vengono testati per
 	 * controllare se la pena è in ergastolo oppure no sono : getCodTipoPenaDetentiva() e
 	 * getDescrTipoPenaDetentiva(). In questi metodi il valore del flag ergastolo su pena residua è
 	 * prioritario sul tipo pena detentiva della pena complessiva
-	 * 
+	 *
 	 * @return la descrizione del cod tipo pena detentiva "logica", non quella relativa al DB ("fisica")
-	 * 
+	 *
 	 */
 	public String getDescrTipoPenaDetentiva() {
 		if (getPenaResidua() == null) {
@@ -317,10 +334,10 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	/**
 	 * Ritorna il cod tipo pena detentiva "fisica" a differenza del metodo getCodTipoPenaDetentiva() che
 	 * ritorna quello "logico"
-	 * 
+	 *
 	 * @return il cod tipo pena detentiva "fisico", non quello "logico" ritornato dal metodo
 	 *         getCodTipoPenaDetentiva()
-	 * 
+	 *
 	 */
 	public String getCodTipoPenaDetentivaDB() {
 		return mCodTipoPenaDetentiva;
@@ -329,10 +346,10 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 	/**
 	 * Ritorna la descrizione del cod tipo pena detentiva "fisico" a differenza del metodo
 	 * getDescrTipoPenaDetentiva() che ritorna quella "logica"
-	 * 
+	 *
 	 * @return la descrizione del cod tipo pena detentiva "fisica", non quello "logica" ritornato dal metodo
 	 *         getDescrTipoPenaDetentiva()
-	 * 
+	 *
 	 */
 	public String getDescrTipoPenaDetentivaDB() {
 		return mDescrTipoPenaDetentiva;
@@ -659,7 +676,7 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 
 	/**
 	 * calcolaStringaArresto per la Stampa in cui serve la stringa composta di anni mesi giorni
-	 * 
+	 *
 	 * @return
 	 */
 	public void calcolaStringaArrestoCum() {
@@ -685,7 +702,7 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 
 	/**
 	 * calcolaStringaReclusione per la Stampa in cui serve la stringa composta di anni mesi giorni
-	 * 
+	 *
 	 * @return
 	 */
 	public void calcolaStringaReclusioneCum() {
@@ -711,7 +728,7 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 
 	/**
 	 * calcolaStringaIsolamento per la Stampa in cui serve la stringa composta di anni mesi giorni
-	 * 
+	 *
 	 * @return
 	 */
 	public void calcolaStringaIsolamentoCum() {
@@ -735,4 +752,5 @@ public class PenaComplessivaCumuloModel extends GenericModel {
 			this.mStringaIsolamentoDiurno = null;
 		}
 	}
+
 }
