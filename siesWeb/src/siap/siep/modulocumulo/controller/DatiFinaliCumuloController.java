@@ -1349,10 +1349,14 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// LogF3B.getLogger()
 			siesLogger.debug("Aggiorno FASCICOLO_SIEP.FLAG_CUMULANTE = 'S'");
 			lFascDao = new FascicoloSiepDAO(lConn);
-
 			lFascDao.selCondizioneUpdate(lEveModel.getFasSieIdFascicoloSiep());
-
 			lFascDao.setFlagCumulante("S");
+
+			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
+			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
+			// settato a 02
+			if (lFasModel != null && "01".equals(lFasModel.getCodStatoFascicolo()))
+				lFascDao.setCodStatoFascicolo("02");
 
 			lFascDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
 			lFascDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
@@ -1454,129 +1458,132 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					|| (lPenResMod.getNumGiorniArresto() != null
 							&& lPenResMod.getNumGiorniArresto().intValue() > 0)) {
 				if (lTipoScedenzario.equals("03")) { // Vane Ricerche
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug("Soggetto Libero Attivo lo scadenzario Vane Ricerche");
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Soggetto Libero Attivo lo scadenzario Vane Ricerche");
 
-				// Cerco se presente lo scadenzario specifico "VANE RICERCHE" dell'ufficio
-				lParSqlDao = new ParametroSqlDAO(lConn);
+					// Cerco se presente lo scadenzario specifico "VANE RICERCHE" dell'ufficio
+					lParSqlDao = new ParametroSqlDAO(lConn);
 					lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE",
 							aEvento.getCodUfficioAggiornamento());
 
-				ParametroModel lParMod = (ParametroModel) lParSqlDao.getModelByKey();
-				lParSqlDao.stop();
+					ParametroModel lParMod = (ParametroModel) lParSqlDao.getModelByKey();
+					lParSqlDao.stop();
 
-				if (lParMod == null) {
-					// se non presente cerco quello generico
+					if (lParMod == null) {
+						// se non presente cerco quello generico
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// LogF3B.getLogger()
+						siesLogger.debug("Non presente scadenzario specifico, cerco quello generico");
+						lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE", null);
+						lParMod = (ParametroModel) lParSqlDao.getModelByKey();
+					}
+
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.debug("Non presente scadenzario specifico, cerco quello generico");
-					lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE", null);
-					lParMod = (ParametroModel) lParSqlDao.getModelByKey();
+					siesLogger.debug("lParMod = " + lParMod);
+
+					Date lInizioScadenza = lEveModel.getDataEmissione();
+					Date lFineScadenza = lEveModel.getDataEmissione();
+
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lInizioScadenza = " + DateUtils.getDateToString(lInizioScadenza, "dd/MM/yyyy"));
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+
+					lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.YEAR,
+							lParMod.getAnni().intValue());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+					lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.MONTH,
+							lParMod.getMesi().intValue());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+					lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.DAY_OF_MONTH,
+							lParMod.getGiorni().intValue());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("03");
+					lScaMod.setDataInizioScadenza(lInizioScadenza);
+					lScaMod.setDataFineScadenza(lFineScadenza);
+
+				} else if (lTipoScedenzario.equals("02")) { // FINE PENA
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("02");
+					lScaMod.setDataInizioScadenza(lPenResMod.getDataInizio());
+					lScaMod.setDataFineScadenza(lPenResMod.getDataFine());
+				} else if (lTipoScedenzario.equals("06")) { // Differimento
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("06");
+					lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
+					lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
+				} else if (lTipoScedenzario.equals("01")) { // 17/04/2019 MEV70 Aggiunta Scadenzario Simeone
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("01");
+					if (lPosGiuCumModel.getDataInizio() != null)
+						lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
+					else
+						lScaMod.setDataInizioScadenza(lEveModel.getDataEmissione());
+					lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
 				}
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug("lParMod = " + lParMod);
-
-				Date lInizioScadenza = lEveModel.getDataEmissione();
-				Date lFineScadenza = lEveModel.getDataEmissione();
-
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug(
-						"lInizioScadenza = " + DateUtils.getDateToString(lInizioScadenza, "dd/MM/yyyy"));
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-
-				lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.YEAR,
-						lParMod.getAnni().intValue());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-				lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.MONTH,
-						lParMod.getMesi().intValue());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-				lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.DAY_OF_MONTH,
-						lParMod.getGiorni().intValue());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("03");
-				lScaMod.setDataInizioScadenza(lInizioScadenza);
-				lScaMod.setDataFineScadenza(lFineScadenza);
-
-			} else if (lTipoScedenzario.equals("02")) { // FINE PENA
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("02");
-				lScaMod.setDataInizioScadenza(lPenResMod.getDataInizio());
-				lScaMod.setDataFineScadenza(lPenResMod.getDataFine());
-			} else if (lTipoScedenzario.equals("06")) { // Differimento
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("06");
-				lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
-				lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
-			} else if (lTipoScedenzario.equals("01")) { // 17/04/2019 MEV70 Aggiunta Scadenzario Simeone
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("01");
-				if (lPosGiuCumModel.getDataInizio() != null)
-					lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
-				else
-					lScaMod.setDataInizioScadenza(lEveModel.getDataEmissione());
-				lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
-			}
-
-			if (lScaMod != null) {
-				// Verifico se andare in Update
-				lScadeSqlDao = new ScadenzarioSqlDAO(lConn);
+				if (lScaMod != null) {
+					// Verifico se andare in Update
+					lScadeSqlDao = new ScadenzarioSqlDAO(lConn);
 					lScadeSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo(
 							lScaMod.getCodTipoScadenzario(), lEveModel.getFasSieIdFascicoloSiep());
-				ScadenzarioModel lScadModelOld = (ScadenzarioModel) lScadeSqlDao.getModelByKey();
+					ScadenzarioModel lScadModelOld = (ScadenzarioModel) lScadeSqlDao.getModelByKey();
 
-				lScaMod.setFlagVisto("N");
-				lScaMod.setEveIdEvento(lEveModel.getIdEvento());
-				lScaMod.setFasSieIdFascicoloSiep(lEveModel.getFasSieIdFascicoloSiep());
+					lScaMod.setFlagVisto("N");
+					lScaMod.setEveIdEvento(lEveModel.getIdEvento());
+					lScaMod.setFasSieIdFascicoloSiep(lEveModel.getFasSieIdFascicoloSiep());
 
-				if (lScaMod.getCodTipoScadenzario().equals("03"))// Vane Ricerche
+					if (lScaMod.getCodTipoScadenzario().equals("03"))// Vane Ricerche
 						lScaMod.setCodStatoNotifica("NP"); // Valore Iniziale Indica il VVR non ancora
 															// pervenuto
 
-				if (lScadModelOld == null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("Lo scadenzario non esiste vado in insert ");
-					lScaMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
-					lScaMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
-					lScaMod.setDataInserimento(aEvento.getDataAggiornamento());
+					if (lScadModelOld == null) {
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// LogF3B.getLogger()
+						siesLogger.debug("Lo scadenzario non esiste vado in insert ");
+						lScaMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
+						lScaMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
+						lScaMod.setDataInserimento(aEvento.getDataAggiornamento());
 
-					lScaDao.setDAOFromModel(lScaMod);
-					lScaDao.insert();
-					lScaDao.stop();
-				} else {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("Lo scadenzario esiste, vado in update");
+						lScaDao.setDAOFromModel(lScaMod);
+						lScaDao.insert();
+						lScaDao.stop();
+					} else {
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// LogF3B.getLogger()
+						siesLogger.debug("Lo scadenzario esiste, vado in update");
 
-					lScaMod.setIdScadenzario(lScadModelOld.getIdScadenzario());
+						lScaMod.setIdScadenzario(lScadModelOld.getIdScadenzario());
 
-					lScaMod.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
-					lScaMod.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
-					lScaMod.setDataAggiornamento(aEvento.getDataAggiornamento());
+						lScaMod.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
+						lScaMod.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
+						lScaMod.setDataAggiornamento(aEvento.getDataAggiornamento());
 
-					lScaDao.setDAOFromModelForUpdate(lScaMod);
-					lScaDao.update();
-					lScaDao.stop();
+						lScaDao.setDAOFromModelForUpdate(lScaMod);
+						lScaDao.update();
+						lScaDao.stop();
+					}
 				}
-			}
 			} // Chiusura inserimento/aggiornamento Scadenzario
 
 			// ========================================================================
@@ -4755,15 +4762,15 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// Aggiorno lo FASCICOLO_SIEP.FLAG_ALTRA_CAUSA
 			// ========================================================================
 			siesLogger.debug("Aggiorno FASCICOLO_SIEP.FLAG_ALTRA_CAUSA = " + flagAltraCausa);
-			
+
 			lFascSqlDao = new FascicoloSiepSqlDAO(lConn);
 			lFascSqlDao.ricercaFascicoloByKey(aFascicolo.getIdFascicoloSiep());
 			FascicoloSiepModel lFasModel = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
-			lFascSqlDao.stop();	
-			
-			lFascDao = new FascicoloSiepDAO(lConn);		 	
+			lFascSqlDao.stop();
+
+			lFascDao = new FascicoloSiepDAO(lConn);
 			lFascDao.selCondizioneUpdate(lFasModel.getIdFascicoloSiep());
-			//lFascDao.setDAOFromModel(lFasModel);
+			// lFascDao.setDAOFromModel(lFasModel);
 			lFascDao.setCodOperatoreAggiornamento(aFascicolo.getCodOperatoreAggiornamento());
 			lFascDao.setCodUfficioAggiornamento(aFascicolo.getCodUfficioAggiornamento());
 			lFascDao.setDataAggiornamento(aFascicolo.getDataAggiornamento());
@@ -4785,7 +4792,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 			cleanup(lConn);
 		}
-
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
 		// ***** FINE INTERVENTO 20191128013 *****//
 
