@@ -274,18 +274,61 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String setCondizioneSuperSoggettoPerSige(SoggettoModel aModel) {
+
 		String lCondizioni = new String();
 		// 27/10/2010 Utilizzo di UPPER e toUpperCase per normalizzare il
-		// controllo di uguaglianza x
-		// (PATERNITA, COGNOME_MADRE, ATTO_NASCITA, COD_AFIS)
+		// controllo di uguaglianza x (PATERNITA, COGNOME_MADRE, ATTO_NASCITA, COD_AFIS)
 		if (aModel.getIdSoggetto().doubleValue() != 0) {
 			lCondizioni = " AND ID_SOGGETTO = " + aModel.getIdSoggetto();
 		} else {
-
+			// Ticket#20200226013 — SIGE - ricerca omonimi (vedi anche ticket 20200218019 Catania)
+			// su segnalazione della MAFFUCCI si ripristina il vecchio funzionamento
 			// Modifica del 21/12/2016 MEV_15_S4
-			// Come richiesto da Michele, e confermato da Vito,
-			// la ricerca per Soggetto viene ristretta ai soli campi
-			// Cognome, Nome,
+			// Come richiesto da Michele, e confermato da Vito, la ricerca per Soggetto viene ristretta ai
+			// soli campi Cognome, Nome,
+			// Ticket#20200226013 — SIGE - ricerca omonimi (vedi anche ticket 20200218019 Catania)
+			// START
+			if (aModel.getAnnoNascita() != null)
+				lCondizioni += " AND sogg.ANNO_NASCITA = '" + aModel.getAnnoNascita() + "'";
+			else
+				lCondizioni += " AND sogg.ANNO_NASCITA is null";
+
+			if (aModel.getAttoNascita() != null && aModel.getAttoNascita().length() > 0)
+				lCondizioni += " AND UPPER(sogg.ATTO_NASCITA) = '" + aModel.getAttoNascita().toUpperCase()
+						+ "'";
+			else
+				lCondizioni += " AND sogg.ATTO_NASCITA is null";
+
+			if (aModel.getCodAfis() != null && aModel.getCodAfis().length() > 0)
+				lCondizioni += " AND UPPER(sogg.COD_AFIS) = '" + aModel.getCodAfis().toUpperCase() + "'";
+			else
+				lCondizioni += " AND sogg.COD_AFIS is null";
+
+			if (aModel.getCodComuneNascita() != null && aModel.getCodComuneNascita().length() > 0)
+				lCondizioni += " AND sogg.COD_COMUNE_NASCITA = '" + aModel.getCodComuneNascita() + "'";
+			else
+				lCondizioni += " AND sogg.COD_COMUNE_NASCITA is null";
+
+			if (aModel.getCodCs() != null && aModel.getCodCs().length() > 0)
+				lCondizioni += " AND sogg.COD_CS = '" + aModel.getCodCs() + "'";
+			else
+				lCondizioni += " AND sogg.COD_CS is null";
+
+			if (aModel.getCodFiscale() != null && aModel.getCodFiscale().length() > 0)
+				lCondizioni += " AND sogg.COD_FISCALE = '" + aModel.getCodFiscale() + "'";
+			else
+				lCondizioni += " AND sogg.COD_FISCALE is null";
+
+			if (aModel.getCodProvinciaNascita() != null && aModel.getCodProvinciaNascita().length() > 0)
+				lCondizioni += " AND sogg.COD_PROVINCIA_NASCITA = '" + aModel.getCodProvinciaNascita() + "'";
+			else
+				lCondizioni += " AND sogg.COD_PROVINCIA_NASCITA is null";
+
+			if (aModel.getCodStatoNascita() != null && aModel.getCodStatoNascita().length() > 0)
+				lCondizioni += " AND sogg.COD_STATO_NASCITA = '" + aModel.getCodStatoNascita() + "'";
+			else
+				lCondizioni += " AND sogg.COD_STATO_NASCITA is null";
+
 			if (aModel.getCognome() != null && aModel.getCognome().length() > 0)
 				lCondizioni += " AND sogg.COGNOME = '" + StringUtils.convertSqlString(aModel.getCognome())
 						+ "'";
@@ -297,86 +340,69 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 			else
 				lCondizioni += " AND sogg.NOME is null";
 
-			/*
-			 * if (aModel.getAnnoNascita() != null) lCondizioni += " AND sogg.ANNO_NASCITA = '" +
-			 * aModel.getAnnoNascita() + "'"; else lCondizioni += " AND sogg.ANNO_NASCITA is null";
-			 *
-			 * if (aModel.getAttoNascita() != null && aModel.getAttoNascita().length() > 0) lCondizioni +=
-			 * " AND UPPER(sogg.ATTO_NASCITA) = '" + aModel.getAttoNascita().toUpperCase() + "'"; else
-			 * lCondizioni += " AND sogg.ATTO_NASCITA is null";
-			 *
-			 * if (aModel.getCodAfis() != null && aModel.getCodAfis().length() > 0) lCondizioni +=
-			 * " AND UPPER(sogg.COD_AFIS) = '" + aModel.getCodAfis().toUpperCase() + "'"; else lCondizioni +=
-			 * " AND sogg.COD_AFIS is null";
-			 *
-			 * if (aModel.getCodComuneNascita() != null && aModel.getCodComuneNascita().length() > 0)
-			 * lCondizioni += " AND sogg.COD_COMUNE_NASCITA = '" + aModel.getCodComuneNascita() + "'"; else
-			 * lCondizioni += " AND sogg.COD_COMUNE_NASCITA is null";
-			 *
-			 * if (aModel.getCodCs() != null && aModel.getCodCs().length() > 0) lCondizioni +=
-			 * " AND sogg.COD_CS = '" + aModel.getCodCs() + "'"; else lCondizioni +=
-			 * " AND sogg.COD_CS is null";
-			 *
-			 * if (aModel.getCodFiscale() != null && aModel.getCodFiscale().length() > 0) lCondizioni +=
-			 * " AND sogg.COD_FISCALE = '" + aModel.getCodFiscale() + "'"; else lCondizioni +=
-			 * " AND sogg.COD_FISCALE is null";
-			 *
-			 * if (aModel.getCodProvinciaNascita() != null && aModel.getCodProvinciaNascita().length() > 0)
-			 * lCondizioni += " AND sogg.COD_PROVINCIA_NASCITA = '" + aModel.getCodProvinciaNascita() + "'";
-			 * else lCondizioni += " AND sogg.COD_PROVINCIA_NASCITA is null";
-			 *
-			 * if (aModel.getCodStatoNascita() != null && aModel.getCodStatoNascita().length() > 0)
-			 * lCondizioni += " AND sogg.COD_STATO_NASCITA = '" + aModel.getCodStatoNascita() + "'"; else
-			 * lCondizioni += " AND sogg.COD_STATO_NASCITA is null";
-			 *
-			 * if (aModel.getCognome() != null && aModel.getCognome().length() > 0) lCondizioni +=
-			 * " AND sogg.COGNOME = '" + StringUtils.convertSqlString(aModel.getCognome()) + "'"; else
-			 * lCondizioni += " AND sogg.COGNOME is null";
-			 *
-			 * if (aModel.getNome() != null && aModel.getNome().length() > 0) lCondizioni +=
-			 * " AND sogg.NOME = '" + StringUtils.convertSqlString(aModel.getNome()) + "'"; else lCondizioni
-			 * += " AND sogg.NOME is null";
-			 *
-			 * if (aModel.getDataNascita() != null) // 20180110: [SG] aggiunta trunc sulla data nascita per
-			 * gestire la presenza di ore min sec lCondizioni += " AND trunc(sogg.DATA_NASCITA) = to_date('" +
-			 * DateUtils.getDateToString(aModel.getDataNascita(), "dd/MM/yyyy") + "','DD-MM-YYYY')"; else
-			 * lCondizioni += " AND sogg.DATA_NASCITA is null";
-			 *
-			 * if (aModel.getDataNascitaPresunta() != null && aModel.getDataNascitaPresunta().length() > 0)
-			 * lCondizioni += " AND sogg.DATA_NASCITA_PRESUNTA = '" + aModel.getDataNascitaPresunta() + "'";
-			 * else lCondizioni += " AND sogg.DATA_NASCITA_PRESUNTA is null";
-			 *
-			 * // if (aModel.getDescComuneNascitaEstero() != null && //
-			 * aModel.getDescComuneNascitaEstero().length()>0) // lCondizioni +=
-			 * " AND sogg.DESC_COMUNE_NASCITA_ESTERO = '"+ //
-			 * StringUtils.convertSqlString(aModel.getDescComuneNascitaEstero())+"'"; // else // lCondizioni
-			 * += " AND sogg.DESC_COMUNE_NASCITA_ESTERO is null";
-			 *
-			 * // if (aModel.getNazionalita() != null && aModel.getNazionalita().length()>0) // lCondizioni +=
-			 * " AND sogg.NAZIONALITA = '"+ aModel.getNazionalita()+"'"; // else // lCondizioni +=
-			 * " AND sogg.NAZIONALITA is null";
-			 *
-			 * if (aModel.getPaternita() != null && aModel.getPaternita().length() > 0) lCondizioni +=
-			 * " AND UPPER(sogg.PATERNITA) = '" +
-			 * StringUtils.convertSqlString(aModel.getPaternita().toUpperCase()) + "'"; else lCondizioni +=
-			 * " AND sogg.PATERNITA is null";
-			 *
-			 * if (aModel.getCognomeMadre() != null && aModel.getCognomeMadre().length() > 0) lCondizioni +=
-			 * " AND UPPER(sogg.COGNOME_MADRE) = '" +
-			 * StringUtils.convertSqlString(aModel.getCognomeMadre().toUpperCase()) + "'"; else lCondizioni +=
-			 * " AND sogg.COGNOME_MADRE is null";
-			 *
-			 * if (aModel.getNomeMadre() != null && aModel.getNomeMadre().length() > 0) lCondizioni +=
-			 * " AND UPPER(sogg.NOME_MADRE) = '" +
-			 * StringUtils.convertSqlString(aModel.getNomeMadre().toUpperCase()) + "'"; else lCondizioni +=
-			 * " AND sogg.NOME_MADRE is null";
-			 *
-			 * if (aModel.getSesso() != null && aModel.getSesso().length() > 0) lCondizioni +=
-			 * " AND sogg.SESSO = '" + aModel.getSesso() + "'"; else lCondizioni += " AND sogg.SESSO is null";
-			 *
-			 * if (aModel.getMeseNascita() != null) lCondizioni += " AND sogg.MESE_NASCITA = " +
-			 * aModel.getMeseNascita(); else lCondizioni += " AND sogg.MESE_NASCITA is null";
-			 */
+			if (aModel.getDataNascita() != null)
+				// 20180110: [SG] aggiunta trunc sulla data nascita per gestire la presenza di ore min sec
+				lCondizioni += " AND trunc(sogg.DATA_NASCITA) = to_date('"
+						+ DateUtils.getDateToString(aModel.getDataNascita(), "dd/MM/yyyy")
+						+ "','DD-MM-YYYY')";
+			else
+				lCondizioni += " AND sogg.DATA_NASCITA is null";
+
+			if (aModel.getDataNascitaPresunta() != null && aModel.getDataNascitaPresunta().length() > 0)
+				lCondizioni += " AND sogg.DATA_NASCITA_PRESUNTA = '" + aModel.getDataNascitaPresunta() + "'";
+			else
+				lCondizioni += " AND sogg.DATA_NASCITA_PRESUNTA is null";
+
+			if (aModel.getEtaPresuntaAnni() != null)
+				lCondizioni += " AND sogg.ETA_PRESUNTA_ANNI = '" + aModel.getEtaPresuntaAnni() + "'";
+			else
+				lCondizioni += " AND sogg.ETA_PRESUNTA_ANNI is null";
+
+			if (aModel.getEtaPresuntaMesi() != null)
+				lCondizioni += " AND sogg.ETA_PRESUNTA_MESI = '" + aModel.getEtaPresuntaMesi() + "'";
+			else
+				lCondizioni += " AND sogg.ETA_PRESUNTA_MESI is null";
+
+			if (aModel.getDescComuneNascitaEstero() != null
+					&& aModel.getDescComuneNascitaEstero().length() > 0)
+				lCondizioni += " AND sogg.DESC_COMUNE_NASCITA_ESTERO = '"
+						+ StringUtils.convertSqlString(aModel.getDescComuneNascitaEstero()) + "'";
+			else
+				lCondizioni += " AND sogg.DESC_COMUNE_NASCITA_ESTERO is null";
+
+			if (aModel.getNazionalita() != null && aModel.getNazionalita().length() > 0)
+				lCondizioni += " AND sogg.NAZIONALITA = '" + aModel.getNazionalita() + "'";
+			else
+				lCondizioni += " AND sogg.NAZIONALITA is null";
+
+			if (aModel.getPaternita() != null && aModel.getPaternita().length() > 0)
+				lCondizioni += " AND UPPER(sogg.PATERNITA) = '"
+						+ StringUtils.convertSqlString(aModel.getPaternita().toUpperCase()) + "'";
+			else
+				lCondizioni += " AND sogg.PATERNITA is null";
+
+			if (aModel.getCognomeMadre() != null && aModel.getCognomeMadre().length() > 0)
+				lCondizioni += " AND UPPER(sogg.COGNOME_MADRE) = '"
+						+ StringUtils.convertSqlString(aModel.getCognomeMadre().toUpperCase()) + "'";
+			else
+				lCondizioni += " AND sogg.COGNOME_MADRE is null";
+
+			if (aModel.getNomeMadre() != null && aModel.getNomeMadre().length() > 0)
+				lCondizioni += " AND UPPER(sogg.NOME_MADRE) = '"
+						+ StringUtils.convertSqlString(aModel.getNomeMadre().toUpperCase()) + "'";
+			else
+				lCondizioni += " AND sogg.NOME_MADRE is null";
+
+			if (aModel.getSesso() != null && aModel.getSesso().length() > 0)
+				lCondizioni += " AND sogg.SESSO = '" + aModel.getSesso() + "'";
+			else
+				lCondizioni += " AND sogg.SESSO is null";
+
+			if (aModel.getMeseNascita() != null)
+				lCondizioni += " AND sogg.MESE_NASCITA = " + aModel.getMeseNascita();
+			else
+				lCondizioni += " AND sogg.MESE_NASCITA is null";
+			// END
 		}
 		return lCondizioni;
 	}
