@@ -49,6 +49,7 @@ import siap.web.ISIAPCostantiWeb;
 import f3b.log.LogF3B;
 import f3b.security.model.FunctionModel;
 import f3b.security.model.ProfileModel;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.Action;
 import f3b.web.IWebConstants;
@@ -1118,8 +1119,18 @@ public class ActionSiap extends Action {
 		) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
+/* 
+				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
+				 * Numero MAC : 20200220017
+				 * Autore    : monica
+				 * Data      : 20/feb/2020
+				 * Branch    : 12.1
+				 */
+				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione.");
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
+				//***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1151,8 +1162,18 @@ public class ActionSiap extends Action {
 		) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
+/* 
+				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
+				 * Numero MAC : 20200220017
+				 * Autore    : monica
+				 * Data      : 20/feb/2020
+				 * Branch    : 12.1
+				 */
+				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione.");
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
+				//***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1170,15 +1191,25 @@ public class ActionSiap extends Action {
 		EventoModel lEveMod = new EventoModel();
 		lEveMod = lCtrl.ExRicercaEventoByFascicoloSiepDescUfficioConnesso(lFas.getIdFascicoloSiep(),
 				this.getCodUfficioUtenteConnesso());
-
+  
 		if (lEveMod != null && lEveMod.getCodMotivo() != null && !lEveMod.getCodMotivo().equals("0222")
 				&& !lEveMod.getCodMotivo().equals("0223") && !lEveMod.getCodMotivo().equals("0224")
 				&& !lEveMod.getCodMotivo().equals("0277") && lEveMod.getCodTipoEvento() != null
 				&& !lEveMod.getCodTipoEvento().equals("05")) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
+/* 
+				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
+				 * Numero MAC : 20200220017
+				 * Autore    : monica
+				 * Data      : 20/feb/2020
+				 * Branch    : 12.1
+				 */
+				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione.");
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
+				//***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1203,8 +1234,18 @@ public class ActionSiap extends Action {
 				&& !lEveMod.getCodTipoEvento().equals("01")) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
+				/* 
+				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
+				 * Numero MAC : 20200220017
+				 * Autore    : monica
+				 * Data      : 20/feb/2020
+				 * Branch    : 12.1
+				 */
+				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione.");
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
+				//***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
