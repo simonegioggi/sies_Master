@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV 16: aggiunti import --%>
-<%@page import="f3b.util.Utils"%>
-<%@page import="siap.siep.modulocumulo.util.ModuloCumuloUtils"%>
+<%@ page import="f3b.util.Utils"%>
+<%@ page import="siap.siep.modulocumulo.util.ModuloCumuloUtils"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Iterator" %>
@@ -211,10 +211,19 @@ if ((lFunFiglie != null) && (lFunFiglie.size() != 0)) {
 					coloreIcona = "dettaglioFC24R.png";
 				}
 				// MEV 16 CUMULO: gestite casistiche per cui far vedere l'icona del FC
-				boolean onOffIconFCCumulo = "true".equalsIgnoreCase(F3BProperties.getProperty("onOffIconFCCumulo")) ? true : false;
+				boolean onOffIconFCCumulo = "off".equalsIgnoreCase(F3BProperties.getProperty("onOffIconFCCumulo")) ? true : false;
 				String codMotivo = request.getParameter("MotivoEvento");
-  				if (ModuloCumuloUtils.isCumulo(Utils.isPresent(codMotivo) ? codMotivo : ""))
-  					isFCIconVisible = onOffIconFCCumulo;
+  				if (ModuloCumuloUtils.isCumulo(Utils.isPresent(codMotivo) ? codMotivo : "")) {
+					// String valoreIdEntitaProvv = request.getParameter("ValoreIdEntitaProvv");
+  					String docRegistrato = request.getParameter("docRegistrato");
+  					if (Utils.isPresent(docRegistrato)
+  							&& !"S".equals(docRegistrato)
+  							&& !onOffIconFCCumulo) {
+  						// l'evento deve essere validato!
+  						onOffIconFCCumulo = true;
+  					}
+  					isFCIconVisible = !onOffIconFCCumulo;
+  				}
   				if (lFun.getFunctionType().equals("F") && isFCIconVisible) {
 %>
 		<td>
