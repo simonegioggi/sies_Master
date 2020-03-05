@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.cssa.action.ICostantiCSSA;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
@@ -26,9 +29,6 @@ import siap.siep.notifica.model.NotificaModel;
 import siap.siep.ordinescarcerazione.controller.IOrdineScarcerazione;
 import siap.siep.util.MinorMask;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -43,24 +43,24 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class ActInserisciOrdineScarcerazionePerNuovaScadenzaPena extends ActionSiap implements
-		ICostantiAnnotazioneManuale {
+public class ActInserisciOrdineScarcerazionePerNuovaScadenzaPena extends ActionSiap
+		implements ICostantiAnnotazioneManuale {
 
 	/**
 	 * Azione di Inserimento del
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
 	public String processRequest() throws F3BException {
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String lCodiceOperatore = this.getCodUtenteConnesso();
-		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = getCodUtenteConnesso();
+		String lCodiceUfficio = getCodUfficioUtenteConnesso();
 
 		EventoModel lEve = new EventoModel();
 
@@ -123,7 +123,7 @@ public class ActInserisciOrdineScarcerazionePerNuovaScadenzaPena extends ActionS
 
 	/**
 	 * calcolaMagistrato
-	 * 
+	 *
 	 * @return
 	 */
 	protected String calcolaMagistrato() throws F3BException {
@@ -152,112 +152,105 @@ public class ActInserisciOrdineScarcerazionePerNuovaScadenzaPena extends ActionS
 
 	/**
 	 * Imposta tutte le notifiche associate all'evento prodotto
-	 * 
+	 *
 	 * @param lKey
 	 * @return
 	 * @throws F3BException
 	 */
 	protected NotificaModel[] setNotifiche(EventoModel lEve) throws F3BException {
 
-		String lCodiceOperatore = this.getCodUtenteConnesso();
-		String lCodiceUfficio = this.getCodUfficioUtenteConnesso();
+		String lCodiceOperatore = getCodUtenteConnesso();
+		String lCodiceUfficio = getCodUfficioUtenteConnesso();
 
 		ArrayList lNotifiche = new ArrayList();
 
 		// SETTO UDS
-		if (!this.isRequestParameterNullObj(ICostantiNotifica.CAMPO_UFF_COD_UFFICIO)
-		// MEV 37 - Inizio
+		if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_UFF_COD_UFFICIO)
+				// MEV 37 - Inizio
 				&& !getRequestStringParameter(ICostantiNotifica.CAMPO_UFF_COD_UFFICIO).equals("")) {
 			// MEV 37 - Fine
 			NotificaModel lNotModTDS = new NotificaModel();
-
-			String lUDS = this.getCodUfficioByCodTipoUfficioDescrComune("UDS",
+			String lUDS = getCodUfficioByCodTipoUfficioDescrComune("UDS",
 					getRequestStringParameter(ICostantiNotifica.CAMPO_UFF_COD_UFFICIO));
-			String lNoteUDS = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_UFF);
-
+			String lNoteUDS = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_UFF);
 			lNotModTDS.setCodTipoNotifica("N");
 			lNotModTDS.setNote(lNoteUDS);
 			lNotModTDS.setCodEsito("-");
 			lNotModTDS.setDataInvio(lEve.getDataEmissione());
 			lNotModTDS.setUffCodUfficio(lUDS);
 
-			// MERGE v10 COLLAUDO: aggiunta impostazione di proprietà
-			lNotModTDS.setCodUffUdsUdsm(this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO));
+			// Ticket#202003040112 - SIEP - Errre in provvedimento revoca sentenza per abolizione reato:
+			// aggiunto controllo di consistenza
+			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO))
+				lNotModTDS.setCodUffUdsUdsm(
+						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO));
 
 			lNotModTDS.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotModTDS.setDataInserimento(DateUtils.getSysDate());
 			lNotModTDS.setCodUfficioInserimento(lCodiceUfficio);
-
 			lNotifiche.add(lNotModTDS);
 		}
 
 		// SETTO NOTIFICA AUTORITA E
-		if (!this.isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
-			String lCodTipo = this
-					.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
-			String lSede = this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
-			String lNote = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
+		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA)) {
+			String lCodTipo = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+			String lSede = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+			String lNote = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
 
 			NotificaModel lNotMod = new NotificaModel();
-
 			lNotMod.setCodTipoNotifica("E");
 			// lNotMod.setDataAvvenutaNotifica();
 			lNotMod.setDataInvio(lEve.getDataTrasmissioneAtti());
 			lNotMod.setCodEsito("-");
 			lNotMod.setNote(lNote);
-
 			lNotMod.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotMod.setDataInserimento(DateUtils.getSysDate());
 			lNotMod.setCodUfficioInserimento(lCodiceUfficio);
-
 			AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 			lAut.setCodTipoAutorita(lCodTipo);
-
 			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lSede));
 			lAut.setCodSede(lComMod.getCodComune());
 			lAut.setCodOperatoreInserimento(lCodiceOperatore);
 			lAut.setDataInserimento(DateUtils.getSysDate());
 			lAut.setCodUfficioInserimento(lCodiceUfficio);
-
 			lNotMod.setAutoritaEsterna(lAut);
-
 			lNotifiche.add(lNotMod);
 		}
 
 		// SETTO CSSA
-		if (!this.isRequestParameterNullObj(ICostantiCSSA.CAMPO_ID_CSSA)) {
+		// Ticket#202003040112 - SIEP - Errre in provvedimento revoca sentenza per abolizione reato:
+		// modificato controllo di consistenza
+		if (!isRequestParameterNullEmptyObj(ICostantiCSSA.CAMPO_ID_CSSA)) {
 			NotificaModel lNotModCSSA = new NotificaModel();
-
-			BigDecimal lCssa = this.getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
-			String lNoteCssa = this.getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_CSSA);
-
-			// MERGE v10 COLLAUDO: aggiunta impostazione di proprietà
-			lNotModCSSA.setCodUffUepeUssmSS(this.getRequestStringParameter(MinorMask.ComboCSSAId));
+			BigDecimal lCssa = getRequestBigDecimalParameter(ICostantiCSSA.CAMPO_ID_CSSA);
+			String lNoteCssa = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_CSSA);
+			// Ticket#202003040112 - SIEP - Errre in provvedimento revoca sentenza per abolizione reato:
+			// aggiunto controllo di consistenza
+			if (!isRequestParameterNullObj(MinorMask.ComboCSSAId))
+				lNotModCSSA.setCodUffUepeUssmSS(getRequestStringParameter(MinorMask.ComboCSSAId));
 
 			lNotModCSSA.setCodTipoNotifica("N");
 			lNotModCSSA.setNote(lNoteCssa);
 			lNotModCSSA.setCodEsito("-");
 			lNotModCSSA.setDataInvio(lEve.getDataEmissione());
 			lNotModCSSA.setCssIdCssa(lCssa);
-
 			lNotModCSSA.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotModCSSA.setDataInserimento(DateUtils.getSysDate());
 			lNotModCSSA.setCodUfficioInserimento(lCodiceUfficio);
-
 			lNotifiche.add(lNotModCSSA);
 		}
 
 		// ******************************
 		String lTipoNotificaIst = "E";
-		if (!isRequestParameterNullObj("FlagMisuraAlternativa")) {
+		if (!isRequestParameterNullObj("FlagMisuraAlternativa"))
 			lTipoNotificaIst = "N";
-		}
 
 		// SETTO ISTITUTO DETENZIONE
-		if ((!this.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))) {
+		if ((!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))) {
 			NotificaModel lNotModIst = new NotificaModel();
 
-			String lIstituto = getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+			String lIstituto = getRequestStringParameter(
+					ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
 			String lNoteIstituto = getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_NOTE);
 
 			lNotModIst.setCodTipoNotifica(lTipoNotificaIst);
@@ -266,7 +259,6 @@ public class ActInserisciOrdineScarcerazionePerNuovaScadenzaPena extends ActionS
 			lNotModIst.setCodEsito("-");
 			lNotModIst.setNote(lNoteIstituto);
 			lNotModIst.setIstDetIdIstitutoDetenzione(lIstituto);
-
 			lNotModIst.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotModIst.setDataInserimento(DateUtils.getSysDate());
 			lNotModIst.setCodUfficioInserimento(lCodiceUfficio);
