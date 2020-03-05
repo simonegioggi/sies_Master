@@ -211,12 +211,19 @@ public class EventoVerbaleSqlDAO extends SqlDAO
 	 
 	public String  setCondizioneOELSRSCUM(BigDecimal aKeyFasc)
 	{
+        /* 
+		 * ISSUE MAC : Aggiunta la condizione sul CUMULO_NEW
+		 * Numero MAC : 20200220016
+		 * Autore    : monica
+		 * Data      : 26/feb/2020
+		 * Branch    : 12.1
+		 */
 		 String lCondizioni = new String();
 		 lCondizioni +=  " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKeyFasc;
-		 lCondizioni +=  " AND (CODMOV.RV_HIGH_VALUE LIKE 'OE%' OR CODMOV.RV_HIGH_VALUE LIKE 'LS%'OR CODMOV.RV_HIGH_VALUE LIKE 'RS%' OR CODMOV.RV_HIGH_VALUE = 'CUMULO') " ;
+		 lCondizioni +=  " AND (CODMOV.RV_HIGH_VALUE LIKE 'OE%' OR CODMOV.RV_HIGH_VALUE LIKE 'LS%'OR CODMOV.RV_HIGH_VALUE LIKE 'RS%' OR CODMOV.RV_HIGH_VALUE = 'CUMULO' OR CODMOV.RV_HIGH_VALUE = 'CUMULO_NEW') " ;
 		 lCondizioni +=  " AND FLAG_DOCUMENTO_REGISTRATO = 'S' ";
       	 lCondizioni +=  " ORDER BY DATA_INSERIMENTO DESC ";
-      
+      	//***** FINE INTERVENTO MAC_numero_MAC *****//
 		 return lCondizioni;
 		}	 
 

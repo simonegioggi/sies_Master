@@ -959,6 +959,15 @@ public class VerbaleController extends SiapController implements IVerbale {
 			String lFlagOE = "N";
 			String lFlagRS = "N";
 			String lFlagCUM = "N";
+		    /* 
+			 * ISSUE MAC : aggiunta variabile
+			 * Numero MAC : 20200220016
+			 * Autore    : monica
+			 * Data      : 02/mar/2020
+			 * Branch    : 12.1
+			 */
+			  String lFlagCUMNEW = "N"; 
+			  //***** FINE INTERVENTO 20200220016 *****//
 			Date lDataPrelevata = null;
 			lEveVerSql = new EventoVerbaleSqlDAO(lConn);
 			lEveVerSql.ricercaEventoOELSRSCUM(aKeyFasc);
@@ -975,7 +984,20 @@ public class VerbaleController extends SiapController implements IVerbale {
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0079")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0080")) {
 					lFlagRS = "S";
-				} else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0222"))
+                } 
+				/* 
+				 * ISSUE MAC : gestito il motivo 0630 - Ordine di esecuzione 
+				 * per la carcerazione ex Art 656 comma 1 cpp
+				 * Numero MAC : 20200220016
+				 * Autore    : monica
+				 * Data      : 02/mar/2020
+				 * Branch    : 12.1
+				 */
+				else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0630"))) {
+		             lFlagCUMNEW = "S";       	     	 
+				}
+				//***** FINE INTERVENTO 20200220016 *****//
+				else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0222"))
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0223")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0224")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0277")
@@ -1003,7 +1025,17 @@ public class VerbaleController extends SiapController implements IVerbale {
 						lStaProMod.setCodStatoProcedimento("0120"); // r.s.
 					else if (lFlagCUM.equals("S"))
 						lStaProMod.setCodStatoProcedimento("0057"); // cumulo -- stesso stato di ordine
-																	// esecuzione
+             /* 
+			 * ISSUE MAC : gestito lo stato Emesso Ordine di Esecuzione con Arresto Il del cumulo new
+			 * Numero MAC : 20200220016
+			 * Autore    : monica
+			 * Data      : 02/mar/2020
+			 * Branch    : 12.1
+			 */
+                    else if(lFlagCUMNEW.equals("S"))
+				       lStaProMod.setCodStatoProcedimento("0001"); // Emesso Ordine di Esecuzione con Arresto Il															
+               //***** FINE INTERVENTO 20200220016 *****//
+
 					else
 						lStaProMod.setCodStatoProcedimento("0011"); // o.e.s.
 
