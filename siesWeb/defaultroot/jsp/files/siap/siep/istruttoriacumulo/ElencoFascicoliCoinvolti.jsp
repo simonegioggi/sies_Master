@@ -546,14 +546,14 @@ if (isTitoloManuale) {
 <%
 if ("A".equals(IstruttoriaCumulo.getFlagStato())) {
 	// MEV 16 CUMULO: gestita casistica per cui far vedere il bottone di "Iscrizione Nuovo Titolo da NSC"
-	boolean onOffIconFCCumulo = "true".equalsIgnoreCase(F3BProperties.getProperty("onOffButtonINTDNSC")) ? true : false;
+	boolean onOffButtonINTDNSC = "off".equalsIgnoreCase(F3BProperties.getProperty("onOffButtonINTDNSC")) ? true : false;
 %>
 <table cellspacing="2" cellpadding="2" align="center" width="95%">
 	<tr>
       	<td style="text-align:left">
         	<INPUT class="bottone" type="button" name="AGGIUNGI" style="width:200" value="Iscrizione Titolo Pervenuto" onClick="javascript:selezionaTitoloDaPresaInCarico();" title="Iscrizione/Presa in carico">
 <%
-	if (onOffIconFCCumulo) {
+	if (!onOffButtonINTDNSC) {
 %>
         	<INPUT class="bottone" type="button" name="AGGIUNGI" style="width:190" value="Iscrizione Nuovo Titolo da NSC" onClick="javascript:selezionaTitoloDaNsc();" title="Iscrizione/NSC">
 <%
