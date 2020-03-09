@@ -2,7 +2,7 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2016.09.27 alle 02:09:58 PM CEST 
+// Generato il: 2020.02.10 alle 12:42:15 PM CET 
 //
 
 
@@ -10,7 +10,6 @@ package it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -100,7 +99,7 @@ public class DATIPROCEDIMENTOOUTPUT {
     protected ERRORE errore;
 
     /**
-     * Recupera il valore della proprietà fascicolosius.
+     * elemento contenitore dei dati del fascicolo SIUS
      * 
      * @return
      *     possible object is
@@ -124,7 +123,7 @@ public class DATIPROCEDIMENTOOUTPUT {
     }
 
     /**
-     * Recupera il valore della proprietà soggetto.
+     * elemento contenitore dei dati del Soggetto
      * 
      * @return
      *     possible object is
@@ -148,7 +147,7 @@ public class DATIPROCEDIMENTOOUTPUT {
     }
 
     /**
-     * Recupera il valore della proprietà atto.
+     * elemento contenitore dei dati dell'atto
      * 
      * @return
      *     possible object is
@@ -172,7 +171,8 @@ public class DATIPROCEDIMENTOOUTPUT {
     }
 
     /**
-     * Recupera il valore della proprietà fascicolosiep.
+     * elemento contenitore dei dati del fascicolo SIEP
+     * 
      * 
      * @return
      *     possible object is
@@ -450,7 +450,7 @@ public class DATIPROCEDIMENTOOUTPUT {
     }
 
     /**
-     * Recupera il valore della proprietà errore.
+     * elemento contenitore di errori
      * 
      * @return
      *     possible object is

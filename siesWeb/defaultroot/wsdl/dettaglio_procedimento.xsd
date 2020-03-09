@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti"
-	targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by Emma (Engineering) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:type="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti" targetNamespace="http://it/eng/giustizia/avvocatura/ws/type/ricercaSoggettiConProcedimenti" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="DATI_PROCEDIMENTO_INPUT">
 		<xs:annotation>
-			<xs:documentation>Comment describing your root element
-			</xs:documentation>
+			<xs:documentation>elemento root per il servizio di dettaglio procedimento		</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="annoProcedimento" type="xs:integer"
-					nillable="false" />
-				<xs:element name="numeroProcedimento" type="xs:integer"
-					nillable="false" />
-				<xs:element name="codiceFiscaleAvvocato" type="xs:string" />
+				<xs:element name="annoProcedimento" type="xs:integer" nillable="false">
+					<xs:annotation>
+						<xs:documentation>anno del procedimento</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="numeroProcedimento" type="xs:integer" nillable="false">
+					<xs:annotation>
+						<xs:documentation>numero del procedimento</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="codiceFiscaleAvvocato" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>cf avvocato</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 				<xs:element name="codTipoUfficio" type="xs:string">
 					<xs:annotation>
 						<xs:documentation>
@@ -27,66 +34,99 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="codDistretto" type="xs:string" />
+				<xs:element name="codDistretto" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>codice distretto</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<!-- MEV_20: aggiunto campo -->
+				<xs:element name="codUfficio" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>codice ufficio</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<!-- MEV_20: FINE -->
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="DATI_PROCEDIMENTO_OUTPUT">
+		<xs:annotation>
+			<xs:documentation>elemento contenitore dei dati complessivi del procedimento</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="type:FASCICOLO_SIUS" />
-				<xs:element ref="type:SOGGETTO" />
-				<xs:element ref="type:ATTO" />
-				<xs:element ref="type:FASCICOLO_SIEP" />
-				<xs:element name="oggetto" type="type:TENORE_TYPE"
-					maxOccurs="unbounded">
+				<xs:element ref="type:FASCICOLO_SIUS">
 					<xs:annotation>
-						<xs:documentation>è la sezione OGGETTO; Fa riferimento alla lista
-							dei TENORI
+						<xs:documentation>elemento contenitore dei dati del fascicolo SIUS</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="type:SOGGETTO">
+					<xs:annotation>
+						<xs:documentation>elemento contenitore dei dati del Soggetto</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="type:ATTO">
+					<xs:annotation>
+						<xs:documentation>elemento contenitore dei dati dell'atto</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="type:FASCICOLO_SIEP">
+					<xs:annotation>
+						<xs:documentation>elemento contenitore dei dati del fascicolo SIEP
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="oggettiStralciati" type="type:TENORE_TYPE"
-					maxOccurs="unbounded">
+				<xs:element name="oggetto" type="type:TENORE_TYPE" maxOccurs="unbounded">
 					<xs:annotation>
-						<xs:documentation>E' dopo la sezione OGGETTO; Fa riferimento alla
-							lista TENORI
-							STRALCIATI
-						</xs:documentation>
+						<xs:documentation>è la sezione OGGETTO</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="elencoRiferimentiFascicoliSIEP" type="type:RIFERIMENTO_FASC_SIEP_TYPE"
-					maxOccurs="unbounded">
+				<xs:element name="oggettiStralciati" type="type:TENORE_TYPE" maxOccurs="unbounded">
 					<xs:annotation>
-						<xs:documentation>Sezione Alti Titoli Esecutivi</xs:documentation>
+						<xs:documentation> Fa riferimento alla lista dei tenori stralciati				</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="listaAvvocati" type="type:AVVOCATO_TYPE"
-					maxOccurs="unbounded">
+				<xs:element name="elencoRiferimentiFascicoliSIEP" type="type:RIFERIMENTO_FASC_SIEP_TYPE" maxOccurs="unbounded">
 					<xs:annotation>
-						<xs:documentation>sezione DIFENSORI</xs:documentation>
+						<xs:documentation>Elemento contenitore degli alti Titoli Esecutivi</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="elencoMovimentiUdienza" type="type:MOVIMENTI_UDIENZA_TYPE"
-					maxOccurs="unbounded" />
-				<xs:element name="elencoProvvedimenti" type="type:EVENTO_TYPE"
-					maxOccurs="unbounded">
+				<xs:element name="listaAvvocati" type="type:AVVOCATO_TYPE" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>elenco dei difensori</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="elencoMovimentiUdienza" type="type:MOVIMENTI_UDIENZA_TYPE" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>elenco dei movimenti udienza</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="elencoProvvedimenti" type="type:EVENTO_TYPE" maxOccurs="unbounded">
 					<xs:annotation>
 						<xs:documentation>Sezione Provvedimenti</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="elencoAtti" type="type:EVENTO_TYPE"
-					maxOccurs="unbounded">
+				<xs:element name="elencoAtti" type="type:EVENTO_TYPE" maxOccurs="unbounded">
 					<xs:annotation>
 						<xs:documentation>Contiene la sezione Altri Atti
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="elencoRichiesteIstruttorie" type="type:NOTIFICA_TYPE"
-					maxOccurs="unbounded" />
-				<xs:element name="ALLEGATO_RTF" type="xs:base64Binary"
-					nillable="true" />
-				<xs:element ref="type:ERRORE" />
+				<xs:element name="elencoRichiesteIstruttorie" type="type:NOTIFICA_TYPE" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>elenco delle richieste istruttorie</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="ALLEGATO_RTF" type="xs:base64Binary" nillable="true">
+					<xs:annotation>
+						<xs:documentation>allegato della stampa rtf di SIUS</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="type:ERRORE">
+					<xs:annotation>
+						<xs:documentation>elemento contenitore di errori</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -99,21 +139,57 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="chiaveProgrSIEP" type="xs:integer" />
-				<xs:element name="chiaveAnnoSIEP" type="xs:integer" />
-				<xs:element name="flagCumulante" type="xs:string" />
+				<xs:element name="chiaveProgrSIEP" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation>numero del fascicolo SIEP</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="chiaveAnnoSIEP" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation>anno del fascicolo SIEP</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="flagCumulante" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>flag cumulante</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 				<xs:element name="descrTipoUfficio">
 					<xs:annotation>
 						<xs:documentation>Tipo Ufficio che ha iscritto il titolo esecutivo
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="descrComuneUfficio" type="xs:string" />
-				<xs:element name="dataIscrizione" type="type:DATA_TYPE" />
-				<xs:element ref="type:SENTENZA" />
-				<xs:element name="descrPosizioneGiuridica" type="xs:string" />
-				<xs:element name="PENA_RESIDUA" type="type:PENA_TYPE" />
-				<xs:element name="PENA_COMPLESSIVA" type="type:PENA_TYPE" />
+				<xs:element name="descrComuneUfficio" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>comune dell'ufficio</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataIscrizione" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>data di iscrizione del fascicolo SIEP</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="type:SENTENZA">
+					<xs:annotation>
+						<xs:documentation>dati della sentenza</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="descrPosizioneGiuridica" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>descrizione della posizione giuridica</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PENA_RESIDUA" type="type:PENA_TYPE">
+					<xs:annotation>
+						<xs:documentation>dati della pena residua</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PENA_COMPLESSIVA" type="type:PENA_TYPE">
+					<xs:annotation>
+						<xs:documentation>dati della pena complessiva</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -122,10 +198,26 @@
 	<xs:element name="UDIENZA">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="dataUdienza" type="type:DATA_TYPE" />
-				<xs:element name="dataCameraConsiglio" type="type:DATA_TYPE" />
-				<xs:element name="flagRinviata" type="xs:string" />
-				<xs:element name="descrPresidente" type="xs:string" />
+				<xs:element name="dataUdienza" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>data dell'udienza</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataCameraConsiglio" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>data camera di consiglio</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="flagRinviata" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>flag udienza rinviata</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="descrPresidente" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>presidente udienza</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -138,7 +230,11 @@
 	</xs:element>
 	<xs:complexType name="FASCICOLO_SIUS_TYPE">
 		<xs:sequence>
-			<xs:element name="idFascicoloSius" type="xs:integer" />
+			<xs:element name="idFascicoloSius" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>identificativo del fascicolo SIUS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="chiaveAnno" type="xs:integer">
 				<xs:annotation>
 					<xs:documentation>è l'anno del procedimento</xs:documentation>
@@ -150,36 +246,69 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="dataIscrizione" type="type:DATA_TYPE" />
-			<xs:element name="descrPosizioneMateriale" type="xs:string" />
-			<xs:element name="descrStatoFascicolo" type="xs:string" />
-			<xs:element name="fascicoloUnificante" type="xs:string">
+			<xs:element name="dataIscrizione" type="type:DATA_TYPE">
 				<xs:annotation>
-					<xs:documentation>sarà una stringa così formata:
-						anno/numero
-					</xs:documentation>
+					<xs:documentation>data di iscrizione del fascicolo SIUS</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="dataDefinizione" type="type:DATA_TYPE" />
-			<xs:element name="descrDefinizione" type="xs:string" />
-			<xs:element name="tipoDefinizione" type="xs:string" />
-			<xs:element name="codTipoRegistro" type="xs:string" />
-			<xs:element name="descrTipoRegistro" type="xs:string" />
-			<xs:element name="annoS1" type="xs:string" />
-			<xs:element name="progrS1" type="xs:string" />
+			<xs:element name="descrPosizioneMateriale" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione della posizione materiale</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrStatoFascicolo" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione dello stato del fascicolo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fascicoloUnificante" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>anno/numero del fascicolo unificante					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataDefinizione" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data di definizione del fascicolo SIUS</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrDefinizione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione della definizione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tipoDefinizione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>tipo di definizione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codTipoRegistro" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice del tipo registro</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipoRegistro" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo registro</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annoS1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>anno del fascicolo unificato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="progrS1" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>numero del fascicolo unificato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="elencoFascicoliUnificati" type="xs:string">
 				<xs:annotation>
-					<xs:documentation>sarà una concatenazione di stringhe così formate:
-						anno/numero;anno/numero
-					</xs:documentation>
+					<xs:documentation>sarà una concatenazione di stringhe così formate: anno/numero;anno/numero </xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="elencoFascicoliCollegati" type="xs:string">
 				<xs:annotation>
-					<xs:documentation>sarà una concatenazione di stringhe così formate:
-						anno/numero tipoUfficio e DescrizioneUfficio ;anno/numero
-						tipoUfficio e DescrizioneUfficio
-					</xs:documentation>
+					<xs:documentation>sarà una concatenazione di stringhe così formate:				anno/numero tipoUfficio e DescrizioneUfficio ;anno/numero	tipoUfficio e DescrizioneUfficio</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="fascicoloPadre" type="xs:string">
@@ -190,20 +319,41 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element ref="type:UDIENZA" />
-			<xs:element name="contenuto" type="xs:string">
+			<xs:element ref="type:UDIENZA">
 				<xs:annotation>
-					<xs:documentation>è la sezione contenuto,quella successiva al
-						titolo esecutivo
-					</xs:documentation>
+					<xs:documentation>dati dell'udienza</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element ref="type:MAGISTRATO" />
-			<xs:element name="descrCancelleriaAssegnataria" type="xs:string" />
-			<xs:element name="annotazioniProcedimento" type="xs:string" />
-			<xs:element name="listaNote" type="type:NOTE_TYPE"
-				maxOccurs="unbounded" />
-			<xs:element name="ulterioriIstanze" type="xs:boolean" />
+			<xs:element name="contenuto" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>è la sezione contenuto				</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="type:MAGISTRATO">
+				<xs:annotation>
+					<xs:documentation>dati del magistrato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrCancelleriaAssegnataria" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>cancelleria assegnataria</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annotazioniProcedimento" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>annotazioni del procedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="listaNote" type="type:NOTE_TYPE" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>elenco di note del fascicolo</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ulterioriIstanze" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>descrizione di ulteriori istanze</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="FASCICOLO_SIUS">
@@ -215,8 +365,16 @@
 	</xs:element>
 	<xs:complexType name="TENORE_TYPE">
 		<xs:sequence>
-			<xs:element name="descrOggettoTenore" />
-			<xs:element name="note" type="xs:string" />
+			<xs:element name="descrOggettoTenore">
+				<xs:annotation>
+					<xs:documentation>descrizione oggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="note" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>note</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RESIDENZA_TYPE">
@@ -227,19 +385,55 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="codStato" type="xs:string" />
-			<xs:element name="descrStato" type="xs:string" />
-			<xs:element name="codProvincia" type="xs:string" />
-			<xs:element name="descrComune" type="xs:string" />
-			<xs:element name="indirizzo" type="xs:string" />
-			<xs:element name="descComuneEstero" type="xs:string" />
+			<xs:element name="codStato" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice stato di residenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrStato" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione stato di residenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codProvincia" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice della provincia di residenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrComune" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del comune di residenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="indirizzo" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>indirizzo di residenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descComuneEstero" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>comune estero di residenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PENA_TYPE">
 		<xs:sequence>
-			<xs:element name="dataInizioPena" type="type:DATA_TYPE" />
-			<xs:element name="dataFinePena" type="type:DATA_TYPE" />
-			<xs:element name="sanzSostResidua" type="xs:string" />
+			<xs:element name="dataInizioPena" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data inizio della pena</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataFinePena" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data fine della pena</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sanzSostResidua" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>sanzione sostitutiva residua</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="flagErgastolo" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>S=ERGASTOLO
@@ -247,59 +441,168 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="numAnniIsolamentoDiurno" type="xs:integer" />
-			<xs:element name="numMesiIsolamentoDiurno" type="xs:integer" />
-			<xs:element name="numGiorniIsolamentoDiurno" type="xs:integer" />
-			<xs:element name="numAnniReclusione" type="xs:integer" />
-			<xs:element name="numMesiReclusione" type="xs:integer" />
-			<xs:element name="numGiorniReclusione" type="xs:integer" />
-			<xs:element name="importoMulta" type="xs:decimal" />
-			<xs:element name="numAnniArresto" type="xs:integer" />
-			<xs:element name="numMesiArresto" type="xs:integer" />
-			<xs:element name="numGiorniArresto" type="xs:integer" />
-			<xs:element name="importoAmmenda" type="xs:decimal" />
-			<xs:element name="codTipoPenaDetentiva" type="xs:string" />
-			<xs:element name="descrTipoPenaDetentiva" type="xs:string" />
+			<xs:element name="numAnniIsolamentoDiurno" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero anni di isolamento diurno</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numMesiIsolamentoDiurno" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero mesi di isolamento diurno</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numGiorniIsolamentoDiurno" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero giorni di isolamento diurno</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numAnniReclusione" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero anni di reclusione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numMesiReclusione" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero mesi di reclusione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numGiorniReclusione" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero giorni di reclusione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="importoMulta" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>importo della multa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numAnniArresto" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero anni di arresto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numMesiArresto" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero mesi di reclusione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numGiorniArresto" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>numero giorni di reclusione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="importoAmmenda" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>importo dell'ammenda</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codTipoPenaDetentiva" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>tipo di pena detentiva</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipoPenaDetentiva" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo di pena detentiva</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="POSIZIONE_GIURIDICA_TYPE">
-		<xs:sequence />
 	</xs:complexType>
 	<xs:complexType name="SENTENZA_TYPE">
 		<xs:sequence>
-			<xs:element name="idSentenza" type="xs:integer" />
-			<xs:element name="numeroSentenza" type="xs:string" />
-			<xs:element name="annoSentenza" type="xs:integer" />
-			<xs:element name="dataProvvedimento" type="type:DATA_TYPE" />
-			<xs:element name="descrTipoAutoritaEmittente" type="xs:string" />
+			<xs:element name="idSentenza" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>identificativo della sentenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numeroSentenza" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>numero della sentenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annoSentenza" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>anno della sentenza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataProvvedimento" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipoAutoritaEmittente" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>autorita emittente</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="MAGISTRATO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="mCognome" />
-				<xs:element name="mNome" />
+				<xs:element name="mCognome">
+					<xs:annotation>
+						<xs:documentation>cognome del magistrato</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="mNome">
+					<xs:annotation>
+						<xs:documentation>nome del magistrato</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="AVVOCATO_TYPE">
 		<xs:sequence>
-			<xs:element name="cognome" type="xs:string" />
-			<xs:element name="nome" type="xs:string" />
-			<xs:element name="descrTipo" type="xs:string" />
-			<xs:element name="codiceFiscale" type="xs:string" />
+			<xs:element name="cognome" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>cognome dell'avvocato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nome" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>nome dell'avvocato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipo" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>decrizione del tipo di avvocato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codiceFiscale" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice fiscale dell'avvocato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="NOTE_TYPE">
 		<xs:sequence>
-			<xs:element name="data" type="type:DATA_TYPE" />
-			<xs:element name="descrizione" type="xs:string" />
+			<xs:element name="data" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrizione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="IMPUGNAZIONE_TYPE">
 		<xs:sequence>
-			<xs:element name="descrTipoImpugnazione" type="xs:string" />
-			<xs:element name="dataRicorso" type="type:DATA_TYPE" />
+			<xs:element name="descrTipoImpugnazione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo di impugnazione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataRicorso" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data del ricorso</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="flagTipo" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>I=impugnazione
@@ -311,17 +614,56 @@
 	</xs:complexType>
 	<xs:complexType name="EVENTO_TYPE">
 		<xs:sequence>
-			<xs:element name="idEvento" type="xs:integer" />
-			<xs:element name="dataEmissione" type="type:DATA_TYPE" />
-			<xs:element name="descrTipoProvvedimento" type="xs:string" />
-			<xs:element name="descrMotivo" type="xs:string" />
-			<xs:element name="descrEsito" type="xs:string" />
-			<xs:element name="dataDeposito" type="type:DATA_TYPE" />
-			<xs:element name="altreInformazioni" type="xs:string" />
-			<xs:element name="codTipoProvvedimento" type="xs:string" />
-			<xs:element name="eventoIdEventoRevoca" type="xs:string" />
-			<xs:element name="elencoImpugnazioniOpposizioni" type="type:IMPUGNAZIONE_TYPE"
-				maxOccurs="unbounded" />
+			<xs:element name="idEvento" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>identificativo evento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataEmissione" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data di emissione del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipoProvvedimento" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrMotivo" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del motivo del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrEsito" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione esito del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataDeposito" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data di depositov del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="altreInformazioni" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>altre informazioni inerenti al provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codTipoProvvedimento" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice del tipo provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="eventoIdEventoRevoca" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>identificativo del evento di revoca</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="elencoImpugnazioniOpposizioni" type="type:IMPUGNAZIONE_TYPE" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>elenco delle impugnazioni ed opposizioni</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="flagDocumentoRegistrato" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>A=ANNULLATO
@@ -329,23 +671,75 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="flagDepositoValidato" type="xs:string" />
+			<xs:element name="flagDepositoValidato" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>flag che individua se deposito provvedimento è validato</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RIFERIMENTO_FASC_SIEP_TYPE">
 		<xs:sequence>
-			<xs:element name="idRiferimentoFascicoloSiep" type="xs:integer" />
-			<xs:element name="flagMS" type="xs:string" />
-			<xs:element name="annoFascicoloSiep" type="xs:integer" />
-			<xs:element name="progrFascicoloSiep" type="xs:string" />
-			<xs:element name="descrUffFascicoloSiep" type="xs:string" />
-			<xs:element name="dataProvvedimento" type="type:DATA_TYPE" />
-			<xs:element name="descrTipoProvvedimento" type="xs:string" />
-			<xs:element name="descrTipoAutoritaEmittente" type="xs:string" />
-			<xs:element name="descrLuogoEmittente" type="xs:string" />
-			<xs:element name="dataIrrevocabilita" type="type:DATA_TYPE" />
-			<xs:element name="annoProvvedimento" type="xs:integer" />
-			<xs:element name="numeroProvvedimento" type="xs:string" />
+			<xs:element name="idRiferimentoFascicoloSiep" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>identificativo del riferimento al fascicolo siep</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="flagMS" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>flag misure sicurezza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annoFascicoloSiep" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>anno del fascicolo SIEP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="progrFascicoloSiep" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>numero del fascicolo SIEP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrUffFascicoloSiep" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>ufficio del fascicolo SIEP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataProvvedimento" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipoProvvedimento" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrTipoAutoritaEmittente" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo autorita emittente</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrLuogoEmittente" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>luogo emittente</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataIrrevocabilita" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data di irrevocabilita</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annoProvvedimento" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>anno del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="numeroProvvedimento" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>numero del provvedimento</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="NOTIFICA_TYPE">
@@ -354,7 +748,11 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="mDescrizione" type="xs:string" />
+			<xs:element name="mDescrizione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione della notifica</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="mDestinatario">
 				<xs:annotation>
 					<xs:documentation>Destinatario puo essere:
@@ -367,8 +765,16 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="mDataInvio" type="type:DATA_TYPE" />
-			<xs:element name="mDataAvvenutaNotifica" type="type:DATA_TYPE" />
+			<xs:element name="mDataInvio" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data invio notifica</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mDataAvvenutaNotifica" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data di avvenuta notifica</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="UFFICIO_TYPE">
@@ -384,22 +790,57 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="descrTipoUfficio" type="xs:string" />
-			<xs:element name="descrComune" type="xs:string" />
-			<xs:element name="codDistretto" type="xs:string" />
+			<xs:element name="descrTipoUfficio" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo uffiicio</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrComune" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del comune dell'ufficio</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codDistretto" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>distretto di appartenenza dell'ufficio</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!-- MEV_20: aggiunto campo -->
+			<xs:element name="codUfficio" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice dell'ufficio</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<!-- MEV_20: FINE -->
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AUTORITA_ESTERNA_TYPE">
 		<xs:sequence>
-			<xs:element name="mDescrTipoAutorita" type="xs:string" />
-			<xs:element name="mDescrSede" type="xs:string" />
+			<xs:element name="mDescrTipoAutorita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione del tipo autorita</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mDescrSede" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>descrizione sede autorita</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="ERRORE">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="CODICE_ERRORE" type="xs:string" />
-				<xs:element name="DESCR_ERRORE" type="xs:string" />
+				<xs:element name="CODICE_ERRORE" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>codice dell'errore</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="DESCR_ERRORE" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>descrizione dell'errore</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -413,61 +854,176 @@
 	</xs:element>
 	<xs:complexType name="SOGGETTO_TYPE">
 		<xs:sequence>
-			<xs:element name="cognome" type="xs:string" />
-			<xs:element name="nome" type="xs:string" />
-			<xs:element name="sesso" type="xs:string" />
-			<xs:element name="dataNascita" type="type:DATA_TYPE" />
-			<xs:element name="descrComuneNascita" type="xs:string" />
-			<xs:element name="descrStatoNascita" type="xs:string" />
-			<xs:element name="codProvinciaNascita" type="xs:string" />
-			<xs:element name="idSoggetto" type="xs:integer" />
-			<xs:element name="listaResidenze" type="type:RESIDENZA_TYPE"
-				maxOccurs="unbounded" />
-			<xs:element name="paternita" type="xs:string" />
+			<xs:element name="cognome" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>cognome soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nome" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>nome soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sesso" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>sesso del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataNascita" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data di nascita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrComuneNascita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>comune di nascita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="descrStatoNascita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>stato di nascita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codProvinciaNascita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>provincia di nascita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="idSoggetto" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>identificativo del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="listaResidenze" type="type:RESIDENZA_TYPE" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>elenco delle residenze del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="paternita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>paternita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="codCs" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>è il codice CUI</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="cognomeMadre" type="xs:string" />
+			<xs:element name="cognomeMadre" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>cognome madre del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="numeroFascicoli" type="xs:integer">
 				<xs:annotation>
 					<xs:documentation>numero di fascicoli del soggetto
 					</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="descrPosGiuridica" type="xs:string" />
-			<xs:element name="dataFinePena" type="type:DATA_TYPE" />
-			<xs:element name="luogoDetenzione" type="xs:string" />
-			<xs:element name="codComuneNascita" type="xs:string" />
-			<xs:element name="codStatoNascita" type="xs:string" />
+			<xs:element name="descrPosGiuridica" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>posizione giuridica del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataFinePena" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data fine pena</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="luogoDetenzione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>luogo di detenzione</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codComuneNascita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice del comune di nascita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="codStatoNascita" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>codice dello stato di nascita del soggetto</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="DATA_TYPE">
 		<xs:sequence>
-			<xs:element name="giorno" type="xs:int" />
-			<xs:element name="mese" type="xs:int" />
-			<xs:element name="anno" type="xs:int" />
+			<xs:element name="giorno" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>giorno della data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mese" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>mese della data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="anno" type="xs:int">
+				<xs:annotation>
+					<xs:documentation>anno della data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="MOVIMENTI_UDIENZA" type="type:MOVIMENTI_UDIENZA_TYPE" />
 	<xs:complexType name="MOVIMENTI_UDIENZA_TYPE">
 		<xs:sequence>
-			<xs:element name="dataUdienza" type="type:DATA_TYPE" />
-			<xs:element name="tipoOperazione" type="xs:string" />
-			<xs:element name="dataInserimento" type="type:DATA_TYPE" />
-			<xs:element name="dataModifica" type="type:DATA_TYPE" />
+			<xs:element name="dataUdienza" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data dell'udienza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tipoOperazione" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>tipo di movimento udienza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataInserimento" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data inserimento del movimento udienza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dataModifica" type="type:DATA_TYPE">
+				<xs:annotation>
+					<xs:documentation>data modifica udienza</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="ATTO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="dataRichiesta" type="type:DATA_TYPE" />
-				<xs:element name="descrTipoAtto" type="xs:string" />
-				<xs:element name="dataArrivoCancelleria" type="type:DATA_TYPE" />
-				<xs:element name="descrTipoMittenteAtto" type="xs:string" />
-				<xs:element name="descrSedeMittente" type="xs:string" />
-				<xs:element name="descrMittente" type="xs:string" />
+				<xs:element name="dataRichiesta" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>data di richiesta dell'atto</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="descrTipoAtto" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>descrizione del tipo di 'atto</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dataArrivoCancelleria" type="type:DATA_TYPE">
+					<xs:annotation>
+						<xs:documentation>data di arrivo in cancelleria</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="descrTipoMittenteAtto" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>descrizione del tipo mittente</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="descrSedeMittente" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>descrizione sede mittente</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="descrMittente" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>descrizione del mittente</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
