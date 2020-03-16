@@ -12,6 +12,7 @@
 <%@ page import="siap.siep.sentenza.model.SentenzaModel" %>
 <%@ page import="siap.siep.annotazionemanuale.action.ICostantiAnnotazioneManuale" %>
 <%@ page import="siap.siep.annotazionemanuale.model.AnnotazioneManualeModel" %>
+<%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 
 <jsp:useBean id="annotazioneManuale"   scope="request"  class="java.util.Vector"/>
 <jsp:useBean id="codice"               scope="request" class="java.lang.String" />
@@ -22,11 +23,10 @@
 <jsp:useBean id="sentenza"             scope="request" class="siap.siep.sentenza.model.SentenzaModel" />
 
 <%
-  AnnotazioneManualeModel lAnnManApp = new AnnotazioneManualeModel();
-  if( !annotazioneManuale.isEmpty() )
-  {
-    lAnnManApp = (AnnotazioneManualeModel)annotazioneManuale.firstElement();
-  }
+AnnotazioneManualeModel lAnnManApp = new AnnotazioneManualeModel();
+if (!annotazioneManuale.isEmpty()) {
+	lAnnManApp = (AnnotazioneManualeModel)annotazioneManuale.firstElement();
+}
 %>
 
 <html>
@@ -66,12 +66,14 @@
         var desktop;
         desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.magistrato.action.ActLoadRicercaMag&formname="+a_formname+"&fieldname="+a_fieldname+"&field2="+a_field2+"&field3="+a_field3, "Ricerca_Magistrato", "toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=no, width=500, height=500");
       }
-      
-      
-      function ListaComuniTds(formname,fieldname)
-      {
-        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneTds&formname="+formname+"&fieldname="+fieldname, "Ricerca_Comune_Tds","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
-      }
+
+	<%-- Ticket#20200303013 - Siep Lista destinatari errata: cambiata lista di riferimento --%>
+	function ListaUfficiComuni(a_formname,a_fieldname,codTipoUfficio) {
+		desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.ufficio.action.ActLoadListaUfficiPerTipo&formname="+a_formname+"&fieldname="+a_fieldname+"&<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>="+codTipoUfficio, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
+	}
+// 	function ListaComuniTds(formname,fieldname) {
+<%-- 		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneTds&formname="+formname+"&fieldname="+fieldname, "Ricerca_Comune_Tds","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500"); --%>
+// 	}
     </script>
     <title>[S.I.E.S.] - Richiesta Determinazione pena ex.art.671 cp e 673 cpp</title>
   </head>
@@ -252,9 +254,13 @@
     <td class="l">
       <font class="campo">
         <input Title="Luogo Ufficio "  value="<%=sentenza.getDescrLuogoEmittente()%>" name="<%= ICostantiRichiesta.CAMPO_SEDE_UFFICIO %>" size=35 type="text">
-        <a href="Javascript:ListaComuniTds('f','<%=ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>');">
-          <img src="/images/filefolder.gif" border=0>
-        </a>
+        <%-- Ticket#20200303013 - Siep Lista destinatari errata: cambiata lista di riferimento --%>
+        <a href="Javascript:ListaUfficiComuni('f','<%=ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>',document.f.<%=ICostantiRichiesta.CAMPO_COD_UFFICIO%>[document.f.<%=ICostantiRichiesta.CAMPO_COD_UFFICIO%>.options.selectedIndex].value);">
+			<img src="/images/filefolder.gif" border=0>
+		</a>
+<%--         <a href="Javascript:ListaComuniTds('f','<%=ICostantiRichiesta.CAMPO_SEDE_UFFICIO%>');"> --%>
+<!--           <img src="/images/filefolder.gif" border=0> -->
+<!--         </a> -->
       </font>
     </td>
   </tr>
