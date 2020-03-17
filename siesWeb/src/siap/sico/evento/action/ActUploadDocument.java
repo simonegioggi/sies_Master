@@ -448,12 +448,24 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			// Recupero i dati del soggetto dalla sessione @emma 25/08/2016 - avvocatura
 			String cognomeSoggetto = "";
-			String nomeSoggetto = "";
-			if (!isSessionAttributeNullObj("soggetto")) {
+			String nomeSoggetto = "";	
+			
+			/* 
+			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di Roma:
+			 * Eliminato recupero dalla session del soggetto che viene inserito nella tabella 
+			 * degli avvisi_avvocato 
+			 * Numero MEV : MEV_20
+			 * Autore    : monica
+			 * Data      : 13/mar/2020
+			 * Branch    : MEV_20 
+			 */
+			/*if (!isSessionAttributeNullObj("soggetto")) {
 				SoggettoModel datiSoggetto = (SoggettoModel) getSessionAttribute("soggetto");
 				cognomeSoggetto = datiSoggetto.getCognome();
 				nomeSoggetto = datiSoggetto.getNome();
-			} else if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
+			} else */
+				//***** FINE INTERVENTO MEV_20  *****//
+				if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
 				// provo a verificare se è presente nell'oggetto FascicoloGPModel
 				cognomeSoggetto = lFasGPMod.getFascicoloSiusModel().getSoggetto() != null
 						? lFasGPMod.getFascicoloSiusModel().getSoggetto().getCognome()
