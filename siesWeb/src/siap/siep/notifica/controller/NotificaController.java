@@ -12,6 +12,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.avvocato.model.AvvocatoModel;
 import siap.sico.cssa.controller.ICSSA;
@@ -40,10 +44,6 @@ import siap.sige.avvocato.dao.AvvocatoSqlDAO;
 import siap.sige.avvocato.model.AvvocatoSigeModel;
 import siap.sius.avvocato.dao.AvvocatoFascicoloSiusSqlDAO;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -58,10 +58,10 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class NotificaController extends SiapController implements INotifica {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -102,6 +102,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public ArrayList ExInserisciNotifiche(ArrayList aNotifica) throws F3BException {
+
 		Connection lConn = null;
 		NotificaDAO lNotDao = null;
 		ArrayList lNotifiche = new ArrayList();
@@ -143,7 +144,6 @@ public class NotificaController extends SiapController implements INotifica {
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -166,12 +166,13 @@ public class NotificaController extends SiapController implements INotifica {
 
 	/**
 	 * Ricerca Notifica dall'Evento
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaNotificaByKeyEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotifici = new Vector();
 		NotificaSqlDAO lNotDao = null;
@@ -211,6 +212,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 * @throws F3BException
 	 */
 	public Vector<NotificaModel> ExRicercaEstesaNotificaByKeyEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null; // connessione
 		Vector<NotificaModel> lNotifici = null;
 		NotificaSqlDAO lNotDao = null;
@@ -248,6 +250,7 @@ public class NotificaController extends SiapController implements INotifica {
 
 	public Vector<NotificaModel> ExRicercaEstesaNotificaDataAvvNotificaNullByKeyEvento(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null; // connessione
 		Vector<NotificaModel> lNotifici = null;
 		NotificaSqlDAO lNotDao = null;
@@ -288,6 +291,7 @@ public class NotificaController extends SiapController implements INotifica {
 
 	private Vector<NotificaModel> RicercaDestinatari(Vector<NotificaModel> aNotifiche, Connection aConn)
 			throws Exception {
+
 		NotificaSqlDAO lNotDao = null;
 		UfficioSqlDAO lUffDao = null;
 		AutoritaEsternaSqlDAO lAutoritaSqlDao = null;
@@ -306,7 +310,8 @@ public class NotificaController extends SiapController implements INotifica {
 					cleanup(lAutoritaSqlDao);
 				}
 				// Preleva gli uffici
-				if (lNotifica.getUffCodUfficio() != null && lNotifica.getUffCodUfficio().compareTo("-") != 0) {
+				if (lNotifica.getUffCodUfficio() != null
+						&& lNotifica.getUffCodUfficio().compareTo("-") != 0) {
 					IUfficio lUff = SICOLookupRemote.getUfficioRemote();
 					UfficioModel lUffMod = lUff.getUfficioByKey(lNotifica.getUffCodUfficio());
 					// Inserisce l'occorrenza nel model delle notifiche.
@@ -336,28 +341,26 @@ public class NotificaController extends SiapController implements INotifica {
 				}
 				// Preleva gli avvocati SIGE
 				if (lNotifica.getAvvIdAvvocatoFascicoloSige() != null) {
-					/* 
-					 * ISSUE MAC : decommentata vecchia valorizzazione avvocato sige
-					 * Numero MAC : 20200107012
-					 * Autore    : monica
-					 * Data      : 10/gen/2020
-					 * Branch    : 11.2.5
-					 */					
+					/*
+					 * ISSUE MAC : decommentata vecchia valorizzazione avvocato sige Numero MAC : 20200107012
+					 * Autore : monica Data : 10/gen/2020 Branch : 11.2.5
+					 */
 
-					 AvvocatoFascicoloSigeSqlDAO lAvvSigeDao = new AvvocatoFascicoloSigeSqlDAO(aConn);
-					 lAvvSigeDao.ricercaAvvocatoByKeyAvvocatoFasSige(lNotifica.getAvvIdAvvocatoFascicoloSige());
-					 lNotifica.setAvvSige((AvvocatoSigeModel) lAvvSigeDao.getModelByKey());
-					 cleanup(lAvvSigeDao);
-					 
-					/*AvvocatoSqlDAO avvocatoSqlDao = new AvvocatoSqlDAO(aConn);
-					avvocatoSqlDao.ricercaAvvocatobyKey(lNotifica.getAvvIdAvvocatoFascicoloSige());
-					avvocatoSqlDao.start();
-					if (avvocatoSqlDao.next())
-						lNotifica.setAvvocato((AvvocatoModel) avvocatoSqlDao.getModelByKey());
+					AvvocatoFascicoloSigeSqlDAO lAvvSigeDao = new AvvocatoFascicoloSigeSqlDAO(aConn);
+					lAvvSigeDao
+							.ricercaAvvocatoByKeyAvvocatoFasSige(lNotifica.getAvvIdAvvocatoFascicoloSige());
+					lNotifica.setAvvSige((AvvocatoSigeModel) lAvvSigeDao.getModelByKey());
+					cleanup(lAvvSigeDao);
 
-					avvocatoSqlDao.stop();
-					cleanup(avvocatoSqlDao);*/
-					//***** FINE INTERVENTO 20200107012 *****// 
+					/*
+					 * AvvocatoSqlDAO avvocatoSqlDao = new AvvocatoSqlDAO(aConn);
+					 * avvocatoSqlDao.ricercaAvvocatobyKey(lNotifica.getAvvIdAvvocatoFascicoloSige());
+					 * avvocatoSqlDao.start(); if (avvocatoSqlDao.next())
+					 * lNotifica.setAvvocato((AvvocatoModel) avvocatoSqlDao.getModelByKey());
+					 *
+					 * avvocatoSqlDao.stop(); cleanup(avvocatoSqlDao);
+					 */
+					// ***** FINE INTERVENTO 20200107012 *****//
 				}
 				// tipo istituto
 				if (lNotifica.getIstDetIdIstitutoDetenzione() != null
@@ -369,8 +372,7 @@ public class NotificaController extends SiapController implements INotifica {
 					lIstDao.stop();
 				}
 			} // endwhile
-		} finally // sca
-		{
+		} finally {
 			cleanup(lNotDao); // sca
 			cleanup(lUffDao); // sca
 			cleanup(lAutoritaSqlDao); // sca
@@ -381,13 +383,14 @@ public class NotificaController extends SiapController implements INotifica {
 
 	/**
 	 * Ricerca Notifiche attraverso la chiave del Fascicolo Sius.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaNotificheByFascicoloSius(BigDecimal aFascKey, String aTipoEvento)
 			throws F3BException {
+
 		Connection lConn = null; // connessione
 		Vector lNotifiche = null;
 		EveNotificaSqlDAO lNotDao = null;
@@ -420,12 +423,12 @@ public class NotificaController extends SiapController implements INotifica {
 			cleanup(lNotDao); // sca
 
 			cleanup(lConn);
-
 		}
 		return lNotifiche;
 	}
 
 	public Vector ExRicercaNotifica(NotificaModel aNotifica) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotifici = new Vector();
 		NotificaSqlDAO lNotDao = null;
@@ -455,6 +458,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public Vector ExRicercaNotificaAvvocatoNonAvvenuta(NotificaModel aNotifica) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotifici = new Vector();
 		NotificaSqlDAO lNotDao = null;
@@ -483,6 +487,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public NotificaModel ExRicercaNotificaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		NotificaSqlDAO lNotDao = null;
 		Vector lNotifici = null;
@@ -526,6 +531,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public NotificaModel ExRicercaNotificaCompByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		NotificaAutoritaSqlDAO lNotDao = null;
 		NotificaModel lNotMod;
@@ -552,6 +558,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public NotificaModel ExRicercaNotificaPolByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		NotificaAutoritaSqlDAO lNotDao = null;
 		NotificaModel lNotMod;
@@ -579,6 +586,7 @@ public class NotificaController extends SiapController implements INotifica {
 
 	// ricerca tipo notifica=N
 	public NotificaModel ExRicercaNotificaTipoNotNByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		NotificaAutoritaSqlDAO lNotDao = null;
 		NotificaModel lNotMod;
@@ -606,6 +614,7 @@ public class NotificaController extends SiapController implements INotifica {
 
 	// ricerca tipo notifica=C
 	public NotificaModel ExRicercaNotificaTipoNotCByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		NotificaAutoritaSqlDAO lNotDao = null;
 		NotificaModel lNotMod;
@@ -632,6 +641,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public NotificaModel ExRicercaNotificaUffByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		NotificaAutoritaSqlDAO lNotDao = null;
 		NotificaModel lNotMod;
@@ -658,6 +668,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public NotificaModel ExModificaNotifica(NotificaModel aNotifica) throws F3BException {
+
 		Connection lConn = null;
 		NotificaDAO lNotDao = null;
 		NotificaModel lNotMod = new NotificaModel(aNotifica);
@@ -688,6 +699,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public void ExCancellaNotifica(NotificaModel aNotifica) throws F3BException {
+
 		Connection lConn = null;
 		NotificaDAO lNotDao = null;
 
@@ -715,6 +727,7 @@ public class NotificaController extends SiapController implements INotifica {
 
 	public Vector ExAggiornaRegistrazioneNotificaDecretoIrreeribilita(NotificaModel[] IdNotifiche,
 			BigDecimal aFasc) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lVectNot = new Vector();
@@ -786,7 +799,8 @@ public class NotificaController extends SiapController implements INotifica {
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			daoEx.printStackTrace();
-			throw new F3BException("OrdineEsecuzioneController.ExAggiornaAvvenutaNotifica: daoEx--> " + daoEx);
+			throw new F3BException(
+					"OrdineEsecuzioneController.ExAggiornaAvvenutaNotifica: daoEx--> " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			ex.printStackTrace();
@@ -804,14 +818,14 @@ public class NotificaController extends SiapController implements INotifica {
 	/**
 	 * ExAggiornaDateNotifica() Aggiorna la data di avvenuta notifica di un elenco di notifiche passato come
 	 * parametro.
-	 * 
+	 *
 	 * @param NotificaModel
 	 *            IdNotifiche[]
 	 * @return void
 	 * @throws F3BException
 	 */
-
 	public void ExAggiornaDateNotifica(NotificaModel[] aNotifiche) throws F3BException {
+
 		Connection lConn = null;
 
 		NotificaDAO lNotDAO = null;
@@ -861,13 +875,14 @@ public class NotificaController extends SiapController implements INotifica {
 
 	/**
 	 * Verifica se tutte le notifiche legate ad un evento sono già state notificate.
-	 * 
+	 *
 	 * @param aKey
 	 *            : Identificativo Evento
 	 * @return boolean : true se tutte le notifiche hanno data di avvenuta notifica
 	 * @throws F3BException
 	 */
 	public boolean ExSonoNotificate(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		NotificaSqlDAO lNotDao = null;
 		boolean bRet = false; // valore di ritorno
@@ -904,13 +919,14 @@ public class NotificaController extends SiapController implements INotifica {
 
 	/**
 	 * Verifica se tutte le notifiche di tipo N legate ad un evento sono già state notificate.
-	 * 
+	 *
 	 * @param aKey
 	 *            : Identificativo Evento
 	 * @return boolean : true se tutte le notifiche hanno data di avvenuta notifica
 	 * @throws F3BException
 	 */
 	public boolean ExSonoNotificateSige(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		NotificaSqlDAO lNotDao = null;
 		boolean bRet = false; // valore di ritorno
@@ -948,14 +964,14 @@ public class NotificaController extends SiapController implements INotifica {
 	/**
 	 * Restituisce la data di avvenuta notifica più alta in un gruppo di di notifiche legate allo stesso
 	 * evento.
-	 * 
+	 *
 	 * @param aKey
 	 *            : Identificativo Evento
 	 * @return data : data di avvenuta notifica massima
 	 * @throws F3BException
 	 */
-
 	public Date ExRicercaDataNotifica(BigDecimal aIdEve) throws F3BException {
+
 		Connection lConn = null;
 		NotificaSqlDAO lNotDao = null;
 		Date rData = null; // data di ritorno
@@ -989,14 +1005,14 @@ public class NotificaController extends SiapController implements INotifica {
 	/**
 	 * Restituisce la data di avvenuta notifica più alta in un gruppo di notifiche di tipo N legate allo
 	 * stesso evento.
-	 * 
+	 *
 	 * @param aKey
 	 *            : Identificativo Evento
 	 * @return data : data di avvenuta notifica massima
 	 * @throws F3BException
 	 */
-
 	public Date ExRicercaDataNotificaSige(BigDecimal aIdEve) throws F3BException {
+
 		Connection lConn = null;
 		NotificaSqlDAO lNotDao = null;
 		Date rData = null; // data di ritorno
@@ -1032,7 +1048,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 * una serie di condizioni di filtro che sono passate attraverso il RicercaNotificheSiusModel. Il
 	 * risultato è una lista (Vector) di model NotificaFasSiusEveModel; in questi sono presenti oltre ai dati
 	 * della Notifica anche dati relativi al Fascicolo SIUS, Provvedimento (Evento) e Soggetto.
-	 * 
+	 *
 	 * @param aModel
 	 *            RicercaNotificheSiusModel.
 	 * @return Vector
@@ -1040,6 +1056,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 */
 	public Vector ExRicercaPaginataNotificheXFasSius(RicercaNotificheSiusModel aModel, int aPageNum)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .ExRicercaPaginataNotificheXFasSius(): inizio ");
@@ -1069,7 +1086,7 @@ public class NotificaController extends SiapController implements INotifica {
 			if (lNotifiche.isEmpty())
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 
-			cleanup(lNotDao);
+			// cleanup(lNotDao);
 			// Inserimento di eventuali destinatari: Autorita Esterna,
 			// Ufficio, Avvocato Siep, Avvocato Sius, CSSA.
 			lNotifiche = RicercaDestinatari(lNotifiche, lConn);
@@ -1078,7 +1095,8 @@ public class NotificaController extends SiapController implements INotifica {
 		} catch (Exception e) {
 			throw new F3BException("NotificaController.ExRicercaPaginataNotificheXFasSius: " + e);
 		} finally {
-			// cleanup(lNotDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotDao);
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1090,12 +1108,13 @@ public class NotificaController extends SiapController implements INotifica {
 
 	/**
 	 * Ritorna n.ro di record risultato della ExRicercaPaginataNotificheXFasSius
-	 * 
+	 *
 	 * @param RicercaNotificheSiusModel
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaNotificheXFasSius(RicercaNotificheSiusModel aModel) throws F3BException {
+
 		Connection lConn = null; // connessione
 		NotificaFasSiusEveSqlDAO lNotDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -1118,7 +1137,7 @@ public class NotificaController extends SiapController implements INotifica {
 
 	/**
 	 * Ricerca Notifiche attraverso la chiave del Fascicolo Sius.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @param aTipoEvento
 	 * @param aCodMotivo
@@ -1127,6 +1146,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 */
 	public Date ExRicercaDataInvioCertCasellario(BigDecimal aFascKey, String aTipoEvento, String aCodMotivo)
 			throws F3BException {
+
 		Connection lConn = null;
 		EveNotificaSqlDAO lNotDao = null;
 		Date dataInvioCert = null;
@@ -1157,6 +1177,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEstesaNotificaByIdParteUdienza(BigDecimal aIdParteUdienza) throws F3BException {
+
 		Connection lConn = null; // connessione
 		Vector lNotifiche = null;
 		NotificaSqlDAO lNotDao = null;
@@ -1201,6 +1222,7 @@ public class NotificaController extends SiapController implements INotifica {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaNotificaByIdParteUdienza(BigDecimal aIdParteUdienza) throws F3BException {
+
 		Connection lConn = null; // connessione
 		Vector lNotifiche = null;
 		NotificaSqlDAO lNotDao = null;
@@ -1229,6 +1251,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	private Vector RicercaDestinatariParteUdienza(Vector aNotifiche, Connection aConn) throws Exception {
+
 		NotificaSqlDAO lNotDao = null;
 		UfficioSqlDAO lUffDao = null;
 		AutoritaEsternaSqlDAO lAutoritaSqlDao = null;
@@ -1249,7 +1272,8 @@ public class NotificaController extends SiapController implements INotifica {
 				}
 
 				// Preleva gli uffici
-				if (lNotifica.getUffCodUfficio() != null && lNotifica.getUffCodUfficio().compareTo("-") != 0) {
+				if (lNotifica.getUffCodUfficio() != null
+						&& lNotifica.getUffCodUfficio().compareTo("-") != 0) {
 					IUfficio lUff = SICOLookupRemote.getUfficioRemote();
 					UfficioModel lUffMod = lUff.getUfficioByKey(lNotifica.getUffCodUfficio());
 					// Inserisce l'occorrenza nel model delle notifiche.
@@ -1284,6 +1308,7 @@ public class NotificaController extends SiapController implements INotifica {
 	}
 
 	public ArrayList ExInserisciNotifiche(ArrayList aNotifica, Connection aConn) throws F3BException {
+
 		NotificaDAO lNotDao = null;
 		ArrayList lNotifiche = new ArrayList();
 		AutoritaEsternaDAO lAutDao = null;
@@ -1321,7 +1346,6 @@ public class NotificaController extends SiapController implements INotifica {
 				lNotModel.setIdNotifica(lKey);
 				lNotifiche.add(lNotModel);
 			}
-
 		} catch (DAOException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

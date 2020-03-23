@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,8 +32,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue l'inserimento di un tenore.
-	 * <p>
-	 * 
+	 *
 	 * @param aTenore
 	 *            tenero model con i dati.
 	 * @return il tenore model con il suo id.
@@ -41,6 +40,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga errore di eccezione.
 	 */
 	public TenoreModel ExInserisciTenore(TenoreModel aTenore) throws F3BException {
+
 		Connection lConn = null;
 		TenoreDAO lTenDao = null;
 		TenoreModel lTenMod = null;
@@ -66,8 +66,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca dei tenori.
-	 * <p>
-	 * 
+	 *
 	 * @param aTenore
 	 *            Model del tenore.
 	 * @return elenco dei tenori ricercati.
@@ -75,6 +74,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga errori di eccezione.
 	 */
 	public Vector ExRicercaTenore(TenoreModel aTenore) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTenori = new Vector();
 		TenoreSqlDAO lTenDao = null;
@@ -100,8 +100,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca del tenore per la sua chiave id.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chaive id del tenore da ricercare.
 	 * @return il tenore model.
@@ -109,6 +108,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga errori di eccezione.
 	 */
 	public TenoreModel ExRicercaTenoreByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		TenoreModel lTenMod;
@@ -129,8 +129,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la modifica di un tenore.
-	 * <p>
-	 * 
+	 *
 	 * @param aTenore
 	 *            dati del tenore per modifica.
 	 * @return ritorna il model con i dati modificati.
@@ -138,6 +137,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga errore di eccezione.
 	 */
 	public TenoreModel ExModificaTenore(TenoreModel aTenore) throws F3BException {
+
 		Connection lConn = null;
 		TenoreDAO lTenDao = null;
 		TenoreModel lTenMod = new TenoreModel(aTenore);
@@ -160,14 +160,14 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Effettua la rimozione di un record tenore.
-	 * <p>
-	 * 
+	 *
 	 * @param aTenore
 	 *            tenore model con l'id del rec da cancellare.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	public void ExCancellaTenore(TenoreModel aTenore) throws F3BException {
+
 		Connection lConn = null;
 		TenoreDAO lTenDao = null;
 
@@ -187,8 +187,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Generale procedimento.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chaive id del generale procedimento.
 	 * @return l'insime dei tenori.
@@ -196,9 +195,11 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByGenProc(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
+
 		try {
 			lConn = getDBConnection();
 			lTenDao = new TenoreSqlDAO(lConn);
@@ -217,8 +218,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Ordinanza.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chaive id del Deposito Ordinanza.
 	 * @return Vector lista dei tenori.
@@ -226,17 +226,19 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByOrdinanza(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
+
 		try {
 			lConn = getDBConnection();
 			lTenDao = new TenoreSqlDAO(lConn);
 			lTenDao.ricercaTenoreByOrdinanza(aKey);
 			lTenori = new Vector(lTenDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("TenoreController.ExRicercaTenoreByOrdinanza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TenoreController.ExRicercaTenoreByOrdinanza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTenDao);
 			cleanup(lConn);
@@ -246,8 +248,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Decreto.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chaive id del Deposito Decreto.
 	 * @return Vector lista dei tenori.
@@ -255,9 +256,11 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByDecreto(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
+
 		try {
 			lConn = getDBConnection();
 			lTenDao = new TenoreSqlDAO(lConn);
@@ -274,8 +277,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Decreto.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chaive id del Deposito Decreto.
 	 * @return Vector lista dei tenori.
@@ -283,9 +285,11 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByDecretoIrreperibilità(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
+
 		try {
 			lConn = getDBConnection();
 			lTenDao = new TenoreSqlDAO(lConn);
@@ -304,7 +308,7 @@ public class TenoreController extends SiapController implements ITenore {
 	/**
 	 * Esegue la ricerca di tenori per l'id del Generale procedimento, ordinati per peso.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave id del generale procedimento.
 	 * @return l'insieme dei tenori.
@@ -312,6 +316,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByGenProcOrderByPeso(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
@@ -335,7 +340,7 @@ public class TenoreController extends SiapController implements ITenore {
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Ordinanza, ordinati per peso.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave id del Deposito Ordinanza.
 	 * @return l'insieme dei tenori.
@@ -343,6 +348,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByOrdinanzaOrderByPeso(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
@@ -365,8 +371,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Ordinanza, ordinati per peso.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave id del Deposito Ordinanza.
 	 * @return l'insieme dei tenori.
@@ -374,6 +379,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByOrdinanzaOrderByPesoNoGenProc(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
@@ -397,8 +403,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Decreto, ordinati per peso.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave id del Deposito Decreto.
 	 * @return l'insieme dei tenori.
@@ -406,6 +411,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByDecretoOrderByPeso(BigDecimal aKey, Connection aConn) throws F3BException {
+
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
 
@@ -425,8 +431,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Decreto, ordinati per peso.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave id del Deposito Decreto.
 	 * @return l'insieme dei tenori.
@@ -434,6 +439,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreByDecretoOrderByPesoNoGenProc(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;
@@ -457,8 +463,7 @@ public class TenoreController extends SiapController implements ITenore {
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Deposito Sentenza, ordinati per peso.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave id del Deposito Sentenza.
 	 * @return l'insieme dei tenori.
@@ -466,6 +471,7 @@ public class TenoreController extends SiapController implements ITenore {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaTenoreBySentenzaOrderByPeso(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenori = null;

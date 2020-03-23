@@ -42,6 +42,7 @@ import siap.siep.sentenza.model.SentenzaModel;
 public class ScadenzarioController extends SiapController implements IScadenzario {
 
 	public ScadenzarioModel ExInserisciScadenzario(ScadenzarioModel aScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioDAO lScaDao = null;
@@ -147,8 +148,8 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	// AMBROSINO 04-02-2011 Vers 5.1 - Su segnalazione di Marchese Aggiungo Data VVR alla ricerca Scadenzario
 	// .
 	// uery per caricare il vettore a 20 a 20 coi dati per poi passarlo alla jsp.
-
 	public Vector ExRicercaScadenzarioVVRPaged(ScadenzarioModel aScadenzario, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lScadenzari = new Vector();
 		ScadenzarioSoggettoSqlDAO lScaSogDao = null;
@@ -184,6 +185,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	// uso la query solo per il conteggio totale delle righe
 	public BigDecimal ExGetCountScadenzarioVVRPaged(ScadenzarioModel aScadenzario, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal HowManyRecords = null;
 		ScadenzarioSoggettoSqlDAO lScaSogDao = null;
@@ -196,7 +198,6 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 			lScaSogDao.start();
 			lScaSogDao.next();
 			HowManyRecords = lScaSogDao.getBigDecimal("HowManyRecords");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("ScadenzarioController.ExGetCountScadenzarioVVRPaged 1 : " + daoEx);
 		} finally {
@@ -206,11 +207,11 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 
 		return HowManyRecords;
 	}
-
 	// END AMBROSINO
 
 	public List ExRicercaScadenzarioSimeonePaged(ScadenzarioModel aScadenzario, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		List lScadenzari = new ArrayList();
@@ -255,6 +256,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public ScadenzarioModel ExRicercaScadenzarioByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioModel lScaMod = new ScadenzarioModel();
@@ -311,6 +313,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public ScadenzarioModel ExModificaScadenzario(ScadenzarioModel aScadenzario) throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioModel lScaMod = new ScadenzarioModel(aScadenzario);
@@ -332,6 +335,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public void ExCancellaScadenzario(ScadenzarioModel aScadenzario) throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioDAO lScaDao = null;
 
@@ -351,6 +355,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public void ExCancellaScadenzarioSimeone(ScadenzarioModel aScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioDAO lScaDao = null;
@@ -372,6 +377,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public List ExScadenzarioByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioSqlDAO lScaDao = null;
@@ -403,6 +409,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 
 	public ScadenzarioModel ExScadenzarioCorrenteByIdFascicoloTipoScadenzario(BigDecimal aIdFascicolo,
 			String aCodTipoScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioModel lScaMod = new ScadenzarioModel();
@@ -437,6 +444,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	 */
 	public ScadenzarioModel ExRicercaInserisciAggScadenzarioIdFascicoloCorrente(ScadenzarioModel aScadenzario)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioSqlDAO lScaDao = null;
@@ -492,6 +500,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public Vector ExRicercaScadenzarioVerbaleArresto(ScadenzarioModel aScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lScadenzarii;
@@ -578,6 +587,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	}
 
 	public BigDecimal ExGetCountScadenzarioSimeone(ScadenzarioModel aScadenzario) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -608,6 +618,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 
 	public ScadenzarioModel ExRicercaScadenzarioCorrenteByIdFascicoloIdNotifica(BigDecimal aKey,
 			BigDecimal aKeyNot, String aTipSca) throws F3BException {
+
 		Connection lConn = null;
 
 		ScadenzarioSqlDAO lScaDao = null;
@@ -635,6 +646,7 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 	// AMBROSINO Decreto L78/2013
 	public BigDecimal ExGetCountTrasmessiL78del2013(ScadenzarioModel aScadenzario, Boolean Attivi,
 			String acoduffcoll, Boolean nostato) throws F3BException {
+
 		BigDecimal HowManyRecords = null;
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveFasDao = null;
@@ -658,11 +670,11 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 		}
 
 		return HowManyRecords;
-
 	} // Chiude ExGetCountTrasmessiL78del2013
 
 	public List ExRicercaTrasmessiL78del2013Paged(ScadenzarioModel aScadenzario, int aPage, Boolean Attivi,
 			String acoduffcoll, Boolean nostato) throws F3BException {
+
 		Connection lConn = null;
 		List lEventi = new ArrayList();
 		EventoSimeoneSqlDAO lEveFasDao = null;
@@ -694,36 +706,9 @@ public class ScadenzarioController extends SiapController implements IScadenzari
 		return lEventi;
 	}
 
-	// 27/03/2015 Scadenzario Fine pena Mis Sic --->
-	// public BigDecimal ExGetCountScadenzariMisSic(ScadenzarioModel aScadenzario) throws F3BException {
-	//
-	// BigDecimal lCount = new BigDecimal(0);
-	// Connection lConn = null;
-	// ScadenzarioSqlDAO lScaDao = new ScadenzarioSqlDAO(lConn);
-	//
-	// try {
-	// lConn = getDBConnection();
-	//
-	// lScaDao = new ScadenzarioSqlDAO(lConn);
-	// lScaDao.getCountScadenzariMisSic(aScadenzario);
-	// lScaDao.start();
-	// lScaDao.next();
-	//
-	// lCount = lScaDao.getBigDecimal("HowManyRecords");
-	// lScaDao.stop();
-	// } catch (DAOException daoEx) {
-	// throw new SIEPException(SIEPException.USER_MESSAGE,
-	// "ScadenzarioController.ExGetCountScadenzariMisSic: Non posso leggere : " + daoEx);
-	// } finally {
-	// cleanup(lScaDao);
-	// cleanup(lConn);
-	// }
-	//
-	// return lCount;
-	// }
-
 	public Vector ExRicercaScadenzarioPagedMisSic(ScadenzarioModel aScadenzario, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lScadenzari = new Vector();

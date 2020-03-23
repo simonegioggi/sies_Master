@@ -6,18 +6,17 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.soggetto.dao.SoggettoSqlDAO;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.fascicolo.dao.FascicoloSiepSqlDAO;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
- *
  * <p>
  * Title: SoggettoFascicoloController
  * </p>
@@ -39,7 +38,7 @@ public class SoggettoFascicoloController extends SiapController implements ISogg
 	// Ambrosino 03/2010
 	/**
 	 * Ricerca di Soggetti all'interno del distretto Con TipoUffucio e Numero fascicolo nella lista
-	 * 
+	 *
 	 * @param aSoggetto
 	 *            SoggettoModel
 	 * @return Vettore di Soggetti
@@ -47,11 +46,13 @@ public class SoggettoFascicoloController extends SiapController implements ISogg
 	 */
 	public Vector ExRicercaSoggettoPerDistrettoProgFasc(SoggettoModel aSoggetto, String aCodDistretto,
 			int aPage) throws F3BException {
+
 		return ExRicercaSoggettoPerDistrettoProgFasc(aSoggetto, aCodDistretto, aPage, "");
 	}
 
 	public Vector ExRicercaSoggettoPerDistrettoProgFasc(SoggettoModel aSoggetto, String aCodDistretto,
 			int aPage, String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggetti = new Vector();
 
@@ -123,7 +124,6 @@ public class SoggettoFascicoloController extends SiapController implements ISogg
 
 			if (lSoggetti.isEmpty())
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(daoEx.getLocalizedMessage());
@@ -137,12 +137,11 @@ public class SoggettoFascicoloController extends SiapController implements ISogg
 		}
 
 		return lSoggetti;
-
 	} // chiude ExRicercaSoggettoPerDistrettoProgFasc
 
 	/**
 	 * Conta i Soggetti all'interno del distretto
-	 * 
+	 *
 	 * @param aSoggetto
 	 *            SoggettoModel, aCodDistretto CodiceDistretto, aPage (numero di pagina = 0 per contare)
 	 * @return Vettore di Soggetti
@@ -150,11 +149,13 @@ public class SoggettoFascicoloController extends SiapController implements ISogg
 	 */
 	public BigDecimal ExCountSoggettoPerDistrettoProgFasc(SoggettoModel aSoggetto, String aCodDistretto,
 			int aPage) throws F3BException {
+
 		return ExCountSoggettoPerDistrettoProgFasc(aSoggetto, aCodDistretto, aPage, "");
 	}
 
 	public BigDecimal ExCountSoggettoPerDistrettoProgFasc(SoggettoModel aSoggetto, String aCodDistretto,
 			int aPage, String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		BigDecimal HowManyRecords = null;
@@ -167,7 +168,6 @@ public class SoggettoFascicoloController extends SiapController implements ISogg
 			lSogSqlDao.start();
 			lSogSqlDao.next();
 			HowManyRecords = lSogSqlDao.getBigDecimal("HowManyRecords");
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(daoEx.getLocalizedMessage());

@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -55,10 +59,6 @@ import siap.sius.permesso.dao.EventoPermessoLicenzaSqlDAO;
 import siap.sius.permesso.model.EventoPermessoLicenzaModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.Utils;
 
 /**
  * <p>
@@ -73,19 +73,21 @@ import f3b.util.Utils;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class LicenzaPeriodiLibAnticipataController extends SiapController implements
-		ILicenzaPeriodiLibAnticipata {
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class LicenzaPeriodiLibAnticipataController extends SiapController
+		implements ILicenzaPeriodiLibAnticipata {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public LicenzaPeriodiLibAnticipataModel[] ExInserisciLicenzeLibanticipata(
 			LicenzaPeriodiLibAnticipataModel[] aLicenze, Connection aConn) throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(" CONTROLLER exins - Ord, LA -  ExInserisciLicenzeLibanticipata - inizio ");
 		LicenzaLibanticipataDAO lLicDao = null;
 		LicenzaLibAnticipataModel lLicMod = null;
@@ -104,8 +106,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			lPerDao = new PeriodoLibanticipataDAO(aConn);
 
 			for (int i = 0; i < aLicenze.length; i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				// siesLogger.debug(" CONTROLLER exins - Ord, LA -  ExInserisciLicenzeLibanticipata - ciclo for i = "+i);
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				// siesLogger.debug(" CONTROLLER exins - Ord, LA - ExInserisciLicenzeLibanticipata - ciclo for
+				// i = "+i);
 				// Inserimento Licenza
 				lLicMod = new LicenzaLibAnticipataModel(aLicenze[i].getLicenza());
 				lLicDao.setDAOFromModel(lLicMod);
@@ -127,11 +131,12 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 						aLicenze[i].getPeriodi()[j] = lPerMod;
 					}
 				} else {
-					System.out
-							.println("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: mancano periodi");
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					siesLogger
-							.debug("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: mancano periodi");
+					System.out.println(
+							"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: mancano periodi");
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: mancano periodi");
 				}
 			}
 		} finally {// sca
@@ -168,16 +173,16 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: " + ex);
 		} catch (SQLException sqe) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: "
-					+ sqe);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: " + sqe);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: " + ex);
 		} finally {
 			cleanup(lTenDao);
 			cleanup(lEveDao);
@@ -190,37 +195,30 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	}
 
 	// NUOVA ORDINANZA L.A. - Decreto 2013/146
-
 	public void ExInserisciNewLicenzeLibanticipata(LicenzaPeriodiLibAnticipataModel[] aLicenze,
 			LicenzaPeriodiLibAnticipataModel[] aLicenze_spe, LicenzaPeriodiLibAnticipataModel[] aLicenze_int,
 			LicenzaLibAnticipataModel aLicenzaC, LicenzaLibAnticipataModel aLicenzaC_SPE,
 			LicenzaLibAnticipataModel aLicenzaC_INT, BigDecimal aIdEvento) throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(" CONTROLLER - Ord, LA -  ExInserisciNewLicenzeLibanticipata - inizio ");
 		Connection lConn = null;
-
-		// TenoreDAO lTenDao = null;
-		// EventoDAO lEveDao = null;
-		// EventoSqlDAO lEveSqlDAO = null;
-		// DepositoOrdinanzaPcDAO lDepDao = null;
-
-//		LicenzaPeriodiLibAnticipataModel[] lLicenze;
-//		LicenzaLibAnticipataModel licMod;
 
 		try {
 			lConn = getDBTransaction();
 
 			// Aggiornamento LICENZA_LIBANTICIPATA di ID_EVENTO
 			if (aLicenze != null) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				// siesLogger.debug(" CONTROLLER - Ord, LA -  ExInserisciNewLicenzeLibanticipata - lLicenze != null ");
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				// siesLogger.debug(" CONTROLLER - Ord, LA - ExInserisciNewLicenzeLibanticipata - lLicenze !=
+				// null ");
 				for (int i = 0; i < aLicenze.length; i++) {
 					LicenzaLibAnticipataModel lLibAnt = aLicenze[i].getLicenza();
 					lLibAnt.setEveIdEvento(aIdEvento);
 				}
-
-				/*lLicenze = */ExInserisciLicenzeLibanticipata(aLicenze, lConn);
+				/* lLicenze = */ExInserisciLicenzeLibanticipata(aLicenze, lConn);
 			}
 
 			// Aggiornamento LICENZA_LIBANTICIPATA di ID_EVENTO
@@ -229,8 +227,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					LicenzaLibAnticipataModel lLibAnt = aLicenze_spe[i].getLicenza();
 					lLibAnt.setEveIdEvento(aIdEvento);
 				}
-
-				/*lLicenze = */ExInserisciLicenzeLibanticipata(aLicenze_spe, lConn);
+				/* lLicenze = */ExInserisciLicenzeLibanticipata(aLicenze_spe, lConn);
 			}
 
 			// Aggiornamento LICENZA_LIBANTICIPATA di ID_EVENTO
@@ -239,24 +236,23 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					LicenzaLibAnticipataModel lLibAnt = aLicenze_int[i].getLicenza();
 					lLibAnt.setEveIdEvento(aIdEvento);
 				}
-
-				/*lLicenze = */ExInserisciLicenzeLibanticipata(aLicenze_int, lConn);
+				/* lLicenze = */ExInserisciLicenzeLibanticipata(aLicenze_int, lConn);
 			}
 
 			// Aggiornamento LICENZA_LIBANTICIPATA di ID_EVENTO
 			if (aLicenzaC != null) {
 				aLicenzaC.setEveIdEvento(aIdEvento);
-				/*licMod = */ExInserisciLicenzaLibanticipata(aLicenzaC, lConn);
+				/* licMod = */ExInserisciLicenzaLibanticipata(aLicenzaC, lConn);
 			}
 
 			if (aLicenzaC_SPE != null) {
 				aLicenzaC_SPE.setEveIdEvento(aIdEvento);
-				/*licMod = */ExInserisciLicenzaLibanticipata(aLicenzaC_SPE, lConn);
+				/* licMod = */ExInserisciLicenzaLibanticipata(aLicenzaC_SPE, lConn);
 			}
 
 			if (aLicenzaC_INT != null) {
 				aLicenzaC_INT.setEveIdEvento(aIdEvento);
-				/*licMod = */ExInserisciLicenzaLibanticipata(aLicenzaC_INT, lConn);
+				/* licMod = */ExInserisciLicenzaLibanticipata(aLicenzaC_INT, lConn);
 			}
 
 			commit(lConn);
@@ -273,10 +269,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			throw new F3BException(
 					"LicenzaPeriodiLibAnticipataController.ExInserisciNewLicenzeLibanticipata: " + ex);
 		} finally {
-			// cleanup(lTenDao);
-			// cleanup(lEveDao);
-			// cleanup(lEveSqlDAO);
-			// cleanup(lDepDao);
 			cleanup(lConn);
 		}
 	}
@@ -293,8 +285,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		DepositoOrdinanzaPcDAO lDepDao = null;
 		// LicenzaPeriodiLibAnticipataModel[] lLicenze;
 		EventoModel lEvento = new EventoModel();
+
 		try {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug(
 					" ExInserisciLicenzeLibanticipataSIEP - Inserimento EVENTO, DEPOSITO_ORD_PC, TENORE");
 
@@ -326,11 +320,12 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 			// Inserimento TENORE
 			lTenDao = new TenoreDAO(lConn);
-//			TenoreModel[] lTenori = null;
+			// TenoreModel[] lTenori = null;
 			int num = aOrdEveTenMod.getTenori().length;
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug(" ExInserisciLicenzeLibanticipataSIEP - Tenori da INSERIRE = " + num);
-//			lTenori = new TenoreModel[num];
+			// lTenori = new TenoreModel[num];
 
 			BigDecimal lKeyTenore;
 
@@ -342,17 +337,19 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lKeyTenore = lTenDao.insert();
 				lTenMod.setIdTenore(lKeyTenore);
 				lTenDao.stop();
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug(" ExInserisciLicenzeLibanticipataSIEP - Inserito TENORE = "+lTenMod);
 			}
 			//
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			siesLogger.debug(
-					" ExInserisciLicenzeLibanticipataSIEP - Ins LIBERAZIONE_ANTICIPATA e PERIODI ");
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" ExInserisciLicenzeLibanticipataSIEP - Ins LIBERAZIONE_ANTICIPATA e PERIODI ");
 
 			// Inserisce LIBERAZIONE_ANTICIPATA E relativi PERIODI
 			if (aLicenze != null) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("- L.A. NORM - ExInserisciLicenzeLibanticipataSIEP - aLicenze != null = "
 				// + aLicenze);
 				for (int i = 0; i < aLicenze.length; i++) {
@@ -367,8 +364,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			//
 			// Inserisce LIBERAZIONE_ANTICIPATA_SPECIALE E relativi PERIODI
 			if (aLicenze_spe != null) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				// siesLogger.debug("-L.A. SPEC - ExInserisciLicenzeLibanticipataSIEP - aLicenze_spe != null = "
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				// siesLogger.debug("-L.A. SPEC - ExInserisciLicenzeLibanticipataSIEP - aLicenze_spe != null =
+				// "
 				// + aLicenze_spe);
 				for (int i = 0; i < aLicenze_spe.length; i++) {
 					LicenzaLibAnticipataModel lLibAnt = aLicenze_spe[i].getLicenza();
@@ -382,8 +381,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			//
 			// Inserisce LIBERAZIONE_ANTICIPATA_INTEGRAZIONEE E relativi PERIODI
 			if (aLicenze_int != null) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				// siesLogger.debug("-L.A. INTEG - ExInserisciLicenzeLibanticipataSIEP - aLicenze_int != null = "
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				// siesLogger.debug("-L.A. INTEG - ExInserisciLicenzeLibanticipataSIEP - aLicenze_int != null
+				// = "
 				// + aLicenze_int);
 				for (int i = 0; i < aLicenze_int.length; i++) {
 					LicenzaLibAnticipataModel lLibAnt = aLicenze_int[i].getLicenza();
@@ -416,9 +417,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		}
 
 		return lEvento;
-
 	} // Chiude ExInserisciLicenzeLibanticipataSIEP(...)
-	// END Decreto 2013/146
+		// END Decreto 2013/146
 
 	public LicenzaPeriodiLibAnticipataModel[] ExInserisciLicenzeLibanticipata(
 			LicenzaPeriodiLibAnticipataModel[] aLicenze, OrdinanzaEventoTenoriModel aOrdEveTenMod)
@@ -488,16 +488,16 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: " + ex);
 		} catch (SQLException sqe) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: "
-					+ sqe);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: " + sqe);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzeLibanticipata: " + ex);
 		} finally {
 			cleanup(lTenDao);
 			cleanup(lEveDao);
@@ -527,7 +527,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			lLicDao.ricercaLicenzaLibanticipataByEve(aIdEvento);
 			lLicenze = new Vector(lLicDao.getModels());
 			if (lLicenze.size() == 0) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Nessuna Licenza LA trovata a sistema");
 			} else {
 				lItx = lLicenze.iterator();
@@ -539,8 +540,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					// POSSO AVERE UNA LIBERAZIONE ANTICIPATA SENZA CORRISPONDENTE PERIODO, e la contrassegno
 					// con 'LSU', 'LAU', 'LIU'
 
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					// siesLogger.debug("--> LicenzaPeriodoLibanticipataController - Prima di GetDescStatopermesso");
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
+					// siesLogger.debug("--> LicenzaPeriodoLibanticipataController - Prima di
+					// GetDescStatopermesso");
 					if (("LAU").equals(aModel.getLicenza().getDescrStatoPermesso())
 							|| ("LSU").equals(aModel.getLicenza().getDescrStatoPermesso())
 							|| ("LIU").equals(aModel.getLicenza().getDescrStatoPermesso())) {
@@ -550,8 +553,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					} else {
 						// Ricerca dei Periodi relativi alla licenza
 						lPerDao = new PeriodoLibanticipataSqlDAO(lConn);
-						lPerDao.ricercaPeriodoLibanticipataByLic(aModel.getLicenza()
-								.getIdLicenzaLibanticipata());
+						lPerDao.ricercaPeriodoLibanticipataByLic(
+								aModel.getLicenza().getIdLicenzaLibanticipata());
 						lPeriodi = new ArrayList(lPerDao.getModels());
 						aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
 								.toArray(new PeriodoLibAnticipataModel[1]));
@@ -629,7 +632,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 		return lLicenze;
 	}
-
 	// End DL 146/2013
 
 	public LicenzaLibAnticipataModel ExInserisciLicenzaLibanticipata(
@@ -824,14 +826,16 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					lEveDao.selCondizioneEveIdEvento(item.getEveIdEvento());
 					lEveDao.start();
 					if (lEveDao.next()) {
-						// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+						// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+						// posto di LogF3B.getLogger()
 						// siesLogger.debug("item : " + item.isConProvvedimentoValidato());
 						EventoModel lEveMod = new EventoModel();
 						lEveMod.setFlagDocumentoRegistrato(lEveDao.getFlagDocumentoRegistrato());
 
 						if (lEveMod != null && "S".equals(lEveMod.getFlagDocumentoRegistrato())) {
 							item.setConProvvedimentoValidato(true);
-							// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+							// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
 							// siesLogger.debug("item : " + item.isConProvvedimentoValidato());
 						}
 					}
@@ -840,7 +844,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				}
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP: "
@@ -884,25 +889,29 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					lEveDao.selCondizioneEveIdEvento(item.getEveIdEvento());
 					lEveDao.start();
 					if (lEveDao.next()) {
-						// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+						// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+						// posto di LogF3B.getLogger()
 						// siesLogger.debug("item : " + item.isConProvvedimentoValidato());
 						EventoModel lEveMod = new EventoModel();
 						lEveMod.setFlagDocumentoRegistrato(lEveDao.getFlagDocumentoRegistrato());
 
 						if (lEveMod != null && "S".equals(lEveMod.getFlagDocumentoRegistrato())) {
 							item.setConProvvedimentoValidato(true);
-							// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+							// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
 							// siesLogger.debug("item : " + item.isConProvvedimentoValidato());
 						}
 					}
 					lEveDao.stop();
 
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
 					// siesLogger.debug("LA : " + item);
 				}
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"LicenzaLibanticipataController.ExRicercaLicenzaLibanticipataConcesseDepositateByIdFascicoloSIEP: "
@@ -946,8 +955,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					lPerDao.ricercaPeriodoLibanticipataByLic(aModel.getLicenza().getIdLicenzaLibanticipata());
 
 					ArrayList lPeriodi = new ArrayList(lPerDao.getModels());
-					aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
-							.toArray(new PeriodoLibAnticipataModel[1]));
+					aModel.setPeriodi(
+							(PeriodoLibAnticipataModel[]) lPeriodi.toArray(new PeriodoLibAnticipataModel[1]));
 
 					lLicenzePeriodi.add(aModel);
 					cleanup(lPerDao);
@@ -969,7 +978,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	/**
 	 * Aggiorna tutte le LA associate al Fascicolo con FLAG_ELABORATO = aFlagElaboratoVecchio modifcandolo in
 	 * aFlagElaboratoNuovo
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @param aFlagElaboratoVecchio
 	 * @param aFlagElaboratoNuovo
@@ -1177,7 +1186,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	 * @param aIdFascicoloSiep
 	 * @return
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public int ExTotalePeriodiConcessiNonValidatiByIdFascicoloSiep(BigDecimal aIdFascicoloSiep)
 			throws F3BException {
 
@@ -1264,7 +1273,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lEveOrdinanza = (EventoModel) lEveSql.getModelByKey();
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("lEveOrdinanza legato alla LA: " + lEveOrdinanza);
 
 			if (lEveOrdinanza != null) {
@@ -1282,7 +1292,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				DepositoOrdinanzaPcModel lDepMod = (DepositoOrdinanzaPcModel) lDepSql.getModelByKey();
 
 				if (lDepMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.info("lDepMod legato all'Ordinanza: " + lEveOrdinanza);
 
 					lDepDAO = new DepositoOrdinanzaPcDAO(lConn);
@@ -1388,7 +1399,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			rollback(lConn);
 			ex.printStackTrace();
 			throw new F3BException(
-					"LicenzaPeriodiLibAnticipataController.ExCancellaFungibilitaLicenzeLibanticipata : " + ex);
+					"LicenzaPeriodiLibAnticipataController.ExCancellaFungibilitaLicenzeLibanticipata : "
+							+ ex);
 		} finally {
 			cleanup(lFunDao);
 			cleanup(lPenDao);
@@ -1466,7 +1478,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				for (int i = 0; i < aLicenzePeriodi.size(); i++) {
 					lLicPerMod = (LicenzaPeriodiLibAnticipataModel) aLicenzePeriodi.get(i);
 					lLicMod = lLicPerMod.getLicenza();
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
 					// siesLogger.info("Licenza Lib. Anticipata da inserire = " + lLicMod);
 					if (lLicMod != null && lLicMod.getIdLicenzaLibanticipata() != null) {
 						lLicDao.setDAOFromModel(lLicMod);
@@ -1488,9 +1501,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 							}
 						}
 					} else
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						siesLogger
-								.info("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzePeriodiLibAnticipata: mancano periodi");
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.info(
+								"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzePeriodiLibAnticipata: mancano periodi");
 
 					// 23/06/2008 Inserimento EventoPermessoLicenza
 					if (!Utils.isNullObj(lLicPerMod.getEventiPermLic())) {
@@ -1505,9 +1519,10 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 							}
 						}
 					} else
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						siesLogger
-								.info("LicenzaPeriodiLibAnticipataController.ExInserisciLicenzePeriodiLibAnticipata: mancano EventoPermessoLicenza");
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.info(
+								"LicenzaPeriodiLibAnticipataController.ExInserisciLicenzePeriodiLibAnticipata: mancano EventoPermessoLicenza");
 				}
 			}
 		} catch (DAOException ex) {
@@ -1518,12 +1533,14 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			} else {
 				lCodEsito = "01400";
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error(F3BException.USER_MESSAGE
-						+ " Impossibile inserire la LicenzaPeriodiLibAnticipata! ");
+				siesLogger.error(
+						F3BException.USER_MESSAGE + " Impossibile inserire la LicenzaPeriodiLibAnticipata! ");
 			}
 		} finally {
 			cleanup(lLicDao);
 			cleanup(lPerDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEPLDao);
 		}
 		return lCodEsito;
 	}
@@ -1533,13 +1550,13 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	 * Fascicolo SIEP <br>
 	 * 26/06/2008 Aggiunto il vettore degli EventoPermessoLicenza come attributo delle
 	 * LicenzaPeriodiLibAnticipataModel.
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            - Id Fascicolo SIEP di riferimento
 	 * @return Vector - Vettore di LicenzaPeriodiLibAnticipataModel
 	 */
-
-	public Vector ExRicercaLicenzeLibanticipataByIdFascicoloSIEP(BigDecimal aIdFascicolo) throws F3BException {
+	public Vector ExRicercaLicenzeLibanticipataByIdFascicoloSIEP(BigDecimal aIdFascicolo)
+			throws F3BException {
 
 		Connection lConn = null;
 
@@ -1573,25 +1590,26 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					lPerDao = new PeriodoLibanticipataSqlDAO(lConn);
 					lPerDao.ricercaPeriodoLibanticipataByLic(aModel.getLicenza().getIdLicenzaLibanticipata());
 					lPeriodi = new ArrayList(lPerDao.getModels());
-					aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
-							.toArray(new PeriodoLibAnticipataModel[1]));
+					aModel.setPeriodi(
+							(PeriodoLibAnticipataModel[]) lPeriodi.toArray(new PeriodoLibAnticipataModel[1]));
 					lLicenzePeriodi.add(aModel);
 					cleanup(lPerDao);
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.info("Licenza - > " + aModel);
 
 					// 23/06/2008 Ricerca degli eventi permessi licenze.
 					lEvePerLicSqlDao = new EventoPermessoLicenzaSqlDAO(lConn);
-					lEvePerLicSqlDao.ricercaEventoPermessoLicenzaByKeyLicLib(aModel.getLicenza()
-							.getIdLicenzaLibanticipata());
+					lEvePerLicSqlDao.ricercaEventoPermessoLicenzaByKeyLicLib(
+							aModel.getLicenza().getIdLicenzaLibanticipata());
 					lEventiPL = new ArrayList(lEvePerLicSqlDao.getModels());
 					aModel.setEventiPermLic((EventoPermessoLicenzaModel[]) lEventiPL
 							.toArray(new EventoPermessoLicenzaModel[1]));
 					lEventiPermLic.add(aModel);
 					cleanup(lEvePerLicSqlDao);
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.info("EventoPermessoLicenza - > " + aModel);
-
 				}
 			}
 		} catch (DAOException daoEx) {
@@ -1602,6 +1620,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		} finally {
 			cleanup(lLicDao);
 			cleanup(lPerDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEvePerLicSqlDao);
 			cleanup(lConn);
 		}
 		return lLicenzePeriodi;
@@ -1612,7 +1632,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			LicenzaPeriodiLibAnticipataModel aLicenzaLAINT) throws Exception {
 
 		Connection lConn = null;
-		lConn = getDBTransaction();
 
 		EventoDAO lEveDao = null;
 		CampoNotaDAO lCampoNoteDAO = null;
@@ -1640,6 +1659,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 		EventoModel lEvento = null;
 		try {
+			lConn = getDBTransaction();
 
 			// Inserimento EVENTO
 			lEveDao = new EventoDAO(lConn);
@@ -1651,7 +1671,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 			// Inserisco il campo note
 			if (aCampoNote != null && aCampoNote.getDescr() != null && !aCampoNote.getDescr().equals("")) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("Inserisco il campo note....");
 				aCampoNote.setEveIdEvento(lKeyEvento);
 
@@ -1675,7 +1696,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lLicDao.stop();
 
 				lPeriodi = aLicenzaLA.getPeriodi();
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug("-------->>>>>>> L.A. periodi size = "+ lPeriodi.length );
 				if (lPeriodi != null) {
 					// Inserimento Periodi
@@ -1721,11 +1743,12 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lLicDao = new LicenzaLibanticipataDAO(lConn);
 				lPerDao = new PeriodoLibanticipataDAO(lConn);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug(" Lic LAINT - gg = " + aLicenzaLAINT.getLicenza().getNumeroGiorni());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug(
-						" Lic LAINT - tipo = " + aLicenzaLAINT.getLicenza().getDescrStatoPermesso());
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug(" Lic LAINT - tipo = " + aLicenzaLAINT.getLicenza().getDescrStatoPermesso());
 
 				lLicModINT = new LicenzaLibAnticipataModel(aLicenzaLAINT.getLicenza());
 				lLicModINT.setEveIdEvento(lKeyEvento);
@@ -1751,20 +1774,24 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", ex);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: ", ex);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: " + ex);
 		} finally {
+			cleanup(lEveDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lCampoNoteDAO);
 			cleanup(lLicDao);
 			cleanup(lPerDao);
-			cleanup(lEveDao);
 			cleanup(lConn);
 		}
 		return lEvento.getIdEvento();
@@ -1792,7 +1819,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			lLicenze = new Vector(lLicDao.getModels());
 
 			if (lLicenze.size() == 0) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Nessun Periodo Concesso Depositato LA trovata a sistema");
 			} else {
 				lItx = lLicenze.iterator();
@@ -1804,14 +1832,16 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					lPerDao = new PeriodoLibanticipataSqlDAO(lConn);
 
 					// lPerDao.ricercaPeriodoLibanticipataByLic(aModel.getLicenza().getIdLicenzaLibanticipata());
-					lPerDao.ricercaPeriodoLibanticipataOrdByLic(aModel.getLicenza()
-							.getIdLicenzaLibanticipata());
+					lPerDao.ricercaPeriodoLibanticipataOrdByLic(
+							aModel.getLicenza().getIdLicenzaLibanticipata());
 
 					lPeriodi = new ArrayList(lPerDao.getModels());
-					aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
-							.toArray(new PeriodoLibAnticipataModel[1]));
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					// siesLogger.debug(" primo periodo - ini/fin = "+aModel.getPeriodi()[0].getDataInizio()+"/"+aModel.getPeriodi()[0].getDataFine());
+					aModel.setPeriodi(
+							(PeriodoLibAnticipataModel[]) lPeriodi.toArray(new PeriodoLibAnticipataModel[1]));
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
+					// siesLogger.debug(" primo periodo - ini/fin =
+					// "+aModel.getPeriodi()[0].getDataInizio()+"/"+aModel.getPeriodi()[0].getDataFine());
 					lLicenzePeriodi.add(aModel);
 					cleanup(lPerDao);
 				}
@@ -1830,7 +1860,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            idFascicolo SIEP
 	 * @param aFlagElaborato
@@ -1859,7 +1889,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			lLicenze = new Vector(lLicLibSqlDao.getModels());
 
 			if (lLicenze.size() == 0) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Nessuna Revoca LA trovata a sistema");
 			} else {
 				Iterator lItx = null;
@@ -1873,8 +1904,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					// Ricerca dei Periodi relativi alla licenza
 					lPerLibSqlDao = new PeriodoLibanticipataSqlDAO(lConn);
 
-					lPerLibSqlDao.ricercaPeriodoLibanticipataOrdByLic(aModel.getLicenza()
-							.getIdLicenzaLibanticipata());
+					lPerLibSqlDao.ricercaPeriodoLibanticipataOrdByLic(
+							aModel.getLicenza().getIdLicenzaLibanticipata());
 
 					lPeriodi = new ArrayList(lPerLibSqlDao.getModels());
 
@@ -1902,7 +1933,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				}
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException:", daoEx);
 			throw new F3BException(
 					"LicenzaPeriodiLibAnticipataController.ExRicercaLAPeriodiRevocatiDepositatiByIdFascSIEP: Non posso leggere : "
@@ -1925,7 +1957,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		Connection lConn = null;
 
 		// PeriodoLibAnticipataModel lPeriodi = null;
-//		Vector lLicenzePeriodi = new Vector();
+		// Vector lLicenzePeriodi = new Vector();
 		ArrayList lPeriodi = null;
 
 		PeriodoLibanticipataSqlDAO lPerDao = null;
@@ -1957,7 +1989,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	/**
 	 * Metodo per l'inserimento del ridimensionamento/revoca LA. Inserisce: - Evento Sorveglianza - Evento
 	 * SIEP - Licenza Lib Anticipata e periodi
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aEventoAltroUff
 	 * @param aCampoNote
@@ -1975,7 +2007,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			throws Exception {
 
 		Connection lConn = null;
-		lConn = getDBTransaction();
 
 		EventoDAO lEveDao = null;
 		CampoNotaDAO lCampoNoteDAO = null;
@@ -1995,11 +2026,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		BigDecimal lKeyPer = null;
 		PeriodoLibAnticipataModel[] lPeriodi = null;
 
-		// if (aLicenzaLA == null && aLicenzaLA.getLicenza() == null &&
-		// aLicenzaLASPE == null && aLicenzaLASPE.getLicenza() == null &&
-		// aLicenzaLAINT == null && aLicenzaLAINT.getLicenza() == null )
-		// throw new F3BException(F3BException.USER_MESSAGE, "Nessuna Licenza da Inserire");
-
 		if (!(aLicenzaLA != null && aLicenzaLA.getLicenza() != null)
 				&& !(aLicenzaLASPE != null && aLicenzaLASPE.getLicenza() != null)
 				&& !(aLicenzaLAINT != null && aLicenzaLAINT.getLicenza() != null)) {
@@ -2009,6 +2035,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		EventoModel lEvento = null;
 
 		try {
+			lConn = getDBTransaction();
 
 			// Inserimento EVENTO Sorveglianza
 			lEveDao = new EventoDAO(lConn);
@@ -2028,7 +2055,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 			// Inserisco il campo note
 			if (aCampoNote != null && aCampoNote.getDescr() != null && !aCampoNote.getDescr().equals("")) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Inserisco il campo note....");
 				aCampoNote.setEveIdEvento(lKeyEvento);
 
@@ -2045,11 +2073,12 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lLicDao = new LicenzaLibanticipataDAO(lConn);
 				lPerDao = new PeriodoLibanticipataDAO(lConn);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug(" Lic LA - gg = " + aLicenzaLA.getLicenza().getNumeroGiorni());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug(
-						" Lic LA - tipo = " + aLicenzaLA.getLicenza().getDescrStatoPermesso());
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug(" Lic LA - tipo = " + aLicenzaLA.getLicenza().getDescrStatoPermesso());
 
 				lLicModLA = new LicenzaLibAnticipataModel(aLicenzaLA.getLicenza());
 				lLicModLA.setEveIdEvento(lKeyEvento);
@@ -2108,11 +2137,12 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lLicDao = new LicenzaLibanticipataDAO(lConn);
 				lPerDao = new PeriodoLibanticipataDAO(lConn);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug(" Lic LAINT - gg = " + aLicenzaLAINT.getLicenza().getNumeroGiorni());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug(
-						" Lic LAINT - tipo = " + aLicenzaLAINT.getLicenza().getDescrStatoPermesso());
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug(" Lic LAINT - tipo = " + aLicenzaLAINT.getLicenza().getDescrStatoPermesso());
 
 				lLicModINT = new LicenzaLibAnticipataModel(aLicenzaLAINT.getLicenza());
 				lLicModINT.setEveIdEvento(lKeyEvento);
@@ -2141,18 +2171,20 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: ", ex);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciRidimLibanticipata: " + ex);
 		} finally {
+			cleanup(lEveDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lCampoNoteDAO);
 			cleanup(lLicDao);
 			cleanup(lPerDao);
-			cleanup(lEveDao);
 			cleanup(lConn);
 		}
 		return lEvento.getIdEvento();
@@ -2160,26 +2192,25 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 	public EventoModel ExInserisciRimediRisarcitoriSIEP(EventoModel aEvento,
 			Vector<LicenzaPeriodiLibAnticipataModel> aLicenzeEPeriodi, DepositoDecretoModel aDepDecMod,
-			DepositoOrdinanzaPcModel aDepOrdMod, TenoreModel aTenoreModel) 
-					throws Exception {
+			DepositoOrdinanzaPcModel aDepOrdMod, TenoreModel aTenoreModel) throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(" ExInserisciRimediRisarcitoriSIEP - INIZIO");
 
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		TenoreDAO lTenDao = null;
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		DepositoDecretoDAO lDepDecrDao = null;
-
 		LicenzaLibanticipataDAO lLicDao = null;
 		PeriodoLibanticipataDAO lPeriodoDao = null;
 
 		try {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Inserimento EVENTO..");
 
 			lConn = getDBTransaction(); // getDBConnection()
@@ -2203,7 +2234,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// Inserimento DEPOSITO_DECRETO
 			// ====================================
 			if (aDepDecMod != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Inserimento DEPOSITO_DECRETO..");
 				lDepDecrDao = new DepositoDecretoDAO(lConn);
 
@@ -2219,7 +2251,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// Inserimento DEPOSITO_ORDINANZA_PC
 			// ====================================
 			if (aDepOrdMod != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Inserimento DEPOSITO_ORDINANZA_PC..");
 				lDepOrdDao = new DepositoOrdinanzaPcDAO(lConn);
 
@@ -2234,7 +2267,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// ====================================
 			// Inserimento TENORE
 			// ====================================
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Inserimento TENORE...");
 			if (aDepDecMod != null) {
 				aTenoreModel.setDepDecIdDepositoDecreto(aDepDecMod.getIdDepositoDecreto());
@@ -2255,7 +2289,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// =======================================================
 			// Vector <LicenzaPeriodiLibAnticipataModel> aLicenzeEPeriodi
 			for (int i = 0; i < aLicenzeEPeriodi.size(); i++) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Inserimento LICENZA_LIBANTICIPATA...");
 				// Inserisco licenza
 				LicenzaLibAnticipataModel lLibAntModel = aLicenzeEPeriodi.elementAt(i).getLicenza();
@@ -2271,7 +2306,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				// Inserisco i periodi
 				PeriodoLibAnticipataModel[] lArrayPeriodi = aLicenzeEPeriodi.elementAt(i).getPeriodi();
 				for (int j = 0; j < lArrayPeriodi.length; j++) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Inserimento PERIODO_LIBANTICIPATA...");
 					PeriodoLibAnticipataModel lPeriodoModel = lArrayPeriodi[j];
 
@@ -2288,17 +2324,19 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// rollback (lConn);
 			commit(lConn);
 		} catch (DAOException ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Eccezione in fase di inserimento RimediRisarcitori", ex);
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciRimediRisarcitoriSIEP: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciRimediRisarcitoriSIEP: " + ex);
 		} catch (Exception ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Eccezione in fase di inserimento RimediRisarcitori", ex);
 			rollback(lConn);
-			throw new F3BException("LicenzaPeriodiLibAnticipataController.ExInserisciRimediRisarcitoriSIEP: "
-					+ ex);
+			throw new F3BException(
+					"LicenzaPeriodiLibAnticipataController.ExInserisciRimediRisarcitoriSIEP: " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDAO);
@@ -2315,7 +2353,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 	/**
 	 * Deve ricercare gli eventi di tipo 2790 e le relative licenze associate
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aFlagElaborato
 	 * @return
@@ -2339,7 +2377,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		String[] lCodTipoProvvedimento = { "02", "03" };
 		String[] lCodMotivo = { "2790" };
 
-		Vector<EventoLicenzePeriodiModel> lListaEventiRet = new Vector<EventoLicenzePeriodiModel>();
+		Vector<EventoLicenzePeriodiModel> lListaEventiRet = new Vector<>();
 
 		try {
 			lConn = getDBConnection();
@@ -2387,7 +2425,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				}
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
 					"LicenzaLibanticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
@@ -2403,7 +2442,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -2411,17 +2450,14 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	public EventoModel ExUpdateValidaComunicazioneRimediRisarcitori(EventoModel aEvento) throws F3BException {
 
 		Connection lConn = null;
+		Connection lConnBlob = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
-
 		DepositoDecretoDAO lDepDecDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
-
-		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2458,7 +2494,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lEveSorveglianza = (EventoModel) lEveSqlDao.getModelByKey();
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("lEveSorveglianza legato alla LA: " + lEveSorveglianza.getIdEvento());
 
 			if (lEveSorveglianza != null) {
@@ -2480,7 +2517,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 						.getModelByKey();
 
 				if (lDepOrdMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.info(
 							"lDepOrdMod legato all'Ordinanza: " + lDepOrdMod.getIdDepositoOrdinanzaPc());
 
@@ -2505,9 +2543,9 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				DepositoDecretoModel lDepDecMod = (DepositoDecretoModel) lDepDecSqlDao.getModelByKey();
 
 				if (lDepDecMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					siesLogger.info(
-							"lDepDecMod legato al Decreto: " + lDepDecMod.getIdDepositoDecreto());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.info("lDepDecMod legato al Decreto: " + lDepDecMod.getIdDepositoDecreto());
 
 					lDepDecDao = new DepositoDecretoDAO(lConn);
 
@@ -2553,14 +2591,16 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 			commit(lConnBlob);
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException:", daoEx);
 			rollback(lConn);
 			rollback(lConnBlob);
 			throw new F3BException(
 					"LicenzaLibanticipataController.ExUpdateValidaComunicazioneRimediRisarcitori : " + daoEx);
 		} catch (Exception ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception:", ex);
 			rollback(lConn);
 			rollback(lConnBlob);
@@ -2582,7 +2622,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -2590,17 +2630,14 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	public EventoModel ExUpdateValidaOSRimediRisarcitori(EventoModel aEvento) throws F3BException {
 
 		Connection lConn = null;
+		Connection lConnBlob = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
-
 		DepositoDecretoDAO lDepDecDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
-
-		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2631,7 +2668,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			lEveApp = (EventoModel) lEveDao.getModelByKey();
 			lEveDao.stop();
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lEveApp = " + lEveApp);
 
 			// ======================================================================
@@ -2646,7 +2684,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lEveSorveglianza = (EventoModel) lEveSqlDao.getModelByKey();
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("lEveSorveglianza legato alla LA: " + lEveSorveglianza.getIdEvento());
 
 			if (lEveSorveglianza != null) {
@@ -2668,7 +2707,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 						.getModelByKey();
 
 				if (lDepOrdMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.info(
 							"lDepOrdMod legato all'Ordinanza: " + lDepOrdMod.getIdDepositoOrdinanzaPc());
 
@@ -2693,9 +2733,9 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				DepositoDecretoModel lDepDecMod = (DepositoDecretoModel) lDepDecSqlDao.getModelByKey();
 
 				if (lDepDecMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					siesLogger.info(
-							"lDepDecMod legato al Decreto: " + lDepDecMod.getIdDepositoDecreto());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.info("lDepDecMod legato al Decreto: " + lDepDecMod.getIdDepositoDecreto());
 
 					lDepDecDao = new DepositoDecretoDAO(lConn);
 
@@ -2724,7 +2764,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 				if ("RD".equals(lLicLibMod.getCodTipoLicenza()) && "C".equals(lLicLibMod.getFlagConcesso())) {
 					// Record dei GG di riduzione concessi
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Aggiornamento FLAG_ELABORATO su RD");
 
 					lLicLibDao = new LicenzaLibanticipataDAO(lConn);
@@ -2750,7 +2791,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
 			if (lPenResMod != null && lPenResMod.getIdPenaResidua() != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Validazione pena residua");
 				lPenResDao = new PenaResiduaDAO(lConn);
 
@@ -2788,7 +2830,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lFunDao.update();
 				lFunDao.stop();
 			} else {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Fungibilità non trovata");
 			}
 
@@ -2797,7 +2840,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// 0449 - Emesso Ordine di Scarcerazione per Concessione Risarcimento Danni D.L. 92/2014 il
 			// 0010 - Pena in Esecuzione Fino al
 			// ======================================================================
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Aggiornamento stato procedimento");
 			lStatoDao = new StatoProcedimentoDAO(lConn);
 
@@ -2818,7 +2862,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 			// 0449: Emesso Ordine di Scarcerazione per Concessione Risarcimento Danni D.L. 92/2014 il
 			lStatoProcMod.setCodStatoProcedimento("0449");
-			// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori 
+			// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori
 			// nel caso di Ordine di Scarcerazione per RECLAMO Concessione Risarcimento Danni D.L. 92/2014
 			// devo inserire un apposito stato del procedimento, OSSIA 0499
 			if (lEveApp != null
@@ -2845,7 +2889,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
 
 			if (lPosMod.isMisAlt()) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Aggiornamento fine misura...");
 
 				lMisDAO = new MisuraAlternativaDAO(lConn);
@@ -2876,7 +2921,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 						// lMisDAO.insert();
 					}
 				} else {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Misura non trovata");
 				}
 			}
@@ -2884,14 +2930,15 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// ======================================================================
 			//
 			// ======================================================================
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Inizio Aggiornamento scadenzari");
 			lScaDao = new ScadenzarioDAO(lConn);
 			lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 
 			// ======================================================================
 			// Ricerca scadenzario Fine Pena (02) e lo aggiorna. Se non presente lo inserisce
-			Vector<String> lScadenzari = new Vector<String>();
+			Vector<String> lScadenzari = new Vector<>();
 			lScadenzari.add("02"); // 02 Scadenzario fine pena
 
 			if (lPosMod.isMisAlt()) {
@@ -2901,7 +2948,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			for (int i = 0; i < lScadenzari.size(); i++) {
 				String lTipoScadenzario = lScadenzari.elementAt(i);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Scadenzario = " + lTipoScadenzario);
 
 				lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo(lTipoScadenzario,
@@ -2910,7 +2958,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 				if (lScadModel != null) {
 					// aggiorna scadenzario
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Aggiorno");
 
 					lScaDao.setDataFineScadenza(lPenResMod.getDataFine());
@@ -2925,7 +2974,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					lScaDao.stop();
 				} else {
 					// inserisce scadenzario
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Inserisco");
 
 					ScadenzarioModel lScaMod = new ScadenzarioModel();
@@ -2961,32 +3011,33 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			// ---------------------
 			commit(lConnBlob);
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("SQLException:", sqe);
 
 			rollback(lConn);
 			rollback(lConnBlob);
 
-			throw new F3BException("LicenzaLibanticipataController.ExUpdateValidaOSRimediRisarcitori : "
-					+ sqe);
+			throw new F3BException(
+					"LicenzaLibanticipataController.ExUpdateValidaOSRimediRisarcitori : " + sqe);
 		} catch (Exception ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception:", ex);
 
 			rollback(lConn);
 			rollback(lConnBlob);
 
-			throw new F3BException("LicenzaLibanticipataController.ExUpdateValidaOSRimediRisarcitori : " + ex);
+			throw new F3BException(
+					"LicenzaLibanticipataController.ExUpdateValidaOSRimediRisarcitori : " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
-
 			cleanup(lDepOrdDao);
 			cleanup(lDepOrdSqlDao);
-
 			cleanup(lDepDecDao);
 			cleanup(lDepDecSqlDao);
-
+			cleanup(lEveDaoBlob);
 			cleanup(lLicLibSqlDao);
 			cleanup(lLicLibDao);
 			cleanup(lPenResSqlDao);
@@ -3001,8 +3052,6 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			cleanup(lFunSqlDao);
 
 			cleanup(lConn);
-
-			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
 
@@ -3011,7 +3060,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 	/**
 	 * Deve ricercare gli eventi di tipo 9027 e le relative licenze associate
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aFlagElaborato
 	 * @return
@@ -3035,7 +3084,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 		String[] lCodTipoProvvedimento = { "02", "03" };
 		String[] lCodMotivo = { "9027" };
 
-		Vector<EventoLicenzePeriodiModel> lListaEventiRet = new Vector<EventoLicenzePeriodiModel>();
+		Vector<EventoLicenzePeriodiModel> lListaEventiRet = new Vector<>();
 
 		try {
 			lConn = getDBConnection();
@@ -3083,7 +3132,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				}
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
 					"LicenzaLibanticipataController.ExRicercaReclamoRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
@@ -3099,7 +3149,7 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -3108,17 +3158,14 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 			throws F3BException {
 
 		Connection lConn = null;
+		Connection lConnBlob = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
-
 		DepositoDecretoDAO lDepDecDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
-
-		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -3155,7 +3202,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				lEveSorveglianza = (EventoModel) lEveSqlDao.getModelByKey();
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("lEveSorveglianza legato alla LA: " + lEveSorveglianza.getIdEvento());
 
 			if (lEveSorveglianza != null) {
@@ -3177,7 +3225,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 						.getModelByKey();
 
 				if (lDepOrdMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.info(
 							"lDepOrdMod legato all'Ordinanza: " + lDepOrdMod.getIdDepositoOrdinanzaPc());
 
@@ -3202,9 +3251,9 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 				DepositoDecretoModel lDepDecMod = (DepositoDecretoModel) lDepDecSqlDao.getModelByKey();
 
 				if (lDepDecMod != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					siesLogger.info(
-							"lDepDecMod legato al Decreto: " + lDepDecMod.getIdDepositoDecreto());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.info("lDepDecMod legato al Decreto: " + lDepDecMod.getIdDepositoDecreto());
 
 					lDepDecDao = new DepositoDecretoDAO(lConn);
 
@@ -3250,7 +3299,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 
 			commit(lConnBlob);
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException:", daoEx);
 			rollback(lConn);
 			rollback(lConnBlob);
@@ -3258,7 +3308,8 @@ public class LicenzaPeriodiLibAnticipataController extends SiapController implem
 					"LicenzaLibanticipataController.ExUpdateValidaComunicazioneReclamoRimediRisarcitori : "
 							+ daoEx);
 		} catch (Exception ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception:", ex);
 			rollback(lConn);
 			rollback(lConnBlob);

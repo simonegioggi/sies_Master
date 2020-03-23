@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -15,8 +17,6 @@ import siap.sius.motivazionedecreto.dao.MotivazioneDecretoDAO;
 import siap.sius.motivazionedecreto.dao.MotivazioneDecretoSqlDAO;
 import siap.sius.motivazionedecreto.model.MotivazioneDecretoModel;
 import siap.sius.produzioneatti.action.ICostantiProduzioneAtti;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -40,6 +40,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	/* STUB - 20030903 Da Eliminare Verrà Usato ? */
 	public MotivazioneDecretoModel ExInserisciMotivazioneDecreto(MotivazioneDecretoModel aMotivazioneDecreto)
 			throws F3BException {
+
 		Connection lConn = null;
 		MotivazioneDecretoDAO lMotDao = null;
 		MotivazioneDecretoModel lMotMod = null;
@@ -67,7 +68,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	/**
 	 * Esegue l'inserimento delle motivazioni decreto.
 	 * <p>
-	 * 
+	 *
 	 * @param aMotivazioniDecreto
 	 *            Array di model delle MotivazioneDecreto
 	 * @throws F3BException
@@ -75,6 +76,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 */
 	public void ExInserisciMotivazioniDecreto(MotivazioneDecretoModel[] aMotivazioniDecreto)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		try {
@@ -91,29 +93,36 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 		}
 	}
 
-	private void ExInserisciMotivazioniDecreto(MotivazioneDecretoModel[] aMotivazioniDecreto, Connection aConn)
-			throws Exception {
+	private void ExInserisciMotivazioniDecreto(MotivazioneDecretoModel[] aMotivazioniDecreto,
+			Connection aConn) throws Exception {
+
 		MotivazioneDecretoDAO lMotDao = null;
 
-		lMotDao = new MotivazioneDecretoDAO(aConn);
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		try {
+			lMotDao = new MotivazioneDecretoDAO(aConn);
 
-		// Effettua l'inserimento delle Motivazioni
-		int lSize = aMotivazioniDecreto.length;
-		for (int lIndex = 0; lIndex < lSize; lIndex++) {
-			// Imposta nel model il progressivo motivazione lIndex + 1.
-			aMotivazioniDecreto[lIndex].setProgrMotivazione(new BigDecimal((double) lIndex + 1));
-			lMotDao.setDAOFromModel(aMotivazioniDecreto[lIndex]);
-			lMotDao.insert();
-			lMotDao.stop();
+			// Effettua l'inserimento delle Motivazioni
+			int lSize = aMotivazioniDecreto.length;
+			for (int lIndex = 0; lIndex < lSize; lIndex++) {
+				// Imposta nel model il progressivo motivazione lIndex + 1.
+				aMotivazioniDecreto[lIndex].setProgrMotivazione(new BigDecimal((double) lIndex + 1));
+				lMotDao.setDAOFromModel(aMotivazioniDecreto[lIndex]);
+				lMotDao.insert();
+				lMotDao.stop();
+			}
+		} catch (Exception e) {
+			throw new F3BException("Non posso leggere  : " + e);
+		} finally {
+			cleanup(lMotDao);
 		}
-		cleanup(lMotDao);
 	}
 
 	/**
 	 * Inserisce Evento Notifica, Autorita Esterne associate e eventuali Campi note aggiuntive, Motivazioni
 	 * Decreto per la "Richiesta Parere".
 	 * <p>
-	 * 
+	 *
 	 * @param EventoNotificaModel
 	 *            , MotivazioneDecretoModel[]
 	 * @return EventoNotificaModel
@@ -121,6 +130,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 */
 	public EventoNotificaModel ExInserisciRichiestaParere(EventoNotificaModel aEvento,
 			MotivazioneDecretoModel[] aMotivazioniDecreto) throws F3BException {
+
 		Connection lConn = null;
 		EventoNotificaModel lEveRet = null;
 
@@ -153,7 +163,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	/**
 	 * Esegue l'inserimento delle motivazioni decreto incompetenza.
 	 * <p>
-	 * 
+	 *
 	 * @param aMotivazioniDecreto
 	 *            Array di model delle MotivazioneDecreto
 	 * @throws F3BException
@@ -161,6 +171,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 */
 	public void ExInserisciMotivazioniDecretoIncompetenza(MotivazioneDecretoModel[] aMotivazioniDecreto)
 			throws F3BException {
+
 		Connection lConn = null;
 		MotivazioneDecretoDAO lMotDao = null;
 
@@ -193,7 +204,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	/**
 	 * Esegue la ricerca delle Motivazioni per id del deposito decreto.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id del deposito decreto.
 	 * @return l'insieme di MovitazioneDecretoModel
@@ -202,6 +213,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 */
 
 	public Vector ExRicercaMotivazioniDecretoInammissibilitaByDepDecr(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMotivazioneDecreti = new Vector();
 		MotivazioneDecretoSqlDAO lMotSqlDao = null;
@@ -229,7 +241,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 * Esegue la ricerca delle Motivazioni per id Evento. La ricerca ritorna le descrizioni delle motivazioni
 	 * comprensive anche dei campi variabili.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id Evento.
 	 * @return l'insieme di MovitazioneDecretoModel
@@ -237,6 +249,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 *             propagazione dell'errore di eccezione.
 	 */
 	public Vector ExRicercaMotivazioniDecretoInammissibilitaByEve(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMotivazioneDecreti = new Vector();
 		MotivazioneDecretoSqlDAO lMotSqlDao = null;
@@ -259,7 +272,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	/**
 	 * Esegue la ricerca delle Motivazioni per id Evento.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id Evento.
 	 * @return l'insieme di MovitazioneDecretoModel
@@ -267,6 +280,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 *             propagazione dell'errore di eccezione.
 	 */
 	public Vector ExRicercaMotivazioniDecretoByEve(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMotivazioneDecreti = new Vector();
 		MotivazioneDecretoSqlDAO lMotSqlDao = null;
@@ -291,7 +305,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 * Richiesta Parere Inammissibilità per quel fascicolo, poi si cercano le Motivazioni collegate a
 	 * quell'evento
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id Fascicolo SIUS.
 	 * @return l'insieme di MovitazioneDecretoModel
@@ -299,6 +313,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 	 *             propagazione dell'errore di eccezione.
 	 */
 	public Vector ExRicercaUltimeMotivazioniDecretoByIdFasSius(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMotivazioneDecreti = new Vector();
 		MotivazioneDecretoSqlDAO lMotSqlDao = null;
@@ -327,6 +342,9 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 		} catch (Exception e) {
 			throw new F3BException("Non posso leggere  : " + e);
 		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMotSqlDao);
+			cleanup(lEveDao);
 			cleanup(lConn);
 		}
 
@@ -335,6 +353,7 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 
 	public MotivazioneDecretoModel ExModificaMotivazioneDecreto(MotivazioneDecretoModel aMotivazioneDecreto)
 			throws F3BException {
+
 		Connection lConn = null;
 		MotivazioneDecretoDAO lMotDao = null;
 		MotivazioneDecretoModel lMotMod = new MotivazioneDecretoModel(aMotivazioneDecreto);
@@ -355,7 +374,9 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 		return lMotMod;
 	}
 
-	public void ExCancellaMotivazioneDecreto(MotivazioneDecretoModel aMotivazioneDecreto) throws F3BException {
+	public void ExCancellaMotivazioneDecreto(MotivazioneDecretoModel aMotivazioneDecreto)
+			throws F3BException {
+
 		Connection lConn = null;
 		MotivazioneDecretoDAO lMotDao = null;
 
@@ -367,7 +388,8 @@ public class MotivazioneDecretoController extends SiapController implements IMot
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"MotivazioneDecretoController.ExCancellaMotivazioneDecreto: Non posso leggere : " + daoEx);
+					"MotivazioneDecretoController.ExCancellaMotivazioneDecreto: Non posso leggere : "
+							+ daoEx);
 		} finally {
 			cleanup(lMotDao);
 			cleanup(lConn);

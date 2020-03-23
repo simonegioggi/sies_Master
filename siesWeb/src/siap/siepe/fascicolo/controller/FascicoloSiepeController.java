@@ -7,6 +7,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.jms.ICostantiJMS;
 import siap.jms.messaggio.dao.MessaggioDAO;
@@ -41,9 +44,6 @@ import siap.sius.fascicolo.dao.FascicoloGPSqlDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -72,6 +72,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 	public FascicoloSiepeModel ExInserisciFascicoloSiepe(FascicoloSiepeModel aFascicoloSiepe,
 			MessaggioModel aMessaggio, AttivitaModel[] aListaAttivita) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeModel lFasMod = null;
 		FascicoloSiepeSqlDAO lFasDAO = null;
@@ -104,9 +105,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
-		}
-
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -119,21 +118,31 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		return lFasMod;
 	}
 
-	public FascicoloSiepeModel ExInserisciFascicoloSiepe(FascicoloSiepeModel aFascicoloSiepe, Connection aConn)
-			throws Exception {
+	public FascicoloSiepeModel ExInserisciFascicoloSiepe(FascicoloSiepeModel aFascicoloSiepe,
+			Connection aConn) throws Exception {
+
 		FascicoloSiepeDAO lFasDao = null;
 		FascicoloSiepeModel lFasMod = null;
-		lFasMod = new FascicoloSiepeModel(aFascicoloSiepe);
-		lFasDao = new FascicoloSiepeDAO(aConn);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.debug("ExInserisciFascicoloSiepe : inizio");
-		// Inserimento fel Fascicolo SIEPE
-		lFasDao.setDAOFromModel(aFascicoloSiepe);
-		BigDecimal lKey = null;
-		lKey = lFasDao.insert();
-		lFasMod.setIdFascicoloSiepe(lKey);
-		cleanup(lFasDao);
+		try {
+			lFasMod = new FascicoloSiepeModel(aFascicoloSiepe);
+			lFasDao = new FascicoloSiepeDAO(aConn);
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.debug("ExInserisciFascicoloSiepe : inizio");
+			// Inserimento fel Fascicolo SIEPE
+			lFasDao.setDAOFromModel(aFascicoloSiepe);
+			BigDecimal lKey = null;
+			lKey = lFasDao.insert();
+			lFasMod.setIdFascicoloSiepe(lKey);
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("Exception: " + e);
+			throw new F3BException("FascicoloSiepeController.ExInserisciFascicoloSiepe: " + e);
+		} finally {
+			cleanup(lFasDao);
+		}
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("ExInserisciFascicoloSiepe : fine");
 
@@ -142,7 +151,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 	/**
 	 * La funzione attiva la Presa In Carico richiamando la funzione specifica in un altro controller.
-	 * 
+	 *
 	 * @param aFascicoloSiepe
 	 * @param aMessaggio
 	 * @return
@@ -150,6 +159,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 */
 	private MessaggioModel PresaInCarico(FascicoloSiepeModel aFascicoloSiepe, MessaggioModel aMessaggio,
 			Connection aConn) throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("PresaInCarico : inizio");
 
@@ -168,27 +178,25 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		IPresaInCarico lPres = SICOLookupRemote.getPresaInCaricoRemote();
 		if (aMessaggio.getCodTipoOperazione().equalsIgnoreCase(ICostantiJMS.TRASFERIMENTO_ORDINANZA)) {
 			// Richiamo della funzione di Presa In Carico Ordinanza
-			/*MessaggioModel lMessReturn = */lPres.ExPresaInCaricoOrdinanza(aMessaggio, lMisAlt, aConn);
+			/* MessaggioModel lMessReturn = */lPres.ExPresaInCaricoOrdinanza(aMessaggio, lMisAlt, aConn);
 		} else if (aMessaggio.getCodTipoOperazione().equalsIgnoreCase(ICostantiJMS.TRASFERIMENTO_DECRETO)) {
 			// Richiamo della funzione di Presa In Carico Decreto
-			/*MessaggioModel lMessReturn = */lPres.ExPresaInCaricoDecreto(aMessaggio, lMisAlt, aConn);
-		} else if (aMessaggio.getCodTipoOperazione().equalsIgnoreCase(
-				ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO)) {
+			/* MessaggioModel lMessReturn = */lPres.ExPresaInCaricoDecreto(aMessaggio, lMisAlt, aConn);
+		} else if (aMessaggio.getCodTipoOperazione()
+				.equalsIgnoreCase(ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO)) {
 			// Richiamo della funzione di Presa In Carico Provvedimento
-			/*MessaggioModel lMessReturn = */lPres.ExPresaInCaricoProvvedimento(aMessaggio, aConn);
-		} else if (aMessaggio.getCodTipoOperazione().equalsIgnoreCase(
-				ICostantiJMS.TRASFERIMENTO_RICHIESTA_RELAZIONE)) {
+			/* MessaggioModel lMessReturn = */lPres.ExPresaInCaricoProvvedimento(aMessaggio, aConn);
+		} else if (aMessaggio.getCodTipoOperazione()
+				.equalsIgnoreCase(ICostantiJMS.TRASFERIMENTO_RICHIESTA_RELAZIONE)) {
 			// Richiamo della funzione di Presa In Carico Richiesta Relazione
-			/*MessaggioModel lMessReturn = */lPres.ExPresaInCaricoRichiestaRelazione(aMessaggio, aConn);
+			/* MessaggioModel lMessReturn = */lPres.ExPresaInCaricoRichiestaRelazione(aMessaggio, aConn);
 		}
 		// 26/06/2007
 		else if (aMessaggio.getCodTipoOperazione()
 				.equalsIgnoreCase(ICostantiJMS.TRASFERIMENTO_RICHIESTA_UEPE)) {
 			// Richiamo della funzione di Presa In Carico Richiesta UEPE
-			/*MessaggioModel lMessReturn = */lPres.ExPresaInCaricoRichiestaSiepe(aMessaggio, aConn);
-		}
-
-		else
+			/* MessaggioModel lMessReturn = */lPres.ExPresaInCaricoRichiestaSiepe(aMessaggio, aConn);
+		} else
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Presa in Carico di questo tipo di messaggio non disponibile.");
 
@@ -215,6 +223,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 */
 	private void AggiornaFascicoloSiepe(MessaggioModel aMessaggio, FascicoloSiepeModel aFasSiepe)
 			throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("AggiornaFascicoloSiepe : inizio");
 
@@ -236,15 +245,15 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 					&& lPars.getFascicoloSiepeEsteso().getSoggetto() != null) {
 				aFasSiepe.setSogIdSoggetto(lPars.getFascicoloSiepeEsteso().getSoggetto().getIdSoggetto());
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.debug("ID Soggetto ->"
-						+ lPars.getFascicoloSiepeEsteso().getSoggetto().getIdSoggetto());
+				siesLogger.debug(
+						"ID Soggetto ->" + lPars.getFascicoloSiepeEsteso().getSoggetto().getIdSoggetto());
 				// 28-06-2006 Riportati Tutti i puntamenti dall'altro UEPE.
 				aFasSiepe
 						.setEveIdEvento(lPars.getFascicoloSiepeEsteso().getFascicoloSiepe().getEveIdEvento());
-				aFasSiepe.setFasSiuIdFascicoloSius(lPars.getFascicoloSiepeEsteso().getFascicoloSiepe()
-						.getFasSiuIdFascicoloSius());
-				aFasSiepe.setFasSieIdFascicoloSiep(lPars.getFascicoloSiepeEsteso().getFascicoloSiepe()
-						.getFasSieIdFascicoloSiep());
+				aFasSiepe.setFasSiuIdFascicoloSius(
+						lPars.getFascicoloSiepeEsteso().getFascicoloSiepe().getFasSiuIdFascicoloSius());
+				aFasSiepe.setFasSieIdFascicoloSiep(
+						lPars.getFascicoloSiepeEsteso().getFascicoloSiepe().getFasSieIdFascicoloSiep());
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.debug("ID Evento ->"
 						+ lPars.getFascicoloSiepeEsteso().getFascicoloSiepe().getFasSieIdFascicoloSiep());
@@ -267,23 +276,22 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 			if (lPars.getFascicoloGPSius() != null
 					&& lPars.getFascicoloGPSius().getFascicoloSiusModel() != null
 					&& lPars.getFascicoloGPSius().getFascicoloSiusModel().getIdFascicoloSius() != null) {
-				aFasSiepe.setFasSiuIdFascicoloSius(lPars.getFascicoloGPSius().getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				aFasSiepe.setFasSiuIdFascicoloSius(
+						lPars.getFascicoloGPSius().getFascicoloSiusModel().getIdFascicoloSius());
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.debug("ID FascicoloSius ->"
 						+ lPars.getFascicoloGPSius().getFascicoloSiusModel().getIdFascicoloSius());
 
 				// Se il Soggetto è stato passato con il Fascicolo SIUS se ne ricava l'ID per aggiornare il
 				// Fascicolo SIEPE
-				if (lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto() != null
-						&& lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto().getIdSoggetto() != null) {
-					aFasSiepe.setSogIdSoggetto(lPars.getFascicoloGPSius().getFascicoloSiusModel()
-							.getSoggetto().getIdSoggetto());
+				if (lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto() != null && lPars
+						.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto().getIdSoggetto() != null) {
+					aFasSiepe.setSogIdSoggetto(
+							lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto().getIdSoggetto());
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
-					siesLogger.debug("ID Soggetto ->"
-							+ lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto()
-									.getIdSoggetto());
+					siesLogger.debug("ID Soggetto ->" + lPars.getFascicoloGPSius().getFascicoloSiusModel()
+							.getSoggetto().getIdSoggetto());
 
 				}
 			}
@@ -300,7 +308,9 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 	}
 
-	public Vector ExRicercaFascicoloSiepe(FascicoloSiepeRicercaModel aFascicoloSiepeSogg) throws F3BException {
+	public Vector ExRicercaFascicoloSiepe(FascicoloSiepeRicercaModel aFascicoloSiepeSogg)
+			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoloSiepe = new Vector();
 		FascicoloSiepeSoggSqlDAO lFasDao = null;
@@ -325,6 +335,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	}
 
 	public FascicoloSiepeModel ExRicercaFascicoloSiepeByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeSqlDAO lFasDao = null;
 		FascicoloSiepeModel lFasMod;
@@ -347,6 +358,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 	public FascicoloSiepeModel ExRicercaFascicoloByAnnoProgrCodUfficio(FascicoloSiepeModel aFasSiepe)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeSqlDAO lFasDao = null;
 		FascicoloSiepeModel lFasMod;
@@ -359,8 +371,8 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("FascicoloSiepeController.ExRicercaFascicoloSiepeByAnnoProgrCodUfficio: "
-					+ daoEx);
+			throw new F3BException(
+					"FascicoloSiepeController.ExRicercaFascicoloSiepeByAnnoProgrCodUfficio: " + daoEx);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lConn);
@@ -371,7 +383,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	/**
 	 * Metodo che esegue la modifica del fascicolo.
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloSiepe
 	 *            FascicoloSiepeModel Dati da aggiornare
 	 * @throws F3BException
@@ -380,6 +392,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 */
 	public FascicoloSiepeModel ExModificaFascicoloSiepe(FascicoloSiepeModel aFascicoloSiepe)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeDAO lFasDao = null;
 		FascicoloSiepeModel lFasMod = new FascicoloSiepeModel(aFascicoloSiepe);
@@ -398,7 +411,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.error("SQLException: " + ex);
+			siesLogger.error("Exception: " + ex);
 			throw new SIEPEException("FascicoloSiepeController.ExModificaFascicoloSiepe : " + ex);
 		} finally {
 			cleanup(lFasDao);
@@ -408,6 +421,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	}
 
 	public void ExCancellaFascicoloSiepe(FascicoloSiepeModel aFascicoloSiepe) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeDAO lFasDao = null;
 
@@ -430,7 +444,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	/**
 	 * Ricerca Fascicolo Siepe paginata.
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloSiepe
 	 * @param aPageNum
 	 *            : numero pagina > 0
@@ -439,6 +453,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 */
 	public Vector ExRicercaFascicoloSiepePaginata(FascicoloSiepeRicercaModel aSiepeRicercaModel, int aPageNum)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 		FascicoloSiepeSoggSqlDAO lFasSoggSqlDao = null;
@@ -480,13 +495,14 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 	/**
 	 * Ritorna n.ro di record risultato di una ricercaFascicoloSiepPaginata
-	 * 
+	 *
 	 * @param aFascicoloSiepe
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaFascicoloSiepe(FascicoloSiepeRicercaModel aFasSiepeRicModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeSoggSqlDAO lFasSoggSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -515,7 +531,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 	/**
 	 * Ritorna n.ro di record risultato di una ricercaFascSiepeBySoggetto
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param lCodUfficioUtenteConnesso
 	 * @param lIncludeArchiviati
@@ -528,6 +544,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	public BigDecimal ExGetNumRicercaFascicoliBySoggetto(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lIncludeArchiviati, String lCodIncarico, Date dataDal,
 			Date dataAl) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepeSoggSqlDAO lFasSoggDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -559,7 +576,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	/**
 	 * Ricerca Fascicoli Siepe Paginata per Soggetto, e filtri aggiuntivi.
 	 * <p>
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param lIncludeArchiviati
 	 * @param lCodIncarico
@@ -570,10 +587,10 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 * @return Vettore di FascicoloSiepeModel
 	 * @throws F3BException
 	 */
-
 	public Vector ExRicercaFascSiepeBySoggettoPagina(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lIncludeArchiviati, String lCodIncarico, Date dataDal,
 			Date dataAl, int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -643,7 +660,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 * Ricerca Fascicoli di Un Soggetto (Nel model aSogModel è valorizzato l'ID) in base ai parametridi
 	 * ricerca selezionati.
 	 * <p>
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param strCodUffOTrib
@@ -658,6 +675,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	 */
 	public Vector ExRicercaFascSiepeDelSoggetto(SoggettoModel aSogModel, String strCodUfficioUtenteConnesso,
 			String lIncludeArchiviati, String lCodIncarico, Date dataDal, Date dataAl) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -666,7 +684,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		// AttivitaModel lAttMod = null;
 		// AttivitaSqlDAO lAttDao = null;
 		SoggettoSqlDAO lSogDao = null;
-//		boolean lEsiste = false;
+		// boolean lEsiste = false;
 
 		try {
 			lConn = getDBConnection();
@@ -732,12 +750,13 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 	/**
 	 * Ricerca Fascicoli SIEPE per IdFascicoloSIUS.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdFasSius
 	 * @return lFascicoli
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoliSiepePerIdFasSius(BigDecimal aIdFasSius) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -801,8 +820,8 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 								"Errore: Fascicolo SIUS non trovato");
 
 					// Si Caricano i records eventuali di Tenore
-					lTenDao.ricercaTenoreByGeneraleProc(lFasGP.getGeneraleProcedimentoModel()
-							.getIdGeneraleProcedimento());
+					lTenDao.ricercaTenoreByGeneraleProc(
+							lFasGP.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 					// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 					Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -877,24 +896,24 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		}
 
 		return lFascicoli;
-
 	}
 
 	/**
 	 * Ricerca Fascicoli SIEPE per IdFasSiep.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdFasSiep
 	 * @return lFascicoli
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoliSiepePerIdFasSiep(BigDecimal aIdFasSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
 
 		FascicoloSiepeSqlDAO lFasSqlDao = null;
-//		AttivitaSqlDAO lAttDao = null;
+		// AttivitaSqlDAO lAttDao = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		FascicoloGPSqlDAO lFascDao = null;
 		TenoreSqlDAO lTenDao = null;
@@ -952,8 +971,8 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 								"Errore: Fascicolo SIUS non trovato");
 
 					// Si Caricano i records eventuali di Tenore
-					lTenDao.ricercaTenoreByGeneraleProc(lFasGP.getGeneraleProcedimentoModel()
-							.getIdGeneraleProcedimento());
+					lTenDao.ricercaTenoreByGeneraleProc(
+							lFasGP.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 					// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 					Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -1003,22 +1022,13 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 
 				lFascicoli.addElement(lFascicoloEsteso);
 			}
-
 		} catch (DAOException daoEx) {
 			// rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIEPEException(F3BException.USER_MESSAGE,
 					"FascicoloSiepeController.ExRicercaFascicoliSiepePerIdFasSius: " + daoEx);
-		}
-		/*
-		 * catch (SQLException sqe) { rollback(lConn); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile
-		 * di istanza siesLogger al posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-		 * SIEPEException
-		 * (F3BException.USER_MESSAGE,"FascicoloSiepeController.ExRicercaFascicoliSiepePerIdFasSius: " + sqe);
-		 * }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			// rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + e);
@@ -1037,10 +1047,10 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 		}
 
 		return lFascicoli;
-
 	}
 
 	public void ExInserisciDefinizioneFascicoloSiepe(FascicoloSiepeModel aFasMod) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiepeDAO lFasDao = null;
@@ -1074,12 +1084,7 @@ public class FascicoloSiepeController extends SiapController implements IFascico
 			rollback(lConn);
 			throw new SIEPEException(F3BException.USER_MESSAGE,
 					"FascicoloSiepeController.ExInserisciDefinizioneFascicoloSius : " + ex);
-		}
-		/*
-		 * catch (SQLException sqe) { rollback(lConn); throw new SIUSException(F3BException.USER_MESSAGE,
-		 * "FascicoloSiepeController.ExInserisciDefinizioneFascicoloSius : " + sqe); }
-		 */
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			rollback(lConn);
 			throw new SIEPEException(F3BException.USER_MESSAGE,
 					"FascicoloSiepeController.ExInserisciDefinizioneFascicoloSius : " + ex);

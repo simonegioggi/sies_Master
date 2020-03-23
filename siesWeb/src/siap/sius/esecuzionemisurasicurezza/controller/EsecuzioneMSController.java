@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.SIUSException;
 import siap.sius.esecuzionemisurasicurezza.dao.EsecuzioneMisuraSicurezzaDAO;
@@ -15,9 +18,6 @@ import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -43,6 +43,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExInserisciEsecuzioneMisuraSicurezza(
 			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod = null;
@@ -75,8 +76,9 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 		return lEseMod;
 	}
 
-	public Vector ExRicercaEsecuzioneMisuraSicurezza(EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezza)
-			throws F3BException {
+	public Vector ExRicercaEsecuzioneMisuraSicurezza(
+			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEsecuzioneMisureSicurezza = new Vector();
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
@@ -108,6 +110,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExRicercaEsecuzioneMisuraSicurezzaByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod;
@@ -138,6 +141,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExRicercaEsecuzioneMisuraSicurezzaByAnnoProg(BigDecimal aAnno,
 			BigDecimal aProg) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod = null;
@@ -170,6 +174,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod;
@@ -200,6 +205,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExRicercaEsecuzioneMisuraSicurezzaByIdOrdinanza(
 			BigDecimal aIdOrdinanza) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod;
@@ -230,6 +236,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExRicercaEsecuzioneMisuraSicurezzaByIdFascicolo(BigDecimal aKey,
 			Connection aConn) throws F3BException {
+
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod;
 		try {
@@ -255,6 +262,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExModificaEsecuzioneMisuraSicurezza(
 			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod = new EsecuzioneMisuraSicurezzaModel(
@@ -288,6 +296,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneMisuraSicurezzaModel ExModificaEMSbyFascicolo(
 			EsecuzioneMisuraSicurezzaModel aEsecuzioneMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod = new EsecuzioneMisuraSicurezzaModel(
@@ -320,6 +329,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	}
 
 	public void ExCancellaEsecuzioneMisuraSicurezza(BigDecimal idEMS) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaDAO lEseDao = null;
 		try {
@@ -349,7 +359,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	/**
 	 * Ricerca Procedimenti di Esecuzione Misure Sicurezza
-	 * 
+	 *
 	 * @param lAnno
 	 * @param lProgr
 	 * @param lAnnoIniziale
@@ -363,6 +373,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	public Vector ExRicercaEsecuzioneMisureSicurezza(String lAnno, String lProgr, String lAnnoIniziale,
 			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso,
 			int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEsecuzioneMS = new Vector();
 
@@ -406,7 +417,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	/**
 	 * Ricerca Numero Procedimenti di Esecuzione Misure Sicurezza.
-	 * 
+	 *
 	 * @param lAnno
 	 * @param lProgr
 	 * @param lAnnoIniziale
@@ -420,6 +431,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	public BigDecimal ExGetNumRicercaEsecuzioneMisureSicurezza(String lAnno, String lProgr,
 			String lAnnoIniziale, String lProgrIniziale, String lAnnoFinale, String lProgrFinale,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseMSSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -452,7 +464,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Misure Sicurezza. (Dettaglio Esec. Mis. Alt.).
-	 * 
+	 *
 	 * @param aEseMSKey
 	 * @param aIdSoggetto
 	 * @return Vettore di FascicoloGPModel
@@ -460,6 +472,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaDettaglioEsecuzioneMS(BigDecimal aEseMSKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisure = new Vector();
 		EsecuzioneMisuraSicurezzaSqlDAO lEseMSSqlDao = null;
@@ -492,8 +505,8 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -530,7 +543,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Misure Sicurezza. (Dettaglio Esec. Mis. Sic.).
-	 * 
+	 *
 	 * @param aEseMSKey
 	 * @param aIdSoggetto
 	 * @param aConn
@@ -539,6 +552,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaDettaglioEsecuzioneMS(BigDecimal aEseMSKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso, Connection aConn) throws F3BException {
+
 		Vector lMisure = new Vector();
 		EsecuzioneMisuraSicurezzaSqlDAO lEseMSSqlDao = null;
 		// TenoreModel lTenMod = null;
@@ -568,8 +582,8 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(aConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -581,7 +595,6 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 			}
 			lEseMSSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -604,7 +617,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Misure Sicurezza. (Dettaglio Esec. Mis. Sic.). e
 	 * per ogni Misura, si cercano i procedimenti correlati.
-	 * 
+	 *
 	 * @param aEseMSKey
 	 * @param aIdSoggetto
 	 * @return Coppia di Vettori di FascicoloGPModel
@@ -612,6 +625,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	 */
 	public Vector[] ExRicercaDettaglioEMSeCorrelati(BigDecimal aEseMSKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector[] lMisureECorrelati = new Vector[2];
 		Vector lMisure = new Vector();
@@ -647,8 +661,8 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -662,8 +676,8 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 				if (lFascicolo.getFascicoloSiusModel().getNumeroFascicoliUnificati() != null
 						&& lFascicolo.getFascicoloSiusModel().getNumeroFascicoliUnificati().intValue() > 0) {
 					lEseMSSqlDao2 = new EsecuzioneMisuraSicurezzaSqlDAO(lConn);
-					lEseMSSqlDao2.ricercaProcedimentiCorrelatiAllEMS(lFascicolo.getFascicoloSiusModel()
-							.getIdFascicoloSius(), lUfficioUtenteConnesso);
+					lEseMSSqlDao2.ricercaProcedimentiCorrelatiAllEMS(
+							lFascicolo.getFascicoloSiusModel().getIdFascicoloSius(), lUfficioUtenteConnesso);
 					lEseMSSqlDao2.start();
 					FascicoloGPModel lFascCorrelato = null;
 					while (lEseMSSqlDao2.next()) {
@@ -703,7 +717,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Misure Sicurezza per IdFascicolo. (Dettaglio
 	 * Esec. Mis. Alt.).
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aIdSoggetto
 	 * @return Vettore di FascicoloGPModel
@@ -711,6 +725,7 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaDettaglioEsecuzioneMSbyFascicolo(BigDecimal aIdFascicolo, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisure = new Vector();
 		EsecuzioneMisuraSicurezzaSqlDAO lEseMSSqlDao = null;
@@ -743,8 +758,8 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// 05/11/2003 Carico i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -782,8 +797,8 @@ public class EsecuzioneMSController extends SiapController implements IEsecuzion
 		return lMisure;
 	}
 
-	// TODO carmela da verificare
 	public Vector ExRicercaEsecuzioneMisureSicRidByIdOrdinanza(BigDecimal aIdOrdinanza) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		Vector lEseMisSisRid = new Vector();

@@ -6,13 +6,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.permesso.dao.EventoPermessoLicenzaDAO;
 import siap.sius.permesso.dao.EventoPermessoLicenzaSqlDAO;
 import siap.sius.permesso.model.EventoPermessoLicenzaModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -38,6 +38,7 @@ public class EventoPermessoLicenzaController extends SiapController implements I
 
 	public EventoPermessoLicenzaModel ExInserisciEventoPermessoLicenza(
 			EventoPermessoLicenzaModel aEventoPermessoLicenza) throws F3BException {
+
 		Connection lConn = null;
 		EventoPermessoLicenzaDAO lEveDao = null;
 		EventoPermessoLicenzaModel lEveMod = null;
@@ -72,6 +73,7 @@ public class EventoPermessoLicenzaController extends SiapController implements I
 	}
 
 	public Vector ExRicercaEventoPermessoLicenzaByKeyLicLib(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEventoPermessoLicenze = new Vector();
 		EventoPermessoLicenzaSqlDAO lEveDao = null;
@@ -108,7 +110,7 @@ public class EventoPermessoLicenzaController extends SiapController implements I
 	 * public Vector ExRicercaEventoPermessoLicenza (EventoPermessoLicenzaModel aEventoPermessoLicenza )
 	 * throws F3BException { Connection lConn = null; Vector lEventoPermessoLicenze = new Vector();
 	 * EventoPermessoLicenzaSqlDAO lEveDao = null;
-	 * 
+	 *
 	 * try { lConn = getDBConnection(); lEveDao = new EventoPermessoLicenzaSqlDAO(lConn);
 	 * lEveDao.ricercaEventoPermessoLicenza(aEventoPermessoLicenza); lEventoPermessoLicenze = new
 	 * Vector(lEveDao.getModels()); if ( lEventoPermessoLicenze.size() == 0 ) throw new
@@ -123,6 +125,7 @@ public class EventoPermessoLicenzaController extends SiapController implements I
 	 */
 	public EventoPermessoLicenzaModel ExRicercaEventoPermessoLicenzaByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoPermessoLicenzaSqlDAO lEveDao = null;
 		EventoPermessoLicenzaModel lEveMod;
@@ -154,6 +157,7 @@ public class EventoPermessoLicenzaController extends SiapController implements I
 
 	public EventoPermessoLicenzaModel ExModificaEventoPermessoLicenza(
 			EventoPermessoLicenzaModel aEventoPermessoLicenza) throws F3BException {
+
 		Connection lConn = null;
 		EventoPermessoLicenzaDAO lEveDao = null;
 		EventoPermessoLicenzaModel lEveMod = new EventoPermessoLicenzaModel(aEventoPermessoLicenza);
@@ -187,6 +191,7 @@ public class EventoPermessoLicenzaController extends SiapController implements I
 
 	public void ExCancellaEventoPermessoLicenza(EventoPermessoLicenzaModel aEventoPermessoLicenza)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoPermessoLicenzaDAO lEveDao = null;
 

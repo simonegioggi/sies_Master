@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.bdmc.sbperipren.dao.SbPeriprenDAO;
 import siap.bdmc.sbperipren.model.SbPeriprenModel;
 import siap.bdmc.sbpren.action.ICostantiSbPren;
@@ -45,9 +48,6 @@ import siap.siep.sentenza.dao.SentenzaDAO;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -72,18 +72,20 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 	private Date mData = null;
 
 	public siap.bdmc.sbpren.model.EsitoImportModel getEsito() {
+
 		return mEsito;
 	}
 
 	/**
 	 * Importa Provvedimento BDMC
-	 * 
+	 *
 	 * @param aBDMCProvvedimento
 	 * @return ProvvedimentoModel
 	 * @throws F3BException
 	 */
 	public BigDecimal ExImportaProvvedimentoBDMC(siap.bdmc.sbpren.model.EsitoImportModel aEsito)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		BigDecimal lKeyFascicolo = null;
@@ -137,8 +139,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 					if (lSoggetto.getCodStatoNascita() != null
 							&& lSoggetto.getCodStatoNascita().compareTo("100") == 0)
 						lSoggetto.setCodStatoNascita("039");
-					if (lSoggetto.getCodStatoNascita() == null
-							|| lSoggetto.getCodStatoNascita().length() == 0
+					if (lSoggetto.getCodStatoNascita() == null || lSoggetto.getCodStatoNascita().length() == 0
 							|| lSoggetto.getCodStatoNascita().compareTo("000") == 0)
 						lSoggetto.setCodStatoNascita("-");
 					// ----Inserimento Soggetto------
@@ -235,12 +236,13 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * Integrazione di un fascicolo esistente con i dati selezionati da BDMC
-	 * 
+	 *
 	 * @param aBDMCProvvedimento
 	 * @return
 	 * @throws F3BException
 	 */
 	public BigDecimal ExIntegraFascicoloSiep(EsitoImportModel aEsito) throws F3BException {
+
 		Connection lConn = null;
 		ProvvedimentoModelBDMC lBDMCProvvedimento = aEsito.getProvvedimento();
 
@@ -293,7 +295,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento del Fascicolo Siep
-	 * 
+	 *
 	 * @param lConn
 	 * @param aFascicoloSiep
 	 * @return
@@ -380,7 +382,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento dei periodi prenotati
-	 * 
+	 *
 	 * @param lConn
 	 * @param aResidenza
 	 * @return
@@ -389,6 +391,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 	private Vector inserisciPeriPren(Connection lConn, Vector aPeriPren, Vector aSbProcPena,
 			BigDecimal lKeyFascicolo, BigDecimal lSogIdSoggetto, BigDecimal annoSiep, BigDecimal numeroSiep,
 			String ufficioSiep) throws F3BException {
+
 		SbPeriprenModel lPeriPren = null;
 		MisuraCautelareBdmcDAO lMisCautBdmcDao = null;
 		MisuraCautelareBdmcModel lMisCautBdmcMod = null;
@@ -480,12 +483,9 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 					if (lPeriPren.getNumeFascSiep() != null) {
 						lMisCautBdmcMod.setAnnoFascSiep(lPeriPren.getAnnoFascSiep());
 						lMisCautBdmcMod.setNumeFascSiep(lPeriPren.getNumeFascSiep());
-
 					} else {
-
 						lMisCautBdmcMod.setNumeFascSiep(numeroSiep);
 						lMisCautBdmcMod.setAnnoFascSiep(annoSiep);
-
 					}
 					lMisCautBdmcMod.setAnnoFascBdmc(lPeriPren.getAnnoFascBdmc());
 					lMisCautBdmcMod.setNumeFascBdmc(lPeriPren.getNumeFascBdmc());
@@ -527,6 +527,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 				throw new F3BException("ImportaDatiInBDMCController.inserisciPeriPren: " + sqe);
 			} finally {
 				cleanup(lMisCautBdmcDao);
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lMisCautelareDao);
 				mEsito.setEsitoPeriPren(lEsiti);
 			}
 		}
@@ -535,7 +537,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * inserimento dei Reati
-	 * 
+	 *
 	 * @param lConn
 	 * @param aReati
 	 * @param lKeyFascicolo
@@ -543,6 +545,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 	 */
 	private Vector inserisciReati(Connection lConn, Vector aCapoImpu, BigDecimal lKeyFascicolo)
 			throws F3BException {
+
 		ReatoDAO lReaDao = null;
 		ReatoSqlDAO lReaSiepDao = null;
 		// ReatoCircostanzaModel lReaPrincipale = null;
@@ -592,7 +595,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 						codFonteGiuridica = "-";
 						if (lSbViewReat.getCodiFontGiur() != null
 								&& lSbViewReat.getCodiFontGiur().length() != 0) {
-
 							if (lSbViewReat.getCodiFontGiur().compareTo("CC") == 0) {
 								codFonteGiuridica = "11";
 							} else if (lSbViewReat.getCodiFontGiur().compareTo("CP") == 0) {
@@ -610,7 +612,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 							} else if (lSbViewReat.getCodiFontGiur().compareTo("RD") == 0) {
 								codFonteGiuridica = "06";
 							}
-
 						}
 
 						lReaMod.setCodFonte(codFonteGiuridica);
@@ -705,7 +706,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 						if ((lBDMCCapoimpu.getArti0061Comm() != null)
 								&& (lBDMCCapoimpu.getArti0061Comm().length() > 0)) {
 							lReaMod.setComma(lBDMCCapoimpu.getArti0061Comm());
-
 						}
 						lReaDao.setDAOFromModel(lReaMod);
 						BigDecimal lKeyReato = lReaDao.insert();
@@ -743,7 +743,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 						if ((lBDMCCapoimpu.getArti0081Comm() != null)
 								&& (lBDMCCapoimpu.getArti0081Comm().length() > 0)) {
 							lReaMod.setComma(lBDMCCapoimpu.getArti0081Comm());
-
 						}
 						lReaDao.setDAOFromModel(lReaMod);
 						BigDecimal lKeyReato = lReaDao.insert();
@@ -781,7 +780,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 						if ((lBDMCCapoimpu.getArti0112Commi() != null)
 								&& (lBDMCCapoimpu.getArti0112Commi().length() > 0)) {
 							lReaMod.setComma(lBDMCCapoimpu.getArti0112Commi());
-
 						}
 						lReaDao.setDAOFromModel(lReaMod);
 						BigDecimal lKeyReato = lReaDao.insert();
@@ -964,7 +962,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 						// di mLog
 						siesLogger.debug("-------------------------------------------------------------");
 					}
-
 				}
 			}
 		} catch (DAOException ex) {
@@ -981,6 +978,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			throw new F3BException("ImportaDatiInBDMCController.inserisciReati: " + sqe);
 		} finally {
 			cleanup(lReaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lReaSiepDao);
 			mEsito.setEsitoReati(lEsiti);
 		}
 		return lReati;
@@ -988,7 +987,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento delle Circostanze
-	 * 
+	 *
 	 * @param lConn
 	 * @param aCircostanze
 	 * @param lKeyFascicolo
@@ -996,6 +995,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 	 */
 	private Vector inserisciCircostanze(Connection lConn, Vector aSbProcPena, BigDecimal lKeyFascicolo)
 			throws F3BException {
+
 		CircostanzaDAO lCirDao = null;
 		CircostanzaModel lCirMod = new CircostanzaModel();
 		Vector lCircostanze = new Vector();
@@ -1009,16 +1009,16 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			SbViewProcpenaModel circBDMC = (SbViewProcpenaModel) aSbProcPena.get(0);
 			/*
 			 * Iterator lItx = aCircostanze.iterator();
-			 * 
+			 *
 			 * while (lItx.hasNext()) { BDMCCircostanzaModel lBDMCCirc = (BDMCCircostanzaModel) lItx.next();
-			 * 
+			 *
 			 * lCirMod = lBDMCCirc.toCircostanza(); lCirMod.setFasSieIdFascicoloSiep(lKeyFascicolo);
 			 * lCirMod.setCodOperatoreInserimento(mUtente); lCirMod.setDataInserimento(mData);
 			 * lCirMod.setCodUfficioInserimento(mUfficio);
-			 * 
+			 *
 			 * lCirDao.setDAOFromModel(lCirMod); BigDecimal lKey = null; lKey = lCirDao.insert();
 			 * lCirMod.setIdCircostanza(lKey); lCirDao.stop(); lCircostanze.add(lCirMod);
-			 * 
+			 *
 			 * lEsiti.add(ICostantiSbPren.ESITO_POSITIVO); }
 			 */
 
@@ -1275,23 +1275,23 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			/*
 			 * lCirMod.setFasSieIdFascicoloSiep(lKeyFascicolo); lCirMod.setCodOperatoreInserimento(mUtente);
 			 * lCirMod.setDataInserimento(mData); lCirMod.setCodUfficioInserimento(mUfficio);
-			 * 
+			 *
 			 * lCirDao.setDAOFromModel(lCirMod); BigDecimal lKey = null; lKey = lCirDao.insert();
 			 * lCirMod.setIdCircostanza(lKey); lCirDao.stop(); lCircostanze.add(lCirMod);
-			 * 
+			 *
 			 * lEsiti.add(ICostantiSbPren.ESITO_POSITIVO);
 			 */
 
 		} catch (DAOException ex) {
 			rollback(lConn);
 			lEsiti.add(ex.getMessage());
-			throw new F3BException("ImportaDatiInBDMCController.inserisciCircostanze: Non posso inserire: "
-					+ ex);
+			throw new F3BException(
+					"ImportaDatiInBDMCController.inserisciCircostanze: Non posso inserire: " + ex);
 		} catch (Exception sqe) {
 			rollback(lConn);
 			lEsiti.add(sqe.getMessage());
-			throw new F3BException("ImportaDatiInBDMCController.inserisciCircostanze: Non posso inserire : "
-					+ sqe);
+			throw new F3BException(
+					"ImportaDatiInBDMCController.inserisciCircostanze: Non posso inserire : " + sqe);
 		} finally {
 			cleanup(lCirDao);
 			mEsito.setEsitoCircostanze(lEsiti);
@@ -1301,7 +1301,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento della Pena complessiva
-	 * 
+	 *
 	 * @param lConn
 	 * @param aPenaComplessiva
 	 * @param lKeyFascicolo
@@ -1309,6 +1309,7 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 	 */
 	private boolean inserisciPenaComplessiva(Connection lConn, Vector aSbProcPena, BigDecimal lKeyFascicolo)
 			throws F3BException {
+
 		PenaComplessivaDAO lPenDao = null;
 		PenaComplessivaModel lPenMod = new PenaComplessivaModel();
 		boolean flagPenaPresente = false;
@@ -1327,7 +1328,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			// Controllo se è Arresto o reclusione
 			// Carico i campi della tabella pena_complessiva
 			// ======================================================================
-			if (penaBDMC.getFlagReclArreAppe() != null && penaBDMC.getFlagReclArreAppe().compareTo("R") == 0) {
+			if (penaBDMC.getFlagReclArreAppe() != null
+					&& penaBDMC.getFlagReclArreAppe().compareTo("R") == 0) {
 				if (penaBDMC.getMesiPenaAppe() != null && penaBDMC.getGiorPenaAppe() != null
 						&& penaBDMC.getAnniPenaAppe() != null) {
 					flagPenaPresente = true;
@@ -1336,7 +1338,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 					lPenMod.setNumAnniReclusione(penaBDMC.getAnniPenaAppe());
 				}
 			}
-			if (penaBDMC.getFlagReclArreAppe() != null && penaBDMC.getFlagReclArreAppe().compareTo("A") == 0) {
+			if (penaBDMC.getFlagReclArreAppe() != null
+					&& penaBDMC.getFlagReclArreAppe().compareTo("A") == 0) {
 				if (penaBDMC.getMesiPenaAppe() != null && penaBDMC.getGiorPenaAppe() != null
 						&& penaBDMC.getAnniPenaAppe() != null) {
 					flagPenaPresente = true;
@@ -1351,7 +1354,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			// Controllo se è Arresto o reclusione
 			// Carico i campi della tabella pena_complessiva
 			// ======================================================================
-			if (penaBDMC.getFlagReclArreDiba() != null && penaBDMC.getFlagReclArreDiba().compareTo("R") == 0) {
+			if (penaBDMC.getFlagReclArreDiba() != null
+					&& penaBDMC.getFlagReclArreDiba().compareTo("R") == 0) {
 				if (penaBDMC.getMesiPenaDiba() != null && penaBDMC.getGiorPenaDiba() != null
 						&& penaBDMC.getAnniPenaDiba() != null) {
 					flagPenaPresente = true;
@@ -1360,7 +1364,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 					lPenMod.setNumAnniReclusione(penaBDMC.getAnniPenaDiba());
 				}
 			}
-			if (penaBDMC.getFlagReclArreDiba() != null && penaBDMC.getFlagReclArreDiba().compareTo("A") == 0) {
+			if (penaBDMC.getFlagReclArreDiba() != null
+					&& penaBDMC.getFlagReclArreDiba().compareTo("A") == 0) {
 				if (penaBDMC.getMesiPenaDiba() != null && penaBDMC.getGiorPenaDiba() != null
 						&& penaBDMC.getAnniPenaDiba() != null) {
 					flagPenaPresente = true;
@@ -1375,7 +1380,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			// Controllo se è Arresto o reclusione
 			// Carico i campi della tabella pena_complessiva
 			// ======================================================================
-			if (penaBDMC.getFlagReclArreGigu() != null && penaBDMC.getFlagReclArreGigu().compareTo("R") == 0) {
+			if (penaBDMC.getFlagReclArreGigu() != null
+					&& penaBDMC.getFlagReclArreGigu().compareTo("R") == 0) {
 				if (penaBDMC.getMesiPenaGigu() != null && penaBDMC.getGiorPenaGigu() != null
 						&& penaBDMC.getAnniPenaGigu() != null) {
 					flagPenaPresente = true;
@@ -1384,7 +1390,8 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 					lPenMod.setNumAnniReclusione(penaBDMC.getAnniPenaGigu());
 				}
 			}
-			if (penaBDMC.getFlagReclArreGigu() != null && penaBDMC.getFlagReclArreGigu().compareTo("A") == 0) {
+			if (penaBDMC.getFlagReclArreGigu() != null
+					&& penaBDMC.getFlagReclArreGigu().compareTo("A") == 0) {
 				if (penaBDMC.getMesiPenaGigu() != null && penaBDMC.getGiorPenaGigu() != null
 						&& penaBDMC.getAnniPenaGigu() != null) {
 					flagPenaPresente = true;
@@ -1433,13 +1440,14 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 
 	/**
 	 * Fujnzione di eliminazione dei dati BDMC appena importati con successo in SIEP
-	 * 
+	 *
 	 * @param idFile
 	 * @param lConn
 	 * @return vero se sono stai cancellati tutti correttamente - false altrimenti
 	 * @throws F3BException
 	 */
 	private boolean deleteDatiBDMC(BigDecimal aIdPren, Connection lConn) throws F3BException {
+
 		SbPeriprenDAO lPeriprenDAO = null;
 		SbPrenDAO lPrenDAO = null;
 		SbViewCapoimpuDAO lViewCapoimpuDAO = null;
@@ -1479,7 +1487,6 @@ public class ImportaDatiInBDMCController extends SiapController implements IImpo
 			siesLogger.info("Errore durante la cancellazione dei dati BDMC", sqe);
 			return false;
 		} finally {
-
 			cleanup(lPeriprenDAO);
 			cleanup(lPrenDAO);
 			cleanup(lViewCapoimpuDAO);

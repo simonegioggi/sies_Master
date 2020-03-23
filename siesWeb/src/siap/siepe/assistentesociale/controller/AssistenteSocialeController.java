@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siepe.SIEPEException;
 import siap.siepe.assistentesociale.dao.AssistenteSocialeDAO;
 import siap.siepe.assistentesociale.dao.AssistenteSocialeSqlDAO;
 import siap.siepe.assistentesociale.model.AssistenteSocialeModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -35,7 +35,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	/**
 	 * Metodo che si occupa dell'inserimento di un assistente sociale.
 	 * <p>
-	 * 
+	 *
 	 * @param aAssistenteSociale
 	 *            AssistenteSocialeModel Dati da inserire
 	 * @throws F3BException
@@ -44,6 +44,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 */
 	public AssistenteSocialeModel ExInserisciAssistenteSociale(AssistenteSocialeModel aAssistenteSociale)
 			throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeDAO lAssSocDao = null;
 		AssistenteSocialeModel lAssSocMod = null;
@@ -81,7 +82,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	/**
 	 * Metodo che si occupa della ricerca di uno o più Assistente Sociale.
 	 * <p>
-	 * 
+	 *
 	 * @param aAssistenteSociale
 	 *            AssistenteSocialeModel Model con parametri di ricerca.
 	 * @throws F3BException
@@ -89,6 +90,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 * @return Vector Elenco di assistenti sociali.
 	 */
 	public Vector ExRicercaAssistenteSociale(AssistenteSocialeModel aAssistenteSociale) throws F3BException {
+
 		Connection lConn = null;
 		Vector lAssistentiSociali = new Vector();
 		AssistenteSocialeSqlDAO lAssSocDao = null;
@@ -115,7 +117,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	/**
 	 * Metodo di creazione elenco degli assistenti sociali per combo-box, filtrati per codice ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            String codice d'ufficio
 	 * @throws F3BException
@@ -123,6 +125,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 * @return Vector lista Assistenti sociali per ComboBox
 	 */
 	public Vector ExElencoCbxAssistentiSocialiByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeSqlDAO lAssSocDao = null;
 		Vector lAssSocDecMods = new Vector();
@@ -140,7 +143,6 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 
 				lAssSocDecMods.add(new DecodeModel(lIdAssistenteSociale, lCognome + " " + lNome));
 			}
-
 		} catch (DAOException daoex) {
 			throw new SIEPEException(
 					"AssistenteSocialeController.ExElencoCbxEspertiByCodUfficio: Non posso leggere : "
@@ -156,7 +158,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	/**
 	 * Metodo che esegue la ricerca di un Assistente Sociale attraverso l'id.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            BigDecimal Id Assistente sociale.
 	 * @throws F3BException
@@ -164,6 +166,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 * @return AssistenteSocialeModel Model Assistente Sociale opportunamente popolato.
 	 */
 	public AssistenteSocialeModel ExRicercaAssistenteSocialeByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeSqlDAO lAssSocDao = null;
 		AssistenteSocialeModel lAssSocMod;
@@ -188,7 +191,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 * Metodo che esgue la modifica di un Assistente Sociale, con i dati contenuti nel relativo model passato
 	 * come argomento.
 	 * <p>
-	 * 
+	 *
 	 * @param aAssistenteSociale
 	 *            AssistenteSocialeModel Model con i dati
 	 * @throws F3BException
@@ -197,6 +200,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 */
 	public AssistenteSocialeModel ExModificaAssistenteSociale(AssistenteSocialeModel aAssistenteSociale)
 			throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeDAO lAssSocDao = null;
 		AssistenteSocialeModel lAssSocMod = new AssistenteSocialeModel(aAssistenteSociale);
@@ -217,9 +221,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 			throw new SIEPEException(
 					"AssistenteSocialeController.ExModificaAssistenteSociale: Non posso modificare l'assistente sociale : "
 							+ ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lAssSocDao);
 			cleanup(lConn);
 		}
@@ -229,13 +231,14 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	/**
 	 * Metodo che si occupa della rimozione di un determinato Assistente Sociale.
 	 * <p>
-	 * 
+	 *
 	 * @param IdAssistenteSociale
 	 *            BigDecimal Id dell'assistente sociale.
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
 	public void ExCancellaAssistenteSociale(BigDecimal IdAssistenteSociale) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeDAO lAssSocDao = null;
 
@@ -266,7 +269,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	/**
 	 * Ricerca Assistente Sociale per ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            String Codice ufficio.
 	 * @throws F3BException
@@ -274,6 +277,7 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 	 * @return Vector Elenco di assistenti sociali per ufficio.
 	 */
 	public Vector ExRicercaAssistenteSocialeByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeSqlDAO lAssSocDao = null;
 		Vector lAssSocMods = null;
@@ -281,7 +285,6 @@ public class AssistenteSocialeController extends SiapController implements IAssi
 		try {
 			lConn = getDBConnection();
 			lAssSocDao = new AssistenteSocialeSqlDAO(lConn);
-
 			lAssSocDao.ricercaAssistenteSocialeByCodUfficio(aCodUfficio);
 			lAssSocMods = new Vector(lAssSocDao.getModels());
 		} catch (DAOException daoex) {

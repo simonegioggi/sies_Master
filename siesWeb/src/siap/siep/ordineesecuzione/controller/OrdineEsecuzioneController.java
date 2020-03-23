@@ -148,6 +148,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOrdineEsecuzioneAltraCausa(EventoNotificaModel aEvento,
 			FascicoloSiepModel aFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -239,6 +240,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOENotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -367,6 +369,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciAnnNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, String IdEveOrd) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -471,7 +474,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 			commit(lConn);
 		} catch (DAOException daoEx) {
-
 			rollback(lConn);
 			throw new F3BException("OrdineEsecuzioneController.ExInserisciOENotifica: " + daoEx);
 		} catch (Exception ex) {
@@ -502,6 +504,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaOENotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -640,14 +643,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			throw new F3BException("OrdineEsecuzioneController.ExInserisciOModificaOENotifica: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException("OrdineEsecuzioneController.ExInserisciOModificaOENotifica: " + ex);
 		} finally {
@@ -681,6 +681,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExAggiornaEventoInserisciCampoNota(EventoModel aEvento, CampoNotaModel aCampoNota)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -700,7 +701,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		FascicoloSiepDAO lFascDao = null;
 		ArchiviazioneDAO lArcDao = null;
 		ArchiviazioneSqlDAO lArcSqlDao = null;
-
 		CumuloSqlDAO lCumSqlDao = null;
 		CumuloDAO lCumDao = null;
 		PenaCumuloSqlDAO lPenCumSqlDao = null;
@@ -1292,16 +1292,16 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// provvedimento che e' stato inserito contestualmente.
 			// n.b. lo annullo solo se e' stato inserito dallo stesso utente
 			// ========================================================================
-			if (aEvento.getCodTipoProvvedimento().equals("25")
-					&& (aEvento.getCodMotivo().equals("0948") || aEvento.getCodMotivo().equals("0949")
-							|| aEvento.getCodMotivo().equals("0950") || aEvento.getCodMotivo().equals("0951")
-							|| aEvento.getCodMotivo().equals("0952") || aEvento.getCodMotivo().equals("0953")
-							|| aEvento.getCodMotivo().equals("0954") || aEvento.getCodMotivo().equals("0955")
-							|| aEvento.getCodMotivo().equals("0956") || aEvento.getCodMotivo().equals("0957")
-							|| aEvento.getCodMotivo().equals("0958") || aEvento.getCodMotivo().equals("0959")
-							|| aEvento.getCodMotivo().equals("0987") || aEvento.getCodMotivo().equals("0988") || aEvento.getCodMotivo().equals("1006")// ticket 20191210013 
-							)
-					&& aEvento.getEveIdEvento() != null) {
+			if (aEvento.getCodTipoProvvedimento().equals("25") && (aEvento.getCodMotivo().equals("0948")
+					|| aEvento.getCodMotivo().equals("0949") || aEvento.getCodMotivo().equals("0950")
+					|| aEvento.getCodMotivo().equals("0951") || aEvento.getCodMotivo().equals("0952")
+					|| aEvento.getCodMotivo().equals("0953") || aEvento.getCodMotivo().equals("0954")
+					|| aEvento.getCodMotivo().equals("0955") || aEvento.getCodMotivo().equals("0956")
+					|| aEvento.getCodMotivo().equals("0957") || aEvento.getCodMotivo().equals("0958")
+					|| aEvento.getCodMotivo().equals("0959") || aEvento.getCodMotivo().equals("0987")
+					|| aEvento.getCodMotivo().equals("0988") || aEvento.getCodMotivo().equals("1006")// ticket
+																										// 20191210013
+			) && aEvento.getEveIdEvento() != null) {
 				lSqlDAO.ricercaEventoByKey(aEvento.getEveIdEvento());
 				EventoModel lEveAltraAut = (EventoModel) lSqlDAO.getModelByKey();
 				if (lEveAltraAut.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
@@ -1920,7 +1920,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lSqlDAO);
 			cleanup(lAnnSql);
 			cleanup(lAnnDAO);
-
 			cleanup(lPosSql);
 			cleanup(lPosDAO);
 			cleanup(lStatoDao);
@@ -1929,7 +1928,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lFascDao);
 			cleanup(lArcDao);
 			cleanup(lArcSqlDao);
-
 			cleanup(lSospDAO);
 			cleanup(lSospSqlDAO);
 			cleanup(lCumSqlDao);
@@ -1940,21 +1938,20 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lMisDAO);
 			cleanup(lLicDao);
 			cleanup(lSSRDAO);
-
 			cleanup(lFunDao);
 			cleanup(lAvvFascDao);
 			cleanup(lAvvFascSqlDao);
 			cleanup(lNotDao);
 			cleanup(lFascSqlDao);
 			cleanup(lDocDao);
-
 			cleanup(lEventoProc);
-
 			cleanup(lFascMsToFascSiepSqlDao);
 			cleanup(lFascMsToFascSiepDao);
-
 			cleanup(lMisSicSqlDao);
 			cleanup(lMisSicDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEventoProc03);
+			cleanup(lDatiFinaliCumSqlDao);
 
 			cleanup(lConn);
 		}
@@ -1970,6 +1967,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @throws F3BException
 	 */
 	public EventoModel ExCancellaEventoConStorePocedure(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveRet = new EventoModel(aEvento);
@@ -2073,9 +2071,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStorePocedure: " + daoEx);
 		} catch (Exception ex) {
@@ -2103,6 +2099,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaEventoNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenMod) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2233,16 +2230,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
-
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExInserisciOModificaEmissioneNotifica: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException("OrdineEsecuzioneController.ExInserisciOModificaEmissioneNotifica: " + ex);
 		} finally {
@@ -2270,6 +2263,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaLSNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2430,9 +2424,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			 */
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
@@ -2468,6 +2460,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaRevocaLSNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, MotivoEventoModel aMotEve) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2601,9 +2594,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lPenaResDao.stop();
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
@@ -2638,6 +2629,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaOEScadenzarioEventoByFascicolo(BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRicercaVect = new Vector();
 		OrdineEsecuzioneSqlDao lRicDao = null;
@@ -2656,7 +2648,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 			if (lRicercaVect.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExRicercaOEScadenzarioEventoByFascicolo: Non posso leggere : "
@@ -2670,13 +2661,14 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	}
 
 	/**
-	 * //ricerca tutti gli eventi
+	 * Ricerca tutti gli eventi
 	 *
 	 * @param aKeyFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaTuttiEventiByFascicolo(BigDecimal aKeyFascicolo) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("OrdineEsecuzioneController.ExRicercaTuttiEventiByFascicolo");
 
@@ -2717,6 +2709,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public Vector ExRicercaTuttiEventiByFascicoloPaged(BigDecimal aKeyFascicolo, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lRicVect = new Vector();
@@ -2751,6 +2744,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountEventi(BigDecimal aKeyFascicolo) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -2781,6 +2775,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public Vector ExRicercaEventiPerCodiceTipoEventoByFascicolo(BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lEveVect = new Vector();
 		OrdineEsecuzioneSqlDao lRicDao = null;
@@ -2799,7 +2794,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 			if (lEveVect.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExRicercaEventiConCodiceMotivoByFascicolo: Non posso leggere : "
@@ -2813,7 +2807,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		return lEveVect;
 	}
 
-	//
 	/**
 	 * RICERCA EVENTO E CAMPO NOTA ASSOCIATO
 	 *
@@ -2822,6 +2815,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @throws F3BException
 	 */
 	public CampoNotaModel ExRicercaEventoCampoNotaByIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		CampoNotaSqlDAO lCampoNotaSqlDAO = null;
@@ -2832,7 +2826,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lCampoNotaSqlDAO = new CampoNotaSqlDAO(lConn);
 			lCampoNotaSqlDAO.ricercaCampoNotaByKeyEventoDesc(aKey);
 			lCampoMod = (CampoNotaModel) lCampoNotaSqlDAO.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExRicercaEventoCampoNotaByIdEvento: Non posso leggere : "
@@ -2848,6 +2841,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 	public Vector ExAggiornaAvvenutaNotifica(NotificaModel[] IdNotifiche, BigDecimal aFasc,
 			boolean isIrreperibilita) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lVectNot = new Vector();
@@ -3127,16 +3121,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExAggiornaAvvenutaNotifica: daoEx --> " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExAggiornaAvvenutaNotifica: ex --> " + ex);
 		} finally {
 			cleanup(lNotDAO);
@@ -3221,6 +3211,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public String calcolaCodStatoNotifica(List aNotifiche, Date aDataAvvenutaNotifica,
 			RinnovoModel aRinnovo) {
+
 		String lCodStatoNotifica = "N";
 
 		if (aDataAvvenutaNotifica != null) {
@@ -3232,8 +3223,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 				if (lElement != null && "E".equals(lElement.getCodTipoNotifica())) {
 					if (lElement.getDataAvvenutaNotifica() != null) {
 						lCodStatoNotifica = "A";
-					} else // La notifica al condannato non e' avvenuta ( DataAvvenutaNotifica == null)
-					{
+					} else {
+						// La notifica al condannato non e' avvenuta ( DataAvvenutaNotifica == null)
 						if (aRinnovo != null && aRinnovo.getCodTipoRinnovo() != null) {
 							if ("R".equals(aRinnovo.getCodTipoRinnovo())
 									|| "N".equals(aRinnovo.getCodTipoRinnovo())
@@ -3250,7 +3241,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							}
 						}
 					}
-
 					break;
 				}
 			}
@@ -3264,6 +3254,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * maggiore e ritorna null
 	 */
 	public Date calcolaDataMaggiore(NotificaModel[] aNotifiche) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		// siesLogger.debug("aNotifiche.length : " + aNotifiche.length);
 
@@ -3317,15 +3308,15 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public Date calcolaPeriodoFeriale(Connection aConn, Date aDataMaggiore, String aCodUfficioUtente)
 			throws F3BException {
+
 		ParametroSqlDAO lParSqlDao = null;
 
 		ParametroModel lParMod = null;
 
 		Date lDataFineScadenza = aDataMaggiore;
 
-		if (lDataFineScadenza == null) {
+		if (lDataFineScadenza == null)
 			return null;
-		}
 
 		try {
 			lParSqlDao = new ParametroSqlDAO(aConn);
@@ -3410,6 +3401,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	public Vector ExAggiornaNotifichePosizioneGiuridicaLuogoDetenzioneVerbaleArresto(
 			NotificaModel[] IdNotifiche, PosizioneGiuridicaModel aPosMod, LuogoDetenzioneModel aLuoDetMod)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lVectNot = new Vector();
 
@@ -3483,9 +3475,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// BigDecimal lKeyLuoDet = null;
 			/* lKeyLuoDet = */lLuoDetDao.insert();
 			lLuoDetDao.stop();
-
 			/**************************** Fine Luogo Detenzione ***********************************/
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			throw new F3BException(
@@ -3566,6 +3556,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExUpdateValidaOE(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3585,11 +3576,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaDAO lMisDAO = null;
 		FascicoloSiepDAO lFasDao = null;
+		Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
 
-		Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 		BigDecimal lKeyPos = null;
 
 		try {
@@ -4323,7 +4314,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lPenResSqlDao);
 			cleanup(lNotEveDao);
 			cleanup(lScaDao);
-
 			cleanup(lScadeDao); // sca
 			cleanup(lEveSql);
 			cleanup(lNomProvDao);
@@ -4332,9 +4322,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lLicSqlDao);
 			cleanup(lMisDao);
 			cleanup(lMisDAO);
+			cleanup(lEveDaoBlob);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasDao);
 
 			cleanup(lConn);
-			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
 
@@ -4343,6 +4335,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 	public EventoModel ExUpdateValidaOESanSos(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -4350,7 +4343,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-		// PenaResiduaSqlDAO lPenResSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScadeDao = null;
@@ -4361,11 +4353,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaDAO lMisDAO = null;
+		Connection lConnBlob = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
 
-		Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 		BigDecimal lKeyPos = null;
 
 		try {
@@ -4729,10 +4721,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lPosDao);
 			cleanup(lPosSqlDao);
 			cleanup(lPenResDao);
-			// cleanup(lPenResSqlDao);
 			cleanup(lNotEveDao);
 			cleanup(lScaDao);
-
 			cleanup(lScadeDao); // sca
 			cleanup(lEveSql); // sca
 			cleanup(lNomProvDao);
@@ -4741,7 +4731,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lLicSqlDao);
 			cleanup(lMisDao);
 			cleanup(lMisDAO);
-
 			cleanup(lConn);
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
@@ -4760,6 +4749,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExUpdateValidaLS(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -4776,11 +4766,10 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
 		FascicoloSiepDAO lFasDao = null;
 		MisuraCautelareSqlDAO lMisCauDao = null;
-
-		EventoModel lEveMod = new EventoModel(aEvento);
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -5291,11 +5280,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lNomProvDao);
 			cleanup(lLicSqlDao);
 			cleanup(lEveSql);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasDao);
+			cleanup(lMisCauDao);
 		}
 
 		return lEveMod;
@@ -5311,6 +5301,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExUpdateValidaLSSanSos(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -5318,18 +5309,16 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-		// PenaResiduaSqlDAO lPenResSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
 		ScadenzarioDAO lSca03Dao = null;
 		ScadenzarioSqlDAO lScadeDao = null;
 		NomeProvvedimentoDAO lNomProvDao = null;
 		EventoSqlDAO lEveSql = null;
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
-
-		EventoModel lEveMod = new EventoModel(aEvento);
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -5592,16 +5581,13 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lPosDao);
 			cleanup(lPosSqlDao);
 			cleanup(lPenResDao);
-			// cleanup(lPenResSqlDao);
 			cleanup(lNotEveDao);
 			cleanup(lSca03Dao);
 			cleanup(lScadeDao);
 			cleanup(lNomProvDao);
 			cleanup(lLicSqlDao);
 			cleanup(lEveSql);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
@@ -5612,6 +5598,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	// metodo revoca legge simeone
 	public EventoModel ExUpdateValidaRS(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -5628,7 +5615,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		ScadenzarioDAO lSca03Dao = null;
 		ScadenzarioSqlDAO lScadeDao = null;
 		MisuraCautelareSqlDAO lMisCauDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -6066,16 +6052,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateRS : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateRS : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -6092,9 +6074,10 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lSca03Dao);
 			cleanup(lScadeDao);
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisCauDao);
 		}
 		return lEveMod;
 	}
@@ -6113,6 +6096,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExUpdateValidaOrdineEsecuzioneRidetPena(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -6123,20 +6107,14 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScadeDao = null;
-
 		NomeProvvedimentoDAO lNomProvDao = null;
-
 		NotificaEventoSqlDAO lNotEveDao = null;
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
 		AnnotazioneManualeDAO lAnnDao = null;
-
 		FungibilitaDAO lFunDao = null;
 		FungibilitaSqlDAO lFunSqlDao = null;
-
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraAlternativaDAO lMisAltDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -6676,9 +6654,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lMisAltSqlDao);
 			cleanup(lMisAltDao);
 			cleanup(lNotEveDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
@@ -6696,6 +6672,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExRicercaEventoOERDNonRegistratoByFascicoloSiep(BigDecimal aKey, String aTipEve,
 			String aTipProv) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		OrdineEsecuzioneSqlDao lOrdEveDao = null;
@@ -6727,6 +6704,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExRicercaEventoNonRegistratoByFascicoloSiep(BigDecimal aKey, String aTipEve,
 			String aTipProv) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		OrdineEsecuzioneSqlDao lOrdEveDao = null;
@@ -6756,11 +6734,10 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @throws F3BException
 	 */
 	public boolean ExEsisteOrdineEsecuzioneByFascicoloSiep(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		OrdineEsecuzioneSqlDao lOrdEveDao = null;
 		boolean lFlagOrdineEsecuzione = false;
-
-		// EventoSqlDAO lDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -6795,6 +6772,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	public EventoNotificaModel ExInserisciOModificaMANotificaRevocaLS(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, MisuraAlternativaModel aMisura, MotivoEventoModel aMotEve)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -6935,11 +6913,9 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("DAOException: " + daoEx);
-
 			rollback(lConn);
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExInserisciOModificaMANotificaRevocaLS: " + daoEx);
@@ -6947,7 +6923,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("Exception: " + ex);
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExInserisciOModificaMANotificaRevocaLS: " + ex);
@@ -6974,6 +6949,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @since 4.0
 	 */
 	public EventoModel ExInserisciOERidetPenaAltro(EventoNotificaModel aEveNotModel) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -7103,7 +7079,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception", ex);
-
 			ex.printStackTrace();
 			rollback(lConn);
 			throw new F3BException("OrdineEsecuzioneController.ExInserisciOERidetPenaAltro: " + ex);
@@ -7138,19 +7113,16 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExUpdateValidaOERidetPenaAltro(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
-
 		ScadenzarioSqlDAO lScadSqlDao = null;
 		ScadenzarioDAO lScaDao = null;
-
 		NotificaEventoSqlDAO lNotEveSqlDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -7409,16 +7381,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateValidaOERidetPenaAltro : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExUpdateValidaOrdineEsecuzioneRidetPena : " + ex);
 		} finally {
@@ -7426,14 +7394,10 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lPenResDao);
 			cleanup(lPosSqlDao);
 			cleanup(lStatoDao);
-
 			cleanup(lScadSqlDao);
 			cleanup(lScaDao);
-
 			cleanup(lNotEveSqlDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
@@ -7446,6 +7410,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	*/
 	public EventoNotificaModel ExInserisciVariazioneDecorrenzaScadenzaQC(EventoNotificaModel aEveNotMod,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -7571,20 +7536,17 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoModel ExUpdateValidaVariazioneDecScadQC(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
-
 		ScadenzarioSqlDAO lScadSqlDao = null;
 		ScadenzarioDAO lScaDao = null;
-
 		NotificaEventoSqlDAO lNotEveSqlDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -7687,16 +7649,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateValidaVariazioneDecScadQC : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateValidaVariazioneDecScadQC : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -7704,14 +7662,10 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lPenResSqlDao);
 			cleanup(lPosSqlDao);
 			cleanup(lStatoDao);
-
 			cleanup(lScadSqlDao);
 			cleanup(lScaDao);
-
 			cleanup(lNotEveSqlDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
@@ -7722,6 +7676,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	// metodo revoca legge alfano
 	public EventoModel ExUpdateValidaRED(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -7736,10 +7691,8 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		NotificaEventoSqlDAO lNotEveDao = null;
 		AltraCausaSqlDAO lAltCauDao = null;
 		FascicoloSiepDAO lFasDao = null;
-
 		ScadenzarioDAO lSca03Dao = null;
 		ScadenzarioSqlDAO lScadeDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -8005,9 +7958,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			siesLogger.error("OrdineEsecuzioneController.ExUpdateValidaRED", daoEx);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateValidaRED : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -8015,9 +7966,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			siesLogger.error("OrdineEsecuzioneController.ExUpdateValidaRED", ex);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineEsecuzioneController.ExUpdateValidaRED : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -8032,11 +7981,9 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// 30-05-2016 - MEV_YY da rilasciare dopo Primo Collaudo per V.10
 			cleanup(lEveSqlDao);
 			// 30-05-2016 - END MEV_YY
-
 			cleanup(lSca03Dao);
 			cleanup(lScadeDao);
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
@@ -8056,6 +8003,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	public EventoNotificaModel ExInserisciOModificaMANotificaRevocaLAlf(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, MisuraAlternativaModel aMisura, MotivoEventoModel aMotEve)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -8196,11 +8144,9 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("DAOException: " + daoEx);
-
 			rollback(lConn);
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExInserisciOModificaMANotificaRevocaLAlf: " + daoEx);
@@ -8208,7 +8154,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("Exception: " + ex);
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException(
 					"OrdineEsecuzioneController.ExInserisciOModificaMANotificaRevocaLAlf: " + ex);
@@ -8239,6 +8184,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaRevocaLAlfNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, MotivoEventoModel aMotEve) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -8373,9 +8319,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lPenaResDao.stop();
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
@@ -8413,6 +8357,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaLAlfNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -8563,9 +8508,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
@@ -8600,6 +8543,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 */
 	public EventoNotificaModel ExInserisciOModificaLegge78del2013(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -8752,9 +8696,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
@@ -8777,7 +8719,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		}
 
 		return lEveRet;
-
 	} // Chiudo ExInserisciOModificaLegge78del2013
 
 	// AMBROS 01--2014 - Misure di Sicurezza SIEP
@@ -8786,6 +8727,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	// 06-03-2015 cambiati gli ultimi 2 parametri (da bigDecimal a list, e da Model a Vector)
 	public EventoNotificaModel ExInserisciOENotificaMisSic(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, List aMisureOld, Vector aMisureNewSius) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
@@ -8795,6 +8737,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		MisuraSicurezzaSqlDAO lMisSqlDao = null;
 		MisuraSicurezzaDAO lMisDao = null;
 		MisuraSicurezzaDAO lMisDao1 = null;
+
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
 
 		try {
@@ -8940,11 +8883,13 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			cleanup(lPenaResDao);
 			cleanup(lMisDao);
 			cleanup(lMisSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisDao1);
+
 			cleanup(lConn);
 		}
 
 		return lEveRet;
-
 	} // Chiude ExInserisciOENotificaMisSis
 
 	/*
@@ -8960,12 +8905,10 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		EventoDAO eventoDAO = null;
 		NotificaDAO notificaDAO = null;
 		ScadenzarioDAO scadenzarioDAO = null;
-
 		// altri insert
 		AutoritaEsternaDAO autoritaEsternaDAO = null;
 		CampoNotaDAO campoNotaDAO = null;
 		MisuraAlternativaDAO misAltDAO = null;
-
 		// altri update
 		PenaResiduaDAO penaResiduaDAO = null;
 		// DepositoOrdinanzaPcDAO depositoOrdinanzaPcDAO = null;
@@ -9176,7 +9119,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		// DepositoOrdinanzaPcDAO depositoOrdinanzaPcDAO = null;
 		PenaResiduaDAO penaResiduaDAO = null;
 		MisuraAlternativaDAO misAltDAO = null;
-
 		// recupero dati
 		// DepositoOrdinanzaPcSqlDAO depositoOrdinanzaPcSqlDAO = null;
 		ScadenzarioSqlDAO scadenzarioSqlDAO = null;

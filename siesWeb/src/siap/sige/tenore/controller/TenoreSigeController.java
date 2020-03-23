@@ -59,9 +59,11 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public Vector ExRicercaTenoreSige(TenoreSigeModel aTenoreSige) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTenoreSigi = new Vector();
 		TenoreSigeDAO lTenDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lTenDao = new TenoreSigeDAO(lConn);
@@ -95,6 +97,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @throws F3BException
 	 */
 	public Vector<TenoreSigeModel> ExRicercaTenoreByRichiesta(BigDecimal aIdRichiesta) throws F3BException {
+
 		Connection lConn = null;
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
@@ -123,12 +126,18 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @return
 	 * @throws F3BException
 	 */
-	public Vector ExRicercaTenoreByRichiesta(BigDecimal aIdRichiesta, Connection lConn) throws F3BException {
+	public Vector ExRicercaTenoreByRichiesta(BigDecimal aIdRichiesta, Connection aConn) throws F3BException {
+
 		Vector lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
 
 		try {
-			lConn = getDBConnection();
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBConnection();
 			lTenDao = new TenoreSigeSqlDAO(lConn);
 			lTenDao.ricercaTenoriByRichiesta(aIdRichiesta);
 			lTenoriSige = new Vector(lTenDao.getModels());
@@ -138,11 +147,15 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			throw new F3BException("TenoreSigeController.ExRicercaTenoreByRichiesta Exception: " + e);
 		} finally {
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aConn == null)
+				cleanup(lConn);
 		}
 		return lTenoriSige;
 	}
 
 	public Vector<TenoreSigeModel> ExRicercaTenoreById(BigDecimal aITenoreSige) throws F3BException {
+
 		Connection lConn = null;
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
@@ -165,6 +178,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 
 	public Vector<TenoreSigeEstesoModel> ExRicercaTenoreEstesoById(BigDecimal aITenoreSige)
 			throws F3BException {
+
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		Vector<TenoreSigeEstesoModel> lTenoriEstesi = new Vector<>();
 		IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
@@ -206,7 +220,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public Vector<TenoreSigeModel> ExRicercaTenori(TenoreSigeModel aTenore) throws F3BException {
 
 		Connection lConn = null;
@@ -247,6 +260,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @throws F3BException
 	 */
 	public Vector<TenoreSigeModel> ExRicercaTenoriAttivi(TenoreSigeModel aTenore) throws F3BException {
+
 		Connection lConn = null;
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
@@ -282,6 +296,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 */
 	public Vector<TenoreSigeEstesoModel> ExRicercaTenoreEstesoByRichiesta(BigDecimal aIdRichiesta)
 			throws F3BException {
+
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		Vector<TenoreSigeEstesoModel> lTenoriEstesi = new Vector<>();
 		IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
@@ -327,6 +342,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 */
 	public Vector<TenoreSigeEstesoModel> ExRicercaTenoreEstesoByRichiesta(BigDecimal aIdRichiesta,
 			Connection lConn) throws F3BException {
+
 		Vector lTenoriSige = null;
 		Vector lTenoriEstesi = new Vector();
 		// Modifica del 23/11/2016 MEV_15_S4
@@ -400,9 +416,9 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @return Vector di TenoreSigeEstesoModel
 	 * @throws F3BException
 	 */
-
 	public Vector<TenoreSigeEstesoModel> ExRicercaTenoriEstesiAttivi(TenoreSigeModel aTenore)
 			throws F3BException {
+
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		Vector<TenoreSigeEstesoModel> lTenoriEstesi = new Vector<>();
 		IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
@@ -446,11 +462,12 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public SentenzaModel ricercaSentenzaByKey(BigDecimal aSentenzaKey) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaSqlDAO lSenDao = null;
 		SentenzaModel lSen = null;
+
 		try {
 			lConn = getDBConnection();
 			lSenDao = new SentenzaSqlDAO(lConn);
@@ -476,6 +493,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @throws F3BException
 	 */
 	public void ExInserisciOggettoXRichiesta(TenoreSigeModel[] aTenori) throws F3BException {
+
 		Connection lConn = null;
 		if (aTenori == null)
 			throw new F3BException(
@@ -515,14 +533,13 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	public void ExModificaOggettoXRichiesta(BigDecimal aIdRichiestaSige, TenoreSigeModel[] aTenori,
 			String codContenutoOld) throws F3BException {
 
-		Vector lElencoTenoriSige = null;
-
-		Connection lConn = null;
 		if (aTenori == null)
 			throw new F3BException(
 					"TenoreSigeController.ExModificaOggettoXRichiesta: Tenore da modificare null !!");
 		int lNum = aTenori.length;
 		if (lNum > 0) {
+			Vector lElencoTenoriSige = null;
+			Connection lConn = null;
 			TenoreSigeDAO lTenDao = null;
 			TenoreSentenzaReatoDAO lTenSenReaDAO = null;
 			// 20190514 [SG]: aggiunto dao
@@ -586,6 +603,8 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			} finally {
 				cleanup(lTenDao);
 				cleanup(lTenSenReaDAO);
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lTenSqlDao);
 				cleanup(lConn);
 			}
 		} // endif
@@ -638,7 +657,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			} finally {
 				cleanup(lTenDao);
 				cleanup(lTenSenReaDAO);
-
 			}
 		} // endif
 	}
@@ -647,14 +665,15 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	public void ExInserisciEsitiOggetto(TenoreSigeModel aTenore, TenoreSentenzaReatoModel[] aTenori,
 			DatiProvvedimentoSigeModel[] aDatiProv, AnnotazioneManualeModel aAnnotazioneManuale,
 			Vector aListaRichieste, BigDecimal aIdProvvedimento) throws F3BException {
+
 		TenoreSigeDAO lTenDao = null;
 		TenoreSentenzaReatoDAO lTenSenReaDAO = null;
 		DatiProvvedimentoSigeDAO lDatiProvDao = null;
 		AnnotazioneManualeDAO lAnnDao = null;
+		EventoDAO lEventoDAO = null;
 		Connection lConn = null;
 
 		try {
-
 			// Si ricava la connessione al DB
 			lConn = getDBConnection();
 
@@ -782,7 +801,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				 */
 				// Aggiornamento del COD_MOTIVO dell'EVENTO con il valore
 				// richiesto da SIEP: 0284
-				EventoDAO lEventoDAO = new EventoDAO(lConn);
+				lEventoDAO = new EventoDAO(lConn);
 				lEventoDAO.setCodMotivo("0284");
 				lEventoDAO.setCodOperatoreAggiornamento(aAnnotazioneManuale.getCodOperatoreInserimento());
 				lEventoDAO.setDataAggiornamento(aAnnotazioneManuale.getDataInserimento());
@@ -805,7 +824,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				lEventoDAO.selCondizioneUpdate(aAnnotazioneManuale.getEveIdEvento());
 				lEventoDAO.update();
 				lEventoDAO.stop();
-				cleanup(lEventoDAO);
 			}
 
 			commit(lConn);
@@ -819,78 +837,12 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			cleanup(lTenDao);
 			cleanup(lDatiProvDao);
 			cleanup(lTenSenReaDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAnnDao);
+			cleanup(lEventoDAO);
 			cleanup(lConn);
 		}
 	}
-
-	/**
-	 * La funzione effettua l'inserimento di un elenco di oggetti. L'elengo viene ragggruppato in liste di
-	 * elementi ccoorispondenti allo stesso oggetto che vengono inseriti utilizzando la funzione
-	 * ExInserisciOggetto(...). Se aIdFascicoloSige non è null vengono storicizzati eventuali oggetti già
-	 * presenti nella tabella TENORE_SIGE e legati a quel Fascicolo SIGE.
-	 *
-	 * @param aTenori
-	 * @param aIdFascicoloSige
-	 * @param aConn
-	 * @throws F3BException
-	 */
-	/*
-	 * public void ExInserisciOggetti( Vector aTenori, BigDecimal aIdFascicoloSige, Connection aConn ) throws
-	 * F3BException { TenoreSigeDAO lTenDao = null; TenoreSigeModel lTenore = null;
-	 *
-	 * if (aTenori == null ) throw new
-	 * F3BException("TenoreSigeController.ExInserisciOggetto: Tenore da inserire null !!"); int lNum =
-	 * aTenori.size(); if (lNum > 0) { try { // Inizializzazione lTenDao = new TenoreSigeDAO(aConn); lTenore =
-	 * (TenoreSigeModel) aTenori.get(0);
-	 *
-	 * // Storicizzazione eventuali oggetti collegati al Fascicolo SIGE if (aIdFascicoloSige != null) {
-	 * lTenDao.setDAOPerStoricizzare(lTenore);
-	 *
-	 * //lTenDao.selCondizioneFasSige(aIdFascicoloSige);
-	 * lTenDao.setCondizioneFasSigePerStoricizzazione(aIdFascicoloSige); lTenDao.update(); lTenDao.stop();
-	 * cleanup(lTenDao);
-	 *
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("Effettuata storicizzazione oggetti" ); } Vector lElencoTenori =
-	 * new Vector(aTenori);
-	 *
-	 * // Iterazione della lista per estrarre sottoliste per codice oggetto while (lElencoTenori.size() > 0) {
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("Dimensione lista generale tenori -> " + lElencoTenori.size() );
-	 *
-	 * lTenore = (TenoreSigeModel)lElencoTenori.firstElement();
-	 *
-	 * // Si istanzia la lista oggetti Vector lOggetto = new Vector(); Vector lNewElenco = new Vector();
-	 *
-	 * // lOggetto.add(new TenoreSigeModel(lTenore)); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile
-	 * di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.debug("iterazione per estrarre sottolista  " );
-	 *
-	 * // Iterazione per estrarre tutti i tenori con lo stesso codice oggetto Iterator itx2 =
-	 * lElencoTenori.iterator(); while (itx2.hasNext()) { TenoreSigeModel lTenoreCorr =
-	 * (TenoreSigeModel)itx2.next(); if
-	 * (lTenoreCorr.getCodOggettoSige().equalsIgnoreCase(lTenore.getCodOggettoSige())) {
-	 * //lTenoreCorr.setCodEsitoSige(null); // 10-04-2009 Annullamento dell'Esito dei TENORE_SIGE
-	 * storicizzati. lOggetto.add(new TenoreSigeModel(lTenoreCorr)); } else lNewElenco.add(new
-	 * TenoreSigeModel(lTenoreCorr)); }
-	 *
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("Dimensione lista tenori per oggetto " +
-	 * lTenore.getCodOggettoSige() + " ->  " + lOggetto.size() ); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
-	 * variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.debug("Dimensione lista tenori rimanenti ->  " + lNewElenco.size() );
-	 *
-	 * // Inserimento dell'oggetto ExInserisciOggetto((TenoreSigeModel[] ) lOggetto.toArray( new
-	 * TenoreSigeModel[0] ), aConn );
-	 *
-	 * lElencoTenori = new Vector(lNewElenco) ;
-	 *
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("End while "); }
-	 *
-	 * } catch (F3BException fe) { throw fe; } catch (Exception sqe) { throw new
-	 * F3BException("TenoreSigeController.ExInserisciOggetti: " + sqe); } } // endif }
-	 */
 
 	/**
 	 * La funzione effettua l'inserimento di un elenco di oggetti. Se aIdFascicoloSige non è null vengono
@@ -906,8 +858,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 
 		TenoreSigeDAO lTenDao = null;
 		TenoreSigeModel lTenore = null;
-		// TenoreSentenzaReatoDAO lTenSenReaDAO = null;
-		// TenoreSigeSqlDAO lTenSigeDao = null;
 
 		if (aTenori == null)
 			throw new F3BException("TenoreSigeController.ExInserisciOggetto: Tenore da inserire null !!");
@@ -924,7 +874,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 					lTenDao.setCondizioneFasSigePerStoricizzazione(aIdFascicoloSige);
 					lTenDao.update();
 					lTenDao.stop();
-					cleanup(lTenDao);
 
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
@@ -988,6 +937,9 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				throw fe;
 			} catch (Exception sqe) {
 				throw new F3BException("TenoreSigeController.ExInserisciOggetti: " + sqe);
+			} finally {
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lTenDao);
 			}
 		} // endif
 	}
@@ -1007,6 +959,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 */
 	public void ExCancellaTenoreSige(BigDecimal aIdRichiestaSige, BigDecimal aIdTenoreSige,
 			BigDecimal aIdSentenza) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSigeDAO lTenDao = null;
 		TenoreSentenzaReatoDAO lTenSenReaDAO = null;
@@ -1075,6 +1028,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @throws F3BException
 	 */
 	public void ExControlloDataIrrevocabilita(Vector aTenori) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeSentenzaDAO lFasSigeSenDAO = null;
 		TenoreSigeModel lTenore = null;
@@ -1103,9 +1057,12 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 				throw fe;
 			} catch (Exception sqe) {
 				throw new F3BException("TenoreSigeController.ExControlloDataIrrevocabilita: " + sqe);
+			} finally {
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lConn);
+				cleanup(lFasSigeSenDAO);
 			}
 		} // endif
-
 	}
 
 	/**
@@ -1116,14 +1073,19 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @return Vector
 	 * @throws F3BException
 	 */
-
-	public Vector ExRicercaTenoreByProvvedimento(BigDecimal aIdProvvedimento, Connection lConn)
+	public Vector ExRicercaTenoreByProvvedimento(BigDecimal aIdProvvedimento, Connection aConn)
 			throws F3BException {
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
 		Vector lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
 
 		try {
-			lConn = getDBConnection();
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBConnection();
 			lTenDao = new TenoreSigeSqlDAO(lConn);
 			lTenDao.ricercaTenoriByProvvedimento(aIdProvvedimento);
 			lTenoriSige = new Vector(lTenDao.getModels());
@@ -1134,6 +1096,9 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			throw new F3BException("TenoreSigeController.ExRicercaTenoreByProvvedimento Exception: " + e);
 		} finally {
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aConn == null)
+				cleanup(lConn);
 		}
 		return lTenoriSige;
 	}
@@ -1146,12 +1111,20 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @param lConn
 	 * @throws F3BException
 	 */
-	public boolean ExAggiornaTenoriPerAnnullamento(ProvvedimentoSigeModel lProSige, Connection lConn)
+	public boolean ExAggiornaTenoriPerAnnullamento(ProvvedimentoSigeModel lProSige, Connection aConn)
 			throws F3BException {
+
 		TenoreSigeDAO lTenDao = null;
 		boolean lDataFineNull = false;
 
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
+
 		try {
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBConnection();
 
 			// Inizializzazione
 			lTenDao = new TenoreSigeDAO(lConn);
@@ -1188,6 +1161,9 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			throw new F3BException("TenoreSigeController.ExAggiornaTenoriPerAnnullamento : " + e);
 		} finally {
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aConn == null)
+				cleanup(lConn);
 		}
 		return lDataFineNull;
 	}
@@ -1200,6 +1176,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @throws F3BException
 	 */
 	public BigDecimal getCountSentenzeByIdTenoreSige(BigDecimal aIdTenoreSige) throws F3BException {
+
 		Connection lConn = null;
 		TenoreSigeSqlDAO lTenoreSigeDao = null;
 		BigDecimal lCount = new BigDecimal(0);
@@ -1229,10 +1206,10 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 			throws F3BException {
 
 		Vector<TenoreSigeEstesoModel> lTenoriEstesi = new Vector<>();
-		IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
-		IFasSigeSentenza lFSSCtrl = SIGELookupRemote.getFasSigeSentenzaRemote(); // 20/01/2010
 
 		try {
+			IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
+			IFasSigeSentenza lFSSCtrl = SIGELookupRemote.getFasSigeSentenzaRemote(); // 20/01/2010
 			// Ricerca dei Tenori Sige
 			Vector<TenoreSigeModel> lTenoriSige = ExRicercaTenoreByIdProvvedimento(idProvvedimento);
 
@@ -1283,6 +1260,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 */
 	public Vector<TenoreSigeModel> ExRicercaTenoreByIdProvvedimento(BigDecimal idProvvedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
@@ -1306,18 +1284,21 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	@Override
 	public Vector<TenoreSigeEstesoModel> ExRicercaTenoriByCodOggettoSigeAndIdProvvedimento(String codOggetto,
 			BigDecimal idProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
 		Vector<TenoreSigeEstesoModel> lTenoriEstesi = new Vector<>();
-		IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
-		IFasSigeSentenza lFSSCtrl = SIGELookupRemote.getFasSigeSentenzaRemote(); // 20/01/2010
+
 		try {
 			lConn = getDBConnection();
 			lTenDao = new TenoreSigeSqlDAO(lConn);
 			lTenDao.ricercaTenoriByProvvedimento(idProvvedimento);
 			lTenDao.ricercaTenoriByProvvedimentoAndCodOggetto(codOggetto, idProvvedimento);
 			lTenoriSige = new Vector(lTenDao.getModels());
+
+			IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
+			IFasSigeSentenza lFSSCtrl = SIGELookupRemote.getFasSigeSentenzaRemote(); // 20/01/2010
 
 			for (TenoreSigeModel lTenore : lTenoriSige) {
 				SentenzaModel lSentenza = ricercaSentenzaByKey(lTenore.getIdSentenza());
@@ -1335,7 +1316,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 
 				lTenoriEstesi.add(lTenoreEsteso);
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"TenoreSigeController.ExRicercaTenoriByCodOggettoSigeAndIdProvvedimento DAOException: "
@@ -1350,19 +1330,6 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 		return lTenoriEstesi;
 	}
 
-	/*
-	 * public void ExModificaTenoreSige (TenoreSigeModel aTenoreSige ) throws F3BException { Connection lConn
-	 * = null; Vector lTenoreSigi = new Vector(); TenoreSigeDAO lTenDao = null;
-	 *
-	 *
-	 *
-	 * try { lConn = getDBConnection(); lTenDao = new TenoreSigeDAO(lConn);
-	 * lTenDao.setDAOFromModel(aTenoreSige ); lTenDao.update(); commit(lConn); } catch (DAOException ex) {
-	 * rollback(lConn); throw new F3BException("TenoreSigeController.ExModifica: Non posso inserire: " + ex);
-	 * } catch (SQLException sqe) { rollback(lConn); throw new
-	 * F3BException("TenoreSigeController.ExModificaTenoreSige: Non posso inserire il soggetti : " + sqe); }
-	 * finally { cleanup(lTenDao); cleanup(lConn); } }
-	 */
 	/**
 	 * Ricerca le Sentenze legate al Tenore Sige.
 	 *
@@ -1373,12 +1340,19 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSentenzeByRichiestaAndIdTenoreSige(BigDecimal aIdRichiesta,
-			BigDecimal aIdTenoreSige, Connection lConn) throws F3BException {
+			BigDecimal aIdTenoreSige, Connection aConn) throws F3BException {
+
 		Vector lSentenzeTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;
 
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
+
 		try {
-			lConn = getDBConnection();
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBConnection();
 			lTenDao = new TenoreSigeSqlDAO(lConn);
 			lTenDao.ricercaSentenzeByRichiestaAndIdTenoreSige(aIdRichiesta, aIdTenoreSige);
 			lSentenzeTenoriSige = new Vector(lTenDao.getModels());
@@ -1391,6 +1365,9 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 					"TenoreSigeController.ExRicercaSentenzeByRichiestaAndIdTenoreSige Exception: " + e);
 		} finally {
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aConn == null)
+				cleanup(lConn);
 		}
 		return lSentenzeTenoriSige;
 	}
@@ -1405,12 +1382,13 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 */
 	public Vector<TenoreSigeEstesoModel> ExRicercaTenoreEstesoByRichiesta(BigDecimal aIdRichiesta,
 			String codContenuto) throws F3BException {
+
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		Vector<TenoreSigeEstesoModel> lTenoriEstesi = new Vector<>();
-		IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
-		IFasSigeSentenza lFSSCtrl = SIGELookupRemote.getFasSigeSentenzaRemote(); // 20/01/2010
 
 		try {
+			IReato lReaCtrl = SIEPLookupRemote.getReatoRemote();
+			IFasSigeSentenza lFSSCtrl = SIGELookupRemote.getFasSigeSentenzaRemote(); // 20/01/2010
 			// Ricerca dei Tenori Sige
 			lTenoriSige = ExRicercaTenoreByRichiesta(aIdRichiesta, codContenuto);
 
@@ -1448,6 +1426,7 @@ public class TenoreSigeController extends GenericController implements ITenoreSi
 	 */
 	public Vector<TenoreSigeModel> ExRicercaTenoreByRichiesta(BigDecimal aIdRichiesta, String codContenuto)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<TenoreSigeModel> lTenoriSige = null;
 		TenoreSigeSqlDAO lTenDao = null;

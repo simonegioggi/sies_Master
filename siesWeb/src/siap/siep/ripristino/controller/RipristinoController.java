@@ -5,6 +5,9 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -23,9 +26,6 @@ import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class RipristinoController extends SiapController implements IRipristino {
@@ -50,11 +50,12 @@ public class RipristinoController extends SiapController implements IRipristino 
 
 	public EventoModel ExUpdateValidaProvvedimentoRipristino(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
+		Connection lConnBlob = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		StatoProcedimentoDAO lStatoDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
@@ -64,8 +65,6 @@ public class RipristinoController extends SiapController implements IRipristino 
 		ScadenzarioSqlDAO lScaSqlDao = null;
 		DecretoOrdinanzaSiepSqlDAO lDecOrdSqlDao = null;
 		DecretoOrdinanzaSiepDAO lDecOrdDao = null;
-
-		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		try {
@@ -73,7 +72,7 @@ public class RipristinoController extends SiapController implements IRipristino 
 
 			// ** Aggiorna EVENTO **
 			lEveDao = new EventoDAO(lConn);
-//			EventoSqlDAO lEveSqlDAO = new EventoSqlDAO(lConn);
+			// EventoSqlDAO lEveSqlDAO = new EventoSqlDAO(lConn);
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 			lPenResDao = new PenaResiduaDAO(lConn);
 
@@ -134,9 +133,9 @@ public class RipristinoController extends SiapController implements IRipristino 
 			// Cerca POSIZIONE_GIURIDICA corrente
 			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
 			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
-			/*PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) */lPosSqlDao.getModelByKey();
+			/* PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) */lPosSqlDao.getModelByKey();
 
-//			String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
+			// String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
 
 			// Cerca l'ultima PENA_RESIDUA per fascicolo
 			PenaResiduaModel lPenResMod = new PenaResiduaModel();
@@ -146,7 +145,7 @@ public class RipristinoController extends SiapController implements IRipristino 
 			/*
 			 * // SCADENZARIO boolean lFlagLibero = false; if (lCodPosizione != null &&
 			 * (lCodPosizione.equals("07") || lCodPosizione.equals("10"))) // LIBERO { lFlagLibero = true; }
-			 * 
+			 *
 			 * boolean lFlagAltraCausa = false; if (aFascicolo.getFlagAltraCausa() != null &&
 			 * aFascicolo.getFlagAltraCausa().equals("S")) // ALTRA CAUSA { lFlagAltraCausa = true; } // Se
 			 * non è libero oppure è libero ma detenuto per altra causa // modifica/inserisce lo scadenzario
@@ -246,10 +245,9 @@ public class RipristinoController extends SiapController implements IRipristino 
 			cleanup(lScaSqlDao);
 			cleanup(lDecOrdSqlDao);
 			cleanup(lDecOrdDao);
+			cleanup(lEveDaoBlob);
 
 			cleanup(lConn);
-
-			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
 

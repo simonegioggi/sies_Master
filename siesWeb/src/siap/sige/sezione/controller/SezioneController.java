@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sige.SIGEException;
 import siap.sige.magistratosezione.dao.MagistratoSezioneSqlDAO;
 import siap.sige.sezione.dao.SezioneDAO;
 import siap.sige.sezione.dao.SezioneSqlDAO;
 import siap.sige.sezione.model.SezioneModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -37,8 +37,7 @@ public class SezioneController extends SiapController implements ISezione {
 
 	/**
 	 * Metodo che esegue l'inserimento di una sezione.
-	 * <p>
-	 * 
+	 *
 	 * @param aSezione
 	 *            SezioneModel Il model con i dati da inserire.
 	 * @throws F3BException
@@ -46,6 +45,7 @@ public class SezioneController extends SiapController implements ISezione {
 	 * @return CuratoreModel ritorna il model.
 	 */
 	public SezioneModel ExInserisciSezione(SezioneModel aSezione) throws F3BException {
+
 		Connection lConn = null;
 		SezioneDAO lSezDao = null;
 		SezioneModel lSezMod = null;
@@ -79,8 +79,7 @@ public class SezioneController extends SiapController implements ISezione {
 
 	/**
 	 * Metodo che esegue la ricerca di un Sezione.
-	 * <p>
-	 * 
+	 *
 	 * @param aSezione
 	 *            Model popolato con i parametri necessari per la ricerca
 	 * @return ritorna l'insieme delle occorrenze.
@@ -88,6 +87,7 @@ public class SezioneController extends SiapController implements ISezione {
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaSezione(SezioneModel aSezione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSezioni = new Vector();
 		SezioneSqlDAO lSezDao = null;
@@ -113,8 +113,7 @@ public class SezioneController extends SiapController implements ISezione {
 	/**
 	 * Metodo che si occupa di recupera l'elenco delle sezioni per popolare elementi Combobox oppurtamente
 	 * filtrati per il codice ufficio.
-	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            codice uffcio.
 	 * @return ritorna l'insieme di SezioneModel delle occorrenze.
@@ -122,6 +121,7 @@ public class SezioneController extends SiapController implements ISezione {
 	 *             propaga errore di eccezione.
 	 */
 	public Collection ExElencoCbxSezioniByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		SezioneSqlDAO lSezDao = null;
 		Collection lColl = new ArrayList();
@@ -142,8 +142,8 @@ public class SezioneController extends SiapController implements ISezione {
 
 			lSezDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("SezioneController.ExElencoCbxCuratoriByCodUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SezioneController.ExElencoCbxCuratoriByCodUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSezDao);
 			cleanup(lConn);
@@ -154,8 +154,7 @@ public class SezioneController extends SiapController implements ISezione {
 
 	/**
 	 * Metodo che esegue la ricerca puntuale per l'id di un Sezione.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id chiave di puntamento al record.
 	 * @return SezioneModel ritorna il model opportunamente popolato.
@@ -163,6 +162,7 @@ public class SezioneController extends SiapController implements ISezione {
 	 *             propga errore di eccezione.
 	 */
 	public SezioneModel ExRicercaSezioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		SezioneSqlDAO lSezDao = null;
 		SezioneModel lSezMod;
@@ -183,8 +183,7 @@ public class SezioneController extends SiapController implements ISezione {
 
 	/**
 	 * Metodo che esegue la modifica dei dati di un Sezione.
-	 * <p>
-	 * 
+	 *
 	 * @param aSezione
 	 *            Model Sezione.
 	 * @return model dell'e Sezione di ritorno.
@@ -192,6 +191,7 @@ public class SezioneController extends SiapController implements ISezione {
 	 *             propga errore di eccezione.
 	 */
 	public SezioneModel ExModificaSezione(SezioneModel aSezione) throws F3BException {
+
 		Connection lConn = null;
 		SezioneDAO lSezDao = null;
 		SezioneModel lSezMod = new SezioneModel(aSezione);
@@ -217,15 +217,15 @@ public class SezioneController extends SiapController implements ISezione {
 	}
 
 	/**
-	 * <p>
 	 * Description: : la funzione effettua la cancellazione di un record nella tabella Sezione
-	 * 
+	 *
 	 * @param IdSezione
 	 *            : identificatore univoco Sezione
 	 * @return
 	 * @throws F3BException
 	 */
 	public void ExCancellaSezione(BigDecimal IdSezione) throws F3BException {
+
 		Connection lConn = null;
 		SezioneDAO lSezDao = null;
 
@@ -253,9 +253,8 @@ public class SezioneController extends SiapController implements ISezione {
 	}
 
 	/**
-	 * <p>
 	 * Description: : restituisce l'elenco degli Esperti per ufficio
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            : COdice ufficio di appartenenza
 	 * @return
@@ -263,6 +262,7 @@ public class SezioneController extends SiapController implements ISezione {
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaSezioneByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		SezioneSqlDAO lCurDao = null;
 		Vector lCurMods = null;
@@ -274,8 +274,8 @@ public class SezioneController extends SiapController implements ISezione {
 			lCurDao.ricercaSezioneByCodUfficio(aCodUfficio);
 			lCurMods = new Vector(lCurDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("SezioneController.ExRicercaSezioneByCodUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SezioneController.ExRicercaSezioneByCodUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lCurDao);
 			cleanup(lConn);
@@ -286,13 +286,13 @@ public class SezioneController extends SiapController implements ISezione {
 
 	/**
 	 * Numero dei record occorsi.
-	 * <p>
-	 * 
+	 *
 	 * @param aSezione
 	 * @return
 	 * @throws F3BException
 	 */
 	public int ExGetNumRicercaSezione(SezioneModel aSezione) throws F3BException {
+
 		Connection lConn = null;
 		SezioneSqlDAO lCurDao = null;
 
@@ -314,11 +314,10 @@ public class SezioneController extends SiapController implements ISezione {
 
 	/**
 	 * 20171013: [EC] aggiungo metodo per recuperare le sezioni per codice magistrato ed ufficio appartenenza
-	 * 
+	 *
 	 * Metodo che si occupa di recupera l'elenco delle sezioni per popolare elementi Combobox oppurtamente
 	 * filtrati per il codice ufficio e magistrato
-	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            codice uffcio.
 	 * @return ritorna l'insieme di SezioneModel delle occorrenze.

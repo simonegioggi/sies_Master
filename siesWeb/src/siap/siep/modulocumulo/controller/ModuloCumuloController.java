@@ -182,22 +182,17 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		FascicoloSiepSqlDAO lFascDao = null;
 		SoggettoSqlDAO lSoggDao = null;
 		SentenzaSqlDAO lSentDao = null;
-
 		TitoloCumulatoDAO lTitoloCumDao = null;
 		ProcedimentoCumulatoDAO lProcCumDao = null;
 		SoggettoCumulatoDAO lSoggCumDao = null;
-
 		UfficioSqlDAO lUffSqlDao = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaCumuloDAO lPosCumDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		MisuraAlternativaSqlDAO lMisSqlDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
-
 		IstruttoriaCumuloSqlDAO lIstruttoraSqlDao = null;
-
 		ContinuazioneCumuloSqlDAO lContinCunSqlDao = null;
 		ContinuazioneCumuloDAO lContinuaDao = null;
 
@@ -641,16 +636,21 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(lFascDao);
 			cleanup(lSoggDao);
 			cleanup(lSentDao);
-			cleanup(lSoggCumDao);
-			cleanup(lProcCumDao);
 			cleanup(lTitoloCumDao);
-
+			cleanup(lProcCumDao);
+			cleanup(lSoggCumDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUffSqlDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lPosSqlDao);
 			cleanup(lPosCumDao);
 			cleanup(lEveSqlDao);
 			cleanup(lMisSqlDao);
 			cleanup(lLuoDetSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstruttoraSqlDao);
+			cleanup(lContinCunSqlDao);
+			cleanup(lContinuaDao);
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
@@ -659,8 +659,9 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	}
 
 	public void ExInserisciTitoliProprioUfficioInIstruttoria(BigDecimal aIdIstruttoriaCumulo,
-			String[] lIdFascicoliMioUfficio, DatiOperazioneModel aDatoOpModel, Connection aDBConnection, // null
+			String[] lIdFascicoliMioUfficio, DatiOperazioneModel aDatoOpModel, Connection aDBConnection,
 			BigDecimal aIdFasCumulante, String aTipoIscrizione) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiepSqlDAO lFasSqlDao = null;
@@ -702,12 +703,12 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			if (aDBConnection == null)
 				cleanup(lConn);
 		}
-
 	} // Chiude ExInserisciTitoliProprioUfficioInIstruttoria
 
 	public void ExInserisciEventoAnnotazioneEsitoTrasm(FascicoloSiepModel lFasCumulante,
 			BigDecimal aIdIstruttoriaCumulo, BigDecimal aIdFascicolo, DatiOperazioneModel aDatoOpModel,
 			Connection aDBConnection) throws F3BException {
+
 		siesLogger.debug("--XX-- Inizio ExInserisciEventoAnnotazioneEsitoTrasm - lavoro il fascicolo ID N. >"
 				+ aIdFascicolo + "<");
 		Connection lConn = null;
@@ -805,7 +806,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			if (aDBConnection == null) {
 				commit(lConn);
 			}
-
 		} catch (Exception ex) {
 			siesLogger.debug("Exception: ", ex);
 			throw new F3BException("ModuloCumuloController.ExInserisciEventoAnnotazioneEsitoTrasm: " + ex);
@@ -818,7 +818,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			if (aDBConnection == null)
 				cleanup(lConn);
 		}
-
 	} // Chiude ExInserisciEventoAnnotazioneEsitoTrasm
 
 	/**
@@ -831,6 +830,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	 */
 	public void ExEstraiDatiAnalitici(BigDecimal aIdFascicoloCumulato, TitoloCumulatoModel aTitolo,
 			Connection aDBConnection) throws F3BException {
+
 		Connection lConn = null;
 
 		try {
@@ -911,7 +911,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			}
 		}
 	}
-
 	// ==================
 
 	/**
@@ -935,7 +934,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		BeneficioSqlDAO lBenSqlDao = null;
 		BeneficioCumuloDAO lBenCumDao = null;
 		BeneficioCumuloSqlDAO lBenCumSqlDao = null;
-
 		PenaAccessoriaSqlDAO lpenAccSDao = null;
 		PenaAccessoriaCumuloDAO lpenAccCumDao = null;
 		PenaAccessoriaCumuloSqlDAO lPAcCumSqlDao = null;
@@ -1172,10 +1170,8 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(lpenAccSDao);
 			cleanup(lpenAccCumDao);
 			cleanup(lBenSqlDao);
-
 			cleanup(lBenCumDao);
 			cleanup(lBenCumSqlDao);
-
 			cleanup(lPAcCumSqlDao);
 			cleanup(lTipOrDao);
 
@@ -1185,8 +1181,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		}
 	} // Chiude ExEstraiBeneficiConcessiPerCumulo()
 
-	//
-	// =======
 	/**
 	 * Metodo che estrae i dati dei Benefici (REVOCHE) del fascicolo da cumulare, Revocati in altri
 	 * procedimenti, e li carica nella tabella BENEFICIO_CUMULO, agganciandoli al record TITOLO_CUMULATO
@@ -1209,7 +1203,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		BeneficioSqlDAO lBenSqlDao = null;
 		BeneficioCumuloDAO lBenCumDao = null;
 		TitoloCumulatoSqlDAO lTitSqlDao = null;
-
 		BeneficioCumuloSqlDAO lBenCumSqlDao = null;
 		BeneficioCumuloSqlDAO lConCumSqlDao = null;
 		BeneficioCumuloDAO lConcessioneCumDao = null;
@@ -1269,8 +1262,8 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 							if (lBeneficioCum != null && lBeneficioCum.getIdBeneficioCumulo() != null) {
 								lBenCumMod.setBenIdBeneficioCumulo(lBeneficioCum.getIdBeneficioCumulo());
 							}
-
-							cleanup(lBenCumSqlDao);
+							// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+							// cleanup(lBenCumSqlDao);
 						}
 
 						// Se la Revoca_Origine riporta il riferimento alla Sentenza di Concessione
@@ -1322,10 +1315,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 									lConcessioneCumDao.setDAOFromModelForUpdate(lModel);
 									lConcessioneCumDao.update();
 									lConcessioneCumDao.stop();
-
-									// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-									// siesLogger al posto di LogF3B.getLogger()
-									// siesLogger.debug("--XX--Update Benefico concessi = "+lModel );
 								}
 							}
 						}
@@ -1343,12 +1332,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 						BigDecimal lKey_01 = lBenCumDao.insert();
 						lBenCumMod.setIdBeneficioCumulo(lKey_01);
 						lBenCumDao.stop();
-
-						// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-						// posto di LogF3B.getLogger()
-						// siesLogger.debug("--XX-- Insert REVOCA lBenCumMod = "+lBenCumMod);
 					}
-
 				} // Chiude Iterator
 			}
 			if (aDBConnection == null) {
@@ -1369,12 +1353,13 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			throw new F3BException(
 					"ModuloCumuloController.ExEstraiRevochePerCumulo: Non posso inserire: " + ex);
 		} finally {
-
 			cleanup(lBenSqlDao);
 			cleanup(lBenCumDao);
 			cleanup(lTitSqlDao);
 			cleanup(lConCumSqlDao);
 			cleanup(lConcessioneCumDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lBenCumSqlDao);
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
@@ -1382,8 +1367,8 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		}
 	} // Chiude ExEstraiRevochePerCumulo()
 
-	//
 	public BeneficioCumuloModel PreparaBeneficio(BeneficioModel lBenMod) throws F3BException {
+
 		BeneficioCumuloModel lBenCumMod = new BeneficioCumuloModel();
 
 		lBenCumMod.setCodTipoBeneficio(lBenMod.getCodTipoBeneficio());
@@ -1556,6 +1541,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	 */
 	public void ExEstraiMisureCautelariPerCumulo(BigDecimal aIdFascicoloCumulato,
 			TitoloCumulatoModel aTitoloModel, Connection aDBConnection) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraCautelareDAO lMisCautelareDAO = null;
@@ -1639,7 +1625,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 				cleanup(lConn);
 			}
 		}
-
 	} // Chiude ExEstraiMisureCautelariCumulo()
 
 	/**
@@ -1664,11 +1649,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		MisuraSicurezzaCumuloDAO lMisCumDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisCumSqlDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisCumSqlDaoXX = null;
-
 		FascMsToFascSiepSqlDAO lFascMsSqlDao = null;
-		FascMsToFascSiepModel lFascMsModel = null;
-
 		UfficioSqlDAO lUffSqldao = null;
+
+		FascMsToFascSiepModel lFascMsModel = null;
 		UfficioModel lUffMod = null;
 
 		Vector lListaMisure = new Vector();
@@ -1777,18 +1761,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 														// Dati_Finali_Cumulo
 
 				// Inserisco
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.debug("Inserisco misura cumulo:");
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.debug(lMisSicCumMod);
-
 				lMisCumDao = new MisuraSicurezzaCumuloDAO(lConn);
 				lMisCumDao.setDAOFromModel(lMisSicCumMod);
 				lMisCumDao.insert();
 				lMisCumDao.stop();
-
 			}
 
 			// Serve un secondo passaggio per valorizzare, se possibile e se esiste, l'attributo
@@ -1826,9 +1802,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 						lMisCumDao.update();
 						lMisCumDao.stop();
 					}
-
 				}
-
 			}
 
 			if (aDBConnection == null) {
@@ -1853,6 +1827,9 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(lMisCumDao);
 			cleanup(lMisCumSqlDao);
 			cleanup(lMisCumSqlDaoXX);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFascMsSqlDao);
+			cleanup(lUffSqldao);
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
@@ -1861,6 +1838,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	}
 
 	public String trattaDato(String lTipo) throws F3BException {
+
 		String lNat = "";
 
 		IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
@@ -1978,7 +1956,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 				cleanup(lConn);
 			}
 		}
-
 	} // CHIUDE ExEstraiReatiPerCumulo()
 
 	/**
@@ -2089,11 +2066,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		PenaComplessivaSqlDAO lPenSqlDao = null;
 		SanzioneSostitutivaSqlDAO lSanSqlDao = null;
 		ContinuazioneSqlDAO lContSqlDao = null;
-
 		PenaComplessivaCumuloDAO lPenCumDao = null;
 		SanzioneSostitutivaCumuloDAO lSanzCumDao = null;
 		ContinuazioneCumuloDAO lContCumDao = null;
 		ContinuazioneCumuloSqlDAO lContCumSqlDAo = null;
+		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 
 		PenaComplessivaModel lPenMod = null;
 		SanzioneSostitutivaModel lSanMod = null;
@@ -2102,8 +2079,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		PenaComplessivaCumuloModel lPenCumMod = null;
 		SanzioneSostitutivaCumuloModel lSanCumMod = null;
 		ContinuazioneCumuloModel lContCumMod = null;
-
-		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 
 		try {
 			if (aDBConnection != null) {
@@ -2293,12 +2268,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(lPenSqlDao);
 			cleanup(lSanSqlDao);
 			cleanup(lContSqlDao);
-
 			cleanup(lPenCumDao);
 			cleanup(lSanzCumDao);
 			cleanup(lContCumDao);
 			cleanup(lContCumSqlDAo);
-
 			cleanup(lTitCumSqlDao);
 
 			if (aDBConnection == null)
@@ -2310,13 +2283,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	 * Metod di validazione della Richiesta trasmissione atti
 	 *
 	 * @param aEvento
-	 *            = evento da validate
-	 * @return
-	 * @throws
-	 *
-	 * 			@since
+	 *            = evento da validate @return @throws
 	 */
 	public EventoModel ExUpdateValidaRichiestaTrasmissioneAtti(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2395,7 +2365,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		}
 
 		return lEveMod;
-
 	}
 
 	public Vector<MessaggioModel> ExRicercaMessaggi(String aDeliveryMode, String aCodTipoMessaggio,
@@ -2405,6 +2374,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			Date aDataTrasmissioneAl, String aCognome, String aNome, BigDecimal aChiaveAnnoFasCumulante,
 			BigDecimal aChiaveProgrFasCumulante, String aChiaveUfficioFasCumulante, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MessaggioSqlDAO lMessaggioSqlDAO = null;
@@ -2426,7 +2396,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			lLista = new Vector<MessaggioModel>(lMessaggioSqlDAO.getModels());
 
 			lMessaggioSqlDAO.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2448,6 +2417,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			Date aDataTrasmissioneAl, String aCognome, String aNome, BigDecimal aChiaveAnnoFasCumulante,
 			BigDecimal aChiaveProgrFasCumulante, String aChiaveUfficioFasCumulante, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MessaggioSqlDAO lMessaggioSqlDAO = null;
@@ -2469,7 +2439,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			lLista = new Vector<MessaggioModel>(lMessaggioSqlDAO.getModels());
 
 			lMessaggioSqlDAO.stop();
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("ModuloCumuloController.ExRicercaMessaggi: ", daoEx);
 			throw new F3BException("ModuloCumuloController.ExRicercaMessaggi: " + daoEx);
@@ -2487,6 +2456,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			String aCodUfficioMitt, String aCodUfficioDest, Date aDataTrasmissioneDal,
 			Date aDataTrasmissioneAl, String aCognome, String aNome, BigDecimal aChiaveAnnoFasCumulante,
 			BigDecimal aChiaveProgrFasCumulante, String aChiaveUfficioFasCumulante) throws Exception {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MessaggioSqlDAO lMesSqlDao = null;
@@ -2526,9 +2496,8 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			BigDecimal aChiaveAnnoSiep, BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep,
 			String aCodUfficioMitt, String aCodUfficioDest, Date aDataTrasmissioneDal,
 			Date aDataTrasmissioneAl, String aCognome, String aNome, BigDecimal aChiaveAnnoFasCumulante,
-			BigDecimal aChiaveProgrFasCumulante, String aChiaveUfficioFasCumulante) throws Exception
+			BigDecimal aChiaveProgrFasCumulante, String aChiaveUfficioFasCumulante) throws Exception {
 
-	{
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MessaggioSqlDAO lMesSqlDao = null;
@@ -2559,12 +2528,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		return lCount;
 	}
 
-	/**
-	*
-	*/
 	public Vector<SentenzaSoggettoFascicoloModel> ExRicercaProcedimentiPerTitoloSoggetto(
 			SentenzaModel aSentenzaModel, SoggettoModel aSoggettoModel,
 			FascicoloSiepModel aFascicoloSiepModel, int aPage) throws Exception {
+
 		Connection lConn = null;
 
 		siesLogger.debug("-ModuloCumuloController --> ExRicercaProcedimentiPerTitoloSoggetto");
@@ -2603,11 +2570,9 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		return lListaProcedimenti;
 	}
 
-	/**
-	*
-	*/
 	public BigDecimal ExCountProcedimentiPerTitoloSoggetto(SentenzaModel aSentenzaModel,
 			SoggettoModel aSoggettoModel, FascicoloSiepModel aFascicoloSiepModel) throws Exception {
+
 		Connection lConn = null;
 
 		siesLogger.debug("ExCountProcedimentiPerTitoloSoggetto");
@@ -2635,12 +2600,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		return lContaRecord;
 	}
 
-	/*
-	*
-	*/
 	public BigDecimal ExInserisciSollecitoRichiestaAtti(EventoNotificaModel aEventoNot,
 			SollecitoEsitoTrasmissioneModel aSollecitoModel, CompetenzaModel aCompetenza)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(" --XXX-- ExInserisciSollecitoRichiestaAtti - Inizio inserimento sollecito...");
@@ -2648,12 +2611,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		Connection lConn = null;
 
 		EventoSqlDAO lEventoSqlDao = null;
-
 		EventoDAO lEveDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
-
 		SollecitoEsitoTrasmissioneDAO lSollecitoDAO = null;
 		CompetenzaDAO lCompDAO = null;
 
@@ -2774,7 +2735,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			throw new F3BException("ModuloCumuloController.ExInserisciSollecitoRichiestaAtti: " + e);
 		} finally {
 			cleanup(lEventoSqlDao);
-
 			cleanup(lEveDao);
 			cleanup(lCampoNotaDao);
 			cleanup(lNotDao);
@@ -2804,6 +2764,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	 */
 	private void ExEstraiStatoEsecuzione(BigDecimal aIdFascicoloCumulato, TitoloCumulatoModel aTitolo,
 			Connection aDBConnection, DatiOperazioneModel aDatiOper) throws F3BException {
+
 		Connection lConn = null;
 
 		try {
@@ -2876,11 +2837,11 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			BigDecimal aIdIstruttoriaCumulo, FascicoloSiepModel aFascicoloSiepCumulato,
 			DatiOperazioneModel aDatoOpModel, Connection aDBConnection, String aTipoIscrizione)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		TitoloCumulatoSqlDAO lTitoloCumSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcedimentoSqlDao = null;
-
 		ContinuazioneCumuloDAO lContCumDao = null;
 		BeneficioCumuloDAO lBenCumDao = null;
 
@@ -3048,6 +3009,10 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 					"ModuloCumuloController.estraiDaPrecedenteCumulo: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lTitoloCumSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProcedimentoSqlDao);
+			cleanup(lContCumDao);
+			cleanup(lBenCumDao);
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
@@ -3073,44 +3038,32 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			Hashtable<BigDecimal, BigDecimal> aIdBenCumNewBenIdBeneOldMap,
 			Hashtable<BigDecimal, BigDecimal> aIdBenCumNewTitIdTitCollOldMap, Connection aDBConnection)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		TitoloCumulatoDAO lTitoloCumDao = null;
-
 		ProcedimentoCumulatoSqlDAO lProcedimentoSqlDao = null;
 		ProcedimentoCumulatoDAO lProcedimentoDao = null;
-
 		SoggettoCumulatoSqlDAO lSoggettoCumulatoSqlDao = null;
 		SoggettoCumulatoDAO lSoggettoCumulatoDao = null;
-
 		ReatoCumuloSqlDAO lReatoCumSqlDao = null;
 		ReatoCumuloDAO lReatoCumDao = null;
-
 		CircostanzaCumuloSqlDAO lCircostCumSqlDao = null;
 		CircostanzaCumuloDAO lCircostCumDao = null;
-
 		PenaComplessivaCumuloSqlDAO lPenaCompSqlDao = null;
 		PenaComplessivaCumuloDAO lPenaCompDao = null;
-
 		SanzioneSostitutivaCumuloSqlDAO lSanSostCumSqlDao = null;
 		SanzioneSostitutivaCumuloDAO lSanSostCumDao = null;
-
 		ContinuazioneCumuloSqlDAO lContinuaCumSqlDao = null;
 		ContinuazioneCumuloDAO lContinuaCumDao = null;
-
 		PenaAccessoriaCumuloSqlDAO lPenAccCumSqlDao = null;
 		PenaAccessoriaCumuloDAO lPenAccCumDao = null;
-
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDao = null;
 		MisuraSicurezzaCumuloDAO lMisSicCumDao = null;
-
 		MisuraCautelareCumuloSqlDAO lMisCautCumSqlDao = null;
 		MisuraCautelareCumuloDAO lMisCautCumDao = null;
-
 		BeneficioCumuloSqlDAO lBenCumSqlDao = null;
 		BeneficioCumuloDAO lBenCumDao = null;
-
-		//
 		// - STATO_ESEC_TITOLO_CUMULATO
 		// - NOTIFICA_CUMULO
 		// - COMPUTI_CUMULO
@@ -3118,16 +3071,12 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 		// - PERIODO_LIB_ANT_CUMULO
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecSqlDao = null;
 		StatoEsecTitoloCumulatoDAO lStatoEsecDao = null;
-
 		NotificaCumuloSqlDAO lNotificaSqlDao = null;
 		NotificaCumuloDAO lNotificaDao = null;
-
 		ComputiCumuloSqlDAO lComputiCumSqlDao = null;
 		ComputiCumuloDAO lComputiCumDao = null;
-
 		LibAnticipataCumuloSqlDAO lLibAntCumSqlDao = null;
 		LibAnticipataCumuloDAO lLibAntCumDao = null;
-
 		PeriodoLibAntCumuloSqlDAO lPeriodoLibAntCumSqlDao = null;
 		PeriodoLibAntCumuloDAO lPeriodoLibAntCumDao = null;
 
@@ -3153,35 +3102,33 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// Inserimento Titolo_cumulato
 			// ========================================================================
 			BigDecimal lIdTitoloIns = null;
-			{
-				siesLogger.debug("Titolo Origine = " + aTitoloOrigine);
-				TitoloCumulatoModel lTitoloModelNew = new TitoloCumulatoModel(aTitoloOrigine);
+			siesLogger.debug("Titolo Origine = " + aTitoloOrigine);
+			TitoloCumulatoModel lTitoloModelNew = new TitoloCumulatoModel(aTitoloOrigine);
 
-				lTitoloModelNew.setIstrIdIstruttoriaCumulo(aIdIstruttoriaCumulo);
-				lTitoloModelNew.setTipoIscrizione(lTipoIscrizione);
+			lTitoloModelNew.setIstrIdIstruttoriaCumulo(aIdIstruttoriaCumulo);
+			lTitoloModelNew.setTipoIscrizione(lTipoIscrizione);
 
-				// FIXME da stabilire cosa scrivere in questo campo
-				lTitoloModelNew.setMessIdMessaggio(null);
+			// FIXME da stabilire cosa scrivere in questo campo
+			lTitoloModelNew.setMessIdMessaggio(null);
 
-				lTitoloModelNew.setFlagStato(lFlagStato);
-				lTitoloModelNew.setMotivoModifica(null);
+			lTitoloModelNew.setFlagStato(lFlagStato);
+			lTitoloModelNew.setMotivoModifica(null);
 
-				lTitoloModelNew.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-				lTitoloModelNew.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-				lTitoloModelNew.setDataInserimento(aDatoOpModel.getData());
+			lTitoloModelNew.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+			lTitoloModelNew.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+			lTitoloModelNew.setDataInserimento(aDatoOpModel.getData());
 
-				lTitoloModelNew.setCodOperatoreAggiornamento(null);
-				lTitoloModelNew.setCodUfficioAggiornamento(null);
-				lTitoloModelNew.setDataAggiornamento(null);
+			lTitoloModelNew.setCodOperatoreAggiornamento(null);
+			lTitoloModelNew.setCodUfficioAggiornamento(null);
+			lTitoloModelNew.setDataAggiornamento(null);
 
-				siesLogger.debug("Titolo Da Inserire = " + lTitoloModelNew);
+			siesLogger.debug("Titolo Da Inserire = " + lTitoloModelNew);
 
-				lTitoloCumDao = new TitoloCumulatoDAO(lConn);
-				lTitoloCumDao.setDAOFromModel(lTitoloModelNew);
-				lIdTitoloIns = lTitoloCumDao.insert();
+			lTitoloCumDao = new TitoloCumulatoDAO(lConn);
+			lTitoloCumDao.setDAOFromModel(lTitoloModelNew);
+			lIdTitoloIns = lTitoloCumDao.insert();
 
-				aIdTitOrigNewMap.put(aTitoloOrigine.getIdTitoloCumulato(), lIdTitoloIns);
-			}
+			aIdTitOrigNewMap.put(aTitoloOrigine.getIdTitoloCumulato(), lIdTitoloIns);
 
 			// ========================================================================
 			// Inserimento Procedimento_Cumulato
@@ -3195,7 +3142,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			lProcModel = (ProcedimentoCumulatoModel) lProcedimentoSqlDao.getModelByKey();
 
 			if (lProcModel != null) {
-
 				siesLogger.debug("ProcedimentoCumulato presente...");
 				lProcModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
@@ -3221,86 +3167,79 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// ========================================================================
 			// Inserimento Soggetto_cumulato
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero il Soggetto Cumulato");
-				lSoggettoCumulatoSqlDao = new SoggettoCumulatoSqlDAO(lConn);
+			siesLogger.debug("Recupero il Soggetto Cumulato");
+			lSoggettoCumulatoSqlDao = new SoggettoCumulatoSqlDAO(lConn);
 
-				lSoggettoCumulatoSqlDao
-						.ricercaSoggettoCumulatoByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
+			lSoggettoCumulatoSqlDao.ricercaSoggettoCumulatoByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
 
-				SoggettoCumulatoModel lSoggCumModel = (SoggettoCumulatoModel) lSoggettoCumulatoSqlDao
-						.getModelByKey();
+			SoggettoCumulatoModel lSoggCumModel = (SoggettoCumulatoModel) lSoggettoCumulatoSqlDao
+					.getModelByKey();
 
-				if (lSoggCumModel != null) {
-					siesLogger.debug("Soggetto Cumulato presente...");
+			if (lSoggCumModel != null) {
+				siesLogger.debug("Soggetto Cumulato presente...");
 
-					lSoggCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
+				lSoggCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-					lSoggCumModel.setFlagStato(lFlagStato);
-					lSoggCumModel.setMotivoModifica(null);
+				lSoggCumModel.setFlagStato(lFlagStato);
+				lSoggCumModel.setMotivoModifica(null);
 
-					lSoggCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-					lSoggCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-					lSoggCumModel.setDataInserimento(aDatoOpModel.getData());
+				lSoggCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+				lSoggCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+				lSoggCumModel.setDataInserimento(aDatoOpModel.getData());
 
-					lSoggCumModel.setCodOperatoreAggiornamento(null);
-					lSoggCumModel.setCodUfficioAggiornamento(null);
-					lSoggCumModel.setDataAggiornamento(null);
+				lSoggCumModel.setCodOperatoreAggiornamento(null);
+				lSoggCumModel.setCodUfficioAggiornamento(null);
+				lSoggCumModel.setDataAggiornamento(null);
 
-					siesLogger.debug("Inserisco il Soggetto Cumulato = " + lSoggCumModel);
-					lSoggettoCumulatoDao = new SoggettoCumulatoDAO(lConn);
-					lSoggettoCumulatoDao.setDAOFromModel(lSoggCumModel);
-					lSoggettoCumulatoDao.insert();
-				} else {
-					siesLogger.debug("Soggetto Cumulato non presente");
-				}
-			}
+				siesLogger.debug("Inserisco il Soggetto Cumulato = " + lSoggCumModel);
+				lSoggettoCumulatoDao = new SoggettoCumulatoDAO(lConn);
+				lSoggettoCumulatoDao.setDAOFromModel(lSoggCumModel);
+				lSoggettoCumulatoDao.insert();
+			} else
+				siesLogger.debug("Soggetto Cumulato non presente");
 
 			// ========================================================================
 			// Inserimento ReatoCumulo
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero i Reato Cumulo");
-				lReatoCumSqlDao = new ReatoCumuloSqlDAO(lConn);
-				lReatoCumSqlDao.ricercaReatiCumuloByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
+			siesLogger.debug("Recupero i Reato Cumulo");
+			lReatoCumSqlDao = new ReatoCumuloSqlDAO(lConn);
+			lReatoCumSqlDao.ricercaReatiCumuloByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<ReatoCumuloModel> lListaReati = new Vector<ReatoCumuloModel>(
-						lReatoCumSqlDao.getModels());
+			Vector<ReatoCumuloModel> lListaReati = new Vector<ReatoCumuloModel>(lReatoCumSqlDao.getModels());
 
-				siesLogger.debug("Reati trovati: " + (lListaReati != null ? lListaReati.size() : "0"));
+			siesLogger.debug("Reati trovati: " + (lListaReati != null ? lListaReati.size() : "0"));
 
-				if (lListaReati != null && lListaReati.size() > 0) {
-					lReatoCumDao = new ReatoCumuloDAO(lConn);
+			if (lListaReati != null && lListaReati.size() > 0) {
+				lReatoCumDao = new ReatoCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaReati.size(); i++) {
-						ReatoCumuloModel lReatoCum = lListaReati.elementAt(i);
+				for (int i = 0; i < lListaReati.size(); i++) {
+					ReatoCumuloModel lReatoCum = lListaReati.elementAt(i);
 
-						BigDecimal lIdReatoOrig = lReatoCum.getIdReatoCum();
+					BigDecimal lIdReatoOrig = lReatoCum.getIdReatoCum();
 
-						lReatoCum.setTitIdTitoloCumulato(lIdTitoloIns);
-						// ID_CONTINUAZIONE_REATO_CUM n.b. viene copiato tal quale. NON è un id a una chiave
-						// primaria (sequence)
+					lReatoCum.setTitIdTitoloCumulato(lIdTitoloIns);
+					// ID_CONTINUAZIONE_REATO_CUM n.b. viene copiato tal quale. NON è un id a una chiave
+					// primaria (sequence)
 
-						lReatoCum.setFlagStato(lFlagStato);
-						lReatoCum.setMotivoModificaNote(null);
+					lReatoCum.setFlagStato(lFlagStato);
+					lReatoCum.setMotivoModificaNote(null);
 
-						lReatoCum.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lReatoCum.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lReatoCum.setDataInserimento(aDatoOpModel.getData());
+					lReatoCum.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lReatoCum.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lReatoCum.setDataInserimento(aDatoOpModel.getData());
 
-						lReatoCum.setCodOperatoreAggiornamento(null);
-						lReatoCum.setCodUfficioAggiornamento(null);
-						lReatoCum.setDataAggiornamento(null);
+					lReatoCum.setCodOperatoreAggiornamento(null);
+					lReatoCum.setCodUfficioAggiornamento(null);
+					lReatoCum.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco il Reato = " + lReatoCum);
+					siesLogger.debug("Inserisco il Reato = " + lReatoCum);
 
-						lReatoCumDao.setDAOFromModel(lReatoCum);
-						BigDecimal lIdReatoNew = lReatoCumDao.insert();
-						lReatoCumDao.stop();
+					lReatoCumDao.setDAOFromModel(lReatoCum);
+					BigDecimal lIdReatoNew = lReatoCumDao.insert();
+					lReatoCumDao.stop();
 
-						// Serve per i computi
-						lIdReatoOrigIdReatoNewMap.put(lIdReatoOrig, lIdReatoNew);
-					}
+					// Serve per i computi
+					lIdReatoOrigIdReatoNewMap.put(lIdReatoOrig, lIdReatoNew);
 				}
 			}
 
@@ -3308,42 +3247,40 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// Inserimento CircostanzaCumulo
 			// - Punta solo il Titolo
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero le Circostanze");
-				lCircostCumSqlDao = new CircostanzaCumuloSqlDAO(lConn);
-				lCircostCumSqlDao.ricercaCircostanzeCumuloByTitolo(aTitoloOrigine.getIdTitoloCumulato());
+			siesLogger.debug("Recupero le Circostanze");
+			lCircostCumSqlDao = new CircostanzaCumuloSqlDAO(lConn);
+			lCircostCumSqlDao.ricercaCircostanzeCumuloByTitolo(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<CircostanzaCumuloModel> lListaCircostanze = new Vector<CircostanzaCumuloModel>(
-						lCircostCumSqlDao.getModels());
+			Vector<CircostanzaCumuloModel> lListaCircostanze = new Vector<CircostanzaCumuloModel>(
+					lCircostCumSqlDao.getModels());
 
-				siesLogger.debug("Circostanze trovate: "
-						+ (lListaCircostanze != null ? lListaCircostanze.size() : "0"));
+			siesLogger.debug(
+					"Circostanze trovate: " + (lListaCircostanze != null ? lListaCircostanze.size() : "0"));
 
-				if (lListaCircostanze != null && lListaCircostanze.size() > 0) {
-					lCircostCumDao = new CircostanzaCumuloDAO(lConn);
+			if (lListaCircostanze != null && lListaCircostanze.size() > 0) {
+				lCircostCumDao = new CircostanzaCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaCircostanze.size(); i++) {
-						CircostanzaCumuloModel lCircModel = lListaCircostanze.elementAt(i);
+				for (int i = 0; i < lListaCircostanze.size(); i++) {
+					CircostanzaCumuloModel lCircModel = lListaCircostanze.elementAt(i);
 
-						lCircModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lCircModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						lCircModel.setFlagStato(lFlagStato);
-						lCircModel.setMotivoModifica(null);
+					lCircModel.setFlagStato(lFlagStato);
+					lCircModel.setMotivoModifica(null);
 
-						lCircModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lCircModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lCircModel.setDataInserimento(aDatoOpModel.getData());
+					lCircModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lCircModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lCircModel.setDataInserimento(aDatoOpModel.getData());
 
-						lCircModel.setCodOperatoreAggiornamento(null);
-						lCircModel.setCodUfficioAggiornamento(null);
-						lCircModel.setDataAggiornamento(null);
+					lCircModel.setCodOperatoreAggiornamento(null);
+					lCircModel.setCodUfficioAggiornamento(null);
+					lCircModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco Circostanza = " + lCircModel);
+					siesLogger.debug("Inserisco Circostanza = " + lCircModel);
 
-						lCircostCumDao.setDAOFromModel(lCircModel);
-						lCircostCumDao.insert();
-						lCircostCumDao.stop();
-					}
+					lCircostCumDao.setDAOFromModel(lCircModel);
+					lCircostCumDao.insert();
+					lCircostCumDao.stop();
 				}
 			}
 
@@ -3351,42 +3288,40 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// Inserimento Pena Complessiva Cumulo
 			// - è puntata da: CONTINUAZIONE_CUMULO, SANZIONE_SOST_CUM
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero Pena Complessiva Cumulo");
-				lPenaCompSqlDao = new PenaComplessivaCumuloSqlDAO(lConn);
+			siesLogger.debug("Recupero Pena Complessiva Cumulo");
+			lPenaCompSqlDao = new PenaComplessivaCumuloSqlDAO(lConn);
 
-				lPenaCompSqlDao.ricercaPenaComplessivaCumuloByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
+			lPenaCompSqlDao.ricercaPenaComplessivaCumuloByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
 
-				PenaComplessivaCumuloModel lPenaCompMod = (PenaComplessivaCumuloModel) lPenaCompSqlDao
-						.getModelByKey();
+			PenaComplessivaCumuloModel lPenaCompMod = (PenaComplessivaCumuloModel) lPenaCompSqlDao
+					.getModelByKey();
 
-				if (lPenaCompMod != null) {
-					lPenaCompDao = new PenaComplessivaCumuloDAO(lConn);
+			if (lPenaCompMod != null) {
+				lPenaCompDao = new PenaComplessivaCumuloDAO(lConn);
 
-					BigDecimal lIdPenCumOrig = lPenaCompMod.getIdPenaComplessivaCum();
+				BigDecimal lIdPenCumOrig = lPenaCompMod.getIdPenaComplessivaCum();
 
-					lPenaCompMod.setTitIdTitoloCumulato(lIdTitoloIns);
+				lPenaCompMod.setTitIdTitoloCumulato(lIdTitoloIns);
 
-					lPenaCompMod.setFlagStato(lFlagStato);
-					lPenaCompMod.setMotivoModifica(null);
+				lPenaCompMod.setFlagStato(lFlagStato);
+				lPenaCompMod.setMotivoModifica(null);
 
-					lPenaCompMod.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-					lPenaCompMod.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-					lPenaCompMod.setDataInserimento(aDatoOpModel.getData());
+				lPenaCompMod.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+				lPenaCompMod.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+				lPenaCompMod.setDataInserimento(aDatoOpModel.getData());
 
-					lPenaCompMod.setCodOperatoreAggiornamento(null);
-					lPenaCompMod.setCodUfficioAggiornamento(null);
-					lPenaCompMod.setDataAggiornamento(null);
+				lPenaCompMod.setCodOperatoreAggiornamento(null);
+				lPenaCompMod.setCodUfficioAggiornamento(null);
+				lPenaCompMod.setDataAggiornamento(null);
 
-					siesLogger.debug("Inserisco Pena Complessiva Cumulo = " + lPenaCompMod);
+				siesLogger.debug("Inserisco Pena Complessiva Cumulo = " + lPenaCompMod);
 
-					lPenaCompDao.setDAOFromModel(lPenaCompMod);
-					BigDecimal lIdPenConNew = lPenaCompDao.insert();
-					lPenaCompDao.stop();
+				lPenaCompDao.setDAOFromModel(lPenaCompMod);
+				BigDecimal lIdPenConNew = lPenaCompDao.insert();
+				lPenaCompDao.stop();
 
-					// Salvo la mappatura dell'id di copia con quello originario
-					lIdPenaCompOrigNewMap.put(lIdPenCumOrig, lIdPenConNew);
-				}
+				// Salvo la mappatura dell'id di copia con quello originario
+				lIdPenaCompOrigNewMap.put(lIdPenCumOrig, lIdPenConNew);
 			}
 
 			// ========================================================================
@@ -3394,52 +3329,48 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// - Punta anche PENA_COMPLESSIVA_CUMULO stesso titolo
 			// n.b tramite FK not null
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero Sanzione Sostitutiva Cumulo");
-				lSanSostCumSqlDao = new SanzioneSostitutivaCumuloSqlDAO(lConn);
+			siesLogger.debug("Recupero Sanzione Sostitutiva Cumulo");
+			lSanSostCumSqlDao = new SanzioneSostitutivaCumuloSqlDAO(lConn);
 
-				lSanSostCumSqlDao
-						.ricercaSanzioneSostitutivaCumByTitoloCum(aTitoloOrigine.getIdTitoloCumulato());
+			lSanSostCumSqlDao.ricercaSanzioneSostitutivaCumByTitoloCum(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<SanzioneSostitutivaCumuloModel> lListaSanzSost = null;
+			Vector<SanzioneSostitutivaCumuloModel> lListaSanzSost = null;
 
-				lListaSanzSost = new Vector<SanzioneSostitutivaCumuloModel>(lSanSostCumSqlDao.getModels());
+			lListaSanzSost = new Vector<SanzioneSostitutivaCumuloModel>(lSanSostCumSqlDao.getModels());
 
-				siesLogger.debug("Sanzione Sostitutiva Cumulo trovate: "
-						+ (lListaSanzSost != null ? lListaSanzSost.size() : "0"));
+			siesLogger.debug("Sanzione Sostitutiva Cumulo trovate: "
+					+ (lListaSanzSost != null ? lListaSanzSost.size() : "0"));
 
-				if (lListaSanzSost != null && lListaSanzSost.size() > 0) {
-					lSanSostCumDao = new SanzioneSostitutivaCumuloDAO(lConn);
+			if (lListaSanzSost != null && lListaSanzSost.size() > 0) {
+				lSanSostCumDao = new SanzioneSostitutivaCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaSanzSost.size(); i++) {
-						SanzioneSostitutivaCumuloModel lSanSostModel = lListaSanzSost.elementAt(i);
+				for (int i = 0; i < lListaSanzSost.size(); i++) {
+					SanzioneSostitutivaCumuloModel lSanSostModel = lListaSanzSost.elementAt(i);
 
-						lSanSostModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lSanSostModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						// Collego subito la SANZIONE_SOST_CUM alla PENA_COMPLESSIVA_CUMULO
-						// essendo stesso titolo e la FK not null
-						BigDecimal lPcIdPenaComplessivaNew = lIdPenaCompOrigNewMap
-								.get(lSanSostModel.getPcIdPenaComplessivaCum());
-						lSanSostModel.setPcIdPenaComplessivaCum(lPcIdPenaComplessivaNew); // !!!NOT NULL!!!
+					// Collego subito la SANZIONE_SOST_CUM alla PENA_COMPLESSIVA_CUMULO
+					// essendo stesso titolo e la FK not null
+					BigDecimal lPcIdPenaComplessivaNew = lIdPenaCompOrigNewMap
+							.get(lSanSostModel.getPcIdPenaComplessivaCum());
+					lSanSostModel.setPcIdPenaComplessivaCum(lPcIdPenaComplessivaNew); // !!!NOT NULL!!!
 
-						lSanSostModel.setFlagStato(lFlagStato);
-						lSanSostModel.setMotivoModifica(null);
+					lSanSostModel.setFlagStato(lFlagStato);
+					lSanSostModel.setMotivoModifica(null);
 
-						lSanSostModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lSanSostModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lSanSostModel.setDataInserimento(aDatoOpModel.getData());
+					lSanSostModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lSanSostModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lSanSostModel.setDataInserimento(aDatoOpModel.getData());
 
-						lSanSostModel.setCodOperatoreAggiornamento(null);
-						lSanSostModel.setCodUfficioAggiornamento(null);
-						lSanSostModel.setDataAggiornamento(null);
+					lSanSostModel.setCodOperatoreAggiornamento(null);
+					lSanSostModel.setCodUfficioAggiornamento(null);
+					lSanSostModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco Sanzione Sostitutiva = " + lSanSostModel);
+					siesLogger.debug("Inserisco Sanzione Sostitutiva = " + lSanSostModel);
 
-						lSanSostCumDao.setDAOFromModel(lSanSostModel);
-						lSanSostCumDao.insert();
-						lSanSostCumDao.stop();
-
-					}
+					lSanSostCumDao.setDAOFromModel(lSanSostModel);
+					lSanSostCumDao.insert();
+					lSanSostCumDao.stop();
 				}
 			}
 
@@ -3448,58 +3379,56 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// - punta PENA_COMPLESSIVA_CUMULO (stesso titolo not null)
 			// - punta TITOLO_CUMULATO (altro titolo, tittolo con cui è in continuazione)
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero Continuazione Cumulo");
+			siesLogger.debug("Recupero Continuazione Cumulo");
 
-				lContinuaCumSqlDao = new ContinuazioneCumuloSqlDAO(lConn);
-				lContinuaCumSqlDao.ricercaContinuazioneByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
+			lContinuaCumSqlDao = new ContinuazioneCumuloSqlDAO(lConn);
+			lContinuaCumSqlDao.ricercaContinuazioneByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<ContinuazioneCumuloModel> lListaContinuazioni = null;
-				lListaContinuazioni = new Vector<ContinuazioneCumuloModel>(lContinuaCumSqlDao.getModels());
+			Vector<ContinuazioneCumuloModel> lListaContinuazioni = null;
+			lListaContinuazioni = new Vector<ContinuazioneCumuloModel>(lContinuaCumSqlDao.getModels());
 
-				siesLogger.debug("Continuazioni trovate: "
-						+ (lListaContinuazioni != null ? lListaContinuazioni.size() : "0"));
+			siesLogger.debug("Continuazioni trovate: "
+					+ (lListaContinuazioni != null ? lListaContinuazioni.size() : "0"));
 
-				if (lListaContinuazioni != null && lListaContinuazioni.size() > 0) {
-					lContinuaCumDao = new ContinuazioneCumuloDAO(lConn);
+			if (lListaContinuazioni != null && lListaContinuazioni.size() > 0) {
+				lContinuaCumDao = new ContinuazioneCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaContinuazioni.size(); i++) {
-						ContinuazioneCumuloModel lContModel = lListaContinuazioni.elementAt(i);
+				for (int i = 0; i < lListaContinuazioni.size(); i++) {
+					ContinuazioneCumuloModel lContModel = lListaContinuazioni.elementAt(i);
 
-						lContModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lContModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						// Collego subito la CONTINUAZIONE_CUMULO alla PENA_COMPLESSIVA_CUMULO
-						// essendo stesso titolo e la FK not null
-						BigDecimal lPcIdPenaComplessivaNew = lIdPenaCompOrigNewMap
-								.get(lContModel.getPcIdPenaComplessivaCum());
-						lContModel.setPcIdPenaComplessivaCum(lPcIdPenaComplessivaNew); // !!!NOT NULL!!
+					// Collego subito la CONTINUAZIONE_CUMULO alla PENA_COMPLESSIVA_CUMULO
+					// essendo stesso titolo e la FK not null
+					BigDecimal lPcIdPenaComplessivaNew = lIdPenaCompOrigNewMap
+							.get(lContModel.getPcIdPenaComplessivaCum());
+					lContModel.setPcIdPenaComplessivaCum(lPcIdPenaComplessivaNew); // !!!NOT NULL!!
 
-						// TIT_ID_TITOLO_CUMULATO_CONT
-						BigDecimal lTitIdTitoloCumulatoCont = lContModel.getTitIdTitoloCumulatoCont();
-						lContModel.setTitIdTitoloCumulatoCont(null);
+					// TIT_ID_TITOLO_CUMULATO_CONT
+					BigDecimal lTitIdTitoloCumulatoCont = lContModel.getTitIdTitoloCumulatoCont();
+					lContModel.setTitIdTitoloCumulatoCont(null);
 
-						lContModel.setFlagStato(lFlagStato);
-						lContModel.setMotivoModifica(null);
+					lContModel.setFlagStato(lFlagStato);
+					lContModel.setMotivoModifica(null);
 
-						lContModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lContModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lContModel.setDataInserimento(aDatoOpModel.getData());
+					lContModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lContModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lContModel.setDataInserimento(aDatoOpModel.getData());
 
-						lContModel.setCodOperatoreAggiornamento(null);
-						lContModel.setCodUfficioAggiornamento(null);
-						lContModel.setDataAggiornamento(null);
+					lContModel.setCodOperatoreAggiornamento(null);
+					lContModel.setCodUfficioAggiornamento(null);
+					lContModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco Continuazione = " + lContModel);
+					siesLogger.debug("Inserisco Continuazione = " + lContModel);
 
-						lContinuaCumDao.setDAOFromModel(lContModel);
-						BigDecimal lIdContCumNew = lContinuaCumDao.insert();
-						lContinuaCumDao.stop();
+					lContinuaCumDao.setDAOFromModel(lContModel);
+					BigDecimal lIdContCumNew = lContinuaCumDao.insert();
+					lContinuaCumDao.stop();
 
-						// Salvo la mappatura del nuovi IdCont cone idPC e id TitCont originari
-						// aIdContNewIdPenCompOldMap.put(lIdContCumNew, lPcIdPenaComplessivaCum);
-						if (lTitIdTitoloCumulatoCont != null)
-							aIdContNewIdTitContOldMap.put(lIdContCumNew, lTitIdTitoloCumulatoCont);
-					}
+					// Salvo la mappatura del nuovi IdCont cone idPC e id TitCont originari
+					// aIdContNewIdPenCompOldMap.put(lIdContCumNew, lPcIdPenaComplessivaCum);
+					if (lTitIdTitoloCumulatoCont != null)
+						aIdContNewIdTitContOldMap.put(lIdContCumNew, lTitIdTitoloCumulatoCont);
 				}
 			}
 
@@ -3508,57 +3437,55 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// - Punta eventualmente BENEFICIO_CUMULO ovvero l'amnistia/indulto che hanno
 			// recovato la PA
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero Pena Accessoria Cumulo");
+			siesLogger.debug("Recupero Pena Accessoria Cumulo");
 
-				lPenAccCumSqlDao = new PenaAccessoriaCumuloSqlDAO(lConn);
+			lPenAccCumSqlDao = new PenaAccessoriaCumuloSqlDAO(lConn);
 
-				lPenAccCumSqlDao.ricercaPenaAccessoriaCumuloByTitoloCum(aTitoloOrigine.getIdTitoloCumulato());
+			lPenAccCumSqlDao.ricercaPenaAccessoriaCumuloByTitoloCum(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<PenaAccessoriaCumuloModel> lListaPeneAcc = null;
-				lListaPeneAcc = new Vector<PenaAccessoriaCumuloModel>(lPenAccCumSqlDao.getModels());
+			Vector<PenaAccessoriaCumuloModel> lListaPeneAcc = null;
+			lListaPeneAcc = new Vector<PenaAccessoriaCumuloModel>(lPenAccCumSqlDao.getModels());
 
-				siesLogger.debug(
-						"Pene Accessorie trovate: " + (lListaPeneAcc != null ? lListaPeneAcc.size() : "0"));
+			siesLogger.debug(
+					"Pene Accessorie trovate: " + (lListaPeneAcc != null ? lListaPeneAcc.size() : "0"));
 
-				if (lListaPeneAcc != null && lListaPeneAcc.size() > 0) {
-					lPenAccCumDao = new PenaAccessoriaCumuloDAO(lConn);
+			if (lListaPeneAcc != null && lListaPeneAcc.size() > 0) {
+				lPenAccCumDao = new PenaAccessoriaCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaPeneAcc.size(); i++) {
-						PenaAccessoriaCumuloModel lPenaAccModel = lListaPeneAcc.elementAt(i);
+				for (int i = 0; i < lListaPeneAcc.size(); i++) {
+					PenaAccessoriaCumuloModel lPenaAccModel = lListaPeneAcc.elementAt(i);
 
-						lPenaAccModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lPenaAccModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						// BEN_ID_BENEFICIO_CUMULO Punta il record BENEFICIO_CUMULO (indulto/amnistia) che ha
-						// Annullato la PA (n.b. stesso titolo)
-						// FLAG_DATI_FINALI
-						BigDecimal lBenIdBeneficioCumulo = lPenaAccModel.getBenIdBeneficioCumulo();
-						lPenaAccModel.setBenIdBeneficioCumulo(null);
+					// BEN_ID_BENEFICIO_CUMULO Punta il record BENEFICIO_CUMULO (indulto/amnistia) che ha
+					// Annullato la PA (n.b. stesso titolo)
+					// FLAG_DATI_FINALI
+					BigDecimal lBenIdBeneficioCumulo = lPenaAccModel.getBenIdBeneficioCumulo();
+					lPenaAccModel.setBenIdBeneficioCumulo(null);
 
-						lPenaAccModel.setFlagDatiFinali("S"); // Per default le PA sono caricati in Dati
-																// Finali Cumulo
+					lPenaAccModel.setFlagDatiFinali("S"); // Per default le PA sono caricati in Dati
+															// Finali Cumulo
 
-						lPenaAccModel.setFlagStato(lFlagStato);
-						lPenaAccModel.setMotivoModifica(null);
+					lPenaAccModel.setFlagStato(lFlagStato);
+					lPenaAccModel.setMotivoModifica(null);
 
-						lPenaAccModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lPenaAccModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lPenaAccModel.setDataInserimento(aDatoOpModel.getData());
+					lPenaAccModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lPenaAccModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lPenaAccModel.setDataInserimento(aDatoOpModel.getData());
 
-						lPenaAccModel.setCodOperatoreAggiornamento(null);
-						lPenaAccModel.setCodUfficioAggiornamento(null);
-						lPenaAccModel.setDataAggiornamento(null);
+					lPenaAccModel.setCodOperatoreAggiornamento(null);
+					lPenaAccModel.setCodUfficioAggiornamento(null);
+					lPenaAccModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco Pena Accessoria = " + lPenaAccModel);
+					siesLogger.debug("Inserisco Pena Accessoria = " + lPenaAccModel);
 
-						lPenAccCumDao.setDAOFromModel(lPenaAccModel);
-						BigDecimal lIdPenAccNew = lPenAccCumDao.insert();
-						lPenAccCumDao.stop();
+					lPenAccCumDao.setDAOFromModel(lPenaAccModel);
+					BigDecimal lIdPenAccNew = lPenAccCumDao.insert();
+					lPenAccCumDao.stop();
 
-						// Salvo i reference
-						if (lBenIdBeneficioCumulo != null)
-							lIdPenAccNewIdBenCumOldMap.put(lIdPenAccNew, lBenIdBeneficioCumulo);
-					}
+					// Salvo i reference
+					if (lBenIdBeneficioCumulo != null)
+						lIdPenAccNewIdBenCumOldMap.put(lIdPenAccNew, lBenIdBeneficioCumulo);
 				}
 			}
 
@@ -3566,54 +3493,51 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// Inserimento Misura Sicurezza Cumulo
 			// - nessun reference se non al TITOLO_CUMULATO
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero le Misure Sicurezza Cumulo");
+			siesLogger.debug("Recupero le Misure Sicurezza Cumulo");
 
-				lMisSicCumSqlDao = new MisuraSicurezzaCumuloSqlDAO(lConn);
+			lMisSicCumSqlDao = new MisuraSicurezzaCumuloSqlDAO(lConn);
 
-				lMisSicCumSqlDao
-						.ricercaMisuraSicurezzaCumuloByIdTitoloCum(aTitoloOrigine.getIdTitoloCumulato());
+			lMisSicCumSqlDao.ricercaMisuraSicurezzaCumuloByIdTitoloCum(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<MisuraSicurezzaCumuloModel> lListaMisureSicurezza = null;
-				lListaMisureSicurezza = new Vector<MisuraSicurezzaCumuloModel>(lMisSicCumSqlDao.getModels());
+			Vector<MisuraSicurezzaCumuloModel> lListaMisureSicurezza = null;
+			lListaMisureSicurezza = new Vector<MisuraSicurezzaCumuloModel>(lMisSicCumSqlDao.getModels());
 
-				siesLogger.debug("Misure Sicurezza trovate: "
-						+ (lListaMisureSicurezza != null ? lListaMisureSicurezza.size() : "0"));
+			siesLogger.debug("Misure Sicurezza trovate: "
+					+ (lListaMisureSicurezza != null ? lListaMisureSicurezza.size() : "0"));
 
-				if (lListaMisureSicurezza != null && lListaMisureSicurezza.size() > 0) {
-					lMisSicCumDao = new MisuraSicurezzaCumuloDAO(lConn);
+			if (lListaMisureSicurezza != null && lListaMisureSicurezza.size() > 0) {
+				lMisSicCumDao = new MisuraSicurezzaCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaMisureSicurezza.size(); i++) {
-						MisuraSicurezzaCumuloModel lMisSicCumModel = lListaMisureSicurezza.elementAt(i);
+				for (int i = 0; i < lListaMisureSicurezza.size(); i++) {
+					MisuraSicurezzaCumuloModel lMisSicCumModel = lListaMisureSicurezza.elementAt(i);
 
-						lMisSicCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lMisSicCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						// da capire chi valorizza il campo MIS_ID_MISURA_SICUREZZA_CUMULO
-						// n.b. non valorizzato da codice. Probabilmente un refuso
-						lMisSicCumModel.setMisIdMisuraSicurezzaCumulo(null);
+					// da capire chi valorizza il campo MIS_ID_MISURA_SICUREZZA_CUMULO
+					// n.b. non valorizzato da codice. Probabilmente un refuso
+					lMisSicCumModel.setMisIdMisuraSicurezzaCumulo(null);
 
-						// FLAG_CREA_PROCEDIMENTO - Non gestito qui
+					// FLAG_CREA_PROCEDIMENTO - Non gestito qui
 
-						lMisSicCumModel.setFlagDatiFinali("S"); // Per default le MS sono caricati in Dati
-																// Finali Cumulo
+					lMisSicCumModel.setFlagDatiFinali("S"); // Per default le MS sono caricati in Dati
+															// Finali Cumulo
 
-						lMisSicCumModel.setFlagStato(lFlagStato);
-						lMisSicCumModel.setMotivoModifica(null);
+					lMisSicCumModel.setFlagStato(lFlagStato);
+					lMisSicCumModel.setMotivoModifica(null);
 
-						lMisSicCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lMisSicCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lMisSicCumModel.setDataInserimento(aDatoOpModel.getData());
+					lMisSicCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lMisSicCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lMisSicCumModel.setDataInserimento(aDatoOpModel.getData());
 
-						lMisSicCumModel.setCodOperatoreAggiornamento(null);
-						lMisSicCumModel.setCodUfficioAggiornamento(null);
-						lMisSicCumModel.setDataAggiornamento(null);
+					lMisSicCumModel.setCodOperatoreAggiornamento(null);
+					lMisSicCumModel.setCodUfficioAggiornamento(null);
+					lMisSicCumModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco la Misura di Sicurezza = " + lMisSicCumModel);
+					siesLogger.debug("Inserisco la Misura di Sicurezza = " + lMisSicCumModel);
 
-						lMisSicCumDao.setDAOFromModel(lMisSicCumModel);
-						lMisSicCumDao.insert();
-						lMisSicCumDao.stop();
-					}
+					lMisSicCumDao.setDAOFromModel(lMisSicCumModel);
+					lMisSicCumDao.insert();
+					lMisSicCumDao.stop();
 				}
 			}
 
@@ -3621,45 +3545,42 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// Inserimento Misura Cautelare Cumulo
 			// - nessun reference se non al TITOLO_CUMULATO
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero le Misure Cautelari Cumulo");
+			siesLogger.debug("Recupero le Misure Cautelari Cumulo");
 
-				lMisCautCumSqlDao = new MisuraCautelareCumuloSqlDAO(lConn);
+			lMisCautCumSqlDao = new MisuraCautelareCumuloSqlDAO(lConn);
 
-				lMisCautCumSqlDao
-						.ricercaMisuraCautelareCumuloByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
+			lMisCautCumSqlDao.ricercaMisuraCautelareCumuloByIdTitolo(aTitoloOrigine.getIdTitoloCumulato());
 
-				Vector<MisuraCautelareCumuloModel> lListaMisureCautCum = null;
-				lListaMisureCautCum = new Vector<MisuraCautelareCumuloModel>(lMisCautCumSqlDao.getModels());
+			Vector<MisuraCautelareCumuloModel> lListaMisureCautCum = null;
+			lListaMisureCautCum = new Vector<MisuraCautelareCumuloModel>(lMisCautCumSqlDao.getModels());
 
-				siesLogger.debug("Misure Cautelari trovate: "
-						+ (lListaMisureCautCum != null ? lListaMisureCautCum.size() : "0"));
+			siesLogger.debug("Misure Cautelari trovate: "
+					+ (lListaMisureCautCum != null ? lListaMisureCautCum.size() : "0"));
 
-				if (lListaMisureCautCum != null && lListaMisureCautCum.size() > 0) {
-					lMisCautCumDao = new MisuraCautelareCumuloDAO(lConn);
+			if (lListaMisureCautCum != null && lListaMisureCautCum.size() > 0) {
+				lMisCautCumDao = new MisuraCautelareCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaMisureCautCum.size(); i++) {
-						MisuraCautelareCumuloModel lMisCautCumModel = lListaMisureCautCum.elementAt(i);
+				for (int i = 0; i < lListaMisureCautCum.size(); i++) {
+					MisuraCautelareCumuloModel lMisCautCumModel = lListaMisureCautCum.elementAt(i);
 
-						lMisCautCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lMisCautCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						lMisCautCumModel.setFlagStato(lFlagStato);
-						lMisCautCumModel.setMotivoModifica(null);
+					lMisCautCumModel.setFlagStato(lFlagStato);
+					lMisCautCumModel.setMotivoModifica(null);
 
-						lMisCautCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lMisCautCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lMisCautCumModel.setDataInserimento(aDatoOpModel.getData());
+					lMisCautCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lMisCautCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lMisCautCumModel.setDataInserimento(aDatoOpModel.getData());
 
-						lMisCautCumModel.setCodOperatoreAggiornamento(null);
-						lMisCautCumModel.setCodUfficioAggiornamento(null);
-						lMisCautCumModel.setDataAggiornamento(null);
+					lMisCautCumModel.setCodOperatoreAggiornamento(null);
+					lMisCautCumModel.setCodUfficioAggiornamento(null);
+					lMisCautCumModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco la Misura di Cautelare = " + lMisCautCumModel);
+					siesLogger.debug("Inserisco la Misura di Cautelare = " + lMisCautCumModel);
 
-						lMisCautCumDao.setDAOFromModel(lMisCautCumModel);
-						lMisCautCumDao.insert();
-						lMisCautCumDao.stop();
-					}
+					lMisCautCumDao.setDAOFromModel(lMisCautCumModel);
+					lMisCautCumDao.insert();
+					lMisCautCumDao.stop();
 				}
 			}
 
@@ -3673,63 +3594,59 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			// Se trattasi di una CONCESSIONE ma revocata, punto il titolo che la ha
 			// revocata
 			// ========================================================================
-			{
-				siesLogger.debug("Recupero i Benefici Cumulo");
+			siesLogger.debug("Recupero i Benefici Cumulo");
 
-				lBenCumSqlDao = new BeneficioCumuloSqlDAO(lConn);
+			lBenCumSqlDao = new BeneficioCumuloSqlDAO(lConn);
 
-				lBenCumSqlDao.ricercaBeneficioCumuloByTitoloCum(aTitoloOrigine.getIdTitoloCumulato(), null,
-						null);
+			lBenCumSqlDao.ricercaBeneficioCumuloByTitoloCum(aTitoloOrigine.getIdTitoloCumulato(), null, null);
 
-				Vector<BeneficioCumuloModel> lListaBenefici = null;
-				lListaBenefici = new Vector<BeneficioCumuloModel>(lBenCumSqlDao.getModels());
+			Vector<BeneficioCumuloModel> lListaBenefici = null;
+			lListaBenefici = new Vector<BeneficioCumuloModel>(lBenCumSqlDao.getModels());
 
-				siesLogger.debug(
-						"Benefici Cumulo trovati: " + (lListaBenefici != null ? lListaBenefici.size() : "0"));
+			siesLogger.debug(
+					"Benefici Cumulo trovati: " + (lListaBenefici != null ? lListaBenefici.size() : "0"));
 
-				if (lListaBenefici != null && lListaBenefici.size() > 0) {
-					lBenCumDao = new BeneficioCumuloDAO(lConn);
+			if (lListaBenefici != null && lListaBenefici.size() > 0) {
+				lBenCumDao = new BeneficioCumuloDAO(lConn);
 
-					for (int i = 0; i < lListaBenefici.size(); i++) {
-						BeneficioCumuloModel lBenCumModel = lListaBenefici.elementAt(i);
+				for (int i = 0; i < lListaBenefici.size(); i++) {
+					BeneficioCumuloModel lBenCumModel = lListaBenefici.elementAt(i);
 
-						lBenCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
+					lBenCumModel.setTitIdTitoloCumulato(lIdTitoloIns);
 
-						BigDecimal lIdBenCumOrig = lBenCumModel.getIdBeneficioCumulo();
-						BigDecimal lBenIdBeneficioCumulo = lBenCumModel.getBenIdBeneficioCumulo();
-						BigDecimal lTitIdTitoloCumulatoCollegato = lBenCumModel
-								.getTitIdTitoloCumulatoCollegato();
+					BigDecimal lIdBenCumOrig = lBenCumModel.getIdBeneficioCumulo();
+					BigDecimal lBenIdBeneficioCumulo = lBenCumModel.getBenIdBeneficioCumulo();
+					BigDecimal lTitIdTitoloCumulatoCollegato = lBenCumModel.getTitIdTitoloCumulatoCollegato();
 
-						lBenCumModel.setBenIdBeneficioCumulo(null);
-						lBenCumModel.setTitIdTitoloCumulatoCollegato(null);
-						// BEN_ID_BENEFICIO_CUMULO
-						// TIT_ID_TITOLO_CUMULO_COLLEGATO (altro titolo)
+					lBenCumModel.setBenIdBeneficioCumulo(null);
+					lBenCumModel.setTitIdTitoloCumulatoCollegato(null);
+					// BEN_ID_BENEFICIO_CUMULO
+					// TIT_ID_TITOLO_CUMULO_COLLEGATO (altro titolo)
 
-						lBenCumModel.setFlagStato(lFlagStato);
-						lBenCumModel.setMotivoModifica(null);
+					lBenCumModel.setFlagStato(lFlagStato);
+					lBenCumModel.setMotivoModifica(null);
 
-						lBenCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
-						lBenCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
-						lBenCumModel.setDataInserimento(aDatoOpModel.getData());
+					lBenCumModel.setCodOperatoreInserimento(aDatoOpModel.getCodOperatore());
+					lBenCumModel.setCodUfficioInserimento(aDatoOpModel.getCodUfficio());
+					lBenCumModel.setDataInserimento(aDatoOpModel.getData());
 
-						lBenCumModel.setCodOperatoreAggiornamento(null);
-						lBenCumModel.setCodUfficioAggiornamento(null);
-						lBenCumModel.setDataAggiornamento(null);
+					lBenCumModel.setCodOperatoreAggiornamento(null);
+					lBenCumModel.setCodUfficioAggiornamento(null);
+					lBenCumModel.setDataAggiornamento(null);
 
-						siesLogger.debug("Inserisco BeneficioCumulo = " + lBenCumModel);
+					siesLogger.debug("Inserisco BeneficioCumulo = " + lBenCumModel);
 
-						lBenCumDao.setDAOFromModel(lBenCumModel);
-						BigDecimal lIdBenNew = lBenCumDao.insert();
-						lBenCumDao.stop();
+					lBenCumDao.setDAOFromModel(lBenCumModel);
+					BigDecimal lIdBenNew = lBenCumDao.insert();
+					lBenCumDao.stop();
 
-						// Salvo i reference
-						aIdBenCumOrigNewMap.put(lIdBenCumOrig, lIdBenNew);
+					// Salvo i reference
+					aIdBenCumOrigNewMap.put(lIdBenCumOrig, lIdBenNew);
 
-						if (lBenIdBeneficioCumulo != null)
-							aIdBenCumNewBenIdBeneOldMap.put(lIdBenNew, lBenIdBeneficioCumulo);
-						if (lTitIdTitoloCumulatoCollegato != null)
-							aIdBenCumNewTitIdTitCollOldMap.put(lIdBenNew, lTitIdTitoloCumulatoCollegato);
-					}
+					if (lBenIdBeneficioCumulo != null)
+						aIdBenCumNewBenIdBeneOldMap.put(lIdBenNew, lBenIdBeneficioCumulo);
+					if (lTitIdTitoloCumulatoCollegato != null)
+						aIdBenCumNewTitIdTitCollOldMap.put(lIdBenNew, lTitIdTitoloCumulatoCollegato);
 				}
 			}
 
@@ -4035,52 +3952,36 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			throw new F3BException("ModuloCumuloController.CopiaDatiTitolo: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lTitoloCumDao);
-
 			cleanup(lProcedimentoSqlDao);
 			cleanup(lProcedimentoDao);
-
 			cleanup(lSoggettoCumulatoSqlDao);
 			cleanup(lSoggettoCumulatoDao);
-
 			cleanup(lReatoCumSqlDao);
 			cleanup(lReatoCumDao);
-
 			cleanup(lCircostCumSqlDao);
 			cleanup(lCircostCumDao);
-
 			cleanup(lPenaCompSqlDao);
 			cleanup(lPenaCompDao);
-
 			cleanup(lSanSostCumSqlDao);
 			cleanup(lSanSostCumDao);
-
 			cleanup(lContinuaCumSqlDao);
 			cleanup(lContinuaCumDao);
-
 			cleanup(lPenAccCumSqlDao);
 			cleanup(lPenAccCumDao);
-
 			cleanup(lMisSicCumSqlDao);
 			cleanup(lMisSicCumDao);
-
 			cleanup(lMisCautCumSqlDao);
 			cleanup(lMisCautCumDao);
-
 			cleanup(lBenCumSqlDao);
 			cleanup(lBenCumDao);
-
 			cleanup(lStatoEsecSqlDao);
 			cleanup(lStatoEsecDao);
-
 			cleanup(lNotificaSqlDao);
 			cleanup(lNotificaDao);
-
 			cleanup(lComputiCumSqlDao);
 			cleanup(lComputiCumDao);
-
 			cleanup(lLibAntCumSqlDao);
 			cleanup(lLibAntCumDao);
-
 			cleanup(lPeriodoLibAntCumSqlDao);
 			cleanup(lPeriodoLibAntCumDao);
 
@@ -4106,6 +4007,7 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 	private void caricaEspiazionePregressa(BigDecimal aIdFascicoloSiep, BigDecimal aIdTitolo,
 			BigDecimal aIdIstruttoria, DatiOperazioneModel aDatoOpModel, Connection aConn)
 			throws F3BException {
+
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		StatoEsecTitoloCumulatoDAO lStatoEsecDAO = null;
 		ComputiCumuloDAO lComputiDao = null;
@@ -4251,7 +4153,6 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 							"Impossibile recuperare l'espiato. La PR corrente non ha quantum e nemmeno quella precedente.");
 				}
 			}
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			throw new F3BException(
@@ -4446,11 +4347,14 @@ public class ModuloCumuloController extends TitoloEsecutivoController implements
 			cleanup(sosDAO);
 			cleanup(sesDAO);
 			cleanup(scDAO);
-			// cleanup(pcDAO);
-			// cleanup(icsDAO);
 			cleanup(tcDAO);
 			cleanup(ccsDAO);
 			cleanup(ccDAO);
+
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aDBConnection == null) {
+				cleanup(c);
+			}
 		}
 	}
 

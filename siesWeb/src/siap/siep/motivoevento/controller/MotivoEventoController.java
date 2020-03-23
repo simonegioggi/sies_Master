@@ -5,12 +5,12 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-import siap.controller.SiapController;
-import siap.siep.motivoevento.dao.MotivoEventoSqlDAO;
-import siap.siep.motivoevento.model.MotivoEventoModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.controller.SiapController;
+import siap.siep.motivoevento.dao.MotivoEventoSqlDAO;
+import siap.siep.motivoevento.model.MotivoEventoModel;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 
@@ -35,6 +35,7 @@ public class MotivoEventoController extends SiapController implements IMotivoEve
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public MotivoEventoModel ExRicercaMotivoEventoByEveIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MotivoEventoSqlDAO lMotDao = null;
 		MotivoEventoModel lMotMod;
@@ -48,7 +49,8 @@ public class MotivoEventoController extends SiapController implements IMotivoEve
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"MotivoEventoController.ExRicercaMotivoEventoByEveIdEvento: Non posso leggere : " + daoEx);
+					"MotivoEventoController.ExRicercaMotivoEventoByEveIdEvento: Non posso leggere : "
+							+ daoEx);
 		} finally {
 			cleanup(lMotDao);
 			cleanup(lConn);

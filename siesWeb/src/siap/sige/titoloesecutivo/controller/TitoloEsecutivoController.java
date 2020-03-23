@@ -8,6 +8,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.controller.GenericController;
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.sico.note.dao.NoteDAO;
 import siap.sico.note.model.NoteModel;
 import siap.sico.residenza.dao.ResidenzaDAO;
@@ -28,11 +33,6 @@ import siap.sige.richiesta.model.RichiestaSigeModel;
 import siap.sige.sentenza.dao.FasSigeSentenzaDAO;
 import siap.sige.sentenza.model.SentenzaSigeModel;
 import siap.sius.SIUSException;
-import f3b.controller.GenericController;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Engineering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -58,6 +58,7 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 
 	public FascicoloSigeEstesoModel ExAssegnaTitoloEsecutivo(FascicoloSigeEstesoModel aFascicoloSigeEsteso,
 			FascicoloSiepModel lFasSiepMod, FascicoloSiepModel lFasSiepOld) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSigeDAO lFasSigeDao = null;
@@ -87,7 +88,6 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 
 			// COMMIT
 			commit(lConn);
-
 		} catch (SQLException sqe) {
 			rollback(lConn);
 			throw new F3BException("TitoloEsecutivoController.ExAssegnaTitoloEsecutivo: " + sqe);
@@ -103,14 +103,14 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 	/**
 	 * Metodo di correzione delle RESIDENZA_FASCICOLO_SIGE a partire da aFascicoloSigeEsteso, per effetto di
 	 * modifica Soggetto.
-	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloSigeEsteso
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void insResidenzeSige(FascicoloSigeEstesoModel aFascicoloSigeEsteso, Connection lConn)
 			throws F3BException {
+
 		ResidenzaDAO lResDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSigeDAO lResFasSigeDao = null;
@@ -121,8 +121,8 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			lResFasSigeDao = new ResidenzaFascicoloSigeDAO(lConn);
 
 			// Puntamento alle eventuali Residenze riferite al Procedimento SIGE.
-			lResSqlDao.ricercaResidenzaByFascicoloSige(aFascicoloSigeEsteso.getFascicoloSige()
-					.getIdFascicoloSige());
+			lResSqlDao.ricercaResidenzaByFascicoloSige(
+					aFascicoloSigeEsteso.getFascicoloSige().getIdFascicoloSige());
 
 			// Lettura dei dati delle residenze.
 			lResSqlDao.start();
@@ -136,11 +136,12 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 
 				// Si duplicano le residenze per consentire l'associazione al nuovo soggetto.
 				if (lResMod != null) {
-					lResMod.setCodOperatoreInserimento(aFascicoloSigeEsteso.getFascicoloSige()
-							.getCodOperatoreAggiornamento());
-					lResMod.setDataInserimento(aFascicoloSigeEsteso.getFascicoloSige().getDataAggiornamento());
-					lResMod.setCodUfficioInserimento(aFascicoloSigeEsteso.getFascicoloSige()
-							.getCodUfficioAggiornamento());
+					lResMod.setCodOperatoreInserimento(
+							aFascicoloSigeEsteso.getFascicoloSige().getCodOperatoreAggiornamento());
+					lResMod.setDataInserimento(
+							aFascicoloSigeEsteso.getFascicoloSige().getDataAggiornamento());
+					lResMod.setCodUfficioInserimento(
+							aFascicoloSigeEsteso.getFascicoloSige().getCodUfficioAggiornamento());
 					lResMod.setSogIdSoggetto(aFascicoloSigeEsteso.getFascicoloSige().getSogIdSoggetto());
 					lResDao.setDAOFromModel(lResMod);
 					lKeyRes = lResDao.insert();
@@ -150,39 +151,35 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 				if (lResFasMod != null) {
 					lResFasMod.setResIdResidenza(lKeyRes);
 					lResFasSigeDao.setDAOFromModelForUpdate(lResFasMod);
-					lResFasSigeDao.setCondizioneFasicoloResidenza(aFascicoloSigeEsteso.getFascicoloSige()
-							.getIdFascicoloSige(), lKeyRes);
+					lResFasSigeDao.setCondizioneFasicoloResidenza(
+							aFascicoloSigeEsteso.getFascicoloSige().getIdFascicoloSige(), lKeyRes);
 					lResFasSigeDao.update();
 					lResFasSigeDao.stop();
 				}
 			}
 
 			lResSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.insResidenzeSige: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.insResidenzeSige: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
-
 			cleanup(lResDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFasSigeDao);
-
 		}
 	}
 
 	/**
 	 * Metodo di inserimento delle NOTE per la RIDEFINIZIONE TITOLO ESECUTIVO.
-	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloSigeEsteso
 	 * @param lFasSiepMod
 	 * @param lFasSiepOld
@@ -192,6 +189,7 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 	private void inserimentoNote(FascicoloSigeEstesoModel aFascicoloSigeEsteso,
 			FascicoloSiepModel lFasSiepMod, FascicoloSiepModel lFasSiepOld, Connection lConn)
 			throws F3BException {
+
 		NoteDAO lNoteDao = null;
 		try {
 			lNoteDao = new NoteDAO(lConn);
@@ -206,11 +204,11 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 					+ lFasSiepOld.getDescrComuneUfficio() + " AL " + lFasSiepMod.getChiaveAnno() + "/"
 					+ lFasSiepMod.getChiaveProgr() + " " + lFasSiepMod.getDescrTipoUfficio() + " di "
 					+ lFasSiepMod.getDescrComuneUfficio());
-			lNoteMod.setCodOperatoreInserimento(aFascicoloSigeEsteso.getFascicoloSige()
-					.getCodOperatoreAggiornamento());
+			lNoteMod.setCodOperatoreInserimento(
+					aFascicoloSigeEsteso.getFascicoloSige().getCodOperatoreAggiornamento());
 			lNoteMod.setDataInserimento(aFascicoloSigeEsteso.getFascicoloSige().getDataAggiornamento());
-			lNoteMod.setCodUfficioInserimento(aFascicoloSigeEsteso.getFascicoloSige()
-					.getCodUfficioAggiornamento());
+			lNoteMod.setCodUfficioInserimento(
+					aFascicoloSigeEsteso.getFascicoloSige().getCodUfficioAggiornamento());
 			lNoteMod.setFasSigeIdFascicoloSige(aFascicoloSigeEsteso.getFascicoloSige().getIdFascicoloSige());
 			lNoteMod.setFasSieIdFascicoloSiep(lFasSiepMod.getIdFascicoloSiep());
 
@@ -220,8 +218,8 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.inserimentoNote: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.inserimentoNote: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -234,14 +232,14 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 
 	/**
 	 * Metodo di inserimento delle NOTE per la DEASSEGNAZIONE TITOLO ESECUTIVO.
-	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloSigeEsteso
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void inserimentoNoteDeassegnaTitoloEsecutivo(FascicoloSigeEstesoModel aFascicoloSigeEsteso,
 			String chiaveAnnoSiep, String chiaveProgSiep, Connection lConn) throws F3BException {
+
 		NoteDAO lNoteDao = null;
 		try {
 			lNoteDao = new NoteDAO(lConn);
@@ -257,11 +255,11 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			lNoteMod.setDescrizione(" DEASSEGNATO TITOLO ESECUTIVO " + chiaveAnnoSiep + "/" + chiaveProgSiep
 					+ " " + aFascicoloSigeEsteso.getFascicoloSiep().getDescrTipoUfficio() + " di "
 					+ aFascicoloSigeEsteso.getFascicoloSiep().getDescrComuneUfficio());
-			lNoteMod.setCodOperatoreInserimento(aFascicoloSigeEsteso.getFascicoloSige()
-					.getCodOperatoreAggiornamento());
+			lNoteMod.setCodOperatoreInserimento(
+					aFascicoloSigeEsteso.getFascicoloSige().getCodOperatoreAggiornamento());
 			lNoteMod.setDataInserimento(aFascicoloSigeEsteso.getFascicoloSige().getDataAggiornamento());
-			lNoteMod.setCodUfficioInserimento(aFascicoloSigeEsteso.getFascicoloSige()
-					.getCodUfficioAggiornamento());
+			lNoteMod.setCodUfficioInserimento(
+					aFascicoloSigeEsteso.getFascicoloSige().getCodUfficioAggiornamento());
 			lNoteMod.setFasSigeIdFascicoloSige(aFascicoloSigeEsteso.getFascicoloSige().getIdFascicoloSige());
 			lNoteMod.setFasSieIdFascicoloSiep(aFascicoloSigeEsteso.getFascicoloSiep().getIdFascicoloSiep());
 
@@ -271,8 +269,8 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.inserimentoNote: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.inserimentoNote: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -285,19 +283,21 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 
 	public FascicoloSigeEstesoModel ExDeassegnaTitoloEsecutivo(FascicoloSigeEstesoModel aFascicoloSigeEsteso,
 			String chiaveAnnoSiep, String chiaveProgSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSigeDAO lFasSigeDao = null;
 		FasSigeSentenzaDAO lFasSigeSentenzaDao = null;
 		RichiestaSigeDAO lRichiestaSigeDao = null;
-		RichiestaSigeModel lRicMod = null;
-		Vector lFasSentenze = null;
 		FasSigeSentenzaDAO lFasDao = null;
 		PenaCompSenSigeDAO lPenComSenSigeDAO = null;
 		PenaAccSenSigeDAO lPenaAccSigeDAO = null;
 		ReatoSentenzaSigeDAO lReaSenDAO = null;
 		CircostanzaSenSigeDAO lCircostanzaSigeDAO = null;
 		BeneficioSenSigeDAO lBeneficioSigeDAO = null;
+
+		RichiestaSigeModel lRicMod = null;
+		Vector lFasSentenze = null;
 
 		try {
 
@@ -323,20 +323,20 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			if (aFascicoloSigeEsteso.getFascicoloSige() != null
 					&& aFascicoloSigeEsteso.getFascicoloSige().getRicIdRichiestaSige() != null) {
 				lRichiestaSigeDao = new RichiestaSigeDAO(lConn);
-				lRichiestaSigeDao.setIdRichiestaSige(aFascicoloSigeEsteso.getFascicoloSige()
-						.getRicIdRichiestaSige());
+				lRichiestaSigeDao
+						.setIdRichiestaSige(aFascicoloSigeEsteso.getFascicoloSige().getRicIdRichiestaSige());
 				lRichiestaSigeDao.selByKey();
 				lRicMod = (RichiestaSigeModel) lRichiestaSigeDao.getModelByKey();
 
 				if (lRicMod != null) {
 					// Aggiornamento Richiesta settando a null il campo FAS_SIE_ID_FASCICOLO_SIEP
 					lRicMod.setFasSieIdFascicoloSiep(null);
-					lRicMod.setCodOperatoreAggiornamento(aFascicoloSigeEsteso.getFascicoloSige()
-							.getCodOperatoreAggiornamento());
-					lRicMod.setCodUfficioAggiornamento(aFascicoloSigeEsteso.getFascicoloSige()
-							.getCodUfficioAggiornamento());
-					lRicMod.setDataAggiornamento(aFascicoloSigeEsteso.getFascicoloSige()
-							.getDataAggiornamento());
+					lRicMod.setCodOperatoreAggiornamento(
+							aFascicoloSigeEsteso.getFascicoloSige().getCodOperatoreAggiornamento());
+					lRicMod.setCodUfficioAggiornamento(
+							aFascicoloSigeEsteso.getFascicoloSige().getCodUfficioAggiornamento());
+					lRicMod.setDataAggiornamento(
+							aFascicoloSigeEsteso.getFascicoloSige().getDataAggiornamento());
 
 					lRichiestaSigeDao.setDAOFromModelForUpdateDeassegnazione(lRicMod);
 					lRichiestaSigeDao.update();
@@ -349,8 +349,8 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			// sulla tabella FAS_SIGE_SENTENZA e sulle tabelle collegate
 			// Si ricerca la sentenza di competenza associata al fascicolo Sige
 			SentenzaSigeModel aFasSigeSentenza = new SentenzaSigeModel();
-			aFasSigeSentenza.setFasIdFascicoloSige(aFascicoloSigeEsteso.getFascicoloSige()
-					.getIdFascicoloSige());
+			aFasSigeSentenza
+					.setFasIdFascicoloSige(aFascicoloSigeEsteso.getFascicoloSige().getIdFascicoloSige());
 			aFasSigeSentenza.setFlagCompetenza("S");
 			lFasSentenze = ExRicercaFasSigeSentenza(aFasSigeSentenza);
 			if (lFasSentenze != null) {
@@ -396,12 +396,11 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 			}
 
 			// Inserimento Note.
-			this.inserimentoNoteDeassegnaTitoloEsecutivo(aFascicoloSigeEsteso, chiaveAnnoSiep,
-					chiaveProgSiep, lConn);
+			this.inserimentoNoteDeassegnaTitoloEsecutivo(aFascicoloSigeEsteso, chiaveAnnoSiep, chiaveProgSiep,
+					lConn);
 
 			// COMMIT
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("TitoloEsecutivoController.ExDeassegnaTitoloEsecutivo:  : " + ex);
@@ -428,6 +427,7 @@ public class TitoloEsecutivoController extends GenericController implements ITit
 	 * La funzione effettua ricerca nella sola tabella FAS_SIGE_SENTENZA.
 	 */
 	public Vector ExRicercaFasSigeSentenza(SentenzaSigeModel aFasSigeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFasSigeSentenze = new Vector();
 		FasSigeSentenzaDAO lFasSenDao = null;

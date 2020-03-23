@@ -8,6 +8,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.SIAPReceiver;
 import siap.sico.evento.model.XModel;
@@ -23,30 +28,32 @@ import siap.siep.stampadocumenti.model.StampaDocumentiModel;
 import siap.siep.statistiche.model.RicercaFogliCompModel;
 import siap.siep.statistiche.model.StatisticheFogliComplementariContainerModel;
 import siap.siep.statistiche.model.StatisticheFogliComplementariModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
-
 
 /**
-* <p>Title: StampaDocumentiController</p>
-* <p>Description: Classe Controller per StampaDocumenti</p>
-* <p>Copyright: Copyright (c) 2007</p>
-* <p>Company: Eunics</p>
-* @version 1.0
-*/
+ * <p>
+ * Title: StampaDocumentiController
+ * </p>
+ * <p>
+ * Description: Classe Controller per StampaDocumenti
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2007
+ * </p>
+ * <p>
+ * Company: Eunics
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class StampaDocumentiController extends SiapController implements IStampaDocumenti
- {
+public class StampaDocumentiController extends SiapController implements IStampaDocumenti {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un StampaDocumenti a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aStampaDocumenti
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -54,6 +61,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	 ****************************************************************************/
 	public StampaDocumentiModel ExInserisciStampaDocumenti(StampaDocumentiModel aStampaDocumenti)
 			throws F3BException {
+
 		Connection lConn = null;
 		StampaDocumentiDAO lStaDao = null;
 		StampaDocumentiModel lStaMod = null;
@@ -80,7 +88,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati StampaDocumenti
-	 * 
+	 *
 	 * @param aStampaDocumenti
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -88,6 +96,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaStampaDocumenti(StampaDocumentiModel aStampaDocumenti) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStampaDocumenti = new Vector();
 		StampaDocumentiDAO lStaDao = null;
@@ -99,7 +108,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 			lStaDao.setOrderBy();
 			lStaDao.start();
 			while (lStaDao.next()) {
-				lStampaDocumenti.add((StampaDocumentiModel) lStaDao.getModel());
+				lStampaDocumenti.add(lStaDao.getModel());
 			}
 			lStaDao.stop();
 
@@ -107,14 +116,14 @@ public class StampaDocumentiController extends SiapController implements IStampa
 				// Provo a svegliare il listener sulla coda di stampa
 				SIAPReceiver.getInstance().testStampa();
 			} catch (Exception e) {
+				siesLogger.error(e.getMessage());
 			}
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("StampaDocumentiController.ExRicercaStampaDocumenti: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StampaDocumentiController.ExRicercaStampaDocumenti: Non posso leggere : " + daoEx);
 		} catch (Exception daoEx) {
-			throw new F3BException("StampaDocumentiController.ExRicercaStampaDocumenti: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StampaDocumentiController.ExRicercaStampaDocumenti: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lStaDao);
 			cleanup(lConn);
@@ -125,13 +134,14 @@ public class StampaDocumentiController extends SiapController implements IStampa
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public StampaDocumentiModel ExRicercaStampaDocumentiById(BigDecimal aIdStampa) throws F3BException {
+
 		Connection lConn = null;
 		StampaDocumentiModel lStampaDocumentiMod = new StampaDocumentiModel();
 		StampaDocumentiSqlDAO lStampaDocumentiSqlDao = null;
@@ -156,12 +166,13 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	 * Metodo che modifica i dati dell'StampaDocumenti Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aStampaDocumenti
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaStampaDocumenti(StampaDocumentiModel aStampaDocumenti) throws F3BException {
+
 		Connection lConn = null;
 		StampaDocumentiDAO lStaDao = null;
 
@@ -183,11 +194,12 @@ public class StampaDocumentiController extends SiapController implements IStampa
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aStampaDocumenti
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaStampaDocumenti(StampaDocumentiModel aStampaDocumenti) throws F3BException {
+
 		Connection lConn = null;
 		StampaDocumentiDAO lStaDao = null;
 
@@ -210,12 +222,13 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aStampaDocumenti
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountStampaDocumenti(StampaDocumentiModel aStampaDocumenti) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		StampaDocumentiSqlDAO lStampaDocumentiSqlDao = null;
@@ -242,7 +255,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aStampaDocumenti
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -252,6 +265,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	 ****************************************************************************/
 	public Vector ExRicercaStampaDocumentiPaged(StampaDocumentiModel aStampaDocumenti, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lStampaDocumenti = new Vector();
 		StampaDocumentiSqlDAO lStampaDocumentiSqlDao = null;
@@ -268,8 +282,8 @@ public class StampaDocumentiController extends SiapController implements IStampa
 			} catch (Exception e) {
 				// Non rilancio l'eccezione se openjms è momentaneamente giù in quanto
 				// devo visualizzare comunque l'esito della ricerca
+				siesLogger.error(e.getMessage());
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"StampaDocumentiController.ExRicercaStampaDocumentiPaged: Non posso leggere : " + daoEx);
@@ -285,7 +299,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 
 	/*********************************************************************
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @return Array con il Documento recuperato dal DB
 	 * @throws F3BException
@@ -295,7 +309,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 		Connection lConn = null;
 		StampaDocumentiDAO lStaDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
-//		ByteArrayInputStream lByteArrayIn = null;
+		// ByteArrayInputStream lByteArrayIn = null;
 		try {
 			lConn = getDBConnection();
 			lStaDao = new StampaDocumentiDAO(lConn);
@@ -315,7 +329,6 @@ public class StampaDocumentiController extends SiapController implements IStampa
 
 			if (lByteArrayOut.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {
@@ -331,6 +344,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 	@Override
 	public ByteArrayOutputStream ExPreStampaStatisticheFC(
 			StatisticheFogliComplementariContainerModel container) throws F3BException {
+
 		Connection lConn = null;
 
 		// ArrayOutput restituito dalla funzione
@@ -344,7 +358,7 @@ public class StampaDocumentiController extends SiapController implements IStampa
 			lConn = getDBConnection(); // connessione al Db
 
 			// Intestazione dell'Ufficio documento
-			XModel lBase = (XModel) CreateRoot(aUtente.getUfficioUtente().getCodUfficio(), lConn);
+			XModel lBase = CreateRoot(aUtente.getUfficioUtente().getCodUfficio(), lConn);
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -382,13 +396,14 @@ public class StampaDocumentiController extends SiapController implements IStampa
 
 	/**
 	 * Creazione della Root del Documento in da stampare
-	 * 
+	 *
 	 * @param aCodiceUfficio
 	 * @param aConn
 	 * @return lXMod
 	 * @throws F3BException
 	 */
 	private XModel CreateRoot(String aCodiceUfficio, Connection aConn) throws F3BException {
+
 		UfficioSqlDAO lUDao = null;
 		UfficioModel lUffMod = null;
 		UfficioModel lUffCAP = null;
@@ -422,7 +437,6 @@ public class StampaDocumentiController extends SiapController implements IStampa
 			}
 			if (lUffCAP.getDescrComune() != null)
 				lXMod.setUfficioCAP(lUffCAP.getDescrComune().toUpperCase());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

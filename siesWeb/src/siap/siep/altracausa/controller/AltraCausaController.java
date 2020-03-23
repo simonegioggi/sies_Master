@@ -40,16 +40,9 @@ public class AltraCausaController extends SiapController implements IAltraCausa 
 			lAltCauDao.ricercaAltraCausaByIdFascicolo(aKeyFascicolo);
 			lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			System.out.println("DAOException: " + daoEx);
 			throw new F3BException(
 					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByKey: "
 							+ daoEx);
-			// } catch (SQLException sqe) {
-			// System.out.println("SQLException: " + sqe);
-			// throw new F3BException(
-			// "PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByKey:
-			// "
-			// + sqe);
 		} finally {
 			cleanup(lAltCauDao);
 			cleanup(lConn);
@@ -66,6 +59,7 @@ public class AltraCausaController extends SiapController implements IAltraCausa 
 	 */
 	public AltraCausaModel ExRicercaAltraCausaIstitutoByFascicolo(BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		AltraCausaSqlDAO lAltCauDao = null;
 		IstitutoDetenzioneSqlDAO lIstDAO = null;
 		Connection lConn = null;
@@ -89,16 +83,9 @@ public class AltraCausaController extends SiapController implements IAltraCausa 
 					lAltraCausa.setIstitutoDetenzione(lIstModel);
 			}
 		} catch (DAOException daoEx) {
-			System.out.println("DAOException: " + daoEx);
 			throw new F3BException(
 					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByKey: "
 							+ daoEx);
-			// } catch (SQLException sqe) {
-			// System.out.println("SQLException: " + sqe);
-			// throw new F3BException(
-			// "PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByKey:
-			// "
-			// + sqe);
 		} finally {
 			cleanup(lAltCauDao);
 			cleanup(lIstDAO);
@@ -115,6 +102,7 @@ public class AltraCausaController extends SiapController implements IAltraCausa 
 	 * @throws F3BException
 	 */
 	public AltraCausaModel ExRicercaAltraCausaIstitutoByKey(BigDecimal aKeyAltraCausa) throws F3BException {
+
 		AltraCausaSqlDAO lAltCauDao = null;
 		IstitutoDetenzioneSqlDAO lIstDAO = null;
 		Connection lConn = null;
@@ -178,10 +166,6 @@ public class AltraCausaController extends SiapController implements IAltraCausa 
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire altra Causa della Posizione Giuridica! ");
 			}
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// throw new F3BException("AltraCausaController.ExInserisciAltraCausaWithoutSequence: " + sqe);
 		} finally {
 			cleanup(lPosDao);
 		}

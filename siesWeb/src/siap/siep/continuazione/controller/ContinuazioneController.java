@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.continuazione.dao.ContinuazioneDAO;
 import siap.siep.continuazione.dao.ContinuazioneSqlDAO;
 import siap.siep.continuazione.model.ContinuazioneModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,13 +24,15 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ContinuazioneController extends SiapController implements IContinuazione {
 
-	public ContinuazioneModel ExInserisciContinuazione(ContinuazioneModel aContinuazione) throws F3BException {
+	public ContinuazioneModel ExInserisciContinuazione(ContinuazioneModel aContinuazione)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneDAO lConDao = null;
@@ -64,6 +66,7 @@ public class ContinuazioneController extends SiapController implements IContinua
 	}
 
 	public Vector ExRicercaContinuazione(ContinuazioneModel aContinuazione) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lContinuazioni = new Vector();
@@ -89,6 +92,7 @@ public class ContinuazioneController extends SiapController implements IContinua
 	}
 
 	public ContinuazioneModel ExRicercaContinuazioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneSqlDAO lConDao = null;
@@ -110,6 +114,7 @@ public class ContinuazioneController extends SiapController implements IContinua
 	}
 
 	public Vector ExRicercaContinuazioneByIDPenaComplessiva(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneSqlDAO lConDao = null;
@@ -123,8 +128,8 @@ public class ContinuazioneController extends SiapController implements IContinua
 			lContinuazioni = new Vector(lConDao.getModels());
 
 		} catch (DAOException daoEx) {
-			throw new F3BException("ContinuazioneController.ExRicercaContinuazioneByIDPenaComplessiva: "
-					+ daoEx);
+			throw new F3BException(
+					"ContinuazioneController.ExRicercaContinuazioneByIDPenaComplessiva: " + daoEx);
 		} finally {
 			cleanup(lConDao);
 			cleanup(lConn);
@@ -134,6 +139,7 @@ public class ContinuazioneController extends SiapController implements IContinua
 	}
 
 	public ContinuazioneModel ExModificaContinuazione(ContinuazioneModel aContinuazione) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneDAO lConDao = null;
@@ -158,25 +164,20 @@ public class ContinuazioneController extends SiapController implements IContinua
 	}
 
 	public void ExCancellaContinuazione(ContinuazioneModel aContinuazione) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		ContinuazioneDAO lConDao = null;
 
 		try {
 			lConn = getDBConnection();
-
 			lConDao = new ContinuazioneDAO(lConn);
-
 			lConDao.setCondizioneUpdate(aContinuazione.getIdContinuazione());
-
 			lConDao.delete();
-
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			throw new F3BException("ContinuazioneController.ExCancellaContinuazione: " + daoEx);
 		} finally {
 			cleanup(lConDao);
-
 			cleanup(lConn);
 		}
 	}

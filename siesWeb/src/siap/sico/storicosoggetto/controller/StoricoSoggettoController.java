@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.soggetto.dao.SoggettoSqlDAO;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -16,8 +18,6 @@ import siap.siep.fascicolo.dao.FascicoloSiepOnViewSqlDAO;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -40,6 +40,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 
 	public StoricoSoggettoModel ExInserisciStoricoSoggetto(StoricoSoggettoModel aStoricoSoggetto)
 			throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoDAO lStoDao = null;
 		StoricoSoggettoModel lStoMod = null;
@@ -49,8 +50,8 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			lStoMod = new StoricoSoggettoModel(aStoricoSoggetto);
 			lStoDao = new StoricoSoggettoDAO(lConn);
 			lStoDao.setDAOFromModel(aStoricoSoggetto);
-//			BigDecimal lKey = null;
-			/*lKey = */lStoDao.insert();
+			// BigDecimal lKey = null;
+			/* lKey = */lStoDao.insert();
 			commit(lConn);
 			// lStoMod.setIdStoricoSoggetto(lKey);
 		} catch (DAOException ex) {
@@ -64,6 +65,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 	}
 
 	public Vector ExRicercaStoricoSoggetto(StoricoSoggettoModel aStoricoSoggetto) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStoricoSoggetti = new Vector();
 		StoricoSoggettoSqlDAO lStoDao = null;
@@ -77,8 +79,8 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("StoricoSoggettoController.ExRicercaStoricoSoggetto: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StoricoSoggettoController.ExRicercaStoricoSoggetto: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lStoDao);
 			cleanup(lConn);
@@ -87,6 +89,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 	}
 
 	public StoricoSoggettoModel ExRicercaStoricoSoggettoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoSqlDAO lStoDao = null;
 		StoricoSoggettoModel lStoMod;
@@ -97,8 +100,8 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			lStoDao.ricercaStoricoSoggettoByKey(aKey);
 			lStoMod = (StoricoSoggettoModel) lStoDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("StoricoSoggettoController.ExRicercaStoricoSoggetto: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StoricoSoggettoController.ExRicercaStoricoSoggetto: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lStoDao);
 			cleanup(lConn);
@@ -107,16 +110,16 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 	}
 
 	public Vector ExRicercaStoricoSoggettoByIdSogVariato(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoSqlDAO lStoDao = null;
-//		StoricoSoggettoModel lStoMod;
 		Vector lStoricoSoggetti = null;
 		SoggettoStoricoSoggettoModel lSogStoricoSoMod = null;
 		SoggettoSqlDAO lSqlDAO = null;
-//		SoggettoModel lSogMod = null;
 		Vector lStoricoSoggettiTutti = new Vector();
 		FascicoloSiepModel lFacMod = null;
 		FascicoloSiepOnViewSqlDAO lFacSql = null;
+
 		try {
 			lConn = getDBConnection();
 			lStoDao = new StoricoSoggettoSqlDAO(lConn);
@@ -132,7 +135,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			if (lStoricoSoggetti.size() > 0) {
 				lSogStoricoSoMod.setStoricoSoggetto(new ArrayList(lStoricoSoggetti));
 				for (int i = 0; i < lStoricoSoggetti.size(); i++) {
-					/*lStoMod = (StoricoSoggettoModel)*/ lStoricoSoggetti.get(i);
+					/* lStoMod = (StoricoSoggettoModel) */ lStoricoSoggetti.get(i);
 				}
 			}
 
@@ -143,7 +146,6 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			lSogStoricoSoMod.setFascicoloSiep(new ArrayList(lFacSql.getModels()));
 
 			lStoricoSoggettiTutti.add(lSogStoricoSoMod);
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"StoricoSoggettoController.ExRicercaStoricoSoggettoByIdSogVariato: Non posso leggere : "
@@ -152,9 +154,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			throw new F3BException(
 					"StoricoSoggettoController.ExRicercaStoricoSoggettoByIdSogVariato: Non posso leggere  : "
 							+ e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lStoDao);
 			cleanup(lSqlDAO);
 			cleanup(lFacSql);
@@ -165,24 +165,23 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 	}
 
 	public Vector ExRicercaStoricoSoggettoSiusByIdSogVariato(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoSqlDAO lStoDao = null;
-//		StoricoSoggettoModel lStoMod;
 		Vector lStoricoSoggetti = null;
 		SoggettoStoricoSoggettoModel lSogStoricoSoMod = null;
 		SoggettoSqlDAO lSqlDAO = null;
-//		SoggettoModel lSogMod = null;
 		Vector lStoricoSoggettiTutti = new Vector();
-//		FascicoloSiusModel lFacMod = null;
 		FascicoloSiusSoggettoSqlDAO lFacSql = null;
 		SoggettoModel lSog = null;
+
 		try {
 			lConn = getDBConnection();
 			lStoDao = new StoricoSoggettoSqlDAO(lConn);
 			lStoDao = new StoricoSoggettoSqlDAO(lConn);
 			lSqlDAO = new SoggettoSqlDAO(lConn);
 			lFacSql = new FascicoloSiusSoggettoSqlDAO(lConn);
-//			lFacMod = new FascicoloSiusModel();
+			// lFacMod = new FascicoloSiusModel();
 			lSog = new SoggettoModel();
 
 			lSogStoricoSoMod = new SoggettoStoricoSoggettoModel();
@@ -193,7 +192,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			if (lStoricoSoggetti.size() > 0) {
 				lSogStoricoSoMod.setStoricoSoggetto(new ArrayList(lStoricoSoggetti));
 				for (int i = 0; i < lStoricoSoggetti.size(); i++) {
-					/*lStoMod = (StoricoSoggettoModel) */lStoricoSoggetti.get(i);
+					/* lStoMod = (StoricoSoggettoModel) */lStoricoSoggetti.get(i);
 				}
 			}
 
@@ -214,7 +213,6 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 
 			lSogStoricoSoMod.setFascicoloSius(fascicoli);
 			lStoricoSoggettiTutti.add(lSogStoricoSoMod);
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"StoricoSoggettoController.ExRicercaStoricoSoggettoSiusByIdSogVariato: Non posso leggere : "
@@ -223,9 +221,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 			throw new F3BException(
 					"StoricoSoggettoController.ExRicercaStoricoSoggettoSiusByIdSogVariato: Non posso leggere  : "
 							+ e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lStoDao);
 			cleanup(lSqlDAO);
 			cleanup(lFacSql);
@@ -236,6 +232,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 	}
 
 	public Vector ExRicercaStoricoSoggettoByIdSogNuovo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoSqlDAO lStoDao = null;
 		StoricoSoggettoModel lStoMod;
@@ -266,7 +263,6 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 				lSogMod = (SoggettoModel) lSqlDAO.getModelByKey();
 				lSogStoricoSoMod.setSoggetto(lSogMod);
 				for (int i = 0; i < lStoricoSoggetti.size(); i++) {
-
 					lStoMod = (StoricoSoggettoModel) lStoricoSoggetti.get(i);
 					if (lStoMod != null) {
 
@@ -276,7 +272,6 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 					}
 
 					lStoricoSoggettiTutti.add(lSogStoricoSoMod);
-
 				}
 			}
 		} catch (DAOException daoEx) {
@@ -295,6 +290,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 
 	public StoricoSoggettoModel ExModificaStoricoSoggetto(StoricoSoggettoModel aStoricoSoggetto)
 			throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoDAO lStoDao = null;
 		StoricoSoggettoModel lStoMod = new StoricoSoggettoModel(aStoricoSoggetto);
@@ -317,6 +313,7 @@ public class StoricoSoggettoController extends SiapController implements IStoric
 	}
 
 	public void ExCancellaStoricoSoggetto(StoricoSoggettoModel aStoricoSoggetto) throws F3BException {
+
 		Connection lConn = null;
 		StoricoSoggettoDAO lStoDao = null;
 

@@ -13,6 +13,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.dao.CampoNotaSqlDAO;
@@ -97,12 +103,6 @@ import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraDAO;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoDAO;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -117,7 +117,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -128,12 +128,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Inserisce Evento Notifica e Autorita Esterne associate
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExInserisciEvento(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
@@ -171,12 +172,13 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Inserisce Evento Notifica, Autorita Esterne associate e eventuali Campi note aggiuntive.
 	 * <p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoNotificaModel lEveRet = null;
 
@@ -200,6 +202,7 @@ public class EventoController extends SiapController implements IEvento {
 	// / Luigi 2-2-2005
 	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento, Connection aConn)
 			throws F3BException {
+
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
 		NotificaDAO lNotDao = null;
@@ -307,7 +310,7 @@ public class EventoController extends SiapController implements IEvento {
 	 * Febbraio 2009 Inserisce Evento Notifica, Autorita Esterne associate e eventuali pena res e Campi note
 	 * aggiuntive.
 	 * <p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -315,6 +318,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
@@ -413,7 +417,7 @@ public class EventoController extends SiapController implements IEvento {
 			 * aEvento.getCampoNote()[count].setProgressivo(new BigDecimal((double) count + 1));
 			 * lCampoNotaDao.setDAOFromModel(aEvento.getCampoNote()[count]); lCampoNotaDao.insert();
 			 * lCampoNotaDao.stop();
-			 * 
+			 *
 			 * count++; } }
 			 */
 
@@ -440,13 +444,14 @@ public class EventoController extends SiapController implements IEvento {
 	 * per data EMISSIONE descrescente. n.b. non tutti i campi del model vengono utilizzati per comporre la
 	 * query n.b. se non trava corrispondenza viene rilanciata una eccezione con error code
 	 * F3BException.USER_MESSAGE = 'Nessun elemento trovato'
-	 * 
+	 *
 	 * @param aEvento
 	 *            - Model di ricerca
 	 * @return vettore di EventoModel
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEvento(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEventi = new Vector();
 		EventoSqlDAO lEveDao = null;
@@ -471,6 +476,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public boolean ExRicercaEventoInoltroDispPM(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEventi = new Vector();
 		EventoSqlDAO lEveDao = null;
@@ -496,12 +502,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ExRicercaEventoIstanzaRigettata
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoIstanzaRigettata(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEventi = new Vector();
 		EventoSqlDAO lEveDao = null;
@@ -537,12 +544,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ricerca evento istanza
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoIstanza(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEventi = new Vector();
 		EventoSqlDAO lEveDao = null;
@@ -571,7 +579,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ricerca evento Misura alternativa flag_registrato=n Affidamento In Prova
-	 * 
+	 *
 	 * @param aKey
 	 * @param aEveKey
 	 * @return
@@ -579,6 +587,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public EventoModel ExRicercaEventoMANonRegistratoByFascicoloSiep(BigDecimal aKey, BigDecimal aEveKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		EventoSqlDAO lEveDao = null;
@@ -603,12 +612,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca evento Misura alternativa per fascicolo sius
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoMisuraAlternativaByIdFasSius(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = null;
 		EventoSqlDAO lEveDao = null;
@@ -631,12 +641,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ricerca evento non registrato generico
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoNonRegistrato(EventoModel aModel) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		EventoSqlDAO lEveDao = null;
@@ -659,13 +670,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento per Motivo
-	 * 
+	 *
 	 * @param aMotivo
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoPerMotivo(String[] aMotivo, EventoModel aModel) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = new EventoModel();
@@ -690,7 +702,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Eventi per Motivo e tipo provvedimento
-	 * 
+	 *
 	 * @param aMotivo
 	 * @param aModel
 	 * @return
@@ -698,6 +710,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public Vector ExRicercaEventiPerMotivoTipoProvv(String[] aMotivo, String[] aTipo, EventoModel aModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveDao = null;
@@ -710,8 +723,7 @@ public class EventoController extends SiapController implements IEvento {
 			lEveDao.ricercaEventoPerMotivoProvv(aMotivo, aTipo, aModel);
 			lEveDao.start();
 			while (lEveDao.next()) {
-				MisuraAlternativaAggregatoModel lAgg = (MisuraAlternativaAggregatoModel) lEveDao
-						.getModelDecretoOrdinanzaUfficio();
+				MisuraAlternativaAggregatoModel lAgg = lEveDao.getModelDecretoOrdinanzaUfficio();
 				lEventi.add(lAgg);
 			}
 			lEveDao.stop();
@@ -729,7 +741,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ExRicercaEventoPerMotivoOrderDesc
-	 * 
+	 *
 	 * @param aMotivo
 	 * @param aModel
 	 * @return
@@ -737,6 +749,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public EventoModel ExRicercaEventoPerMotivoOrderDesc(String[] aMotivo, EventoModel aModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		EventoSqlDAO lEveDao = null;
@@ -760,7 +773,7 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca l'ultimo evento che ha codice motivo e tipo provvedimento tra quelli passati in input, mentre
 	 * le condizione su idFascicolo codTipoEvento e FlagDocumentoRegistrato vengono recuperati del Model.
-	 * 
+	 *
 	 * @param aMotivo
 	 *            vettore contenente l'elenco dei codici motivo su cui effettuare la ricerca
 	 * @param aTipoProvv
@@ -772,6 +785,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public EventoModel ExRicercaEventoPerMotivoPerProvv(String[] aMotivo, String[] aTipoProvv,
 			EventoModel aModel) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		EventoSqlDAO lEveDao = null;
@@ -793,12 +807,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ExRicercaEventoTipoProv
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoTipoProv(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = new EventoModel();
 		EventoSqlDAO lEveDao = null;
@@ -821,13 +836,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca un Ordine di Esecuzione non registrato attraverso la chiave del Fascicolo.
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExRicercaOENotificheNonRegistratoByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEve = null;
@@ -893,7 +909,7 @@ public class EventoController extends SiapController implements IEvento {
 					lAvvDao = new AvvocatoFascicoloSiepPerEventoSqlDAO(lConn);
 					lAvvDao.ricercaAvvocatoByKeyAvvocatoFasSiep(
 							lEve.getNotifiche()[count].getAvvIdAvvocatoFascicoloSiep());
-					lAvvocati.add((AvvocatoSiepModel) lAvvDao.getModelByKey());
+					lAvvocati.add(lAvvDao.getModelByKey());
 				}
 
 				count++;
@@ -932,12 +948,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return lEve
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByKey(BigDecimal aEventoKey) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEve = null;
@@ -955,7 +972,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
@@ -1123,19 +1140,22 @@ public class EventoController extends SiapController implements IEvento {
 			// modifica relativa al tipo istituto
 			cleanup(lIstDao);
 			cleanup(lCampoNotaSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAvvSigeDao);
 		}
 		return lEve;
 	}
 
 	/**
 	 * Ricerca Evento attraverso EVE_ID_EVENTO.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByEveIdEvento(BigDecimal aEventoKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEve = null;
@@ -1313,6 +1333,8 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lIstDao);
 			cleanup(lCurSiusDao); // 25/05/2011
 			cleanup(lCurSqlDao); // 25/05/2011
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAvvSigeDao);
 			cleanup(lConn);
 		}
 
@@ -1321,13 +1343,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * PM -- per richiesta atti. Da rivedere il tutto Ricerca Evento attraverso la chiave.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByKeyForRichiestaAtti(BigDecimal aEventoKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// PassaggioEventoSqlDAO lPEveDao = null;
@@ -1337,7 +1360,6 @@ public class EventoController extends SiapController implements IEvento {
 		AutoritaEsternaSqlDAO lAutoritaSqlDao = null;
 		CSSASqlDAO lCSSASqlDao = null;
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
-
 		// Gestione Istituto Penitenziario
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 
@@ -1438,13 +1460,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByKeyForUdienza(BigDecimal aEventoKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		NotificaSqlDAO lNotDao = null;
@@ -1481,13 +1504,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave (per Trasm. Atti).
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return lEve
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByKeyForTrasmAtti(BigDecimal aEventoKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// PassaggioEventoSqlDAO lPEveDao = null;
@@ -1539,13 +1563,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave del Fascicolo Siep.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoNotificaByFascicoloSiep(BigDecimal aFascKey, String[] aTipoEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
@@ -1582,7 +1607,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * 15/06/2011 Ricerca Evento attraverso la chiave del Fascicolo Siep e la chiave Ufficio.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @param aChiaveUfficio
 	 * @return
@@ -1590,6 +1615,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public Vector ExRicercaEventoNotificaByFascicoloSiepChiaveUfficio(BigDecimal aFascKey,
 			String aChiaveUfficio, String[] aTipoEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
@@ -1622,12 +1648,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave del Fascicolo Siep.e tipo provv
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoFascicoloSiepProvvSius(BigDecimal aFascKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
@@ -1665,7 +1692,7 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca Eventi per CFC attraverso la chiave del Fascicolo Sius. MEV10-s3: aggiunto parametro di
 	 * passaggio per gestire tipologia ufficio minorenni
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aTipoEvento
 	 * @param strCodTipoUfficio
@@ -1705,13 +1732,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave del Fascicolo Sius.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoByFascicoloSius(BigDecimal aFascKey, String aTipoEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -1737,9 +1765,7 @@ public class EventoController extends SiapController implements IEvento {
 		} catch (Exception e) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByFascicoloSius: Non posso leggere  : " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
 		}
@@ -1747,16 +1773,16 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	// genny 23/03/2004
-
 	/**
 	 * Ricerca Evento attraverso la chiave del Fascicolo Sius.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoByFascEsitoParereInamm(BigDecimal aFascKey, String aTipoEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -1782,9 +1808,7 @@ public class EventoController extends SiapController implements IEvento {
 		} catch (Exception e) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByFascEsitoParereInamm: Non posso leggere  : " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
 		}
@@ -1793,13 +1817,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Evento attraverso la chiave del Fascicolo Sius.
-	 * 
+	 *
 	 * @param aEventoKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaAltroEventoByFascicoloSius(BigDecimal aFascKey, String aTipoEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -1834,13 +1859,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca Provvedimenti SIUS comprensivi del numero di documenti allegati e della data di Deposito.
-	 * 
+	 *
 	 * @param aEvento
 	 *            : contiene le condizioni di filtro della Ricerca
 	 * @return Vector lEventi : elenco di EventoDepositoModel.
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaProvvedimentiDeposito(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
@@ -1866,6 +1892,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	private Vector RicercaNumAllegati(Vector aEventi, Connection aConn, String aCodTipoDoc) throws Exception {
+
 		// Correzione del 24-6-2005 by Luigi
 		// Ora la funzione ricava anche la Data di Deposito del Decreto/Ordinanza
 
@@ -1929,6 +1956,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	public EventoNotificaModel ExConfermaTrasmissione(EventoModel aEvento, NotificaModel aNotifica,
 			String aCodStatoProcedimento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2027,7 +2055,6 @@ public class EventoController extends SiapController implements IEvento {
 		NotificaDAO lNotDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
 		StatoProcedimentoSqlDAO lStatoSqlDao = null;
-
 		ScadenzarioDAO lScaDao = null;
 
 		try {
@@ -2235,11 +2262,12 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Modifica del Documento Stampato...
-	 * 
+	 *
 	 * @param aEvento
 	 * @throws F3BException
 	 */
 	public void ExModificaEvento(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2267,12 +2295,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Aggiornameto data ricezione Atti Istruttori
-	 * 
+	 *
 	 * @param aEvento
 	 *            : ArrayList
 	 * @throws F3BException
 	 */
 	public void ExAggiornaDateRicezioneEvento(ArrayList aEventi) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		int lLungLista = aEventi.size();
@@ -2301,11 +2330,12 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Cancellaizone Evento
-	 * 
+	 *
 	 * @param aEvento
 	 * @throws F3BException
 	 */
 	public void ExCancellaEvento(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -2329,13 +2359,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Stampa un documento di Ordine d'esecuzione per condannato Libero
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExStampaDocumento(EventoNotificaModel aEvento, UtenteModel aUtente)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -2392,12 +2423,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Effettua l'operazione di update di un documento mandato tramite upload
-	 * 
+	 *
 	 * @param aEvento
 	 * @throws F3BException
 	 */
 
 	public EventoModel ExUpdateDocument(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
@@ -2455,11 +2487,12 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Effettua l'operazione di update del campo FLAG_DOCUMENTO_REGISTRATO.
-	 * 
+	 *
 	 * @param aEvento
 	 * @throws F3BException
 	 */
 	public void ExAggiornaValidazione(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		try {
@@ -2487,7 +2520,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @return Array con il Documento recuperato dal DB
 	 * @throws F3BException
@@ -2532,6 +2565,7 @@ public class EventoController extends SiapController implements IEvento {
 	// DECRETO SOSPENSIONE
 	public EventoModel ExRicercaEventoByFascicoloSiepDecretoSospensione(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = new EventoModel();
@@ -2565,6 +2599,7 @@ public class EventoController extends SiapController implements IEvento {
 	// DECRETO SOSPENSIONE
 	public EventoModel ExRicercaEventoByFascicoloSiepOESospensione(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = new EventoModel();
@@ -2595,6 +2630,7 @@ public class EventoController extends SiapController implements IEvento {
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoTipoMotProvEveDocReg(EventoModel aModel) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = new EventoModel();
@@ -2628,7 +2664,7 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca gli eventi eventi in base a idFascicolo, tipoEvento, tipoProvvedimento, motivoProvvedimento
 	 * recuperati dal model. Ordinati per data Inserimento decrescente
-	 * 
+	 *
 	 * @param aModel
 	 *            - EventoModel con i parametri per la ricerca
 	 * @param lFlagDocReg
@@ -2639,6 +2675,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public Vector ExRicercaEventoTipoEveTipoProvMot(EventoModel aModel, String lFalgDocReg)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lDao = null;
@@ -2668,6 +2705,7 @@ public class EventoController extends SiapController implements IEvento {
 	// ricerca ordinanza di revoca simeone
 	public EventoModel ExRicercaRevocaOrdinanzaAcquisitaDecretoSospensioneByFascicoloSiep(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = new EventoModel();
@@ -2706,6 +2744,7 @@ public class EventoController extends SiapController implements IEvento {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEventoByFascicoloSiep(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lEvento = new Vector();
@@ -2735,6 +2774,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public Vector ExRicercaEventoStatoEsecuzioneByFascicoloSiep(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lEvento = new Vector();
@@ -2762,6 +2802,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoNotificaModel ExRicercaEventoByKeyPerMotivo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoNotificaModel lEve = null;
@@ -2770,15 +2811,12 @@ public class EventoController extends SiapController implements IEvento {
 			lEveDao = new EventoSqlDAO(lConn);
 			lEveDao.ricercaEventoByKeyPerMotivo(aKey);
 			lEve = new EventoNotificaModel((EventoModel) lEveDao.getModelByKey());
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
-
 			throw new F3BException(
 					"EventoController.ExRicercaEventoNotificaByKey: Non posso leggere : " + daoEx);
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			throw new F3BException(
 					"EventoController.ExRicercaEventoNotificaByKey: Non posso leggere  : " + e);
 		} finally {
@@ -2789,6 +2827,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoNotificaModel ExRicercaEventoNotificaCondannatoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoNotificaModel lEve = null;
@@ -2874,7 +2913,7 @@ public class EventoController extends SiapController implements IEvento {
 					lAvvDao = new AvvocatoFascicoloSiepPerEventoSqlDAO(lConn);
 					lAvvDao.ricercaAvvocatoByKeyAvvocatoFasSiep(
 							lEve.getNotifiche()[count].getAvvIdAvvocatoFascicoloSiep());
-					lAvvocati.add((AvvocatoSiepModel) lAvvDao.getModelByKey());
+					lAvvocati.add(lAvvDao.getModelByKey());
 				}
 
 				count++;
@@ -2906,6 +2945,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoNotificaModel ExRicercaEventoNotificaDifensoreByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoNotificaModel lEve = null;
@@ -2972,7 +3012,7 @@ public class EventoController extends SiapController implements IEvento {
 					lAvvDao = new AvvocatoFascicoloSiepPerEventoSqlDAO(lConn);
 					lAvvDao.ricercaAvvocatoByKeyAvvocatoFasSiep(
 							lEve.getNotifiche()[count].getAvvIdAvvocatoFascicoloSiep());
-					lAvvocati.add((AvvocatoSiepModel) lAvvDao.getModelByKey());
+					lAvvocati.add(lAvvDao.getModelByKey());
 				}
 				count++;
 			}
@@ -3002,6 +3042,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoModel ExRicercaEventoByDataInserimentoUguale(EventoModel lEveModel) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveMod = new EventoModel();
@@ -3029,12 +3070,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca l'evento per Id evento
-	 * 
+	 *
 	 * @param aKey
 	 *            id dell'evento
 	 * @return Model dell'evento
 	 */
 	public EventoModel ExRicercaEventoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveMod;
@@ -3057,12 +3099,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca l'evento per Id evento X conversione pene pec
-	 * 
+	 *
 	 * @param aKey
 	 *            id dell'evento
 	 * @return Model dell'evento
 	 */
 	public EventoModel ExRicercaEventoByKeyTenore(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveMod;
@@ -3084,6 +3127,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoModel ExRicercaEventoEsitoParereInamm(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveMod;
@@ -3105,6 +3149,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoModel ExRicercaEventoIstanzaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveDao = null;
@@ -3128,6 +3173,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public TemplateModel ExRicercaTemplateByCodMotivo(String aCodMotivo) throws F3BException {
+
 		TemplateSqlDAO lTemplateSqlDao = null;
 		TemplateModel lTemplateMod = null;
 		Connection lConn = null;
@@ -3156,6 +3202,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoModel ExRicercaUltimoTipoEventoByIdFascicolo(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoModel lEvento = null;
 		EventoSqlDAO lEveDao = null;
@@ -3179,9 +3226,11 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 *
-	 * @param @return @throws
+	 * @param @return
+	 * 			@throws
 	 */
 	public EventoModel ExRicercaUltimoEventoGeneratoByCodUtente(String aCodUtente) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = null;
@@ -3206,13 +3255,14 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca l'ultimo evento inserito per fascicolo sius
-	 * 
+	 *
 	 * @param aKey
 	 *            Fascicolo Sius
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaUltimoByFasSius(String aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEvento = null;
@@ -3241,7 +3291,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Estrae il BLOB dall'EVENTO e lo restituisce come Byte Array.
-	 * 
+	 *
 	 * @param aIdEvento
 	 *            ,
 	 * @return byte[].
@@ -3282,11 +3332,12 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Effettua l'update del campo FLAG_DOCUMENTO_REGISTRATO ad 'A' ed inserisce le motivazioni
 	 * dell'annullamento in Campo_nota.
-	 * 
+	 *
 	 * @param aEvento
 	 * @throws F3BException
 	 */
 	public void ExAnnullaEventoInserisciCampoNota(CampoNotaModel aCampoNota) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
@@ -3464,8 +3515,8 @@ public class EventoController extends SiapController implements IEvento {
 			 * if (lEve.getCodMotivo().compareTo("2410")==0 ) { // Cancellazione eventuale Periodo Altra
 			 * Misura collegata lPAMDao = new PeriodoAltraMisuraDAO(lConn); // Il Periodo Altra Misura e'
 			 * collegato all'evento lPAMDao.setCondizioneByEveIdEvento(lEve.getIdEvento()); lPAMDao.delete();
-			 * 
-			 * 
+			 *
+			 *
 			 * }
 			 **/
 
@@ -3678,7 +3729,7 @@ public class EventoController extends SiapController implements IEvento {
 	 * Ricerca gli Eventi con coppie COD_MOTIVO e COD_TIPO_PROVVEDIMENTO passati attraverso due array di
 	 * String. Gli eventi vengono restituiti ordinati per DATA_INSERIMENTO DESC La condzione sullo stato di
 	 * validazione viene specificata nel model
-	 * 
+	 *
 	 * @param aModel
 	 * @param aTipoProv
 	 * @param aCodMotiv
@@ -3687,6 +3738,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public Vector ExRicercaEventoTipoProvTipoMot(EventoModel aModel, String[] aTipoProv, String[] aCodMotiv)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lDao = null;
@@ -3708,7 +3760,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aModel
 	 * @param aTipoProv
 	 * @param aCodMotiv
@@ -3716,6 +3768,7 @@ public class EventoController extends SiapController implements IEvento {
 	 */
 	public EventoModel ExRicercaEventoUnicoTipoProvTipoMot(EventoModel aModel, String[] aTipoProv,
 			String[] aCodMotiv) throws F3BException {
+
 		EventoModel lEvento = null;
 		Vector lEventi = null;
 
@@ -3728,6 +3781,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	public List ExRicercaEventiNOTAnnullati(BigDecimal aIdFascicolo, String[] aMotivo, String aTipoProvv,
 			String aTipoEve) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveDao = null;
@@ -3756,12 +3810,13 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca gli Ordini di Esecuzione emessi per la richiesta di restituzione. Gli OE sono ordinati per
 	 * data_emissione decrescente
-	 * 
+	 *
 	 * @param aFascKey
 	 * @return Vettore di EventoModel
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaOEPerRestituzioneByFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lListaOrdiniEsecuzione = new Vector();
@@ -3789,12 +3844,13 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Modifica il Magistrato dell'Evento, la Data Emissione dell'Evento e la data Trasmissione delle
 	 * Notifiche.
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aNotMod
 	 * @throws F3BException
 	 */
 	public void ExModificaEventoNotifiche(EventoModel aEvento, NotificaModel aNotMod) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3821,9 +3877,7 @@ public class EventoController extends SiapController implements IEvento {
 		} catch (Exception ex) {
 			rollback(lConn);
 			throw new F3BException("EventoController.ExModificaEventoNotifiche: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lConn);
@@ -3832,15 +3886,16 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Modifica l'Evento, le notifiche e i campi nota, secondo i parametri passati
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aNotMod
 	 * @param aCampoNota
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	public void ExModificaEventoNotificheCampoNote(EventoModel aEvento, NotificaModel aNotMod,
 			CampoNotaModel aCampoNota) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3874,9 +3929,7 @@ public class EventoController extends SiapController implements IEvento {
 		} catch (Exception ex) {
 			rollback(lConn);
 			throw new F3BException("EventoController.ExModificaEventoNotificheCampoNote: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lCNoteDAO);
@@ -3886,19 +3939,19 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Modifica l'evento e cancella lo scadenzario (01 = SIMEONE) passato come parametro
-	 * 
+	 *
 	 * @param EventoModel
 	 *            aEvento
 	 * @param FascicoloSiepModel
 	 *            aFas
 	 * @param String
 	 *            aTipoScadenzario
-	 * 
+	 *
 	 * @throws F3BException
 	 */
-
 	public void ExModificaEventoTrasmissioneCompetenza(EventoModel aEvento, FascicoloSiepModel aFas,
 			String aTipoScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3940,6 +3993,7 @@ public class EventoController extends SiapController implements IEvento {
 	}
 
 	public EventoModel ExUpdateValidaProvvedimento(EventoModel aEvento, String StatoPro) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3960,7 +4014,7 @@ public class EventoController extends SiapController implements IEvento {
 			lEveDao.setDAOFromModel(aEvento);
 			/*
 			 * lEveDao.setIdEvento(aEvento.getIdEvento());
-			 * 
+			 *
 			 * lEveDao.start(); if (lEveDao.next()) { lEveApp.setIdEvento(lEveDao.getIdEvento());
 			 * lEveApp.setDataEmissione(lEveDao.getDataEmissione()); }
 			 */
@@ -4081,6 +4135,8 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lEveDaoBlob);
 			cleanup(lPosDao);
 			cleanup(lPosSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEveSqlDao);
 			cleanup(lConn);
 			// cleanup(lConnBlob);
 		}
@@ -4090,12 +4146,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca il Foglio Complementare legato alll'evento in input
-	 * 
+	 *
 	 * @param aKey
 	 *            id dell'evento
 	 * @return booelan return true se e' presente il Foglio Complementare false altrimenti
 	 */
 	public boolean ExRicercaFoglioComplementare(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO lDocAllSqlDAO = null;
 		boolean foglioPresente = false;
@@ -4113,6 +4170,8 @@ public class EventoController extends SiapController implements IEvento {
 		} catch (Exception e) {
 			throw new F3BException("EventoController.ExRicercaFoglioComplementare: " + e);
 		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lDocAllSqlDAO);
 			cleanup(lConn);
 		}
 		return foglioPresente;
@@ -4123,6 +4182,7 @@ public class EventoController extends SiapController implements IEvento {
 	 * @throws F3BException
 	 */
 	public void ExAnnullaEventoInserisciCampoNotaFC(CampoNotaModel aCampoNota) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
@@ -4286,8 +4346,8 @@ public class EventoController extends SiapController implements IEvento {
 			 * if (lEve.getCodMotivo().compareTo("2410")==0 ) { // Cancellazione eventuale Periodo Altra
 			 * Misura collegata lPAMDao = new PeriodoAltraMisuraDAO(lConn); // Il Periodo Altra Misura e'
 			 * collegato all'evento lPAMDao.setCondizioneByEveIdEvento(lEve.getIdEvento()); lPAMDao.delete();
-			 * 
-			 * 
+			 *
+			 *
 			 * }
 			 **/
 
@@ -4500,12 +4560,13 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Ricerca il Foglio Complementare Trasmesso, legato all'evento in input
-	 * 
+	 *
 	 * @param aKey
 	 *            id dell'evento
 	 * @return booelan return true se e' presente il Foglio Complementare false altrimenti
 	 */
 	public boolean ExRicercaFoglioComplementareTrasmesso(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO lDocAllSqlDAO = null;
 		boolean foglioPresente = false;
@@ -4528,13 +4589,14 @@ public class EventoController extends SiapController implements IEvento {
 				if (lCount.compareTo(new BigDecimal(0)) > 0) {
 					foglioPresente = true;
 				}
-
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException("EventoController.ExRicercaFoglioComplementareTrasmesso: " + daoEx);
 		} catch (Exception e) {
 			throw new F3BException("EventoController.ExRicercaFoglioComplementareTrasmesso: " + e);
 		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lDocAllSqlDAO);
 			cleanup(lConn);
 		}
 		return foglioPresente;
@@ -4542,7 +4604,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * ExRicercaDataEmissioneCertCasellario
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aChiaveUfficio
 	 * @param aTipoEvento
@@ -4578,12 +4640,13 @@ public class EventoController extends SiapController implements IEvento {
 	 * Effettua la ricerca dell'Annotazione Designazione Istituto da parte del DAP nella'ambito della
 	 * esecuzione Misure Sicurezza. Viene Ricercato un VERBALE legato ad un EVENTO di provvedimento
 	 * Annotazione (la PENA_RESIDUA aggiornata ??)
-	 * 
+	 *
 	 * @param adEvento
 	 * @return EventoVerbaleModel
 	 * @throws F3BException
 	 */
 	public EventoVerbaleModel ExRicercaEventoVerbaleByIdEve(BigDecimal aEveKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoVerbaleModel lEveVerMod = null;
 
@@ -4594,7 +4657,7 @@ public class EventoController extends SiapController implements IEvento {
 			lEveDao.ricercaEventoVerbaleByIdEve(aEveKey);
 			lEveDao.start();
 			if (lEveDao.next())
-				lEveVerMod = (EventoVerbaleModel) lEveDao.getModelIstituto();
+				lEveVerMod = lEveDao.getModelIstituto();
 			lEveDao.stop();
 			commit(lConn);
 
@@ -4628,11 +4691,11 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * Modifica l'Evento, le notifiche e i campi nota, secondo i parametri passati
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aNotMod
 	 * @param aCampoNota
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	public void ExModificaEventoProvvedimentoSIGE(EventoModel aEvento,
@@ -4698,7 +4761,7 @@ public class EventoController extends SiapController implements IEvento {
 
 	/**
 	 * 07/2015 - ActStampaComunicazionePoliziaEsecMs - Cerca tutti gli eventi per idFascicoloSiep Order desc
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return Vettore di Eventi
 	 * @throws F3BException
@@ -4734,18 +4797,16 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lConn);
 		}
 		return lEvento;
-
 	} // End ExRicercaTuttiEventiValidatiByFascicoloSiepDesc()
 
 	/**
 	 * Effettua l'operazione di update di un documento mandato tramite upload e inserisce uno/due (dipende dal
 	 * numero di avvocati legati al fascicolo) avvisi sulla tabella AVVISI_AVVOCATO
-	 * 
+	 *
 	 * @param aEvento
 	 * @param lAvvvisiAvvocato
 	 * @throws F3BException
 	 */
-
 	public EventoModel ExUpdateDocument(EventoModel aEvento, Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato)
 			throws F3BException {
 
@@ -4817,6 +4878,8 @@ public class EventoController extends SiapController implements IEvento {
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAvvisiAvvocatoDao);
 			cleanup(lConn);
 		}
 		return lEveMod;
@@ -4825,6 +4888,7 @@ public class EventoController extends SiapController implements IEvento {
 	// MEV 26 CUMULO
 	public Vector ExRicercaEventoByTipoEveKeyIstruttoriaCumulo(BigDecimal aIstruCumKey, String[] aTipoEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
@@ -4860,17 +4924,20 @@ public class EventoController extends SiapController implements IEvento {
 
 		return lEventi;
 	}
-	
+
 	/**
-	 * // intervento per MEV 64- AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti depositati)
-	 * 
+	 * // intervento per MEV 64- AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti
+	 * depositati)
+	 *
 	 * @param aEventi
 	 * @param aConn
 	 * @param aCodTipoDoc
 	 * @return
 	 * @throws Exception
 	 */
-	private Vector RicercaNumAllegatiConDeposito(Vector aEventi, Connection aConn, String aCodTipoDoc) throws Exception {
+	private Vector RicercaNumAllegatiConDeposito(Vector aEventi, Connection aConn, String aCodTipoDoc)
+			throws Exception {
+
 		// Correzione del 24-6-2005 by Luigi
 		// Ora la funzione ricava anche la Data di Deposito del Decreto/Ordinanza
 
@@ -4884,7 +4951,7 @@ public class EventoController extends SiapController implements IEvento {
 				lEveDao = new EventoSqlDAO(aConn);
 				int lnum = -1;
 				int lNumValidati = -1;
-				//EventoModel lEventoDep = null;
+				// EventoModel lEventoDep = null;
 
 				// Model Esteso e Nuovo Vector
 				EventoDepositoModel lEventoDep = null;
@@ -4894,7 +4961,7 @@ public class EventoController extends SiapController implements IEvento {
 					Date lDataDeposito = null;
 					EventoModel evento = (EventoModel) itx.next();
 					// le fissazioni udienze non devono essere visualizzate
-					if(!"0601".equals(evento.getCodEsito())) {
+					if (!"0601".equals(evento.getCodEsito())) {
 						lEventoDep = new EventoDepositoModel(evento);
 						lnum = lEveDao.getNumDocumentiAllegati(lEventoDep.getIdEvento(), aCodTipoDoc);
 						lEventoDep.setNumAllegati(lnum);
@@ -4908,13 +4975,15 @@ public class EventoController extends SiapController implements IEvento {
 								DepositoDecretoSqlDAO DepDecDao = new DepositoDecretoSqlDAO(aConn);
 								lDataDeposito = DepDecDao.getDataDepositoByEve(lEventoDep.getIdEvento());
 								cleanup(DepDecDao);
-							} else if (lEventoDep.getDescrTipoProvvedimento().compareToIgnoreCase("Ordinanza") == 0) {
+							} else if (lEventoDep.getDescrTipoProvvedimento()
+									.compareToIgnoreCase("Ordinanza") == 0) {
 								DepositoOrdinanzaPcSqlDAO DepOrdDao = new DepositoOrdinanzaPcSqlDAO(aConn);
 								lDataDeposito = DepOrdDao.getDataDepositoByEve(lEventoDep.getIdEvento());
 								cleanup(DepOrdDao);
 							}
 							// MEV10-s3: gestione casistica per "sentenza"
-							else if (lEventoDep.getDescrTipoProvvedimento().compareToIgnoreCase("Sentenza") == 0) {
+							else if (lEventoDep.getDescrTipoProvvedimento()
+									.compareToIgnoreCase("Sentenza") == 0) {
 								DepositoSentenzaSqlDAO lDepSentDao = new DepositoSentenzaSqlDAO(aConn);
 								lDepSentDao.ricercaDepositoSentenzaByIdEveGenerato(lEventoDep.getIdEvento());
 								DepositoSentenzaModel lDepSenMod = (DepositoSentenzaModel) lDepSentDao
@@ -4924,11 +4993,11 @@ public class EventoController extends SiapController implements IEvento {
 							}
 						}
 						// Costruzione del nuovo Vector
-	//					lEventoDep = new EventoDepositoModel(lEvento, lDataDeposito);
-	//					lEventiDep.add(lEventoDep);
+						// lEventoDep = new EventoDepositoModel(lEvento, lDataDeposito);
+						// lEventiDep.add(lEventoDep);
 						lEventoDep.setDataDeposito(lDataDeposito);
 						lEventiDepnew.add(lEventoDep);
-					}// chiudo if
+					} // chiudo if
 				}
 			} finally {
 				cleanup(lEveDao);
@@ -4936,17 +5005,17 @@ public class EventoController extends SiapController implements IEvento {
 		}
 		return lEventiDepnew;
 	}
-	
-	
+
 	/**
 	 * Ricerca Provvedimenti SIUS comprensivi del numero di documenti allegati e della data di Deposito.
-	 * 
+	 *
 	 * @param aEvento
 	 *            : contiene le condizioni di filtro della Ricerca
 	 * @return Vector lEventi : elenco di EventoDepositoModel.
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaProvvedimentiConDataDeposito(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;

@@ -94,6 +94,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByIdFascicoloDescrMotivo(BigDecimal aKeyFasc,
 			String aMotivo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEve = null;
@@ -266,6 +267,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public EventoModel ExRicercaEventoByFascicoloSiepTipEventoTipProvCodMotivo(BigDecimal aFascKey,
 			String aTipoEvento, String aTipoProv, String aMotivo) throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -298,7 +300,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	// 27/03/2019 MEV70
 	/**
 	 * Ricerca eventi dal fascicolo e dal tipo evento, tipo provvedimento, motivo
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aTipoEvento
 	 * @param aTipoProv
@@ -308,6 +310,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public Vector ExRicercaEventiByFascicoloSiepTipEventoTipProvCodMotivo(BigDecimal aFascKey,
 			String aTipoEvento, String aTipoProv, String aMotivo) throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -356,6 +359,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public Vector ExRicercaEventoByFascicoloSiepTipProv(BigDecimal aFascKey, String[] aTipoProv)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
 		Vector lEventi = new Vector();
@@ -393,6 +397,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public EventoNotificaModel ExRicercaEventoNotificaByIdFascicoloCodiceMotivo(BigDecimal aKeyFasc,
 			String[] aMotivo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEve = null;
@@ -552,6 +557,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public EventoNotificaModel ExInseriscioModificaEventoNotificaCumulo(FascicoloSiepModel aFascicolo,
 			EventoNotificaModel aEvento, CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -562,13 +568,9 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 		CumuloSqlDAO lCumSql = null;
 		LicenzaLibanticipataDAO lLibDAO = null;
 		LicenzaLibanticipataSqlDAO lLibSqlDAO = null;
-
-		// LicenzaLibAnticipataModel lLicMod = null;
-
 		PenaCumuloSqlDAO lPenSqlDao = null;
 
 		EventoModel lEveMod = new EventoModel();
-
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
 
 		try {
@@ -856,10 +858,8 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			cleanup(lSqlDAO);
 			cleanup(lCumSql);
 			cleanup(lCumDao);
-
 			cleanup(lLibDAO);
 			cleanup(lLibSqlDAO);
-
 			cleanup(lPenSqlDao);
 
 			cleanup(lConn);
@@ -881,6 +881,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	public EventoModel ExRicercaEventoByFascicoloSiepTipEventoTipProvPerEventoDaAnnullareCancellare(
 			BigDecimal aFascKey, String[] aTipoEvento, String[] aTipoProv, String aOrdinamento)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -911,7 +912,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	// Provvedimenti PM.
 	/**
 	 * Ricerca Evento By FascicoloSiep TipEvento TipProv Per Evento Da Annullare Cancellare
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aTipoEvento
 	 * @param aTipoProv
@@ -923,6 +924,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	public EventoModel ExRicercaEventoByFascicoloSiepTipEventoTipProvPerEventoDaAnnullareCancellare(
 			BigDecimal aFascKey, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo,
 			String aOrdinamento) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		// EventoNotificaModel lEve = null;
@@ -981,6 +983,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			// String aCodUfficioUtenteConnesso,
 			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv, int aPage,
 			String aOrdinamento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveDao = null;
@@ -1042,6 +1045,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
 			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 
 		Connection lConn = null;
@@ -1075,7 +1079,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	// Provvedimenti PM.
 	/**
 	 * Ricerca Evento By FascicoloSiep TipEvento NOT TipProvPaged
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aTipoEvento
 	 * @param aTipoProv
@@ -1088,6 +1092,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			// String aCodUfficioUtenteConnesso,
 			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
 			String[] aCodMotivo, int aPage, String aOrdinamento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveDao = null;
@@ -1138,7 +1143,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	// Provvedimenti PM.
 	/**
 	 * Get Count Evento By FascicoloSiep TipEvento NOT TipProvPaged
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aTipoEvento
 	 * @param aTipoProv
@@ -1148,6 +1153,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
 			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 
 		Connection lConn = null;
@@ -1186,7 +1192,9 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public Vector ExRicercaOrdinanzeDecretiSiep(BigDecimal aFascKey, String[] aTipoEvento, String[] aTipoProv)
 			throws F3BException {
+
 		Connection lConn = null;
+
 		EventoSimeoneSqlDAO lEveDao = null;
 		LicenzaLibanticipataSqlDAO lLibSql = null;
 		// PeriodoLibanticipataSqlDAO lPerDao = null; // 04/02/2008
@@ -1356,20 +1364,20 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public Vector ExRicercaEventoNotificaByFascicoloSiepTipEventoNOTTipProvNONAnnullati(BigDecimal aFascKey,
 			String[] aTipoEvento, String[] aTipoProv) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		CampoNotaSqlDAO lCampoDao = null;
-		EventoModel lEve = null;
-
 		NotificaEventoSqlDAO lNotEveDao = null;
 		CSSASqlDAO lCssaDao = null;
 		UfficioSqlDAO lUffDao = null;
 		AutoritaEsternaSqlDAO lAutoritaSqlDao = null;
 		IstitutoDetenzioneSqlDAO lIstDao = null;
+		RiepilogoProvvedimentoSqlDAO lRiepDao = null;
 
+		EventoModel lEve = null;
 		EventoNotificaModel lEveNot = null;
 		RiepilogoProvvedimentoModel lRiep = new RiepilogoProvvedimentoModel();
-		RiepilogoProvvedimentoSqlDAO lRiepDao = null;
 		Vector lEventi = null;
 		Vector lEventiNotifica = null;
 
@@ -1475,7 +1483,6 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			cleanup(lEveDao);
 			cleanup(lCampoDao);
 			cleanup(lRiepDao);
-
 			cleanup(lUffDao);
 			cleanup(lCssaDao);
 			cleanup(lAutoritaSqlDao);
@@ -1495,6 +1502,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoByEveIdEvento(BigDecimal aEventoKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveMod = new EventoModel();
@@ -1538,6 +1546,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public EventoModel ExRicercaEventoByEveIdEventoTipoProvCodMotivo(BigDecimal aEventoKey,
 			String aTipoEvento, String aTipoProvv, String aMotivo) throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
 		EventoModel lEveMod = new EventoModel();
@@ -1577,6 +1586,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public EventoModel ExRicercaEventoByFascicoloSiepDesc(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
 		EventoModel lEveMod = new EventoModel();
@@ -1616,6 +1626,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public EventoModel ExRicercaEventoByFascicoloSiepDescUfficioConnesso(BigDecimal aKey, String aCodUfficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lEveDao = null;
 		EventoModel lEveMod = new EventoModel();
@@ -1653,6 +1664,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaUltimoEventoByIdFascicolo(BigDecimal aKeyFasc) throws F3BException {
+
 		Connection lConn = null;
 		EventoSqlDAO lEveDao = null;
 		Vector lEve = null;
@@ -1688,12 +1700,14 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public Vector ExRicercaEventoStatoEsecuzioneByFascicoloSiepPaged(BigDecimal aIdFascicolo, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoSimeoneSqlDAO lDao = null;
 		TenoreSqlDAO lTenSql = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSql = null;
 		DepositoDecretoSqlDAO lDepDecSql = null;
 		MisuraAlternativaSqlDAO lMisSql = null;
+
 		MisuraAlternativaAggregatoModel lMisAggregato = null;
 		// LicenzaLibAnticipataModel lLibAntic = null;
 		DepositoOrdinanzaPcModel lDepOrdPCMod = null;
@@ -1777,9 +1791,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("SQLException: " + ex);
 			throw new F3BException("EventoController.ExRicercaEventoStatoEsecuzioneByFascicoloSiep: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lDao);
 			cleanup(lDepOrdSql);
 			cleanup(lDepDecSql);
@@ -1800,6 +1812,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountEventiPaged(BigDecimal aKeyFascicolo) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -1829,6 +1842,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountEventiNonValidatiPaged(EventoModel aModel) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -1859,6 +1873,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaProvvedimentiOnViewPaged(EventoModel aModel, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		// Vector lFascicoli = new Vector();
 		EventoSimeoneSqlDAO lEveDao = null;
@@ -1998,9 +2013,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			 * la variabile di istanza siesLogger al posto di mLog
 			 * siesLogger.error("---AGGREGATO EVENTI------>" + lEveVer.getCodMotivo()); } }
 			 */
-
 			// lEveDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new SIEPException(F3BException.USER_MESSAGE,
 					"FascicoloSiepController.ExRicercaFascicoloSiep: Non posso leggere : " + daoEx);
@@ -2022,6 +2035,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 */
 	public List ExRicercaProvvedimentiPerOmesseNotificheOnViewPaged(EventoModel aModel,
 			String aCodUfficioUtenteConnesso, int aPage) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSimeoneSqlDAO lEveFasDao = null;
@@ -2094,6 +2108,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 
 	public BigDecimal ExGetCountProvvedimentiPerOmesseNotifiche(EventoModel aEvento,
 			String aCodUfficioUtenteConnesso) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 
 		Connection lConn = null;

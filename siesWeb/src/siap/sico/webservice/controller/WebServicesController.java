@@ -400,6 +400,9 @@ public class WebServicesController extends SiapController implements IWebService
 			cleanup(lSanzioneSostitutivaDao);
 			cleanup(lBeneficioDao);
 			cleanup(lStatoProcDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lContinuazioneDao);
+			cleanup(lSogCerDao);
 			cleanup(lConn);
 		}
 	}
@@ -447,6 +450,7 @@ public class WebServicesController extends SiapController implements IWebService
 	}
 
 	public ComuneModel ExRicercaProvinciaSedeGiudiziaria(String aCodIstatComuneNascita) throws F3BException {
+
 		Connection lConn = null;
 		ComuneModel lComuneModel = new ComuneModel();
 		WebserviceSqlDAO lSqlDao = null;
@@ -479,6 +483,7 @@ public class WebServicesController extends SiapController implements IWebService
 
 	public UfficioModel ExRicercaCodiceUfficio(String aCodTipoUfficio, String aCodComune)
 			throws F3BException {
+
 		Connection lConn = null;
 		UfficioModel lUfficioModel = new UfficioModel();
 		WebserviceSqlDAO lSqlDao = null;
@@ -486,9 +491,8 @@ public class WebServicesController extends SiapController implements IWebService
 		try {
 			lConn = getDBConnection();
 			lSqlDao = new WebserviceSqlDAO(lConn);
-			lSqlDao.ricercaCodUfficio(aCodTipoUfficio, aCodComune); // Imposto
-																	// Istruzione
-																	// Sql
+			// Imposto Istruzione Sql
+			lSqlDao.ricercaCodUfficio(aCodTipoUfficio, aCodComune);
 			lSqlDao.start(); // Esegue la Query
 
 			if (lSqlDao.next()) // Controllo su Recordset
@@ -513,6 +517,7 @@ public class WebServicesController extends SiapController implements IWebService
 	}
 
 	public Vector ExRicercaReatiInContinuazione(long aFascicoloSIEP) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReatoVector = new Vector();
 		WebserviceSqlDAO lSqlDao = null;
@@ -550,6 +555,7 @@ public class WebServicesController extends SiapController implements IWebService
 	public Vector ExRicercaTitoloEsecutivoTrasferito(Date dataRicercaInizio, Date dataRicercaFine,
 			String lDestinazione, String lStatoFascicolo, String lCodUfficioUtenteConnesso, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascSoggSent = new Vector();
 		WSFascicoloSoggettoSentenzaSqlDAO lWSFasSoggSenSqlDao = null;
@@ -579,6 +585,7 @@ public class WebServicesController extends SiapController implements IWebService
 	public BigDecimal ExGetCountRicercaTitoloEsecutivoTrasferito(Date dataRicercaInizio, Date dataRicercaFine,
 			String lDestinazione, String lStatoFascicolo, String lCodUfficioUtenteConnesso)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		WSFascicoloSoggettoSentenzaSqlDAO lWSFasSoggSenSqlDao = null;
@@ -727,6 +734,7 @@ public class WebServicesController extends SiapController implements IWebService
 
 	public FascicoloSiepModel ExPrelevaAnnoNumeroFas(BigDecimal lKeyProvvNsc, BigDecimal lKeySoggNsc)
 			throws F3BException {
+
 		Connection lConn = null;
 		// BigDecimal lCount=new BigDecimal(0);
 		WSFascicoloSoggettoSentenzaSqlDAO lWSFasSoggSenSqlDao = null;
@@ -948,6 +956,8 @@ public class WebServicesController extends SiapController implements IWebService
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lTraDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogCerDao);
 			cleanup(conn);
 		}
 	}

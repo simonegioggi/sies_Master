@@ -7,13 +7,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.reatopredisposto.dao.ReatoPredispostoDAO;
 import siap.siep.reatopredisposto.dao.ReatoPredispostoSqlDAO;
 import siap.siep.reatopredisposto.model.ReatoPredispostoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -39,6 +39,7 @@ public class ReatoPredispostoController extends SiapController implements IReato
 
 	public ReatoPredispostoModel ExInserisciReatoPredisposto(ReatoPredispostoModel aReatoPredisposto)
 			throws F3BException {
+
 		Connection lConn = null;
 		ReatoPredispostoDAO lReaDao = null;
 		ReatoPredispostoModel lReaMod = null;
@@ -65,6 +66,7 @@ public class ReatoPredispostoController extends SiapController implements IReato
 	}
 
 	public Vector ExRicercaReatoPredisposto(ReatoPredispostoModel aReatoPredisposto) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReatoPredisposti = new Vector();
 		ReatoPredispostoSqlDAO lReaDao = null;
@@ -90,6 +92,7 @@ public class ReatoPredispostoController extends SiapController implements IReato
 	}
 
 	public ReatoPredispostoModel ExRicercaReatoPredispostoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ReatoPredispostoSqlDAO lReaDao = null;
 		ReatoPredispostoModel lReaMod;
@@ -113,6 +116,7 @@ public class ReatoPredispostoController extends SiapController implements IReato
 
 	public ReatoPredispostoModel ExModificaReatoPredisposto(ReatoPredispostoModel aReatoPredisposto)
 			throws F3BException {
+
 		Connection lConn = null;
 		ReatoPredispostoDAO lReaDao = null;
 		ReatoPredispostoModel lReaMod = new ReatoPredispostoModel(aReatoPredisposto);
@@ -137,6 +141,7 @@ public class ReatoPredispostoController extends SiapController implements IReato
 	}
 
 	public void ExCancellaReatoPredisposto(ReatoPredispostoModel aReatoPredisposto) throws F3BException {
+
 		Connection lConn = null;
 		ReatoPredispostoDAO lReaDao = null;
 
@@ -164,6 +169,7 @@ public class ReatoPredispostoController extends SiapController implements IReato
 	}
 
 	public ReatoPredispostoModel ExInserisciReatiPredisposti(ArrayList aReati) throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoPredispostoDAO lReaDao = null;
@@ -214,11 +220,9 @@ public class ReatoPredispostoController extends SiapController implements IReato
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			throw new F3BException("ReatoController.ExInserisciReati: " + ex);
 		} catch (Exception sqe) {
 			rollback(lConn);
-
 			if (used)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nome elemento già in uso!");
 			else

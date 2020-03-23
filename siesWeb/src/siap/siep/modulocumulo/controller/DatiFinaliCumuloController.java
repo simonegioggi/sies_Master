@@ -164,6 +164,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 ****************************************************************************/
 	public DatiFinaliCumuloModel ExInserisciDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		DatiFinaliCumuloDAO lDatDao = null;
 		DatiFinaliCumuloModel lDatMod = null;
@@ -201,6 +202,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lDatiFinaliCumuli = new Vector();
 		DatiFinaliCumuloDAO lDatDao = null;
@@ -239,6 +241,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 ****************************************************************************/
 	public DatiFinaliCumuloModel ExRicercaDatiFinaliCumuloById(BigDecimal aIdDatiFinaliCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		DatiFinaliCumuloModel lDatiFinaliCumuloMod = new DatiFinaliCumuloModel();
 		DatiFinaliCumuloSqlDAO lDatiFinaliCumuloSqlDao = null;
@@ -270,6 +273,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo) throws F3BException {
+
 		Connection lConn = null;
 		DatiFinaliCumuloDAO lDatDao = null;
 
@@ -298,6 +302,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo) throws F3BException {
+
 		Connection lConn = null;
 		DatiFinaliCumuloDAO lDatDao = null;
 
@@ -328,6 +333,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 ****************************************************************************/
 	public BigDecimal ExGetCountDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		DatiFinaliCumuloSqlDAO lDatiFinaliCumuloSqlDao = null;
@@ -359,6 +365,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public DatiFinaliCumuloModel ExRicercaDatiFinaliCumuloByIdIstrutt(BigDecimal aIdIstruttoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		DatiFinaliCumuloModel lDatiFinaliCumuloMod = null;
 		DatiFinaliCumuloSqlDAO lDatiFinaliCumuloSqlDao = null;
@@ -388,11 +395,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 	/**
 	 * Metodo che recupera tutti i dati finali cumulo presenti in istruttoria
-	 *
-	 *
 	 */
 	public DatiFinaliCumuloAggregatoModel ExRicercaDatiFinaliAggregatiByIdIstruttoria(
 			BigDecimal aIdIstruttoria) throws F3BException {
+
 		Connection lConn = null;
 
 		DatiFinaliCumuloAggregatoModel lDatiFinaliAggregatoMod = new DatiFinaliCumuloAggregatoModel();
@@ -516,6 +522,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public PenaRideterminataCumuloModel ExInserisciPenaRideterminataCumulo(
 			PenaRideterminataCumuloModel aPenaRideterminataCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PenaRideterminataCumuloDAO lPenDao = null;
 		PenaRideterminataCumuloModel lPenMod = null;
@@ -550,6 +557,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public void ExModificaPenaRideterminataCumulo(PenaRideterminataCumuloModel aPenaRideterminataCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaRideterminataCumuloDAO lPenDao = null;
 
@@ -579,6 +587,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public void ExCancellaPenaRideterminataCumulo(PenaRideterminataCumuloModel aPenaRideterminataCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaRideterminataCumuloDAO lPenDao = null;
 
@@ -608,6 +617,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public void ExCRUDPeneRideterminateUlterioriSanzioniCumulo(
 			DatiFinaliCumuloAggregatoModel aDatiFInaliAggregato) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaRideterminataCumuloDAO lPenDao = null;
@@ -802,7 +812,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 			cleanup(lConn);
 		}
-
 	}
 
 	/**
@@ -810,6 +819,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public PosizioneGiuridicaCumuloModel ExInserisciPosizioneGiuridicaCumulo(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lPosDao = null;
 		PosizioneGiuridicaCumuloModel lPosMod = null;
@@ -847,6 +857,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public void ExModificaPosizioneGiuridicaCumulo(PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lPosDao = null;
 
@@ -881,6 +892,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public EventoNotificaModel ExInserisciProvvedimentoCumulo(EventoNotificaModel aEveNotModel,
 			BigDecimal aIdDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEveNot = null;
@@ -929,6 +941,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public EventoNotificaModel ExModificaProvvedimentoCumulo(EventoNotificaModel aEveNotModel,
 			BigDecimal aIdDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoNotificaModel lEveNot = null;
@@ -992,6 +1005,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public Vector<ProcedimentoCumulatoModel> ExRicercaProcedimentiClasseIVPerRibaltamentoByIdIstru(
 			BigDecimal aIdIstruttoria, String aChiaveUfficio) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<ProcedimentoCumulatoModel> lProcedimenti = new Vector<>();
@@ -1045,41 +1059,31 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public void ExUpdateValidaProvvedimentoCumulo(EventoModel aEvento,
 			Vector<TitoloCumulatoModel> alistaTitoli) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		StatoProcedimentoDAO lStatoProcDao = null;
 		EventoDAO lEveDaoBlob = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-
 		LicenzaLibanticipataDAO lLicenzaDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDAO = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
-
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScadeSqlDao = null;
-
 		FascicoloSiepDAO lFascDao = null;
 		FascicoloSiepSqlDAO lFascSqlDao = null;
-
 		IstruttoriaCumuloDAO lIstruttoriaDao = null;
-
 		DatiFinaliCumuloSqlDAO lDatiFinaliSqlDao = null;
 		DatiFinaliCumuloDAO lDatiFinaliDao = null;
-
 		PenaRideterminataCumuloSqlDAO lPenaRidetCumuloSqlDao = null;
 		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumuloSqlDao = null;
-
 		ParametroSqlDAO lParSqlDao = null;
-
 		EventoDAO lEveDao = null;
 		ArchiviazioneDAO lArcDao = null;
 		AnnotazioneEsitoTrasmissioneDAO lAnnotaEsitoDao = null;
-
 		PenaAccessoriaCumuloSqlDAO lPenAccCumSqlDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
 
@@ -1454,129 +1458,132 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					|| (lPenResMod.getNumGiorniArresto() != null
 							&& lPenResMod.getNumGiorniArresto().intValue() > 0)) {
 				if (lTipoScedenzario.equals("03")) { // Vane Ricerche
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug("Soggetto Libero Attivo lo scadenzario Vane Ricerche");
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug("Soggetto Libero Attivo lo scadenzario Vane Ricerche");
 
-				// Cerco se presente lo scadenzario specifico "VANE RICERCHE" dell'ufficio
-				lParSqlDao = new ParametroSqlDAO(lConn);
+					// Cerco se presente lo scadenzario specifico "VANE RICERCHE" dell'ufficio
+					lParSqlDao = new ParametroSqlDAO(lConn);
 					lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE",
 							aEvento.getCodUfficioAggiornamento());
 
-				ParametroModel lParMod = (ParametroModel) lParSqlDao.getModelByKey();
-				lParSqlDao.stop();
+					ParametroModel lParMod = (ParametroModel) lParSqlDao.getModelByKey();
+					lParSqlDao.stop();
 
-				if (lParMod == null) {
-					// se non presente cerco quello generico
+					if (lParMod == null) {
+						// se non presente cerco quello generico
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// LogF3B.getLogger()
+						siesLogger.debug("Non presente scadenzario specifico, cerco quello generico");
+						lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE", null);
+						lParMod = (ParametroModel) lParSqlDao.getModelByKey();
+					}
+
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.debug("Non presente scadenzario specifico, cerco quello generico");
-					lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE", null);
-					lParMod = (ParametroModel) lParSqlDao.getModelByKey();
+					siesLogger.debug("lParMod = " + lParMod);
+
+					Date lInizioScadenza = lEveModel.getDataEmissione();
+					Date lFineScadenza = lEveModel.getDataEmissione();
+
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lInizioScadenza = " + DateUtils.getDateToString(lInizioScadenza, "dd/MM/yyyy"));
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+
+					lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.YEAR,
+							lParMod.getAnni().intValue());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+					lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.MONTH,
+							lParMod.getMesi().intValue());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+					lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.DAY_OF_MONTH,
+							lParMod.getGiorni().intValue());
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.debug(
+							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
+
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("03");
+					lScaMod.setDataInizioScadenza(lInizioScadenza);
+					lScaMod.setDataFineScadenza(lFineScadenza);
+
+				} else if (lTipoScedenzario.equals("02")) { // FINE PENA
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("02");
+					lScaMod.setDataInizioScadenza(lPenResMod.getDataInizio());
+					lScaMod.setDataFineScadenza(lPenResMod.getDataFine());
+				} else if (lTipoScedenzario.equals("06")) { // Differimento
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("06");
+					lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
+					lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
+				} else if (lTipoScedenzario.equals("01")) { // 17/04/2019 MEV70 Aggiunta Scadenzario Simeone
+					lScaMod = new ScadenzarioModel();
+					lScaMod.setCodTipoScadenzario("01");
+					if (lPosGiuCumModel.getDataInizio() != null)
+						lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
+					else
+						lScaMod.setDataInizioScadenza(lEveModel.getDataEmissione());
+					lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
 				}
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug("lParMod = " + lParMod);
-
-				Date lInizioScadenza = lEveModel.getDataEmissione();
-				Date lFineScadenza = lEveModel.getDataEmissione();
-
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug(
-						"lInizioScadenza = " + DateUtils.getDateToString(lInizioScadenza, "dd/MM/yyyy"));
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-
-				lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.YEAR,
-						lParMod.getAnni().intValue());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-				lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.MONTH,
-						lParMod.getMesi().intValue());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-				lFineScadenza = DateUtils.moveDateTo(lFineScadenza, java.util.Calendar.DAY_OF_MONTH,
-						lParMod.getGiorni().intValue());
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-					siesLogger.debug(
-							"lFineScadenza = " + DateUtils.getDateToString(lFineScadenza, "dd/MM/yyyy"));
-
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("03");
-				lScaMod.setDataInizioScadenza(lInizioScadenza);
-				lScaMod.setDataFineScadenza(lFineScadenza);
-
-			} else if (lTipoScedenzario.equals("02")) { // FINE PENA
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("02");
-				lScaMod.setDataInizioScadenza(lPenResMod.getDataInizio());
-				lScaMod.setDataFineScadenza(lPenResMod.getDataFine());
-			} else if (lTipoScedenzario.equals("06")) { // Differimento
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("06");
-				lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
-				lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
-			} else if (lTipoScedenzario.equals("01")) { // 17/04/2019 MEV70 Aggiunta Scadenzario Simeone
-				lScaMod = new ScadenzarioModel();
-				lScaMod.setCodTipoScadenzario("01");
-				if (lPosGiuCumModel.getDataInizio() != null)
-					lScaMod.setDataInizioScadenza(lPosGiuCumModel.getDataInizio());
-				else
-					lScaMod.setDataInizioScadenza(lEveModel.getDataEmissione());
-				lScaMod.setDataFineScadenza(lPosGiuCumModel.getDataFineMisura());
-			}
-
-			if (lScaMod != null) {
-				// Verifico se andare in Update
-				lScadeSqlDao = new ScadenzarioSqlDAO(lConn);
+				if (lScaMod != null) {
+					// Verifico se andare in Update
+					lScadeSqlDao = new ScadenzarioSqlDAO(lConn);
 					lScadeSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo(
 							lScaMod.getCodTipoScadenzario(), lEveModel.getFasSieIdFascicoloSiep());
-				ScadenzarioModel lScadModelOld = (ScadenzarioModel) lScadeSqlDao.getModelByKey();
+					ScadenzarioModel lScadModelOld = (ScadenzarioModel) lScadeSqlDao.getModelByKey();
 
-				lScaMod.setFlagVisto("N");
-				lScaMod.setEveIdEvento(lEveModel.getIdEvento());
-				lScaMod.setFasSieIdFascicoloSiep(lEveModel.getFasSieIdFascicoloSiep());
+					lScaMod.setFlagVisto("N");
+					lScaMod.setEveIdEvento(lEveModel.getIdEvento());
+					lScaMod.setFasSieIdFascicoloSiep(lEveModel.getFasSieIdFascicoloSiep());
 
-				if (lScaMod.getCodTipoScadenzario().equals("03"))// Vane Ricerche
+					if (lScaMod.getCodTipoScadenzario().equals("03"))// Vane Ricerche
 						lScaMod.setCodStatoNotifica("NP"); // Valore Iniziale Indica il VVR non ancora
 															// pervenuto
 
-				if (lScadModelOld == null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("Lo scadenzario non esiste vado in insert ");
-					lScaMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
-					lScaMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
-					lScaMod.setDataInserimento(aEvento.getDataAggiornamento());
+					if (lScadModelOld == null) {
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// LogF3B.getLogger()
+						siesLogger.debug("Lo scadenzario non esiste vado in insert ");
+						lScaMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
+						lScaMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
+						lScaMod.setDataInserimento(aEvento.getDataAggiornamento());
 
-					lScaDao.setDAOFromModel(lScaMod);
-					lScaDao.insert();
-					lScaDao.stop();
-				} else {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.debug("Lo scadenzario esiste, vado in update");
+						lScaDao.setDAOFromModel(lScaMod);
+						lScaDao.insert();
+						lScaDao.stop();
+					} else {
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// LogF3B.getLogger()
+						siesLogger.debug("Lo scadenzario esiste, vado in update");
 
-					lScaMod.setIdScadenzario(lScadModelOld.getIdScadenzario());
+						lScaMod.setIdScadenzario(lScadModelOld.getIdScadenzario());
 
-					lScaMod.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
-					lScaMod.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
-					lScaMod.setDataAggiornamento(aEvento.getDataAggiornamento());
+						lScaMod.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
+						lScaMod.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
+						lScaMod.setDataAggiornamento(aEvento.getDataAggiornamento());
 
-					lScaDao.setDAOFromModelForUpdate(lScaMod);
-					lScaDao.update();
-					lScaDao.stop();
+						lScaDao.setDAOFromModelForUpdate(lScaMod);
+						lScaDao.update();
+						lScaDao.stop();
+					}
 				}
-			}
 			} // Chiusura inserimento/aggiornamento Scadenzario
 
 			// ========================================================================
@@ -2055,46 +2062,44 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							"Errore durante l'elaborazione del titolo " + lTitolo.getIdTitoloCumulato());
 					rollback(lConn);
 				} finally {
-
+					siesLogger.debug(
+							"Errore durante l'elaborazione del titolo " + lTitolo.getIdTitoloCumulato());
 				}
 			} // Chiude ciclo while
-
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
 			ex.printStackTrace();
 			throw new F3BException("DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo : " + ex);
 		} finally {
+			cleanup(lEveSqlDao);
+			cleanup(lStatoProcDao);
+			cleanup(lEveDaoBlob);
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lLicenzaDao);
-
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisSicCumSqlDAO);
 			cleanup(lPosSqlDao);
 			cleanup(lPosDao);
-
 			cleanup(lScaDao);
+			cleanup(lScadeSqlDao);
 			cleanup(lFascDao);
 			cleanup(lFascSqlDao);
-
+			cleanup(lIstruttoriaDao);
 			cleanup(lDatiFinaliSqlDao);
 			cleanup(lDatiFinaliDao);
 			cleanup(lPenaRidetCumuloSqlDao);
 			cleanup(lPosGiuCumuloSqlDao);
-
-			cleanup(lEveSqlDao);
-			cleanup(lStatoProcDao);
-
-			cleanup(lEveDaoBlob);
-
+			cleanup(lParSqlDao);
 			cleanup(lEveDao);
 			cleanup(lArcDao);
-
+			cleanup(lAnnotaEsitoDao);
 			cleanup(lPenAccCumSqlDao);
 			cleanup(lPenAccDao);
 
 			cleanup(lConn);
 		}
-
 	} // CHIUDE ExUpdateValidaProvvedimentoCumulo()
 
 	/**
@@ -2110,14 +2115,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	public ByteArrayOutputStream ExStampaProvvedimentoCumulo(EventoNotificaModel aEventoNotModel,
 			FascicoloSiepModel aFascicoloModel, UtenteModel aUtenteMod, UfficioModel aUfficioMod)
 			throws F3BException {
+
 		Connection lConn = null;
 
-		ByteArrayOutputStream lByteArrayOut = null;
-
 		EventoDAO lEveDao = null;
-
 		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
-
 		IstruttoriaCumuloSqlDAO lIstrCumSqlDao = null;
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		SoggettoCumulatoSqlDAO lSoggCumSqlDao = null;
@@ -2126,19 +2128,17 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		DatiFinaliUlterioriSanzioniSqlDAO lUlterioriSanzioniSqlDao = null;
 		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumSalDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDAO = null;
-
 		UfficioSqlDAO lUffSqlDao = null;
 		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
-
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
-
 		DecodificheDAO lDecDao = null;
 		ComuneDAO lComDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
 
 		Vector<UfficioModel> lListaUffEsecuzione = new Vector<>();
 		Vector<UfficioModel> lListaUffCancelleria = new Vector<>();
-		EventoSqlDAO lEveSqlDAO = null;
+		ByteArrayOutputStream lByteArrayOut = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2681,12 +2681,14 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lUlterioriSanzioniSqlDao);
 			cleanup(lPosGiuCumSalDao);
 			cleanup(lMisSicCumSqlDAO);
-
 			cleanup(lUffSqlDao);
 			cleanup(lIstitutoSqlDao);
-
-			cleanup(lComDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTipologiaOrarioSqlDao);
+			cleanup(lComputiSqlDao);
 			cleanup(lDecDao);
+			cleanup(lComDao);
+			cleanup(lEveSqlDAO);
 
 			cleanup(lConn);
 		}
@@ -2708,15 +2710,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	public ByteArrayOutputStream ExStampaComunicazioni(EventoNotificaModel aEventoNotModel,
 			FascicoloSiepModel aFascicoloModel, UtenteModel aUtenteMod, UfficioModel aUfficioMod,
 			String lDestinatario) throws F3BException {
-		Connection lConn = null;
 
-		ByteArrayOutputStream lByteArrayOut = null;
+		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		NotificaSqlDAO lNotSqlDAO = null;
-
 		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
-
 		IstruttoriaCumuloSqlDAO lIstrCumSqlDao = null;
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		SoggettoCumulatoSqlDAO lSoggCumSqlDao = null;
@@ -2725,18 +2724,16 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		DatiFinaliUlterioriSanzioniSqlDAO lUlterioriSanzioniSqlDao = null;
 		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumSalDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDAO = null;
-
 		UfficioSqlDAO lUffSqlDao = null;
 		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
-
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
-
 		DecodificheDAO lDecDao = null;
 		ComuneDAO lComDao = null;
 
 		Vector<UfficioModel> lListaUffEsecuzione = new Vector<>();
 		Vector<UfficioModel> lListaUffCancelleria = new Vector<>();
+		ByteArrayOutputStream lByteArrayOut = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -3323,7 +3320,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			}
 
 			commit(lConn);
-
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
@@ -3331,6 +3327,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			throw new F3BException("DatiFinaliCumuloController.ExStampaComunicazioni: " + e);
 		} finally {
 			cleanup(lEveDao);
+			cleanup(lNotSqlDAO);
 			cleanup(lAvvSqlDao);
 			cleanup(lIstrCumSqlDao);
 			cleanup(lTitoloSqlDao);
@@ -3340,13 +3337,13 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lUlterioriSanzioniSqlDao);
 			cleanup(lPosGiuCumSalDao);
 			cleanup(lMisSicCumSqlDAO);
-
 			cleanup(lUffSqlDao);
 			cleanup(lIstitutoSqlDao);
-
-			cleanup(lComDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTipologiaOrarioSqlDao);
+			cleanup(lComputiSqlDao);
 			cleanup(lDecDao);
-			cleanup(lNotSqlDAO);
+			cleanup(lComDao);
 
 			cleanup(lConn);
 		}
@@ -3354,11 +3351,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lByteArrayOut;
 	}
 
-	/**
-	*
-	*/
 	private PenaResiduaModel calcolaResiduoPenaAdOggi(PenaRideterminataCumuloModel aPenaRidetCumulo,
 			Date aOggi) throws Exception {
+
 		PenaResiduaModel lPenaInEspiazione = aPenaRidetCumulo.getPenaResidua();
 
 		// Calcolo il residuo pena se interrompessi Oggi
@@ -3550,32 +3545,23 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 		SoggettoDAO lSoggDao = null;
 		SoggettoSqlDAO lSoggSqlDao = null;
-
 		ResidenzaDAO lResidenzaDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiepDAO lResidenzaFascicoloSiepDAO = null;
-
 		SentenzaRiunitaFascSiepSqlDAO lSentenzaRiunitaFascSiepSqlDao = null;
 		SentenzaRiunitaFascSiepDAO lSentenzaRiunitaFascSiepDao = null;
-
 		FascicoloSiepSqlDAO lFascSiepSqlDao = null;
 		FascicoloSiepDAO lFascSiepDao = null;
 		MisuraSicurezzaDAO lMisuraSicurezzaDao = null;
 		FascMsToFascSiepDAO lFascMsToFascSiepDao = null;
 		RiferimentoFascicoloSiepDAO lRifFasSiepDao = null;
-
 		AvvocatoFascicoloSiepSqlDAO lAccFascSiepDao = null;
 		AvvocatoFascicoloSiepDAO lAvvFasDao = null;
-
 		PosizioneGiuridicaDAO lPosDao = null;
-
 		PenaResiduaDAO lPenaResiduaDao = null;
-
 		AgdgFascicoloSiepSqlDAO lAgdgFascicoloSiepSqlDao = null;
 		AgdgFascicoloSiepDAO lAgdgFascicoloSiepDao = null;
-
 		StatoProcedimentoDAO lStatoProcDao = null;
-
 		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
 
@@ -4170,9 +4156,30 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			throw new F3BException(
 					"DatiFinaliCumuloController.iscriviProcedimentoDiClasseIV: Non posso inserire: " + ex);
 		} finally {
-			if (aDBConnection == null) {
+			if (aDBConnection == null)
 				cleanup(lConn);
-			}
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSoggDao);
+			cleanup(lSoggSqlDao);
+			cleanup(lResidenzaDao);
+			cleanup(lResSqlDao);
+			cleanup(lResidenzaFascicoloSiepDAO);
+			cleanup(lSentenzaRiunitaFascSiepSqlDao);
+			cleanup(lSentenzaRiunitaFascSiepDao);
+			cleanup(lFascSiepSqlDao);
+			cleanup(lFascSiepDao);
+			cleanup(lMisuraSicurezzaDao);
+			cleanup(lFascMsToFascSiepDao);
+			cleanup(lRifFasSiepDao);
+			cleanup(lAccFascSiepDao);
+			cleanup(lAvvFasDao);
+			cleanup(lPosDao);
+			cleanup(lPenaResiduaDao);
+			cleanup(lAgdgFascicoloSiepSqlDao);
+			cleanup(lAgdgFascicoloSiepDao);
+			cleanup(lStatoProcDao);
+			cleanup(lTitCumSqlDao);
+			cleanup(lProcCumSqlDao);
 		}
 	}
 
@@ -4197,13 +4204,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		MisuraSicurezzaDAO lMisuraSicurezzaDao = null;
 		FascMsToFascSiepDAO lFascMsToFascSiepDao = null;
 		RiferimentoFascicoloSiepDAO lRifFasSiepDao = null;
-
 		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-
 		FascicoloSiepSqlDAO lFascSiepSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
-
 		FascMsToFascSiepSqlDAO lFascMsToFascSiepSqlDao = null;
 
 		try {
@@ -4547,19 +4551,15 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lFascMsToFascSiepDao);
 			cleanup(lFascMsToFascSiepSqlDao);
 			cleanup(lRifFasSiepDao);
-
 			cleanup(lTitCumSqlDao);
 			cleanup(lProcCumSqlDao);
-
 			cleanup(lFascSiepSqlDao);
 			cleanup(lUffSqlDao);
 
-			if (aDBConnection == null) {
+			if (aDBConnection == null)
 				cleanup(lConn);
-			}
 		}
 	}
-
 	// MEV 26 Cumulo Step2
 
 	// La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce, ma inserendo
@@ -4569,6 +4569,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	//
 	public String ExInserisciDatiFinaliCumuloWithoutSequence(DatiFinaliCumuloModel aDatiFinaliCumulo,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		DatiFinaliCumuloDAO lDatiFinCumDao = null;
 		// DatiFinaliCumuloModel lDatiFin = null;
@@ -4596,11 +4597,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciDatiFinaliCumuloWithoutSequence()
 
 	public String ExInserisciPosizioneGiuridicaCumuloWithoutSequence(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo, Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		PosizioneGiuridicaCumuloDAO lPosCumDao = null;
 		// PosizioneGiuridicaCumuloModel lPosizione = null;
@@ -4614,9 +4615,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lPosCumDao.setWithoutSequence(true);
 				lPosCumDao.insert();
 				lPosCumDao.stop();
-
 			}
-
 		} catch (DAOException daoEx) {
 			if (daoEx.UNIQUE_CONSTRAINT_VIOLATED) {
 				siesLogger.error("Posizione Giuridica Cumulo gia' presente...>"
@@ -4632,11 +4631,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciPosizioneGiuridicaCumuloWithoutSequence()
 
 	public String ExInserisciPeneRideterminateCumuloWithoutSequence(
 			PenaRideterminataCumuloModel aPenaRidetCumModel, Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		PenaRideterminataCumuloDAO lPeneCumDao = null;
 
@@ -4664,12 +4663,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciPeneRideterminateCumuloWithoutSequence
 
 	public String ExInserisciUlerioriSanzioniCumuloWithoutSequence(
 			DatiFinaliUlterioriSanzioniModel aDatiFinaliUlterioriSanzioniModel, Connection lConn)
 			throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		DatiFinaliUlterioriSanzioniDAO lUlterioriDao = null;
 
@@ -4732,17 +4731,15 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
 	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
 	 */
-
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
-	 *
 	 */
 	public void ExUpdateFlagAltraCausaFascicolo(FascicoloSiepModel aFascicolo, String flagAltraCausa)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
-
 		FascicoloSiepDAO lFascDao = null;
 		FascicoloSiepSqlDAO lFascSqlDao = null;
 
@@ -4755,37 +4752,33 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// Aggiorno lo FASCICOLO_SIEP.FLAG_ALTRA_CAUSA
 			// ========================================================================
 			siesLogger.debug("Aggiorno FASCICOLO_SIEP.FLAG_ALTRA_CAUSA = " + flagAltraCausa);
-			
+
 			lFascSqlDao = new FascicoloSiepSqlDAO(lConn);
 			lFascSqlDao.ricercaFascicoloByKey(aFascicolo.getIdFascicoloSiep());
 			FascicoloSiepModel lFasModel = (FascicoloSiepModel) lFascSqlDao.getModelByKey();
-			lFascSqlDao.stop();	
-			
-			lFascDao = new FascicoloSiepDAO(lConn);		 	
+			lFascSqlDao.stop();
+
+			lFascDao = new FascicoloSiepDAO(lConn);
 			lFascDao.selCondizioneUpdate(lFasModel.getIdFascicoloSiep());
-			//lFascDao.setDAOFromModel(lFasModel);
+			// lFascDao.setDAOFromModel(lFasModel);
 			lFascDao.setCodOperatoreAggiornamento(aFascicolo.getCodOperatoreAggiornamento());
 			lFascDao.setCodUfficioAggiornamento(aFascicolo.getCodUfficioAggiornamento());
 			lFascDao.setDataAggiornamento(aFascicolo.getDataAggiornamento());
 			lFascDao.setFlagAltraCausa(flagAltraCausa);
 			lFascDao.update();
 			commit(lConn);
-
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
 			ex.printStackTrace();
 			throw new F3BException("DatiFinaliCumuloController.ExUpdateFlagAltraCausaFascicolo : " + ex);
 		} finally {
-
 			cleanup(lFascDao);
 			cleanup(lFascSqlDao);
-
 			cleanup(lEveSqlDao);
 
 			cleanup(lConn);
 		}
-
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
 		// ***** FINE INTERVENTO 20191128013 *****//
 

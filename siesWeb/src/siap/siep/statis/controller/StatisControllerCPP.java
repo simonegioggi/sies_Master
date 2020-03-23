@@ -62,9 +62,9 @@ public class StatisControllerCPP extends GenericController {
 	 * per Statistica RIEPILOGO ISCRIZIONI E ATTIVITA' CPP Cerca i dati aggregati per anno già selezionati
 	 * dalla Strore-Procedure, per visualizzazione TOTALI ISCRIZIONI CPP sul foglio xls Riepilogo
 	 */
-
 	public Vector<RiepilogoIscrizioniAttivitaCPPModel> ExRicercaRiepilogoGeneraleIscrizioniAttivita(
 			int aAnnoIni, int aAnnoFin, String aggmmIni, String aggmmFin) throws F3BException {
+
 		Connection lConn = null;
 		Vector<RiepilogoIscrizioniAttivitaCPPModel> lVect = new Vector<>();
 		RiepilogoIscrizioniAttivitaCPPSqlDAO lRiepDao = null;
@@ -83,7 +83,6 @@ public class StatisControllerCPP extends GenericController {
 					while (lRiepDao.next()) {
 						lVect.add((RiepilogoIscrizioniAttivitaCPPModel) lRiepDao.getModelIscrizioni());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -100,7 +99,6 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaRiepilogoGeneraleIscrizioniAttivita
 
 	/**
@@ -110,6 +108,7 @@ public class StatisControllerCPP extends GenericController {
 
 	public Vector<DettaglioIscrizioniAttivitaCPPModel> ExRicercaDettagliAttivitaCPP(int aAnnoIni,
 			int aAnnoFin, String aggmmIni, String aggmmFin) throws F3BException {
+
 		Connection lConn = null;
 		Vector<DettaglioIscrizioniAttivitaCPPModel> lVect = new Vector<>();
 		DettaglioIscrizioniAttivitaCPPSqlDAO lDettDao = null;
@@ -117,13 +116,10 @@ public class StatisControllerCPP extends GenericController {
 		try {
 			lConn = getDBConnection();
 			lDettDao = new DettaglioIscrizioniAttivitaCPPSqlDAO(lConn);
-
-			for (int aTipo = 0; aTipo < 6; aTipo++) // Ciclo su TipoDettalio (0 = Iscritti, 1 = Errori, 2 = In
-													// atteesa Esecuzione etc...)
-			{
-				for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) // Ciclo su Anni (da Anno Inizio a
-																			// Anno Fine)
-				{
+			// Ciclo su TipoDettalio (0 = Iscritti, 1 = Errori, 2 = In atteesa Esecuzione etc...)
+			for (int aTipo = 0; aTipo < 6; aTipo++) {
+				// Ciclo su Anni (da Anno Inizio a Anno Fine)
+				for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) {
 					try {
 						lDettDao.ricercaDettagliIscrizioniCPP(aAnno, aTipo, aAnnoIni, aAnnoFin, aggmmIni,
 								aggmmFin);
@@ -132,7 +128,6 @@ public class StatisControllerCPP extends GenericController {
 						while (lDettDao.next()) {
 							lVect.add((DettaglioIscrizioniAttivitaCPPModel) lDettDao.getModelDettaglioCPP());
 						}
-
 					} catch (DAOException daoEx) {
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di mLog
@@ -140,8 +135,6 @@ public class StatisControllerCPP extends GenericController {
 						throw new F3BException(
 								"StatisControllerCPP.ExRicercaDettagliAttivitaCPP: Non posso leggere : "
 										+ daoEx);
-					} finally {
-						// cleanup(lDettDao);
 					}
 				}
 			}
@@ -151,12 +144,12 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaDettagliAttivitaCPP
 
 	public Vector<RiepilogoIscrizioniAttivitaCPPModel> ExRicercaRiepilogoGeneraleIscrizioniAttivitaPerMese(
 			int aAnno, String aggmmIni, String aggmmFin, String aTipoMese, String aQuale_Trim_Sem)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<RiepilogoIscrizioniAttivitaCPPModel> lVect = new Vector<>();
 		RiepilogoIscrizioniAttivitaCPPSqlDAO lRiepDao = null;
@@ -176,7 +169,6 @@ public class StatisControllerCPP extends GenericController {
 				while (lRiepDao.next()) {
 					lVect.add((RiepilogoIscrizioniAttivitaCPPModel) lRiepDao.getModelIscrizioniPerMese());
 				}
-
 			} catch (DAOException daoEx) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("DAOException: " + daoEx);
@@ -191,11 +183,11 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaRiepilogoGeneraleIscrizioniAttivitaPerMese
 
 	public Vector<DettaglioIscrizioniAttivitaCPPModel> ExRicercaDettagliAttivitaCPPPerMese(int aAnno,
 			String aggmmIni, String aggmmFin, String aTipoMese, String aQuale_Trim_Sem) throws F3BException {
+
 		Connection lConn = null;
 		Vector<DettaglioIscrizioniAttivitaCPPModel> lVect = new Vector<>();
 		DettaglioIscrizioniAttivitaCPPSqlDAO lDettDao = null;
@@ -205,10 +197,8 @@ public class StatisControllerCPP extends GenericController {
 		try {
 			lConn = getDBConnection();
 			lDettDao = new DettaglioIscrizioniAttivitaCPPSqlDAO(lConn);
-
-			for (int aTipo = 0; aTipo < 6; aTipo++) // Ciclo su TipoDettalio (0 = Iscritti, 1 = Errori, 2 = In
-													// atteesa Esecuzione etc...)
-			{
+			// Ciclo su TipoDettalio (0 = Iscritti, 1 = Errori, 2 = In atteesa Esecuzione etc...)
+			for (int aTipo = 0; aTipo < 6; aTipo++) {
 				try {
 					lDettDao.ricercaDettagliIscrizioniCPPPerMese(aAnno, aTipo, aggmmIni, aggmmFin, aTipoMese,
 							aQuale_Trim_Sem);
@@ -218,7 +208,6 @@ public class StatisControllerCPP extends GenericController {
 						lVect.add(
 								(DettaglioIscrizioniAttivitaCPPModel) lDettDao.getModelDettaglioCPPPerMese());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -226,10 +215,7 @@ public class StatisControllerCPP extends GenericController {
 					throw new F3BException(
 							"StatisControllerCPP.ExRicercaDettagliAttivitaCPPPerMese: Non posso leggere : "
 									+ daoEx);
-				} finally {
-					// cleanup(lDettDao);
 				}
-
 			}
 		} finally {
 			cleanup(lConn);
@@ -237,7 +223,6 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaDettagliAttivitaCPPPerMese
 
 	//
@@ -247,9 +232,9 @@ public class StatisControllerCPP extends GenericController {
 	 * fascicoli di classe VII aggregati per anno (già selezionati dalla Strore-Procedure), per
 	 * visualizzazione TEMPI ISCRIZIONE PROCEDIMENTI CPP sul foglio xls di Riepilogo
 	 */
-
 	public Vector<IspTempiModel> ExRicercaRiepilogoTempiIscrizioniCPP(int aAnnoIni, int aAnnoFin,
 			String aggmmIni, String aggmmFin) throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspTempiModel> lVect = new Vector<>();
 		IspTempiSqlDAO lTempSqlDao = null;
@@ -261,9 +246,8 @@ public class StatisControllerCPP extends GenericController {
 			// Ciclo sul Tipo Distinta (stato del procedimento: es. tra Data Arrivo e data decisione, tra data
 			// decisione e data Validazione etc..)
 			for (int aTipo = 1; aTipo < 5; aTipo++) {
-				for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) // Ciclo su Anni (da Anno Inizio a
-																			// Anno Fine)
-				{
+				// Ciclo su Anni (da Anno Inizio a Anno Fine)
+				for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) {
 					try {
 						lTempSqlDao.RicercaRiepilogoTempiIscrizioniCPP(aAnno, aTipo, aggmmIni, aggmmFin,
 								aAnnoIni, aAnnoFin);
@@ -272,7 +256,6 @@ public class StatisControllerCPP extends GenericController {
 						while (lTempSqlDao.next()) {
 							lVect.add((IspTempiModel) lTempSqlDao.getRiepilogoCPPModel());
 						}
-
 					} catch (DAOException daoEx) {
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di mLog
@@ -280,8 +263,6 @@ public class StatisControllerCPP extends GenericController {
 						throw new F3BException(
 								"StatisControllerCPP.ExRicercaRiepilogoTempiIscrizioniCPP: Non posso leggere : "
 										+ daoEx);
-					} finally {
-						// cleanup(lDettDao);
 					}
 				}
 			}
@@ -291,11 +272,11 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaRiepilogoTempiIscrizioniCPP
 
 	public Vector<IspTempiModel> ExRicercaRiepilogoTempiIscrizioniCPPPerMese(int aAnno, String aggmmIni,
 			String aggmmFin, String aTipoMese, String aQuale_Trim_Sem) throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspTempiModel> lVect = new Vector<>();
 		IspTempiSqlDAO lTempSqlDao = null;
@@ -311,11 +292,9 @@ public class StatisControllerCPP extends GenericController {
 					lTempSqlDao.RicercaRiepilogoTempiIscrizioniCPPPerMese(aAnno, aTipo, aggmmIni, aggmmFin,
 							aTipoMese, aQuale_Trim_Sem);
 					lTempSqlDao.start();
-
 					while (lTempSqlDao.next()) {
 						lVect.add((IspTempiModel) lTempSqlDao.getRiepilogoPerMeseCPPModel());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -326,19 +305,17 @@ public class StatisControllerCPP extends GenericController {
 				} finally {
 					cleanup(lTempSqlDao);
 				}
-
 			} // Chiude ciclo FOR su Tipo_Distinta
-
 		} finally {
 			cleanup(lConn);
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaRiepilogoTempiIscrizioniCPPPerMese
 
 	public Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> ExRicercaDettaglioTempiIscrizioneCPP(
 			int aAnnoIni, int aAnnoFin, String aggmmIni, String aggmmFin) throws F3BException {
+
 		Connection lConn = null;
 		Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> lVect = new Vector<>();
 		DettaglioTempiIscrizioneProcedimentiCPPSqlDAO lTempSqlDao = null;
@@ -352,7 +329,6 @@ public class StatisControllerCPP extends GenericController {
 			for (int aTipo = 1; aTipo < 5; aTipo++) {
 				// for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) // Ciclo su Anni (da Anno Inizio
 				// a Anno Fine)
-				// {
 				try {
 					int aAnno = 0;
 					lTempSqlDao.RicercaDettaglioTempiIscrizioneCPP(aAnno, aTipo, aAnnoIni, aAnnoFin, aggmmIni,
@@ -363,7 +339,6 @@ public class StatisControllerCPP extends GenericController {
 						lVect.add((DettaglioTempiIscrizioneProcedimentiCPPModel) lTempSqlDao
 								.getModelDettaglioTempiIscrCPP());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -371,12 +346,7 @@ public class StatisControllerCPP extends GenericController {
 					throw new F3BException(
 							"StatisControllerCPP.ExRicercaDettaglioTempiIscrizioneCPP: Non posso leggere : "
 									+ daoEx);
-				} finally {
-					// cleanup(lDettDao);
 				}
-
-				// }
-
 			}
 		} finally {
 			cleanup(lConn);
@@ -384,12 +354,12 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaDettaglioTempiIscrizioneCPP
 
 	public Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> ExRicercaDettaglioTempiIscrizioneCPPPerMese(
 			int aAnno, String aggmmIni, String aggmmFin, String aTipoMese, String aQuale_Trim_Sem)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> lVect = new Vector<>();
 		DettaglioTempiIscrizioneProcedimentiCPPSqlDAO lTempSqlDao = null;
@@ -410,7 +380,6 @@ public class StatisControllerCPP extends GenericController {
 						lVect.add((DettaglioTempiIscrizioneProcedimentiCPPModel) lTempSqlDao
 								.getModelDettaglioTempiIscrCPP_PerMese());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -418,8 +387,6 @@ public class StatisControllerCPP extends GenericController {
 					throw new F3BException(
 							"StatisControllerCPP.ExRicercaDettaglioTempiIscrizioneCPPPerMese: Non posso leggere : "
 									+ daoEx);
-				} finally {
-					// cleanup(lDettDao);
 				}
 			}
 		} finally {
@@ -428,19 +395,17 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaDettaglioTempiIscrizioneCPPPerMese()
 
-	//
 	// ======================================
 	/**
 	 * per Statistica RIEPILO PROCEDIMENTO PENDENTI CPP ExRicercaRiepilogoDefinitiCPP: Cerca i dati sui
 	 * fascicoli Definiti di classe VII aggregati per anno (già selezionati dalla Strore-Procedure), per
 	 * visualizzazione sul foglio xls di Riepilogo Definiti
 	 */
-
 	public Vector<RiepilogoPendentiDefinitiCPPModel> ExRicercaRiepilogoDefinitiCPP(int aAnnoIni, int aAnnoFin,
 			String aggmmIni, String aggmmFin) throws F3BException {
+
 		Connection lConn = null;
 		Vector<RiepilogoPendentiDefinitiCPPModel> lVect = new Vector<>();
 		RiepilogoPendentiDefinitiCPPSqlDAO lRiepDao = null;
@@ -458,7 +423,6 @@ public class StatisControllerCPP extends GenericController {
 					while (lRiepDao.next()) {
 						lVect.add((RiepilogoPendentiDefinitiCPPModel) lRiepDao.getModelPendDefCPP());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -475,7 +439,6 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lVect;
-
 	} // Chiude ExRicercaRiepilogoDefinitiCPP()
 
 	public Vector ExRicercaDettaglioProcedimenti_CPP(String[] aCodici) throws F3BException {
@@ -510,6 +473,7 @@ public class StatisControllerCPP extends GenericController {
 
 	public Vector<String> getTitoliPerCodici_CPP(String[] aCodiciSelezionati, String aTipoTitolo)
 			throws F3BException {
+
 		Vector<String> lElencoTitoli = new Vector<>();
 
 		Connection lConn = null;
@@ -527,7 +491,6 @@ public class StatisControllerCPP extends GenericController {
 			while (lIspSqlDao.next()) {
 				lElencoTitoli.add(lIspSqlDao.getString(aTipoTitolo));
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -539,11 +502,11 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lElencoTitoli;
-
 	}
 
 	public Vector ExGetCountRiepilogoIspProvvedimenti_CPP(IspProvvedimentiModel aIspProvvedimenti)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lIspProvvedimenti = new Vector();
 		IspProvvedimentiSqlDAO lIspDao = null;
@@ -574,22 +537,18 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		return lIspProvvedimenti;
-
 	}
 
 	// 07-06-2016 - Riciclo dopo primo collaudo V.10
 	// public Vector ExRicercaDettaglioArchiviazioni_CPP(String[] aCodici) throws F3BException
 	public Vector ExRicercaDettaglioArchiviazioni_CPP(String[] aCodici, String dataIni, String dataFin)
-			throws F3BException
-	// 07-06-2016 - END Riciclo
-	{
+			throws F3BException { // 07-06-2016 - END Riciclo
 
 		Connection lConn = null;
 		Vector lDetArchiviazioni = new Vector();
 		DettaglioArchiviazioniCPPSqlDAO lArcDao = null;
 
 		try {
-
 			lConn = getDBConnection();
 			lArcDao = new DettaglioArchiviazioniCPPSqlDAO(lConn);
 
@@ -854,7 +813,6 @@ public class StatisControllerCPP extends GenericController {
 		nColAnno++;
 		nRow = setTotaliTempi(sheet, csBold, csBoldCenter, nRow, nRowAnno, nColAnno);
 		nRow++;
-
 	} // CHIUDE ExCreateRiepilogoIscrizioni_Attivita()
 
 	/**
@@ -943,12 +901,12 @@ public class StatisControllerCPP extends GenericController {
 		// nRow = 0;
 		/* nRow = */CreaElencoSenzaAttivita(aVect, sheet, csNull, cs, csBold, csBoldCenter, font,
 				uffUteConnesso, DescIntesta, dataIni, dataFin);
-
 	} // CHIUDE ExCreateElencoDettaglioIscrizioni_Attivita()
 
 	private int CreaElencoIscrizioni(Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFSheet sheet,
 			HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold, HSSFCellStyle csBoldCenter,
 			HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta, String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -987,18 +945,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaElencoIscrizioni()
 
 	private int CreaElencoIscrizioniErrore(Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFSheet sheet,
 			HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold, HSSFCellStyle csBoldCenter,
 			HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta, String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -1038,18 +995,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaElencoIscrizioniErrore()
 
 	private int CreaElencoAttesaEsecuzione(Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFSheet sheet,
 			HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold, HSSFCellStyle csBoldCenter,
 			HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta, String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -1090,18 +1046,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaElencoAttesaEsecuzione()
 
 	private int CreaElencoAttesaRisposta(Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFSheet sheet,
 			HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold, HSSFCellStyle csBoldCenter,
 			HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta, String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -1142,18 +1097,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaElencoAttesaRisposta()
 
 	private int CreaElencoAttesaInoltro(Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFSheet sheet,
 			HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold, HSSFCellStyle csBoldCenter,
 			HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta, String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -1194,18 +1148,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaElencoAttesaInoltro()
 
 	private int CreaElencoSenzaAttivita(Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFSheet sheet,
 			HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold, HSSFCellStyle csBoldCenter,
 			HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta, String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -1244,16 +1197,15 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaElencoSenzaAttivita()
 
 	private HSSFSheet settaLarghezzaColumnElenco(HSSFSheet sheet) {
+
 		sheet.setColumnWidth(0, (16 * 256)); // Anno/Numero Proc
 		sheet.setColumnWidth(1, (23 * 256)); // Data comunicazione impossibilita esazione
 		sheet.setColumnWidth(2, (27 * 256)); // Data arrivo in cancelleria
@@ -1267,6 +1219,7 @@ public class StatisControllerCPP extends GenericController {
 	}
 
 	private HSSFRow valorizzaTestataElenco(HSSFSheet sheet, int riga, HSSFCellStyle csBoldCenter) {
+
 		HSSFRow row = sheet.getRow(riga);
 		if (row == null)
 			row = sheet.createRow(riga);
@@ -1285,6 +1238,7 @@ public class StatisControllerCPP extends GenericController {
 
 	private HSSFRow valorizzaRigaElenco(HSSFSheet sheet, int riga, HSSFCellStyle cs,
 			DettaglioIscrizioniAttivitaCPPModel lMod) {
+
 		HSSFRow row = sheet.getRow(riga);
 
 		if (row == null)
@@ -1319,7 +1273,6 @@ public class StatisControllerCPP extends GenericController {
 
 		return row;
 	}
-
 	// ///////////////
 
 	/**
@@ -1534,13 +1487,13 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		nRow++;
-
 	} // CHIUDE ExCreateRiepilogoIscrizioni_Attivita_PerMese()
 
 	public void ExCreateElencoDettaglioIscrizioni_Attivita_PerMese(
 			Vector<DettaglioIscrizioniAttivitaCPPModel> aVect, HSSFWorkbook wb, UfficioModel uffUteConnesso,
 			String dataIni, String dataFin, String DescIntesta, String aTipoMese, String aQuale_Trim_Sem)
 			throws F3BException {
+
 		HSSFCellStyle csNull = wb.createCellStyle();
 
 		// stile per celle col bordo
@@ -1794,11 +1747,9 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRigaElenco(sheet, nRow, cs, lMod);
 			}
-
 		}
 
 		nRow++;
-
 	} // CHIUDE ExCreateElencoDettaglioIscrizioni_AttivitaPerMese()
 
 	/**
@@ -1857,12 +1808,12 @@ public class StatisControllerCPP extends GenericController {
 			nRow++;
 			nRowAnno = nRow;
 		}
-
 	} // CHIUDE ECreateXLSRiepilogoTempiIscrizioniCPP()
 
 	private int ScriviRighe_Riepilogo_Tempi(Vector<IspTempiModel> aVect, int Riga, int nRowAnno,
 			short nColAnno, HSSFSheet sheet, HSSFCellStyle cs, HSSFCellStyle csBoldCenter,
 			HSSFCellStyle csBold, int TipoD) {
+
 		int nRow = Riga;
 
 		String Tipologia = "";
@@ -1982,12 +1933,12 @@ public class StatisControllerCPP extends GenericController {
 			nRow++;
 			nRowAnno = nRow;
 		}
-
 	} // CHIUDE ECreateXLSRiepilogoTempiIscrizioniCPP_PerMese()
 
 	private int ScriviRighe_Riepilogo_Tempi_PerMese(Vector<IspTempiModel> aVect, int Riga, int nRowAnno,
 			short nColAnno, HSSFSheet sheet, HSSFCellStyle cs, HSSFCellStyle csBoldCenter,
 			HSSFCellStyle csBold, int TipoD, String TipoRicerca, String PeriodoRic) {
+
 		int nRow = Riga;
 
 		String Tipologia = "";
@@ -2042,9 +1993,9 @@ public class StatisControllerCPP extends GenericController {
 	}
 
 	// -----------------------------------------
-
 	private int ScriviRigheTempi(IspTempiModel lMod, int Riga, int nRowAnno, short nColAnno, HSSFSheet sheet,
 			HSSFCellStyle cs, HSSFCellStyle csBoldCenter, HSSFCellStyle csBold) {
+
 		int nRow = Riga;
 		String formula = "";
 
@@ -2104,7 +2055,6 @@ public class StatisControllerCPP extends GenericController {
 		setFormulaCell(row, nColAnno, formula, csBold);
 
 		return nRow;
-
 	} // Chiude ScriviRigheTempi()
 
 	/**
@@ -2130,6 +2080,7 @@ public class StatisControllerCPP extends GenericController {
 			Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect, HSSFWorkbook wb,
 			UfficioModel uffUteConnesso, String dataIni, String dataFin, String DescIntesta)
 			throws F3BException {
+
 		HSSFCellStyle csNull = wb.createCellStyle();
 
 		// stile per celle col bordo
@@ -2180,13 +2131,13 @@ public class StatisControllerCPP extends GenericController {
 		// nRow = 0;
 		/* nRow = */CreaDettaglioTempi_D4(aVect, sheet, csNull, cs, csBold, csBoldCenter, font,
 				uffUteConnesso, DescIntesta, dataIni, dataFin);
-
 	} // CHIUDE ExCreateXLSDettaglioTempiIscrizioniCPP()
 
 	public void ExCreateXLSDettaglioTempiIscrizioniCPP_PerMese(
 			Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect, HSSFWorkbook wb,
 			UfficioModel uffUteConnesso, String dataIni, String dataFin, String DescIntesta,
 			String TipoRicerca, String PeriodoRic) throws F3BException {
+
 		HSSFCellStyle csNull = wb.createCellStyle();
 
 		// stile per celle col bordo
@@ -2237,10 +2188,10 @@ public class StatisControllerCPP extends GenericController {
 		// nRow = 0;
 		/* nRow = */CreaDettaglioTempi_D4_Mese(aVect, sheet, csNull, cs, csBold, csBoldCenter, font,
 				uffUteConnesso, DescIntesta, dataIni, dataFin, TipoRicerca, PeriodoRic);
-
 	} // CHIUDE ExCreateXLSDettaglioTempiIscrizioniCPP_PerMese()
 
 	private HSSFSheet settaLarghezzaColumn_DettaglioTempiCPP(HSSFSheet sheet) {
+
 		sheet.setColumnWidth(0, (16 * 256)); // Anno/Numero Proc
 		sheet.setColumnWidth(1, (23 * 256)); // Data comunicazione impossibilita esazione
 		sheet.setColumnWidth(2, (10 * 256)); // Tempi
@@ -2259,6 +2210,7 @@ public class StatisControllerCPP extends GenericController {
 
 	private HSSFRow valorizzaTestata_DettaglioTempiCPP(HSSFSheet sheet, int riga,
 			HSSFCellStyle csBoldCenter) {
+
 		HSSFRow row = sheet.getRow(riga);
 		if (row == null)
 			row = sheet.createRow(riga);
@@ -2281,6 +2233,7 @@ public class StatisControllerCPP extends GenericController {
 
 	private HSSFRow valorizzaRiga_DettaglioTempiCPP(HSSFSheet sheet, int riga, HSSFCellStyle cs,
 			DettaglioTempiIscrizioneProcedimentiCPPModel lMod, String Descrizione, String Tempo) {
+
 		HSSFRow row = sheet.getRow(riga);
 
 		if (row == null)
@@ -2324,6 +2277,7 @@ public class StatisControllerCPP extends GenericController {
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -2391,13 +2345,13 @@ public class StatisControllerCPP extends GenericController {
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D1()
 
 	private int CreaDettaglioTempi_D2(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -2455,20 +2409,18 @@ public class StatisControllerCPP extends GenericController {
 
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D2()
 
-	//
 	private int CreaDettaglioTempi_D3(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -2530,19 +2482,18 @@ public class StatisControllerCPP extends GenericController {
 
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D3()
 
 	private int CreaDettaglioTempi_D4(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin) {
+
 		int nRow = 0;
 
 		// Intestazione del foglio excel
@@ -2604,19 +2555,18 @@ public class StatisControllerCPP extends GenericController {
 
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D4()
 
 	private int CreaDettaglioTempi_D1_Mese(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin, String TipoRicerca, String PeriodoRic) {
+
 		int nRow = 0;
 		String lAnnoStat = dataIni.substring(6);
 
@@ -2687,18 +2637,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D1_Mese()
 
 	private int CreaDettaglioTempi_D2_Mese(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin, String TipoRicerca, String PeriodoRic) {
+
 		int nRow = 0;
 		String lAnnoStat = dataIni.substring(6);
 
@@ -2765,19 +2714,17 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D2_Mese()
 
-	//
 	private int CreaDettaglioTempi_D3_Mese(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin, String TipoRicerca, String PeriodoRic) {
+
 		int nRow = 0;
 		String lAnnoStat = dataIni.substring(6);
 
@@ -2848,19 +2795,18 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D3_Mese()
 
 	private int CreaDettaglioTempi_D4_Mese(Vector<DettaglioTempiIscrizioneProcedimentiCPPModel> aVect,
 			HSSFSheet sheet, HSSFCellStyle csNull, HSSFCellStyle cs, HSSFCellStyle csBold,
 			HSSFCellStyle csBoldCenter, HSSFFont font, UfficioModel uffUteConnesso, String DescIntesta,
 			String dataIni, String dataFin, String TipoRicerca, String PeriodoRic) {
+
 		int nRow = 0;
 		String lAnnoStat = dataIni.substring(6);
 
@@ -2931,12 +2877,10 @@ public class StatisControllerCPP extends GenericController {
 				nRow++;
 				row = valorizzaRiga_DettaglioTempiCPP(sheet, nRow, cs, lMod, Descrizio, Tempo);
 			}
-
 		}
 
 		nRow++;
 		return nRow;
-
 	} // CHIUDE CreaDettaglioTempi_D4_Mese()
 
 	/**
@@ -2952,9 +2896,7 @@ public class StatisControllerCPP extends GenericController {
 	// uffUteConnesso, String DescIntesta) throws F3BException
 	public void ExCreateFoglioDettaglioArchiviazioni_CPP(Vector aVect, HSSFWorkbook wb,
 			UfficioModel uffUteConnesso, String dataIni, String dataFin, String DescIntesta)
-			throws F3BException
-	// 07-06-2016 - END Riciclo
-	{
+			throws F3BException { // 07-06-2016 - END Riciclo
 
 		HSSFCellStyle csNull = wb.createCellStyle();
 
@@ -3070,7 +3012,6 @@ public class StatisControllerCPP extends GenericController {
 		}
 
 		nRow++;
-
 	} // CHIUDE ExCreateFoglioDettaglioArchiviazioni_CPP()
 
 	/**
@@ -3463,11 +3404,9 @@ public class StatisControllerCPP extends GenericController {
 		nRow = setTotaliTempi_Per_Def(sheet, csBold, csBoldCenter, nRow, nRowAnno, nColAnno, RigaAnnoLC,
 				RigaAnnoLS, RigaAnnoNLP, RigaAnnoADEF);
 		nRow++;
-
 	} // CHIUDI ExCreateRiepilogoDefinitiCPP()
 
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
@@ -3506,28 +3445,6 @@ public class StatisControllerCPP extends GenericController {
 
 		return cell;
 	}
-
-	// private int setIntestazione(HSSFSheet sheet, UfficioModel uffUteConnesso, HSSFCellStyle csNull) {
-	//
-	// int nRow = 0;
-	//
-	// // Create a row and put some cells in it. Rows are 0 based.
-	// HSSFRow row = sheet.createRow(nRow);
-	// // Create a cell and put a value in it.
-	// String value = (uffUteConnesso.getDescrTipoUfficio().toUpperCase() + " DI " + uffUteConnesso
-	// .getDescrComune().toUpperCase());
-	// setCell(row, 0, value, csNull);
-	//
-	// nRow++;
-	// // Create a row and put some cells in it. Rows are 0 based.
-	// row = sheet.createRow(nRow);
-	// // Create a cell and put a value in it.
-	//
-	// value = ("Tel. " + uffUteConnesso.getTelefono() + " - Fax " + uffUteConnesso.getFax());
-	// setCell(row, 0, value, csNull);
-	//
-	// return nRow;
-	// }
 
 	private int setIntestazione(HSSFSheet sheet, UfficioModel uffUteConnesso, HSSFCellStyle csNull,
 			String DescUffIntesta) {
@@ -3639,9 +3556,6 @@ public class StatisControllerCPP extends GenericController {
 	}
 
 	private String getStringaSomma(int nRow1, int nCol1, int nRow2, int nCol2) {
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("--XX-- StatisControllerCPP.getStringaSomma : inizio");
 
 		CellReference cellRef1 = new CellReference(nRow1, nCol1);
 		CellReference cellRef2 = new CellReference(nRow2, nCol2);
@@ -3653,7 +3567,6 @@ public class StatisControllerCPP extends GenericController {
 		// siesLogger.debug("--XX-- StatisControllerCPP.getStringaSomma fine : formula : "+ formula );
 
 		return formula;
-
 	}
 
 	// -----------------------------------------------------------------------------------
@@ -3671,13 +3584,8 @@ public class StatisControllerCPP extends GenericController {
 	 * @throws F3BException
 	 *             propaga l'eccezione.
 	 */
-	public void ExRiepilogoIscrizioniCPPStoredProcedure(String dataIni, String dataFin, String ufficio) // ,
-																										// String
-																										// ufficioaccorpato1,
-																										// String
-																										// ufficioaccorpato2,
-																										// String
-																										// ufficioaccorpato3)
+	public void ExRiepilogoIscrizioniCPPStoredProcedure(String dataIni, String dataFin, String ufficio)
+			// , String ufficioaccorpato1, String ufficioaccorpato2, String ufficioaccorpato3)
 			throws F3BException {
 
 		Connection lConn = null;
@@ -3706,7 +3614,6 @@ public class StatisControllerCPP extends GenericController {
 
 			lConn.commit();
 		} catch (DAOException daoEx) {
-
 			throw new F3BException("StatisControllerCPP.ExRiepilogoIscrizioniCPPStoredProcedure: " + daoEx);
 		} catch (SQLException sqe) {
 			throw new F3BException("StatisControllerCPP.ExRiepilogoIscrizioniCPPStoredProcedure: " + sqe);
@@ -3715,7 +3622,6 @@ public class StatisControllerCPP extends GenericController {
 
 			cleanup(lConn);
 		}
-
 	} // CHIUDE ExRiepilogoIscrizioniCPPStoredProcedure
 
 	/**
@@ -3752,7 +3658,6 @@ public class StatisControllerCPP extends GenericController {
 			lConn.commit();
 		} catch (DAOException daoEx) {
 			throw new F3BException("StatisControllerCPP.ExStatProvvedimenti_CPP_StoredProcedure: " + daoEx);
-
 		} catch (SQLException sqe) {
 			throw new F3BException("StatisControllerCPP.ExStatProvvedimenti_CPP_StoredProcedure: " + sqe);
 		} finally {

@@ -7,16 +7,16 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaDAO;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.sige.penaaccessoria.dao.PenaAccSenSigeDAO;
 import siap.sige.penaaccessoria.model.PenaAccSigeModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -42,6 +42,7 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	public PenaAccessoriaModel ExInserisciPenaAccessoria(PenaAccessoriaModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaDAO lPenDao = null;
 
@@ -82,12 +83,13 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	/**
 	 * Ricerca la PEna Accessoria
-	 * 
+	 *
 	 * @param aPenaAccessoria
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPenaAccessoria(PenaAccessoriaModel aPenaAccessoria) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaAccessori = new Vector();
 		PenaAccessoriaSqlDAO lPenDao = null;
@@ -103,8 +105,8 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaAccessoriaController.ExRicercaPenaAccessoria: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaAccessoriaController.ExRicercaPenaAccessoria: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -114,13 +116,14 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	/**
 	 * Ricerca la Pena Accessoria per la chiave
-	 * 
+	 *
 	 * @param aPenaAccessoria
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaAccessoriaModel ExRicercaPenaAccessoriaByKey(PenaAccessoriaModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaSqlDAO lPenDao = null;
 		PenaAccessoriaModel lPenMod = null;
@@ -137,8 +140,8 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaAccessoriaController.ExRicercaPenaAccessoria: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaAccessoriaController.ExRicercaPenaAccessoria: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -147,14 +150,15 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 	}
 
 	/**
-	 * MOdifica Pena Accessoria
-	 * 
+	 * Modifica Pena Accessoria
+	 *
 	 * @param aPenaAccessoria
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaAccessoriaModel ExModificaPenaAccessoria(PenaAccessoriaModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaDAO lPenDao = null;
 
@@ -165,7 +169,6 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 			lPenDao.selCondizioneUpdate(aPenaAccessoria.getIdPenaAccessoria());
 			lPenDao.update();
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -180,13 +183,14 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	/**
 	 * MOdifica Ordinanza pena Accessoria
-	 * 
+	 *
 	 * @param aPenaAccessoria
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaAccessoriaModel ExModificaOrdinanzaPenaAccessoria(PenaAccessoriaModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaDAO lPenDao = null;
 
@@ -197,7 +201,6 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 			lPenDao.selCondizioneUpdate(aPenaAccessoria.getIdPenaAccessoria());
 			lPenDao.update();
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -211,14 +214,15 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 	}
 
 	/**
-	 * MOdifica Pena Accesoria
-	 * 
+	 * Modifica Pena Accesoria
+	 *
 	 * @param aPenaAccessoria
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaAccessoriaModel ExModificaCodNuovoTipoPA(PenaAccessoriaModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaDAO lPenDao = null;
 
@@ -229,7 +233,6 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 			lPenDao.selCondizioneUpdate(aPenaAccessoria.getIdPenaAccessoria());
 			lPenDao.update();
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -244,11 +247,12 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	/**
 	 * Cancella Pena Accessoria
-	 * 
+	 *
 	 * @param aPenaAccessoria
 	 * @throws F3BException
 	 */
 	public void ExCancellaPenaAccessoria(PenaAccessoriaModel aPenaAccessoria) throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaModel lPenMod = null;
 		PenaAccessoriaDAO lPenDao = null;
@@ -288,9 +292,9 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 					if (lPenMod != null) {
 						lPenMod.setFlagCondonata("-");
 						lPenMod.setCodNuovoTipoPenaAccessoria("-");
-						lPenMod.setNote(lPenMod.getNote()
-								+ " - Cancellata Pena Accessoria sostitutiva in data "
-								+ DateUtils.getSysDate("dd/MM/yyyy") + ".");
+						lPenMod.setNote(
+								lPenMod.getNote() + " - Cancellata Pena Accessoria sostitutiva in data "
+										+ DateUtils.getSysDate("dd/MM/yyyy") + ".");
 						lPenDao.setDAOFromModelForUpdate(lPenMod);
 						lPenDao.selCondizioneUpdate(lPenMod.getIdPenaAccessoria());
 						lPenDao.update();
@@ -301,8 +305,8 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaAccessoriaController.ExCancellaPenaAccessoria: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaAccessoriaController.ExCancellaPenaAccessoria: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lPenSqlDao);
@@ -312,6 +316,7 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	public String ExInserisciPenaAccessoriaWithoutSequence(ArrayList aPene, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		PenaAccessoriaDAO lPenDao = null;
 
@@ -333,7 +338,8 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 				lCodEsito = "00001";
 			} else {
 				lCodEsito = "01400";
-				throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire le Pene Accessorie! ");
+				throw new F3BException(F3BException.USER_MESSAGE,
+						"Impossibile inserire le Pene Accessorie! ");
 			}
 		} finally {
 			cleanup(lPenDao);
@@ -343,15 +349,16 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 
 	/**
 	 * Verifica l'esistenza della Pena Accessoria Sostitutiva
-	 * 
+	 *
 	 * @param aModel
 	 * @return boolean
 	 * @throws F3BException
 	 */
 	public boolean ExistPASostitutiva(BigDecimal aIdPenaAccessoria) throws F3BException {
+
 		Connection lConn = null;
 		boolean esiste = false;
-//		PenaAccessoriaModel lFascicolo = null;
+		// PenaAccessoriaModel lFascicolo = null;
 		PenaAccessoriaSqlDAO lPASqlDao = null;
 
 		try {
@@ -360,13 +367,12 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 			lPASqlDao = new PenaAccessoriaSqlDAO(lConn);
 
 			esiste = lPASqlDao.ExistPASostitutiva(aIdPenaAccessoria);
-
 		} catch (DAOException dex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + dex);
-			throw new F3BException(F3BException.USER_MESSAGE, "PenaAccessoriaController.ExistPASostitutiva: "
-					+ dex);
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"PenaAccessoriaController.ExistPASostitutiva: " + dex);
 		} catch (Exception e) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -385,12 +391,13 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 	/**
 	 * ExRicercaPenaAccessoriaNoError non rilancia l'eccezione di Nessun elemento trovato Ricerca la PEna
 	 * Accessoria
-	 * 
+	 *
 	 * @param aPenaAccessoria
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPenaAccessoriaNoError(PenaAccessoriaModel aPenaAccessoria) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaAccessori = new Vector();
 		PenaAccessoriaSqlDAO lPenDao = null;
@@ -404,8 +411,8 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaAccessoriaController.ExRicercaPenaAccessoria: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaAccessoriaController.ExRicercaPenaAccessoria: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);

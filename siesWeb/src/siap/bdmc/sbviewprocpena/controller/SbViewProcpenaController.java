@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.bdmc.sbviewprocpena.dao.SbViewProcpenaDAO;
 import siap.bdmc.sbviewprocpena.dao.SbViewProcpenaSqlDAO;
 import siap.bdmc.sbviewprocpena.model.SbViewProcpenaModel;
 import siap.controller.SiapController;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,7 +32,7 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SbViewProcpena a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSbViewProcpena
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -40,6 +40,7 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 	 ****************************************************************************/
 	public SbViewProcpenaModel ExInserisciSbViewProcpena(SbViewProcpenaModel aSbViewProcpena)
 			throws F3BException {
+
 		Connection lConn = null;
 		SbViewProcpenaDAO lSbVDao = null;
 		SbViewProcpenaModel lSbVMod = null;
@@ -66,7 +67,7 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati SbViewProcpena
-	 * 
+	 *
 	 * @param aSbViewProcpena
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -74,6 +75,7 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbViewProcpena(SbViewProcpenaModel aSbViewProcpena) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbViewProcpeni = new Vector();
 		SbViewProcpenaSqlDAO lSbVDao = null;
@@ -85,8 +87,8 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 			// lSbVDao.setOrderBy();
 			lSbViewProcpeni = new Vector(lSbVDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("SbViewProcpenaController.ExRicercaSbViewProcpena: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbViewProcpenaController.ExRicercaSbViewProcpena: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbVDao);
 			cleanup(lConn);
@@ -97,13 +99,14 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public SbViewProcpenaModel ExRicercaSbViewProcpenaById(BigDecimal aIdPren) throws F3BException {
+
 		Connection lConn = null;
 		SbViewProcpenaModel lSbViewProcpenaMod = new SbViewProcpenaModel();
 		SbViewProcpenaSqlDAO lSbViewProcpenaSqlDao = null;
@@ -128,12 +131,13 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 	 * Metodo che modifica i dati dell'SbViewProcpena Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aSbViewProcpena
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaSbViewProcpena(SbViewProcpenaModel aSbViewProcpena) throws F3BException {
+
 		Connection lConn = null;
 		SbViewProcpenaDAO lSbVDao = null;
 
@@ -155,11 +159,12 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aSbViewProcpena
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaSbViewProcpena(SbViewProcpenaModel aSbViewProcpena) throws F3BException {
+
 		Connection lConn = null;
 		SbViewProcpenaDAO lSbVDao = null;
 
@@ -171,8 +176,8 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("SbViewProcpenaController.ExCancellaSbViewProcpena: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbViewProcpenaController.ExCancellaSbViewProcpena: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbVDao);
 			cleanup(lConn);
@@ -182,12 +187,13 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aSbViewProcpena
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountSbViewProcpena(SbViewProcpenaModel aSbViewProcpena) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		SbViewProcpenaSqlDAO lSbViewProcpenaSqlDao = null;
@@ -201,8 +207,8 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 			lCount = lSbViewProcpenaSqlDao.getBigDecimal("HowManyRecords");
 			lSbViewProcpenaSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("SbViewProcpenaController.ExGetCountSbViewProcpena: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbViewProcpenaController.ExGetCountSbViewProcpena: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbViewProcpenaSqlDao);
 			cleanup(lConn);
@@ -214,7 +220,7 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aSbViewProcpena
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -224,6 +230,7 @@ public class SbViewProcpenaController extends SiapController implements ISbViewP
 	 ****************************************************************************/
 	public Vector ExRicercaSbViewProcpenaPaged(SbViewProcpenaModel aSbViewProcpena, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbViewProcpeni = new Vector();
 		SbViewProcpenaSqlDAO lSbViewProcpenaSqlDao = null;

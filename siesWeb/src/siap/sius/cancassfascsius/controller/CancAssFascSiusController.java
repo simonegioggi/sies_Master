@@ -5,12 +5,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.cancassfascsius.dao.CancAssFascSiusDAO;
 import siap.sius.cancassfascsius.dao.CancAssFascSiusSqlDAO;
 import siap.sius.cancassfascsius.model.CancAssFascSiusModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class CancAssFascSiusController extends SiapController implements ICancAssFascSius {
@@ -37,7 +37,7 @@ public class CancAssFascSiusController extends SiapController implements ICancAs
 	 * precedente attiva. La "chiusura" consiste nella valorizzare della Data Di Chiusura dell'istanza
 	 * precedente con la stessa Data Di Inizio della nuova che si sta inserendo. In questa maniera tali
 	 * istanze risultano essere storicizzate.
-	 * 
+	 *
 	 * @param aCancAssFascSius
 	 * @return
 	 * @throws F3BException
@@ -82,7 +82,7 @@ public class CancAssFascSiusController extends SiapController implements ICancAs
 	 * La funzione effettua una ricerca di associazioni Fascicolo SIUS - Cancelleria Assegnataria. Il filtro
 	 * di ricerca da utilizzare viene passato attraverso il CancAssFascSiusModel. L'elenco di istanze
 	 * risultato della ricerca viene restituito nella forma di Vector di CancAssFascSiusModel
-	 * 
+	 *
 	 * @param aCancAssFascSius
 	 *            : CancAssFascSiusModel
 	 * @return Elenco : Vector
@@ -122,12 +122,13 @@ public class CancAssFascSiusController extends SiapController implements ICancAs
 
 	/**
 	 * La funzione effettua la ricerca dell' istanza attiva Cancelleria Assegnataria _ Fascicolo SIUS.
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return CancAssFascSiusModel
 	 * @throws F3BException
 	 */
 	public CancAssFascSiusModel ExRicercaCancAssFascSiusAttiva(BigDecimal aIdFascicolo) throws F3BException {
+
 		// CancAssFascSiusModel risultato della ricerca
 		CancAssFascSiusModel lCanMod = null;
 		// Connessione
@@ -157,11 +158,12 @@ public class CancAssFascSiusController extends SiapController implements ICancAs
 	 * Cancellazione della relazione Cancelleria Assegnataria - Fascicolo SIUS. La cancellazione comporta
 	 * l'eliminazione della relazione attiva per il Fascicolo specificato e la riattivazione dell'eventuale
 	 * relazione precedentemente chiusa.
-	 * 
+	 *
 	 * @param aCancAssFascSius
 	 * @throws F3BException
 	 */
 	public void ExCancellaCancAssFascSius(CancAssFascSiusModel aCancAssFascSius) throws F3BException {
+
 		Connection lConn = null;
 		CancAssFascSiusDAO lCanDao = null;
 

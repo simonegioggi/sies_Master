@@ -109,6 +109,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public Vector<ParereModel> ExRicercaPareriPaginata(ParereModel aParereIn, int aPageNum)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<ParereModel> lElencoPareri = new Vector<>();
 		ParereSqlDAO lParDao = null;
@@ -163,6 +164,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaPareri(ParereModel aParereIn) throws F3BException {
+
 		Connection lConn = null;
 		ParereSqlDAO lParDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -189,6 +191,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private RichiestaSigeModel InserisciRichiestaSige(RichiestaSigeModel aRichiestaSige, Connection aConn)
 			throws Exception {
+
 		RichiestaSigeDAO lRicDao = null;
 		RichiestaSigeModel lRicMod = null;
 		BigDecimal lKey = null;
@@ -225,6 +228,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private void InserisciSentenzaSiep(RichiestaSigeModel aRichiestaSige, BigDecimal aIdFasSige,
 			Connection aConn) throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 		// siesLogger al posto di mLog
 		siesLogger.debug("DAOException  InserisciSentenzaSiep: inizio ");
@@ -252,8 +256,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 		// siesLogger al posto di mLog
 		siesLogger.debug("DAOException  InserisciSentenzaSiep: fine ");
-
-		return;
 	}
 
 	/*
@@ -261,6 +263,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private void InserisciMagistratoAssegnatario(MagistratoAssegnatarioModel aMagAss, Connection aConn)
 			throws Exception {
+
 		MagistratoAssegnatarioDAO lMagDao = null;
 
 		try {
@@ -276,17 +279,15 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		} finally {
 			cleanup(lMagDao);
 		}
-		return;
 	}
 
 	/**
 	 * La funzione effettua l'inserimento nella tabella FAS_SIGE_SETENZIONE del riferimento al
 	 * LUOGO_DETENZIONE o ALTRA_CAUSA legato al Fascicolo SIEP
-	 *
-	 *
 	 */
 	private void InserisciLuogoDetenzioneSIEP(FasSigeDetenzioneModel aDetenzione, Connection aConn)
 			throws Exception {
+
 		FasSigeDetenzioneDAO lDetDao = null;
 		try {
 			lDetDao = new FasSigeDetenzioneDAO(aConn);
@@ -300,17 +301,15 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		} finally {
 			cleanup(lDetDao);
 		}
-		return;
 	}
 
 	/**
 	 * Funzione di inserimento di un nuovo FascicoloSige e Richiesta associata.
-	 *
 	 */
-
 	public FascicoloSigeModel ExInserisciFascicoloSige(FascicoloSigeModel aFascicoloSige,
 			RichiestaSigeModel aRichiestaSige, MagistratoAssegnatarioModel aMagistrato,
 			FasSigeDetenzioneModel aDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		FascicoloSigeSqlDAO lFasSqlDao = null;
@@ -339,7 +338,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			// siesLogger al posto di mLog
 			siesLogger.debug("Chiave Progr FASCICOLO_SIGE ->" + lChiaveProgr);
 			lFasMod.setChiaveProgr(new BigDecimal(lChiaveProgr.intValue() + 1));
-			cleanup(lFasSqlDao);
 
 			// paolo cherubini per supersoggetto 30/07/2009
 			// se il soggetto e' collegato ad un fascicolo che esso sia SIEP SIUS o SIGE
@@ -440,9 +438,9 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			// siesLogger al posto di mLog
 			siesLogger.error("Exception: " + e);
 			throw new F3BException("FascicoloSigeController.ExInserisciFascicoloSige Exception : " + e);
-		}
-
-		finally {
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSqlDao);
 			cleanup(lFasDao);
 			cleanup(lConn);
 		}
@@ -457,6 +455,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	public FascicoloSigeModel ExInserisciFascicoloSigeManuale(FascicoloSigeModel aFascicoloSige,
 			RichiestaSigeModel aRichiestaSige, MagistratoAssegnatarioModel aMagistrato,
 			FasSigeDetenzioneModel aDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		FascicoloSigeSqlDAO lFasSqlDao = null;
@@ -555,9 +554,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			// siesLogger al posto di mLog
 			siesLogger.error("Exception: " + e);
 			throw new F3BException("FascicoloSigeController.ExInserisciFascicoloSige Exception : " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lFasDao);
 			cleanup(lFasSqlDao);
 			cleanup(lConn);
@@ -573,6 +570,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoloSige(FascicoloSigeModel aFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoloSigi = new Vector();
 		FascicoloSigeDAO lFasDao = null;
@@ -606,11 +604,13 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public FascicoloSigeEstesoModel ExRicercaEstesaFascicoloSigeByKey(BigDecimal aKey) throws F3BException {
+
 		return ExRicercaEstesaFascicoloSigeByKey(aKey, false);
 	}
 
 	public FascicoloSigeEstesoModel ExRicercaEstesaFascicoloSigeByKey(BigDecimal aKey, boolean complete)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -711,6 +711,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private FascicoloSigeEstesoModel ricercaRicSogFasSiep(FascicoloSigeModel aFasMod, Connection aConn)
 			throws Exception {
+
 		FascicoloSigeEstesoModel lFascicoloEsteso = null;
 		RichiestaSigeDAO lRicDao = null;
 		RichiestaSigeModel lRicMod;
@@ -718,34 +719,42 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		FascicoloSiepModel lFasSIEP = null;
 		lSogMod = null;
 
-		// Ricerca dela Richiesta
-		lRicDao = new RichiestaSigeDAO(aConn);
-		lRicDao.setIdRichiestaSige(aFasMod.getRicIdRichiestaSige());
-		lRicDao.selByKey();
-		lRicMod = (RichiestaSigeModel) lRicDao.getModelByKey();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		try {
+			// Ricerca dela Richiesta
+			lRicDao = new RichiestaSigeDAO(aConn);
+			lRicDao.setIdRichiestaSige(aFasMod.getRicIdRichiestaSige());
+			lRicDao.selByKey();
+			lRicMod = (RichiestaSigeModel) lRicDao.getModelByKey();
 
-		// Ricerca del Soggetto
-		ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
-		lSogMod = lSogCtrl.ExRicercaSoggettoByKey(aFasMod.getSogIdSoggetto());
+			// Ricerca del Soggetto
+			ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
+			lSogMod = lSogCtrl.ExRicercaSoggettoByKey(aFasMod.getSogIdSoggetto());
 
-		if (lRicMod != null) {
-			if (lRicMod.getFasSieIdFascicoloSiep() != null) {
-				// Ricerca del Fascicolo SIEP
-				IFascicoloSiep lCtrlSIEP = SIEPLookupRemote.getFascicoloSiepRemote();
-				lFasSIEP = lCtrlSIEP.ExRicercaFascicoloByKeyNoError(lRicMod.getFasSieIdFascicoloSiep());
+			if (lRicMod != null) {
+				if (lRicMod.getFasSieIdFascicoloSiep() != null) {
+					// Ricerca del Fascicolo SIEP
+					IFascicoloSiep lCtrlSIEP = SIEPLookupRemote.getFascicoloSiepRemote();
+					lFasSIEP = lCtrlSIEP.ExRicercaFascicoloByKeyNoError(lRicMod.getFasSieIdFascicoloSiep());
+				}
+
+				// trascodifica dei codici
+				lRicMod.decodifica();
 			}
 
 			// trascodifica dei codici
-			lRicMod.decodifica();
+			aFasMod.decodifica();
+
+			// Tutti i model ricavati si aggregano nell'unico FascicoloSigeEsteso
+			lFascicoloEsteso = new FascicoloSigeEstesoModel(aFasMod, lSogMod, lRicMod, lFasSIEP);
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			// siesLogger al posto di LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new SIGEException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(lRicDao);
 		}
-
-		// trascodifica dei codici
-		aFasMod.decodifica();
-
-		// Tutti i model ricavati si aggregano nell'unico FascicoloSigeEsteso
-		lFascicoloEsteso = new FascicoloSigeEstesoModel(aFasMod, lSogMod, lRicMod, lFasSIEP);
-
-		cleanup(lRicDao);
 		return lFascicoloEsteso;
 	}
 
@@ -758,6 +767,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public FascicoloSigeEstesoModel ExRicercaFascicoloSigeByAnnoNumCodUfficio(FascicoloSigeModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -811,11 +821,13 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public FascicoloSigeEstesoModel ExRicercaEstesaFascicoloSigeByAnnoNumCodUfficio(
 			FascicoloSigeModel aFascicolo) throws F3BException {
+
 		return ExRicercaEstesaFascicoloSigeByAnnoNumCodUfficio(aFascicolo, false);
 	}
 
 	public FascicoloSigeEstesoModel ExRicercaEstesaFascicoloSigeByAnnoNumCodUfficio(
 			FascicoloSigeModel aFascicolo, boolean complete) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -897,6 +909,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	}
 
 	public FascicoloSigeModel ExRicercaFascicoloSigeByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -935,6 +948,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 
 	public void ExModificaFascicoloSige(FascicoloSigeModel aFascicoloSige, RichiestaSigeModel aRichiesta)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		RichiestaSigeDAO lRicDao = null;
@@ -963,7 +977,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			cleanup(lRicDao);
 			cleanup(lConn);
 		}
-		return;
 	}
 
 	/**
@@ -973,8 +986,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @param aRichiesta
 	 * @throws F3BException
 	 */
-
 	public void ExModificaFascicoloSige(FascicoloSigeModel aFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		RichiestaSigeDAO lRicDao = null;
@@ -998,10 +1011,10 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			cleanup(lRicDao);
 			cleanup(lConn);
 		}
-		return;
 	}
 
 	public void ExCancellaFascicoloSige(FascicoloSigeModel aFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 
@@ -1036,6 +1049,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascicoloSigeEstesaPagina(RicercaFascicoloSigeModel aRicFascModel, int aPage,
 			String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		Vector<FascicoloSigeEstesoModel> lFascicoli = new Vector<>();
 
@@ -1095,6 +1109,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascicoloSigeByEstremiPagina(RicercaFascicoloSigeModel aRicFascModel, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -1149,6 +1164,9 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
 			cleanup(lFasSigeSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUdiDao);
+
 			cleanup(lConn);
 		}
 		return lFascicoli;
@@ -1165,6 +1183,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public BigDecimal ExGetNumRicercaFascicoloSigeEstesa(RicercaFascicoloSigeModel aRicFascModel,
 			String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasSigeSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -1206,6 +1225,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public BigDecimal ExGetNumRicercaFascicoloSigeByEstremi(RicercaFascicoloSigeModel aRicFascModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasSigeSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -1245,25 +1265,21 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSentenze(FascicoloSigeEstesoModel aFascicolo) throws F3BException {
-		// Connection lConn = null;
+
 		Vector lSentenze = new Vector();
 
 		try {
-			// lConn = getDBConnection();
-
 			// Se il Fascicolo e' associato ad un Fascicolo SIEP di competenza si preleva la Sentenza
 			if (aFascicolo.getFascicoloSiep() != null
 					&& aFascicolo.getFascicoloSiep().getSentenza() != null) {
 				lSentenze.add(aFascicolo.getFascicoloSiep().getSentenza());
 			}
-			// STUB: qui bisogna aggiungere le ricerche di altre sentenze legate
-			// al Fascicolo
-			// ....
-
 		} catch (Exception e) {
 			throw new F3BException("FascicoloSigeController.ExRicercaSentenze: " + e);
 		} finally {
-			// cleanup(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			// siesLogger al posto di LogF3B.getLogger()
+			siesLogger.debug("finally di ExRicercaSentenze: " + getClass().getName());
 		}
 		return lSentenze;
 	}
@@ -1283,6 +1299,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	public Vector ExRicercaFascicoliBySoggettoPagina(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lCodDistretto, int aPageNum, String majorOffice)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -1363,6 +1380,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public BigDecimal ExGetNumRicercaFascicoliBySoggetto(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lCodDistretto, String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -1409,6 +1427,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascSigeDelSoggetto(SoggettoModel aSogModel, String strCodUfficioUtenteConnesso,
 			String lCodDistretto) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -1474,6 +1493,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public ByteArrayOutputStream ExStampaProcedimento(BigDecimal aIdFascicolo, String lTipoUfficio,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		IStampaSige lCtrlSta = SIGELookupRemote.getStampaRemote();
@@ -1510,6 +1530,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public ByteArrayOutputStream ExStampaAvvocato(BigDecimal aIdFascicolo, String lTipoUfficio,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		IStampaSige lCtrlSta = SIGELookupRemote.getStampaRemote();
 		// Riempie l'Array contenente le tipologie di dati da prelevare
@@ -1542,6 +1563,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public ByteArrayOutputStream ExStampaFoglioComplementare(BigDecimal aIdFascicolo, String lTipoUfficio,
 			UtenteModel aUtenteModel, String templateName) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		IStampaSige lCtrlSta = SIGELookupRemote.getStampaRemote();
 		// Riempie l'Array contenente le tipologie di dati da prelevare
@@ -1565,6 +1587,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 
 	public ResidenzaAssociataModel ExRicercaResidenzaFascicoloSigeCorrente(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
@@ -1599,6 +1622,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 
 	public ResidenzaAssociataModel ExRicercaDomicilioFascicoloSigeCorrente(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
@@ -1643,6 +1667,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public ResidenzaAssociataModel ExInserisciResidenzaFascicoloSige(ResidenzaAssociataModel aResidenza)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaDAO lResDao = null;
@@ -1712,6 +1737,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	}
 
 	private BigDecimal getIdResidenzaFascicoloSigeCorrente(BigDecimal aIdFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 
 		BigDecimal lId = null;
@@ -1757,6 +1783,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public ResidenzaAssociataModel ExModificaResidenzaFascicoloSige(ResidenzaAssociataModel aResidenza)
 			throws F3BException {
+
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 		// siesLogger al posto di LogF3B.getLogger()
 		// siesLogger.debug("ExModificaResidenzaFascicoloSige : inizio");
@@ -1868,6 +1895,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaResidenzaByProcedimentoSige(BigDecimal aKeyFascicolo, char aTipoResidenza)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lResidenze = new Vector();
 		ResidenzaSqlDAO lDao = null;
@@ -1927,6 +1955,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public void ExCancellaResidenzaProcedimentoSige(BigDecimal IdResidenza, BigDecimal IdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		ResidenzaFascicoloSigeDAO lResFasSigeDao = null;
 
@@ -1970,9 +1999,9 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public void ExCancellaDomicilioProcedimentoSige(BigDecimal IdResidenza, BigDecimal IdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		ResidenzaFascicoloSigeDAO lResFasSigeDao = null;
 
@@ -2015,8 +2044,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public Vector ExRicercaFascicoloSigeBySentenza(BigDecimal aIdSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoliSige = null;
 		FascicoloSigeDAO lFasDao = null;
@@ -2046,9 +2075,9 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public Vector ExRicercaFascicoloSigeByFasSiep(BigDecimal aIdFasSiep, String strCodUfficioUtenteConnesso)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoliSige = null;
 		FascicoloSigeDAO lFasDao = null;
@@ -2079,6 +2108,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	private String existAnnoProgrSige(FascicoloSigeModel aFSigeModel, Connection lConn) throws F3BException {
+
 		String response = "";
 		FascicoloSigeSqlDAO lFSigeSqlDao = new FascicoloSigeSqlDAO(lConn);
 		try {
@@ -2136,8 +2166,10 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * .USER_MESSAGE,"FascicoloSigeController.ExDefinizioneManualeFascicoloSige : " + ex); } finally {
 	 * cleanup(lFasDao); cleanup(lConn); } }
 	 */
+
 	public void ExDefinizioneManualeFascicoloSige(ProvvedimentoSigeModel aProvvedimentoSige,
 			EventoModel aEvento, FascicoloSigeModel aFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSigeDAO lFasDao = null;
@@ -2216,6 +2248,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 
 	public void ExModificaDefinizioneManualeFascicoloSige(ProvvedimentoSigeModel aProvvedimentoSige,
 			EventoModel aEvento, FascicoloSigeModel aFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSigeDAO lFasDao = null;
@@ -2334,6 +2367,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private FascicoloSigeModel SuperSoggetto(FascicoloSigeModel aFSigeModel, Connection lConn)
 			throws F3BException {
+
 		SoggettoSqlDAO lSogSqlDao = null;
 		SoggettoDAO lSogDao = null;
 		SoggettoModel lSogMod = null;
@@ -2388,10 +2422,10 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @return Vettore di FascicoloSigeEstesoModel
 	 * @throws F3BException
 	 */
+	// 20181031: aggiunto parametro di passaggio
 	public Vector ExRicercaFasSigeByDatiFasSiep(FascicoloSiepModel aFascicoloSiep, String aCodUfficioSige,
 			String majorOffice) throws F3BException {
 
-		// 20181031: aggiunto parametro di passaggio
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -2467,10 +2501,10 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @return Vector
 	 * @throws F3BException
 	 */
+	// 20181031: aggiunto parametro di passaggio
 	public Vector ExRicercaFasSigePerLaSentenza(SentenzaModel aSenModel, String majorOffice)
 			throws F3BException {
 
-		// 20181031: aggiunto parametro di passaggio
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -2606,6 +2640,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public Vector<FascicoloSigeModel> ExRicercaElencoFascicoliUnificati(FascicoloSigeModel aModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<FascicoloSigeModel> lFascicoli = new Vector<>();
@@ -2665,6 +2700,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public FascicoloSigeModel ExRicercaFascicoloSigeByAnnoProgrCodUfficio(FascicoloSigeModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -2752,6 +2788,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	public FascicoloSigeModel ExInserisciFascicoloSigeSoggettoIgnoto(FascicoloSigeModel aFascicoloSige,
 			RichiestaSigeModel aRichiestaSige, MagistratoAssegnatarioModel aMagistrato,
 			FasSigeDetenzioneModel aDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 		FascicoloSigeSqlDAO lFasSqlDao = null;
@@ -2773,7 +2810,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			// Si ricava la CHIAVE PROGR del Fascicolo SIGE da inserire
 			BigDecimal lChiaveProgr = lFasSqlDao.getProgressivoFascicoloSige(aFascicoloSige);
 			lFasMod.setChiaveProgr(new BigDecimal(lChiaveProgr.intValue() + 1));
-			cleanup(lFasSqlDao);
 
 			// Inserimento Fascicolo
 			lFasDao = new FascicoloSigeDAO(lConn);
@@ -2808,7 +2844,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 				InserisciLuogoDetenzioneSIEP(aDetenzione, lConn);
 			}
 			commit(lConn);
-
 		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
@@ -2828,6 +2863,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 					"FascicoloSigeController.ExInserisciFascicoloSigeSoggettoIgnoto Exception : " + e);
 		} finally {
 			cleanup(lFasDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSqlDao);
 			cleanup(lConn);
 		}
 
@@ -2837,6 +2874,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	@Override
 	public Vector<FascicoloSigeEstesoModel> ExRicercaStatisticaFascicoloSigeByEstremi(
 			RicercaFascicoloSigeModel aRicFascModel) throws F3BException {
+
 		Connection lConn = null;
 		Vector<FascicoloSigeEstesoModel> lFascicoli = new Vector<>();
 
@@ -2891,6 +2929,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
 			cleanup(lFasSigeSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUdiDao);
 			cleanup(lConn);
 		}
 		return lFascicoli;
@@ -2947,6 +2987,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProvDao);
 			cleanup(lConn);
 		}
 
@@ -2955,6 +2997,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 
 	@Override
 	public EventoModel ExModificaDataInvioAtti(EventoModel aEventoModel) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -3057,25 +3100,43 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 					"FascicoloSigeController.ExInserisciDataInvioAtti : " + ex);
 		} finally {
 			cleanup(lEveDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProvDao);
 			cleanup(lConn);
 		}
 	}
 
 	private void InserisciResidenzeSiep(BigDecimal idFascicoloSige, BigDecimal idFascicoloSiep,
-			Connection conn) throws DAOException {
-		ResidenzaFascicoloSiepDAO resSiep = new ResidenzaFascicoloSiepDAO(conn);
-		ResidenzaFascicoloSigeDAO resSige = new ResidenzaFascicoloSigeDAO(conn);
-		resSiep.setCondizioneIdFascicoloSiep(idFascicoloSiep);
-		resSiep.setFasSieIdFascicoloSiep(idFascicoloSiep);
-		Vector<ResidenzaFascicoloSiepModel> residenzeSiep = new Vector<ResidenzaFascicoloSiepModel>(
-				resSiep.getModels());
-		for (ResidenzaFascicoloSiepModel residenzaSiep : residenzeSiep) {
-			ResidenzaFascicoloSigeModel residenzaSige = new ResidenzaFascicoloSigeModel();
-			residenzaSige.setFasSigeIdFascicoloSige(idFascicoloSige);
-			residenzaSige.setDataInizioValidita(new Date());
-			residenzaSige.setResIdResidenza(residenzaSiep.getResIdResidenza());
-			resSige.setDAOFromModel(residenzaSige);
-			resSige.insert();
+			Connection conn) throws F3BException {
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		ResidenzaFascicoloSiepDAO resSiep = null;
+		ResidenzaFascicoloSigeDAO resSige = null;
+
+		try {
+			resSiep = new ResidenzaFascicoloSiepDAO(conn);
+			resSige = new ResidenzaFascicoloSigeDAO(conn);
+
+			resSiep.setCondizioneIdFascicoloSiep(idFascicoloSiep);
+			resSiep.setFasSieIdFascicoloSiep(idFascicoloSiep);
+			Vector<ResidenzaFascicoloSiepModel> residenzeSiep = new Vector<ResidenzaFascicoloSiepModel>(
+					resSiep.getModels());
+			for (ResidenzaFascicoloSiepModel residenzaSiep : residenzeSiep) {
+				ResidenzaFascicoloSigeModel residenzaSige = new ResidenzaFascicoloSigeModel();
+				residenzaSige.setFasSigeIdFascicoloSige(idFascicoloSige);
+				residenzaSige.setDataInizioValidita(new Date());
+				residenzaSige.setResIdResidenza(residenzaSiep.getResIdResidenza());
+				resSige.setDAOFromModel(residenzaSige);
+				resSige.insert();
+			}
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			// siesLogger al posto di LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new SIGEException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(resSiep);
+			cleanup(resSige);
 		}
 	}
 
@@ -3090,6 +3151,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public void ExUpdateDataDefinizione(FascicoloSigeModel aFascicolo, Connection lConn) throws F3BException {
+
 		FascicoloSigeDAO lFasDao = null;
 		try {
 
@@ -3121,6 +3183,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	public FascicoloSigeModel ExModificaIdFascicoloSigeOrigine(FascicoloSigeModel aFascicoloSigeModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeDAO lFasDao = null;
 
@@ -3156,6 +3219,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	}
 
 	public FascicoloSigeModel ExRicercaFascicoloCollegato(BigDecimal idFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -3183,6 +3247,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	}
 
 	public Vector ExRicercaSentenzeAssegnateFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasDao = null;
 		FascicoloSigeModel lFasMod;
@@ -3241,6 +3306,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lSenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEveSqlDao);
 			cleanup(lConn);
 		}
 		return lSentenze;
@@ -3257,6 +3324,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private void inserisciSentenzaNataInSige(RichiestaSigeModel aRichiestaSige, BigDecimal aIdFasSige,
 			BigDecimal aIdFasSigeOrigine, Connection aConn) throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 		// siesLogger al posto di mLog
 		siesLogger.debug("DAOException  InserisciSentenzaSiep: inizio ");
@@ -3293,8 +3361,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		lFasSigeSen = assegnaSentenzaFascicoloSige(lFasSigeSen, aConn);
 
 		siesLogger.debug("DAOException  InserisciSentenzaSiep: fine ");
-
-		return;
 	}
 
 	/**
@@ -3309,6 +3375,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 */
 	private SentenzaSigeModel assegnaSentenzaFascicoloSige(SentenzaSigeModel aFasSigeSentenza,
 			Connection lConn) throws F3BException {
+
 		FasSigeSentenzaDAO lFasDao = null;
 		SentenzaSigeModel lFasMod = null;
 
@@ -3332,7 +3399,6 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			else
 				throw new F3BException("FasSigeSentenzaController.ExAssegnaSentenzaFascicoloSige:  " + ex);
 		} catch (Exception e) {
-
 			throw new F3BException("FasSigeSentenzaController.ExAssegnaSentenzaFascicoloSige : " + e);
 		} finally {
 			cleanup(lFasDao);

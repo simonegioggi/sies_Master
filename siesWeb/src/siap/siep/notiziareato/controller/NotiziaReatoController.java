@@ -6,13 +6,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.notiziareato.dao.NotiziaReatoDAO;
 import siap.siep.notiziareato.dao.NotiziaReatoSqlDAO;
 import siap.siep.notiziareato.model.NotiziaReatoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -38,12 +38,13 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 
 	/**
 	 * Inserisci Notizia Reato
-	 * 
+	 *
 	 * @param aNotiziaReato
 	 * @return
 	 * @throws F3BException
 	 */
 	public NotiziaReatoModel ExInserisciNotiziaReato(NotiziaReatoModel aNotiziaReato) throws F3BException {
+
 		Connection lConn = null;
 		NotiziaReatoDAO lNotDao = null;
 		NotiziaReatoModel lNotMod = null;
@@ -72,13 +73,13 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 	// 19.05.2009 ANGELA
 	/*
 	 * ExRicercaNotiziaReatoByIdFascicoloSige
-	 * 
+	 *
 	 * @param BigDecimal aIdFascicolo
-	 * 
+	 *
 	 * @return Vector - Elenco di notizie di reato trovate per il dato fascicolosige
 	 */
-
 	public Vector ExRicercaNotiziaReatoByIdFascicoloSige(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotiziaReati = new Vector();
 		NotiziaReatoSqlDAO lNotDao = null;
@@ -94,8 +95,8 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotDao);
 			cleanup(lConn);
@@ -105,12 +106,13 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 
 	/**
 	 * ExRicercaNotiziaReatoByIdFascicoloSiep
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aIdFascicolo
 	 * @return Vector - Elenco di notizie di reato trovate per il dato fascicolosiep
 	 */
 	public Vector ExRicercaNotiziaReatoByIdFascicoloSiep(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotiziaReati = new Vector();
 		NotiziaReatoSqlDAO lNotDao = null;
@@ -127,8 +129,8 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotDao);
 			cleanup(lConn);
@@ -138,10 +140,11 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 
 	/**
 	 * 05/06/2009 ExRicercaNotiziaReato da fascicolo SIGE * @param NotiziaReatoModel aNotiziaReato
-	 * 
+	 *
 	 * @return Vector
 	 */
 	public Vector ExRicercaNotiziaReatoBySIGE(NotiziaReatoModel aNotiziaReato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotiziaReati = new Vector();
 		NotiziaReatoSqlDAO lNotDao = null;
@@ -157,8 +160,8 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotDao);
 			cleanup(lConn);
@@ -166,15 +169,15 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		return lNotiziaReati;
 	}
 
-	// //////////////////////////////
 	/**
 	 * ExRicercaNotiziaReato
-	 * 
+	 *
 	 * @param NotiziaReatoModel
 	 *            aNotiziaReato
 	 * @return Vector
 	 */
 	public Vector ExRicercaNotiziaReato(NotiziaReatoModel aNotiziaReato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNotiziaReati = new Vector();
 		NotiziaReatoSqlDAO lNotDao = null;
@@ -190,8 +193,8 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NotiziaReatoController.ExRicercaNotiziaReato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotDao);
 			cleanup(lConn);
@@ -201,13 +204,14 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 
 	/**
 	 * ExRicercaNotiziaReatoByKey
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aKey
 	 * @return NotiziaReatoModel - La notizia di reato trovata per chiave
 	 * @throws F3BException
 	 */
 	public NotiziaReatoModel ExRicercaNotiziaReatoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		NotiziaReatoSqlDAO lNotDao = null;
 		NotiziaReatoModel lNotMod;
@@ -220,8 +224,8 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NotiziaReatoController.ExRicercaNotiziaReatoByKey: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NotiziaReatoController.ExRicercaNotiziaReatoByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotDao);
 			cleanup(lConn);
@@ -231,12 +235,13 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 
 	/**
 	 * ExModificaNotiziaReato
-	 * 
+	 *
 	 * @param aNotiziaReato
 	 * @return
 	 * @throws F3BException
 	 */
 	public NotiziaReatoModel ExModificaNotiziaReato(NotiziaReatoModel aNotiziaReato) throws F3BException {
+
 		Connection lConn = null;
 		NotiziaReatoDAO lNotDao = null;
 		NotiziaReatoModel lNotMod = new NotiziaReatoModel(aNotiziaReato);
@@ -261,11 +266,12 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 
 	/**
 	 * ExCancellaNotiziaReato
-	 * 
+	 *
 	 * @param aNotiziaReato
 	 * @throws F3BException
 	 */
 	public void ExCancellaNotiziaReato(NotiziaReatoModel aNotiziaReato) throws F3BException {
+
 		Connection lConn = null;
 		NotiziaReatoDAO lNotDao = null;
 
@@ -278,8 +284,8 @@ public class NotiziaReatoController extends SiapController implements INotiziaRe
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NotiziaReatoController.ExCancellaNotiziaReato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NotiziaReatoController.ExCancellaNotiziaReato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotDao);
 			cleanup(lConn);

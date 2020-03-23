@@ -8,6 +8,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siepe.SIEPEException;
 import siap.siepe.assistentesocialeattivita.controller.IAssistenteSocialeAttivita;
@@ -21,10 +25,6 @@ import siap.siepe.relazione.controller.IRelazione;
 import siap.siepe.relazione.dao.RelazioneDAO;
 import siap.siepe.relazione.model.RelazioneModel;
 import siap.siepe.util.SIEPELookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -51,7 +51,7 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Esegue l'inserimento di un'attività.
 	 * <p>
-	 * 
+	 *
 	 * @param aAttivita
 	 *            AttivitaModel Model poipolato con i dati da inserire.
 	 * @throws F3BException
@@ -59,6 +59,7 @@ public class AttivitaController extends SiapController implements IAttivita {
 	 * @return AttivitaModel ritorna il model con i dati appena inseriti.
 	 */
 	public AttivitaModel ExInserisciAttivita(AttivitaModel aAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaDAO lAttDao = null;
 		AttivitaModel lAttMod = null;
@@ -99,13 +100,14 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Inserimento multiplo di una lista di Attività.
 	 * <p>
-	 * 
+	 *
 	 * @param aListaAttivita
 	 * @return
 	 * @throws F3BException
 	 */
 	public AttivitaModel[] ExInserisciAttivita(AttivitaModel[] aListaAttivita, Connection aConn)
 			throws Exception {
+
 		AttivitaDAO lAttDao = null;
 		BigDecimal lKey = null;
 
@@ -121,9 +123,10 @@ public class AttivitaController extends SiapController implements IAttivita {
 	}
 
 	public Vector ExRicercaAttivita(AttivitaModel aAttivita) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAttiviti = new Vector();
 		AttivitaSqlDAO lAttDao = null;
+		Vector lAttiviti = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -144,7 +147,7 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Metodo di ricerca di un'attività attraverso il proprio id.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            BigDecimal chiave di ricerca.
 	 * @throws F3BException
@@ -152,6 +155,7 @@ public class AttivitaController extends SiapController implements IAttivita {
 	 * @return AttivitaModel Model di ritorno con i dati.
 	 */
 	public AttivitaModel ExRicercaAttivitaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaSqlDAO lAttDao = null;
 		AttivitaModel lAttMod;
@@ -172,8 +176,8 @@ public class AttivitaController extends SiapController implements IAttivita {
 				while (lItRel.hasNext()) {
 					RelazioneModel lRelazione = (RelazioneModel) lItRel.next();
 					// Occorre rifare la ricerca puntuale per ricavare anche il BLOB
-					RelazioneModel lRelazioneBlob = lRelCtrl.ExRicercaRelazioneByKey(lRelazione
-							.getIdRelazione());
+					RelazioneModel lRelazioneBlob = lRelCtrl
+							.ExRicercaRelazioneByKey(lRelazione.getIdRelazione());
 					if (lRelazioneBlob != null) {
 						lRelazione.setDocPerTrasferimento(lRelazioneBlob.getDocBlobOut());
 						lRelArray[i] = lRelazione;
@@ -194,6 +198,7 @@ public class AttivitaController extends SiapController implements IAttivita {
 	}
 
 	public AttivitaModel ExModificaAttivita(AttivitaModel aAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaDAO lAttDao = null;
 		AttivitaModel lAttMod = new AttivitaModel(aAttivita);
@@ -222,12 +227,13 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * La funzione attua la "chiusura" della Attività. Tale operazione si realizza valorizzando la data di
 	 * chiusura e l'esito dell'attività.
-	 * 
+	 *
 	 * @param aAttivita
 	 * @return
 	 * @throws F3BException
 	 */
 	public AttivitaModel ExChiusuraAttivita(AttivitaModel aAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaDAO lAttDao = null;
 		AttivitaModel lAttMod = new AttivitaModel(aAttivita);
@@ -260,13 +266,14 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Esegue la cancellazione di un'attività.
 	 * <p>
-	 * 
+	 *
 	 * @param IdAttivita
 	 *            : chiave del record da cancellare.
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
 	public void ExCancellaAttivita(BigDecimal aIdAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaDAO lAttDao = null;
 		RelazioneDAO lRelDao = null;
@@ -306,6 +313,8 @@ public class AttivitaController extends SiapController implements IAttivita {
 			cleanup(lRelDao);
 			cleanup(lEspAttDao);
 			cleanup(lAttDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAssAttDao);
 			cleanup(lConn);
 		}
 	}
@@ -313,7 +322,7 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
 	 * <p>
-	 * 
+	 *
 	 * @param AttivitaModel
 	 *            model con i dati dell'attivita.
 	 * @return Array con il Documento recuperato dal DB.
@@ -344,7 +353,6 @@ public class AttivitaController extends SiapController implements IAttivita {
 
 			if (lByteArrayOut.size() == 0)
 				throw new SIEPEException(SIEPEException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {
@@ -391,13 +399,14 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Effettua l'operazione di update di un documento mandato tramite upload
 	 * <p>
-	 * 
+	 *
 	 * @param aAttivita
 	 *            Model popolato dei dati dell'attivita.
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
 	public AttivitaModel ExUpdateDocument(AttivitaModel aAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaDAO lAttDao = null;
 		AttivitaModel lAttivita = new AttivitaModel(aAttivita);
@@ -420,13 +429,14 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * Effettua l'operazione di update del campo FLAG_DOCUMENTO_REGISTRATO.
 	 * <p>
-	 * 
+	 *
 	 * @param aRichiesta
 	 *            model di richiesta con i dati utili all'aggiornamnto.
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
 	public void ExAggiornaValidazioneAttivita(AttivitaModel aAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AttivitaDAO lAttDao = null;
 
@@ -459,12 +469,13 @@ public class AttivitaController extends SiapController implements IAttivita {
 	/**
 	 * La funzione richiama il Controller predisposto alle operazioni sulla entità ASSISTENTE_SOCIALE_ATTIVITA
 	 * per registrare l'inserimento di un nuovo Assistente Sociale sulla Attività.
-	 * 
+	 *
 	 * @param aAttivita
 	 * @param aConn
 	 * @throws F3BException
 	 */
 	private void aggiornaAssistenteSociale(AttivitaModel aAttivita, Connection aConn) throws F3BException {
+
 		if (aAttivita.getAssSocIdAssSociale() != null) {
 			AssistenteSocialeAttivitaModel lAssSocAtt = new AssistenteSocialeAttivitaModel();
 

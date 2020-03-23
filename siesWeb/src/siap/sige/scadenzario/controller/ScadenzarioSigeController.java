@@ -7,6 +7,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.model.DecodeModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
@@ -18,11 +23,6 @@ import siap.sige.fascicolo.model.FascicoloSigeModel;
 import siap.sige.scadenzario.dao.ScadenzarioSigeDAO;
 import siap.sige.scadenzario.dao.ScadenzarioSigeSqlDAO;
 import siap.sige.scadenzario.model.ScadenzarioSigeModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.model.DecodeModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -48,6 +48,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 
 	public ScadenzarioSigeModel ExInserisciScadenzarioSige(ScadenzarioSigeModel aScadenzarioSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeDAO lScaDao = null;
 		ScadenzarioSigeModel lScaMod = null;
@@ -76,14 +77,13 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 
 	/**
 	 * Ricerca i Tipi Scadenzari Sige per l'ufficio Collegato.
-	 * <p>
-	 * 
+	 *
 	 * @param aTipoUfficio
 	 * @return Vettore di Tipi Scadenzari SIGE
 	 * @throws F3BException
 	 */
-
 	public Vector ExElencoTipiScadenzarioByTipoUfficio(String aTipoUfficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTipiScadenzariSige = new Vector();
 		ScadenzarioSigeSqlDAO lScaDao = null;
@@ -104,12 +104,12 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 			}
 
 			lScaDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("ScadenzarioSigeController.ExElencoTipiScadenzarioByTipoUfficio: " + daoEx);
+			throw new F3BException(
+					"ScadenzarioSigeController.ExElencoTipiScadenzarioByTipoUfficio: " + daoEx);
 		} finally {
 			cleanup(lScaDao);
 			cleanup(lConn);
@@ -123,6 +123,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	}
 
 	public Vector ExRicercaScadenzarioSige(ScadenzarioSigeModel aScadenzarioSige) throws F3BException {
+
 		Connection lConn = null;
 		Vector lScadenzariSige = new Vector();
 		ScadenzarioSigeSqlDAO lScaDao = null;
@@ -148,6 +149,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	}
 
 	public ScadenzarioSigeModel ExRicercaScadenzarioSigeByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeSqlDAO lScaDao = null;
 		ScadenzarioSigeModel lScaMod;
@@ -170,9 +172,9 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 
 	/**
 	 * Ricerca record con scadenza all'interno di un intervallo di date.
-	 *
 	 */
 	public Vector ExRicercaScadenzarioSige(Date aData1, Date aData2) throws F3BException {
+
 		Connection lConn = null;
 		Vector lScadenzariSige = new Vector();
 		ScadenzarioSigeSqlDAO lScaDao = null;
@@ -195,7 +197,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 
 				ScadenzarioSigeModel lScadModTmp = new ScadenzarioSigeModel();
 				FascicoloSigeModel lFascicolo = new FascicoloSigeModel();
-//				SoggettoModel lSoggMod = new SoggettoModel();
+				// SoggettoModel lSoggMod = new SoggettoModel();
 				BigDecimal lFascID;
 				BigDecimal lSoggID;
 				EventoModel lEvento = new EventoModel();
@@ -219,7 +221,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 							// posto di LogF3B.getLogger()
 							siesLogger.warn("ID SOGGETTO: " + lSoggID);
 							lSoggDao.ricercaSoggettoByKey(lSoggID);
-							/*lSoggMod = (SoggettoModel) */lSoggDao.getModelByKey();
+							/* lSoggMod = (SoggettoModel) */lSoggDao.getModelByKey();
 
 							lFascicolo.setSogIdSoggetto(lSoggID);
 
@@ -268,10 +270,10 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	/**
 	 * Ricerca record di scadenzario di un determinato tipo, con scadenza all'interno di un intervallo di
 	 * date.
-	 *
 	 */
 	public Vector ExRicercaScadenzarioSige(String aTipoScadenzario, Date aData1, Date aData2)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lScadenzariSige = new Vector();
 		ScadenzarioSigeSqlDAO lScaDao = null;
@@ -344,7 +346,6 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 						lEvento = (EventoModel) lEveDao.getModelByKey();
 						lScadModTmp.setEvento(lEvento);
 					}
-
 				} // end for
 			} // endif size
 		} catch (DAOException daoEx) {
@@ -365,10 +366,10 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	/**
 	 * Ricerca record di scadenzario di un determinato tipo, con scadenza all'interno di un intervallo di
 	 * date.
-	 *
 	 */
 	public Vector ExRicercaScadenzarioSige(String aTipoScadenzario, Date aData1, Date aData2,
 			UtenteModel lUteMod) throws F3BException {
+
 		Connection lConn = null;
 		Vector lScadenzariSige = new Vector();
 		ScadenzarioSigeSqlDAO lScaDao = null;
@@ -441,7 +442,6 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 						lEvento = (EventoModel) lEveDao.getModelByKey();
 						lScadModTmp.setEvento(lEvento);
 					}
-
 				} // end for
 			} // endif size
 		} catch (DAOException daoEx) {
@@ -461,6 +461,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 
 	public ScadenzarioSigeModel ExModificaScadenzarioSige(ScadenzarioSigeModel aScadenzarioSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeDAO lScaDao = null;
 		ScadenzarioSigeModel lScaMod = new ScadenzarioSigeModel(aScadenzarioSige);
@@ -486,6 +487,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	}
 
 	public void ExCancellaScadenzarioSige(ScadenzarioSigeModel aScadenzarioSige) throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeDAO lScaDao = null;
 
@@ -508,6 +510,7 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 
 	public ScadenzarioSigeModel ExRicercaScadenzarioSigeByIdFascicoloTipo(BigDecimal aIdFascicolo,
 			String aTipo) throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeSqlDAO lScaDao = null;
 		ScadenzarioSigeModel lScaMod;
@@ -520,8 +523,8 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("ScadenzarioSigeController.ExRicercaScadenzarioSigeByIdFascicoloTipo: "
-					+ daoEx);
+			throw new F3BException(
+					"ScadenzarioSigeController.ExRicercaScadenzarioSigeByIdFascicoloTipo: " + daoEx);
 		} finally {
 			cleanup(lScaDao);
 			cleanup(lConn);
@@ -532,10 +535,10 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	/**
 	 * Il metodo ritorna true se esiste il record di scadenzario per il fascicolo ed il tipo individuati dai
 	 * parametri e se tale record ha data di scadenza inferiore alla data di sistema.
-	 *
 	 */
 	public boolean ExScadutoScadenzarioSigeByIdFascicoloTipo(BigDecimal aIdFascicolo, String aTipo)
 			throws F3BException {
+
 		boolean ritorno = false;
 
 		ScadenzarioSigeModel lScaMod = ExRicercaScadenzarioSigeByIdFascicoloTipo(aIdFascicolo, aTipo);
@@ -548,13 +551,13 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	}
 
 	/**
-	 *
 	 * @param aScadenzarioSige
 	 * @return aScadenzarioSige
 	 * @throws F3BException
 	 */
 	public ScadenzarioSigeModel ExModificaScadenzario(ScadenzarioSigeModel aScadenzarioSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeDAO lScadDao = null;
 		ScadenzarioSigeModel lEspMod = new ScadenzarioSigeModel(aScadenzarioSige);
@@ -580,12 +583,12 @@ public class ScadenzarioSigeController extends SiapController implements IScaden
 	}
 
 	/**
-	 *
 	 * @param aScadenzarioSige
 	 * @return void
 	 * @throws F3BException
 	 */
 	public void ExSetVistoScadenzario(ScadenzarioSigeModel aScadenzarioSige) throws F3BException {
+
 		Connection lConn = null;
 		ScadenzarioSigeDAO lScadDao = null;
 		// ScadenzarioSigeModel lEspMod = new ScadenzarioSigeModel(aScadenzarioSige);

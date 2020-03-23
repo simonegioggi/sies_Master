@@ -10,6 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.dao.EventoDAO;
@@ -41,11 +46,6 @@ import siap.siep.storicoavvocato.dao.StoricoAvvocatoDAO;
 import siap.siep.storicoavvocato.dao.StoricoAvvocatoSqlDAO;
 import siap.siep.storicoavvocato.model.StoricoAvvocatoModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.dao.DAOException;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -60,7 +60,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -68,6 +68,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	public BigDecimal ExInserisciAvvocato(AvvocatoModel aAvvocato, AvvocatoFascicoloSiepModel aAvvFascMod)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		AvvocatoDAO lAvvDao = null;
@@ -156,6 +157,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	public BigDecimal ExInserisciAvvocato(EventoNotificaModel lEveNot, AvvocatoModel aAvvocato,
 			AvvocatoFascicoloSiepModel aAvvFascMod) throws F3BException {
+
 		Connection lConn = null;
 
 		AvvocatoDAO lAvvDao = null;
@@ -247,9 +249,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-   * 
-   */
+	*
+	*/
 	public AvvocatoModel ExInserisciAvvocato(AvvocatoModel aAvvocato) throws F3BException {
+
 		Connection lConn = null;
 		AvvocatoDAO lAvvDao = null;
 		AvvocatoModel lAvv = null;
@@ -277,13 +280,14 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-   * 
-   */
+	*
+	*/
 	public Vector ExRicercaAvvocato(AvvocatoModel aAvvocato, AvvocatoFascicoloSiepModel aAvvFascMod)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lAvvocati = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -292,7 +296,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 
 			lAvvDao.stop();
@@ -301,11 +305,11 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
 
 		} catch (DAOException daoEx) {
-			throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaAvvocato: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
-			throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocato: Non posso leggere  : "
-					+ ex);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaAvvocato: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -315,10 +319,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	public AvvocatoModel ExRicercaAvvocatoByKey(BigDecimal aIdAvvocato) throws F3BException {
-		Connection lConn = null;
 
-		AvvocatoModel lAvvocato = new AvvocatoModel();
+		Connection lConn = null;
 		AvvocatoSqlDAO lAvvDao = null;
+		AvvocatoModel lAvvocato = new AvvocatoModel();
 
 		try {
 			lConn = getDBConnection();
@@ -329,11 +333,11 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 			lAvvDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException(this.getClass().getName()
-					+ ".ExRicercaAvvocatoByKey: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaAvvocatoByKey: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
-			throw new F3BException(this.getClass().getName()
-					+ ".ExRicercaAvvocatoByKey: Non posso leggere  : " + ex);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaAvvocatoByKey: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -344,12 +348,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Ricerca gli avvocati ATTUALMENTE assegnati al fascicolo in input la condizione è per id avvocato o nome
-	 ************************************************************************** */
+	 */
 	public Vector ExRicercaAvvocatiAttualiFascicolo(AvvocatoModel aAvvocato,
 			AvvocatoFascicoloSiepModel aAvvFascMod) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lAvvocati = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -358,19 +363,19 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 
 			lAvvDao.stop();
 
 			if (lAvvocati.size() == 0)
-				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
+				throw new SIEPException(SIEPException.USER_MESSAGE,
+						"Nessun avvocato associato al fascicolo.");
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaAvvocatiAttualiFascicolo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
-
 			cleanup(lConn);
 		}
 
@@ -379,10 +384,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	public List ExRicercaStoricoAvvocatiFascicolo(AvvocatoModel aAvvocato,
 			AvvocatoFascicoloSiepModel aAvvFascMod) throws F3BException {
-		Connection lConn = null;
 
-		List lAvvocati = new ArrayList();
+		Connection lConn = null;
 		AvvocatoFascicoloSiepSqlDAO lAvvFasDao = null;
+		List lAvvocati = new ArrayList();
 
 		try {
 			lConn = getDBConnection();
@@ -393,19 +398,19 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvFasDao.start();
 
 			while (lAvvFasDao.next()) {
-				lAvvocati.add((AvvocatoSiepModel) lAvvFasDao.getModel());
+				lAvvocati.add(lAvvFasDao.getModel());
 			}
 
 			lAvvFasDao.stop();
 
 			if (lAvvocati.size() == 0)
-				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
+				throw new SIEPException(SIEPException.USER_MESSAGE,
+						"Nessun avvocato associato al fascicolo.");
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaStoricoAvvocatiFascicolo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAvvFasDao);
-
 			cleanup(lConn);
 		}
 
@@ -414,17 +419,18 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Recupera l'elenco degli avvocati ATTUALMENTE assegnati a al fascicolo specificato in input
-	 * 
+	 *
 	 * @param aKey
 	 *            - id del fascicolo
 	 * @return vettore di AvvocatoModel
 	 * @throws F3BException
 	 *             - se avvocati non trovati o altro errore
-	 ************************************************************************** */
+	 */
 	public Vector ExRicercaAvvocatiByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = null;
 		AvvocatoFascicoloSiepSqlDAO lAvvDao = null;
+		Vector lAvvocati = null;
 
 		try {
 			lConn = getDBConnection();
@@ -434,7 +440,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvocati = new Vector(lAvvDao.getModels());
 
 			if (lAvvocati.size() == 0)
-				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
+				throw new SIEPException(SIEPException.USER_MESSAGE,
+						"Nessun avvocato associato al fascicolo.");
 
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
@@ -448,12 +455,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/*****************************************************************************
-   * 
-   ************************************************************************** */
+	*
+	************************************************************************** */
 	public Vector ExRicercaAvvocatiByFascicoloNoError(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = null;
 		AvvocatoFascicoloSiepSqlDAO lAvvDao = null;
+		Vector lAvvocati = null;
 
 		try {
 			lConn = getDBConnection();
@@ -474,12 +482,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/*****************************************************************************
-   * 
-   ************************************************************************** */
+	*
+	************************************************************************** */
 	public Vector ExRicercaAvvocato(AvvocatoModel aAvvocato) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lAvvocati = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -488,7 +497,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 
 			lAvvDao.stop();
@@ -497,8 +506,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
 
 		} catch (DAOException daoEx) {
-			throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaAvvocato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -508,12 +517,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-   * 
-   */
+	*
+	*/
 	public Vector ExRicercaAvvocatoPerUffApparteneza(AvvocatoModel aAvvocato) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lAvvocati = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -522,7 +532,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 
 			lAvvDao.stop();
@@ -542,12 +552,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/*****************************************************************************
-   * 
-   ************************************************************************** */
+	*
+	************************************************************************** */
 	public Vector ExRicercaAvvocatoPaged(AvvocatoModel aAvvocato, int aPage) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lAvvocati = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -556,7 +567,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 
 			lAvvDao.stop();
@@ -565,8 +576,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
 
 		} catch (DAOException daoEx) {
-			throw new F3BException(this.getClass().getName()
-					+ ".ExRicercaAvvocatoPaged: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaAvvocatoPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -576,13 +587,15 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/**
-   * 
-   */
+	*
+	*/
 	public BigDecimal ExGetCountAvvocati(AvvocatoModel aAvvocato) throws F3BException {
-		BigDecimal lCount = new BigDecimal(0);
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AvvocatoSqlDAO lAvvDao = null;
+
+		BigDecimal lCount = new BigDecimal(0);
+
 		try {
 			lConn = getDBConnection();
 			lAvvDao = new AvvocatoSqlDAO(lConn);
@@ -596,19 +609,19 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 					+ ".ExGetCountAvvocati: Non posso leggere gli avvocati : " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
-
 			cleanup(lConn);
 		}
 		return lCount;
 	}
 
 	/*****************************************************************************
-   * 
-   ************************************************************************** */
+	*
+	************************************************************************** */
 	public Vector ExRicercaAvvocatoPerInserimento(AvvocatoModel aAvvocato) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAvvocati = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lAvvocati = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -617,7 +630,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 
 			lAvvDao.stop();
@@ -628,9 +641,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaAvvocatoPerInserimento: Non posso leggere : " + daoEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
 		}
@@ -639,9 +650,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	public AvvocatoSiepModel ExRicercaAvvocatoByKeyAvvocatoFasSiep(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
-		AvvocatoSiepModel lAvvFasModel = new AvvocatoSiepModel();
 		AvvocatoFascicoloSiepSqlDAO lAvvDao = null;
+		AvvocatoSiepModel lAvvFasModel = new AvvocatoSiepModel();
 
 		try {
 			lConn = getDBConnection();
@@ -653,9 +665,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaAvvocatoByKeyAvvocatoFasSiep: Non posso leggere : " + daoEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
 		}
@@ -664,6 +674,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	public AvvocatoModel ExModificaAvvocato(AvvocatoModel aAvvocato) throws F3BException {
+
 		Connection lConn = null;
 		AvvocatoDAO lAvvDao = null;
 
@@ -675,8 +686,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException(this.getClass().getName() + ".ExModificaAvvocato: Non posso inserire: "
-					+ ex);
+			throw new F3BException(
+					this.getClass().getName() + ".ExModificaAvvocato: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -686,12 +697,12 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	/*****************************************************************************
-   * 
-   ************************************************************************** */
+	*
+	************************************************************************** */
 	public AvvocatoFascicoloSiepModel ExDeassegnaAvvocato(AvvocatoFascicoloSiepModel aAvvocato)
 			throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -763,7 +774,6 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			cleanup(lAvvFascDao);
 			cleanup(lEveSqlDao);
 			cleanup(lNotEveDao);
-
 			cleanup(lConn);
 		}
 
@@ -772,6 +782,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	public AvvocatoModel ExModificaStoricizzaAvvocato(AvvocatoModel aAvvocato, StoricoAvvocatoModel aStorico)
 			throws F3BException {
+
 		Connection lConn = null;
 		AvvocatoDAO lAvvDao = null;
 		StoricoAvvocatoDAO lStoricoAvvDAO = null;
@@ -787,19 +798,18 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lStoricoAvvDAO = new StoricoAvvocatoDAO(lConn);
 
 			lStoricoAvvDAO.setDAOFromModel(aStorico);
-			/*BigDecimal lSequence = */lStoricoAvvDAO.insert();
+			/* BigDecimal lSequence = */lStoricoAvvDAO.insert();
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException(this.getClass().getName()
-					+ ".ExModificaStoricizzaAvvocato: Non posso inserire: " + ex);
+			throw new F3BException(
+					this.getClass().getName() + ".ExModificaStoricizzaAvvocato: Non posso inserire: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			throw new F3BException(this.getClass().getName() + ".ExModificaStoricizzaAvvocato: " + ex);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lStoricoAvvDAO);
-
 			cleanup(lConn);
 		}
 
@@ -808,16 +818,16 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	public AvvocatoModel ExCancellaStoricizzaAvvocato(AvvocatoModel aAvvocato, StoricoAvvocatoModel aStorico)
 			throws F3BException {
-		Connection lConn = null;
-		Vector lAvvocati = new Vector();
-		AvvocatoModel lAvv = null;
 
+		Connection lConn = null;
 		AvvocatoDAO lAvvDao = null;
 		AvvocatoSqlDAO lAvvDAO = null;
 		StoricoAvvocatoDAO lStoricoAvvDAO = null;
 		StoricoAvvocatoSqlDAO lStoricoSqlDAO = null;
 
-//		Vector lstorici = null;
+		Vector lAvvocati = new Vector();
+		AvvocatoModel lAvv = null;
+		// Vector lstorici = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -830,7 +840,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDAO.start();
 
 			while (lAvvDAO.next()) {
-				lAvvocati.add((AvvocatoModel) lAvvDAO.getModel());
+				lAvvocati.add(lAvvDAO.getModel());
 			}
 
 			lAvvDAO.stop();
@@ -838,13 +848,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvv = (AvvocatoModel) lAvvocati.get(0);
 			aStorico.setFlagCancellato("S");
 			lStoricoAvvDAO.setDAOFromModel(aStorico);
-			/*BigDecimal lSequence = */lStoricoAvvDAO.insert();
+			/* BigDecimal lSequence = */lStoricoAvvDAO.insert();
 
 			lStoricoAvvDAO.stop();
 
 			lStoricoSqlDAO = new StoricoAvvocatoSqlDAO(lConn);
 			lStoricoSqlDAO.ricercaStoricoAvvocatoByIdAvvocato(lAvv.getIdAvvocato());
-			/*lstorici = new Vector(*/lStoricoSqlDAO.getModels()/*)*/;
+			/* lstorici = new Vector( */lStoricoSqlDAO.getModels()/* ) */;
 
 			// delete avvocato
 			lAvv.setFlagCancellato("S");
@@ -857,8 +867,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException(this.getClass().getName()
-					+ ".ExCancellaStoricizzaAvvocato: Non posso inserire: " + ex);
+			throw new F3BException(
+					this.getClass().getName() + ".ExCancellaStoricizzaAvvocato: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lAvvDAO);
@@ -872,6 +882,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	}
 
 	public void ExCancellaAvvocato(AvvocatoModel aAvvocato) throws F3BException {
+
 		Connection lConn = null;
 		AvvocatoDAO lAvvDao = null;
 
@@ -883,20 +894,20 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException(this.getClass().getName() + ".ExCancellaAvvocato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExCancellaAvvocato: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException(this.getClass().getName() + ".ExCancellaAvvocato: Non posso leggere  : "
-					+ ex);
+			throw new F3BException(
+					this.getClass().getName() + ".ExCancellaAvvocato: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAvvDao);
-
 			cleanup(lConn);
 		}
 	}
 
 	public void ExCancellaAvvocatoFascicoloSiepbyKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AvvocatoFascicoloSiepDAO lAvvFasDao = null;
 
@@ -916,21 +927,21 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 					+ ".ExCancellaAvvocatoFascicoloSiepbyKey: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAvvFasDao);
-
 			cleanup(lConn);
 		}
 	}
 
 	/*****************************************************************************
 	 * Recupera i dati di tutti i fascicoli su cui è attualmente impegnato dell'avvocato passato in input
-	 * 
+	 *
 	 * @param aKey
 	 *            - id avvocato
 	 * @return vector di AvvocatoSiepModel
 	 * @throws F3BException
 	 *             se avvocati non presenti o sql exception
-	 ************************************************************************** */
+	 */
 	public Vector ExRicercaAvvocatoFascicoloSiepByKeyAvvocato(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AvvocatoFascicoloSiepSqlDAO lAvvDao = null;
 		Vector lAvvocati = new Vector();
@@ -943,13 +954,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 			lAvvDao.start();
 			while (lAvvDao.next()) {
-				lAvvocati.add((AvvocatoSiepModel) lAvvDao.getModel());
+				lAvvocati.add(lAvvDao.getModel());
 			}
 			lAvvDao.stop();
 
 			if (lAvvocati.size() == 0)
-				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
-
+				throw new SIEPException(SIEPException.USER_MESSAGE,
+						"Nessun avvocato associato al fascicolo.");
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaAvvocatoFascicoloSiepByKeyAvvocato: Non posso leggere : " + daoEx);
@@ -963,18 +974,18 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Recupera i dati dell'avvocato specificato sul fascicolo specificato
-	 * 
+	 *
 	 * @param aIdAvvocato
 	 * @param aIdFascicolo
 	 * @return AvvocatoSiepModel
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public AvvocatoSiepModel ExRicercaAvvocatoFascicoloSiepByIdAvvocatoIdFascicolo(BigDecimal aIdAvvocato,
 			BigDecimal aIdFascicolo) throws F3BException {
-		Connection lConn = null;
 
-		AvvocatoSiepModel lAvvFasModel = new AvvocatoSiepModel();
+		Connection lConn = null;
 		AvvocatoFascicoloSiepSqlDAO lAvvDao = null;
+		AvvocatoSiepModel lAvvFasModel = new AvvocatoSiepModel();
 
 		try {
 			lConn = getDBConnection();
@@ -989,7 +1000,6 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 					+ ".ExRicercaAvvocatoFascicoloSiepByKeyAvvocatoIdFascicolo: " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
-
 			cleanup(lConn);
 		}
 
@@ -998,16 +1008,17 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Metodo che effettua la sostituzione di un avvocato su un fascicolo SIES
-	 * 
+	 *
 	 * @param aAvvUp
 	 *            - vecchio avvocato da aggiornare (data fine validità)
 	 * @param aAvvocatoIns
 	 *            - nuovo avvocato da inserire
 	 * @return model dell'avvocato inserito
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public AvvocatoFascicoloSiepModel ExSostituzioneAvvocato(AvvocatoFascicoloSiepModel aAvvocatoUp,
 			AvvocatoFascicoloSiepModel aAvvocatoIns) throws F3BException {
+
 		Connection lConn = null;
 
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
@@ -1103,17 +1114,18 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Metodo che effettua la sostituzione di un avvocato su un fascicolo SIES
-	 * 
+	 *
 	 * @param aAvvUp
 	 *            - vecchio avvocato da aggiornare (data fine validità)
 	 * @param aAvvocatoIns
 	 *            - nuovo avvocato da inserire
 	 * @return model dell'avvocato inserito
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public AvvocatoFascicoloSiepModel ExSostituzioneAvvocato(EventoNotificaModel lEveNot,
 			AvvocatoFascicoloSiepModel aAvvocatoUp, AvvocatoFascicoloSiepModel aAvvocatoIns)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
@@ -1214,6 +1226,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	public EventoNotificaModel ExInserisciEventoNotifica(BigDecimal lSequence, EventoNotificaModel aEvento,
 			Connection aConn) throws F3BException {
+
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
 		NotificaDAO lNotDao = null;
@@ -1302,7 +1315,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/**
 	 * Stampa un documento di Avvocato
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -1310,9 +1323,11 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	public ByteArrayOutputStream ExStampaDocumentoAvvocato(EventoModel aEvento,
 			AvvocatoFascicoloSiepModel aAvvocatoSiep, String aNomeTemplate, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
+
 		try {
 			lConn = getDBTransaction();
 			IStampa lStampa = SICOLookupRemote.getStampaRemote();
@@ -1332,8 +1347,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException(this.getClass().getName()
-					+ ".ExStampaDocumentoAvvocato: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExStampaDocumentoAvvocato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
@@ -1343,13 +1358,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Recupera tutti i fori caricati per caricare la combo
-	 * 
-	 ************************************************************************** */
-
+	 *
+	 */
 	public Vector ExRicercaForiCaricati() throws F3BException {
+
 		Connection lConn = null;
-		Vector lFori = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lFori = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1358,7 +1373,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lFori.add((AvvocatoModel) lAvvDao.getModelForo());
+				lFori.add(lAvvDao.getModelForo());
 			}
 
 			lAvvDao.stop();
@@ -1366,10 +1381,9 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			if (lFori.size() == 0)
 				throw new SIEPException(SIEPException.USER_MESSAGE,
 						"Nessun Foro trovato, impossibile caricare gli avvocati");
-
 		} catch (DAOException daoEx) {
-			throw new F3BException(this.getClass().getName() + ".ExRicercaForiCaricati: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaForiCaricati: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -1380,13 +1394,13 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	/*****************************************************************************
 	 * Recupera tutti i fori caricati per caricare la combo
-	 * 
-	 ************************************************************************** */
-
+	 *
+	 */
 	public Vector ExRicercaForiDisponibili() throws F3BException {
+
 		Connection lConn = null;
-		Vector lFori = new Vector();
 		AvvocatoSqlDAO lAvvDao = null;
+		Vector lFori = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1395,7 +1409,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.start();
 
 			while (lAvvDao.next()) {
-				lFori.add((AvvocatoModel) lAvvDao.getModelForo());
+				lFori.add(lAvvDao.getModelForo());
 			}
 
 			lAvvDao.stop();
@@ -1403,10 +1417,9 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			if (lFori.size() == 0)
 				throw new SIEPException(SIEPException.USER_MESSAGE,
 						"Nessun Foro trovato, impossibile caricare gli avvocati");
-
 		} catch (DAOException daoEx) {
-			throw new F3BException(this.getClass().getName()
-					+ ".ExRicercaForiDisponibili: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					this.getClass().getName() + ".ExRicercaForiDisponibili: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
@@ -1417,14 +1430,15 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 	private void RicalcoloScadenzario(Connection lConn, List lListNotifiche,
 			AvvocatoFascicoloSiepModel aAvvocato, EventoModel lEveModLS) throws F3BException {
+
 		ScadenzarioDAO lScaDao = null;
 		try {
 
 			IOrdineEsecuzione lCtrlOE = SIEPLookupRemote.getOrdineEsecuzioneRemote();
 
 			// Calcola la Data di Avvenuta notifica massima su tutte le notifiche utili
-			Date lDataAvvenutaNotifica = lCtrlOE.calcolaDataMaggiore((NotificaModel[]) lListNotifiche
-					.toArray(new NotificaModel[0]));
+			Date lDataAvvenutaNotifica = lCtrlOE
+					.calcolaDataMaggiore((NotificaModel[]) lListNotifiche.toArray(new NotificaModel[0]));
 
 			// Calcola periodo feriale opzionale sulla data scadenza
 			Date lDataFineScadenza = null;
@@ -1437,7 +1451,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			RinnovoModel lRinnovo = null;
 			/*
 			 * if( lIdNotificaCondannato != null ) { lRinSqlDao = new RinnovoSqlDAO(lConn);
-			 * 
+			 *
 			 * lRinSqlDao.ricercaRinnovoIdNotificaCodTipoRinnovo(lIdNotificaCondannato, null); lRinnovo =
 			 * (RinnovoModel)lRinSqlDao.getModelByKey(); }
 			 */
@@ -1461,8 +1475,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			// lScaDao.setNotIdNotifica(IdNotifiche[i].getIdNotifica());
 
 			// Inserisce/Modifica lo scadenzario
-			lScaDao.setCodStatoNotifica(lCtrlOE.calcolaCodStatoNotifica(lListNotifiche,
-					lDataAvvenutaNotifica, lRinnovo));
+			lScaDao.setCodStatoNotifica(
+					lCtrlOE.calcolaCodStatoNotifica(lListNotifiche, lDataAvvenutaNotifica, lRinnovo));
 
 			if (lScaMod == null && lDataAvvenutaNotifica != null) {
 				// paolo 02/09/2010 non va inserito lo scadenzario poichè se è stato cancellato un motivo ci
@@ -1474,13 +1488,15 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 				// lScaDao.setCodUfficioInserimento(aAvvocato.getCodUfficioAggiornamento());
 				// lScaDao.setDataInserimento(DateUtils.getSysDate());
 				// lScaDao.insert();
-			} else if (lScaMod != null && lScaMod.getIdScadenzario() != null && lDataAvvenutaNotifica != null) {
+			} else if (lScaMod != null && lScaMod.getIdScadenzario() != null
+					&& lDataAvvenutaNotifica != null) {
 				lScaDao.setCodOperatoreAggiornamento(aAvvocato.getCodOperatoreAggiornamento());
 				lScaDao.setCodUfficioAggiornamento(aAvvocato.getCodUfficioAggiornamento());
 				lScaDao.setDataAggiornamento(DateUtils.getSysDate());
 				lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
 				lScaDao.update();
-			} else if (lScaMod != null && lScaMod.getIdScadenzario() != null && lDataAvvenutaNotifica == null) {
+			} else if (lScaMod != null && lScaMod.getIdScadenzario() != null
+					&& lDataAvvenutaNotifica == null) {
 				lScaDao.setCodOperatoreAggiornamento(aAvvocato.getCodOperatoreAggiornamento());
 				lScaDao.setCodUfficioAggiornamento(aAvvocato.getCodUfficioAggiornamento());
 				lScaDao.setDataAggiornamento(DateUtils.getSysDate());
@@ -1500,8 +1516,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	private boolean RicalcoloNotifiche(Connection lConn, String lAzione,
 			AvvocatoFascicoloSiepModel aAvvCorrente, EventoModel lEveMod,
 			AvvocatoFascicoloSiepModel aAvvSostituito) throws F3BException {
+
 		NotificaEventoSqlDAO lNotEveDao = null;
 		NotificaDAO lNotDao = null;
+
 		try {
 			boolean lIsRicalcoloScadenzario = false;
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
@@ -1512,18 +1530,16 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 				for (Iterator lIter = lNotifiche.iterator(); lIter.hasNext();) {
 					NotificaModel lNotMod = (NotificaModel) lIter.next();
 					if (lNotMod != null && lNotMod.getIdNotifica() != null
-							&& "N".equals(lNotMod.getCodTipoNotifica())) {
+							&& "N".equals(lNotMod.getCodTipoNotifica()))
 						nNotifice++; // conto notifiche agli avvocati
-					}
 				}
 
 				for (Iterator lIter = lNotifiche.iterator(); lIter.hasNext();) {
 					NotificaModel lNotMod = (NotificaModel) lIter.next();
 					if (lNotMod != null && lNotMod.getIdNotifica() != null
 							&& "N".equals(lNotMod.getCodTipoNotifica())) {
-						if ("revoca".equals(lAzione)
-								&& aAvvCorrente.getIdAvvocatoFascicoloSiep().equals(
-										lNotMod.getAvvIdAvvocatoFascicoloSiep())) {
+						if ("revoca".equals(lAzione) && aAvvCorrente.getIdAvvocatoFascicoloSiep()
+								.equals(lNotMod.getAvvIdAvvocatoFascicoloSiep())) {
 							// revoca o deassegna
 							if (nNotifice == 2) {
 								// se ci sono 2 notifiche
@@ -1607,8 +1623,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 								if (lNotMod.getDataAvvenutaNotifica() == null) {
 									lNotDao = new NotificaDAO(lConn);
 									lNotDao.setCondizioneUpdate(lNotMod.getIdNotifica());
-									lNotDao.setAvvIdAvvocatoFascicoloSiep(aAvvCorrente
-											.getIdAvvocatoFascicoloSiep());
+									lNotDao.setAvvIdAvvocatoFascicoloSiep(
+											aAvvCorrente.getIdAvvocatoFascicoloSiep());
 									lNotDao.update();
 									lNotDao.stop();
 									break;
@@ -1616,9 +1632,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 							}
 						} // fine caso assegna
 
-						if ("sostituzione".equals(lAzione)
-								&& aAvvSostituito.getIdAvvocatoFascicoloSiep().equals(
-										lNotMod.getAvvIdAvvocatoFascicoloSiep())) {
+						if ("sostituzione".equals(lAzione) && aAvvSostituito.getIdAvvocatoFascicoloSiep()
+								.equals(lNotMod.getAvvIdAvvocatoFascicoloSiep())) {
 							// sostituzione
 							if ("02".equals(aAvvCorrente.getCodTipoAvvocato())) {
 								// se l'avvocato sostituente è di fiducia sbianco idAvvocato
@@ -1648,8 +1663,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 									if (lNotMod.getDataAvvenutaNotifica() != null)
 										lIsRicalcoloScadenzario = true;
 									lNotDao.setDataAvvenutaNotifica(null);
-									lNotDao.setAvvIdAvvocatoFascicoloSiep(aAvvCorrente
-											.getIdAvvocatoFascicoloSiep());
+									lNotDao.setAvvIdAvvocatoFascicoloSiep(
+											aAvvCorrente.getIdAvvocatoFascicoloSiep());
 									lNotDao.update();
 									lNotDao.stop();
 									break;

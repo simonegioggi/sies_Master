@@ -4,30 +4,35 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.SIEPException;
 import siap.siep.scarti.dao.WScartiDAO;
 import siap.siep.scarti.dao.WScartiSqlDAO;
 import siap.siep.scarti.model.WScartiModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
-
-
-
-
 
 /**
-* <p>Title: WScartiController</p>
-* <p>Description: Classe Controller per WScarti</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
+ * <p>
+ * Title: WScartiController
+ * </p>
+ * <p>
+ * Description: Classe Controller per WScarti
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class WScartiController extends SiapController implements IWScarti
- {
+public class WScartiController extends SiapController implements IWScarti {
 
 	public WScartiModel ExInserisciWScarti(WScartiModel aWScarti) throws F3BException {
+
 		Connection lConn = null;
 		WScartiDAO lWScDao = null;
 		WScartiModel lWScMod = null;
@@ -52,6 +57,7 @@ public class WScartiController extends SiapController implements IWScarti
 	}
 
 	public Vector ExRicercaWScarti(WScartiModel aWScarti) throws F3BException {
+
 		Connection lConn = null;
 		Vector lWScarti = new Vector();
 		WScartiSqlDAO lWScDao = null;
@@ -74,6 +80,7 @@ public class WScartiController extends SiapController implements IWScarti
 	}
 
 	public WScartiModel ExRicercaWScartiByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		WScartiSqlDAO lWScDao = null;
 		WScartiModel lWScMod;
@@ -93,6 +100,7 @@ public class WScartiController extends SiapController implements IWScarti
 	}
 
 	public WScartiModel ExModificaWScarti(WScartiModel aWScarti) throws F3BException {
+
 		Connection lConn = null;
 		WScartiDAO lWScDao = null;
 		WScartiModel lWScMod = new WScartiModel(aWScarti);
@@ -115,6 +123,7 @@ public class WScartiController extends SiapController implements IWScarti
 	}
 
 	public void ExCancellaWScarti(WScartiModel aWScarti) throws F3BException {
+
 		Connection lConn = null;
 		WScartiDAO lWScDao = null;
 
@@ -133,6 +142,7 @@ public class WScartiController extends SiapController implements IWScarti
 	}
 
 	public Vector ExRicercaScartiPaged(WScartiModel aWScarti, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lScarti = new Vector();
 		WScartiSqlDAO lScartiDao = null;
@@ -144,14 +154,13 @@ public class WScartiController extends SiapController implements IWScarti
 			lScartiDao.start();
 
 			while (lScartiDao.next()) {
-				lScarti.add((WScartiModel) lScartiDao.getModel());
+				lScarti.add(lScartiDao.getModel());
 			}
 
 			lScartiDao.stop();
 
 			if (lScarti.size() == 0)
 				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("WScartiController.ExRicercaScartiPaged: Non posso leggere : " + daoEx);
 		} finally {
@@ -163,6 +172,7 @@ public class WScartiController extends SiapController implements IWScarti
 	}
 
 	public BigDecimal ExGetCountScarti(WScartiModel aScarti) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 

@@ -7,6 +7,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoDAO;
@@ -21,10 +25,6 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 //import f3b.util.report.ReportGenerator;
 
@@ -41,18 +41,18 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class StralcioController extends SiapController implements IStralcio {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Verifica del Procedimento destinazione dello Stralcio.
-	 * <p>
-	 * 
+	 *
 	 * @param aAnnoProcStralcio
 	 * @param aNumeroDestStralcio
 	 * @param aUfficioUtenteConnesso
@@ -72,8 +72,8 @@ public class StralcioController extends SiapController implements IStralcio {
 			lFasDao = new FascicoloGPSqlDAO(lConn);
 
 			// Ricerca per Progressivo/Anno/codUfficio del fascicolo destinazione di Stralcio.
-			if (!lFasDao.existFasSiusUfficio(new BigDecimal(aAnnoDestStralcio), new BigDecimal(
-					aNumeroDestStralcio), aUfficioUtenteConnesso)) {
+			if (!lFasDao.existFasSiusUfficio(new BigDecimal(aAnnoDestStralcio),
+					new BigDecimal(aNumeroDestStralcio), aUfficioUtenteConnesso)) {
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Procedimento destinazione di Stralcio non esistente in archivio");
 			}
@@ -88,25 +88,20 @@ public class StralcioController extends SiapController implements IStralcio {
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Procedimento destinazione di Stralcio archiviato :  Stralcio Impossibile");
 
-			if (lFasDestStralcio.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0)
+			if (lFasDestStralcio.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+					.compareTo("U004") == 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Il Procedimento destinazione di Stralcio è di Esecuzione Misure Alternative :  Stralcio Impossibile");
 
 			if (lFasDestStralcio.getFascicoloSiusModel().getSogIdSoggetto().compareTo(idSoggetto) != 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Il Procedimento destinazione di Stralcio è riferito ad un soggetto diverso :  Stralcio Impossibile");
-		}
-
-		catch (DAOException ex) {
+		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("StralcioController.ExVerificaFascicoloDestStralcio: " + ex);
-//		} catch (SQLException sqe) {
-//			rollback(lConn);
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException("StralcioController.ExVerificaFascicoloDestStralcio: " + sqe);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lConn);
@@ -119,8 +114,7 @@ public class StralcioController extends SiapController implements IStralcio {
 	 * Individuati devono essere a STATO = 2 Iscritto).; Vengono replicati i Tenori del FasSiusDaStralciare in
 	 * SiusDestStralcio; Il FasDaUnif viene aggiornato come Stralciato; Si effettua l'inserimento dell'EVENTO
 	 * relativo.
-	 * <p>
-	 * 
+	 *
 	 * @param lIdFasSiusDaStralciare
 	 * @param lIdFasSiusDestStralcio
 	 * @param dataStralcio
@@ -168,17 +162,18 @@ public class StralcioController extends SiapController implements IStralcio {
 				if (lFasOrigStralcio.getTenori() != null) {
 					// Impostazione del ciclo di scrittura dei TENORE in lFasDestStralcio;
 					TenoreModel lTenore = new TenoreModel();
-					for (int j = numOggettiIniziali.intValue(); j < lFasDestStralcio.getTenori().length; j++) {
+					for (int j = numOggettiIniziali.intValue(); j < lFasDestStralcio
+							.getTenori().length; j++) {
 						lTenore = lFasDestStralcio.getTenori()[j];
 						// Setto il DAO dal Model ed inserisco il Tenore
 						lTenore.setDataFine(null);
-						lTenore.setNote("Stralcio dal "
-								+ lFasOrigStralcio.getFascicoloSiusModel().getChiaveAnno() + " / "
-								+ lFasOrigStralcio.getFascicoloSiusModel().getChiaveProgr()
-								+ " (proc. stralciato)");
+						lTenore.setNote(
+								"Stralcio dal " + lFasOrigStralcio.getFascicoloSiusModel().getChiaveAnno()
+										+ " / " + lFasOrigStralcio.getFascicoloSiusModel().getChiaveProgr()
+										+ " (proc. stralciato)");
 						lTenDao.setDAOFromModel(lTenore);
-						lTenDao.setGenPridGeneraleProcedimento(lFasDestStralcio
-								.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+						lTenDao.setGenPridGeneraleProcedimento(
+								lFasDestStralcio.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 						lTenDao.setDataFine(null);
 						lTenDao.insert();
 					}
@@ -194,9 +189,8 @@ public class StralcioController extends SiapController implements IStralcio {
 					lTenore = lFasDestStralcio.getTenori()[j];
 					// Setto il DAO dal Model ed inserisco il Tenore
 					lTenore.setDataFine(null);
-					lTenore.setNote("Stralcio dal "
-							+ lFasOrigStralcio.getFascicoloSiusModel().getChiaveAnno() + " / "
-							+ lFasOrigStralcio.getFascicoloSiusModel().getChiaveProgr()
+					lTenore.setNote("Stralcio dal " + lFasOrigStralcio.getFascicoloSiusModel().getChiaveAnno()
+							+ " / " + lFasOrigStralcio.getFascicoloSiusModel().getChiaveProgr()
 							+ " (proc. stralciato)");
 					lTenDao.setDAOFromModel(lTenore);
 					lTenDao.setDataFine(null);
@@ -204,10 +198,10 @@ public class StralcioController extends SiapController implements IStralcio {
 					lTenDao.update();
 					lTenDao.stop();
 				}
-				aEvento.setFasSiuIdFascicoloSius(lFasOrigStralcio.getFascicoloSiusModel()
-						.getIdFascicoloSius());
-				aEvento.setFasSiuIdFascicoloSiusDest(lFasDestStralcio.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				aEvento.setFasSiuIdFascicoloSius(
+						lFasOrigStralcio.getFascicoloSiusModel().getIdFascicoloSius());
+				aEvento.setFasSiuIdFascicoloSiusDest(
+						lFasDestStralcio.getFascicoloSiusModel().getIdFascicoloSius());
 			}
 
 			// Stralcio dal Procedimento Origine: Impostazione del ciclo di riscrittura dei TENORE di
@@ -217,13 +211,14 @@ public class StralcioController extends SiapController implements IStralcio {
 				if (lArrayCheckBox[j].compareTo("S") == 0) {
 					TenoreModel lTenore = lFasOrigStralcio.getTenori()[j];
 					lTenore.setCodEsitoTenore("0604");
-					lTenore.setCodMagistrato(lFasOrigStralcio.getGeneraleProcedimentoModel()
-							.getCodAutoritaDelegata());
+					lTenore.setCodMagistrato(
+							lFasOrigStralcio.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
 					lTenore.setData(dataStralcio);
-					lTenore.setCodOperatoreAggiornamento(lFasOrigStralcio.getTenori()[lArrayCheckBox.length - 1]
-							.getCodOperatoreInserimento());
-					lTenore.setDataAggiornamento(lFasOrigStralcio.getTenori()[lArrayCheckBox.length - 1]
-							.getDataInserimento());
+					lTenore.setCodOperatoreAggiornamento(
+							lFasOrigStralcio.getTenori()[lArrayCheckBox.length - 1]
+									.getCodOperatoreInserimento());
+					lTenore.setDataAggiornamento(
+							lFasOrigStralcio.getTenori()[lArrayCheckBox.length - 1].getDataInserimento());
 					lTenore.setCodUfficioAggiornamento(lFasOrigStralcio.getTenori()[lArrayCheckBox.length - 1]
 							.getCodUfficioInserimento());
 					lTenore.setNote(lFasDestStralcio.getFascicoloSiusModel().getChiaveAnno().toString() + "/"
@@ -232,36 +227,32 @@ public class StralcioController extends SiapController implements IStralcio {
 					lTenore.setDataFine(DateUtils.getSysDate());
 					// Setto il DAO dal Model ed aggiorno il Tenore
 					lTenDao.setDAOFromModelForUpdateStralcio(lTenore);
-					lTenDao.setGenPridGeneraleProcedimento(lFasOrigStralcio.getGeneraleProcedimentoModel()
-							.getIdGeneraleProcedimento());
+					lTenDao.setGenPridGeneraleProcedimento(
+							lFasOrigStralcio.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lTenDao.update();
 					lTenDao.stop();
 				}
 			}
 
 			// Inserimento dell'EVENTO.
-			aEvento.setFasSiuIdFascicoloSiusDest(lFasDestStralcio.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			aEvento.setFasSiuIdFascicoloSiusDest(
+					lFasDestStralcio.getFascicoloSiusModel().getIdFascicoloSius());
 
 			lEveDao.setDAOFromModel(aEvento);
 			aEvento.setIdEvento(lEveDao.insert());
 
 			// COMMIT
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("StralcioController.exInserisciStralcio: " + ex);
-//		} catch (SQLException sqe) {
-//			rollback(lConn);
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException("StralcioController.exInserisciStralcio: " + sqe);
 		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException("StralcioController.exInserisciStralcio: " + e);
 		} finally {
@@ -276,8 +267,7 @@ public class StralcioController extends SiapController implements IStralcio {
 
 	/**
 	 * Ricerca Tenori Stralciati dal Fascicolo di riferimento
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloStralciato
 	 * @return Vettore di TenoriStralciati
 	 * @throws F3BException
@@ -300,17 +290,14 @@ public class StralcioController extends SiapController implements IStralcio {
 			lTenori = new Vector(lTenSqlDao.getModels());
 			// lTenSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"StralcioController.ExRicercaTenoriStralciatiByIdFascicolo : " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new SIUSException(F3BException.USER_MESSAGE,
-//					"StralcioController.ExRicercaTenoriStralciatiByIdFascicolo : " + sqe);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -321,209 +308,12 @@ public class StralcioController extends SiapController implements IStralcio {
 	}
 
 	/**
-	 * Stralcio di Soggetti riferiti a due Procedimenti Individuati.
+	 * Esegue la cancellazione di un di Stralcio.
 	 * <p>
-	 * 
-	 * @param aFascicoloUnificante
-	 * @param aFascicoloDaUnificare
-	 * @param aUtenteConnesso
-	 * @param aUfficioUtenteConnesso
-	 * @param aLuogoUfficioUtenteConnesso
-	 * @throws F3BException
-	 */
-	/*
-	 * public void ExInsStralcioSoggetti (FascicoloSiusModel aFascicoloUnificante, FascicoloSiusModel
-	 * aFascicoloDaUnificare, String aUfficioUtenteConnesso, String aUtenteConnesso, String
-	 * aLuogoUfficioUtenteConnesso ) throws F3BException { Connection lConn = null;
-	 * 
-	 * FascicoloSiusDAO lFasDao = null; FascicoloSiusSqlDAO lFasSqlDao = null; EventoDAO lEveDao = null;
-	 * NotificaDAO lNotDao = null; SoggettoDAO lSogDao = null; StoricoSoggettoDAO lStoSogDao = null;
-	 * StoricoSoggettoSqlDAO lStoSogSqlDao = null;
-	 * 
-	 * try { lConn = getDBTransaction();
-	 * 
-	 * lFasDao = new FascicoloSiusDAO(lConn); lFasSqlDao = new FascicoloSiusSqlDAO(lConn); lEveDao = new
-	 * EventoDAO(lConn); lNotDao = new NotificaDAO(lConn) ; lSogDao = new SoggettoDAO(lConn); lStoSogDao = new
-	 * StoricoSoggettoDAO(lConn); lStoSogSqlDao = new StoricoSoggettoSqlDAO(lConn);
-	 * 
-	 * //Set del DAO e aggiornamento del FascicoloSius.
-	 * lFasDao.setDAOFromModelForStralcioSoggetti(aFascicoloUnificante,
-	 * aFascicoloDaUnificare.getIdFascicoloSius() ); lFasDao.update(); lFasDao.stop();
-	 * 
-	 * // Set del DAO e aggiornamento delle Notifiche. lNotDao.setDAOFromModelForUpdateIdSoggetto(
-	 * aFascicoloUnificante, aFascicoloDaUnificare ); lNotDao.update(); lNotDao.stop();
-	 * 
-	 * // Inserimento/Correzione delle Residenze. this.insResidenzeSius( aFascicoloUnificante,
-	 * aFascicoloDaUnificare, lConn);
-	 * 
-	 * // Inserimento Note. this.inserimentoNote( aFascicoloUnificante, aFascicoloDaUnificare, lConn);
-	 * 
-	 * // Eventuale Storicizzazione del Soggetto (in caso di assenza di Fascicoli SIEP-SIUS ad esso riferiti).
-	 * boolean esisteFascicolo = lFasSqlDao.ExistAltroFascicoloPerSoggetto(
-	 * aFascicoloDaUnificare.getSogIdSoggetto()) ; if (esisteFascicolo==false) { // Cancellazione delle
-	 * Residenze. this.delResidenzeSius( aFascicoloDaUnificare, lConn);
-	 * 
-	 * 
-	 * // Inserimento Storico Soggetto. lStoSogDao = new StoricoSoggettoDAO(lConn);
-	 * lStoSogDao.setDAOFromModelSoggetto( aFascicoloDaUnificare.getSoggetto());
-	 * lStoSogDao.setFasSieIdFascicoloSius(aFascicoloDaUnificare.getIdFascicoloSius());
-	 * lStoSogDao.setNote("SOGGETTO CANCELLATO a seguito di UNIFICAZIONE SOGGETTI per PROCEDIMENTI SIUS");
-	 * 
-	 * lStoSogSqlDao.nextProgressivo(aFascicoloDaUnificare.getSogIdSoggetto() );
-	 * 
-	 * int lMaxProg = 0;
-	 * 
-	 * lStoSogSqlDao.start(); if (lStoSogSqlDao.next()) { lMaxProg = lStoSogSqlDao.getInt("max_progressivo");
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.info("MAX = " + lMaxProg); } BigDecimal lMax = new BigDecimal(lMaxProg + 1);
-	 * 
-	 * if (lMaxProg > 0) { lStoSogDao.setProgressivoStorico(lMax); } else {
-	 * lStoSogDao.setProgressivoStorico(new BigDecimal(1)); }
-	 * 
-	 * lStoSogDao.insert();
-	 * 
-	 * // Cancellazione Soggetto. lSogDao = new SoggettoDAO(lConn);
-	 * lSogDao.setDAOFromModel(aFascicoloDaUnificare.getSoggetto());
-	 * lSogDao.selCondizioneUpdate(aFascicoloDaUnificare.getSoggetto().getIdSoggetto()); lSogDao.delete();
-	 * System
-	 * .out.println(">>>>>>>>>>>>>>>>> STORICIZZATO il SOGGETTO CON ID = "+aFascicoloDaUnificare.getSogIdSoggetto
-	 * () ) ; } lFasSqlDao.stop();
-	 * 
-	 * 
-	 * 
-	 * //COMMIT commit(lConn);
-	 * 
-	 * } catch (DAOException ex) { rollback(lConn); throw new
-	 * F3BException("StralcioController.ExInsStralcioSoggetti:  : " + ex); } catch (SQLException sqe) {
-	 * rollback(lConn); throw new
-	 * F3BException("StralcioController.ExInsStralcioSoggetti: " + sqe); } finally { cleanup(lFasDao);
-	 * cleanup(lEveDao); cleanup(lFasSqlDao); cleanup(lNotDao); cleanup(lSogDao); cleanup(lStoSogDao);
-	 * cleanup(lStoSogSqlDao); cleanup(lConn); } }
-	 */
-	/**
-	 * Metodo di correzione delle RESIDENZA_FASCICOLO_SIUS a partire da aFasSiusUnificante e
-	 * aFasSiusStralciato, per effetto di modifica Soggetto.
-	 * <p>
-	 * 
-	 * @param aFasGPModel
-	 * @param lConn
-	 * @throws F3BException
-	 */
-	/*
-	 * private void insResidenzeSius( FascicoloSiusModel aFasSiusUnificante, FascicoloSiusModel
-	 * aFasSiusStralciato, Connection lConn ) throws F3BException { ResidenzaDAO lResDao = null;
-	 * ResidenzaSqlDAO lResSqlDao = null; ResidenzaFascicoloSiusDAO lResFasSiusDao = null; try { lResDao = new
-	 * ResidenzaDAO(lConn); lResSqlDao = new ResidenzaSqlDAO(lConn); lResFasSiusDao = new
-	 * ResidenzaFascicoloSiusDAO(lConn);
-	 * 
-	 * // Puntamento alle eventuali Residenze riferite al Procedimento SIUS Stralciato.
-	 * lResSqlDao.ricercaResidenzeByFascicoloSius(aFasSiusStralciato.getIdFascicoloSius());
-	 * 
-	 * // Lettura dei dati delle residenze. lResSqlDao.start();
-	 * 
-	 * ResidenzaModel lResMod = null; ResidenzaFascicoloSiusModel lResFasSiuMod = null;
-	 * 
-	 * while (lResSqlDao.next()) { lResMod = (ResidenzaModel)lResSqlDao.getModel(); lResFasSiuMod =
-	 * (ResidenzaFascicoloSiusModel)lResSqlDao.getModelResidenzaFascicoloSius(); BigDecimal lKeyRes = null;
-	 * 
-	 * // Si duplicano le residenze per consentire l'associazione al nuovo soggetto. if (lResMod != null) {
-	 * lResMod.setCodOperatoreInserimento(aFasSiusUnificante.getCodOperatoreAggiornamento());
-	 * lResMod.setDataInserimento(aFasSiusUnificante.getDataAggiornamento());
-	 * lResMod.setCodUfficioInserimento(aFasSiusUnificante.getCodUfficioAggiornamento());
-	 * lResMod.setSogIdSoggetto(aFasSiusUnificante.getSogIdSoggetto()); lResDao.setDAOFromModel(lResMod);
-	 * lKeyRes = lResDao.insert(); // Aggiornamento della ResidenzaFascicoloSius. if (lResFasSiuMod != null) {
-	 * lResFasSiusDao.setResIdResidenza(lKeyRes);
-	 * lResFasSiusDao.setCondizioneFasicoloResidenza(aFasSiusStralciato.getIdFascicoloSius(),
-	 * lResFasSiuMod.getResIdResidenza()); lResFasSiusDao.update(); lResFasSiusDao.stop(); } } lResDao.stop();
-	 * }
-	 * 
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * lResSqlDao.stop(); } catch( DAOException daoEx ) { siesLogger.error("DAOException: " + daoEx);
-	 * throw new SIUSException(F3BException.USER_MESSAGE,"StralcioController.insResidenzeSius: " + daoEx); }
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * catch( SQLException sqlEx ) { siesLogger.error("SQLException: " + sqlEx ); throw new
-	 * SIUSException(F3BException.USER_MESSAGE,"StralcioController.insResidenzeSius: " + sqlEx); } catch
-	 * (// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * (Exception e) { siesLogger.error("Exception: " + e); throw new
-	 * SIUSException(F3BException.USER_MESSAGE, e.getMessage()); } finally {
-	 * 
-	 * cleanup(lResDao); cleanup(lResSqlDao); cleanup(lResFasSiusDao);
-	 * 
-	 * } }
-	 */
-	/**
-	 * Metodo di cancellazione delle RESIDENZE, per consentire la storicizzazione del Soggetto.
-	 * <p>
-	 * 
-	 * @param aFasSiusStralciato
-	 * @param lConn
-	 * @throws F3BException
-	 */
-	/*
-	 * private void delResidenzeSius( FascicoloSiusModel aFascicoloDaUnificare, Connection lConn ) throws
-	 * F3BException { ResidenzaDAO lResDao = null; ResidenzaFascicoloSiusDAO lResFasSiusDao = null; try {
-	 * lResDao = new ResidenzaDAO(lConn); lResFasSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
-	 * 
-	 * // Cancellazione Residenze . lResDao.selPerIdSoggetto(aFascicoloDaUnificare.getSogIdSoggetto() );
-	 * lResDao.delete(); lResDao.stop();
-	 * 
-	 * } // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * } catch( DAOException daoEx ) { siesLogger.error("DAOException: " + daoEx); throw new
-	 * SIUSException(F3BException.USER_MESSAGE,"StralcioController.delResidenzeSius: " + daoEx); } catch(
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * SQLException sqlEx ) { siesLogger.error("SQLException: " + sqlEx ); throw new
-	 * SIUSException(F3BException.USER_MESSAGE,"StralcioController.delResidenzeSius: " + sqlEx); } catch
-	 * (// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * (Exception e) { siesLogger.error("Exception: " + e); throw new
-	 * SIUSException(F3BException.USER_MESSAGE, e.getMessage()); } finally {
-	 * 
-	 * cleanup(lResDao); cleanup(lResFasSiusDao);
-	 * 
-	 * } }
-	 */
-	/**
-	 * Metodo di inserimento delle NOTE per l' UNIFICAZIONE SOGGETTI riferiti a DUE FASCICOLI SIUS.
-	 * <p>
-	 * 
-	 * @param aFasSiusUnificante
-	 * @param aFasSiusDaUnificare
-	 * @param lConn
-	 * @throws F3BException
-	 */
-	/*
-	 * private void inserimentoNote( FascicoloSiusModel aFasSiusUnificante, FascicoloSiusModel
-	 * aFasSiusDaUnificare , Connection lConn ) throws F3BException { NoteDAO lNoteDao = null; try { lNoteDao
-	 * = new NoteDAO(lConn); BigDecimal lKeyRes = null;
-	 * 
-	 * // Caricamento della Nota di Inserimento Titolo Esecutivo. NoteModel lNoteMod = new NoteModel();
-	 * 
-	 * lNoteMod.setData(DateUtils.getSysDate());
-	 * lNoteMod.setDescrizione("UNIFICATO dal SOGGETTO "+aFasSiusDaUnificare
-	 * .getSoggetto().getCognome()+" "+aFasSiusDaUnificare
-	 * .getSoggetto().getNome()+"  ( ID = "+aFasSiusDaUnificare
-	 * .getSogIdSoggetto()+" ) al SOGGETTO "+aFasSiusUnificante
-	 * .getSoggetto().getCognome()+" "+aFasSiusUnificante
-	 * .getSoggetto().getNome()+"  ( ID = "+aFasSiusUnificante.getSogIdSoggetto()+" ) ");
-	 * lNoteMod.setCodOperatoreInserimento(aFasSiusUnificante.getCodOperatoreAggiornamento());
-	 * lNoteMod.setDataInserimento(aFasSiusUnificante.getDataAggiornamento());
-	 * lNoteMod.setCodUfficioInserimento(aFasSiusUnificante.getCodUfficioAggiornamento());
-	 * lNoteMod.setFasSiuIdFascicoloSius(aFasSiusUnificante.getIdFascicoloSius());
-	 * 
-	 * lNoteDao.setDAOFromModel(lNoteMod); lKeyRes = lNoteDao.insert(); } catch( DAOException daoEx ) {
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.error("DAOException: " + daoEx); throw new
-	 * SIUSException(F3BException.USER_MESSAGE,"StralcioController.inserimentoNote: " + daoEx); } catch(
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * SQLException sqlEx ) { siesLogger.error("SQLException: " + sqlEx ); throw new
-	 * SIUSException(F3BException.USER_MESSAGE,"StralcioController.inserimentoNote: " + sqlEx); } catch
-	 * (// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * (Exception e) { siesLogger.error("Exception: " + e); throw new
-	 * SIUSException(F3BException.USER_MESSAGE, e.getMessage()); } finally { cleanup(lNoteDao); } }
-	 * 
-	 * /** Esegue la cancellazione di un di Stralcio. <p>
-	 * 
-	 * @param aKeyEvento: chiave del record
-	 * 
+	 *
+	 * @param aKeyEvento:
+	 *            chiave del record
+	 *
 	 * @throws F3BException
 	 */
 	public void ExCancellaStralcio(BigDecimal aKeyEvento, String aUfficioUtenteConnesso,
@@ -536,13 +326,13 @@ public class StralcioController extends SiapController implements IStralcio {
 		TenoreSqlDAO lTenSqlDao = null;
 		EventoDAO lEveDao = null;
 
-		// Preleva l'eventoModel da cancellare.
-		IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
-		EventoModel aEvento = lEveCtrl.ExRicercaEventoByKey(aKeyEvento);
-		if (aEvento == null)
-			throw new F3BException("Attenzione!  Stralcio non trovato!");
-
 		try {
+			// Preleva l'eventoModel da cancellare.
+			IEvento lEveCtrl = SICOLookupRemote.getEventoRemote();
+			EventoModel aEvento = lEveCtrl.ExRicercaEventoByKey(aKeyEvento);
+			if (aEvento == null)
+				throw new F3BException("Attenzione!  Stralcio non trovato!");
+
 			lConn = getDBConnection();
 			lFasDao = new FascicoloSiusDAO(lConn);
 			lTenDao = new TenoreDAO(lConn);
@@ -556,16 +346,16 @@ public class StralcioController extends SiapController implements IStralcio {
 			FascicoloGPModel lFGPStralciato = (FascicoloGPModel) lFasGPSqlDao.getModelByKey();
 
 			// Caricamento dei Tenore del Procedimento Stralciato.
-			lTenSqlDao.ricercaTenoreByStralcio(lFGPStralciato.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento(), DateUtils.getDateToString(aEvento.getDataEmissione(),
-					"yyyyMMdd"));
+			lTenSqlDao.ricercaTenoreByStralcio(
+					lFGPStralciato.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(),
+					DateUtils.getDateToString(aEvento.getDataEmissione(), "yyyyMMdd"));
 
 			Vector lVectTenori = new Vector(lTenSqlDao.getModels());
 			if (lVectTenori != null) {
 				TenoreModel[] lTenoriModel = (TenoreModel[]) lVectTenori.toArray(new TenoreModel[0]);
 				lFGPStralciato.setTenori(lTenoriModel);
 			}
-//			lTenSqlDao.stop();
+			// lTenSqlDao.stop();
 
 			// Smarcamento dei TENORE precedentemente stralciati.
 			if (lFGPStralciato.getTenori() != null) {
@@ -590,14 +380,16 @@ public class StralcioController extends SiapController implements IStralcio {
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException("StralcioController.ExCancellaStralcio: " + daoEx);
-//		} catch (SQLException sqe) {
-//			rollback(lConn);
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new SIUSException("StralcioController.ExCancellaStralcio: " + sqe);
+			// } catch (SQLException sqe) {
+			// rollback(lConn);
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.error("SQLException: " + sqe);
+			// throw new SIUSException("StralcioController.ExCancellaStralcio: " + sqe);
 		} finally {
 			cleanup(lFasGPSqlDao);
 			cleanup(lFasDao);

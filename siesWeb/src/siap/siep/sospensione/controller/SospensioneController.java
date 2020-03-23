@@ -10,6 +10,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
@@ -57,12 +63,6 @@ import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -77,7 +77,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -94,6 +94,7 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public EventoNotificaModel ExInserisciOModificaEventoNotificaSosp(EventoNotificaModel aEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -252,7 +253,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * ExInserisciEventoNotificaVerbale
-	 * 
+	 *
 	 * @param aEventoNot
 	 * @param aPena
 	 * @param aEvento
@@ -262,6 +263,7 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public EventoNotificaModel ExInserisciEventoNotificaVerbale(EventoNotificaModel aEventoNot,
 			PenaResiduaModel aPena, EventoModel aEvento, VerbaleModel aVerbale) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -376,6 +378,7 @@ public class SospensioneController extends SiapController implements ISospension
 	}
 
 	public SospensioneModel ExInserisciSospensione(SospensioneModel aSospensione) throws F3BException {
+
 		Connection lConn = null;
 
 		SospensioneDAO lSosDao = null;
@@ -393,7 +396,6 @@ public class SospensioneController extends SiapController implements ISospension
 			lSosMod.setIdSospensione(lKey);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
@@ -409,7 +411,7 @@ public class SospensioneController extends SiapController implements ISospension
 	/**
 	 * Effettua Insert dei records SOSPENSIONE senza assegnare la Nuova sequence (Mantiene la KEY originale
 	 * passata in Input); Chiamata dalla procedura di Presa in Carico dopo TRSF-CMPTZ
-	 * 
+	 *
 	 * @param aListaSospensioni
 	 * @param lConn
 	 * @return lCodEsito
@@ -417,6 +419,7 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public String ExInserisciSospensioneWithoutSequence(SospensioneModel aSospensioneModel, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 
 		SospensioneDAO lSopensioneDAO = null;
@@ -451,13 +454,14 @@ public class SospensioneController extends SiapController implements ISospension
 	/**
 	 * Effettua la <b>SVALIDAZIONE</b> dell'evento e della pena residua. Cancellando le eventuali vecchie
 	 * annotazioni (Quali?) e sostituendole con quelle passare in input.
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel ExModificaEventoInserisciNotificaSosp(EventoNotificaModel aEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -465,7 +469,6 @@ public class SospensioneController extends SiapController implements ISospension
 		NotificaDAO lNotDao = null;
 		PenaResiduaDAO lPenDAO = null;
 		PenaResiduaSqlDAO lPenSqlDAO = null;
-
 		AutoritaEsternaDAO lAutDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
 
@@ -629,6 +632,7 @@ public class SospensioneController extends SiapController implements ISospension
 	}
 
 	public Vector ExRicercaSospensione(SospensioneModel aSospensione) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lSospensioni = new Vector();
@@ -659,6 +663,7 @@ public class SospensioneController extends SiapController implements ISospension
 	}
 
 	public SospensioneModel ExRicercaSospensioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		SospensioneSqlDAO lSosDao = null;
@@ -685,6 +690,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	public SospensioneModel ExRicercaSospensioneByIdPenaResidua(BigDecimal aIdPenaResidua)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		SospensioneSqlDAO lSosDao = null;
@@ -710,6 +716,7 @@ public class SospensioneController extends SiapController implements ISospension
 	}
 
 	public SospensioneModel ExModificaSospensione(SospensioneModel aSospensione) throws F3BException {
+
 		Connection lConn = null;
 
 		SospensioneDAO lSosDao = null;
@@ -736,6 +743,7 @@ public class SospensioneController extends SiapController implements ISospension
 	}
 
 	public void ExCancellaSospensione(SospensioneModel aSospensione) throws F3BException {
+
 		Connection lConn = null;
 
 		SospensioneDAO lSosDao = null;
@@ -761,6 +769,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	public Vector<SospensioneModel> ExRicercaSospensioneByIdFascicoloSiep(BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<SospensioneModel> lSospensioni = new Vector();
@@ -772,17 +781,11 @@ public class SospensioneController extends SiapController implements ISospension
 			lSosDao = new SospensioneSqlDAO(lConn);
 			lSosDao.ricercaSospensioneByFascicolo(aKeyFascicolo);
 			lSospensioni = new Vector<SospensioneModel>(lSosDao.getModels());
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"SospensioneController.ExRicercaSospensioneByIdFascicoloSiep: Non posso leggere : "
 							+ daoEx);
-			// } catch (SQLException sqe) {
-			// siesLogger.error("SQLException: " + sqe);
-			// throw new F3BException(
-			// "SospensioneController.ExRicercaSospensioneByIdFascicoloSiep: Non posso leggere : "
-			// + sqe);
 		} finally {
 			cleanup(lSosDao);
 			cleanup(lConn);
@@ -793,10 +796,10 @@ public class SospensioneController extends SiapController implements ISospension
 
 	public EventoModel ExUpdateValidaSospensione(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aPosGiu, String aNomProv, String aStatoProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
@@ -805,11 +808,9 @@ public class SospensioneController extends SiapController implements ISospension
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		DecretoOrdinanzaSiepDAO lDecDao = null;
 		DecretoOrdinanzaSiepSqlDAO lDecSql = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -982,7 +983,7 @@ public class SospensioneController extends SiapController implements ISospension
 			 * lFascDao.setCodOperatoreAggiornamento(lEveMod.getCodOperatoreAggiornamento());
 			 * lFascDao.setCodUfficioAggiornamento(lEveMod.getCodUfficioAggiornamento());
 			 * lFascDao.setDataAggiornamento(lEveMod.getDataAggiornamento());
-			 * 
+			 *
 			 * lFascDao.update(); lFascDao.stop(); }
 			 */
 
@@ -1003,38 +1004,27 @@ public class SospensioneController extends SiapController implements ISospension
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaSospensione: " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaSospensione: " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lStatoDao);
 			cleanup(lPosDao);
 			cleanup(lPosSqlDao);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lNomProvvDAO);
 			cleanup(lDecDao);
 			cleanup(lDecSql);
-			// cleanup(lFascDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
@@ -1042,8 +1032,8 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * Effettua l'aggiornamento del blob e la validazione del Differimento.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param aEvento
 	 *            - Evento dell'Esecuzione (Comunicazione o Ordine di scarcerazione)
 	 * @param aFascicolo
@@ -1059,11 +1049,11 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public EventoModel ExUpdateValidaDifferimento(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aPosGiu, String aNomProv, String aStatoProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
@@ -1073,11 +1063,9 @@ public class SospensioneController extends SiapController implements ISospension
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
 		DecretoOrdinanzaSiepDAO lDecDao = null;
 		DecretoOrdinanzaSiepSqlDAO lDecSql = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -1092,7 +1080,7 @@ public class SospensioneController extends SiapController implements ISospension
 			// * Cerca L'EVENTO * ???????????????????
 			/*
 			 * EventoModel lEveApp = new EventoModel();
-			 * 
+			 *
 			 * lEveDao.setIdEvento(aEvento.getIdEvento()); lEveDao.selByKey(); lEveDao.start(); if
 			 * (lEveDao.next()) { lEveApp.setIdEvento(lEveDao.getIdEvento());
 			 * lEveApp.setDataEmissione(lEveDao.getDataEmissione()); } // [FT] - 03/08/2016 - MAC_LOG -
@@ -1291,20 +1279,13 @@ public class SospensioneController extends SiapController implements ISospension
 
 			// -----------------------
 			commit(lConn);
-			// commit(lConnBlob);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaDifferimento : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaDifferimento : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -1318,27 +1299,29 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lDecDao);
 			cleanup(lDecSql);
 			cleanup(lPosSqlDAO);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
 	}
 
 	/**
-	 * Effettua la validazione e dei provvedimenti collegati a una <b>Interruzione</b><br> - Valida
-	 * l'evento<br> - Valida la pena residua<br> - Valida il decreto ordinanza siep<br> - Effettua
-	 * l'aggiornamento dello Stato del Procedimento, dello Scadenzario Vane Ricerche, del Nome
-	 * Provvedimento<br> <br>
+	 * Effettua la validazione e dei provvedimenti collegati a una <b>Interruzione</b><br>
+	 * - Valida l'evento<br>
+	 * - Valida la pena residua<br>
+	 * - Valida il decreto ordinanza siep<br>
+	 * - Effettua l'aggiornamento dello Stato del Procedimento, dello Scadenzario Vane Ricerche, del Nome
+	 * Provvedimento<br>
 	 *
-	 * @param aEvento @param aFascicolo @param aNomProv - nome provvedimento @param aStatoProc - stato
-	 * procedimento @return @throws
+	 * @param aEvento
+	 * @param aFascicolo
+	 * @param aNomProv
+	 *            - nome provvedimento @param aStatoProc - stato procedimento @return @throws
 	 */
 	public EventoModel ExUpdateValidaSospensioneOE(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aNomProv, String aStatoProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1349,8 +1332,6 @@ public class SospensioneController extends SiapController implements ISospension
 		DecretoOrdinanzaSiepDAO lDecDao = null;
 		DecretoOrdinanzaSiepSqlDAO lDecSql = null;
 		ScadenzarioDAO lScaDao = null;
-
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -1492,27 +1473,19 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
 			lEveDaoBlob.update();
 			lEveDaoBlob.stop();
-
-			// commit(lConnBlob);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaSospensioneOE : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaSospensioneOE : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -1523,11 +1496,8 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lDecDao);
 			cleanup(lDecSql);
 			cleanup(lScaDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
@@ -1537,7 +1507,7 @@ public class SospensioneController extends SiapController implements ISospension
 	 * Valida l'evento, la pena residua, il decreto ordinanza siep legati a una interruzione. Se codMotivo =
 	 * in (0266,0267,0268,0269) aggiorna anche la posizione giuridica Se codMotivo 0268 cambia anche lo stato
 	 * del procedimento in 0137 (Disposta consegna temporanea all'estero del condannato)
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param aPosGiu
@@ -1547,6 +1517,7 @@ public class SospensioneController extends SiapController implements ISospension
 	public EventoModel ExUpdateValidaInterruzione(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			PosizioneGiuridicaModel aPosGiu, PenaResiduaModel aPenaResidua,
 			DecretoOrdinanzaSiepModel aDecreto) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1672,27 +1643,21 @@ public class SospensioneController extends SiapController implements ISospension
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaInterruzione : " + daoEx);
 		} catch (SQLException sqe) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SQLException: " + sqe);
 			rollback(lConn);
-
 			sqe.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaInterruzione : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaInterruzione : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -1702,7 +1667,6 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lDecDao);
 
 			cleanup(lConn);
-
 		}
 
 		return lEveMod;
@@ -1711,12 +1675,12 @@ public class SospensioneController extends SiapController implements ISospension
 	// Funzione che richiama l'aggiornamento dello Stato Procedimento. Luigi 24-10-2005
 	private void aggiornaStatoProcedimento(BigDecimal aIdFascicoloSiep, EventoModel aEve,
 			String aCodStatoProcedimento, Connection aConn) throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("aggiornaStatoProcedimento: inizio");
 
 		StatoProcedimentoModel lStatoMod = new StatoProcedimentoModel();
-
 		lStatoMod.setCodStatoProcedimento(aCodStatoProcedimento);
 		lStatoMod.setData(aEve.getDataEmissione());
 		lStatoMod.setFasSieIdFascicoloSiep(aIdFascicoloSiep);
@@ -1725,37 +1689,40 @@ public class SospensioneController extends SiapController implements ISospension
 		lStatoMod.setCodOperatoreInserimento(aEve.getCodOperatoreAggiornamento());
 		lStatoMod.setProgressivo(new BigDecimal(1));
 
-		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(aConn);
+		StatoProcedimentoDAO lStatoDao = null;
 
-		// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
-		lStatoDao.setCondizioneByIdFascicolo(aIdFascicoloSiep);
-		lStatoDao.delete();
+		try {
+			lStatoDao = new StatoProcedimentoDAO(aConn);
 
-		// - Inserisce
-		lStatoDao.setDAOFromModel(lStatoMod);
-		lStatoDao.insert();
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(aIdFascicoloSiep);
+			lStatoDao.delete();
 
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoMod);
+			lStatoDao.insert();
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lStatoDao);
+		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("aggiornaStatoProcedimento: fine");
-
 	}
 
 	public EventoModel ExUpdateValidaDecretoSospensione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
-		// EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
 		ScadenzarioDAO lScaDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
 		NotificaDAO lNotDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -1772,18 +1739,18 @@ public class SospensioneController extends SiapController implements ISospension
 			 * lEveDao.setDataAggiornamento(lEveMod.getDataAggiornamento());
 			 * lEveDao.setCodOperatoreAggiornamento(lEveMod.getCodOperatoreAggiornamento());
 			 * lEveDao.setCodUfficioAggiornamento(lEveMod.getCodUfficioAggiornamento());
-			 * 
+			 *
 			 * lEveDao.setFlagDocumentoRegistrato("S"); lEveDao.selByKey(); lEveDao.update(); lEveDao.stop();
 			 */
 
 			// scadenzario simeone
 			/*
 			 * lScaSqlDao = new ScadenzarioSqlDAO(lConn); lScaDao = new ScadenzarioDAO(lConn);
-			 * 
+			 *
 			 * lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("01",
 			 * aFascicolo.getIdFascicoloSiep()); ScadenzarioModel lScaMod = new ScadenzarioModel(); lScaMod =
 			 * (ScadenzarioModel)lScaSqlDao.getModelByKey();
-			 * 
+			 *
 			 * if( lScaMod != null && lScaMod.getIdScadenzario() != null ) {
 			 * lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
 			 * lScaDao.setCodOperatoreAggiornamento(lEveMod.getCodOperatoreAggiornamento());
@@ -1792,7 +1759,7 @@ public class SospensioneController extends SiapController implements ISospension
 			 * lScaDao.setDataInizioScadenza(lEveModel.getDataEmissione());
 			 * lScaDao.setDataFineScadenza(DateUtils.moveDateTo(lEveModel.getDataEmissione(),
 			 * java.util.Calendar.DAY_OF_MONTH, 30));
-			 * 
+			 *
 			 * lScaDao.update(); lScaDao.stop(); } else { lScaDao.setCodTipoScadenzario("01");
 			 * lScaDao.setDataInizioScadenza(lEveModel.getDataEmissione());
 			 * lScaDao.setDataFineScadenza(DateUtils.moveDateTo(lEveModel.getDataEmissione(),
@@ -1875,31 +1842,22 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDaoBlob.stop();
 			// ---------------------
 			commit(lConn);
-			// commit(lConnBlob);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaDecretoSospensione : " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaDecretoSospensione : " + ex);
 		} finally {
-			// cleanup(lEveDao);
 			cleanup(lEveSqlDao);
 			cleanup(lStatoDao);
 			cleanup(lScaDao);
@@ -1907,7 +1865,6 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lNotEveDao);
 			cleanup(lNotDao);
 
-			// cleanup(lConnBlob);
 			cleanup(lConn);
 		}
 
@@ -1916,13 +1873,14 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * Stampa un documento Sospensioni
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExStampaDocumentoSospensioni(EventoNotificaModel aEvento,
 			UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -1979,56 +1937,13 @@ public class SospensioneController extends SiapController implements ISospension
 		return lByteArrayOut;
 	}
 
-	// private void inserisciModificaPosizioneGiuridica(Connection lConn, FascicoloSiepModel aFascicolo,
-	// EventoModel lEveModel, String aPosGiu, EventoModel aEvento) throws DAOException, F3BException {
-	// // Cerca POSIZIONE_GIURIDICA corrente
-	// PosizioneGiuridicaSqlDAO lPosSqlDao = null;
-	// PosizioneGiuridicaDAO lPosDao = null;
-	//
-	// try {
-	// lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
-	//
-	// lPosSqlDao.ricercaPosizioneGiuridicaByIdFascicoloDesc(aFascicolo.getIdFascicoloSiep());
-	// PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
-	//
-	// lPosDao = new PosizioneGiuridicaDAO(lConn);
-	// lPosDao.setIdPosizioneGiuridica(lPosMod.getIdPosizioneGiuridica());
-	//
-	// lPosDao.setDataFine(lEveModel.getDataEmissione());
-	//
-	// lPosDao.selByKey();
-	// lPosDao.update();
-	// lPosDao.stop();
-	//
-	// // inserimento nuova occorrenza
-	// PosizioneGiuridicaModel lPosizione = new PosizioneGiuridicaModel();
-	//
-	// lPosizione.setCodPosizioneGiuridica(aPosGiu);
-	// lPosizione.setDataInizio(lEveModel.getDataEmissione());
-	//
-	// lPosizione.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
-	//
-	// lPosizione.setDataInserimento(aEvento.getDataAggiornamento());
-	// lPosizione.setCodPosizioneProcessuale("-");
-	// lPosizione.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
-	// lPosizione.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
-	// lPosizione.setIdEventoRiferimento(aEvento.getIdEvento()); // **
-	//
-	// lPosDao.setDAOFromModel(lPosizione);
-	// lPosDao.insert();
-	// lPosDao.stop();
-	// } finally {
-	// cleanup(lPosDao);
-	// cleanup(lPosSqlDao);
-	// }
-	// }
-
 	/*****************************************************************************
 	 * Effettua l'inserimento di:
 	 *
 	 */
 	public EventoModel ExInserisciEventoDecretoOrdinanzaSiep(DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep,
 			EventoNotificaModel aEventoNot, CalcoloPenaModel aCalcoloPenaMod) throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepDAO lDecDao = null;
@@ -2357,36 +2272,28 @@ public class SospensioneController extends SiapController implements ISospension
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			ex.printStackTrace();
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("SospensioneController.ExInserisciEventoDecretoOrdinanzaSiep: " + ex);
 		} catch (SQLException sqe) {
 			rollback(lConn);
-
 			sqe.printStackTrace();
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SQLException: " + sqe);
 			throw new F3BException("SospensioneController.ExInserisciEventoDecretoOrdinanzaSiep: " + sqe);
 		} catch (SIEPException siepEx) {
 			rollback(lConn);
-
 			siepEx.printStackTrace();
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SIEPException: " + siepEx);
 			throw siepEx;
 		} catch (Exception ex) {
 			rollback(lConn);
-
 			ex.printStackTrace();
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
@@ -2413,13 +2320,14 @@ public class SospensioneController extends SiapController implements ISospension
 	 * Validazione del Provvedimento/Ordine Scarcerazione legato alla Sospensione del PM - valida l'evento -
 	 * valida la pena residua - aggiorna la posizione giuridica - nome provvedimento - aggiorna stato
 	 * procedimento - aggiorna il blob - Cancella l'eventuale Scadenzario Simeone
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
 	 */
 	public EventoModel ExUpdateValidaSospensioneEsecPenaDispPm(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2432,11 +2340,9 @@ public class SospensioneController extends SiapController implements ISospension
 		PosizioneGiuridicaDAO lPosDao = null;
 		DecretoOrdinanzaSiepSqlDAO lDecSqlDao = null;
 		ScadenzarioDAO lScaDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2487,7 +2393,7 @@ public class SospensioneController extends SiapController implements ISospension
 			 * modifica del 05-05-2005 -- Dario --Luciana nn deve inserire una nuova pena ma aggiornare
 			 * sempre, l'id dell'evento è già presente grazie alla fase d'inserimento quindi si mette solo la
 			 * 'S' in FlagValidato
-			 * 
+			 *
 			 * PenaResiduaModel lPenResMod = new PenaResiduaModel();
 			 * lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(aFascicolo.getIdFascicoloSiep());
 			 * lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey(); if (lPenResMod.getEveIdEvento()
@@ -2597,17 +2503,13 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDaoBlob.update();
 			lEveDaoBlob.stop();
 			// ---------------------
-			// commit(lConnBlob);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException(
 					"SospensioneController.ExUpdateValidaSospensioneEsecPenaDispPm : " + daoEx);
 		} catch (Exception ex) {
@@ -2615,10 +2517,7 @@ public class SospensioneController extends SiapController implements ISospension
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaSospensioneEsecPenaDispPm : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -2631,9 +2530,7 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lPosDao);
 			cleanup(lDecSqlDao);
 			cleanup(lScaDao);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 
 			cleanup(lConn);
 		}
@@ -2643,6 +2540,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	public EventoModel ExUpdateValidaSospensioneDecisioniSorveglianza(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -2650,10 +2548,9 @@ public class SospensioneController extends SiapController implements ISospension
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		MisuraAlternativaSqlDAO lMisSqlDAO = null;
 		EventoDAO lEveDaoMisAlt = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2749,17 +2646,13 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDaoBlob.update();
 			lEveDaoBlob.stop();
 
-			// commit(lConnBlob);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException(
 					"SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza : " + daoEx);
 		} catch (Exception ex) {
@@ -2767,10 +2660,7 @@ public class SospensioneController extends SiapController implements ISospension
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException(
 					"SospensioneController.ExUpdateValidaSospensioneDecisioniSorveglianza : " + ex);
 		} finally {
@@ -2779,11 +2669,8 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lNomProvvDAO);
 			cleanup(lMisSqlDAO);
 			cleanup(lEveDaoMisAlt);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
@@ -2792,9 +2679,9 @@ public class SospensioneController extends SiapController implements ISospension
 	// ==============================================================================
 	// METODI PRIVATI
 	// ==============================================================================
-
 	private PenaResiduaModel InserimentoAggiornamentoPenResMisuraAlternativa(Connection lConn,
 			EventoModel lEveModel, BigDecimal aKey) throws DAOException, F3BException {
+
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaModel lPenResMod = null;
@@ -2839,6 +2726,7 @@ public class SospensioneController extends SiapController implements ISospension
 	private BigDecimal InserimentoAggiornamentoPosizioneGiuridica(Connection lConn, String lPosizione,
 			PosizioneGiuridicaModel lPos, Date lData, EventoModel lEveModel, BigDecimal aKeyFasc,
 			BigDecimal aKeyEve) throws DAOException, F3BException {
+
 		PosizioneGiuridicaDAO lPosDao = null;
 		BigDecimal lIdPosizioneGiuridica = null;
 
@@ -2868,9 +2756,8 @@ public class SospensioneController extends SiapController implements ISospension
 				lIdPosizioneGiuridica = lPosDao.insert();
 				lPosDao.stop();
 			}
-		} finally // sca
-
-		{
+		} finally {
+			// sca
 			cleanup(lPosDao);
 		}
 
@@ -2879,6 +2766,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
 			EventoModel lEveModel, String lStatoProcMod) throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(lConn);
 
 		try {
@@ -2903,7 +2791,7 @@ public class SospensioneController extends SiapController implements ISospension
 	/**
 	 * Effettua l'inserimento del Provvedimento conseguente un Differimento. Eventualmente calcola la pena
 	 * residua e la sospensione.
-	 * 
+	 *
 	 * @param aEventoNotifica
 	 *            - model contenente i dati dell'evento da inserire e delle relative notifiche. Il campo
 	 *            mEveIdEvento dell'EventoModel deve essere valorizzato con l'id dell'Evento legato al
@@ -2913,6 +2801,7 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public EventoNotificaModel ExInserisciEventoDifferimento(String aTipoDifferimento,
 			EventoNotificaModel aEventoNotifica, CalcoloPenaModel aCalcoloPenaMod) throws F3BException {
+
 		Connection lConn = null;
 
 		/*
@@ -3297,7 +3186,6 @@ public class SospensioneController extends SiapController implements ISospension
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
@@ -3305,7 +3193,6 @@ public class SospensioneController extends SiapController implements ISospension
 					"SospensioneController.ExInserisciEventoDifferimento: Non posso inserire: " + ex);
 		} catch (Exception e) {
 			rollback(lConn);
-
 			throw new F3BException(
 					"SospensioneController.ExInserisciEventoDifferimento: Non posso inserire: " + e);
 		} finally {
@@ -3328,13 +3215,14 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * Stampa un documento dei Differimenti
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExStampaDocumentoDifferimento(EventoNotificaModel aEventoNot,
 			UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -3388,9 +3276,7 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDao.update();
 
 			commit(lConn);
-		}
-		// catch (Exception e){}
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3408,14 +3294,13 @@ public class SospensioneController extends SiapController implements ISospension
 	/**
 	 * ************************************************************************** Effettua l'aggiornamento del
 	 * blob e la validazione degli eventi legati al differimento<br>
-	 * <br>
 	 *
 	 * - validazione evento della sorveglianza<br>
 	 * - aggiornamento blob e validazione evento dell'Esecuzione<br>
 	 * - validazione pena residua<br>
 	 * - modifica posizione giuridica<br>
 	 * - aggiornamento stato del procedimento<br>
-	 * 
+	 *
 	 * @since v 2.0
 	 * @param aTipoProvvedimento
 	 * @param aEvento
@@ -3436,27 +3321,23 @@ public class SospensioneController extends SiapController implements ISospension
 	public EventoModel ExUpdateValidaDifferimentoNew(String aTipoProvvedimento, EventoModel aEvento,
 			MisuraAlternativaModel aMisAlt, BigDecimal aFascicoloKey, String aPosGiu, String aNomProv,
 			String aStatoProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
-
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -3710,24 +3591,17 @@ public class SospensioneController extends SiapController implements ISospension
 
 			// -----------------------
 			commit(lConn);
-			// commit(lConnBlob);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error(daoEx.getMessage(), daoEx);
-
 			throw new F3BException("SospensioneController.ExUpdateValidaDifferimentoNew : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error(ex.getMessage(), ex);
-
 			throw new F3BException("SospensioneController.ExUpdateValidaDifferimentoNew : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -3741,11 +3615,8 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lScaSqlDao);
 			cleanup(lScaDao);
 			cleanup(lNotEveDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
@@ -3753,7 +3624,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * ExUpdateRinunciaOpEspulsione
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -3761,12 +3632,12 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public EventoModel ExUpdateRinunciaOpEspulsione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 		EventoDAO lEveDao = null;
 		MisuraAlternativaDAO lMisDAO = null;
@@ -3852,27 +3723,18 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDaoBlob.stop();
 			// ---------------------
 
-			// commit(lConnBlob);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateRinunciaOpEspulsione : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
-
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateRinunciaOpEspulsione : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
@@ -3882,9 +3744,7 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lMisDao);
 			cleanup(lMisDAO);
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return aEvento;
@@ -3892,7 +3752,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * ExUpdateEspulsione
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -3900,6 +3760,7 @@ public class SospensioneController extends SiapController implements ISospension
 	 */
 	public EventoModel ExUpdateEspulsione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -3907,7 +3768,6 @@ public class SospensioneController extends SiapController implements ISospension
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		StatoProcedimentoDAO lStatoProDao = null;
 		MisuraAlternativaSqlDAO lMisSql = null;
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 		EventoDAO lEveDaoMisAlt = null;
 
@@ -4011,27 +3871,18 @@ public class SospensioneController extends SiapController implements ISospension
 			lEveDaoBlob.stop();
 			// ---------------------
 
-			// commit(lConnBlob);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateEspulsione : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
-
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateEspulsione : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
@@ -4041,9 +3892,7 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lEveDaoMisAlt);
 			cleanup(lStatoProDao);
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return aEvento;
@@ -4051,7 +3900,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * ExInserisciEventoNotVerbaleSospPena Metodo d'inserimento per l'avvenuta espulsione
-	 * 
+	 *
 	 * @param aEveVer
 	 * @param aVerMod
 	 * @param aSosp
@@ -4060,10 +3909,10 @@ public class SospensioneController extends SiapController implements ISospension
 	 * @return idevento
 	 * @throws F3BException
 	 */
-
 	public EventoModel ExInserisciEventoNotVerbaleSospPena(EventoModel aEveVer, VerbaleModel aVerMod,
 			SospensioneModel aSosp, PenaResiduaModel aPenMod, EventoNotificaModel aEveNot)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -4175,7 +4024,6 @@ public class SospensioneController extends SiapController implements ISospension
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-
 			rollback(lConn);
 			throw new F3BException("SospensioneController.ExInserisciEventoNotVerbaleSospPena: " + daoEx);
 		} catch (Exception ex) {
@@ -4183,7 +4031,6 @@ public class SospensioneController extends SiapController implements ISospension
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException("SospensioneController.ExInserisciEventoNotVerbaleSospPena: " + ex);
 		} finally {
@@ -4203,7 +4050,7 @@ public class SospensioneController extends SiapController implements ISospension
 
 	/**
 	 * ExUpdateValidaEspulsione
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param aPosGiu
@@ -4215,10 +4062,10 @@ public class SospensioneController extends SiapController implements ISospension
 
 	public EventoModel ExUpdateValidaEspulsione(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aPosGiu, String aNomProv, String aStatoProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
@@ -4229,11 +4076,9 @@ public class SospensioneController extends SiapController implements ISospension
 		ScadenzarioDAO lScaDao = null;
 		MisuraAlternativaSqlDAO lMisSqlDao = null;
 		MisuraAlternativaDAO lMisDAO = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -4422,26 +4267,19 @@ public class SospensioneController extends SiapController implements ISospension
 			// ---------------------
 
 			commit(lConn);
-			// commit(lConnBlob);
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaEspulsione: " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("SospensioneController.ExUpdateValidaEspulsione: " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -4455,11 +4293,8 @@ public class SospensioneController extends SiapController implements ISospension
 			cleanup(lScaDao);
 			cleanup(lMisSqlDao);
 			cleanup(lMisDAO);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;

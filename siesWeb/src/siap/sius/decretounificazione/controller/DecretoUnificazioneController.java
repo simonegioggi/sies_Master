@@ -10,6 +10,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaSqlDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -57,11 +62,6 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -76,7 +76,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -87,7 +87,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 
 	/**
 	 * Verifica della Unificabilità dei due Procedimenti Individuati.;
-	 * 
+	 *
 	 * @param aAnnoDaUnif
 	 * @param aNumeroDaUnif
 	 * @param aAnnoUnificante
@@ -117,8 +117,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			}
 
 			// Ricerca per Progressivo/Anno/codUfficio del fascicolo Unificante.
-			if (!lFasDao.existFasSiusUfficio(new BigDecimal(aAnnoUnificante), new BigDecimal(
-					aNumeroUnificante), aUfficioUtenteConnesso)) {
+			if (!lFasDao.existFasSiusUfficio(new BigDecimal(aAnnoUnificante),
+					new BigDecimal(aNumeroUnificante), aUfficioUtenteConnesso)) {
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Procedimento Unificante non esistente in archivio");
 			}
@@ -152,10 +152,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 					&& !lFasUnificante.getFascicoloSiusModel().getCodStatoFascicolo().equals("10"))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Il Procedimento Unificante è gia archiviato :  Unificazione Impossibile");
-
-		}
-
-		catch (SIUSException se) {
+		} catch (SIUSException se) {
 			rollback(lConn);
 			throw se;
 		} catch (DAOException ex) {
@@ -181,7 +178,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	/**
 	 * Verifica del Procedimento da Unificare.
 	 * <p>
-	 * 
+	 *
 	 * @param aAnnoDaUnif
 	 * @param aNumeroDaUnif
 	 * @param aUfficioUtenteConnesso
@@ -190,6 +187,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	 */
 	public FascicoloGPModel ExVerificaFascicoloDaUnificare(String aAnnoDaUnif, String aNumeroDaUnif,
 			String aUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloGPSqlDAO lFasDao = null;
 		SoggettoSqlDAO lSoggDao = null;
@@ -226,23 +224,21 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 
 			// 14.04.2011 Verifica presenza Magistrato Relatore in Fascicolo da Unificare
 			IMagistratoRelatore lCtrlM = SIUSLookupRemote.getMagistratoRelatoreRemote();
-			lMagRel = lCtrlM.ExRicercaEstesaMagRelByFascicolo(lFasDaUnif.getGeneraleProcedimentoModel()
-					.getFasSiuIdFascicoloSius());
+			lMagRel = lCtrlM.ExRicercaEstesaMagRelByFascicolo(
+					lFasDaUnif.getGeneraleProcedimentoModel().getFasSiuIdFascicoloSius());
 
 			// Modifica del 21/11/2016 MEV_32
 			// [EC] 15022018 AMOMALIA ME32 SEGNALATA DA GASBARRI IN TEST PRECOLLAUDO
-		    //controllo la presenza dei magistati per entrambi i fascicoli 			
+			// controllo la presenza dei magistati per entrambi i fascicoli
 			if (lMagRel != null && lMagRel.getMagistrato() != null) {
-				lFasDaUnif.setMagistratoRelatore(lMagRel);				
-			}		
+				lFasDaUnif.setMagistratoRelatore(lMagRel);
+			}
 
 			// STUB 17/09/2004.
 			if (lFasDaUnif.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Procedimento da Unificare di Esecuzione Misure Alternative :  Unificazione Impossibile");
-		}
-
-		catch (SIUSException se) {
+		} catch (SIUSException se) {
 			rollback(lConn);
 			throw se;
 		} catch (DAOException ex) {
@@ -257,7 +253,6 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw new F3BException("DecretoUnificazioneController.ExVerificaFascicoloDaUnificare: " + e);
-
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lSoggDao);
@@ -269,7 +264,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	/**
 	 * Verifica del Procedimento Unificante.
 	 * <p>
-	 * 
+	 *
 	 * @param aAnnoUnificante
 	 * @param aNumeroUnificante
 	 * @param aUfficioUtenteConnesso
@@ -291,8 +286,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			lFasDao = new FascicoloGPSqlDAO(lConn);
 
 			// Ricerca per Progressivo/Anno/codUfficio del fascicolo Unificante.
-			if (!lFasDao.existFasSiusUfficio(new BigDecimal(aAnnoUnificante), new BigDecimal(
-					aNumeroUnificante), aUfficioUtenteConnesso))
+			if (!lFasDao.existFasSiusUfficio(new BigDecimal(aAnnoUnificante),
+					new BigDecimal(aNumeroUnificante), aUfficioUtenteConnesso))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Procedimento Unificante non esistente in archivio");
 
@@ -313,21 +308,21 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 						"Procedimento Unificante archiviato :  Unificazione Impossibile");
 
 			// STUB 17/09/2004.
-			if (lFasUnificante.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0)
+			if (lFasUnificante.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+					.compareTo("U004") == 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Procedimento Unificante di Esecuzione Misure Alternative :  Unificazione Impossibile");
 
 			// Modifica del 21/11/2016 MEV_32
 			IMagistratoRelatore lCtrlM = SIUSLookupRemote.getMagistratoRelatoreRemote();
-			lMagRel = lCtrlM.ExRicercaEstesaMagRelByFascicolo(lFasUnificante.getFascicoloSiusModel()
-					.getIdFascicoloSius());
-			
+			lMagRel = lCtrlM.ExRicercaEstesaMagRelByFascicolo(
+					lFasUnificante.getFascicoloSiusModel().getIdFascicoloSius());
+
 			// [EC] 15022018 AMOMALIA ME32 SEGNALATA DA GASBARRI IN TEST PRECOLLAUDO
-		    //controllo la presenza dei magistati per entrambi i fascicoli 			
+			// controllo la presenza dei magistati per entrambi i fascicoli
 			if (lMagRel != null && lMagRel.getMagistrato() != null) {
-				lFasUnificante.setMagistratoRelatore(lMagRel);				
-			} 
-			
+				lFasUnificante.setMagistratoRelatore(lMagRel);
+			}
 		} catch (SIUSException se) {
 			rollback(lConn);
 			throw se;
@@ -343,7 +338,6 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + e);
 			throw new F3BException("DecretoUnificazioneController.ExVerificaFascicoloUnificante: " + e);
-
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lSoggDao);
@@ -355,7 +349,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	/**
 	 * Esecuzione stampa Decreto di Unificazione
 	 * <p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @param lUfficio
 	 * @return ByteArrayOutputStream
@@ -363,6 +357,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	 */
 	public EventoNotificaModel ExStampaDecretoUnificazione(EventoModel aEvento, UfficioModel lUfficio,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		EventoNotificaModel lEveNotifica = null;
 
@@ -452,7 +447,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	 * Individuati.; Vengono replicati i Tenori del FasDaUnif in FasUnificante; Il FasDaUnif viene aggiornato
 	 * come Unificato; Si effettua l'inserimento dell'EVENTO relativo.
 	 * <p>
-	 * 
+	 *
 	 * @param aAnnoDaUnif
 	 * @param aNumeroDaUnif
 	 * @param aAnnoUnificante
@@ -469,15 +464,16 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			String aAnnoUnificante, String aNumeroUnificante, String aUfficioUtenteConnesso,
 			String aUtenteConnesso, String aLuogoUfficioUtenteConnesso, Date aDataUnificazione)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
 		TenoreDAO lTenDao = null;
 		EventoDAO lEveDao = null;
-		String lCodMagistrato = null;
 		RichiestaConversioneDAO lRCDao = null;
 		RichiestaConversioneSqlDAO lRCSqlDao = null;
 
+		String lCodMagistrato = null;
 		FascicoloGPModel lFasUnificante = new FascicoloGPModel();
 		FascicoloGPModel lFasDaUnif = new FascicoloGPModel();
 		EventoModel lEveMod = new EventoModel();
@@ -541,8 +537,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 					if (lCodOggettiPresenti.indexOf(lTenore.getCodOggettoTenore()) < 0) {
 						lTenore.setProgrTenore(new BigDecimal((double) (lTenoriUnificante + j + 1)));
 						lTenore.setNote("UNIFICATO"); // STUB 01/02/2005
-						lTenore.setGenPridGeneraleProcedimento(lFasUnificante.getGeneraleProcedimentoModel()
-								.getIdGeneraleProcedimento());
+						lTenore.setGenPridGeneraleProcedimento(
+								lFasUnificante.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 						// Setto il DAO dal Model ed inserisco il Tenore
 						lTenDao.setDAOFromModel(lTenore);
@@ -552,8 +548,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			}
 			// Ricerca del Magistrato Relatore
 			IMagistratoRelatore lMagCtrl = SIUSLookupRemote.getMagistratoRelatoreRemote();
-			MagistratoRelatoreModel lMagRel = lMagCtrl.ExRicercaEstesaMagRelByFascicolo(lFasDaUnif
-					.getFascicoloSiusModel().getIdFascicoloSius());
+			MagistratoRelatoreModel lMagRel = lMagCtrl.ExRicercaEstesaMagRelByFascicolo(
+					lFasDaUnif.getFascicoloSiusModel().getIdFascicoloSius());
 			if (lMagRel != null && lMagRel.getMagistrato() != null)
 				// Prelevare il codice Magistrato_Relatore
 				lCodMagistrato = lMagRel.getMagistrato().getCodMagistrato();
@@ -593,16 +589,16 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 
 					RiferimentoFascicoloSiepModel rifFasModel = new RiferimentoFascicoloSiepModel();
 
-					rifFasModel.setFasSiuIdFascicoloSius(lFasUnificante.getFascicoloSiusModel()
-							.getIdFascicoloSius());
-					rifFasModel.setFasSieIdFascicoloSiep(lFasDaUnif.getFascicoloSiusModel()
-							.getFasSieIdFascicoloSiep());
+					rifFasModel.setFasSiuIdFascicoloSius(
+							lFasUnificante.getFascicoloSiusModel().getIdFascicoloSius());
+					rifFasModel.setFasSieIdFascicoloSiep(
+							lFasDaUnif.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 					rifFasModel.setAnnoFascicoloSiep(fascSiepMod.getChiaveAnno());
 					rifFasModel.setProgrFascicoloSiep(fascSiepMod.getChiaveProgr());
 					rifFasModel.setCodUffFascicoloSiep(fascSiepMod.getChiaveUfficio());
 					rifFasModel.setCodTipoProvvedimento(fascSiepMod.getSentenza().getCodTipoProvvedimento());
-					rifFasModel.setCodTipoAutoritaEmittente(fascSiepMod.getSentenza()
-							.getCodTipoAutoritaEmittente());
+					rifFasModel.setCodTipoAutoritaEmittente(
+							fascSiepMod.getSentenza().getCodTipoAutoritaEmittente());
 					rifFasModel.setCodLuogoEmittente(fascSiepMod.getSentenza().getCodLuogoEmittente());
 					rifFasModel.setAnnoProvvedimento(fascSiepMod.getSentenza().getAnnoSentenza());
 					rifFasModel.setNumeroProvvedimento(fascSiepMod.getSentenza().getNumeroSentenza());
@@ -624,8 +620,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			// Lettura del/i procedimento/i SIEP legati al procedimento SIUS unificato
 			IRiferimentoFascicoloSiep lRifFasCtrl = SIUSLookupRemote.getRiferimentoFascicoloSiepRemote();
 			Vector lRiferimentiSiep = new Vector();
-			lRiferimentiSiep = lRifFasCtrl.ExRicercaRiferimentoFascicoloSiepByIdFasSius(lFasDaUnif
-					.getFascicoloSiusModel().getIdFascicoloSius());
+			lRiferimentiSiep = lRifFasCtrl.ExRicercaRiferimentoFascicoloSiepByIdFasSius(
+					lFasDaUnif.getFascicoloSiusModel().getIdFascicoloSius());
 			if (lRiferimentiSiep.size() > 0) {
 
 				Iterator iter = lRiferimentiSiep.iterator();
@@ -633,8 +629,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 
 					RiferimentoFascicoloSiepModel rifFasModel = (RiferimentoFascicoloSiepModel) iter.next();
 
-					rifFasModel.setFasSiuIdFascicoloSius(lFasUnificante.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					rifFasModel.setFasSiuIdFascicoloSius(
+							lFasUnificante.getFascicoloSiusModel().getIdFascicoloSius());
 					rifFasModel.setCodOperatoreInserimento(aUtenteConnesso);
 					rifFasModel.setDataInserimento(DateUtils.getSysDate());
 					rifFasModel.setCodUfficioInserimento(aUfficioUtenteConnesso);
@@ -657,14 +653,14 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 				RichiestaConversioneModel lRCModel = new RichiestaConversioneModel();
 				lRCModel.setFasSiuIdFascicoloSius(lFasDaUnif.getFascicoloSiusModel().getIdFascicoloSius());
 				lRCSqlDao.ricercaRichiestaConversione(lRCModel);
-				lRCSqlDao.ricercaRichiestaConversioneByIdFasSIUS(lFasDaUnif.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lRCSqlDao.ricercaRichiestaConversioneByIdFasSIUS(
+						lFasDaUnif.getFascicoloSiusModel().getIdFascicoloSius());
 				lRCSqlDao.start();
 				while (lRCSqlDao.next()) {
 					RichiestaConversioneModel lRicConv = new RichiestaConversioneModel(
 							(RichiestaConversioneModel) lRCSqlDao.getModel());
-					lRicConv.setFasSiuIdFascicoloSius(lFasUnificante.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lRicConv.setFasSiuIdFascicoloSius(
+							lFasUnificante.getFascicoloSiusModel().getIdFascicoloSius());
 					lRicConv.setDataInserimento(DateUtils.getSysDate());
 					lRicConv.setCodUfficioInserimento(aUfficioUtenteConnesso);
 					lRicConv.setCodOperatoreInserimento(aUtenteConnesso);
@@ -710,7 +706,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	/**
 	 * Esegue la cancellazione di un Decreto di unificazione.
 	 * <p>
-	 * 
+	 *
 	 * @param aKeyEvento
 	 *            : chiave del record
 	 * @throws F3BException
@@ -745,8 +741,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			FascicoloGPModel lFGPUnificato = (FascicoloGPModel) lFasGPSqlDao.getModelByKey();
 
 			// Caricamento dei Tenore del Procedimento Unificato.
-			lTenSqlDao.ricercaTenoreByGeneraleProc(lFGPUnificato.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lTenSqlDao.ricercaTenoreByGeneraleProc(
+					lFGPUnificato.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 			Vector lVectTenori = new Vector(lTenSqlDao.getModels());
 			if (lVectTenori != null) {
@@ -756,13 +752,13 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			lTenSqlDao.stop();
 
 			// Lettura del Procedimento SIUS Unificante.
-			lFasGPSqlDao.ricercaFascicoloByKey(lFGPUnificato.getFascicoloSiusModel()
-					.getFasSiuIdFascicoloSius());
+			lFasGPSqlDao
+					.ricercaFascicoloByKey(lFGPUnificato.getFascicoloSiusModel().getFasSiuIdFascicoloSius());
 			FascicoloGPModel lFGPUnificante = (FascicoloGPModel) lFasGPSqlDao.getModelByKey();
 
 			// Caricamento dei Tenore del Procedimento Unificante.
-			lTenSqlDao.ricercaTenoreByGeneraleProc(lFGPUnificante.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lTenSqlDao.ricercaTenoreByGeneraleProc(
+					lFGPUnificante.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 			lVectTenori = new Vector(lTenSqlDao.getModels());
 			if (lVectTenori != null) {
@@ -815,10 +811,10 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 						lTenoreDiUnificato = lFGPUnificato.getTenori()[jj];
 
 						// STUB 01/02/2005 non si elimina il Tenore dell'unificante.
-						if (lTenoreDiUnificante.getCodOggettoTenore().equals(
-								lTenoreDiUnificato.getCodOggettoTenore())
-								&& lTenoreDiUnificante.getCodDettaglioOggetto().equals(
-										lTenoreDiUnificato.getCodDettaglioOggetto())
+						if (lTenoreDiUnificante.getCodOggettoTenore()
+								.equals(lTenoreDiUnificato.getCodOggettoTenore())
+								&& lTenoreDiUnificante.getCodDettaglioOggetto()
+										.equals(lTenoreDiUnificato.getCodDettaglioOggetto())
 								&& lTenoreDiUnificante.getNote() != null
 								&& lTenoreDiUnificante.getNote().compareTo("UNIFICATO") == 0) {
 							// Setto il DAO dal Model e cancello il Tenore.
@@ -833,8 +829,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			if (lFGPUnificato.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 					.compareTo(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE) == 0) {
 				lRCDao = new RichiestaConversioneDAO(lConn);
-				lRCDao.selCondizioneByIdFasSiusIdEvento(lFGPUnificante.getFascicoloSiusModel()
-						.getIdFascicoloSius(), aKeyEvento);
+				lRCDao.selCondizioneByIdFasSiusIdEvento(
+						lFGPUnificante.getFascicoloSiusModel().getIdFascicoloSius(), aKeyEvento);
 				lRCDao.delete();
 			}
 
@@ -882,7 +878,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 
 	/**
 	 * Preleva dati dai dao e li organizza gerarchicamente.
-	 * 
+	 *
 	 * @param aEvento
 	 * @param lUfficio
 	 * @return lTreeRoot
@@ -890,6 +886,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	 * @throws F3BException
 	 */
 	private TreeModel prelevaDati(EventoModel aEvento, UfficioModel lUfficio) throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		FascicoloGPSqlDAO lFasGPSqlDao = null;
@@ -920,8 +917,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			// siesLogger.debug("###### Dati prelevati da lFGPUnificato " + lFGPUnificato );
 
 			// Procedimento SIUS Unificante.
-			lFasGPSqlDao.ricercaFascicoloByKey(lFGPUnificato.getFascicoloSiusModel()
-					.getFasSiuIdFascicoloSius());
+			lFasGPSqlDao
+					.ricercaFascicoloByKey(lFGPUnificato.getFascicoloSiusModel().getFasSiuIdFascicoloSius());
 			FascicoloGPModel lFGPUnificante = (FascicoloGPModel) lFasGPSqlDao.getModelByKey();
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1035,8 +1032,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			PosizioneGiuridicaModel lPosGiuModel = null;
 			if (lFasSiepModel != null) {
 				lPosGiuSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
-				lPosGiuSqlDao.ricercaPosizioneGiuridicaByIdFascicolo(lFasUnificante
-						.getFasSieIdFascicoloSiep());
+				lPosGiuSqlDao
+						.ricercaPosizioneGiuridicaByIdFascicolo(lFasUnificante.getFasSieIdFascicoloSiep());
 				lPosGiuModel = (PosizioneGiuridicaModel) lPosGiuSqlDao.getModelByKey();
 			}
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1051,8 +1048,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			// LogF3B.getLogger()
 			// siesLogger.debug(">>>>>>> Inizio Sezione - Load LuogoDetenzione. ") ;
 			lDetenzioneSqlDao = new LuogoDetenzioneSqlDAO(lConn);
-			lDetenzioneSqlDao.ricercaLuogoDetenzioneCorrenteByFascicoloSius(lFasUnificante
-					.getIdFascicoloSius());
+			lDetenzioneSqlDao
+					.ricercaLuogoDetenzioneCorrenteByFascicoloSius(lFasUnificante.getIdFascicoloSius());
 			LuogoDetenzioneModel lDetenzioneModel = (LuogoDetenzioneModel) lDetenzioneSqlDao.getModelByKey();
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1134,8 +1131,8 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			lTreeRoot.add(lTreeEvento);
 			lTreeRoot.add(lTreeFasSiepModel);
 			// Riferimento Fascicolo SIEP.
-			lTreeRoot = prelevaDatiRifasiep(lTreeRoot, lFGPUnificante.getFascicoloSiusModel()
-					.getIdFascicoloSius(), lConn); // STUB 14/10/2004
+			lTreeRoot = prelevaDatiRifasiep(lTreeRoot,
+					lFGPUnificante.getFascicoloSiusModel().getIdFascicoloSius(), lConn); // STUB 14/10/2004
 
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1148,16 +1145,16 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 			siesLogger.debug("Exception: " + Ex);
 			throw new F3BException("DecretoUnificazioneController.prelevaDati: " + Ex);
 		} finally {
-			cleanup(lSogSqlDao);
 			cleanup(lFasGPSqlDao);
-			cleanup(lPosGiuSqlDao);
+			cleanup(lTenSqlDao);
+			cleanup(lSogSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lFasSiepSqlDao);
-			cleanup(lSentenzaSqlDao);
-			cleanup(lCampoNotaSqlDao);
-			cleanup(lTenSqlDao);
+			cleanup(lPosGiuSqlDao);
 			cleanup(lDetenzioneSqlDao);
+			cleanup(lCampoNotaSqlDao);
 			cleanup(lSentenzaSqlDao);
+			
 			cleanup(lConn);
 		}
 
@@ -1167,12 +1164,13 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	/**
 	 * Creazione della radice dell'albero.
 	 * <p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @param lUfficio
 	 * @return il model di radice.
 	 */
 	private XModel createRoot(EventoModel aEvento, UfficioModel lUfficio) {
+
 		XModel lXMod = new XModel();
 
 		lXMod.setTipoUfficioT1(aEvento.getDescrUfficioEmittente().toUpperCase());
@@ -1189,7 +1187,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	/**
 	 * STUB 11/10/2004 Si prelevano i dati di Riferimento Fascicolo Siep.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicoloSIUS
 	 *            id del FascicoloSIUS.
 	 * @param aConn
@@ -1200,6 +1198,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 	 */
 	private TreeModel prelevaDatiRifasiep(TreeModel aTreeModel, BigDecimal aIdFascicoloSIUS, Connection aConn)
 			throws F3BException {
+
 		if (aTreeModel != null) {
 			RiferimentoFascicoloSiepModel lRFSMod = new RiferimentoFascicoloSiepModel();
 			lRFSMod.setFasSiuIdFascicoloSius(aIdFascicoloSIUS);
@@ -1221,9 +1220,7 @@ public class DecretoUnificazioneController extends SiapController implements IDe
 						}
 					}
 				}
-			}
-
-			catch (DAOException daoEx) {
+			} catch (DAOException daoEx) {
 				daoEx.printStackTrace();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()

@@ -4,16 +4,15 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
-
 import siap.controller.SiapController;
 import siap.siep.modulocumulo.dao.ContinuazioneCumuloDAO;
 import siap.siep.modulocumulo.dao.ContinuazioneCumuloSqlDAO;
 import siap.siep.modulocumulo.model.ContinuazioneCumuloModel;
-
-import org.apache.log4j.Logger;
 
 /**
  * <p>
@@ -25,7 +24,7 @@ import org.apache.log4j.Logger;
  * <p>
  * in ambito Cumulo (Continuazione_Cumulo)
  * </p>
- * 
+ *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ContinuazioneCumuloController extends SiapController implements IContinuazioneCumulo {
@@ -35,6 +34,7 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 
 	public ContinuazioneCumuloModel ExInserisciContinuazione(ContinuazioneCumuloModel aContinuazione)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloDAO lConDao = null;
@@ -77,9 +77,10 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 	 */
 	public Vector<ContinuazioneCumuloModel> ExRicercaContinuazione(ContinuazioneCumuloModel aContinuazione)
 			throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<ContinuazioneCumuloModel> lContinuazioni = new Vector<ContinuazioneCumuloModel>();
+		Vector<ContinuazioneCumuloModel> lContinuazioni = new Vector<>();
 		ContinuazioneCumuloSqlDAO lConDao = null;
 
 		try {
@@ -102,9 +103,10 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public ContinuazioneCumuloModel ExRicercaContinuazioneCumByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloSqlDAO lConDao = null;
@@ -130,10 +132,11 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 	}
 
 	/**
-	 * 
+	 *
 	 * @deprecated da verificare. Mai referenziato
 	 */
 	public Vector ExRicercaContinuazioneByIDPenaComplessiva(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloSqlDAO lConDao = null;
@@ -163,17 +166,18 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aIdTitolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector<ContinuazioneCumuloModel> ExRicercaContinuazioneByIDTitolo(BigDecimal aIdTitolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloSqlDAO lConDao = null;
-		Vector<ContinuazioneCumuloModel> lContinuazioni = new Vector<ContinuazioneCumuloModel>();
+		Vector<ContinuazioneCumuloModel> lContinuazioni = new Vector<>();
 
 		try {
 			lConn = getDBConnection();
@@ -189,7 +193,6 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 			throw new F3BException("ContinuazioneCumuloController.ExRicercaContinuazioneByIDTitolo: " + ex);
 		} finally {
 			cleanup(lConDao);
-
 			cleanup(lConn);
 		}
 
@@ -197,10 +200,11 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public ContinuazioneCumuloModel ExModificaContinuazioneCum(ContinuazioneCumuloModel aContinuazione)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloDAO lConDao = null;
@@ -223,7 +227,6 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 			throw new F3BException("ContinuazioneCumuloController.ExModificaContinuazioneCum: " + ex);
 		} finally {
 			cleanup(lConDao);
-
 			cleanup(lConn);
 		}
 
@@ -231,6 +234,7 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 	}
 
 	public void ExCancellaContinuazioneCum(ContinuazioneCumuloModel aContinuazione) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloDAO lConDao = null;
@@ -255,7 +259,6 @@ public class ContinuazioneCumuloController extends SiapController implements ICo
 			throw new F3BException("ContinuazioneCumuloController.ExCancellaContinuazione: " + ex);
 		} finally {
 			cleanup(lConDao);
-
 			cleanup(lConn);
 		}
 	}

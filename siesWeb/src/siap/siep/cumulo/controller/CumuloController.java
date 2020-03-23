@@ -11,6 +11,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoDAO;
@@ -55,12 +61,6 @@ import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.ulterioresanzionecumulo.dao.UlterioreSanzioneCumuloDAO;
 import siap.siep.ulterioresanzionecumulo.model.UlterioreSanzioneCumuloModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -75,7 +75,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,6 +98,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	 */
 	public CumuloModel ExInserisciCumulo(CumuloModel aCumulo, FascicoloSiepModel aFasMod,
 			SentenzaModel aSenMod, BigDecimal IdFas0) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 		SentenzaDAO lSenDao = null;
@@ -127,10 +128,10 @@ public class CumuloController extends SiapController implements ICumulo {
 						aSenMod.getCodTipoAutoritaEmittente(), aSenMod.getCodLuogoEmittente());
 				lSenMod = (SentenzaModel) lSenSQL.getModelByKey();
 				if (lSenMod != null) {
-					throw new SIEPException(SIEPException.USER_MESSAGE, "La sentenza "
-							+ lSenMod.getAnnoSentenza() + "/" + lSenMod.getNumeroSentenza() + " - "
-							+ lSenMod.getDescrTipoAutoritaEmittente() + " <br>di "
-							+ lSenMod.getDescrLuogoEmittente() + " è già presente in archivio.");
+					throw new SIEPException(SIEPException.USER_MESSAGE,
+							"La sentenza " + lSenMod.getAnnoSentenza() + "/" + lSenMod.getNumeroSentenza()
+									+ " - " + lSenMod.getDescrTipoAutoritaEmittente() + " <br>di "
+									+ lSenMod.getDescrLuogoEmittente() + " è già presente in archivio.");
 				}
 
 				lSenDao.setDAOFromModel(aSenMod);
@@ -183,7 +184,7 @@ public class CumuloController extends SiapController implements ICumulo {
 
 	/**
 	 * Inserisce/Aggiorna i dati del Cumulo, Pena_cumulo e LA in cumulo
-	 * 
+	 *
 	 * @param aPenaCumulo
 	 * @param aCumulo
 	 * @param alibAntMod
@@ -191,23 +192,22 @@ public class CumuloController extends SiapController implements ICumulo {
 	 * @return
 	 * @throws F3BException
 	 */
-	public PenaCumuloModel ExInserisciCumuloPenaCumuloLibAnt(PenaCumuloModel aPenaCumulo,
-			CumuloModel aCumulo, LicenzaLibAnticipataModel alibAntMod, boolean aEsisteGiorniLib)
-			throws F3BException {
+	public PenaCumuloModel ExInserisciCumuloPenaCumuloLibAnt(PenaCumuloModel aPenaCumulo, CumuloModel aCumulo,
+			LicenzaLibAnticipataModel alibAntMod, boolean aEsisteGiorniLib) throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloDAO lPenDao = null;
 		PenaCumuloSqlDAO lPenSqlDao = null;
-		PenaCumuloModel lPenMod = null;
 		CumuloDAO lCumDao = null;
 		CumuloSqlDAO lCumSqlDao = null;
 		LicenzaLibanticipataDAO lLicDao = null;
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
 
-		lPenMod = new PenaCumuloModel(aPenaCumulo);
+		PenaCumuloModel lPenMod = null;
 
 		try {
 			lConn = getDBTransaction();
-
+			lPenMod = new PenaCumuloModel(aPenaCumulo);
 			lPenDao = new PenaCumuloDAO(lConn);
 			lCumDao = new CumuloDAO(lConn);
 			lCumSqlDao = new CumuloSqlDAO(lConn);
@@ -219,15 +219,15 @@ public class CumuloController extends SiapController implements ICumulo {
 			 * modifica 08-06-2006 -- Dario -- Viviana -- viene spostata la scrittura del FlagCumulante
 			 * dall'inserimento dei fascicoli coinvolti alla validazione del provvedimento pene concorrenti
 			 * ossia la funzione Stampa di gestione cumulo!!
-			 * 
+			 *
 			 * //FASCICOLO SIEP FascicoloSiepModel lFascMod = new FascicoloSiepModel();
 			 * lFascSqlDao.ricercaFascicoloByKey(aCumulo.getFasSieIdFascicoloSiep()); lFascMod =
 			 * (FascicoloSiepModel)lFascSqlDao.getModelByKey();
-			 * 
+			 *
 			 * if(lFascMod != null && lFascMod.getIdFascicoloSiep() != null) {
 			 * lFascDao.setDAOFromModelForUpdate(lFascMod); lFascDao.setFlagCumulante("S");
 			 * lFascDao.selCondizioneUpdate(lFascMod.getIdFascicoloSiep());
-			 * 
+			 *
 			 * lFascDao.update(); lFascDao.stop(); }
 			 */
 			// =======================================================================
@@ -329,12 +329,12 @@ public class CumuloController extends SiapController implements ICumulo {
 			 * if(aEsisteGiorniLib && alibAntMod != null && alibAntMod.getNumeroGiorni() != null &&
 			 * alibAntMod.getNumeroGiorni().compareTo(new BigDecimal(0))!= 0 ) { BigDecimal lLiberazioneGiorni
 			 * = alibAntMod.getNumeroGiorni();
-			 * 
+			 *
 			 * LicenzaLibAnticipataModel lLicMod = new LicenzaLibAnticipataModel();
 			 * lLicSqlDao.ricercaLicenzaLibanticipataUltimaByIDFascicoloSIEP
 			 * (aCumulo.getFasSieIdFascicoloSiep()); lLicMod = (LicenzaLibAnticipataModel)
 			 * lLicSqlDao.getModelByKey();
-			 * 
+			 *
 			 * if ( lLicMod != null && lLicMod.getFlagElaborato() != null &&
 			 * lLicMod.getFlagElaborato().equals("N") ) { //aggiorna
 			 * lLicMod.setFasSieIdFascicoloSiep(alibAntMod.getFasSieIdFascicoloSiep());
@@ -342,12 +342,12 @@ public class CumuloController extends SiapController implements ICumulo {
 			 * lLicMod.setFlagElaborato(alibAntMod.getFlagElaborato());
 			 * lLicMod.setCodTipoLicenza(alibAntMod.getCodTipoLicenza());
 			 * lLicMod.setNumeroGiorni(lLiberazioneGiorni);
-			 * 
+			 *
 			 * //???????????????????????
 			 * lLicMod.setCodUfficioAggiornamento(alibAntMod.getCodUfficioInserimento());
 			 * lLicMod.setCodOperatoreAggiornamento(alibAntMod.getCodOperatoreInserimento());
 			 * lLicMod.setDataAggiornamento(DateUtils.getSysDate());
-			 * 
+			 *
 			 * lLicDao.setDAOFromModelForUpdate(lLicMod); lLicDao.update(); lLicDao.stop(); } else {
 			 * //inserisce alibAntMod.setNumeroGiorni(lLiberazioneGiorni);
 			 * lLicDao.setDAOFromModel(alibAntMod); lLicDao.insert(); lLicDao.stop(); } }
@@ -383,6 +383,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public Vector ricercaCumuloSentenzaFascicoloSige(CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCumuli = new Vector();
 		CumuloSqlDAO lCumDao = null;
@@ -403,6 +404,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public Vector ExRicercaCumulo(CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCumuli = new Vector();
 		CumuloSqlDAO lCumDao = null;
@@ -431,6 +433,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoliCumulobyIdFascicoloSiepFlagValidato(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCumuli = new Vector();
 		CumuloSqlDAO lCumDao = null;
@@ -455,6 +458,7 @@ public class CumuloController extends SiapController implements ICumulo {
 
 	public Vector ExRicercaFascicoliCumulobyIdFascicoloSiepValidatoDataCumuloNotNull(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lCumuli = new Vector();
 		CumuloSqlDAO lCumDao = null;
@@ -487,13 +491,15 @@ public class CumuloController extends SiapController implements ICumulo {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoliCumulatiByIDFascicoloSiep(BigDecimal lFascID) throws F3BException {
+
 		Connection lConn = null;
-		Vector lCumuli = new Vector();
 		CumuloSqlDAO lCumDao = null;
-		Vector lFascicoli = new Vector();
 		FascicoloSiepController lFasCtr = new FascicoloSiepController();
 		SentenzaController lSenCtr = new SentenzaController();
 		FascicoloSiepModel lFasMod = new FascicoloSiepModel();
+
+		Vector lFascicoli = new Vector();
+		Vector lCumuli = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -525,8 +531,8 @@ public class CumuloController extends SiapController implements ICumulo {
 					lFascicoli.add(lFasMod);
 					// Indica i Titoli Esecutivi appartenenti ad un Fascicolo di Cumulo
 					// e non collegati a Procedimenti SIEP.
-				} else if ((cumulo.getSentenza() != null && cumulo.getSentenza().getFlagVisibilita() != null && cumulo
-						.getSentenza().getFlagVisibilita().equals("S"))) {
+				} else if ((cumulo.getSentenza() != null && cumulo.getSentenza().getFlagVisibilita() != null
+						&& cumulo.getSentenza().getFlagVisibilita().equals("S"))) {
 					lFasMod.setSentenza(lSenCtr.ExRicercaSentenzaByKey(cumulo.getSenIdSentenza()));
 					lFascicoli.add(lFasMod);
 				}
@@ -548,6 +554,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public CumuloModel ExRicercaCumuloByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		CumuloSqlDAO lCumDao = null;
 		CumuloModel lCumMod;
@@ -567,6 +574,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public CumuloModel ExRicercaCumuloByEveIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		CumuloSqlDAO lCumDao = null;
 		CumuloModel lCumMod;
@@ -577,8 +585,8 @@ public class CumuloController extends SiapController implements ICumulo {
 			lCumDao.ricercaCumuloByEveIdEvento(aKey);
 			lCumMod = (CumuloModel) lCumDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CumuloController.ExRicercaCumuloByEveIdEvento: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CumuloController.ExRicercaCumuloByEveIdEvento: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lCumDao);
 			cleanup(lConn);
@@ -587,6 +595,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public CumuloModel ExModificaCumulo(CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 		CumuloModel lCumMod = new CumuloModel(aCumulo);
@@ -609,6 +618,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public void ExCancellaCumulo(CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 
@@ -627,6 +637,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	}
 
 	public void ExAggiornaCumuloFasc(CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 		try {
@@ -663,26 +674,21 @@ public class CumuloController extends SiapController implements ICumulo {
 	 */
 	public EventoModel ExUpdateValidaCumulo(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		// Connection lConnBlob = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
-
 		EventoDAO lEveDaoBlob = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
-
 		CumuloSqlDAO lCumSqlDao = null;
 		CumuloDAO lCumDao = null;
-
 		FascicoloSiepDAO lFascDao = null;
 		LicenzaLibanticipataDAO lLibDAO = null;
 		LicenzaLibanticipataSqlDAO lLibSqlDAO = null;
-
 		NotificaEventoSqlDAO lNotEveDao = null;
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScadeDao = null;
@@ -860,11 +866,9 @@ public class CumuloController extends SiapController implements ICumulo {
 			// Aggiorna liberazione anticipata legate all'evento ponendo il flag
 			// elaborate a S se computate sulla pena
 			// ========================================================================
-			if (lPenResMod != null
-					&& lPenResMod.getDataInizio() != null
-					&& lPenResMod.getDataFine() != null
-					&& (lPenResMod.getFlagErgastolo() == null || (lPenResMod.getFlagErgastolo() != null && lPenResMod
-							.getFlagErgastolo().equals("N")))) {
+			if (lPenResMod != null && lPenResMod.getDataInizio() != null && lPenResMod.getDataFine() != null
+					&& (lPenResMod.getFlagErgastolo() == null || (lPenResMod.getFlagErgastolo() != null
+							&& lPenResMod.getFlagErgastolo().equals("N")))) {
 				lLibSqlDAO.ricercaLicenzaLibanticipataByEve(lEveMod.getIdEvento());
 
 				Vector lListaLicenze = new Vector(lLibSqlDAO.getModels());
@@ -929,8 +933,8 @@ public class CumuloController extends SiapController implements ICumulo {
 					ParametroModel lParModel = (ParametroModel) lIter.next();
 					lSommaAnni = DateUtils.moveDateTo(lScaMod.getDataInizioScadenza(),
 							java.util.Calendar.YEAR, lParModel.getAnni().intValue());
-					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH, lParModel
-							.getMesi().intValue());
+					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
+							lParModel.getMesi().intValue());
 					lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
 							lParModel.getGiorni().intValue());
 				}
@@ -1005,26 +1009,18 @@ public class CumuloController extends SiapController implements ICumulo {
 			commit(lConn);
 			// commit(lConnBlob);
 		} catch (DAOException daoEx) {
-
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("CumuloController.ExUpdateValidaCumulo : " + daoEx);
 		} catch (F3BException f3bEx) {
-
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			throw f3bEx;
 		} catch (Exception ex) {
-
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("CumuloController.ExUpdateValidaCumulo : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
@@ -1052,6 +1048,7 @@ public class CumuloController extends SiapController implements ICumulo {
 
 	public ByteArrayOutputStream ExStampaDocumentoXCumulo(EventoNotificaModel aEvento, UtenteModel aUtente)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1060,8 +1057,8 @@ public class CumuloController extends SiapController implements ICumulo {
 
 		try {
 			IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEveMod = lCtrlEve.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEveMod = lCtrlEve
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			lEveMod.getEvento().setDescrUfficioEmittente(aEvento.getEvento().getDescrUfficioEmittente());
 
@@ -1106,7 +1103,6 @@ public class CumuloController extends SiapController implements ICumulo {
 			throw new F3BException("CumuloController.ExStampaDocumentoXCumulo: " + daoEx);
 		} finally {
 			cleanup(lEveDao);
-
 			cleanup(lConn);
 		}
 
@@ -1160,13 +1156,14 @@ public class CumuloController extends SiapController implements ICumulo {
 
 	/**
 	 * Effettua la ricerca di tutti i record CUMULO associati ad una certa istruttoria
-	 * 
+	 *
 	 * @param aIdIstruttoria
 	 *            - Id Dell'istruttoria
 	 * @return vettore di CumuloModel
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaCumuloByIstruttoria(BigDecimal aIdIstruttoria) throws F3BException {
+
 		Connection lConn = null;
 
 		CumuloSqlDAO lCumSqlDao = null;
@@ -1219,10 +1216,9 @@ public class CumuloController extends SiapController implements ICumulo {
 					siesLogger.debug("Sentenza = " + lSentModel);
 				}
 			}
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("CumuloController.ExRicercaCumuloByIstruttoria: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CumuloController.ExRicercaCumuloByIstruttoria: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lCumSqlDao);
 			cleanup(lFasSiepSqlDAO);
@@ -1237,12 +1233,13 @@ public class CumuloController extends SiapController implements ICumulo {
 	/**
 	 * Effettua la cancellazione del cumulato che non risulta essere 'Primo Cumulo' e della Sentenza ad esso
 	 * associata, se a quest'ultima non è associato nessun Fascicolo Siep.
-	 * 
+	 *
 	 * @param aCumulo
 	 *            - cumulo da eliminare
 	 * @throws F3BException
 	 */
 	public void ExCancellaFascCumulato(CumuloModel aCumulo) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 		SentenzaDAO lSentenzaDao = null;
@@ -1271,9 +1268,7 @@ public class CumuloController extends SiapController implements ICumulo {
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("CumuloController.ExCancellaFascCumulato: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCumDao);
 			cleanup(lSentenzaDao);
 			cleanup(lConn);
@@ -1285,7 +1280,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	 * si imposta il cumulo successivo come 'Primo Cumulo' e si associa a quest'ultimo la Pena Cumulo (se
 	 * esiste); si elimina la sentanza ad esso associata, se a quest'ultima non è associato nessun Fascicolo
 	 * Siep.
-	 * 
+	 *
 	 * @param aCumulo
 	 *            - cumulo da eliminare
 	 * @param aNextPrimoCumulo
@@ -1298,6 +1293,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	 */
 	public void ExCancellaFascCumulatoPrimoCumulo(CumuloModel aCumulo, CumuloModel aNextPrimoCumulo,
 			PenaCumuloModel aPenaCumulo, Vector aUltSanzCumulo) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 		SentenzaDAO lSentenzaDao = null;
@@ -1368,11 +1364,12 @@ public class CumuloController extends SiapController implements ICumulo {
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("CumuloController.ExCancellaFascCumulatoPrimoCumulo: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCumDao);
 			cleanup(lSentenzaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPenaCumuloDao);
+			cleanup(lUltSanzDao);
 			cleanup(lConn);
 		}
 	}
@@ -1383,7 +1380,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	 * Sanzioni (se esistono) legate al Cumulo. Si imposta a 'N' il Flag FLAG_CUMULANTE sulla tabella
 	 * FASCICOLO_SIEP. Si cancella l'evento associato. Si elimina la sentanza ad esso associata, se a
 	 * quest'ultima non è associato nessun Fascicolo Siep.
-	 * 
+	 *
 	 * @param aCumulo
 	 *            - cumulo da eliminare
 	 * @param aNextPrimoCumulo
@@ -1394,6 +1391,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	 */
 	public void ExCancellaFascCumulatoUnico(CumuloModel aCumulo, String aCodUtenteConnesso,
 			String aCodUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		CumuloDAO lCumDao = null;
 		SentenzaDAO lSentenzaDao = null;
@@ -1456,19 +1454,20 @@ public class CumuloController extends SiapController implements ICumulo {
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("CumuloController.ExCancellaFascCumulatoUnico: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCumDao);
 			cleanup(lSentenzaDao);
 			cleanup(lUltSanzDao);
 			cleanup(lEventoDao);
 			cleanup(lFascDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPenaCumuloDao);
 			cleanup(lConn);
 		}
 	}
 
 	public CumuloModel ExRicercaCumuloByIdSentenza(BigDecimal aKey, String flagValidato) throws F3BException {
+
 		Connection lConn = null;
 		CumuloSqlDAO lCumDao = null;
 		CumuloModel lCumMod;
@@ -1479,8 +1478,8 @@ public class CumuloController extends SiapController implements ICumulo {
 			lCumDao.ricercaCumuloByIdSentenza(aKey, flagValidato);
 			lCumMod = (CumuloModel) lCumDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CumuloController.ExRicercaCumuloByIdSentenza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CumuloController.ExRicercaCumuloByIdSentenza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lCumDao);
 			cleanup(lConn);
@@ -1494,6 +1493,7 @@ public class CumuloController extends SiapController implements ICumulo {
 	// Vengono estratti dalla tabella Evento, tutti gli eventi legati al Fascicolo Siep,
 	// che hanno COD_MOTIVO legati al cumulo
 	public Vector ExRicercaEventoCumulo(BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCumuli = new Vector();
 		// CumuloSqlDAO lCumDao = null;

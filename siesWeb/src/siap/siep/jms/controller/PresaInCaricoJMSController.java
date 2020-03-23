@@ -118,7 +118,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	/**
 	 * INserisce l'Istanza Trasmessa 2010-04-30 - Metodo obsoleto, questo verrà rimpiazzato con :
 	 * ExInserisciNuovaIstanzaTrasmessa
-	 * 
+	 *
 	 * @param aMessaggioModel
 	 * @return
 	 * @throws F3BException
@@ -213,8 +213,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 	/**
 	 * Inserisce l'Istanza Trasmessa ( Nuova Versione per tabella NuovaIstanza ) Questo metodo sostituisce
 	 * quello precedente, ovvero quello afferente all'istanza.
-	 * <p>
-	 * 
+	 *
 	 * @param aMessaggioModel
 	 * @return
 	 * @throws F3BException
@@ -263,10 +262,10 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				try {
 					if (lPars.getNuovaIstanza() != null) {
 						siesLogger.debug("lPars.getNuovaIstanza() is not null");
-					lNIstDao = new NuovaIstanzaDAO(lConn);
-					lNIstDao.setDAOFromModel(lPars.getNuovaIstanza());
-					lNIstDao.setWithoutSequence(true);
-					lNIstDao.insert();
+						lNIstDao = new NuovaIstanzaDAO(lConn);
+						lNIstDao.setDAOFromModel(lPars.getNuovaIstanza());
+						lNIstDao.setWithoutSequence(true);
+						lNIstDao.insert();
 					}
 				} catch (DAOException ex) {
 					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
@@ -307,7 +306,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 
 	/**
 	 * Inserisce il Provvedimento SIEP Trasmesso solo se di Altra BDI
-	 * 
+	 *
 	 * @param aMessaggioModel
 	 * @return
 	 * @throws F3BException
@@ -380,12 +379,13 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 
 	/**
 	 * Metodo di inserimento dei dati del fascicolo SIEP nel caso di trasmissione
-	 * 
+	 *
 	 * @param aMessaggioModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExInserisciFascicoloSiep(MessaggioModel aMessaggioModel) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloStoreProcedurePulisciDAO lProc = null;
 		String lRapporto = "";
@@ -1034,7 +1034,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				lModelDatiCum = lPars.getDatiCumuloPerTrasferimento();
 				if (lModelDatiCum.getListIstruttoriaCumulo() != null
 						&& lModelDatiCum.getListIstruttoriaCumulo().size() > 0) {
-					lVecIstruttorie = new Vector<IstruttoriaCumuloModel>(lModelDatiCum.getListIstruttoriaCumulo());
+					lVecIstruttorie = new Vector<>(lModelDatiCum.getListIstruttoriaCumulo());
 				}
 			}
 
@@ -1164,7 +1164,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 					// Richieste_Pm_In_Cumulo ( ancora da inviare, NON legate alle Richieste_Inviate )
 					if (lIstru != null && lIstru.getListaRichiestePmInCumulo() != null
 							&& lIstru.getListaRichiestePmInCumulo().size() > 0) {
-						Vector<RichiestePmInCumuloModel> VecRichPmCum = new Vector<RichiestePmInCumuloModel>(
+						Vector<RichiestePmInCumuloModel> VecRichPmCum = new Vector<>(
 								lIstru.getListaRichiestePmInCumulo());
 						lCodEsito = lRichCtrl.ExInserisciRichiestePmInCumuloWithoutSequence(VecRichPmCum,
 								lConn);
@@ -1326,7 +1326,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 								lStEsecTiCumModel = (StatoEsecTitoloCumulatoModel) ItxST.next();
 								if (lStEsecTiCumModel != null
 										&& lStEsecTiCumModel.getListaLiberazioniAnticipate() != null) {
-									VecLibAbtCum = new Vector<LibAnticipataCumuloModel>(
+									VecLibAbtCum = new Vector<>(
 											lStEsecTiCumModel.getListaLiberazioniAnticipate());
 
 									lCodEsito = lStEsecCumCtrl
@@ -1348,7 +1348,7 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 				if (lVecIstruttorie != null && lVecIstruttorie.size() > 0) {
 					for (IstruttoriaCumuloModel lIstru : lVecIstruttorie) {
 						if (lIstru.getComputiCumulo() != null && lIstru.getComputiCumulo().size() > 0) {
-							Vector<ComputiCumuloModel> VecCompCum = new Vector<ComputiCumuloModel>(lIstru.getComputiCumulo());
+							Vector<ComputiCumuloModel> VecCompCum = new Vector<>(lIstru.getComputiCumulo());
 
 							lCodEsito = lCompCtrl.ExInserisciComputiCumuloWithoutSequence(VecCompCum, lConn);
 							lRapporto += buildRapporto("Inserimento ", " Computi_Cumulo ", lCodEsito);
@@ -1415,7 +1415,6 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 			lRapporto += buildRapporto("ERRORE GENERICO", messaggioErrore, ICostantiJMS.ERRORE_CARICAMENTO);
 			throw new F3BException(F3BException.USER_MESSAGE, lRapporto);
 			// fine MEV_67
-
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

@@ -9,6 +9,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.siep.reato.dao.ReatoDAO;
@@ -17,9 +20,6 @@ import siap.siep.reato.model.ReatoCircostanzaModel;
 import siap.siep.reato.model.ReatoModel;
 import siap.sige.reato.dao.ReatoSentenzaSigeDAO;
 import siap.sige.reato.model.ReatoSentenzaSigeModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -45,12 +45,13 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Inserisce il Reato
-	 * 
+	 *
 	 * @param aReato
 	 * @return
 	 * @throws F3BException
 	 */
 	public ReatoModel ExInserisciReato(ReatoModel aReato) throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoDAO lReaDao = null;
@@ -88,13 +89,14 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Inserimento di piu' reati
-	 * 
+	 *
 	 * @param aReati
 	 *            - ArrayList di reati
 	 * @return ReatoModel - il reato inserito
 	 * @throws F3BException
 	 */
 	public ReatoModel ExInserisciReati(ArrayList aReati) throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoDAO lReaDao = null;
@@ -186,7 +188,7 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Inserimento Ulteriori Reati
-	 * 
+	 *
 	 * @param aReatoPrincipale
 	 *            - reato principale
 	 * @param aReati
@@ -194,6 +196,7 @@ public class ReatoController extends SiapController implements IReato {
 	 * @throws F3BException
 	 */
 	public void ExInserisciUlterioriReati(ReatoModel aReatoPrincipale, ArrayList aReati) throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoDAO lReaDao = null;
@@ -258,6 +261,7 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public Vector ExRicercaReato(ReatoModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		ReatoSqlDAO lReaDao = null;
@@ -292,6 +296,7 @@ public class ReatoController extends SiapController implements IReato {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaReatiByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		ReatoSqlDAO lReaDao = null;
@@ -317,12 +322,13 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Cerca solo i reati
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaReatiNoCircostanzaByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		ReatoSqlDAO lReaDao = null;
@@ -353,6 +359,7 @@ public class ReatoController extends SiapController implements IReato {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaReatiByFascicoloNoError(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		ReatoSqlDAO lReaDao = null;
@@ -375,6 +382,7 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public ReatoModel ExRicercaReatoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ReatoSqlDAO lReaDao = null;
 		ReatoModel lReaMod;
@@ -398,13 +406,14 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Ricerca il Reato e le circostanze correlate per un Fascicolo
-	 * 
+	 *
 	 * @param aKey
 	 *            - Chiave Fascicolo
 	 * @return Vettore di Reati Circostanze
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaReatoCircostanzaByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ReatoSqlDAO lReaDao = null;
 		Vector lListReaCirc = null;
@@ -438,6 +447,7 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public ReatoModel ExModificaReato(ReatoModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 		ReatoModel lReaMod = new ReatoModel(aReato);
@@ -469,6 +479,7 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public ReatoModel ExModificaPenaReato(ReatoModel aReato, Vector aNormeUlteriori) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 		ReatoModel lReaMod = new ReatoModel(aReato);
@@ -492,7 +503,7 @@ public class ReatoController extends SiapController implements IReato {
 
 			Iterator itx = aNormeUlteriori.iterator();
 
-//			BigDecimal oriIdReato = aReato.getIdReato();
+			// BigDecimal oriIdReato = aReato.getIdReato();
 
 			while (itx.hasNext()) {
 
@@ -519,17 +530,17 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Cancellaizone Reato
-	 * 
+	 *
 	 * @param aReato
 	 *            - reato da Cancellare
 	 * @throws F3BException
 	 */
 	public void ExCancellaReato(ReatoModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 
 		try {
-
 			if (aReato.getProgrCircostanza() != null) {
 
 				lConn = getDBConnection();
@@ -556,9 +567,7 @@ public class ReatoController extends SiapController implements IReato {
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("ReatoController.ExCancellaReato: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lReaDao);
 			cleanup(lConn);
 		}
@@ -588,18 +597,18 @@ public class ReatoController extends SiapController implements IReato {
 				lReaDao.setDAOFromModel(lReaPrincipale.getReato());
 				lReaDao.setWithoutSequence(true);
 
-//				BigDecimal lKeyReato = lReaPrincipale.getReato().getIdReato();
+				// BigDecimal lKeyReato = lReaPrincipale.getReato().getIdReato();
 				lReaDao.insert();
 				lReaDao.stop();
 
 				// Inserimento successivi
 				ReatoModel lReaMod = null;
-//				BigDecimal lProgrCircostanza = null;
+				// BigDecimal lProgrCircostanza = null;
 
 				// STUB 12/12/2007 Corretto ciclo di Caricamento vettore con REATO e annesse CIRCOSTANZA_REATO
 				for (int i = 0; i < lReaPrincipale.getCircostanze().length; i++) {
 					lReaMod = new ReatoModel();
-					lReaMod = (ReatoModel) lReaPrincipale.getCircostanze()[i];
+					lReaMod = lReaPrincipale.getCircostanze()[i];
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
 					siesLogger.debug("-------------------------------------------------------------");
@@ -637,6 +646,7 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public void ExOrganizzaReati(Vector reatiMod, Vector reatiCanc) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDaoMod = null;
 		ReatoModel lReaMod = null;
@@ -731,6 +741,7 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public void ExModificaUlterioriNorme(ReatoModel aNormaUno, Vector aNormeUlteriori) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 
@@ -755,7 +766,6 @@ public class ReatoController extends SiapController implements IReato {
 					lReaDao.setDAOFromModelForUpdateUlterioriNorme(aNormaUno);
 
 					lReaDao.update();
-
 				}
 			}
 
@@ -772,11 +782,11 @@ public class ReatoController extends SiapController implements IReato {
 			cleanup(lReaDao);
 			cleanup(lConn);
 		}
-
 	}
 
-	public ReatoModel ExRicercaNormaPrincipaleByReatoFascicoloSiep(BigDecimal aProgrReato, BigDecimal aKeyFasc)
-			throws F3BException {
+	public ReatoModel ExRicercaNormaPrincipaleByReatoFascicoloSiep(BigDecimal aProgrReato,
+			BigDecimal aKeyFasc) throws F3BException {
+
 		Connection lConn = null;
 		ReatoSqlDAO lReaDao = null;
 		ReatoModel lReaMod;
@@ -799,11 +809,10 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	// ///////// SIGE //////////////
-
 	/**
 	 * Inserimento di piu' reati associati a Sentenza-ProcedimentoSIGE e non a ProcedimentoSIEP. La funzione è
 	 * ottenuta da ExInserisciReatiSige eliminando da questa i riferimenti previsti al Procedimento SIEP.
-	 * 
+	 *
 	 * @param aReati
 	 *            - ArrayList di reati
 	 * @param aIdFasSigeSen
@@ -812,6 +821,7 @@ public class ReatoController extends SiapController implements IReato {
 	 * @throws F3BException
 	 */
 	public ReatoModel ExInserisciReatiSige(ArrayList aReati, BigDecimal aIdFasSigeSen) throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoDAO lReaDao = null;
@@ -911,10 +921,10 @@ public class ReatoController extends SiapController implements IReato {
 	 * funzione è stata ottenuta da una copia di ExRicercaReato(...) nella quale si usa una nuova funzione
 	 * ReatoSqlDAO.ricercaReato(...) (vedi) la quale realizza una condizione di ricerca sulla tabella REATO
 	 * che fa uso della tabella di relazione REATO_SENTENZA_SIGE.
-	 * 
+	 *
 	 */
-
 	public Vector ExRicercaReatoSige(ReatoSentenzaSigeModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		ReatoSqlDAO lReaDao = null;
@@ -943,10 +953,10 @@ public class ReatoController extends SiapController implements IReato {
 	 * ingresso. L'elenco dei Reati così ottenuto viene scandito per discriminare i reati dalle circostanze.
 	 * Reati e circostanze legati allo stesso reato hanno lo stesso Progr. Reato, il reato ha il Progr.
 	 * Circostanza = 1. La scansione viene effettuata sfruttando l'ordinamento dei Reati per Progr. reato.
-	 * 
+	 *
 	 */
-
 	public Vector ExRicercaReatoCircostanzaBySentenzaSige(BigDecimal aKey) throws F3BException {
+
 		// Risultato: Elenco di ReatoCircostanzaModel
 		Vector lListReaCirc = new Vector();
 		// Filtro di Ricerca
@@ -1042,13 +1052,13 @@ public class ReatoController extends SiapController implements IReato {
 	/**
 	 * Funzione di ricerca di tutte le norme ed il reato legate ad un Titolo SIGE e con Progr. Reato
 	 * specificato.
-	 * 
+	 *
 	 * @param aReato
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public Vector ExRicercaNormeSige(ReatoSentenzaSigeModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		ReatoSqlDAO lReaDao = null;
@@ -1077,12 +1087,13 @@ public class ReatoController extends SiapController implements IReato {
 
 	/**
 	 * Cancellaizone Reato Sige
-	 * 
+	 *
 	 * @param aReato
 	 *            - reato da Cancellare
 	 * @throws F3BException
 	 */
 	public void ExCancellaReatoSige(ReatoSentenzaSigeModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		// DAO alla Tabella REATO
 		ReatoDAO lReaDao = null;
@@ -1143,12 +1154,11 @@ public class ReatoController extends SiapController implements IReato {
 			}
 		} else
 			throw new F3BException("ReatoController.ExCancellaReatoSige: Progr Circostanza null!");
-
 	}
 
 	/**
 	 * Inserimento Ulteriori Reati Sige
-	 * 
+	 *
 	 * @param aReatoPrincipale
 	 *            - reato principale
 	 * @param aReati
@@ -1157,6 +1167,7 @@ public class ReatoController extends SiapController implements IReato {
 	 */
 	public void ExInserisciUlterioriReatiSige(ReatoModel aReatoPrincipale, ArrayList aReati,
 			BigDecimal aIdFasSigeSen) throws F3BException {
+
 		Connection lConn = null;
 		ReatoModel lReaPrincipale = aReatoPrincipale;
 
@@ -1216,7 +1227,6 @@ public class ReatoController extends SiapController implements IReato {
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("ReatoController.ExInserisciUlterioriReati: " + ex);
@@ -1232,9 +1242,10 @@ public class ReatoController extends SiapController implements IReato {
 	}
 
 	public void ExModificaKeyNSCByKey(ReatoModel aReato) throws F3BException {
+
 		Connection conn = null;
 		ReatoDAO lReaDao = null;
-//		ReatoModel lReaMod = null;
+		// ReatoModel lReaMod = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.info("ReatoController.ExModificaKeyNSCByKey: entrata nel metodo ");
@@ -1261,6 +1272,7 @@ public class ReatoController extends SiapController implements IReato {
 
 	// Da utilizzare solo se dobbiamo girare i Reati x NSC
 	public Vector ExRicercaReatoCircostanzaByFascicoloOnlyNsc(long aFascicoloSIEP) throws F3BException {
+
 		Connection lConn = null;
 		ReatoSqlDAO lReaDao = null;
 		Vector lListReaCirc = null;
@@ -1338,10 +1350,9 @@ public class ReatoController extends SiapController implements IReato {
 							lReatoModel.setArticolo("");
 						}
 
-						if (lFlagReato == 0
-								&& (!lReatoModel.getArticolo().equals("110")
-										&& !lReatoModel.getArticolo().equals("56") && !lReatoModel
-										.getArticolo().equals("81"))) {
+						if (lFlagReato == 0 && (!lReatoModel.getArticolo().equals("110")
+								&& !lReatoModel.getArticolo().equals("56")
+								&& !lReatoModel.getArticolo().equals("81"))) {
 							// Carichiamo i Reati
 							aModel.setReato(lReatoModel);
 							lFlagReato = 1;
@@ -1392,7 +1403,7 @@ public class ReatoController extends SiapController implements IReato {
 	// AMBROSINO 04/2011
 	/**
 	 * Inserimento dei Reati Copiati da altro procedimento Siep
-	 * 
+	 *
 	 * @param aIdFas
 	 *            - Procedimento da cui copiare
 	 * @param aReati
@@ -1401,6 +1412,7 @@ public class ReatoController extends SiapController implements IReato {
 	 */
 	public String ExInserisciReatiCopiati(String[] aReati, BigDecimal aIdFas, ReatoModel aReato)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoDAO lReaDao = null;
@@ -1453,7 +1465,6 @@ public class ReatoController extends SiapController implements IReato {
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException(" DAOException - ReatoController.ExInserisciReatiCopiati: " + ex);

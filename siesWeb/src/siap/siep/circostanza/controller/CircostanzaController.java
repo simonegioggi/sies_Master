@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.circostanza.dao.CircostanzaDAO;
 import siap.siep.circostanza.dao.CircostanzaSqlDAO;
@@ -15,9 +18,6 @@ import siap.siep.circostanza.model.CircostanzaModel;
 import siap.siep.circostanza.util.CircostanzaUtil;
 import siap.sige.circostanza.dao.CircostanzaSenSigeDAO;
 import siap.sige.circostanza.model.CircostanzaSigeModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -42,6 +42,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public CircostanzaModel ExInserisciCircostanza(CircostanzaModel aCircostanza) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaDAO lCirDao = null;
 		CircostanzaModel lCirMod = null;
@@ -69,6 +70,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	}
 
 	public Vector ExRicercaCircostanza(CircostanzaModel aCircostanza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCircostanzi = new Vector();
 
@@ -91,14 +93,13 @@ public class CircostanzaController extends SiapController implements ICircostanz
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("CircostanzaController.ExRicercaCircostanza: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"CircostanzaController.ExRicercaCircostanza: Non posso leggere : " + daoEx);
 		} catch (F3BException sqe) {
 			throw sqe;
 		} catch (Exception e) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanza: Non posso leggere  : " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCirDao);
 			cleanup(lConn);
 		}
@@ -106,6 +107,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	}
 
 	public Vector ExRicercaCircostanzaNoErr(CircostanzaModel aCircostanza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCircostanzi = new Vector();
 		CircostanzaSqlDAO lCirDao = null;
@@ -124,14 +126,13 @@ public class CircostanzaController extends SiapController implements ICircostanz
 			lNewVectCirc = CircostanzaUtil.creaVectorCircostanze(lCircostanzi);
 
 		} catch (DAOException daoEx) {
-			throw new F3BException("CircostanzaController.ExRicercaCircostanza: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"CircostanzaController.ExRicercaCircostanza: Non posso leggere : " + daoEx);
 		} catch (SQLException sqe) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanza: Non posso leggere  : " + sqe);
 		} catch (Exception e) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanza: Non posso leggere  : " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCirDao);
 			cleanup(lConn);
 		}
@@ -140,6 +141,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	}
 
 	public CircostanzaModel ExRicercaCircostanzaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaSqlDAO lCirDao = null;
 		CircostanzaModel lCirMod;
@@ -163,6 +165,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	}
 
 	public Vector ExRicercaCircostanzaByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lCircostanze = new Vector();
@@ -186,9 +189,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 			throw new F3BException("CircostanzaController.ExRicercaCircostanzaByIdFascicolo: " + sqe);
 		} catch (Exception e) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanzaByIdFascicolo: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCirDao);
 			cleanup(lConn);
 		}
@@ -197,6 +198,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	}
 
 	public Vector ExRicercaCircostanzaDescByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lCircostanze = new Vector();
@@ -211,16 +213,13 @@ public class CircostanzaController extends SiapController implements ICircostanz
 			// Serena rework generale - manipola il vettore di circostanze mettendo come ultimo elemento la
 			// circostanza avente Art 442 e CodFonte 25
 			lNewVectCirc = CircostanzaUtil.creaVectorCircostanze(lCircostanze);
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanzaDescByIdFascicolo: " + daoEx);
 		} catch (SQLException sqe) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanzaDescByIdFascicolo: " + sqe);
 		} catch (Exception e) {
 			throw new F3BException("CircostanzaController.ExRicercaCircostanzaDescByIdFascicolo: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lCirDao);
 			cleanup(lConn);
 		}
@@ -232,20 +231,21 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	 * public CircostanzaModel ExModificaCircostanza (CircostanzaModel aCircostanza ) throws F3BException {
 	 * Connection lConn = null; CircostanzaDAO lCirDao = null; CircostanzaModel lCirMod = new
 	 * CircostanzaModel(aCircostanza);
-	 * 
+	 *
 	 * try { lConn = getDBConnection(); lCirDao = new CircostanzaDAO(lConn);
 	 * lCirDao.setDAOFromModelForUpdate(aCircostanza ); lCirDao.update(); commit(lConn); } catch (DAOException
 	 * ex) { rollback(lConn); throw new F3BException("CircostanzaController.ExModifica: Non posso inserire: "
 	 * + ex); } catch (SQLException sqe) { rollback(lConn); throw new
 	 * F3BException("CircostanzaController.ExModificaCircostanza: Non posso inserire il soggetti : " + sqe); }
 	 * finally { cleanup(lCirDao); cleanup(lConn); }
-	 * 
+	 *
 	 * return lCirMod; }
 	 */
 	// public CircostanzaModel ExModificaCircostanza (CircostanzaModel aCircostanza )
 	public CircostanzaModel ExModificaCircostanza(CircostanzaModel aCircostanza, boolean flagAgg,
 			String flagGiudizio, String flagSentenza, String codBil, String noteBil,
 			BigDecimal idFascicoloSiep, BigDecimal aIdFascicoloSentenzaSige) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaDAO lCirDao = null;
 		CircostanzaSqlDAO lCirSqlDao = null;
@@ -280,13 +280,13 @@ public class CircostanzaController extends SiapController implements ICircostanz
 				 * //*************************************** //Federica - a9-rr-078 //aggiunto campo
 				 * Comma-Qualificante lCirMod3.setCommaQualificante("-");
 				 * //***************************************
-				 * 
+				 *
 				 * lCirDao.setDAOFromModel(lCirMod3); lCirDao.insert(); lCirDao.stop(); } //se il flagGiudizio
 				 * è "N" e ci sono circostanze art 442cpp le elimino else
 				 * if(flagGiudizio.equalsIgnoreCase("N")&& flagCircBil){
 				 * lCirDao.setCondizioneCircBilanciamento(aCircostanza.getFasSieIdFascicoloSiep());
 				 * lCirDao.delete(); lCirDao.stop(); }
-				 * 
+				 *
 				 * //aggiornamento campi comuni // lCirDao.setFlagGiudizioAbbreviato(flagGiudizio); //
 				 * lCirDao.setFlagSentenzaApplicazPena(flagSentenza); // fine modifica
 				 */
@@ -315,6 +315,7 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	}
 
 	public void ExCancellaCircostanza(CircostanzaModel aCircostanza) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaDAO lCirDao = null;
 		CircostanzaSqlDAO lCirSqlDao = null;
@@ -391,15 +392,18 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	/**
 	 * Il metodo inserisce una circostanza nella tabella "CIRCOSTANZE" Vengono passati i paramentri per
 	 * effettuare l'aggiornamento dei campi comuni a tutte le circostanze del fascicolo
-	 * 
+	 *
 	 * Implementato per la a7-rr-165 (Inserimento Info Accessorie per Bilanciamento Circostanze) Nel caso di
 	 * Circostanze SIGE vengono anche inseriti i record nella tabella di relazione CIRCOSTANZA_SENTENZA_SIGE.
-	 * 
+	 *
 	 * @param Vector
 	 *            aCircostanze
-	 * @param boolean aggiornamento
-	 * @param boolean flagGiudizio
-	 * @param boolean flagSentenza
+	 * @param boolean
+	 *            aggiornamento
+	 * @param boolean
+	 *            flagGiudizio
+	 * @param boolean
+	 *            flagSentenza
 	 * @param String
 	 *            codBil
 	 * @param String
@@ -408,11 +412,12 @@ public class CircostanzaController extends SiapController implements ICircostanz
 	 *            idFascicoloSiep
 	 * @param BigDecimal
 	 *            aIdFascicoloSentenzaSige
-	 * 
+	 *
 	 */
 	public void ExInserisciCircostanze(Vector aCircostanze, boolean aggiornamento, String flagGiudizio,
 			String flagSentenza, String codBil, String noteBil, BigDecimal aIdFascicoloSiep,
 			BigDecimal aIdFascicoloSentenzaSige) throws F3BException {
+
 		Connection lConn = null;
 
 		CircostanzaDAO lCirDao = null;
@@ -466,6 +471,8 @@ public class CircostanzaController extends SiapController implements ICircostanz
 			throw new F3BException("CircostanzaController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lCirDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lCirSigeDao);
 			cleanup(lConn);
 		}
 	}

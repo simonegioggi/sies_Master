@@ -19,6 +19,12 @@ import javax.jms.Session;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.SIAPReceiver;
 import siap.jms.connection.ConnectionPoolJMS;
@@ -43,12 +49,6 @@ import siap.siep.stampadocumenti.dao.StampaDocumentiDAO;
 import siap.siep.stampadocumenti.model.StampaDocumentiModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.util.SIAPPathProperties;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -61,7 +61,7 @@ import f3b.util.xml.TreeModel;
  * Copyright: Copyright (c) 2002
  * </p>
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class IstruttoriaController extends SiapController implements IIstruttoria {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -73,7 +73,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 	/**
 	 * Stampa un documento di Istruttoria
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -87,14 +87,15 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 		ByteArrayOutputStream lByteArrayOut = null;
 		try {
 			IEvento lEvCrtl = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEventoModel = lEvCrtl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEventoModel = lEvCrtl
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			IStampa lStampa = SICOLookupRemote.getStampaRemote();
 			TreeModel lTree = lStampa.prelevaDatiIstruttoria(lEventoModel, aUtente);
 
 			ReportGenerator lReport = new ReportGenerator();
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Chiave = " + aEvento.getNomeTemplate());
 			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aEvento.getNomeTemplate());
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -132,7 +133,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 	/**
 	 * stampa il documento per la stampa copertina
-	 * 
+	 *
 	 * @param aFasc
 	 * @param lIdTemplate
 	 * @param aUtente
@@ -160,7 +161,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 	/**
 	 * stampa il documento per la stampa delle copertine
-	 * 
+	 *
 	 * @param aFasc
 	 * @param aUtente
 	 * @return
@@ -185,7 +186,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 	/**
 	 * Ricerca gli IdFascicolo dei fascicoli che ricadono nell'intervallo di ricerca
-	 * 
+	 *
 	 * @param aFasc
 	 *            - Model con gli estremi delle ricerca
 	 * @param aValidato
@@ -194,7 +195,8 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 	 *         nell'intervallo
 	 * @throws F3BException
 	 */
-	public Vector ExCercaIntervalloFascicoli(FascicoloSiepModel aFasc, boolean aValidato) throws F3BException {
+	public Vector ExCercaIntervalloFascicoli(FascicoloSiepModel aFasc, boolean aValidato)
+			throws F3BException {
 
 		Vector lFascicoli = null;
 		IstruttoriaSqlDAO lIstrDao = null;
@@ -212,7 +214,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 			lFascicoli = new Vector(lIstrDao.getModels());
 
-//			Iterator lItx = lFascicoli.iterator();
+			// Iterator lItx = lFascicoli.iterator();
 
 			if (lFascicoli.size() == 0)
 				throw new F3BException("Nessun procedimento nell'intervallo impostato!");
@@ -221,6 +223,8 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("IstruttoriaController.ExCercaIntervalloFascicoli: " + daoEx);
 		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstrDao);
 			cleanup(lConn);
 		}
 		return lFascicoli;
@@ -229,7 +233,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 	/**
 	 * Metodo invocato dal Listener Di Stampa. Effettua la Stampa Inizio Esecuzione per l'elenco dei fascicoli
 	 * specificati nel messaggio.
-	 * 
+	 *
 	 * @param FascicoloSiepModel
 	 *            model di appoggio contenente l'intervallo di fascicoli per i quali generare la stampa inizio
 	 *            esecuzione
@@ -303,7 +307,8 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 				try {
 					lVect = lCtrl.ExRicercaEvento(lEveMod);
 				} catch (F3BException ex) { // Non è stato trovato nessun elemento
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug(">>> +++ *** Nessun Evento Trovato!");
 				}
 
@@ -314,7 +319,8 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 					lRetModel = lCtrl.ExRicercaEventoNotificaByKey(lEve.getIdEvento());
 
 				} else {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug(">>> +++ *** INSERISCO EVENTO INIZIO ESECUZIONE!");
 					// --- Inserisci Evento Inizio Esecuzione
 					EventoNotificaModel lEve = new EventoNotificaModel();
@@ -375,7 +381,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 				aUtente.setUfficioUtente(aUfficio);
 
-				/*TreeModel lTree = */this.ExStampaMultiInizio(lRetModel, aUtente, lNomeFileXml, lConn);
+				/* TreeModel lTree = */this.ExStampaMultiInizio(lRetModel, aUtente, lNomeFileXml, lConn);
 			}
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug(">>> PRIMA DI lReport TREE MODEL");
@@ -394,8 +400,8 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 			// NUOVA INFRASTRUTTURA: cambiato il path per differenziare macchina windows da macchina UNIX
 			mPath = mPathProperties.getProperty("SIEPISIPMULTI");
-			ByteArrayOutputStream lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocumentFromFile(
-					lNomeFileXml, mPath);
+			ByteArrayOutputStream lByteArrayOut = (ByteArrayOutputStream) lReport
+					.generateDocumentFromFile(lNomeFileXml, mPath);
 			ByteArrayInputStream lByteArrayInput = new ByteArrayInputStream(lByteArrayOut.toByteArray());
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug(">>> Dopo di lByteArrayOut TREE MODEL " + lByteArrayOut.size());
@@ -454,12 +460,11 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 
 		}
 		return true;
-
 	}
 
 	/**
 	 * Produce il documento e aggiorna l'evento con il blob
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -467,7 +472,6 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 	private TreeModel ExStampaMultiInizio(EventoNotificaModel aEvento, UtenteModel aUtente, String aFileXml,
 			Connection lConn) throws F3BException {
 
-		// Connection lConn = null;
 		EventoDAO lEveDao = null;
 		TreeModel lTree = null;
 		TreeModel lTreeCopy = new TreeModel();
@@ -527,7 +531,6 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 					"IstruttoriaController.ExStampaMultiInizio: Non posso inserire l'Evento : " + e);
 		} finally {
 			cleanup(lEveDao);
-			// cleanup(lConn);
 		}
 
 		return lTreeCopy;
@@ -536,7 +539,8 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 	/**
 	 * Metodo che inserisce la richiesta di stampa (STAMPA_DOCUMENTO) e invia sul sistema asincrono JMS la
 	 * richiesta di stampa per rendere l'esecuzione asincrona
-	 * 
+	 *
+	 * @throws JMSException
 	 */
 	public BigDecimal ExInserisciRichiestaJmsStampaInizioEsecuzioneMultiple(FascicoloSiepModel aFasc,
 			UtenteModel aUtente, UfficioModel aUfficio) throws F3BException {
@@ -603,9 +607,7 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 					lMessage.setStringProperty("COMUNE_UFFICIO", aUfficio.getCodComune());
 					lMessage.setStringProperty("TIPO_UFFICIO", aUfficio.getDescrTipoUfficio());
 					lMessage.setStringProperty("ID_STAMPA", "" + lSequence);
-
 					// lMessage.setObjectProperty("UTENTE", aUtente);
-
 				}
 				qSender.send(lMessage);
 
@@ -618,10 +620,10 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 				// SIAPReceiver.getInstance();
 			}
 		} catch (JMSException jmsEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			siesLogger.error(
-					"ExInserisciRichiestaJmsStampaInizioEsecuzioneMultiple():Exception = "
-							+ jmsEx.getErrorCode());
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("ExInserisciRichiestaJmsStampaInizioEsecuzioneMultiple():Exception = "
+					+ jmsEx.getErrorCode());
 			jmsEx.printStackTrace();
 			rollback(lConn);
 			if (lConnPool != null) {
@@ -630,10 +632,10 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 			throw new F3BException("Eccezione durante la spedizione del messaggio: " + jmsEx);
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			siesLogger.error(
-					"SIAPSender.ExInserisciRichiestaJmsStampaInizioEsecuzioneMultiple():Exception = "
-							+ exception);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("SIAPSender.ExInserisciRichiestaJmsStampaInizioEsecuzioneMultiple():Exception = "
+					+ exception);
 			rollback(lConn);
 			if (exception.toString().equals("java.lang.NullPointerException"))
 				exception.printStackTrace();
@@ -645,14 +647,11 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 		} finally {
 			if (lConnPool != null)
 				lConnPool.releaseConnection(lQueueConn);
-
 			cleanup(lStampaDAO);
 			cleanup(lConn);
-
 		}
 
 		return lSequence;
-
 	}
 
 	/**
@@ -690,11 +689,11 @@ public class IstruttoriaController extends SiapController implements IIstruttori
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + e.getStackTrace()[1]);
 			throw new F3BException(
-					"IstruttoriaController.ExControllaNotizieDiReatoRege: Non posso inserire l'Evento : " + e);
+					"IstruttoriaController.ExControllaNotizieDiReatoRege: Non posso inserire l'Evento : "
+							+ e);
 		} finally {
 			cleanup(lIstRegeDao);
 			cleanup(lConn);
-
 		}
 
 		return lKeyRege;

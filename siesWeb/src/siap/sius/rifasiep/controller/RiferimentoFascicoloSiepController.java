@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.misurasicurezza.dao.MisuraSicurezzaDAO;
 import siap.siep.misurasicurezza.dao.MisuraSicurezzaSqlDAO;
@@ -13,9 +16,6 @@ import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.sius.rifasiep.dao.RiferimentoFascicoloSiepDAO;
 import siap.sius.rifasiep.dao.RiferimentoFascicoloSiepSqlDAO;
 import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -41,6 +41,7 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 
 	public RiferimentoFascicoloSiepModel ExInserisciRiferimentoFascicoloSiep(
 			RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepDAO lRifDao = null;
 		RiferimentoFascicoloSiepSqlDAO lRifSqlDao = null;
@@ -58,12 +59,11 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 				lKey = lRifDao.insert();
 				commit(lConn);
 				lRifMod.setIdRiferimentoFascicoloSiep(lKey);
-			} else {
 			}
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("RiferimentoFascicoloSiepController.ExInserisciRiferimentoFascicoloSiep: "
-					+ ex);
+			throw new F3BException(
+					"RiferimentoFascicoloSiepController.ExInserisciRiferimentoFascicoloSiep: " + ex);
 		} finally {
 			cleanup(lRifDao);
 			cleanup(lRifSqlDao);
@@ -74,6 +74,7 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 
 	public Vector ExRicercaRiferimentoFascicoloSiep(RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRiFaSiep = new Vector();
 		RiferimentoFascicoloSiepSqlDAO lRifDao = null;
@@ -83,8 +84,8 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 			lRifDao.ricercaRiferimentoFascicoloSiep(aRiferimentoFascicoloSiep);
 			lRiFaSiep = new Vector(lRifDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("RiferimentoFascicoloSiepController.ExRicercaRiferimentoFascicoloSiep: "
-					+ daoEx);
+			throw new F3BException(
+					"RiferimentoFascicoloSiepController.ExRicercaRiferimentoFascicoloSiep: " + daoEx);
 		} finally {
 			cleanup(lRifDao);
 			cleanup(lConn);
@@ -94,6 +95,7 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 
 	public RiferimentoFascicoloSiepModel ExRicercaRiferimentoFascicoloSiepByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepSqlDAO lRifDao = null;
 		RiferimentoFascicoloSiepModel lRifMod;
@@ -103,8 +105,8 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 			lRifDao.ricercaRiferimentoFascicoloSiepByKey(aKey);
 			lRifMod = (RiferimentoFascicoloSiepModel) lRifDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("RiferimentoFascicoloSiepController.ExRicercaRiferimentoFascicoloSiep: "
-					+ daoEx);
+			throw new F3BException(
+					"RiferimentoFascicoloSiepController.ExRicercaRiferimentoFascicoloSiep: " + daoEx);
 		} finally {
 			cleanup(lRifDao);
 			cleanup(lConn);
@@ -114,6 +116,7 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 
 	public RiferimentoFascicoloSiepModel ExModificaRiferimentoFascicoloSiep(
 			RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepDAO lRifDao = null;
 		RiferimentoFascicoloSiepModel lRifMod = new RiferimentoFascicoloSiepModel(aRiferimentoFascicoloSiep);
@@ -136,6 +139,7 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 
 	public void ExCancellaRiferimentoFascicoloSiep(RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepDAO lRifDao = null;
 		try {
@@ -145,15 +149,17 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 			lRifDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("RiferimentoFascicoloSiepController.ExCancellaRiferimentoFascicoloSiep: "
-					+ daoEx);
+			throw new F3BException(
+					"RiferimentoFascicoloSiepController.ExCancellaRiferimentoFascicoloSiep: " + daoEx);
 		} finally {
 			cleanup(lRifDao);
 			cleanup(lConn);
 		}
 	}
 
-	public void ExCancellaRiferimentoFascicoloSiep(BigDecimal idRiferimentoFascicoloSiep) throws F3BException {
+	public void ExCancellaRiferimentoFascicoloSiep(BigDecimal idRiferimentoFascicoloSiep)
+			throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepDAO lRifDao = null;
 		try {
@@ -163,15 +169,14 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 			lRifDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("RiferimentoFascicoloSiepController.ExCancellaRiferimentoFascicoloSiep: "
-					+ daoEx);
+			throw new F3BException(
+					"RiferimentoFascicoloSiepController.ExCancellaRiferimentoFascicoloSiep: " + daoEx);
 		} finally {
 			cleanup(lRifDao);
 			cleanup(lConn);
 		}
 	}
 
-	// TODO carmela verificare
 	public Vector ExRicercaRiferimentoFascicoloSiepByIdFasSius(BigDecimal idFascicoloSius)
 			throws F3BException {
 
@@ -195,7 +200,9 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 		return lRiFaSiep;
 	}
 
-	public void ExCancellaRiferimentoFascicoloSiepByIdFasSius(BigDecimal idFascicoloSius) throws F3BException {
+	public void ExCancellaRiferimentoFascicoloSiepByIdFasSius(BigDecimal idFascicoloSius)
+			throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepDAO lRifDao = null;
 		try {
@@ -218,6 +225,7 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 	public BigDecimal ExInserisciRiferimentoSiepUpdateMisuraSic(
 			RiferimentoFascicoloSiepModel aRiferimentoFascicoloSiep, BigDecimal aIdMisura)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		BigDecimal idMisura = aIdMisura;
@@ -269,21 +277,17 @@ public class RiferimentoFascicoloSiepController extends SiapController implement
 		}
 
 		return idMisura;
-
 	} // Chiude ExInserisciRiferimentoSiepUpdateMisuraSic
 
 	public void ExCancellaRiferimentoFascicoloSiepUpdateMisuraSic(MisuraSicurezzaModel aMisuraMod)
 			throws F3BException {
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("--XX-- ExCancellaRiferimentoFascicoloSiepUpdateMisuraSic - Start");
 
 		Connection lConn = null;
 		RiferimentoFascicoloSiepDAO lRifDao = null;
-
-//		MisuraSicurezzaSqlDAO lMisqlDao = null;
 		MisuraSicurezzaDAO lMisDao = null;
+
 		MisuraSicurezzaModel lMisMod = null;
+
 		try {
 			lConn = getDBConnection();
 			// RiferimentoFascicoloSiep

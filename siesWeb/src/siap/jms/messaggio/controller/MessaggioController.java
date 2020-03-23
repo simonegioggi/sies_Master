@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
@@ -22,8 +24,6 @@ import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.siepe.ricezioneatti.model.CruscottoModel;
 
-import org.apache.log4j.Logger;
-
 /**
  * <p>
  * Title: MessaggioController
@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -48,12 +48,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Inserisce MEssaggio
-	 * 
+	 *
 	 * @param aMessaggio
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExInserisciMessaggio(MessaggioModel aMessaggio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -107,13 +108,14 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Inserisci Messaggio Esito
-	 * 
+	 *
 	 * @param aMessaggio
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExInserisciMessaggioEsitoTrasferimento(MessaggioModel aMessaggio)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -130,11 +132,12 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesMod = new MessaggioModel(aMessaggio);
 			lMesDao = new MessaggioDAO(lConn);
 			lMesDao.setDAOFromModel(aMessaggio);
-			Date dataEmissioneCumulo =  aMessaggio.getDataEmissioneCumulo();
-			siesLogger.debug(">>>>>>>>>>>>> DataEmissioneCumulo in ARRIVO>>>>>>>>>>>>>" + aMessaggio.getDataEmissioneCumulo());			
-			if(dataEmissioneCumulo != null  && "00079".equals(aMessaggio.getCodTipoOperazione())){
-				lMesDao.setDataEsito(dataEmissioneCumulo);	
-			}	
+			Date dataEmissioneCumulo = aMessaggio.getDataEmissioneCumulo();
+			siesLogger.debug(">>>>>>>>>>>>> DataEmissioneCumulo in ARRIVO>>>>>>>>>>>>>"
+					+ aMessaggio.getDataEmissioneCumulo());
+			if (dataEmissioneCumulo != null && "00079".equals(aMessaggio.getCodTipoOperazione())) {
+				lMesDao.setDataEsito(dataEmissioneCumulo);
+			}
 
 			BigDecimal lKey = null;
 			lKey = lMesDao.insert();
@@ -195,6 +198,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggioRichiestaPerUfficio(String aUfficio, String aTipoOperazione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -242,6 +246,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggiRichiestaPerUfficio(String aUfficio, String aTipoOperazione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -281,12 +286,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Ricerca Messaggio Esito per Ufficio
-	 * 
+	 *
 	 * @param aUfficio
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaMessaggioEsitoPerUfficio(String aUfficio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -345,13 +351,14 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Ricerca Messaggio Esito per Ufficio e Tipo Operazione
-	 * 
+	 *
 	 * @param aUfficio
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaMessaggioEsitoPerUfficio(String aUfficio, String aTipoOperazione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -409,16 +416,15 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aTipoOperazione
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaMessaggioEsitoRicercaPerUfficio(String aUfficio, String aTipoOperazione, int aPage)
-			throws F3BException
+			throws F3BException {
 
-	{
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -475,7 +481,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aTipoOperazione
 	 * @return
@@ -483,6 +489,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public BigDecimal ExGetCountEsitoRicercaPerUfficio(String aUfficio, String aTipoOperazione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -522,7 +529,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aTipoOperazione
 	 * @return
@@ -530,6 +537,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public BigDecimal ExGetCountMessaggioRichiestaRicercaSoggettoPerUfficioPaged(String aUfficioMittente,
 			String aCodiceUtente, String aTipoOperazione) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -572,105 +580,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	/**
-	 * @param aUfficio
-	 * @param aTipoOperazione
-	 * @return un Vettore di Messaggi con i Messaggi Esiti Correlati e l'ultimo Model è un ContatoreEsitiModel
-	 *         che riassume i dati esiti ricevuti...per la paginazione
-	 * @throws F3BException
-	 */
-	/*
-	 * public Vector ExRicercaMessaggioEsitoRicercaSoggettoPerUfficioPaged(String aUfficioMittente, String
-	 * aCodiceUtente, String aTipoOperazione,int aPage) throws F3BException, Exception { Connection lConn =
-	 * null; Vector lMessaggi = new Vector(); MessaggioSqlDAO lMesDao = null; try { lConn = getDBConnection();
-	 * lMesDao = new MessaggioSqlDAO(lConn);
-	 * lMesDao.ricercaMessaggioRichiestaRicercaSoggettoPerUfficioPaged(aUfficioMittente, aCodiceUtente,
-	 * aTipoOperazione,aPage); lMessaggi = new Vector(lMesDao.getModels()); lMesDao.stop(); if
-	 * (lMessaggi.size() == 0) { throw new F3BException(F3BException.USER_MESSAGE,
-	 * "Nessun Messaggio di Ricerca in Attesa"); } //Vettor ein cui andare ad inserire i messagi esitop
-	 * collegati alla richiesta. Vector lVectTemp = new Vector(); //Collego ad ogni Messaggio di tipo
-	 * richiesta // i messaggi di tipo Esito trovati for (int i = 0; i < lMessaggi.size(); i++) {
-	 * MessaggioModel aMess = (MessaggioModel) lMessaggi.get(i); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
-	 * variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.info("Vediamo sto messaggio = " + aMess.getCodBdiDestinataria()); //Se siamo nel caso si
-	 * ricerca presso una sola BDI if(aMess.getCodBdiDestinataria().compareTo(ICostantiJMS.COD_TUTTE)!=0) {
-	 * lMesDao.ricercaMessaggioEsitoRicercaPerJmsId(aMess.getIdMessaggio().toString()); MessaggioModel
-	 * lMessEsito = (MessaggioModel)lMesDao.getModelByKey(); if (lMessEsito!=null)
-	 * aMess.setMessaggioCorrelato(lMessEsito); lMesDao.stop(); } else {//caso BDI multiple
-	 * lMesDao.ricercaMessaggioEsitoRicercaPerJmsId(aMess.getIdMessaggio().toString()); Vector lVect = new
-	 * Vector(lMesDao.getModels()); lMesDao.stop(); ContatoreEsitiModel lContatore = new
-	 * ContatoreEsitiModel(); //Trovo diversi esiti per ogni richiesta if (lVect.size() > 0) { for (int y = 0;
-	 * y < lVect.size(); y++) { MessaggioModel lModelTemp = (MessaggioModel) lVect.get(y);
-	 * aggiornaContatore(lModelTemp.getCodEsito(), lContatore); lVectTemp.add(lModelTemp); //Se non partito
-	 * rispedisco... //--- if (lModelTemp.getCodEsito().equals(NON_SPEDITO)) //--- { //---GDV TEMPORANEO
-	 * ManageMessageNoSend lMan = new ManageMessageNoSend(); //---GDV TEMPORANEO
-	 * lMan.rispedisciMessaggioNonSpedito(aMess,lModelTemp); //--- } } // STUB 09/06/2005
-	 * lContatore.calcolaBDIInAttesa(); lContatore.calcolaBDINonAttive(); lVectTemp.add(lContatore);
-	 * aMess.setMessaggiCorrelati(lVectTemp); } else { } lMessaggi.set(i, aMess); } /* else //Nessun esito...
-	 * Tutte le BDI sono inattive { // STUB 09/06/2005 lContatore.calcolaBDIInAttesa();
-	 * lContatore.calcolaBDINonAttive(); lVectTemp.add(lContatore); aMess.setMessaggiCorrelati(lVectTemp);
-	 * lMessaggi.set(i, aMess); }
-	 */
-	/*
-	 * } } catch (DAOException daoEx) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-	 * siesLogger al posto di LogF3B.getLogger() siesLogger.error("DAOException: " + daoEx); throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoRicercaSoggettoPerUfficioPaged: " + daoEx); }
-	 * catch (SQLException sqe) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
-	 * al posto di LogF3B.getLogger() siesLogger.error("SQLException: " + sqe); throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoRicercaSoggettoPerUfficioPaged: " + sqe); } /*
-	 * catch (IOException ioe) { throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoRicercaSoggettoPerUfficioPaged: " + ioe); }
-	 * catch (ClassNotFoundException ioe) { throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoRicercaSoggettoPerUfficioPaged: " + ioe); }
-	 */
-	/*
-	 * finally { cleanup(lMesDao); cleanup(lConn); } return lMessaggi; }
-	 */
-
-	/**
-	 * @param aUfficio
-	 * @param aTipoOperazione
-	 * @return un Vettore di Messaggi con i Messaggi Esiti Correlati e l'ultimo Model è un ContatoreEsitiModel
-	 *         che riassume i dati esiti ricevuti
-	 * @throws F3BException
-	 */
-	/*
-	 * public Vector ExRicercaMessaggioEsitoRicercaSoggettoPerUfficio(String aUfficioMittente, String
-	 * aCodiceUtente, String aTipoOperazione) throws F3BException, Exception { Connection lConn = null; Vector
-	 * lMessaggi = new Vector(); MessaggioSqlDAO lMesDao = null; try { lConn = getDBConnection(); lMesDao =
-	 * new MessaggioSqlDAO(lConn);
-	 * lMesDao.ricercaMessaggioRichiestaRicercaSoggettoPerUfficio(aUfficioMittente, aCodiceUtente,
-	 * aTipoOperazione); lMessaggi = new Vector(lMesDao.getModels()); lMesDao.stop(); if (lMessaggi.size() ==
-	 * 0) { throw new F3BException(F3BException.USER_MESSAGE, "Nessun Messaggio di Ricerca in Attesa"); }
-	 * //Collego ai Messaggi di tipo Esito trovati il Rispettivo Messaggio di Richiesta for (int i = 0; i <
-	 * lMessaggi.size(); i++) { MessaggioModel aMess = (MessaggioModel) lMessaggi.get(i);
-	 * lMesDao.ricercaMessaggioEsitoRicercaPerJmsId(aMess.getIdMessaggio().toString()); Vector lVect = new
-	 * Vector(lMesDao.getModels()); lMesDao.stop(); ContatoreEsitiModel lContatore = new
-	 * ContatoreEsitiModel(); Vector lVectTemp = new Vector(); if (lVect.size() > 0) { for (int y = 0; y <
-	 * lVect.size(); y++) { MessaggioModel lModelTemp = (MessaggioModel) lVect.get(y);
-	 * aggiornaContatore(lModelTemp.getCodEsito(), lContatore); lVectTemp.add(lModelTemp); //Se non partito
-	 * rispedisco... //--- if (lModelTemp.getCodEsito().equals(NON_SPEDITO)) //--- { //---GDV TEMPORANEO
-	 * ManageMessageNoSend lMan = new ManageMessageNoSend(); //---GDV TEMPORANEO
-	 * lMan.rispedisciMessaggioNonSpedito(aMess,lModelTemp); //--- } } // STUB 09/06/2005
-	 * lContatore.calcolaBDIInAttesa(); lContatore.calcolaBDINonAttive(); lVectTemp.add(lContatore);
-	 * aMess.setMessaggiCorrelati(lVectTemp); lMessaggi.set(i, aMess); } else //Nessun esito... Tutte le BDI
-	 * sono in attesa { // STUB 09/06/2005 lContatore.calcolaBDIInAttesa(); lContatore.calcolaBDINonAttive();
-	 * lVectTemp.add(lContatore); aMess.setMessaggiCorrelati(lVectTemp); lMessaggi.set(i, aMess); } } } catch
-	 * (DAOException daoEx) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-	 * posto di LogF3B.getLogger() siesLogger.error("DAOException: " + daoEx); throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + daoEx); } catch (SQLException
-	 * sqe) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.error("SQLException: " + sqe); throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + sqe); } /* catch (IOException
-	 * ioe) { throw new F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + ioe); } catch
-	 * (ClassNotFoundException ioe) { throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + ioe); }
-	 */
-	/*
-	 * finally { cleanup(lMesDao); cleanup(lConn); } return lMessaggi; }
-	 */
-	/**
 	 * Ricerca Messaggi
-	 * 
+	 *
 	 * @param aMessaggio
 	 * @return
 	 * @throws F3BException
@@ -678,6 +589,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggiRicevutiPaged(MessaggioModel aMessaggio,
 			Vector<String> aListaTipoOperazione, Date aDataInizio, Date aDataFine, int aPage)
 			throws F3BException {
+
 		siesLogger.debug(" Inizio ExRicercaMessaggiRicevutiPaged...");
 		Connection lConn = null;
 		Vector lMessaggi = null;
@@ -691,8 +603,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMessaggi = new Vector(lMesDao.getModels());
 		} catch (DAOException daoEx) {
 			siesLogger.error(this.getClass().getName(), daoEx);
-			throw new F3BException("MessaggioController.ExRicercaMessaggiRicevutiPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExRicercaMessaggiRicevutiPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMesDao);
 			cleanup(lConn);
@@ -704,6 +616,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public BigDecimal ExCountMessaggiRicevutiPaged(MessaggioModel aMessaggio,
 			Vector<String> aListaTipoOperazione, Date aDataInizio, Date aDataFine, int aPage)
 			throws F3BException {
+
 		// siesLogger.debug(" Inizio ExCountMessaggiRicevutiPaged...");
 		Connection lConn = null;
 
@@ -721,8 +634,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			HowManyRecords = lMesDao.getBigDecimal("HowManyRecords");
 		} catch (DAOException daoEx) {
 			siesLogger.error(this.getClass().getName(), daoEx);
-			throw new F3BException("MessaggioController.ExCountMessaggiRicevutiPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExCountMessaggiRicevutiPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMesDao);
 			cleanup(lConn);
@@ -732,6 +645,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	public Vector ExRicercaMessaggio(MessaggioModel aMessaggio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -769,7 +683,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Ricerca Cancella Messaggio Esito By Correlation Id
-	 * 
+	 *
 	 * @param aCorrelationID
 	 * @param aBDIMittente
 	 * @throws F3BException
@@ -818,6 +732,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	public MessaggioModel ExRicercaMessaggioByCorrelationId(String aKey) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -850,12 +765,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Ricerca un singolo MEssaggio di richiesta spedito a diverse BDI
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaMessaggioByKeyMultipleBDI(BigDecimal aKey) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -929,8 +845,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 				} // Fine ricerca su piu' BDI
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("MessaggioController.ExRicercaMessaggioByKey: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExRicercaMessaggioByKey: Non posso leggere : " + daoEx);
 		} catch (Exception oEx) {
 			oEx.printStackTrace();
 			throw new F3BException("MessaggioController.ExRicercaMessaggioByKey: Non posso leggere : " + oEx);
@@ -947,12 +863,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * ExRicercaMessaggioByKey
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaMessaggioByKey(BigDecimal aKey) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -990,8 +907,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 				}
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("MessaggioController.ExRicercaMessaggioByKey: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExRicercaMessaggioByKey: Non posso leggere : " + daoEx);
 		} catch (Exception oEx) {
 			throw new F3BException("MessaggioController.ExRicercaMessaggioByKey: Non posso leggere : " + oEx);
 		} finally {
@@ -1006,6 +923,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	public MessaggioModel ExModificaMessaggio(MessaggioModel aMessaggio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1039,9 +957,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			siesLogger.error("Exception: " + exc, exc);
 			throw new F3BException(
 					"MessaggioController.ExModificaMessaggio: Non posso inserire il soggetti : " + exc);
-		}
-
-		finally {
+		} finally {
 			cleanup(lMesDao);
 			cleanup(lConn);
 		}
@@ -1053,6 +969,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	public void ExCancellaMessaggio(BigDecimal aKeyMessaggio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1084,12 +1001,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Modifica Messaggio Visto
-	 * 
+	 *
 	 * @param aMessaggio
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExModificaMessaggioVisto(MessaggioModel aMessaggio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1123,9 +1041,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			siesLogger.error(getClass().getName() + "SQLException: " + exc);
 			throw new F3BException(
 					"MessaggioController.ExModificaMessaggio: Non posso inserire il soggetti : " + exc);
-		}
-
-		finally {
+		} finally {
 			cleanup(lMesDao);
 			cleanup(lConn);
 		}
@@ -1138,12 +1054,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Modifica Messaggio con l'ID JMS
-	 * 
+	 *
 	 * @param aMessaggio
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExModificaMessaggioJMSId(MessaggioModel aMessaggio) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio Modifica Messaggio");
@@ -1194,7 +1111,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aUfficioMittente
 	 * @param aTipoOperazione
@@ -1203,6 +1120,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggioRichiestaPerUffici(String aUfficioRicevente, String aUfficioMittente,
 			String aTipoOperazione) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1243,7 +1161,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente a prescindere dal
 	 * Tipo Operazione.
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aUfficioMittente
 	 * @return
@@ -1251,6 +1169,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggiPerUffici(String aUfficioRicevente, String aUfficioMittente)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1290,7 +1209,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aUfficioMittente
 	 * @param aDataInizioTrasmissione
@@ -1302,6 +1221,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggioRichiestaPerDateUffici(String aUfficioRicevente, String aUfficioMittente,
 			Date aDataInizioTrasmissione, Date aDataFineTrasmissione, String aIncludeInCarico)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1342,7 +1262,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente per Anno/Numero
 	 * Fascicolo (SIEP se Istanza, SIUS se Decreto/Ordinanza)
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aUfficioMittente
 	 * @param aTipoOperazione
@@ -1354,6 +1274,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggioRichiestaPerTipoOperazioneFascicolo(String aUfficioRicevente,
 			String aUfficioMittente, String aTipoOperazione, BigDecimal aAnnoFascicolo,
 			BigDecimal aProgrFascicolo, String aIncludeInCarico) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1394,47 +1315,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente per Anno/Numero
 	 * Fascicolo (SIEP se Istanza, SIUS se Decreto/Ordinanza)
-	 * 
-	 * @param aUfficioRicevente
-	 * @param aUfficioMittente
-	 * @param aTipoOperazione
-	 * @param aAnnoFascicolo
-	 * @param aProgrFascicolo
-	 * @return
-	 * @throws F3BException
-	 */
-
-	/*
-	 * public Vector ExRicercaMessaggioRichiestaPerTipoOperazioneFascicolo(String aUfficioRicevente, String
-	 * aUfficioMittente, String aTipoOperazione, BigDecimal aAnnoFascicolo, BigDecimal aProgrFascicolo, String
-	 * aIncludeInCarico, String aFlagVisto) throws F3BException { Connection lConn = null;
-	 * 
-	 * Vector lMessaggii = new Vector(); MessaggioSqlDAO lMesDao = null;
-	 * 
-	 * try { lConn = getDBConnection();
-	 * 
-	 * lMesDao = new MessaggioSqlDAO(lConn);
-	 * lMesDao.ricercaMessaggioRichiestaPerTipoOperazioneFascicolo(aUfficioRicevente, aUfficioMittente,
-	 * aTipoOperazione, aAnnoFascicolo, aProgrFascicolo, aIncludeInCarico, aFlagVisto);
-	 * 
-	 * lMessaggii = new Vector(lMesDao.getModels());
-	 * 
-	 * if (lMessaggii.size() == 0) { throw new F3BException(F3BException.USER_MESSAGE,
-	 * "Non vi sono atti da prendere in carico"); } } catch (DAOException daoEx) { // [FT] - 03/08/2016 -
-	 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.error(getClass().getName() + "DAOException: " + daoEx); throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioRichiestaPerUffici: " + daoEx); } catch
-	 * (SQLException sqe) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-	 * posto di LogF3B.getLogger() siesLogger.error(getClass().getName() + "SQLException: " + sqe); throw new
-	 * F3BException("MessaggioController.ExRicercaMessaggioRichiestaPerUffici: " + sqe); } finally {
-	 * cleanup(lMesDao); cleanup(lConn); }
-	 * 
-	 * return lMessaggii; }
-	 */
-	/**
-	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente per Anno/Numero
-	 * Fascicolo (SIEP se Istanza, SIUS se Decreto/Ordinanza)
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aUfficioMittente
 	 * @param aTipoOperazione
@@ -1445,6 +1326,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggioRichiestaPerTipoOperazioneFascicolo(MessaggioModel aMessaggio,
 			String aIncludeInCarico) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1483,7 +1365,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente per Tipo Operazione e Date ricezione (UEPE).
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aTipoOperazione
 	 * @param aDataInizioTrasmissione
@@ -1495,6 +1377,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggioRichiestaPerTipoeDate(String aUfficioRicevente, String aTipoOperazione,
 			Date aDataInizioTrasmissione, Date aDataFineTrasmissione, String aIncludeVisto)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1534,7 +1417,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente per Soggetto e Tipo Operazione (UEPE).
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aCognomeSoggetto
 	 * @param aNomeSoggetto
@@ -1549,6 +1432,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggioRichiestaPerSoggetto(String aUfficioRicevente, String aCognomeSoggetto,
 			String aNomeSoggetto, String aCodComuneNascita, String aCodStatoNascita, Date aDataNascita,
 			String aTipoOperazione, String aIncludeVisto) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1588,7 +1472,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	/**
 	 * Selezione dei messaggi destinati a aUfficioRicevente da parte di aUfficioMittente di un particolare
 	 * Tipo Operazione.
-	 * 
+	 *
 	 * @param aUfficioRicevente
 	 * @param aUfficioMittente
 	 * @param aTipoOperazione
@@ -1597,6 +1481,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggiPerUfficioTipoOper(String aUfficioMittente, String aTipoOperazione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1635,11 +1520,12 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * funzione per aggiornare il COntatore del risultato delle spedizioni alle varie BDI
-	 * 
+	 *
 	 * @param aEsito
 	 * @param aContatore
 	 */
 	private void aggiornaContatore(String aEsito, ContatoreEsitiModel aContatore) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1664,7 +1550,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	/**
 	 * Ricerca i Messaggi di RICHIESTA (01) inviati da un certo Ufficio corrispondenti ai criteri di ricerca
 	 * specificati. Per ogni messaggio trovato verifica se presente la risposta
-	 * 
+	 *
 	 * @param aUfficio
 	 *            - Cod ufficio che ha inviato la richiesta
 	 * @param aUtente
@@ -1679,6 +1565,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaMessaggioEsitoConFiltri(String aUfficio, String aUtente, String aEsito,
 			String aTipoOperazione, Date dataRicercaInizio, Date dataRicercaFine) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1719,9 +1606,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 						i--;
 					}
 					// Richiesta Tutti gli esiti o Esito specificato.
-					else if (aEsito == null
-							|| (aEsito != null && (aEsito.compareTo(((MessaggioModel) lVect.firstElement())
-									.getCodEsito())) == 0)) {
+					else if (aEsito == null || (aEsito != null && (aEsito
+							.compareTo(((MessaggioModel) lVect.firstElement()).getCodEsito())) == 0)) {
 						lMess.setMessaggioCorrelato((MessaggioModel) lVect.firstElement());
 						lMessaggii.set(i, lMess);
 					}
@@ -1770,7 +1656,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Ricerca Messaggio Esito con filtri.
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aUtente
 	 * @param aEsito
@@ -1784,6 +1670,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			String aUfficio, String aUfficioDestinatario, String aUtente, String aEsito,
 			String aTipoOperazione, Date dataRicercaInizio, Date dataRicercaFine, int aPage)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1823,9 +1710,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 						i--;
 					}
 					// Richiesta Tutti gli esiti o Esito specificato.
-					else if (aEsito == null
-							|| (aEsito != null && (aEsito.compareTo(((MessaggioModel) lVect.firstElement())
-									.getCodEsito())) == 0)) {
+					else if (aEsito == null || (aEsito != null && (aEsito
+							.compareTo(((MessaggioModel) lVect.firstElement()).getCodEsito())) == 0)) {
 						aMess.setMessaggioCorrelato((MessaggioModel) lVect.firstElement());
 						lMessaggii.set(i, aMess);
 
@@ -1856,8 +1742,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException("MessaggioController.ExRicercaMessaggioEsitoRicercaFascConFiltri: "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExRicercaMessaggioEsitoRicercaFascConFiltri: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1881,7 +1767,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Ricerca Messaggio Esito Istanze con filtri.
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aUtente
 	 * @param aEsito
@@ -1895,6 +1781,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggioEsitoConFiltri(String aCodTipoOper, String aUfficio, String aUtente,
 			String aEsito, String aCodUffDest, String aAnnoSiep, String aProgrSiep, Date dataRicercaInizio,
 			Date dataRicercaFine) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -1906,8 +1793,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 		try {
 			lConn = getDBConnection();
 			lMesDao = new MessaggioSqlDAO(lConn);
-			lMesDao.ricercaMessaggioConFiltri(aCodTipoOper, aUfficio, aUtente, aEsito, aCodUffDest,
-					aAnnoSiep, aProgrSiep, dataRicercaInizio, dataRicercaFine);
+			lMesDao.ricercaMessaggioConFiltri(aCodTipoOper, aUfficio, aUtente, aEsito, aCodUffDest, aAnnoSiep,
+					aProgrSiep, dataRicercaInizio, dataRicercaFine);
 			lMessaggii = new Vector(lMesDao.getModels());
 			lMesDao.stop();
 
@@ -1930,9 +1817,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 						i--;
 					}
 					// Richiesta Tutti gli esiti o Esito specificato.
-					else if (aEsito == null
-							|| (aEsito != null && (aEsito.compareTo(((MessaggioModel) lVect.firstElement())
-									.getCodEsito())) == 0)) {
+					else if (aEsito == null || (aEsito != null && (aEsito
+							.compareTo(((MessaggioModel) lVect.firstElement()).getCodEsito())) == 0)) {
 						aMess.setMessaggioCorrelato((MessaggioModel) lVect.firstElement());
 						lMessaggii.set(i, aMess);
 					}
@@ -1981,7 +1867,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	/**
 	 * Ricerca Messaggio Esito con filtri (x soggetto). restituisce un Vettore di Messaggi Esiti Correlati e
 	 * l'ultimo Model è un ContatoreEsitiModel che riassume i dati esiti ricevuti per la paginazione.
-	 * 
+	 *
 	 * @param aUfficioMittente
 	 * @param aCodiceUtente
 	 * @param aEsito
@@ -1994,6 +1880,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public Vector ExRicercaMessaggioEsitoRicercaSoggettoPerUfficioPaged(String aUfficioMittente,
 			String aCodiceUtente, String aTipoOperazione, Date dataRicercaInizio, Date dataRicercaFine,
 			int aPage) throws F3BException, Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -2095,12 +1982,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	/**
 	 * Metodo per evitare il loop del listner sui messaggi non spediti.
-	 * 
+	 *
 	 * @param aMessage
 	 * @return
 	 * @throws F3BException
 	 */
 	public boolean ExRicercaMessaggioUgualeNonSpedito(MessaggioModel aMessage) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -2139,14 +2027,13 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 		siesLogger.info("[JMS]: fine");
 		return lRetMessaggio;
 	}
-
-	// // SIEPE
+	// SIEPE
 
 	/**
 	 * Ricerca dei contatori visualizzati nel "Cruscotto" del SIEPE. La funzione restituisce un Vector di
 	 * CruscottoModel, in ogni elemento sono memorizzati il numero di messaggi ricevuti nella stessa data e
 	 * classificati in base allo stato: Nuovo, Preso in Visione, Preso in carico.
-	 * 
+	 *
 	 * @param acodUfficioDestinatario
 	 * @param aOrd
 	 * @return Vector
@@ -2154,6 +2041,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 */
 	public Vector ExRicercaContatoriXCruscotto(String acodUfficioDestinatario, String aOrd)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -2173,9 +2061,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 				// Lettura dei dati
 				lNuovo = lMesDao.getCruscottoModel();
 
-				if (lRetVect.size() == 0
-						|| ((CruscottoModel) lRetVect.lastElement()).getDataRicezione().compareTo(
-								lNuovo.getDataRicezione()) != 0) {
+				if (lRetVect.size() == 0 || ((CruscottoModel) lRetVect.lastElement()).getDataRicezione()
+						.compareTo(lNuovo.getDataRicezione()) != 0) {
 					// Se l'ultimo record letto aveva data diversa da quello appena letto
 					// o se siamo alla prima lettura si aggiunge un nuovo elemento alla lista.
 					lRetVect.add(new CruscottoModel(lNuovo.getDataRicezione()));
@@ -2197,17 +2084,15 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 				else
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger
-							.error("Errore nei dati: nella tabella MESSAGGIO rilevato un record con FLAG_VISTO di codice non previsto ->"
+					siesLogger.error(
+							"Errore nei dati: nella tabella MESSAGGIO rilevato un record con FLAG_VISTO di codice non previsto ->"
 									+ lFlag);
 
 				// Aggiornamento del Totale
-				lUltimo.setINumAttiRicevuti(lUltimo.getNumAttiNuovi().add(
-						lUltimo.getNumAttiPresiInCarico().add(
-								lUltimo.getNumAttiPresiInVisione().add(lUltimo.getNumAttiRestituiti()))));
+				lUltimo.setINumAttiRicevuti(lUltimo.getNumAttiNuovi().add(lUltimo.getNumAttiPresiInCarico()
+						.add(lUltimo.getNumAttiPresiInVisione().add(lUltimo.getNumAttiRestituiti()))));
 			}
 			lMesDao.stop();
-
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2224,7 +2109,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aIdMessaggio
 	 * @return
 	 * @throws F3BException
@@ -2245,13 +2130,12 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesSqlDao.ricercaEsitiRicevutiByIdMessaggi(aIdMessaggio);
 
 			lListaMessaggi = new Vector(lMesSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("MessaggioController.ExRicercaMessaggiCorrelati: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExRicercaMessaggiCorrelati: Non posso leggere : " + daoEx);
 		} catch (Exception oEx) {
-			throw new F3BException("MessaggioController.ExRicercaMessaggiCorrelati: Non posso leggere : "
-					+ oEx);
+			throw new F3BException(
+					"MessaggioController.ExRicercaMessaggiCorrelati: Non posso leggere : " + oEx);
 		} finally {
 			cleanup(lMesSqlDao);
 			cleanup(lConn);
@@ -2268,6 +2152,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	public MessaggioModel ExRicercaMessaggioByIdRichiesta(String aTipoMes // 01 = RICHIESTA
 			, String aTipoOperazione // 00066 = TRASFERIMENTO_COMPETENZA
 			, String aCodUffMittenete, BigDecimal aIdRichiesta) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("[JMS]: inizio");
@@ -2285,7 +2170,6 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesMod = (MessaggioModel) lMesDao.getModelByKey();
 
 			lMesDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MessaggioController.ExRicercaMessaggioByIdRichiesta: Non posso leggere : " + daoEx);
@@ -2304,14 +2188,14 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	}
 
 	/**
-	 * ExRicercaSollecitiMessaggioRichiestaAtti : Ricerca Messaggi di
-	 * "Sollecito Richiestra Atti Per trasferimento Competenza" Oltre agli altri parametri, la ricerca è fatta
-	 * per IdRMessaggioSollecitato"
+	 * ExRicercaSollecitiMessaggioRichiestaAtti : Ricerca Messaggi di "Sollecito Richiestra Atti Per
+	 * trasferimento Competenza" Oltre agli altri parametri, la ricerca è fatta per IdRMessaggioSollecitato"
 	 */
 
 	public Vector<MessaggioModel> ExRicercaSollecitiMessaggioRichiestaAtti(String aTipoMes // 01 = RICHIESTA
 			, String aTipoOperazione // 00076 = SOLLECITO Richiesta Atti per Tr. Comp.
 			, String aIdMesSollecitato) throws F3BException {
+
 		Connection lConn = null;
 		MessaggioSqlDAO lMesSqlDao = null;
 		Vector<MessaggioModel> lListaSolleciti;
@@ -2320,7 +2204,6 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesSqlDao = new MessaggioSqlDAO(lConn);
 			lMesSqlDao.RicercaSollecitiMessaggioRichiestaAtti(aTipoMes, aTipoOperazione, aIdMesSollecitato);
 			lListaSolleciti = new Vector(lMesSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MessaggioController.ExRicercaSollecitiMessaggioRichiestaAtti: Non posso leggere : "
@@ -2340,6 +2223,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	// Seguito Atti
 	public MessaggioModel ExRicercaMessaggioByCorrelationIdOnly(String aKey) throws F3BException {
+
 		siesLogger.info("[JMS]: inizio");
 
 		Connection lConn = null;
@@ -2355,7 +2239,8 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesMod = (MessaggioModel) lMesDao.getModelByKey();
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"MessaggioController.ExRicercaMessaggioByCorrelationIdOnly: Non posso leggere : " + daoEx);
+					"MessaggioController.ExRicercaMessaggioByCorrelationIdOnly: Non posso leggere : "
+							+ daoEx);
 		} catch (Exception oEx) {
 			throw new F3BException(
 					"MessaggioController.ExRicercaMessaggioByCorrelationIdOnly: Non posso leggere : " + oEx);
@@ -2370,6 +2255,7 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 	public Vector ExRicercaMessaggiNelPeriodoPaged(MessaggioModel aMessaggio, Date aDataInizio,
 			Date aDataFine, int aPage) throws F3BException {
+
 		siesLogger.info("[JMS]: inizio");
 
 		Connection lConn = null;
@@ -2382,7 +2268,6 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesDao = new MessaggioSqlDAO(lConn);
 			lMesDao.ricercaMessaggioNelPeriodoPaged(aMessaggio, aDataInizio, aDataFine, aPage);
 			lMessaggii = new Vector(lMesDao.getModels());
-
 		} catch (DAOException daoEx) {
 			siesLogger.error(this.getClass().getName(), daoEx);
 			throw new F3BException(
@@ -2394,11 +2279,11 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 
 		siesLogger.info("[JMS]: fine");
 		return lMessaggii;
-
 	}
 
 	public BigDecimal ExCountMessaggiNelPeriodoPaged(MessaggioModel aMessaggio, Date aDataInizio,
 			Date aDataFine, int aPage) throws F3BException {
+
 		siesLogger.debug("--XX-- ExCountMessaggiNelPeriodoPaged ...... INIZIO  ");
 
 		BigDecimal HowManyRecords = null;
@@ -2413,11 +2298,10 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesDao.start();
 			lMesDao.next();
 			HowManyRecords = lMesDao.getBigDecimal("HowManyRecords");
-
 		} catch (DAOException daoEx) {
 			siesLogger.error(this.getClass().getName(), daoEx);
-			throw new F3BException("MessaggioController.ExCountMessaggiNelPeriodoPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MessaggioController.ExCountMessaggiNelPeriodoPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMesDao);
 			cleanup(lConn);
@@ -2430,9 +2314,9 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 	 * Ricerca Messaggi di "Sollecito l'Ufficio Cumulante a Emettere il provvedimento di CUMULO" la ricerca è
 	 * fatta per IdRMessaggioSollecitato e Tipo Operazione"
 	 */
-
 	public Vector<MessaggioModel> ExRicercaMessaggioByIdMessaggioSollecitato(String aTipoOperazione,
 			String aIdMesSollecitato) throws F3BException {
+
 		Connection lConn = null;
 		MessaggioSqlDAO lMesSqlDao = null;
 		Vector<MessaggioModel> lListaSolleciti;
@@ -2441,7 +2325,6 @@ public class MessaggioController extends SiapController implements IMessaggio, I
 			lMesSqlDao = new MessaggioSqlDAO(lConn);
 			lMesSqlDao.RicercaSolleciti(aTipoOperazione, aIdMesSollecitato);
 			lListaSolleciti = new Vector(lMesSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MessaggioController.ExRicercaMessaggioByIdMessaggioSollecitato: Non posso leggere : "

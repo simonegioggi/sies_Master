@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.profilo.dao.ProfiloDAO;
 import siap.sico.profilo.dao.ProfiloSqlDAO;
 import siap.sico.profilo.model.ProfiloModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,12 +24,14 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProfiloController extends SiapController implements IProfilo {
+
 	public ProfiloModel ExInserisciProfilo(ProfiloModel aProfilo) throws F3BException {
+
 		Connection lConn = null;
 		ProfiloDAO lProDao = null;
 		ProfiloModel lProMod = null;
@@ -54,6 +56,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	}
 
 	public Vector ExRicercaProfilo(ProfiloModel aProfilo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lProfili = new Vector();
 		ProfiloSqlDAO lProDao = null;
@@ -76,6 +79,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	}
 
 	public Vector ExRicercaListaProfili() throws F3BException {
+
 		Connection lConn = null;
 		Vector lProfili = new Vector();
 		ProfiloSqlDAO lProDao = null;
@@ -98,6 +102,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	}
 
 	public ProfiloModel ExRicercaProfiloByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ProfiloSqlDAO lProDao = null;
 		ProfiloModel lProMod;
@@ -117,6 +122,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	}
 
 	public ProfiloModel ExModificaProfilo(ProfiloModel aProfilo) throws F3BException {
+
 		Connection lConn = null;
 		ProfiloDAO lProDao = null;
 		ProfiloModel lProMod = new ProfiloModel(aProfilo);
@@ -138,6 +144,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	}
 
 	public ProfiloModel ExRicercaProfiloByCodUtente(String aCodUtente) throws F3BException {
+
 		Connection lConn = null;
 		ProfiloSqlDAO lProDao = null;
 		ProfiloModel lProMod = new ProfiloModel();
@@ -159,6 +166,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	}
 
 	public void ExCancellaProfilo(ProfiloModel aProfilo) throws F3BException {
+
 		Connection lConn = null;
 		ProfiloDAO lProDao = null;
 
@@ -180,7 +188,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	 * Metodo che esegue attraverso l'utilizzo del SQLDao, la ricerca di tutti i profili corrspondenti al
 	 * codice tipo uffcio passato come argomento.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodTipoUfficio
 	 *            String Codice tipo ufficio
 	 * @throws F3BException
@@ -188,6 +196,7 @@ public class ProfiloController extends SiapController implements IProfilo {
 	 * @return Vector ritorna l'inseime delle occorrenze.
 	 */
 	public Vector ExRicercaProfiliByCodTipoUfficio(String aCodTipoUfficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lProfili = new Vector();
 		ProfiloSqlDAO lProDao = null;
@@ -202,8 +211,8 @@ public class ProfiloController extends SiapController implements IProfilo {
 			if (lProfili.isEmpty())
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoEx) {
-			throw new F3BException("ProfiloController.ExRicercaProfiliByCodTipoUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ProfiloController.ExRicercaProfiliByCodTipoUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lProDao);
 			cleanup(lConn);

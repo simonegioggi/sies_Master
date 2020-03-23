@@ -9,6 +9,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -40,10 +44,6 @@ import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcDAO;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -69,7 +69,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati ScambioSanzione
-	 * 
+	 *
 	 * @param aScambioSanzione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -77,6 +77,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaScambioSanzione(ScambioSanzioneModel aScambioSanzione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lScambioSanzioni = new Vector();
 		ScambioSanzioneDAO lScaDao = null;
@@ -88,12 +89,12 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			lScaDao.setOrderBy();
 			lScaDao.start();
 			while (lScaDao.next()) {
-				lScambioSanzioni.add((ScambioSanzioneModel) lScaDao.getModel());
+				lScambioSanzioni.add(lScaDao.getModel());
 			}
 			lScaDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("ScambioSanzioneController.ExRicercaScambioSanzione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ScambioSanzioneController.ExRicercaScambioSanzione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lScaDao);
 			cleanup(lConn);
@@ -104,7 +105,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -112,6 +113,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public ScambioSanzioneModel ExRicercaScambioSanzioneByEveIdEvento(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScambioSanzioneModel lScambioSanzioneMod = new ScambioSanzioneModel();
 		ScambioSanzioneSqlDAO lScambioSanzioneSqlDao = null;
@@ -135,7 +137,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/**********************************************************************************
 	 * Effettua la ricerca per chiave IdEvento senza controllare il flag di validazione
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -143,6 +145,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 **********************************************************************************/
 	public ScambioSanzioneModel ExRicercaScambioSanzioneByEveIdEventoNoControlValid(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScambioSanzioneModel lScambioSanzioneMod = new ScambioSanzioneModel();
 		ScambioSanzioneSqlDAO lScambioSanzioneSqlDao = null;
@@ -166,7 +169,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -174,6 +177,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public ScambioSanzioneModel ExRicercaScambioSanzioneById(BigDecimal aIdScambioSanzione)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScambioSanzioneModel lScambioSanzioneMod = new ScambioSanzioneModel();
 		ScambioSanzioneSqlDAO lScambioSanzioneSqlDao = null;
@@ -196,7 +200,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave (usata per conversione pene pec)
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -204,6 +208,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public ScambioSanzioneModel ExRicercaScambioSanzioneByIdXRichConv(BigDecimal aIdScambioSanzione)
 			throws F3BException {
+
 		Connection lConn = null;
 		ScambioSanzioneModel lScambioSanzioneMod = new ScambioSanzioneModel();
 		ScambioSanzioneSqlDAO lScambioSanzioneSqlDao = null;
@@ -227,7 +232,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati ScambioSanzione e RichiestaConversione
-	 * 
+	 *
 	 * @param aScambioSanzione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -236,6 +241,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public Vector ExRicercaScambioSanzioneRichConv(String TipoDec, BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lScambioSanzioni = new Vector();
 		ScambioSanzioneRichiestaConvSqlDAO lScambioSanzioneRichiestaConvSqlDao = null;
@@ -249,9 +255,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			throw new F3BException(
 					"ScambioSanzioneController.ExRicercaScambioSanzioneRichConv: Non posso leggere : "
 							+ daoEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lScambioSanzioneRichiestaConvSqlDao);
 			cleanup(lConn);
 		}
@@ -260,7 +264,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati ScambioSanzione e RichiestaConversione
-	 * 
+	 *
 	 * @param aTipoProv
 	 *            Array di Codici Tipo Provvedimento
 	 * @param aIdFascicolo
@@ -270,6 +274,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public Vector[] ExRicercaScambioSanzioneRichConv(String[] aTipoProv, BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lScambioSanzioni = new Vector();
 		Vector lCodTipoProvv = new Vector();
@@ -280,22 +285,19 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			lConn = getDBConnection();
 			for (int i = 0; i < aTipoProv.length; i++) {
 				lScambioSanzioneRichiestaConvSqlDao = new ScambioSanzioneRichiestaConvSqlDAO(lConn);
-				lScambioSanzioneRichiestaConvSqlDao
-						.ricercaScambioSanzioneRichConv(aTipoProv[i], aIdFascicolo);
+				lScambioSanzioneRichiestaConvSqlDao.ricercaScambioSanzioneRichConv(aTipoProv[i],
+						aIdFascicolo);
 				Vector lScambio = new Vector(lScambioSanzioneRichiestaConvSqlDao.getModels());
 				lScambioSanzioni.addAll(lScambio);
 				for (int j = 0; j < lScambio.size(); j++) {
 					lCodTipoProvv.add(aTipoProv[i]);
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"ScambioSanzioneController.ExRicercaScambioSanzioneRichConv: Non posso leggere : "
 							+ daoEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lScambioSanzioneRichiestaConvSqlDao);
 			cleanup(lConn);
 		}
@@ -309,7 +311,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 * Effettua la ricerca dei dati ScambioSanzione e RichiestaConversione 09/03/2015 Si imposta nella query
 	 * il criterio di accoppiamento tra il MOTIVO_PROVVEDIMENTO e ESITO_PROVVEDIMENTO, individuando delle
 	 * occorrenze con ESITO_PROVVEDIMENTO specifico
-	 * 
+	 *
 	 * @param aTipoProv
 	 *            Array di Codici Tipo Provvedimento
 	 * @param aIdFascicolo
@@ -319,6 +321,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public Vector[] ExRicercaScambioSanzioneRichConvEPS(String[] aTipoProv, BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lScambioSanzioni = new Vector();
 		Vector lCodTipoProvv = new Vector();
@@ -337,14 +340,11 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 					lCodTipoProvv.add(aTipoProv[i]);
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"ScambioSanzioneController.ExRicercaScambioSanzioneRichConv: Non posso leggere : "
 							+ daoEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lScambioSanzioneRichiestaConvSqlDao);
 			cleanup(lConn);
 		}
@@ -357,12 +357,13 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aScambioSanzione
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountScambioSanzione(ScambioSanzioneModel aScambioSanzione) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		ScambioSanzioneSqlDAO lScambioSanzioneSqlDao = null;
@@ -389,7 +390,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aScambioSanzione
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -399,6 +400,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	 ****************************************************************************/
 	public Vector ExRicercaScambioSanzionePaged(ScambioSanzioneModel aScambioSanzione, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lScambioSanzioni = new Vector();
 		ScambioSanzioneSqlDAO lScambioSanzioneSqlDao = null;
@@ -420,16 +422,15 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 
 	/*****************************************************************************
 	 * Dato il numero di un fascicolo SIEP, effettua la ricerca dei dati ScambioSanzione ad esso collegato
-	 * 
+	 *
 	 * @param aFascicolo
 	 *            BigDecimal
 	 * @return un vettore di model con il risultato della ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public List ExRicercaScambioSanzioneByIdFascicoloSiepNaturaTipo(BigDecimal aFascicolo,
-			String[] aTipoDecisone, String[] aNaturaSanzione, String[] aTipoSanzione)
+			String[] aTipoDecisone, String[] aNaturaSanzione, String[] aTipoSanzione) throws F3BException {
 
-	throws F3BException {
 		Connection lConn = null;
 		List lScambioSanzioni = new ArrayList();
 		ScambioSanzioneSqlDAO lScaDao = null;
@@ -440,7 +441,6 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			lScaDao.ricercaByIdFascicoloNaturaTipo(aFascicolo, aTipoDecisone, aNaturaSanzione, aTipoSanzione);
 
 			lScambioSanzioni = new ArrayList(lScaDao.getModels());
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"ScambioSanzioneController.ExRicercaScambioSanzioneByIdFascicoloSiepNaturaTipo: Non posso leggere : "
@@ -456,13 +456,12 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 	/*****************************************************************************
 	 * Dato uno ScambioSanzioneModel, aggiorna lo Stato del procedimento del fascicolo secondo quanto indicato
 	 * per lo
-	 * 
+	 *
 	 * @param aFascicolo
 	 *            BigDecimal
 	 * @return un vettore di model con il risultato della ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
-
 	public EventoModel ExInserisciEventoAggiornaStatoProcedimento(EventoModel aEveMod,
 			PosizioneGiuridicaModel aPos, PenaResiduaModel aPenaResidua, StatoProcedimentoModel aStatoProcMod)
 			throws F3BException {
@@ -554,16 +553,16 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			// LogF3B.getLogger()
 			siesLogger.error(daoEx.getMessage(), daoEx);
 
-			throw new F3BException("ScambioSanzioneController.ExInserisciEventoAggiornaStatoProcedimento : "
-					+ daoEx);
+			throw new F3BException(
+					"ScambioSanzioneController.ExInserisciEventoAggiornaStatoProcedimento : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error(ex.getMessage(), ex);
 
-			throw new F3BException("ScambioSanzioneController.ExInserisciEventoAggiornaStatoProcedimento : "
-					+ ex);
+			throw new F3BException(
+					"ScambioSanzioneController.ExInserisciEventoAggiornaStatoProcedimento : " + ex);
 		} finally {
 			cleanup(lStatoDao);
 			cleanup(lEveDao);
@@ -595,7 +594,6 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 		FascicoloSiepDAO lFasDao = null;
 		LuogoDetenzioneDAO lLuoDetDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
-
 		ScambioSanzioneDAO lScaSanDao = null;
 		TenoreDAO lTenDAO = null;
 		DepositoOrdinanzaPcDAO lDepOrdDAO = null;
@@ -770,7 +768,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			 * STATO_PROCEDIMENTO
 			 * lStatoDao.setCondizioneByIdFascicolo(aStatoProcMod.getFasSieIdFascicoloSiep());
 			 * lStatoDao.delete();
-			 * 
+			 *
 			 * // - Inserisce aStatoProcMod.setEveIdEvento(lKeyEvento);
 			 * lStatoDao.setDAOFromModel(aStatoProcMod); lStatoDao.insert(); lStatoDao.stop();
 			 */
@@ -802,7 +800,6 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			cleanup(lFasDao);
 			cleanup(lLuoDetDao);
 			cleanup(lLuoDetSqlDao);
-
 			cleanup(lScaSanDao);
 			cleanup(lTenDAO);
 			cleanup(lDepOrdDAO);

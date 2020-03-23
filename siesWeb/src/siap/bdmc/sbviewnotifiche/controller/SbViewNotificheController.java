@@ -5,13 +5,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.bdmc.sbviewnotifiche.dao.SbViewNotificheDAO;
 import siap.bdmc.sbviewnotifiche.dao.SbViewNotificheSqlDAO;
 import siap.bdmc.sbviewnotifiche.dao.VariazioneStatoNotificaStoreProcedureDAO;
 import siap.bdmc.sbviewnotifiche.model.SbViewNotificheModel;
 import siap.controller.SiapController;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,7 +34,7 @@ public class SbViewNotificheController extends SiapController implements ISbView
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SbViewNotifiche a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSbViewNotifiche
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -42,6 +42,7 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	 ****************************************************************************/
 	public SbViewNotificheModel ExInserisciSbViewNotifiche(SbViewNotificheModel aSbViewNotifiche)
 			throws F3BException {
+
 		Connection lConn = null;
 		SbViewNotificheDAO lSbVDao = null;
 		SbViewNotificheModel lSbVMod = null;
@@ -67,7 +68,7 @@ public class SbViewNotificheController extends SiapController implements ISbView
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati SbViewNotifiche
-	 * 
+	 *
 	 * @param aSbViewNotifiche
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -75,6 +76,7 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbViewNotifiche(SbViewNotificheModel aSbViewNotifiche) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbViewNotifichi = new Vector();
 		SbViewNotificheDAO lSbVDao = null;
@@ -86,12 +88,12 @@ public class SbViewNotificheController extends SiapController implements ISbView
 			lSbVDao.setOrderBy();
 			lSbVDao.start();
 			while (lSbVDao.next()) {
-				lSbViewNotifichi.add((SbViewNotificheModel) lSbVDao.getModel());
+				lSbViewNotifichi.add(lSbVDao.getModel());
 			}
 			lSbVDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("Problemi durante la connessione alla Banca Dati Misure Cautelari: "
-					+ daoEx);
+			throw new F3BException(
+					"Problemi durante la connessione alla Banca Dati Misure Cautelari: " + daoEx);
 		} finally {
 			cleanup(lSbVDao);
 			cleanup(lConn);
@@ -102,13 +104,14 @@ public class SbViewNotificheController extends SiapController implements ISbView
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public SbViewNotificheModel ExRicercaSbViewNotificheById(BigDecimal aProgNoti) throws F3BException {
+
 		Connection lConn = null;
 		SbViewNotificheModel lSbViewNotificheMod = new SbViewNotificheModel();
 		SbViewNotificheSqlDAO lSbViewNotificheSqlDao = null;
@@ -133,12 +136,13 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	 * Metodo che modifica i dati dell'SbViewNotifiche Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aSbViewNotifiche
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaSbViewNotifiche(SbViewNotificheModel aSbViewNotifiche) throws F3BException {
+
 		Connection lConn = null;
 		SbViewNotificheDAO lSbVDao = null;
 
@@ -160,11 +164,12 @@ public class SbViewNotificheController extends SiapController implements ISbView
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aSbViewNotifiche
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaSbViewNotifiche(SbViewNotificheModel aSbViewNotifiche) throws F3BException {
+
 		Connection lConn = null;
 		SbViewNotificheDAO lSbVDao = null;
 
@@ -187,12 +192,13 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aSbViewNotifiche
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountSbViewNotifiche(SbViewNotificheModel aSbViewNotifiche) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		SbViewNotificheSqlDAO lSbViewNotificheSqlDao = null;
@@ -217,8 +223,10 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	}
 
 	public void ExChiudiSbViewNotifiche(SbViewNotificheModel aSbViewNotifiche) throws F3BException {
+
 		Connection lConn = null;
 		VariazioneStatoNotificaStoreProcedureDAO lProc = null;
+
 		try {
 
 			lConn = getDBTransaction();
@@ -233,24 +241,24 @@ public class SbViewNotificheController extends SiapController implements ISbView
 			/*
 			 * if (lProc.getEsito() != null && lProc.getEsito().compareTo(new BigDecimal(0)) != 0) { // [FT] -
 			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			 * LogF3B.getLogger() siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE...");
-			 * throw new DAOException("Errore"+ lProc.getEsito()
-			 * +" durante la chiusura della notifica n° "+ aSbViewNotifiche.getProgNoti() ); }
+			 * LogF3B.getLogger() siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE..."); throw new
+			 * DAOException("Errore"+ lProc.getEsito() +" durante la chiusura della notifica n° "+
+			 * aSbViewNotifiche.getProgNoti() ); }
 			 */
 
 			lConn.commit();
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException(F3BException.USER_MESSAGE, "Errore durante la chiusura della notifica n° "
-					+ aSbViewNotifiche.getProgNoti());
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Errore durante la chiusura della notifica n° " + aSbViewNotifiche.getProgNoti());
 		} catch (SQLException ex) {
 			rollback(lConn);
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Errore durante ila chiusura della notifica n° " + aSbViewNotifiche.getProgNoti());
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException(F3BException.USER_MESSAGE, "Errore durante la chiusura della notifica n° "
-					+ aSbViewNotifiche.getProgNoti());
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Errore durante la chiusura della notifica n° " + aSbViewNotifiche.getProgNoti());
 		} finally {
 			cleanup(lProc);
 			cleanup(lConn);
@@ -260,7 +268,7 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aSbViewNotifiche
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -270,6 +278,7 @@ public class SbViewNotificheController extends SiapController implements ISbView
 	 ****************************************************************************/
 	public Vector ExRicercaSbViewNotifichePaged(SbViewNotificheModel aSbViewNotifiche, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbViewNotifichi = new Vector();
 		SbViewNotificheSqlDAO lSbViewNotificheSqlDao = null;
@@ -280,8 +289,8 @@ public class SbViewNotificheController extends SiapController implements ISbView
 			lSbViewNotificheSqlDao.ricercaSbViewNotifichePaged(aSbViewNotifiche, aPage);
 			lSbViewNotifichi = new Vector(lSbViewNotificheSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("Problemi durante la connessione alla Banca Dati Misure Cautelari: "
-					+ daoEx);
+			throw new F3BException(
+					"Problemi durante la connessione alla Banca Dati Misure Cautelari: " + daoEx);
 		} finally {
 			cleanup(lSbViewNotificheSqlDao);
 			cleanup(lConn);

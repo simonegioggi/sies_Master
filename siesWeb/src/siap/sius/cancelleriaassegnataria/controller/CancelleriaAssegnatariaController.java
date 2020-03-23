@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.cancelleriaassegnataria.dao.CancelleriaAssegnatariaDAO;
 import siap.sius.cancelleriaassegnataria.dao.CancelleriaAssegnatariaSqlDAO;
 import siap.sius.cancelleriaassegnataria.model.CancelleriaAssegnatariaModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 
@@ -36,13 +36,14 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 
 	/**
 	 * Funzione di inserimento di un nuovo record Cancelleria Assegnataria.
-	 * 
+	 *
 	 * @param aCancelleriaAssegnataria
 	 * @return
 	 * @throws F3BException
 	 */
 	public CancelleriaAssegnatariaModel ExInserisciCancelleriaAssegnataria(
 			CancelleriaAssegnatariaModel aCancelleriaAssegnataria) throws F3BException {
+
 		Connection lConn = null;
 		CancelleriaAssegnatariaDAO lCanDao = null;
 		CancelleriaAssegnatariaModel lCanMod = null;
@@ -74,6 +75,7 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 
 	public Vector ExRicercaCancelleriaAssegnataria(CancelleriaAssegnatariaModel aCancelleriaAssegnataria)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lCancelleriaAssegnatariaLista = new Vector();
 		CancelleriaAssegnatariaSqlDAO lCanDao = null;
@@ -96,7 +98,7 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 
 	/**
 	 * Ricerca Cancelleria Assegnataria paginata
-	 * 
+	 *
 	 * @param CancelleriaAssegnatariaModel
 	 * @param aPageNum
 	 *            : numero pagina > 0
@@ -105,6 +107,7 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 	 */
 	public Vector ExRicercaCancelleriaAssegnatariaPagina(
 			CancelleriaAssegnatariaModel aCancelleriaAssegnataria, int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCancelleriaAssegnatariaLista = new Vector();
 		CancelleriaAssegnatariaSqlDAO lCanDao = null;
@@ -142,13 +145,14 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 
 	/**
 	 * Ritorna n.ro di record risultato di una ExRicercaPosizioneMaterialePagina
-	 * 
+	 *
 	 * @param PosizioneMaterialeModel
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaCancelleriaAssegnatariaPagina(
 			CancelleriaAssegnatariaModel aCancelleriaAssegnataria) throws F3BException {
+
 		Connection lConn = null;
 		// Vector lCancelleriaAssegnatariaLista = new Vector();
 		CancelleriaAssegnatariaSqlDAO lCanDao = null;
@@ -174,13 +178,14 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 	 * Funzione di modifica di una Cancelleria Assegnataria. Attraverso il parametro
 	 * CancelleriaAssegnatariaModel viene passata la nuova descrizione e la chiave
 	 * (COD_CANCELLERIA_ASSEGNATARIA, COD_UFFICIO) per individuare il record da aggiornare.
-	 * 
+	 *
 	 * @param aCancelleriaAssegnataria
 	 * @return
 	 * @throws F3BException
 	 */
 	public CancelleriaAssegnatariaModel ExModificaCancelleriaAssegnataria(
 			CancelleriaAssegnatariaModel aCancelleriaAssegnataria) throws F3BException {
+
 		Connection lConn = null;
 		CancelleriaAssegnatariaDAO lCanDao = null;
 		CancelleriaAssegnatariaModel lCanMod = new CancelleriaAssegnatariaModel(aCancelleriaAssegnataria);
@@ -207,12 +212,13 @@ public class CancelleriaAssegnatariaController extends SiapController implements
 	/**
 	 * Funzione di cancellazione. Il record da cancellare è individuato dalla chiave composta
 	 * (COD_CANCELLERIA_ASSEGNATARIA, COD_UFFICIO) passata attraverso l'argomento CancelleriaAssegnatariaModel
-	 * 
+	 *
 	 * @param aCancelleriaAssegnataria
 	 * @throws F3BException
 	 */
 	public void ExCancellaCancelleriaAssegnataria(CancelleriaAssegnatariaModel aCancelleriaAssegnataria)
 			throws F3BException {
+
 		Connection lConn = null;
 		CancelleriaAssegnatariaDAO lCanDao = null;
 

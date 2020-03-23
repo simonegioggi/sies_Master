@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.controller.IEvento;
@@ -50,10 +54,6 @@ import siap.sius.udienzaprocedimento.model.ProcedimentixUdienzaModel;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -68,7 +68,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -79,6 +79,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	public UdienzaProcedimentoModel ExInserisciUdienzaProcedimento(
 			UdienzaProcedimentoModel aUdienzaProcedimento) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod = null;
@@ -103,6 +104,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	}
 
 	public Vector ExRicercaProcedimentixUdienza(BigDecimal aIdUdienza, String aOrderBy) throws F3BException {
+
 		Connection lConn = null;
 		Vector lProcedimenti = new Vector();
 		ProcedimentixUdienzaSqlDAO lUdiDao = null;
@@ -145,6 +147,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 */
 	public Vector ExRicercaProcedimentixUdienza(BigDecimal aIdUdienza, String aOrderBy,
 			String aStatoProcedimento, String aTipoProc) throws F3BException {
+
 		Connection lConn = null;
 		Vector lProcedimenti = new Vector();
 		ProcedimentixUdienzaSqlDAO lUdiDao = null;
@@ -176,8 +179,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	/**
 	 * Metodo ExRicercaProcedimentixUdienza con l'aggiunta di parametri discriminanti il tipo Procedimento.
-	 * <p>
-	 * 
+	 *
 	 * @param aDataUdienza
 	 * @param aOrderBy
 	 * @param aStatoProcedimento
@@ -185,6 +187,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 */
 	public Vector ExRicercaProcedimentixDataUdienza(Date aDataUdienza, String aOrderBy,
 			String aStatoProcedimento, String aTipoProc, String aCodUfficioConnesso) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("UdienzaProcedimentoController.ExRicercaProcedimentixDataUdienza() : inizio");
@@ -213,8 +216,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato!");
 
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaProcedimentoController.ExRicercaProcedimentixDataUdienza: "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaProcedimentoController.ExRicercaProcedimentixDataUdienza: " + daoEx);
 		} catch (F3BException f3bex) {
 			throw f3bex;
 		} catch (Exception ex) {
@@ -233,6 +236,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	public Vector ExRicercaUdienzaProcedimento(UdienzaProcedimentoModel aUdienzaProcedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienzaProcedimenti = new Vector();
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
@@ -264,6 +268,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaUdienzaProcedimentoByGeneraleProcedimento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienzaProcedimenti = new Vector();
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
@@ -292,6 +297,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaUdienzaProcedimentoUdiByGeneraleProcedimento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdiProUdiVector = new Vector();
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
@@ -331,6 +337,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 */
 	public UdienzaProcedimentoModel ExRicercaUdienzaProcedimentoByGenProFlagRinviata(BigDecimal aKey,
 			String aFilter) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod;
@@ -352,6 +359,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	}
 
 	public UdienzaProcedimentoModel ExRicercaUdienzaProcedimentoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod;
@@ -373,6 +381,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	}
 
 	public UdienzaProcedimentoModel ExRicercaUdienzaProcedimentoByEve(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod = null;
@@ -395,6 +404,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	public UdienzaProcedimentoModel ExModificaUdienzaProcedimento(
 			UdienzaProcedimentoModel aUdienzaProcedimento) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod = new UdienzaProcedimentoModel(aUdienzaProcedimento);
@@ -418,6 +428,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	public void ExCancellaUdienzaProcedimento(UdienzaProcedimentoModel aUdienzaProcedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoDAO lUdiDao = null;
 
@@ -439,6 +450,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	public void ExAggiornaFissazioneUdienza(UdienzaProcedimentoModel aUdienzaProcedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoDAO lUdiDao = null;
 
@@ -452,13 +464,12 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 			rollback(lConn);
 
 			throw new F3BException(
-					"UdienzaProcedimentoController.ExAggiornaFissazioneUdienza: Non posso leggere : " + daoEx);
+					"UdienzaProcedimentoController.ExAggiornaFissazioneUdienza: Non posso leggere : "
+							+ daoEx);
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("UdienzaProcedimentoController.ExAggiornaFissazioneUdienza: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lUdiDao);
 			cleanup(lConn);
 		}
@@ -466,8 +477,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	/**
 	 * Esecuzione stampa dei procedimenti fissati per udienza.
-	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @param aStatoProcedimento
 	 * @param aTipoProc
@@ -478,6 +488,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 			BigDecimal aIdEsperto, XModel aStampa, String aIdDocumento, String lOrderBy,
 			UtenteModel aUtenteModel, String aStatoProcedimento, String aTipoProc, String aCodUfficioConnesso)
 			throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		// TreeModel lTree = this.prelevaDati( aIdUdienza, aCodMagistrato, aIdEsperto, aStampa, lOrderBy);
 
@@ -498,10 +509,6 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 		return lByteArrayOut;
 	}
 
-	/**
-   * 
-   * 
-   */
 	public ByteArrayOutputStream ExStampaProcedimentixDataUdienza(Date aDataUdienza, String aCodMagistrato,
 			BigDecimal aIdEsperto, XModel aStampa, String aIdDocumento, String lOrderBy,
 			UtenteModel aUtenteModel, String aStatoProcedimento, String aTipoProc, String aCodUfficioConnesso)
@@ -534,118 +541,6 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	}
 
 	/**
-	 * Preleva dati dai DB ed li organizza gerarchicamente nel documento di stampa restituendo un TreeModel
-	 * (struttura XML).
-	 * <p>
-	 * 
-	 * @return TreeModel
-	 * @param aIdUdienza
-	 * @param aStampaMod
-	 * @throws F3BException
-	 */
-	/*
-	 * private TreeModel prelevaDati( BigDecimal aIdUdienza, String aCodMagistrato, BigDecimal aIdEsperto,
-	 * XModel aStampaMod, String lOrderBy, String aStatoProcedimento, String tipoProc ) throws F3BException {
-	 * TreeModel lTreeGenProc = null; TreeModel lTreeFasSIUS = null; TreeModel lTreeRoot; // radice
-	 * dell'albero generale del documento TreeModel lRootUdienza; // radice del sottoalbero a partire dal nodo
-	 * Udienza TreeModel lTreeTenore = null; TreeModel lTreeOrdinanza = null; String lCodMagistrato = null;
-	 * Vector lTenori = new Vector();
-	 * 
-	 * UdienzaModel lUdienza; EventoModel lEvento; RiferimentoFascicoloSiusModel lRifaSius; FascicoloGPModel
-	 * lFasGPMod = new FascicoloGPModel();
-	 * 
-	 * Vector lProcedimentiPerUdienza = ExRicercaProcedimentixUdienza(aIdUdienza, lOrderBy,
-	 * aStatoProcedimento, tipoProc); Iterator itx = lProcedimentiPerUdienza.iterator();
-	 * 
-	 * // Ricerca Udienza IUdienza lCtrlUd = SIUSLookupRemote.getUdienzaRemote(); lUdienza =
-	 * lCtrlUd.ExRicercaUdienzaByKey(aIdUdienza);
-	 * 
-	 * // Intestazione del documento lTreeRoot = new TreeModel(aStampaMod); lRootUdienza = new
-	 * TreeModel(lUdienza);
-	 * 
-	 * lCodMagistrato = (aCodMagistrato != null && aCodMagistrato.trim().length() > 1) ? aCodMagistrato :
-	 * null; int i = 0;
-	 * 
-	 * while ( itx.hasNext()) { ProcedimentixUdienzaModel lProcedimento =
-	 * (ProcedimentixUdienzaModel)itx.next();
-	 * 
-	 * if ( (lCodMagistrato == null && aIdEsperto == null) || (lCodMagistrato != null &&
-	 * lProcedimento.getCodMagistrato() != null && lProcedimento.getCodMagistrato().compareTo(lCodMagistrato)
-	 * == 0 ) || (aIdEsperto != null && lProcedimento.getIdEsperto() != null &&
-	 * aIdEsperto.compareTo(lProcedimento.getIdEsperto())== 0 ) ){
-	 * 
-	 * i++; // Contatore per progressivo fascicolo
-	 * 
-	 * // Preleva i dati del fascicolo IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-	 * lFasGPMod = lCtrl.ExRicercaFascicoloByKey(lProcedimento.getIdFasSIUS()); lTreeFasSIUS = new
-	 * TreeModel(lFasGPMod.getFascicoloSiusModel() );
-	 * 
-	 * // Setta il progressivo del fascicolo lRifaSius = new RiferimentoFascicoloSiusModel();
-	 * lRifaSius.setProgrFascicoloSius(new BigDecimal(i)) ; lTreeFasSIUS.add (new TreeModel(lRifaSius));
-	 * 
-	 * // Preleva dati Generale Procedimento // lTreeFasSIUS.add(new
-	 * TreeModel(lFasGPMod.getGeneraleProcedimentoModel() )) ;
-	 * 
-	 * lTreeGenProc = new TreeModel( lFasGPMod.getGeneraleProcedimentoModel() );
-	 * 
-	 * TenoreSqlDAO lTenDao = null; Vector lTenoriMod = new Vector();
-	 * 
-	 * ITenore lCtrlTenGP = SIUSLookupRemote.getTenoreRemote(); lTenori = lCtrlTenGP.ExRicercaTenoreByGenProc(
-	 * lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento() ); if (lTenori.size() != 0) {
-	 * Iterator lItxTen = lTenori.iterator(); while( lItxTen.hasNext() ) lTreeGenProc.add(new TreeModel(
-	 * (TenoreModel)lItxTen.next())); }
-	 * 
-	 * lTreeFasSIUS.add(lTreeGenProc); // Preleva altri dati del fascicolo IStampaSius lCtrlSta =
-	 * SIUSLookupRemote.getStampaRemote(); //Riempi l'Array contenente le tipologie di dati da prelevare int[]
-	 * aTipoDati = { ICostantiStampaSius.TREE_SOGGETTO , ICostantiStampaSius.TREE_AVVOCATO ,
-	 * ICostantiStampaSius.TREE_LUOGODET}; //Crea il TreeModel con i dati che occorrono lTreeFasSIUS =
-	 * lCtrlSta.ExAggiungiDatiStampa(lProcedimento.getIdFasSIUS(),aTipoDati, lTreeFasSIUS);
-	 * 
-	 * // Aggiunge i dati UdienzaProcedimento lTreeFasSIUS.add (new TreeModel(lProcedimento));
-	 * 
-	 * // Preleva i dati dei fascicoli unificati Vector lVectFas = null; if (lFasGPMod.getFascicoloSiusModel()
-	 * != null && lFasGPMod.getFascicoloSiusModel().getNumeroFascicoliUnificati() != null &&
-	 * lFasGPMod.getFascicoloSiusModel().getNumeroFascicoliUnificati(). intValue() > 0) { FascicoloSiusModel
-	 * lFasRicModel = new FascicoloSiusModel();
-	 * lFasRicModel.setFasSiuIdFascicoloSius(lProcedimento.getIdFasSIUS()); lVectFas =
-	 * lCtrl.ExRicercaElencoFascicoliUnificati(lFasRicModel); Iterator itx4 = lVectFas.iterator(); while
-	 * (itx4.hasNext()) { FascicoloSiusModel lFasUnificati = (FascicoloSiusModel) itx4.next();
-	 * lTreeFasSIUS.add( new TreeModel(lFasUnificati)); } }
-	 * 
-	 * // Preleva dati ultimo Evento if (lFasGPMod.getFascicoloSiusModel() != null ){ IEvento lCtrlEve =
-	 * SICOLookupRemote.getEventoRemote(); lEvento =
-	 * lCtrlEve.ExRicercaUltimoByFasSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius().toString() );
-	 * if (lEvento != null){ lTreeFasSIUS.add( new TreeModel(lEvento ));
-	 * 
-	 * // Tenori Ordinanza if(lEvento.getCodTipoProvvedimento()!= null &&
-	 * lEvento.getCodTipoProvvedimento().equals("02")) { // Lettura del Deposito Ordinanza.
-	 * IDepositoOrdinanzaPc lCtrlOrd = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-	 * DepositoOrdinanzaPcModel llDepMod =
-	 * lCtrlOrd.ExRicercaDepositoOrdinanzaPcByEvento(lEvento.getIdEvento()); if (llDepMod != null &&
-	 * llDepMod.getIdDepositoOrdinanzaPc() != null) { ITenore lCtrlTen = SIUSLookupRemote.getTenoreRemote();
-	 * lTenori = lCtrlTen.ExRicercaTenoreByOrdinanza(llDepMod.getIdDepositoOrdinanzaPc()); if (lTenori.size()
-	 * != 0) { Iterator lItxTen = lTenori.iterator(); while (lItxTen.hasNext()) { lTreeFasSIUS.add(new
-	 * TreeModel( (TenoreModel) lItxTen.next())); } } } }//endif
-	 * 
-	 * // Tenori Decreto if(lEvento.getCodTipoProvvedimento()!= null &&
-	 * lEvento.getCodTipoProvvedimento().equals("03")){ // Lettura del Deposito Ordinanza. IDepositoDecreto
-	 * lCtrlDec = SIUSLookupRemote.getDepositoDecretoRemote(); DepositoDecretoModel llDepModDec =
-	 * lCtrlDec.ExRicercaDepositoDecretoByIdEvento(lEvento.getIdEvento()); if (llDepModDec != null &&
-	 * llDepModDec.getIdDepositoDecreto() != null) { ITenore lCtrlTen = SIUSLookupRemote.getTenoreRemote();
-	 * lTenori = lCtrlTen.ExRicercaTenoreByDecreto(llDepModDec.getIdDepositoDecreto()); if (lTenori.size() !=
-	 * 0) { Iterator lItxTen = lTenori.iterator(); while (lItxTen.hasNext()) { lTreeFasSIUS.add(new TreeModel(
-	 * (TenoreModel) lItxTen.next())); } } } }//endif
-	 * 
-	 * }// end if evento
-	 * 
-	 * }
-	 * 
-	 * lRootUdienza.add(lTreeFasSIUS); lTreeRoot.add(lRootUdienza); } }
-	 * 
-	 * return lTreeRoot; }
-	 */
-
-	/**
 	 * Metdodo che si occupa di prelevare i dati necessari alla stampa e quindi alla generazione della
 	 * struttura dati XML. Come si noterà il metodo prende un parametro di tipo Object poichè è stato
 	 * generalizzato per gestire il recupero dati sia per IDUdienza (BigDecimal) che per DataUdienza (Date).
@@ -653,6 +548,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	private TreeModel prelevaDati(Object aValue, String aCodMagistrato, BigDecimal aIdEsperto,
 			XModel aStampaMod, String lOrderBy, String aStatoProcedimento, String tipoProc,
 			String aCodUfficioConnesso) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("UdienzaProcedimentoController.prelevaDati() : inizio");
@@ -704,10 +600,10 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 			ProcedimentixUdienzaModel lProcedimento = (ProcedimentixUdienzaModel) itx.next();
 
 			if ((lCodMagistrato == null && aIdEsperto == null)
-					|| (lCodMagistrato != null && lProcedimento.getCodMagistrato() != null && lProcedimento
-							.getCodMagistrato().compareTo(lCodMagistrato) == 0)
-					|| (aIdEsperto != null && lProcedimento.getIdEsperto() != null && aIdEsperto
-							.compareTo(lProcedimento.getIdEsperto()) == 0)) {
+					|| (lCodMagistrato != null && lProcedimento.getCodMagistrato() != null
+							&& lProcedimento.getCodMagistrato().compareTo(lCodMagistrato) == 0)
+					|| (aIdEsperto != null && lProcedimento.getIdEsperto() != null
+							&& aIdEsperto.compareTo(lProcedimento.getIdEsperto()) == 0)) {
 
 				i++; // Contatore per progressivo fascicolo
 
@@ -726,12 +622,12 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 				lTreeGenProc = new TreeModel(lFasGPMod.getGeneraleProcedimentoModel());
 
-//				TenoreSqlDAO lTenDao = null;
-//				Vector lTenoriMod = new Vector();
+				// TenoreSqlDAO lTenDao = null;
+				// Vector lTenoriMod = new Vector();
 
 				ITenore lCtrlTenGP = SIUSLookupRemote.getTenoreRemote();
-				lTenori = lCtrlTenGP.ExRicercaTenoreByGenProc(lFasGPMod.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenori = lCtrlTenGP.ExRicercaTenoreByGenProc(
+						lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				if (lTenori.size() != 0) {
 					Iterator lItxTen = lTenori.iterator();
 					while (lItxTen.hasNext())
@@ -769,8 +665,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 				// Preleva dati ultimo Evento
 				if (lFasGPMod.getFascicoloSiusModel() != null) {
 					IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
-					lEvento = lCtrlEve.ExRicercaUltimoByFasSius(lFasGPMod.getFascicoloSiusModel()
-							.getIdFascicoloSius().toString());
+					lEvento = lCtrlEve.ExRicercaUltimoByFasSius(
+							lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius().toString());
 					if (lEvento != null) {
 						lTreeFasSIUS.add(new TreeModel(lEvento));
 						// Tenori Ordinanza
@@ -783,8 +679,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 							if (llDepMod != null && llDepMod.getIdDepositoOrdinanzaPc() != null) {
 								ITenore lCtrlTen = SIUSLookupRemote.getTenoreRemote();
-								lTenori = lCtrlTen.ExRicercaTenoreByOrdinanza(llDepMod
-										.getIdDepositoOrdinanzaPc());
+								lTenori = lCtrlTen
+										.ExRicercaTenoreByOrdinanza(llDepMod.getIdDepositoOrdinanzaPc());
 								if (lTenori.size() != 0) {
 									Iterator lItxTen = lTenori.iterator();
 									while (lItxTen.hasNext()) {
@@ -792,7 +688,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 									}
 								}
 							}
-						}// endif
+						} // endif
 
 						// Tenori Decreto
 						if (lEvento.getCodTipoProvvedimento() != null
@@ -803,8 +699,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 									.ExRicercaDepositoDecretoByIdEvento(lEvento.getIdEvento());
 							if (llDepModDec != null && llDepModDec.getIdDepositoDecreto() != null) {
 								ITenore lCtrlTen = SIUSLookupRemote.getTenoreRemote();
-								lTenori = lCtrlTen.ExRicercaTenoreByDecreto(llDepModDec
-										.getIdDepositoDecreto());
+								lTenori = lCtrlTen
+										.ExRicercaTenoreByDecreto(llDepModDec.getIdDepositoDecreto());
 								if (lTenori.size() != 0) {
 									Iterator lItxTen = lTenori.iterator();
 									while (lItxTen.hasNext()) {
@@ -812,9 +708,9 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 									}
 								}
 							}
-						}// endif
+						} // endif
 
-					}// end if evento
+					} // end if evento
 
 				}
 				lRootUdienza.add(lTreeFasSIUS);
@@ -831,8 +727,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	/**
 	 * Inserisci Pre FIssazione Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param aNuovaUdienzaProc
 	 *            : Udienza_Procedimento da inserire;
 	 * @param aGenProc
@@ -845,8 +740,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	public UdienzaProcedimentoModel ExInserisciPreFissazioneUdienza(
 			UdienzaProcedimentoModel aNuovaUdienzaProc, GeneraleProcedimentoModel aGenProc,
 			UdienzaProcedimentoModel aVecchiaUdienzaProc) throws F3BException {
+
 		Connection lConn = null;
-//		UdienzaProcedimentoModel lUdiMod = null;
 
 		UdienzaProcedimentoDAO lUdiDao = null;
 		GeneraleProcedimentoDAO lGenDAO = null;
@@ -893,7 +788,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new SIUSException("UdienzaProcedimentoController.ExInserisciPreFissazioneUdienza: " + daoEx);
+			throw new SIUSException(
+					"UdienzaProcedimentoController.ExInserisciPreFissazioneUdienza: " + daoEx);
 		} catch (Exception sqe) {
 			rollback(lConn);
 			throw new SIUSException("" + sqe);
@@ -908,18 +804,17 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	/**
 	 * Effettua l'annullamento di una udienza già fissata.
-	 * <p>
-	 * 
+	 *
 	 * @param UdienzaProcedimentoModel
 	 * @throws F3BException
 	 */
 	public void ExCancellaFissazioneUdienza(UdienzaProcedimentoModel aUdienzaProcedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		NotificaDAO lNotDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
 		GeneraleProcedimentoDAO lGenDAO = null;
-		// UdienzaModel lUdienza = null;
 		DepositoDecretoModel lDepDec = null;
 		UdienzaProcedimentoDAO lUdiDao = null;
 		UdienzaProcedimentoSqlDAO lUdiSqlDao = null; // 15/10/2009
@@ -1069,7 +964,6 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 			// FINE
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			if (daoEx.INTEGRITY_CONSTRAINT_VIOLATED)
@@ -1089,6 +983,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 			cleanup(lUdiDao);
 			cleanup(lUdiSqlDao);
 			cleanup(lEventoSqlDao);
+
 			cleanup(lConn);
 		}
 
@@ -1097,8 +992,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 	/**
 	 * Effettua l'annullamento di una udienza già rinviata.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienzaProcedimento
 	 * @param aIdFasSius
 	 *            Id del fascicolo SIUS di rferimento
@@ -1107,6 +1001,7 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 	 */
 	public void ExCancellaRinvioUdienza(UdienzaProcedimentoModel aUdienzaProcedimento, BigDecimal aIdFasSius)
 			throws F3BException {
+
 		Connection lConn = null;
 		NotificaDAO lNotDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
@@ -1266,9 +1161,8 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 
 			// Update dello stato del fascicolo SIUS se trattasi di nuovo ruolo
 			// il fascicolo viene reimpostato con codice 02 ( iscritto ).
-			if (lUdiProUdi.getUdienzaProcedimento() == null
-					|| (lUdiProUdi.getUdienzaProcedimento() != null && lUdiProUdi.getUdienzaProcedimento()
-							.getFlagRinviata().equalsIgnoreCase("M"))) {
+			if (lUdiProUdi.getUdienzaProcedimento() == null || (lUdiProUdi.getUdienzaProcedimento() != null
+					&& lUdiProUdi.getUdienzaProcedimento().getFlagRinviata().equalsIgnoreCase("M"))) {
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setCodStatoFascicolo("02"); // Iscritto
 				lFasSiusDao.setCondizioneUpdate(aIdFasSius);
@@ -1295,22 +1189,27 @@ public class UdienzaProcedimentoController extends SiapController implements IUd
 				cleanup(lCampoNotaDao);
 				cleanup(lNotDao);
 			}
-
 			cleanup(lEventoSqlDao);
 			cleanup(lGenDAO);
 			cleanup(lUdiDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUdiSqlDao);
+			cleanup(lFasSiusDao);
+			cleanup(lEventoDao);
 			cleanup(lConn);
 		}
 	}
 
 	/**
 	 * Ricerca Udienze - Magistrati Relatori - Procedimenti per data minima, data massima dell'Udienza.
-	 * 
+	 *
 	 * @param aUdienza
 	 * @return
 	 * @throws F3BException
 	 */
-	public Collection ExRicercaUdienzeMagistratiProcedimentiByDate(UdienzaModel aUdienza) throws F3BException {
+	public Collection ExRicercaUdienzeMagistratiProcedimentiByDate(UdienzaModel aUdienza)
+			throws F3BException {
+
 		Connection lConn = null;
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
 		Collection lListaRisultato = null;

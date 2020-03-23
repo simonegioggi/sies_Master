@@ -3,13 +3,13 @@ package siap.sico.template.controller;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.template.dao.TemplateDAO;
 import siap.sico.template.dao.TemplateSqlDAO;
 import siap.sico.template.model.TemplateModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,16 +24,18 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TemplateController extends SiapController implements ITemplate {
 
 	public Vector ExRicercaAllTemplate() throws F3BException {
+
 		Connection lConn = null;
 		Vector lTemplati = new Vector();
 		TemplateSqlDAO lTemDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lTemDao = new TemplateSqlDAO(lConn);
@@ -53,6 +55,7 @@ public class TemplateController extends SiapController implements ITemplate {
 	}
 
 	public Vector ExRicercaTemplate(TemplateModel aTemplate) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTemplati = new Vector();
 		TemplateSqlDAO lTemDao = null;
@@ -75,6 +78,7 @@ public class TemplateController extends SiapController implements ITemplate {
 	}
 
 	public TemplateModel ExRicercaTemplateByKey(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		TemplateDAO lTemDao = null;
 		TemplateModel lTemMod;
@@ -94,6 +98,7 @@ public class TemplateController extends SiapController implements ITemplate {
 	}
 
 	public TemplateModel ExRicercaTemplateByCodMotivo(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		TemplateSqlDAO lTemDao = null;
 		TemplateModel lTemMod;
@@ -118,6 +123,7 @@ public class TemplateController extends SiapController implements ITemplate {
 
 	public TemplateModel ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(String aTipoEvento,
 			String aTipoProv, String aCodMotivo, String aFlagTemplate) throws F3BException {
+
 		Connection lConn = null;
 
 		TemplateSqlDAO lTemDao = null;
@@ -149,8 +155,8 @@ public class TemplateController extends SiapController implements ITemplate {
 	 * Ricerca di Template generica con risultato Vector di DecodeModel. Utilizzato per la creazione di una
 	 * ComboBox.
 	 */
-
 	public Vector ExListaCbxTemplate(TemplateModel aTemplate) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTemplati = new Vector();
 

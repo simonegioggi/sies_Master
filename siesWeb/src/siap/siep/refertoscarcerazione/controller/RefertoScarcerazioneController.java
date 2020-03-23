@@ -5,6 +5,9 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -19,9 +22,6 @@ import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.refertoscarcerazione.dao.RefertoScarcerazioneDAO;
 import siap.siep.refertoscarcerazione.dao.RefertoScarcerazioneSqlDAO;
 import siap.siep.refertoscarcerazione.model.RefertoScarcerazioneModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class RefertoScarcerazioneController extends SiapController implements IRefertoScarcerazione {
@@ -46,7 +46,7 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 
 	/**
 	 * Inserisce un Referto scarcerazione
-	 * 
+	 *
 	 * @param aEve
 	 * @param aRefertoScarcerazione
 	 * @param aEveMod
@@ -58,6 +58,7 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 	public EventoModel ExInserisciEventoRefertoScarcerazione(EventoModel aEve,
 			RefertoScarcerazioneModel aRefertoScarcerazione, EventoNotificaModel aEveMod,
 			PenaResiduaModel aPenMod, MisuraAlternativaModel aMisMod) throws F3BException {
+
 		Connection lConn = null;
 		RefertoScarcerazioneDAO lRefDao = null;
 		EventoDAO lEveDao = null;
@@ -142,7 +143,6 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 				lPenaResDao.stop();
 			}
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException(
@@ -163,12 +163,13 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 
 	/**
 	 * Ricerca il referto scarcerazione dalla chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public RefertoScarcerazioneModel ExRicercaRefertoScarcerazioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		RefertoScarcerazioneSqlDAO lRefDao = null;
 		RefertoScarcerazioneModel lRefMod;
@@ -191,11 +192,12 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 
 	/**
 	 * Ricerca l'ultimo referto scarcerzione
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public RefertoScarcerazioneModel ExRicercaUltimoRefertoScarcerazione() throws F3BException {
+
 		Connection lConn = null;
 		RefertoScarcerazioneSqlDAO lRefDao = null;
 		RefertoScarcerazioneModel lRefMod;
@@ -218,13 +220,14 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 
 	/**
 	 * RIcerca il referto scarcerazione legato all'evento
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public RefertoScarcerazioneModel ExRicercaRefertoScarcerazioneByEveIdEvento(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		RefertoScarcerazioneSqlDAO lRefDao = null;
 		RefertoScarcerazioneModel lRefMod;
@@ -247,7 +250,7 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 
 	/**
 	 * Inserisci Evento Referto Scarcerazione
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @param aEveMod
 	 * @param aPenMod
@@ -256,6 +259,7 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 	 */
 	public EventoModel ExInserisciEventoRefertoScarcerazione(BigDecimal aKeyEvento,
 			EventoNotificaModel aEveMod, PenaResiduaModel aPenMod) throws F3BException {
+
 		Connection lConn = null;
 		RefertoScarcerazioneDAO lRefDao = null;
 		EventoDAO lEveDao = null;
@@ -322,7 +326,6 @@ public class RefertoScarcerazioneController extends SiapController implements IR
 				lPenaResDao.stop();
 			}
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog

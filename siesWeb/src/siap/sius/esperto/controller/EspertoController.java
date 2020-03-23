@@ -5,14 +5,14 @@ import java.sql.Connection;
 import java.util.Collection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.SIUSException;
 import siap.sius.esperto.dao.EspertoDAO;
 import siap.sius.esperto.dao.EspertoSqlDAO;
 import siap.sius.esperto.model.EspertoModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -27,16 +27,16 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class EspertoController extends SiapController implements IEsperto {
 
 	/**
 	 * Metodo che esegue l'inserimento di un esperto.
 	 * <p>
-	 * 
+	 *
 	 * @param aEsperto
 	 *            EspertoModel Il model con i dati da inserire.
 	 * @throws F3BException
@@ -78,7 +78,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	/**
 	 * Metodo che esegue la ricerca di un esperto.
 	 * <p>
-	 * 
+	 *
 	 * @param aEsperto
 	 *            Model popolato con i parametri necessari per la ricerca
 	 * @return ritorna l'insieme delle occorrenze.
@@ -113,7 +113,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	 * Metodo che si occupa di recupera l'elenco degli esperti per popolare elementi Combobox oppurtamente
 	 * filtrati per il codice ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            codice uffcio.
 	 * @return ritorna l'insieme di EsperoModel delle occorrenze.
@@ -143,8 +143,8 @@ public class EspertoController extends SiapController implements IEsperto {
 
 			lEspDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("EspertoController.ExElencoCbxEspertiByCodUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"EspertoController.ExElencoCbxEspertiByCodUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lEspDao);
 			cleanup(lConn);
@@ -156,7 +156,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	/**
 	 * Metodo che esegue la ricerca puntuale per l'id di un esperto.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id chiave di puntamento al record.
 	 * @return EspertoModel ritorna il model opportunamente popolato.
@@ -186,7 +186,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	/**
 	 * Metodo che esegue la modifica dei dati di un esperto.
 	 * <p>
-	 * 
+	 *
 	 * @param aEsperto
 	 *            Model esperto.
 	 * @return model dell'e esperto di ritorno.
@@ -222,7 +222,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	/**
 	 * <p>
 	 * Description: : la funzione effettua la cancellazione di un record nella tabella Esperto
-	 * 
+	 *
 	 * @param IdEsperto
 	 *            : identificatore univoco Esperto
 	 * @return
@@ -259,7 +259,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	/**
 	 * <p>
 	 * Description: : restituisce l'elenco degli Esperti per ufficio
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            : COdice ufficio di appartenenza
 	 * @return
@@ -279,8 +279,8 @@ public class EspertoController extends SiapController implements IEsperto {
 			lEspDao.ricercaEspertoByCodUfficio(aCodUfficio);
 			lEspMods = new Vector(lEspDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("EspertoController.ExRicercaEspertoByCodUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"EspertoController.ExRicercaEspertoByCodUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lEspDao);
 			cleanup(lConn);
@@ -292,7 +292,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	/**
 	 * Numero dei record occorsi.
 	 * <p>
-	 * 
+	 *
 	 * @param aEsperto
 	 * @return
 	 * @throws F3BException
@@ -322,7 +322,7 @@ public class EspertoController extends SiapController implements IEsperto {
 	 * MERGE v10: aggiunto metodo di ricerca
 	 */
 	public Collection ExElencoCbxEspertiByCodAndTipoUff(String aCodUfficio, String aCodTipoUfficio)
-			 throws F3BException {
+			throws F3BException {
 
 		Connection lConn = null;
 		EspertoSqlDAO lEspDao = null;
@@ -348,8 +348,8 @@ public class EspertoController extends SiapController implements IEsperto {
 
 			lEspDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("EspertoController.ExElencoCbxEspertiByCodAndTipoUff! Non posso leggere: "
-					+ daoEx);
+			throw new F3BException(
+					"EspertoController.ExElencoCbxEspertiByCodAndTipoUff! Non posso leggere: " + daoEx);
 		} finally {
 			cleanup(lEspDao);
 			cleanup(lConn);

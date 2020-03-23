@@ -58,25 +58,6 @@ public class StatisController extends GenericController {
 		return cell;
 	}
 
-	// private HSSFCell setCell(HSSFRow row, short nCol, double value, HSSFCellStyle cs) {
-	//
-	// HSSFCell cell = row.createCell(nCol);
-	// cell.setCellValue(value);
-	// cell.setCellStyle(cs);
-	//
-	// return cell;
-	// }
-
-	// private HSSFCell setFormulaCell(HSSFRow row, short nCol, String value, HSSFCellStyle cs) {
-	//
-	// HSSFCell cell = row.createCell(nCol);
-	// // cell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-	// cell.setCellFormula(value);
-	// cell.setCellStyle(cs);
-	//
-	// return cell;
-	// }
-
 	private HSSFCell setCell(HSSFRow row, short nCol, String value) {
 
 		HSSFCell cell = row.createCell(nCol);
@@ -87,6 +68,7 @@ public class StatisController extends GenericController {
 
 	public HSSFWorkbook getReportStatisticheFogliComplementari(
 			StatisticheFogliComplementariContainerModel container) {
+
 		HSSFWorkbook wb = new HSSFWorkbook();
 		Vector<StatisticheFogliComplementariModel> iscrittiManualmente = container.getFcIscrittiManualmente();
 		Vector<StatisticheFogliComplementariModel> fcAnnullati = container.getFcAnnullati();
@@ -128,6 +110,7 @@ public class StatisController extends GenericController {
 
 	private int writeIntestazioneRiepilogo(StatisticheFogliComplementariContainerModel container,
 			HSSFSheet sheet, HSSFWorkbook wb) {
+
 		int nRow = 0;
 		HSSFRow row = sheet.createRow(nRow);
 
@@ -191,6 +174,7 @@ public class StatisController extends GenericController {
 
 	private int elaboraRiepilogo(HSSFSheet riepilogoSheet, int nRow,
 			StatisticheFogliComplementariContainerModel container, HSSFWorkbook wb) {
+
 		Vector<RiepilogoStatisticheFogliComplementari> fcAnnullati = container.getRiepilogoAnnullati();
 		Vector<RiepilogoStatisticheFogliComplementari> fcIscrittiManualmente = container
 				.getRiepilogFCIscrittiManualmente();
@@ -292,6 +276,7 @@ public class StatisController extends GenericController {
 
 	private int writeIntestazioneStatisticheFC(StatisticheFogliComplementariContainerModel container,
 			HSSFSheet sheet, HSSFWorkbook wb) {
+
 		int nRow = 0;
 		HSSFRow row = sheet.createRow(nRow);
 
@@ -352,6 +337,7 @@ public class StatisController extends GenericController {
 
 	private int elaboraSheetStatisticheFC(Vector<StatisticheFogliComplementariModel> dati, HSSFSheet sheet,
 			int nRow) {
+
 		Iterator<StatisticheFogliComplementariModel> it = dati.iterator();
 		while (it.hasNext()) {
 			StatisticheFogliComplementariModel model = it.next();
@@ -366,6 +352,7 @@ public class StatisController extends GenericController {
 	}
 
 	private HSSFCellStyle getBoldStyle(HSSFWorkbook wb) {
+
 		HSSFCellStyle boldStyle = wb.createCellStyle();
 		HSSFFont fontBold = wb.createFont();
 

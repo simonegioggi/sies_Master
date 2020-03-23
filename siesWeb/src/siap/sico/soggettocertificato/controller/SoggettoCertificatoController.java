@@ -6,12 +6,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.soggettocertificato.dao.SoggettoCertificatoDAO;
 import siap.sico.soggettocertificato.dao.SoggettoCertificatoSqlDAO;
 import siap.sico.soggettocertificato.model.SoggettoCertificatoModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,7 +34,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SoggettoCertificato a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSoggettoCertificato
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -42,6 +42,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	 ****************************************************************************/
 	public SoggettoCertificatoModel ExInserisciSoggettoCertificato(
 			SoggettoCertificatoModel aSoggettoCertificato) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoCertificatoDAO lSogDao = null;
 		SoggettoCertificatoModel lSogMod = null;
@@ -68,7 +69,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati SoggettoCertificato
-	 * 
+	 *
 	 * @param aSoggettoCertificato
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -77,6 +78,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	 ****************************************************************************/
 	public Vector ExRicercaSoggettoCertificato(SoggettoCertificatoModel aSoggettoCertificato)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggettoCertificati = new Vector();
 		SoggettoCertificatoDAO lSogDao = null;
@@ -88,7 +90,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 			lSogDao.setOrderBy();
 			lSogDao.start();
 			while (lSogDao.next()) {
-				lSoggettoCertificati.add((SoggettoCertificatoModel) lSogDao.getModel());
+				lSoggettoCertificati.add(lSogDao.getModel());
 			}
 			lSogDao.stop();
 		} catch (DAOException daoEx) {
@@ -105,7 +107,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -113,6 +115,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	 ****************************************************************************/
 	public SoggettoCertificatoModel ExRicercaSoggettoCertificatoById(BigDecimal aIdSoggettoCertificato)
 			throws F3BException {
+
 		Connection lConn = null;
 		SoggettoCertificatoModel lSoggettoCertificatoMod = new SoggettoCertificatoModel();
 		SoggettoCertificatoSqlDAO lSoggettoCertificatoSqlDao = null;
@@ -138,13 +141,14 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	 * Metodo che modifica i dati dell'SoggettoCertificato Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aSoggettoCertificato
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaSoggettoCertificato(SoggettoCertificatoModel aSoggettoCertificato)
 			throws F3BException {
+
 		Connection lConn = null;
 		SoggettoCertificatoDAO lSogDao = null;
 
@@ -166,12 +170,13 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aSoggettoCertificato
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaSoggettoCertificato(SoggettoCertificatoModel aSoggettoCertificato)
 			throws F3BException {
+
 		Connection lConn = null;
 		SoggettoCertificatoDAO lSogDao = null;
 
@@ -195,13 +200,14 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aSoggettoCertificato
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountSoggettoCertificato(SoggettoCertificatoModel aSoggettoCertificato)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		SoggettoCertificatoSqlDAO lSoggettoCertificatoSqlDao = null;
@@ -229,7 +235,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aSoggettoCertificato
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -239,6 +245,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 	 ****************************************************************************/
 	public Vector ExRicercaSoggettoCertificatoPaged(SoggettoCertificatoModel aSoggettoCertificato, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggettoCertificati = new Vector();
 		SoggettoCertificatoSqlDAO lSoggettoCertificatoSqlDao = null;
@@ -264,7 +271,7 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 		Connection lConn = null;
 		SoggettoCertificatoDAO lCerDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
-//		ByteArrayInputStream lByteArrayIn = null;
+
 		try {
 			lConn = getDBConnection();
 			lCerDao = new SoggettoCertificatoDAO(lConn);
@@ -284,7 +291,6 @@ public class SoggettoCertificatoController extends SiapController implements ISo
 
 			if (lByteArrayOut.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {

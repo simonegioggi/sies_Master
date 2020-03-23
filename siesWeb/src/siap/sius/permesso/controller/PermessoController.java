@@ -11,6 +11,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.soggetto.dao.SoggettoSqlDAO;
@@ -28,9 +31,6 @@ import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -45,18 +45,18 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PermessoController extends SiapController implements IPermesso {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Ricerca Permessi Paginata per Soggetto, e filtri aggiuntivi.
-	 * <p>
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param strCodUffOTrib
 	 * @param lIncludeDistretto
@@ -69,10 +69,9 @@ public class PermessoController extends SiapController implements IPermesso {
 	 * @return Vettore di FascicoloSiusModel
 	 * @throws F3BException
 	 */
-	public Vector ExRicercaPermessiBySoggettoPagina(SoggettoModel aSogModel,
-			String lCodUfficioUtenteConnesso, String lCodUffOTrib, String lCodDistretto,
-			String lIncludeRigettati, String lCodPermesso, Date dataDalInCanc, Date dataAlInCanc, int aPageNum)
-			throws F3BException {
+	public Vector ExRicercaPermessiBySoggettoPagina(SoggettoModel aSogModel, String lCodUfficioUtenteConnesso,
+			String lCodUffOTrib, String lCodDistretto, String lIncludeRigettati, String lCodPermesso,
+			Date dataDalInCanc, Date dataAlInCanc, int aPageNum) throws F3BException {
 
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
@@ -99,8 +98,8 @@ public class PermessoController extends SiapController implements IPermesso {
 
 				// paolo cherubini per supersoggetto 14/10/2010
 				// cambio la select
-				lSogDao.ricercaSuperSoggetto("ufficio", lCodUfficioUtenteConnesso, lFascicolo
-						.getFascicoloSiusModel().getSoggetto(), "FASCICOLO_SIUS", lCodDistretto);
+				lSogDao.ricercaSuperSoggetto("ufficio", lCodUfficioUtenteConnesso,
+						lFascicolo.getFascicoloSiusModel().getSoggetto(), "FASCICOLO_SIUS", lCodDistretto);
 				// lSogDao.ricercaSoggettoByKey(lFascicolo.getFascicoloSiusModel().getSogIdSoggetto());
 				// fine
 
@@ -116,8 +115,8 @@ public class PermessoController extends SiapController implements IPermesso {
 
 				// Si Caricano i dati del tenore nell'array di Tenori di FascicoloGPModel.
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				Vector lVectTenori = new Vector(lTenDao.getModels());
 				if (lVectTenori != null) {
@@ -135,21 +134,15 @@ public class PermessoController extends SiapController implements IPermesso {
 						"Nessun Soggetto individuato con i criteri di ricerca selezionati! ");
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaPermessiBySoggettoPagina: " + daoEx);
-		}
-		/*
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * catch (SQLException sqe) { rollback(lConn); siesLogger.error("SQLException: " + sqe); throw
-		 * new
-		 * SIUSException(F3BException.USER_MESSAGE,"PermessoController.ExRicercaPermessiBySoggettoPagina: " +
-		 * sqe); }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -163,16 +156,16 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Ritorna n.ro di record risultato di una ricercaPermessiBySoggetto
-	 * 
+	 *
 	 * @param aSogModel
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
-
 	public BigDecimal ExGetNumRicercaPermessiBySoggetto(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lCodUffOTrib, String lCodDistretto,
 			String lIncludeRigettati, String lCodPermesso, Date dataDalInCanc, Date dataAlInCanc)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -185,21 +178,15 @@ public class PermessoController extends SiapController implements IPermesso {
 			lCont = lPermSqlDao.getNumRowsSelected();
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExGetNumRicercaPermessiBySoggetto: " + daoEx);
-		}
-		/*
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * catch (SQLException sqe) { rollback(lConn); siesLogger.error("SQLException: " + sqe); throw
-		 * new
-		 * SIUSException(F3BException.USER_MESSAGE,"PermessoController.ExGetNumRicercaPermessiBySoggetto: " +
-		 * sqe); }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -212,7 +199,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	/**
 	 * Ricerca Fascicoli relativi a permesso di Un Soggetto in base ai parametri di ricerca selezionati.
 	 * <p>
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param strCodUffOTrib
@@ -227,6 +214,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	public Vector ExRicercaPermessiDelSoggetto(SoggettoModel aSogModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeRigettati, String lCodPermesso,
 			Date dataDalInCanc, Date dataAlInCanc) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lPermessi = new Vector();
@@ -266,24 +254,22 @@ public class PermessoController extends SiapController implements IPermesso {
 				throw new SIUSException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaPermessiDelSoggetto: " + daoEx);
-		}
-		/*
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * catch (SQLException sqe) { rollback(lConn); siesLogger.error("SQLException: " + sqe); throw
-		 * new SIUSException(F3BException.USER_MESSAGE,"PermessoController.ExRicercaPermessiDelSoggetto: " +
-		 * sqe); }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
 			cleanup(lPermSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogDao);
+
 			cleanup(lConn);
 		}
 		return lPermessi;
@@ -291,16 +277,16 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Ritorna n.ro di record risultato di una ricercaLicenzeBySoggetto
-	 * 
+	 *
 	 * @param aSogModel
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
-
 	public BigDecimal ExGetNumRicercaLicenzeBySoggetto(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lCodUffOTrib, String lCodDistretto,
 			String lIncludeRigettati, String lCodLicenza, Date dataDalInCanc, Date dataAlInCanc)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -313,20 +299,15 @@ public class PermessoController extends SiapController implements IPermesso {
 			lCont = lPermSqlDao.getNumRowsSelected();
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExGetNumRicercaLicenzeBySoggetto: " + daoEx);
-		}
-		/*
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * catch (SQLException sqe) { rollback(lConn); siesLogger.error("SQLException: " + sqe); throw
-		 * new SIUSException(F3BException.USER_MESSAGE,"PermessoController.ExGetNumRicercaLicenzeBySoggetto: "
-		 * + sqe); }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -339,7 +320,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	/**
 	 * Ricerca Licenze Paginata per Soggetto, e filtri aggiuntivi.
 	 * <p>
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param strCodUffOTrib
 	 * @param lIncludeDistretto
@@ -352,10 +333,10 @@ public class PermessoController extends SiapController implements IPermesso {
 	 * @return Vettore di FascicoloSiusModel
 	 * @throws F3BException
 	 */
-
 	public Vector ExRicercaLicenzeBySoggettoPagina(SoggettoModel aSogModel, String lCodUfficioUtenteConnesso,
 			String lCodUffOTrib, String lCodDistretto, String lIncludeRigettati, String lCodLicenza,
 			Date dataDalInCanc, Date dataAlInCanc, int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 		// TenoreModel lTenMod = null;
@@ -381,8 +362,8 @@ public class PermessoController extends SiapController implements IPermesso {
 
 				// paolo cherubini per supersoggetto 14/10/2010
 				// cambio la select
-				lSogDao.ricercaSuperSoggetto("ufficio", lCodUfficioUtenteConnesso, lFascicolo
-						.getFascicoloSiusModel().getSoggetto(), "FASCICOLO_SIUS", lCodDistretto);
+				lSogDao.ricercaSuperSoggetto("ufficio", lCodUfficioUtenteConnesso,
+						lFascicolo.getFascicoloSiusModel().getSoggetto(), "FASCICOLO_SIUS", lCodDistretto);
 				// lSogDao.ricercaSoggettoByKey(lFascicolo.getFascicoloSiusModel().getSogIdSoggetto());
 				// fine
 
@@ -398,8 +379,8 @@ public class PermessoController extends SiapController implements IPermesso {
 
 				// Si Caricano i dati del tenore nell'array di Tenori di FascicoloGPModel.
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				Vector lVectTenori = new Vector(lTenDao.getModels());
 				if (lVectTenori != null) {
@@ -417,19 +398,15 @@ public class PermessoController extends SiapController implements IPermesso {
 						"Nessun Soggetto individuato con i criteri di ricerca selezionati! ");
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaLicenzeBySoggettoPagina: " + daoEx);
-			// } catch (SQLException sqe) {
-			// rollback(lConn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			// siesLogger.error("SQLException: " + sqe);
-			// throw new SIUSException(F3BException.USER_MESSAGE,
-			// "PermessoController.ExRicercaLicenzeBySoggettoPagina: " + sqe);
 		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -444,7 +421,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	/**
 	 * Ricerca Fascicoli relativi a licenze di un Soggetto in base ai parametri di ricerca selezionati.
 	 * <p>
-	 * 
+	 *
 	 * @param aSogModel
 	 * @param strCodUfficioUtenteConnesso
 	 * @param strCodUffOTrib
@@ -459,6 +436,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	public Vector ExRicercaLicenzeDelSoggetto(SoggettoModel aSogModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeRigettati, String lCodLicenza,
 			Date dataDalInCanc, Date dataAlInCanc) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lLicenze = new Vector();
@@ -498,24 +476,29 @@ public class PermessoController extends SiapController implements IPermesso {
 				throw new SIUSException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaLicenzeDelSoggetto: " + daoEx);
 		}
 		/*
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * catch (SQLException sqe) { rollback(lConn); siesLogger.error("SQLException: " + sqe); throw
-		 * new SIUSException(F3BException.USER_MESSAGE,"PermessoController.ExRicercaLicenzeDelSoggetto: " +
-		 * sqe); }
+		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		 * LogF3B.getLogger() catch (SQLException sqe) { rollback(lConn); siesLogger.error("SQLException: " +
+		 * sqe); throw new
+		 * SIUSException(F3BException.USER_MESSAGE,"PermessoController.ExRicercaLicenzeDelSoggetto: " + sqe);
+		 * }
 		 */
 		catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
 			cleanup(lPermSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogDao);
 			cleanup(lConn);
 		}
 		return lLicenze;
@@ -523,6 +506,7 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	public DepositoDecretoMotivazioniLicenzaModel ExRicercaPermessoDepositato(BigDecimal aIDFasSius)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		DepositoDecretoMotivazioniLicenzaModel lDepDecrMotLic = null;
@@ -540,12 +524,14 @@ public class PermessoController extends SiapController implements IPermesso {
 
 			lPermSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaPermessoDepositato : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -558,6 +544,7 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	public DepositoDecretoMotivazioniLicenzaModel ExRicercaLicenzaDepositata(BigDecimal aIDFasSius)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		DepositoDecretoMotivazioniLicenzaModel lDepDecrMotLic = null;
@@ -575,12 +562,14 @@ public class PermessoController extends SiapController implements IPermesso {
 
 			lPermSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaLicenzaDepositata : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -594,7 +583,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	/**
 	 * Metodo che ritorna elenco dei provvedimenti con Permessi o Licenze, concessi.
 	 * <p>
-	 * 
+	 *
 	 * @param aCriteriRicerca
 	 *            Criteri di Ricerca.
 	 * @return Collection insieme delle occorrense.
@@ -603,6 +592,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 */
 	public DepositoDecretoMotivazioniLicenzaModel ExRicercaPermessoLicenzaDepositati(BigDecimal aIDLicLibAnt)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		DepositoDecretoMotivazioniLicenzaModel lDepDecrMotLic = null;
@@ -620,12 +610,14 @@ public class PermessoController extends SiapController implements IPermesso {
 
 			lPermSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaPermessoLicenzaDepositati : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -639,7 +631,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 * Metodo che individua permesso o licenza depositato e ritorna l'id della Licenza ed il tipo, nel model
 	 * di pertinenza. Tale funzione viene impiegata, nella fase di dettaglio del fascicolo sius.
 	 * <p>
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aIDFascicoloSius.
 	 * @return LicenzaLibAnticipataModel.
@@ -648,6 +640,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 */
 	public LicenzaLibAnticipataModel ExRicercaTipoPermessoLicenzaDepositata(BigDecimal aIDFascicoloSius)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		LicenzaLibAnticipataModel lLicLibAnt = null;
@@ -657,12 +650,14 @@ public class PermessoController extends SiapController implements IPermesso {
 			lPermSqlDao = new PermessoSqlDAO(lConn);
 			lLicLibAnt = lPermSqlDao.getTipoPermessoLicenzaDepositata(aIDFascicoloSius);
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaTipoPermessoLicenzaDepositata : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
@@ -674,8 +669,7 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Metodo che ritorna elenco dei provvedimenti con Permessi o Licenze, concessi.
-	 * <p>
-	 * 
+	 *
 	 * @param aCriteriRicerca
 	 *            Criteri di Ricerca.
 	 * @return Collection insieme delle occorrense.
@@ -684,6 +678,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 */
 	public Collection ExRicercaProvvedimentiPermessiLicenze(
 			CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca) throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		Collection lColl = new ArrayList();
@@ -701,14 +696,15 @@ public class PermessoController extends SiapController implements IPermesso {
 				lColl.add(lPermSqlDao.getProvvedimentoPermessoLicenzaModel());
 
 			lPermSqlDao.stop();
-
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaProvvedimentiPermessiLicenze : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExRicercaProvvedimentiPermessiLicenze : " + e.getMessage());
@@ -722,8 +718,7 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Metodo che ritorna il numero totale dei provvedimenti con Permessi o Licenze, concessi.
-	 * <p>
-	 * 
+	 *
 	 * @param aCriteriRicerca
 	 *            Criteri di Ricerca.
 	 * @return TotaliPermessiLicenzeModel model opportunamente popolato con i totali.
@@ -732,6 +727,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 */
 	public int ExGetNumProvvedimentiPermessiLicenze(CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca)
 			throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		int lNum = 0;
@@ -745,12 +741,14 @@ public class PermessoController extends SiapController implements IPermesso {
 					aCriteriRicerca.getCodUfficio());
 			lNum = lPermSqlDao.getNumRowsSelected().intValue();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExGetNumProvvedimentiPermessiLicenza : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExGetNumProvvedimentiPermessiLicenza : " + e.getMessage());
@@ -763,8 +761,7 @@ public class PermessoController extends SiapController implements IPermesso {
 
 	/**
 	 * Metodo che recupera i totali afferenti ai provvedimenti per Permessi e Licenze.
-	 * <p>
-	 * 
+	 *
 	 * @param aCriteriRicerca
 	 *            Criteri di Ricerca.
 	 * @return TotaliPermessiLicenzeModel model opportunamnte popolato con i totali.
@@ -773,6 +770,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 */
 	public TotaliPermessiLicenzeModel ExGetTotProvvedimentiPermessiLicenze(
 			CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca) throws F3BException {
+
 		Connection lConn = null;
 		PermessoSqlDAO lPermSqlDao = null;
 		TotaliPermessiLicenzeModel lTotali = null;
@@ -805,12 +803,14 @@ public class PermessoController extends SiapController implements IPermesso {
 					lTotali.setNumLI(lNum);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException : " + daoEx);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExGetNumProvvedimentiPermessiLicenza : " + daoEx);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExGetNumProvvedimentiPermessiLicenza : " + e.getMessage());
@@ -825,7 +825,7 @@ public class PermessoController extends SiapController implements IPermesso {
 	 * Metodo che si occccupa della produzione della stampa elenco provvedimenti con permessi o licenze
 	 * concessi.
 	 * <p>
-	 * 
+	 *
 	 * @param aDataIniziale
 	 *            Data deposito iniziale.
 	 * @param aDataFinale
@@ -840,13 +840,15 @@ public class PermessoController extends SiapController implements IPermesso {
 	 */
 	public ByteArrayOutputStream ExStampaProvvedimentiPermessiLicenze(
 			CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca, UtenteModel aUtente) throws F3BException {
+
 		ByteArrayOutputStream lReport = null;
 
 		try {
 			IStampaSius lCtrl = SIUSLookupRemote.getStampaRemote();
 			lReport = lCtrl.ExPreStampaProvvedimentiPermessiLicenza(aCriteriRicerca, aUtente);
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception : " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE,
 					"PermessoController.ExStampaProvvedimentiPermessiLicenze : " + e.getMessage());

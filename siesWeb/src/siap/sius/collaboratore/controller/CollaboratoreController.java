@@ -4,16 +4,13 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Vector;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.collaboratore.dao.CollaboratoreSqlDAO;
 import siap.sius.collaboratore.dao.aggiornaCollabStProDAO;
@@ -22,11 +19,6 @@ import siap.sius.collaboratore.dao.getCollabCurStProDAO;
 import siap.sius.collaboratore.dao.isCollaboratoreStProDAO;
 import siap.sius.collaboratore.dao.setCollaboratoreStProDAO;
 import siap.sius.collaboratore.model.CollaboratoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.F3BProperties;
-
 
 /**
  * <p>
@@ -41,7 +33,7 @@ import f3b.util.F3BProperties;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 3.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -53,7 +45,7 @@ public class CollaboratoreController extends SiapController implements ICollabor
 	/**
 	 * La funzione verifica se al Fascicolo Sius individuato dal suo ID e dal codice dell'ufficio di
 	 * competenza è associato ad un collaboratore di giustizia.
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aIdFascicoloSius : ID del Fascicolo;
 	 * @param String
@@ -62,6 +54,7 @@ public class CollaboratoreController extends SiapController implements ICollabor
 	 * @throws F3BException
 	 */
 	public boolean ExIsCollaboratore(BigDecimal aIdFascicoloSius, String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		boolean lRet = false;
 		int lCont = 0;
@@ -95,6 +88,7 @@ public class CollaboratoreController extends SiapController implements ICollabor
 	 * Collaboratore di Giustizia.
 	 */
 	public boolean ExIsPackage() throws F3BException {
+
 		Connection lConn = null;
 		boolean lRet = false;
 		isCollaboratoreStProDAO lDao = null;
@@ -113,22 +107,22 @@ public class CollaboratoreController extends SiapController implements ICollabor
 			cleanup(lConn);
 		}
 		return lRet;
-
 	}
 
 	/**
 	 * Funzione di ricerca di CollaboratoreModel legati ad uno stesso Fascicolo SIUS.
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aIdFascicoloSius : ID del Fascicolo;
 	 * @param String
 	 *            aCodUfficio : ufficio di competenza del Fascicolo.
 	 * @return Vector : elenco di CollaboratoreModel individuati.
-	 * @throws F3BException. La
-	 *             funzione non viene utilizzata perchè utilizza un DAO che necessita di un driver che
+	 * @throws F3BException.
+	 *             La funzione non viene utilizzata perchè utilizza un DAO che necessita di un driver che
 	 *             supporti le "Estensioni Oracle".
 	 */
 	public Vector ExGetCollaboratore(BigDecimal aIdFascicoloSius, String aCodUfficio) throws F3BException {
+
 		Vector lLista = null;
 		// OracleConnection lConn = null;
 		Connection lConn = null;
@@ -155,16 +149,17 @@ public class CollaboratoreController extends SiapController implements ICollabor
 	/**
 	 * Funzione di ricerca di un CollaboratoreModel. Ricerca il record Collaboratore individuato univocamente
 	 * dal suo ID.
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aIdCollaboratore : ID del Collaboratore;
 	 * @return CollaboratoreModel : record individuato.
-	 * @throws F3BException. La
-	 *             funzione non viene utilizzata perchè utilizza un DAO che necessita di un driver che
+	 * @throws F3BException.
+	 *             La funzione non viene utilizzata perchè utilizza un DAO che necessita di un driver che
 	 *             supporti le "Estensioni Oracle".
-	 * 
+	 *
 	 */
 	public CollaboratoreModel ExGetCollaboratoreById(BigDecimal aIdCollaboratore) throws F3BException {
+
 		CollaboratoreModel lCollaboratore = null;
 		Vector lLista = null;
 		Connection lConn = null;
@@ -190,12 +185,13 @@ public class CollaboratoreController extends SiapController implements ICollabor
 
 	/**
 	 * Funzione di inserimento di un Collaboratore di Giustizia legato ad un Fascicolo SIUS.
-	 * 
+	 *
 	 * @param CollaboratoreModel
 	 *            aCollaboratore: model contenente i dati del nuovo record da inserire.
 	 * @throws F3BException.
 	 */
 	public void ExInserisciCollaboratore(CollaboratoreModel aCollaboratore) throws F3BException {
+
 		Connection lConn = null;
 		setCollaboratoreStProDAO lDao = null;
 		try {
@@ -215,13 +211,14 @@ public class CollaboratoreController extends SiapController implements ICollabor
 
 	/**
 	 * Funzione di modifica di un record Collaboratore di Giustizia legato ad un Fascicolo SIUS.
-	 * 
+	 *
 	 * @param CollaboratoreModel
 	 *            aCollaboratore: model contenente i dati da aggiornare insieme all'ID che individua il record
 	 *            da modificare.
 	 * @throws F3BException.
 	 */
 	public void ExAggiornaCollaboratore(CollaboratoreModel aCollaboratore) throws F3BException {
+
 		Connection lConn = null;
 		aggiornaCollabStProDAO lDao = null;
 		try {
@@ -241,12 +238,13 @@ public class CollaboratoreController extends SiapController implements ICollabor
 
 	/**
 	 * Funzione di cancellazione di un record Collaboratore di Giustizia legato ad un Fascicolo SIUS.
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            aIdCollaboratore : ID del record da cancellare.
 	 * @throws F3BException.
 	 */
 	public void ExCancellaCollaboratore(BigDecimal aIdCollaboratore) throws F3BException {
+
 		Connection lConn = null;
 		delCollabStProDAO lDao = null;
 		try {
@@ -266,6 +264,7 @@ public class CollaboratoreController extends SiapController implements ICollabor
 
 	// Ricava il nome del driver dalla connessione al DataSource
 	private String getInfoDriver(Connection aConn) throws Exception {
+
 		String lDriverName = "Driver: ";
 		DatabaseMetaData lDMD = aConn.getMetaData();
 		lDriverName += lDMD.getDriverName() + " ver.  " + lDMD.getDriverVersion();
@@ -312,50 +311,52 @@ public class CollaboratoreController extends SiapController implements ICollabor
 	/**
 	 * La funzione restituisce una connessione utilizzando il Datasouse di nome "jdbc/siap2" definito sul
 	 * server.xml.
-	 * 
+	 *
 	 * @return Connection
 	 * @throws F3BException
 	 */
-	protected static synchronized Connection getDBConnection2() throws F3BException {
-		try {
-			Context lInitialCtx = new InitialContext();
-			// Context envCtx = (Context)initCtx.lookup("java:comp/env");
-			Context lEnvCtx = (Context) lInitialCtx.lookup(F3BProperties.getProperty("ctx.env"));
-			// DataSource ds = (DataSource)envCtx.lookup("jdbc/siap");
-			DataSource lDataSource = (DataSource) lEnvCtx.lookup("jdbc/siap2");
+	// protected static synchronized Connection getDBConnection2() throws F3BException {
+	//
+	// try {
+	// Context lInitialCtx = new InitialContext();
+	// // Context envCtx = (Context)initCtx.lookup("java:comp/env");
+	// Context lEnvCtx = (Context) lInitialCtx.lookup(F3BProperties.getProperty("ctx.env"));
+	// // DataSource ds = (DataSource)envCtx.lookup("jdbc/siap");
+	// DataSource lDataSource = (DataSource) lEnvCtx.lookup("jdbc/siap2");
+	//
+	// Connection lConn = lDataSource.getConnection();
+	// lConn.setAutoCommit(false);
+	//
+	// return lConn;
+	// } catch (SQLException sqlex) {
+	// sqlex.printStackTrace();
+	// throw new F3BException(sqlex.getMessage());
+	// } catch (NamingException ex) {
+	// ex.printStackTrace();
+	// throw new F3BException(ex.getMessage());
+	// }
+	// }
 
-			Connection lConn = lDataSource.getConnection();
-			lConn.setAutoCommit(false);
-
-			return lConn;
-		} catch (SQLException sqlex) {
-			sqlex.printStackTrace();
-			throw new F3BException(sqlex.getMessage());
-		} catch (NamingException ex) {
-			ex.printStackTrace();
-			throw new F3BException(ex.getMessage());
-		}
-	}
-
-//	private void mapTipo(Connection aConn) throws Exception {
-//		// tentativo : mappare il tipo
-//		java.util.Map map = aConn.getTypeMap();
-//		map.put("COLLA.COLL.ARRLISTA", Class.forName("siap.sius.collaboratore.model.CollaboratoreModel"));
-//		map.put("COLLA.COLL.ARRLISTA", Class.forName("siap.sius.collaboratore.model.CollaboratoreModel"));
-//		aConn.setTypeMap(map);
-//		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//		// LogF3B.getLogger()
-//		siesLogger.debug("richiamato setTypeMap");
-//	}
+	// private void mapTipo(Connection aConn) throws Exception {
+	// // tentativo : mappare il tipo
+	// java.util.Map map = aConn.getTypeMap();
+	// map.put("COLLA.COLL.ARRLISTA", Class.forName("siap.sius.collaboratore.model.CollaboratoreModel"));
+	// map.put("COLLA.COLL.ARRLISTA", Class.forName("siap.sius.collaboratore.model.CollaboratoreModel"));
+	// aConn.setTypeMap(map);
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("richiamato setTypeMap");
+	// }
 
 	/**
 	 * Funzione di Ricerca record su tabella COLLA.COLLABORATORE.
-	 * 
+	 *
 	 * @param CollaboratoreModel
 	 *            : filtro di ricerca
 	 * @return Vector : elenco risultato
 	 */
 	public Vector ExRicercaCollaboratore(CollaboratoreModel aCollaboratore) throws F3BException {
+
 		// Connessione
 		Connection lConn = null;
 		// Elenco risultato della ricerca
@@ -372,8 +373,8 @@ public class CollaboratoreController extends SiapController implements ICollabor
 			lCanDao.ricercaCollaboratore(aCollaboratore);
 			lElenco = new Vector(lCanDao.getModels());
 		} catch (DAOException ex) {
-			throw new F3BException("CollaboratoreController.ExRicercaCollaboratore: Non posso leggere  : "
-					+ ex);
+			throw new F3BException(
+					"CollaboratoreController.ExRicercaCollaboratore: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lCanDao);
 			cleanup(lConn);
@@ -383,12 +384,13 @@ public class CollaboratoreController extends SiapController implements ICollabor
 
 	/**
 	 * Funzione di Ricerca di un record su tabella COLLA.COLLABORATORE individuato univocamente dal suo ID.
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            : ID chiave
 	 * @return CollaboratoreModel : risultato
 	 */
 	public CollaboratoreModel ExRicercaCollaboratoreById(BigDecimal aId) throws F3BException {
+
 		// Model usato come parametro di scambio verso il DAO e come risultato
 		CollaboratoreModel lCollaboratore = new CollaboratoreModel();
 		// Connessione

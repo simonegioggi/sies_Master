@@ -5,12 +5,12 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-import siap.controller.SiapController;
-import siap.siep.notefascicolo.dao.NoteFascicoloSqlDAO;
-import siap.siep.notefascicolo.model.NoteFascicoloModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.controller.SiapController;
+import siap.siep.notefascicolo.dao.NoteFascicoloSqlDAO;
+import siap.siep.notefascicolo.model.NoteFascicoloModel;
 
 /**
  * <p>
@@ -30,12 +30,13 @@ public class NoteFascicoloController extends SiapController {
 
 	/**
 	 * ExRicercaAltraCausaByFascicolo
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public NoteFascicoloModel ExRicercaNoteFascicolo(BigDecimal aKeyFascicolo) throws F3BException {
+
 		NoteFascicoloSqlDAO lNotDao = null;
 		Connection lConn = null;
 		NoteFascicoloModel lNotMod = null;

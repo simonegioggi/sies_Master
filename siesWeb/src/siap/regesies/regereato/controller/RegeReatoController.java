@@ -8,14 +8,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.regesies.regereato.dao.RegeReatoDAO;
 import siap.regesies.regereato.dao.RegeReatoSqlDAO;
 import siap.regesies.regereato.model.RegeReatoCircostanzaModel;
 import siap.regesies.regereato.model.RegeReatoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -39,30 +39,16 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	/*
-	 * public RegeReatoModel ExInserisciRegeReato (RegeReatoModel aRegeReato ) throws F3BException {
-	 * Connection lConn = null; RegeReatoDAO lRegDao = null; RegeReatoModel lRegMod = null; try { lConn =
-	 * getDBConnection(); lRegMod = new RegeReatoModel(aRegeReato); lRegDao = new RegeReatoDAO(lConn);
-	 * lRegDao.setDAOFromModel(aRegeReato ); BigDecimal lKey = null; lKey = lRegDao.insert(); commit(lConn);
-	 * lRegMod.setIdRegeReato(lKey); } catch (DAOException ex) { rollback(lConn); // [FT] - 03/08/2016 -
-	 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-	 * siesLogger.error("DAOException: " + ex); throw new
-	 * F3BException("RegeReatoController.ExInserisci: Non posso inserire: " + ex); } catch (SQLException sqe)
-	 * { rollback(lConn); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-	 * posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-	 * F3BException("RegeReatoController.ExInserisciRegeReato: Non posso inserire il soggetti : " + sqe); }
-	 * finally { cleanup(lRegDao); cleanup(lConn); } return lRegMod; }
-	 */
-
 	/**
 	 * Ricerca Rege Reati
-	 * 
+	 *
 	 * @param aKey
 	 *            - id file
 	 * @return Vettore di reati trovati
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaRegeReato(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRegeReati = new Vector();
 		RegeReatoSqlDAO lRegDao = null;
@@ -88,7 +74,7 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 
 	/**
 	 * ExRicercaRegeReatoByKey
-	 * 
+	 *
 	 * @param aKey
 	 *            - id file
 	 * @param aProgr
@@ -98,6 +84,7 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 	 */
 	public RegeReatoModel ExRicercaRegeReatoByKey(String aKey, int aProgr, int aProgrCirc)
 			throws F3BException {
+
 		Connection lConn = null;
 		RegeReatoSqlDAO lRegDao = null;
 		RegeReatoModel lRegMod = new RegeReatoModel();
@@ -114,8 +101,8 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RegeReatoController.ExRicercaRegeReatoByKey: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"RegeReatoController.ExRicercaRegeReatoByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRegDao);
 			cleanup(lConn);
@@ -125,12 +112,13 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 
 	/**
 	 * MOdifica Rege Reato
-	 * 
+	 *
 	 * @param aRegeReato
 	 * @return Il RegeReato model modificato
 	 * @throws F3BException
 	 */
 	public RegeReatoModel ExModificaRegeReato(RegeReatoModel aRegeReato) throws F3BException {
+
 		Connection lConn = null;
 		RegeReatoDAO lRegDao = null;
 		RegeReatoModel lRegMod = new RegeReatoModel(aRegeReato);
@@ -154,11 +142,12 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 
 	/**
 	 * Cancella il reato Rege
-	 * 
+	 *
 	 * @param aRegeReato
 	 * @throws F3BException
 	 */
 	public void ExCancellaRegeReato(RegeReatoModel aRegeReato) throws F3BException {
+
 		Connection lConn = null;
 		RegeReatoDAO lRegDao = null;
 
@@ -180,12 +169,13 @@ public class RegeReatoController extends SiapController implements IRegeReato {
 
 	/**
 	 * Imposta Reati e Circostanze nel model RegeReatoCircostanzaModel
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaReatoCircostanzaByProvvedimento(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		RegeReatoSqlDAO lReaDao = null;
 		Vector lListReaCirc = null;

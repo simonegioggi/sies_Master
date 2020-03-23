@@ -5,26 +5,35 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoSqlDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
- * <p>Title: StatoProcedimentoController</p>
- * <p>Description: Classe Controller per StatoProcedimento</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
+ * <p>
+ * Title: StatoProcedimentoController
+ * </p>
+ * <p>
+ * Description: Classe Controller per StatoProcedimento
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class StatoProcedimentoController extends SiapController implements IStatoProcedimento
- {
+public class StatoProcedimentoController extends SiapController implements IStatoProcedimento {
 
 	public StatoProcedimentoModel ExInserisciStatoProcedimento(StatoProcedimentoModel aStatoProcedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		StatoProcedimentoDAO lStaDao = null;
 		StatoProcedimentoModel lStaMod = null;
@@ -50,6 +59,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 
 	public StatoProcedimentoModel ExCancellaInserisciStatoProcedimento(
 			StatoProcedimentoModel aStatoProcedimento) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoProcedimentoDAO lStaDao = null;
@@ -79,7 +89,8 @@ public class StatoProcedimentoController extends SiapController implements IStat
 			throw new F3BException("StatoProcedimentoController.ExCancellaInserisciStatoProcedimento: " + ex);
 		} catch (Exception exp) {
 			rollback(lConn);
-			throw new F3BException("StatoProcedimentoController.ExCancellaInserisciStatoProcedimento: " + exp);
+			throw new F3BException(
+					"StatoProcedimentoController.ExCancellaInserisciStatoProcedimento: " + exp);
 		} finally {
 			cleanup(lStaDao);
 			cleanup(lConn);
@@ -89,6 +100,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 	}
 
 	public Vector ExRicercaStatoProcedimento(StatoProcedimentoModel aStatoProcedimento) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStatoProcedimenti = new Vector();
 		StatoProcedimentoSqlDAO lStaDao = null;
@@ -112,6 +124,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 	}
 
 	public Vector ExRicercaStatoProcedimentoByFascicoloSiep(BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStatoProcedimenti = new Vector();
 		StatoProcedimentoSqlDAO lStaDao = null;
@@ -121,9 +134,9 @@ public class StatoProcedimentoController extends SiapController implements IStat
 			lStaDao = new StatoProcedimentoSqlDAO(lConn);
 			lStaDao.ricercaStatoProcedimentoByFascicoloSiep(aKeyFascicolo);
 			lStatoProcedimenti = new Vector(lStaDao.getModels());
-			if (lStatoProcedimenti.size() == 0) {
-				// throw new F3BException(F3BException.USER_MESSAGE,"Nessun Elemento trovato");
-			}
+			// if (lStatoProcedimenti.size() == 0) {
+			// throw new F3BException(F3BException.USER_MESSAGE,"Nessun Elemento trovato");
+			// }
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"StatoProcedimentoController.ExRicercaStatoProcedimento: Non posso leggere : " + daoEx);
@@ -135,6 +148,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 	}
 
 	public String ExGetMaxStatoProcedimentoByFascicoloSiep(BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		String lCodStatoProcedimento = "";
 		StatoProcedimentoSqlDAO lStaDao = null;
@@ -157,9 +171,9 @@ public class StatoProcedimentoController extends SiapController implements IStat
 
 	public Vector ExRicercaStatoProcedimentoByFascicoloSiepStato(BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lStatoProcedimento = new Vector();
-		// StatoProcedimentoModel lStatoProcedimento = new StatoProcedimentoModel();
 		StatoProcedimentoSqlDAO lStaDao = null;
 
 		try {
@@ -167,7 +181,6 @@ public class StatoProcedimentoController extends SiapController implements IStat
 			lStaDao = new StatoProcedimentoSqlDAO(lConn);
 			lStaDao.ricercaStatoProcedimentoByFascicoloSiepStato(aKeyFascicolo);
 			lStatoProcedimento = new Vector(lStaDao.getModels());
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"StatoProcedimentoController.ExRicercaStatoProcedimento: Non posso leggere : " + daoEx);
@@ -179,6 +192,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 	}
 
 	public StatoProcedimentoModel ExRicercaStatoProcedimentoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		StatoProcedimentoSqlDAO lStaDao = null;
 		StatoProcedimentoModel lStaMod;
@@ -200,6 +214,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 
 	public StatoProcedimentoModel ExModificaStatoProcedimento(StatoProcedimentoModel aStatoProcedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoProcedimentoDAO lStaDao = null;
@@ -226,6 +241,7 @@ public class StatoProcedimentoController extends SiapController implements IStat
 	}
 
 	public void ExCancellaStatoProcedimento(StatoProcedimentoModel aStatoProcedimento) throws F3BException {
+
 		Connection lConn = null;
 		StatoProcedimentoDAO lStaDao = null;
 
@@ -263,7 +279,6 @@ public class StatoProcedimentoController extends SiapController implements IStat
 					lStaDao.stop();
 				}
 			}
-
 		} catch (DAOException ex) {
 			if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
 				lCodEsito = "00001";
@@ -276,7 +291,6 @@ public class StatoProcedimentoController extends SiapController implements IStat
 			cleanup(lStaDao);
 		}
 		return lCodEsito;
-
 	}
 
 }

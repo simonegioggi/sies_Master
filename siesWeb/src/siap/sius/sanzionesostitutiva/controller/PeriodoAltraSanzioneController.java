@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -18,9 +21,6 @@ import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneSqlDAO;
 import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -65,12 +65,12 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lPerMod.setIdPeriodoAltraSanzione(lSequence);
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);
@@ -81,7 +81,6 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 	/*****************************************************************************
 	 * 2 modifica Periodo Altra Sanzione
 	 ****************************************************************************/
-
 	public PeriodoAltraSanzioneModel ExModificaPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod)
 			throws F3BException {
 
@@ -220,6 +219,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
 			ScadenzarioSiusModel lScaMod1, EsecuzioneSanzioneSostitutivaModel lEssMod,
 			ScadenzarioSiusModel lScaMod2) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraSanzioneDAO lPerDao = null;
 		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
@@ -259,7 +259,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lEseDao);
@@ -276,6 +277,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 	public PeriodoAltraSanzioneModel ExInserisciPeriodoAltraSanzione(PeriodoAltraSanzioneModel lPerMod,
 			EsecuzioneSanzioneSostitutivaModel lEssMod, ScadenzarioSiusModel lScaMod1,
 			ScadenzarioSiusModel lScaMod2) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraSanzioneDAO lPerDao = null;
 		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
@@ -314,7 +316,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExInserisciPeriodoAltraSanzione: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lEseDao);
@@ -362,9 +365,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lEseDao.update();
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -427,7 +428,6 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lPerDao.delete();
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -444,7 +444,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati PeriodoAltraSanzione
-	 * 
+	 *
 	 * @param lEssMod
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -464,7 +464,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 			lPerDao.setOrderBy();
 			lPerDao.start();
 			while (lPerDao.next()) {
-				lPeriodoAltraSanzioni.add((PeriodoAltraSanzioneModel) lPerDao.getModel());
+				lPeriodoAltraSanzioni.add(lPerDao.getModel());
 			}
 			lPerDao.stop();
 		} catch (DAOException daoEx) {
@@ -481,7 +481,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 
 	/****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -502,8 +502,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraSanzioneController.ExRicercaPeriodoAltraSanzioneById: "
-					+ daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExRicercaPeriodoAltraSanzioneById: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);
@@ -513,8 +513,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 	}
 
 	/*****************************************************************************/
-
 	public List ExRicercaSanzioneSostitutivaByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraSanzioneSqlDAO lPerDao = null;
 		List lLisPer = new ArrayList();
@@ -537,8 +537,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 	}
 
 	/*****************************************************************************/
-
 	public List ExRicercaSanzioneSostitutivaByIdSiep(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraSanzioneSqlDAO lPerDao = null;
 		List lLisPer = new ArrayList();
@@ -551,8 +551,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraSanzioneController.ExRicercaSanzioneSostitutivaByIdSiep: "
-					+ daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExRicercaSanzioneSostitutivaByIdSiep: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);
@@ -562,7 +562,7 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 
 	/*****************************************************************************
 	 * Effettua la ricerca per id evento
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -571,7 +571,6 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
-
 	public PeriodoAltraSanzioneModel ExRicercaSanzioneSostitutivaByIdEvento(BigDecimal aKey)
 			throws F3BException {
 
@@ -587,8 +586,8 @@ public class PeriodoAltraSanzioneController extends SiapController implements IP
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraSanzioneController.ExRicercaSanzioneSostitutivaByIdEvento: "
-					+ daoEx);
+			throw new F3BException(
+					"PeriodoAltraSanzioneController.ExRicercaSanzioneSostitutivaByIdEvento: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);

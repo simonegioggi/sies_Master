@@ -7,6 +7,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -24,9 +27,6 @@ import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -41,7 +41,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -52,12 +52,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * ExInserisciPenaResidua
-	 * 
+	 *
 	 * @param aPenaResidua
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExInserisciPenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaDAO lPenDao = null;
 		PenaResiduaModel lPenMod = null;
@@ -81,11 +82,9 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 		return lPenMod;
 	}
 
-	/**
-   *
-   */
 	public PenaResiduaModel ExInserisciPenaResiduaScadenzario(PenaResiduaModel aPenaResidua, String aCodice)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaDAO lPenDao = null;
 		PenaResiduaModel lPenMod = null;
@@ -167,7 +166,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Inserisci pena Residua per JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aPenaPresunta
 	 * @param lConn
 	 * @return
@@ -175,6 +174,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 */
 	public String ExInserisciPenaResiduaWithoutSequence(PenaResiduaModel aPenaPresunta, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		PenaResiduaDAO lPenDao = null;
 		try {
@@ -202,7 +202,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Inserisci i records di Pena Residua per JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aPenaResidua
 	 * @param lConn
 	 * @return lCodEsito
@@ -210,6 +210,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 */
 	public String ExInserisciPeneResidueWithoutSequence(ArrayList aPenaResidua, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		PenaResiduaDAO lPenDao = null;
 		PenaResiduaModel lPenResMod = null;
@@ -270,12 +271,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca il record pena residua inserito più recentemente (data inserimento), validato o meno.
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltima(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaSqlDAO lPenResDao = null;
 		PenaResiduaModel lPenResMod;
@@ -297,13 +299,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/*****************************************************************************
 	 * Recupera l'ultimo record PENA_RESIDUA <b>VALIDATO</b> per il fascicolo passato in input
-	 * 
+	 *
 	 * @param aKey
 	 *            - id del fascicolo per cui fare la ricerca
 	 * @return PenaResiduaModel
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaByDate(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -334,9 +337,10 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 *            - id fascicolo
 	 * @return
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaByDate_IgnoraValidazione(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -366,8 +370,9 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 *            -id del fascicolo
 	 * @return
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaValidata(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -394,13 +399,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	/**
 	 * Restituisce la PENA_RESIDUA VALIDATA con data inserimento più recente e Data Fine Pena valorizzata (not
 	 * null)
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaValidataDataFinePena(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -415,8 +421,8 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaResiduaController.ExRicercaPenaResiduaUltimaValidataDataFinePena: "
-					+ daoEx);
+			throw new F3BException(
+					"PenaResiduaController.ExRicercaPenaResiduaUltimaValidataDataFinePena: " + daoEx);
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lConn);
@@ -427,13 +433,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca Pena Residua Ultima Validata Sospesa
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaValidataSospesa(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -448,8 +455,8 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaResiduaController.ExRicercaPenaResiduaUltimaValidataSospesa: "
-					+ daoEx);
+			throw new F3BException(
+					"PenaResiduaController.ExRicercaPenaResiduaUltimaValidataSospesa: " + daoEx);
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lConn);
@@ -460,13 +467,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca Pena Residua Ultima NON Validata Sospesa
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaNonValidataSospesa(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -481,8 +489,8 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaResiduaController.ExRicercaPenaResiduaUltimaNonValidataSospesa: "
-					+ daoEx);
+			throw new F3BException(
+					"PenaResiduaController.ExRicercaPenaResiduaUltimaNonValidataSospesa: " + daoEx);
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lConn);
@@ -493,13 +501,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca Pena Residua Ultima Validata Sospesa Interruzione
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaValidataSospesaInterruzione(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -527,12 +536,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Inserisci aggiorna pena residua VA
-	 * 
+	 *
 	 * @param aPenaResidua
 	 * @return
 	 * @throws F3BException
 	 */
-	public PenaResiduaModel ExInserisciAggiornaPenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+	public PenaResiduaModel ExInserisciAggiornaPenaResidua(PenaResiduaModel aPenaResidua)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaDAO lPenDao = null;
@@ -562,7 +573,6 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 			// fine inserimento
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -578,12 +588,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Aggiorna pena residua
-	 * 
+	 *
 	 * @param aPenaResidua
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExAggiornaPenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaDAO lPenDao = null;
@@ -611,6 +622,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	}
 
 	public PenaResiduaModel ExInsertOrUpdatePenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenDao = null;
@@ -698,6 +710,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaResidui = new Vector();
 		PenaResiduaSqlDAO lPenDao = null;
@@ -725,8 +738,9 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 *            del Fascicolo SIEP
 	 * @return PenaResiduaModel
 	 * @throws F3BException
-	 ************************************************************************* */
+	 */
 	public PenaResiduaModel ExRicercaPenaResiduaCorrenteByFascicoloSiep(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -741,8 +755,8 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PenaResiduaController.ExRicercaPenaResiduaCorrenteByFascicoloSiep: "
-					+ daoEx);
+			throw new F3BException(
+					"PenaResiduaController.ExRicercaPenaResiduaCorrenteByFascicoloSiep: " + daoEx);
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lConn);
@@ -754,13 +768,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	/*****************************************************************************
 	 * Ricerca la pena residua NON VALIDATA ('N') inserita più recentemente. (ne può esistere più di una non
 	 * validata?)
-	 * 
+	 *
 	 * @param aKey
 	 * @return pena residua con flagValidato = 'N' più recente
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public PenaResiduaModel ExRicercaPenaResiduaCorrenteByFascicoloSiepFlagValidato(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResDao = null;
@@ -774,7 +789,8 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 			lPenResMod = (PenaResiduaModel) lPenResDao.getModelByKey();
 		} catch (DAOException daoEx) {
 			throw new F3BException(
-					"PenaResiduaController.ExRicercaPenaResiduaCorrenteByFascicoloSiepFlagValidato: " + daoEx);
+					"PenaResiduaController.ExRicercaPenaResiduaCorrenteByFascicoloSiepFlagValidato: "
+							+ daoEx);
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lConn);
@@ -785,13 +801,14 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Pena residua corrente con flagPiùMeno dell'evento valorizzato
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaCorrenteFlagPiuMenoByFascicoloSiep(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaSqlDAO lPenResDao = null;
 		PenaResiduaModel lPenResMod;
@@ -814,12 +831,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca Pena tramite chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaSqlDAO lPenDao = null;
 		PenaResiduaModel lPenMod;
@@ -842,12 +860,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca Pena tramite chiave Evento
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaByIdEvento(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenDao = null;
@@ -874,17 +893,18 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca Pena Residua tramite chiave Fascicolo
-	 * 
+	 *
 	 * @param aIdFasicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPenaResiduaByIdFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lPenaResidua = new Vector();
 		PenaResiduaSqlDAO lPenDao = null;
-//		PenaResiduaModel lPenMod;
+		// PenaResiduaModel lPenMod;
 
 		try {
 			lConn = getDBConnection();
@@ -906,12 +926,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Modifica Pena Residua
-	 * 
+	 *
 	 * @param aPenaResidua
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExModificaPenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaDAO lPenDao = null;
@@ -928,7 +949,6 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("PenaResiduaController.ExModificaPenaResidua: " + ex);
@@ -942,6 +962,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	}
 
 	public void ExCancellaPenaResidua(PenaResiduaModel aPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaDAO lPenDao = null;
 
@@ -963,11 +984,12 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Cancella tutti i record pena residua non validati associati al fascicolo
-	 * 
+	 *
 	 * @param aFascID
 	 * @throws F3BException
 	 */
 	public void ExCancellaPenaResiduaNonValidata(BigDecimal aFascID) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaDAO lPenDao = null;
 
@@ -996,6 +1018,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 * @throws F3BException
 	 */
 	public PenaPrecedenteModel ExRicercaPenaPrecedenteByKeyFascicolo(BigDecimal aFascID) throws F3BException {
+
 		Connection lConn = null;
 		PenaPrecedenteSqlDAO lPenDao = null;
 		Vector lPrec = null;
@@ -1024,12 +1047,13 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Ricerca l'ultima Pena Residua inserita sul fascicolo, Validata o meno
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel ExRicercaPenaResiduaUltimaPerFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaSqlDAO lPenDao = null;
 		PenaResiduaModel lPrecModel = null;
@@ -1064,6 +1088,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 */
 	public PenaResiduaModel ExRicercaPenaPrecedenteByKeyEvento(BigDecimal aFascID, BigDecimal aEveID)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaDettaglioSqlDAO lPenDao = null;
 		PenaResiduaModel lPrecModel = null;
@@ -1086,7 +1111,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 	/**
 	 * Inserisce i dati della pena Residua Manuale ed eventualmente aggiorna lo scadenzario.
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aPenaResidua
 	 * @param aLibAnt
@@ -1096,8 +1121,9 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 	 * @throws F3BException
 	 */
 	public EventoModel ExInserisciPenaResiduaManuale(EventoModel aEvento, PenaResiduaModel aPenaResidua,
-	// LicenzaLibAnticipataModel aLibAnt,
+			// LicenzaLibAnticipataModel aLibAnt,
 			Vector<LicenzaLibAnticipataModel> aListaLicenze, String aCodTipoScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = null;
@@ -1106,7 +1132,6 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 		PenaResiduaDAO lPenDao = null;
 		ScadenzarioDAO lScaDAO = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
-
 		EventoDAO lEveDAO = null;
 		LicenzaLibanticipataDAO lLicDAO = null;
 
@@ -1135,11 +1160,11 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 
 					lLicModel.setEveIdEvento(lEveMod.getIdEvento());
 
-					if (aPenaResidua != null
-							&& aPenaResidua.getDataInizio() != null
+					if (aPenaResidua != null && aPenaResidua.getDataInizio() != null
 							&& aPenaResidua.getDataFine() != null
-							&& (aPenaResidua.getFlagErgastolo() == null || (aPenaResidua.getFlagErgastolo() != null && aPenaResidua
-									.getFlagErgastolo().equals("N")))) {
+							&& (aPenaResidua.getFlagErgastolo() == null
+									|| (aPenaResidua.getFlagErgastolo() != null
+											&& aPenaResidua.getFlagErgastolo().equals("N")))) {
 						lLicModel.setFlagElaborato("S");
 					}
 
@@ -1150,7 +1175,7 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 			}
 
 			/*
-			 * 
+			 *
 			 * //================================================================= // Inserisco la Liberazine
 			 * Anticipata //================================================================= // 20/05/2014
 			 * Nuova L.A. : viene inserita una licenza per ogni tipo ci Concessione L.A. presente : // max 3
@@ -1158,40 +1183,40 @@ public class PenaResiduaController extends SiapController implements IPenaResidu
 			 * //=================================================================== if ( aLibAnt!=null ) {
 			 * if(ggLibAnt_Ord!=null && ggLibAnt_Ord.intValue() != 0) { lLicDAO = new
 			 * LicenzaLibanticipataDAO(lConn); aLibAnt.setEveIdEvento(lEveMod.getIdEvento());
-			 * 
+			 *
 			 * // 20/05/2014 Nuova L.A. aLibAnt.setNumeroGiorni(ggLibAnt_Ord);
 			 * aLibAnt.setDescrStatoPermesso("LA"); // End Nuova L.A.
-			 * 
+			 *
 			 * // Se la pena è in decorenza e non trattasi di ergastolo flaggo le LA come // computate if(
 			 * aPenaResidua != null && aPenaResidua.getDataInizio() != null && aPenaResidua.getDataFine() !=
 			 * null && ( aPenaResidua.getFlagErgastolo()==null || (aPenaResidua.getFlagErgastolo()!=null &&
 			 * aPenaResidua.getFlagErgastolo().equals("N")) ) ) { aLibAnt.setFlagElaborato("S"); }
 			 * lLicDAO.setDAOFromModel(aLibAnt); lLicDAO.insert(); lLicDAO.stop(); }
-			 * 
+			 *
 			 * if(ggLibAnt_Spe!=null && ggLibAnt_Spe.intValue() != 0) { lLicDAO = new
 			 * LicenzaLibanticipataDAO(lConn); aLibAnt.setEveIdEvento(lEveMod.getIdEvento());
-			 * 
+			 *
 			 * // 20/05/2014 Nuova L.A. aLibAnt.setNumeroGiorni(ggLibAnt_Spe);
 			 * aLibAnt.setDescrStatoPermesso("LS"); // End Nuova L.A.
-			 * 
+			 *
 			 * // Se la pena è in decorenza e non trattasi di ergastolo flaggo le LA come // computate if(
 			 * aPenaResidua != null && aPenaResidua.getDataInizio() != null && aPenaResidua.getDataFine() !=
 			 * null && ( aPenaResidua.getFlagErgastolo()==null || (aPenaResidua.getFlagErgastolo()!=null &&
 			 * aPenaResidua.getFlagErgastolo().equals("N")) ) ) { aLibAnt.setFlagElaborato("S"); }
 			 * lLicDAO.setDAOFromModel(aLibAnt); lLicDAO.insert(); lLicDAO.stop(); }
-			 * 
+			 *
 			 * if(ggLibAnt_Int!=null && ggLibAnt_Int.intValue() != 0) { lLicDAO = new
 			 * LicenzaLibanticipataDAO(lConn); aLibAnt.setEveIdEvento(lEveMod.getIdEvento());
-			 * 
+			 *
 			 * // 20/05/2014 Nuova L.A. aLibAnt.setNumeroGiorni(ggLibAnt_Int);
 			 * aLibAnt.setDescrStatoPermesso("LI"); // End Nuova L.A.
-			 * 
+			 *
 			 * // Se la pena è in decorenza e non trattasi di ergastolo flaggo le LA come // computate if(
 			 * aPenaResidua != null && aPenaResidua.getDataInizio() != null && aPenaResidua.getDataFine() !=
 			 * null && ( aPenaResidua.getFlagErgastolo()==null || (aPenaResidua.getFlagErgastolo()!=null &&
 			 * aPenaResidua.getFlagErgastolo().equals("N")) ) ) { aLibAnt.setFlagElaborato("S"); }
 			 * lLicDAO.setDAOFromModel(aLibAnt); lLicDAO.insert(); lLicDAO.stop(); }
-			 * 
+			 *
 			 * }
 			 */
 

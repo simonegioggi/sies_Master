@@ -233,9 +233,6 @@ public class MagistratoRelatoreController extends SiapController implements IMag
 		return lMagRel;
 	}
 
-	/**
-	* 
-	*/
 	public void ExModificaMultiplaMagistratoRelatore(MagistratoRelatoreModel aMagRelModel,
 			String[] aListaFascicoli) throws F3BException {
 
@@ -290,7 +287,6 @@ public class MagistratoRelatoreController extends SiapController implements IMag
 				lGPDao.setCondizioneUpdateByIdFasSius(aMagRelModel.getFasSiuIdFascicoloSius());
 				lGPDao.update();
 				lGPDao.stop();
-
 			}
 
 			commit(lConn);
@@ -304,11 +300,11 @@ public class MagistratoRelatoreController extends SiapController implements IMag
 					"MagistratoRelatoreController.ExModificaMultiplaMagistratoRelatore: " + ex);
 		} finally {
 			cleanup(lMagRelDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lGPDao);
 
 			cleanup(lConn);
 		}
-
-		// return lMagMod;
 	}
 
 }

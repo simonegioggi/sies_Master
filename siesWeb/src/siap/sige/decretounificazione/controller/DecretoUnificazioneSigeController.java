@@ -10,6 +10,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -35,11 +40,6 @@ import siap.sige.tenore.dao.TenoreSigeDAO;
 import siap.sige.tenore.dao.TenoreSigeSqlDAO;
 import siap.sige.tenore.model.TenoreSigeModel;
 import siap.sige.util.SIGELookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -54,18 +54,19 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class DecretoUnificazioneSigeController extends SiapController implements IDecretoUnificazioneSige {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Verifica del Procedimento Sige prima dell' Unificazione.
 	 * <p>
-	 * 
+	 *
 	 * @param aAnnoFascicolo
 	 * @param aNumeroFascicolo
 	 * @param aUfficioUtenteConnesso
@@ -89,14 +90,14 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 		lFasEstMod = lCtrl.ExRicercaFascicoloSigeByAnnoNumCodUfficio(lFasMod);
 
 		if (lFasEstMod == null || lFasEstMod.getFascicoloSige() == null)
-			throw new SIGEException(SIGEException.USER_MESSAGE, "Procedimento " + aRuoloFascicolo
-					+ " non esistente in archivio");
+			throw new SIGEException(SIGEException.USER_MESSAGE,
+					"Procedimento " + aRuoloFascicolo + " non esistente in archivio");
 
 		if (lFasEstMod.getFascicoloSige().getCodStatoFascicolo().equals("05"))
-			throw new SIGEException(SIGEException.USER_MESSAGE, "Procedimento " + aRuoloFascicolo
-					+ " gia unificato ");
-		
-        // Ticket#20191213011 — SIES : impossibile riunire du procedimenti  (rilascio per 11.2.4)
+			throw new SIGEException(SIGEException.USER_MESSAGE,
+					"Procedimento " + aRuoloFascicolo + " gia unificato ");
+
+		// Ticket#20191213011 — SIES : impossibile riunire du procedimenti (rilascio per 11.2.4)
 		// sentita Nunzia aggiungo anche lo stato 20 (Decreto Fissazione Udienza)
 		if (!lFasEstMod.getFascicoloSige().getCodStatoFascicolo().equals("02")
 				&& !lFasEstMod.getFascicoloSige().getCodStatoFascicolo().equals("10")
@@ -111,15 +112,16 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	/**
 	 * Esecuzione stampa Decreto di Unificazione
 	 * <p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @param lUfficio
 	 * @return ByteArrayOutputStream
 	 * @throws F3BException
 	 */
-	public ByteArrayOutputStream ExStampaDecretoUnificazioneSige(EventoModel lEvento,
-			BigDecimal aIdFascicolo, BigDecimal aIdFascicoloUnificante, String lTipoUfficio,
-			UtenteModel aUtenteModel) throws F3BException {
+	public ByteArrayOutputStream ExStampaDecretoUnificazioneSige(EventoModel lEvento, BigDecimal aIdFascicolo,
+			BigDecimal aIdFascicoloUnificante, String lTipoUfficio, UtenteModel aUtenteModel)
+			throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		IStampaSige lCtrlSta = SIGELookupRemote.getStampaRemote();
@@ -164,7 +166,6 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 		// Inserisce il documento generato nel model di ritorno
 		// In esso inserisce il Nome del template di ritorno
 		// e il documento generato.
-
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -206,7 +207,7 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	 * Individuati.; Vengono replicati i Tenori del FasDaUnif in FasUnificante; Il FasDaUnif viene aggiornato
 	 * come Unificato; Si effettua l'inserimento dell'EVENTO relativo.
 	 * <p>
-	 * 
+	 *
 	 * @param aAnnoDaUnif
 	 * @param aNumeroDaUnif
 	 * @param aAnnoUnificante
@@ -219,10 +220,11 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	 * @throws F3BException
 	 */
 
-	public ProvvedimentoSigeModel ExInserisciDecretoUnificazioneSige(String aAnnoDaUnif,
-			String aNumeroDaUnif, String aAnnoUnificante, String aNumeroUnificante,
-			String aUfficioUtenteConnesso, String aUtenteConnesso, String aLuogoUfficioUtenteConnesso,
-			Date aDataUnificazione) throws F3BException {
+	public ProvvedimentoSigeModel ExInserisciDecretoUnificazioneSige(String aAnnoDaUnif, String aNumeroDaUnif,
+			String aAnnoUnificante, String aNumeroUnificante, String aUfficioUtenteConnesso,
+			String aUtenteConnesso, String aLuogoUfficioUtenteConnesso, Date aDataUnificazione)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSigeDAO lFasDao = null;
@@ -354,10 +356,10 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 				if (lCodOggettiPresenti.indexOf(lTenModDaUnificare.getCodOggettoSige()) < 0) {
 					// lTenModDaUnificare.setProgrTenore(new BigDecimal ((double)(lTenoriUnificante+j+1)));
 					lTenModDaUnificare.setNote("UNIFICATO");
-					lTenModDaUnificare.setFasIdFascicoloSige(lFasUnificante.getFascicoloSige()
-							.getIdFascicoloSige());
-					lTenModDaUnificare.setRicSigIdRichiestaSige(lFasUnificante.getFascicoloSige()
-							.getRicIdRichiestaSige());
+					lTenModDaUnificare
+							.setFasIdFascicoloSige(lFasUnificante.getFascicoloSige().getIdFascicoloSige());
+					lTenModDaUnificare.setRicSigIdRichiestaSige(
+							lFasUnificante.getFascicoloSige().getRicIdRichiestaSige());
 					lTenModDaUnificare.setProvIdProvvedimentoSige(idDecUnif);
 
 					// Setto il DAO dal Model ed inserisco il Tenore
@@ -392,19 +394,21 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + ex);
-			throw new F3BException("DecretoUnificazioneSigeController.exInserisciDecretoUnificazioneSige: "
-					+ ex);
+			throw new F3BException(
+					"DecretoUnificazioneSigeController.exInserisciDecretoUnificazioneSige: " + ex);
 		} catch (Exception e) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
-			throw new F3BException("DecretoUnificazioneSigeController.exInserisciDecretoUnificazioneSige: "
-					+ e);
+			throw new F3BException(
+					"DecretoUnificazioneSigeController.exInserisciDecretoUnificazioneSige: " + e);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lTenDao);
 			cleanup(lEveDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSenReaDao);
 			cleanup(lProvvDao);
 			cleanup(lConn);
 		}
@@ -415,14 +419,13 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	/**
 	 * Esegue la cancellazione di un Decreto di unificazione in Sige.
 	 * <p>
-	 * 
+	 *
 	 * @param aKeyProvvedimento
 	 *            : chiave del record
 	 * @throws F3BException
 	 */
-	public void ExCancellaDecretoUnificazioneSige(BigDecimal aKeyProvvedimento,
-			String aUfficioUtenteConnesso, String aUtenteConnesso, String aLuogoUfficioUtenteConnesso)
-			throws F3BException {
+	public void ExCancellaDecretoUnificazioneSige(BigDecimal aKeyProvvedimento, String aUfficioUtenteConnesso,
+			String aUtenteConnesso, String aLuogoUfficioUtenteConnesso) throws F3BException {
 
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasSqlDao = null;
@@ -489,8 +492,8 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 
 			// Aggiornamento del FASCICOLO SIGE Unificante.
 			if (lFasEstUnificante.getNumeroFascicoliUnificati().intValue() > 0)
-				lFasDao.setNumeroFascicoliUnificati(lFasEstUnificante.getNumeroFascicoliUnificati().subtract(
-						new BigDecimal(1)));
+				lFasDao.setNumeroFascicoliUnificati(
+						lFasEstUnificante.getNumeroFascicoliUnificati().subtract(new BigDecimal(1)));
 			lFasDao.setDataAggiornamento(DateUtils.getSysDate());
 			lFasDao.setCodUfficioAggiornamento(aUfficioUtenteConnesso);
 			lFasDao.setCodOperatoreAggiornamento(aUtenteConnesso);
@@ -506,11 +509,10 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 					Iterator itxUnificato = lVectTenoriUnificato.iterator();
 					while (itxUnificato.hasNext()) {
 						TenoreSigeModel lTenoreDiUnificato = (TenoreSigeModel) itxUnificato.next();
-						if (lTenoreDiUnificante.getCodOggettoSige().equals(
-								lTenoreDiUnificato.getCodOggettoSige())
-								&&
-								// lTenoreDiUnificante.getCodDettaglioOggetto().equals(lTenoreDiUnificato.getCodDettaglioOggetto())
-								// &&
+						if (lTenoreDiUnificante.getCodOggettoSige()
+								.equals(lTenoreDiUnificato.getCodOggettoSige()) &&
+						// lTenoreDiUnificante.getCodDettaglioOggetto().equals(lTenoreDiUnificato.getCodDettaglioOggetto())
+						// &&
 								lTenoreDiUnificante.getNote() != null
 								&& "UNIFICATO".compareTo(lTenoreDiUnificante.getNote()) == 0) {
 							// Prima del Tenore occorre cancellare il TenoreSentenzaReato
@@ -577,19 +579,21 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new SIGEException("DecretoUnificazioneSigeController.ExCancellaDecretoUnificazioneSige: "
-					+ daoEx);
+			throw new SIGEException(
+					"DecretoUnificazioneSigeController.ExCancellaDecretoUnificazioneSige: " + daoEx);
 		} catch (Exception e) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + e);
-			throw new SIGEException("DecretoUnificazioneSigeController.ExCancellaDecretoUnificazioneSige: "
-					+ e);
+			throw new SIGEException(
+					"DecretoUnificazioneSigeController.ExCancellaDecretoUnificazioneSige: " + e);
 		} finally {
 			cleanup(lFasSqlDao);
 			cleanup(lFasDao);
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSqlDao);
 			cleanup(lEveDao);
 			cleanup(lProvvDao);
 			cleanup(lTenSqlDao);
@@ -602,7 +606,7 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	 * Individuati.; Vengono replicati i Tenori del FasDaUnif in FasUnificante; Il FasDaUnif viene aggiornato
 	 * come Unificato; Si effettua l'inserimento dell'EVENTO relativo.
 	 * <p>
-	 * 
+	 *
 	 * @param aAnnoDaUnif
 	 * @param aNumeroDaUnif
 	 * @param aAnnoUnificante
@@ -615,10 +619,11 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	 * @throws F3BException
 	 */
 
-	public ProvvedimentoSigeModel ExInserisciVerbaleUnificazioneSige(String aAnnoDaUnif,
-			String aNumeroDaUnif, String aAnnoUnificante, String aNumeroUnificante,
-			String aUfficioUtenteConnesso, String aUtenteConnesso, String aLuogoUfficioUtenteConnesso,
-			Date aDataUnificazione) throws F3BException {
+	public ProvvedimentoSigeModel ExInserisciVerbaleUnificazioneSige(String aAnnoDaUnif, String aNumeroDaUnif,
+			String aAnnoUnificante, String aNumeroUnificante, String aUfficioUtenteConnesso,
+			String aUtenteConnesso, String aLuogoUfficioUtenteConnesso, Date aDataUnificazione)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSigeDAO lFasDao = null;
@@ -750,10 +755,10 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 				if (lCodOggettiPresenti.indexOf(lTenModDaUnificare.getCodOggettoSige()) < 0) {
 					// lTenModDaUnificare.setProgrTenore(new BigDecimal ((double)(lTenoriUnificante+j+1)));
 					lTenModDaUnificare.setNote("UNIFICATO");
-					lTenModDaUnificare.setFasIdFascicoloSige(lFasUnificante.getFascicoloSige()
-							.getIdFascicoloSige());
-					lTenModDaUnificare.setRicSigIdRichiestaSige(lFasUnificante.getFascicoloSige()
-							.getRicIdRichiestaSige());
+					lTenModDaUnificare
+							.setFasIdFascicoloSige(lFasUnificante.getFascicoloSige().getIdFascicoloSige());
+					lTenModDaUnificare.setRicSigIdRichiestaSige(
+							lFasUnificante.getFascicoloSige().getRicIdRichiestaSige());
 					lTenModDaUnificare.setProvIdProvvedimentoSige(idDecUnif);
 
 					// Setto il DAO dal Model ed inserisco il Tenore
@@ -789,20 +794,23 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + ex);
-			throw new F3BException("DecretoUnificazioneSigeController.ExInserisciVerbaleUnificazioneSige: "
-					+ ex);
+			throw new F3BException(
+					"DecretoUnificazioneSigeController.ExInserisciVerbaleUnificazioneSige: " + ex);
 		} catch (Exception e) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
-			throw new F3BException("DecretoUnificazioneSigeController.ExInserisciVerbaleUnificazioneSige: "
-					+ e);
+			throw new F3BException(
+					"DecretoUnificazioneSigeController.ExInserisciVerbaleUnificazioneSige: " + e);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSenReaDao);
 			cleanup(lEveDao);
 			cleanup(lProvvDao);
+
 			cleanup(lConn);
 		}
 
@@ -812,14 +820,13 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	/**
 	 * Esegue la cancellazione di un Verbale di unificazione in Sige.
 	 * <p>
-	 * 
+	 *
 	 * @param aKeyProvvedimento
 	 *            : chiave del record
 	 * @throws F3BException
 	 */
-	public void ExCancellaVerbaleUnificazioneSige(BigDecimal aKeyProvvedimento,
-			String aUfficioUtenteConnesso, String aUtenteConnesso, String aLuogoUfficioUtenteConnesso)
-			throws F3BException {
+	public void ExCancellaVerbaleUnificazioneSige(BigDecimal aKeyProvvedimento, String aUfficioUtenteConnesso,
+			String aUtenteConnesso, String aLuogoUfficioUtenteConnesso) throws F3BException {
 
 		Connection lConn = null;
 		FascicoloSigeSqlDAO lFasSqlDao = null;
@@ -886,8 +893,8 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 
 			// Aggiornamento del FASCICOLO SIGE Unificante.
 			if (lFasEstUnificante.getNumeroFascicoliUnificati().intValue() > 0)
-				lFasDao.setNumeroFascicoliUnificati(lFasEstUnificante.getNumeroFascicoliUnificati().subtract(
-						new BigDecimal(1)));
+				lFasDao.setNumeroFascicoliUnificati(
+						lFasEstUnificante.getNumeroFascicoliUnificati().subtract(new BigDecimal(1)));
 			lFasDao.setDataAggiornamento(DateUtils.getSysDate());
 			lFasDao.setCodUfficioAggiornamento(aUfficioUtenteConnesso);
 			lFasDao.setCodOperatoreAggiornamento(aUtenteConnesso);
@@ -903,11 +910,10 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 					Iterator itxUnificato = lVectTenoriUnificato.iterator();
 					while (itxUnificato.hasNext()) {
 						TenoreSigeModel lTenoreDiUnificato = (TenoreSigeModel) itxUnificato.next();
-						if (lTenoreDiUnificante.getCodOggettoSige().equals(
-								lTenoreDiUnificato.getCodOggettoSige())
-								&&
-								// lTenoreDiUnificante.getCodDettaglioOggetto().equals(lTenoreDiUnificato.getCodDettaglioOggetto())
-								// &&
+						if (lTenoreDiUnificante.getCodOggettoSige()
+								.equals(lTenoreDiUnificato.getCodOggettoSige()) &&
+						// lTenoreDiUnificante.getCodDettaglioOggetto().equals(lTenoreDiUnificato.getCodDettaglioOggetto())
+						// &&
 								lTenoreDiUnificante.getNote() != null
 								&& "UNIFICATO".compareTo(lTenoreDiUnificante.getNote()) == 0) {
 							// Prima del Tenore occorre cancellare il TenoreSentenzaReato
@@ -958,22 +964,24 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new SIGEException("DecretoUnificazioneSigeController.ExCancellaVerbaleUnificazioneSige: "
-					+ daoEx);
+			throw new SIGEException(
+					"DecretoUnificazioneSigeController.ExCancellaVerbaleUnificazioneSige: " + daoEx);
 		} catch (Exception e) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + e);
-			throw new SIGEException("DecretoUnificazioneSigeController.ExCancellaVerbaleUnificazioneSige: "
-					+ e);
+			throw new SIGEException(
+					"DecretoUnificazioneSigeController.ExCancellaVerbaleUnificazioneSige: " + e);
 		} finally {
 			cleanup(lFasSqlDao);
 			cleanup(lFasDao);
 			cleanup(lTenDao);
+			cleanup(lTenSqlDao);
 			cleanup(lEveDao);
 			cleanup(lProvvDao);
-			cleanup(lTenSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSenReaDao);
 
 			cleanup(lConn);
 		}
@@ -986,15 +994,16 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 	/**
 	 * Esecuzione stampa Verbale di Unificazione
 	 * <p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @param lUfficio
 	 * @return ByteArrayOutputStream
 	 * @throws F3BException
 	 */
-	public ByteArrayOutputStream ExStampaVerbaleUnificazioneSige(EventoModel lEvento,
-			BigDecimal aIdFascicolo, BigDecimal aIdFascicoloUnificante, String lTipoUfficio,
-			UtenteModel aUtenteModel) throws F3BException {
+	public ByteArrayOutputStream ExStampaVerbaleUnificazioneSige(EventoModel lEvento, BigDecimal aIdFascicolo,
+			BigDecimal aIdFascicoloUnificante, String lTipoUfficio, UtenteModel aUtenteModel)
+			throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		IStampaSige lCtrlSta = SIGELookupRemote.getStampaRemote();

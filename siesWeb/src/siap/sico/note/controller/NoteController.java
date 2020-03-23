@@ -5,10 +5,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
-import siap.controller.SiapController;
-import siap.sico.note.dao.NoteSqlDAO;
 import f3b.dao.DAOException;
 import f3b.util.F3BException;
+import siap.controller.SiapController;
+import siap.sico.note.dao.NoteSqlDAO;
 
 /**
  * <p>
@@ -23,13 +23,14 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class NoteController extends SiapController implements INote {
 
 	public Vector ExRicercaNote(BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 		NoteSqlDAO lNoteSqlDao = null;
 
@@ -45,7 +46,6 @@ public class NoteController extends SiapController implements INote {
 			lVectNote = new Vector(lNoteSqlDao.getModels());
 
 			lNoteSqlDao.stop();
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("NoteController.ExRicercaNote:  : " + ex);
@@ -58,6 +58,7 @@ public class NoteController extends SiapController implements INote {
 	}
 
 	public Vector ExRicercaNoteFasSige(BigDecimal aIdFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 		NoteSqlDAO lNoteSqlDao = null;
 
@@ -73,7 +74,6 @@ public class NoteController extends SiapController implements INote {
 			lVectNote = new Vector(lNoteSqlDao.getModels());
 
 			lNoteSqlDao.stop();
-
 		} catch (SQLException sqe) {
 			rollback(lConn);
 			throw new F3BException("NoteController.ExRicercaNoteFasSige: " + sqe);

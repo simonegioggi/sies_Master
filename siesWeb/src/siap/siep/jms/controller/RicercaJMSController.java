@@ -49,7 +49,6 @@ import siap.siep.scambiosanzione.dao.ScambioSanzioneSqlDAO;
 import siap.siep.scambiosanzione.model.ScambioSanzioneModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.avvocato.dao.AvvocatoFascicoloSiusSqlDAO;
-import siap.sius.avvocato.model.AvvocatoSiusModel;
 import siap.sius.depositodecreto.dao.DepositoDecretoSqlDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO;
@@ -83,7 +82,7 @@ import siap.sius.tenore.model.TenoreProvvedimentoModel;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version 1.0
  */
@@ -95,12 +94,13 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 	/**
 	 * Costruisce il MEssaggio per la richiesta di un messaggio
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExSpedisciRichiestaRicerca(GenericModel aModel) throws F3BException {
+
 		TreeModel lTreeRoot = null;
 		if (aModel instanceof FascicoloSiepModel) {
 			lTreeRoot = new TreeModel(createRoot(1));
@@ -116,12 +116,13 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 	/**
 	 * Ricerca il fascicolo Siep e prepara il messaggio di risposta
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaFascicoloSiep(FascicoloSiepModel aModel) throws F3BException {
+
 		// Ricerco Fascicolo Sogetto e sentenza
 		IFascicoloSiep lFasc = SIEPLookupRemote.getFascicoloSiepRemote();
 		FascicoloSiepModel lFascModel = lFasc.ExRicercaFascicoloSiepByProgrAnnoCodUfficio(aModel);
@@ -150,13 +151,14 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	/**
 	 * Ricerca tutto l'intero fascicolo Siep e prepara il messaggio di risposta o di invio il metodo è infatti
 	 * utilizzato sia in caso di trasferimento atti per competenza che nel caso di richiesta.
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaFascicoloSiepPerTrasferimento(FascicoloSiepModel aModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeRoot = null;
 		MessaggioModel lMessage = new MessaggioModel();
@@ -264,8 +266,8 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 					}
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.debug("\n\nRicerco Eventi per fascicolo SIEP.\n\n"
-							+ (EventoNotificaModel) lEventiNot.firstElement());
+					siesLogger
+							.debug("\n\nRicerco Eventi per fascicolo SIEP.\n\n" + lEventiNot.firstElement());
 
 					lDettFascicolo.setEventi(lEventiNot);
 				}
@@ -308,9 +310,8 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 							siesLogger.info("Evento_Provvedimento_Cumulo Valido - IdEvento = "
 									+ lEveXCum.getIdEvento());
 							IIstruttoriaCumulo lCtristr = SIEPLookupRemote.getIstruttoriaCumuloRemote();
-							IstruttoriaCumulo = (IstruttoriaCumuloModel) lCtristr
-									.ExCercaIsruttoriaPerAltriDatiCumulo(lFascModel.getIdFascicoloSiep(),
-											lEveXCum.getIdEvento(), lConn);
+							IstruttoriaCumulo = lCtristr.ExCercaIsruttoriaPerAltriDatiCumulo(
+									lFascModel.getIdFascicoloSiep(), lEveXCum.getIdEvento(), lConn);
 
 							if (IstruttoriaCumulo != null
 									&& IstruttoriaCumulo.getIdIstruttoriaCumulo() != null)
@@ -356,13 +357,14 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	 * Crea il MessaggioModel per la richiesta trasmissione atti per competenza. Inserisce nel Blob
 	 * (TreeModel) solo i dati essenziali del fascicolo cumulante e dell'ultimo record competenza contenente i
 	 * dati della Richiesta.
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaFascicoloSiepPerRichiestaTrasferimento(FascicoloSiepModel aModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeRoot = null;
 		MessaggioModel lMessage = new MessaggioModel();
@@ -418,11 +420,9 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
 	 * // [EC] - 16/01/2018: - ANOMALIA VISIBILITA MINORE SIEP: creo nuovo metodo passando anche il controllo
 	 * su ufficio minorenne o meno
-	 * 
+	 *
 	 * @see
 	 * siap.siep.jms.controller.IRicercaJMS#ExRicercaFascicoloSiepPerTrasferimento(siap.siep.fascicolo.model.
 	 * FascicoloSiepModel, boolean)
@@ -535,8 +535,8 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 					}
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.debug("\n\nRicerco Eventi per fascicolo SIEP.\n\n"
-							+ (EventoNotificaModel) lEventiNot.firstElement());
+					siesLogger
+							.debug("\n\nRicerco Eventi per fascicolo SIEP.\n\n" + lEventiNot.firstElement());
 
 					lDettFascicolo.setEventi(lEventiNot);
 				}
@@ -562,11 +562,12 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 	/**
 	 * Crea la root del tree model
-	 * 
+	 *
 	 * @param caseSwitch
 	 * @return
 	 */
 	private RootJMSModel createRoot(int caseSwitch) {
+
 		RootJMSModel aModel = new RootJMSModel();
 
 		switch (caseSwitch) {
@@ -577,7 +578,6 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 			aModel.setDescrTipoOperazione("RICERCA FASCICOLO");
 			aModel.setEsito("NON TROVATO");
 			break;
-
 		case 1: // Fascicolo
 			aModel.setCodTipoMessaggio("04");
 			aModel.setCodTipoOperazione("00030");
@@ -592,14 +592,13 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 			aModel.setDescrTipoOperazione("RICERCA FASCICOLO COMPLETA");
 			aModel.setEsito("TROVATO");
 			break;
-
 		}
 		return aModel;
 	}
 
 	/**
 	 * ricerca Evento Notifica By Fascicolo Siep Per Trasferimento
-	 * 
+	 *
 	 * @param lKeyFascicolo
 	 * @return
 	 * @throws F3BException
@@ -634,7 +633,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	 * 09/01/2008 Ricerca dei Provvedimenti di Sorveglianza iscritti da SIEP per Trasferimento ad altra BDI.
 	 * Viene utilizzato ed adeguato allo scopo il FascicoloGPTPModel, che conterrà anche
 	 * DECRETO_ORDINANZA_SIEP
-	 * 
+	 *
 	 * @param aIdEvento
 	 *            (BigDecimal)
 	 * @param lFasGPTPModel
@@ -647,6 +646,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	 */
 	private FascicoloGPTPModel ricercaProvvedimentoPerEvento(BigDecimal aIdEvento,
 			FascicoloGPTPModel lFasGPTPModel, Connection lConn) throws F3BException {
+
 		DepositoDecretoSqlDAO lDepDecSqlDAO = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDAO = null;
 		DecretoOrdinanzaSiepSqlDAO lDecOrdSiepSqlDAO = null;
@@ -753,7 +753,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	/**
 	 * 09/01/2008 Ricerca del DOCUMENTO_ALLEGATO collegato ad un EVENTO. Viene utilizzato il
 	 * FascicoloGPTPModel, che lo conterrà.
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @param lFasGPTPModel
 	 * @return FascicoloGPTPModel
@@ -761,6 +761,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	 */
 	private FascicoloGPTPModel ricercaAllegatoPerEvento(BigDecimal aIdEvento,
 			FascicoloGPTPModel lFasGPTPModel, Connection lConn) throws F3BException {
+
 		DocumentoAllegatoSqlDAO lDocAllSqlDAO = null;
 		Object genericObject = null;
 		try {
@@ -801,14 +802,14 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	 * 21/02/2008 Ricerca di tutti i dati del Fascicolo SIUS per il Trasferimento ad altra BDI. Viene
 	 * introdotto il nuovo DatiSiusPerTrasferimentoModel ed adeguato allo scopo il FascicoloGPTPModel, che lo
 	 * conterrà
-	 * 
+	 *
 	 * I dati caricati nel model sono: FascicoloGPTPModel - FascicoloSiusModel - GeneraleProcedimentoModel -
 	 * TenoreProvvedimentoModel[] - [gli allegati non vengono caricati] - DatiSiusPerTrasferimentoModel - List
 	 * <ResidenzaAssociataModel> - LuogoDetenzioneModel - MagistratoRelatoreModel - List <AvvocatoSiusModel> -
 	 * List <NoteModel> - EsecuzioneSanzioneSostitutivaModel - List <PeriodoAltraSanzioneModel> -
 	 * ScambioSanzioneModel - List <>RCPP non caicate
-	 * 
-	 * 
+	 *
+	 *
 	 * @param lFasGPTPModel
 	 * @param lConn
 	 * @return ricercaAltriDatiFascicoloSius
@@ -816,6 +817,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	 */
 	private FascicoloGPTPModel ricercaDatiFascicoloSius(FascicoloGPTPModel lFasGPTPModel,
 			EventoModel lEveTemp, Connection lConn) throws F3BException {
+
 		DepositoDecretoSqlDAO lDepDecSqlDAO = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDAO = null;
 		TenoreSqlDAO lTenSqlDao = null;
@@ -825,7 +827,6 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 		MagistratoRelatoreSqlDAO lMagRelSqlDao = null;
 		MagistratoSqlDAO lMagDao = null;
 		EspertoSqlDAO lEspDao = null;
-		// AvvocatoSqlDAO lAvvSqlDao = null;
 		AvvocatoFascicoloSiusSqlDAO lAvvSqlDao = null;
 		NoteSqlDAO lNoteSqlDao = null;
 		EsecuzioneSanzioneSostitutivaSqlDAO lESSSqlDao = null;
@@ -982,7 +983,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 			lAvvSqlDao.start();
 			while (lAvvSqlDao.next()) {
-				lAvvocati.add((AvvocatoSiusModel) lAvvSqlDao.getModel());
+				lAvvocati.add(lAvvSqlDao.getModel());
 			}
 			lAvvSqlDao.stop();
 
@@ -1075,16 +1076,17 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 	/**
 	 * Ricerca il fascicolo Siep e prepara il messaggio di risposta
-	 * 
+	 *
 	 * // [EC] - 16/01/2018: - ANOMALIA VISIBILITA MINORE SIEP: creo nuovo metodo passando anche il controllo
 	 * su ufficio minorenne o meno
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaFascicoloSiep(FascicoloSiepModel aModel, String checkMajor)
 			throws F3BException {
+
 		// Ricerco Fascicolo Sogetto e sentenza
 		IFascicoloSiep lFasc = SIEPLookupRemote.getFascicoloSiepRemote();
 		FascicoloSiepModel lFascModel = lFasc.ExRicercaFascicoloSiepByProgrAnnoCodUfficio(aModel, checkMajor);
@@ -1111,6 +1113,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 	}
 
 	private Boolean CercaCodice(EventoModel aEve, Vector lVec) throws F3BException {
+
 		Boolean trovato = false;
 
 		DecodificheModel lModelVec = null;

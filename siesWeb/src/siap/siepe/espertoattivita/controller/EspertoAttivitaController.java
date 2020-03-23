@@ -6,13 +6,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siepe.espertoattivita.dao.EspertoAttivitaDAO;
 import siap.siepe.espertoattivita.dao.EspertoAttivitaSqlDAO;
 import siap.siepe.espertoattivita.model.EspertoAttivitaModel;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -40,13 +40,14 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 
 	/**
 	 * Funzione di inserimento di un record in tabella.
-	 * 
+	 *
 	 * @param aEspertoAttivita
 	 * @return
 	 * @throws F3BException
 	 */
 	public EspertoAttivitaModel ExInserisciEspertoAttivita(EspertoAttivitaModel aEspertoAttivita)
 			throws F3BException {
+
 		Connection lConn = null;
 		EspertoAttivitaDAO lEspDao = null;
 		EspertoAttivitaModel lEspMod = null;
@@ -73,12 +74,13 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 	/**
 	 * Funzione di ricerca. Trova tutti gli esperti associati ad una attività specificata attraverso la sua
 	 * chiave.
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEspertiXAttivita(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EspertoAttivitaSqlDAO lEspDao = null;
 		Vector lEspertiAttivita = new Vector();
@@ -100,12 +102,13 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 	/**
 	 * Funzione di ricerca. Trova tutti gli esperti associati ad una attività specificata che siano attivi,
 	 * ovvero che abbiano un periodo di abilitazione che comprenda la data di sistema.
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaEspertiAttiviXAttivita(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EspertoAttivitaSqlDAO lEspDao = null;
 		Vector lEspertiAttivita = new Vector();
@@ -126,6 +129,7 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 
 	public EspertoAttivitaModel ExChiudiEspertoAttivita(EspertoAttivitaModel aEspertoAttivita)
 			throws F3BException {
+
 		Connection lConn = null;
 		EspertoAttivitaDAO lEspDao = null;
 		EspertoAttivitaModel lEspMod = new EspertoAttivitaModel(aEspertoAttivita);
@@ -151,6 +155,7 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 
 	public EspertoAttivitaModel ExModificaEspertoAttivita(EspertoAttivitaModel aEspertoAttivita)
 			throws F3BException {
+
 		Connection lConn = null;
 		EspertoAttivitaDAO lEspDao = null;
 		EspertoAttivitaModel lEspMod = new EspertoAttivitaModel(aEspertoAttivita);
@@ -177,8 +182,8 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 	/*
 	 * public void ExCancellaEspertoAttivita (EspertoAttivitaModel aEspertoAttivita ) throws F3BException {
 	 * Connection lConn = null; EspertoAttivitaDAO lEspDao = null;
-	 * 
-	 * 
+	 *
+	 *
 	 * try { lConn = getDBConnection(); lEspDao = new EspertoAttivitaDAO(lConn);
 	 * lEspDao.setCondizioneUpdate(aEspertoAttivita.getIdEspertoAttivita()); lEspDao.delete(); commit(lConn);
 	 * } catch (DAOException daoEx) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
@@ -192,9 +197,9 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 	/*
 	 * public Vector ExRicercaEspertoAttivita (EspertoAttivitaModel aEspertoAttivita ) throws F3BException {
 	 * Connection lConn = null; Vector lEspertoAttiviti = new Vector(); EspertoAttivitaSqlDAO lEspDao = null;
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * try { lConn = getDBConnection(); lEspDao = new EspertoAttivitaSqlDAO(lConn);
 	 * lEspDao.ricercaEspertoAttivita(aEspertoAttivita); lEspertoAttiviti = new Vector(lEspDao.getModels());
 	 * if ( lEspertoAttiviti.size() == 0 ) { throw new
@@ -211,9 +216,9 @@ public class EspertoAttivitaController extends SiapController implements IEspert
 	/*
 	 * public EspertoAttivitaModel ExRicercaEspertoAttivitaByKey ( BigDecimal aKey) throws F3BException {
 	 * Connection lConn = null; EspertoAttivitaSqlDAO lEspDao = null; EspertoAttivitaModel lEspMod;
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * try { lConn = getDBConnection(); lEspDao = new EspertoAttivitaSqlDAO(lConn);
 	 * lEspDao.ricercaEspertoAttivitaByKey(aKey); lEspMod = (EspertoAttivitaModel)lEspDao.getModelByKey(); }
 	 * catch (DAOException daoEx) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza

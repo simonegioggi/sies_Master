@@ -110,6 +110,7 @@ public class StatisController extends GenericController {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public Vector ExRicercaStatoFascicoloRes(StatoFascicoloResModel aStatoFascicoloRes) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStatoFascicoloRei = new Vector();
 		StatoFascicoloResDAO lStaDao = null;
@@ -227,7 +228,6 @@ public class StatisController extends GenericController {
 
 			lConn.commit();
 		} catch (DAOException daoEx) {
-
 			throw new F3BException("StatisController.ExAttivitaMagistratiStoredProcedure: " + daoEx);
 		} catch (SQLException sqe) {
 			throw new F3BException("StatisController.ExAttivitaMagistratiStoredProcedure: " + sqe);
@@ -250,12 +250,8 @@ public class StatisController extends GenericController {
 	 * @throws F3BException
 	 *             propaga l'eccezione.
 	 */
-	public void ExTempiIscrizioneStoredProcedure(String dataIni, String dataFin, String ufficio) // , String
-																									// ufficioaccorpato1,
-																									// String
-																									// ufficioaccorpato2,
-																									// String
-																									// ufficioaccorpato3)
+	public void ExTempiIscrizioneStoredProcedure(String dataIni, String dataFin, String ufficio)
+			// , String ufficioaccorpato1, String ufficioaccorpato2, String ufficioaccorpato3)
 			throws F3BException {
 
 		Connection lConn = null;
@@ -280,7 +276,6 @@ public class StatisController extends GenericController {
 
 			lConn.commit();
 		} catch (DAOException daoEx) {
-
 			throw new F3BException("StatisController.ExTempiIscrizioneStoredProcedure: " + daoEx);
 		} catch (SQLException sqe) {
 			throw new F3BException("StatisController.ExTempiIscrizioneStoredProcedure: " + sqe);
@@ -324,7 +319,6 @@ public class StatisController extends GenericController {
 			lSpDao.setCodUfficioAccorpato_1(ufficioaccorpato1);
 			lSpDao.setCodUfficioAccorpato_2(ufficioaccorpato2);
 			lSpDao.setCodUfficioAccorpato_3(ufficioaccorpato3);
-			//
 
 			lSpDao.execute();
 
@@ -340,6 +334,7 @@ public class StatisController extends GenericController {
 	}
 
 	public Vector ExRicercaIspProvvedimenti(IspProvvedimentiModel aIspProvvedimenti) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lIspProvvedimenti = new Vector();
@@ -370,9 +365,9 @@ public class StatisController extends GenericController {
 		return lIspProvvedimenti;
 	}
 
-	public Vector ExGetCountRiepilogoIspProvvedimenti(
+	public Vector ExGetCountRiepilogoIspProvvedimenti(IspProvvedimentiModel aIspProvvedimenti)
+			throws F3BException {
 
-			IspProvvedimentiModel aIspProvvedimenti) throws F3BException {
 		Connection lConn = null;
 		Vector lIspProvvedimenti = new Vector();
 		IspProvvedimentiSqlDAO lIspDao = null;
@@ -445,6 +440,7 @@ public class StatisController extends GenericController {
 	 * @throws F3BException
 	 */
 	public void ExInserisciStatRisSies(Vector aStatVect) throws F3BException {
+
 		Connection lConn = null;
 		StatRisSiesDAO lStaDao = null;
 
@@ -485,29 +481,22 @@ public class StatisController extends GenericController {
 	 */
 	public Vector<IspAttivitaMagistratiModel> ExRiepilogoGeneraleAttivita(int aAnnoIni, int aAnnoFin)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspAttivitaMagistratiModel> lVect = new Vector<>();
 		IspAttivitaMagistratiSqlDAO lIspDao = null;
 
 		try {
-
 			lConn = getDBConnection();
-
 			for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) {
-
 				try {
-
 					lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
-
 					lIspDao.ricercaRiepilogoGeneraleAttivita(aAnno);
-
 					lIspDao.start();
-
 					while (lIspDao.next()) {
 						lVect.add(
 								(IspAttivitaMagistratiModel) lIspDao.getModelAttivita("RIEPILOGO GENERALE"));
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -518,7 +507,6 @@ public class StatisController extends GenericController {
 					cleanup(lIspDao);
 				}
 			}
-
 		} finally {
 			cleanup(lConn);
 		}
@@ -540,29 +528,22 @@ public class StatisController extends GenericController {
 	 */
 	public Vector ExAttivitaMagistrato(int aAnnoIni, int aAnnoFin, MagistratoModel modMag, Vector lVect)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		IspAttivitaMagistratiSqlDAO lIspDao = null;
 
 		try {
-
 			lConn = getDBConnection();
-
 			for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) {
-
 				try {
-
 					lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
-
 					lIspDao.ricercaAttivitaMagistrato(aAnno, modMag.getCodMagistrato());
-
 					lIspDao.start();
-
 					while (lIspDao.next()) {
 						lVect.add(lIspDao.getModelAttivitaCodMag(modMag.getCognome() + " " + modMag.getNome(),
 								modMag.getCodMagistrato()));
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -573,7 +554,6 @@ public class StatisController extends GenericController {
 					cleanup(lIspDao);
 				}
 			}
-
 		} finally {
 			cleanup(lConn);
 		}
@@ -593,21 +573,17 @@ public class StatisController extends GenericController {
 	 */
 	public Vector<IspTempiModel> ExRicercaRiepilogoGeneraleTempi(int aAnnoIni, int aAnnoFin, int tipo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<IspTempiModel> lVect = new Vector<>();
 		IspTempiSqlDAO lIspDao = null;
 
 		try {
-
 			lConn = getDBConnection();
-
 			for (int aAnno = aAnnoIni; aAnno < aAnnoFin + 1; aAnno++) {
-
 				try {
-
 					lIspDao = new IspTempiSqlDAO(lConn);
-
 					if (tipo == 1)
 						lIspDao.ricercaRiepilogoGeneraleTempiRicezioneIscrizione(aAnno);
 					else if (tipo == 2)
@@ -616,13 +592,10 @@ public class StatisController extends GenericController {
 						lIspDao.ricercaRiepilogoGeneraleTempiGiudicatoIscrizione(aAnno);
 					else if (tipo == 4)
 						lIspDao.ricercaRiepilogoGeneraleTempiIscrizioneEmissione(aAnno);
-
 					lIspDao.start();
-
 					while (lIspDao.next()) {
 						lVect.add((IspTempiModel) lIspDao.getModel());
 					}
-
 				} catch (DAOException daoEx) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
@@ -633,7 +606,6 @@ public class StatisController extends GenericController {
 					cleanup(lIspDao);
 				}
 			}
-
 		} finally {
 			cleanup(lConn);
 		}
@@ -652,6 +624,7 @@ public class StatisController extends GenericController {
 	 */
 	public Vector<IspTempiIscrizioneModel> ExRicercaDettaglioTempiIscrizione(int tipo, int intervallo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspTempiIscrizioneModel> lIspVect = new Vector<>();
 		IspTempiIscrizioneDAO lIspDao = null;
@@ -701,6 +674,7 @@ public class StatisController extends GenericController {
 	 */
 	public Vector<IspTempiRicezioneModel> ExRicercaDettaglioTempiRicezione(int intervallo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspTempiRicezioneModel> lIspVect = new Vector<>();
 		IspTempiRicezioneDAO lIspDao = null;
@@ -733,6 +707,7 @@ public class StatisController extends GenericController {
 	}
 
 	public Vector ExRicercaDettaglioTempiEmissione(int intervallo, String codMag) throws F3BException {
+
 		Connection lConn = null;
 		Vector lVect = new Vector();
 		IspTempiEmissioneSqlDAO lIspDao = null;
@@ -907,7 +882,6 @@ public class StatisController extends GenericController {
 		// row = sheet.createRow(nRow);
 		// setCell(row, 0, "TOTALE GENERALE", csBold);
 		// setFormulaCell(row, 1, "SUM(B" + (rifRow + 1) + ":B" + (nRow - 1) + ")", csBold);
-
 	}
 
 	/**
@@ -926,13 +900,6 @@ public class StatisController extends GenericController {
 	 */
 	public void ExCreateDettagliProcedimenti(Vector aIspModVect, HSSFWorkbook wb, UfficioModel uffUteConnesso,
 			String nomeFoglio, String UffScelto) throws F3BException {
-
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("Inizio ExCreateDettagliProcedimenti");
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("aIspModVect.size() = "+aIspModVect.size());
 
 		// Stile della cella vuoto
 		HSSFCellStyle csNull = wb.createCellStyle();
@@ -1236,9 +1203,6 @@ public class StatisController extends GenericController {
 		nRow++;
 		// formula = totGen.substring(0, totGen.length() - 1) + ")";
 		formula = totGenNum + "";
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug(" nRow = "+nRow);
 		setRowTotaliProvvedimenti(sheet, nRow, "TOTALE GENERALE", csBoldRight, csNull, formula);
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -1486,9 +1450,7 @@ public class StatisController extends GenericController {
 				// ------>
 				else {
 					Iterator itx2 = VTotaliMotiviMag.iterator();
-
 					while (itx2.hasNext()) {
-
 						IspAttivitaMagistratiModel TotMotMod2 = (IspAttivitaMagistratiModel) itx2.next();
 
 						if (lMod.getDescrMagistrato().equals("MAGISTRATO NULLO")) {
@@ -1508,17 +1470,12 @@ public class StatisController extends GenericController {
 									}
 								}
 							}
-
 						}
 					}
 				}
-
 				setCell(row, nColAnno, totamoti, cs);
-
 			}
-
 			// }
-
 			// NGG - END
 		}
 
@@ -1897,7 +1854,6 @@ public class StatisController extends GenericController {
 		// le somme parziali e generali
 		nColAnno++;
 		nRow = setTotaliTempi(sheet, csBold, csBoldCenter, nRow, nRowAnno, nColAnno);
-
 	}
 
 	/**
@@ -2409,24 +2365,13 @@ public class StatisController extends GenericController {
 	}
 
 	private String getStringaSomma(int nRow1, int nCol1, int nRow2, int nCol2) {
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug(getClass().getPackage().getName() + ".getStringaSomma : inizio");
 
 		CellReference cellRef1 = new CellReference(nRow1, nCol1);
 		CellReference cellRef2 = new CellReference(nRow2, nCol2);
 
 		String formula = "SUM(" + cellRef1.formatAsString() + ":" + cellRef2.formatAsString() + ")";
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug( "formula : "+ formula );
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug(getClass().getPackage().getName() + ".getStringaSomma : fine");
-
 		return formula;
-
 	}
 
 	// NGG - Nuova somma Totale Tipologie
@@ -2442,15 +2387,7 @@ public class StatisController extends GenericController {
 
 		formula += ")";
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug( "-----AMBROS ---------------------formula : "+ formula );
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug(getClass().getPackage().getName() + ".getStringaSomma : fine");
-
 		return formula;
-
 	}
 
 	private int setIntestazione(HSSFSheet sheet, UfficioModel uffUteConnesso, HSSFCellStyle csNull) {
@@ -2476,7 +2413,6 @@ public class StatisController extends GenericController {
 	}
 
 	// Duplico setIntestazione per NGG Statistiche SIEP
-
 	private int setIntestazione(HSSFSheet sheet, UfficioModel uffUteConnesso, HSSFCellStyle csNull,
 			String DescUffIntesta) {
 
@@ -2674,13 +2610,6 @@ public class StatisController extends GenericController {
 		return cell;
 	}
 
-	// private HSSFCell setNumericCell(HSSFRow row, int nCol, String value) {
-	//
-	// HSSFCell cell = row.createCell(nCol, HSSFCell.CELL_TYPE_NUMERIC);
-	// cell.setCellValue(value);
-	// return cell;
-	// }
-
 	private HSSFCell setCellRichText(HSSFRow row, int nCol, HSSFRichTextString value, HSSFCellStyle cs) {
 
 		HSSFCell cell = row.createCell(nCol);
@@ -2710,15 +2639,14 @@ public class StatisController extends GenericController {
 	}
 
 	private HSSFCell setCell(HSSFRow row, int nCol, String value) {
+
 		HSSFCell cell = row.createCell(nCol);
 		cell.setCellValue(value);
 
 		return cell;
 	}
 
-	// /
 	// STATISTICHE SIUS
-	// /
 	/**
 	 * Crea il foglio excel per il dettaglio dei tempi emissione
 	 *
@@ -2747,6 +2675,7 @@ public class StatisController extends GenericController {
 			Vector aElencoFascNoRelatore, Vector aStatisticheRelatori, String aDescOggetto,
 			CancelleriaAssegnatariaModel aCancAss, String aFiltroCollab, String aFiltroPosGiurid)
 			throws F3BException {
+
 		int numCol = 0;
 
 		boolean isAggregato = false;
@@ -2970,11 +2899,11 @@ public class StatisController extends GenericController {
 		if (aElencoFascNoRelatore != null) {
 			creaFoglioFascicoliPriviDiRelatore(wb, uffUteConnesso, lTitolo1, aElencoFascNoRelatore, dataFin);
 		}
-
 	}
 
 	private int scriviAggregato(Vector aVect, HSSFSheet aSheet, int aNumRowRow, HSSFCellStyle aCsCenter)
 			throws F3BException {
+
 		int numCol;
 		HSSFRow row;
 		int lSizeVect = aVect.size();
@@ -3042,6 +2971,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioDettaglioOggetti(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, Date adataIni, String aDescOggetto) {
+
 		int numCol = 0;
 		IspEstrazioneOggettiModel lProcEstrModel = null;
 
@@ -3156,7 +3086,6 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++, "si", csCenter);
 			}
 		}
-
 	}
 
 	/**
@@ -3175,6 +3104,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioDettaglioOggettiDelMagistrato(HSSFWorkbook wb, UfficioModel aUuffUteConnesso,
 			String aTitolo, Vector aElencoProc, Date adataIni) {
+
 		int numCol = 0;
 		IspEstrazioneOggettiModel lProcEstrModel = null;
 
@@ -3305,6 +3235,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioFascicoliPriviDiRelatore(HSSFWorkbook wb, UfficioModel aUuffUteConnesso,
 			String aTitolo, Vector aElencoProcNoRel, Date adataFine) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPriviDiRelatore : inizio");
@@ -3431,13 +3362,11 @@ public class StatisController extends GenericController {
 					DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getMotivoProvvedimento(),
 							lProcEstrModel.getCodOggettoTenore()),
 					csCenter);
-
 		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPriviDiRelatore : fine");
-
 	}
 
 	/**
@@ -3453,9 +3382,8 @@ public class StatisController extends GenericController {
 	 * @param aDescOggetto
 	 */
 	private void creaFoglioTotaliPerRelatore(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
-			Vector aTotaliRelatore, Date adataIni) throws F3BException
+			Vector aTotaliRelatore, Date adataIni) throws F3BException {
 
-	{
 		int numCol = 0;
 
 		HSSFSheet sheet = wb.createSheet("Totali per magistrato");
@@ -3604,6 +3532,7 @@ public class StatisController extends GenericController {
 			Date dataFin, String aRelatore, Vector aElencoProc, String aDescOggetto,
 			CancelleriaAssegnatariaModel aCancAss, String aFiltroCollab, Vector... aVectors)
 			throws F3BException {
+
 		int numCol = 0;
 
 		HSSFCellStyle csNull = wb.createCellStyle();
@@ -3774,6 +3703,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioDettaglioTempi(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, String aDescOggetto) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("######## creaFoglioDettaglioTempi - START ####### ");
@@ -3895,8 +3825,6 @@ public class StatisController extends GenericController {
 	}
 
 	/**
-	 *
-	 *
 	 * @param wb
 	 * @param aUuffUteConnesso
 	 * @param aTitolo
@@ -3905,6 +3833,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioDettaglioGiorniIntercorsi(HSSFWorkbook wb, UfficioModel aUuffUteConnesso,
 			String aTitolo, Vector<IspProcIntervalliModel> aElencoProc, String aDescOggetto) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("####### creaFoglioDettaglioGiorniIntercorsi START ########");
@@ -4029,8 +3958,9 @@ public class StatisController extends GenericController {
 			lCodMagistrato = (lProcEstrModel.getDescrMagistrato() != null)
 					? lProcEstrModel.getDescrMagistrato()
 					: "-";
-            // COLLAUDO 11.3 (TERZA SESSIONE): INTEGRO LA STRING 'ESPERTO' SE TRATTASI DI UN MAGISTRATO ESPERTO
-			if(lCodMagistrato != null && lProcEstrModel.getCodMagistrato().contains("ESPERTO")){	
+			// COLLAUDO 11.3 (TERZA SESSIONE): INTEGRO LA STRING 'ESPERTO' SE TRATTASI DI UN MAGISTRATO
+			// ESPERTO
+			if (lCodMagistrato != null && lProcEstrModel.getCodMagistrato().contains("ESPERTO")) {
 				lCodMagistrato = lCodMagistrato + " (ESPERTO) ";
 			}
 
@@ -4077,6 +4007,7 @@ public class StatisController extends GenericController {
 	public void creaFoglioElencoProvvedimenti(HSSFWorkbook wb, String aModalitaRicerca,
 			UfficioModel aUuffUteConnesso, String aCriterio1, String aCriterio2, String aCriterio3,
 			String aCriterio4, Vector aElencoProvv) throws F3BException {
+
 		int numCol = 0;
 		EveFasGepSogProvModel lProvvedimento = null;
 
@@ -4256,6 +4187,7 @@ public class StatisController extends GenericController {
 	}
 
 	public List ExRicercaScadenzarioSimeone(ScadenzarioModel aScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		List lScadenzari = new ArrayList();
@@ -4296,6 +4228,7 @@ public class StatisController extends GenericController {
 
 	public void ExCreateReportScadenzarioSimeone(ScadenzarioModel aScaMod, UfficioModel aUffMod,
 			HSSFWorkbook wb) throws F3BException {
+
 		// Stile della cella vuoto
 		HSSFCellStyle csNull = wb.createCellStyle();
 
@@ -4421,10 +4354,6 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++, StringUtils.toStringJSP(lSca.getDescrStatoNotifica()), csCenter);
 			}
 		}
-
-		/*
-		 * // Aggiusta il contenuto delle colonne for (int i = 1; i < 7; i++) { }
-		 */
 	}
 
 	/**
@@ -4441,6 +4370,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioFascicoliPendenti(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, Date adataFine) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendenti : inizio");
@@ -4550,7 +4480,6 @@ public class StatisController extends GenericController {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendenti : fine");
-
 	}
 
 	/**
@@ -4565,9 +4494,9 @@ public class StatisController extends GenericController {
 	 * @param aElencoProc
 	 * @param adataFine
 	 */
-
 	private void creaFoglioContenutiPendenti(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, Date adataFine) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioContenutiPendenti : inizio");
@@ -4752,7 +4681,6 @@ public class StatisController extends GenericController {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioContenutiPendenti : fine");
-
 	}
 
 	/**
@@ -4769,6 +4697,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioOggettiPendenti(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, Date adataFine) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiPendenti : inizio");
@@ -4904,7 +4833,6 @@ public class StatisController extends GenericController {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliPendentiPerOggetto : fine");
-
 	}
 
 	/**
@@ -4919,6 +4847,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioOggettiCancellati(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, Date adataFine) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioOggettiCancellati : inizio");
@@ -5033,6 +4962,7 @@ public class StatisController extends GenericController {
 	 */
 	private void creaFoglioFascicoliUnificati(HSSFWorkbook wb, UfficioModel aUuffUteConnesso, String aTitolo,
 			Vector aElencoProc, Date adataFine) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliUnificati : inizio");
@@ -5136,12 +5066,12 @@ public class StatisController extends GenericController {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getPackage().getName() + ".creaFoglioFascicoliUnificati : fine");
-
 	}
 
 	// AMBROS L78/2013
 	public void ExCreateReportTrasmessiL78del2013(ScadenzarioModel aScaMod, UfficioModel aUffMod,
 			HSSFWorkbook wb, Boolean attivi, Boolean noattivi, String uffutecoll) throws F3BException {
+
 		// Stile della cella vuoto
 		HSSFCellStyle csNull = wb.createCellStyle();
 
@@ -5260,11 +5190,11 @@ public class StatisController extends GenericController {
 
 			setCell(row, numCol++, StringUtils.toStringJSP(mStatoProc.getDescrStatoProcedimento()), csCenter);
 		}
-
 	} // chiude ExCreateReportTrasmessiL78del2013
 
 	public List ExRicercaTrasmessiL78del2013(ScadenzarioModel aScadenzario, String uffutecol, Boolean attivi,
 			Boolean noattivi) throws F3BException {
+
 		Connection lConn = null;
 
 		List lTrasmessi = new ArrayList();
@@ -5296,13 +5226,14 @@ public class StatisController extends GenericController {
 		}
 
 		return lTrasmessi;
-
 	} // chiude ExRicercaTrasmessiL78del2013
 
 	public Vector<IspAttivitaMagistratiModel> ExCercaMotivi(String Tipologia) throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspAttivitaMagistratiModel> lVect = new Vector<>();
 		IspAttivitaMagistratiSqlDAO lIspDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
@@ -5312,7 +5243,6 @@ public class StatisController extends GenericController {
 			while (lIspDao.next()) {
 				lVect.add((IspAttivitaMagistratiModel) lIspDao.getModelMotivo());
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -5325,32 +5255,17 @@ public class StatisController extends GenericController {
 		return lVect;
 	}
 
-	/*
-	 * public int ExTotaleMotivi(String CodMotivo, int Anno) throws F3BException { int sommaMot=0; Connection
-	 * lConn = null; IspAttivitaMagistratiSqlDAO lIspDao = null; try { lConn = getDBConnection(); lIspDao =
-	 * new IspAttivitaMagistratiSqlDAO(lConn); lIspDao.ricercaTotaleMotivo(CodMotivo, Anno ); lIspDao.start();
-	 * lIspDao.next(); sommaMot=lIspDao.getTotale();
-	 *
-	 * } // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog } catch
-	 * (DAOException daoEx) { siesLogger.error("DAOException: " + daoEx); throw new F3BException(
-	 * "StatisController.ExTotaleMotivi: Non posso leggere : " + daoEx); } catch (SQLException sqe) { // [FT]
-	 * - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-	 * siesLogger.error("SQLException: " + sqe); throw new F3BException(
-	 * "StatisController.ExTotaleMotivi: Non posso leggere  : " + sqe);
-	 *
-	 * } finally { cleanup(lConn); cleanup(lIspDao); } return sommaMot; }
-	 */
-
 	// NGG
 	public Vector<IspAttivitaMagistratiModel> ExTotaleMotiviAnno(int annoini, int annofin)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspAttivitaMagistratiModel> lVect = new Vector<>();
 		IspAttivitaMagistratiSqlDAO lIspDao = null;
+
 		try {
 			lConn = getDBConnection();
 			for (int aAnno = annoini; aAnno < annofin + 1; aAnno++) {
-
 				try {
 					lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
 					lIspDao.ricercaTotaleMotivoPerAnno(aAnno);
@@ -5368,7 +5283,6 @@ public class StatisController extends GenericController {
 					cleanup(lIspDao);
 				}
 			}
-
 		} finally {
 			cleanup(lConn);
 		}
@@ -5378,13 +5292,13 @@ public class StatisController extends GenericController {
 
 	public Vector<IspAttivitaMagistratiModel> ExTotaleMotiviMagAnno(int annoini, int annofin)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspAttivitaMagistratiModel> lVect = new Vector<>();
 		IspAttivitaMagistratiSqlDAO lIspDao = null;
 		try {
 			lConn = getDBConnection();
 			for (int aAnno = annoini; aAnno < annofin + 1; aAnno++) {
-
 				try {
 					lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
 					lIspDao.ricercaTotaleMotivoPerMagistratoAnno(aAnno);
@@ -5402,10 +5316,7 @@ public class StatisController extends GenericController {
 					cleanup(lIspDao);
 				}
 			}
-
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 
@@ -5413,9 +5324,11 @@ public class StatisController extends GenericController {
 	}
 
 	public Vector<IspAttivitaMagistratiModel> ExElencoMotiviMagAnno(String CodMag) throws F3BException {
+
 		Connection lConn = null;
 		Vector<IspAttivitaMagistratiModel> lVect = new Vector<>();
 		IspAttivitaMagistratiSqlDAO lIspDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lIspDao = new IspAttivitaMagistratiSqlDAO(lConn);
@@ -5453,9 +5366,6 @@ public class StatisController extends GenericController {
 	public void ExCreateAttivitaMagistratiElenco(HSSFWorkbook wb, UfficioModel uffUteConnesso, String dataIni,
 			String dataFin, String descIntesta, Vector VElencoMotivi, MagistratoModel aMagistratoMod)
 			throws F3BException {
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug("VElencoMotivi = "+VElencoMotivi);
 
 		HSSFCellStyle csNull = wb.createCellStyle();
 
@@ -5670,6 +5580,7 @@ public class StatisController extends GenericController {
 	public void creaFoglioElencoRicorsiImpugnazioni(HSSFWorkbook wb, UfficioModel aUffUtenteConnessoModel,
 			String aCriterio1, String aCriterio2, String aCriterio3, Vector aElencoProvv)
 			throws F3BException {
+
 		int numCol = 0;
 		EveFasGepSogProvModel lProvvedimentoModel = null;
 		ImpugnazioneDAO lImpugnazioneDao = null;
@@ -5688,12 +5599,12 @@ public class StatisController extends GenericController {
 		BigDecimal lID;
 		Iterator lIterator;
 		int lProgressivo;
-		DocumentoAllegatoDAO lDocumentoAllegatoDao;
+		DocumentoAllegatoDAO lDocumentoAllegatoDao = null;
 		Collection lDocumentoAllegatoModels;
 		DocumentoAllegatoModel lDocumentoAllegatoModel;
-		SoggettoDAO lSoggettoDao;
+		SoggettoDAO lSoggettoDao = null;
 		Collection lSoggettoModels;
-		Connection lDBConnection;
+		Connection lDBConnection = null;
 
 		int lRow = 0;
 
@@ -5772,216 +5683,230 @@ public class StatisController extends GenericController {
 		setCell(lRowExcel, numCol++, "Stato Esecuzione", csCenter);
 		setCell(lRowExcel, numCol++, "Stato", csCenter);
 
-		lDBConnection = getDBConnection();
+		try {
+			lDBConnection = getDBConnection();
 
-		lImpugnazioneDao = new ImpugnazioneDAO(lDBConnection);
+			lImpugnazioneDao = new ImpugnazioneDAO(lDBConnection);
 
-		lIterator = aElencoProvv.iterator();
-		lProgressivo = 0;
+			lIterator = aElencoProvv.iterator();
+			lProgressivo = 0;
 
-		// inizio ciclo di scrittura dei dati
-		while (lIterator.hasNext()) {
-			numCol = 0;
+			// inizio ciclo di scrittura dei dati
+			while (lIterator.hasNext()) {
+				numCol = 0;
 
-			lProvvedimentoModel = (EveFasGepSogProvModel) lIterator.next();
+				lProvvedimentoModel = (EveFasGepSogProvModel) lIterator.next();
 
-			// I dati dell-Impugnazione vengono prelevati dal model popolato con
-			// i dati provenienti dallo specifico DAO filtrato su ID_IMPUGNAZIONE
-			// il metodo setCondizioneUpdate viene utilizzato IMPROPRIAMENTE per poter
-			// impostare un filtro sul DAO.
-			lID = lProvvedimentoModel.getImpugnazione().getIdImpugnazione();
-			lImpugnazioneDao.setCondizioneUpdate(lID);
-			lImpugnazioneModel = null;
-			try {
-				lImpugnazioneModel = (ImpugnazioneModel) lImpugnazioneDao.getModelByKey();
-			} catch (DAOException e) {
-				throw new F3BException("creaFoglioElencoRicorsiImpugnazioni: ricerca Impugnazione " + e);
-			}
-
-			if (lImpugnazioneModel != null) {
-				lRowExcel = sheet.createRow(lRow++);
-
-				// I dati del Soggetto vengno prelevati dal model popolato con i dati
-				// provenenti dallo specifico DAO filtrato su ID_SOGGETTO
-				// si usa IMPROPRIAMENTE il metod selCondizioneUpdate per impostare la condizione
-				// di filtro
-				lDataDeposito = "";
-				lGeneralitaSoggetto = "";
-				// lTipoProvvedimento = "";
-				lLuogoNascita = "";
-				lIdSoggetto = lProvvedimentoModel.getSoggetto().getIdSoggetto();
-				lSoggettoModel = null;
+				// I dati dell-Impugnazione vengono prelevati dal model popolato con
+				// i dati provenienti dallo specifico DAO filtrato su ID_IMPUGNAZIONE
+				// il metodo setCondizioneUpdate viene utilizzato IMPROPRIAMENTE per poter
+				// impostare un filtro sul DAO.
+				lID = lProvvedimentoModel.getImpugnazione().getIdImpugnazione();
+				lImpugnazioneDao.setCondizioneUpdate(lID);
+				lImpugnazioneModel = null;
 				try {
-					lSoggettoDao = new SoggettoDAO(lDBConnection);
-					lSoggettoDao.selCondizioneUpdate(lIdSoggetto);
-					lSoggettoModels = lSoggettoDao.getModels();
-					if (lSoggettoModels != null) {
-						if (lSoggettoModels.size() > 0) {
-							lSoggettoModel = (SoggettoModel) lSoggettoModels.iterator().next();
-						}
-					}
-				} catch (Exception e) {
-					throw new F3BException("creaFoglioElencoRicorsiImpugnazioni: ricerca Soggetto " + e);
-				}
-
-				if (lSoggettoModel != null) {
-					// se il Soggetto e' italiano si riporta la provincia di nascita, altrimenti lo stato di
-					// nascita
-					if (lSoggettoModel.getCodStatoNascita().compareTo("039") == 0) {
-						lLuogoNascita = lSoggettoModel.getDescrComuneNascita() + "("
-								+ lSoggettoModel.getCodProvinciaNascita() + ")";
-					} else {
-						lLuogoNascita = lSoggettoModel.getDescComuneNascitaEstero() + "("
-								+ lSoggettoModel.getDescrStatoNascita() + ")";
-					}
-
-					lGeneralitaSoggetto = lSoggettoModel.getNome() + " " + lSoggettoModel.getCognome() + "\n"
-							+ DateUtils.getDateToString(lSoggettoModel.getDataNascita(), "dd/MM/yyyy") + " "
-							+ lLuogoNascita;
-				}
-
-				// Progr. +
-				setCell(lRowExcel, numCol++, StringUtils.intZerotoString(++lProgressivo), csCenter);
-
-				// N.ro Ricorso Impugnazione +
-				setCell(lRowExcel, numCol++,
-						lImpugnazioneModel.getAnnoS7() + "/" + lImpugnazioneModel.getProgrS7(), csCenter);
-
-				// Data Inserimento +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DateUtils
-								.getDateToString(lImpugnazioneModel.getDataInserimento(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Procedimento SIUS +
-				setCell(lRowExcel, numCol++, lProvvedimentoModel.getFascicoloSius().getChiaveAnno() + "/"
-						+ lProvvedimentoModel.getFascicoloSius().getChiaveProgr(), csCenter);
-
-				// Generalita' Soggetto +
-				setCell(lRowExcel, numCol++, lGeneralitaSoggetto, csCenter);
-
-				// Tipo Provv. +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
-								DecodificheManager.getInstance().getTipoProvvedimenti(),
-								lProvvedimentoModel.getEvento().getCodTipoProvvedimento())),
-						csCenter);
-
-				// Contenuto Atto +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(lProvvedimentoModel.getEvento().getDescrMotivo()), csCenter);
-
-				// Esito Provvedimento +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(lProvvedimentoModel.getEvento().getDescrEsito()), csCenter);
-
-				// Data Emissione +
-				setCell(lRowExcel, numCol++, StringUtils.cStrForJS(DateUtils
-						.getDateToString(lProvvedimentoModel.getEvento().getDataEmissione(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Data Deposito
-				// la data deposito viene prelevata dal campo DATA_EMISSIONE del documento allegato
-				// E' necessario popolare il model del DocumentoAllegato partendo da ID_EVENTO
-				lDataDeposito = "";
-				lID = lProvvedimentoModel.getEvento().getIdEvento();
-				lDocumentoAllegatoDao = new DocumentoAllegatoDAO(lDBConnection);
-				lDocumentoAllegatoDao.setCondizioneByEve(lID);
-				try {
-					lDocumentoAllegatoModels = lDocumentoAllegatoDao.getModels();
-					if (lDocumentoAllegatoModels != null) {
-						if (lDocumentoAllegatoModels.size() > 0) {
-							lDocumentoAllegatoModel = (DocumentoAllegatoModel) lDocumentoAllegatoModels
-									.iterator().next();
-							lDataDeposito = DateUtils.getDateToString(
-									lDocumentoAllegatoModel.getDataEmissione(), "dd/MM/yyyy");
-						}
-					}
+					lImpugnazioneModel = (ImpugnazioneModel) lImpugnazioneDao.getModelByKey();
 				} catch (DAOException e) {
-					throw new F3BException(
-							"creaFoglioElencoRicorsiImpugnazioni: ricerca Documento Allegato " + e);
+					throw new F3BException("creaFoglioElencoRicorsiImpugnazioni: ricerca Impugnazione " + e);
 				}
-				setCell(lRowExcel, numCol++, StringUtils.cStrForJS(lDataDeposito), csCenter);
 
-				// Tipo Impugnazione +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
-								DecodificheManager.getInstance().getTipoRicorso(),
-								lImpugnazioneModel.getCodTipoImpugnazione())),
-						csCenter);
+				if (lImpugnazioneModel != null) {
+					lRowExcel = sheet.createRow(lRow++);
 
-				// Presentato da +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
-								DecodificheManager.getInstance().getSoggettoImpugnante(),
-								lImpugnazioneModel.getSoggettoImpugnante())),
-						csCenter);
-
-				// Data Imp. +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(
-								DateUtils.getDateToString(lImpugnazioneModel.getDataRicorso(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Data arr. Cancelleria +
-				setCell(lRowExcel, numCol++, StringUtils.cStrForJS(DateUtils
-						.getDateToString(lImpugnazioneModel.getDataArrivoCancelleria(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Data Trasmissione +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DateUtils
-								.getDateToString(lImpugnazioneModel.getDataTrasmissioneAtti(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Aut. Destinataria +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
-								DecodificheManager.getInstance().getTipoUfficio(),
-								lImpugnazioneModel.getCodAutoritaDestinataria())),
-						csCenter);
-
-				// Data Decisione +
-				setCell(lRowExcel, numCol++, StringUtils.cStrForJS(
-						DateUtils.getDateToString(lImpugnazioneModel.getDataDecisione(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Tenore Decisione +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
-								DecodificheManager.getInstance().getTenoreDecisioneRicorso(),
-								lImpugnazioneModel.getCodTenoreDecisione())),
-						csCenter);
-
-				// Data Rest. Atti +
-				setCell(lRowExcel, numCol++,
-						StringUtils.cStrForJS(DateUtils
-								.getDateToString(lImpugnazioneModel.getDataRestituzioneAtti(), "dd/MM/yyyy")),
-						csCenter);
-
-				// Stato Esecuzione +
-				lStatoEsecuzione = "";
-				if (lImpugnazioneModel.getFlagSospEsec() != null) {
-					if (lImpugnazioneModel.getFlagSospEsec().compareTo("S") == 0) {
-						lStatoEsecuzione = "Esecuzione sospesa";
+					// I dati del Soggetto vengno prelevati dal model popolato con i dati
+					// provenenti dallo specifico DAO filtrato su ID_SOGGETTO
+					// si usa IMPROPRIAMENTE il metod selCondizioneUpdate per impostare la condizione
+					// di filtro
+					lDataDeposito = "";
+					lGeneralitaSoggetto = "";
+					// lTipoProvvedimento = "";
+					lLuogoNascita = "";
+					lIdSoggetto = lProvvedimentoModel.getSoggetto().getIdSoggetto();
+					lSoggettoModel = null;
+					try {
+						lSoggettoDao = new SoggettoDAO(lDBConnection);
+						lSoggettoDao.selCondizioneUpdate(lIdSoggetto);
+						lSoggettoModels = lSoggettoDao.getModels();
+						if (lSoggettoModels != null) {
+							if (lSoggettoModels.size() > 0) {
+								lSoggettoModel = (SoggettoModel) lSoggettoModels.iterator().next();
+							}
+						}
+					} catch (Exception e) {
+						throw new F3BException("creaFoglioElencoRicorsiImpugnazioni: ricerca Soggetto " + e);
 					}
-				}
-				setCell(lRowExcel, numCol++, lStatoEsecuzione, csCenter);
 
-				// Stato +
-				lStato = "";
-				if (lImpugnazioneModel.getFlagAnnullamento() != null) {
-					if (lImpugnazioneModel.getFlagAnnullamento().compareTo("S") == 0) {
-						lStato = "ANNULLATO";
+					if (lSoggettoModel != null) {
+						// se il Soggetto e' italiano si riporta la provincia di nascita, altrimenti lo stato
+						// di
+						// nascita
+						if (lSoggettoModel.getCodStatoNascita().compareTo("039") == 0) {
+							lLuogoNascita = lSoggettoModel.getDescrComuneNascita() + "("
+									+ lSoggettoModel.getCodProvinciaNascita() + ")";
+						} else {
+							lLuogoNascita = lSoggettoModel.getDescComuneNascitaEstero() + "("
+									+ lSoggettoModel.getDescrStatoNascita() + ")";
+						}
+
+						lGeneralitaSoggetto = lSoggettoModel.getNome() + " " + lSoggettoModel.getCognome()
+								+ "\n"
+								+ DateUtils.getDateToString(lSoggettoModel.getDataNascita(), "dd/MM/yyyy")
+								+ " " + lLuogoNascita;
 					}
+
+					// Progr. +
+					setCell(lRowExcel, numCol++, StringUtils.intZerotoString(++lProgressivo), csCenter);
+
+					// N.ro Ricorso Impugnazione +
+					setCell(lRowExcel, numCol++,
+							lImpugnazioneModel.getAnnoS7() + "/" + lImpugnazioneModel.getProgrS7(), csCenter);
+
+					// Data Inserimento +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DateUtils
+									.getDateToString(lImpugnazioneModel.getDataInserimento(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Procedimento SIUS +
+					setCell(lRowExcel, numCol++, lProvvedimentoModel.getFascicoloSius().getChiaveAnno() + "/"
+							+ lProvvedimentoModel.getFascicoloSius().getChiaveProgr(), csCenter);
+
+					// Generalita' Soggetto +
+					setCell(lRowExcel, numCol++, lGeneralitaSoggetto, csCenter);
+
+					// Tipo Provv. +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
+									DecodificheManager.getInstance().getTipoProvvedimenti(),
+									lProvvedimentoModel.getEvento().getCodTipoProvvedimento())),
+							csCenter);
+
+					// Contenuto Atto +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(lProvvedimentoModel.getEvento().getDescrMotivo()),
+							csCenter);
+
+					// Esito Provvedimento +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(lProvvedimentoModel.getEvento().getDescrEsito()), csCenter);
+
+					// Data Emissione +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DateUtils.getDateToString(
+									lProvvedimentoModel.getEvento().getDataEmissione(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Data Deposito
+					// la data deposito viene prelevata dal campo DATA_EMISSIONE del documento allegato
+					// E' necessario popolare il model del DocumentoAllegato partendo da ID_EVENTO
+					lDataDeposito = "";
+					lID = lProvvedimentoModel.getEvento().getIdEvento();
+					lDocumentoAllegatoDao = new DocumentoAllegatoDAO(lDBConnection);
+					lDocumentoAllegatoDao.setCondizioneByEve(lID);
+					try {
+						lDocumentoAllegatoModels = lDocumentoAllegatoDao.getModels();
+						if (lDocumentoAllegatoModels != null) {
+							if (lDocumentoAllegatoModels.size() > 0) {
+								lDocumentoAllegatoModel = (DocumentoAllegatoModel) lDocumentoAllegatoModels
+										.iterator().next();
+								lDataDeposito = DateUtils.getDateToString(
+										lDocumentoAllegatoModel.getDataEmissione(), "dd/MM/yyyy");
+							}
+						}
+					} catch (DAOException e) {
+						throw new F3BException(
+								"creaFoglioElencoRicorsiImpugnazioni: ricerca Documento Allegato " + e);
+					}
+					setCell(lRowExcel, numCol++, StringUtils.cStrForJS(lDataDeposito), csCenter);
+
+					// Tipo Impugnazione +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
+									DecodificheManager.getInstance().getTipoRicorso(),
+									lImpugnazioneModel.getCodTipoImpugnazione())),
+							csCenter);
+
+					// Presentato da +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
+									DecodificheManager.getInstance().getSoggettoImpugnante(),
+									lImpugnazioneModel.getSoggettoImpugnante())),
+							csCenter);
+
+					// Data Imp. +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DateUtils
+									.getDateToString(lImpugnazioneModel.getDataRicorso(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Data arr. Cancelleria +
+					setCell(lRowExcel, numCol++, StringUtils.cStrForJS(DateUtils
+							.getDateToString(lImpugnazioneModel.getDataArrivoCancelleria(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Data Trasmissione +
+					setCell(lRowExcel, numCol++, StringUtils.cStrForJS(DateUtils
+							.getDateToString(lImpugnazioneModel.getDataTrasmissioneAtti(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Aut. Destinataria +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
+									DecodificheManager.getInstance().getTipoUfficio(),
+									lImpugnazioneModel.getCodAutoritaDestinataria())),
+							csCenter);
+
+					// Data Decisione +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DateUtils
+									.getDateToString(lImpugnazioneModel.getDataDecisione(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Tenore Decisione +
+					setCell(lRowExcel, numCol++,
+							StringUtils.cStrForJS(DecodificheUtils.getDescbyCode(
+									DecodificheManager.getInstance().getTenoreDecisioneRicorso(),
+									lImpugnazioneModel.getCodTenoreDecisione())),
+							csCenter);
+
+					// Data Rest. Atti +
+					setCell(lRowExcel, numCol++, StringUtils.cStrForJS(DateUtils
+							.getDateToString(lImpugnazioneModel.getDataRestituzioneAtti(), "dd/MM/yyyy")),
+							csCenter);
+
+					// Stato Esecuzione +
+					lStatoEsecuzione = "";
+					if (lImpugnazioneModel.getFlagSospEsec() != null) {
+						if (lImpugnazioneModel.getFlagSospEsec().compareTo("S") == 0) {
+							lStatoEsecuzione = "Esecuzione sospesa";
+						}
+					}
+					setCell(lRowExcel, numCol++, lStatoEsecuzione, csCenter);
+
+					// Stato +
+					lStato = "";
+					if (lImpugnazioneModel.getFlagAnnullamento() != null) {
+						if (lImpugnazioneModel.getFlagAnnullamento().compareTo("S") == 0) {
+							lStato = "ANNULLATO";
+						}
+					}
+					setCell(lRowExcel, numCol++, lStato, csCenter);
 				}
-				setCell(lRowExcel, numCol++, lStato, csCenter);
 			}
+		} catch (Exception e) {
+			siesLogger.error(e.getMessage());
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSoggettoDao);
+			cleanup(lDocumentoAllegatoDao);
+			cleanup(lImpugnazioneDao);
+			cleanup(lDBConnection);
 		}
 	}
 
 	public void creaFoglioElencoProc(HSSFWorkbook aWb, UfficioModel aUfficioUtenteConnesso, String aTitolo,
 			Vector<EveFasGepSogProvModel> aElencoProc) {
+
 		HSSFSheet lSheet;
 		HSSFCellStyle lCellStyleNull;
 		HSSFCellStyle lCellStyleCenter;
@@ -6118,86 +6043,6 @@ public class StatisController extends GenericController {
 		siesLogger.info("######### creaFoglioElencoProc STOP ########");
 	}
 
-	/*
-	 * 20131222 - Da riutilizzare per funzionalita' successiva, prossimo requisito public HSSFWorkbook
-	 * creaFoglioProcFissatiNonDef(UfficioModel aUfficioUtenteConnesso, RicercaProcedimentoModel
-	 * aRicercaModel, Collection<EveFasGepSogProvPosGiuModel> aElenco) { HSSFWorkbook lWb = null; HSSFSheet
-	 * lSheet = null; HSSFCellStyle lCellStyleNull = null; HSSFCellStyle lCellStyleCenter = null; HSSFRow lRow
-	 * = null; Iterator lItx = null; int lContatore = 0; int lRowCounter = 0; EveFasGepSogProvPosGiuModel
-	 * lModel = null; String lPatternData = "dd/MM/yyyy"; String lBuffer = null; int lGiorni = 0;
-	 *
-	 * lWb = new HSSFWorkbook();
-	 *
-	 * lSheet = lWb.createSheet("Elenco Procedimenti"); lCellStyleNull = lWb.createCellStyle();
-	 *
-	 * //Intestazione del foglio excel lRowCounter = setIntestazione(lSheet, aUfficioUtenteConnesso,
-	 * lCellStyleNull); lRowCounter += 2;
-	 *
-	 * // Stampa filtri di ricerca if (aRicercaModel != null) { if
-	 * (aRicercaModel.getDataCameraConsiglioInizio() != null || aRicercaModel.getDataCameraConsiglioFine() !=
-	 * null) { lBuffer = "Procedimenti Iscritti"; if (aRicercaModel.getDataCameraConsiglioInizio() != null) {
-	 * lBuffer += " dal " + DateUtils.getDateToString(aRicercaModel.getDataCameraConsiglioInizio(),
-	 * lPatternData); } if (aRicercaModel.getDataCameraConsiglioFine() != null) { lBuffer += " al " +
-	 * DateUtils.getDateToString(aRicercaModel.getDataCameraConsiglioFine(), lPatternData); } lRow =
-	 * lSheet.createRow(lRowCounter); setCell(lRow, 0, lBuffer, lCellStyleNull); lRowCounter++; } if
-	 * (aRicercaModel.getDataIscrizioneInizio() != null || aRicercaModel.getDataIscrizioneFine() != null) {
-	 * lBuffer = "Procedimenti con Data Iscrizione"; if (aRicercaModel.getDataIscrizioneInizio() != null) {
-	 * lBuffer += " dal " + DateUtils.getDateToString(aRicercaModel.getDataIscrizioneInizio(), lPatternData);
-	 * } if (aRicercaModel.getDataIscrizioneFine() != null) { lBuffer += " al " +
-	 * DateUtils.getDateToString(aRicercaModel.getDataIscrizioneFine(), lPatternData); } lRow =
-	 * lSheet.createRow(lRowCounter); setCell(lRow, 0, lBuffer, lCellStyleNull); lRowCounter++; } if
-	 * (aRicercaModel.getCodPosizioneGiuridica() != null &&
-	 * aRicercaModel.getCodPosizioneGiuridica().compareTo("-") != 0) { lBuffer =
-	 * "Procedimenti con Posizione Giuridica : " + aRicercaModel.getDescrPosizioneGiuridica(); lRow =
-	 * lSheet.createRow(lRowCounter); setCell(lRow, 0, lBuffer, lCellStyleNull); lRowCounter++; } if
-	 * (aRicercaModel.getCodOggettoProcedimento() != null &&
-	 * aRicercaModel.getCodOggettoProcedimento().compareTo("-") != 0) { lBuffer = "Procedimenti relativi a : "
-	 * + aRicercaModel.getDescrOggettoProcedimento(); lRow = lSheet.createRow(lRowCounter); setCell(lRow, 0,
-	 * lBuffer, lCellStyleNull); lRowCounter++; } }
-	 *
-	 * lRow = lSheet.createRow(lRowCounter); setCell(lRow, 0,
-	 * "Elenco Procedimenti con Data Udienza Fissata non Definiti" , lCellStyleNull); lRowCounter += 2;
-	 *
-	 * // stile per celle col bordo con testo centrato lCellStyleCenter = getBordo4Lati(lWb);
-	 * lCellStyleCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	 * lCellStyleCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-	 * lCellStyleCenter.setWrapText(true);
-	 *
-	 * lRow = lSheet.createRow(lRowCounter++);
-	 *
-	 * lSheet.setColumnWidth( 0, 10 * 256); // Prog lSheet.setColumnWidth( 1, 15 * 256);
-	 * lSheet.setColumnWidth( 2, 35 * 256); lSheet.setColumnWidth( 3, 15 * 256); lSheet.setColumnWidth( 4, 15
-	 * * 256); lSheet.setColumnWidth( 5, 15 * 256);
-	 *
-	 * // Intestazione colonne setCell(lRow, 0, "Prog", lCellStyleCenter); setCell(lRow, 1,
-	 * "Procedimento SIUS", lCellStyleCenter); setCell(lRow, 2, "Generalita' Soggetto", lCellStyleCenter);
-	 * setCell(lRow, 3, "Data Iscrizione", lCellStyleCenter); setCell(lRow, 4, "Data Udienza",
-	 * lCellStyleCenter); setCell(lRow, 5, "N.ro giorni trascorsi", lCellStyleCenter);
-	 *
-	 * lItx = aElenco.iterator(); while (lItx.hasNext()) { lModel = (EveFasGepSogProvPosGiuModel) lItx.next();
-	 *
-	 * lContatore++; lRow = lSheet.createRow(lRowCounter++);
-	 *
-	 * setCell(lRow, 0, "" + lContatore, lCellStyleCenter);
-	 *
-	 * setCell(lRow, 1, "" + lModel.getFascicoloSius().getChiaveAnno() + "/" +
-	 * lModel.getFascicoloSius().getChiaveProgr(), lCellStyleCenter);
-	 *
-	 * setCell(lRow, 2, lModel.getFascicoloSius().getSoggetto().getCognome() + " " +
-	 * lModel.getFascicoloSius().getSoggetto().getNome(), lCellStyleCenter);
-	 *
-	 * setCell(lRow, 3, DateUtils.getDateToString(lModel.getGeneraleProcedimento().getDataCameraConsiglio(),
-	 * lPatternData), lCellStyleCenter);
-	 *
-	 * setCell(lRow, 4, DateUtils.getDateToString(lModel.getFascicoloSius().getDataInserimento(),
-	 * lPatternData), lCellStyleCenter);
-	 *
-	 * // calcolo dei giorni trascorsi tra la data di stampa e la data di iscrizione lGiorni =
-	 * DateUtils.getIntervallo(lModel.getFascicoloSius().getDataInserimento(), DateUtils.getSysDate());
-	 * setCell(lRow, 5, "" + lGiorni, lCellStyleCenter); }
-	 *
-	 * return lWb; }
-	 */
 	public HSSFWorkbook creaFoglioFoglioComplementare(UfficioModel aUfficioUtenteConnesso,
 			RicercaOrdinanzaModel aRicerca) throws F3BException {
 
@@ -6405,6 +6250,7 @@ public class StatisController extends GenericController {
 	 * @throws Exception
 	 */
 	private int getNumTipologieAttivita() throws F3BException {
+
 		int numRecord = 0;
 
 		Connection lConn = null;
@@ -6430,7 +6276,6 @@ public class StatisController extends GenericController {
 			cleanup(lConn);
 		}
 		return numRecord;
-
 	}
 
 	/**
@@ -7063,6 +6908,7 @@ public class StatisController extends GenericController {
 
 	private int elaboraSheetStatisticheFC(Vector<StatisticheFogliComplementariModel> dati, HSSFSheet sheet,
 			int nRow) {
+
 		Iterator<StatisticheFogliComplementariModel> it = dati.iterator();
 		while (it.hasNext()) {
 			StatisticheFogliComplementariModel model = it.next();
@@ -7078,6 +6924,7 @@ public class StatisController extends GenericController {
 	}
 
 	private HSSFCellStyle getBoldStyle(HSSFWorkbook wb) {
+
 		HSSFCellStyle boldStyle = wb.createCellStyle();
 		HSSFFont fontBold = wb.createFont();
 

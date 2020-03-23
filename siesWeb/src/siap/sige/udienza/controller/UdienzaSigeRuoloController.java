@@ -12,6 +12,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.Utils;
+import f3b.util.xml.TreeModel;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -50,11 +55,6 @@ import siap.sige.udienza.model.UdienzaSigeModel;
 import siap.sige.udienzaprocedimento.dao.UdienzaProcedimentoSigeDAO;
 import siap.sige.udienzaprocedimento.model.UdienzaProcedimentoSigeModel;
 import siap.sige.util.SIGELookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.Utils;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -69,7 +69,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -81,8 +81,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	/**
 	 * Funzione di ricerca delle udienze Sige. Si pone un limite al numero di occorrenze da cercare,
 	 * attraverso un parametro.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza della classe UdienzaSigeModel
 	 * @param aNumOccorrenze
@@ -92,6 +91,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	 *             propagazione dell'errore di eccezione.
 	 */
 	public Vector ExRicercaUdienza(UdienzaSigeModel aUdienzaSige, int aNumOccorrenze) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienzeSige = new Vector();
 		UdienzaSigeSqlDAO lUdiSqlDao = null;
@@ -119,8 +119,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	/**
 	 * Funzione di ricerca delle udienze Sige in base ai parametri in UdienzaSigeModel. l'estrazione tiene
 	 * conto del Tipo Ufficio per impostare il filtro "Tipo Rito" (Monocratico / Collegiale)
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza della classe UdienzaSigeModel
 	 * @return l'insieme delle istanze UdienzaSigeModel.
@@ -129,12 +128,11 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	 */
 	public Vector ExRicercaUdienzaSigePerRuolo(UdienzaSigeModel aUdienzaSige, String aTipoRito)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector<UdienzaSigeModel> lUdienzeSige = new Vector<UdienzaSigeModel>();
+		Vector<UdienzaSigeModel> lUdienzeSige = new Vector<>();
 		UdienzaSigeRuoloSqlDAO lUdiRuoSqlDao = null;
 		CollegioMagistratoSqlDAO lColMagDao = null;
-
-		// CollegioMagistratoModel magModel = new CollegioMagistratoModel();
 
 		try {
 			lConn = getDBConnection();
@@ -160,14 +158,14 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 
 					lColMagDao.ricercaMagistratoByIdCollegioCodUff(lUdienzaSige.getColIdCollegio(),
 							aUdienzaSige.getCodUfficioAppartenenza());
-					Collection<CollegioMagistratoModel> lColl = new ArrayList<CollegioMagistratoModel>();
+					Collection<CollegioMagistratoModel> lColl = new ArrayList<>();
 					lColl = lColMagDao.getModels();
 
 					if (lUdienzaSige.getCollegio() == null)
 						lUdienzaSige.setCollegio(new CollegioModel());
 
-					lUdienzaSige.getCollegio().setCollegioMagistrati(
-							(CollegioMagistratoModel[]) lColl.toArray(new CollegioMagistratoModel[0]));
+					lUdienzaSige.getCollegio()
+							.setCollegioMagistrati(lColl.toArray(new CollegioMagistratoModel[0]));
 				}
 
 				AulaUdienzaModel aulaModel = new AulaUdienzaModel();
@@ -200,6 +198,8 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 			throw new SIGEException("UdienzaSigeRuoloController.ExRicercaUdienza: " + daoEx);
 		} finally {
 			cleanup(lUdiRuoSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lColMagDao);
 			cleanup(lConn);
 		}
 		return lUdienzeSige;
@@ -240,13 +240,11 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 		} // endif
 
 		return aListaTenori;
-
 	}
 
 	/**
 	 * Inserisci Fissazione Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param aNuovaUdienzaProc
 	 * @param aFasSige
 	 * @param aEve
@@ -260,6 +258,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 			UdienzaProcedimentoSigeModel aNuovaUdienzaProc, FascicoloSigeModel aFasSige,
 			EventoNotificaModel aEve, ProvvedimentoSigeModel lProvvedimento, Vector lTenori,
 			UdienzaProcedimentoSigeModel aVecchiaUdienzaProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -394,6 +393,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	}
 
 	private void ExCancellaNotifica(Connection lConn, NotificaModel aNotifica) throws F3BException {
+
 		NotificaDAO lNotDao = null;
 
 		try {
@@ -417,7 +417,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 
 	private void ExRipulisciNotificheByKeyEvento(Connection lConn, BigDecimal aKey) throws F3BException {
 
-		Vector<NotificaModel> lNotifici = new Vector<NotificaModel>();
+		Vector<NotificaModel> lNotifici = new Vector<>();
 		NotificaSqlDAO lNotDao = null;
 
 		try {
@@ -498,7 +498,6 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 				}
 				count++;
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("UdienzaSigeRuoloController.ExInserisciNotificheByKeyEvento: " + daoEx);
 		} catch (Exception ex) {
@@ -507,13 +506,11 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 			cleanup(lAutDao);
 			cleanup(lNotDao);
 		}
-
 	}
 
 	/**
 	 * Modifica Fissazione Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param aNuovaUdienzaProc
 	 * @param aFasSige
 	 * @param aEve
@@ -527,6 +524,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 			UdienzaProcedimentoSigeModel aNuovaUdienzaProc, FascicoloSigeModel aFasSige,
 			EventoNotificaModel aEve, ProvvedimentoSigeModel lProvvedimento, Vector lTenori,
 			UdienzaProcedimentoSigeModel aVecchiaUdienzaProc) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -718,6 +716,8 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 			cleanup(lTenDao);
 			cleanup(lTenoreSqlDao);
 			cleanup(lFasSigeDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSenReaDAO);
 			cleanup(lConn);
 		}
 
@@ -726,8 +726,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 
 	/**
 	 * Esecuzione stampa Fissazione Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param lEvento
 	 * @param lUfficio
 	 * @param aUtenteModel
@@ -736,6 +735,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	 */
 	public ByteArrayOutputStream ExStampaFissazioneUdienza(BigDecimal aIdFascicolo, EventoModel lEvento,
 			String aCodUff, UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		EventoDAO lEveDao = null;
 		Connection lConn = null;
@@ -814,6 +814,7 @@ public class UdienzaSigeRuoloController extends UdienzaSigeController implements
 	@Override
 	public void ExInserisciFissazioneUdienza(FascicoloSigeModel aFasSige, EventoNotificaModel aEve,
 			ProvvedimentoSigeModel lProvvedimento, Vector lTenori) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;

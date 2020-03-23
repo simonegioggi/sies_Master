@@ -3,6 +3,8 @@ package siap.sius.trasmissioneatti.controller;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -13,8 +15,6 @@ import siap.siep.notifica.dao.NotificaSqlDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoDAO;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -29,15 +29,15 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class TrasmissioneAttiController extends SiapController implements ITrasmissioneAtti {
+
 	/**
 	 * Trasmissione dell'atto: Aggiornamento del fascicolo SIUS, del GENERALE PROCEDIMENTO; Inserimento
 	 * dell'EVENTO .
-	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 * @param aEventoNotificaModel
 	 * @return EventoNotificaModel
@@ -45,6 +45,7 @@ public class TrasmissioneAttiController extends SiapController implements ITrasm
 	 */
 	public EventoNotificaModel ExTrasmettiAtto(FascicoloGPModel aFascicoloGPModel,
 			EventoNotificaModel aEventoNotificaModel) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -53,7 +54,6 @@ public class TrasmissioneAttiController extends SiapController implements ITrasm
 		EventoSqlDAO lEveSqlDao = null;
 		NotificaDAO lNotDao = null;
 		NotificaSqlDAO lNotSqlDao = null;
-		// PassaggioEventoDAO lPasEveDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -101,9 +101,7 @@ public class TrasmissioneAttiController extends SiapController implements ITrasm
 
 			// COMMIT
 			commit(lConn);
-		}
-
-		catch (DAOException ex) {
+		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("TtasmissioneAttiController.ExTrasmettiAtto: " + ex);
 		} finally {
@@ -113,60 +111,10 @@ public class TrasmissioneAttiController extends SiapController implements ITrasm
 			cleanup(lEveSqlDao);
 			cleanup(lNotDao);
 			cleanup(lNotSqlDao);
-			// cleanup(lPasEveDao);
 			cleanup(lConn);
 		}
 
 		return aEventoNotificaModel;
 	}
-
-	/**
-	 * Ricerca il Fascicolo SIUS in Banca Dati per primary key
-	 * <p>
-	 * 
-	 * @param aModel
-	 * @return FascicoloGPModel
-	 * @throws F3BException
-	 */
-	/*
-	 * public FascicoloGPModel ExRicercaAttoByKey(BigDecimal aIdEvento) throws F3BException { Connection lConn
-	 * = null;
-	 * 
-	 * FascicoloGPModel lFascicolo = null; SoggettoModel lSoggMod = null; TenoreModel lTenMod = null;
-	 * 
-	 * FascicoloGPSqlDAO lFascDao = null; SoggettoSqlDAO lSoggDao = null; TenoreSqlDAO lTenDao = null;
-	 * 
-	 * try { lConn = getDBTransaction();
-	 * 
-	 * lFascDao = new FascicoloGPSqlDAO(lConn); lSoggDao = new SoggettoSqlDAO(lConn); lTenDao = new
-	 * TenoreSqlDAO(lConn);
-	 * 
-	 * lFascDao.ricercaFascicoloByKey(aIdEvento); lFascicolo = (FascicoloGPModel)lFascDao.getModelByKey();
-	 * 
-	 * lSoggDao.ricercaSoggettoByKey(lFascicolo.getFascicoloSiusModel().getSogIdSoggetto()); lSoggMod =
-	 * (SoggettoModel)lSoggDao.getModelByKey();
-	 * 
-	 * lFascicolo.getFascicoloSiusModel().setSoggetto(lSoggMod);
-	 * 
-	 * // Carico i records eventuali di Tenore
-	 * lTenDao.ricercaTenoreByKey(lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-	 * 
-	 * //Carico i dati del tenore, ciclando per recuperare tutti i codici e descrizioni con 2 StringBuffer.
-	 * lTenDao.start(); String strCodice = ""; String strDescr = ""; if(lTenDao.next()) { lTenMod =
-	 * (TenoreModel)lTenDao.getModelDetail(); strCodice = lTenDao.getString("COD_OGGETTO_TENORE"); strDescr =
-	 * lTenDao.getString("DESC_OGGETTO_TENORE"); }
-	 * 
-	 * while(lTenDao.next()) { strCodice += "|"+lTenDao.getString("COD_OGGETTO_TENORE"); strDescr +=
-	 * "\n"+lTenDao.getString("DESC_OGGETTO_TENORE"); } if (!strCodice.equalsIgnoreCase("")) {
-	 * lTenMod.setCodOggettoTenore( strCodice ); lTenMod.setDescrOggettoTenore( strDescr );
-	 * 
-	 * // Aggiungo il Tenore al Fascicolo; I campi di CODICE e DESCRIZIONE OGGETTO_TENORE sono compattati e
-	 * separati rispettivamente da "|" e "\n". lFascicolo.setTenoreModel(lTenMod); }
-	 * 
-	 * } catch (DAOException dex) { throw new
-	 * SIUSException("FascicoloSiusController.ExRicercaFascicoloByKey: " + dex); } catch (SQLException sqlex)
-	 * { throw new SIUSException("FascicoloSiusController.ExRicercaFascicoloByKey: " + sqlex); } finally {
-	 * cleanup(lFascDao); cleanup(lSoggDao); cleanup(lConn); } return lFascicolo; }
-	 */
 
 }

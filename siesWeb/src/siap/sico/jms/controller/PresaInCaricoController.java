@@ -8,6 +8,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.model.GenericModel;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
 import siap.controller.SiapController;
 import siap.jms.ICostantiJMS;
 import siap.jms.messaggio.model.MessaggioModel;
@@ -91,11 +96,6 @@ import siap.sius.sanzionesostitutiva.dao.PeriodoAltraSanzioneDAO;
 import siap.sius.sanzionesostitutiva.model.PeriodoAltraSanzioneModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.model.GenericModel;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
 
 /**
  * <p>
@@ -114,17 +114,19 @@ import f3b.util.StringUtils;
  */
 @SuppressWarnings("rawtypes")
 public class PresaInCaricoController extends SiapController implements IPresaInCarico {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public MessaggioModel ExPresaInCaricoOrdinanza(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt)
 			throws F3BException {
+
 		Connection lConn = null;
-//		FascicoloSiepeModel lFasSiepe = null;
+		// FascicoloSiepeModel lFasSiepe = null;
 		try {
 			lConn = getDBTransaction();
 
-//			ParserMessage lPars;
+			// ParserMessage lPars;
 			if (aMessaggio.getTreeModel() == null)
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
@@ -137,7 +139,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
+			throw new F3BException(
+					this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -151,6 +154,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 */
 	public MessaggioModel ExPresaInCaricoOrdinanza(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt,
 			Connection aConn) throws Exception {
+
 		ParserMessage lPars;
 		if (aMessaggio.getTreeModel() != null)
 			lPars = new ParserMessage(aMessaggio.getTreeModel());
@@ -170,24 +174,24 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			aMessaggio = ExScaricaSoggettoSIEP(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIEP e suo Inserimento nel DB
-//			FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
-			/*lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
+			// FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
+			/* lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIUS e suo Inserimento nel DB
-			/*FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
+			/* FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
 
 			// GENERALE PROCEDIMENTO
 			// Prelievo del GENERALE PROCEDIMENTO e suo Inserimento nel DB
-			/*GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
+			/* GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
 
 			// RESIDENZA
-			/*ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
+			/* ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
 
 			// RESIDENZA_FASCICOLO_SIUS
-			/*lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
+			/* lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
 
 			// EVENTO
-			/*EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
+			/* EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
 
 			// NOTE AGGIUNTIVE
 			ExScaricaNoteAggiuntive(lPars, aConn, aMessaggio);
@@ -250,22 +254,22 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	/**
 	 * Presa in carico del Decreto
-	 * 
+	 *
 	 * @param aMessaggio
 	 *            Messaggio arrivato via JMS
 	 * @param aMisAlt
 	 * @return MessaggioModel
 	 * @throws F3BException
 	 */
-
 	public MessaggioModel ExPresaInCaricoDecreto(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt)
 			throws F3BException {
+
 		Connection lConn = null;
-//		FascicoloSiepeModel lFasSiepe = null;
+		// FascicoloSiepeModel lFasSiepe = null;
 		try {
 			lConn = getDBTransaction();
 
-//			ParserMessage lPars;
+			// ParserMessage lPars;
 			if (aMessaggio.getTreeModel() == null)
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
@@ -288,7 +292,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	/**
 	 * Presa in carico del Decreto
-	 * 
+	 *
 	 * @param aMessaggio
 	 *            Messaggio arrivato via JMS
 	 * @param aMisAlt
@@ -317,23 +321,23 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			aMessaggio = ExScaricaSoggettoSIEP(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIEP e suo Inserimento nel DB
-//			FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
-			/*lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
+			// FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
+			/* lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIUS e suo Inserimento nel DB
-			/*FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
+			/* FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
 
 			// Prelievo del GENERALE PROCEDIMENTO e suo Inserimento nel DB
-			/*GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
+			/* GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
 
 			// RESIDENZA
-			/*ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
+			/* ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
 
 			// RESIDENZA_FASCICOLO_SIUS
-			/*lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
+			/* lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
 
 			// EVENTO
-			/*EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
+			/* EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
 
 			// NOTE AGGIUNTIVE
 			ExScaricaNoteAggiuntive(lPars, aConn, aMessaggio);
@@ -398,14 +402,14 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 * Copyright: Copyright (c) 2007
 	 * </p>
 	 */
-
 	public MessaggioModel ExPresaInCaricoAttivita(MessaggioModel aMessaggio) throws F3BException {
+
 		Connection lConn = null;
-//		FascicoloSiepeEstesoModel lFasSiepeEsteso = null;
+		// FascicoloSiepeEstesoModel lFasSiepeEsteso = null;
 		try {
 			lConn = getDBTransaction();
 
-//			ParserMessage lPars;
+			// ParserMessage lPars;
 			if (aMessaggio.getTreeModel() == null)
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
@@ -428,6 +432,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	public MessaggioModel ExPresaInCaricoAttivita(MessaggioModel aMessaggio, Connection aConn)
 			throws Exception {
+
 		ParserMessage lPars;
 		if (aMessaggio.getTreeModel() != null)
 			lPars = new ParserMessage(aMessaggio.getTreeModel());
@@ -453,11 +458,12 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 * Metodo che esegue la presa in carico della Richiesta Siepe.
 	 * <p>
 	 * @ param aMessaggio Istanza della classe MessaggioModel.
-	 * 
+	 *
 	 * @exception F3BException
 	 *                propaga l'errore di eccezione.
 	 */
 	public MessaggioModel ExPresaInCaricoRichiestaSiepe(MessaggioModel aMessaggio) throws F3BException {
+
 		Connection lConn = null;
 
 		try {
@@ -479,8 +485,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception ex) {
 			rollback(lConn);
 			ex.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName()
-					+ ".ExPresaInCaricoRichiestaSiepe: " + ex);
+			throw new F3BException(
+					this.getClass().getPackage().getName() + ".ExPresaInCaricoRichiestaSiepe: " + ex);
 		} finally {
 			cleanup(lConn);
 		}
@@ -491,7 +497,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	/**
 	 * Metodo che si occupa di eseguire la presa in carico della Richiesta SIEPE/UEPE.
 	 * <p>
-	 * 
+	 *
 	 * @param aMessaggio
 	 *            Oggetto MessaggioModel come parametro.
 	 * @param aConn
@@ -502,6 +508,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 */
 	public MessaggioModel ExPresaInCaricoRichiestaSiepe(MessaggioModel aMessaggio, Connection aConn)
 			throws Exception {
+
 		// ParserMessage lPars; // Si puo' eliminare ?
 		ParserMessage lPars = null;
 		if (aMessaggio.getTreeModel() != null)
@@ -524,6 +531,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	public MessaggioModel ExPresaInCaricoRicorso(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiepDAO lFasSiepDao = null; // STUB 11/12/2003 Prima di Fascicolo SIUS
@@ -561,7 +569,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
 
-			if (aMessaggio.getCodBdiDestinataria().trim().compareTo(aMessaggio.getCodBdiMittente().trim()) != 0) {
+			if (aMessaggio.getCodBdiDestinataria().trim()
+					.compareTo(aMessaggio.getCodBdiMittente().trim()) != 0) {
 
 				lConn = getDBTransaction();
 
@@ -574,8 +583,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 							&& lPars.getFascicoloGPSius().getFascicoloSiusModel() != null
 							&& lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto() != null) {
 						lSogDao = new SoggettoDAO(lConn);
-						lSogDao.setDAOFromModel(lPars.getFascicoloGPSius().getFascicoloSiusModel()
-								.getSoggetto());
+						lSogDao.setDAOFromModel(
+								lPars.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto());
 						lSogDao.setWithoutSequence(true);
 						lSogDao.insert();
 					} else
@@ -644,14 +653,14 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 							/*
 							 * FascicoloSiepController lCtrl = new FascicoloSiepController();
 							 * FascicoloSiepModel lFasSiepPresente = new FascicoloSiepModel();
-							 * 
+							 *
 							 * // Imposto la chiave Anno/Progressivo/Ufficio per la ricerca.
 							 * lFasSiepPresente.setChiaveAnno(lFasSiepInviato.getChiaveAnno());
 							 * lFasSiepPresente.setChiaveProgr(lFasSiepInviato.getChiaveProgr());
 							 * lFasSiepPresente.setChiaveUfficio(lFasSiepInviato.getChiaveUfficio());
-							 * 
+							 *
 							 * Vector lVect = lCtrl.ExRicercaFascicoloSiep(lFasSiepPresente);
-							 * 
+							 *
 							 * if ( lVect.size() > 0 ) {
 							 */
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
@@ -676,12 +685,12 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 							 * GDV --- Query inutile e causa di un outofMemory FascicoloSiepController lCtrl =
 							 * new FascicoloSiepController(); FascicoloSiepModel lFasSiepPresente = new
 							 * FascicoloSiepModel();
-							 * 
+							 *
 							 * // Imposto la chiave Primaria per la ricerca.
 							 * lFasSiepPresente.setIdFascicoloSiep(lFasSiepInviato.getIdFascicoloSiep());
-							 * 
+							 *
 							 * Vector lVect = lCtrl.ExRicercaFascicoloSiep(lFasSiepPresente);
-							 * 
+							 *
 							 * if ( lVect.size() > 0 ) { aMessaggio.setCodEsito("00001"); } else throw new
 							 * F3BException(F3BException.USER_MESSAGE,
 							 * "Impossibile inserire il Fascicolo Siep! Presente Un fascicolo SIEP con stesso ID ma ANNO/PROGR/UFFICIO diversi!"
@@ -787,8 +796,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 					lProcEve = new PulisciEventoStoreProcedureDAO(lConn);
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.info("Partita Store Procerdure PULISCI EVENTO per EVENTO = "
-							+ lEveOld.toString());
+					siesLogger.info(
+							"Partita Store Procerdure PULISCI EVENTO per EVENTO = " + lEveOld.toString());
 					lProcEve.setIdEvento(lEveOld.getIdEvento());
 					lProcEve.execute();
 
@@ -820,12 +829,13 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 							&& lEve.getEvento().getDocPerTrasferimento().length > 1) {
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
-						siesLogger.info("Controllo BBBLOBBB Out"
-								+ lEve.getEvento().getDocPerTrasferimento().length);
+						siesLogger.info(
+								"Controllo BBBLOBBB Out" + lEve.getEvento().getDocPerTrasferimento().length);
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 						// di LogF3B.getLogger()
 						siesLogger.info("Settato BLOBBBB");
-						lEveDao.setDocBlob(new ByteArrayInputStream(lEve.getEvento().getDocPerTrasferimento()));
+						lEveDao.setDocBlob(
+								new ByteArrayInputStream(lEve.getEvento().getDocPerTrasferimento()));
 					}
 
 					lEveDao.setWithoutSequence(true);
@@ -911,8 +921,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 								lAvvFasSiuDao.delete();
 								lAvvFasSiuDao.stop();
 
-								lAvvFasSiuDao.setDAOFromModel(lNotifiche[count].getAvvSius()
-										.getAvvocatoFascicoloSiusModel());
+								lAvvFasSiuDao.setDAOFromModel(
+										lNotifiche[count].getAvvSius().getAvvocatoFascicoloSiusModel());
 								lAvvFasSiuDao.setWithoutSequence(true);
 								lAvvFasSiuDao.insert();
 								lAvvFasSiuDao.stop();
@@ -1117,8 +1127,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 						for (int i = 0; i < mMotivazioniDecreto.size(); i++) {
 							try {
-								lMotDecrDao.setDAOFromModel((MotivazioneDecretoModel) mMotivazioniDecreto
-										.get(i));
+								lMotDecrDao.setDAOFromModel(
+										(MotivazioneDecretoModel) mMotivazioniDecreto.get(i));
 								lMotDecrDao.setWithoutSequence(true);
 								lMotDecrDao.insert();
 							} catch (DAOException ex) {
@@ -1233,7 +1243,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 				EventoModel lEve = lPars.getEvento().getEvento();
 				lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
 				lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(lEve.getFasSieIdFascicoloSiep());
-				/*PosizioneGiuridicaModel lPosizione = (PosizioneGiuridicaModel) */lPosSqlDao.getModelByKey();
+				/* PosizioneGiuridicaModel lPosizione = (PosizioneGiuridicaModel) */lPosSqlDao
+						.getModelByKey();
 
 				// Misura Alternativa
 				MisuraAlternativaModel lMisura = lPars.getMisuraAlternativa();
@@ -1247,15 +1258,13 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 					if (lNatura != null && !lNatura.equals("") && lTipoMisura != null
 							&& !lTipoMisura.equals("")) {
 						// CONC.AFFIDAMENTO
-						if (lNatura.equals("CO")
-								&& (lTipoMisura.equals("0001") || lTipoMisura.equals("0002") || lTipoMisura
-										.equals("0003"))) {
+						if (lNatura.equals("CO") && (lTipoMisura.equals("0001") || lTipoMisura.equals("0002")
+								|| lTipoMisura.equals("0003"))) {
 							lStatoProcedimento = "0022";
 						}
 						// CONC.DET.DOM.
-						if (lNatura.equals("CO")
-								&& (lTipoMisura.equals("0005") || lTipoMisura.equals("0010") || lTipoMisura
-										.equals("0013"))) {
+						if (lNatura.equals("CO") && (lTipoMisura.equals("0005") || lTipoMisura.equals("0010")
+								|| lTipoMisura.equals("0013"))) {
 							lStatoProcedimento = "0026";
 						}
 						// CONC.SEMILIBERTA'
@@ -1263,15 +1272,13 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 							lStatoProcedimento = "0030";
 						}
 						// RIPRISTINO AFFIDAMENTO
-						if (lNatura.equals("RG")
-								&& (lTipoMisura.equals("0014") || lTipoMisura.equals("0015") || lTipoMisura
-										.equals("0086"))) {
+						if (lNatura.equals("RG") && (lTipoMisura.equals("0014") || lTipoMisura.equals("0015")
+								|| lTipoMisura.equals("0086"))) {
 							lStatoProcedimento = "0041";
 						}
 						// RIPRISTINO DET.DOM.
-						if (lNatura.equals("RG")
-								&& (lTipoMisura.equals("0016") || lTipoMisura.equals("0087") || lTipoMisura
-										.equals("0089"))) {
+						if (lNatura.equals("RG") && (lTipoMisura.equals("0016") || lTipoMisura.equals("0087")
+								|| lTipoMisura.equals("0089"))) {
 							lStatoProcedimento = "0042";
 						}
 						// RIPRISTINO SEMILIBERTA'
@@ -1279,15 +1286,13 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 							lStatoProcedimento = "0043";
 						}
 						// REVOCA AFFIDAMENTO
-						if (lNatura.equals("RE")
-								&& (lTipoMisura.equals("0014") || lTipoMisura.equals("0015") || lTipoMisura
-										.equals("0086"))) {
+						if (lNatura.equals("RE") && (lTipoMisura.equals("0014") || lTipoMisura.equals("0015")
+								|| lTipoMisura.equals("0086"))) {
 							lStatoProcedimento = "0049";
 						}
 						// REVOCA DET.DOM.
-						if (lNatura.equals("RE")
-								&& (lTipoMisura.equals("0016") || lTipoMisura.equals("0087") || lTipoMisura
-										.equals("0089"))) {
+						if (lNatura.equals("RE") && (lTipoMisura.equals("0016") || lTipoMisura.equals("0087")
+								|| lTipoMisura.equals("0089"))) {
 							lStatoProcedimento = "0050";
 						}
 						// REVOCA SEMILIBERTA'
@@ -1389,11 +1394,11 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			aMessaggio = ExScaricaSoggettoSIEP(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIEP e suo Inserimento nel DB
-//			FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
-			/*lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
+			// FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
+			/* lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
 
 			// EVENTO
-			/*EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
+			/* EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
 
 			// LUOGO DETENZIONE.
 			// ExScaricaLuogoDetenzione(lPars, aConn, aMessaggio);
@@ -1435,23 +1440,23 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			aMessaggio = ExScaricaSentenza(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIEP e suo Inserimento nel DB
-//			FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
-			/*lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
+			// FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
+			/* lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIUS e suo Inserimento nel DB
-			/*FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
+			/* FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
 
 			// Prelievo del GENERALE PROCEDIMENTO e suo Inserimento nel DB
-			/*GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
+			/* GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
 
 			// RESIDENZA
-			/*ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
+			/* ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
 
 			// RESIDENZA_FASCICOLO_SIUS
-			/*lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
+			/* lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
 
 			// EVENTO
-			/*EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
+			/* EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
 
 			// LUOGO DETENZIONE.
 			ExScaricaLuogoDetenzione(lPars, aConn, aMessaggio);
@@ -1462,6 +1467,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	// / LUIGI 28-06-2006
 	private void ExScaricaSoggetto(ParserMessage aParseMess, Connection aConn) throws F3BException {
+
 		SoggettoDAO lSogDao = null;
 		try {
 			if (aParseMess.getSoggetto() != null) {
@@ -1475,7 +1481,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 					&& aParseMess.getFascicoloGPSius().getFascicoloSiusModel() != null
 					&& aParseMess.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto() != null) {
 				lSogDao = new SoggettoDAO(aConn);
-				lSogDao.setDAOFromModel(aParseMess.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto());
+				lSogDao.setDAOFromModel(
+						aParseMess.getFascicoloGPSius().getFascicoloSiusModel().getSoggetto());
 				lSogDao.setWithoutSequence(true);
 				lSogDao.insert();
 				lSogDao.stop();
@@ -1497,6 +1504,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	// Scarica il soggetto dal FascicoloSiepeEsteso.
 	private void ExScaricaSoggetto(FascicoloSiepeEstesoModel aFasSiepeEsteso, Connection aConn)
 			throws F3BException {
+
 		SoggettoDAO lSogDao = null;
 		try {
 			if (aFasSiepeEsteso.getSoggetto() != null) {
@@ -1509,8 +1517,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 					&& aFasSiepeEsteso.getFascicoloSius().getFascicoloSiusModel() != null
 					&& aFasSiepeEsteso.getFascicoloSius().getFascicoloSiusModel().getSoggetto() != null) {
 				lSogDao = new SoggettoDAO(aConn);
-				lSogDao.setDAOFromModel(aFasSiepeEsteso.getFascicoloSius().getFascicoloSiusModel()
-						.getSoggetto());
+				lSogDao.setDAOFromModel(
+						aFasSiepeEsteso.getFascicoloSius().getFascicoloSiusModel().getSoggetto());
 				lSogDao.setWithoutSequence(true);
 				lSogDao.insert();
 				lSogDao.stop();
@@ -1531,6 +1539,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private MessaggioModel ExScaricaSentenza(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		SentenzaDAO lSentenzaDao = null;
 		try {
 			SentenzaModel lSentenza = aParseMess.getSentenza();
@@ -1562,6 +1571,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	// Scarica la sentenza dal FascicoloSiepeEsteso.
 	private void ExScaricaSentenza(FascicoloSiepeEstesoModel aFasSiepeEsteso, Connection aConn)
 			throws F3BException {
+
 		SentenzaDAO lSentenzaDao = null;
 		try {
 			if (aFasSiepeEsteso.getFascicoloSiep().getSentenza() != null
@@ -1590,6 +1600,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private FascicoloSiepModel ExScaricaFascicoloSiep(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		FascicoloSiepDAO lFasSiepDao = null;
 		FascicoloSiepModel lFasSiepInviato = null;
 		try {
@@ -1629,6 +1640,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaFascicoloSiep(FascicoloSiepeEstesoModel aFasEsteso, Connection aConn)
 			throws F3BException {
+
 		FascicoloSiepDAO lFasSiepDao = null;
 		try {
 			if (aFasEsteso.getFascicoloSiep().getIdFascicoloSiep() != null) {
@@ -1663,6 +1675,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private FascicoloSiusModel ExScaricaFascicoloSius(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		FascicoloSiusDAO lFasSiusDao = null;
 		FascicoloSiusModel lFasSius = null;
 		try {
@@ -1703,6 +1716,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaFascicoloSius(FascicoloSiepeEstesoModel aFasEsteso, Connection aConn)
 			throws F3BException {
+
 		FascicoloSiusDAO lFasSiusDao = null;
 		try {
 			if (aFasEsteso.getFascicoloSius() != null
@@ -1733,6 +1747,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private GeneraleProcedimentoModel ExScaricaGeneraleProcedimento(ParserMessage aParseMess,
 			Connection aConn, MessaggioModel aMessaggio) throws F3BException {
+
 		GeneraleProcedimentoDAO lGenProDao = null;
 		GeneraleProcedimentoModel lGenPro = null;
 
@@ -1769,6 +1784,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaGeneraleProcedimento(FascicoloSiepeEstesoModel aFasEsteso, Connection aConn)
 			throws F3BException {
+
 		GeneraleProcedimentoDAO lGenProDao = null;
 
 		try {
@@ -1794,8 +1810,9 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		}
 	}
 
-	private void ExScaricaFascicoloSiepe(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
-			throws F3BException, Exception {
+	private void ExScaricaFascicoloSiepe(ParserMessage aParseMess, Connection aConn,
+			MessaggioModel aMessaggio) throws F3BException, Exception {
+
 		FascicoloSiepeEstesoModel lFasSiepeEstesoInviato = null;
 		try {
 			lFasSiepeEstesoInviato = aParseMess.getFascicoloSiepeEsteso();
@@ -1852,6 +1869,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaFascicoloSiepe(FascicoloSiepeEstesoModel aFasEsteso, Connection aConn)
 			throws F3BException {
+
 		FascicoloSiepeDAO lFasSiepeDao = null;
 
 		try {
@@ -1885,7 +1903,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	/**
 	 * Metodo che si occupa di recuperare la richiesta ricevuta e inserire la stessa nel Dbase
 	 * <p>
-	 * 
+	 *
 	 * @param aParseMess
 	 *            TreeModel contente i dati opportuni per il recupero della richiesta.
 	 * @param aConn
@@ -1898,6 +1916,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 */
 	private RichiestaModel ExScaricaRichiestaSiepe(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		RichiestaDAO lRichDao = null;
 		RichiestaModel lRichiestaInviata = null;
 
@@ -1944,6 +1963,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private AttivitaModel ExScaricaAttivitaSiepe(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		AttivitaDAO lAttDao = null;
 		AttivitaModel lAttivitaInviata = null;
 		try {
@@ -1985,7 +2005,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	/**
 	 * Metodo che si occupa di recuperare e scrivere le Relazioni afferenti ad un'attivita' o relazione.
 	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 *            Model GenericModel, vengono accettate istanze di AttivitaModel o RichiestaModel.
 	 * @param aConn
@@ -1994,6 +2014,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 *             propaga errore di eccezione.
 	 */
 	private void ExScaricaRelazioni(GenericModel aModel, Connection aConn) throws F3BException {
+
 		RelazioneDAO lRelDao = null;
 		List mRelazioni = null;
 
@@ -2007,57 +2028,49 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			throw new F3BException(F3BException.SYSTEM_ERROR,
 					"Il model dati passato non e' del tipo AttivitaModel o RichiestaModel.");
 
-		// Se esistono relazioni nell'insieme, inserisce le stesse nel Dbase.
-		if (mRelazioni != null && !mRelazioni.isEmpty()) {
-			lRelDao = new RelazioneDAO(aConn);
-			RelazioneModel lRelazione = null;
+		try {
+			// Se esistono relazioni nell'insieme, inserisce le stesse nel Dbase.
+			if (mRelazioni != null && !mRelazioni.isEmpty()) {
+				lRelDao = new RelazioneDAO(aConn);
+				RelazioneModel lRelazione = null;
 
-			for (int i = 0; i < mRelazioni.size(); i++) {
-				try {
-					// Relazione corrente nella lista
-					lRelazione = (RelazioneModel) mRelazioni.get(i);
+				for (int i = 0; i < mRelazioni.size(); i++) {
+					try {
+						// Relazione corrente nella lista
+						lRelazione = (RelazioneModel) mRelazioni.get(i);
 
-					lRelDao.setDAOFromModel(lRelazione);
+						lRelDao.setDAOFromModel(lRelazione);
 
-					// Recupero del BLOB trasmesso
-					if (lRelazione.getDocPerTrasferimento() != null
-							&& lRelazione.getDocPerTrasferimento().length > 1)
-						lRelDao.setDocBlob(new ByteArrayInputStream(lRelazione.getDocPerTrasferimento()));
+						// Recupero del BLOB trasmesso
+						if (lRelazione.getDocPerTrasferimento() != null
+								&& lRelazione.getDocPerTrasferimento().length > 1)
+							lRelDao.setDocBlob(new ByteArrayInputStream(lRelazione.getDocPerTrasferimento()));
 
-					lRelDao.setWithoutSequence(true);
+						lRelDao.setWithoutSequence(true);
 
-					lRelDao.insert();
-					lRelDao.stop();
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.info("Relazione gia' presente...");
-					else
-						throw new F3BException(F3BException.USER_MESSAGE,
-								"Impossibile inserire la Relazione ");
+						lRelDao.insert();
+						lRelDao.stop();
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto
+							// di LogF3B.getLogger()
+							siesLogger.info("Relazione gia' presente...");
+						else
+							throw new F3BException(F3BException.USER_MESSAGE,
+									"Impossibile inserire la Relazione ");
+					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lRelDao);
 		}
 	}
 
-	/*
-	 * 
-	 * private void ExScaricaRelazioni(AttivitaModel aAttivita, Connection aConn ) throws F3BException {
-	 * RelazioneDAO lRelDao = null;
-	 * 
-	 * List mRelazioni = Arrays.asList(aAttivita.getRelazioni());
-	 * 
-	 * if (mRelazioni != null && !mRelazioni.isEmpty()) { lRelDao = new RelazioneDAO(aConn);
-	 * 
-	 * for (int i = 0; i < mRelazioni.size(); i++) { try { lRelDao.setDAOFromModel( (RelazioneModel)
-	 * mRelazioni.get(i)); lRelDao.setWithoutSequence(true); lRelDao.insert(); } catch (DAOException ex) { if
-	 * (// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() (ex.UNIQUE_CONSTRAINT_VIOLATED) siesLogger.info("Relazione gia' presente..."); else
-	 * throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire la Relazione "); } } } }
-	 */
 	private AssistenteSocialeModel ExScaricaAssistenteSociale(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		AssistenteSocialeDAO lAssDao = null;
 		AssistenteSocialeModel lAssistenteSocialeInviato = null;
 		try {
@@ -2090,6 +2103,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private ResidenzaAssociataModel ExScaricaResidenza(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		ResidenzaDAO lResDao = null;
 		ResidenzaAssociataModel lResAssociata = null;
 		try {
@@ -2098,7 +2112,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			if (lResAssociata != null && lResAssociata.getResidenza() != null) {
 				// 22/05/2008 Caso particolare di disallineamento ID_SOGGETTO con la Residenza.
 				FascicoloSiusModel lFasSius = aParseMess.getFascicoloGPSius().getFascicoloSiusModel();
-				if (lFasSius.getSogIdSoggetto().compareTo(lResAssociata.getResidenza().getSogIdSoggetto()) == 0) {
+				if (lFasSius.getSogIdSoggetto()
+						.compareTo(lResAssociata.getResidenza().getSogIdSoggetto()) == 0) {
 					lResDao = new ResidenzaDAO(aConn);
 
 					lResDao.setDAOFromModel(lResAssociata.getResidenza());
@@ -2129,6 +2144,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private ResidenzaAssociataModel ExScaricaResidenzaSius(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		ResidenzaFascicoloSiusDAO lResFasSiuDao = null;
 		ResidenzaAssociataModel lResAssociata = null;
 		try {
@@ -2166,6 +2182,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private EventoNotificaModel ExScaricaEvento(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		EventoNotificaModel lEve = null;
 		EventoDAO lEveDao = null;
 
@@ -2191,8 +2208,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 						&& lEve.getEvento().getDocPerTrasferimento().length > 1) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.info("Controllo BBBLOBBB Out"
-							+ lEve.getEvento().getDocPerTrasferimento().length);
+					siesLogger.info(
+							"Controllo BBBLOBBB Out" + lEve.getEvento().getDocPerTrasferimento().length);
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.info("Settato BLOBBBB");
@@ -2219,6 +2236,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaEvento(FascicoloSiepeEstesoModel aFasEsteso, MessaggioModel aMessaggio,
 			Connection aConn) throws F3BException {
+
 		EventoDAO lEveDao = null;
 		try {
 			EventoModel lEve = null;
@@ -2262,85 +2280,95 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaNotifiche(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
 			throws F3BException {
+
 		AutoritaEsternaDAO lAutDao = null;
 		NotificaDAO lNotDao = null;
-//		CampoNotaDAO lCampoNotaDao = null;
-//		AvvocatoDAO lAvvDao = null;
-//		AvvocatoFascicoloSiusDAO lAvvFasSiuDao = null;
 
-		if (aParseMess.getEvento() != null && aParseMess.getEvento().getNotifiche() != null) {
-			// NOTIFICHE - AUTORITA ESTERNE
-			NotificaModel[] lNotifiche = aParseMess.getEvento().getNotifiche();
+		try {
 
-			lAutDao = new AutoritaEsternaDAO(aConn);
-			lNotDao = new NotificaDAO(aConn);
+			if (aParseMess.getEvento() != null && aParseMess.getEvento().getNotifiche() != null) {
+				// NOTIFICHE - AUTORITA ESTERNE
+				NotificaModel[] lNotifiche = aParseMess.getEvento().getNotifiche();
 
-			int count = 0;
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("Presenti " + lNotifiche.length + " notifiche");
+				lAutDao = new AutoritaEsternaDAO(aConn);
+				lNotDao = new NotificaDAO(aConn);
 
-			while (count < lNotifiche.length) {
+				int count = 0;
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.info("Notifica[" + count + "] = " + lNotifiche[count]);
+				siesLogger.info("Presenti " + lNotifiche.length + " notifiche");
 
-				if (lNotifiche[count] != null) {
-					try {
-						// AUTORITA ESTERNA
-						if (lNotifiche[count].getAutoritaEsterna() != null) {
-							lAutDao.setDAOFromModel(lNotifiche[count].getAutoritaEsterna());
-							lAutDao.setWithoutSequence(true);
-							lAutDao.insert();
-							lAutDao.stop();
+				while (count < lNotifiche.length) {
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.info("Notifica[" + count + "] = " + lNotifiche[count]);
+
+					if (lNotifiche[count] != null) {
+						try {
+							// AUTORITA ESTERNA
+							if (lNotifiche[count].getAutoritaEsterna() != null) {
+								lAutDao.setDAOFromModel(lNotifiche[count].getAutoritaEsterna());
+								lAutDao.setWithoutSequence(true);
+								lAutDao.insert();
+								lAutDao.stop();
+							}
+						} catch (DAOException ex) {
+							if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Autorita Esterna gia' presente...");
+								aMessaggio.setCodEsito("00001");
+							} else
+								throw new F3BException(F3BException.USER_MESSAGE,
+										"Impossibile inserire la Notifica! ");
 						}
-					} catch (DAOException ex) {
-						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Autorita Esterna gia' presente...");
-							aMessaggio.setCodEsito("00001");
-						} else
-							throw new F3BException(F3BException.USER_MESSAGE,
-									"Impossibile inserire la Notifica! ");
+
+						// AVVOCATO SIUS
+						if (lNotifiche[count].getAvvIdAvvocatoFascicoloSius() != null
+								&& lNotifiche[count].getAvvSius() != null) {
+							// AVVOCATO
+							ExInserisciAvvocato(lNotifiche[count].getAvvSius().getAvvocato(), aConn,
+									aMessaggio);
+
+							// AVVOCATO FASCICOLO SIUS
+							ExInseisciAvvocatoFascicoloSIUS(
+									lNotifiche[count].getAvvSius().getAvvocatoFascicoloSiusModel(), aConn,
+									aMessaggio);
+						}
+
+						// NOTIFICA
+						try {
+							lNotDao.setDAOFromModel(lNotifiche[count]);
+							lNotDao.setWithoutSequence(true);
+							lNotDao.insert();
+							lNotDao.stop();
+						} catch (DAOException ex) {
+							if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Notifica gia' presente...");
+								aMessaggio.setCodEsito("00001");
+							} else
+								throw new F3BException(F3BException.USER_MESSAGE,
+										"Impossibile inserire la Notifica! ");
+						}
 					}
 
-					// AVVOCATO SIUS
-					if (lNotifiche[count].getAvvIdAvvocatoFascicoloSius() != null
-							&& lNotifiche[count].getAvvSius() != null) {
-						// AVVOCATO
-						ExInserisciAvvocato(lNotifiche[count].getAvvSius().getAvvocato(), aConn, aMessaggio);
-
-						// AVVOCATO FASCICOLO SIUS
-						ExInseisciAvvocatoFascicoloSIUS(lNotifiche[count].getAvvSius()
-								.getAvvocatoFascicoloSiusModel(), aConn, aMessaggio);
-					}
-
-					// NOTIFICA
-					try {
-						lNotDao.setDAOFromModel(lNotifiche[count]);
-						lNotDao.setWithoutSequence(true);
-						lNotDao.insert();
-						lNotDao.stop();
-					} catch (DAOException ex) {
-						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Notifica gia' presente...");
-							aMessaggio.setCodEsito("00001");
-						} else
-							throw new F3BException(F3BException.USER_MESSAGE,
-									"Impossibile inserire la Notifica! ");
-					}
+					count++;
 				}
-
-				count++;
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAutDao);
+			cleanup(lNotDao);
 		}
 	}
 
-	private void ExScaricaNoteAggiuntive(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
-			throws F3BException {
+	private void ExScaricaNoteAggiuntive(ParserMessage aParseMess, Connection aConn,
+			MessaggioModel aMessaggio) throws F3BException {
+
 		CampoNotaDAO lCampoNotaDao = null;
 
 		// NOTE AGGIUNTIVE
@@ -2352,8 +2380,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 				if (lNote != null) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.info("Inserimento Eventuali Note Aggiuntive Numero note Aggiuntive : "
-							+ lNote.length);
+					siesLogger.info(
+							"Inserimento Eventuali Note Aggiuntive Numero note Aggiuntive : " + lNote.length);
 
 					int count = 0;
 					while (count < lNote.length) {
@@ -2377,11 +2405,11 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} finally {
 			cleanup(lCampoNotaDao);
 		}
-
 	}
 
 	private void ExScaricaDocumentoAllegato(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		DocumentoAllegatoDAO lDocAllDAO = null;
 
 		try {
@@ -2415,11 +2443,11 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} finally {
 			cleanup(lDocAllDAO);
 		}
-
 	}
 
 	private void ExScaricaLuogoDetenzione(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		LuogoDetenzioneDAO lLuoDetDAO = null;
 
 		try {
@@ -2448,6 +2476,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaRiferimentiFascicoloSIEP(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		RiferimentoFascicoloSiepDAO lRifasiepDAO = null;
 
 		List mRifasiep = aParseMess.getRifasiep();
@@ -2490,6 +2519,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaMisuraAlternativa(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		MisuraAlternativaDAO lMisDao = null;
 		try {
 			lMisDao = new MisuraAlternativaDAO(aConn);
@@ -2521,6 +2551,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaAvvocatiSIUS(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
 			throws F3BException {
+
 		List lListaAvvSius = aParseMess.getAvvSius();
 		if ((lListaAvvSius != null) && (!lListaAvvSius.isEmpty())) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -2542,6 +2573,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExInserisciAvvocato(AvvocatoModel aAvvocato, Connection aConn, MessaggioModel aMessaggio)
 			throws F3BException {
+
 		if (aAvvocato != null) {
 			AvvocatoDAO lAvvDao = null;
 			try {
@@ -2563,27 +2595,11 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 				cleanup(lAvvDao);
 			}
 		}
-
 	}
-
-//	private void ExScaricaAvvocatiFascicoloSIUS(ParserMessage aParseMess, Connection aConn,
-//			MessaggioModel aMessaggio) throws F3BException {
-//
-//		List mAvvFasSius = aParseMess.getAvvSius();
-//		if ((mAvvFasSius != null) && (!mAvvFasSius.isEmpty())) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//			// LogF3B.getLogger()
-//			siesLogger.info("size di List Avvocato Fascicolo SIUS : " + mAvvFasSius.size());
-//			for (int i = 0; i < mAvvFasSius.size(); i++) {
-//				AvvocatoSiusModel lAvvocatoSius = (AvvocatoSiusModel) mAvvFasSius.get(i);
-//				ExInseisciAvvocatoFascicoloSIUS(lAvvocatoSius.getAvvocatoFascicoloSiusModel(), aConn,
-//						aMessaggio);
-//			}
-//		}
-//	}
 
 	private void ExInseisciAvvocatoFascicoloSIUS(AvvocatoFascicoloSiusModel aAvvocato, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		if (aAvvocato != null) {
 			AvvocatoFascicoloSiusDAO lAvvFasSiuDao = null;
 
@@ -2645,7 +2661,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	/**
 	 * Metodo che esegue lo scarico e la scrittura dei dati del DepositoDecreto
 	 * <p>
-	 * 
+	 *
 	 * @param aParseMess
 	 *            ParseMessage
 	 * @param aConn
@@ -2657,6 +2673,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	 */
 	private void ExScaricaDepositoDecreto(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		DepositoDecretoDAO lDepDecrDao = null;
 		try {
 			DepositoDecretoModel lDepDecr = aParseMess.getDepositoDecreto();
@@ -2684,11 +2701,11 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaMotivazioniDecreto(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		MotivazioneDecretoDAO lMotDecrDao = null;
 
 		if (aParseMess.getMotivazioniDecreto() != null) {
 			List mMotivazioniDecreto = aParseMess.getMotivazioniDecreto();
-
 			if (!mMotivazioniDecreto.isEmpty()) {
 				lMotDecrDao = new MotivazioneDecretoDAO(aConn);
 
@@ -2718,141 +2735,160 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	private void ExScaricaLiberazioneAnticipata(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		LicenzaLibanticipataDAO lLibAntDAO = null;
 		PeriodoLibanticipataDAO lPerAntDAO = null;
 		EventoPermessoLicenzaDAO lEvePermLicDAO = null;
 
-		// if ( aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null && (
-		// aParseMess.getEvento().getEvento().getCodMotivo().equals("0076") ||
-		// aParseMess.getEvento().getEvento().getCodMotivo().equals("2130")))
-		// 2008-06-23
-		// Eseguita modifica concordata per eliminazione delle condizioni di filtro sul CodMotivo
-		// Precedentemente fissato solo per 0076 e 2130.
-		if (aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("Inserimento dati Licenze/Permessi.");
+		try {
+			// if ( aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null && (
+			// aParseMess.getEvento().getEvento().getCodMotivo().equals("0076") ||
+			// aParseMess.getEvento().getEvento().getCodMotivo().equals("2130")))
+			// 2008-06-23
+			// Eseguita modifica concordata per eliminazione delle condizioni di filtro sul CodMotivo
+			// Precedentemente fissato solo per 0076 e 2130.
+			if (aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.info("Inserimento dati Licenze/Permessi.");
 
-			// LICENZA LIBANTICIPATA Rielaborate il 21/03/2005
-			List mLicenze = aParseMess.getLicenze();
+				// LICENZA LIBANTICIPATA Rielaborate il 21/03/2005
+				List mLicenze = aParseMess.getLicenze();
 
-			if ((mLicenze != null) && (!mLicenze.isEmpty())) {
-				for (int i = 0; i < mLicenze.size(); i++) {
-					try {
-						LicenzaPeriodiLibAnticipataModel lLicenzaPeriodi = (LicenzaPeriodiLibAnticipataModel) mLicenze
-								.get(i);
-						LicenzaLibAnticipataModel lLicenza = lLicenzaPeriodi.getLicenza();
-						PeriodoLibAnticipataModel lPeriodoModel = null;
-						EventoPermessoLicenzaModel lEvePermLic = null;
+				if ((mLicenze != null) && (!mLicenze.isEmpty())) {
+					for (int i = 0; i < mLicenze.size(); i++) {
+						try {
+							LicenzaPeriodiLibAnticipataModel lLicenzaPeriodi = (LicenzaPeriodiLibAnticipataModel) mLicenze
+									.get(i);
+							LicenzaLibAnticipataModel lLicenza = lLicenzaPeriodi.getLicenza();
+							PeriodoLibAnticipataModel lPeriodoModel = null;
+							EventoPermessoLicenzaModel lEvePermLic = null;
 
-						if (lLicenza != null) {
-							lLibAntDAO = new LicenzaLibanticipataDAO(aConn);
+							if (lLicenza != null) {
+								lLibAntDAO = new LicenzaLibanticipataDAO(aConn);
 
-							lLicenza.setFasSieIdFascicoloSiep(aParseMess.getEvento().getEvento()
-									.getFasSieIdFascicoloSiep());
-							lLicenza.setCodUfficioEmittente(aParseMess.getEvento().getEvento()
-									.getCodUfficioEmittente());
-							lLicenza.setCodLuogoEmittente(aParseMess.getEvento().getEvento()
-									.getCodLuogoEmittente());
-							if (aParseMess.getFascicoloGPSius().getFascicoloSiusModel() != null) {
-								lLicenza.setAnnoSius(aParseMess.getFascicoloGPSius().getFascicoloSiusModel()
-										.getChiaveAnno());
-								lLicenza.setNumeroSius(StringUtils.toStringJSP(aParseMess
-										.getFascicoloGPSius().getFascicoloSiusModel().getChiaveProgr()));
-							}
-							lLibAntDAO.setDAOFromModel(lLicenza);
-							lLibAntDAO.setWithoutSequence(true);
-							lLibAntDAO.insert();
-							lLibAntDAO.stop();
+								lLicenza.setFasSieIdFascicoloSiep(
+										aParseMess.getEvento().getEvento().getFasSieIdFascicoloSiep());
+								lLicenza.setCodUfficioEmittente(
+										aParseMess.getEvento().getEvento().getCodUfficioEmittente());
+								lLicenza.setCodLuogoEmittente(
+										aParseMess.getEvento().getEvento().getCodLuogoEmittente());
+								if (aParseMess.getFascicoloGPSius().getFascicoloSiusModel() != null) {
+									lLicenza.setAnnoSius(aParseMess.getFascicoloGPSius()
+											.getFascicoloSiusModel().getChiaveAnno());
+									lLicenza.setNumeroSius(StringUtils.toStringJSP(aParseMess
+											.getFascicoloGPSius().getFascicoloSiusModel().getChiaveProgr()));
+								}
+								lLibAntDAO.setDAOFromModel(lLicenza);
+								lLibAntDAO.setWithoutSequence(true);
+								lLibAntDAO.insert();
+								lLibAntDAO.stop();
 
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Inserimento dati Periodi ");
-							if (lLicenzaPeriodi.getPeriodi() != null
-									&& lLicenzaPeriodi.getPeriodi().length > 0) {
-								PeriodoLibAnticipataModel[] lPeriodi = lLicenzaPeriodi.getPeriodi();
-								if (lPeriodi != null && lPeriodi.length > 0) {
-									for (int j = 0; j < lPeriodi.length; j++) {
-										lPeriodoModel = (PeriodoLibAnticipataModel) lPeriodi[j];
-										if (lPeriodoModel != null
-												&& lPeriodoModel.getIdPeriodoLibanticipata() != null) {
-											lPerAntDAO = new PeriodoLibanticipataDAO(aConn);
-											lPerAntDAO.setDAOFromModel(lPeriodoModel);
-											lPerAntDAO.setWithoutSequence(true);
-											lPerAntDAO.insert();
-											lPerAntDAO.stop();
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Inserimento dati Periodi ");
+								if (lLicenzaPeriodi.getPeriodi() != null
+										&& lLicenzaPeriodi.getPeriodi().length > 0) {
+									PeriodoLibAnticipataModel[] lPeriodi = lLicenzaPeriodi.getPeriodi();
+									if (lPeriodi != null && lPeriodi.length > 0) {
+										for (int j = 0; j < lPeriodi.length; j++) {
+											lPeriodoModel = lPeriodi[j];
+											if (lPeriodoModel != null
+													&& lPeriodoModel.getIdPeriodoLibanticipata() != null) {
+												lPerAntDAO = new PeriodoLibanticipataDAO(aConn);
+												lPerAntDAO.setDAOFromModel(lPeriodoModel);
+												lPerAntDAO.setWithoutSequence(true);
+												lPerAntDAO.insert();
+												lPerAntDAO.stop();
+											}
 										}
 									}
 								}
-							}
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Inserimento dati EventoPermessoLicenza ");
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Inserimento dati EventoPermessoLicenza ");
 
-							if (lLicenzaPeriodi.getEventiPermLic() != null
-									&& lLicenzaPeriodi.getEventiPermLic().length > 0) {
-								EventoPermessoLicenzaModel[] lEventiPermLic = lLicenzaPeriodi
-										.getEventiPermLic();
-								if (lEventiPermLic != null && lEventiPermLic.length > 0) {
-									for (int j = 0; j < lEventiPermLic.length; j++) {
-										lEvePermLic = (EventoPermessoLicenzaModel) lEventiPermLic[j];
-										if (lEvePermLic != null
-												&& lEvePermLic.getIdEventoPermessoLicenza() != null) {
-											lEvePermLicDAO = new EventoPermessoLicenzaDAO(aConn);
-											lEvePermLicDAO.setDAOFromModel(lEvePermLic);
-											lEvePermLicDAO.setWithoutSequence(true);
-											lEvePermLicDAO.insert();
-											lEvePermLicDAO.stop();
+								if (lLicenzaPeriodi.getEventiPermLic() != null
+										&& lLicenzaPeriodi.getEventiPermLic().length > 0) {
+									EventoPermessoLicenzaModel[] lEventiPermLic = lLicenzaPeriodi
+											.getEventiPermLic();
+									if (lEventiPermLic != null && lEventiPermLic.length > 0) {
+										for (int j = 0; j < lEventiPermLic.length; j++) {
+											lEvePermLic = lEventiPermLic[j];
+											if (lEvePermLic != null
+													&& lEvePermLic.getIdEventoPermessoLicenza() != null) {
+												lEvePermLicDAO = new EventoPermessoLicenzaDAO(aConn);
+												lEvePermLicDAO.setDAOFromModel(lEvePermLic);
+												lEvePermLicDAO.setWithoutSequence(true);
+												lEvePermLicDAO.insert();
+												lEvePermLicDAO.stop();
+											}
 										}
 									}
 								}
-							}
 
-						}// end if
-					} catch (DAOException ex) {
-						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Licenza Anticipata gia' presente...");
-							aMessaggio.setCodEsito("00001");
-						} else
-							throw new F3BException(F3BException.USER_MESSAGE,
-									"Impossibile inserire la Licenza Anticipata! ");
+							} // end if
+						} catch (DAOException ex) {
+							if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Licenza Anticipata gia' presente...");
+								aMessaggio.setCodEsito("00001");
+							} else
+								throw new F3BException(F3BException.USER_MESSAGE,
+										"Impossibile inserire la Licenza Anticipata! ");
+						}
 					}
-				}
-			}// end if
+				} // end if
+			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLibAntDAO);
+			cleanup(lPerAntDAO);
+			cleanup(lEvePermLicDAO);
 		}
 	}
 
 	private void ExScaricaPrescrizioni(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
 			throws F3BException {
+
 		PrescrizioneDAO lPresrDao = null;
-		List mPrescrizioni = aParseMess.getPrescrizioni();
+		try {
+			List mPrescrizioni = aParseMess.getPrescrizioni();
 
-		if ((mPrescrizioni != null) && (!mPrescrizioni.isEmpty())) {
-			lPresrDao = new PrescrizioneDAO(aConn);
+			if ((mPrescrizioni != null) && (!mPrescrizioni.isEmpty())) {
+				lPresrDao = new PrescrizioneDAO(aConn);
 
-			for (int i = 0; i < mPrescrizioni.size(); i++) {
-				try {
-					lPresrDao.setDAOFromModel((PrescrizioneModel) mPrescrizioni.get(i));
-					lPresrDao.setWithoutSequence(true);
-					lPresrDao.insert();
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.info("Prescrizione gia' presente...");
-						aMessaggio.setCodEsito("00001");
-					} else
-						throw new F3BException(F3BException.USER_MESSAGE,
-								"Impossibile inserire la Prescrizione! ");
+				for (int i = 0; i < mPrescrizioni.size(); i++) {
+					try {
+						lPresrDao.setDAOFromModel((PrescrizioneModel) mPrescrizioni.get(i));
+						lPresrDao.setWithoutSequence(true);
+						lPresrDao.insert();
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto
+							// di LogF3B.getLogger()
+							siesLogger.info("Prescrizione gia' presente...");
+							aMessaggio.setCodEsito("00001");
+						} else
+							throw new F3BException(F3BException.USER_MESSAGE,
+									"Impossibile inserire la Prescrizione! ");
+					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPresrDao);
 		}
 	}
 
 	private void ExScaricaImpugnazione(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
 			throws F3BException {
+
 		ImpugnazioneDAO lImpDao = null;
 		ImpugnazioneModel lImp = aParseMess.getImpugnazione();
 
@@ -2871,71 +2907,88 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 					siesLogger.info("Impugnazione gia' presente...");
 					aMessaggio.setCodEsito("00001");
 				} else
-					throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire l'Impugnazione! ");
+					throw new F3BException(F3BException.USER_MESSAGE,
+							"Impossibile inserire l'Impugnazione! ");
 			} finally {
 				cleanup(lImpDao);
 			}
-
 		}
 	}
 
 	private void ExScaricaTenori(ParserMessage aParseMess, Connection aConn, MessaggioModel aMessaggio)
 			throws F3BException {
+
 		TenoreDAO lTenDao = null;
 
-		List mTenori = aParseMess.getTenori();
+		try {
+			List mTenori = aParseMess.getTenori();
 
-		if (mTenori != null && !mTenori.isEmpty()) {
-			lTenDao = new TenoreDAO(aConn);
+			if (mTenori != null && !mTenori.isEmpty()) {
+				lTenDao = new TenoreDAO(aConn);
 
-			for (int i = 0; i < mTenori.size(); i++) {
-				try {
-					lTenDao.setDAOFromModel((TenoreModel) mTenori.get(i));
-					lTenDao.setWithoutSequence(true);
-					lTenDao.insert();
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.info("Tenore gia' presente...");
-						aMessaggio.setCodEsito("00001");
-					} else
-						throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire il Tenore! ");
+				for (int i = 0; i < mTenori.size(); i++) {
+					try {
+						lTenDao.setDAOFromModel((TenoreModel) mTenori.get(i));
+						lTenDao.setWithoutSequence(true);
+						lTenDao.insert();
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto
+							// di LogF3B.getLogger()
+							siesLogger.info("Tenore gia' presente...");
+							aMessaggio.setCodEsito("00001");
+						} else
+							throw new F3BException(F3BException.USER_MESSAGE,
+									"Impossibile inserire il Tenore! ");
+					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenDao);
 		}
 	}
 
 	private void ExScaricaTenori(FascicoloSiepeEstesoModel aFasEsteso, Connection aConn) throws F3BException {
+
 		TenoreDAO lTenDao = null;
 
-		List mTenori = Arrays.asList(aFasEsteso.getFascicoloSius().getTenori());
+		try {
+			List mTenori = Arrays.asList(aFasEsteso.getFascicoloSius().getTenori());
 
-		if (mTenori != null && !mTenori.isEmpty()) {
-			lTenDao = new TenoreDAO(aConn);
+			if (mTenori != null && !mTenori.isEmpty()) {
+				lTenDao = new TenoreDAO(aConn);
 
-			for (int i = 0; i < mTenori.size(); i++) {
-				try {
-					TenoreModel lTenoreModel = new TenoreModel((TenoreModel) mTenori.get(i));
+				for (int i = 0; i < mTenori.size(); i++) {
+					try {
+						TenoreModel lTenoreModel = new TenoreModel((TenoreModel) mTenori.get(i));
 
-					lTenDao.setDAOFromModel(lTenoreModel);
-					lTenDao.setWithoutSequence(true);
-					lTenDao.insert();
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.info("Tenore gia' presente...");
-					else
-						throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire il Tenore! ");
+						lTenDao.setDAOFromModel(lTenoreModel);
+						lTenDao.setWithoutSequence(true);
+						lTenDao.insert();
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto
+							// di LogF3B.getLogger()
+							siesLogger.info("Tenore gia' presente...");
+						else
+							throw new F3BException(F3BException.USER_MESSAGE,
+									"Impossibile inserire il Tenore! ");
+					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenDao);
 		}
 	}
 
 	// 25/02/2008 ESECUZIONE SANZIONE SOSTITUTIVA
 	private void ExScaricaEsecSanzSostitutiva(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		EsecuzioneSanzioneSostitutivaDAO lESSDao = null;
 		try {
 			lESSDao = new EsecuzioneSanzioneSostitutivaDAO(aConn);
@@ -2972,48 +3025,54 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	// 25/02/2008 PERIODO ALTRA SANZIONE
 	private void ExScaricaPeriodiAltraSanzione(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		PeriodoAltraSanzioneDAO lPerAltSanDao = null;
-		// 21/05/2008 Controlli x evitare NullPointer in Presa in Carico Ordinanza.
-		if (aParseMess.getFascicoloGPTPSius() != null
-				&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento() != null
-				&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento().getPAS() != null) {
-			List mPeriodiAltreSanzioni = aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento()
-					.getPAS();
+		try {
+			// 21/05/2008 Controlli x evitare NullPointer in Presa in Carico Ordinanza.
+			if (aParseMess.getFascicoloGPTPSius() != null
+					&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento() != null
+					&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento().getPAS() != null) {
+				List mPeriodiAltreSanzioni = aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento()
+						.getPAS();
 
-			if ((mPeriodiAltreSanzioni != null) && (!mPeriodiAltreSanzioni.isEmpty())) {
-				lPerAltSanDao = new PeriodoAltraSanzioneDAO(aConn);
+				if ((mPeriodiAltreSanzioni != null) && (!mPeriodiAltreSanzioni.isEmpty())) {
+					lPerAltSanDao = new PeriodoAltraSanzioneDAO(aConn);
 
-				for (int i = 0; i < mPeriodiAltreSanzioni.size(); i++) {
-					try {
-						lPerAltSanDao.setDAOFromModel((PeriodoAltraSanzioneModel) mPeriodiAltreSanzioni
-								.get(i));
-						lPerAltSanDao.setWithoutSequence(true);
-						lPerAltSanDao.insert();
-					} catch (DAOException ex) {
-						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Periodo Altra Sanzione gia' presente...");
-							aMessaggio.setCodEsito("00001");
-						} else
-							throw new F3BException(F3BException.USER_MESSAGE,
-									"Impossibile inserire il Periodo Altra Sanzione ! ");
+					for (int i = 0; i < mPeriodiAltreSanzioni.size(); i++) {
+						try {
+							lPerAltSanDao.setDAOFromModel(
+									(PeriodoAltraSanzioneModel) mPeriodiAltreSanzioni.get(i));
+							lPerAltSanDao.setWithoutSequence(true);
+							lPerAltSanDao.insert();
+						} catch (DAOException ex) {
+							if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Periodo Altra Sanzione gia' presente...");
+								aMessaggio.setCodEsito("00001");
+							} else
+								throw new F3BException(F3BException.USER_MESSAGE,
+										"Impossibile inserire il Periodo Altra Sanzione ! ");
+						}
 					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPerAltSanDao);
 		}
-		cleanup(lPerAltSanDao); // 21/05/2008
 	}
 
 	// 25/02/2008 SCAMBIO SANZIONE
 	private void ExScaricaScambioSanzione(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
-		ScambioSanzioneDAO lSSDao = null;
 
 		// 21/05/2008 Controlli x evitare NullPointer in Presa in Carico Ordinanza.
 		if (aParseMess.getFascicoloGPTPSius() != null
 				&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento() != null
 				&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento().getSS() != null) {
+			ScambioSanzioneDAO lSSDao = null;
 			try {
 				lSSDao = new ScambioSanzioneDAO(aConn);
 
@@ -3039,229 +3098,231 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 				cleanup(lSSDao);
 			}
 		}
-		cleanup(lSSDao); // 21/05/2008
 	}
 
 	private void ExAggiornaPosizioneGiuridica(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt) throws Exception {
+
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaModel lPosizione = null;
 		EventoModel lEve = null;
 
-		// Posizione Giuridica
-		if (aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null) {
-			lEve = aParseMess.getEvento().getEvento();
+		try {
+			// Posizione Giuridica
+			if (aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null) {
+				lEve = aParseMess.getEvento().getEvento();
 
-			lPosSqlDao = new PosizioneGiuridicaSqlDAO(aConn);
-			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(lEve.getFasSieIdFascicoloSiep());
-			lPosizione = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
-		}
+				lPosSqlDao = new PosizioneGiuridicaSqlDAO(aConn);
+				lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(lEve.getFasSieIdFascicoloSiep());
+				lPosizione = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
+			}
 
-		// Misura Alternativa
-		// 16/06/2008 Segnalazione anomalia NullPoinerException su "PresaInCarico Ordinanza" (planning ID
-		// 29743695).
-		// MisuraAlternativaModel lMisura = aParseMess.getMisuraAlternativa();
-		MisuraAlternativaModel lMisura = null;
-		if (aParseMess.getMisuraAlternativa() != null)
-			lMisura = aParseMess.getMisuraAlternativa();
+			// Misura Alternativa
+			// 16/06/2008 Segnalazione anomalia NullPoinerException su "PresaInCarico Ordinanza" (planning ID
+			// 29743695).
+			// MisuraAlternativaModel lMisura = aParseMess.getMisuraAlternativa();
+			MisuraAlternativaModel lMisura = null;
+			if (aParseMess.getMisuraAlternativa() != null)
+				lMisura = aParseMess.getMisuraAlternativa();
 
-		// Il codice della Posizione Giurica viene aggiornato
-		// in base al codice della Misura Alternativa
-		if (lMisura != null && lPosizione != null) {
-			String lCodPosizione = lPosizione.getCodPosizioneGiuridica();
-			String lNatura = lMisura.getCodNaturaDecisione();
-			String lTipoMisura = lMisura.getCodTipoMisura();
+			// Il codice della Posizione Giurica viene aggiornato
+			// in base al codice della Misura Alternativa
+			if (lMisura != null && lPosizione != null) {
+				String lCodPosizione = lPosizione.getCodPosizioneGiuridica();
+				String lNatura = lMisura.getCodNaturaDecisione();
+				String lTipoMisura = lMisura.getCodTipoMisura();
 
-			// se la DATA_SCARCERAZIONE e' presente...
-			if (lMisura.getDataScarcerazione() != null && lNatura != null && !lNatura.equals("")
-					&& lTipoMisura != null && !lTipoMisura.equals("") && lCodPosizione != null
-					&& !lCodPosizione.equals("")) {
-				boolean lCambiaPosizione = false;
-				// CONC.AFFIDAMENTO IN PROVA
-				if (lNatura.equals("CO")
-						&& (lTipoMisura.equals("0001") || lTipoMisura.equals("0002") || lTipoMisura
-								.equals("0003"))) {
-					if (lCodPosizione.equals("03") || lCodPosizione.equals("14")) {
-						lCodPosizione = "13";
-						lCambiaPosizione = true;
+				// se la DATA_SCARCERAZIONE e' presente...
+				if (lMisura.getDataScarcerazione() != null && lNatura != null && !lNatura.equals("")
+						&& lTipoMisura != null && !lTipoMisura.equals("") && lCodPosizione != null
+						&& !lCodPosizione.equals("")) {
+					boolean lCambiaPosizione = false;
+					// CONC.AFFIDAMENTO IN PROVA
+					if (lNatura.equals("CO") && (lTipoMisura.equals("0001") || lTipoMisura.equals("0002")
+							|| lTipoMisura.equals("0003"))) {
+						if (lCodPosizione.equals("03") || lCodPosizione.equals("14")) {
+							lCodPosizione = "13";
+							lCambiaPosizione = true;
+						}
 					}
-				}
 
-				// CONC.DET.DOM.
-				else if (lNatura.equals("CO")
-						&& (lTipoMisura.equals("0005") || lTipoMisura.equals("0010") || lTipoMisura
-								.equals("0013"))) {
-					if (lCodPosizione.equals("03") || lCodPosizione.equals("14")) {
-						lCodPosizione = "12";
-						lCambiaPosizione = true;
+					// CONC.DET.DOM.
+					else if (lNatura.equals("CO") && (lTipoMisura.equals("0005") || lTipoMisura.equals("0010")
+							|| lTipoMisura.equals("0013"))) {
+						if (lCodPosizione.equals("03") || lCodPosizione.equals("14")) {
+							lCodPosizione = "12";
+							lCambiaPosizione = true;
+						}
 					}
-				}
 
-				// RIPRISTINO MISURA ALTERNATIVA
-				else if (lNatura.equals("RG")
-						&& (lTipoMisura.equals("0123") || lTipoMisura.equals("0124")
-								|| lTipoMisura.equals("0125") || lNatura.equals("0126")
-								|| lNatura.equals("0127") || lNatura.equals("0128") || lNatura.equals("0129"))) {
-					if (lCodPosizione.equals("03") || lCodPosizione.equals("14")) {
-						lCodPosizione = "12";
-						lCambiaPosizione = true;
+					// RIPRISTINO MISURA ALTERNATIVA
+					else if (lNatura.equals("RG") && (lTipoMisura.equals("0123") || lTipoMisura.equals("0124")
+							|| lTipoMisura.equals("0125") || lNatura.equals("0126") || lNatura.equals("0127")
+							|| lNatura.equals("0128") || lNatura.equals("0129"))) {
+						if (lCodPosizione.equals("03") || lCodPosizione.equals("14")) {
+							lCodPosizione = "12";
+							lCambiaPosizione = true;
+						}
 					}
-				}
 
-				// SOSPENSIONE PROVVISORIA
-				else if (lNatura.equals("SP")
-						&& (lTipoMisura.equals("2145") || lTipoMisura.equals("2146")
-								|| lTipoMisura.equals("2147") || lTipoMisura.equals("2148")
-								|| lTipoMisura.equals("2149") || lTipoMisura.equals("2150") || lTipoMisura
-									.equals("2151"))) {
-					if (lCodPosizione.equals("12") || lCodPosizione.equals("13")
-							|| lCodPosizione.equals("14")) {
-						lCodPosizione = "03";
-						lCambiaPosizione = true;
+					// SOSPENSIONE PROVVISORIA
+					else if (lNatura.equals("SP") && (lTipoMisura.equals("2145") || lTipoMisura.equals("2146")
+							|| lTipoMisura.equals("2147") || lTipoMisura.equals("2148")
+							|| lTipoMisura.equals("2149") || lTipoMisura.equals("2150")
+							|| lTipoMisura.equals("2151"))) {
+						if (lCodPosizione.equals("12") || lCodPosizione.equals("13")
+								|| lCodPosizione.equals("14")) {
+							lCodPosizione = "03";
+							lCambiaPosizione = true;
+						}
 					}
-				}
 
-				// ...e una delle condizioni si verifica, storicizza la Posizione Giuridica
-				if (lCambiaPosizione) {
-					// CHIUDE POSIZIONE_GIURIDICA VECCHIA
-					// ( suppone la presenza di una posizione giuridica,
-					// se non presente la prima inserirla? )
-					lPosDao = new PosizioneGiuridicaDAO(aConn);
+					// ...e una delle condizioni si verifica, storicizza la Posizione Giuridica
+					if (lCambiaPosizione) {
+						// CHIUDE POSIZIONE_GIURIDICA VECCHIA
+						// ( suppone la presenza di una posizione giuridica,
+						// se non presente la prima inserirla? )
+						lPosDao = new PosizioneGiuridicaDAO(aConn);
 
-					lPosDao.setDataFine(lMisura.getDataScarcerazione());
-					lPosDao.setDataAggiornamento(aMisAlt.getDataAggiornamento());
-					lPosDao.setCodUfficioAggiornamento(aMisAlt.getCodUfficioAggiornamento());
-					lPosDao.setCodOperatoreAggiornamento(aMisAlt.getCodOperatoreAggiornamento());
-					lPosDao.setCondizioneUpdate(lPosizione.getIdPosizioneGiuridica());
+						lPosDao.setDataFine(lMisura.getDataScarcerazione());
+						lPosDao.setDataAggiornamento(aMisAlt.getDataAggiornamento());
+						lPosDao.setCodUfficioAggiornamento(aMisAlt.getCodUfficioAggiornamento());
+						lPosDao.setCodOperatoreAggiornamento(aMisAlt.getCodOperatoreAggiornamento());
+						lPosDao.setCondizioneUpdate(lPosizione.getIdPosizioneGiuridica());
 
-					lPosDao.update();
-					lPosDao.stop();
+						lPosDao.update();
+						lPosDao.stop();
 
-					// INSERISCE LA NUOVA POSIZIONE GIURIDICA
-					lPosDao.setCodPosizioneGiuridica(lCodPosizione);
-					lPosDao.setCodPosizioneProcessuale("-");
-					lPosDao.setCodUfficioInserimento(aMisAlt.getCodUfficioAggiornamento());
-					lPosDao.setCodOperatoreInserimento(aMisAlt.getCodOperatoreAggiornamento());
-					lPosDao.setDataInserimento(aMisAlt.getDataAggiornamento());
-					lPosDao.setDataInizio(lMisura.getDataScarcerazione());
-					lPosDao.setFasSieIdFascicoloSiep(lPosizione.getFasSieIdFascicoloSiep());
+						// INSERISCE LA NUOVA POSIZIONE GIURIDICA
+						lPosDao.setCodPosizioneGiuridica(lCodPosizione);
+						lPosDao.setCodPosizioneProcessuale("-");
+						lPosDao.setCodUfficioInserimento(aMisAlt.getCodUfficioAggiornamento());
+						lPosDao.setCodOperatoreInserimento(aMisAlt.getCodOperatoreAggiornamento());
+						lPosDao.setDataInserimento(aMisAlt.getDataAggiornamento());
+						lPosDao.setDataInizio(lMisura.getDataScarcerazione());
+						lPosDao.setFasSieIdFascicoloSiep(lPosizione.getFasSieIdFascicoloSiep());
 
-					lPosDao.insert();
-					lPosDao.stop();
+						lPosDao.insert();
+						lPosDao.stop();
+					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPosDao);
+			cleanup(lPosSqlDao);
 		}
-		cleanup(lPosDao); // 21/05/2008
-		cleanup(lPosSqlDao); // 21/05/2008
 	}
 
 	private void ExAggiornaStatoProcedimento(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt) throws Exception {
+
 		StatoProcedimentoDAO lStatoDao = null;
 
 		MisuraAlternativaModel lMisura = aParseMess.getMisuraAlternativa();
 		EventoModel lEve = null;
 
-		// *** AGGIORNA LO STATO PROCEDIMENTO IN BASE ALLA MISURA ALTERNATIVA ***
-		if (lMisura != null && aParseMess.getEvento() != null && aParseMess.getEvento().getEvento() != null) {
-			lEve = aParseMess.getEvento().getEvento();
+		try {
+			// *** AGGIORNA LO STATO PROCEDIMENTO IN BASE ALLA MISURA ALTERNATIVA ***
+			if (lMisura != null && aParseMess.getEvento() != null
+					&& aParseMess.getEvento().getEvento() != null) {
+				lEve = aParseMess.getEvento().getEvento();
 
-			String lStatoProcedimento = null;
-			String lNatura = lMisura.getCodNaturaDecisione();
-			String lTipoMisura = lMisura.getCodTipoMisura();
+				String lStatoProcedimento = null;
+				String lNatura = lMisura.getCodNaturaDecisione();
+				String lTipoMisura = lMisura.getCodTipoMisura();
 
-			if (lNatura != null && !lNatura.equals("") && lTipoMisura != null && !lTipoMisura.equals("")) {
-				// CONC.AFFIDAMENTO
-				if (lNatura.equals("CO")
-						&& (lTipoMisura.equals("0001") || lTipoMisura.equals("0002") || lTipoMisura
-								.equals("0003"))) {
-					lStatoProcedimento = "0022";
-				}
-				// CONC.DET.DOM.
-				else if (lNatura.equals("CO")
-						&& (lTipoMisura.equals("0005") || lTipoMisura.equals("0010") || lTipoMisura
-								.equals("0013"))) {
-					lStatoProcedimento = "0026";
-				}
-				// CONC.SEMILIBERTA'
-				else if (lNatura.equals("CO") && (lTipoMisura.equals("0004"))) {
-					lStatoProcedimento = "0030";
-				}
-				// RIPRISTINO AFFIDAMENTO
-				else if (lNatura.equals("RG")
-						&& (lTipoMisura.equals("0014") || lTipoMisura.equals("0015") || lTipoMisura
-								.equals("0086"))) {
-					lStatoProcedimento = "0041";
-				}
-				// RIPRISTINO DET.DOM.
-				else if (lNatura.equals("RG")
-						&& (lTipoMisura.equals("0016") || lTipoMisura.equals("0087") || lTipoMisura
-								.equals("0089"))) {
-					lStatoProcedimento = "0042";
-				}
-				// RIPRISTINO SEMILIBERTA'
-				else if (lNatura.equals("RG") && (lTipoMisura.equals("0091"))) {
-					lStatoProcedimento = "0043";
-				}
-				// REVOCA AFFIDAMENTO
-				else if (lNatura.equals("RE")
-						&& (lTipoMisura.equals("0014") || lTipoMisura.equals("0015") || lTipoMisura
-								.equals("0086"))) {
-					lStatoProcedimento = "0049";
-				}
-				// REVOCA DET.DOM.
-				else if (lNatura.equals("RE")
-						&& (lTipoMisura.equals("0016") || lTipoMisura.equals("0087") || lTipoMisura
-								.equals("0089"))) {
-					lStatoProcedimento = "0050";
-				}
-				// REVOCA SEMILIBERTA'
-				else if (lNatura.equals("RE") && (lTipoMisura.equals("0091"))) {
-					lStatoProcedimento = "0051";
-				}
-				// REVOCA MISURA ALTERNATIVA
-				else if (lNatura.equals("RE") && (lTipoMisura.equals("0000"))) {
-					lStatoProcedimento = "0052";
-				}
-				// SOSPENSIONE
-				else if (lNatura.equals("SP")
-						&& (lTipoMisura.equals("2145") || lTipoMisura.equals("2146")
-								|| lTipoMisura.equals("2147") || lTipoMisura.equals("2148")
-								|| lTipoMisura.equals("2149") || lTipoMisura.equals("2150") || lTipoMisura
-									.equals("2151"))) {
-					lStatoProcedimento = "0033";
-				}
+				if (lNatura != null && !lNatura.equals("") && lTipoMisura != null
+						&& !lTipoMisura.equals("")) {
+					// CONC.AFFIDAMENTO
+					if (lNatura.equals("CO") && (lTipoMisura.equals("0001") || lTipoMisura.equals("0002")
+							|| lTipoMisura.equals("0003"))) {
+						lStatoProcedimento = "0022";
+					}
+					// CONC.DET.DOM.
+					else if (lNatura.equals("CO") && (lTipoMisura.equals("0005") || lTipoMisura.equals("0010")
+							|| lTipoMisura.equals("0013"))) {
+						lStatoProcedimento = "0026";
+					}
+					// CONC.SEMILIBERTA'
+					else if (lNatura.equals("CO") && (lTipoMisura.equals("0004"))) {
+						lStatoProcedimento = "0030";
+					}
+					// RIPRISTINO AFFIDAMENTO
+					else if (lNatura.equals("RG") && (lTipoMisura.equals("0014") || lTipoMisura.equals("0015")
+							|| lTipoMisura.equals("0086"))) {
+						lStatoProcedimento = "0041";
+					}
+					// RIPRISTINO DET.DOM.
+					else if (lNatura.equals("RG") && (lTipoMisura.equals("0016") || lTipoMisura.equals("0087")
+							|| lTipoMisura.equals("0089"))) {
+						lStatoProcedimento = "0042";
+					}
+					// RIPRISTINO SEMILIBERTA'
+					else if (lNatura.equals("RG") && (lTipoMisura.equals("0091"))) {
+						lStatoProcedimento = "0043";
+					}
+					// REVOCA AFFIDAMENTO
+					else if (lNatura.equals("RE") && (lTipoMisura.equals("0014") || lTipoMisura.equals("0015")
+							|| lTipoMisura.equals("0086"))) {
+						lStatoProcedimento = "0049";
+					}
+					// REVOCA DET.DOM.
+					else if (lNatura.equals("RE") && (lTipoMisura.equals("0016") || lTipoMisura.equals("0087")
+							|| lTipoMisura.equals("0089"))) {
+						lStatoProcedimento = "0050";
+					}
+					// REVOCA SEMILIBERTA'
+					else if (lNatura.equals("RE") && (lTipoMisura.equals("0091"))) {
+						lStatoProcedimento = "0051";
+					}
+					// REVOCA MISURA ALTERNATIVA
+					else if (lNatura.equals("RE") && (lTipoMisura.equals("0000"))) {
+						lStatoProcedimento = "0052";
+					}
+					// SOSPENSIONE
+					else if (lNatura.equals("SP") && (lTipoMisura.equals("2145") || lTipoMisura.equals("2146")
+							|| lTipoMisura.equals("2147") || lTipoMisura.equals("2148")
+							|| lTipoMisura.equals("2149") || lTipoMisura.equals("2150")
+							|| lTipoMisura.equals("2151"))) {
+						lStatoProcedimento = "0033";
+					}
 
-			} // endif Natura
+				} // endif Natura
 
-			if (lStatoProcedimento != null) {
-				lStatoDao = new StatoProcedimentoDAO(aConn);
-				// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
-				lStatoDao.setCondizioneByIdFascicolo(lEve.getFasSieIdFascicoloSiep());
-				lStatoDao.delete();
+				if (lStatoProcedimento != null) {
+					lStatoDao = new StatoProcedimentoDAO(aConn);
+					// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+					lStatoDao.setCondizioneByIdFascicolo(lEve.getFasSieIdFascicoloSiep());
+					lStatoDao.delete();
 
-				// - Inserisci STATO PROCEDIMENTO
-				StatoProcedimentoModel lStaProMod = new StatoProcedimentoModel();
+					// - Inserisci STATO PROCEDIMENTO
+					StatoProcedimentoModel lStaProMod = new StatoProcedimentoModel();
 
-				lStaProMod.setProgressivo(new BigDecimal(1));
-				lStaProMod.setCodStatoProcedimento(lStatoProcedimento);
-				lStaProMod.setData(lEve.getDataEmissione());
+					lStaProMod.setProgressivo(new BigDecimal(1));
+					lStaProMod.setCodStatoProcedimento(lStatoProcedimento);
+					lStaProMod.setData(lEve.getDataEmissione());
 
-				lStaProMod.setFasSieIdFascicoloSiep(lEve.getFasSieIdFascicoloSiep());
-				lStaProMod.setCodOperatoreInserimento(aMisAlt.getCodOperatoreAggiornamento());
-				lStaProMod.setDataInserimento(aMisAlt.getDataAggiornamento());
-				lStaProMod.setCodUfficioInserimento(aMisAlt.getCodUfficioAggiornamento());
+					lStaProMod.setFasSieIdFascicoloSiep(lEve.getFasSieIdFascicoloSiep());
+					lStaProMod.setCodOperatoreInserimento(aMisAlt.getCodOperatoreAggiornamento());
+					lStaProMod.setDataInserimento(aMisAlt.getDataAggiornamento());
+					lStaProMod.setCodUfficioInserimento(aMisAlt.getCodUfficioAggiornamento());
 
-				lStatoDao.setDAOFromModel(lStaProMod);
-				lStatoDao.insert();
-			}
-		} // endif Misura
+					lStatoDao.setDAOFromModel(lStaProMod);
+					lStatoDao.insert();
+				}
+			} // endif Misura
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lStatoDao);
+		}
 	}
 
 	// 11/10/2010 Scarico Soggetto legato al Fascicolo SIEP da inserire nei dati
 	private MessaggioModel ExScaricaSoggettoSIEP(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		SoggettoDAO lSoggettoDao = null;
 		try {
 			FascicoloSiepModel lFasSiepInviato = aParseMess.getFascicolo();
@@ -3295,44 +3356,52 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 	// 17/02/2015 MISURE SICUREZZA
 	private void ExScaricaMisureSicurezza(ParserMessage aParseMess, Connection aConn,
 			MessaggioModel aMessaggio) throws F3BException {
+
 		MisuraSicurezzaDAO lMisSicDao = null;
-		if (aParseMess.getFascicoloGPTPSius() != null
-				&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento() != null
-				&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento().getMSA() != null) {
-			List mMisureSicurezza = aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento().getMSA();
+		try {
+			if (aParseMess.getFascicoloGPTPSius() != null
+					&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento() != null
+					&& aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento().getMSA() != null) {
+				List mMisureSicurezza = aParseMess.getFascicoloGPTPSius().getDatiSiusPerTrasferimento()
+						.getMSA();
 
-			if ((mMisureSicurezza != null) && (!mMisureSicurezza.isEmpty())) {
-				lMisSicDao = new MisuraSicurezzaDAO(aConn);
+				if ((mMisureSicurezza != null) && (!mMisureSicurezza.isEmpty())) {
+					lMisSicDao = new MisuraSicurezzaDAO(aConn);
 
-				for (int i = 0; i < mMisureSicurezza.size(); i++) {
-					try {
-						lMisSicDao.setDAOFromModel((MisuraSicurezzaModel) mMisureSicurezza.get(i));
-						lMisSicDao.setWithoutSequence(true);
-						lMisSicDao.insert();
-					} catch (DAOException ex) {
-						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-							// posto di LogF3B.getLogger()
-							siesLogger.info("Misura di Sicurezza gia' presente...");
-							aMessaggio.setCodEsito("00001");
-						} else
-							throw new F3BException(F3BException.USER_MESSAGE,
-									"Impossibile inserire la Misura di Sicurezza ! ");
+					for (int i = 0; i < mMisureSicurezza.size(); i++) {
+						try {
+							lMisSicDao.setDAOFromModel((MisuraSicurezzaModel) mMisureSicurezza.get(i));
+							lMisSicDao.setWithoutSequence(true);
+							lMisSicDao.insert();
+						} catch (DAOException ex) {
+							if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al
+								// posto di LogF3B.getLogger()
+								siesLogger.info("Misura di Sicurezza gia' presente...");
+								aMessaggio.setCodEsito("00001");
+							} else
+								throw new F3BException(F3BException.USER_MESSAGE,
+										"Impossibile inserire la Misura di Sicurezza ! ");
+						}
 					}
 				}
 			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisSicDao);
 		}
-		cleanup(lMisSicDao);
 	}
 
 	public MessaggioModel ExPresaInCaricoSentenza(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt)
 			throws F3BException {
+
 		Connection lConn = null;
-//		FascicoloSiepeModel lFasSiepe = null;
+		// FascicoloSiepeModel lFasSiepe = null;
 		try {
 			lConn = getDBTransaction();
 
-//			ParserMessage lPars;
+			// ParserMessage lPars;
 			if (aMessaggio.getTreeModel() == null)
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire il Messaggio Contenuto incorretto!");
@@ -3346,7 +3415,8 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
-			throw new F3BException(this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
+			throw new F3BException(
+					this.getClass().getPackage().getName() + ".ExPresaInCaricoOrdinanza: " + e);
 		} finally {
 			cleanup(lConn);
 		}
@@ -3356,6 +3426,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 	public MessaggioModel ExPresaInCaricoSentenza(MessaggioModel aMessaggio, MisuraAlternativaModel aMisAlt,
 			Connection aConn) throws Exception {
+
 		ParserMessage lPars;
 		if (aMessaggio.getTreeModel() != null)
 			lPars = new ParserMessage(aMessaggio.getTreeModel());
@@ -3375,24 +3446,24 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 			aMessaggio = ExScaricaSoggettoSIEP(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIEP e suo Inserimento nel DB
-//			FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
-			/*lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
+			// FascicoloSiepModel lFasSiepInviato = new FascicoloSiepModel();
+			/* lFasSiepInviato = */ExScaricaFascicoloSiep(lPars, aConn, aMessaggio);
 
 			// Prelievo del Fascicolo SIUS e suo Inserimento nel DB
-			/*FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
+			/* FascicoloSiusModel lFasSiu = */ExScaricaFascicoloSius(lPars, aConn, aMessaggio);
 
 			// GENERALE PROCEDIMENTO
 			// Prelievo del GENERALE PROCEDIMENTO e suo Inserimento nel DB
-			/*GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
+			/* GeneraleProcedimentoModel lGenPro = */ExScaricaGeneraleProcedimento(lPars, aConn, aMessaggio);
 
 			// RESIDENZA
-			/*ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
+			/* ResidenzaAssociataModel lResAssociata = */ExScaricaResidenza(lPars, aConn, aMessaggio);
 
 			// RESIDENZA_FASCICOLO_SIUS
-			/*lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
+			/* lResAssociata = */ExScaricaResidenzaSius(lPars, aConn, aMessaggio);
 
 			// EVENTO
-			/*EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
+			/* EventoNotificaModel lEvento = */ExScaricaEvento(lPars, aConn, aMessaggio);
 
 			// NOTE AGGIUNTIVE
 			ExScaricaNoteAggiuntive(lPars, aConn, aMessaggio);

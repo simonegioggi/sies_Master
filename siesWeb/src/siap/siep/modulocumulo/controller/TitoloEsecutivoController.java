@@ -173,6 +173,7 @@ public class TitoloEsecutivoController extends SiapController {
 		BeneficioCumuloSqlDAO lBenCumSqlDao = null;
 		BeneficioCumuloSqlDAO lConCumSqlDao = null;
 		BeneficioCumuloDAO lConcessioneCumDao = null;
+
 		BeneficioModel lBenMod = null;
 		BeneficioCumuloModel bcm = null;
 
@@ -301,6 +302,9 @@ public class TitoloEsecutivoController extends SiapController {
 			cleanup(lTitSqlDao);
 			cleanup(lConCumSqlDao);
 			cleanup(lConcessioneCumDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lBenCumSqlDao);
+
 			if (aDBConnection == null)
 				cleanup(lConn);
 		}
@@ -318,6 +322,7 @@ public class TitoloEsecutivoController extends SiapController {
 		PenaAccessoriaCumuloDAO lpenAccCumDao = null;
 		PenaAccessoriaCumuloSqlDAO lPAcCumSqlDao = null;
 		TipologiaOrarioDAO lTipOrDao = null;
+
 		BeneficioModel lBenMod = null;
 		BeneficioCumuloModel lBenCumMod = null;
 		PenaAccessoriaModel lPenMod = null;
@@ -600,8 +605,9 @@ public class TitoloEsecutivoController extends SiapController {
 		MisuraSicurezzaCumuloSqlDAO lMisCumSqlDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisCumSqlDaoXX = null;
 		FascMsToFascSiepSqlDAO lFascMsSqlDao = null;
-		FascMsToFascSiepModel lFascMsModel = null;
 		UfficioSqlDAO lUffSqldao = null;
+
+		FascMsToFascSiepModel lFascMsModel = null;
 		UfficioModel lUffMod = null;
 		MisuraSicurezzaCumuloModel lMisSicCumMod = null;
 		MisuraSicurezzaModel lMisSicMod = null;
@@ -739,6 +745,10 @@ public class TitoloEsecutivoController extends SiapController {
 			cleanup(lMisCumDao);
 			cleanup(lMisCumSqlDao);
 			cleanup(lMisCumSqlDaoXX);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFascMsSqlDao);
+			cleanup(lUffSqldao);
+
 			if (aDBConnection == null)
 				cleanup(lConn);
 		}
@@ -855,12 +865,13 @@ public class TitoloEsecutivoController extends SiapController {
 		SanzioneSostitutivaCumuloDAO lSanzCumDao = null;
 		ContinuazioneCumuloDAO lContCumDao = null;
 		ContinuazioneCumuloSqlDAO lContCumSqlDAo = null;
+		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
+
 		PenaComplessivaModel lPenMod = null;
 		SanzioneSostitutivaModel lSanMod = null;
 		PenaComplessivaCumuloModel lPenCumMod = null;
 		SanzioneSostitutivaCumuloModel lSanCumMod = null;
 		ContinuazioneCumuloModel lContCumMod = null;
-		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 
 		try {
 			if (aDBConnection != null) {

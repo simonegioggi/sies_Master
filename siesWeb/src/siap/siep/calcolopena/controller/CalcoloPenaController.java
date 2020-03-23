@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
@@ -59,10 +63,6 @@ import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoSqlDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CalcoloPenaController extends SiapController implements ICalcoloPena {
@@ -73,11 +73,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/*****************************************************************************
 	 * Effettua la ricerca dei benefici Concessi per Reclusione per il fascicolo corrente. Somma i valori e
 	 * restituisce il totale in un CalendarModel
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            - id del fascicolo
 	 * @return CalendarModel - somma dei benefici
-	 ************************************************************************** */
+	 */
 	public CalendarModel exGetBeneficiConcessiReclusione(BigDecimal lFascID) throws F3BException {
 
 		Connection lConn = null;
@@ -138,12 +138,13 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/*****************************************************************************
 	 * Effettua la ricerca dei benefici Concessi per Arresto per il fascicolo corrente. Somma i valori e
 	 * restituisce il totale in un CalendarModel
-	 * 
+	 *
 	 * @param BigDecimal
 	 *            - id del fascicolo
 	 * @return CalendarModel - somma dei benefici
-	 ************************************************************************** */
+	 */
 	public CalendarModel exGetBeneficiConcessiArresto(BigDecimal lFascID) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioSqlDAO lBenDao = null;
 
@@ -184,8 +185,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			lBenConc = lCalCon.ricalcolaGAM(lBenConc);
 			lBenDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaController.exGetBeneficiConcessiArresto: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaController.exGetBeneficiConcessiArresto: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException(
 					"CalcoloPenaController.exGetBeneficiConcessiArresto: Non posso leggere  : " + ex);
@@ -200,11 +201,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/*****************************************************************************
 	 * Effettua la ricerca dei benefici Revocati per Reclusione per il fascicolo corrente. Somma i valori e
 	 * restituisce il totale in un CalendarModel
-	 * 
+	 *
 	 * @param lFascID
 	 * @return CalendarModel - somma dei benefici
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public CalendarModel exGetBeneficiRevocatiReclusione(BigDecimal lFascID) throws F3BException {
 
 		Connection lConn = null;
@@ -235,8 +236,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				 * TODO ??? così li somma 2 volte? verificare
 				 */
 				if (lBenMod.getImportoMulta() != null)
-					lCalMod.setImportoMulta(lCalMod.getImportoMulta()
-							+ lBenMod.getImportoMulta().doubleValue());
+					lCalMod.setImportoMulta(
+							lCalMod.getImportoMulta() + lBenMod.getImportoMulta().doubleValue());
 
 				lBenConc = lCalCon.sommaGiornieValute(lBenConc, lCalMod);
 			}
@@ -260,12 +261,13 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/*****************************************************************************
 	 * Effettua la ricerca dei benefici Revocati per Arresto per il fascicolo corrente. Somma i valori e
 	 * restituisce il totale in un CalendarModel
-	 * 
+	 *
 	 * @param lFascID
 	 * @return CalendarModel - somma dei benefici
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public CalendarModel exGetBeneficiRevocatiArresto(BigDecimal lFascID) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioSqlDAO lBenDao = null;
 
@@ -295,8 +297,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				 * TODO ??? così li somma 2 volte? verificare
 				 */
 				if (lBenMod.getImportoAmmenda() != null)
-					lCalMod.setImportoAmmenda(lCalMod.getImportoAmmenda()
-							+ lBenMod.getImportoAmmenda().doubleValue());
+					lCalMod.setImportoAmmenda(
+							lCalMod.getImportoAmmenda() + lBenMod.getImportoAmmenda().doubleValue());
 
 				lBenConc = lCalCon.sommaGiornieValute(lBenConc, lCalMod);
 			}
@@ -304,8 +306,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			lBenConc = lCalCon.ricalcolaGAM(lBenConc);
 			lBenDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaController.exGetBeneficiRevocatiArresto: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaController.exGetBeneficiRevocatiArresto: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException(
 					"CalcoloPenaController.exGetBeneficiRevocatiArresto: Non posso leggere  : " + ex);
@@ -327,6 +329,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @throws F3BException
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliReclusione(BigDecimal lFascID) throws F3BException {
+
 		// Retrieve Misura Cautelare (PS=Presofferto Computabile)
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
@@ -394,6 +397,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @throws F3BException
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliArresto(BigDecimal lFascID) throws F3BException {
+
 		// Retrieve Misura Cautelare (PS=Presofferto Computabile)
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
@@ -462,7 +466,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @return CalendarModel - somma delle Misure Cautelari
 	 * @throws F3BException
 	 ****************************************************************************/
-	public CalendarModel exGetMisureCautelariNONComputabiliReclusione(BigDecimal lFascID) throws F3BException {
+	public CalendarModel exGetMisureCautelariNONComputabiliReclusione(BigDecimal lFascID)
+			throws F3BException {
+
 		// Retrieve Misura Cautelare (NC=Presofferto NON Computabile)
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
@@ -531,6 +537,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @throws F3BException
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariNONComputabiliArresto(BigDecimal lFascID) throws F3BException {
+
 		// Retrieve Misura Cautelare (NC=Presofferto NON Computabile)
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
@@ -598,6 +605,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @throws F3BException
 	 ****************************************************************************/
 	public CalendarModel exGetFungibilita(BigDecimal lFascID) throws F3BException {
+
 		// Retrieve Misura Cautelare (FU=Fungibilita)
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
@@ -681,12 +689,13 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @param CodUffOperatore
 	 * @return Model della PENA_RESIDUA aggiornata o inserita
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public PenaResiduaModel exCalcolaQuantumPenaComplessivaIniziale(BigDecimal lFascID,
 			PenaComplessivaModel lPenMod, CalendarModel lBenConcessiReclusione,
 			CalendarModel lBenRevocatiReclusione, CalendarModel lBenConcessiArresto,
 			CalendarModel lBenRevocatiArresto, CalendarModel lMCTotRec, CalendarModel lMCTotArr,
 			String CodOperatore, String CodUffOperatore) throws F3BException {
+
 		// CALCOLO DEL QUANTUM DI PENA
 		Connection lConn = null;
 
@@ -705,8 +714,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		boolean lProceedForErg = false;
 
 		// false se ergastolo
-		lProceedForErg = !(lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod
-				.getCodTipoPenaDetentiva().equals("04"));
+		lProceedForErg = !(lPenMod.getCodTipoPenaDetentiva().equals("03")
+				|| lPenMod.getCodTipoPenaDetentiva().equals("04"));
 
 		// =============================================================================
 		// Il cacolo viene effettuato solo se la pena in sentenza non è un ergastolo
@@ -748,12 +757,12 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// =======================================================================================================
 			if (lPCCalReclusione.getErrorMsg().equals("Swapped")) {
 				lPCTmpReclusione = lCalCon.sommaGiorni(lPCCalReclusione, lPenaComplessivaReclusione);
-				lPCTmpReclusione.setImportoMulta(lPenaComplessivaReclusione.getImportoMulta()
-						- lPCCalReclusione.getImportoMulta());
+				lPCTmpReclusione.setImportoMulta(
+						lPenaComplessivaReclusione.getImportoMulta() - lPCCalReclusione.getImportoMulta());
 			} else {
 				lPCTmpReclusione = lCalCon.sottraiGiorni(lPenaComplessivaReclusione, lPCCalReclusione);
-				lPCTmpReclusione.setImportoMulta(lPenaComplessivaReclusione.getImportoMulta()
-						- lPCCalReclusione.getImportoMulta());
+				lPCTmpReclusione.setImportoMulta(
+						lPenaComplessivaReclusione.getImportoMulta() - lPCCalReclusione.getImportoMulta());
 			}
 
 			// Se i benefici per Reclusione superano la pena complessiva per reclusione,
@@ -780,8 +789,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// prevista una un'ammenda in Pena Complessiva
 			if (lPCTmpReclusione.getImportoMulta() < 0) {
 				if (lPenaComplessivaArresto.getImportoAmmenda() > 0)
-					lBenConcessiArresto.setImportoAmmenda(lBenConcessiArresto.getImportoAmmenda()
-							- lPCTmpReclusione.getImportoMulta());
+					lBenConcessiArresto.setImportoAmmenda(
+							lBenConcessiArresto.getImportoAmmenda() - lPCTmpReclusione.getImportoMulta());
 				lPCTmpReclusione.setImportoMulta(0);
 			}
 
@@ -799,8 +808,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			} else {
 				lPCTmpArresto = lCalCon.sottraiGiornieValute(lPenaComplessivaArresto, lPCCalArresto);
 			}
-			lPCTmpArresto.setImportoAmmenda(lPenaComplessivaArresto.getImportoAmmenda()
-					- lPCCalArresto.getImportoAmmenda());
+			lPCTmpArresto.setImportoAmmenda(
+					lPenaComplessivaArresto.getImportoAmmenda() - lPCCalArresto.getImportoAmmenda());
 
 			// ==================================================
 			// Prendo in considerazione le MISURE CAUTELARI
@@ -982,13 +991,14 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @param lPenaGiaEspiata
 	 * @return
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public PenaResiduaModel exCalcolaQuantumPenaComplessivaNuovo(BigDecimal lFascID,
 			PenaComplessivaModel lPenMod, CalendarModel lBenConcessiReclusione,
 			CalendarModel lBenRevocatiReclusione, CalendarModel lBenConcessiArresto,
 			CalendarModel lBenRevocatiArresto, CalendarModel lMCTotRec, CalendarModel lMCTotArr,
 			String CodOperatore, String CodUffOperatore, boolean ForzaFungibilita,
 			CalendarModel lPenaGiaEspiata) throws F3BException {
+
 		// CALCOLO DEL QUANTUM DI PENA
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -1007,8 +1017,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 		boolean lProceedForErg = false;
 
-		lProceedForErg = !(lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod
-				.getCodTipoPenaDetentiva().equals("04"));
+		lProceedForErg = !(lPenMod.getCodTipoPenaDetentiva().equals("03")
+				|| lPenMod.getCodTipoPenaDetentiva().equals("04"));
 
 		// ==========================================================================
 		// se lProceedForErg=true, NON c'è una riga tipo codice = ergastolo...proseguo!
@@ -1048,7 +1058,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// siesLogger.debug("Tot Reclusione di Partenza :" + lPenaComplessivaReclusione);
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("Tot Arresto di Partenza    :" + lPenaComplessivaArresto);
+			// siesLogger.debug("Tot Arresto di Partenza :" + lPenaComplessivaArresto);
 
 			/*
 			 * //Sottraggo Benefici Concessi Arresto
@@ -1069,7 +1079,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// siesLogger.debug("-------------------------------------------");
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("    CALCOLO SALDO BENEFICI RECLUSIONE   ");
+			// siesLogger.debug(" CALCOLO SALDO BENEFICI RECLUSIONE ");
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			// siesLogger.debug("-------------------------------------------");
@@ -1090,13 +1100,13 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// ======================================================================
 			if (lPCCal.getErrorMsg().equals("Swapped")) {
 				lPCTmpReclusione = lCalCon.sommaGiorni(lPCCal, lPenaComplessivaReclusione);
-				lPCTmpReclusione.setImportoMulta(lPenaComplessivaReclusione.getImportoMulta()
-						- lPCCal.getImportoMulta());
+				lPCTmpReclusione.setImportoMulta(
+						lPenaComplessivaReclusione.getImportoMulta() - lPCCal.getImportoMulta());
 			} else { // Concessi > revocati, saldo positivo, sottraggo i benefici alla pena
 						// complessiva
 				lPCTmpReclusione = lCalCon.sottraiGiorniNew(lPenaComplessivaReclusione, lPCCal);
-				lPCTmpReclusione.setImportoMulta(lPenaComplessivaReclusione.getImportoMulta()
-						- lPCCal.getImportoMulta());
+				lPCTmpReclusione.setImportoMulta(
+						lPenaComplessivaReclusione.getImportoMulta() - lPCCal.getImportoMulta());
 			}
 
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1122,7 +1132,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				// n.b. sottraggo una quantità negativa, quindi la sto sommando
 				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				// siesLogger.debug("Benefici Reclusione > Reclusione a sistema: azzero la reclusione e carico l'eccesso sui benefici per Arresti");
+				// siesLogger.debug("Benefici Reclusione > Reclusione a sistema: azzero la reclusione e carico
+				// l'eccesso sui benefici per Arresti");
 				lBenConcessiArresto = lCalCon.sottraiGiornieValute(lBenConcessiArresto, lPCTmpReclusione);
 				lPCTmpReclusione.setNumAnni(0);
 				lPCTmpReclusione.setNumMesi(0);
@@ -1137,8 +1148,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// Ammenda, ma solo se è prevista un'ammenda in Pena Complessiva
 			if (lPCTmpReclusione.getImportoMulta() < 0) {
 				if (lPenaComplessivaArresto.getImportoAmmenda() > 0)
-					lBenConcessiArresto.setImportoAmmenda(lBenConcessiArresto.getImportoAmmenda()
-							- lPCTmpReclusione.getImportoMulta());
+					lBenConcessiArresto.setImportoAmmenda(
+							lBenConcessiArresto.getImportoAmmenda() - lPCTmpReclusione.getImportoMulta());
 				lPCTmpReclusione.setImportoMulta(0);
 			}
 
@@ -1154,7 +1165,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// siesLogger.debug("-------------------------------------------");
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("    CALCOLO SALDO BENEFICI ARRESTI    ");
+			// siesLogger.debug(" CALCOLO SALDO BENEFICI ARRESTI ");
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			// siesLogger.debug("-------------------------------------------");
@@ -1170,14 +1181,15 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 															// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
 															// variabile di istanza siesLogger al posto di
 															// LogF3B.getLogger()
-															// siesLogger.debug("Saldo Benefici arresti negativo");
+															// siesLogger.debug("Saldo Benefici arresti
+															// negativo");
 				lPCTmpArresto = lCalCon.sommaGiorni(lPCCal, lPenaComplessivaArresto);
 			} else {
 				lPCTmpArresto = lCalCon.sottraiGiorniNew(lPenaComplessivaArresto, lPCCal);
 			}
 
-			lPCTmpArresto.setImportoAmmenda(lPenaComplessivaArresto.getImportoAmmenda()
-					- lPCCal.getImportoAmmenda());
+			lPCTmpArresto.setImportoAmmenda(
+					lPenaComplessivaArresto.getImportoAmmenda() - lPCCal.getImportoAmmenda());
 
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1194,7 +1206,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// siesLogger.debug("-------------------------------------------");
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("    CALCOLO MISURE CAUTELARI    ");
+			// siesLogger.debug(" CALCOLO MISURE CAUTELARI ");
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			// siesLogger.debug("-------------------------------------------");
@@ -1283,7 +1295,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// siesLogger.debug("Reclusione: "+lPCTmpReclusione);
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("Arresti:    "+lPCTmpArresto);
+			// siesLogger.debug("Arresti: "+lPCTmpArresto);
 			try {
 				lConn = getDBConnection();
 
@@ -1319,7 +1331,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					// Inserisco o aggiorno i dati della PENA_RESIDUA con quanto calcolato
 					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 					// di LogF3B.getLogger()
-					// siesLogger.debug("ForzaFungibilita = false, inserisco la pena residua calcolata anche se <0");
+					// siesLogger.debug("ForzaFungibilita = false, inserisco la pena residua calcolata anche
+					// se <0");
 					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 					// di LogF3B.getLogger()
 					// siesLogger.debug(lPenResMod);
@@ -1333,12 +1346,12 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 					// Sommo arresti e reclusione della PENA_RESIDUA fin quì calcolata
 					// potrebbro essere negativi
-					nuovoQuantum.setNumAnni(lPenResMod.getNumAnniArresto().add(
-							lPenResMod.getNumAnniReclusione()));
-					nuovoQuantum.setNumMesi(lPenResMod.getNumMesiArresto().add(
-							lPenResMod.getNumMesiReclusione()));
-					nuovoQuantum.setNumGiorni(lPenResMod.getNumGiorniArresto().add(
-							lPenResMod.getNumGiorniReclusione()));
+					nuovoQuantum.setNumAnni(
+							lPenResMod.getNumAnniArresto().add(lPenResMod.getNumAnniReclusione()));
+					nuovoQuantum.setNumMesi(
+							lPenResMod.getNumMesiArresto().add(lPenResMod.getNumMesiReclusione()));
+					nuovoQuantum.setNumGiorni(
+							lPenResMod.getNumGiorniArresto().add(lPenResMod.getNumGiorniReclusione()));
 
 					nuovoQuantum = lCalCon.ricalcolaGAM(nuovoQuantum); // normalizzo
 
@@ -1349,8 +1362,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					// ================================================================
 					/** TODO è corretto ??? */
 					if (lCalCon.isGreater(nuovoQuantum, lPenaGiaEspiata) && !lCalCon.isZero(nuovoQuantum)) {
-						CalendarModel diff = new CalendarModel(lCalCon.BeneficisottraiGiornieValute(
-								nuovoQuantum, lPenaGiaEspiata));
+						CalendarModel diff = new CalendarModel(
+								lCalCon.BeneficisottraiGiornieValute(nuovoQuantum, lPenaGiaEspiata));
 
 						PenaResiduaModel lPenResMod2 = new PenaResiduaModel();
 
@@ -1376,7 +1389,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 				commit(lConn);
 			} catch (DAOException daoEx) {
-				throw new F3BException("CalcoloPenaController.exCalcolaQuantumPenaComplessivaNuovo: " + daoEx);
+				throw new F3BException(
+						"CalcoloPenaController.exCalcolaQuantumPenaComplessivaNuovo: " + daoEx);
 			} catch (Exception ex) {
 				throw new F3BException("CalcoloPenaController.exCalcolaQuantumPenaComplessivaNuovo: " + ex);
 			} finally {
@@ -1405,8 +1419,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 *            - indica se calcolare nel computo anche la datainizio
 	 * @return
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public Vector exCalcolaDataFinePena(Date aDataInizio, PenaResiduaModel aPenResMod, boolean diesaquo) {
+
 		Date lDataFinePena = new Date();
 		Date lDataFineRecl = new Date();
 		Vector Result = new Vector(0);
@@ -1425,7 +1440,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug("Pena Residua Reclusione : "+aPenResMod.getNumAnniReclusione()+"-"+aPenResMod.getNumMesiReclusione()+"-"+aPenResMod.getNumGiorniReclusione());
+		// siesLogger.debug("Pena Residua Reclusione :
+		// "+aPenResMod.getNumAnniReclusione()+"-"+aPenResMod.getNumMesiReclusione()+"-"+aPenResMod.getNumGiorniReclusione());
 
 		ltmp.setNumAnni(aPenResMod.getNumAnniReclusione());
 		ltmp.setNumMesi(aPenResMod.getNumMesiReclusione());
@@ -1472,7 +1488,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("Pena Residua Arresto : "+aPenResMod.getNumAnniArresto()+"-"+aPenResMod.getNumMesiArresto()+"-"+aPenResMod.getNumGiorniArresto());
+			// siesLogger.debug("Pena Residua Arresto :
+			// "+aPenResMod.getNumAnniArresto()+"-"+aPenResMod.getNumMesiArresto()+"-"+aPenResMod.getNumGiorniArresto());
 
 			if (lCalUtil.isPositiveTime(ltmp) && !lCalUtil.isZero(ltmp)) {
 				// NumGiorni+= aPenResMod.getNumGiorniArresto().intValue();
@@ -1519,7 +1536,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("Pena Residua Arresto : "+aPenResMod.getNumAnniArresto()+"-"+aPenResMod.getNumMesiArresto()+"-"+aPenResMod.getNumGiorniArresto());
+			// siesLogger.debug("Pena Residua Arresto :
+			// "+aPenResMod.getNumAnniArresto()+"-"+aPenResMod.getNumMesiArresto()+"-"+aPenResMod.getNumGiorniArresto());
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			// siesLogger.debug("anni , mesi , giorni " + NumAnni+","+NumMesi+","+NumGiorni);
@@ -1549,7 +1567,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * La data inizio viene passata come CalendarModel e specificata nei campi mGG, mMM, mAA, <b>NON nel campo
 	 * DataInizio</b> Il quantum <b>deve essere normalizzato</b> altrimenti il risultato finale potrebbe non
 	 * essere corretto
-	 * 
+	 *
 	 * @param aDataInizio
 	 *            - CalendarModel con data inizio specificata come mGG, mMM, mAA non vengono presi in
 	 *            considerazione gli altri campi del model (DataInizio e DataFine)
@@ -1559,8 +1577,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 *            - se true viene considerato anche il gg data inizio come facente parte del periodo
 	 * @return data fine calcolata
 	 * @throws F3BException
-	 ************************************************************************** */
+	 */
 	public Date exCalcolaNuovaDataFine(CalendarModel aDataInizio, CalendarModel aDurata, boolean diesaquo) {
+
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		// siesLogger.debug("Data Inizio : " + aDataInizio);
@@ -1625,8 +1644,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		// anno e mese inizio, prima di sommare mm e aa)
 		// GGScad viene corretto per MM e AA finali.
 		// n.b. viene corretto solo il GG, non vengono aggiornati mm e aa
-		int lEndOfMonthDataFine = Integer.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(AAScad,
-				MMScad)));
+		int lEndOfMonthDataFine = Integer
+				.parseInt(DateUtils.getDayToString(DateUtils.getEndOfMonth(AAScad, MMScad)));
 		if (GGScad > lEndOfMonthDataFine) {
 			lDataFine = DateUtils.getDate(AAScad, MMScad, lEndOfMonthDataFine);
 		} else {
@@ -1647,6 +1666,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	}
 
 	public Date exCalcolaNuovaDataFine(Date aDataInizio, CalendarModel aDurata, boolean diesaquo) {
+
 		CalendarModel ltmp = new CalendarModel();
 
 		ltmp.setNumAnni(new BigDecimal(DateUtils.getYearToString(aDataInizio)));
@@ -1668,6 +1688,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 * @throws F3BException
 	 ****************************************************************************/
 	public CalendarModel exGetQuantumPenaAncoraDaEspiare(BigDecimal aFascId) throws F3BException {
+
 		/**
 		 * TODO verificare il metodo. Non viene mai referenziato nel codice e non è dichiarato
 		 * nell'interfaccia ICalcoloPena
@@ -1737,7 +1758,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalcoloPenaModel exCalcoloLiberazioneAnticipata(CalcoloPenaModel aCalcoloPenaModel,
 			BigDecimal aFascId, BigDecimal aIdEventoOrdinanza, Date aDataSistemaPerCalcoli,
-			Date aDataFinePena, String aTipoLicenza, DatiOperazioneModel aDatiOperazione) throws F3BException {
+			Date aDataFinePena, String aTipoLicenza, DatiOperazioneModel aDatiOperazione)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaModel lPenRes = new PenaResiduaModel();
@@ -1768,8 +1791,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				int lTotGGConcessi = 0;
 				for (int i = 0; i < lLicenze.size(); i++) {
 					LicenzaLibAnticipataModel lLicenzaModel = (LicenzaLibAnticipataModel) lLicenze.get(i);
-					if ((lLicenzaModel.getCodTipoLicenza().equals("RD") || lLicenzaModel.getCodTipoLicenza()
-							.equals("LA")) && lLicenzaModel.getFlagConcesso().equals("C")) {
+					if ((lLicenzaModel.getCodTipoLicenza().equals("RD")
+							|| lLicenzaModel.getCodTipoLicenza().equals("LA"))
+							&& lLicenzaModel.getFlagConcesso().equals("C")) {
 						lTotGGConcessi += lLicenzaModel.getNumeroGiorni().intValue();
 					}
 				}
@@ -1941,7 +1965,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/*****************************************************************************
 	 * Calcola la data fine pena della pena residua sottraendo i giorni di liberazione dalla data fine a
 	 * l'ultima pena residua VALIDATA presente sul DB.
-	 * 
+	 *
 	 * @param aTotLA
 	 * @param aFascId
 	 * @return Data Fine ricalcolata
@@ -1949,6 +1973,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public Date exCalcoloLiberazioneAnticipataSuDataFineUltimaPena(int aTotLA, BigDecimal aFascId)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenResSqlDao = null;
@@ -2017,6 +2042,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 */
 	public CalendarModel exGetAnnotazioniManualiConcessiReclusione(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeSqlDAO lBenDao = null;
@@ -2105,10 +2131,10 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				 * sottraggono i benefici concessi non ancora validati. Se sono presenti benefici Revocati (+)
 				 * validati (quindi computati nella pena residua, e questo è tutto da verificare) vengono
 				 * sottratti in modo tale che non vengano computati sul quantum finale.
-				 * 
+				 *
 				 * Questa porzione di codice non tiene conto del fatto che amnistia e indulto vanno di pari
 				 * passo
-				 * 
+				 *
 				 * Il fatto che l'annotazione sia una anticipazione, validata, e il calcolo sia ab inizio,
 				 * dovrebbe garantire che tale anticipazione sia stata computata nella pena residua e va
 				 * quaindi scomputata.
@@ -2140,8 +2166,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 			lBenDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaController.exGetAnnotazioniManualiConcessiReclusione: "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaController.exGetAnnotazioniManualiConcessiReclusione: " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException("CalcoloPenaController.exGetAnnotazioniManualiConcessiReclusione: " + ex);
 		} finally {
@@ -2167,6 +2193,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 */
 	public CalendarModel exGetAnnotazioniManualiConcessiAnticipazioneReclusione(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeSqlDAO lBenDao = null;
@@ -2187,8 +2214,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			while (lBenDao.next()) {
 				lAnnMan = (AnnotazioneManualeModel) lBenDao.getModel();
 
-				if (lAnnMan.getFlagPiuMeno() != null
-						&& lAnnMan.getFlagPiuMeno().equals("-") // concessi
+				if (lAnnMan.getFlagPiuMeno() != null && lAnnMan.getFlagPiuMeno().equals("-") // concessi
 						&& lAnnMan.getFlagAppProvvisoria() != null
 						&& (lAnnMan.getFlagAppProvvisoria().equals("A") // con anticipazione
 						// || lAnnMan.getFlagAppProvvisoria().equals("R")
@@ -2265,6 +2291,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 	public CalendarModel exGetAnnotazioniManualiRevocatiReclusione(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeSqlDAO lBenDao = null;
@@ -2347,8 +2374,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			lBenConc = lCalCon.ricalcolaGAM(lBenConc);
 			lBenDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaController.exGetAnnotazioniManualiRevocatiReclusione: "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaController.exGetAnnotazioniManualiRevocatiReclusione: " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException("CalcoloPenaController.exGetAnnotazioniManualiRevocatiReclusione: " + ex);
 		} finally {
@@ -2362,6 +2389,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 	public CalendarModel exGetAnnotazioniManualiRevocatiAnticipazioneReclusione(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeSqlDAO lBenDao = null;
@@ -2443,6 +2471,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 	public CalendarModel exGetAnnotazioniManualiRevocatiArresto(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lBenDao = null;
 		CalendarModel lBenConc = new CalendarModel();
@@ -2541,6 +2570,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 	public CalendarModel exGetAnnotazioniManualiRevocatiAnticipazioneArresto(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeSqlDAO lBenDao = null;
@@ -2619,6 +2649,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 	public CalendarModel exGetAnnotazioniManualiConcessiArresto(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lBenDao = null;
 		CalendarModel lBenConc = new CalendarModel();
@@ -2716,10 +2747,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	public CalendarModel exGetAnnotazioniManualiConcessiAnticipazioneArresto(BigDecimal lFascID,
 			String aCodTipoAnnotazione, boolean isAbInitio) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeSqlDAO lBenDao = null;
@@ -2847,9 +2879,10 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 *            = S-N
 	 */
 	public CalcoloPenaModel exCalcoloRevocheMisureAlternative(BigDecimal lFascID, Date aDataDAL,
-			CalendarModel aQuantumRevocatoReclusione, CalendarModel aQuantumRevocatoArresto,
-			String a30giorni, int aStatoDetenuto, Date aNuovoInizioPena, String aDetenuto,
-			CalcoloPenaModel aCalcoloPenaModel) throws F3BException {
+			CalendarModel aQuantumRevocatoReclusione, CalendarModel aQuantumRevocatoArresto, String a30giorni,
+			int aStatoDetenuto, Date aNuovoInizioPena, String aDetenuto, CalcoloPenaModel aCalcoloPenaModel)
+			throws F3BException {
+
 		/*
 		 * ------------------------------------------------------------------------------ Preliminare : carico
 		 * la PenaResidua del Fascicolo Si da per scontato che esista un record VALIDATO di PenaResidua !!!
@@ -2940,8 +2973,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					// ------------ GESTIONE DEI QUANTUM -------------------------------
 					// 1- Effettuo un precalcolo della pena per verificare quale è la pena di
 					// partenza.
-					PenaResiduaModel lPenaDiPartenza = aCalcoloPenaModel.getPenaDaEspiare(
-							lPenRes.getDataInizio(), null, null);
+					PenaResiduaModel lPenaDiPartenza = aCalcoloPenaModel
+							.getPenaDaEspiare(lPenRes.getDataInizio(), null, null);
 					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 					// di LogF3B.getLogger()
 					// siesLogger.debug("**************************************************");
@@ -3038,7 +3071,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 
 				lPenRes.setNumAnniReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumAnni() + ""));
 				lPenRes.setNumMesiReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumMesi() + ""));
-				lPenRes.setNumGiorniReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumGiorni() + ""));
+				lPenRes.setNumGiorniReclusione(
+						new BigDecimal(aQuantumRevocatoReclusione.getNumGiorni() + ""));
 
 				if (a30giorni != null) {
 					lTmp = new CalendarModel(aQuantumRevocatoReclusione);
@@ -3070,11 +3104,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				if (aDetenuto != null && aDetenuto.equals("S")) {
 					lPenRes.setDataInizio(aNuovoInizioPena);
 					if (!(lPenRes.getNumAnniReclusione().equals(Zero)
-							&& lPenRes.getNumMesiReclusione().equals(Zero) && lPenRes
-							.getNumGiorniReclusione().equals(Zero))
+							&& lPenRes.getNumMesiReclusione().equals(Zero)
+							&& lPenRes.getNumGiorniReclusione().equals(Zero))
 							&& (lPenRes.getNumAnniArresto().equals(Zero)
-									&& lPenRes.getNumMesiArresto().equals(Zero) && lPenRes
-									.getNumGiorniArresto().equals(Zero))) {
+									&& lPenRes.getNumMesiArresto().equals(Zero)
+									&& lPenRes.getNumGiorniArresto().equals(Zero))) {
 						// Solo Reclusione
 						lTmp = new CalendarModel();
 						lTmp.setNumAnni(lPenRes.getNumAnniReclusione());
@@ -3090,11 +3124,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					}
 
 					if ((lPenRes.getNumAnniReclusione().equals(Zero)
-							&& lPenRes.getNumMesiReclusione().equals(Zero) && lPenRes
-							.getNumGiorniReclusione().equals(Zero))
+							&& lPenRes.getNumMesiReclusione().equals(Zero)
+							&& lPenRes.getNumGiorniReclusione().equals(Zero))
 							&& !(lPenRes.getNumAnniArresto().equals(Zero)
-									&& lPenRes.getNumMesiArresto().equals(Zero) && lPenRes
-									.getNumGiorniArresto().equals(Zero))) {
+									&& lPenRes.getNumMesiArresto().equals(Zero)
+									&& lPenRes.getNumGiorniArresto().equals(Zero))) {
 						// Solo arresto
 						lTmp = new CalendarModel();
 						lTmp.setNumAnni(lPenRes.getNumAnniArresto());
@@ -3110,11 +3144,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					}
 
 					if (!(lPenRes.getNumAnniReclusione().equals(Zero)
-							&& lPenRes.getNumMesiReclusione().equals(Zero) && lPenRes
-							.getNumGiorniReclusione().equals(Zero))
+							&& lPenRes.getNumMesiReclusione().equals(Zero)
+							&& lPenRes.getNumGiorniReclusione().equals(Zero))
 							&& !(lPenRes.getNumAnniArresto().equals(Zero)
-									&& lPenRes.getNumMesiArresto().equals(Zero) && lPenRes
-									.getNumGiorniArresto().equals(Zero))) {
+									&& lPenRes.getNumMesiArresto().equals(Zero)
+									&& lPenRes.getNumGiorniArresto().equals(Zero))) {
 						// Reclusione + Arresto
 						lTmp = new CalendarModel();
 						lTmp.setNumAnni(lPenRes.getNumAnniReclusione());
@@ -3129,8 +3163,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 						lTmp.setNumGiorni(lPenRes.getNumGiorniArresto());
 
 						// lPenRes.setDataFine(exCalcolaNuovaDataFine(lPenRes.getDataInizioArresto(),lTmp,true));
-						lPenRes.setDataFinePresunta(exCalcolaNuovaDataFine(lPenRes.getDataInizioArresto(),
-								lTmp, true));
+						lPenRes.setDataFinePresunta(
+								exCalcolaNuovaDataFine(lPenRes.getDataInizioArresto(), lTmp, true));
 						lPenRes.setDataFine(null);
 					}
 				} else {
@@ -3187,8 +3221,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 					// ------------ GESTIONE DEI QUANTUM -------------------------------
 					// 1- Effettuo un precalcolo della pena per verificare quale è la pena di
 					// partenza.
-					PenaResiduaModel lPenaDiPartenza = aCalcoloPenaModel.getPenaDaEspiare(
-							lPenRes.getDataInizio(), null, null);
+					PenaResiduaModel lPenaDiPartenza = aCalcoloPenaModel
+							.getPenaDaEspiare(lPenRes.getDataInizio(), null, null);
 					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 					// di LogF3B.getLogger()
 					// siesLogger.debug("**************************************************");
@@ -3224,7 +3258,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			{ // Specificati i soli quantum
 				lPenRes.setNumAnniReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumAnni() + ""));
 				lPenRes.setNumMesiReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumMesi() + ""));
-				lPenRes.setNumGiorniReclusione(new BigDecimal(aQuantumRevocatoReclusione.getNumGiorni() + ""));
+				lPenRes.setNumGiorniReclusione(
+						new BigDecimal(aQuantumRevocatoReclusione.getNumGiorni() + ""));
 
 				lPenRes.setNumAnniArresto(new BigDecimal(aQuantumRevocatoArresto.getNumAnni() + ""));
 				lPenRes.setNumMesiArresto(new BigDecimal(aQuantumRevocatoArresto.getNumMesi() + ""));
@@ -3260,6 +3295,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	}
 
 	public boolean ExIsCalcoloPenaAbInizio(BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		boolean lIsAbInitio = true;
 
 		Connection lConn = null;
@@ -3359,7 +3395,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		// siesLogger.debug("Pena in espiazione = "+aPenaResidua);
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug("Data al  = "+aDataSospensione);
+		// siesLogger.debug("Data al = "+aDataSospensione);
 		// PenaResiduaModel lPenaResidua = new PenaResiduaModel(aPenaResidua);
 
 		/*
@@ -3414,7 +3450,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		// siesLogger.debug("lCalReclusione = "+lCalReclusione);
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug("lCalArresto    = "+lCalArresto);
+		// siesLogger.debug("lCalArresto = "+lCalArresto);
 
 		// ======================================================================
 		// Ricalcolo i nuovi quantum di Reclusione e Arresto in base alla data
@@ -3432,7 +3468,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				// Reclusione ancora in espiazione, aggiorno solo il quantum di reclusione
 				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				// siesLogger.debug("Reclusione ancora in espiazione, aggiorno solo il quantum di reclusione");
+				// siesLogger.debug("Reclusione ancora in espiazione, aggiorno solo il quantum di
+				// reclusione");
 
 				lCalReclusioneNew.setDataInizio(DateUtils.getDayAfter(aDataSospensione));
 				lCalReclusioneNew.setDataFine(lCalReclusione.getDataFine());
@@ -3488,7 +3525,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 																						// istanza siesLogger
 																						// al posto di
 																						// LogF3B.getLogger()
-																						// siesLogger.debug("Presente solo la Reclusione");
+																						// siesLogger.debug("Presente
+																						// solo la
+																						// Reclusione");
 			lCalReclusioneNew.setDataInizio(aDataSospensione);
 			lCalReclusioneNew.setDataFine(lCalReclusione.getDataFine());
 
@@ -3516,7 +3555,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 																						// istanza siesLogger
 																						// al posto di
 																						// LogF3B.getLogger()
-																						// siesLogger.debug("Presente solo arresto");
+																						// siesLogger.debug("Presente
+																						// solo arresto");
 			lPenaResidua.setNumAnniReclusione(new BigDecimal(0));
 			lPenaResidua.setNumMesiReclusione(new BigDecimal(0));
 			lPenaResidua.setNumGiorniReclusione(new BigDecimal(0));
@@ -3561,7 +3601,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		// siesLogger.debug("Pena in espiazione = "+aPenaResidua);
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug("Data Computo  = "+aDataComputo);
+		// siesLogger.debug("Data Computo = "+aDataComputo);
 		// PenaResiduaModel lPenaResidua = new PenaResiduaModel(aPenaResidua);
 
 		/*
@@ -3616,7 +3656,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		// siesLogger.debug("lCalReclusione = "+lCalReclusione);
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug("lCalArresto    = "+lCalArresto);
+		// siesLogger.debug("lCalArresto = "+lCalArresto);
 
 		// ======================================================================
 		// Ricalcolo i nuovi quantum di Reclusione e Arresto in base alla data
@@ -3634,7 +3674,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				// Reclusione ancora in espiazione, aggiorno solo il quantum di reclusione
 				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				// siesLogger.debug("Reclusione ancora in espiazione, aggiorno solo il quantum di reclusione");
+				// siesLogger.debug("Reclusione ancora in espiazione, aggiorno solo il quantum di
+				// reclusione");
 
 				lCalReclusioneNew.setDataInizio(aPenaResidua.getDataInizio());
 				lCalReclusioneNew.setDataFine(aDataComputo);
@@ -3683,7 +3724,9 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 																						// istanza siesLogger
 																						// al posto di
 																						// LogF3B.getLogger()
-																						// siesLogger.debug("Presente solo la Reclusione");
+																						// siesLogger.debug("Presente
+																						// solo la
+																						// Reclusione");
 			lCalReclusioneNew.setDataInizio(lCalReclusione.getDataInizio());
 			lCalReclusioneNew.setDataFine(aDataComputo);
 
@@ -3708,7 +3751,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 																						// istanza siesLogger
 																						// al posto di
 																						// LogF3B.getLogger()
-																						// siesLogger.debug("Presente solo arresto");
+																						// siesLogger.debug("Presente
+																						// solo arresto");
 			lPenaEspiata.setNumAnniReclusione(new BigDecimal(0));
 			lPenaEspiata.setNumMesiReclusione(new BigDecimal(0));
 			lPenaEspiata.setNumGiorniReclusione(new BigDecimal(0));
@@ -3730,13 +3774,14 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/**
 	 * Effettua l'inserimento delle comunicazione nuovo residuo pena nel caso di Ridetermiazione Pena - ALtro
 	 * Duplica la pena rideterminata sul provvedimento di computo.
-	 * 
+	 *
 	 * @param aEveNotModel
 	 * @return Model Inserito
 	 * @since 4.0
 	 * @throws F3BException
 	 */
 	public EventoModel ExInserisciCOMRidetPenaAltro(EventoNotificaModel aEveNotModel) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3891,7 +3936,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/**
 	 * Metodo che effettua la validazione della Comunicazione nuovo residuo pena a seguito di rideterminazione
 	 * pena altro ed eventuale validazione del computo
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -3899,6 +3944,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 */
 	public EventoModel ExUpdateValidaComNuovoResPenaRidetPenaAltro(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -3955,9 +4001,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				siesLogger.debug("Evento di Computo = " + lEveComputo);
 
 				if (lEveComputo.getFlagDocumentoRegistrato() == null
-						|| (lEveComputo.getFlagDocumentoRegistrato() != null && lEveComputo
-								.getFlagDocumentoRegistrato().equals("N"))) { // Procedo alla validazione del
-																				// Provvedimento di Computo
+						|| (lEveComputo.getFlagDocumentoRegistrato() != null
+								&& lEveComputo.getFlagDocumentoRegistrato().equals("N"))) { // Procedo alla
+																							// validazione del
+																							// Provvedimento
+																							// di Computo
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("Procedo alla validazione del Provvedimento di Computo");
@@ -4022,7 +4070,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			// "0010" = Pena in Esecuzione Fino al
 			// Allora devo aggiornare lo stato procedimento per tenere allinea
 			// Ergastolo???????
-			if (lPenaResModel != null && lPenaResModel.getDataFine() != null && !lPenaResModel.isErgastolo()) {
+			if (lPenaResModel != null && lPenaResModel.getDataFine() != null
+					&& !lPenaResModel.isErgastolo()) {
 				// Recupero lo stato procedimento attuale per verificare se prevede
 				// l'informazione: Pena in Esecuzione Fino al
 				lStatoSqlDao = new StatoProcedimentoSqlDAO(lConn);
@@ -4093,8 +4142,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			daoEx.printStackTrace();
 
 			rollback(lConn);
-			throw new F3BException("CalcoloPenaController.ExUpdateValidaComNuovoResPenaRidetPenaAltro : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaController.ExUpdateValidaComNuovoResPenaRidetPenaAltro : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4102,8 +4151,8 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			ex.printStackTrace();
 
 			rollback(lConn);
-			throw new F3BException("CalcoloPenaController.ExUpdateValidaComNuovoResPenaRidetPenaAltro : "
-					+ ex);
+			throw new F3BException(
+					"CalcoloPenaController.ExUpdateValidaComNuovoResPenaRidetPenaAltro : " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lPenResDao);
@@ -4130,13 +4179,14 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	/**
 	 * Effettua l'inserimento dell'Ordine di Scarcerazione nuovo residuo pena nel caso di Ridetermiazione Pena
 	 * - ALtro Duplica la pena rideterminata sul provvedimento di computo.
-	 * 
+	 *
 	 * @param aEveNotModel
 	 * @return Model Inserito
 	 * @since 4.0
 	 * @throws F3BException
 	 */
 	public EventoModel ExInserisciOSRidetPenaAltro(EventoNotificaModel aEveNotModel) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -4302,17 +4352,16 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 		}
 
 		return lEventoModel;
-
 	}
 
 	/**
 	 * Metodo che effettua la validazione della Rideterminazione Pena nuovo residuo pena a seguito di
 	 * rideterminazione pena altro ed eventuale validazione del computo.
-	 * 
+	 *
 	 * Attenzione il metodo viene invocato dalla ActUploadOSRidetPenaAltro che gestisce oltre alla
 	 * rideteminazione pena altro anche: - Ridimensionamento LA (01-09-0998) - Revoca LA (01-09-1009) -
 	 * Scomputo permesso (0958, 0996) - Reclamo su Scomputo Permesso (0994,0997)
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -4320,6 +4369,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 */
 	public EventoModel ExUpdateValidaOSNuovoResPenaRidetPenaAltro(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -4376,9 +4426,11 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 				siesLogger.debug("Evento di Computo = " + lEveComputo);
 
 				if (lEveComputo.getFlagDocumentoRegistrato() == null
-						|| (lEveComputo.getFlagDocumentoRegistrato() != null && lEveComputo
-								.getFlagDocumentoRegistrato().equals("N"))) { // Procedo alla validazione del
-																				// Provvedimento di Computo
+						|| (lEveComputo.getFlagDocumentoRegistrato() != null
+								&& lEveComputo.getFlagDocumentoRegistrato().equals("N"))) { // Procedo alla
+																							// validazione del
+																							// Provvedimento
+																							// di Computo
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("Procedo alla validazione del Provvedimento di Computo");
@@ -4573,15 +4625,16 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			rollback(lConn);
 			daoEx.printStackTrace();
 
-			throw new F3BException("CalcoloPenaController.ExUpdateValidaOSNuovoResPenaRidetPenaAltro : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaController.ExUpdateValidaOSNuovoResPenaRidetPenaAltro : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
 			ex.printStackTrace();
-			throw new F3BException("CalcoloPenaController.ExUpdateValidaOSNuovoResPenaRidetPenaAltro : " + ex);
+			throw new F3BException(
+					"CalcoloPenaController.ExUpdateValidaOSNuovoResPenaRidetPenaAltro : " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lPenResDao);
@@ -4615,6 +4668,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliMisSicApplicata(BigDecimal lFascID)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
 
@@ -4672,7 +4726,6 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			cleanup(lMCDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -4686,6 +4739,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliArrestiDomiciliari(BigDecimal lFascID)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
 
@@ -4743,7 +4797,6 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			cleanup(lMCDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -4757,6 +4810,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliPermanenzaInCasa(BigDecimal lFascID)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
 
@@ -4813,7 +4867,6 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			cleanup(lMCDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -4827,6 +4880,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliCollocamentoInComunita(BigDecimal lFascID)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
 
@@ -4883,7 +4937,6 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			cleanup(lMCDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -4897,6 +4950,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliCameraDiSicurezza(BigDecimal lFascID)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
 
@@ -4953,7 +5007,6 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 			cleanup(lMCDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
@@ -4967,6 +5020,7 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	 ****************************************************************************/
 	public CalendarModel exGetMisureCautelariComputabiliPeriodoMessaAllaProva(BigDecimal lFascID)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareSqlDAO lMCDao = null;
 
@@ -5026,13 +5080,14 @@ public class CalcoloPenaController extends SiapController implements ICalcoloPen
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aPenaResidua
 	 * @param aFungModel
 	 * @throws F3BException
 	 */
 	public void ExInserisciAggiornaPenaResiduaFungibilita(PenaResiduaModel aPenaResidua,
 			FungibilitaModel aFungModel) throws F3BException {
+
 		Connection lConn = null;
 
 		FungibilitaSqlDAO lFunSqlDao = null;

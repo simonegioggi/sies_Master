@@ -71,7 +71,6 @@ import siap.sius.util.SIUSLookupRemote;
  * StatoEsecuzioneController
  *
  * @author Giselda De Vita
- *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StatoEsecuzioneController extends SiapController {
@@ -106,12 +105,11 @@ public class StatoEsecuzioneController extends SiapController {
 		TenoreSqlDAO lTenSql = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSql = null;
 		DepositoDecretoSqlDAO lDepDecSql = null;
-		DepositoOrdinanzaPcModel lDepOrdPCMod = null;
-		// DepositoDecretoModel lDepDecMod;
-		ScambioSanzioneSqlDAO lScaSanSql = null;
-
 		// Paolo Cherubini 29/04/2011
 		RichiestaConversioneSqlDAO lRicConSqlDao = null;
+		ScambioSanzioneSqlDAO lScaSanSql = null;
+
+		DepositoOrdinanzaPcModel lDepOrdPCMod = null;
 
 		try {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1139,7 +1137,6 @@ public class StatoEsecuzioneController extends SiapController {
 			lDepDecSql.stop();
 			lTenSql.stop();
 			lScaSanSql.stop();
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1150,9 +1147,7 @@ public class StatoEsecuzioneController extends SiapController {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("StatoEsecuzioneController.appendStatoEsecuzione: ", sqe);
 			throw new F3BException("StatoEsecuzioneController.appendStatoEsecuzione: " + sqe);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDaoStampa);
 			cleanup(lPenaResStatDao);
 			cleanup(lMisAltStatDAO);
@@ -1178,6 +1173,7 @@ public class StatoEsecuzioneController extends SiapController {
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSql = null;
 		Date lReturnDate = null;
+
 		try {
 			lConn = getDBConnection();
 			lSospSql = new SospensioneSqlDAO(lConn);
@@ -1187,16 +1183,13 @@ public class StatoEsecuzioneController extends SiapController {
 			SospensioneModel lSospMod = (SospensioneModel) lSospSql.getModelByKey();
 			if (lSospMod != null)
 				lReturnDate = lSospMod.getDataInizio();
-
 			// fine lettura sospensione
 		} catch (Exception sqe) {
 			sqe.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("StatoEsecuzioneController.appendStatoEsecuzione: ", sqe);
 			throw new F3BException("StatoEsecuzioneController.appendStatoEsecuzione: " + sqe);
-		}
-
-		finally {
+		} finally {
 			cleanup(lSospSql);
 			cleanup(lConn);
 		}
@@ -1216,6 +1209,7 @@ public class StatoEsecuzioneController extends SiapController {
 		siesLogger.debug("--XX-- getAnnoNumeroSius - di StatoEsecuzioneController");
 		Connection lConn = null;
 		StatoEsecuzioneSqlDAO lStatEsec = null;
+
 		try {
 			lConn = getDBConnection();
 			lStatEsec = new StatoEsecuzioneSqlDAO(lConn);
@@ -1236,8 +1230,8 @@ public class StatoEsecuzioneController extends SiapController {
 				cleanup(lStatEsec);
 				cleanup(lConn);
 			} catch (Exception eee) {
+				siesLogger.error("Errore in getAnnoNumeroSius");
 			}
-
 		}
 	}
 

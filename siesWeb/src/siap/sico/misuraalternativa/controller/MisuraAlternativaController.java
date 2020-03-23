@@ -11,6 +11,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
@@ -58,10 +62,6 @@ import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcDAO;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -76,7 +76,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -89,6 +89,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	public MisuraAlternativaModel ExInserisciMisuraAlternativaEventoNotifica(EventoNotificaModel aEveNotMod,
 			DepositoOrdinanzaPcModel lDepOrdMod, TenoreModel lTenMod,
 			MisuraAlternativaModel aMisuraAlternativa) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaDAO lMisDao = null;
@@ -208,7 +209,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExInserisciDecretoSospEventoNotifica - inserimento decreto sospensione
-	 * 
+	 *
 	 * @param aEveNotMod
 	 * @param lDepDecMod
 	 * @param lTenMod
@@ -219,6 +220,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	public MisuraAlternativaModel ExInserisciDecretoSospEventoNotifica(EventoNotificaModel aEveNotMod,
 			DepositoDecretoModel lDepDecMod, TenoreModel lTenMod, MisuraAlternativaModel aMisuraAlternativa)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaDAO lMisDao = null;
@@ -335,12 +337,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisuraAlternativaByKey
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -368,12 +371,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisuraAlternativaByIdEvento
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaByIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -403,13 +407,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisuraAlternativaCorrenteByIdFascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaCorrenteByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod = null;
@@ -438,12 +443,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisureAlternativeByIdFascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaMisureAlternativeByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		Vector lMisureAlternative = new Vector();
@@ -473,13 +479,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	/**
 	 * ExRicercaMisuraAlternativaPerOrdineScarcerazioneByIdFascicolo Controllo della coerenza della richiesta
 	 * di emissione del provvedimento con L'Ordinanza del TS per l'Ordine di Scarcerazione
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaPerOrdineScarcerazioneByIdFascicolo(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod = null;
@@ -526,13 +533,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisuraAlternativaPerOSLiberazioneAnticipataMAByIdFascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaPerOSLiberazioneAnticipataMAByIdFascicolo(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod = null;
@@ -581,13 +589,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	/**
 	 * ExRicercaMisuraAlternativaConcessaCorrenteByIdFascicolo Ricerca la Misura Alternativa Concessa Corrente
 	 * by Id_Fascicolo
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaConcessaCorrenteByIdFascicolo(
 			BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaSqlDAO lMisDao = null;
@@ -624,7 +633,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 * alternativa che e' = pena residua se il soggetto era inizialmente libero, o pari al residuo pena alla
 	 * data di sottoscrizione se il soggetto era gia' in espiazione. Aggiorna il fine pena manuale e Valida la
 	 * pena residua associata al Verbale Aggiorna lo scadenzario.
-	 * 
+	 *
 	 * @param lVerMod
 	 *            - Model del verbale di sottoscrizione
 	 * @param lPen
@@ -640,6 +649,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	public MisuraAlternativaModel ExCalcolaFineEspiazionePenaMAConcessa(VerbaleModel lVerMod,
 			PenaResiduaModel lPen, PosizioneGiuridicaModel lPos, MisuraAlternativaModel lMisMod,
 			BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaDAO lMisuraDAO = null;
@@ -900,14 +910,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 		}
 		return lMisMod;
 	}
-
 	// FINE PENA concessa
-
 	// CALCOLA DATA FINE ESPIAZIONE PENA revocata
 
 	/**
 	 * ExCalcolaFineEspiazionePenaMARevocata CALCOLA DATA FINE ESPIAZIONE PENA revocata
-	 * 
+	 *
 	 * @param lPos
 	 * @param lMisMod
 	 * @param aKeyFascicolo
@@ -918,6 +926,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	public MisuraAlternativaModel ExCalcolaFineEspiazionePenaMARevocata(PosizioneGiuridicaModel lPos,
 			MisuraAlternativaModel lMisMod, BigDecimal aKeyFascicolo, String FlagRicalcola)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaSqlDAO lMisDao = null;
@@ -1043,13 +1052,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisuraAlternativaByFascicoloOrdinanza fine calcolo pena revocata
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaByFascicoloOrdinanza(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaSqlDAO lMisDao = null;
@@ -1087,13 +1097,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExModificaMisuraAlternativa
-	 * 
+	 *
 	 * @param aMisuraAlternativa
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExModificaMisuraAlternativa(MisuraAlternativaModel aMisuraAlternativa)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod = new MisuraAlternativaModel(aMisuraAlternativa);
@@ -1124,7 +1135,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExInserisciOModificaOSNotifica
-	 * 
+	 *
 	 * @param aEvento
 	 * @param tipoMisura
 	 * @return
@@ -1132,6 +1143,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoNotificaModel ExInserisciOModificaOSNotifica(EventoNotificaModel aEvento, String tipoMisura)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1274,7 +1286,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExInserisciOModificaMANotifica
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aPenaResidua
 	 * @param aMisura
@@ -1285,6 +1297,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	public EventoNotificaModel ExInserisciOModificaMANotifica(EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, MisuraAlternativaModel aMisura, SospensioneModel aSospensione)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1545,7 +1558,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExUpdateValidaMA
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -1553,6 +1566,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoModel ExUpdateValidaMA(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1829,7 +1843,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			}
 
 			// 28/09/2010 Controllo per Espiazione Pena Presso Domicilio
-			else if (lMisModelOrder.getCodTipoMisura().equals("2630") || lMisModelOrder.getCodTipoMisura().equals("0610"))
+			else if (lMisModelOrder.getCodTipoMisura().equals("2630")
+					|| lMisModelOrder.getCodTipoMisura().equals("0610"))
 			/*
 			 * { if ( ( lPosMod != null && lPosMod.getCodPosizioneGiuridica() != null && lPoModelPrec != null
 			 * && lPoModelPrec.getCodPosizioneGiuridica() != null && ( ( lPoModelPrec.isLibero() ) &&
@@ -1891,7 +1906,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// mi sembra assurdo modificare la misura dopo aver stampato il template
 			/*
 			 * // aggiorna misura alternativa lMiDAO = new MisuraAlternativaDAO(lConn);
-			 * 
+			 *
 			 * //if (tipoMisura.equals("DETENZIONE")) // Controllo per "DETENZIONE DOMICILIARE" if
 			 * (lMisModelOrder.getCodTipoMisura().equals("0005") ||
 			 * lMisModelOrder.getCodTipoMisura().equals("0010") ||
@@ -1903,7 +1918,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * esiste occorrenza con dataInizioPosizioneGiuridica=dataInizioMisura //aggiorno la misura if
 			 * (lMisModel != null) { lMiDAO.setCondizioneUpdate(lMisModel.getIdMisuraAlternativa());
 			 * lMiDAO.setDataFineMisura(lEveModel.getDataEmissione()); lMiDAO.update(); lMiDAO.stop(); }
-			 * 
+			 *
 			 * if (lMisModelOrder != null) { // se esiste occorrenza data inserimento piu' alta //aggiorno la
 			 * misura lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
 			 * lMiDAO.setDataInizioMisura(lEveModel.getDataEmissione());
@@ -1938,12 +1953,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * esiste occorrenza con dataInizioPosizioneGiuridica=dataInizioMisura //aggiorno la misura if
 			 * (lMisModel != null) { lMiDAO.setCondizioneUpdate(lMisModel.getIdMisuraAlternativa());
 			 * lMiDAO.setDataFineMisura(lEveModel.getDataEmissione()); lMiDAO.update(); lMiDAO.stop(); }
-			 * 
+			 *
 			 * if (lMisModelOrder != null) { // se esiste occorrenza data inserimento piu' alta //aggiorno la
 			 * misura lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
 			 * lMiDAO.setDataInizioMisura(lEveModel.getDataEmissione());
 			 * lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
-			 * 
+			 *
 			 * lMiDAO.update(); lMiDAO.stop(); } } else if (lPosMod != null &&
 			 * lPosMod.getCodPosizioneGiuridica() != null && lMisModelOrder != null &&
 			 * lMisModelOrder.getCodTipoUfficioScarcerazione() != null &&
@@ -1956,7 +1971,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * la misura lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
 			 * lMiDAO.setDataInizioMisura(lMisModelOrder.getDataScarcerazione());
 			 * lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
-			 * 
+			 *
 			 * lMiDAO.update(); lMiDAO.stop(); } else if (lCodPosizione.equals("13") && lPoModelPrec != null
 			 * && lPoModelPrec.isLibero()) {
 			 * lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
@@ -1971,9 +1986,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * && lMisModelOrder.getDataScarcerazione() != null) {
 			 * lMiDAO.setDataInizioMisura(lMisModelOrder.getDataScarcerazione()); } else {
 			 * lMiDAO.setDataInizioMisura(lEveModel.getDataEmissione()); }
-			 * 
+			 *
 			 * lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
-			 * 
+			 *
 			 * lMiDAO.update(); lMiDAO.stop(); } } } //else if (tipoMisura.equals("SEMILIBERTA")) //Controllo
 			 * per semiliberta else if (lMisModelOrder.getCodTipoMisura().equals("0004")) { if
 			 * (lCodPosizione.equals("14") && lPoModelPrec != null && lPoModelPrec.isLibero()) {
@@ -1989,7 +2004,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * misura lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
 			 * lMiDAO.setDataInizioMisura(lEveModel.getDataEmissione());
 			 * lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
-			 * 
+			 *
 			 * lMiDAO.update(); lMiDAO.stop(); } } } //else if (tipoMisura.equals("INDULTINO")) //Controllo
 			 * per indultino // 28/09/2010 Aggiunto Controllo per Espiazione Pena presso Domicilio else if
 			 * (lMisModelOrder.getCodTipoMisura().equals("2245") ||
@@ -2014,7 +2029,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * && lMisModelOrder.getDataScarcerazione() != null)
 			 * lMiDAO.setDataInizioMisura(lMisModelOrder.getDataScarcerazione()); else
 			 * lMiDAO.setDataInizioMisura(lEveModel.getDataEmissione());
-			 * 
+			 *
 			 * lMiDAO.setDataFineMisura(lPenResMod.getDataFine()); lMiDAO.update(); lMiDAO.stop(); } } } fine
 			 * paolo cherubini 27/01/2011
 			 */
@@ -2283,7 +2298,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// Controllo per indultino ed Espiazione presso il domicilio
 			// 28/09/2010 Aggiunto Controllo per Espiazione Pena presso Domicilio
 			else if (lMisModelOrder.getCodTipoMisura().equals("2245") // INDULTINO
-					|| lMisModelOrder.getCodTipoMisura().equals("2630")  || lMisModelOrder.getCodTipoMisura().equals("0610") // ESPIAZIONE PRESSO IL DOMICILIO
+					|| lMisModelOrder.getCodTipoMisura().equals("2630")
+					|| lMisModelOrder.getCodTipoMisura().equals("0610") // ESPIAZIONE PRESSO IL DOMICILIO
 			) {
 				if (lPosMod.getCodPosizioneGiuridica().equals("03")
 						|| lPosMod.getCodPosizioneGiuridica().equals("14")
@@ -2320,7 +2336,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// Inserisco la nuova posizione
 					if (lMisModelOrder.getCodTipoMisura().equals("2245"))
 						lPosizione.setCodPosizioneGiuridica("27");
-					if (lMisModelOrder.getCodTipoMisura().equals("2630") || lMisModelOrder.getCodTipoMisura().equals("0610"))
+					if (lMisModelOrder.getCodTipoMisura().equals("2630")
+							|| lMisModelOrder.getCodTipoMisura().equals("0610"))
 						lPosizione.setCodPosizioneGiuridica("50");
 
 					if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
@@ -2478,8 +2495,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				}
 			}
 			// 28/09/2010 Controllo per Espiazione Pena presso Domicilio
-			else if (lMisModelOrder.getCodTipoMisura().equals(
-					ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO) || lMisModelOrder.getCodTipoMisura().equals("0610")) {
+			else if (lMisModelOrder.getCodTipoMisura()
+					.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM_MOTIVO)
+					|| lMisModelOrder.getCodTipoMisura().equals("0610")) {
 				if (lPoModelPrec != null && lPoModelPrec.getCodPosizioneGiuridica() != null
 						&& (lPoModelPrec.isLibero()) && lMisModelOrder.getDataInizioMisura() != null
 						&& lPosizioneGiu.equals(ICostantiMisuraAlternativa.ESP_PRESSO_DOM_POS_GIU)) {
@@ -2617,7 +2635,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExUpdateValidaMASospProvv validazione documento Sosp Provv
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -2642,7 +2660,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 		LuogoDetenzioneDAO lLuogoDao = null;
 		MisuraAlternativaSqlDAO lMisSqlDAO = null;
 		MisuraAlternativaDAO lMiDAO = null;
-
 		EventoDAO lEveDaoMisAlt = null;
 
 		try {
@@ -2772,7 +2789,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// eliminati dalla base dati
 				}
 				// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-				//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
+				// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
 				else if (lMisModelOrder.getCodTipoMisura().equals("2291")) {
 					lStatoProcMod = "0600";
 				}
@@ -2848,7 +2865,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// eliminati dalla base dati
 				}
 				// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-				//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
+				// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
 				else if (lMisModelOrder.getCodTipoMisura().equals("2291")) {
 					lStatoProcMod = "0601";
 				}
@@ -2944,7 +2961,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// eliminati dalla base dati
 				}
 				// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-				//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
+				// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
 				else if (lMisModelOrder.getCodTipoMisura().equals("2291")) {
 					lStatoProcMod = "0601";
 				}
@@ -3115,14 +3132,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 								|| lMisModelOrder.getCodTipoMisura().equals("2741")
 								|| lMisModelOrder.getCodTipoMisura().equals("2742")
 								|| lMisModelOrder.getCodTipoMisura().equals("2743")
-						// Inizio MAC 2016/10/21
-						// Gestione codice MOTIVO_PROVVEDIMENTO = 2291
-						// Il codice 2291 sostituisce i codici (2741,2742,2743,2756)
-						// eliminati dalla base dati
-						// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-						//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)								
-								|| lMisModelOrder.getCodTipoMisura().equals("2291")
-						))
+								// Inizio MAC 2016/10/21
+								// Gestione codice MOTIVO_PROVVEDIMENTO = 2291
+								// Il codice 2291 sostituisce i codici (2741,2742,2743,2756)
+								// eliminati dalla base dati
+								// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
+								// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice
+								// 2291)
+								|| lMisModelOrder.getCodTipoMisura().equals("2291")))
 				// Fine MAC 2016/10/21
 				{ // impostiamo la posizione giuridica
 					// per Sospensione provvisoria arresti
@@ -3141,7 +3158,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						// eliminati dalla base dati
 					}
 					// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-					//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
+					// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
 					else if (lMisModelOrder.getCodTipoMisura().equals("2291")) {
 						lPosizione = "49";
 					}
@@ -3292,7 +3309,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	// upload revoca
 	/**
 	 * ExUpdateValidaMARevoca
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param tipoMisura
@@ -3302,6 +3319,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoModel ExUpdateValidaMARevoca(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -3409,14 +3427,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// Posizione giuridica
 			if (lCodPosizione.equalsIgnoreCase("62") || lCodPosizione.equalsIgnoreCase("63")
 					|| lCodPosizione.equalsIgnoreCase("64") || lCodPosizione.equalsIgnoreCase("65")
-			// Inizio MAC 2016/10/21
-			// Gestione codice MOTIVO_PROVVEDIMENTO = 2291
-			// Il codice 2291 sostituisce i codici (2741,2742,2743,2756)
-			// eliminati dalla base dati
-			// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
-			//PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
-					|| lCodPosizione.equalsIgnoreCase("49")
-			) {
+					// Inizio MAC 2016/10/21
+					// Gestione codice MOTIVO_PROVVEDIMENTO = 2291
+					// Il codice 2291 sostituisce i codici (2741,2742,2743,2756)
+					// eliminati dalla base dati
+					// MAC 2017/04/01 Ripristinati i codici (2741,2742,2743,2756)
+					// PEC m_dg.DOG07.01-10-2018.0030206.U (deve essere censito anche i codice 2291)
+					|| lCodPosizione.equalsIgnoreCase("49")) {
 				// Fine MAC 2016/10/21
 				// revocaDopoSospensioneProvvisoria = "dopoSospensione";
 				lNomProvvDAO.setCodNomeProvvedimento("NP308");
@@ -3715,15 +3732,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	// ***************************************
 	// 13.12.2010 AGGIUNTO DANIELA : Inizio
 	// ***************************************
-
 	// upload cessazione
-
 	/**
 	 * Metodo per la validazione della Cessazione di una mIsura Alternativa n.b. gestisce la validazione della
 	 * cessazione per tutte le misure.
 	 */
 	public EventoModel ExUpdateValidaMACessazione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -4117,7 +4133,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * Funzione di validazione dei provvedimenti a seguito della cessazione 51bis disposta del MDS DL 146/2013
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -4125,6 +4141,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoModel ExUpdateValidaMACessazione51bisMDS(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Connection lConnBlob = null;
 
@@ -4137,7 +4154,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 		MisuraAlternativaDAO lMisDao = null;
 		MisuraAlternativaSqlDAO lMisSqlDAO = null;
 		EventoDAO lEveDaoMisAlt = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -4512,7 +4528,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			cleanup(lMisDao);
 			cleanup(lMisSqlDAO);
 			cleanup(lEveDaoMisAlt);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 
@@ -4526,10 +4541,9 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	}
 
 	// 13.12.2010 Fine AGGIUNTO DANIELA
-
 	/**
 	 * ExUpdateValidaMARipristino validazione documento Ripristino
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -4537,6 +4551,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoModel ExUpdateValidaMARipristino(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -4876,13 +4891,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExRicercaMisuraAlternativaSospesaCorrenteByIdFascicolo
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaSospesaCorrenteByIdFascicolo(
 			BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaSqlDAO lMisDao = null;
@@ -4920,7 +4936,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * ExUpdateValidaMADetDomTemp
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param tipoMisura
@@ -4929,10 +4945,10 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoModel ExUpdateValidaMADetDomTemp(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -5016,7 +5032,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			 * != null) { lMisDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
 			 * lMisDAO.setDataFineMisura(lPenResMod.getDataFine()); lMisDAO.update(); lMisDAO.stop();
 			 * lMisModelOrder.setDataFineMisura(lPenResMod.getDataFine());
-			 * 
+			 *
 			 * }
 			 */
 
@@ -5219,7 +5235,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	// validazione documento Perdita Efficacia
 	/**
 	 * ExUpdateValidaMAPerditaEfficacia
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -5227,6 +5243,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public EventoModel ExUpdateValidaMAPerditaEfficacia(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -5238,7 +5255,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		MisuraAlternativaSqlDAO lMisSql = null;
 		RefertoScarcerazioneSqlDAO lRefScaSql = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 		EventoDAO lEveDaoMisAlt = null;
@@ -5443,6 +5459,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	public List<MisuraAlternativaEventoModel> ExRicercaMisureAlternativeEventiOrderDesc(
 			BigDecimal aIdFascicolo, String[] aCodTipoDecisione, String[] aCodNaturaDecisione,
 			String[] aCodTipoMisura) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveDao = null;
@@ -5508,7 +5525,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	// METODI PRIVATI
 	/**
 	 * InserimentoAggiornamentoPenResMisuraAlternativa
-	 * 
+	 *
 	 * @param lConn
 	 * @param lEveModel
 	 * @param aKey
@@ -5518,6 +5535,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	private PenaResiduaModel InserimentoAggiornamentoPenResMisuraAlternativa(Connection lConn,
 			EventoModel lEveModel, BigDecimal aKey, String lRevocaCalcolo) throws DAOException, F3BException {
+
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaModel lPenResMod = null;
@@ -5569,7 +5587,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	// Aggiorna/inserisce POSIZIONE_GIURIDICA
 	/**
 	 * InserimentoAggiornamentoPosizioneGiuridica
-	 * 
+	 *
 	 * @param lConn
 	 * @param lPosizione
 	 * @param lPos
@@ -5584,6 +5602,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	private BigDecimal InserimentoAggiornamentoPosizioneGiuridica(Connection lConn, String lPosizione,
 			PosizioneGiuridicaModel lPos, Date lData, EventoModel lEveModel, BigDecimal aKeyFasc,
 			BigDecimal aKeyEve) throws DAOException, F3BException {
+
 		PosizioneGiuridicaDAO lPosDao = null;
 		BigDecimal lIdPosizioneGiuridica = null;
 
@@ -5653,9 +5672,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lIdPosizioneGiuridica = lPosDao.insert();
 				lPosDao.stop();
 			}
-		} finally
-
-		{
+		} finally {
 			cleanup(lPosDao);
 		}
 
@@ -5664,7 +5681,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * InserimentoAggiornamentoScadenzarioFinePena
-	 * 
+	 *
 	 * @param lConn
 	 * @param lPenResMod
 	 * @param lEveModel
@@ -5675,6 +5692,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	private void InserimentoAggiornamentoScadenzarioFinePena(Connection lConn, PenaResiduaModel lPenResMod,
 			EventoModel lEveModel, Date lData, BigDecimal aKey) throws DAOException, F3BException {
+
 		ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
 		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 		ScadenzarioModel lScaMod = null;
@@ -5714,7 +5732,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * InserimentoAggiornamentoScadenzarioMisuraAlternativa
-	 * 
+	 *
 	 * @param lConn
 	 * @param lData
 	 * @param lPenResMod
@@ -5726,6 +5744,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	private void InserimentoAggiornamentoScadenzarioMisuraAlternativa(Connection lConn, Date lData,
 			PenaResiduaModel lPenResMod, EventoModel lEveModel, BigDecimal aKey)
 			throws DAOException, F3BException {
+
 		ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
 		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 		ScadenzarioModel lScaMod = null;
@@ -5759,8 +5778,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lScaDao.insert();
 				lScaDao.stop();
 			}
-		} finally // sca
-		{
+		} finally {
+			// sca
 			cleanup(lScaDao);
 			cleanup(lScaSqlDao);
 		}
@@ -5768,7 +5787,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 	/**
 	 * InserimentoCancellazioneStatoProcedimento
-	 * 
+	 *
 	 * @param lConn
 	 * @param aKey
 	 * @param lEveModel
@@ -5778,6 +5797,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
 			EventoModel lEveModel, String lStatoProcMod) throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(lConn);
 
 		try {
@@ -5853,6 +5873,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	@Override
 	public MisuraAlternativaModel ExInserisciMisuraAlternativa(MisuraAlternativaModel aMisuraAlternativa)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaDAO lMisDao = null;
@@ -5885,6 +5906,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	@Override
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaCorrenteByAnnoProgr(BigDecimal anno,
 			BigDecimal progr) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -5917,6 +5939,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 	 */
 	public String ExInserisciMisuraAlternativaWithoutSequence(MisuraAlternativaModel aMisuraAlternativa,
 			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		MisuraAlternativaDAO lMisAltDao = null;
 

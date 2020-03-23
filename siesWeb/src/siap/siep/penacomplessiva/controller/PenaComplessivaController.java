@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.continuazione.dao.ContinuazioneDAO;
 import siap.siep.continuazione.dao.ContinuazioneSqlDAO;
@@ -21,8 +23,6 @@ import siap.siep.sanzionesostitutiva.dao.SanzioneSostitutivaSqlDAO;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.sige.penacomplessiva.dao.PenaCompSenSigeDAO;
 import siap.sige.penacomplessiva.model.PenaCompSigeModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -151,12 +151,12 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("PenaComplessivaController.ExInserisciPenaCompSanzioneSostContinuazioni: "
-					+ ex);
+			throw new F3BException(
+					"PenaComplessivaController.ExInserisciPenaCompSanzioneSostContinuazioni: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("PenaComplessivaController.ExInserisciPenaCompSanzioneSostContinuazioni: "
-					+ ex);
+			throw new F3BException(
+					"PenaComplessivaController.ExInserisciPenaCompSanzioneSostContinuazioni: " + ex);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lSanzDao);
@@ -188,8 +188,8 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 				ContinuazioneModel lItem = (ContinuazioneModel) lIter.next();
 
 				// Gestione Progressivo
-				BigDecimal lProgr = lContSqlDAo.getProgressivoContinuazione(lItem
-						.getPenComIdPenaComplessiva());
+				BigDecimal lProgr = lContSqlDAo
+						.getProgressivoContinuazione(lItem.getPenComIdPenaComplessiva());
 				lItem.setProgrContinuazione(new BigDecimal(lProgr.intValue() + 1));
 
 				lContDao.setDAOFromModel(lItem);
@@ -200,12 +200,10 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			ex.printStackTrace();
 			throw new F3BException("PenaComplessivaController.ExInserisciUlterioriContinuazioni: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
-
 			ex.printStackTrace();
 			throw new F3BException("PenaComplessivaController.ExInserisciUlterioriContinuazioni: " + ex);
 		} finally {
@@ -216,6 +214,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 	}
 
 	public Vector ExRicercaPenaComplessiva(PenaComplessivaModel aPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lPenaComplessivi = new Vector();
@@ -230,8 +229,8 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -241,6 +240,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 	}
 
 	public Vector ExRicercaPenaComplessivaNoError(PenaComplessivaModel aPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lPenaComplessivi = new Vector();
@@ -251,10 +251,9 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			lPenDao = new PenaComplessivaSqlDAO(lConn);
 			lPenDao.ricercaPenaComplessiva(aPenaComplessiva);
 			lPenaComplessivi = new Vector(lPenDao.getModels());
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -264,6 +263,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 	}
 
 	public PenaComplessivaModel ExRicercaPenaComplessivaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -276,8 +276,8 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			lPenDao.ricercaPenaComplessivaByKey(aKey);
 			lPenMod = (PenaComplessivaModel) lPenDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -286,6 +286,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 	}
 
 	public PenaComplessivaModel ExRicercaPenaComplessivaByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -298,8 +299,8 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			lPenDao.ricercaPenaComplessivaByIdFascicolo(aKey);
 			lPenMod = (PenaComplessivaModel) lPenDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessiva: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -309,6 +310,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 	public PenaComplessivaSanzioneSostitutivaModel ExRicercaPenaComplessivaSanzioneSostitutivaByKey(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -352,6 +354,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 	public PenaComplessivaSanzioneSostitutivaModel ExRicercaPenaComplessivaSanzioneSostitutivaByIdFascicoloSiep(
 			BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -400,6 +403,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 	public DettaglioPenaComplessivaModel ExRicercaPenaCompSanzioneSostContinuazioniByKey(
 			BigDecimal aIdPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -457,6 +461,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 	public DettaglioPenaComplessivaModel ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -607,6 +612,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 	}
 
 	public void ExCancellaPenaComplessiva(PenaComplessivaModel aPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaDAO lPenDao = null;
@@ -631,6 +637,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 	public void ExCancellaPenaComplessivaSanzioneSostitutivaContinuazioni(
 			PenaComplessivaModel aPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 		/*
 		 * PenaComplessivaDAO lPenDao = null; SanzioneSostitutivaDAO lSanDao = null; ContinuazioneDAO lConDao
@@ -644,13 +651,13 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			/*
 			 * //** Cancella prima i record associati //** e poi cancella Pena Complessiva BigDecimal
 			 * lIdPenaComplessiva = aPenaComplessiva.getIdPenaComplessiva();
-			 * 
+			 *
 			 * //* Cancella la Sanzione Sostitutiva associata lSanDao = new SanzioneSostitutivaDAO(lConn);
 			 * lSanDao.setCondizioneByIdPenaComplessiva(lIdPenaComplessiva); lSanDao.delete();
-			 * 
+			 *
 			 * //* Cancella le Continuazioni associate lConDao = new ContinuazioneDAO(lConn);
 			 * lConDao.setCondizioneByIdPenaComplessiva(lIdPenaComplessiva); lConDao.delete();
-			 * 
+			 *
 			 * //* Cancella la Pena Complessiva lPenDao = new PenaComplessivaDAO(lConn);
 			 * lPenDao.setCondizioneUpdate(lIdPenaComplessiva); lPenDao.delete();
 			 */
@@ -695,7 +702,6 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 			lPenDao = new PenaComplessivaDAO(lConn);
 			lPenDao.setCondizioneUpdate(lIdPenaComplessiva);
 			lPenDao.delete();
-
 		} catch (Exception ex) {
 			throw new F3BException(
 					"PenaComplessivaController.CancellaPenaComplessivaSanzioneSostitutivaContinuazioni: "
@@ -764,14 +770,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire la Pena Complessiva! ");
 			}
-		}
-		/*
-		 * catch (Exception ex) { rollback(lConn);
-		 * 
-		 * ex.printStackTrace(); throw new
-		 * F3BException("PenaComplessivaController.ExInserisciPenaCompSanzioneSostContinuazioni: " + ex); }
-		 */
-		finally {
+		} finally {
 			cleanup(lPenDao);
 			cleanup(lSanzDao);
 			cleanup(lContDao);
@@ -783,6 +782,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 	public DettaglioPenaComplessivaModel ExRicercaPenaComplessivaCompletaByIdSIGE(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaCompSenSigeDAO lPenaCompSigeDAO = null;
 
@@ -799,21 +799,17 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 
 			// Si richiama la ricerca Pena Complessiva per ID
 			if (lPenaCompSige != null && lPenaCompSige.getIdPenaComplessiva() != null)
-				lPenSanMod = ExRicercaPenaCompSanzioneSostContinuazioniByKey(lPenaCompSige
-						.getIdPenaComplessiva());
+				lPenSanMod = ExRicercaPenaCompSanzioneSostContinuazioniByKey(
+						lPenaCompSige.getIdPenaComplessiva());
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaComplessivaController.ExRicercaPenaComplessivaCompletaByIdSIGE: "
-					+ daoEx);
-		}
-
-		catch (F3BException fe) {
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessivaCompletaByIdSIGE: " + daoEx);
+		} catch (F3BException fe) {
 			throw fe;
 		} catch (Exception e) {
-			throw new F3BException("PenaComplessivaController.ExRicercaPenaComplessivaCompletaByIdSIGE-> "
-					+ e);
-		}
-
-		finally {
+			throw new F3BException(
+					"PenaComplessivaController.ExRicercaPenaComplessivaCompletaByIdSIGE-> " + e);
+		} finally {
 			cleanup(lPenaCompSigeDAO);
 			cleanup(lConn);
 		}
@@ -825,6 +821,7 @@ public class PenaComplessivaController extends SiapController implements IPenaCo
 	 * Cancellazione di una Pena Complessiva in relazione con un Procedimento SIGE.
 	 */
 	public void ExCancellaPenaComplessivaSige(PenaComplessivaModel aPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 		PenaCompSenSigeDAO lPenComSigeDAO = null;
 

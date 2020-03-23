@@ -27,7 +27,7 @@ import siap.sige.udienza.dao.UdienzaSigeSqlDAO;
  * <p>
  * Company: Engineering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class AulaController extends SiapController implements IAula {
@@ -35,7 +35,7 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Metodo che esegue l'inserimento di un'Aula.
 	 * <p>
-	 * 
+	 *
 	 * @param aAula
 	 *            AulaUdienzaModel Il model con i dati da inserire.
 	 * @throws F3BException
@@ -43,6 +43,7 @@ public class AulaController extends SiapController implements IAula {
 	 * @return AulaUdienzaModel ritorna il model.
 	 */
 	public AulaUdienzaModel ExInserisciAula(AulaUdienzaModel aAula) throws F3BException {
+
 		Connection lConn = null;
 		AulaDAO lAulaDao = null;
 		AulaUdienzaModel lAulaMod = null;
@@ -72,7 +73,7 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Metodo che esegue la ricerca puntuale per chiave (ID_AULA, ID_SEZIONE) dell'Aula.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdAula
 	 * @param aIdSezione
 	 * @return AulaUdienzaModel ritorna il model opportunamente popolato.
@@ -81,6 +82,7 @@ public class AulaController extends SiapController implements IAula {
 	 */
 	public AulaUdienzaModel ExRicercaAulaByKey(BigDecimal aIdAula, BigDecimal aIdSezione)
 			throws F3BException {
+
 		Connection lConn = null;
 		AulaSqlDAO lAulaDao = null;
 		AulaUdienzaModel lAulaMod;
@@ -103,7 +105,7 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Metodo che esegue la ricerca dell'aula per sezione e descrizione aula.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdSezione
 	 * @param descAula
 	 * @return AulaUdienzaModel ritorna il model opportunamente popolato.
@@ -112,6 +114,7 @@ public class AulaController extends SiapController implements IAula {
 	 */
 	public AulaUdienzaModel ExRicercaAulaByDescrizione(BigDecimal aIdSezione, String descAula)
 			throws F3BException {
+
 		Connection lConn = null;
 		AulaSqlDAO lAulaDao = null;
 		AulaUdienzaModel lAulaMod;
@@ -133,6 +136,7 @@ public class AulaController extends SiapController implements IAula {
 	}
 
 	public Vector<AulaUdienzaModel> ExRicercaAulaByIdSezione(BigDecimal idSezione) throws F3BException {
+
 		Connection lConn = null;
 		Vector<AulaUdienzaModel> lAule = new Vector<>();
 		AulaSqlDAO lAulaDao = null;
@@ -164,7 +168,7 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Metodo che esegue la ricerca di un'Aula.
 	 * <p>
-	 * 
+	 *
 	 * @param aAula
 	 *            Model popolato con i parametri necessari per la ricerca
 	 * @return ritorna l'insieme delle occorrenze.
@@ -176,7 +180,6 @@ public class AulaController extends SiapController implements IAula {
 
 		Connection lConn = null;
 		Vector<AulaUdienzaModel> lAule = new Vector<>();
-
 		AulaSqlDAO lAulaDao = null;
 
 		try {
@@ -200,12 +203,13 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Numero dei record occorsi.
 	 * <p>
-	 * 
+	 *
 	 * @param aAula
 	 * @return
 	 * @throws F3BException
 	 */
 	public int ExGetNumRicercaAula(AulaUdienzaModel aAula) throws F3BException {
+
 		Connection lConn = null;
 		AulaSqlDAO lAulaDao = null;
 
@@ -228,7 +232,7 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Esegue la cancellazione dell'aula.
 	 * <p>
-	 * 
+	 *
 	 * @param idAula
 	 * @param idSezione
 	 * @throws F3BException
@@ -275,7 +279,7 @@ public class AulaController extends SiapController implements IAula {
 	/**
 	 * Metodo che esegue la modifica dei dati di un'Aula.
 	 * <p>
-	 * 
+	 *
 	 * @param aAula
 	 *            Model AulaUdienza.
 	 * @return model dell'Aula di ritorno.
@@ -285,7 +289,6 @@ public class AulaController extends SiapController implements IAula {
 	public AulaUdienzaModel ExModificaAula(AulaUdienzaModel aAula) throws F3BException {
 
 		Connection lConn = null;
-
 		AulaDAO lAulaDao = null;
 		AulaUdienzaModel lAulaMod = new AulaUdienzaModel(aAula);
 
@@ -312,6 +315,7 @@ public class AulaController extends SiapController implements IAula {
 
 	@Override
 	public AulaUdienzaModel ExRicercaAulaPredefinitaSezione(String idSezione) throws F3BException {
+
 		Connection lConn = null;
 		AulaSqlDAO lAulaDao = null;
 		AulaUdienzaModel lAulaMod;
@@ -334,6 +338,7 @@ public class AulaController extends SiapController implements IAula {
 
 	@Override
 	public AulaUdienzaModel ExRicercaAulaByIdAula(BigDecimal idAula) throws F3BException {
+
 		Connection lConn = null;
 		AulaSqlDAO lAulaDao = null;
 		AulaUdienzaModel lAulaMod;
@@ -343,7 +348,6 @@ public class AulaController extends SiapController implements IAula {
 			lAulaDao = new AulaSqlDAO(lConn);
 			lAulaDao.ricercaAulaById(idAula);
 			lAulaMod = (AulaUdienzaModel) lAulaDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"AulaController.ExRicercaAulaByDescrizione : Non posso leggere : " + daoEx);

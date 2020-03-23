@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -50,10 +54,6 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -68,18 +68,20 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class MisuraAlternativaIndultinoController extends SiapController implements
-		IMisuraAlternativaIndultino {
+public class MisuraAlternativaIndultinoController extends SiapController
+		implements IMisuraAlternativaIndultino {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaByIdFascicoloNaturaTipoMisuraDecisione(
-			BigDecimal aKey, String[] aNatura, String[] aTipoMisura, String[] aDecisione) throws F3BException {
+			BigDecimal aKey, String[] aNatura, String[] aTipoMisura, String[] aDecisione)
+			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -89,10 +91,9 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			lMisMod = new MisuraAlternativaModel();
 
-			lMisDao.ricercaMisuraAlternativaByIdFascicoloNaturaTipoMisuraDecisioneOrderDescData(aKey,
-					aNatura, aTipoMisura, aDecisione);
+			lMisDao.ricercaMisuraAlternativaByIdFascicoloNaturaTipoMisuraDecisioneOrderDescData(aKey, aNatura,
+					aTipoMisura, aDecisione);
 			lMisMod = (MisuraAlternativaModel) lMisDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraAternativaIndultinoController.ExRicercaMisuraAlternativaByIdFascicoloNaturaTipoMisuraDecisione: Non posso leggere : "
@@ -107,6 +108,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaByIdFascicoloNaturaDecisione(BigDecimal aKey,
 			String aNatura) throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -118,7 +120,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			lMisDao.ricercaMisuraAlternativaByIdFascicoloNaturaDecisione(aKey, aNatura);
 			lMisMod = (MisuraAlternativaModel) lMisDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraAternativaIndultinoController.ExRicercaMisuraAlternativaByIdFascicoloNaturaTipoMisuraDecisione: Non posso leggere : "
@@ -133,6 +134,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaPrecedenteByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraAlternativaSqlDAO lMisDao = null;
@@ -152,7 +154,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 				lMisMod = (MisuraAlternativaModel) lMisura.get(1);
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraAlternativaIndultinoController.ExRicercaMisuraAlternativaPrecedenteByIdFascicolo: "
@@ -167,6 +168,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	public EventoModel ExUpdateValidaMARipristinoIndultino(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -176,7 +178,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-//		EventoModel lEveModelMDS = null;
+		// EventoModel lEveModelMDS = null;
 		EventoDAO lEveDaoMisAlt = null;
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
@@ -200,9 +202,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				EventoModel lEveModelMis = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
 
-				if (lEveModelMis != null
-						&& (lEveModelMis.getFlagDocumentoRegistrato() == null || lEveModelMis
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				if (lEveModelMis != null && (lEveModelMis.getFlagDocumentoRegistrato() == null
+						|| lEveModelMis.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelMis.setFlagDocumentoRegistrato("S");
 					lEveModelMis.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelMis.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -279,7 +280,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// ------- EVENTO--------
 			// lConnBlob = getDBConnection();
@@ -328,6 +329,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	public EventoModel ExUpdateValidaMAProsecuzione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -362,9 +364,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				EventoModel lEveModelTDS = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
 
-				if (lEveModelTDS != null
-						&& (lEveModelTDS.getFlagDocumentoRegistrato() == null || lEveModelTDS
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				if (lEveModelTDS != null && (lEveModelTDS.getFlagDocumentoRegistrato() == null
+						|| lEveModelTDS.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelTDS.setFlagDocumentoRegistrato("S");
 					lEveModelTDS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelTDS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -403,7 +404,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			// Aggiorna SCADENZARIO FINE PENA
 			ScadenzarioModel lScaMod = null;
-			if (lPenResMod != null && lPenResMod.getDataInizio() != null && lPenResMod.getDataFine() != null) {
+			if (lPenResMod != null && lPenResMod.getDataInizio() != null
+					&& lPenResMod.getDataFine() != null) {
 				// Per tipo misura "AFFIDAMENTO" e "AFFIDAMENTOCUMULO"
 				if (lMisModelOrder.getCodTipoMisura().equals("2205")
 						|| lMisModelOrder.getCodTipoMisura().equals("2281")
@@ -455,16 +457,15 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			// Aggiorna tabella nome_provvedimento
 
-			/*String lPosizioneGiu = */lPosMod.getCodPosizioneGiuridica();
+			/* String lPosizioneGiu = */lPosMod.getCodPosizioneGiuridica();
 			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
 
 			// Per tipo misura "AFFIDAMENTO" e "AFFIDAMENTOCUMULO"
 			if (lMisModelOrder.getCodTipoMisura().equals("2205")
 					|| lMisModelOrder.getCodTipoMisura().equals("2281")
-					|| lMisModelOrder.getCodTipoMisura().equals("2282"))
-			// if (atipoMisura != null && (atipoMisura.equals("AFFIDAMENTO") ||
-			// atipoMisura.equals("AFFIDAMENTOCUMULO")))
-			{
+					|| lMisModelOrder.getCodTipoMisura().equals("2282")) {
+				// if (atipoMisura != null && (atipoMisura.equals("AFFIDAMENTO") ||
+				// atipoMisura.equals("AFFIDAMENTOCUMULO")))
 				lNomProvvDAO.setCodNomeProvvedimento("NP116");
 			}
 			// Per tipo misura "DETENZIONE" e "DETENZIONECUMULO"
@@ -472,17 +473,15 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 					|| lMisModelOrder.getCodTipoMisura().equals("2285")
 					|| lMisModelOrder.getCodTipoMisura().equals("2286")
 					|| lMisModelOrder.getCodTipoMisura().equals("2287")
-					|| lMisModelOrder.getCodTipoMisura().equals("2288"))
-			// else if (atipoMisura != null && (atipoMisura.equals("DETENZIONE") ||
-			// atipoMisura.equals("DETENZIONECUMULO")))
-			{
+					|| lMisModelOrder.getCodTipoMisura().equals("2288")) {
+				// else if (atipoMisura != null && (atipoMisura.equals("DETENZIONE") ||
+				// atipoMisura.equals("DETENZIONECUMULO")))
 				lNomProvvDAO.setCodNomeProvvedimento("NP117");
 			}
 			// Per tipo misura "SEMILIBERTA" e "SEMILIBERTACUMULO"
-			else if (lMisModelOrder.getCodTipoMisura().equals("2283"))
-			// else if (atipoMisura != null && (atipoMisura.equals("SEMILIBERTA") ||
-			// atipoMisura.equals("SEMILIBERTACUMULO")))
-			{
+			else if (lMisModelOrder.getCodTipoMisura().equals("2283")) {
+				// else if (atipoMisura != null && (atipoMisura.equals("SEMILIBERTA") ||
+				// atipoMisura.equals("SEMILIBERTACUMULO")))
 				lNomProvvDAO.setCodNomeProvvedimento("NP118");
 			} else {
 				lNomProvvDAO.setCodNomeProvvedimento("NP119");
@@ -495,7 +494,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			// * Cerca le NOTIFICHE *
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// ------- EVENTO--------
 			// lConnBlob = getDBConnection();
@@ -511,18 +510,15 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
-			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAProsecuzione : "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAProsecuzione : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
-			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAProsecuzione : " + ex);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAProsecuzione : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
 			cleanup(lPosSqlDAO);
@@ -545,7 +541,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	/**
 	 * Valida l'evento a seguito della concessione della Proseczione della misura disposta dal MDS o dal TDS
 	 * secondo le nuove disposizioni del DL 146/2013
-	 * 
+	 *
 	 * @param aEvento
 	 *            - Model con valorizzati solo ID e "dati Aggiornamento" + Blob
 	 * @param aFascicolo
@@ -555,19 +551,16 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMAProsecuzione51Bis(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
-
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
-
 		MisuraAlternativaDAO lMiDAO = null;
 		MisuraAlternativaSqlDAO lMisSqlDAO = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
 		EventoModel lEveMod = new EventoModel(aEvento);
 		EventoDAO lEveDaoMisAlt = null;
@@ -599,9 +592,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				EventoModel lEveModelSIUS = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
 
-				if (lEveModelSIUS != null
-						&& (lEveModelSIUS.getFlagDocumentoRegistrato() == null || lEveModelSIUS
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				if (lEveModelSIUS != null && (lEveModelSIUS.getFlagDocumentoRegistrato() == null
+						|| lEveModelSIUS.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelSIUS.setFlagDocumentoRegistrato("S");
 					lEveModelSIUS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelSIUS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -710,9 +702,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			} else {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger
-						.warn("Impossibile determinare lo stato procedimento per l'evento con cod Motivo = "
-								+ lEveModel.getCodMotivo());
+				siesLogger.warn("Impossibile determinare lo stato procedimento per l'evento con cod Motivo = "
+						+ lEveModel.getCodMotivo());
 			}
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
@@ -765,7 +756,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			// Aggiorna SCADENZARIO FINE PENA
 			ScadenzarioModel lScaMod = null;
-			if (lPenResMod != null && lPenResMod.getDataInizio() != null && lPenResMod.getDataFine() != null) {
+			if (lPenResMod != null && lPenResMod.getDataInizio() != null
+					&& lPenResMod.getDataFine() != null) {
 				// Per tipo misura "AFFIDAMENTO IN PROVA" (con o senza cumulo)
 				// FIXME DL 146/2013 verificare perchè lo scadenzario FP va aggiornato solo se in affidamento
 				if (lEveModel.getCodMotivo().equals("5470") || lEveModel.getCodMotivo().equals("5471")
@@ -799,8 +791,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				}
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger
-						.debug(" Procedo all'aggiornamento/Inserimento scadenzario misura. lCodTipoScadenzario = "
+				siesLogger.debug(
+						" Procedo all'aggiornamento/Inserimento scadenzario misura. lCodTipoScadenzario = "
 								+ lCodTipoScadenzario);
 
 				InserimentoAggiornamentoScadenzario(lConn, lCodTipoScadenzario,
@@ -834,10 +826,20 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				// Prosecuzione disposta dal MDS
 				if (lMisModelOrder.getCodNaturaDecisione().equals("ED")) // Estensione MDS senza Cumulo
 				{
-					if (lMisModelOrder.getDataInizioMisura() != null
-							&& DateUtils.isGreater(lMisModelOrder.getDataInizioMisura(),
-									DateUtils.getSysDate())) { // se a decorrenza futura cambio la PG in
-																// Libero sempre, altrimenti resta invariata
+					if (lMisModelOrder.getDataInizioMisura() != null && DateUtils
+							.isGreater(lMisModelOrder.getDataInizioMisura(), DateUtils.getSysDate())) { // se
+																										// a
+																										// decorrenza
+																										// futura
+																										// cambio
+																										// la
+																										// PG
+																										// in
+																										// Libero
+																										// sempre,
+																										// altrimenti
+																										// resta
+																										// invariata
 						lPosizione = "10"; // Libero
 					}
 				} else { // Senza cumulo aggiorno opportunamente la Posizione In Misura /questa causa)
@@ -908,12 +910,10 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			cleanup(lMiDAO);
 			cleanup(lMisSqlDAO);
 			cleanup(lEveDaoMisAlt);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 		}
 
@@ -922,6 +922,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	public EventoModel ExUpdateValidaMAEstensione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -954,9 +955,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				EventoModel lEveModelTDS = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
 
-				if (lEveModelTDS != null
-						&& (lEveModelTDS.getFlagDocumentoRegistrato() == null || lEveModelTDS
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				if (lEveModelTDS != null && (lEveModelTDS.getFlagDocumentoRegistrato() == null
+						|| lEveModelTDS.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelTDS.setFlagDocumentoRegistrato("S");
 					lEveModelTDS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelTDS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -972,7 +972,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			lPosSqlDAO = new PosizioneGiuridicaSqlDAO(lConn);
 			lPosSqlDAO.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
 			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDAO.getModelByKey();
-			/*String lCodPosizione = */lPosMod.getCodPosizioneGiuridica();
+			/* String lCodPosizione = */lPosMod.getCodPosizioneGiuridica();
 
 			// Aggiorna Inserisci PENA_RESIDUA
 			PenaResiduaModel lPenResMod = null;
@@ -1023,21 +1023,23 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 					aEvento.getIdEvento());
 			// Aggiorna tabella nome_provvedimento
 
-			/*String lPosizioneGiu = */lPosMod.getCodPosizioneGiuridica();
+			/* String lPosizioneGiu = */lPosMod.getCodPosizioneGiuridica();
 			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
 
 			// Per tipo misura "AFFIDAMENTO" senza estenzione cumulo
 			if ((lMisModelOrder.getCodTipoMisura().equals("0020")
-					|| lMisModelOrder.getCodTipoMisura().equals("0092") || lMisModelOrder.getCodTipoMisura()
-					.equals("0093")) && !lMisModelOrder.getCodNaturaDecisione().equals("EC")) {
+					|| lMisModelOrder.getCodTipoMisura().equals("0092")
+					|| lMisModelOrder.getCodTipoMisura().equals("0093"))
+					&& !lMisModelOrder.getCodNaturaDecisione().equals("EC")) {
 				lNomProvvDAO.setCodNomeProvvedimento("NP121");
 			}
 			// Per tipo misura "DETENZIONE" senza estenzione cumulo
 			else if ((lMisModelOrder.getCodTipoMisura().equals("0095")
 					|| lMisModelOrder.getCodTipoMisura().equals("0100")
 					|| lMisModelOrder.getCodTipoMisura().equals("0101")
-					|| lMisModelOrder.getCodTipoMisura().equals("0102") || lMisModelOrder.getCodTipoMisura()
-					.equals("0103")) && !lMisModelOrder.getCodNaturaDecisione().equals("EC")) {
+					|| lMisModelOrder.getCodTipoMisura().equals("0102")
+					|| lMisModelOrder.getCodTipoMisura().equals("0103"))
+					&& !lMisModelOrder.getCodNaturaDecisione().equals("EC")) {
 				lNomProvvDAO.setCodNomeProvvedimento("NP122");
 			}
 			// Per tipo misura "SEMILIBERTA" senza estenzione cumulo
@@ -1058,7 +1060,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			// * Cerca le NOTIFICHE *
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// ------- EVENTO--------
 			// lConnBlob = getDBConnection();
@@ -1075,20 +1077,15 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
-			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAEstensione : "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAEstensione : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAEstensione : " + ex);
 		} finally {
-
 			cleanup(lEveSqlDao);
 			cleanup(lPosSqlDAO);
 			cleanup(lNotEveDao);
@@ -1106,6 +1103,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	public EventoModel ExUpdateValidaMARigetto(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1142,9 +1140,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				EventoModel lEveModelTDS = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
 
-				if (lEveModelTDS != null
-						&& (lEveModelTDS.getFlagDocumentoRegistrato() == null || lEveModelTDS
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				if (lEveModelTDS != null && (lEveModelTDS.getFlagDocumentoRegistrato() == null
+						|| lEveModelTDS.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelTDS.setFlagDocumentoRegistrato("S");
 					lEveModelTDS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelTDS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -1163,8 +1160,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
 
 			// Aggiorna Inserisci PENA_RESIDUA
-//			PenaResiduaModel lPenResMod = null;
-			/*lPenResMod = */InserimentoAggiornamentoPenResMisuraAlternativa(lConn, aEvento,
+			// PenaResiduaModel lPenResMod = null;
+			/* lPenResMod = */InserimentoAggiornamentoPenResMisuraAlternativa(lConn, aEvento,
 					aFascicolo.getIdFascicoloSiep(), null);
 
 			// SETTA LO STATO PROCEDIMENTO
@@ -1211,13 +1208,12 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			// Aggiorna/inserisce POSIZIONE_GIURIDICA
 			if (lCodPosizione != null && lCodPosizione.equals("29")) {
-				InserimentoAggiornamentoPosizioneGiuridica(lConn, "03", lPosMod,
-						lEveModel.getDataEmissione(), aEvento, aFascicolo.getIdFascicoloSiep(),
-						aEvento.getIdEvento());
+				InserimentoAggiornamentoPosizioneGiuridica(lConn, "03", lPosMod, lEveModel.getDataEmissione(),
+						aEvento, aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
 			}
 
 			// Aggiorna tabella nome_provvedimento
-			/*String lPosizioneGiu = */lPosMod.getCodPosizioneGiuridica();
+			/* String lPosizioneGiu = */lPosMod.getCodPosizioneGiuridica();
 			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
 
 			if (lCodPosizione != null && lCodPosizione.equals("29")) {
@@ -1237,7 +1233,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			// * Cerca le NOTIFICHE *
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// ------- EVENTO--------
 			// lConnBlob = getDBConnection();
@@ -1266,7 +1262,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMARigetto : " + ex);
 		} finally {
-
 			cleanup(lEveSqlDao);
 			cleanup(lPosSqlDAO);
 			cleanup(lNotEveDao);
@@ -1287,6 +1282,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	// Cancellazione Ordinanze e Decreti
 	public EventoModel ExAggiornaEventoInserisciCampoNota(EventoModel aEvento, CampoNotaModel aCampoNota)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1310,10 +1306,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 		LicenzaLibanticipataDAO lLicAntiDAO = null;
 		Vector lAnnVect = null;
 		EventoModel lEveRet = new EventoModel(aEvento);
-
 		// paolo cherubini 24-11-2010 aggiungo la procedura per il ricalcolo dello scadenzario simeone
 		EventoStoreProcedureAggiornaScadenzarioSimeoneDAO lEventoProcScad = null;
-
 		EventoStoreProcedureAggiornaScadenzariVaneRicercheDAO lEventoProc03 = null;
 
 		try {
@@ -1409,9 +1403,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 						lCampoNotaDao.stop();
 					}
 
-				} else if (lEveProv != null
-						&& (lEveProv.getFlagDocumentoRegistrato() == null || lEveProv
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				} else if (lEveProv != null && (lEveProv.getFlagDocumentoRegistrato() == null
+						|| lEveProv.getFlagDocumentoRegistrato().equals("N"))) {
 					// Cancello se nn validato
 					lEventoProc = new EventoStoreProcedurePulisciDAO(lConn);
 					lEventoProc.setIdEvento(lEveProv.getIdEvento());
@@ -1465,50 +1458,50 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			// procedimenti della sorveglianza l'esito del tenore!!! --dario--viviana 22-05-06
 			/*
 			 * lMisSqlDao = new MisuraAlternativaSqlDAO(lConn); lMisDao = new MisuraAlternativaDAO(lConn);
-			 * 
+			 *
 			 * MisuraAlternativaModel lMisMod = new MisuraAlternativaModel();
 			 * lMisSqlDao.ricercaMisuraAlternativaByIdEvento(lEveRet.getIdEvento()); lMisMod =
 			 * (MisuraAlternativaModel)lMisSqlDao.getModelByKey();
-			 * 
+			 *
 			 * if(lMisMod != null && lMisMod.getIdMisuraAlternativa() != null) {
 			 * lMisDao.setDAOFromModelForUpdate(lMisMod); lMisDao.delete(); lMisDao.stop(); }
-			 * 
+			 *
 			 * //RICERCA DEPOSITO ORDINANZA PC E CANCELLAZIONE lDepOrdDAO = new DepositoOrdinanzaPcDAO(lConn);
 			 * lDepOrdSqlDAO = new DepositoOrdinanzaPcSqlDAO(lConn); lTenSqlDAO = new TenoreSqlDAO(lConn);
 			 * lTenDAO = new TenoreDAO(lConn);
-			 * 
+			 *
 			 * DepositoOrdinanzaPcModel lDepPCMod = new DepositoOrdinanzaPcModel();
 			 * lDepOrdSqlDAO.ricercaDepositoOrdinanzaPcByIdEveGenerato(lEveRet.getIdEvento()); lDepPCMod =
 			 * (DepositoOrdinanzaPcModel)lDepOrdSqlDAO.getModelByKey();
-			 * 
+			 *
 			 * if(lDepPCMod != null && lDepPCMod.getIdDepositoOrdinanzaPc() != null) { //ricerca tenore ed
 			 * aggiornamento. lTenDAO.setDAOForDeleteDepOrd(lDepPCMod.getIdDepositoOrdinanzaPc());
 			 * lTenDAO.setDataAggiornamento(aCampoNota.getDataInserimento());
 			 * lTenDAO.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 			 * lTenDAO.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento()); lTenDAO.update();
 			 * lTenDAO.stop();
-			 * 
+			 *
 			 * //ricerca DepositoOrdinanzaPc e cancellazione. lDepOrdDAO.setDAOFromModelForUpdate(lDepPCMod);
 			 * lDepOrdDAO.delete(); lDepOrdDAO.stop(); }
-			 * 
+			 *
 			 * //RICERCA DEPOSITO Decreto E CANCELLAZIONE lDepDAO = new DepositoDecretoDAO(lConn); lDepSqlDAO
 			 * = new DepositoDecretoSqlDAO(lConn);
-			 * 
+			 *
 			 * lDepSqlDAO.ricercaDepositoDecretoByIdEveGeneratoNoDescTipoDecreto(lEveRet.getIdEvento());
 			 * DepositoDecretoModel lDepDec = new DepositoDecretoModel(); lDepSqlDAO.start();
 			 * lDepSqlDAO.next(); lDepDec = (DepositoDecretoModel)lDepSqlDAO.getModelNoDescTipoDecreto();
 			 * lDepSqlDAO.stop();
-			 * 
+			 *
 			 * if(lDepDec != null && lDepDec.getIdDepositoDecreto() != null) { //ricerca tenore ed
 			 * aggiornamento. lTenDAO.setDAOForDeleteDepDec(lDepDec.getIdDepositoDecreto());
 			 * lTenDAO.setDataAggiornamento(aCampoNota.getDataInserimento());
 			 * lTenDAO.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 			 * lTenDAO.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento()); lTenDAO.update();
 			 * lTenDAO.stop();
-			 * 
+			 *
 			 * //ricerca DepositoDecreto e cancellazione. lDepDAO.setDAOFromModelForUpdate(lDepDec);
 			 * lDepDAO.delete(); lDepDAO.stop();
-			 * 
+			 *
 			 * }
 			 */
 
@@ -1720,16 +1713,12 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			siesLogger.debug("fine EventoStoreProcedureAggiornaScadenzariVaneRicercheDAO");
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
-
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			throw new F3BException(
 					"MisuraAlternativaIndultinoController.ExAggiornaEventoInserisciCampoNota: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException(
 					"MisuraAlternativaIndultinoController.ExAggiornaEventoInserisciCampoNota: " + ex);
@@ -1752,6 +1741,9 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			cleanup(lSqlSimeoneDao);
 			cleanup(lLicAntiSql);
 			cleanup(lLicAntiDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEventoProcScad);
+			cleanup(lEventoProc03);
 
 			cleanup(lConn);
 		}
@@ -1761,7 +1753,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaMAAmmProvvisoria Upload Ammissione Provvisoria
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -1769,6 +1761,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMAAmmProvvisoria(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1805,9 +1798,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				EventoModel lEveModelMDS = (EventoModel) lEveSqlDao.getModelByKey();
 				lEveDaoMisAlt = new EventoDAO(lConn);
 
-				if (lEveModelMDS != null
-						&& (lEveModelMDS.getFlagDocumentoRegistrato() == null || lEveModelMDS
-								.getFlagDocumentoRegistrato().equals("N"))) {
+				if (lEveModelMDS != null && (lEveModelMDS.getFlagDocumentoRegistrato() == null
+						|| lEveModelMDS.getFlagDocumentoRegistrato().equals("N"))) {
 					lEveModelMDS.setFlagDocumentoRegistrato("S");
 					lEveModelMDS.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 					lEveModelMDS.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -1829,9 +1821,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			PosizioneGiuridicaModel lPosGiu = new PosizioneGiuridicaModel();
 			IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 
-			lPosAltra = lPosCtrl
-					.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(aFascicolo
-							.getIdFascicoloSiep());
+			lPosAltra = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+					aFascicolo.getIdFascicoloSiep());
 			String lPosizioneGiu = lPosAltra.getPosizioneGiuridica().getCodPosizioneGiuridica();
 			lPosGiu.setCodPosizioneGiuridica(lPosizioneGiu);
 
@@ -1869,26 +1860,26 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			// POSIZIONE_GIURICA e il codice tipo posizione giuridica (COD_TIPO_POS_GIURIDICA)
 			// presente sulla tabella ALTRA_CAUSA è uguale a 70, 71, 72, 78, 79, 80, 81
 			// oppure uguale a 73, 74, 75, 76, 77
-			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("PROC")
-					&& (!lPosMod.isLibero() || (lPosizioneGiu.equals("07")
-							&& !lCodTipoPosGiuridicaAltraCausa.equals("") && (lCodTipoPosGiuridicaAltraCausa
-							.equals("70")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("71")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("72")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("78")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("79")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("80")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("81")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("73")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("74")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("75")
-							|| lCodTipoPosGiuridicaAltraCausa.equals("76") || lCodTipoPosGiuridicaAltraCausa
-								.equals("77"))))) {
+			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("PROC") && (!lPosMod.isLibero()
+					|| (lPosizioneGiu.equals("07") && !lCodTipoPosGiuridicaAltraCausa.equals("")
+							&& (lCodTipoPosGiuridicaAltraCausa.equals("70")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("71")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("72")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("78")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("79")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("80")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("81")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("73")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("74")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("75")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("76")
+									|| lCodTipoPosGiuridicaAltraCausa.equals("77"))))) {
 				lCambioPos = true;
-				if (("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder
-						.getCodTipoMisura())) && !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo
-																									// Misura
-																									// "AFFIDAMENTO"
+				if (("2006".equals(lMisModelOrder.getCodTipoMisura())
+						|| "2008".equals(lMisModelOrder.getCodTipoMisura()))
+						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo
+																				// Misura
+																				// "AFFIDAMENTO"
 				{
 					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
@@ -1909,12 +1900,12 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			 * InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizioneDiArrivo, lPosMod,
 			 * lEveModel.getDataEmissione(), lEveMod, aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
 			 * }
-			 * 
+			 *
 			 * fine Vecchia Versione
 			 */
 
 			if (lCambioPos) {
-				/*BigDecimal lKey = */InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizioneDiArrivo,
+				/* BigDecimal lKey = */InserimentoAggiornamentoPosizioneGiuridica(lConn, lPosizioneDiArrivo,
 						lPosMod, lEveModel.getDataEmissione(), lEveMod, aFascicolo.getIdFascicoloSiep(),
 						aEvento.getIdEvento());
 			}
@@ -1938,7 +1929,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				lStato = "0068";
 			}
 
-			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod, lStato);
+			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
+					lStato);
 
 			// ricerca pena residua
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
@@ -1997,7 +1989,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			// * Cerca le NOTIFICHE *
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// aggiorna il luogo detenzione
 			if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
@@ -2032,8 +2024,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			daoEx.printStackTrace();
 
-			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvvisoria : "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvvisoria : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -2042,8 +2034,8 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 			ex.printStackTrace();
 
-			throw new F3BException("MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvvisoria : "
-					+ ex);
+			throw new F3BException(
+					"MisuraAternativaIndultinoController.ExUpdateValidaMAAmmProvvisoria : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
 			cleanup(lPosSqlDao);
@@ -2062,20 +2054,19 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 		return lEveMod;
 	}
-
 	// ---------------------- AMBROSINO 09/2010 : Variazione Data Inizio Misura - Validazione
 
 	/**
 	 * ExUpdateValidaVariazioneMAAmmProvvisoria Upload Ammissione Provvisoria
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public EventoModel ExUpdateValidaVariazioneMAAmmProvvisoria(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -2086,7 +2077,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 		/*
 		 * PosizioneGiuridicaSqlDAO lPosSqlDao = null;
-		 * 
+		 *
 		 * NotificaEventoSqlDAO lNotEveDao = null; MisuraAlternativaDAO lMiDAO = null; NomeProvvedimentoDAO
 		 * lNomProvvDAO = null; LuogoDetenzioneDAO lLuogoDAO = null;
 		 */
@@ -2168,19 +2159,16 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException(
-					"MisuraAternativaIndultinoController.ExUpdateValidaVariazioneMAAmmProvvisoria : " + daoEx);
+					"MisuraAternativaIndultinoController.ExUpdateValidaVariazioneMAAmmProvvisoria : "
+							+ daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException(
 					"MisuraAternativaIndultinoController.ExUpdateValidaVariazioneMAAmmProvvisoria : " + ex);
 		} finally {
@@ -2189,7 +2177,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 			cleanup(lMisSqlDAO);
 			cleanup(lEveDaoMisAlt);
 			cleanup(lPenResSqlDao);
-
 			/*
 			 * cleanup(lPosSqlDao); cleanup(lNotEveDao); cleanup(lMiDAO); cleanup(lNomProvvDAO);
 			 * cleanup(lLuogoDAO);
@@ -2202,26 +2189,11 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 		return lEveMod;
 	}
 
-	/**
-	 * Ricerca lo scadenzario fine misura "13" associato al fasciolo e se lo trova lo aggiorna altrimenti ne
-	 * inserisce uno nuovo
-	 * 
-	 * @param lConn
-	 * @param aDataInizio
-	 * @param lPenResMod
-	 *            - data fine pena = data fine misura
-	 * @param lEveModel
-	 *            - codOperatore e codUfficio
-	 * @param aIdFacicoloSiep
-	 * @throws DAOException
-	 * @throws F3BException
-	 */
-	// ---------------------
-
 	// METODI PRIVATI
 	private void InserimentoAggiornamentoScadenzarioMisuraAlternativa(Connection lConn, Date aDataInizio,
 			PenaResiduaModel lPenResMod, EventoModel lEveModel, BigDecimal aIdFacicoloSiep)
 			throws DAOException, F3BException {
+
 		ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
 		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 		ScadenzarioModel lScaMod = null;
@@ -2258,7 +2230,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				lScaDao.setDAOFromModel(lScaModel);
 				lScaDao.insert();
 				lScaDao.stop();
-
 			}
 		} finally {
 			cleanup(lScaDao);
@@ -2311,6 +2282,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	private void InserimentoAggiornamentoScadenzarioFinePena(Connection lConn, PenaResiduaModel lPenResMod,
 			EventoModel lEveModel, BigDecimal aKey) throws DAOException, F3BException {
+
 		ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
 		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 		ScadenzarioModel lScaMod = null;
@@ -2344,7 +2316,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 				lScaDao.setDAOFromModel(lScaModel);
 				lScaDao.insert();
 				lScaDao.stop();
-
 			}
 		} finally {
 			cleanup(lScaDao);
@@ -2354,7 +2325,6 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	}
 
 	/**
-	 * 
 	 * @param lConn
 	 * @param lPosizione
 	 * @param lPos
@@ -2369,6 +2339,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	private BigDecimal InserimentoAggiornamentoPosizioneGiuridica(Connection lConn, String lPosizione,
 			PosizioneGiuridicaModel lPos, Date lData, EventoModel lEveModel, BigDecimal aKeyFasc,
 			BigDecimal aKeyEve) throws DAOException, F3BException {
+
 		PosizioneGiuridicaDAO lPosDao = new PosizioneGiuridicaDAO(lConn);
 		BigDecimal lKey = null;
 
@@ -2410,7 +2381,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	/**
 	 * Cancella lo STATO_PROCEDIMENTO attuale. Inserisce il nuovo STATO_PROCEDIMENTO.
-	 * 
+	 *
 	 * @param lConn
 	 * @param aKey
 	 *            - idFascicoloSiep
@@ -2421,6 +2392,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	 */
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
 			EventoModel lEveModel, String lStatoProcMod) throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(lConn);
 		try {
 			// cancellazione
@@ -2446,7 +2418,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 
 	/**
 	 * Aggiorna/Inserisce un generico scadenzario secondo quanto indicato
-	 * 
+	 *
 	 * @param aConnection
 	 * @param aCodTipoScadenzario
 	 * @param aDataInizio
@@ -2460,6 +2432,7 @@ public class MisuraAlternativaIndultinoController extends SiapController impleme
 	private void InserimentoAggiornamentoScadenzario(Connection aConnection, String aCodTipoScadenzario,
 			Date aDataInizio, Date aDataFine, String aCodOperatore, String aCodUfficio,
 			BigDecimal aIdFacicoloSiep) throws DAOException, F3BException {
+
 		ScadenzarioDAO lScaDao = new ScadenzarioDAO(aConnection);
 		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(aConnection);
 		ScadenzarioModel lScaMod = null;

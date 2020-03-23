@@ -121,6 +121,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 	public StatoEsecTitoloCumulatoModel ExInserisciStatoEsecTitoloCumulato(
 			StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		StatoEsecTitoloCumulatoDAO lStaDao = null;
 		StatoEsecTitoloCumulatoModel lStaMod = null;
@@ -160,6 +161,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************************************/
 	public String ExInserisciStatoEsecTitoloCumulatoFullWithoutSequence(
 			Vector<StatoEsecTitoloCumulatoModel> aVecStatoEsec, Connection aConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		String QualeOggetto = "";
 		BigDecimal QualeId = null;
@@ -173,7 +175,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lStaDao = new StatoEsecTitoloCumulatoDAO(aConn);
 			if (aVecStatoEsec != null && aVecStatoEsec.size() > 0) {
 				for (int i = 0; i < aVecStatoEsec.size(); i++) {
-					lStaMod = (StatoEsecTitoloCumulatoModel) aVecStatoEsec.get(i);
+					lStaMod = aVecStatoEsec.get(i);
 
 					QualeOggetto = "Stato_Esec_Titolo_Cumulato";
 					QualeId = lStaMod.getIdStatoEsecTitoloCumulato();
@@ -247,6 +249,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************/
 	public Vector ExRicercaStatoEsecTitoloCumulato(StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lStatoEsecTitoloCumulati = new Vector();
 		StatoEsecTitoloCumulatoDAO lStaDao = null;
@@ -258,7 +261,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lStaDao.setOrderBy();
 			lStaDao.start();
 			while (lStaDao.next()) {
-				lStatoEsecTitoloCumulati.add((StatoEsecTitoloCumulatoModel) lStaDao.getModel());
+				lStatoEsecTitoloCumulati.add(lStaDao.getModel());
 			}
 			lStaDao.stop();
 		} catch (DAOException daoEx) {
@@ -284,6 +287,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************/
 	public StatoEsecTitoloCumulatoModel ExRicercaStatoEsecTitoloCumulatoById(
 			BigDecimal aIdStatoEsecTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		StatoEsecTitoloCumulatoModel lStatoEsecTitoloCumulatoMod = new StatoEsecTitoloCumulatoModel();
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
@@ -318,6 +322,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************/
 	public void ExModificaStatoEsecTitoloCumulato(StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		StatoEsecTitoloCumulatoDAO lStaDao = null;
 
@@ -346,6 +351,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************/
 	public void ExCancellaStatoEsecTitoloCumulato(StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		StatoEsecTitoloCumulatoDAO lStaDao = null;
 
@@ -377,6 +383,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************/
 	public BigDecimal ExGetCountStatoEsecTitoloCumulato(StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
@@ -415,6 +422,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 ****************************************************************************/
 	public Vector ExRicercaStatoEsecTitoloCumulatoPaged(StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStatoEsecTitoloCumulati = new Vector();
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
@@ -437,11 +445,9 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		return lStatoEsecTitoloCumulati;
 	}
 
-	/**
-	* 
-	*/
 	public Vector<StatoEsecTitoloCumulatoModel> ExRicercaStatoEsecTitoloCumulatoByIdTitolo(
 			BigDecimal aIdTitolo) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<StatoEsecTitoloCumulatoModel> lStatoEsecTitoloCumulati = new Vector();
@@ -469,8 +475,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	}
 
 	/**
-	 *
-	 *
 	 * @param aListaEventiDaInserire
 	 * @param aListaEventiDaRimuovere
 	 * @param aIdTitolo
@@ -484,22 +488,20 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			Vector<StatoEsecTitoloCumulatoModel> aListaEventiDaRimuovere, BigDecimal aIdTitolo,
 			BigDecimal aIdIstruttoria, Connection aDBConnection, DatiOperazioneModel aDatiOper,
 			boolean aPresaInCarico) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEventoSqlDao = null;
-
 		MotivoEventoSqlDAO lMotivoEventoSqlDao = null;
 		NotificaSqlDAO lNotificaSqlDao = null;
 		NotificaCumuloDAO lNotificaCumuloDao = null;
 		VerbaleSqlDAO lVerbaleSqlDao = null;
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
-
 		TitoloCumulatoDAO lTitoloDao = null;
 
 		try {
-			// lConn = getDBConnection();
 			if (aDBConnection != null) {
 				siesLogger.debug("Utilizzo connessione in input ");
 				lConn = aDBConnection;
@@ -1038,21 +1040,16 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lEventoDao);
 			cleanup(lEventoSqlDao);
 			cleanup(lMotivoEventoSqlDao);
-
 			cleanup(lNotificaSqlDao);
 			cleanup(lNotificaCumuloDao);
-
 			cleanup(lVerbaleSqlDao);
 			cleanup(lNuovaIstanzaSqlDao);
-
 			cleanup(lTitoloDao);
 
-			// cleanup(lConn);
 			if (aDBConnection == null) {
 				cleanup(lConn);
 			}
 		}
-
 	}
 
 	/**
@@ -1061,6 +1058,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	public ByteArrayOutputStream ExStampaStatoEsecTitolo(FascicoloSiepModel aFasc, String lIdTemplate,
 			UtenteModel aUtente) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		try {
@@ -1079,21 +1077,15 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			siesLogger.error("Exception: " + ex);
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExStampaStatoEsecTitolo: Non posso inserire: " + ex);
-		} finally {
-			//
 		}
 
 		return lByteArrayOut;
 	}
 
-	/**
-	* 
-	*/
-	// public void ExInserisciPresofferto (StatoEsecTitoloCumulatoModel aStatoEsecuz, ComputiCumuloModel
-	// aComputoCumulo) throws F3BException
 	public StatoEsecTitoloCumulatoModel ExInserisciStatoEsecComputoCumulo(
 			StatoEsecTitoloCumulatoModel aStatoEsecuz, ComputiCumuloModel aComputoCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -1137,11 +1129,9 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		return aStatoEsecuz;
 	}
 
-	/**
-	* 
-	*/
 	public StatoEsecTitoloCumulatoModel ExInserisciPagamentiPP(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			Vector<ComputiCumuloModel> aListaCumuli) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -1189,11 +1179,9 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		return aStatoEsecuz;
 	}
 
-	/**
-	* 
-	*/
 	public void ExModificaStatoEsecComputoCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			ComputiCumuloModel aComputoCumulo) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -1233,14 +1221,11 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			cleanup(lConn);
 		}
-
 	}
 
-	/**
-	* 
-	*/
 	public void ExModificaStatoEsecComputiCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			Vector<ComputiCumuloModel> aListaCumuli) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -1293,26 +1278,20 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			cleanup(lConn);
 		}
-
 	}
 
-	/**
-	 *
-	 */
 	public void ExCancellaStatoEsecTitoloCumulatoById(BigDecimal aStatoEsecTitoloCumulato, Connection aConn)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
-
 		ComputiCumuloDAO lComputiDao = null;
 		NotificaCumuloDAO lNotificaDao = null;
-
 		LibAnticipataCumuloDAO lLibAntDao = null;
 		LibAnticipataCumuloSqlDAO lLibAntSqlDao = null;
 		PeriodoLibAntCumuloDAO lPerLibDao = null;
-
 		RichPMStatoEsecCumSqlDAO lRichPMStatEsecSqlDao = null;
 
 		try {
@@ -1365,8 +1344,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					lLibAntSqlDao.getModels());
 			if (lListaLiberazioni != null && lListaLiberazioni.size() > 0) {
 				for (int j = 0; j < lListaLiberazioni.size(); j++) {
-					LibAnticipataCumuloModel lLibAntCumMod = (LibAnticipataCumuloModel) lListaLiberazioni
-							.elementAt(j);
+					LibAnticipataCumuloModel lLibAntCumMod = lListaLiberazioni.elementAt(j);
 					// Cancello PERIODI_LIBERAZIONI_ANTICIPATE
 					lPerLibDao.selCondizioneLib_Id_LibAnt(lLibAntCumMod.getIdLibAnticipataCumulo());
 					lPerLibDao.delete();
@@ -1396,52 +1374,41 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			siesLogger.error("DAOException: ", daoEx);
 			siesLogger.error("DAOException.getErrorCode(): " + daoEx.getErrorCode());
 			siesLogger.error("DAOException.getSQLState(): " + daoEx.getSQLState());
-
-			if (daoEx.getErrorCode() == 2292) {
-				// restrizione di integrità violata
-			}
-
+			// if (daoEx.getErrorCode() == 2292) {
+			// restrizione di integrità violata
+			// }
 			if (aConn == null)
 				rollback(lConn);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExCancellaStatoEsecTitoloCumulatoById: " + daoEx);
 		} catch (F3BException f3bEx) {
-
 			if (aConn == null)
 				rollback(lConn);
-
 			throw f3bEx;
-
 		} finally {
 			cleanup(lStatoEsecTitoloCumulatoDao);
 			cleanup(lStatoEsecTitoloCumulatoSqlDao);
 			cleanup(lComputiDao);
 			cleanup(lNotificaDao);
-
 			cleanup(lPerLibDao);
 			cleanup(lLibAntDao);
 			cleanup(lLibAntSqlDao);
-
 			cleanup(lRichPMStatEsecSqlDao);
 
 			if (aConn == null)
 				cleanup(lConn);
 		}
-
 	}
 
-	/**
-	* 
-	*/
 	public Vector<StatoEsecTitoloCumulatoModel> ExRicercaPresoffertiByIdTitolo(BigDecimal aIdTitolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
 
-		Vector<StatoEsecTitoloCumulatoModel> lListaPresofferti = new Vector<StatoEsecTitoloCumulatoModel>();
+		Vector<StatoEsecTitoloCumulatoModel> lListaPresofferti = new Vector<>();
 
 		StatoEsecTitoloCumulatoModel lStatoRicerca = new StatoEsecTitoloCumulatoModel();
 
@@ -1472,7 +1439,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			}
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExRicercaPresoffertiByIdTitolo: Non posso leggere : "
 							+ daoEx);
@@ -1494,19 +1460,18 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	public StatoEsecTitoloCumulatoModel ExRicercaStatoEsecTitoloCumulatoByIdFull(
 			BigDecimal aIdStatoEsecTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
 		NotificaCumuloSqlDAO lNotificaSqlDao = null;
-
 		LibAnticipataCumuloSqlDAO lLibAntSqlDao = null;
 		PeriodoLibAntCumuloSqlDAO lPeriodoLibAntSqlDao = null;
+		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
 
 		StatoEsecTitoloCumulatoModel lStatoEsecTitoloCumulatoMod = null;
 		LibAnticipataCumuloModel lLibAntCumMod = null;
-
-		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -1555,8 +1520,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			if (lListaLiberazioni != null && lListaLiberazioni.size() > 0) {
 				for (int j = 0; j < lListaLiberazioni.size(); j++) {
-					lLibAntCumMod = (LibAnticipataCumuloModel) lListaLiberazioni.elementAt(j);
-
+					lLibAntCumMod = lListaLiberazioni.elementAt(j);
 					// Ricerca eventuali Periodi di Liberazione Anticipata
 					lPeriodoLibAntSqlDao.ricercaPeriodoLibAntCumuloByLibIdLibAntCum(
 							lLibAntCumMod.getIdLibAnticipataCumulo());
@@ -1565,15 +1529,11 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					if (lListaPeriodiLibAnt != null && lListaPeriodiLibAnt.size() > 0) {
 						lLibAntCumMod.setListaPeriodiLibAnticipate(lListaPeriodiLibAnt);
 					}
-
 					lPeriodoLibAntSqlDao.stop();
 				}
-
 				lStatoEsecTitoloCumulatoMod.setListaLiberazioniAnticipate(lListaLiberazioni);
 			}
-
 			lLibAntSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1584,6 +1544,9 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lComputiSqlDao);
 			cleanup(lIstitutoSqlDao);
 			cleanup(lNotificaSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLibAntSqlDao);
+			cleanup(lPeriodoLibAntSqlDao);
 
 			cleanup(lConn);
 		}
@@ -1600,6 +1563,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputi(BigDecimal aIdEvento, StatoEsecTitoloCumulatoModel aStatoEsecModel,
 			Connection aConn) throws F3BException {
+
 		AnnotazioneManualeSqlDAO lAnnotaSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 
@@ -1697,6 +1661,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiEspiatoPM(BigDecimal aKeyFascicolo, BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
 		PenaResiduaSqlDAO lPenaResSqlDao = null;
 		SospensioneSqlDAO lSospSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
@@ -1727,9 +1692,8 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					siesLogger.warn("Sospensione NON trovata per PR con id " + lPenResMod.getIdPenaResidua()
 							+ " su evento id " + aIdEvento);
 				}
-			} else {
+			} else
 				siesLogger.warn("PR assente per evento interruttivo con id = " + aIdEvento);
-			}
 
 			if (lSospModel != null) {
 				lComputiModel = new ComputiCumuloModel();
@@ -1804,8 +1768,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 				lComputiDao.insert();
 
 				lComputiDao.stop();
-			} else {
-
 			}
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
@@ -1817,8 +1779,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lComputiDao);
 			cleanup(lPenaPrecedenteSqlDao);
 			cleanup(lDecOrdSqlDao);
-
-			cleanup(lComputiDao);
 		}
 	}
 
@@ -1832,18 +1792,16 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaDatiSorv(BigDecimal aIdEvento, StatoEsecTitoloCumulatoModel aStatoEsecModel,
 			Connection aConn) throws F3BException {
+
 		// I dati da recuperare sono iscritti su:
 		// MISURA_ALTERNATIVA
 		// DEPOSITO_DECRETO
 		// DEPOSITO_ORDINANZA
 		// ESITO_TENORE
 		MisuraAlternativaDAO lMisuraAltDao = null;
-
 		DepositoOrdinanzaPcSqlDAO lDepositoOrdinanzaSqlDao = null;
 		DepositoDecretoSqlDAO lDepositoDecretoSqlDao = null;
-
 		TenoreSqlDAO lTenoreSqlDal = null;
-
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
 
 		try {
@@ -1910,7 +1868,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lStatoEsecTitoloCumulatoDao.selCondizioneUpdate(aStatoEsecModel.getIdStatoEsecTitoloCumulato());
 			lStatoEsecTitoloCumulatoDao.update();
 			lStatoEsecTitoloCumulatoDao.stop();
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1920,10 +1877,8 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lDepositoDecretoSqlDao);
 			cleanup(lDepositoOrdinanzaSqlDao);
 			cleanup(lTenoreSqlDal);
-
 			cleanup(lStatoEsecTitoloCumulatoDao);
 		}
-
 	}
 
 	/**
@@ -1935,6 +1890,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiPagamentoPP(BigDecimal aIdEvento, StatoEsecTitoloCumulatoModel aStatoEsecModel,
 			Connection aConn) throws F3BException {
+
 		AnnotazioneManualeSqlDAO lAnnotaSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		CampoNotaSqlDAO lCaNoSqlDao = null;
@@ -2047,6 +2003,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiAmnistiaIndulto(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
 		AnnotazioneManualeSqlDAO lAnnotaSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		EventoSqlDAO lEveSqlDao = null;
@@ -2178,6 +2135,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiDepenIncost(BigDecimal aIdEvento, StatoEsecTitoloCumulatoModel aStatoEsecModel,
 			Connection aConn) throws F3BException {
+
 		AnnotazioneManualeSqlDAO lAnnotaSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		EventoSqlDAO lEveSqlDao = null;
@@ -2314,6 +2272,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiSospensioneGE(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
 		DecretoOrdinanzaSiepSqlDAO lDecOrdSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		EventoSqlDAO lEveSqlDao = null;
@@ -2397,6 +2356,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiInterruzioneGE(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
 		DecretoOrdinanzaSiepSqlDAO lDecOrdSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		EventoSqlDAO lEveSqlDao = null;
@@ -2481,6 +2441,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaComputiMisuraAlternativaSORV(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		EventoSqlDAO lEveSqlDao = null;
@@ -2704,12 +2665,14 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 	private void caricaComputiOrdRevocaSospCondPenaGE(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
+
 		ComputiCumuloDAO lComputiDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdPCSqlDao = null;
 		TenoreSqlDAO lTenoreSqlDao = null;
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitCumDAO = null;
+
 		String codEsito = "";
 
 		try {
@@ -2797,17 +2760,16 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	// (Cod.Motivo = 9027)
 	private void caricaLiberazioniAnticipate(BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
-		siesLogger.debug("--XX-- Start caricaLiberazioniAnticipate / Rimedi Risarcitori... >>> ");
-		StatoEsecTitoloCumulatoDAO lStatDao = null;
 
+		siesLogger.debug("--XX-- Start caricaLiberazioniAnticipate / Rimedi Risarcitori... >>> ");
+
+		StatoEsecTitoloCumulatoDAO lStatDao = null;
 		LibAnticipataCumuloDAO lLibAntDao = null;
 		PeriodoLibAntCumuloDAO lPerLibDao = null;
-
 		EventoSqlDAO lEveSqlDao = null;
-
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
-
 		PeriodoLibanticipataSqlDAO lPerSqlDao = null;
+
 		ArrayList lPeriodi = null;
 
 		try {
@@ -2932,7 +2894,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					"StatoEsecTitoloCumulatoController.caricaLiberazioniAnticipate: Non posso leggere : "
 							+ daoEx);
 		} finally {
-
 			cleanup(lEveSqlDao);
 			cleanup(lLibAntDao);
 			cleanup(lPerLibDao);
@@ -2940,7 +2901,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lPerSqlDao);
 			cleanup(lStatDao);
 		}
-
 	} // Chiude caricaLiberazioniAnticipate()
 
 	/**
@@ -2971,13 +2931,13 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	private void caricaScomputiPermessi(BigDecimal aIdEvento, StatoEsecTitoloCumulatoModel aStatoEsecModel,
 			Connection aConn) throws F3BException {
+
 		siesLogger.debug("--XX-- Start carica ScomputiPermessi... >>> ");
+
 		StatoEsecTitoloCumulatoDAO lStatDao = null;
 		LibAnticipataCumuloDAO lLibAntDao = null;
-
 		EventoSqlDAO lEveSqlDao = null;
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
-
 		FascicoloSiusSqlDAO lFascSiusSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdPCSqlDao = null;
@@ -2989,6 +2949,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		// NON è quello corrente, ma quello ad esso collegato tramite EVE_ID_EVENTO;
 		// ============================================================================================================
 		boolean isSius = false;
+
 		try {
 			lEveSqlDao = new EventoSqlDAO(aConn);
 			lEveSqlDao.ricercaEventoByKey(aIdEvento);
@@ -3141,8 +3102,12 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			cleanup(lLibAntDao);
 			cleanup(lLicSqlDao);
 			cleanup(lStatDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFascSiusSqlDao);
+			cleanup(lDepDecSqlDao);
+			cleanup(lDepOrdPCSqlDao);
+			cleanup(lTenoreSqlDao);
 		}
-
 	} // Chiude caricaScomputiPermessi()
 
 	/**
@@ -3152,6 +3117,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	public void ExInserisciSospensioniDelPM(Vector<StatoEsecTitoloCumulatoModel> aListaProvvedimenti)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -3205,18 +3171,16 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 	}
 
-	/**
-	* 
-	*/
 	public Vector<StatoEsecTitoloCumulatoModel> ExRicercaProvvedimentiCumuloByIdTitoloTipoProvv(
 			BigDecimal aIdTitolo, String aCodTipoEvento, String aCodTipoProvvedimento, String aCodMotivo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
 
-		Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<StatoEsecTitoloCumulatoModel>();
+		Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<>();
 
 		StatoEsecTitoloCumulatoModel lStatoRicerca = new StatoEsecTitoloCumulatoModel();
 
@@ -3275,9 +3239,9 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	 */
 	public void ExModificaStatoEsecTitoloCumulatoFull(StatoEsecTitoloCumulatoModel aStatoEsecTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		StatoEsecTitoloCumulatoDAO lStaDao = null;
-
 		NotificaCumuloSqlDAO lNotificaSqlDao = null;
 		NotificaCumuloDAO lNotificaDao = null;
 
@@ -3363,15 +3327,17 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 							+ ex);
 		} finally {
 			cleanup(lStaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotificaSqlDao);
+			cleanup(lNotificaDao);
+
 			cleanup(lConn);
 		}
 	}
 
-	/**
-	* 
-	*/
 	public Vector<StatoEsecTitoloCumulatoModel> ExRicercaSospensioniDelPMByIdTitolo(BigDecimal aIdTitolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<StatoEsecTitoloCumulatoModel> lStatoEsecTitoloCumulati = new Vector();
@@ -3383,7 +3349,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			lStatoEsecTitoloCumulatoSqlDao = new StatoEsecTitoloCumulatoSqlDAO(lConn);
 
-			List<String> listCodiciSosp = new ArrayList<String>();
+			List<String> listCodiciSosp = new ArrayList<>();
 
 			// Comma 5. Legge Simeone
 			listCodiciSosp.addAll(StatoEsecuzioneCumuloUtils.aCodSospC5Provv);
@@ -3408,14 +3374,12 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			// Istanze comma 5. Cod motivo 0993 e COD_CONTENUTO_ISTANZA = C001. Rimuovo
 			// dalla lista le istanze che no sono di accesso alle MS.
 			for (int i = 0; i < lStatoEsecTitoloCumulati.size(); i++) {
-				StatoEsecTitoloCumulatoModel lStato = (StatoEsecTitoloCumulatoModel) lStatoEsecTitoloCumulati
-						.elementAt(i);
+				StatoEsecTitoloCumulatoModel lStato = lStatoEsecTitoloCumulati.elementAt(i);
 				if (lStato.getCodMotivo().equals("0993") && !"C001".equals(lStato.getCodContenutoIstanza())) {
 					lStatoEsecTitoloCumulati.remove(i);
 					i--;
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -3432,7 +3396,9 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	// FUNGIBILITA'
 	public BigDecimal ExInserisciFungibilitaCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			ComputiCumuloModel aComputoCumulo) throws F3BException {
+
 		Connection lConn = null;
+
 		BigDecimal lIdStato = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -3475,11 +3441,11 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 
 		return lIdStato;
-
 	} // CHIUDE ExInserisciFungibilitaCumulo()
 
 	public void ExInserisciPeriodoFungibilitaCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			ComputiCumuloModel aComputoCumulo) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -3503,7 +3469,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			rollback(lConn);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExInserisciPeriodoFungibilitaCumulo: Non posso leggere : "
 							+ daoEx);
@@ -3513,11 +3478,11 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			cleanup(lConn);
 		}
-
 	} // Chiude ExInserisciPeriodoFungibilitaCumulo()
 
 	public void ExModificaFungibilitaCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			ComputiCumuloModel aComputoCumulo) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -3554,18 +3519,18 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			cleanup(lConn);
 		}
-
 	} // Chiude ExModificaFungibilitaCumulo()
 
 	public Vector<StatoEsecTitoloCumulatoModel> ExRicercaProvvedimentiCumuloByIdTitoloListaProvv(
 			BigDecimal aIdTitolo, String aCodTipoEvento, String aCodTipoProvvedimento,
 			Vector<String> listaProvv) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
 
-		Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<StatoEsecTitoloCumulatoModel>();
+		Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<>();
 
 		StatoEsecTitoloCumulatoModel lStatoRicerca = new StatoEsecTitoloCumulatoModel();
 
@@ -3596,7 +3561,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			}
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExRicercaProvvedimentiCumuloByIdTitoloListaProvv: Non posso leggere : "
 							+ daoEx);
@@ -3613,15 +3577,15 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	public Vector<StatoEsecTitoloCumulatoModel> ExRicercaProvvedimentiCumuloByIdTitoloListeTipoMotivoProvv(
 			BigDecimal aIdTitolo, String aCodTipoEvento, Vector<String> listaTipoProvv,
 			Vector<String> listaProvv) throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoloCumulatoSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
-
 		LibAnticipataCumuloSqlDAO lLibAntSqlDao = null;
 		PeriodoLibAntCumuloSqlDAO lPeriodoLibAntSqlDao = null;
 
-		Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<StatoEsecTitoloCumulatoModel>();
+		Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<>();
 
 		StatoEsecTitoloCumulatoModel lStatoRicerca = new StatoEsecTitoloCumulatoModel();
 		LibAnticipataCumuloModel lLibAntCumMod = null;
@@ -3662,7 +3626,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 						lLibAntSqlDao.getModels());
 				if (lListaLiberazioni != null && lListaLiberazioni.size() > 0) {
 					for (int j = 0; j < lListaLiberazioni.size(); j++) {
-						lLibAntCumMod = (LibAnticipataCumuloModel) lListaLiberazioni.elementAt(j);
+						lLibAntCumMod = lListaLiberazioni.elementAt(j);
 
 						// Ricerca eventuali Periodi di Liberazione Anticipata
 						lPeriodoLibAntSqlDao.ricercaPeriodoLibAntCumuloByLibIdLibAntCum(
@@ -3683,13 +3647,15 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			}
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExRicercaProvvedimentiCumuloByIdTitoloListeTipoMotivoProvv: Non posso leggere : "
 							+ daoEx);
 		} finally {
 			cleanup(lStatoEsecTitoloCumulatoSqlDao);
 			cleanup(lComputiSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLibAntSqlDao);
+			cleanup(lPeriodoLibAntSqlDao);
 
 			cleanup(lConn);
 		}
@@ -3703,6 +3669,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	public BigDecimal ExInserisciLiberazioneAnticipataCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			LibAnticipataCumuloModel aLibAntCumLAModel, LibAnticipataCumuloModel aLibAntCumLASPEModel,
 			LibAnticipataCumuloModel aLibAntCumLAINTModel) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lIdStato = null;
 
@@ -3746,8 +3713,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 						if (LibAntCumMod.getListaPeriodiLibAnticipate() != null
 								&& LibAntCumMod.getListaPeriodiLibAnticipate().size() > 0) {
-							lVecPeriodi = (Vector<PeriodoLibAntCumuloModel>) LibAntCumMod
-									.getListaPeriodiLibAnticipate();
+							lVecPeriodi = LibAntCumMod.getListaPeriodiLibAnticipate();
 
 							Iterator Itx = lVecPeriodi.iterator();
 							while (Itx.hasNext()) {
@@ -3759,7 +3725,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 								lPeriodoCumDao.stop();
 							}
 						}
-
 					}
 				}
 			}
@@ -3781,13 +3746,14 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 
 		return lIdStato;
-
 	} // CHIUDE ExInserisciLiberazioneAnticipataCumulo()
 
 	public BigDecimal ExModificaLiberazioneAnticipataCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			LibAnticipataCumuloModel aLibAntCumLAModel, LibAnticipataCumuloModel aLibAntCumLASPEModel,
 			LibAnticipataCumuloModel aLibAntCumLAINTModel) throws F3BException {
+
 		siesLogger.debug("--XX-- ExModificaLiberazioneAnticipataCumulo Inizio... ");
+
 		Connection lConn = null;
 		BigDecimal lIdStato = aStatoEsecuz.getIdStatoEsecTitoloCumulato();
 
@@ -3866,8 +3832,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 						if (LibAntCumMod.getListaPeriodiLibAnticipate() != null
 								&& LibAntCumMod.getListaPeriodiLibAnticipate().size() > 0) {
-							lVecPeriodi = (Vector<PeriodoLibAntCumuloModel>) LibAntCumMod
-									.getListaPeriodiLibAnticipate();
+							lVecPeriodi = LibAntCumMod.getListaPeriodiLibAnticipate();
 
 							Iterator Itx = lVecPeriodi.iterator();
 							while (Itx.hasNext()) {
@@ -3891,7 +3856,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			rollback(lConn);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExModificaLiberazioneAnticipataCumulo: Non posso Scrivere : "
 							+ daoEx);
@@ -3905,19 +3869,19 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 
 		return lIdStato;
-
 	} // CHIUDE ExModificaLiberazioneAnticipataCumulo()
 
 	public String ExInserisciLiberazioneAnticipataCumuloFullWithoutSequence(
 			Vector<LibAnticipataCumuloModel> aVecLibAntCum, Connection aConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		String QualeOggetto = "";
 		BigDecimal QualeId = null;
 
 		LibAnticipataCumuloDAO lLibDao = null;
-		LibAnticipataCumuloModel lLibModel = null;
-
 		PeriodoLibAntCumuloDAO lPeriodoDao = null;
+
+		LibAnticipataCumuloModel lLibModel = null;
 
 		try {
 			lLibDao = new LibAnticipataCumuloDAO(aConn);
@@ -3926,7 +3890,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 				// LiberazioneAnticipataCumulo
 				// ====================================
 				for (int i = 0; i < aVecLibAntCum.size(); i++) {
-					lLibModel = (LibAnticipataCumuloModel) aVecLibAntCum.get(i);
+					lLibModel = aVecLibAntCum.get(i);
 
 					QualeOggetto = "Lib_Anticipata_Cumulo";
 					QualeId = lLibModel.getIdLibAnticipataCumulo();
@@ -3988,12 +3952,12 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 
 		return lCodEsito;
-
 	} // CHIUDE ExInserisciLiberazioneAnticipataCumuloFullWithoutSequence
 
 	// RIMEDI RISARCITORI
 	public BigDecimal ExInserisciRimediRisarcitoriCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			Vector<LibAnticipataCumuloModel> VecLib) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lIdStato = null;
 
@@ -4026,8 +3990,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 						if (LibAntCumMod.getListaPeriodiLibAnticipate() != null
 								&& LibAntCumMod.getListaPeriodiLibAnticipate().size() > 0) {
-							lVecPeriodi = (Vector<PeriodoLibAntCumuloModel>) LibAntCumMod
-									.getListaPeriodiLibAnticipate();
+							lVecPeriodi = LibAntCumMod.getListaPeriodiLibAnticipate();
 
 							Iterator Itx = lVecPeriodi.iterator();
 							while (Itx.hasNext()) {
@@ -4040,7 +4003,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 								lPeriodoCumDao.stop();
 							}
 						}
-
 					}
 				}
 			}
@@ -4062,12 +4024,13 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		}
 
 		return lIdStato;
-
 	} // CHIUDE ExInserisciRimediRisarcitoriCumulo()
 
 	public BigDecimal ExModificaRimediRisarcitoriCumulo(StatoEsecTitoloCumulatoModel aStatoEsecuz,
 			Vector<LibAnticipataCumuloModel> VecLib) throws F3BException {
+
 		siesLogger.debug("--XX-- ExModificaRimediRisarcitoriCumulo Inizio... ");
+
 		Connection lConn = null;
 		BigDecimal lIdStato = aStatoEsecuz.getIdStatoEsecTitoloCumulato();
 
@@ -4133,8 +4096,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 						if (LibAntCumMod.getListaPeriodiLibAnticipate() != null
 								&& LibAntCumMod.getListaPeriodiLibAnticipate().size() > 0) {
-							lVecPeriodi = (Vector<PeriodoLibAntCumuloModel>) LibAntCumMod
-									.getListaPeriodiLibAnticipate();
+							lVecPeriodi = LibAntCumMod.getListaPeriodiLibAnticipate();
 
 							Iterator Itx = lVecPeriodi.iterator();
 							while (Itx.hasNext()) {
@@ -4154,7 +4116,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			rollback(lConn);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExModificaRimediRisarcitoriCumulo: Non posso Scrivere : "
 							+ daoEx);
@@ -4423,6 +4384,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	public StatoEsecTitoloCumulatoModel ExInserisciStatoEsecComputiCumulo(
 			StatoEsecTitoloCumulatoModel aStatoEsecuzione, Vector<ComputiCumuloModel> aListaComputi)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		StatoEsecTitoloCumulatoDAO lStatoEsecTitoloCumulatoDao = null;
@@ -4458,7 +4420,6 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			rollback(lConn);
-
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.ExInserisciStatoEsecComputiCumulo: Non posso leggere : "
 							+ daoEx);

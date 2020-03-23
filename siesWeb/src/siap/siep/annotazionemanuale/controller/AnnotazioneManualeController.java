@@ -11,6 +11,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -65,12 +71,6 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sige.provvedimento.dao.ProvvedimentoSigeDAO;
 import siap.sige.provvedimento.model.ProvvedimentoSigeModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -85,7 +85,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -97,7 +97,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Inserisce l'evento di annotazione di Rideterminazione pena altro con i quantum di computo
 	 * (annotazione_manuale) ed eventualmente il provvedimento altra autorità.
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aListaAnnotazioni
 	 * @param aCampoNote
@@ -107,8 +107,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	public EventoModel ExInserisciEventoAnnotazioni(EventoModel aEvento, Vector aListaAnnotazioni,
 			CampoNotaModel aCampoNote, EventoModel aEveAltraAutorita,
 			LicenzaLibAnticipataModel aLicLibAntModel) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		EventoDAO lEveDAO = null;
 		AnnotazioneManualeDAO lAnnDao = null;
 		LicenzaLibanticipataDAO lLicLibDao = null;
@@ -234,13 +234,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	// AMBROSINO - Inserimento Avvenuto pagamento PP
-
 	public EventoModel ExInserisciEventoAnnotazioniCampoNota(EventoModel aEvento, Vector aListaAnnotazioni,
-			Vector aListaCampoNote, EventoModel aEveAltraAutorita)
+			Vector aListaCampoNote, EventoModel aEveAltraAutorita) throws F3BException {
 
-	throws F3BException {
 		Connection lConn = null;
-
 		EventoDAO lEveDAO = null;
 		AnnotazioneManualeDAO lAnnDao = null;
 		CampoNotaDAO lCampoNoteDAO = null;
@@ -377,19 +374,20 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEvento(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento) throws F3BException {
+
 		return ExInserisciAnnotazioneManualeEvento(aAnnotazioneManuale, aEvento, null);
 	}
 
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEvento(
-			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento, BigDecimal aIdAnnotazioneManuale)
-			throws F3BException {
+			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento,
+			BigDecimal aIdAnnotazioneManuale) throws F3BException {
+
 		Connection lConn = null;
-
 		AnnotazioneManualeDAO lAnnDao = null;
-		AnnotazioneManualeModel lAnnMod = null;
-
 		EventoSqlDAO lEveSqlDao = null;
 		EventoDAO lEveDao = null;
+
+		AnnotazioneManualeModel lAnnMod = null;
 		EventoModel lEve = new EventoModel();
 
 		try {
@@ -480,7 +478,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			 * all'evento corrente. In questo modo se sono presenti più annotazioni (aggiungi) vengono
 			 * agganciate ad un unico evento di richiesta , l'ultimo inserito. L'unico problema è la
 			 * condizione su FLAG_APP_PROVVISORIA=-
-			 * 
+			 *
 			 * UPDATE ANNOTAZIONE_MANUALE SET EVE_ID_EVENTO=? WHERE FAS_SIE_ID_FASCICOLO_SIEP=? AND
 			 * COD_TIPO_ANNOTAZIONE='?' AND FLAG_APP_PROVVISORIA='-' AND FLAG_VALIDATO='N'
 			 */
@@ -517,19 +515,18 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	// MEV 9
-
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEventoUpd(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento,
 			BigDecimal aIdAnnotazioneRichiesta, BigDecimal aIdAnnotazioneManuale) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
-		AnnotazioneManualeModel lAnnMod = null;
-
 		AnnotazioneManualeDAO lAnnRichDao = null;
-
 		EventoSqlDAO lEveSqlDao = null;
 		EventoDAO lEveDao = null;
+
+		AnnotazioneManualeModel lAnnMod = null;
 		EventoModel lEve = new EventoModel();
 
 		try {
@@ -647,14 +644,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: ", ex);
-			throw new F3BException("AnnotazioneManualeController.ExInserisciAnnotazioneManualeEventoUpd: "
-					+ ex);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExInserisciAnnotazioneManualeEventoUpd: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: ", ex);
-			throw new F3BException("AnnotazioneManualeController.ExInserisciAnnotazioneManualeEventoUpd: "
-					+ ex);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExInserisciAnnotazioneManualeEventoUpd: " + ex);
 		} finally {
 			cleanup(lAnnDao);
 			cleanup(lEveDao);
@@ -666,12 +663,11 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 		return lAnnMod;
 	}
-
 	// End MEV 9
 
 	/**
 	 * Inserisce l'annotazione Manuale, l'Evento e le notifiche
-	 * 
+	 *
 	 * @param AnnotazioneManualeModel
 	 *            model dell'annotazione manuale
 	 * @param EventoNotificaModel
@@ -681,15 +677,15 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeEventoNotifica(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoNotificaModel aEventoNotifica)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
-		AnnotazioneManualeModel lAnnMod = null;
-
 		AutoritaEsternaDAO lAutDao = null;
 		NotificaDAO lNotDao = null;
-
 		EventoDAO lEveDao = null;
+
+		AnnotazioneManualeModel lAnnMod = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -716,14 +712,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			while (count < aEventoNotifica.getNotifiche().length) {
 				if (aEventoNotifica.getNotifiche()[count] != null) {
 					if (aEventoNotifica.getNotifiche()[count].getAutoritaEsterna() != null) {
-						lAutDao.setRicercaByAutSede(aEventoNotifica.getNotifiche()[count]
-								.getAutoritaEsterna());
+						lAutDao.setRicercaByAutSede(
+								aEventoNotifica.getNotifiche()[count].getAutoritaEsterna());
 						AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 						lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
 						if (lAutMod == null) {
-							lAutDao.setDAOFromModel(aEventoNotifica.getNotifiche()[count]
-									.getAutoritaEsterna());
+							lAutDao.setDAOFromModel(
+									aEventoNotifica.getNotifiche()[count].getAutoritaEsterna());
 							lKeyAutorita = lAutDao.insert();
 							aEventoNotifica.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 						} else {
@@ -792,18 +788,19 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 * @param aEveProvvedimentoMod
 	 * @param aAnnotazioneOrdinanza
 	 * @param aListaRichieste
-	 ************************************************************************** */
+	 */
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManualeProvvedimentoRichiesta(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEveOrdinanzaMod,
 			EventoModel aEveProvvedimentoMod, AnnotazioneManualeModel aAnnotazioneOrdinanza,
 			Vector aListaRichieste) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
-		AnnotazioneManualeModel lAnnMod = null;
-
 		EventoSqlDAO lEveSqlDao = null;
 		EventoDAO lEveDao = null;
+
+		AnnotazioneManualeModel lAnnMod = null;
 		EventoModel lEveProvvedimentoMod = new EventoModel();
 		EventoModel lEveOrdinanzaMod = new EventoModel();
 
@@ -861,8 +858,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			} else { // Ordinanza già presente, aggancio l'annotazione all'ordinanza
 				aEveOrdinanzaMod.setIdEvento(lEveOrdinanzaMod.getIdEvento());
 				aEveOrdinanzaMod.setCodUfficioAggiornamento(aAnnotazioneManuale.getCodUfficioInserimento());
-				aEveOrdinanzaMod.setCodOperatoreAggiornamento(aAnnotazioneManuale
-						.getCodOperatoreInserimento());
+				aEveOrdinanzaMod
+						.setCodOperatoreAggiornamento(aAnnotazioneManuale.getCodOperatoreInserimento());
 				aEveOrdinanzaMod.setDataAggiornamento(DateUtils.getSysDate());
 
 				aEveOrdinanzaMod.setDataEmissione(aAnnotazioneOrdinanza.getDataGE());
@@ -904,10 +901,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			if (lEveProvvedimentoMod != null) { // Provvedimento presente lo aggiorno
 				aEveProvvedimentoMod.setIdEvento(lEveProvvedimentoMod.getIdEvento());
 
-				aEveProvvedimentoMod.setCodUfficioAggiornamento(aAnnotazioneManuale
-						.getCodUfficioInserimento());
-				aEveProvvedimentoMod.setCodOperatoreAggiornamento(aAnnotazioneManuale
-						.getCodOperatoreInserimento());
+				aEveProvvedimentoMod
+						.setCodUfficioAggiornamento(aAnnotazioneManuale.getCodUfficioInserimento());
+				aEveProvvedimentoMod
+						.setCodOperatoreAggiornamento(aAnnotazioneManuale.getCodOperatoreInserimento());
 				aEveProvvedimentoMod.setDataAggiornamento(DateUtils.getSysDate());
 
 				// STUB 06/09/2006 valorizzata Data emissione conforme all'ordinanza
@@ -921,8 +918,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 				aAnnotazioneManuale.setEveIdEvento(lEveIdEvento);
 			} else { // Provvedimento non presente lo inserisco
 				aEveProvvedimentoMod.setCodUfficioInserimento(aAnnotazioneManuale.getCodUfficioInserimento());
-				aEveProvvedimentoMod.setCodOperatoreInserimento(aAnnotazioneManuale
-						.getCodOperatoreInserimento());
+				aEveProvvedimentoMod
+						.setCodOperatoreInserimento(aAnnotazioneManuale.getCodOperatoreInserimento());
 				aEveProvvedimentoMod.setDataInserimento(DateUtils.getSysDate());
 
 				// STUB 06/09/2006 valorizzata Data emissione conforme all'ordinanza
@@ -1001,8 +998,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 					&& (aAnnotazioneManuale.getCodTipoAnnotazione().equals("002")
 							|| aAnnotazioneManuale.getCodTipoAnnotazione().equals("003")
 							// MEV 37 -Inizio
-							|| aAnnotazioneManuale.getCodTipoAnnotazione().equals("004") || aAnnotazioneManuale
-							.getCodTipoAnnotazione().equals("017")
+							|| aAnnotazioneManuale.getCodTipoAnnotazione().equals("004")
+							|| aAnnotazioneManuale.getCodTipoAnnotazione().equals("017")
 					// MEV 37 -Fine
 					)) { // aggiorno le richieste
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
@@ -1028,14 +1025,16 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: ", ex);
 			throw new F3BException(
-					"AnnotazioneManualeController.ExInserisciAnnotazioneManualeProvvedimentoRichiesta: " + ex);
+					"AnnotazioneManualeController.ExInserisciAnnotazioneManualeProvvedimentoRichiesta: "
+							+ ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: ", ex);
 			throw new F3BException(
-					"AnnotazioneManualeController.ExInserisciAnnotazioneManualeProvvedimentoRichiesta: " + ex);
+					"AnnotazioneManualeController.ExInserisciAnnotazioneManualeProvvedimentoRichiesta: "
+							+ ex);
 		} finally {
 			cleanup(lAnnDao);
 			cleanup(lEveDao);
@@ -1087,8 +1086,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	public AnnotazioneManualeModel ExInserisciAnnotazioneManuale(AnnotazioneManualeModel aAnnotazioneManuale)
 			throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeDAO lAnnDao = null;
 		AnnotazioneManualeModel lAnnMod = null;
 
@@ -1117,14 +1116,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	/**
-   *
-   */
+	*
+	*/
 	public Vector ExRicercaAnnotazioneManualeGenerico(AnnotazioneManualeModel aAnnotazioneManuale)
 			throws F3BException {
-		Connection lConn = null;
 
-		Vector lAnnotazioneManuali = new Vector();
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1154,10 +1153,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 * aAnnotazioneManuale.
 	 */
 	public Vector ExRicercaRichieste(AnnotazioneManualeModel aAnnotazioneManuale) throws F3BException {
-		Connection lConn = null;
 
-		Vector lAnnotazioneManuali = new Vector();
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1166,8 +1165,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			lAnnDao.ricercaRichieste(aAnnotazioneManuale);
 			lAnnotazioneManuali = new Vector(lAnnDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("AnnotazioneManualeController.ExRicercaRichieste: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExRicercaRichieste: Non posso leggere : " + daoEx);
 		} catch (Exception sqe) {
 			throw new F3BException(
 					"AnnotazioneManualeController.ExRicercaAnnotazioneManualeGenerico: Non posso leggere -> "
@@ -1181,9 +1180,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	public Vector ExRicercaAnnotazioneManuale(AnnotazioneManualeModel aAnnotazioneManuale)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector lAnnotazioneManuali = new Vector();
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1208,7 +1208,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca TUTTE le annotazioni manuali legate al fascicolo indipendentemente dallo stato di validazione e
 	 * dal tipo di annotazione
-	 * 
+	 *
 	 * @param aKey
 	 *            = id del fascicolo
 	 * @return vettore di AnnotazioneManualeModel
@@ -1216,9 +1216,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 *             se annotazione non trovata o errore
 	 */
 	public Vector ExRicercaAnnotazioneManualeByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAnnotazioneManuali = new Vector();
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1240,7 +1241,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca TUTTE le annotazioni manuali legate all'evento indipendentemente dallo stato di validazione e
 	 * dal tipo di annotazione
-	 * 
+	 *
 	 * @param aKey
 	 *            = id dell'evento
 	 * @return vettore di AnnotazioneManualeModel
@@ -1248,9 +1249,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 *             se annotazione non trovata o errore
 	 */
 	public Vector ExRicercaAnnotazioneManualeByIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
-		Vector lAnnotazioneManuali = new Vector();
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1274,8 +1276,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByKey(BigDecimal aKey) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		AnnotazioneManualeModel lAnnMod;
 
@@ -1300,8 +1302,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByIdReato(BigDecimal aKey) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		AnnotazioneManualeModel lAnnMod;
 
@@ -1325,8 +1327,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	public Vector ExRicercaAnnotazioniManualiByIdReato(BigDecimal aKey) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		Vector lAnnMod = null;
 
@@ -1354,8 +1356,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	public Vector ExRicercaAnnotazioneManualeNoErrorByIdReato(BigDecimal aKey) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		Vector lAnnMod = null;
 
@@ -1380,15 +1382,15 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	/**
 	 * Ricerca tutte le annotazioni manuali con FLAG_APP_PROVVISORIA<>A e R associate al reato validate o meno
-	 * 
+	 *
 	 * @param aKey
 	 *            id del reato
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaAnnotazioniManualiNonRichiesteByIdReato(BigDecimal aKey) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		Vector lAnnMod = null;
 
@@ -1414,6 +1416,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	public Vector ExRicercaAnnotazioniManuali_non_richieste_ByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		Vector lAnnMod = null;
@@ -1439,7 +1442,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca le annotazioni manuali per il fasscicolo specificato e il tipo. Scarta le richieste al GE (A e
 	 * R) ORDER BY DATA_INSERIMENTO
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aCodTipoAnnotazione
 	 * @param aFlagValidazione
@@ -1448,8 +1451,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public Vector ExRicercaAnnotazioniManualiByIdFascicoloNonRichiesteTipoAnn(BigDecimal aIdFascicolo,
 			String aCodTipoAnnotazione, String aFlagValidazione) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnSqlDao = null;
 		Vector lAnnMod = null;
 
@@ -1476,14 +1479,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	/**
 	 * Recupera tutte le annotazioni manuali legate a Richieste con ancticipazione ma non ancora validate
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 */
 	public Vector ExRicercaAnnotazioneManualeRichiesteAnticipazioneAministiaIndultoByIdFascicolo(
 			BigDecimal aKey) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		Vector lAnnMod = null;
 
@@ -1510,14 +1513,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca le annotazioni di tipo Amnistia o Indulto lagate a Richieste ('R') <b>non validate</b> senza
 	 * anticipazione
-	 * 
+	 *
 	 * @param aKey
 	 *            idFascicolo
 	 */
 	public Vector ExRicercaAnnotazioneManualeRichiesteAministiaIndultoByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		Vector lAnnMod = null;
 
@@ -1543,13 +1546,13 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	/**
 	 * Aggiorna l'annotazione manuale
-	 * 
+	 *
 	 * @param
 	 */
 	public AnnotazioneManualeModel ExModificaAnnotazioneManuale(AnnotazioneManualeModel aAnnotazioneManuale)
 			throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeDAO lAnnDao = null;
 		AnnotazioneManualeModel lAnnMod = new AnnotazioneManualeModel(aAnnotazioneManuale);
 
@@ -1575,9 +1578,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 		return lAnnMod;
 	}
 
-	public void ExCancellaAnnotazioneManuale(AnnotazioneManualeModel aAnnotazioneManuale) throws F3BException {
-		Connection lConn = null;
+	public void ExCancellaAnnotazioneManuale(AnnotazioneManualeModel aAnnotazioneManuale)
+			throws F3BException {
 
+		Connection lConn = null;
 		AnnotazioneManualeDAO lAnnDao = null;
 
 		try {
@@ -1591,7 +1595,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"AnnotazioneManualeController.ExCancellaAnnotazioneManuale: Non posso leggere : " + daoEx);
+					"AnnotazioneManualeController.ExCancellaAnnotazioneManuale: Non posso leggere : "
+							+ daoEx);
 		} finally {
 			cleanup(lAnnDao);
 			cleanup(lConn);
@@ -1599,12 +1604,12 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	/**
-   *
-   */
+	*
+	*/
 	public AnnotazioneManualeModel ExRicercaAnnotazioniManualiByIdEvento(BigDecimal aKeyEvento)
 			throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		AnnotazioneManualeModel lAnnMod = null;
 
@@ -1618,8 +1623,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("AnnotazioneManualeController.ExRicercaAnnotazioniManualiByIdEvento: "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExRicercaAnnotazioniManualiByIdEvento: " + daoEx);
 		} finally {
 			cleanup(lAnnDao);
 			cleanup(lConn);
@@ -1636,8 +1641,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public AnnotazioneOrdinanzaModel ExRicercaUltimaAnnotazioneManualeOrdinanzaByIdFascicolo(
 			BigDecimal aKeyFascicolo) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		EventoSqlDAO lEveSqlDao = null;
 		AnnotazioneManualeSqlDAO lAnnSqlDao = null;
 
@@ -1680,8 +1685,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	public AnnotazioneOrdinanzaModel ExRicercaUltimaAnnotazioneManualeOrdinanzaByIdFascicolo(
 			EventoModel aEvento) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		EventoSqlDAO lEveSqlDao = null;
 		AnnotazioneManualeSqlDAO lAnnSqlDao = null;
 
@@ -1725,7 +1730,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca Ordinanza Sige (PROVVEDIMENTO_SIGE) validata legato ad un Fascicolo SIEP e ad una
 	 * ANNOTAZIONE_MANUALE.
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -1733,6 +1738,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	public AnnotazioneOrdinanzaSigeModel ExRicercannotazioneManualeOrdinanzaSigeByIdFascicolo(
 			EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		// DAO utilizzati per le ricerche nelle 3 tabelle
@@ -1794,14 +1800,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca Ordinanza Sige (PROVVEDIMENTO_SIGE, ANNOTAZIONE_MANUALE, EVENTO) a partire dall'ID
 	 * dell'AnnotazioneManuale..
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public AnnotazioneOrdinanzaSigeModel ExRicercannotazioneManualeOrdinanzaSigeByIdAnnMan(
 			BigDecimal aIdAnnotazioneManuale) throws F3BException {
+
 		Connection lConn = null;
 
 		// DAO utilizzati per le ricerche nelle 3 tabelle
@@ -1842,7 +1848,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 							lAnnOrdMod.setAnnotazioneManuale(lAnnMod);
 							lAnnOrdMod.setProvSige(lProvvedimento);
 						}
-
 					}
 				}
 			}
@@ -1863,16 +1868,14 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	/**
 	 * Ricerca tutte le annotazioni e i reati associati legati all'ultimo Provvedimento (04) o Richiesta (26)
 	 * con codice motivo passato in input.
-	 * 
+	 *
 	 * @param aKeyFascicolo
-	 *            id del fascicolo
-	 * @param aCodMotivo
-	 *            - Se specificato richerca l'evento con codice motivo passato in input. Se non specificato...
-	 * @return Vettore di AnnotazioneReatoModel
-	 * @throws
+	 *            id del fascicolo @param aCodMotivo - Se specificato richerca l'evento con codice motivo
+	 *            passato in input. Se non specificato... @return Vettore di AnnotazioneReatoModel @throws
 	 */
 	public Vector ExRicercaUltimeAnnotazioniManualiReatiByIdFascicolo(BigDecimal aKeyFascicolo,
 			String aCodMotivo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1952,20 +1955,21 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	/**
 	 * Produce il Documento di stampa per Annotazioni Manuali
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExStampaDocumentoXAnnotazioni(EventoNotificaModel aEvento,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
 		ByteArrayOutputStream lByteArrayOut = null;
 		try {
 			IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEveMod = lCtrlEve.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEveMod = lCtrlEve
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			lEveMod.getEvento().setDescrUfficioEmittente(aEvento.getEvento().getDescrUfficioEmittente());
 			lEveMod.setNomeTemplate(aEvento.getNomeTemplate());
@@ -2011,9 +2015,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Eccezione ", ex);
 			throw new F3BException("AnnotazioneManualeController.ExStampaDocumentoXAnnotazioni: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
 		}
@@ -2035,6 +2037,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public EventoModel ExUpdatePeneEspiateSenzaTitolo(EventoModel aEvento, String codicePosizione,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		// Connection lConnBlob = null;
 
@@ -2052,7 +2055,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 		ScadenzarioSqlDAO lScaSqlDAO = null;
 		ScadenzarioDAO lScaDAO = null;
 		StatoProcedimentoDAO lStatoDao = null;
-
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2113,12 +2115,12 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// Aggiorno lo scadenzario FinePena/VaneRicerche con la nuova data fine
 			// se non libero e non in affidamento in prova
 			// =======================================================================
-			if (!(codicePosizione.equals("07") || codicePosizione.equals("10")
-					|| codicePosizione.equals("16") || codicePosizione.equals("17")
-					|| codicePosizione.equals("46") || codicePosizione.equals("47")
-					|| codicePosizione.equals("20") || codicePosizione.equals("26") || codicePosizione
-						.equals("30")) && !codicePosizione.equals("13") // Espiazione Pena in Regime di
-																		// Affidamento in Prova
+			if (!(codicePosizione.equals("07") || codicePosizione.equals("10") || codicePosizione.equals("16")
+					|| codicePosizione.equals("17") || codicePosizione.equals("46")
+					|| codicePosizione.equals("47") || codicePosizione.equals("20")
+					|| codicePosizione.equals("26") || codicePosizione.equals("30"))
+					&& !codicePosizione.equals("13") // Espiazione Pena in Regime di
+														// Affidamento in Prova
 			) {
 				ScadenzarioModel lScaMod = null;
 
@@ -2376,7 +2378,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	/**
 	 * Effettua la validazione del provvedimento di computo fungibilita Pena Detentiva per altro reato
-	 * 
+	 *
 	 * @param aEvento
 	 * @param codicePosizione
 	 *            - Codice Posiziona Giuridica
@@ -2384,6 +2386,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public EventoModel ExUpdateFungibilita(EventoModel aEvento, String codicePosizione,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		// Connection lConnBlob = null;
 
@@ -2401,11 +2404,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 		StatoProcedimentoDAO lStatoDao = null;
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraAlternativaDAO lMisAltDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-//		AnnotazioneManualeModel lAnnMod = null;
-
-		EventoDAO lEveDaoBlob = null;
+		// AnnotazioneManualeModel lAnnMod = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2474,13 +2476,12 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// ======================================================
 			lScaSqlDAO = new ScadenzarioSqlDAO(lConn);
 			lScaDAO = new ScadenzarioDAO(lConn);
-			if (aFascicolo.getFlagAltraCausa() != null
-					&& !aFascicolo.getFlagAltraCausa().equals("S")
+			if (aFascicolo.getFlagAltraCausa() != null && !aFascicolo.getFlagAltraCausa().equals("S")
 					&& (codicePosizione.equals("07") || codicePosizione.equals("10")
 							|| codicePosizione.equals("16") || codicePosizione.equals("17")
 							|| codicePosizione.equals("46") || codicePosizione.equals("47")
-							|| codicePosizione.equals("20") || codicePosizione.equals("26") || codicePosizione
-								.equals("30"))) {
+							|| codicePosizione.equals("20") || codicePosizione.equals("26")
+							|| codicePosizione.equals("30"))) {
 				ScadenzarioModel lScaMod = null;
 				ScadenzarioModel lScaModSet = new ScadenzarioModel();
 				lScaModSet.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
@@ -2513,7 +2514,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			siesLogger.error("ricerca_annotazione_manuale_per_evento" + aEvento.getIdEvento());
 			Vector lAnnVec = new Vector(lAnnManuSqlDAO.getModels());
 			AnnotazioneManualeModel lAnnManMod = null;
-//			AnnotazioneManualeModel lAnnAR = null;
+			// AnnotazioneManualeModel lAnnAR = null;
 
 			lPenResDao = new PenaResiduaDAO(lConn);
 			for (int i = 0; i < lAnnVec.size(); i++) {
@@ -2606,7 +2607,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// ========================================================================
 			// lAnnManuSqlDAO.ricercaAnnotazioneManualeFlagAppProvByIdFascicolo(aFascicolo.getIdFascicoloSiep());
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("ricerca  annotazione manuale A e R per fascicolo");
+			// siesLogger.error("ricerca annotazione manuale A e R per fascicolo");
 			//
 			// Vector lAnnVectAR = new Vector(lAnnManuSqlDAO.getModels());
 			// if (lAnnVectAR.size() > 0)
@@ -2728,7 +2729,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			cleanup(lPosSqlDAO);
 			cleanup(lNomProvvDAO);
 			cleanup(lScaSqlDAO);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lFunSql);
 			cleanup(lEveDao);
@@ -2753,26 +2753,24 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public EventoModel ExUpdateRideterminazionePenaAltro(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
 		AnnotazioneManualeDAO lAnnManualeDAO = null;
 		AnnotazioneManualeSqlDAO lAnnManuSqlDAO = null;
 		ScadenzarioSqlDAO lScaSqlDAO = null;
 		ScadenzarioDAO lScaDAO = null;
-
 		// StatoProcedimentoDAO lStatoDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraAlternativaDAO lMisAltDao = null;
 		FungibilitaSqlDAO lFunSql = null;
 		FungibilitaDAO lFunDAO = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -2850,8 +2848,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 					ParametroModel lParModel = (ParametroModel) lIter.next();
 					lSommaAnni = DateUtils.moveDateTo(lEveApp.getDataEmissione(), java.util.Calendar.YEAR,
 							lParModel.getAnni().intValue());
-					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH, lParModel
-							.getMesi().intValue());
+					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
+							lParModel.getMesi().intValue());
 					lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
 							lParModel.getGiorni().intValue());
 				}
@@ -2974,15 +2972,15 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			 * eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
 			 * lStatoDao.setCondizioneByIdFascicolo(aFascicolo.getIdFascicoloSiep()); lStatoDao.delete();
 			 * StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
-			 * 
+			 *
 			 * lStatoProcMod.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
 			 * lStatoProcMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
 			 * lStatoProcMod.setDataInserimento(aEvento.getDataAggiornamento());
 			 * lStatoProcMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
-			 * 
+			 *
 			 * lStatoProcMod.setCodStatoProcedimento("0128"); lStatoProcMod.setProgressivo(new BigDecimal(1));
 			 * lStatoProcMod.setData(lEveApp.getDataEmissione()); lStatoDao.setDAOFromModel(lStatoProcMod);
-			 * 
+			 *
 			 * lStatoDao.insert(); lStatoDao.stop();
 			 */
 
@@ -3017,8 +3015,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 			daoEx.printStackTrace();
 
-			throw new F3BException("AnnotazioneManualeController.ExUpdateRideterminazionePenaAltro : "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExUpdateRideterminazionePenaAltro : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: ", ex);
@@ -3027,7 +3025,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			ex.printStackTrace();
 			throw new F3BException("AnnotazioneManualeController.ExUpdateRideterminazionePenaAltro : " + ex);
 		} finally {
-
 			cleanup(lAnnManualeDAO);
 			cleanup(lAnnManuSqlDAO);
 			cleanup(lPenResDao);
@@ -3043,11 +3040,9 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			cleanup(lMisAltDao);
 			cleanup(lFunSql);
 			cleanup(lFunDAO);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConn);
 			// cleanup(lConnBlob);
-
 		}
 
 		return lEveMod;
@@ -3066,6 +3061,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public AnnotazioneManualeModel ExCancellaAnnotazioneManualeComputo(BigDecimal aIdAnnotazioneManuale,
 			boolean aFlagRichieste) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
@@ -3100,7 +3096,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			// ========================================================================
 			if (!aFlagRichieste && lAnnMan.getCodTipoAnnotazione() != null
 					&& (lAnnMan.getCodTipoAnnotazione().equals("002") // indulto
-					|| lAnnMan.getCodTipoAnnotazione().equals("003") // amnistia
+							|| lAnnMan.getCodTipoAnnotazione().equals("003") // amnistia
 					)) {
 				// recupero le annotazioni legate all'evento corrente che verranno
 				// cancellate
@@ -3170,8 +3166,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 							|| lAnnMan.getCodTipoAnnotazione().equals("003") // amnistia
 							|| lAnnMan.getCodTipoAnnotazione().equals("004") // Depenalizzazione
 							|| lAnnMan.getCodTipoAnnotazione().equals("013") // Incostituzionalità
-					// MEV 37 - Inizio
-					|| lAnnMan.getCodTipoAnnotazione().equals("017") // Illecito Amministrativo
+							// MEV 37 - Inizio
+							|| lAnnMan.getCodTipoAnnotazione().equals("017") // Illecito Amministrativo
 					// MEV 37 - Fine
 					)) {
 				// Cerca l'ordinanza
@@ -3185,7 +3181,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 						|| lAnnMan.getCodTipoAnnotazione().equals("003")) {
 					lMotivoProvvedimento = "0284";
 				} else if (lAnnMan.getCodTipoAnnotazione().equals("004")
-				// MEV 37 - Inizio
+						// MEV 37 - Inizio
 						|| lAnnMan.getCodTipoAnnotazione().equals("017"))
 				// MEV 37 - Fine
 				{
@@ -3226,8 +3222,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("AnnotazioneManualeController.ExCancellaAnnotazioneManualeComputo: "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExCancellaAnnotazioneManualeComputo: " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 
@@ -3253,11 +3249,12 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 * Aggiorna il flagComputabile sull'annotazione
 	 *
 	 * Utilizzata per le decisioni del GE
-	 * 
+	 *
 	 * @param aIdAnnotazione
 	 * @throws F3BException
 	 */
 	public void ExUpdateAnnotazioneFlagComputabile(BigDecimal aIdAnnotazione) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
@@ -3292,7 +3289,7 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 * versione 4.0. - Validazione Evento - Validazione delle annotazioni manuali associate - Validazione
 	 * della pena residua - validazione dell'eventuale fungibilità - Aggiornamento dello scadenzario -
 	 * Eventuale aggiornamento data fine misura
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param aConn
@@ -3302,24 +3299,22 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	 */
 	public EventoModel ExValidaRideterminazionePenaAltro(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			Connection aConn) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
 		AnnotazioneManualeDAO lAnnManualeDAO = null;
 		AnnotazioneManualeSqlDAO lAnnManuSqlDAO = null;
 		ScadenzarioSqlDAO lScaSqlDAO = null;
 		ScadenzarioDAO lScaDAO = null;
-
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraAlternativaDAO lMisAltDao = null;
 		FungibilitaSqlDAO lFunSql = null;
 		FungibilitaDAO lFunDAO = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
 		StatoProcedimentoSqlDAO lStatoSqlDao = null;
 
@@ -3429,8 +3424,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 					ParametroModel lParModel = (ParametroModel) lIter.next();
 					lSommaAnni = DateUtils.moveDateTo(lEveApp.getDataEmissione(), java.util.Calendar.YEAR,
 							lParModel.getAnni().intValue());
-					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH, lParModel
-							.getMesi().intValue());
+					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
+							lParModel.getMesi().intValue());
 					lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
 							lParModel.getGiorni().intValue());
 				}
@@ -3452,8 +3447,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 					lScaDAO.update();
 					lScaDAO.stop();
 				}
-			} else // diverso da libero
-			{
+			} else {
+				// diverso da libero
 				lScaSqlDAO.ricercaScadenzarioByTipoScadenzarioIdFascicolo("02",
 						aFascicolo.getIdFascicoloSiep()); // FINE PENA
 				lScaMod = (ScadenzarioModel) lScaSqlDAO.getModelByKey();
@@ -3557,9 +3552,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 				siesLogger.debug("DEVO AGGIORNARE IL FLAG DI LA Elaborata");
 				LicenzaLibanticipataSqlDAO lLicSqlDao = null;
 
-				DatiOperazioneModel lOperMod = new DatiOperazioneModel(
-						aEvento.getCodOperatoreAggiornamento(), DateUtils.getSysDate(),
-						aEvento.getCodUfficioAggiornamento(), "");
+				DatiOperazioneModel lOperMod = new DatiOperazioneModel(aEvento.getCodOperatoreAggiornamento(),
+						DateUtils.getSysDate(), aEvento.getCodUfficioAggiornamento(), "");
 
 				lLicSqlDao = new LicenzaLibanticipataSqlDAO(lConn);
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3630,7 +3624,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 				// Allora devo aggiornare lo stato procedimento per tenere allinea
 				// Ergastolo???????
 
-				if (lPenaresidua != null && lPenaresidua.getDataFine() != null && !lPenaresidua.isErgastolo()) {
+				if (lPenaresidua != null && lPenaresidua.getDataFine() != null
+						&& !lPenaresidua.isErgastolo()) {
 					// Recupero lo stato procedimento attuale per verificare se prevede
 					// l'informazione: Pena in Esecuzione Fino al
 					lStatoSqlDao = new StatoProcedimentoSqlDAO(lConn);
@@ -3688,8 +3683,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 			daoEx.printStackTrace();
 
-			throw new F3BException("AnnotazioneManualeController.ExUpdateRideterminazionePenaAltro : "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExUpdateRideterminazionePenaAltro : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: ", ex);
@@ -3697,7 +3692,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			ex.printStackTrace();
 			throw new F3BException("AnnotazioneManualeController.ExUpdateRideterminazionePenaAltro : " + ex);
 		} finally {
-
 			cleanup(lAnnManualeDAO);
 			cleanup(lAnnManuSqlDAO);
 			cleanup(lPenResDao);
@@ -3712,7 +3706,6 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			cleanup(lMisAltDao);
 			cleanup(lFunSql);
 			cleanup(lFunDAO);
-
 			cleanup(lStatoDao);
 			cleanup(lStatoSqlDao);
 
@@ -3727,9 +3720,11 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	@Override
 	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByIdSentenza(BigDecimal aIdSentenza)
 			throws F3BException {
+
 		Connection lConn = null;
-		AnnotazioneManualeModel annotazioneManuale = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+
+		AnnotazioneManualeModel annotazioneManuale = null;
 
 		try {
 			lConn = getDBConnection();
@@ -3755,11 +3750,12 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	}
 
 	@Override
-	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByIdSentenzaIdTenoreSige(
-			BigDecimal aIdSentenza, BigDecimal aIdTenoreSige) throws F3BException {
+	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByIdSentenzaIdTenoreSige(BigDecimal aIdSentenza,
+			BigDecimal aIdTenoreSige) throws F3BException {
+
 		Connection lConn = null;
-		AnnotazioneManualeModel annotazioneManuale = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		AnnotazioneManualeModel annotazioneManuale = null;
 
 		try {
 			lConn = getDBConnection();
@@ -3787,10 +3783,10 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 	@Override
 	public Vector ExRicercaRichiesteTenoriSige(AnnotazioneManualeModel aAnnotazioneManuale)
 			throws F3BException {
-		Connection lConn = null;
 
-		Vector lAnnotazioneManuali = new Vector();
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -3799,8 +3795,8 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			lAnnDao.ricercaRichiesteTenoriSige(aAnnotazioneManuale);
 			lAnnotazioneManuali = new Vector(lAnnDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("AnnotazioneManualeController.ExRicercaRichieste: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExRicercaRichieste: Non posso leggere : " + daoEx);
 		} catch (Exception sqe) {
 			throw new F3BException(
 					"AnnotazioneManualeController.ExRicercaAnnotazioneManualeGenerico: Non posso leggere -> "
@@ -3814,11 +3810,11 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 
 	@Override
 	public void ExAggiornaFlagSelQuantum(String ids, String flag) throws F3BException {
-		Connection lConn = null;
 
-		Vector lAnnotazioneManuali = new Vector();
+		Connection lConn = null;
 		AnnotazioneManualeSqlDAO lAnnDao = null;
 		AnnotazioneManualeDAO lDao = null;
+		Vector lAnnotazioneManuali = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -3838,17 +3834,18 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 			}
 			lConn.commit();
 		} catch (DAOException daoEx) {
-			throw new F3BException("AnnotazioneManualeController.ExRicercaRichieste: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExRicercaRichieste: Non posso leggere : " + daoEx);
 		} catch (Exception sqe) {
 			throw new F3BException(
 					"AnnotazioneManualeController.ExRicercaAnnotazioneManualeGenerico: Non posso leggere -> "
 							+ sqe);
 		} finally {
 			cleanup(lAnnDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lDao);
 			cleanup(lConn);
 		}
-
 	}
 
 }

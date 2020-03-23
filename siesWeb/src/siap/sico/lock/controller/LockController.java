@@ -14,13 +14,13 @@ public class LockController {
 	/*
 	 * Metodo che locka un entità presa in carico da un utente, inserendola nella Hash lockTable se non ancora
 	 * ancora lockata.
-	 * 
+	 *
 	 * @sessionID = key della hashtable L'entità coinvolta è descritta tramite
-	 * 
+	 *
 	 * @Entity = descrizione testuale dell'entità
-	 * 
+	 *
 	 * @IdEntity = Id dell'occorrenza
-	 * 
+	 *
 	 * @Cod_utente = Codice ID Utente che ha lockato l'entità Torna un LockModel valorizzato se l'entita è
 	 * lockata contenente le informazione del lock null otherwise.
 	 */
@@ -29,7 +29,7 @@ public class LockController {
 			String Cod_utente, String SessionID) {
 
 		Hashtable lockTable = (Hashtable) ctx.getAttribute("lockTable");
-//		Object lckModels[] = lockTable.values().toArray();
+		// Object lckModels[] = lockTable.values().toArray();
 		Object lckKeys[] = lockTable.keySet().toArray();
 		for (int i = 0; i < lckKeys.length; i++) {
 			LockModel lck = (LockModel) lockTable.get(lckKeys[i]);

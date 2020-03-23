@@ -1,11 +1,5 @@
 package siap.siep.modulocumulo.controller;
 
-/**
-* <p>Title: ComputiCumuloController</p>
-* <p>Description: Classe Controller per ComputiCumulo</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Iterator;
@@ -21,6 +15,16 @@ import siap.siep.modulocumulo.dao.ComputiCumuloDAO;
 import siap.siep.modulocumulo.dao.ComputiCumuloSqlDAO;
 import siap.siep.modulocumulo.model.ComputiCumuloModel;
 
+/**
+ * <p>
+ * Title: ComputiCumuloController
+ * </p>
+ * <p>
+ * Description: Classe Controller per ComputiCumulo
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ComputiCumuloController extends SiapController implements IComputiCumulo {
 
@@ -29,7 +33,7 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un ComputiCumulo a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aComputiCumulo
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -37,6 +41,7 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	 ****************************************************************************/
 	public ComputiCumuloModel ExInserisciComputiCumulo(ComputiCumuloModel aComputiCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		ComputiCumuloDAO lComDao = null;
 		ComputiCumuloModel lComMod = null;
@@ -66,7 +71,7 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati ComputiCumulo
-	 * 
+	 *
 	 * @param aComputiCumulo
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -75,8 +80,9 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	 ****************************************************************************/
 	public Vector<ComputiCumuloModel> ExRicercaComputiCumulo(ComputiCumuloModel aComputiCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector<ComputiCumuloModel> lComputiCumuli = new Vector<ComputiCumuloModel>();
+		Vector<ComputiCumuloModel> lComputiCumuli = new Vector<>();
 		ComputiCumuloDAO lComDao = null;
 
 		try {
@@ -103,13 +109,14 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public ComputiCumuloModel ExRicercaComputiCumuloById(BigDecimal aIdComputiCumulo) throws F3BException {
+
 		Connection lConn = null;
 		ComputiCumuloModel lComputiCumuloMod = new ComputiCumuloModel();
 		ComputiCumuloSqlDAO lComputiCumuloSqlDao = null;
@@ -135,12 +142,13 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	 * Metodo che modifica i dati dell'ComputiCumulo Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aComputiCumulo
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaComputiCumulo(ComputiCumuloModel aComputiCumulo) throws F3BException {
+
 		Connection lConn = null;
 		ComputiCumuloDAO lComDao = null;
 
@@ -164,11 +172,12 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aComputiCumulo
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaComputiCumuloBykey(BigDecimal aIdComputiCumulo) throws F3BException {
+
 		Connection lConn = null;
 		ComputiCumuloDAO lComDao = null;
 
@@ -196,12 +205,13 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aComputiCumulo
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountComputiCumulo(ComputiCumuloModel aComputiCumulo) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		ComputiCumuloSqlDAO lComputiCumuloSqlDao = null;
@@ -229,7 +239,7 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aComputiCumulo
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -239,8 +249,9 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	 ****************************************************************************/
 	public Vector<ComputiCumuloModel> ExRicercaComputiCumuloPaged(ComputiCumuloModel aComputiCumulo,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
-		Vector<ComputiCumuloModel> lComputiCumuli = new Vector<ComputiCumuloModel>();
+		Vector<ComputiCumuloModel> lComputiCumuli = new Vector<>();
 		ComputiCumuloSqlDAO lComputiCumuloSqlDao = null;
 
 		try {
@@ -261,15 +272,16 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 
 	/**
 	 * Recupera tutte le Richieste con Anticipazione (computi Cumulo) legati all'istruttoria indicata
-	 * 
+	 *
 	 * @param aIdIstruttoria
 	 *            = id dell'istruttoria
 	 */
 	public Vector<ComputiCumuloModel> ExRicercaComputiCumuloByIdIstruttoria(BigDecimal aIdIstruttoria,
 			BigDecimal aIdDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<ComputiCumuloModel> lComputiCumulo = new Vector<ComputiCumuloModel>();
+		Vector<ComputiCumuloModel> lComputiCumulo = new Vector<>();
 
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
 
@@ -285,7 +297,6 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 			}
 
 			lComputiCumulo = new Vector<ComputiCumuloModel>(lComputiSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -298,7 +309,6 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 							+ ex);
 		} finally {
 			cleanup(lComputiSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -312,6 +322,7 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 	 */
 	public String ExInserisciComputiCumuloWithoutSequence(Vector<ComputiCumuloModel> VecComputiCum,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		ComputiCumuloDAO lCompCumDao = null;
 		ComputiCumuloModel lCompCumMod = null;
@@ -349,44 +360,42 @@ public class ComputiCumuloController extends SiapController implements IComputiC
 		}
 
 		return EsitodiRitorno;
-
 	} // CHIUDE ExInserisciComputiCumuloWithoutSequence
 
-  /**
-   * Recupera tutte le revoche con esito accolto by id_Titolo
-   */
-  public Vector <ComputiCumuloModel> ExRicercaComputiCumuloByIdTitoloCum (BigDecimal aIdTitolo)  throws F3BException 
-  {
-    Connection lConn = null;
-    
-    Vector <ComputiCumuloModel> lComputiCumulo = new Vector <ComputiCumuloModel>();
-    
-    ComputiCumuloSqlDAO lComputiSqlDao = null;
-    
-    
-    try {
-      lConn = getDBConnection();
-      lComputiSqlDao = new ComputiCumuloSqlDAO (lConn);
-      lComputiSqlDao.ricercaComputiCumuloByIdTitoloCum(aIdTitolo);
-     
-      lComputiCumulo = new Vector <ComputiCumuloModel> (lComputiSqlDao.getModels());
-      
-    }
-    catch (DAOException daoEx) {
-      siesLogger.error("DAOException: ",daoEx);
-      throw new F3BException("ComputiCumuloController.ExRicercaComputiCumuloByIdTitoloCum: Non posso leggere : " + daoEx);
-    }
-    catch (Exception ex) {
-      siesLogger.error("Exception: ",ex);
-      throw new F3BException("ComputiCumuloController.ExRicercaComputiCumuloByIdTitoloCum: Non posso leggere : " + ex);
-    }    
-    finally {
-      cleanup(lComputiSqlDao);
-      
-      cleanup(lConn);
-    }
+	/**
+	 * Recupera tutte le revoche con esito accolto by id_Titolo
+	 */
+	public Vector<ComputiCumuloModel> ExRicercaComputiCumuloByIdTitoloCum(BigDecimal aIdTitolo)
+			throws F3BException {
 
-    return lComputiCumulo;
-  
-  } // chiudi ExRicercaComputiCumuloByIdTitoloCum();
+		Connection lConn = null;
+
+		Vector<ComputiCumuloModel> lComputiCumulo = new Vector<>();
+
+		ComputiCumuloSqlDAO lComputiSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lComputiSqlDao = new ComputiCumuloSqlDAO(lConn);
+			lComputiSqlDao.ricercaComputiCumuloByIdTitoloCum(aIdTitolo);
+
+			lComputiCumulo = new Vector<ComputiCumuloModel>(lComputiSqlDao.getModels());
+
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			throw new F3BException(
+					"ComputiCumuloController.ExRicercaComputiCumuloByIdTitoloCum: Non posso leggere : "
+							+ daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException(
+					"ComputiCumuloController.ExRicercaComputiCumuloByIdTitoloCum: Non posso leggere : " + ex);
+		} finally {
+			cleanup(lComputiSqlDao);
+			cleanup(lConn);
+		}
+
+		return lComputiCumulo;
+	} // chiudi ExRicercaComputiCumuloByIdTitoloCum();
+
 }

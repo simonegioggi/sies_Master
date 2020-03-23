@@ -5,6 +5,11 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
+import f3b.controller.GenericController;
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
@@ -16,11 +21,6 @@ import siap.siep.penaresidua.dao.PenaResiduaSqlDAO;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.controller.GenericController;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  *
@@ -41,7 +41,7 @@ public class IndultoController extends GenericController implements IIndulto {
 
 	/**
 	 * ExValidaProvvedimentoIndulto
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aPenRes
 	 * @param aFascicolo
@@ -50,6 +50,7 @@ public class IndultoController extends GenericController implements IIndulto {
 	 */
 	public EventoModel ExValidaProvvedimentoIndulto(EventoModel aEvento, PenaResiduaModel aPenRes)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -126,8 +127,8 @@ public class IndultoController extends GenericController implements IIndulto {
 				// since 3.1upd02
 				PenaResiduaModel lUltimaPena = null;
 				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(aEvento
-						.getFasSieIdFascicoloSiep());
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(
+						aEvento.getFasSieIdFascicoloSiep());
 				lUltimaPena = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
 				// aggiorno i campi

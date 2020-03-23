@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.SIUSException;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
@@ -15,9 +18,6 @@ import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostituti
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -43,6 +43,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExInserisciEsecuzioneSanzioneSostitutiva(
 			EsecuzioneSanzioneSostitutivaModel aEsecuzioneSanzioneSostitutiva) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod = null;
@@ -68,9 +69,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -79,6 +78,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public Vector ExRicercaEsecuzioneSanzioneSostitutiva(
 			EsecuzioneSanzioneSostitutivaModel aEsecuzioneSanzioneSostitutiva) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEsecuzioneSanzioniSostitutive = new Vector();
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseDao = null;
@@ -87,7 +87,6 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			lEseDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
 			lEseDao.ricercaEsecuzioneSanzioneSostitutiva(aEsecuzioneSanzioneSostitutiva);
 			lEsecuzioneSanzioniSostitutive = new Vector(lEseDao.getModels());
-
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -101,9 +100,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -112,6 +109,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod;
@@ -133,9 +131,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -144,6 +140,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByAnnoProg(
 			BigDecimal aAnno, BigDecimal aProg) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod = null;
@@ -166,9 +163,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 				// LogF3B.getLogger()
 				siesLogger.error("Exception: " + e);
 				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-			}
-
-			finally {
+			} finally {
 				cleanup(lEseDao);
 				cleanup(lConn);
 			}
@@ -178,6 +173,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByIdFascicolo(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod;
@@ -199,9 +195,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -210,6 +204,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExRicercaEsecuzioneSanzioneSostitutivaByIdFascicolo(
 			BigDecimal aKey, Connection aConn) throws F3BException {
+
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod;
 		try {
@@ -227,9 +222,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 		}
 		return lEseMod;
@@ -237,6 +230,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExModificaEsecuzioneSanzioneSostitutiva(
 			EsecuzioneSanzioneSostitutivaModel aEsecuzioneSanzioneSostitutiva) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod = new EsecuzioneSanzioneSostitutivaModel(
@@ -261,9 +255,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -272,6 +264,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	public EsecuzioneSanzioneSostitutivaModel ExModificaESSbyFascicolo(
 			EsecuzioneSanzioneSostitutivaModel aEsecuzioneSanzioneSostitutiva) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
 		EsecuzioneSanzioneSostitutivaModel lEseMod = new EsecuzioneSanzioneSostitutivaModel(
@@ -296,9 +289,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -306,6 +297,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	}
 
 	public void ExCancellaEsecuzioneSanzioneSostitutiva(BigDecimal idESS) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaDAO lEseDao = null;
 		try {
@@ -327,9 +319,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -337,7 +327,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	/**
 	 * Ricerca Procedimenti di Esecuzione Sanzioni Sostitutive
-	 * 
+	 *
 	 * @param lAnno
 	 * @param lProgr
 	 * @param lAnnoIniziale
@@ -351,6 +341,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	public Vector ExRicercaEsecuzioneSanzioniSostitutive(String lAnno, String lProgr, String lAnnoIniziale,
 			String lProgrIniziale, String lAnnoFinale, String lProgrFinale, String lUfficioUtenteConnesso,
 			int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lEsecuzioneSS = new Vector();
 
@@ -386,9 +377,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseSSSqlDao);
 			cleanup(lConn);
 		}
@@ -397,7 +386,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 	/**
 	 * Ricerca Numero Procedimenti di Esecuzione Sanzioni Sostitutive.
-	 * 
+	 *
 	 * @param lAnno
 	 * @param lProgr
 	 * @param lAnnoIniziale
@@ -411,6 +400,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	public BigDecimal ExGetNumRicercaEsecuzioneSanzioniSostitutive(String lAnno, String lProgr,
 			String lAnnoIniziale, String lProgrIniziale, String lAnnoFinale, String lProgrFinale,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -434,9 +424,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseSSSqlDao);
 			cleanup(lConn);
 		}
@@ -446,7 +434,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Sanzioni Sostitutive. (Dettaglio Esec. Mis.
 	 * Alt.).
-	 * 
+	 *
 	 * @param aEseSSKey
 	 * @param aIdSoggetto
 	 * @return Vettore di FascicoloGPModel
@@ -454,10 +442,11 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaDettaglioEsecuzioneSS(BigDecimal aEseSSKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSanzioni = new Vector();
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
-//		TenoreModel lTenMod = null;
+		// TenoreModel lTenMod = null;
 		TenoreSqlDAO lTenDao = null;
 		// SoggettoSqlDAO lSogDao = null;
 
@@ -486,8 +475,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -513,9 +502,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseSSSqlDao);
 			cleanup(lTenDao);
 			// cleanup(lSogDao);
@@ -527,7 +514,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Sanzioni Sostitutive. (Dettaglio Esec. San.
 	 * Sos.).
-	 * 
+	 *
 	 * @param aEseSSKey
 	 * @param aIdSoggetto
 	 * @param aConn
@@ -536,9 +523,10 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaDettaglioEsecuzioneSS(BigDecimal aEseSSKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso, Connection aConn) throws F3BException {
+
 		Vector lSanzioni = new Vector();
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
-//		TenoreModel lTenMod = null;
+		// TenoreModel lTenMod = null;
 		TenoreSqlDAO lTenDao = null;
 		// SoggettoSqlDAO lSogDao = null;
 
@@ -565,8 +553,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(aConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -590,9 +578,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseSSSqlDao);
 			cleanup(lTenDao);
 			// cleanup(lSogDao);
@@ -603,7 +589,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Sanzioni Sostitutive. (Dettaglio Esec. San.
 	 * Sos.). e per ogni Sanzione, si cercano i procedimenti correlati.
-	 * 
+	 *
 	 * @param aEseSSKey
 	 * @param aIdSoggetto
 	 * @return Coppia di Vettori di FascicoloGPModel
@@ -611,6 +597,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 */
 	public Vector[] ExRicercaDettaglioESSeCorrelati(BigDecimal aEseSSKey, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector[] lSanzioniECorrelati = new Vector[2];
 		Vector lSanzioni = new Vector();
@@ -646,8 +633,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// Si Caricano i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -661,8 +648,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 				if (lFascicolo.getFascicoloSiusModel().getNumeroFascicoliUnificati() != null
 						&& lFascicolo.getFascicoloSiusModel().getNumeroFascicoliUnificati().intValue() > 0) {
 					lEseSSSqlDao2 = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
-					lEseSSSqlDao2.ricercaProcedimentiCorrelatiAllESS(lFascicolo.getFascicoloSiusModel()
-							.getIdFascicoloSius(), lUfficioUtenteConnesso);
+					lEseSSSqlDao2.ricercaProcedimentiCorrelatiAllESS(
+							lFascicolo.getFascicoloSiusModel().getIdFascicoloSius(), lUfficioUtenteConnesso);
 					lEseSSSqlDao2.start();
 					FascicoloGPModel lFascCorrelato = null;
 					while (lEseSSSqlDao2.next()) {
@@ -687,9 +674,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseSSSqlDao);
 			cleanup(lEseSSSqlDao2);
 			cleanup(lTenDao);
@@ -705,7 +690,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	/**
 	 * Ricerca dei Procedimenti relativi ad una Esecuzione di Sanzioni Sostitutive per IdFascicolo. (Dettaglio
 	 * Esec. Mis. Alt.).
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aIdSoggetto
 	 * @return Vettore di FascicoloGPModel
@@ -713,10 +698,11 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 	 */
 	public Vector ExRicercaDettaglioEsecuzioneSSbyFascicolo(BigDecimal aIdFascicolo, BigDecimal aIdSoggetto,
 			String lUfficioUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSanzioni = new Vector();
 		EsecuzioneSanzioneSostitutivaSqlDAO lEseSSSqlDao = null;
-//		TenoreModel lTenMod = null;
+		// TenoreModel lTenMod = null;
 		TenoreSqlDAO lTenDao = null;
 		// SoggettoSqlDAO lSogDao = null;
 
@@ -745,8 +731,8 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 
 				// Si Inseriscono i Tenori
 				lTenDao = new TenoreSqlDAO(lConn);
-				lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lTenDao.ricercaTenoreByGeneraleProc(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 				// 05/11/2003 Carico i dati del tenore nell'array di Tenori in FascicoloGPModel.
 				Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -775,9 +761,7 @@ public class EsecuzioneSSController extends SiapController implements IEsecuzion
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lEseSSSqlDao);
 			cleanup(lTenDao);
 			cleanup(lConn);

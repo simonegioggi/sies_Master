@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
-
 import siap.controller.SiapController;
-
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -24,7 +24,6 @@ import siap.sico.evento.dao.EventoStoreProcedurePulisciDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.CalendarUtil;
-
 import siap.siep.SIEPException;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
@@ -61,15 +60,12 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
-
 import siap.sius.depositodecreto.dao.DepositoDecretoDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcDAO;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
-
-import org.apache.log4j.Logger;
 
 /**
  * <p>
@@ -84,7 +80,7 @@ import org.apache.log4j.Logger;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,6 +94,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	 */
 	public EventoNotificaModel ExInserisciOModificaEventoNotifica(EventoNotificaModel aEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -207,13 +204,14 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		} catch (DAOException daoEx) {
 
 			rollback(lConn);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciOModificaEventoNotifica: "
-					+ daoEx);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciOModificaEventoNotifica: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 
 			rollback(lConn);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciOModificaEventoNotifica: " + ex);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciOModificaEventoNotifica: " + ex);
 		} finally {
 			cleanup(lCampoNotaDao);
 			cleanup(lEveDao);
@@ -234,6 +232,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	public DecretoOrdinanzaSiepModel ExInserisciDecretoOrdinanzaSiep(
 			DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep, EventoModel aEvento,
 			CalcoloPenaModel aCalcoloPenaMod) throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepDAO lDecDao = null;
@@ -258,7 +257,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			// cerca l'eventuale record da aggiornare
 			DecretoOrdinanzaSiepModel lDecModPresente = null;
 			if (lDecMod.getIdDecretoOrdinanzaSiep() != null) {
-				lDecDao.setCondizioneByIdDecretoOrdinanzaFlagNonElaborato(lDecMod.getIdDecretoOrdinanzaSiep());
+				lDecDao.setCondizioneByIdDecretoOrdinanzaFlagNonElaborato(
+						lDecMod.getIdDecretoOrdinanzaSiep());
 				lDecModPresente = (DecretoOrdinanzaSiepModel) lDecDao.getModelByKey();
 			}
 
@@ -397,10 +397,9 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			String lFlagErgastolo = "N";
 			// se la Pena Complessiva è un ergastolo o ergastolo con isolamento diurno
-			if (lPenMod.getCodTipoPenaDetentiva() != null
-					&& lPenMod.getCodTipoPenaDetentiva() != ""
-					&& (lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod.getCodTipoPenaDetentiva()
-							.equals("04"))) {
+			if (lPenMod.getCodTipoPenaDetentiva() != null && lPenMod.getCodTipoPenaDetentiva() != ""
+					&& (lPenMod.getCodTipoPenaDetentiva().equals("03")
+							|| lPenMod.getCodTipoPenaDetentiva().equals("04"))) {
 				lFlagErgastolo = "S";
 			}
 
@@ -408,8 +407,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			lPenSqlDao = new PenaResiduaSqlDAO(lConn);
 
 			// Cerca l'ultima pena residua validata...
-			lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(lDecMod
-					.getFasSieIdFascicoloSiep());
+			lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(
+					lDecMod.getFasSieIdFascicoloSiep());
 			PenaResiduaModel lUltimaPenaResidua = (PenaResiduaModel) lPenSqlDao.getModelByKey();
 			// ...se non la trova cerca l'ultima in assoluto
 			if (lUltimaPenaResidua == null) {
@@ -432,8 +431,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			if (lFlagErgastolo.equals("N")) {
 				// Pena Ricalcolata sul
-				PenaResiduaModel lPenaResiduaIniziale = aCalcoloPenaMod.getPenaDaEspiare(
-						lUltimaPenaResidua.getDataInizio(), null, "all");
+				PenaResiduaModel lPenaResiduaIniziale = aCalcoloPenaMod
+						.getPenaDaEspiare(lUltimaPenaResidua.getDataInizio(), null, "all");
 				aCalcoloPenaMod.calcolaPenaDaSospensione(lPenaResiduaIniziale,
 						lDecMod.getDataSospensioneEsecuzione());
 				lPenaResiduaNuova = aCalcoloPenaMod.getPenaResiduaRicalcolata();
@@ -532,14 +531,14 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 							.setNumAnniPenaEspiata(new BigDecimal(lCalPenaEspiataCalcoloErg.getNumAnni()));
 					lSospensione
 							.setNumMesiPenaEspiata(new BigDecimal(lCalPenaEspiataCalcoloErg.getNumMesi()));
-					lSospensione.setNumGiorniPenaEspiata(new BigDecimal(lCalPenaEspiataCalcoloErg
-							.getNumGiorni()));
+					lSospensione.setNumGiorniPenaEspiata(
+							new BigDecimal(lCalPenaEspiataCalcoloErg.getNumGiorni()));
 				}
 
 				lSospensione.setPenResIdPenaResidua(lKeyPena);
 				lSospensione.setFasSieIdFascicoloSiep(aDecretoOrdinanzaSiep.getFasSieIdFascicoloSiep());
-				lSospensione.setNumGiorniLibanticipata(new BigDecimal(aCalcoloPenaMod
-						.getLiberazioneAnticipata()));
+				lSospensione.setNumGiorniLibanticipata(
+						new BigDecimal(aCalcoloPenaMod.getLiberazioneAnticipata()));
 
 				lSospensione.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
 				lSospensione.setDataInserimento(aEvento.getDataInserimento());
@@ -592,7 +591,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aDecOrdSiepMod
 	 * @param lConn
 	 * @return
@@ -600,6 +599,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	 */
 	public String ExInserisciDecretoOrdinanzaWithoutSequence(DecretoOrdinanzaSiepModel aDecOrdSiepMod,
 			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 
 		DecretoOrdinanzaSiepDAO lDecOrdDAO = null;
@@ -633,11 +633,12 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	}
 
 	/**
-   *
-   */
+	*
+	*/
 	public DecretoOrdinanzaSiepModel ExInserisciDecretoOrdinanzaSiepRipristino(
 			DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep, EventoModel aEvento,
 			boolean aInterruzioneNonValida) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaDAO lPenDao = null;
@@ -650,7 +651,6 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		EventoSqlDAO lEveSqlDAO = null;
 		SospensioneDAO lSospDao = null;
 		PenaComplessivaSqlDAO lPenCompSqlDao = null;
-
 		EventoStoreProcedurePulisciDAO lEveProcDao = null;
 
 		DecretoOrdinanzaSiepModel lDecMod = null;
@@ -738,8 +738,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 					lPosDao.stop();
 
 					// CERCA POSIZIONE GIURIDICA PRECEDENTE
-					lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aDecretoOrdinanzaSiep
-							.getFasSieIdFascicoloSiep());
+					lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(
+							aDecretoOrdinanzaSiep.getFasSieIdFascicoloSiep());
 					lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
 
 					if (lPosMod == null || lPosMod.getCodPosizioneGiuridica() == null)
@@ -759,8 +759,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 				lEveProcDao.execute();
 
 				// CERCA LA PENA RESIDUA precedente all'inserimento della sospensione
-				lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(aDecretoOrdinanzaSiep
-						.getFasSieIdFascicoloSiep());
+				lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(
+						aDecretoOrdinanzaSiep.getFasSieIdFascicoloSiep());
 				lPenaResiduaValidata = (PenaResiduaModel) lPenSqlDao.getModelByKey();
 
 				if (lPenaResiduaValidata == null)
@@ -807,8 +807,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 				// Cerca la Pena Complessiva
 				lPenCompSqlDao = new PenaComplessivaSqlDAO(lConn);
 
-				lPenCompSqlDao.ricercaPenaComplessivaByIdFascicolo(aDecretoOrdinanzaSiep
-						.getFasSieIdFascicoloSiep());
+				lPenCompSqlDao.ricercaPenaComplessivaByIdFascicolo(
+						aDecretoOrdinanzaSiep.getFasSieIdFascicoloSiep());
 				PenaComplessivaModel lPenMod = (PenaComplessivaModel) lPenCompSqlDao.getModelByKey();
 
 				if (lPenMod == null || lPenMod.getCodTipoPenaDetentiva() == null)
@@ -817,10 +817,9 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 				String lFlagErgastolo = "N";
 				// se la Pena Complessiva è un ergastolo o ergastolo con isolamento diurno
-				if (lPenMod.getCodTipoPenaDetentiva() != null
-						&& lPenMod.getCodTipoPenaDetentiva() != ""
-						&& (lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod
-								.getCodTipoPenaDetentiva().equals("04"))) {
+				if (lPenMod.getCodTipoPenaDetentiva() != null && lPenMod.getCodTipoPenaDetentiva() != ""
+						&& (lPenMod.getCodTipoPenaDetentiva().equals("03")
+								|| lPenMod.getCodTipoPenaDetentiva().equals("04"))) {
 					lFlagErgastolo = "S";
 				}
 
@@ -882,8 +881,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 				 * TODO perchè vengono azzerati importo e ammenda?
 				 */
 				lPenaResiduaNuova.setDataInserimento(aDecretoOrdinanzaSiep.getDataInserimento());
-				lPenaResiduaNuova.setCodOperatoreInserimento(aDecretoOrdinanzaSiep
-						.getCodOperatoreInserimento());
+				lPenaResiduaNuova
+						.setCodOperatoreInserimento(aDecretoOrdinanzaSiep.getCodOperatoreInserimento());
 				lPenaResiduaNuova.setCodUfficioInserimento(aDecretoOrdinanzaSiep.getCodUfficioInserimento());
 
 				lPenDao.setDAOFromModel(lPenaResiduaNuova);
@@ -939,8 +938,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			lDecDao = new DecretoOrdinanzaSiepDAO(lConn);
 
 			// cerca l'eventuale record da aggiornare
-			lDecDao.setCondizioneByIdFascicoloSiepFlagNonElaborato(aDecretoOrdinanzaSiep
-					.getFasSieIdFascicoloSiep());
+			lDecDao.setCondizioneByIdFascicoloSiepFlagNonElaborato(
+					aDecretoOrdinanzaSiep.getFasSieIdFascicoloSiep());
 			DecretoOrdinanzaSiepModel lDecModPresente = (DecretoOrdinanzaSiepModel) lDecDao.getModelByKey();
 
 			if (lDecModPresente == null) {
@@ -1075,7 +1074,6 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			cleanup(lEveSqlDAO);
 			cleanup(lSospDao);
 			cleanup(lPenCompSqlDao);
-
 			cleanup(lEveProcDao);
 
 			cleanup(lConn);
@@ -1085,26 +1083,24 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	}
 
 	public EventoModel ExUpdateValidaOrdineEsecuzioneRevoca(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		StatoProcedimentoDAO lStatoDao = null;
 		// PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
-
 		DecretoOrdinanzaSiepDAO lDecDao = null;
 		DecretoOrdinanzaSiepSqlDAO lDecSql = null;
+		EventoDAO lEveDaoBlob = null;
 
 		Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -1235,10 +1231,10 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 				ParametroModel lParModel = (ParametroModel) lIter.next();
 				lSommaAnni = DateUtils.moveDateTo(lScaMod.getDataInizioScadenza(), java.util.Calendar.YEAR,
 						lParModel.getAnni().intValue());
-				lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH, lParModel.getMesi()
-						.intValue());
-				lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH, lParModel
-						.getGiorni().intValue());
+				lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
+						lParModel.getMesi().intValue());
+				lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
+						lParModel.getGiorni().intValue());
 			}
 
 			// MODIFICA
@@ -1323,11 +1319,10 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			cleanup(lDecDao);
 			cleanup(lDecSql);
 			cleanup(lNotEveDao);
-
-			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
+
+			cleanup(lConn);
 		}
 
 		return aEvento;
@@ -1337,9 +1332,10 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	 * Inserisce o modifica i dati del descreto ordinanza siep in caso di revoca di una sospensione
 	 *
 	 *
-	 ************************************************************************** */
+	 */
 	public DecretoOrdinanzaSiepModel ExInserisciRevocaDecretoOrdinanzaSiep(
 			DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep, EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepDAO lDecDao = null;
@@ -1354,6 +1350,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		DecretoOrdinanzaSiepModel lDecMod = null;
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("DecretoOrdinanzaSiep -> " + aDecretoOrdinanzaSiep);
+
 		try {
 			lConn = getDBTransaction();
 
@@ -1367,7 +1364,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			// cerca l'eventuale record da aggiornare
 			DecretoOrdinanzaSiepModel lDecModPresente = null;
 			if (lDecMod.getIdDecretoOrdinanzaSiep() != null) {
-				lDecDao.setCondizioneByIdDecretoOrdinanzaFlagNonElaborato(lDecMod.getIdDecretoOrdinanzaSiep());
+				lDecDao.setCondizioneByIdDecretoOrdinanzaFlagNonElaborato(
+						lDecMod.getIdDecretoOrdinanzaSiep());
 				lDecModPresente = (DecretoOrdinanzaSiepModel) lDecDao.getModelByKey();
 			}
 
@@ -1500,12 +1498,12 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			lPenSqlDao = new PenaResiduaSqlDAO(lConn);
 			/*
-			 * lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(lDecMod.getFasSieIdFascicoloSiep
-			 * ()); PenaResiduaModel lPenaResiduaValidata = (PenaResiduaModel) lPenSqlDao.getModelByKey();
-			 * lPenSqlDao.stop();
+			 * lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(lDecMod.
+			 * getFasSieIdFascicoloSiep ()); PenaResiduaModel lPenaResiduaValidata = (PenaResiduaModel)
+			 * lPenSqlDao.getModelByKey(); lPenSqlDao.stop();
 			 */
-			lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidataSospesa(lDecMod
-					.getFasSieIdFascicoloSiep());
+			lPenSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidataSospesa(
+					lDecMod.getFasSieIdFascicoloSiep());
 			PenaResiduaModel lPenaResiduaValidataSospesa = (PenaResiduaModel) lPenSqlDao.getModelByKey();
 
 			if (lPenaResiduaValidataSospesa == null)
@@ -1542,8 +1540,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			ex.printStackTrace();
 
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciRevocaDecretoOrdinanzaSiep: "
-					+ ex);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciRevocaDecretoOrdinanzaSiep: " + ex);
 		} catch (SIEPException siepEx) {
 			rollback(lConn);
 
@@ -1555,8 +1553,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			ex.printStackTrace();
 
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciRevocaDecretoOrdinanzaSiep: "
-					+ ex);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciRevocaDecretoOrdinanzaSiep: " + ex);
 		} finally {
 			cleanup(lDecDao);
 			cleanup(lEveDao);
@@ -1575,6 +1573,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public Vector ExRicercaDecretoOrdinanzaSiep(DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lDecretoOrdinanzaSiei = new Vector();
@@ -1599,6 +1598,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	}
 
 	public DecretoOrdinanzaSiepModel ExRicercaDecretoOrdinanzaSiepByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecDao = null;
@@ -1611,8 +1611,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			lDecDao.ricercaDecretoOrdinanzaSiepByKey(aKey);
 			lDecMod = (DecretoOrdinanzaSiepModel) lDecDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("DecretoOrdinanzaSiepController.ExRicercaDecretoOrdinanzaSiepByKey: "
-					+ daoEx);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExRicercaDecretoOrdinanzaSiepByKey: " + daoEx);
 		} finally {
 			cleanup(lDecDao);
 			cleanup(lConn);
@@ -1622,13 +1622,14 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector<DecretoOrdinanzaSiepModel> ExRicercaDecretoOrdinanzaSiepByIdFasc(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecSqlDao = null;
@@ -1645,8 +1646,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExRicercaDecretoOrdinanzaSiepByIdFasc: "
-					+ daoEx);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExRicercaDecretoOrdinanzaSiepByIdFasc: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -1656,9 +1657,9 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	}
 
 	// RICERCA DECRETO PER CODICE_OGGETTO PROCEDIEMENTO
-
 	public DecretoOrdinanzaSiepModel ExRicercaDecretoOrdinanzaSiepByOggettoProcedimento(String[] aOggetto,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecDao = null;
@@ -1684,6 +1685,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public DecretoOrdinanzaSiepModel ExRicercaUltimaDecretoOrdinanzaSiepByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecDao = null;
@@ -1712,6 +1714,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public DecretoOrdinanzaSiepModel ExRicercaUltimaDecretoOrdinanzaSiepByIdEvento(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecDao = null;
@@ -1738,6 +1741,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public DecretoOrdinanzaSiepModel ExRicercaUltimaDecretoOrdinanzaSiepByDecretoOrdinanzaIdFascicolo(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1782,7 +1786,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	/**
 	 * Inserisce/Modifica - il decreto_ordinanza_siep - l'evento (legato al decreto/ordinanza) - calcola e
 	 * inserisce la pena residua - inserisce la sospensione calcolando l'eventuale pena espiata
-	 * 
+	 *
 	 * @param aDecreto
 	 * @param aEvento
 	 * @param aTipo
@@ -1794,6 +1798,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	public DecretoOrdinanzaSiepModel ExInserisciOModificaDecretoSospensione(
 			DecretoOrdinanzaSiepModel aDecreto, EventoModel aEvento, String atipo,
 			CalcoloPenaModel aCalcoloPenaModel) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1803,13 +1808,13 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		SospensioneSqlDAO lSospSqlDAO = null;
 		SospensioneDAO lSospDAO = null;
-		SospensioneModel lSosMod = null;
 		PenaResiduaDAO lPenResDao = null;
-		Vector lPeneResidue = null;
 		PenaComplessivaSqlDAO lPenCompSqlDao = null;
-		;
-		DecretoOrdinanzaSiepModel lDecMod = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
+
+		Vector lPeneResidue = null;
+		DecretoOrdinanzaSiepModel lDecMod = null;
+		SospensioneModel lSosMod = null;
 		EventoModel lEveRet = new EventoModel(aEvento);
 
 		try {
@@ -1842,11 +1847,11 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			// Verifico se presente decreto di ordinanza ?????????????????????????????
 			if (atipo.equals("I")) {
 				// lDecSqlDAO.ricercaDecretoOrdinanzaSiepInterruzioneByFascicoloSiepFlagElaborato(aEvento.getFasSieIdFascicoloSiep());
-				lDecSqlDAO.ricercaDecretoOrdinanzaSiepByFascicoloSiepFlagElaborato(aEvento
-						.getFasSieIdFascicoloSiep());
+				lDecSqlDAO.ricercaDecretoOrdinanzaSiepByFascicoloSiepFlagElaborato(
+						aEvento.getFasSieIdFascicoloSiep());
 			} else {
-				lDecSqlDAO.ricercaDecretoOrdinanzaSiepByFascicoloSiepFlagElaborato(aEvento
-						.getFasSieIdFascicoloSiep());
+				lDecSqlDAO.ricercaDecretoOrdinanzaSiepByFascicoloSiepFlagElaborato(
+						aEvento.getFasSieIdFascicoloSiep());
 			}
 
 			lDecModPresente = (DecretoOrdinanzaSiepModel) lDecSqlDAO.getModelByKey();
@@ -1902,8 +1907,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			lEveRic.setCodTipoEvento("01"); // Provvedimento
 			lEveRic.setFasSieIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep());
 			if (atipo.equals("I")) { // ?????????????????
-				lSqlDAO.ricercaEventoDecretoOrdinanzaInterruzioneNonRegistrato(aEvento
-						.getFasSieIdFascicoloSiep());
+				lSqlDAO.ricercaEventoDecretoOrdinanzaInterruzioneNonRegistrato(
+						aEvento.getFasSieIdFascicoloSiep());
 			}
 
 			if (atipo.equals("S") || atipo.equals("E")) {
@@ -1989,8 +1994,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 
 			// Cerca l'ultima pena residua validata...
-			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(lDecMod
-					.getFasSieIdFascicoloSiep());
+			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(
+					lDecMod.getFasSieIdFascicoloSiep());
 			PenaResiduaModel lUltimaPenaResidua = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 			// ...se non la trova cerca l'ultima in assoluto
 			if (lUltimaPenaResidua == null) {
@@ -2044,10 +2049,9 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			// Verifico il tipo di pena (se ergastolo)
 			String lFlagErgastolo = "N";
-			if (lPenMod.getCodTipoPenaDetentiva() != null
-					&& lPenMod.getCodTipoPenaDetentiva() != ""
-					&& (lPenMod.getCodTipoPenaDetentiva().equals("03") || lPenMod.getCodTipoPenaDetentiva()
-							.equals("04"))) {
+			if (lPenMod.getCodTipoPenaDetentiva() != null && lPenMod.getCodTipoPenaDetentiva() != ""
+					&& (lPenMod.getCodTipoPenaDetentiva().equals("03")
+							|| lPenMod.getCodTipoPenaDetentiva().equals("04"))) {
 				lFlagErgastolo = "S";
 			}
 
@@ -2063,8 +2067,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			if (lFlagErgastolo.equals("N")
 					&& (!aEvento.getCodMotivo().equals("0268") && !aEvento.getCodMotivo().equals("0269"))) {
 				// Pena Ricalcolata sul
-				PenaResiduaModel lPenaResiduaIniziale = aCalcoloPenaModel.getPenaDaEspiare(
-						lUltimaPenaResidua.getDataInizio(), null, "all");
+				PenaResiduaModel lPenaResiduaIniziale = aCalcoloPenaModel
+						.getPenaDaEspiare(lUltimaPenaResidua.getDataInizio(), null, "all");
 
 				if (atipo.equals("I"))
 					aCalcoloPenaModel.calcolaPenaDaSospensione(lPenaResiduaIniziale,
@@ -2214,8 +2218,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 				lSospensione.setPenResIdPenaResidua(lKeyPena);
 				lSospensione.setFasSieIdFascicoloSiep(aDecreto.getFasSieIdFascicoloSiep());
-				lSospensione.setNumGiorniLibanticipata(new BigDecimal(aCalcoloPenaModel
-						.getLiberazioneAnticipata()));
+				lSospensione.setNumGiorniLibanticipata(
+						new BigDecimal(aCalcoloPenaModel.getLiberazioneAnticipata()));
 
 				lSospensione.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
 				lSospensione.setDataInserimento(aEvento.getDataInserimento());
@@ -2225,8 +2229,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 					lSospensione.setFlagInterruzione("S");
 
 				if (atipo.equals("E"))
-					lSospensione.setDataFine(DateUtils.moveDateTo(lDecMod.getDataEspulsione(), Calendar.YEAR,
-							10));
+					lSospensione.setDataFine(
+							DateUtils.moveDateTo(lDecMod.getDataEspulsione(), Calendar.YEAR, 10));
 
 				lSospDAO.setDAOFromModel(lSospensione);
 				/* BigDecimal lKeySosp = */lSospDAO.insert();
@@ -2238,13 +2242,13 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		} catch (DAOException daoEx) {
 
 			rollback(lConn);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciOModificaDecretoSospensione: "
-					+ daoEx);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciOModificaDecretoSospensione: " + daoEx);
 		} catch (SQLException sqe) {
 
 			rollback(lConn);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciOModificaDecretoSospensione: "
-					+ sqe);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciOModificaDecretoSospensione: " + sqe);
 		} catch (SIEPException siepEx) {
 			rollback(lConn);
 
@@ -2255,8 +2259,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			ex.printStackTrace();
 
 			rollback(lConn);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciOModificaDecretoSospensione: "
-					+ ex);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciOModificaDecretoSospensione: " + ex);
 		} finally {
 			cleanup(lPenCompSqlDao);
 			cleanup(lPenResDao);
@@ -2277,6 +2281,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public DecretoOrdinanzaSiepModel ExModificaDecretoOrdinanzaSiep(
 			DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepDAO lDecDao = null;
@@ -2304,6 +2309,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public void ExCancellaDecretoOrdinanzaSiep(DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepDAO lDecDao = null;
@@ -2327,7 +2333,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	/**
 	 * Inserisce/Modifica
-	 * 
+	 *
 	 * @param aDecreto
 	 * @param aEvento
 	 * @return
@@ -2336,6 +2342,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	public EventoModel ExInserisciProvvedimentoGenerico(EventoModel aEvento, CampoNotaModel aCampo,
 			DepositoDecretoModel aDecreto, DepositoOrdinanzaPcModel aOrdinanza, TenoreModel aTenore)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2401,8 +2408,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		} catch (DAOException daoEx) {
 
 			rollback(lConn);
-			throw new F3BException("DecretoOrdinanzaSiepController.ExInserisciProvvedimentoGenerico: "
-					+ daoEx);
+			throw new F3BException(
+					"DecretoOrdinanzaSiepController.ExInserisciProvvedimentoGenerico: " + daoEx);
 		} catch (SIEPException siepEx) {
 			rollback(lConn);
 
@@ -2437,15 +2444,15 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 	public EventoModel ExUpdateValidaProvvedimentoGenerico(EventoModel aEvento, String lCodStato)
 			throws F3BException {
+
 		Connection lConn = null;
+		Connection lConnBlob = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
-		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		try {
@@ -2485,8 +2492,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 
 			// Cerca l'ultima pena residua validata...
-			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(aEvento
-					.getFasSieIdFascicoloSiep());
+			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepUltimaValidata(
+					aEvento.getFasSieIdFascicoloSiep());
 			PenaResiduaModel lUltimaPenaResidua = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 			// ...se non la trova cerca l'ultima in assoluto
 			if (lUltimaPenaResidua == null) {
@@ -2543,25 +2550,25 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			daoEx.printStackTrace();
 
-			throw new F3BException("ExUpdateValidaOrdineScarcerazione.ExUpdateValidaProvvedimentoGenerico : "
-					+ daoEx);
+			throw new F3BException(
+					"ExUpdateValidaOrdineScarcerazione.ExUpdateValidaProvvedimentoGenerico : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			rollback(lConnBlob);
 
 			ex.printStackTrace();
 
-			throw new F3BException("ExUpdateValidaOrdineScarcerazione.ExUpdateValidaProvvedimentoGenerico : "
-					+ ex);
+			throw new F3BException(
+					"ExUpdateValidaOrdineScarcerazione.ExUpdateValidaProvvedimentoGenerico : " + ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lEveSqlDao);
 			cleanup(lStatoDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lPenResDao);
+			cleanup(lEveDaoBlob);
 
 			cleanup(lConn);
-			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
 
@@ -2572,6 +2579,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	public EventoModel ExInserisciProvvedimentoDecisioneCassazioneRiesame(EventoModel aEvento,
 			EventoModel aEventoOrdDec, DecretoOrdinanzaSiepModel aDecretoOrdinanzaSiep,
 			MisuraSicurezzaModel aMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -2627,7 +2635,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 							lMisDao.update();
 							// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							// siesLogger.debug(" --XX-- DecretoOrdinanzaSiepController : Misura Modificata LuogoEsecuzMisura = "+lMis
+							// siesLogger.debug(" --XX-- DecretoOrdinanzaSiepController : Misura Modificata
+							// LuogoEsecuzMisura = "+lMis
 							// );
 						}
 					}
@@ -2648,7 +2657,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 					lKey = lMisDao.insert();
 					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
 					// di LogF3B.getLogger()
-					// siesLogger.debug(" --XX-- DecretoOrdinanzaSiepController : Misura Inserita = "+aMisuraSicurezza
+					// siesLogger.debug(" --XX-- DecretoOrdinanzaSiepController : Misura Inserita =
+					// "+aMisuraSicurezza
 					// );
 
 					lMisSqlDao = new MisuraSicurezzaSqlDAO(lConn);
@@ -2667,7 +2677,8 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 								lMisDao.update();
 								// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 								// siesLogger al posto di LogF3B.getLogger()
-								// siesLogger.debug(" --XX-- DecretoOrdinanzaSiepController : Misura Old Modificata MisIdMisura = "+lMis
+								// siesLogger.debug(" --XX-- DecretoOrdinanzaSiepController : Misura Old
+								// Modificata MisIdMisura = "+lMis
 								// );
 							}
 						}
@@ -2715,11 +2726,11 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 		}
 
 		return aEvento;
-
 	} // CHIUDE ExInserisciProvvedimentoDecisioneCassazioneRiesame()
 
 	public DecretoOrdinanzaSiepModel ExRicercaDecretoOrdinanzaSiepByIdEventoSemplice(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecDao = null;
@@ -2755,6 +2766,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 	// 01-09-2015 MEV_2 - Misure Sicurezza STEP2-
 	public void ExValidaAnnotazioneDecisioneGiudiceCassazioneRiesame(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiepDAO lFascDao = null;
@@ -2783,7 +2795,7 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			 * if (lEveModel != null && lEveModel.getIdEvento()!= null && lEveModel.getCodMotivo() != null) {
 			 * lMotivo=lEveModel.getCodMotivo(); lStatoProcMod = "0512"; // annotazione Decisione Sorveglianza
 			 * if (lStatoProcMod.compareTo("") != 0) { BigDecimal lKeyEvento = lEveModel.getIdEvento();
-			 * 
+			 *
 			 * // InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
 			 * lStatoProcMod, lKeyEvento); } }
 			 */
@@ -2831,10 +2843,10 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 								// siesLogger.info("--XX-- Vecchia Misura - " + lMisOldMod);
 								if (lMisOldMod != null && lMisOldMod.getIdMisuraSicurezza() != null) {
 									lMisOldMod.setDataAggiornamento(aEvento.getDataAggiornamento());
-									lMisOldMod.setCodUfficioAggiornamento(aEvento
-											.getCodUfficioAggiornamento());
-									lMisOldMod.setCodOperatoreAggiornamento(aEvento
-											.getCodOperatoreAggiornamento());
+									lMisOldMod
+											.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
+									lMisOldMod.setCodOperatoreAggiornamento(
+											aEvento.getCodOperatoreAggiornamento());
 									lMisOldMod.setDataFineValidita(lEveModel.getDataEmissione());
 
 									lMisDAO.setDAOFromModelForUpdate(lMisOldMod);
@@ -2912,13 +2924,11 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 
 			// ---------------------
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			daoEx.printStackTrace();
-
 			throw new F3BException(
 					"DecretoordinanzaSiepController.ExValidaAnnotazioneDecisioneGiudiceCassazioneRiesame : "
 							+ daoEx);
@@ -2927,7 +2937,6 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			siesLogger.error("Exception: " + ex, ex);
 			rollback(lConn);
 			ex.printStackTrace();
-
 			throw new F3BException(
 					"DecretoordinanzaSiepController.ExValidaAnnotazioneDecisioneGiudiceCassazioneRiesame : "
 							+ ex);
@@ -2942,13 +2951,12 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 			cleanup(lMisSqlDao);
 			cleanup(lMisDAO);
 			cleanup(lConn);
-
 		}
-
-	}// Chiude ExValidaAnnotazioneDecisioneGiudiceCassazioneRiesame()
+	} // Chiude ExValidaAnnotazioneDecisioneGiudiceCassazioneRiesame()
 
 	public Vector ExRicercaDecretoOrdinanzaSiepGiudiceCassazione(BigDecimal aIdFas, String[] aCodici)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		DecretoOrdinanzaSiepSqlDAO lDecSqlDao = null;

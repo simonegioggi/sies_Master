@@ -7,6 +7,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.utente.model.UtenteModel;
@@ -30,11 +35,6 @@ import siap.siep.sospensione.dao.SospensioneSqlDAO;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.statoesecuzione.controller.StatoEsecuzioneController;
 import siap.util.SIESSwitch;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StampaCPController extends StampaController {
@@ -44,17 +44,17 @@ public class StampaCPController extends StampaController {
 
 	/*****************************************************************************
 	 * Preleva i dati dal DB per le stampe delle Sanzioni Sostitutive
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return il treeModel riempito con tutti i dati selezionati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public TreeModel prelevaDatiRichiestaConversione(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
-		StampaEventoUtils lStampaEvento = new StampaEventoUtils();
 
 		FascicoloSiepSqlDAO lFasDao = null;
 		EventoSqlDAO lEventoSqlDAO = null;
@@ -65,11 +65,11 @@ public class StampaCPController extends StampaController {
 		ScadenzarioSqlDAO lScadenzarioSqlDao = null;
 		PenaResiduaSqlDAO lPenaResDao = null;
 		SospensioneSqlDAO lSospSql = null;
-		SospensioneModel lSosp = null;
 		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
-		// RichiestaConversioneDAO lRicDao = null;
 		RichiestaConversioneSqlDAO lRicSqlDao = null;
 
+		StampaEventoUtils lStampaEvento = new StampaEventoUtils();
+		SospensioneModel lSosp = null;
 		BigDecimal lKeyFascicolo = aEveModel.getEvento().getFasSieIdFascicoloSiep();
 
 		try {
@@ -269,9 +269,7 @@ public class StampaCPController extends StampaController {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx, daoEx);
 			throw new F3BException(this.getClass().getName() + ".prelevaDatiRichiestaConversione: " + daoEx);
-		}
-
-		catch (Exception sqe) {
+		} catch (Exception sqe) {
 			sqe.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + sqe, sqe);
@@ -286,8 +284,9 @@ public class StampaCPController extends StampaController {
 			cleanup(lPenaResDao);
 			cleanup(lSospSql);
 			cleanup(lSSSqlDAO);
-			// cleanup(lRicDao);
 			cleanup(lRicSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScadenzarioSqlDao);
 
 			cleanup(lConn);
 		}

@@ -187,11 +187,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	// Metodi pubblici, per entry point richiesta stampe per funzionalità.
-
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell' Emissione Ordinanza.
-	 * <p>
 	 *
 	 * @param EventoModel
 	 *            Evento Model.
@@ -201,6 +198,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaEmissioneOrdinanza(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		return ExPreStampaEmissioneOrdinanza(lEvento, aCodUff, aUtenteModel, null);
 	}
 
@@ -212,6 +210,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private ByteArrayOutputStream ExPreStampaEmissioneOrdinanza(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel, DocumentoAllegatoModel aDocAll) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -229,10 +228,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeMisSic = null;
 		// 21/01/2007 Fascicolo SIUS Origine + eventuale EMA.
 		TreeModel lTreeFasOri = null;
-
 		TreeModel lTreeEventoNotifiche = null;
 
 		Connection lConn = null;
+
 		FascicoloGPModel lFasGP = null;
 		FascicoloGPModel lFasGPMisAlt = null;
 		FascicoloGPModel lFasGPMisSic = null;
@@ -408,29 +407,14 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private ByteArrayOutputStream ExPreStampaFoglioComplementareNsc(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel, DocumentoAllegatoModel aDocAll) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		// Oggetti TreeModel componenti del documento di stampa
 		TreeModel lRoot = null;
-		// TreeModel lTreeFasSIUS = null;
-		// TreeModel lTreeFasSIEP = null;
-		// TreeModel lTreeGenProc = null;
-		// TreeModel lTreeSentenza = null;
-		// TreeModel lTreeEsecuzioneMA = null;
-		// TreeModel lTreeOrdinanza = null;
-		// TreeModel dell'eventuale Ordinanza di Riferimento (da revocare)
-		// TreeModel lTreeOrdinanzaRiferimento = null;
-		// TreeModel lTreeMisAlt = null;
-		// TreeModel lTreeMisSic = null;
-		// 21/01/2007 Fascicolo SIUS Origine + eventuale EMA.
-		// TreeModel lTreeFasOri = null;
-		// TreeModel lTreeEventoNotifiche = null;
 
 		Connection lConn = null;
-		// FascicoloGPModel lFasGP = null;
-		// FascicoloGPModel lFasGPMisAlt = null;
-		// FascicoloGPModel lFasGPMisSic = null;
 
 		// Report generator per la costruzione del report
 		ReportGenerator lReport = null;
@@ -444,108 +428,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// connessione al Db
 			lConn = getDBConnection();
 
-			// // ricerca FascicoloSIUSGPmodel
-			// lFasGP = getFascicoloGPSius(lEvento.getFasSiuIdFascicoloSius(), lConn);
-			//
-			// if (lFasGP == null)
-			// throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo inesistente : " +
-			// lEvento.getFasSiuIdFascicoloSius());
-
 			// creazione delle varie foglie componenti del documento TreeModel
 			lRoot = new TreeModel(CreateRoot(aCodUff, lConn));
-
-			// // Fascicolo SIUS
-			// lTreeFasSIUS = prelevaDatiFascicoloSius( lFasGP, lEvento.getIdEvento(), aDocAll, lConn );
-
-			// // 23/05/2006 Ricerca idfascicolo sius per misura alternativa solo per S22
-			// if (lFasGP.getGeneraleProcedimentoModel() != null &&
-			// lFasGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null &&
-			// lFasGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S22") == 0)
-			// {
-			// IFascicoloSius CtrlFasGP = SIUSLookupRemote.getFascicoloSiusRemote();
-			// lFasGPMisAlt = CtrlFasGP.ExRicercaFascicoloByAnnoProgrCodUfficioFast(
-			// lFasGP.getGeneraleProcedimentoModel().getAnnoS1(),
-			// lFasGP.getGeneraleProcedimentoModel().getProgrS1(),
-			// aCodUff,
-			// lConn);
-			// }
-			//
-			// // Generale Procedimento
-			// lTreeGenProc = new TreeModel(lFasGP.getGeneraleProcedimentoModel());
-			// // 23/05/2006 Aggregazione lTreeMisAlt.
-			// if(lFasGPMisAlt != null && lFasGPMisAlt.getFascicoloSiusModel() != null )
-			// lTreeMisAlt =
-			// prelevaDatiEsecuzioneMA(lFasGPMisAlt.getFascicoloSiusModel().getIdFascicoloSius(),lConn);
-			//
-			// // 23/05/2006 Ricerca idfascicolo sius per misura alternativa solo per S09
-			// if (lFasGP.getGeneraleProcedimentoModel() != null &&
-			// lFasGP.getGeneraleProcedimentoModel().getCodTipoRegistro() != null &&
-			// lFasGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S09") == 0)
-			// {
-			// IFascicoloSius CtrlFasGP = SIUSLookupRemote.getFascicoloSiusRemote();
-			// lFasGPMisSic = CtrlFasGP.ExRicercaFascicoloByAnnoProgrCodUfficioFast(
-			// lFasGP.getGeneraleProcedimentoModel().getAnnoS1(),
-			// lFasGP.getGeneraleProcedimentoModel().getProgrS1(),
-			// aCodUff,
-			// lConn);
-			// }
-			//
-			// // Generale Procedimento
-			// lTreeGenProc = new TreeModel(lFasGP.getGeneraleProcedimentoModel());
-			// // 23/05/2006 Aggregazione lTreeMisSic.
-			// if(lFasGPMisSic != null && lFasGPMisSic.getFascicoloSiusModel() != null )
-			// lTreeMisSic =
-			// prelevaDatiEsecuzioneMS(lFasGPMisSic.getFascicoloSiusModel().getIdFascicoloSius(),lConn);
-			//
-			//
-			// // 22/01/2007 Fascicolo SIUS Origine.
-			// if(lFasGP.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null )
-			// lTreeFasOri =
-			// prelevaDatiFascicoloSiusOrigine(lFasGP.getFascicoloSiusModel().getIdFascicoloSiusOrigine(),
-			// lConn);
-			// // Ordinanza
-			// lTreeOrdinanza = prelevaDatiDepositoOrdinanzaPC(lEvento.getIdEvento(),lConn);
-			//
-			// // Nel caso sia valorizzato l'ID_EVE_ID_EVENTO si risale all'Ordinanza relativa
-			// //Dati di Deposito Ordinanza da Revocare
-			// if (lTreeOrdinanza != null && lEvento.getEveIdEvento() != null)
-			// {
-			// // Se il Decreto ha un decreto di Riferimento
-			// lTreeOrdinanzaRiferimento = prelevaDatiDepositoOrdinanzaPC(lEvento.getEveIdEvento(),lConn);
-			// if (lTreeOrdinanzaRiferimento != null)
-			// {
-			// lTreeOrdinanza.add(lTreeOrdinanzaRiferimento);
-			// lTreeOrdinanza.add(prelevaDatiFascicoloSiusByIdEvento( lEvento.getEveIdEvento(),lConn ));
-			// }
-			// }
-			//
-			// lTreeFasSIEP =
-			// prelevaDatiFascicoloSiep(lFasGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep(), lConn);
-			// lTreeSentenza = prelevaDatiSentenza(lFasGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep() ,
-			// lConn);
-			// // 23/05/2006 lTreeEsecuzioneMA = prelevaDatiEsecuzioneMA(lEvento.getFasSiuIdFascicoloSius(),
-			// lConn);
-			//
-			// lTreeEventoNotifiche = prelevaDatiEventoNotifiche(lEvento.getIdEvento() ,lConn);
-			//
-			// // Recupera dati Periodo Altra Sanzione attraverso l'evento.
-			// prelevaDatiPeriodoAltraSanzioneByEvento(lEvento.getIdEvento(),lTreeEventoNotifiche, lConn );
-			//
-			// // COSTRUZIONE DEL DOCUMENTO
-			// lTreeGenProc.add(lTreeMisAlt);
-			// lTreeGenProc.add(lTreeMisSic);
-			// // 23/05/2006 lTreeGenProc.add(lTreeEsecuzioneMA);
-			// lTreeFasSIUS.add(lTreeOrdinanza);
-			// // 23/01/2007 Aggiunto il Fascicolo SIUS Origine con indentata l'eventuale EMA ;
-			// if (lTreeFasOri != null )
-			// lTreeFasSIUS.add(lTreeFasOri);
-			//
-			// lTreeFasSIUS.add(lTreeEventoNotifiche);
-			//
-			// lRoot.add(lTreeFasSIUS);
-			// lRoot.add(lTreeGenProc);
-			// lRoot.add(lTreeFasSIEP);
-			// lRoot.add(lTreeSentenza);
 
 			// CREAZIONE DEL TEMPLATE
 			// Ricavo nome del template
@@ -578,10 +462,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa di alcuni tipi di Ordinanza: Ordinanza di Rinvio Udienza,
 	 * Generazione Modelli.
-	 * <p>
 	 *
 	 * @param FascicoloGPModel
-	 *            ;
 	 * @param EventoModel
 	 *            Evento;
 	 * @param UtenteModel
@@ -592,11 +474,13 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaDocumentoOrdinanza(FascicoloGPModel aFasc,
 			EventoNotificaModel aEvento, UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ExPreStampaDocumentoOrdinanza : inizio");
+
 		try {
 			aEvento.getEvento().setDescrUfficioEmittente(aEvento.getEvento().getDescrUfficioEmittente());
 
@@ -628,7 +512,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell' Emissione Decreto.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del fascicolo SIUS.
@@ -638,6 +521,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaEmissioneDecreto(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		return ExPreStampaEmissioneDecreto(lEvento, aCodUff, aUtenteModel, null);
 	}
 
@@ -649,6 +533,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private ByteArrayOutputStream ExPreStampaEmissioneDecreto(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel, DocumentoAllegatoModel aDocAll) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -672,6 +557,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeFasOri = null;
 
 		Connection lConn = null;
+
 		FascicoloGPModel lFasGP = null;
 		FascicoloGPModel lFasGPMisAlt = null;
 		FascicoloGPModel lFasGPMisSic = null;
@@ -813,9 +699,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -826,7 +710,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa del Verbale Udienza.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del fascicolo SIUS.
@@ -837,6 +720,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	public ByteArrayOutputStream ExPreStampaVerbaleUdienza(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -850,6 +734,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeLuogoDetenzione = null;
 
 		Connection lConn = null;
+
 		FascicoloGPModel lFasGP = null;
 		// TemplateModel lTemplate = null;
 		Vector lAvvocati = new Vector();
@@ -939,7 +824,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell'Allegato dell'Ordinanza, Decreto o Sentenza.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSius
 	 *            Id del Procedimento SIUS.
@@ -949,9 +833,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @throws SIUSException
 	 *             propaga l'errore di eccezione.
 	 */
-
 	public ByteArrayOutputStream ExPreStampaAllegato(BigDecimal aIdFascicoloSius,
 			DocumentoAllegatoModel aDAMod, String aCodUff, UtenteModel aUtenteModel) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -969,6 +853,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeMisSic = null;
 
 		TemplateModel lTemplate = null;
+
 		Connection lConn = null;
 
 		// Oggetti Model Utilizzati.
@@ -1083,17 +968,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			siesLogger.info("######## NOME TEMPLATE >>>" + lNomeTemplate);
 			lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocument(lRoot, lNomeTemplate);
 			// lByteArrayInput = new ByteArrayInputStream( lByteArrayOut.toByteArray() );
-
-		}
-
-		catch (F3BException e) {
+		} catch (F3BException e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("StampaController.ExPreStampaAllegato Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1104,7 +984,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa del Fissazione Udienza.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del fascicolo SIUS.
@@ -1114,6 +993,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaFissazioneUdienza(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".ExPreStampaFissazioneUdienza : inizio");
@@ -1141,9 +1021,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		BigDecimal lIdUdienza = null;
 		// Report generator per la costruzione del report
 		ReportGenerator lReport = null;
-
-		// UfficioSqlDAO lUDao = null;
-		// UfficioModel lUffMod = null;
 
 		try {
 			// connessione al Db
@@ -1229,7 +1106,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Classe per il prelievo dati del Fascicolo al fine di visualizzarli.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del Fascicolo SIUS.
@@ -1240,6 +1116,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	public TreeModel ExPrelevaDatiVideo(BigDecimal aIdFasSius, int[] aTipoDati) throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeDati = null;
 		try {
@@ -1251,9 +1128,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeDati;
@@ -1261,7 +1136,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Classe Public per il prelievo dati del Fascicolo al fine di creare un report.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del Fascicolo SIUS.
@@ -1275,6 +1149,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public TreeModel ExPrelevaDatiStampa(BigDecimal aIdFasSius, int[] aTipoDati, String aCodiceUfficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeDati = null;
 		try {
@@ -1287,9 +1162,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeDati;
@@ -1297,7 +1170,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Classe Public per il aggiungere dati ad un treeModel esistente.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del Fascicolo SIUS.
@@ -1311,6 +1183,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public TreeModel ExAggiungiDatiStampa(BigDecimal aIdFasSius, int[] aTipoDati, TreeModel lTreeDati)
 			throws F3BException {
+
 		Connection lConn = null;
 		try {
 			lConn = getDBConnection(); // connessione al Db
@@ -1320,9 +1193,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeDati;
@@ -1330,6 +1201,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	public ByteArrayOutputStream ExPreStampaModelliAttiIstruttori(BigDecimal aIdFascicoloSius, String aCodUff,
 			UtenteModel aUtente, String lTemIdTemplate) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -1345,6 +1217,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeSentenza = null;
 
 		Connection lConn = null;
+
 		FascicoloGPModel lFasGP = null;
 
 		Vector lAvvocati = new Vector();
@@ -1434,9 +1307,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1447,6 +1318,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	public ByteArrayOutputStream ExPreStampaAvvocato(BigDecimal aIdAvvocato, BigDecimal aIdFascicoloSius,
 			String aCodUff, String lTemIdTemplate, UtenteModel aUtenteModel) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -1554,15 +1426,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("######## NOME TEMPLATE >>>" + lNomeTemplate);
 			lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocument(lRoot, lNomeTemplate);
-
 		} catch (F3BException e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1573,7 +1442,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell' Impugnazione.
-	 * <p>
 	 *
 	 * @param aIdImpugnazione
 	 *            (id dell'impugnazione).
@@ -1585,10 +1453,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @throws SIUSException
 	 *             propaga l'errore di eccezione.
 	 */
-
 	public ByteArrayOutputStream ExPreStampaImpugnazione(BigDecimal lIdImpugnazione, BigDecimal lIdEvento,
 			BigDecimal lIdFascicolo, String lIdTemplate, String aCodUff, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -1606,7 +1474,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeMisSic = null;
 		TreeModel lTreeMagRelatore = null;
 		TreeModel lTreeSentenza = null;
-
 		TreeModel lTreeLuogoDetenzione = null;
 		TreeModel lTreeEventoNotifiche = null;
 
@@ -1774,9 +1641,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1787,7 +1652,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * 04/01/2005 - Genera il ByteArrayOutputStream per la stampa dell' Elenco procedimenti del soggetto.
-	 * <p>
 	 *
 	 * @param lSoggetto
 	 *            (model del Soggetto).
@@ -1801,10 +1665,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @throws SIUSException
 	 *             propaga l'errore di eccezione.
 	 */
-
 	public ByteArrayOutputStream ExPreStampaProcedimentiDelSoggetto(SoggettoModel lSoggetto,
 			Vector lFascicoliGPModel, String aIdDocumento, XModel aStampa, String aCodUff,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -1933,8 +1797,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			cleanup(lConn);
 		}
 
-		// ReportGenerator lReport = new ReportGenerator();
-
 		ReportGenerator lReport = new ReportGenerator(aUtenteModel.getUfficioUtente().getCodUfficio());
 
 		String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aIdDocumento);
@@ -1948,7 +1810,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * 20/06/2005 - Genera il ByteArrayOutputStream per la stampa delle Richieste Atti.
-	 * <p>
 	 *
 	 * @param aEvento
 	 *            (model dell' Evento),
@@ -1962,6 +1823,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaRichiestaAtti(EventoModel aEvento, String aCodUff,
 			UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -1972,8 +1834,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeFasSIUS = null;
 		TreeModel lTreeFasSiep = null;
 		TreeModel lTreeEvento = null;
-		// TreeModel lTreeDecreto = null;
-		// TreeModel lTreeDecretoRiferimento = null;
 
 		try {
 			lConn = getDBConnection(); // connessione al Db
@@ -2040,7 +1900,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * 20/06/2005 - Genera il ByteArrayOutputStream per la stampa dell'Elenco Richieste Parere.
-	 * <p>
 	 *
 	 * @param aParere
 	 *            (ParereModel)
@@ -2054,6 +1913,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaPareri(ParereModel aParere, Vector aListaRichieste,
 			UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -2105,8 +1965,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		}
 
 		// generazione del documento con nome template fisso
-		// ReportGenerator lReport = new ReportGenerator();
-
 		ReportGenerator lReport = new ReportGenerator(aUtente.getUfficioUtente().getCodUfficio());
 		String lNomeTemplate = TemplateManager.getInstance().getTemplateName("SIUS_RP_005");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -2121,7 +1979,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell'Elenco di Notifiche o Comunicazioni X Fascicolo
 	 * SIUS.
-	 * <p>
 	 *
 	 * @param aFiltroNotifica
 	 *            (RicercaNotificheSiusModel)
@@ -2135,6 +1992,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaNotificheSius(RicercaNotificheSiusModel aFiltroNotifica,
 			Vector aListaNotifiche, UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -2181,7 +2039,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 				lTreeRoot.add(lTreeNotifica);
 			}
-
 		} catch (Exception lEx) {
 			throw new SIUSException("StampaController.ExPreStampaNotificheSius : " + lEx);
 		} finally {
@@ -2218,8 +2075,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *
 	 * @return aBranch.
 	 */
-
 	private TreeModel aggiungiDestinatario(TreeModel aBranch, NotificaFasSiusEveModel aNotifica) {
+
 		// UFFICIO
 		if (aNotifica.getUfficio() != null)
 			aBranch.add(new TreeModel(aNotifica.getUfficio()));
@@ -2242,95 +2099,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		return aBranch;
 	}
 
-	// ////////////////// SIEPE ////////////////////////
-	/**
-	 * Genera il ByteArrayOutputStream per la stampa dell'Attività.
-	 * <p>
-	 *
-	 * @param EventoModel
-	 *            Evento Model.
-	 * @return ByteArrayOutputStream.
-	 * @throws F3BException
-	 *             propaga l'errore di eccezione.
-	 */
-	/*
-	 * public ByteArrayOutputStream ExPreStampaAttivitaSiepe(FascicoloSiepeModel LFasSiepe, String aCodUff,
-	 * UtenteModel aUtenteModel) throws F3BException { // ArrayOutput restituito dalla funzione
-	 * ByteArrayOutputStream lByteArrayOut = null;
-	 *
-	 * // Oggetti TreeModel componenti del documento di stampa TreeModel lRoot = null; TreeModel lTreeFasSIUS
-	 * = null; TreeModel lTreeFasSIEP = null; TreeModel lTreeSoggetto = null;
-	 *
-	 * TreeModel lTreeGenProc = null; TreeModel lTreeSentenza = null; // TreeModel lTreeEsecuzioneMA = null;
-	 * TreeModel lTreeOrdinanza = null; TreeModel lTreeMisAlt = null;
-	 *
-	 *
-	 * Connection lConn = null; FascicoloGPModel lFasGP = null; FascicoloGPModel lFasGPMisAlt = null;
-	 *
-	 * // Report generator per la costruzione del report ReportGenerator lReport = null; // [FT] - 03/08/2016
-	 * - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.debug("ExPreStampaAttivitaSiepe : inizio"); try { if (LFasSiepe == null) throw new
-	 * SIUSException(SIUSException.USER_MESSAGE, "Fascicolo SIEPE assente ! ");
-	 *
-	 * // connessione al Db lConn = getDBConnection();
-	 *
-	 *
-	 *
-	 * // ricerca FascicoloSIUSGPmodel lFasGP = getFascicoloGPSius(LFasSiepe.getFasSiuIdFascicoloSius(),
-	 * lConn);
-	 *
-	 *
-	 * // creazione delle varie foglie componenti del documento TreeModel lRoot = new
-	 * TreeModel(CreateRoot(aCodUff, lConn));
-	 *
-	 * // Fascicolo SIUS lTreeFasSIUS = prelevaDatiFascicoloSius( lFasGP, lEvento.getIdEvento(),lConn );
-	 *
-	 * // 23/05/2006 Ricerca idfascicolo sius per misura alternativa solo per S22 if
-	 * (lFasGP.getGeneraleProcedimentoModel().getCodTipoRegistro().compareTo("S22") == 0) { IFascicoloSius
-	 * CtrlFasGP = SIUSLookupRemote.getFascicoloSiusRemote(); lFasGPMisAlt =
-	 * CtrlFasGP.ExRicercaFascicoloByAnnoProgrCodUfficioFast(
-	 * lFasGP.getGeneraleProcedimentoModel().getAnnoS1(), lFasGP.getGeneraleProcedimentoModel().getProgrS1(),
-	 * aCodUff, lConn); }
-	 *
-	 * // Generale Procedimento lTreeGenProc = new TreeModel(lFasGP.getGeneraleProcedimentoModel()); //
-	 * 23/05/2006 Aggregazione lTreeMisAlt. if(lFasGPMisAlt != null && lFasGPMisAlt.getFascicoloSiusModel() !=
-	 * null ) lTreeMisAlt =
-	 * prelevaDatiEsecuzioneMA(lFasGPMisAlt.getFascicoloSiusModel().getIdFascicoloSius(),lConn);
-	 *
-	 * // Ordinanza lTreeOrdinanza = prelevaDatiDepositoOrdinanzaPC(lEvento.getIdEvento(),lConn);
-	 *
-	 * lTreeFasSIEP = prelevaDatiFascicoloSiep(lFasGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep(),
-	 * lConn); lTreeSentenza = prelevaDatiSentenza(lFasGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep() ,
-	 * lConn); // 23/05/2006 lTreeEsecuzioneMA = prelevaDatiEsecuzioneMA(lEvento.getFasSiuIdFascicoloSius(),
-	 * lConn);
-	 *
-	 *
-	 * // COSTRUZIONE DEL DOCUMENTO lTreeGenProc.add(lTreeMisAlt); // 23/05/2006
-	 * lTreeGenProc.add(lTreeEsecuzioneMA); lTreeFasSIUS.add(lTreeOrdinanza);
-	 *
-	 *
-	 * lRoot.add(lTreeFasSIUS); lRoot.add(lTreeGenProc); lRoot.add(lTreeFasSIEP); lRoot.add(lTreeSentenza);
-	 *
-	 * // CREAZIONE DEL TEMPLATE // Ricavo nome del template String lNomeTemplate =
-	 * TemplateManager.getInstance().getTemplateName(lEvento.getTemIdTemplate()); //lReport = new
-	 * ReportGenerator(); lReport = new ReportGenerator(aUtenteModel.getUfficioUtente().getCodUfficio());
-	 *
-	 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.info("######## NOME TEMPLATE >>>" + lNomeTemplate);
-	 *
-	 * lByteArrayOut = (ByteArrayOutputStream)lReport.generateDocument(lRoot,lNomeTemplate); // [FT] -
-	 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.debug("generate document eseguito" ); } catch( F3BException e ) { // [FT] - 03/08/2016 -
-	 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.warn("Exception: " + e ); throw e; } finally { cleanup(lConn); } // [FT] - 03/08/2016 -
-	 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 * siesLogger.debug("ExPreStampaAttivitaSiepe : fine"); return lByteArrayOut; }
-	 */
-
-	// ////////////////////////////////////////////////
-
 	// Metodi private di preleva dati.
-
 	/**
 	 * La funzione costruisce il TreeModel relativo al Fascicolo SIUS I dati aggregati come foglie sono:
 	 * FOGLIO COMPLEMENTARE con cod 06; TENORI legati al Generale Procedimento attualmente attivi; AVVOCATI
@@ -2346,9 +2115,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @throws SIUSException
 	 *             propaga l'errore di eccezione.
 	 */
-
 	private TreeModel prelevaDatiFascicoloSius(FascicoloGPModel lFasGP, BigDecimal aIdEvento,
 			Connection aConn) throws F3BException {
+
 		return prelevaDatiFascicoloSius(lFasGP, aIdEvento, null, aConn);
 	}
 
@@ -2452,7 +2221,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * prelevaDatiFascicoloSius dopo aver ricavato FascicoloGPModel a partire dall'Id Evento.
 	 *
 	 * @param IdEvento
-	 *            ,
 	 * @param aConn
 	 *            connessione al dbase.
 	 * @return dati del Fascicolo SIUS come TreeModel.
@@ -2461,12 +2229,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiFascicoloSiusByIdEvento(BigDecimal aIdEvento, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeFasSIUS = null;
 		FascicoloGPModel lFasGP = null;
 		EventoModel lEvento = null;
 		EventoSqlDAO lEveSqlDao = null;
 		try {
-
 			// Cerca l'Evento by key
 			lEveSqlDao = new EventoSqlDAO(aConn);
 			lEveSqlDao.ricercaEventoByKey(aIdEvento);
@@ -2490,7 +2258,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * La funzione costruisce il TreeModel relativo al solo Fascicolo SIUS Origine e alla sua eventuale EMA.
 	 *
 	 * @param aIdFascicoloOrigine
-	 *            ,
 	 * @param aConn
 	 *            connessione al dbase.
 	 * @param test
@@ -2584,7 +2351,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			DepositoOrdinanzaPcModel lDepOrdMod = (DepositoOrdinanzaPcModel) lDepOrdSqlDao.getModelByKey();
 			if (lDepOrdMod != null && lDepOrdMod.getCodTipoOrdinanza().compareTo("RU") != 0)
 				lTreeFasSIUS.add(new TreeModel(lDepOrdMod));
-
 		} catch (Exception e) {
 			throw new F3BException(e);
 		} finally {
@@ -2597,7 +2363,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati del Soggetto.
-	 * <p>
 	 *
 	 * @param aIdSoggetto
 	 *            l'id del soggetto, prelevato dal fascicolo SIUS.
@@ -2609,6 +2374,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiSoggetto(BigDecimal aIdSoggetto, BigDecimal lIdFasSius, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeSoggetto = null; // new TreeModel();
 		TreeModel lTreeResidenza = null; // new TreeModel();
 		TreeModel lTreeDomicilio = null; // new TreeModel();
@@ -2648,7 +2414,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati Residenza e Domicilio del Soggetto.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del fascicolo sius.
@@ -2660,8 +2425,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiResidenzaDomicilio(BigDecimal aIdFasSius, char lTipo, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeResidenza = null; // new TreeModel();
 		ResidenzaSqlDAO lResSqlDao = null;
+
 		try {
 			lResSqlDao = new ResidenzaSqlDAO(aConn);
 			ResidenzaModel lResMod = new ResidenzaModel();
@@ -2695,7 +2462,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati dell'Udienza.
-	 * <p>
 	 *
 	 * @param aIdUdienza
 	 *            l'id dell'Udienza.
@@ -2706,6 +2472,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiUdienza(BigDecimal aIdUdienza, Connection aConn) throws F3BException {
+
 		TreeModel lTreeUdienza = null; // new TreeModel();
 		UdienzaSqlDAO lUdiDao = null;
 
@@ -2738,7 +2505,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della struttura Evento - Notifiche.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            l'id dell'Evento.
@@ -2749,6 +2515,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiEventoNotifiche(BigDecimal aIdEvento, Connection aConn) throws F3BException {
+
 		TreeModel lTreeEvento = null;
 		EventoSqlDAO lEveDao = null;
 		NotificaSqlDAO lNotDao = null;
@@ -2789,9 +2556,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			throw new SIUSException("StampaController.prelevaDatiEventoNotifiche : " + sqlEx);
 		} catch (Exception Ex) {
 			throw new SIUSException("StampaController.prelevaDatiEventoNotifiche : " + Ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 		}
@@ -2801,7 +2566,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati del Magistrato Relatore.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del Fascicolo SIUS.
@@ -2813,6 +2577,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiMagistratoRelatore(BigDecimal aIdFasSius, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeMagistrato = null; // new TreeModel();
 
 		MagistratoRelatoreSqlDAO lMagRelSqlDao = null;
@@ -2880,7 +2645,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati degli avvocati
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del Fascicolo SIUS.
@@ -2891,6 +2655,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private Vector getAvvocatiFascicolo(BigDecimal aIdFasSius, Connection aConn) throws F3BException {
+
 		AvvocatoFascicoloSiusSqlDAO lAvvSqlDao = null;
 		Vector lAvvMod = new Vector();
 
@@ -2922,7 +2687,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue la ricerca del Fascicolo-GeneraleProcedimentoSIUS.
-	 * <p>
 	 *
 	 * @param aIdFasSius
 	 *            l'id del Fascicolo SIUS.
@@ -2933,6 +2697,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private FascicoloGPModel getFascicoloGPSius(BigDecimal aIdFasSius, Connection aConn) throws F3BException {
+
 		FascicoloGPSqlDAO lFasGPSqlDao = null;
 		FascicoloGPModel lFasGPModel = null;
 		SoggettoSqlDAO lSogSqlDao = null;
@@ -2966,6 +2731,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			throw new SIUSException("StampaController.getFascicoloGPSius : Non posso leggere : " + lEx);
 		} finally {
 			cleanup(lFasGPSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogSqlDao);
 		}
 		return lFasGPModel;
 	}
@@ -2977,9 +2744,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @return lUffMod
 	 * @throws F3BException
 	 */
-
 	private XModel CreateRoot(String aCodiceUfficio, Connection aConn) throws F3BException {
-		// Connection lConn = null;
 
 		UfficioSqlDAO lUDao = null;
 		UfficioModel lUffMod = null;
@@ -3013,7 +2778,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			}
 			if (lUffCAP.getDescrComune() != null)
 				lXMod.setUfficioCAP(lUffCAP.getDescrComune().toUpperCase());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -3031,79 +2795,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		return lXMod;
 	}
 
-	// private TemplateModel getTemplateByCodMotivo(String aCodMotivo, Connection aConn) throws F3BException {
-	// TemplateSqlDAO lTemplateSqlDao = null;
-	// TemplateModel lTemplateMod = null;
-	//
-	// try {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// LogF3B.getLogger()
-	// siesLogger.debug("CodMotivo : " + aCodMotivo);
-	// lTemplateSqlDao = new TemplateSqlDAO(aConn);
-	// lTemplateSqlDao.ricercaTemplateByCodMotivo(aCodMotivo);
-	// lTemplateMod = (TemplateModel) lTemplateSqlDao.getModelByKey();
-	//
-	// if (lTemplateMod == null)
-	// throw new F3BException(F3BException.USER_MESSAGE,
-	// "Template non trovato per il codice motivo richiesto : " + aCodMotivo);
-	//
-	// } catch (DAOException daoEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// LogF3B.getLogger()
-	// siesLogger.debug("DAOException: " + daoEx);
-	// throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : "
-	// + daoEx);
-	// } catch (Exception lEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// LogF3B.getLogger()
-	// siesLogger.debug("Exception: " + lEx);
-	// throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : "
-	// + lEx);
-	// } finally {
-	// cleanup(lTemplateSqlDao);
-	// // cleanup(lConn);
-	// }
-	// return lTemplateMod;
-	// }
-
-	// private TemplateModel getTemplateByCodMotivoFlagTemplate(String aCodMotivo, String aFlagTemplate,
-	// Connection aConn) throws F3BException {
-	// TemplateSqlDAO lTemplateSqlDao = null;
-	// TemplateModel lTemplateMod = null;
-	//
-	// try {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// LogF3B.getLogger()
-	// siesLogger.debug("CodMotivo : " + aCodMotivo);
-	// lTemplateSqlDao = new TemplateSqlDAO(aConn);
-	// lTemplateSqlDao.ricercaTemplateByCodMotivoFlagTemplate(aCodMotivo, aFlagTemplate);
-	// lTemplateMod = (TemplateModel) lTemplateSqlDao.getModelByKey();
-	//
-	// if (lTemplateMod == null)
-	// throw new F3BException(F3BException.USER_MESSAGE,
-	// "Template non trovato per il codice motivo richiesto : " + aCodMotivo + " Ufficio:"
-	// + aFlagTemplate);
-	//
-	// } catch (DAOException daoEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// LogF3B.getLogger()
-	// siesLogger.debug("DAOException: " + daoEx);
-	// throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : "
-	// + daoEx);
-	// } catch (Exception lEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// LogF3B.getLogger()
-	// siesLogger.debug("Exception: " + lEx);
-	// throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : "
-	// + lEx);
-	// } finally {
-	// cleanup(lTemplateSqlDao);
-	// // cleanup(lConn);
-	// }
-	// return lTemplateMod;
-	// }
-
 	private TemplateModel getTemplateByIdTemplate(String aIdTemplate, Connection aConn) throws F3BException {
+
 		TemplateSqlDAO lTemplateSqlDao = null;
 		TemplateModel lTemplateMod = null;
 
@@ -3134,7 +2827,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Generale procedimento.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            chaive id del generale procedimento.
@@ -3143,6 +2835,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private Vector getTenoriByGenProc(BigDecimal aKey, Connection aConn) throws F3BException {
+
 		TenoreSqlDAO lTenDao = null;
 		Vector lTenoriMod = new Vector();
 
@@ -3183,6 +2876,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiLuogoDetenzioneSius(BigDecimal aIdFasSIUS, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeLuogoDetenzione = null; // new TreeModel();
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod;
@@ -3241,6 +2935,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiIstitutoDetenzione(String aKey, Connection aConn) throws F3BException {
+
 		TreeModel lTreeLuogoDetenzione = null; // new TreeModel();
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod;
@@ -3286,7 +2981,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati esclusivamente del FascicoloSIUS senza ulteriori dati.
-	 * <p>
 	 *
 	 * @param lKeyFascicolo
 	 *            chiave fascicolo SIEP.
@@ -3298,6 +2992,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiFascicoloSiepOnly(BigDecimal lKeyFascicolo, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeFasMod = new TreeModel();
 
 		FascicoloSiepSqlDAO lFasDao = null;
@@ -3334,7 +3029,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati del FascicoloSIEP.
-	 * <p>
 	 *
 	 * @param lKeyFascicolo
 	 *            Chiave del Fascicolo SIEP.
@@ -3352,24 +3046,23 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiFascicoloSiep(BigDecimal lKeyFascicolo, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeFasMod = new TreeModel();
 
 		Connection lConn = null;
 
 		SoggettoModel lSoggetto = null;
+
 		SoggettoSqlDAO lSogSqlDao = null;
 		FascicoloSiepSqlDAO lFasDao = null;
 		MisuraCautelareSqlDAO lMisDao = null;
 		ReatoSqlDAO lReaDao = null;
-
 		AvvocatoSiepxStampaSqlDAO lAvvDao = null;
-
 		PenaComplessivaSqlDAO lPenDao = null;
 		PenaAccessoriaSqlDAO lPenAccDao = null;
 		PosizioneGiuridicaSqlDAO lPosGiuDao = null;
 		BeneficioSqlDAO lBenDao = null;
 		LuogoDetenzioneSqlDAO lLuoDao = null;
-
 		AltraCausaSqlDAO lAltCauDao = null;
 		MisuraSicurezzaSqlDAO lMisSicDao = null;
 		PenaResiduaSqlDAO lPenaResDao = null;
@@ -3379,7 +3072,11 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		siesLogger.debug("Preleva dati fascicolo SIEP " + lKeyFascicolo);
 		if (lKeyFascicolo != null) {
 			try {
-				lConn = aConn;
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				if (aConn != null)
+					lConn = aConn;
+				else
+					lConn = getDBConnection();
 
 				// Fascicolo
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3487,6 +3184,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				cleanup(lPenAccDao);
 				cleanup(lMisSicDao);
 				cleanup(lPenaResDao);
+
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				if (aConn == null)
+					cleanup(lConn);
 			}
 		}
 		return lTreeFasMod;
@@ -3494,7 +3195,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della Sentenza.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIEP
 	 *            id del FascicoloSIEP.
@@ -3505,10 +3205,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiSentenza(BigDecimal aIdFascicoloSIEP, Connection aConn) throws F3BException {
+
 		TreeModel lTreeSenMod = new TreeModel();
 
 		FascicoloSiepSqlDAO lFasDao = null;
 		SentenzaSqlDAO lSenDao = null;
+
 		if (aIdFascicoloSIEP != null) {
 			try {
 				// Fascicolo
@@ -3522,7 +3224,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				SentenzaModel lSenModel = (SentenzaModel) lSenDao.getModelByKey();
 
 				lTreeSenMod = new TreeModel(lSenModel);
-
 			} catch (DAOException daoEx) {
 				daoEx.printStackTrace();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3537,6 +3238,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				throw new F3BException("StampaController.prelevaDatiSentenza: Eccezione Generica: " + sqe);
 			} finally {
 				cleanup(lSenDao);
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lFasDao);
 			}
 		}
 		return lTreeSenMod;
@@ -3544,7 +3247,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati DepositoOrdinanzaPC.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            id del Evento.
@@ -3556,9 +3258,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiDepositoOrdinanzaPC(BigDecimal aIdEvento, Connection aConn)
 			throws F3BException {
-		TreeModel lTreeOrdMod = new TreeModel();
 
-		// DepositoOrdinanzaPcSqlDAO lDepDao = null;
+		TreeModel lTreeOrdMod = new TreeModel();
 		DepositoOrdinanzaPcModel lDepMod;
 
 		try {
@@ -3646,7 +3347,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// Esecuzione Misura di Sicurezza,per id depositoOrdinanzaPC
 			lTreeOrdMod.add(prelevaDatiEsecuzioneMSByIdOrdinanza(lDepMod.getIdDepositoOrdinanzaPc(), aConn));
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3654,8 +3354,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			siesLogger.debug("Exception: " + e);
 			throw new F3BException(
 					"StampaController.prelevaDatiDepositoOrdinanzaPC: Eccezione Generica: " + e);
-		} finally {
-			// cleanup(lDepDao);
 		}
 
 		return lTreeOrdMod;
@@ -3663,7 +3361,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati Prescrizioni.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            id del Evento a cui sono legate le Prescrizioni.
@@ -3677,8 +3374,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private void addPrescrizioni(BigDecimal aIdEvento, Connection aConn, TreeModel aTree)
 			throws F3BException {
+
 		PrescrizioneSqlDAO lPreDao = null;
 		Vector lPrescrizioni = null;
+
 		try {
 			lPreDao = new PrescrizioneSqlDAO(aConn);
 			lPreDao.ricercaPrescrizioneByIdEve(aIdEvento);
@@ -3733,7 +3432,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati Licenze e Periodi di Libertà Anticipata.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            id del Evento.
@@ -3744,6 +3442,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private void addLicenzaPeriodiLibAnt(BigDecimal aIdEvento, TreeModel aTree) throws F3BException {
+
 		TreeModel lTreeLicenza = null;
 		// Licenze e Periodi di Liberazione Anticipata
 		ILicenzaPeriodiLibAnticipata lCtrlDep = SICOLookupRemote.getLicenzaPeriodiLibAntRemote();
@@ -3767,7 +3466,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati DepositoDecreto.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            id del Evento.
@@ -3836,7 +3534,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					while (lItx.hasNext())
 						lTreeDepMod.add(new TreeModel(((TenoreModel) lItx.next())));
 				}
-
 			}
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
@@ -3860,7 +3557,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	private Vector getDestinatari(Vector aNotifiche, BigDecimal lIdFasSius, Connection aConn)
 			throws F3BException {
+
 		Vector retNotifiche = new Vector();
+
 		AutoritaEsternaSqlDAO lAutoritaSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
 		CSSASqlDAO lCSSASqlDao = null;
@@ -3967,6 +3666,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			cleanup(lCSSASqlDao);
 			cleanup(lAvvDao);
 			cleanup(lAvvSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstDao);
+			cleanup(lCurSqlDao);
+			cleanup(lCurSiusDao);
 		}
 
 		return retNotifiche;
@@ -3974,7 +3677,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	private TreeModel iperPrelevaDati(BigDecimal aFasSIUS, int[] aTipoDati, TreeModel lTreeDati,
 			Connection lConn) throws F3BException {
-		// ArrayOutput restituito dalla funzione
 
 		// Oggetti TreeModel componenti del documento di stampa
 		TreeModel lTreeResidenza = null;
@@ -3997,6 +3699,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("iperPrelevaDati : inizio");
+
 		try {
 
 			for (int i = 0; i < aTipoDati.length; i++) {
@@ -4163,9 +3866,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			siesLogger.debug("Exception: " + e);
 			throw e;
 		}
-
-		finally {
-		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ExPreDatiFascicolo : fine");
@@ -4248,7 +3948,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			siesLogger.debug("Exception: " + sqe);
 			throw new F3BException(
 					"StampaController.prelevaDatiNotificheDestinatari: Eccezione Generica: " + sqe);
-		} finally {
 		}
 
 		return aTree;
@@ -4260,6 +3959,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiCampoNota(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
+
 		// CampoNote
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
 		Vector lCampiNote = null;
@@ -4291,6 +3991,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiMotivazioniDecreto(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
+
 		// Motivazioni
 		MotivazioneDecretoSqlDAO lMotSqlDao = new MotivazioneDecretoSqlDAO(aConn);
 		Vector lMotivazioneDecreti = null;
@@ -4319,7 +4020,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	/**
 	 * Metodo che recupera i dati di Periodo altra Sanzione afferenti all' ID Evento e li aggiunge. al
 	 * TreeModel passato come parametro in modalità by reference.
-	 * <p>
 	 *
 	 * @param aIDEvento
 	 *            ID dell' Evento corrente.
@@ -4332,9 +4032,11 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private void prelevaDatiPeriodoAltraSanzioneByEvento(BigDecimal aIDEvento, TreeModel aTree,
 			Connection aConn) throws F3BException {
+
 		// Periodo Altra Sanzione.
 		PeriodoAltraSanzioneSqlDAO lPeriodoAltraSanzSqlDao = new PeriodoAltraSanzioneSqlDAO(aConn);
 		TreeModel lTreePeriodoAltraSanz = null;
+
 		try {
 			if (aIDEvento != null) {
 				// Periodo Altra Sanzione.
@@ -4354,7 +4056,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della struttura Evento - Notifiche.
-	 * <p>
 	 *
 	 * @param aFascKey
 	 *            l'id del fascicolo.
@@ -4366,9 +4067,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @throws SIUSException
 	 *             propaga l'errore di eccezione.
 	 */
-
 	private TreeModel prelevaDatiNotificheByFascicoloSius(BigDecimal aFascKey, String aTipoEvento,
 			TreeModel aTree, Connection aConn) throws F3BException {
+
 		TreeModel lTreeNotifiche = aTree;
 		Vector lNotifiche = null;
 		EveNotificaSqlDAO lNotDao = null;
@@ -4398,7 +4099,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della struttura Evento - Notifiche.
-	 * <p>
 	 *
 	 * @param aFascKey
 	 *            l'id del fascicolo.
@@ -4412,6 +4112,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiEventoByFascicoloSius(BigDecimal aFascKey, String aTipoEvento,
 			TreeModel aTree, Connection aConn) throws F3BException {
+
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
 
@@ -4448,8 +4149,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public TreeModel ExPrelevaDatiEvento(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeEvento = null;
 		try {
@@ -4459,9 +4160,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			throw e;
 		} catch (Exception ex) {
 			throw (new F3BException(ex));
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeEvento;
@@ -4469,7 +4168,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della struttura Evento - Notifiche - Provvedimenti.
-	 * <p>
 	 *
 	 * @param aEveKey
 	 *            l'id dell'Evento.
@@ -4480,13 +4178,14 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	// STUB 09/02/2005 Vincenzo.
-
 	private TreeModel prelevaDatiEvento(EventoModel aEvento, Connection aConn) throws F3BException {
+
 		TreeModel lTreeEvento = null;
 		TreeModel lTreeOrdinanza = null;
 		TreeModel lTreeDecreto = null;
 
 		NotificaSqlDAO lNotDao = null;
+
 		try {
 			lTreeEvento = new TreeModel(aEvento);
 
@@ -4536,7 +4235,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della struttura Evento - Notifiche.
-	 * <p>
 	 *
 	 * @param aFascKey
 	 *            l'id del fascicolo.
@@ -4550,6 +4248,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiAltroEventoByFascicoloSius(BigDecimal aFascKey, String aTipoEvento,
 			TreeModel aTree, Connection aConn) throws F3BException {
+
 		EventoSqlDAO lEveDao = null;
 		Vector lEventi = null;
 
@@ -4581,7 +4280,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Preleva dati dai dao ed li organizza gerarchicamente.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSius
 	 * @param StampaModel
@@ -4589,6 +4287,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDati(BigDecimal aIdFascicoloSius, int[] aTipoDati, TreeModel lTreeDati,
 			Connection lConn) throws F3BException {
+
 		TreeModel lTreeRoot = lTreeDati;
 
 		// SoggettoSqlDAO lSogSqlDao = null;
@@ -4674,7 +4373,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// Colpo Finale :))
 			lTreeRoot.add(lTreeFasSiusModel);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4696,7 +4394,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della Esecuzione Misura Alternativa.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIUS
 	 *            id del FascicoloSIUS.
@@ -4707,10 +4404,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiEsecuzioneMA(BigDecimal aKey, Connection aConn) throws F3BException {
+
 		TreeModel lTreeEMCMod = new TreeModel();
 
 		EsecuzioneMisuraAlternativaSqlDAO lEseDao = null;
 		EsecuzioneMisuraAlternativaModel lEseMod;
+
 		try {
 			if (aKey != null) {
 				lEseDao = new EsecuzioneMisuraAlternativaSqlDAO(aConn);
@@ -4718,9 +4417,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				lEseMod = (EsecuzioneMisuraAlternativaModel) lEseDao.getModelByKey();
 				lTreeEMCMod = new TreeModel(lEseMod);
 			}
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4741,7 +4438,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della Esecuzione Misura Sicurezza.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIUS
 	 *            id del FascicoloSIUS.
@@ -4752,10 +4448,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiEsecuzioneMS(BigDecimal aKey, Connection aConn) throws F3BException {
+
 		TreeModel lTreeEMCMod = new TreeModel();
 
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod;
+
 		try {
 			if (aKey != null) {
 				lEseDao = new EsecuzioneMisuraSicurezzaSqlDAO(aConn);
@@ -4763,9 +4461,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 				lEseMod = (EsecuzioneMisuraSicurezzaModel) lEseDao.getModelByKey();
 				lTreeEMCMod = new TreeModel(lEseMod);
 			}
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4786,7 +4482,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della Esecuzione Misura Sicurezza, attraverso l'id del DepositoOrdinanzaPC
-	 * <p>
 	 *
 	 * @param aKey
 	 *            id Ordinanza.
@@ -4798,10 +4493,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiEsecuzioneMSByIdOrdinanza(BigDecimal aKey, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeEMCMod = new TreeModel();
 
 		EsecuzioneMisuraSicurezzaSqlDAO lEseDao = null;
 		EsecuzioneMisuraSicurezzaModel lEseMod;
+
 		try {
 			if (aKey != null) {
 				lEseDao = new EsecuzioneMisuraSicurezzaSqlDAO(aConn);
@@ -4832,7 +4529,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati della Esecuzione Sanzione Sostitutiva.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIUS
 	 *            id del FascicoloSIUS.
@@ -4843,10 +4539,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiEsecuzioneSS(BigDecimal aKey, Connection aConn) throws F3BException {
+
 		TreeModel lTreeESSMod = new TreeModel();
 
 		EsecuzioneSanzioneSostitutivaSqlDAO lESSDao = null;
 		PeriodoAltraSanzioneSqlDAO lPASqlDao = null;
+
 		EsecuzioneSanzioneSostitutivaModel lESSMod;
 		Vector lListaPAS = new Vector();
 
@@ -4877,9 +4575,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					}
 				}
 			}
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4901,7 +4597,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * STUB 11/10/2004 Si prelevano i dati di Riferimento Fascicolo Siep.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIUS
 	 *            id del FascicoloSIUS.
@@ -4913,6 +4608,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiRifasiep(TreeModel aTreeModel, BigDecimal aIdFascicoloSIUS, Connection aConn)
 			throws F3BException {
+
 		if (aTreeModel != null) {
 			RiferimentoFascicoloSiepModel lRFSMod = new RiferimentoFascicoloSiepModel();
 			lRFSMod.setFasSiuIdFascicoloSius(aIdFascicoloSIUS);
@@ -4966,6 +4662,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiTitoliEsecutiviReferenziati(TreeModel aTreeModel,
 			BigDecimal aIdFascicoloSius, BigDecimal aNumFascUnificati, Connection aConn) throws F3BException {
+
 		if (aTreeModel != null) {
 			FascicoloSiepSqlDAO lFSiepSqlDao = null;
 			SentenzaSqlDAO lSenSqlDao = null;
@@ -4992,7 +4689,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					lSenSqlDao = new SentenzaSqlDAO(aConn);
 					lSenSqlDao.ricercaSentenzaBykey(lFSiepMod.getSenIdSentenza());
 					SentenzaModel lSenModel = (SentenzaModel) lSenSqlDao.getModelByKey();
-					cleanup(lSenSqlDao);
 					// Add della Sentenza al TreeModel.
 					aTreeModel.add(new TreeModel(lSenModel));
 
@@ -5027,7 +4723,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 						// Add della Pena Residua al TreeModel.
 						aTreeModel.add(new TreeModel(lPenResMod));
 					}
-
 				}
 				lFSiepSqlDao.stop();
 			} catch (DAOException daoEx) {
@@ -5046,6 +4741,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			} finally {
 				cleanup(lFSiepSqlDao);
 				cleanup(lSenSqlDao);
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lPenComDao);
+				cleanup(lPenaResDao);
 			}
 		} else
 			throw new F3BException(
@@ -5063,8 +4761,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 
 	private BigDecimal cercaIdUdienzaByTdEvento(BigDecimal aIdEvento) throws F3BException {
+
 		BigDecimal lIdUdienza = null;
 		UdienzaProcedimentoModel lUdienzaProcedimento = null;
+
 		try {
 			// Chiama il controller Udienza_Procedimento per risalire all'Udienza
 			IUdienzaProcedimento lUdiProCtrl = SIUSLookupRemote.getUdienzaProcedimentoRemote();
@@ -5083,6 +4783,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 			String aCodUfficio) throws F3BException {
 
 		TreeModel lTree = new TreeModel();
+
 		FascicoloGPSqlDAO lFasDao = null;
 		UdienzaSqlDAO lUdiDao = null;
 		DepositoOrdinanzaPcSqlDAO lOrdDao = null;
@@ -5091,10 +4792,10 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
+
 		Vector lTenoriGenPro = new Vector();
 
 		Connection lConn = null;
-		// BigDecimal lKeyFascicolo = new BigDecimal(0);
 
 		try {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -5255,14 +4956,11 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	}
 
 	/**
-	 * Crea la root del Documento di Stampa Modello Ordinanza
-	 * <p>
-	 * Questa funzione fa uso della CreateRoot() per creare l'intestazione standard del documento di stampa.
-	 * Poi però sull modello standard creato (XModel) effettua delle modifiche riguardo la descrizione
-	 * dell'Ufficio.
+	 * Crea la root del Documento di Stampa Modello Ordinanza Questa funzione fa uso della CreateRoot() per
+	 * creare l'intestazione standard del documento di stampa. Poi però sull modello standard creato (XModel)
+	 * effettua delle modifiche riguardo la descrizione dell'Ufficio.
 	 *
 	 * @param aEveModel
-	 *            ;
 	 * @param Connection
 	 *            aConn;
 	 * @param String
@@ -5294,7 +4992,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell'Elenco del Numero di procedimenti fissati ai vari
 	 * Magistrati Relatori per Udienze in un certo intervallo di Date..
-	 * <p>
 	 *
 	 * @param UdienzaModel
 	 *            .
@@ -5304,6 +5001,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaUdienzeMagistratiProcedimenti(UdienzaModel aUdienza,
 			XModel aStampaMod, String aIdTemplate) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -5331,6 +5029,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	private TreeModel prelevaDatiUdienzeMagistratiProcedimenti(UdienzaModel aUdienza, XModel aStampaMod)
 			throws F3BException {
+
 		// Intestazione del documento
 		TreeModel lTreeRoot = new TreeModel(aStampaMod);
 
@@ -5357,7 +5056,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell'Elenco di Procedimenti SIUS per estremi
 	 * Provvedimenti
-	 * <p>
 	 *
 	 * @param aFiltroRicerca
 	 *            (RicercaOrdinanzaModel)
@@ -5371,6 +5069,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaProcSiusXProv(RicercaOrdinanzaModel aFiltroRicerca,
 			Vector aElenco, UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -5442,7 +5141,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 				lTreeRoot.add(lTreeProcedimento);
 			}
-
 		} catch (Exception lEx) {
 			throw new SIUSException("StampaController.ExPreStampaProcSiusXProv : " + lEx);
 		} finally {
@@ -5478,7 +5176,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati dell' Esecuzione Sanzione Sostitutiva
-	 * <p>
 	 *
 	 * @param aTreeFasSius
 	 *            Tre model del Fascicolo SIUS.
@@ -5492,12 +5189,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaEsecuzioneSanzioneSostitutiva(TreeModel aTreeFasSius,
 			BigDecimal aIdFascicoloSIUS, Connection aConn) throws F3BException {
+
 		TreeModel lTreeESS = null; // new TreeModel();
 
 		Vector lListaPAS = new Vector();
 
 		EsecuzioneSanzioneSostitutivaSqlDAO lESSqlDao = null;
-
 		PeriodoAltraSanzioneSqlDAO lPASqlDao = null;
 
 		try {
@@ -5535,13 +5232,11 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 						}
 					}
 				}
-
 			} else {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("##### metodo prelevaEsecuzioneSanzioneSostitutiva : Dati non presenti");
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -5573,6 +5268,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaFoglioComplementare(DocumentoAllegatoModel aDocAll,
 			String aCodUff, UtenteModel aUtenteModel) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -5606,6 +5302,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	public ByteArrayOutputStream ExPreStampaProvvedimentiPermessiLicenza(
 			CriteriRicercaProvPermessiLicenzeModel aCriteriRicerca, UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		ByteArrayOutputStream lByteArrayOut = null;
 		TreeModel lTreeRoot = null;
@@ -5720,9 +5417,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @return
 	 * @throws F3BException
 	 */
-
 	private TreeModel prelevaRichiesteConversione(TreeModel aTreeFasSius, BigDecimal aIdFascicoloSIUS)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger
@@ -5758,9 +5455,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @return
 	 * @throws F3BException
 	 */
-
 	private TreeModel prelevaMisureSicurezza(TreeModel aTreeFasSius, BigDecimal aIdFascicoloSIUS)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("##### Ricerca Misure Sicurezza per Fascicolo SIUS con ID : " + aIdFascicoloSIUS);
@@ -5794,9 +5491,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 * @return
 	 * @throws F3BException
 	 */
-
 	private TreeModel prelevaRichiesteRemissione(TreeModel aTreeFasSius, BigDecimal aIdFascicoloSIUS)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger
@@ -5835,6 +5532,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaEmissioneSentenza(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		return ExPreStampaEmissioneSentenza(lEvento, aCodUff, aUtenteModel, null);
 	}
 
@@ -5846,6 +5544,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private ByteArrayOutputStream ExPreStampaEmissioneSentenza(EventoModel lEvento, String aCodUff,
 			UtenteModel aUtenteModel, DocumentoAllegatoModel aDocAll) throws F3BException {
+
 		// ArrayOutput restituito dalla funzione
 		ByteArrayOutputStream lByteArrayOut = null;
 
@@ -6006,7 +5705,6 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	/**
 	 * Esegue il prelievo dati DepositoSentenza.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            id del Evento.
@@ -6018,6 +5716,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	private TreeModel prelevaDatiDepositoSentenza(BigDecimal aIdEvento, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeSenMod = new TreeModel();
 		DepositoSentenzaModel lDepMod;
 
@@ -6048,14 +5747,12 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					}
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw new F3BException("StampaController.prelevaDatiDepositoSentenza: Eccezione Generica: " + e);
-		} finally {
 		}
 
 		return lTreeSenMod;
@@ -6064,10 +5761,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa di alcuni tipi di Sentenza: Ordinanza di Rinvio Udienza,
 	 * Generazione Modelli.
-	 * <p>
 	 *
 	 * @param FascicoloGPModel
-	 *            ;
 	 * @param EventoModel
 	 *            Evento;
 	 * @param UtenteModel
@@ -6078,6 +5773,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaDocumentoSentenza(FascicoloGPModel aFasc,
 			EventoNotificaModel aEvento, UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -6114,7 +5810,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 	private TreeModel prelevaDatiDocumentoSentenza(EventoNotificaModel aEvento, FascicoloGPModel lFasModel,
 			String aCodUfficio) throws F3BException {
+
 		TreeModel lTree = new TreeModel();
+
 		FascicoloGPSqlDAO lFasDao = null;
 		UdienzaSqlDAO lUdiDao = null;
 		DepositoSentenzaSqlDAO lSenDao = null;
@@ -6122,6 +5820,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
+
 		Vector lTenoriGenPro = new Vector();
 
 		Connection lConn = null;
@@ -6266,14 +5965,11 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	}
 
 	/**
-	 * Crea la root del Documento di Stampa Modello Sentenza
-	 * <p>
-	 * Questa funzione fa uso della CreateRoot() per creare l'intestazione standard del documento di stampa.
-	 * Poi però sull modello standard creato (XModel) effettua delle modifiche riguardo la descrizione
-	 * dell'Ufficio.
+	 * Crea la root del Documento di Stampa Modello Sentenza Questa funzione fa uso della CreateRoot() per
+	 * creare l'intestazione standard del documento di stampa. Poi però sull modello standard creato (XModel)
+	 * effettua delle modifiche riguardo la descrizione dell'Ufficio.
 	 *
 	 * @param aEveModel
-	 *            ;
 	 * @param Connection
 	 *            aConn;
 	 * @param String
@@ -6312,6 +6008,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 	 */
 	public ByteArrayOutputStream ExPreStampaProcSiusXProv(RicercaProvvedimentoModel aFiltroRicerca,
 			Vector aElenco, UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 

@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.evento.dao.EventoDAO;
@@ -20,9 +23,6 @@ import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.sospensione.dao.SospensioneDAO;
 import siap.siep.sospensione.model.PeriodoInterruzioneModel;
 import siap.siep.sospensione.model.SospensioneModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import f3b.util.F3BException;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version 1.0
  */
@@ -48,6 +48,7 @@ public class InterruzioneController extends SiapController implements IInterruzi
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public List ExRicercaPeriodiInterruzione(BigDecimal aKeyFascicolo) throws F3BException {
+
 		List lPeriodiInterruzione = new ArrayList();
 
 		EventoDAO lEveDao = null;
@@ -70,8 +71,8 @@ public class InterruzioneController extends SiapController implements IInterruzi
 
 			// AMBROS 05/2013 Aggiunto "09" e "0272" (per tripletta 01 09 0272) - per template SIEP_RIPRI_ESP
 			// (comunicazione)
-			lEveDao.selCondizioneRicerca(aKeyFascicolo, "01", (new String[] { "04", "09" }), (new String[] {
-					"0272", "0272" }), null);
+			lEveDao.selCondizioneRicerca(aKeyFascicolo, "01", (new String[] { "04", "09" }),
+					(new String[] { "0272", "0272" }), null);
 
 			List lListEventiAl = new ArrayList(lEveDao.getModels());
 			lEveDao.stop();

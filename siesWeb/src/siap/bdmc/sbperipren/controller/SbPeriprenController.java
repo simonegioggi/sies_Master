@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.bdmc.sbperipren.dao.SbPeriprenDAO;
 import siap.bdmc.sbperipren.dao.SbPeriprenSqlDAO;
 import siap.bdmc.sbperipren.model.SbPeriprenModel;
 import siap.controller.SiapController;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,13 +32,14 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SbPeripren a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSbPeripren
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
 	 ****************************************************************************/
 	public SbPeriprenModel ExInserisciSbPeripren(SbPeriprenModel aSbPeripren) throws F3BException {
+
 		Connection lConn = null;
 		SbPeriprenDAO lSbPDao = null;
 		SbPeriprenModel lSbPMod = null;
@@ -65,7 +66,7 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati SbPeripren
-	 * 
+	 *
 	 * @param aSbPeripren
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -73,6 +74,7 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbPeripren(SbPeriprenModel aSbPeripren) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbPeriprei = new Vector();
 		SbPeriprenDAO lSbPDao = null;
@@ -84,7 +86,7 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 			lSbPDao.setOrderBy();
 			lSbPDao.start();
 			while (lSbPDao.next()) {
-				lSbPeriprei.add((SbPeriprenModel) lSbPDao.getModel());
+				lSbPeriprei.add(lSbPDao.getModel());
 			}
 			lSbPDao.stop();
 		} catch (Exception daoEx) {
@@ -99,13 +101,14 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public SbPeriprenModel ExRicercaSbPeriprenById(BigDecimal aProgPeriPres) throws F3BException {
+
 		Connection lConn = null;
 		SbPeriprenModel lSbPeriprenMod = new SbPeriprenModel();
 		SbPeriprenSqlDAO lSbPeriprenSqlDao = null;
@@ -116,8 +119,8 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 			lSbPeriprenSqlDao.ricercaSbPeriprenByKey(aProgPeriPres);
 			lSbPeriprenMod = (SbPeriprenModel) lSbPeriprenSqlDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("SbPeriprenController.ExRicercaSbPeriprenById: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbPeriprenController.ExRicercaSbPeriprenById: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbPeriprenSqlDao);
 			cleanup(lConn);
@@ -130,12 +133,13 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 	 * Metodo che modifica i dati dell'SbPeripren Viene fatto l'update di tutti i campi del record recuperando
 	 * i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno impostati a
 	 * null
-	 * 
+	 *
 	 * @param aSbPeripren
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaSbPeripren(SbPeriprenModel aSbPeripren) throws F3BException {
+
 		Connection lConn = null;
 		SbPeriprenDAO lSbPDao = null;
 
@@ -157,11 +161,12 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aSbPeripren
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaSbPeripren(SbPeriprenModel aSbPeripren) throws F3BException {
+
 		Connection lConn = null;
 		SbPeriprenDAO lSbPDao = null;
 
@@ -183,12 +188,13 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aSbPeripren
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountSbPeripren(SbPeriprenModel aSbPeripren) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		SbPeriprenSqlDAO lSbPeriprenSqlDao = null;
@@ -214,7 +220,7 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aSbPeripren
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -223,6 +229,7 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbPeriprenPaged(SbPeriprenModel aSbPeripren, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbPeriprei = new Vector();
 		SbPeriprenSqlDAO lSbPeriprenSqlDao = null;
@@ -233,8 +240,8 @@ public class SbPeriprenController extends SiapController implements ISbPeripren 
 			lSbPeriprenSqlDao.ricercaSbPeriprenPaged(aSbPeripren, aPage);
 			lSbPeriprei = new Vector(lSbPeriprenSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("SbPeriprenController.ExRicercaSbPeriprenPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbPeriprenController.ExRicercaSbPeriprenPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbPeriprenSqlDao);
 			cleanup(lConn);

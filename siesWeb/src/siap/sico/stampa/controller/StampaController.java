@@ -1,9 +1,6 @@
 package siap.sico.stampa.controller;
 
 import java.math.BigDecimal;
-
-import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -13,6 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
+import f3b.util.xml.TreeModel;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.camponota.dao.CampoNotaSqlDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -115,12 +120,6 @@ import siap.siep.ulterioresanzionecumulo.dao.UlterioreSanzioneCumuloSqlDAO;
 import siap.siep.ulterioresanzionecumulo.model.UlterioreSanzioneCumuloModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.util.SIESSwitch;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -135,23 +134,24 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StampaController extends SIAPStampaController implements IStampa {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * prelevaDatiEventoSiepXAnnotazioni
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return il TreeModel che contiene anche tutte le annotazioni manuali
 	 * @throws F3BException
 	 */
-	public TreeModel prelevaDatiEventoSiepXAnnotazioni(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
-			throws F3BException {
+	public TreeModel prelevaDatiEventoSiepXAnnotazioni(EventoNotificaModel aEveModel,
+			UtenteModel aUtenteModel) throws F3BException {
 
 		Connection lConn = null;
 
@@ -205,7 +205,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 						EventoModel lEveAnnMan = null;
 
 						for (Iterator iter = lListaEventi.iterator(); iter.hasNext();) {
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
 							siesLogger.debug("Ciclo For");
 
 							lEveAnnMan = (EventoModel) iter.next();
@@ -218,10 +219,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 									&& lEveAnnMan.getCodTipoProvvedimento() != null
 									&& lEveAnnMan.getCodMotivo() != null) {
 								String lCodMotivo = lEveAnnMan.getCodMotivo();
-								if (("26".equals(lEveAnnMan.getCodTipoProvvedimento()) && "0290"
-										.equals(lCodMotivo))
-										|| ("26".equals(lEveAnnMan.getCodTipoProvvedimento()) && "0287"
-												.equals(lCodMotivo))) {
+								if (("26".equals(lEveAnnMan.getCodTipoProvvedimento())
+										&& "0290".equals(lCodMotivo))
+										|| ("26".equals(lEveAnnMan.getCodTipoProvvedimento())
+												&& "0287".equals(lCodMotivo))) {
 									// Formatta per il template la stringa reclusione e arresto
 									lAnnMod.calcolaStringaReclusione();
 									lAnnMod.calcolaStringaArresto();
@@ -258,18 +259,21 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 							while (lEnumTree.hasMoreElements()) {
 								TreeModel lTreeElement = (TreeModel) lEnumTree.nextElement();
-								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
 								siesLogger.debug(
 										"Tree Element : " + lTreeElement.getModel().getClass().getName());
 								String lNomeClasse = lTreeElement.getModel().getClass().getName();
 
 								if ("siap.sico.evento.model.EventoModel".equals(lNomeClasse)) {
-									// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+									// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+									// siesLogger al posto di LogF3B.getLogger()
 									siesLogger.debug("Evento Tree Element : " + lNomeClasse);
 
 									EventoModel lEveMod = (EventoModel) lTreeElement.getModel();
 									if ("S".equals(lEveMod.getEventoCorrente())) {
-										// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+										// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+										// siesLogger al posto di LogF3B.getLogger()
 										siesLogger.debug("Evento Corrente : " + lNomeClasse);
 
 										lTreeEventoCorrente = lTreeElement;
@@ -335,10 +339,9 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 				EventoModel lEvePrec = (EventoModel) lEveDAO.getModelByKey();
 				if (lEvePrec != null) {
-					if (lEveModRidet != null
-							&& (lEveModRidet.getCodMotivo().equals("0284")
-									|| lEveModRidet.getCodMotivo().equals("0285") || lEveModRidet
-									.getCodMotivo().equals("0286"))) {
+					if (lEveModRidet != null && (lEveModRidet.getCodMotivo().equals("0284")
+							|| lEveModRidet.getCodMotivo().equals("0285")
+							|| lEveModRidet.getCodMotivo().equals("0286"))) {
 						lTreeEventoPrec = getTreeEventoPrecedenteAnnotazioniManuali(
 								lEvePrec.getFasSieIdFascicoloSiep(), lEvePrec.getCodMotivo());
 						if (lTreeEventoPrec != null)
@@ -347,14 +350,16 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				}
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiepXAnnotazioni: " + daoEx, daoEx);
 			throw new F3BException("StampaController.prelevaDatiEventoSiepXAnnotazioni: " + daoEx);
 		} catch (Exception sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiepXAnnotazioni: " + sqe, sqe);
-			throw new F3BException("StampaController.prelevaDatiEventoSiepXAnnotazioni: Eccezione Generica: "
-					+ sqe);
+			throw new F3BException(
+					"StampaController.prelevaDatiEventoSiepXAnnotazioni: Eccezione Generica: " + sqe);
 		} finally {
 			cleanup(lEveDAO);
 			cleanup(lAnnoSqlDao);
@@ -367,7 +372,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * Preleva i dati per le stampe del cumulo
-	 * 
+	 *
 	 * @param aEveModel
 	 * @param aUtenteModel
 	 * @return
@@ -375,6 +380,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	public TreeModel prelevaDatiEventoSiepXCumulo(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -513,7 +519,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lLibDAO = new LicenzaLibanticipataSqlDAO(lConn);
 			lLibDAO.ricercaLicenzaLibanticipataUltimaByIDFascicoloSIEP(lKeyFascicolo);
 			LicenzaLibAnticipataModel lLibAnt = (LicenzaLibAnticipataModel) lLibDAO.getModelByKey();
-			if (lLibAnt != null && lLibAnt.getFlagConcesso() != null && lLibAnt.getFlagConcesso().equals("N")) {
+			if (lLibAnt != null && lLibAnt.getFlagConcesso() != null
+					&& lLibAnt.getFlagConcesso().equals("N")) {
 				lTreeFasPadreMod.add(new TreeModel(lLibAnt));
 			}
 
@@ -531,8 +538,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				if (lPenResMod.getDataFine() != null
 						&& lPenResMod.getDataFine().compareTo(DateUtils.getSysDate()) <= 0
 						// GDV 23/10/2006 a6-rr-328
-						&& lPenResMod.getFlagErgastolo() != null
-						&& !lPenResMod.getFlagErgastolo().equals("S")
+						&& lPenResMod.getFlagErgastolo() != null && !lPenResMod.getFlagErgastolo().equals("S")
 						&& !lPenResMod.getFlagErgastolo().equals("D")) {
 					lPenResMod.setImmediataScarcerazione("S");
 				} else {
@@ -603,16 +609,18 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lTreeRoot.add(getTreeSentenza(lFasModel, lConn));
 
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiepXCumulo: " + daoEx, daoEx);
 			throw new F3BException("StampaController.prelevaDatiEventoSiepXCumulo: " + daoEx);
 		}
 
 		catch (Exception sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiepXCumulo: " + sqe, sqe);
-			throw new F3BException("StampaController.prelevaDatiEventoSiepXCumulo: Eccezione Generica: "
-					+ sqe);
+			throw new F3BException(
+					"StampaController.prelevaDatiEventoSiepXCumulo: Eccezione Generica: " + sqe);
 		} finally {
 			cleanup(lFasDao);
 			cleanup(lSogDao);
@@ -626,9 +634,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lUltSanCumDao);
 			cleanup(lUffSqlDAO);
 			cleanup(lPenResDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSenDao);
 
 			cleanup(lConn);
-
 		}
 
 		return lTreeRoot;
@@ -636,18 +645,19 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * preleva Dati Evento Siep
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return TreeModel
 	 * @throws F3BException
 	 */
 	public TreeModel prelevaDatiEventoSiep(EventoNotificaModel aEveModel) throws F3BException {
+
 		return prelevaDatiEventoSiep(aEveModel, null);
 	}
 
 	/**
 	 * Crea l'albero di entita' ricavandole da opportune selezioni da DB
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return TreeModel
 	 * @throws F3BException
@@ -694,15 +704,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lFasDao.ricercaFascicoloByKey(lKeyFascicolo);
 			FascicoloSiepModel lFasModel = (FascicoloSiepModel) lFasDao.getModelByKey();
 			// MEV a7-rr-311 riportare anche il vecchio codice RES
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr(): " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
 			// Posizione Giuridica
@@ -764,11 +773,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			}
 
 			// calcola stinghe residue SE e' SIMEONE
-			if (aEveModel.getEvento() != null
-					&& aEveModel.getEvento().getCodMotivo() != null
+			if (aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
 					&& (aEveModel.getEvento().getCodMotivo().equals("0061")
-							|| aEveModel.getEvento().getCodMotivo().equals("0062") || aEveModel.getEvento()
-							.getCodMotivo().equals("0063"))) {
+							|| aEveModel.getEvento().getCodMotivo().equals("0062")
+							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;
 
@@ -1026,8 +1034,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				if (lMATree != null)
 					lTreePenResMod.add(lMATree);
 				// Misura Alternativa precedente
-				TreeModel lMAPrecTree = lStampa.setMAPrecedente(lTreePenResMod, lKeyFascicolo, aEveModel
-						.getEvento().getTemIdTemplate(), lConn);
+				TreeModel lMAPrecTree = lStampa.setMAPrecedente(lTreePenResMod, lKeyFascicolo,
+						aEveModel.getEvento().getTemIdTemplate(), lConn);
 				if (lMAPrecTree != null)
 					lTreePenResMod.add(lMAPrecTree);
 
@@ -1037,46 +1045,45 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			TreeModel lRefScarc = lStampa.getRefertoScarcerazioneTree(lPenResMod, aEveModel, lConn);
 			if (lRefScarc != null)
 				lTreeEveMod.add(lRefScarc);
-			
+
 			// mev39: recupero dati del differimento
-			if(aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
-					&& aEveModel.getEvento().getCodMotivo().equals("1132")){
-				
+			if (aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
+					&& aEveModel.getEvento().getCodMotivo().equals("1132")) {
+
 				aEveModel.getEvento().setEveIdEvento(aEveModel.getEvento().getIdEvento());
-				
+
 				TreeModel lMATree = lStampa.getMATree(lPenResMod, aEveModel, lConn, lKeyFascicolo,
 						aUtenteModel);
-				
+
 				if (lMATree != null)
 					lTreeEveMod.add(lMATree);
 			}
 			// intervento per mev 39 (casistica di restituzione ordine di consenga)
-			if(aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
-					&& aEveModel.getEvento().getCodMotivo().equals("1149")){
-				
+			if (aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
+					&& aEveModel.getEvento().getCodMotivo().equals("1149")) {
+
 				BigDecimal eventoCorrelato = aEveModel.getEvento().getEveIdEvento();
-				if(eventoCorrelato!=null){
-					
+				if (eventoCorrelato != null) {
+
 					IEvento iEvento = SICOLookupRemote.getEventoRemote();
 					EventoNotificaModel enm = iEvento.ExRicercaEventoNotificaByKey(eventoCorrelato);
-					if(enm!=null){
-						CampoNotaModel lCampoNota =new CampoNotaModel();
+					if (enm != null) {
+						CampoNotaModel lCampoNota = new CampoNotaModel();
 						lCampoNota.setDescr(enm.getEvento().getCodMotivo());
-						TreeModel mytree = new TreeModel((CampoNotaModel) lCampoNota);
+						TreeModel mytree = new TreeModel(lCampoNota);
 						if (mytree != null)
 							lTreeEveMod.add(mytree);
 					}
-				}				
-				
+				}
+
 			}
-			//LTreeNota = new TreeModel((CampoNotaModel) lCampoNota);
+			// LTreeNota = new TreeModel((CampoNotaModel) lCampoNota);
 
 			// Verbale solo per avvenuta espulsione --> 2141
 			// e per rinuncia opposizione espulsione --> 2140
-			if (aEveModel != null
-					&& aEveModel.getEvento() != null
-					&& (("2140".equals(aEveModel.getEvento().getCodMotivo())) || "2141".equals(aEveModel
-							.getEvento().getCodMotivo()))) {
+			if (aEveModel != null && aEveModel.getEvento() != null
+					&& (("2140".equals(aEveModel.getEvento().getCodMotivo()))
+							|| "2141".equals(aEveModel.getEvento().getCodMotivo()))) {
 				String lTipoVerbale = "05"; // N.B. CodMotivo = 2141 --> TipoVerbale = 05
 				if ("2140".equals(aEveModel.getEvento().getCodMotivo())) {
 					lTipoVerbale = "07"; // N.B. CodMotivo = 2140 --> TipoVerbale = 07
@@ -1122,11 +1129,12 @@ public class StampaController extends SIAPStampaController implements IStampa {
 					|| "9032".equals(aEveModel.getEvento().getCodMotivo())
 					|| "9033".equals(aEveModel.getEvento().getCodMotivo())
 					|| "9034".equals(aEveModel.getEvento().getCodMotivo())
-					// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori 
+					// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi
+					// risarcitori
 					|| "9254".equals(aEveModel.getEvento().getCodMotivo())
 					|| "9354".equals(aEveModel.getEvento().getCodMotivo())
-					// fine ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori
-				) {
+			// fine ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori
+			) {
 				lStampaEvento.appendRimediRisarcitori(lConn, lKeyFascicolo, aEveModel, lTreeEveMod);
 			}
 
@@ -1145,8 +1153,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			if ("5201".equals(aEveModel.getEvento().getCodMotivo())) {
 				lSollecitoEsitoSqlDao = new SollecitoEsitoTrasmissioneSqlDAO(lConn);
 				SollecitoEsitoTrasmissioneModel lSollecitoModel = null;
-				lSollecitoEsitoSqlDao.ricercaSollecitoEsitoTrasmissioneByIdEvento(aEveModel.getEvento()
-						.getIdEvento());
+				lSollecitoEsitoSqlDao
+						.ricercaSollecitoEsitoTrasmissioneByIdEvento(aEveModel.getEvento().getIdEvento());
 				lSollecitoModel = (SollecitoEsitoTrasmissioneModel) lSollecitoEsitoSqlDao.getModelByKey();
 				if (lSollecitoModel != null) {
 					TreeModel lTreeModelSollecito = new TreeModel(lSollecitoModel);
@@ -1229,19 +1237,23 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// lTreeRoot.add(this.getTreeSentenza(lFasModel.getSenIdSentenza(), lConn));
 
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiep: " + daoEx, daoEx);
 			throw new F3BException("StampaController.prelevaDatiEventoSiep: " + daoEx);
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiep: " + sqe, sqe);
 			throw new F3BException("StampaController.prelevaDatiEventoSiep: " + sqe);
 		} catch (F3BException f3bEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiep: " + f3bEx);
 			throw f3bEx;
 		} catch (Exception sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiep: " + sqe, sqe);
 			throw new F3BException("StampaController.prelevaDatiEventoSiep: Eccezione Generica: " + sqe);
 		} finally {
@@ -1262,7 +1274,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lSospSql);
 			cleanup(lSSSqlDAO);
 			cleanup(lIstSqlDao);
-
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSollecitoEsitoSqlDao);
 			cleanup(lConn);
 		}
 
@@ -1272,16 +1285,17 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	/*********************************************************************************/
 	/*
 	 * Preleva i dati dal DB per le stampe di Sospensioni
-	 * 
+	 *
 	 * @param aEveModel
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	/*********************************************************************************/
 	public TreeModel prelevaDatiSospensioni(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -1307,15 +1321,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			FascicoloSiepModel lFasModel = (FascicoloSiepModel) lFasDao.getModelByKey();
 
 			// MEV a7-rr-311 riportare anche il vecchio codice RES
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr(): " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
 			// Pena Residua Precedente
@@ -1359,8 +1372,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				if (lPenresMod.getDataFine() != null
 						&& lPenresMod.getDataFine().compareTo(DateUtils.getSysDate()) <= 0
 						// GDV 23/10/2006 a6-rr-328
-						&& lPenresMod.getFlagErgastolo() != null
-						&& !lPenresMod.getFlagErgastolo().equals("S")
+						&& lPenresMod.getFlagErgastolo() != null && !lPenresMod.getFlagErgastolo().equals("S")
 						&& !lPenresMod.getFlagErgastolo().equals("D")) {
 					lPenresMod.setImmediataScarcerazione("S");
 				} else {
@@ -1430,11 +1442,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				this.mEventoUtils.appendStatoEsecuzione("FULL", lTreeRoot, lConn, lKeyFascicolo);
 
 			// Nodi livello 1 Fascicolo - Soggetto - Sentenza
-			// [EC] - 20171030 : intervento per risoluzione anomalia segnalata dalla procura di bologna in relazione alla stampa dell'OE a seguito di un 
+			// [EC] - 20171030 : intervento per risoluzione anomalia segnalata dalla procura di bologna in
+			// relazione alla stampa dell'OE a seguito di un
 			// provvedimento di INTERRUZIONE PER EVASIONE (email Maffucci del 25102017).
-			// Intervento effettuato : il metodogetTreeSoggetto non prendeva in input l'oggetto lFasModel valorizzato, ma veniva passato sempre a NULL! 
-			// Per la distinzione sulla stampa tra  minorenni e maggiorenni serve che l'oggetto lFasModel sia valorizzato!			
-			TreeModel lTreeSogMod = getTreeSoggetto(lFasModel.getSogIdSoggetto(), lKeyFascicolo, lConn, lFasModel);
+			// Intervento effettuato : il metodogetTreeSoggetto non prendeva in input l'oggetto lFasModel
+			// valorizzato, ma veniva passato sempre a NULL!
+			// Per la distinzione sulla stampa tra minorenni e maggiorenni serve che l'oggetto lFasModel sia
+			// valorizzato!
+			TreeModel lTreeSogMod = getTreeSoggetto(lFasModel.getSogIdSoggetto(), lKeyFascicolo, lConn,
+					lFasModel);
 
 			if (lPenPrecedente != null) {
 				TreeModel lTreePenPrec = new TreeModel(lPenPrecedente);
@@ -1475,15 +1491,12 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lTreeRoot.add(lTreeSogMod);
 			lTreeRoot.add(this.getTreeSentenza(lFasModel, lConn));
 			// lTreeRoot.add(this.getTreeSentenza(lFasModel.getSenIdSentenza(), lConn));
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("StampaController.prelevaDatiSospensioni: " + daoEx);
-		}
-
-		catch (Exception sqe) {
+		} catch (Exception sqe) {
 			sqe.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + sqe);
@@ -1497,6 +1510,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lDecSqlDao);
 			cleanup(lPenaResDao);
 			cleanup(lSospSql);
+
 			cleanup(lConn);
 		}
 
@@ -1505,13 +1519,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * Preleva i dati dal DB per le stampe di IStruttoria e Nuova Istanza
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public TreeModel prelevaDatiIstruttoria(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -1520,17 +1535,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		NotificaSqlDAO lNotDao = null;
 		NotiziaReatoSqlDAO lNotRDao = null;
 		FascicoloSiepSqlDAO lFasDao = null;
-		// IstanzaSqlDAO lIstSqlDao = null;
 		NuovaIstanzaSqlDAO lIstSqlDao = null;
-		TreeModel lTreeEventoPrec = null;
 		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
 		PenaComplessivaSqlDAO lPenaComplDAO = null;
 		SanzioneSostitutivaSqlDAO lSSostsqlDAO = null;
 		CircostanzaSqlDAO lCircDao = null;
-
 		PenaPrecedenteSqlDAO lPenPrecDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
 
+		TreeModel lTreeEventoPrec = null;
 		BigDecimal lKeyFascicolo = aEveModel.getEvento().getFasSieIdFascicoloSiep();
 
 		try {
@@ -1540,8 +1553,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// evento OE Per istanza
 
 			if (aEveModel.getEvento().getCodTipoProvvedimento().equals("08")) {
-				lTreeEventoPrec = this.getTreeEventoPrecedenteOEPerIstanza(aEveModel.getEvento()
-						.getFasSieIdFascicoloSiep());
+				lTreeEventoPrec = this.getTreeEventoPrecedenteOEPerIstanza(
+						aEveModel.getEvento().getFasSieIdFascicoloSiep());
 				if (lTreeEventoPrec != null)
 					lTreeRoot.add(lTreeEventoPrec);
 			}
@@ -1556,17 +1569,16 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("prima dell'if del codice RES = "
 					+ lFasModel.getCodOperatoreInserimento().startsWith("RES"));
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.debug("SONo entrata nell'if del codice RES");
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr(): " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
 			// AMBROSINO COLL
@@ -1623,8 +1635,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 						&& (aEveModel.getNotifiche()[count].getIstitutoDetenzione() != null)) {
 					AutoritaEsternaModel lAutFinto = new AutoritaEsternaModel();
 
-					lAutFinto.setDescrTipoAutorita(aEveModel.getNotifiche()[count].getIstitutoDetenzione()
-							.getDescrTipoIstituto());
+					lAutFinto.setDescrTipoAutorita(
+							aEveModel.getNotifiche()[count].getIstitutoDetenzione().getDescrTipoIstituto());
 					// lAutFinto.setDescrSede(aEveModel.getNotifiche()[count].getIstitutoDetenzione().getDescrComune()
 					// + ", " + aEveModel.getNotifiche()[count].getIstitutoDetenzione().getIndirizzo());
 					/*
@@ -1635,12 +1647,11 @@ public class StampaController extends SIAPStampaController implements IStampa {
 							&& !aEveModel.getNotifiche()[count].getIstitutoDetenzione().getIndirizzo()
 									.equalsIgnoreCase("null")) {
 						lAutFinto.setDescrSede(aEveModel.getNotifiche()[count].getIstitutoDetenzione()
-								.getDescrComune()
-								+ ", "
+								.getDescrComune() + ", "
 								+ aEveModel.getNotifiche()[count].getIstitutoDetenzione().getIndirizzo());
 					} else {
-						lAutFinto.setDescrSede(aEveModel.getNotifiche()[count].getIstitutoDetenzione()
-								.getDescrComune());
+						lAutFinto.setDescrSede(
+								aEveModel.getNotifiche()[count].getIstitutoDetenzione().getDescrComune());
 					}
 					lTreeNot.add(new TreeModel(lAutFinto));
 				}
@@ -1667,12 +1678,12 @@ public class StampaController extends SIAPStampaController implements IStampa {
 						&& aEveModel.getEvento().getCodMotivo().equals("0993")) {
 					lIstSqlDao.ricercaNuovaIstanzaByEveIdEvento(aEveModel.getEvento().getIdEvento());
 				} else if (aEveModel.getEvento().getCodMotivo() != null
-						&& (aEveModel.getEvento().getCodMotivo().equals("1001") || aEveModel.getEvento()
-								.getCodMotivo().equals("1002"))) {
+						&& (aEveModel.getEvento().getCodMotivo().equals("1001")
+								|| aEveModel.getEvento().getCodMotivo().equals("1002"))) {
 					lIstSqlDao.ricercaNuovaIstanzaByEveIdEvento(aEveModel.getEvento().getEveIdEvento());
 				} else {
-					lIstSqlDao.ricercaNuovaIstanzaByIdFascicolo(aEveModel.getEvento()
-							.getFasSieIdFascicoloSiep());
+					lIstSqlDao.ricercaNuovaIstanzaByIdFascicolo(
+							aEveModel.getEvento().getFasSieIdFascicoloSiep());
 				}
 				NuovaIstanzaModel lNuoIstMod = new NuovaIstanzaModel(
 						(NuovaIstanzaModel) lIstSqlDao.getModelByKey());
@@ -1684,8 +1695,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 					AvvocatoModel lAvvocato = (AvvocatoModel) lAvvDao.getModelByKey();
 					if (lAvvocato != null) {
-						lNuoIstMod.setDescrAvvocatoPresentante(lAvvocato.getCognome() + " "
-								+ lAvvocato.getNome());
+						lNuoIstMod.setDescrAvvocatoPresentante(
+								lAvvocato.getCognome() + " " + lAvvocato.getNome());
 						lNuoIstMod.setAvvocatoPresentante(lAvvocato);
 					}
 				}
@@ -1822,11 +1833,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			}
 
 			// calcola stinghe residue SE e' SIMEONE
-			if (aEveModel.getEvento() != null
-					&& aEveModel.getEvento().getCodMotivo() != null
+			if (aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
 					&& (aEveModel.getEvento().getCodMotivo().equals("0061")
-							|| aEveModel.getEvento().getCodMotivo().equals("0062") || aEveModel.getEvento()
-							.getCodMotivo().equals("0063"))) {
+							|| aEveModel.getEvento().getCodMotivo().equals("0062")
+							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;
 
@@ -1897,8 +1907,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			SanzioneSostitutivaModel lSanzSostMod = null;
 
 			if (lPenaComplMod != null && lPenaComplMod.getIdPenaComplessiva() != null) {
-				lSSostsqlDAO.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenaComplMod
-						.getIdPenaComplessiva());
+				lSSostsqlDAO
+						.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenaComplMod.getIdPenaComplessiva());
 				lSanzSostMod = (SanzioneSostitutivaModel) lSSostsqlDAO.getModelByKey();
 			}
 
@@ -1944,20 +1954,19 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("StampaController.prelevaDatiIstruttoria: Non posso leggere : " + daoEx);
 		} catch (F3BException f3bEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiep: " + f3bEx);
 			throw f3bEx;
 		} catch (Exception sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiEventoSiep: " + sqe, sqe);
 			throw new F3BException("StampaController.prelevaDatiEventoSiep: Eccezione Generica: " + sqe);
-		}
-
-		finally {
+		} finally {
 			cleanup(lReaDao);
 			cleanup(lNotRDao);
 			cleanup(lFasDao);
-
 			cleanup(lNotDao);
 			cleanup(lIstSqlDao);
 			cleanup(lSSSqlDAO);
@@ -1965,6 +1974,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lCircDao);
 			cleanup(lPenPrecDao); // 28/07/2011
 			cleanup(lPosSqlDAO); // 28/07/2011
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSSostsqlDAO);
 
 			cleanup(lConn);
 		}
@@ -1973,13 +1984,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * Crea una Root per l'Avvocato
-	 * 
+	 *
 	 * @param aAvvSieModel
 	 * @param aUtenteConnesso
 	 * @param aSedeUtenteConnesso
 	 * @return
 	 */
 	private XModel createRootAvvocato(AvvocatoSiepModel aAvvSieModel, UtenteModel aUtenteModel) {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = "";
@@ -2015,21 +2027,22 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * Preleva i dati dal DB per le stampe di IStruttoria
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public TreeModel prelevaDatiAvvocato(AvvocatoFascicoloSiepModel aAvvocatoSiep, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = null;
+		MagistratoModel lMag = null;
 
 		AvvocatoFascicoloSiepSqlDAO lAvvSiepSqlDAO = null;
 		SoggettoSqlDAO lSogDao = null;
 		FascicoloSiepSqlDAO lFasDao = null;
 		MagistratoCompetenteMagistratoSqlDAO lMagSql = null;
 		IstitutoDetenzioneSqlDAO lIstSql = null;
-		MagistratoModel lMag = null;
 		ResidenzaSqlDAO lResDao = null;
 		Connection lConn = null;
 
@@ -2050,15 +2063,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lFasDao.ricercaFascicoloByKey(lAvvFascMod.getFasSieIdFascicoloSiep());
 			FascicoloSiepModel lFasModel = (FascicoloSiepModel) lFasDao.getModelByKey();
 			// MEV a7-rr-311 riportare anche il vecchio codice RES
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr(): " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
 			// Soggetto
@@ -2134,20 +2146,16 @@ public class StampaController extends SIAPStampaController implements IStampa {
 					lTreeSogMod.add(new TreeModel(lResModel));
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("StampaController.prelevaDatiAvvocato: Non posso leggere : " + daoEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lAvvSiepSqlDAO);
 			cleanup(lMagSql);
 			cleanup(lSogDao);
 			cleanup(lFasDao);
 			cleanup(lResDao);
-
 			cleanup(lIstSql);
 
 			cleanup(lConn);
@@ -2161,6 +2169,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	private TreeModel prelevaDatiCampoNota(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
+
 		// CampoNote
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
 		Vector lCampiNote = null;
@@ -2175,7 +2184,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			Iterator lItx = lCampiNote.iterator();
 			while (lItx.hasNext()) {
 				lCampoNota = (CampoNotaModel) lItx.next();
-				LTreeNota = new TreeModel((CampoNotaModel) lCampoNota);
+				LTreeNota = new TreeModel(lCampoNota);
 				aTree.add(LTreeNota);
 			}
 		} catch (Exception e) {
@@ -2192,13 +2201,13 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	private TreeModel prelevaDatiCompetenza(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
+
 		CompetenzaSqlDAO lCompSqlDAO = null;
 		Vector lCompetenze = null;
 		CompetenzaModel lCompetenza = null;
 		TreeModel lTreeCompetenza = null;
-    
-    UfficioSqlDAO lUffSqlDao = null;
-    
+		UfficioSqlDAO lUffSqlDao = null;
+
 		try {
 			// Ricerca Campi note collegate all'evento
 			lCompSqlDAO = new CompetenzaSqlDAO(aConn);
@@ -2207,26 +2216,24 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			Iterator lItx = lCompetenze.iterator();
 			while (lItx.hasNext()) {
 				lCompetenza = (CompetenzaModel) lItx.next();
-				lTreeCompetenza = new TreeModel((CompetenzaModel) lCompetenza);
+				lTreeCompetenza = new TreeModel(lCompetenza);
 				aTree.add(lTreeCompetenza);
-        
-        if (   "S".equals(lCompetenza.getFlagAccorpato())
-            && lCompetenza.getChiaveUfficioOrigine()!=null
-           )
-        {
-          lUffSqlDao = new UfficioSqlDAO (aConn);
-         
-          lUffSqlDao.selUfficioByCod (lCompetenza.getChiaveUfficioOrigine());
-          UfficioModel lUffMod = (UfficioModel) lUffSqlDao.getModelByKey();
-         
-          lTreeCompetenza.add (new TreeModel(lUffMod));
-        }
+
+				if ("S".equals(lCompetenza.getFlagAccorpato())
+						&& lCompetenza.getChiaveUfficioOrigine() != null) {
+					lUffSqlDao = new UfficioSqlDAO(aConn);
+
+					lUffSqlDao.selUfficioByCod(lCompetenza.getChiaveUfficioOrigine());
+					UfficioModel lUffMod = (UfficioModel) lUffSqlDao.getModelByKey();
+
+					lTreeCompetenza.add(new TreeModel(lUffMod));
+				}
 			}
 		} catch (Exception e) {
 			throw e;
 		} finally {
 			cleanup(lCompSqlDAO);
-      cleanup(lUffSqlDao);
+			cleanup(lUffSqlDao);
 		}
 		return aTree;
 	}
@@ -2235,7 +2242,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 * Recupera i dati dell'annotazione di rideterminazione Pena Altro che viene puntata dall'evento corrente
 	 * e la carica nel tree model. Servono per la stampa degli eventi di OE, OECS, OS COMUNICAZIONE, per far
 	 * riferimento al provvedimento di computo.
-	 * 
+	 *
 	 * @param aTree
 	 *            - TreeModel dell'evento corrente a cui agganciare gli eventi collegati
 	 * @param aEventoKey
@@ -2246,8 +2253,11 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	private TreeModel prelevaDatiAnnRidetPenaAltro(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Prelevo i dati dell'evento di annotazione ");
+
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveAnnMod;
 
@@ -2261,6 +2271,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		FungibilitaModel lFunModel = null;
 
 		TreeModel lEveAnnTree = null;
+
 		try {
 			// n.b. se di ufficio recupero l'evento di procura (Annotazione) altrimenti i
 			// dati dell'evento di Altro ufficio
@@ -2287,20 +2298,21 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				if (lEveAnnMod.getEveIdEvento() != null) {
 					lEveDao.ricercaEventoByKey(lEveAnnMod.getEveIdEvento());
 					lEveAltraAut = (EventoModel) lEveDao.getModelByKey();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("evento altra autorita' = " + lEveAltraAut);
 
 					if (lEveAltraAut != null) {
 						// TreeModel lEveAATree = null;
 						lEveAnnMod = lEveAltraAut;
 
-						lEveAnnTree = new TreeModel((EventoModel) lEveAnnMod);
+						lEveAnnTree = new TreeModel(lEveAnnMod);
 						aTree.add(lEveAnnTree);
 						// lEveAATree = new TreeModel((EventoModel) lEveAltraAut);
 						// aTree.add(lEveAATree);
 					}
 				} else {
-					lEveAnnTree = new TreeModel((EventoModel) lEveAnnMod);
+					lEveAnnTree = new TreeModel(lEveAnnMod);
 					aTree.add(lEveAnnTree);
 				}
 			}
@@ -2310,12 +2322,13 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			if (lEveAnnMod.getEveIdEvento() != null) {
 				lEveDao.ricercaEventoByKey(lEveAnnMod.getEveIdEvento());
 				lEveAltraAut = (EventoModel) lEveDao.getModelByKey();
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("evento altra autorita' = " + lEveAltraAut);
 
 				if (lEveAltraAut != null) {
 					TreeModel lEveAATree = null;
-					lEveAATree = new TreeModel((EventoModel) lEveAltraAut);
+					lEveAATree = new TreeModel(lEveAltraAut);
 					aTree.add(lEveAATree);
 				}
 			}
@@ -2358,9 +2371,11 @@ public class StampaController extends SIAPStampaController implements IStampa {
 							lCalArresti);
 				}
 			}
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Totale lCalTotaleAggregatoRec = " + lCalTotaleAggregatoRec);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Totale lCalTotaleAggregatoArr = " + lCalTotaleAggregatoArr);
 
 			// ======================
@@ -2375,25 +2390,22 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			} else if (CalendarUtil.getTotGiorni(lCalTotaleAggregatoRec) < 0) {
 				CalendarModel lCalModelApp = new CalendarModel(lCalUtil.abs(lCalTotaleAggregatoRec));
 				lStringaReclusione = "diminuisce la pena di "
-						+ SiapStringUtil.formattaQuantum(lCalModelApp.getNumAnni(),
-								lCalModelApp.getNumMesi(), lCalModelApp.getNumGiorni()) + " di Reclusione";
+						+ SiapStringUtil.formattaQuantum(lCalModelApp.getNumAnni(), lCalModelApp.getNumMesi(),
+								lCalModelApp.getNumGiorni())
+						+ " di Reclusione";
 			}
 
 			// Aggiungo Eventuale Multa
 			if (lCalTotaleAggregatoRec.getImportoMulta() != 0) {
 				if (!lStringaReclusione.equals("")) {
-					lStringaReclusione = lStringaReclusione
-							+ " Multa Euro "
-							+ StringUtils.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoRec
-									.getImportoMulta())));
+					lStringaReclusione = lStringaReclusione + " Multa Euro " + StringUtils
+							.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoRec.getImportoMulta())));
 				} else if (lCalTotaleAggregatoRec.getImportoMulta() > 0) {
-					lStringaReclusione = "aumenta la pena di Multa Euro "
-							+ StringUtils.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoRec
-									.getImportoMulta())));
+					lStringaReclusione = "aumenta la pena di Multa Euro " + StringUtils
+							.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoRec.getImportoMulta())));
 				} else if (lCalTotaleAggregatoRec.getImportoMulta() < 0) {
-					lStringaReclusione = "diminuisce la pena di Multa Euro "
-							+ StringUtils.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoRec
-									.getImportoMulta())));
+					lStringaReclusione = "diminuisce la pena di Multa Euro " + StringUtils
+							.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoRec.getImportoMulta())));
 				}
 			}
 
@@ -2409,31 +2421,30 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			} else if (CalendarUtil.getTotGiorni(lCalTotaleAggregatoArr) < 0) {
 				CalendarModel lCalModelApp = new CalendarModel(lCalUtil.abs(lCalTotaleAggregatoArr));
 				lStringaArresto = "diminuisce la pena di "
-						+ SiapStringUtil.formattaQuantum(lCalModelApp.getNumAnni(),
-								lCalModelApp.getNumMesi(), lCalModelApp.getNumGiorni()) + " di Arresto";
+						+ SiapStringUtil.formattaQuantum(lCalModelApp.getNumAnni(), lCalModelApp.getNumMesi(),
+								lCalModelApp.getNumGiorni())
+						+ " di Arresto";
 			}
 
 			// Aggiungo Eventuale Ammenda
 			if (lCalTotaleAggregatoArr.getImportoAmmenda() != 0) {
 				if (!lStringaArresto.equals("")) {
-					lStringaArresto = lStringaArresto
-							+ " Ammenda Euro "
-							+ StringUtils.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoArr
-									.getImportoAmmenda())));
+					lStringaArresto = lStringaArresto + " Ammenda Euro " + StringUtils.toEuroFormat(
+							new BigDecimal(Math.abs(lCalTotaleAggregatoArr.getImportoAmmenda())));
 				} else if (lCalTotaleAggregatoArr.getImportoAmmenda() > 0) {
-					lStringaArresto = "aumenta la pena di Ammenda Euro "
-							+ StringUtils.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoArr
-									.getImportoAmmenda())));
+					lStringaArresto = "aumenta la pena di Ammenda Euro " + StringUtils.toEuroFormat(
+							new BigDecimal(Math.abs(lCalTotaleAggregatoArr.getImportoAmmenda())));
 				} else if (lCalTotaleAggregatoArr.getImportoAmmenda() < 0) {
-					lStringaArresto = "diminuisce la pena di Ammenda Euro "
-							+ StringUtils.toEuroFormat(new BigDecimal(Math.abs(lCalTotaleAggregatoArr
-									.getImportoAmmenda())));
+					lStringaArresto = "diminuisce la pena di Ammenda Euro " + StringUtils.toEuroFormat(
+							new BigDecimal(Math.abs(lCalTotaleAggregatoArr.getImportoAmmenda())));
 				}
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lStringaReclusione=" + lStringaReclusione);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lStringaArresto=" + lStringaArresto);
 
 			// SiapStringUtil.formattaQuantum(lCalReclusione.getNumAnni(), lCalReclusione.getNumMesi(),
@@ -2461,7 +2472,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 			lCamSqlDao.ricercaCampoNotaByKeyEvento(lEveAnnMod.getIdEvento());
 			lCamMod = (CampoNotaModel) lCamSqlDao.getModelByKey();
-			TreeModel lTreeCampoNota = new TreeModel((CampoNotaModel) lCamMod);
+			TreeModel lTreeCampoNota = new TreeModel(lCamMod);
 			lEveAnnTree.add(lTreeCampoNota);
 
 			// =========================================================
@@ -2472,18 +2483,20 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lFunModel = (FungibilitaModel) lFungSqlDao.getModelByKey();
 			if (lFunModel != null) {
 				lFunModel.calcolaStringaFungibilita();
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Aggiungo fungibilita' = " + lFunModel);
 				TreeModel lTreeFung = new TreeModel(lFunModel);
 				lEveAnnTree.add(lTreeFung);
 			}
-
 		} catch (Exception e) {
 			throw e;
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lCamSqlDao);
 			cleanup(lAnnManSqlDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFungSqlDao);
 		}
 		return aTree;
 	}
@@ -2491,7 +2504,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	/**
 	 * ************************************************************************** Preleva i dati dal DB per le
 	 * stampe del Differimento
-	 * 
+	 *
 	 * @param aEveNotModel
 	 *            -
 	 * @param aUtenteModel
@@ -2499,9 +2512,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 * @return
 	 * @throws F3BException
 	 * @deprecated Non piu' utilizzato (01/09/2006)
-	 ************************************************************************** */
+	 */
 	public TreeModel prelevaDatiDifferimento(EventoNotificaModel aEveNotModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -2513,6 +2527,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		SanzioneSostitutivaSqlDAO lSanDao = null;
 		PenaResiduaSqlDAO lPenaResDao = null;
 		SospensioneSqlDAO lSospSql = null;
+
 		SospensioneModel lSosp = null;
 
 		BigDecimal lKeyFascicolo = aEveNotModel.getEvento().getFasSieIdFascicoloSiep();
@@ -2523,24 +2538,25 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// ========================================================================
 			// Fascicolo
 			// ========================================================================
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Recupero dati fascicolo: start...");
 			lFasDao = new FascicoloSiepSqlDAO(lConn);
 			lFasDao.ricercaFascicoloByKey(lKeyFascicolo);
 			FascicoloSiepModel lFasModel = (FascicoloSiepModel) lFasDao.getModelByKey();
 			// MEV a7-rr-311 riportare anche il vecchio codice RES
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr(): " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Recupero dati fascicolo: ...stop");
 
 			// ========================================================================
@@ -2549,7 +2565,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// validata
 			// (FLAG_PENA_SOSPESA = 'N' OR FLAG_PENA_SOSPESA IS NULL )
 			// ========================================================================
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Recupero dati PenaPrecedente: start...");
 			lPenPrecDao = new PenaPrecedenteSqlDAO(lConn);
 			lPenPrecDao.ricercaPenaPrecedenteSospensioniByFascicolo(lKeyFascicolo);
@@ -2580,13 +2597,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				lPenPrecDao.stop();
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Recupero dati PenaPrecedente: ...stop");
 
 			// ========================================================================
 			// Pena Residua
 			// ========================================================================
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Recupero dati PenaResidua corrente: start...");
 			lPenaResDao = new PenaResiduaSqlDAO(lConn);
 			lPenaResDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lKeyFascicolo);
@@ -2598,8 +2617,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				if (lPenresMod.getDataFine() != null
 						&& lPenresMod.getDataFine().compareTo(DateUtils.getSysDate()) <= 0
 						// GDV 23/10/2006 a6-rr-328
-						&& lPenresMod.getFlagErgastolo() != null
-						&& !lPenresMod.getFlagErgastolo().equals("S")
+						&& lPenresMod.getFlagErgastolo() != null && !lPenresMod.getFlagErgastolo().equals("S")
 						&& !lPenresMod.getFlagErgastolo().equals("D")) {
 					lPenresMod.setImmediataScarcerazione("S");
 				} else {
@@ -2798,9 +2816,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("StampaController.prelevaDatiSospensioni: " + daoEx);
-		}
-
-		catch (Exception sqe) {
+		} catch (Exception sqe) {
 			sqe.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + sqe);
@@ -2822,11 +2838,12 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * Controlla se il motivo e' una rideterminazione pena Altro
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isRidetPenaAltro(EventoModel aEveModel) {
+
 		boolean lIsRidetPenaAltro = false;
 		if (aEveModel != null && aEveModel.getEveIdEvento() != null && aEveModel.getCodMotivo() != null) {
 			int intCodiceMotivo = Integer.parseInt(aEveModel.getCodMotivo());
@@ -2870,13 +2887,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 	/**
 	 * Preleva i dati dal DB per le stampe di IStruttoria e Nuova Istanza
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public TreeModel prelevaDatiPenaSospesa(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -2887,12 +2905,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		PenaComplessivaSqlDAO lPenaComplDAO = null;
 		SanzioneSostitutivaSqlDAO lSSostsqlDAO = null;
 		AnnotazioneManualeSqlDAO lAnnoSqlDao = null;
-		// IstanzaSqlDAO lIstSqlDao = null;
-		// NuovaIstanzaSqlDAO lIstSqlDao = null;
-		// NotiziaReatoSqlDAO lNotRDao = null;
-		// SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
-		// CircostanzaSqlDAO lCircDao = null;
-		// TreeModel lTreeEventoPrec = null;
 
 		BigDecimal lKeyFascicolo = aEveModel.getEvento().getFasSieIdFascicoloSiep();
 
@@ -2910,17 +2922,16 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("prima dell'if del codice RES = "
 					+ lFasModel.getCodOperatoreInserimento().startsWith("RES"));
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.debug("SONo entrata nell'if del codice RES");
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr(): " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
 			TreeModel lTreeEveMod = new TreeModel(aEveModel.getEvento());
@@ -2948,8 +2959,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 						&& (aEveModel.getNotifiche()[count].getIstitutoDetenzione() != null)) {
 					AutoritaEsternaModel lAutFinto = new AutoritaEsternaModel();
 
-					lAutFinto.setDescrTipoAutorita(aEveModel.getNotifiche()[count].getIstitutoDetenzione()
-							.getDescrTipoIstituto());
+					lAutFinto.setDescrTipoAutorita(
+							aEveModel.getNotifiche()[count].getIstitutoDetenzione().getDescrTipoIstituto());
 					// lAutFinto.setDescrSede(aEveModel.getNotifiche()[count].getIstitutoDetenzione().getDescrComune()
 					// + ", " + aEveModel.getNotifiche()[count].getIstitutoDetenzione().getIndirizzo());
 					/*
@@ -2960,12 +2971,11 @@ public class StampaController extends SIAPStampaController implements IStampa {
 							&& !aEveModel.getNotifiche()[count].getIstitutoDetenzione().getIndirizzo()
 									.equalsIgnoreCase("null")) {
 						lAutFinto.setDescrSede(aEveModel.getNotifiche()[count].getIstitutoDetenzione()
-								.getDescrComune()
-								+ ", "
+								.getDescrComune() + ", "
 								+ aEveModel.getNotifiche()[count].getIstitutoDetenzione().getIndirizzo());
 					} else {
-						lAutFinto.setDescrSede(aEveModel.getNotifiche()[count].getIstitutoDetenzione()
-								.getDescrComune());
+						lAutFinto.setDescrSede(
+								aEveModel.getNotifiche()[count].getIstitutoDetenzione().getDescrComune());
 					}
 					lTreeNot.add(new TreeModel(lAutFinto));
 				}
@@ -2987,7 +2997,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 				// cerco le descr di ufficio e comune che sono solo codificate!!!
 				DecodificheModel lModel = new DecodificheModel();
-				lModel.setContesto("TIPO_UFFICIO");	// 23/04/2019  MEV70
+				lModel.setContesto("TIPO_UFFICIO"); // 23/04/2019 MEV70
 				IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
 				Collection Uffi_Emi = lDecodifiche.ExRicercaDecodifiche(lModel);
 				String strDescrUfficio = "";
@@ -3075,11 +3085,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// Note
 			this.prelevaDatiCampoNota(lTreeEveMod, aEveModel.getEvento().getIdEvento(), lConn);
 
-			// [EC] - 20171030 : intervento per risoluzione anomalia segnalata dalla procura di bologna in relazione alla stampa dell'OE a seguito di un 
+			// [EC] - 20171030 : intervento per risoluzione anomalia segnalata dalla procura di bologna in
+			// relazione alla stampa dell'OE a seguito di un
 			// provvedimento di INTERRUZIONE PER EVASIONE (email Maffucci del 25102017).
-			// Intervento effettuato : il metodogetTreeSoggetto non prendeva in input l'oggetto lFasModel valorizzato, ma veniva passato sempre a NULL! 
-			// Per la distinzione sulla stampa tra  minorenni e maggiorenni serve che l'oggetto lFasModel sia valorizzato!			
-			TreeModel lTreeSogMod = getTreeSoggetto(lFasModel.getSogIdSoggetto(), lKeyFascicolo, lConn, lFasModel);
+			// Intervento effettuato : il metodogetTreeSoggetto non prendeva in input l'oggetto lFasModel
+			// valorizzato, ma veniva passato sempre a NULL!
+			// Per la distinzione sulla stampa tra minorenni e maggiorenni serve che l'oggetto lFasModel sia
+			// valorizzato!
+			TreeModel lTreeSogMod = getTreeSoggetto(lFasModel.getSogIdSoggetto(), lKeyFascicolo, lConn,
+					lFasModel);
 
 			// 04/07/2011 PENA COMPLESSIVA afferente al Fascicolo SIEP
 			PenaComplessivaModel lPenaComplMod = null;
@@ -3119,8 +3133,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			SanzioneSostitutivaModel lSanzSostMod = null;
 
 			if (lPenaComplMod != null && lPenaComplMod.getIdPenaComplessiva() != null) {
-				lSSostsqlDAO.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenaComplMod
-						.getIdPenaComplessiva());
+				lSSostsqlDAO
+						.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenaComplMod.getIdPenaComplessiva());
 				lSanzSostMod = (SanzioneSostitutivaModel) lSSostsqlDAO.getModelByKey();
 			}
 
@@ -3145,33 +3159,35 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// TreeModel lTreeSenMod = new TreeModel(lAnnMod);
 			// lTreeRoot.add(lTreeSenMod);
 			lTreeRoot.add(lTreeAnnManMod);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("StampaController.prelevaDatiPenaSospesa: Non posso leggere : " + daoEx);
 		} catch (F3BException f3bEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiPenaSospesa: " + f3bEx);
 			throw f3bEx;
 		} catch (Exception sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("StampaController.prelevaDatiPenaSospesa: " + sqe, sqe);
 			throw new F3BException("StampaController.prelevaDatiPenaSospesa: Eccezione Generica: " + sqe);
-		}
-
-		finally {
+		} finally {
 			cleanup(lReaDao);
 			cleanup(lFasDao);
-
 			cleanup(lNotDao);
 			cleanup(lPenaComplDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSSostsqlDAO);
+			cleanup(lAnnoSqlDao);
 			cleanup(lConn);
 		}
 
 		Enumeration e = lTreeRoot.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("elemento =" + e.nextElement().toString());
 		}
 		Enumeration lChildRoot = lTreeRoot.children();
@@ -3180,9 +3196,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		int nChildCount = lTreeRoot.getChildCount();
 		// Ciclo di primo livello sui figli della root
 		while (lChildRoot.hasMoreElements()) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			siesLogger.info(
-					"Depth = " + lDepth + " Level=" + lTreeRoot.getLevel() + "  figli " + nChildCount);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger
+					.info("Depth = " + lDepth + " Level=" + lTreeRoot.getLevel() + "  figli " + nChildCount);
 			TreeModel lTNod = (TreeModel) lChildRoot.nextElement();
 
 			if (!lTNod.isLeaf() && lTNod.getChildCount() > 0) {
@@ -3192,13 +3209,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				while (lEnumCH2.hasMoreElements()) {
 					TreeModel lTNod2 = (TreeModel) lEnumCH2.nextElement();
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.info("LIVELLO2----->" + lTNod2.getModel().getClass().getName());
-				}// fine while 2 livello
+				} // fine while 2 livello
 			}
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("LIVELLO1-->" + lTNod.getModel().getClass().getName());
-		}// fine for sui figli della root
+		} // fine for sui figli della root
 
 		return lTreeRoot;
 	}

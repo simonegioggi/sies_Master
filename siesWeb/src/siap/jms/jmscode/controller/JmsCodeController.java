@@ -3,12 +3,12 @@ package siap.jms.jmscode.controller;
 import java.sql.Connection;
 import java.util.Vector;
 
-import siap.controller.SiapController;
-import siap.jms.jmscode.dao.JmsCodeSqlDAO;
-import siap.jms.jmscode.model.JmsCodeModel;
 import f3b.dao.DAOException;
 import f3b.model.DecodeModel;
 import f3b.util.F3BException;
+import siap.controller.SiapController;
+import siap.jms.jmscode.dao.JmsCodeSqlDAO;
+import siap.jms.jmscode.model.JmsCodeModel;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -31,11 +31,12 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 
 	/**
 	 * Ricerca le BDI configurate nel DB
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaAllBDI() throws F3BException {
+
 		Connection lConn = null;
 		Vector lJmsCodi = new Vector();
 		JmsCodeSqlDAO lJmsDao = null;
@@ -58,8 +59,8 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 	}
 
 	// RICERCA PER DOMINIO
-
 	public Vector ExRicercaPerDominio(String aDominio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lJmsCodi = new Vector();
 		JmsCodeSqlDAO lJmsDao = null;
@@ -83,12 +84,13 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 
 	/**
 	 * Ricerca il Codice dalla chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public JmsCodeModel ExRicercaJmsCodeByKey(String aDominio, String aCodice) throws F3BException {
+
 		Connection lConn = null;
 		JmsCodeSqlDAO lJmsDao = null;
 		JmsCodeModel lJmsMod;
@@ -108,6 +110,7 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 	}
 
 	public JmsCodeModel ExRicercaBDICodeByCodUff(String aCode) throws F3BException {
+
 		Connection lConn = null;
 		JmsCodeSqlDAO lJmsDao = null;
 		JmsCodeModel lJmsMod;
@@ -127,8 +130,8 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 	}
 
 	// RICERCA PER DOMINIO & DESCRIZIONE
-
 	public Vector ExRicercaPerDominioEDescrizione(String aDominio, String aDescrizione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lJmsCodi = new Vector();
 		JmsCodeSqlDAO lJmsDao = null;
@@ -159,8 +162,8 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 	}
 
 	// Ricerca Progressivi della BDI
-
 	public Vector ExRicercaProgressiviBDI() throws F3BException {
+
 		Connection lConn = null;
 		Vector lJmsCodi = new Vector();
 		JmsCodeSqlDAO lJmsDao = null;
@@ -185,15 +188,16 @@ public class JmsCodeController extends SiapController implements IJmsCode {
 
 	/**
 	 * Effettua la ricerca sulla tabella JMS utilizzando come criteri i dati presenti nel model
-	 * 
+	 *
 	 * @param aJmsModel
 	 *            - Model con i dati di ricerca. Presi in considerazione se <> null e <> ""
 	 */
 	public Vector<JmsCodeModel> ExRicercaJmsCode(JmsCodeModel aJmsModel) throws F3BException {
+
 		Connection lConn = null;
 		JmsCodeSqlDAO lJmsDao = null;
 
-		Vector<JmsCodeModel> lListaJmsMod = new Vector<JmsCodeModel>();
+		Vector<JmsCodeModel> lListaJmsMod = new Vector<>();
 
 		try {
 			lConn = getDBConnection();

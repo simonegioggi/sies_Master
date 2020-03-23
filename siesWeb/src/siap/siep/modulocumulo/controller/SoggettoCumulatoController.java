@@ -5,15 +5,14 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-import siap.controller.SiapController;
-import siap.sico.SICOException;
-import siap.siep.modulocumulo.controller.ISoggettoCumulato;
-import siap.siep.modulocumulo.dao.SoggettoCumulatoDAO;
-import siap.siep.modulocumulo.dao.SoggettoCumulatoSqlDAO;
-import siap.siep.modulocumulo.model.SoggettoCumulatoModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.controller.SiapController;
+import siap.sico.SICOException;
+import siap.siep.modulocumulo.dao.SoggettoCumulatoDAO;
+import siap.siep.modulocumulo.dao.SoggettoCumulatoSqlDAO;
+import siap.siep.modulocumulo.model.SoggettoCumulatoModel;
 
 /**
  * <p>
@@ -28,7 +27,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class SoggettoCumulatoController extends SiapController implements ISoggettoCumulato {
@@ -38,7 +37,7 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SoggettoCumulatoController a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSoggettoCumulatoModel
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -47,7 +46,7 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 
 	/**
 	 * Inserimento di un SoggettoCumulato
-	 * 
+	 *
 	 * @param aSoggetto
 	 *            SoggettoCumulatoModel
 	 * @return SoggettoCumulatoModel
@@ -88,13 +87,14 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 
 	/**
 	 * Ricerca di Soggetti (Cumulo)
-	 * 
+	 *
 	 * @param aSoggetto
 	 *            Soggetto Cumulato Model
 	 * @return Vettore di Soggetti
 	 * @throws F3BException
 	 */
 	public SoggettoCumulatoModel ExRicercaSoggettoCumulatoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoCumulatoModel lSoggetto = null;
 		SoggettoCumulatoSqlDAO lSogSqlDao = null;
@@ -123,11 +123,9 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 		return lSoggetto;
 	}
 
-	// ======================================
-
 	/**
 	 * Count dei Soggetti per Ricerca procedimento per soggetto
-	 * 
+	 *
 	 * @param aSoggetto
 	 * @param strCodUfficioUtenteConnesso
 	 * @param strCodDistrettoUtenteConnesso
@@ -138,6 +136,7 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 	public BigDecimal ExGetCountSoggettiPerProcedimentiCumulo(SoggettoCumulatoModel aSoggetto,
 			String strCodUfficioUtenteConnesso, String strCodDistrettoUtenteConnesso, String strTipoRicerca)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		// Connection lConn = null;
 		/*
@@ -158,17 +157,16 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 		return lCount;
 	}
 
-	// ====================================
-
 	/**
 	 * Modifica Secca di un soggetto Cumulato
-	 * 
+	 *
 	 * @param aSoggetto
 	 *            SoggettoCumulatoModel
 	 * @throws F3BException
 	 */
 	public SoggettoCumulatoModel ExModificaSoggettoCumulato(SoggettoCumulatoModel aSoggetto)
 			throws F3BException {
+
 		Connection conn = null;
 		SoggettoCumulatoDAO lSogDao = null;
 		SoggettoCumulatoModel lSog = null;
@@ -202,12 +200,13 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 
 	/**
 	 * Cancellazione secca di un soggetto Cumulato
-	 * 
+	 *
 	 * @param aSoggetto
 	 *            SoggettoCumulatoModel
 	 * @throws F3BException
 	 */
 	public void ExCancellaSoggettoCumulato(SoggettoCumulatoModel aSoggetto) throws F3BException {
+
 		Connection conn = null;
 		SoggettoCumulatoDAO lSogDao = null;
 
@@ -237,7 +236,7 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della
 	 * Primary_Key è già preimpostato; Questo metodo è usato nella funzione di presa in carico, per scaricare
 	 * Tutti i dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -245,6 +244,7 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 	 */
 	public String ExInserisciSoggetto_CumulatoWithoutSequence(SoggettoCumulatoModel aSoggetto,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		SoggettoCumulatoDAO lSogCumDao = null;
 
@@ -257,11 +257,10 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 				lSogCumDao.insert();
 				lSogCumDao.stop();
 			}
-
 		} catch (DAOException daoEx) {
 			if (daoEx.UNIQUE_CONSTRAINT_VIOLATED) {
-				siesLogger.error("Soggetto Cumulato gia' presente...>" + aSoggetto.getIdSoggettoCumulato()
-						+ "<");
+				siesLogger.error(
+						"Soggetto Cumulato gia' presente...>" + aSoggetto.getIdSoggettoCumulato() + "<");
 				EsitodiRitorno = "00001";
 			} else {
 				EsitodiRitorno = "01400";
@@ -269,14 +268,13 @@ public class SoggettoCumulatoController extends SiapController implements ISogge
 			}
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
-			throw new F3BException("SoggettoCumulatoController.ExInserisciSoggetto_CumulatoWithoutSequence: "
-					+ ex);
+			throw new F3BException(
+					"SoggettoCumulatoController.ExInserisciSoggetto_CumulatoWithoutSequence: " + ex);
 		} finally {
 			cleanup(lSogCumDao);
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciSoggetto_CumulatoWithoutSequence
 
 } // CHIUDE Controller()

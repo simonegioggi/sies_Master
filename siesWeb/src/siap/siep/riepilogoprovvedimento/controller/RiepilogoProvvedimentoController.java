@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.riepilogoprovvedimento.dao.RiepilogoProvvedimentoDAO;
 import siap.siep.riepilogoprovvedimento.dao.RiepilogoProvvedimentoSqlDAO;
 import siap.siep.riepilogoprovvedimento.model.RiepilogoProvvedimentoModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,6 +32,7 @@ public class RiepilogoProvvedimentoController extends SiapController implements 
 
 	public RiepilogoProvvedimentoModel ExInserisciRiepilogoProvvedimento(
 			RiepilogoProvvedimentoModel aRiepilogoProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 		RiepilogoProvvedimentoDAO lRieDao = null;
 		RiepilogoProvvedimentoModel lRieMod = null;
@@ -57,6 +58,7 @@ public class RiepilogoProvvedimentoController extends SiapController implements 
 
 	public Vector ExRicercaRiepilogoProvvedimento(RiepilogoProvvedimentoModel aRiepilogoProvvedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRiepilogoProvvedimenti = new Vector();
 		RiepilogoProvvedimentoSqlDAO lRieDao = null;
@@ -82,6 +84,7 @@ public class RiepilogoProvvedimentoController extends SiapController implements 
 
 	public RiepilogoProvvedimentoModel ExRicercaRiepilogoProvvedimentoByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		RiepilogoProvvedimentoSqlDAO lRieDao = null;
 		RiepilogoProvvedimentoModel lRieMod;
@@ -104,6 +107,7 @@ public class RiepilogoProvvedimentoController extends SiapController implements 
 
 	public RiepilogoProvvedimentoModel ExModificaRiepilogoProvvedimento(
 			RiepilogoProvvedimentoModel aRiepilogoProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 		RiepilogoProvvedimentoDAO lRieDao = null;
 		RiepilogoProvvedimentoModel lRieMod = new RiepilogoProvvedimentoModel(aRiepilogoProvvedimento);
@@ -127,6 +131,7 @@ public class RiepilogoProvvedimentoController extends SiapController implements 
 
 	public void ExCancellaRiepilogoProvvedimento(RiepilogoProvvedimentoModel aRiepilogoProvvedimento)
 			throws F3BException {
+
 		Connection lConn = null;
 		RiepilogoProvvedimentoDAO lRieDao = null;
 

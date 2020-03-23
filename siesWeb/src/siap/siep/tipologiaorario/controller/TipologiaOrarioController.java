@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
-import siap.siep.tipologiaorario.dao.TipologiaOrarioDAO;
-import siap.siep.tipologiaorario.dao.TipologiaOrarioSqlDAO;
-import siap.siep.tipologiaorario.model.TipologiaOrarioModel;
 import f3b.controller.GenericController;
 import f3b.dao.DAOException;
 import f3b.util.F3BException;
+import siap.siep.tipologiaorario.dao.TipologiaOrarioDAO;
+import siap.siep.tipologiaorario.dao.TipologiaOrarioSqlDAO;
+import siap.siep.tipologiaorario.model.TipologiaOrarioModel;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,7 +32,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un TipologiaOrario a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aTipologiaOrario
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -40,6 +40,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	 ****************************************************************************/
 	public TipologiaOrarioModel ExInserisciTipologiaOrario(TipologiaOrarioModel aTipologiaOrario)
 			throws F3BException {
+
 		Connection lConn = null;
 		TipologiaOrarioDAO lTipDao = null;
 		TipologiaOrarioModel lTipMod = null;
@@ -66,7 +67,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati TipologiaOrario
-	 * 
+	 *
 	 * @param aTipologiaOrario
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -74,6 +75,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaTipologiaOrario(TipologiaOrarioModel aTipologiaOrario) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTipologiaOrarii = new Vector();
 		TipologiaOrarioDAO lTipDao = null;
@@ -85,12 +87,12 @@ public class TipologiaOrarioController extends GenericController implements ITip
 			lTipDao.setOrderBy();
 			lTipDao.start();
 			while (lTipDao.next()) {
-				lTipologiaOrarii.add((TipologiaOrarioModel) lTipDao.getModel());
+				lTipologiaOrarii.add(lTipDao.getModel());
 			}
 			lTipDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("TipologiaOrarioController.ExRicercaTipologiaOrario: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TipologiaOrarioController.ExRicercaTipologiaOrario: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTipDao);
 			cleanup(lConn);
@@ -101,7 +103,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -109,6 +111,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	 ****************************************************************************/
 	public TipologiaOrarioModel ExRicercaTipologiaOrarioById(BigDecimal aIdTipologiaOrario)
 			throws F3BException {
+
 		Connection lConn = null;
 		TipologiaOrarioModel lTipologiaOrario = new TipologiaOrarioModel();
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
@@ -130,6 +133,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	}
 
 	public Vector ExRicercaTipologiaOrarioByIdBeneficio(BigDecimal aIdBeneficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTipologiaOrarioMod = null;
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
@@ -155,12 +159,13 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	 * Metodo che modifica i dati dell'TipologiaOrario Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aTipologiaOrario
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaTipologiaOrario(TipologiaOrarioModel aTipologiaOrario) throws F3BException {
+
 		Connection lConn = null;
 		TipologiaOrarioDAO lTipDao = null;
 
@@ -182,11 +187,12 @@ public class TipologiaOrarioController extends GenericController implements ITip
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aTipologiaOrario
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaTipologiaOrario(TipologiaOrarioModel aTipologiaOrario) throws F3BException {
+
 		Connection lConn = null;
 		TipologiaOrarioDAO lTipDao = null;
 
@@ -209,12 +215,13 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aTipologiaOrario
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountTipologiaOrario(TipologiaOrarioModel aTipologiaOrario) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
@@ -241,7 +248,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aTipologiaOrario
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -251,6 +258,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	 ****************************************************************************/
 	public Vector ExRicercaTipologiaOrarioPaged(TipologiaOrarioModel aTipologiaOrario, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lTipologiaOrarii = new Vector();
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
@@ -273,6 +281,7 @@ public class TipologiaOrarioController extends GenericController implements ITip
 	// MEV26 CUMULO
 	public Vector ExRicercaTipologiaOrarioByIdBeneficioCumulo(BigDecimal aIdBeneficioCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lTipologiaOrarioMod = null;
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;

@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sige.SIGEException;
 import siap.sige.curatore.dao.CuratoreDAO;
 import siap.sige.curatore.dao.CuratoreSqlDAO;
 import siap.sige.curatore.model.CuratoreModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -35,7 +35,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * Metodo che esegue l'inserimento di un curatore.
 	 * <p>
-	 * 
+	 *
 	 * @param aCuratore
 	 *            CuratoreModel Il model con i dati da inserire.
 	 * @throws F3BException
@@ -43,6 +43,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 * @return CuratoreModel ritorna il model.
 	 */
 	public CuratoreModel ExInserisciCuratore(CuratoreModel aCuratore) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreDAO lCurDao = null;
 		CuratoreModel lCurMod = null;
@@ -77,7 +78,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * Metodo che esegue la ricerca di un Curatore.
 	 * <p>
-	 * 
+	 *
 	 * @param aCuratore
 	 *            Model popolato con i parametri necessari per la ricerca
 	 * @return ritorna l'insieme delle occorrenze.
@@ -85,6 +86,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaCuratore(CuratoreModel aCuratore) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCuratori = new Vector();
 		CuratoreSqlDAO lCurDao = null;
@@ -111,7 +113,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 * Metodo che si occupa di recupera l'elenco degli esperti per popolare elementi Combobox oppurtamente
 	 * filtrati per il codice ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            codice uffcio.
 	 * @return ritorna l'insieme di EsperoModel delle occorrenze.
@@ -119,6 +121,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExElencoCbxCuratoriByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSqlDAO lCurDao = null;
 		Vector lCurDecMods = new Vector();
@@ -153,7 +156,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * Metodo che esegue la ricerca puntuale per l'id di un Curatore.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id chiave di puntamento al record.
 	 * @return CuratoreModel ritorna il model opportunamente popolato.
@@ -161,6 +164,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 *             propga errore di eccezione.
 	 */
 	public CuratoreModel ExRicercaCuratoreByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSqlDAO lCurDao = null;
 		CuratoreModel lCurMod;
@@ -182,7 +186,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * Metodo che esegue la modifica dei dati di un Curatore.
 	 * <p>
-	 * 
+	 *
 	 * @param aCuratore
 	 *            Model Curatore.
 	 * @return model dell'e Curatore di ritorno.
@@ -190,6 +194,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 *             propga errore di eccezione.
 	 */
 	public CuratoreModel ExModificaCuratore(CuratoreModel aCuratore) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreDAO lCurDao = null;
 		CuratoreModel lCurMod = new CuratoreModel(aCuratore);
@@ -217,13 +222,14 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * <p>
 	 * Description: : la funzione effettua la cancellazione di un record nella tabella Curatore
-	 * 
+	 *
 	 * @param IdCuratore
 	 *            : identificatore univoco Curatore
 	 * @return
 	 * @throws F3BException
 	 */
 	public void ExCancellaCuratore(BigDecimal IdCuratore) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreDAO lCurDao = null;
 
@@ -253,7 +259,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * <p>
 	 * Description: : restituisce l'elenco degli Esperti per ufficio
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            : COdice ufficio di appartenenza
 	 * @return
@@ -261,6 +267,7 @@ public class CuratoreController extends SiapController implements ICuratore {
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaCuratoreByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSqlDAO lCurDao = null;
 		Vector lCurMods = null;
@@ -285,12 +292,13 @@ public class CuratoreController extends SiapController implements ICuratore {
 	/**
 	 * Numero dei record occorsi.
 	 * <p>
-	 * 
+	 *
 	 * @param aCuratore
 	 * @return
 	 * @throws F3BException
 	 */
 	public int ExGetNumRicercaCuratore(CuratoreModel aCuratore) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSqlDAO lCurDao = null;
 

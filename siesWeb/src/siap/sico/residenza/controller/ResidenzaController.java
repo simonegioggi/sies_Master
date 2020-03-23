@@ -9,6 +9,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.residenza.dao.ResidenzaDAO;
 import siap.sico.residenza.dao.ResidenzaFascicoloSiepDAO;
@@ -17,9 +20,6 @@ import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.residenza.model.ResidenzaFascicoloSiepModel;
 import siap.sico.residenza.model.ResidenzaFascicoloSiusModel;
 import siap.sico.residenza.model.ResidenzaModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -43,72 +43,8 @@ public class ResidenzaController extends SiapController implements IResidenza {
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	/*
-	 * public void ExInserisciResidenza (ResidenzaModel aResidenza) throws F3BException { Connection lConn =
-	 * null;
-	 * 
-	 * ResidenzaDAO lResDao = null; ResidenzaSqlDAO lSqlDao = null;
-	 * 
-	 * try { lConn = getDBTransaction();
-	 * 
-	 * // 1- Cerca l'ultima occorrenza per quel soggetto eventualmente presente BigDecimal lIdRes = null;
-	 * 
-	 * lSqlDao = new ResidenzaSqlDAO(lConn);
-	 * 
-	 * lSqlDao.ricercaMaxIdResidenzaPerIdSoggetto(aResidenza.getSogIdSoggetto()); lSqlDao.start();
-	 * if(lSqlDao.next()) { lIdRes = lSqlDao.getIdResidenza(); } lSqlDao.stop();
-	 * 
-	 * lResDao = new ResidenzaDAO(lConn); // Imposta il parametro del tipo di transazione
-	 * //lResDao.setTransaction();
-	 * 
-	 * // 2- Eventualmente setta la data fine if(lIdRes != null) { lResDao.setIdResidenza(lIdRes);
-	 * lResDao.setDataFineValidita(new Date()); lResDao.selByKey(); lResDao.update(); lResDao.stop(); }
-	 * 
-	 * // 3- Inserisce la nuova occorrenza di residenza lResDao.setDAOFromModel(aResidenza); BigDecimal
-	 * lSequence = lResDao.insert();
-	 * 
-	 * aResidenza.setIdResidenza(lSequence);
-	 * 
-	 * commit(lConn); } catch (DAOException ex) { rollback(lConn); throw new
-	 * F3BException("ResidenzaController.ExInserisci: Non posso inserire: " + ex); } catch (SQLException sqe)
-	 * { rollback(lConn); throw new
-	 * F3BException("ResidenzaController.ExInserisciResidenza: Non posso inserire : " + sqe); } catch
-	 * (Exception ex) { rollback(lConn); throw new
-	 * F3BException("ResidenzaController.ExInserisciResidenza: Non posso inserire : " + ex); } finally {
-	 * cleanup(lResDao); cleanup(lSqlDao); cleanup(lConn); } }
-	 */
-
-	/*
-	 * public ResidenzaModel ExInserisciResidenza(ResidenzaModel aResidenza) throws F3BException { Connection
-	 * lConn = null;
-	 * 
-	 * ResidenzaDAO lResDao = null;
-	 * 
-	 * try { lConn = getDBTransaction();
-	 * 
-	 * // Storicizza l'ultima occorrenza eventualmente presente BigDecimal lIdRes = null; if(
-	 * (aResidenza.getCodTipoResidenza()).equals("R") ) lIdRes =
-	 * getIdResidenzaCorrente(aResidenza.getSogIdSoggetto()); else lIdRes =
-	 * getIdDomicilioCorrente(aResidenza.getSogIdSoggetto());
-	 * 
-	 * lResDao = new ResidenzaDAO(lConn); if(lIdRes != null) { lResDao.setIdResidenza(lIdRes);
-	 * //lResDao.setDataFineValidita(new Date()); lResDao.selByKey(); lResDao.update(); lResDao.stop(); }
-	 * 
-	 * // Inserisce la nuova occorrenza di residenza lResDao.setDAOFromModel(aResidenza); BigDecimal lSequence
-	 * = lResDao.insert();
-	 * 
-	 * aResidenza.setIdResidenza(lSequence);
-	 * 
-	 * commit(lConn); } catch (DAOException ex) { rollback(lConn); throw new
-	 * F3BException("ResidenzaController.ExInserisci: Non posso inserire: " + ex); } catch (SQLException sqe)
-	 * { rollback(lConn); throw new
-	 * F3BException("ResidenzaController.ExInserisciResidenza: Non posso inserire il soggetti : " + sqe); }
-	 * finally { cleanup(lResDao); cleanup(lConn); }
-	 * 
-	 * return aResidenza; }
-	 */
-
 	public ResidenzaModel ExInserisciResidenza(ResidenzaModel aResidenza) throws F3BException {
+
 		Connection lConn = null;
 		ResidenzaDAO lResDao = null;
 		ResidenzaModel lResMod = null;
@@ -133,61 +69,15 @@ public class ResidenzaController extends SiapController implements IResidenza {
 		return lResMod;
 	}
 
-//	private BigDecimal getIdResidenzaCorrente(BigDecimal aIdSoggetto) throws F3BException {
-//		Connection lConn = null;
-//		BigDecimal lIdRes = null;
-//		ResidenzaSqlDAO lSqlDao = null;
-//		try {
-//			lConn = getDBConnection();
-//			lSqlDao = new ResidenzaSqlDAO(lConn);
-//			lSqlDao.ricercaMaxIdResidenzaPerIdSoggetto(aIdSoggetto, "R");
-//			lSqlDao.start();
-//			if (lSqlDao.next()) {
-//				lIdRes = lSqlDao.getIdResidenza();
-//			}
-//			lSqlDao.stop();
-//		} catch (DAOException ex) {
-//			throw new F3BException("ResidenzaController.ExInserisci: Non posso inserire: " + ex);
-//		} finally {
-//			cleanup(lSqlDao);
-//			cleanup(lConn);
-//		}
-//
-//		return lIdRes;
-//	}
-
-//	private BigDecimal getIdDomicilioCorrente(BigDecimal aIdSoggetto) throws F3BException {
-//		Connection lConn = null;
-//		BigDecimal lIdRes = null;
-//		ResidenzaSqlDAO lSqlDao = null;
-//		try {
-//			lConn = getDBConnection();
-//			lSqlDao = new ResidenzaSqlDAO(lConn);
-//			lSqlDao.ricercaMaxIdResidenzaPerIdSoggetto(aIdSoggetto, "D");
-//			lSqlDao.start();
-//			if (lSqlDao.next()) {
-//				lIdRes = lSqlDao.getIdResidenza();
-//			}
-//			lSqlDao.stop();
-//
-//		} catch (DAOException ex) {
-//			throw new F3BException("ResidenzaController.ExInserisci: Non posso inserire: " + ex);
-//		} finally {
-//			cleanup(lSqlDao);
-//			cleanup(lConn);
-//		}
-//
-//		return lIdRes;
-//	}
-
 	/**
 	 * Ricerca Residenza
-	 * 
+	 *
 	 * @param aResidenza
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaResidenza(ResidenzaModel aResidenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lResidenze = new Vector();
 		ResidenzaSqlDAO lDao = null;
@@ -211,12 +101,13 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 	/**
 	 * Ricerca Residenze anche pregressi
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return lResidenze
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaResidenzeByIdFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lResidenze = new Vector();
 		ResidenzaSqlDAO lDao = null;
@@ -254,12 +145,13 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 	/**
 	 * Ricerca Residenze e Domicili, anche pregressi
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return lResidenze
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaResidenzeDomiciliByIdFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lResidenze = new Vector();
 		ResidenzaSqlDAO lDao = null;
@@ -297,13 +189,14 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 	/**
 	 * Ricerca Residenze e Domicili, anche pregressi
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 * @return lResidenze
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaResidenzeDomiciliByIdFascicoloSius(BigDecimal aIdFascicoloSius)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lResidenze = new Vector();
 		ResidenzaSqlDAO lDao = null;
@@ -331,8 +224,8 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 			lDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("ResidenzaController.ExRicercaResidenzeDomiciliByIdFascicoloSius: "
-					+ daoEx);
+			throw new F3BException(
+					"ResidenzaController.ExRicercaResidenzeDomiciliByIdFascicoloSius: " + daoEx);
 		} finally {
 			cleanup(lDao);
 			cleanup(lConn);
@@ -341,6 +234,7 @@ public class ResidenzaController extends SiapController implements IResidenza {
 	}
 
 	public HashMap ExRicercaSiepResidenzeDomiciliByIdSoggetto(BigDecimal aIdSoggetto) throws F3BException {
+
 		Connection lConn = null;
 
 		HashMap lMap = new HashMap();
@@ -381,7 +275,8 @@ public class ResidenzaController extends SiapController implements IResidenza {
 						"Nessuna Residenza/Domicilio trovati per questo Soggetto");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("ResidenzaController.ExRicercaSiepResidenzeDomiciliByIdSoggetto: " + daoEx);
+			throw new F3BException(
+					"ResidenzaController.ExRicercaSiepResidenzeDomiciliByIdSoggetto: " + daoEx);
 		} finally {
 			cleanup(lDao);
 			cleanup(lConn);
@@ -391,6 +286,7 @@ public class ResidenzaController extends SiapController implements IResidenza {
 	}
 
 	public ResidenzaModel ExModificaResidenza(ResidenzaModel aResidenza) throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaDAO lResDao = null;
@@ -419,6 +315,7 @@ public class ResidenzaController extends SiapController implements IResidenza {
 	}
 
 	public void ExCancellaResidenza(ResidenzaModel aResidenza) throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaDAO lResDao = null;
@@ -441,6 +338,7 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 	public String ExInserisciResidenzaWithoutSequence(ResidenzaModel lResidenza, Connection lConn,
 			BigDecimal lKeyFascicolo) throws F3BException {
+
 		ResidenzaDAO lResDao = null;
 		ResidenzaFascicoloSiepDAO lResFasDao = null;
 		String lCodEsito = "00000";
@@ -479,7 +377,8 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 	public String ExInserisciResidenzeWithoutSequence(ArrayList aResidenze, Connection lConn,
 			BigDecimal lKeyFascicolo) throws F3BException {
-//		ResidenzaModel lResMod = new ResidenzaModel();
+
+		// ResidenzaModel lResMod = new ResidenzaModel();
 		ResidenzaDAO lResDao = null;
 		ResidenzaFascicoloSiepDAO lResFasDao = null;
 		String lCodEsito = "00000";
@@ -491,8 +390,8 @@ public class ResidenzaController extends SiapController implements IResidenza {
 
 			if (aResidenze != null && aResidenze.size() > 0) {
 				for (int i = 0; i < aResidenze.size(); i++) {
-					ResidenzaFascicoloSiepModel lResFasMod = new ResidenzaFascicoloSiepModel(new Date(),
-							null, ((ResidenzaModel) aResidenze.get(i)).getIdResidenza(), lKeyFascicolo);
+					ResidenzaFascicoloSiepModel lResFasMod = new ResidenzaFascicoloSiepModel(new Date(), null,
+							((ResidenzaModel) aResidenze.get(i)).getIdResidenza(), lKeyFascicolo);
 
 					lResFasDao = new ResidenzaFascicoloSiepDAO(lConn);
 					lResFasDao.setDAOFromModel(lResFasMod);
@@ -600,7 +499,7 @@ public class ResidenzaController extends SiapController implements IResidenza {
 	/**
 	 * Ricerca Residenza Sige. Nella lista dei domicili vengono caricati anche i domicili del soggetto
 	 * associato al Fascicolo SIEP dal quale è stato inserito il Fascicolo Sige.
-	 * 
+	 *
 	 * @param aResidenza
 	 * @param idSoggettoSiep
 	 * @return
@@ -608,6 +507,7 @@ public class ResidenzaController extends SiapController implements IResidenza {
 	 */
 	public Vector ExRicercaResidenzaSige(ResidenzaModel aResidenza, BigDecimal idSoggettoSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lResidenze = new Vector();
 		ResidenzaSqlDAO lDao = null;
@@ -620,7 +520,8 @@ public class ResidenzaController extends SiapController implements IResidenza {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("ResidenzaController.ExRicercaResidenzaSige: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"ResidenzaController.ExRicercaResidenzaSige: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lDao);
 			cleanup(lConn);

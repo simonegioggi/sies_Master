@@ -1089,33 +1089,6 @@ public class StatisticheMSController extends GenericController {
 		}
 	}
 
-	// public void ricercaRiepilogoMovimentoProcedimentiStoreProcedure(String dataIniziale, String dataFinale,
-	// String ufficioConnesso) throws F3BException {
-	//
-	// Connection c = null;
-	// StatistichMSStoreProcedureDAO smsspdao = null;
-	//
-	// try {
-	// c = getDBConnection();
-	// smsspdao = new StatistichMSStoreProcedureDAO(c);
-	// smsspdao.setRiepilogoMovimentoProcedimentiStoreProcedure();
-	// smsspdao.setDataInizio(dataIniziale);
-	// smsspdao.setDataFine(dataFinale);
-	// smsspdao.setCodUfficioInserimento(ufficioConnesso);
-	// smsspdao.execute();
-	// c.commit();
-	// } catch (DAOException daoEx) {
-	// throw new F3BException(
-	// "StatisticheMSController.ricercaRiepilogoMovimentoProcedimentiStoreProcedure: " + daoEx);
-	// } catch (SQLException sqe) {
-	// throw new F3BException(
-	// "StatisticheMSController.ricercaRiepilogoMovimentoProcedimentiStoreProcedure: " + sqe);
-	// } finally {
-	// cleanup(smsspdao);
-	// cleanup(c);
-	// }
-	// }
-
 	public void ricercaStatiFascicoloStoredProcedure(String ufficioConnesso, String accorpato1,
 			String accorpato2, String accorpato3, String dataVerifica, String dataIniziale, String dataFinale)
 			throws Exception {
@@ -2265,6 +2238,7 @@ public class StatisticheMSController extends GenericController {
 
 	public Vector ExGetCountRiepilogoIspProvvedimentiMS(IspProvvedimentiModel aIspProvvedimenti)
 			throws Exception {
+
 		Connection lConn = null;
 		Vector lIspProvvedimenti = new Vector();
 		IspProvvedimentiSqlDAO lIspDao = null;

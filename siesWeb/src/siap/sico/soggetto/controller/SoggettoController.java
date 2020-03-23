@@ -86,10 +86,12 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSoggetto(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggetti = new Vector();
 
 		SoggettoSqlDAO lSogSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
@@ -99,17 +101,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 
 			if (lSoggetti.isEmpty())
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(daoEx.getLocalizedMessage());
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExRicercaSoggetto: " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info(sqe.getLocalizedMessage());
-			// throw new SICOException(SICOException.USER_MESSAGE, "SoggettoController.ExRicercaSoggetto: "
-			// + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lConn);
@@ -127,6 +123,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSoggettiOmonimi(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggetti = new Vector();
 
@@ -170,10 +167,12 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 */
 	public Vector ExRicercaSoggettoPerDistretto(SoggettoModel aSoggetto, String aCodDistretto, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggetti = new Vector();
 
 		SoggettoSqlDAO lSogSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
@@ -189,17 +188,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 
 			if (lSoggetti.isEmpty())
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(daoEx.getLocalizedMessage());
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExRicercaSoggettoPerDistretto : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info(sqe.getLocalizedMessage());
-			// throw new SICOException(SICOException.USER_MESSAGE,
-			// "SoggettoController.ExRicercaSoggettoPerDistretto : " + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lConn);
@@ -218,10 +211,12 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 */
 	public BigDecimal ExGetCountSoggettiPerDistretto(SoggettoModel aSoggetto, String aCodDistretto)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
 		SoggettoSqlDAO lSogSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
@@ -235,11 +230,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			siesLogger.info(daoEx.getLocalizedMessage());
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExGetCountSoggettiPerDistretto : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info(sqe.getLocalizedMessage());
-			// throw new SICOException(SICOException.USER_MESSAGE,
-			// "SoggettoController.ExGetCountSoggettiPerDistretto : " + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lConn);
@@ -260,10 +250,12 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	public BigDecimal ExGetCountSoggettiPerProcedimenti(SoggettoModel aSoggetto,
 			String strCodUfficioUtenteConnesso, String strCodDistrettoUtenteConnesso, String strTipoRicerca)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
 		SoggettoFascicoloSqlDAO lSogSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lSogSqlDao = new SoggettoFascicoloSqlDAO(lConn);
@@ -278,11 +270,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			siesLogger.info(daoEx.getLocalizedMessage());
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExGetCountSoggettiPerProcedimenti : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info(sqe.getLocalizedMessage());
-			// throw new SICOException(SICOException.USER_MESSAGE,
-			// "SoggettoController.ExGetCountSoggettiPerProcedimenti : " + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lConn);
@@ -298,10 +285,12 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetEtaSoggetto(BigDecimal idSoggetto) throws F3BException {
+
 		BigDecimal eta = null;
 		Connection lConn = null;
 
 		SoggettoSqlDAO lSogSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
@@ -315,11 +304,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			siesLogger.info(daoEx.getLocalizedMessage());
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExGetEtaSoggetto : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info(sqe.getLocalizedMessage());
-			// throw new SICOException(SICOException.USER_MESSAGE,
-			// "SoggettoController.ExGetEtaSoggetto : " + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lConn);
@@ -336,6 +320,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public SoggettoModel ExRicercaSoggettoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoModel lSoggetto = null;
 		SoggettoSqlDAO lSogSqlDao = null;
@@ -357,17 +342,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(lSoggetto.toString());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(daoEx.getLocalizedMessage());
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExRicercaSoggettoByKey : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info(sqe.getLocalizedMessage());
-			// throw new SICOException(SICOException.USER_MESSAGE,
-			// "SoggettoController.ExRicercaSoggettoByKey : " + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lConn);
@@ -385,6 +364,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public SoggettoModel ExInserisciSoggetto(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoDAO lSogDao = null;
 		SoggettoModel lSog = null;
@@ -404,19 +384,19 @@ public class SoggettoController extends SiapController implements ISoggetto {
 
 			/*
 			 * 12/08/2006 -- Eliminato codice CS //Verifico l'esistenza di un soggetto con lo stesso COdice CS
-			 * lSog = this.ExVerifyCodCS(aSoggetto.getCodCs(), lSogDao); if (lSog != null) return lSog;
+			 * lSog = ExVerifyCodCS(aSoggetto.getCodCs(), lSogDao); if (lSog != null) return lSog;
 			 */
 
 			// Verifico l'esistenza di un soggetto con lo stesso Codice CUI
 			// (viene registrato nella colonna COD_AFIS della tabella SOGGETTO)
-			lSogCui = this.ExVerifyCodiceCUI$AFIS(aSoggetto.getCodAfis(), lSogDao);
+			lSogCui = ExVerifyCodiceCUI$AFIS(aSoggetto.getCodAfis(), lSogDao);
 			if (lSogCui != null)
 				lPresenzaCui = true;
 			// return lSog;
 
 			/*
 			 * 12/08/2006 -- Eliminato codice CS //Verifico l'esistenza di un soggetto con lo stesso atto di
-			 * Nascita lSog = this.ExVerifyAttoNascita(aSoggetto.getAttoNascita(), lSogDao); if (lSog != null)
+			 * Nascita lSog = ExVerifyAttoNascita(aSoggetto.getAttoNascita(), lSogDao); if (lSog != null)
 			 * return lSog;
 			 */
 
@@ -458,6 +438,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public SoggettoModel ExModificaSoggetto(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection conn = null;
 		SoggettoDAO lSogDao = null;
 		SoggettoModel lSog = null;
@@ -474,7 +455,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 
 			/*--12/07/2006 --Il codice CS e' stato eliminato
 			//Verifico l'esistenza di un soggetto con ID diverso con lo stesso COdice CS
-			      lSog = this.ExVerifyCodCS(aSoggetto.getCodCs(), lSogDao);
+			      lSog = ExVerifyCodCS(aSoggetto.getCodCs(), lSogDao);
 			      if (lSog != null)
 			      {
 			        if (lSog.getIdSoggetto().compareTo(aSoggetto.getIdSoggetto()) != 0)
@@ -482,7 +463,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			      }*/
 
 			// Verifico l'esistenza di un soggetto con ID diverso con lo stesso atto di Nascita
-			lSog = this.ExVerifyAttoNascita(aSoggetto.getAttoNascita(), lSogDao);
+			lSog = ExVerifyAttoNascita(aSoggetto.getAttoNascita(), lSogDao);
 
 			if (lSog != null) {
 				if (lSog.getIdSoggetto().compareTo(aSoggetto.getIdSoggetto()) != 0)
@@ -503,11 +484,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("DAOException: " + ex);
 			throw new SICOException("SoggettoController.ExModificaSoggetto: " + ex);
-			// } catch (SQLException sqe) {
-			// rollback(conn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info("SQLException: " + sqe);
-			// throw new SICOException("SoggettoController.ExModificaSoggetto: " + sqe);
 		} finally {
 			cleanup(lSogDao);
 			cleanup(conn);
@@ -524,8 +500,8 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public void ExCancellaSoggetto(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection conn = null;
-		// Vector lSoggetti = new Vector();
 		SoggettoDAO lSogDao = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -548,11 +524,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("DAOException: " + ex);
 			throw new SICOException("SoggettoController.ExCancellaSoggetto: " + ex);
-			// } catch (SQLException sqe) {
-			// rollback(conn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info("SQLException: " + sqe);
-			// throw new SICOException("SoggettoController.ExCancellaSoggetto: " + sqe);
 		} finally {
 			cleanup(lSogDao);
 			cleanup(conn);
@@ -567,6 +538,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @return
 	 */
 	public SoggettoModel ExVerifyCodCS(String aCodCS, SoggettoDAO aSogDao) throws DAOException {
+
 		SoggettoModel lRetSog = null;
 
 		// COntrollo il Codice CS
@@ -600,6 +572,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 */
 	public SoggettoModel ExVerifyCodiceCUI$AFIS(String aCodCUI$AFIS, SoggettoDAO aSogDao)
 			throws DAOException {
+
 		SoggettoModel lRetSog = null;
 
 		// Controllo il Codice CUI/AFIS
@@ -628,8 +601,8 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @param aSogDao
 	 * @return
 	 */
-
 	public SoggettoModel ExVerifyAttoNascita(String aAttoNascita, SoggettoDAO aSogDao) throws DAOException {
+
 		SoggettoModel lRetSog = null;
 		// Controllo il Atto di Nascita
 		if (aAttoNascita != null) {
@@ -662,6 +635,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 */
 	public String ExInserisciSoggettoWithoutSequence(SoggettoModel aSoggetto, Connection lConn)
 			throws F3BException {
+
 		SoggettoDAO lSogDao = null;
 		String lCodEsito = "00000";
 
@@ -702,7 +676,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 						siesLogger.debug("Eccezione nell'Update del Soggetto (KEY_SOGG_NSC) ---> " + dex);
 					}
 				}
-
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire il Soggetto! ");
 		} finally {
@@ -715,15 +688,19 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	/* Modifica di un soggetto con un fascicolo Siep associato che aggiorna lo storico */
 	public SoggettoModel ExModificaSoggettoStorico(SoggettoModel aSoggetto, String aProfilo,
 			SoggettoModel aSoggettoVecchio, BigDecimal lKeyFascicoloUnivoco) throws F3BException {
+
 		Connection conn = null;
 		SoggettoDAO lSogDao = null;
-		SoggettoModel lSog = null;
 		StoricoSoggettoDAO lStoSogDao = null;
 		StoricoSoggettoSqlDAO lStoSogSqlDao = null;
 		FascicoloSiusSqlDAO lFascSiepSql = null;
+
+		SoggettoModel lSog = null;
 		FascicoloSiusModel lFasMod = null;
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.info(lKeyFascicoloUnivoco + "");
+
 		boolean lFaiCommit = true;
 
 		try {
@@ -867,11 +844,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("DAOException: " + ex);
 			throw new SICOException("SoggettoController.ExModificaSoggettoStorico: " + ex);
-			// } catch (SQLException sqe) {
-			// rollback(conn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info("SQLException: " + sqe);
-			// throw new SICOException("SoggettoController.ExModificaSoggettoStorico: " + sqe);
 		} finally {
 			cleanup(lSogDao);
 			cleanup(lStoSogDao);
@@ -893,6 +865,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 */
 	public SoggettoModel ExModificaSoggettoStorici(SoggettoModel aSoggetto, Vector lKeyFascicoli,
 			BigDecimal IdSoggettoVecchio) throws F3BException {
+
 		Connection conn = null;
 
 		SoggettoDAO lSogDao = null;
@@ -900,10 +873,12 @@ public class SoggettoController extends SiapController implements ISoggetto {
 		StoricoSoggettoDAO lStoSogDao = null;
 		StoricoSoggettoSqlDAO lStoSogSqlDao = null;
 		FascicoloSiusSqlDAO lFascSiusSql = null;
-		FascicoloSiepModel lFasMod = null;
 		FascicoloSiusDAO lFascSiusDAO = null;
 		FascicoloSiepSqlDAO lFasSql = null;
+
+		FascicoloSiepModel lFasMod = null;
 		SoggettoModel lSogModificato = new SoggettoModel(aSoggetto);
+
 		try {
 			conn = getDBTransaction();
 
@@ -1024,15 +999,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 						lFascSiusDAO.setDAOFromModelForUpdate(lFasSiusMod);
 						lFascSiusDAO.update();
 						lFascSiusDAO.stop();
-
 					}
 					modificaNumFasc += lFasMod.getChiaveAnno() + " / " + lFasMod.getChiaveProgr() + " - ";
 					modificaDaPassare = modifica + modificaNumFasc + modificaSeguito;
 					lSogModificato.setMessage(modificaDaPassare);
-
 				}
-				// Insert
-
 			}
 			commit(conn);
 		} catch (DAOException ex) {
@@ -1041,247 +1012,26 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			// LogF3B.getLogger()
 			siesLogger.error("SoggettoController.ExModificaSoggettoStorici", ex);
 			throw new F3BException("SoggettoController.ExModificaSoggettoStorici : " + ex);
-			// } catch (SQLException sqe) {
-			// rollback(conn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// // LogF3B.getLogger()
-			// siesLogger.error("SoggettoController.ExModificaSoggettoStorici", sqe);
-			// throw new F3BException("SoggettoController.ExModificaSoggettoStorici : " + sqe);
 		} catch (Exception ex) {
 			rollback(conn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SoggettoController.ExModificaSoggettoStorici", ex);
 			throw new F3BException("SoggettoController.ExModificaSoggettoStorici: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lSogDao);
 			cleanup(lSogSqlDao);
 			cleanup(lStoSogDao);
 			cleanup(lStoSogSqlDao);
 			cleanup(lFascSiusSql);
 			cleanup(lFascSiusDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSql);
 
 			cleanup(conn);
 		}
 
 		return lSogModificato;
-
-		/*
-		 * PAOLO commento tutto il pezzo e lo riscrivo 29 marzo 2010 Connection conn = null; SoggettoDAO
-		 * lSogDao = null; SoggettoModel lSog = null; SoggettoSqlDAO lSogSqlDao = null; SoggettoModel
-		 * lSoggetto = null; StoricoSoggettoDAO lStoSogDao = null; StoricoSoggettoSqlDAO lStoSogSqlDao = null;
-		 * FascicoloSiepSqlDAO lFasSql = null; FascicoloSiepModel lFasMod = null; FascicoloSiepDAO lFasDAO =
-		 * null; ResidenzaSqlDAO lReSql = null; ResidenzaDAO lReDAO = null; AliasDAO lAliasDAO = null;
-		 * AliasSqlDAO lAliasSqlDAO = null; NotificaSqlDAO lNotSQL = null; NotificaDAO lNotDAO = null;
-		 * FascicoloSiusSqlDAO lFascSiusSql = null; FascicoloSiusDAO lFascSiusDAO = null;
-		 * ResidenzaFascicoloSiepDAO lReFascDAO = null; EventoSqlDAO lEveSql = null; NotificaEventoSqlDAO
-		 * lNotEveDao = null; SoggettoModel lSogDuplicato = null;
-		 *
-		 * try { conn = getDBTransaction();
-		 *
-		 * lSogDao = new SoggettoDAO(conn); lSogSqlDao = new SoggettoSqlDAO(conn); lFasSql = new
-		 * FascicoloSiepSqlDAO(conn); lFasDAO = new FascicoloSiepDAO(conn); lReDAO = new ResidenzaDAO(conn);
-		 * lAliasDAO = new AliasDAO(conn); lAliasSqlDAO = new AliasSqlDAO(conn); lNotSQL = new
-		 * NotificaSqlDAO(conn); lNotDAO = new NotificaDAO(conn); lFascSiusSql = new
-		 * FascicoloSiusSqlDAO(conn); lReFascDAO = new ResidenzaFascicoloSiepDAO(conn); lFascSiusDAO = new
-		 * FascicoloSiusDAO(conn); lEveSql = new EventoSqlDAO(conn); lNotEveDao = new
-		 * NotificaEventoSqlDAO(conn); lStoSogSqlDao = new StoricoSoggettoSqlDAO(conn); lSogDuplicato = new
-		 * SoggettoModel();
-		 *
-		 * // lSogSqlDao.ricercaSoggettoByKey(aSoggetto.getIdSoggetto());
-		 *
-		 * lSoggetto = new SoggettoModel(aSoggetto);
-		 *
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * BigDecimal lKeySoggDuplicato = null; siesLogger.info("lKeyFascicoli.size----->" +
-		 * lKeyFascicoli.size()); if (lKeyFascicoli.size() > 0) { // DUPLICO SOGGETTO
-		 * lSogDao.setDAOFromModel(aSoggetto); lKeySoggDuplicato = lSogDao.insert();
-		 * lSogDuplicato.setIdSoggetto(lKeySoggDuplicato); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
-		 * variabile di istanza siesLogger al posto di mLog siesLogger.info("soggetto INSERITO----->" +
-		 * lKeySoggDuplicato); }
-		 *
-		 * // INSERISCO STORICO SOGGETTO lStoSogDao = new StoricoSoggettoDAO(conn);
-		 * lSogSqlDao.ricercaSoggettoByKey(IdSoggettoVecchio); SoggettoModel lSoggVecchio = (SoggettoModel)
-		 * lSogSqlDao.getModelByKey(); StoricoSoggettoModel lStoricoSogg = new StoricoSoggettoModel();
-		 *
-		 * lStoricoSogg.setIdSoggettoVariato(IdSoggettoVecchio);
-		 * lStoricoSogg.setDataVariazione(aSoggetto.getDataAggiornamento());
-		 * lStoricoSogg.setNome(lSoggVecchio.getNome()); lStoricoSogg.setCognome(lSoggVecchio.getCognome());
-		 * lStoricoSogg.setAnnoNascita(lSoggVecchio.getAnnoNascita());
-		 * lStoricoSogg.setMeseNascita(lSoggVecchio.getMeseNascita());
-		 * lStoricoSogg.setDataNascita(lSoggVecchio.getDataNascita());
-		 * lStoricoSogg.setDataNascitaPresunta(lSoggVecchio.getDataNascitaPresunta());
-		 *
-		 * lStoricoSogg.setCodComuneNascita(lSoggVecchio.getCodComuneNascita());
-		 * lStoricoSogg.setCodProvinciaNascita(lSoggVecchio.getCodProvinciaNascita());
-		 * lStoricoSogg.setCodComuneCasellario(lSoggVecchio.getCodComuneCasellario());
-		 * lStoricoSogg.setCodFiscale(lSoggVecchio.getCodFiscale());
-		 * lStoricoSogg.setCodCs(lSoggVecchio.getCodCs()); lStoricoSogg.setCodAfis(lSoggVecchio.getCodAfis());
-		 *
-		 * lStoricoSogg.setCodStatoNascita(lSoggVecchio.getCodStatoNascita());
-		 * lStoricoSogg.setDescComuneNascitaEstero(lSoggVecchio.getDescComuneNascitaEstero());
-		 * lStoricoSogg.setNazionalita(lSoggVecchio.getNazionalita());
-		 * lStoricoSogg.setPaternita(lSoggVecchio.getPaternita());
-		 * lStoricoSogg.setCognomeMadre(lSoggVecchio.getCognomeMadre());
-		 * lStoricoSogg.setNomeMadre(lSoggVecchio.getNomeMadre());
-		 * lStoricoSogg.setSesso(lSoggVecchio.getSesso());
-		 * lStoricoSogg.setAttoNascita(lSoggVecchio.getAttoNascita());
-		 * lStoricoSogg.setNote(lSoggVecchio.getNote());
-		 * lStoricoSogg.setCodOperatoreInserimento(lSoggVecchio.getCodOperatoreAggiornamento());
-		 * lStoricoSogg.setDataInserimento(lSoggVecchio.getDataAggiornamento());
-		 * lStoricoSogg.setCodUfficioInserimento(lSoggVecchio.getCodUfficioAggiornamento());
-		 * lStoricoSogg.setIdSoggettoNuovo(lKeySoggDuplicato);
-		 *
-		 * // DUPLICO ALIAS lAliasSqlDAO.ricercaAliasByIdSoggetto(IdSoggettoVecchio); Vector lTutteAlias = new
-		 * Vector(lAliasSqlDAO.getModels()); if (lTutteAlias != null) { Iterator lItx =
-		 * lTutteAlias.iterator();
-		 *
-		 * while (lItx.hasNext()) { AliasModel lAliasMod = (AliasModel) lItx.next();
-		 *
-		 * if (lAliasMod != null) { lAliasMod.setSogIdSoggetto(lKeySoggDuplicato);
-		 * lAliasMod.setCodOperatoreInserimento(aSoggetto.getCodOperatoreAggiornamento());
-		 * lAliasMod.setCodUfficioInserimento(aSoggetto.getCodUfficioAggiornamento());
-		 * lAliasMod.setDataInserimento(DateUtils.getSysDate()); lAliasDAO.setDAOFromModel(lAliasMod);
-		 * lAliasDAO.insert(); lAliasDAO.stop(); } } }
-		 *
-		 * // RICERCA RESIDENZE
-		 *
-		 * lReSql = new ResidenzaSqlDAO(conn); ResidenzaFascicoloSiepModel lResFasModRic = null;
-		 * ResidenzaFascicoloSiepModel lResFasMod = null; ResidenzaModel lResMod = new ResidenzaModel();
-		 * ResidenzaAssociataModel lResAssMod = null; ResidenzaModel lResModNuove = new ResidenzaModel();
-		 *
-		 * Vector lResidenzeFasc = new Vector();
-		 * lReSql.ricercaSiepResidenzeDomiciliByIdSoggetto(aSoggetto.getIdSoggetto()); lReSql.start(); while
-		 * (lReSql.next()) { lResAssMod = new ResidenzaAssociataModel(); lResMod = (ResidenzaModel)
-		 * lReSql.getModel(); if (lResMod != null) { // DUPLICO RESIDENZE LEGATE AL VECCHIO SOGGETTO E LE LEGO
-		 * AL NUOVO lResMod.setCodOperatoreInserimento(aSoggetto.getCodOperatoreAggiornamento());
-		 * lResMod.setDataInserimento(aSoggetto.getDataAggiornamento());
-		 * lResMod.setCodUfficioInserimento(aSoggetto.getCodUfficioAggiornamento());
-		 * lResMod.setSogIdSoggetto(lKeySoggDuplicato); lReDAO.setDAOFromModel(lResMod); BigDecimal lKeyRes =
-		 * lReDAO.insert(); lReDAO.stop(); } } lReSql.stop();
-		 * lReSql.ricercaSiepResidenzeDomiciliByIdSoggetto(lKeySoggDuplicato); lReSql.start(); while
-		 * (lReSql.next()) { lResModNuove = (ResidenzaModel) lReSql.getModel();
-		 *
-		 * lResFasMod = lReSql.getModelResidenzaFascicoloSiep(); // lResAssMod.setResidenza(lResMod); if
-		 * (lResFasMod != null) { for (int v = 0; v < lKeyFascicoli.size(); v++) { BigDecimal lIdFascDaMod =
-		 * (BigDecimal) lKeyFascicoli.get(v); if
-		 * (lResFasMod.getFasSieIdFascicoloSiep().compareTo(lIdFascDaMod) == 0) {
-		 * lResFasMod.setResIdResidenza(lResModNuove.getIdResidenza()); // [FT] - 03/08/2016 - MAC_LOG -
-		 * Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * siesLogger.info("AGGIORNO RESIDENZA fasc--->" + lResFasMod);
-		 * lReFascDAO.setDAOFromModelForUpdate(lResFasMod); lReFascDAO.update(); lReFascDAO.stop(); } } } } //
-		 * se i fascicoli selezionati sono + di uno String modifica = " E' Stato Modificato il Procedimento ";
-		 * String modificaSeguito =
-		 * " a cui e' legato un Procedimento SIUS. Avvertire il Tribunale di Sorveglianza"; String
-		 * modificaNumFasc = ""; String modificaDaPassare = ""; if (lKeyFascicoli.size() > 0) {
-		 *
-		 * // INSERISCO STORICO SOGGETTO // lStoricoSogg.setFasSieIdFascicoloSiep(lIdFasc);
-		 * lStoSogSqlDao.nextProgressivo(IdSoggettoVecchio); int lMaxProg = 0;
-		 *
-		 * lStoSogSqlDao.start(); if (lStoSogSqlDao.next()) { lMaxProg = // [FT] - 03/08/2016 - MAC_LOG -
-		 * Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * lStoSogSqlDao.getInt("max_progressivo"); siesLogger.info("MAX = " + lMaxProg); } BigDecimal lMax =
-		 * new BigDecimal(lMaxProg + 1);
-		 *
-		 * if (lMaxProg > 0) { lStoricoSogg.setProgressivoStorico(lMax);
-		 *
-		 * } else { //Dovuto al fatto che per un nuovo Id mi ritorna un progressivo uguale a zero
-		 * lStoricoSogg.setProgressivoStorico(new BigDecimal(1)); }
-		 *
-		 * lStoSogDao.setDAOFromModel(lStoricoSogg); BigDecimal lStoricoNuovo = lStoSogDao.insert(); // [FT] -
-		 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * siesLogger.info("STORICO NUOVO---->" + lStoricoNuovo); for (int h = 0; h < lKeyFascicoli.size();
-		 * h++) {
-		 *
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * BigDecimal lIdFasc = (BigDecimal) lKeyFascicoli.get(h); siesLogger.info("lIdFasc--->" + lIdFasc);
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * siesLogger.info("lResidenzeFasc.size--->" + lResidenzeFasc.size()); if(lResidenzeFasc.size()>0) {
-		 * for (int v = 0; v < lResidenzeFasc.size(); v++) { //
-		 * lReSql.ricercaResidenzaFascicoloSiepByIdResidenzaIdFascicolo(lResMod.getIdResidenza(), lIdFasc);
-		 * lResAssMod = (ResidenzaAssociataModel) lResidenzeFasc.get(v); // lResFasMod = // [FT] - 03/08/2016
-		 * - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * lResAssMod.getResidenzaFascicoloSiep(); siesLogger.info("RESIDENZA FASCICOLO--->" + lResFasMod);
-		 * lResMod =// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		 * mLog =lResAssMod.getResidenza(); siesLogger.info("RESIDENZA--->" + lResMod); if
-		 * (lResAssMod.getResidenzaFascicoloSiep() != null &&
-		 * lResAssMod.getResidenzaFascicoloSiep().getFasSieIdFascicoloSiep().compareTo(lIdFasc) == 0) { //
-		 * faccio update del sog_id_soggetto di residenza con il sogg duplicato //
-		 * lResMod.setIdResidenza(lResFasMod.getResIdResidenza());
-		 * lResMod.setSogIdSoggetto(lKeySoggDuplicato);
-		 * lResMod.setDataAggiornamento(aSoggetto.getDataAggiornamento());
-		 * lResMod.setCodOperatoreAggiornamento(aSoggetto.getCodOperatoreAggiornamento());
-		 * lResMod.setCodUfficioAggiornamento(aSoggetto.getCodUfficioAggiornamento()); // [FT] - 03/08/2016 -
-		 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * siesLogger.info("AGGIORNO RESIDENZA--->" + lResMod); lReDAO.setDAOFromModelForUpdate(lResMod);
-		 * lReDAO.update(); lReDAO.stop(); } else if (lResAssMod.getResidenzaFascicoloSiep() == null) { // se
-		 * id fascicolo null DUPLICO RESIDENZA //lResMod.set lReDAO.setDAOFromModelForUpdate(lResMod);
-		 * BigDecimal lKeyRes = lReDAO.insert(); lReDAO.stop(); // lResFasMod.setResIdResidenza(lKeyRes);
-		 * //lReFascDAO.setDAOFromModelForUpdate(lResFasMod); // lReFascDAO.insert(); // lReFascDAO.stop(); }
-		 * } } // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		 * LogF3B.getLogger() } } siesLogger.info("Settato setProgressivoStorico = " + lMax);
-		 *
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		 * LogF3B.getLogger() siesLogger.info(lStoricoSogg);
-		 *
-		 * // UPDATE SUL FASCICOLO CON NUOVO IL SOGGETTO
-		 *
-		 * lFasSql.ricercaFascicoloByKey(lIdFasc); lFasMod = (FascicoloSiepModel) lFasSql.getModelByKey();
-		 * lFasDAO.setSogIdSoggetto(lKeySoggDuplicato); lFasDAO.selCondizioneUpdate(lIdFasc); // [FT] -
-		 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * siesLogger.info("FASCICOLO DA MODIFICARE---->" + lFasMod); lFasDAO.update(); lFasDAO.stop();
-		 *
-		 * // ricerca Fascicolo Sius legato al Fascicolo SIEP
-		 *
-		 * FascicoloSiusModel lFascSiusMod = new FascicoloSiusModel();
-		 * lFascSiusMod.setFasSieIdFascicoloSiep(lFasMod.getIdFascicoloSiep());
-		 * lFascSiusSql.ricercaFascicoloSius(lFascSiusMod); Vector FascicoliSius = new
-		 * Vector(lFascSiusSql.getModels()); if (FascicoliSius != null && FascicoliSius.size() > 0) { for (int
-		 * y = 0; y < FascicoliSius.size(); y++) { FascicoloSiusModel lFasSiusMod = (FascicoloSiusModel)
-		 * FascicoliSius.get(y); lFasSiusMod.setSogIdSoggetto(lKeySoggDuplicato);
-		 * lFascSiusDAO.setDAOFromModelForUpdate(lFasSiusMod); lFascSiusDAO.update(); lFascSiusDAO.stop();
-		 *
-		 * } modificaNumFasc += lFasMod.getChiaveAnno() + " / " + lFasMod.getChiaveProgr() + " - ";
-		 * modificaDaPassare = modifica + modificaNumFasc + modificaSeguito;
-		 * lSogDuplicato.setMessage(modificaDaPassare);
-		 *
-		 * }
-		 *
-		 * // ricerca degli eventi del fascicolo per ricercare le notifiche legate al fascicolo e // legate al
-		 * soggetto lEveSql.ricercaEventoByIdFascicoloSiep(lFasMod.getIdFascicoloSiep()); Vector Eventi = new
-		 * Vector(lEveSql.getModels());
-		 *
-		 * for (int z = 0; z < Eventi.size(); z++) { EventoModel lEveMod = (EventoModel) Eventi.get(z);
-		 * lNotSQL.ricercaNotificaByEvento(lEveMod.getIdEvento()); Vector lNotifiche = new
-		 * Vector(lNotSQL.getModels()); for (int x = 0; x < lNotifiche.size(); x++) { NotificaModel lNorMod =
-		 * (NotificaModel) lNotifiche.get(x); if (lNorMod.getSogIdSoggetto() != null) {
-		 * lNorMod.setSogIdSoggetto(lKeySoggDuplicato); lNotDAO.setDAOFromModelForUpdate(lNorMod); // [FT] -
-		 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		 * siesLogger.info("notifica Modificata--->" + lNorMod); lNotDAO.update(); lNotDAO.stop();
-		 *
-		 * } } } } } //Insert commit(conn); } catch (DAOException ex) { rollback(conn); // [FT] - 03/08/2016 -
-		 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		 * siesLogger.error("SoggettoController.ExModificaSoggettoStorici", ex); throw new
-		 * F3BException("SoggettoController.ExModificaSoggettoStorici : " + ex); } catch (SQLException sqe) {
-		 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		 * LogF3B.getLogger() rollback(conn); siesLogger.error("SoggettoController.ExModificaSoggettoStorici",
-		 * sqe); throw new F3BException("SoggettoController.ExModificaSoggettoStorici : " + sqe); } catch
-		 * (Exception // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		 * LogF3B.getLogger() ex) { rollback(conn);
-		 * siesLogger.error("SoggettoController.ExModificaSoggettoStorici", ex); throw new
-		 * F3BException("SoggettoController.ExModificaSoggettoStorici: " + ex); }
-		 *
-		 * finally { cleanup(lSogDao); cleanup(lSogSqlDao); cleanup(lStoSogDao); cleanup(lStoSogSqlDao);
-		 * cleanup(lFasSql); cleanup(lFasDAO); cleanup(lReSql); cleanup(lReDAO); cleanup(lAliasDAO);
-		 * cleanup(lAliasSqlDAO); cleanup(lNotSQL); cleanup(lNotDAO); cleanup(lFascSiusSql);
-		 * cleanup(lReFascDAO); cleanup(lFascSiusDAO); cleanup(lEveSql); cleanup(lNotEveDao);
-		 *
-		 * cleanup(conn); }
-		 *
-		 * return lSogDuplicato;
-		 */
 	}
 
 	/**
@@ -1294,15 +1044,13 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 */
 	public SoggettoModel ExModificaSoggettoStoriciSius(SoggettoModel aSoggetto, Vector lKeyFascicoli,
 			int lFascicoli, int lFascicoliAltriUff, BigDecimal IdSoggettoVecchio) throws F3BException {
+
 		Connection conn = null;
 		SoggettoDAO lSogDao = null;
-		// SoggettoModel lSog = null;
 		SoggettoSqlDAO lSogSqlDao = null;
-		// SoggettoModel lSoggetto = null;
 		StoricoSoggettoDAO lStoSogDao = null;
 		StoricoSoggettoSqlDAO lStoSogSqlDao = null;
 		FascicoloSiusSqlDAO lFasSql = null;
-		FascicoloSiusModel lFasMod = null;
 		FascicoloSiusDAO lFasDAO = null;
 		ResidenzaSqlDAO lReSql = null;
 		ResidenzaDAO lReDAO = null;
@@ -1313,10 +1061,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 		FascicoloSiusSqlDAO lFascSiusSql = null;
 		FascicoloSiepSqlDAO lFascSiepSql = null;
 		FascicoloSiepDAO lFascSiepDAO = null;
-
 		ResidenzaFascicoloSiusDAO lReFascDAO = null;
 		EventoSqlDAO lEveSql = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
+
+		FascicoloSiusModel lFasMod = null;
 		SoggettoModel lSogDuplicato = null;
 
 		try {
@@ -1703,21 +1452,13 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			// LogF3B.getLogger()
 			siesLogger.error("SoggettoController.ExModificaSoggettoStoriciSius", ex);
 			throw new F3BException("SoggettoController.ExModificaSoggettoStoriciSius : " + ex);
-			// } catch (SQLException sqe) {
-			// rollback(conn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// // LogF3B.getLogger()
-			// siesLogger.error("SoggettoController.ExModificaSoggettoStoriciSius", sqe);
-			// throw new F3BException("SoggettoController.ExModificaSoggettoStoriciSius : " + sqe);
 		} catch (Exception ex) {
 			rollback(conn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("SoggettoController.ExModificaSoggettoStoriciSius", ex);
 			throw new F3BException("SoggettoController.ExModificaSoggettoStoriciSius: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lSogDao);
 			cleanup(lSogSqlDao);
 			cleanup(lStoSogDao);
@@ -1732,10 +1473,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			cleanup(lNotDAO);
 			cleanup(lFascSiusSql);
 			cleanup(lFascSiepSql);
-
-			cleanup(lReFascDAO);
 			cleanup(lFascSiepDAO);
+			cleanup(lReFascDAO);
 			cleanup(lNotEveDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEveSql);
 
 			cleanup(conn);
 		}
@@ -1746,17 +1488,18 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	/**
 	 * Modifica del Soggetto riferito a Procedimenti SIGE
 	 */
-
 	public SoggettoModel ExModificaSoggettoStoriciSige(SoggettoModel aSoggetto, Vector lKeyFascicoli,
 			int lFascicoli, int lFascicoliAltriUff, BigDecimal IdSoggettoVecchio) throws F3BException {
+
 		Connection conn = null;
 		SoggettoDAO lSogDao = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		FascicoloSigeDAO lFasDAO = null;
 		AliasDAO lAliasDAO = null;
 		AliasSqlDAO lAliasSqlDAO = null;
-		SoggettoModel lSogDuplicato = null;
+
 		StoricoSoggettoModel lStoricoSogg = null;
+		SoggettoModel lSogDuplicato = null;
 		BigDecimal lKeySoggDuplicato = null;
 
 		try {
@@ -1911,9 +1654,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			// LogF3B.getLogger()
 			siesLogger.error("SoggettoController.ExModificaSoggettoStoriciSige", ex);
 			throw new F3BException("SoggettoController.ExModificaSoggettoStoriciSige: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lSogDao);
 			cleanup(lSogSqlDao);
 			cleanup(lFasDAO);
@@ -1927,82 +1668,90 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	}
 
 	// INSERISCO STORICO SOGGETTO
-
 	private StoricoSoggettoModel inserimentoStoricoSoggetto(SoggettoModel aSoggVecchio, Date aDataVariazione,
 			Connection aConn) throws Exception {
+
 		// si istanziano i DAO
-		StoricoSoggettoDAO lStoSogDao = new StoricoSoggettoDAO(aConn);
-		StoricoSoggettoSqlDAO lStoSogSqlDao = new StoricoSoggettoSqlDAO(aConn);
+		StoricoSoggettoDAO lStoSogDao = null;
+		StoricoSoggettoSqlDAO lStoSogSqlDao = null;
 
-		// Valorizzazione del record da inserire
 		StoricoSoggettoModel lStoricoSogg = new StoricoSoggettoModel();
-		lStoricoSogg.setIdSoggettoVariato(aSoggVecchio.getIdSoggetto());
-		lStoricoSogg.setDataVariazione(aDataVariazione);
-		lStoricoSogg.setNome(aSoggVecchio.getNome());
-		lStoricoSogg.setCognome(aSoggVecchio.getCognome());
-		lStoricoSogg.setAnnoNascita(aSoggVecchio.getAnnoNascita());
-		lStoricoSogg.setMeseNascita(aSoggVecchio.getMeseNascita());
-		lStoricoSogg.setDataNascita(aSoggVecchio.getDataNascita());
-		lStoricoSogg.setDataNascitaPresunta(aSoggVecchio.getDataNascitaPresunta());
-		lStoricoSogg.setCodComuneNascita(aSoggVecchio.getCodComuneNascita());
-		lStoricoSogg.setCodProvinciaNascita(aSoggVecchio.getCodProvinciaNascita());
-		lStoricoSogg.setCodComuneCasellario(aSoggVecchio.getCodComuneCasellario());
-		lStoricoSogg.setCodFiscale(aSoggVecchio.getCodFiscale());
-		lStoricoSogg.setCodCs(aSoggVecchio.getCodCs());
-		lStoricoSogg.setCodAfis(aSoggVecchio.getCodAfis());
-		lStoricoSogg.setCodStatoNascita(aSoggVecchio.getCodStatoNascita());
-		lStoricoSogg.setDescComuneNascitaEstero(aSoggVecchio.getDescComuneNascitaEstero());
-		lStoricoSogg.setNazionalita(aSoggVecchio.getNazionalita());
-		lStoricoSogg.setPaternita(aSoggVecchio.getPaternita());
-		lStoricoSogg.setCognomeMadre(aSoggVecchio.getCognomeMadre());
-		lStoricoSogg.setNomeMadre(aSoggVecchio.getNomeMadre());
-		lStoricoSogg.setSesso(aSoggVecchio.getSesso());
-		lStoricoSogg.setAttoNascita(aSoggVecchio.getAttoNascita());
-		lStoricoSogg.setNote(aSoggVecchio.getNote());
-		lStoricoSogg.setCodOperatoreInserimento(aSoggVecchio.getCodOperatoreAggiornamento());
-		lStoricoSogg.setDataInserimento(aSoggVecchio.getDataAggiornamento());
-		lStoricoSogg.setCodUfficioInserimento(aSoggVecchio.getCodUfficioAggiornamento());
-		lStoricoSogg.setEtaPresuntaAnni(aSoggVecchio.getEtaPresuntaAnni());
-		lStoricoSogg.setEtaPresuntaMesi(aSoggVecchio.getEtaPresuntaMesi());
 
-		// Valutazione del progressivo
-		lStoSogSqlDao.nextProgressivo(aSoggVecchio.getIdSoggetto());
-		int lMaxProg = 0;
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		try {
+			lStoSogDao = new StoricoSoggettoDAO(aConn);
+			lStoSogSqlDao = new StoricoSoggettoSqlDAO(aConn);
 
-		lStoSogSqlDao.start();
-		if (lStoSogSqlDao.next()) {
-			lMaxProg = lStoSogSqlDao.getInt("max_progressivo");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.info("MAX = " + lMaxProg);
+			// Valorizzazione del record da inserire
+			lStoricoSogg.setIdSoggettoVariato(aSoggVecchio.getIdSoggetto());
+			lStoricoSogg.setDataVariazione(aDataVariazione);
+			lStoricoSogg.setNome(aSoggVecchio.getNome());
+			lStoricoSogg.setCognome(aSoggVecchio.getCognome());
+			lStoricoSogg.setAnnoNascita(aSoggVecchio.getAnnoNascita());
+			lStoricoSogg.setMeseNascita(aSoggVecchio.getMeseNascita());
+			lStoricoSogg.setDataNascita(aSoggVecchio.getDataNascita());
+			lStoricoSogg.setDataNascitaPresunta(aSoggVecchio.getDataNascitaPresunta());
+			lStoricoSogg.setCodComuneNascita(aSoggVecchio.getCodComuneNascita());
+			lStoricoSogg.setCodProvinciaNascita(aSoggVecchio.getCodProvinciaNascita());
+			lStoricoSogg.setCodComuneCasellario(aSoggVecchio.getCodComuneCasellario());
+			lStoricoSogg.setCodFiscale(aSoggVecchio.getCodFiscale());
+			lStoricoSogg.setCodCs(aSoggVecchio.getCodCs());
+			lStoricoSogg.setCodAfis(aSoggVecchio.getCodAfis());
+			lStoricoSogg.setCodStatoNascita(aSoggVecchio.getCodStatoNascita());
+			lStoricoSogg.setDescComuneNascitaEstero(aSoggVecchio.getDescComuneNascitaEstero());
+			lStoricoSogg.setNazionalita(aSoggVecchio.getNazionalita());
+			lStoricoSogg.setPaternita(aSoggVecchio.getPaternita());
+			lStoricoSogg.setCognomeMadre(aSoggVecchio.getCognomeMadre());
+			lStoricoSogg.setNomeMadre(aSoggVecchio.getNomeMadre());
+			lStoricoSogg.setSesso(aSoggVecchio.getSesso());
+			lStoricoSogg.setAttoNascita(aSoggVecchio.getAttoNascita());
+			lStoricoSogg.setNote(aSoggVecchio.getNote());
+			lStoricoSogg.setCodOperatoreInserimento(aSoggVecchio.getCodOperatoreAggiornamento());
+			lStoricoSogg.setDataInserimento(aSoggVecchio.getDataAggiornamento());
+			lStoricoSogg.setCodUfficioInserimento(aSoggVecchio.getCodUfficioAggiornamento());
+			lStoricoSogg.setEtaPresuntaAnni(aSoggVecchio.getEtaPresuntaAnni());
+			lStoricoSogg.setEtaPresuntaMesi(aSoggVecchio.getEtaPresuntaMesi());
+
+			// Valutazione del progressivo
+			lStoSogSqlDao.nextProgressivo(aSoggVecchio.getIdSoggetto());
+			int lMaxProg = 0;
+
+			lStoSogSqlDao.start();
+			if (lStoSogSqlDao.next()) {
+				lMaxProg = lStoSogSqlDao.getInt("max_progressivo");
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.info("MAX = " + lMaxProg);
+			}
+			BigDecimal lMax = new BigDecimal(lMaxProg + 1);
+
+			if (lMaxProg > 0) {
+				lStoricoSogg.setProgressivoStorico(lMax);
+			} else {
+				// Dovuto al fatto che per un nuovo Id mi ritorna un progressivo uguale a zero
+				lStoricoSogg.setProgressivoStorico(new BigDecimal(1));
+			}
+
+			lStoSogDao.setDAOFromModel(lStoricoSogg);
+			BigDecimal lStoricoNuovo = lStoSogDao.insert();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.info("STORICO NUOVO---->" + lStoricoNuovo);
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// reset dei DAO
+			cleanup(lStoSogDao);
+			cleanup(lStoSogSqlDao);
 		}
-		BigDecimal lMax = new BigDecimal(lMaxProg + 1);
-
-		if (lMaxProg > 0) {
-			lStoricoSogg.setProgressivoStorico(lMax);
-		} else {
-			// Dovuto al fatto che per un nuovo Id mi ritorna un progressivo uguale a zero
-			lStoricoSogg.setProgressivoStorico(new BigDecimal(1));
-		}
-
-		lStoSogDao.setDAOFromModel(lStoricoSogg);
-		BigDecimal lStoricoNuovo = lStoSogDao.insert();
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.info("STORICO NUOVO---->" + lStoricoNuovo);
-
-		// reset dei DAO
-		cleanup(lStoSogDao);
-		cleanup(lStoSogSqlDao);
 
 		return lStoricoSogg;
 	}
 
 	private void aggiornaResidenze(SoggettoModel aSoggetto, Vector aKeyFascicoli,
 			BigDecimal aKeySoggDuplicato, Connection aConn) throws Exception {
-		// DAO alla tabella Residenza
-		ResidenzaDAO lResDAO = new ResidenzaDAO(aConn);
-		// DAO alla tabella Residenza_Fascicolo_Sige
-		ResidenzaFascicoloSigeDAO lReFascDAO = new ResidenzaFascicoloSigeDAO(aConn);
+
+		ResidenzaDAO lResDAO = null;
+		ResidenzaFascicoloSigeDAO lReFascDAO = null;
+
 		// Lista delle Residenze associate allo stesso Fascicolo SIGE
 		Vector lResidenze = null;
 		// Residenza da duplicare
@@ -2010,52 +1759,63 @@ public class SoggettoController extends SiapController implements ISoggetto {
 		// ID della nuova Residenza inserita
 		BigDecimal lKeyNewRes = null;
 
-		// Ricerca di tutte le residenze collegate ai Fascicoli SIGE selezionati per la modifica del Soggetto
-		for (int v = 0; v < aKeyFascicoli.size(); v++) {
-			// ID Fascicolo Sige
-			BigDecimal lIdfFasc = (BigDecimal) aKeyFascicoli.get(v);
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		try {
+			// DAO alla tabella Residenza
+			lResDAO = new ResidenzaDAO(aConn);
+			// DAO alla tabella Residenza_Fascicolo_Sige
+			lReFascDAO = new ResidenzaFascicoloSigeDAO(aConn);
 
-			// Ricerca delle Residenze collegate al Fascicolo Sige corrente
-			lResDAO.setCondizioneIdFasSige(lIdfFasc);
-			lResidenze = new Vector(lResDAO.getModels());
-			lResDAO.stop();
+			// Ricerca di tutte le residenze collegate ai Fascicoli SIGE selezionati per la modifica del
+			// Soggetto
+			for (int v = 0; v < aKeyFascicoli.size(); v++) {
+				// ID Fascicolo Sige
+				BigDecimal lIdfFasc = (BigDecimal) aKeyFascicoli.get(v);
 
-			// Puo' esserci 1 o piu' di 1 Residenza per Fascicolo
-			if (lResidenze != null) {
-				Iterator lResItx = lResidenze.iterator();
-				// Itera sulle residenze da duplicare
-				while (lResItx.hasNext()) {
-					lResMod = (ResidenzaModel) lResItx.next();
-					// Duplicazione Residenza per legarla al nuovo Soggetto
-					lResMod.setCodOperatoreInserimento(aSoggetto.getCodOperatoreAggiornamento());
-					lResMod.setDataInserimento(aSoggetto.getDataAggiornamento());
-					lResMod.setCodUfficioInserimento(aSoggetto.getCodUfficioAggiornamento());
-					lResMod.setSogIdSoggetto(aKeySoggDuplicato);
-					lResDAO.setDAOFromModel(lResMod);
-					lKeyNewRes = lResDAO.insert();
-					lResDAO.stop();
+				// Ricerca delle Residenze collegate al Fascicolo Sige corrente
+				lResDAO.setCondizioneIdFasSige(lIdfFasc);
+				lResidenze = new Vector(lResDAO.getModels());
+				lResDAO.stop();
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// mLog
-					siesLogger.info("inserisco residenza DUPLICATA --->" + lKeyNewRes);
+				// Puo' esserci 1 o piu' di 1 Residenza per Fascicolo
+				if (lResidenze != null) {
+					Iterator lResItx = lResidenze.iterator();
+					// Itera sulle residenze da duplicare
+					while (lResItx.hasNext()) {
+						lResMod = (ResidenzaModel) lResItx.next();
+						// Duplicazione Residenza per legarla al nuovo Soggetto
+						lResMod.setCodOperatoreInserimento(aSoggetto.getCodOperatoreAggiornamento());
+						lResMod.setDataInserimento(aSoggetto.getDataAggiornamento());
+						lResMod.setCodUfficioInserimento(aSoggetto.getCodUfficioAggiornamento());
+						lResMod.setSogIdSoggetto(aKeySoggDuplicato);
+						lResDAO.setDAOFromModel(lResMod);
+						lKeyNewRes = lResDAO.insert();
+						lResDAO.stop();
 
-					// Aggiornamento della tabella RESIDENZA_FASCICOLO_SIGE
-					ResidenzaFascicoloSigeModel lResFasSige = new ResidenzaFascicoloSigeModel();
-					lResFasSige.setFasSigeIdFascicoloSige(lIdfFasc);
-					lResFasSige.setResIdResidenza(lResMod.getIdResidenza());
-					lReFascDAO.setCondizioneUpdateSoggetto(lResFasSige);
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di
+						// mLog
+						siesLogger.info("inserisco residenza DUPLICATA --->" + lKeyNewRes);
 
-					// Si aggiorna la tabella con il nuovo ID Residenza
-					lReFascDAO.setResIdResidenza(lKeyNewRes);
-					lReFascDAO.update();
-					lReFascDAO.stop();
-				}
-			} // end if lResidenze
-		} // end for
+						// Aggiornamento della tabella RESIDENZA_FASCICOLO_SIGE
+						ResidenzaFascicoloSigeModel lResFasSige = new ResidenzaFascicoloSigeModel();
+						lResFasSige.setFasSigeIdFascicoloSige(lIdfFasc);
+						lResFasSige.setResIdResidenza(lResMod.getIdResidenza());
+						lReFascDAO.setCondizioneUpdateSoggetto(lResFasSige);
 
-		// reset dei DAO
-		cleanup(lResDAO);
-		cleanup(lReFascDAO);
+						// Si aggiorna la tabella con il nuovo ID Residenza
+						lReFascDAO.setResIdResidenza(lKeyNewRes);
+						lReFascDAO.update();
+						lReFascDAO.stop();
+					}
+				} // end if lResidenze
+			} // end for
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// reset dei DAO
+			cleanup(lResDAO);
+			cleanup(lReFascDAO);
+		}
 	}
 
 	/**
@@ -2071,63 +1831,41 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 *            : connessione
 	 * @throws Exception
 	 */
-
 	private void aggiornaNotifiche(SoggettoModel aSoggetto, Vector aKeyFascicoli,
 			BigDecimal aKeySoggDuplicato, BigDecimal aIdSoggettoVecchio, Connection aConn) throws Exception {
+
 		BigDecimal lIdFasSige = null;
+		NotificaDAO lNotDao = null;
 
 		if (aKeyFascicoli != null && aKeyFascicoli.size() > 0) {
-			NotificaDAO lNotDao = new NotificaDAO(aConn);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			try {
+				lNotDao = new NotificaDAO(aConn);
 
-			Iterator lFasItx = aKeyFascicoli.iterator();
-			// Itera sui Fascicoli interessati
-			while (lFasItx.hasNext()) {
-				lIdFasSige = (BigDecimal) lFasItx.next();
+				Iterator lFasItx = aKeyFascicoli.iterator();
+				// Itera sui Fascicoli interessati
+				while (lFasItx.hasNext()) {
+					lIdFasSige = (BigDecimal) lFasItx.next();
 
-				lNotDao.setSogIdSoggetto(aKeySoggDuplicato);
-				lNotDao.setCodOperatoreAggiornamento(aSoggetto.getCodOperatoreAggiornamento());
-				lNotDao.setCodUfficioAggiornamento(aSoggetto.getCodUfficioAggiornamento());
-				lNotDao.setDataAggiornamento(aSoggetto.getDataAggiornamento());
-				lNotDao.selCondizioneUpdateXIdFascicoliSigeIdSoggetto(lIdFasSige, aIdSoggettoVecchio);
-				lNotDao.update();
-				lNotDao.stop();
+					lNotDao.setSogIdSoggetto(aKeySoggDuplicato);
+					lNotDao.setCodOperatoreAggiornamento(aSoggetto.getCodOperatoreAggiornamento());
+					lNotDao.setCodUfficioAggiornamento(aSoggetto.getCodUfficioAggiornamento());
+					lNotDao.setDataAggiornamento(aSoggetto.getDataAggiornamento());
+					lNotDao.selCondizioneUpdateXIdFascicoliSigeIdSoggetto(lIdFasSige, aIdSoggettoVecchio);
+					lNotDao.update();
+					lNotDao.stop();
+				}
+			} finally {
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lNotDao);
 			}
-			cleanup(lNotDao);
 		}
 	}
 
-	/*
-	 * La funzione controlla se esiste almeno un Fascicolo SIEP collegato ad uno dei fascicoli SIUS elencati
-	 * tramite ID
-	 *
-	 * @param lKeyFascicoli
-	 *
-	 * @param lFascSiusSql
-	 *
-	 * @return true o false
-	 *
-	 * @throws Exception
-	 */
-	// private boolean esisteFascicoloSiepCollegato(Vector lKeyFascicoli, FascicoloSiusSqlDAO lFascSiusSql)
-	// throws Exception {
-	// boolean retValue = false;
-	//
-	// // controllo se e' associato a un fasciolo siep e amndo messaggio
-	// for (int i = 0; !retValue && (i < lKeyFascicoli.size()); i++) {
-	// BigDecimal chiaveFasc = (BigDecimal) lKeyFascicoli.get(i);
-	// lFascSiusSql.ricercaFascicoloByKey(chiaveFasc);
-	// FascicoloSiusModel lFasMod = (FascicoloSiusModel) lFascSiusSql.getModelByKey();
-	//
-	// if (lFasMod != null && lFasMod.getFasSieIdFascicoloSiep() != null)
-	// retValue = true;
-	// }
-	// return retValue;
-	// }
-
 	public void ExModificaKeyNSCByKey(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection conn = null;
 		SoggettoDAO lSogDao = null;
-		// SoggettoModel lSog = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.info("SoggettoController.ExModificaKeyNSCByKey: entrata nel metodo ");
@@ -2140,17 +1878,11 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			lSogDao.update();
 
 			commit(conn);
-
 		} catch (DAOException ex) {
 			rollback(conn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info("DAOException: " + ex);
 			throw new SICOException("SoggettoController.ExModificaKeyNSCByKey: " + ex);
-			// } catch (SQLException sqe) {
-			// rollback(conn);
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.info("SQLException: " + sqe);
-			// throw new SICOException("SoggettoController.ExModificaKeyNSCByKey: " + sqe);
 		} finally {
 			cleanup(lSogDao);
 			cleanup(conn);
@@ -2167,6 +1899,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	public Vector ExRicercaSoggettoConFascicoliPaged(SoggettoModel aSoggetto,
 			String lCodUfficioUtenteConnesso, String lCodDistrettoUtenteConnesso, String TipoRicerca,
 			int aPage, String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggettiFascicoli = new Vector(); // vettore in uscita contenente supersoggetto e tutti i
 													// fascicoli collegati
@@ -2276,15 +2009,10 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			}
 			if (lSoggettiFascicoli.isEmpty())
 				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new SIEPException("SoggettoController.ExRicercaSoggettoConFascicoliPaged: " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// throw new SIEPException("SoggettoController.ExRicercaSoggettoConFascicoliPaged: " + sqe);
 		} finally {
 			cleanup(lSogSqlDao);
 			cleanup(lFasSoggDao);
@@ -2307,6 +2035,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSoggettiFascicoliOmonimi(SoggettoModel aSoggetto) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lSoggFascicoliSige = new Vector();
@@ -2327,6 +2056,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 		lSoggetto.setCodProvinciaNascita(aSoggetto.getCodProvinciaNascita());
 		lSoggetto.setCodStatoNascita(aSoggetto.getCodStatoNascita());
 		lSoggetto.setCodAfis(aSoggetto.getCodAfis());
+
 		try {
 			lConn = getDBConnection();
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
@@ -2396,7 +2126,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			}
 
 			lSogSqlDao.stop();
-
 		} catch (Exception lEx) {
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"SoggettoController.ExRicercaSoggettiFascicoliOmonimi : " + lEx);
@@ -2418,6 +2147,7 @@ public class SoggettoController extends SiapController implements ISoggetto {
 	 * @throws F3BException
 	 */
 	public SoggettoModel ExRicercaSoggettoIgnoto() throws F3BException {
+
 		Connection lConn = null;
 		SoggettoModel lSoggetto = null;
 		SoggettoSqlDAO lSogSqlDao = null;
@@ -2437,7 +2167,6 @@ public class SoggettoController extends SiapController implements ISoggetto {
 			if (lSoggetto == null) {
 				throw new SICOException(SICOException.USER_MESSAGE, "Soggetto Ignoto non trovato");
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.info(daoEx.getLocalizedMessage());

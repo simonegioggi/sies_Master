@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.istitutodetenzione.dao.IstitutoDetenzioneSqlDAO;
 import siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel;
@@ -20,10 +23,6 @@ import siap.siep.misuracautelarebdmc.model.MisuraCautelareBdmcModel;
 import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
-import f3b.dao.DAOException;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-
 
 /**
  * <p>
@@ -38,7 +37,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -157,6 +156,9 @@ public class MisuraCautelareController extends SiapController implements IMisura
 					"MisuraCautelareController.ExInserisciMisuraCautelare: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lMisDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisCautBdmcDao);
+
 			cleanup(lConn);
 		}
 
@@ -165,8 +167,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 
 	// **********************************
 	// metodo per inserire misurecautelari e posizione giuridica
-	public MisuraCautelareModel ExInserisciMisuraCautelareInserisciPosizioneGiuridica(
-			Vector aMisuraCautelare, PosizioneGiuridicaModel aPosizioneGiuridica) throws F3BException {
+	public MisuraCautelareModel ExInserisciMisuraCautelareInserisciPosizioneGiuridica(Vector aMisuraCautelare,
+			PosizioneGiuridicaModel aPosizioneGiuridica) throws F3BException {
 
 		Connection lConn = null;
 
@@ -242,8 +244,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 						// E NE INSERISCE COMUNQUE UNO
 						LuogoDetenzioneModel lLuogoDetenzione = new LuogoDetenzioneModel();
 
-						lLuogoDetenzione.setIstDetIdIstitutoDetenzione(lMisMod
-								.getIstDetIdIstitutoDetenzione());
+						lLuogoDetenzione
+								.setIstDetIdIstitutoDetenzione(lMisMod.getIstDetIdIstitutoDetenzione());
 						lLuogoDetenzione.setAltroLuogo(lMisMod.getAltroLuogoDetenzione());
 						lLuogoDetenzione.setDataInizioDetenzione(lMisMod.getDataInizio());
 						lLuogoDetenzione.setFasSieIdFascicoloSiep(lIdFasc);
@@ -251,10 +253,10 @@ public class MisuraCautelareController extends SiapController implements IMisura
 						lLuogoDetenzione.setPosGiuIdPosizioneGiuridica(lPosMod.getIdPosizioneGiuridica());
 
 						if (aPosizioneGiuridica != null) {
-							lLuogoDetenzione.setCodOperatoreInserimento(aPosizioneGiuridica
-									.getCodOperatoreInserimento());
-							lLuogoDetenzione.setCodUfficioInserimento(aPosizioneGiuridica
-									.getCodUfficioInserimento());
+							lLuogoDetenzione.setCodOperatoreInserimento(
+									aPosizioneGiuridica.getCodOperatoreInserimento());
+							lLuogoDetenzione
+									.setCodUfficioInserimento(aPosizioneGiuridica.getCodUfficioInserimento());
 							lLuogoDetenzione.setDataInserimento(aPosizioneGiuridica.getDataInserimento());
 						}
 
@@ -272,18 +274,18 @@ public class MisuraCautelareController extends SiapController implements IMisura
 
 						LuogoDetenzioneModel lLuogoDetenzione = new LuogoDetenzioneModel();
 
-						lLuogoDetenzione.setIstDetIdIstitutoDetenzione(lMisMod
-								.getIstDetIdIstitutoDetenzione());
+						lLuogoDetenzione
+								.setIstDetIdIstitutoDetenzione(lMisMod.getIstDetIdIstitutoDetenzione());
 						lLuogoDetenzione.setAltroLuogo(lMisMod.getAltroLuogoDetenzione());
 						lLuogoDetenzione.setDataInizioDetenzione(lMisMod.getDataInizio());
 						lLuogoDetenzione.setFasSieIdFascicoloSiep(lIdFasc);
 
 						lLuogoDetenzione.setPosGiuIdPosizioneGiuridica(lKeyPosGiu);
 
-						lLuogoDetenzione.setCodOperatoreInserimento(aPosizioneGiuridica
-								.getCodOperatoreInserimento());
-						lLuogoDetenzione.setCodUfficioInserimento(aPosizioneGiuridica
-								.getCodUfficioInserimento());
+						lLuogoDetenzione
+								.setCodOperatoreInserimento(aPosizioneGiuridica.getCodOperatoreInserimento());
+						lLuogoDetenzione
+								.setCodUfficioInserimento(aPosizioneGiuridica.getCodUfficioInserimento());
 						lLuogoDetenzione.setDataInserimento(aPosizioneGiuridica.getDataInserimento());
 
 						lLuoDetDao.setDAOFromModel(lLuogoDetenzione);
@@ -327,8 +329,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("MisuraCautelareController.ExRicercaMisuraCautelare: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraCautelareController.ExRicercaMisuraCautelare: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMisDao);
 			cleanup(lConn);
@@ -364,8 +366,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 				lMis.setIstitutoDetenzione(lIstMod);
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: " + daoEx);
 		} finally {
 			cleanup(lMisDao);
 			cleanup(lIstDetDao);
@@ -404,8 +406,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 			}
 
 		} catch (DAOException daoEx) {
-			throw new F3BException("MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: " + daoEx);
 		} finally {
 			// modifica relativa al tipo istituto
 			cleanup(lMisDao);
@@ -444,8 +446,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 				lMis.setIstitutoDetenzione(lIstMod);
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: " + daoEx);
 		} finally {
 			// modifica relativa al tipo istituto
 			cleanup(lMisDao);
@@ -484,8 +486,8 @@ public class MisuraCautelareController extends SiapController implements IMisura
 				lMis.setIstitutoDetenzione(lIstMod);
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraCautelareController.ExRicercaMisureCautelariByIdFascicolo: " + daoEx);
 		} finally {
 			// modifica relativa al tipo istituto
 			cleanup(lMisDao);

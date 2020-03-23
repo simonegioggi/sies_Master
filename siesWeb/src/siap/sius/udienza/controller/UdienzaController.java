@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.controller.IEvento;
@@ -51,10 +55,6 @@ import siap.sius.udienzaprocedimento.dao.ProcedimentixUdienzaSqlDAO;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -69,7 +69,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -80,8 +80,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua l'inserimento di una undienza.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza del model.
 	 * @return istanza del model.
@@ -89,6 +88,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public UdienzaModel ExInserisciUdienza(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaDAO lUdiDao = null;
 		UdienzaModel lUdiMod = null;
@@ -119,8 +119,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua l'inserimento di una undienza.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza del model.
 	 * @return istanza del model.
@@ -128,6 +127,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public UdienzaModel ExInserisciUdienzaUDS(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaDAO lUdiDao = null;
 		UdienzaModel lUdiMod = null;
@@ -158,8 +158,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua la ricerca di una udienza, per data.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            Istanza del model <code>Udienza</code>.
 	 * @return l'insieme delle istanze model.
@@ -167,6 +166,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaUdienza(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienze = new Vector();
 		UdienzaSqlDAO lUdiDao = null;
@@ -190,8 +190,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua la ricerca di una udienza, per data e del numero di Procedimenti ad essa assegnati.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            Istanza del model <code>Udienza</code>.
 	 * @return l'insieme delle istanze model.
@@ -199,6 +198,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaUdienzaNumProc(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienze = ExRicercaUdienza(aUdienza);
 		ProcedimentixUdienzaSqlDAO lProUdiDao = null;
@@ -238,8 +238,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua la ricerca di una udienza in UDS, per data.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            Istanza del model <code>Udienza</code>.
 	 * @return l'insieme delle istanze model.
@@ -247,6 +246,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExRicercaUdienzaUDS(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienze = new Vector();
 		UdienzaSqlDAO lUdiDao = null;
@@ -280,8 +280,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua La ricerca delle 30 udienze precedenti
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza della classe UdienzaModel
 	 * @param aNumOccorrenze
@@ -292,6 +291,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 */
 	public String ExRicercaUdienzePrecedenti(UdienzaModel aUdienza,
 			GeneraleProcedimentoModel aGeneraleProcedimento) throws F3BException {
+
 		Connection lConn = null;
 		String sUdienze = new String();
 		UdienzaSqlDAO lUdiDao = null;
@@ -319,7 +319,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			if (sUdienze.equalsIgnoreCase("")) {
 				sUdienze = " Nessuna data di udienza precedente a quella attuale.";
 				// throw new
-				// SIUSException(SIUSException.USER_MESSAGE,"Nessuna data di udienza precedente a quella attuale.");
+				// SIUSException(SIUSException.USER_MESSAGE,"Nessuna data di udienza precedente a quella
+				// attuale.");
 			}
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -337,8 +338,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	/**
 	 * Effettua La ricerca delle udienze ritornano l'elenco di esse, ma ponendo un limite al numero di
 	 * occorrenze passato come argomento.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza della classe UdienzaModel
 	 * @param aNumOccorrenze
@@ -348,6 +348,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propagazione dell'errore di eccezione.
 	 */
 	public Vector ExRicercaUdienza(UdienzaModel aUdienza, int aNumOccorrenze) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienze = new Vector();
 		UdienzaSqlDAO lUdiDao = null;
@@ -375,8 +376,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	/**
 	 * Effettua La ricerca delle udienze ritornano l'elenco di esse, ma ponendo un limite al numero di
 	 * occorrenze passato come argomento.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza della classe UdienzaModel
 	 * @param aNumOccorrenze
@@ -386,6 +386,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propagazione dell'errore di eccezione.
 	 */
 	public Vector ExRicercaUdienzaGenerale(UdienzaModel aUdienza, int aNumOccorrenze) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienze = new Vector();
 		UdienzaSqlDAO lUdiDao = null;
@@ -412,8 +413,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua La ricerca delle udienze ritornano l'elenco di 30 di esse.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            istanza della classe UdienzaModel
 	 * @param aNumOccorrenze
@@ -424,6 +424,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 */
 	public Vector ExRicercaNuoveUdienze(UdienzaModel lUdienzaMod,
 			GeneraleProcedimentoModel aGeneraleProcedimento) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienze = new Vector();
 		UdienzaSqlDAO lUdiDao = null;
@@ -457,14 +458,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Ricerca Udienza attraverso la data passata come parametro.
-	 * <p>
-	 * 
+	 *
 	 * @param aDate
 	 *            data con la quale ricercare l'udienza.
 	 * @return
 	 * @throws F3BException
 	 */
 	public UdienzaModel ExRicercaUdienzaByDate(Date aDate, String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaSqlDAO lUdiDao = null;
 		UdienzaModel lUdiMod;
@@ -489,8 +490,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua ricerca di una udienza per la relativa chiave.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave dell'udienza.
 	 * @return l'istanza del UdienzaModel.
@@ -498,6 +498,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public UdienzaModel ExRicercaUdienzaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaSqlDAO lUdiDao = null;
 		UdienzaModel lUdiMod;
@@ -522,8 +523,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua ricerca di una udienza per la relativa chiave.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave dell'udienza.
 	 * @return l'istanza del UdienzaModel.
@@ -531,6 +531,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public UdienzaModel ExRicercaUdienzaByKeyUDS(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaSqlDAO lUdiDao = null;
 		UdienzaModel lUdiMod;
@@ -545,13 +546,12 @@ public class UdienzaController extends SiapController implements IUdienza {
 				lUdiMod = (UdienzaModel) lUdiDao.getModelByKeyUDS();
 			}
 			lUdiDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new SIUSException("UdienzaController.ExRicercaUdienzaByKeyExRicercaUdienzaByKeyUDS: "
-					+ daoEx);
+			throw new SIUSException(
+					"UdienzaController.ExRicercaUdienzaByKeyExRicercaUdienzaByKeyUDS: " + daoEx);
 		} finally {
 			cleanup(lUdiDao);
 			cleanup(lConn);
@@ -562,8 +562,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Modifica di una udienza.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            passaggio udienza model.
 	 * @return ritorna udienza model.
@@ -571,6 +570,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public UdienzaModel ExModificaUdienza(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaDAO lUdiDao = null;
 		UdienzaModel lUdiMod = new UdienzaModel(aUdienza);
@@ -600,8 +600,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Modifica di una udienza per UDS.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            passaggio udienza model.
 	 * @return ritorna udienza model.
@@ -609,6 +608,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 *             propaga l'errore di eccezione.
 	 */
 	public UdienzaModel ExModificaUdienzaUDS(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaDAO lUdiDao = null;
 		UdienzaModel lUdiMod = new UdienzaModel(aUdienza);
@@ -627,7 +627,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			siesLogger.debug("DAOException: " + ex);
 			// if(ex.UNIQUE_CONSTRAINT_VIOLATED)
 			// throw new
-			// SIUSException(SIUSException.USER_MESSAGE,"Aggiornamento impossibile: gia' esiste udienza nella stessa data per lo stesso collegio.");
+			// SIUSException(SIUSException.USER_MESSAGE,"Aggiornamento impossibile: gia' esiste udienza nella
+			// stessa data per lo stesso collegio.");
 			throw new SIUSException("UdienzaController.ExModificaUdienzaUDS: " + ex);
 		} finally {
 			cleanup(lUdiDao);
@@ -639,8 +640,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	/**
 	 * Modifica di una udienza aggiornando il GeneraleProcedimento ed inserendo un nuovo record su
 	 * UdienzaProcedimento.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            passaggio udienza model, aGeneraleProcedimento.
 	 * @return ritorna udienza model.
@@ -704,8 +704,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 				// Esegue inserimento record udienza procedimento
 				lUdienzaProcDao.setEveIdEvento(aEvento.getIdEvento());
-				lUdienzaProcDao.setGenPridGeneraleProcedimento(aGeneraleProcedimento
-						.getIdGeneraleProcedimento());
+				lUdienzaProcDao
+						.setGenPridGeneraleProcedimento(aGeneraleProcedimento.getIdGeneraleProcedimento());
 				lUdienzaProcDao.setUdiIdUdienza(aUdienza.getIdUdienza());
 				lUdienzaProcDao.setDataInserimento(DateUtils.getSysDate());
 				lUdienzaProcDao.setCodOperatoreInserimento(aUdienza.getCodOperatoreInserimento());
@@ -732,8 +732,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				lUdienzaProcDao.stop();
 
 				// Esegue inserimento nuovo record come Nuovo Ruolo (N).
-				lUdienzaProcDao.setGenPridGeneraleProcedimento(aGeneraleProcedimento
-						.getIdGeneraleProcedimento());
+				lUdienzaProcDao
+						.setGenPridGeneraleProcedimento(aGeneraleProcedimento.getIdGeneraleProcedimento());
 				lUdienzaProcDao.setUdiIdUdienza(lUdiMod.getUdiIdUdienza());
 				lUdienzaProcDao.setDataInserimento(DateUtils.getSysDate());
 				lUdienzaProcDao.setCodOperatoreInserimento(aUdienza.getCodOperatoreInserimento());
@@ -801,8 +801,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			// Esegue la ricerca dei tenori sortati per peso esito tenore.
 			lTenSqlDao = new TenoreSqlDAO(lConn);
 			// Ricerca tenori x Id Generale Procedimento.
-			lTenSqlDao.ricercaTenoriByGeneraleProcOrderByPeso(aGeneraleProcedimento
-					.getIdGeneraleProcedimento());
+			lTenSqlDao.ricercaTenoriByGeneraleProcOrderByPeso(
+					aGeneraleProcedimento.getIdGeneraleProcedimento());
 			// lTenSqlDao.ricercaTenoriByGeneraleProcOrderByPeso(
 			// aModel.getOrdinanza().getGenPridGeneraleProcedimento());
 			Vector lTenori = new Vector(lTenSqlDao.getModels());
@@ -874,6 +874,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			cleanup(lEventoDao);
 			cleanup(lTenDao);
 			cleanup(lTenSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAvvisiAvvocatoDao);
 			cleanup(lConn);
 		}
 
@@ -882,14 +884,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Effettua la concellazione di una udienza.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            udienza model.
 	 * @throws F3BException
 	 *             propaga gli errorei di eccezione.
 	 */
 	public void ExCancellaUdienza(UdienzaModel aUdienza) throws F3BException {
+
 		Connection lConn = null;
 		UdienzaDAO lUdiDao = null;
 
@@ -917,8 +919,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Inserisci FIssazioen Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 * @param aFasc
 	 * @param aEve
@@ -930,11 +931,10 @@ public class UdienzaController extends SiapController implements IUdienza {
 			UdienzaProcedimentoModel aVecchiaUdienzaProc) throws F3BException {
 
 		Connection lConn = null;
-		// UdienzaProcedimentoModel lUdiMod = null;
+
 		UdienzaProcedimentoDAO lUdiDao = null;
 		GeneraleProcedimentoDAO lGenDAO = null;
 		EventoDAO lEveDao = null;
-
 		AvvocatoFascicoloSiusDAO lAvvFasSiusDAO = null;
 		TenoreDAO lTenDao = null;
 		DepositoDecretoDAO lDepDao = null;
@@ -981,12 +981,12 @@ public class UdienzaController extends SiapController implements IUdienza {
 			lGenDAO.setDataCameraConsiglio(aFasc.getGeneraleProcedimentoModel().getDataCameraConsiglio());
 			// STUB 15/04/2004 E.A. Mancava la valorizzazione del COD_CONTENUTO impostato in fissazione
 			// Udienza, e i dati di aggiornamento.
-			lGenDAO.setCodOggettoProcedimento(aFasc.getGeneraleProcedimentoModel()
-					.getCodOggettoProcedimento());
-			lGenDAO.setCodUfficioAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodUfficioAggiornamento());
-			lGenDAO.setCodOperatoreAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodOperatoreAggiornamento());
+			lGenDAO.setCodOggettoProcedimento(
+					aFasc.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
+			lGenDAO.setCodUfficioAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
+			lGenDAO.setCodOperatoreAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
 			lGenDAO.setDataAggiornamento(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
 			lGenDAO.setUdiIdUdienza(aNuovaUdienzaProc.getUdiIdUdienza());
 			lGenDAO.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
@@ -1007,8 +1007,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			lDepMod.setDataInserimento(lEve.getEvento().getDataInserimento());
 			lDepMod.setCodOperatoreInserimento(lEve.getEvento().getCodOperatoreInserimento());
 			lDepMod.setCodUfficioInserimento(lEve.getEvento().getCodUfficioInserimento());
-			lDepMod.setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lDepMod.setGenPridGeneraleProcedimento(
+					aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 			lDepMod.setIdEventoGenerato(lEve.getEvento().getIdEvento());
 			lDepMod.setNote(aFasc.getGeneraleProcedimentoModel().getAnnotazione());
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1028,14 +1028,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 			// I Tenori non vengono più cancellati ma chiusi ! Luigi 10-12-2003
 			TenoreModel lTenore = new TenoreModel();
 			// Valorizzazione dei campi da aggiornare + update
-			lTenore.setCodOperatoreAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodOperatoreAggiornamento());
-			lTenore.setCodUfficioAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodUfficioAggiornamento());
+			lTenore.setCodOperatoreAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
+			lTenore.setCodUfficioAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
 			lTenore.setDataAggiornamento(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
 			lTenore.setDataFine(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
-			lTenore.setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lTenore.setGenPridGeneraleProcedimento(
+					aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 			lTenDao.setDAOFromModelForUpdateDataFine(lTenore);
 			lTenDao.update();
 			lTenDao.stop();
@@ -1044,8 +1044,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			for (int x = 0; x < lNumTenori; x++) {
 				// Imposta l'id del generale procedimento nel tenore, prima di inserirlo
 				// nel dbase.
-				aTenori[x].setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				aTenori[x].setGenPridGeneraleProcedimento(
+						aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				aTenori[x].setDepDecIdDepositoDecreto(lKeyDepDec);
 				aTenori[x].setData(lEve.getEvento().getDataEmissione());
 				aTenori[x].setCodEsitoTenore("0601");
@@ -1100,6 +1100,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 			cleanup(lTenDao);
 			cleanup(lDepDao);
 			cleanup(lFasSiuDAO);
+
 			cleanup(lConn);
 		}
 		return aNuovaUdienzaProc;
@@ -1107,8 +1108,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Cancella la Fissazione Udienza.
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            udienza model.
 	 * @throws F3BException
@@ -1117,6 +1117,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 	// STUB: Da ultimare ! Non utilizzabile ! Luigi 26-11-2004
 	public void ExCancellaFissazioneUdienza(BigDecimal aIdDecreto, String aCodUtente, String aCodUfficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		NotificaDAO lNotDao = null;
@@ -1127,27 +1128,27 @@ public class UdienzaController extends SiapController implements IUdienza {
 		BigDecimal lIdEvento = null;
 		BigDecimal lIdGenPro = null;
 
-		// ricerca del record DEPOSITO_DECRETO da cancellare
-		IDepositoDecreto lDecrCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
-		lDepDec = lDecrCtrl.ExRicercaDepositoDecretoByKey(aIdDecreto);
-		if (lDepDec == null)
-			throw new SIUSException("record DepositoDecreto inesistente");
-
-		lIdEvento = lDepDec.getIdEventoGenerato();
-		if (lIdEvento == null)
-			throw new SIUSException("ID Evento non valorizzato nel Decreto");
-
-		lIdGenPro = lDepDec.getGenPridGeneraleProcedimento();
-		if (lIdGenPro == null)
-			throw new SIUSException("ID Generale Procedimento non valorizzato nel Decreto");
-
-		IFascicoloSius lFas = SIUSLookupRemote.getFascicoloSiusRemote();
-		/* FascicoloGPModel lFascicoloGPModel = */
-		lFas.ExRicercaFascicoloByKey(lDepDec.getGenPridGeneraleProcedimento());
-		// notifica per Udienza.
-		// BigDecimal lIdUdienza = lFascicoloGPModel.getGeneraleProcedimentoModel().getUdiIdUdienza();
-
 		try {
+			// ricerca del record DEPOSITO_DECRETO da cancellare
+			IDepositoDecreto lDecrCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
+			lDepDec = lDecrCtrl.ExRicercaDepositoDecretoByKey(aIdDecreto);
+			if (lDepDec == null)
+				throw new SIUSException("record DepositoDecreto inesistente");
+
+			lIdEvento = lDepDec.getIdEventoGenerato();
+			if (lIdEvento == null)
+				throw new SIUSException("ID Evento non valorizzato nel Decreto");
+
+			lIdGenPro = lDepDec.getGenPridGeneraleProcedimento();
+			if (lIdGenPro == null)
+				throw new SIUSException("ID Generale Procedimento non valorizzato nel Decreto");
+
+			IFascicoloSius lFas = SIUSLookupRemote.getFascicoloSiusRemote();
+			/* FascicoloGPModel lFascicoloGPModel = */
+			lFas.ExRicercaFascicoloByKey(lDepDec.getGenPridGeneraleProcedimento());
+			// notifica per Udienza.
+			// BigDecimal lIdUdienza = lFascicoloGPModel.getGeneraleProcedimentoModel().getUdiIdUdienza();
+
 			lConn = getDBConnection();
 
 			// Cancellazione Notifiche
@@ -1191,7 +1192,6 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 			// FINE
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			if (daoEx.INTEGRITY_CONSTRAINT_VIOLATED)
@@ -1209,14 +1209,11 @@ public class UdienzaController extends SiapController implements IUdienza {
 			cleanup(lGenDAO);
 			cleanup(lConn);
 		}
-
-		return;
 	}
 
 	/**
 	 * Inserisci OrdinanzaRinvioUdienza
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienza
 	 *            Dati udienza.
 	 * @param aFasc
@@ -1230,13 +1227,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 * @param aGeneraleProcedimentoold
 	 *            dati Generale procedimento.
 	 * @return
-	 * 
+	 *
 	 * @throws F3BException
 	 *             propaga errore di eccezione
 	 */
 	public EventoModel ExInserisciOrdinanzaRinvioUdienza(UdienzaModel aUdienza, FascicoloGPModel aFasc,
 			EventoModel aEve, TenoreModel[] aTenori, DepositoOrdinanzaPcModel lDepositoOrdinanzaPc,
 			GeneraleProcedimentoModel aGeneraleProcedimentoold) throws F3BException {
+
 		Connection lConn = null;
 
 		GeneraleProcedimentoDAO lGenProcDao = null;
@@ -1293,8 +1291,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				lUdiProcDao.update();
 
 				lUdienzaProcDao = new UdienzaProcedimentoDAO(lConn);
-				lUdienzaProcDao.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold
-						.getIdGeneraleProcedimento());
+				lUdienzaProcDao
+						.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold.getIdGeneraleProcedimento());
 				lUdienzaProcDao.setUdiIdUdienza(aUdienza.getIdUdienza());
 				lUdienzaProcDao.setDataInserimento(DateUtils.getSysDate());
 				lUdienzaProcDao.setCodOperatoreInserimento(aUdienza.getCodOperatoreInserimento());
@@ -1337,8 +1335,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 				// 20071123
 				// Esegue inserimento nuovo record come Nuovo Ruolo (N).
-				lUdiProcDao.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold
-						.getIdGeneraleProcedimento());
+				lUdiProcDao
+						.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold.getIdGeneraleProcedimento());
 				lUdiProcDao.setUdiIdUdienza(lUdiMod.getUdiIdUdienza());
 				lUdiProcDao.setDataInserimento(DateUtils.getSysDate());
 				lUdiProcDao.setCodOperatoreInserimento(aUdienza.getCodOperatoreInserimento());
@@ -1355,8 +1353,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				// Fascicolo SIUS Rinviato a nuovo ruolo.
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setCodStatoFascicolo("10");
-				lFasSiusDao.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel()
-						.getFasSiuIdFascicoloSius());
+				lFasSiusDao
+						.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel().getFasSiuIdFascicoloSius());
 				lFasSiusDao.update();
 				lFasSiusDao.stop();
 
@@ -1365,8 +1363,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				lGenProcDao.setAnnotazione(aFasc.getGeneraleProcedimentoModel().getAnnotazione());
 				// 07/10/2003 Rework per inserire il collegamento tra il generale Procedimento e l'udienza.
 				lGenProcDao.setUdiIdUdienza(null);
-				lGenProcDao.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProcDao.setCondizioneUpdate(
+						aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProcDao.update();
 				lGenProcDao.stop();
 			}
@@ -1381,14 +1379,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 			TenoreModel lTenore = new TenoreModel();
 			// Valorizzazione dei campi da aggiornare + update
 			lTenore.setData(aFasc.getGeneraleProcedimentoModel().getDataCameraConsiglio());
-			lTenore.setCodOperatoreAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodOperatoreAggiornamento());
+			lTenore.setCodOperatoreAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
 			lTenore.setDataAggiornamento(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
-			lTenore.setCodUfficioAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodUfficioAggiornamento());
+			lTenore.setCodUfficioAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
 			lTenore.setDataFine(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
-			lTenore.setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lTenore.setGenPridGeneraleProcedimento(
+					aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 			lTenDao.setDAOFromModelForUpdateDataFine(lTenore);
 			lTenDao.update();
@@ -1406,8 +1404,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			for (int x = 0; x < lNumTenori; x++) {
 				// Imposta l'id del generale procedimento nel tenore, prima di inserirlo
 				// nel dbase.
-				aTenori[x].setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				aTenori[x].setGenPridGeneraleProcedimento(
+						aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				aTenori[x].setDepOpidDepositoOrdinanzaPc(lIdOrd);
 				lTenDao.setDAOFromModel(aTenori[x]);
 				aTenori[x].setIdTenore(lTenDao.insert());
@@ -1480,151 +1478,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 	}
 
 	/**
-	 * Crea l'albero di entità ricavandole da opportune selezioni da DB
-	 * <p>
-	 * 
-	 * @param aEveModel
-	 * @return
-	 * @throws F3BException
-	 */
-	// private TreeModel prelevaDatiSius(EventoNotificaModel aEveModel) throws F3BException {
-	//
-	// TreeModel lTreeRoot = new TreeModel();
-	// SoggettoSqlDAO lSogDao = null;
-	// // ReatoSqlDAO lReaDao = null;
-	// FascicoloGPSqlDAO lFasDao = null;
-	// EventoSqlDAO lEveDao = null;
-	// ResidenzaSqlDAO lResDao = null;
-	//
-	// Connection lConn = null;
-	// BigDecimal lKeyFascicolo = new BigDecimal(0);
-	//
-	// try {
-	// IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-	// EventoNotificaModel lEveMod = lCtrl.ExRicercaEventoNotificaByKey(aEveModel.getEvento()
-	// .getIdEvento());
-	//
-	// lKeyFascicolo = lEveMod.getEvento().getFasSiuIdFascicoloSius();
-	//
-	// lConn = getDBConnection();
-	//
-	// // Fascicolo
-	// lFasDao = new FascicoloGPSqlDAO(lConn);
-	// lFasDao.ricercaFascicoloByKey(lKeyFascicolo);
-	// FascicoloGPModel lFasModel = (FascicoloGPModel) lFasDao.getModelByKey();
-	//
-	// // Soggetto
-	// lSogDao = new SoggettoSqlDAO(lConn);
-	// lSogDao.ricercaSoggettoByKey(lFasModel.getFascicoloSiusModel().getSogIdSoggetto());
-	// SoggettoModel lSogModel = (SoggettoModel) lSogDao.getModelByKey();
-	//
-	// // Residenza
-	// lResDao = new ResidenzaSqlDAO(lConn);
-	// ResidenzaModel lResMod = new ResidenzaModel();
-	// lResDao.ricercaResidenzaByFascicolo(lKeyFascicolo);
-	// lResMod = (ResidenzaModel) lResDao.getModelByKey();
-	//
-	// lTreeRoot = new TreeModel(createRoot(lEveMod));
-	//
-	// // // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// // siesLogger.debug("***** EventoNotifica");
-	// TreeModel lTreeEveMod = new TreeModel(lEveMod.getEvento());
-	//
-	// // Elenco delle notifiche
-	// int count = 0;
-	//
-	// while (count < lEveMod.getNotifiche().length) {
-	// // lEveMod
-	// TreeModel lTreeNot = new TreeModel(lEveMod.getNotifiche()[count]);
-	// lTreeEveMod.add(lTreeNot);
-	//
-	// // A Che Diavolo Serve ? ...........
-	// lTreeNot.add(new TreeModel(lEveMod.getNotifiche()[count].getAutoritaEsterna()));
-	// count++;
-	// }
-	//
-	// TreeModel lTreeFasMod = new TreeModel(lFasModel.getFascicoloSiusModel());
-	// TreeModel lTreeGenMod = new TreeModel(lFasModel.getGeneraleProcedimentoModel());
-	//
-	// if (lTreeGenMod != null)
-	// lTreeFasMod.add(lTreeGenMod);
-	//
-	// TreeModel lTreeSogMod = new TreeModel(lSogModel);
-	//
-	// if (lResMod != null)
-	// lTreeSogMod.add(new TreeModel(lResMod));
-	//
-	// // Stabilisco le gerarchie
-	// lTreeRoot.add(lTreeEveMod);
-	// lTreeRoot.add(lTreeFasMod);
-	// lTreeRoot.add(lTreeSogMod);
-	//
-	// } catch (DAOException daoEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.debug("DAOException: " + daoEx);
-	// throw new F3BException("UdienzaController.prelevaDatiSius : " + daoEx);
-	// } finally {
-	// cleanup(lFasDao);
-	// cleanup(lSogDao);
-	// cleanup(lEveDao);
-	// cleanup(lResDao);
-	// cleanup(lConn);
-	// }
-	// return lTreeRoot;
-	// }
-
-	// private XModel createRoot(EventoNotificaModel aEveModel) throws F3BException {
-	//
-	// XModel lStampa = new XModel();
-	// // String descrTipoUff = aEveModel.getEvento().getDescrUfficioEmittente().toUpperCase();
-	// lStampa.setUfficio(aEveModel.getEvento().getDescrLuogoEmittente().toUpperCase());
-	//
-	// Connection lConn = null;
-	//
-	// UfficioSqlDAO lUff = null;
-	// UfficioModel lUffCAP = null;
-	//
-	// try {
-	// lConn = getDBConnection();
-	// lUff = new UfficioSqlDAO(lConn);
-	// lUff.selUfficioByCod(aEveModel.getEvento().getCodUfficioInserimento());
-	// UfficioModel lUffMod = (UfficioModel) lUff.getModelByKey();
-	// lStampa.setIndirizzo(lUffMod.getIndirizzo());
-	// lStampa.setTipoUfficio(lUffMod.getDescrTipoUfficio().toUpperCase());
-	//
-	// // STUB 31/01/2005 Aggiunta la valorizzazione di TipoUfficioT1 e altri dati.
-	// lStampa.setTipoUfficioT1(lUffMod.getDescrTipoUfficio().toUpperCase());
-	// lStampa.setUfficio(lUffMod.getDescrComune().toUpperCase());
-	// lStampa.setIndirizzo(lUffMod.getIndirizzo());
-	// lStampa.setCap(lUffMod.getCap());
-	// lStampa.setFax(lUffMod.getFax());
-	// lStampa.setTelefono(lUffMod.getTelefono());
-	// lStampa.setDataElaborazione(DateUtils.getSysDate());
-	// if (lUffMod.getCodDistretto() != null) {
-	// lUff.selUfficioByCod(lUffMod.getCodDistretto());
-	// lUffCAP = (UfficioModel) lUff.getModelByKey();
-	// }
-	// if (lUffCAP.getDescrComune() != null)
-	// lStampa.setUfficioCAP(lUffCAP.getDescrComune().toUpperCase());
-	//
-	// } catch (F3BException f3bex) {
-	// throw f3bex;
-	// } catch (DAOException daoex) {
-	// throw new F3BException();
-	// } finally {
-	// cleanup(lUff);
-	// cleanup(lConn);
-	// }
-	//
-	// return lStampa;
-	// }
-
-	/**
 	 * Esecuzione stampa Verbale Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
 	 * @throws F3BException
@@ -1654,7 +1509,6 @@ public class UdienzaController extends SiapController implements IUdienza {
 		// Inserisce il documento generato nel model di ritorno
 		// In esso inserisce il Nome del template di ritorno
 		// e il documento generato.
-
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -1689,8 +1543,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Esecuzione stampa Fissazione Udienza
-	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
 	 * @throws F3BException
@@ -1703,8 +1556,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 		// Generazione documento di stampa
 		IStampaSius lCtrlSta = SIUSLookupRemote.getStampaRemote();
-		lByteArrayOut = lCtrlSta
-				.ExPreStampaFissazioneUdienza(lEvento, lUfficio.getCodUfficio(), aUtenteModel);
+		lByteArrayOut = lCtrlSta.ExPreStampaFissazioneUdienza(lEvento, lUfficio.getCodUfficio(),
+				aUtenteModel);
 
 		ByteArrayInputStream lByteArrayInput = new ByteArrayInputStream(lByteArrayOut.toByteArray());
 
@@ -1721,7 +1574,6 @@ public class UdienzaController extends SiapController implements IUdienza {
 		// Inserisce il documento generato nel model di ritorno
 		// In esso inserisce il Nome del template di ritorno
 		// e il documento generato.
-
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -1755,7 +1607,7 @@ public class UdienzaController extends SiapController implements IUdienza {
 
 	/**
 	 * Inserisci Sentenza Rinvio Udienza
-	 * 
+	 *
 	 * @param aUdienza
 	 *            Dati udienza.
 	 * @param aFasc
@@ -1769,13 +1621,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 	 * @param aGeneraleProcedimentoold
 	 *            dati Generale procedimento.
 	 * @return EventoModel
-	 * 
+	 *
 	 * @throws F3BException
 	 *             propaga errore di eccezione
 	 */
 	public EventoModel ExInserisciSentenzaRinvioUdienza(UdienzaModel aUdienza, FascicoloGPModel aFasc,
 			EventoModel aEve, TenoreModel[] aTenori, DepositoSentenzaModel lDepositoSentenza,
 			GeneraleProcedimentoModel aGeneraleProcedimentoold) throws F3BException {
+
 		Connection lConn = null;
 
 		GeneraleProcedimentoDAO lGenProcDao = null;
@@ -1832,8 +1685,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				lUdiProcDao.update();
 
 				lUdienzaProcDao = new UdienzaProcedimentoDAO(lConn);
-				lUdienzaProcDao.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold
-						.getIdGeneraleProcedimento());
+				lUdienzaProcDao
+						.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold.getIdGeneraleProcedimento());
 				lUdienzaProcDao.setUdiIdUdienza(aUdienza.getIdUdienza());
 				lUdienzaProcDao.setDataInserimento(DateUtils.getSysDate());
 				lUdienzaProcDao.setCodOperatoreInserimento(aUdienza.getCodOperatoreInserimento());
@@ -1874,8 +1727,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				siesLogger.debug("##### Prima Insert record ....");
 
 				// Esegue inserimento nuovo record come Nuovo Ruolo (N).
-				lUdiProcDao.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold
-						.getIdGeneraleProcedimento());
+				lUdiProcDao
+						.setGenPridGeneraleProcedimento(aGeneraleProcedimentoold.getIdGeneraleProcedimento());
 				lUdiProcDao.setUdiIdUdienza(lUdiMod.getUdiIdUdienza());
 				lUdiProcDao.setDataInserimento(DateUtils.getSysDate());
 				lUdiProcDao.setCodOperatoreInserimento(aUdienza.getCodOperatoreInserimento());
@@ -1892,8 +1745,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				// Fascicolo SIUS Rinviato a nuovo ruolo.
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setCodStatoFascicolo("10");
-				lFasSiusDao.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel()
-						.getFasSiuIdFascicoloSius());
+				lFasSiusDao
+						.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel().getFasSiuIdFascicoloSius());
 				lFasSiusDao.update();
 				lFasSiusDao.stop();
 
@@ -1902,8 +1755,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 				lGenProcDao.setAnnotazione(aFasc.getGeneraleProcedimentoModel().getAnnotazione());
 				// Rework per inserire il collegamento tra il generale Procedimento e l'udienza.
 				lGenProcDao.setUdiIdUdienza(null);
-				lGenProcDao.setCondizioneUpdate(aFasc.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProcDao.setCondizioneUpdate(
+						aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProcDao.update();
 				lGenProcDao.stop();
 			}
@@ -1915,14 +1768,14 @@ public class UdienzaController extends SiapController implements IUdienza {
 			TenoreModel lTenore = new TenoreModel();
 			// Valorizzazione dei campi da aggiornare + update
 			lTenore.setData(aFasc.getGeneraleProcedimentoModel().getDataCameraConsiglio());
-			lTenore.setCodOperatoreAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodOperatoreAggiornamento());
+			lTenore.setCodOperatoreAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
 			lTenore.setDataAggiornamento(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
-			lTenore.setCodUfficioAggiornamento(aFasc.getGeneraleProcedimentoModel()
-					.getCodUfficioAggiornamento());
+			lTenore.setCodUfficioAggiornamento(
+					aFasc.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
 			lTenore.setDataFine(aFasc.getGeneraleProcedimentoModel().getDataAggiornamento());
-			lTenore.setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lTenore.setGenPridGeneraleProcedimento(
+					aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 			lTenDao.setDAOFromModelForUpdateDataFine(lTenore);
 			lTenDao.update();
@@ -1940,8 +1793,8 @@ public class UdienzaController extends SiapController implements IUdienza {
 			for (int x = 0; x < lNumTenori; x++) {
 				// Imposta l'id del generale procedimento nel tenore, prima di inserirlo
 				// nel dbase.
-				aTenori[x].setGenPridGeneraleProcedimento(aFasc.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				aTenori[x].setGenPridGeneraleProcedimento(
+						aFasc.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				aTenori[x].setDepIdDepositoSentenza(lIdSen);
 				lTenDao.setDAOFromModel(aTenori[x]);
 				aTenori[x].setIdTenore(lTenDao.insert());

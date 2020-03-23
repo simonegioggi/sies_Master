@@ -142,18 +142,17 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 	protected CalcoloPenaCumuloModel aCalcoloPenaModel = new CalcoloPenaCumuloModel();
 
-	/**
-	*
-	*/
 	public TreeModel prelevaDatiIstruttoriaCumulo(FascicoloSiepModel lFascicoloModel, UtenteModel aUtenteMod,
 			UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, Date lDataEmissione) throws F3BException {
+
 		siesLogger.debug("prelevaDatiIstruttoriaCumulo INIZIO");
 
 		Connection lConn = null;
-		TreeModel lTreeRoot = new TreeModel();
-		SoggettoSqlDAO lSogDao = null;
 
+		TreeModel lTreeRoot = new TreeModel();
+
+		SoggettoSqlDAO lSogDao = null;
 		RichiestePmInCumuloSqlDAO RichiestePmSqlDao = null;
 		RichPMTitoloCumSqlDAO lRichPMTitSqlDao = null;
 		TitoloCumulatoSqlDAO lTitoloCumsqlDao = null;
@@ -165,17 +164,12 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		RichPMStatoEsecCumSqlDAO lRichPmStEsecSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStEsecCumSqlDao = null;
 		LibAnticipataCumuloSqlDAO lLibAntCumSqlDao = null;
-
-		// AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoCumSqlDAO = null;
 		ComputiCumuloSqlDAO lCompCumSqlDao = null;
-
 		RichiesteInviateCumSqlDAO lRicInvSqlDao = null;
 		RichiestePmInCumuloSqlDAO lRicPMSqlDao = null;
-
 		MisuraSicurezzaCumuloSqlDAO lMisSicSqlDao = null;
 		PeriodoLibAntCumuloSqlDAO lPeriodoSqlDao = null;
-
 		PenaRideterminataCumuloSqlDAO lPenaRidSqlDao = null;
 
 		try {
@@ -1337,7 +1331,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			throw new F3BException("StampaCumuloController.prelevaDatiIstruttoriaCumulo: " + e);
 		} finally {
 			cleanup(lSogDao);
-
 			cleanup(RichiestePmSqlDao);
 			cleanup(lTitoloCumsqlDao);
 			cleanup(lRichPMTitSqlDao);
@@ -1351,25 +1344,25 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lLibAntCumSqlDao);
 			cleanup(lStatoEsecTitoCumSqlDAO);
 			cleanup(lCompCumSqlDao);
-
 			cleanup(lMisSicSqlDao);
 			cleanup(lPeriodoSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lRicInvSqlDao);
+			cleanup(lRicPMSqlDao);
+			cleanup(lPenaRidSqlDao);
 
 			cleanup(lConn);
 		}
 
 		return lTreeRoot;
-
 	} // Chiude prelevaDatiIstruttoriaCumulo()
 
-	/**
-	*
-	*/
 	public TreeModel prelevaDatiIstruttoriaPerPropostaCumulo(FascicoloSiepModel lFascicoloModel,
 			UtenteModel aUtenteMod, UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, String lFunzione) throws F3BException {
+
 		Connection lConn = null;
-		TreeModel lTreeRoot = new TreeModel();
+
 		SoggettoSqlDAO lSogDao = null;
 		RichiestePmInCumuloSqlDAO RichiestePmSqlDao = null;
 		RichPMTitoloCumSqlDAO lRichPMTitSqlDao = null;
@@ -1382,17 +1375,16 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		RichPMStatoEsecCumSqlDAO lRichPmStEsecSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStEsecCumSqlDao = null;
 		LibAnticipataCumuloSqlDAO lLibAntCumSqlDao = null;
-
 		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoCumSqlDAO = null;
 		ComputiCumuloSqlDAO lCompCumSqlDao = null;
 		RichiesteInviateCumSqlDAO lRicInvSqlDao = null;
-
 		MisuraSicurezzaCumuloSqlDAO lMisSicSqlDao = null;
 		RichiestePmInCumuloSqlDAO lRicPMSqlDao = null;
 		PeriodoLibAntCumuloSqlDAO lPeriodoSqlDao = null;
-
 		PenaRideterminataCumuloSqlDAO lPenaRidSqlDao = null;
+
+		TreeModel lTreeRoot = new TreeModel();
 
 		try {
 			siesLogger.debug("--XXXX-- INIZIO prelevaDatiIstruttoriaPerPropostaCumulo - Istr = "
@@ -2377,7 +2369,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		} finally {
 			cleanup(lSogDao);
 			cleanup(lAvvSqlDao);
-
 			cleanup(RichiestePmSqlDao);
 			cleanup(lRichPMTitSqlDao);
 			cleanup(lTitoloCumsqlDao);
@@ -2389,32 +2380,31 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lRichPmStEsecSqlDao);
 			cleanup(lStEsecCumSqlDao);
 			cleanup(lLibAntCumSqlDao);
-
 			cleanup(lStatoEsecTitoCumSqlDAO);
 			cleanup(lCompCumSqlDao);
-
 			cleanup(lRicInvSqlDao);
 			cleanup(lMisSicSqlDao);
 			cleanup(lPeriodoSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lRicPMSqlDao);
+			cleanup(lPenaRidSqlDao);
 
 			cleanup(lConn);
-
 		}
 
 		return lTreeRoot;
-
 	} // Chiude prelevaDatiIstruttoriaPerPropostaCumulo()
 
 	public TreeModel prelevaDatiRichiestaInviataCumulo(Connection aConn, TreeModel lTreeMod,
 			UtenteModel aUtenteMod, UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			RichiesteInviateCumModel lRichMod) throws F3BException {
+
 		Connection lConn = null;
 
 		// se il parametro aConn = null provengo da Stampa Richiesta Inviata e ritorna un TreeModel completo
 		// dalla root
 		// se il parametro lConn != null provengo da Stampa Provvediemto di Cumulo e ritorn un TreeModel di
 		// tipo RichiestaInviataCum
-
 		if (aConn != null)
 			lConn = aConn;
 
@@ -2436,19 +2426,12 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		RichPMStatoEsecCumSqlDAO lRichPmStEsecSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStEsecCumSqlDao = null;
 		LibAnticipataCumuloSqlDAO lLibAntCumSqlDao = null;
-
-		// AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecTitoCumSqlDAO = null;
 		ComputiCumuloSqlDAO lCompCumSqlDao = null;
-
 		MisuraSicurezzaCumuloSqlDAO lMisSicSqlDao = null;
 		PeriodoLibAntCumuloSqlDAO lPeriodoSqlDao = null;
 
 		try {
-
-			// siesLogger.debug("--XXXX-- INIZIO prelevaDatiRichiestaInviataCumulo - Istr =
-			// "+aIstruttoriaCumulo.getAnnoProtocollo()+" / "+aIstruttoriaCumulo.getNumProtocollo());
-			// siesLogger.debug("--XXXX-- Id Richiesta_Inviata = "+lRichMod.getIdRichiesteInviateCum() );
 			if (lConn == null)
 				lConn = getDBConnection();
 
@@ -3074,7 +3057,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 					lTreeRoot.add(lTreeRichiestaINV);
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException("StampaCumuloController.prelevaDatiRichiestaInviataCumulo: " + daoEx);
@@ -3082,7 +3064,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			siesLogger.error("StampaCumuloController - -------> Exception: " + e, e);
 			throw new F3BException("StampaCumuloController.prelevaDatiRichiestaInviataCumulo: " + e);
 		} finally {
-
 			cleanup(RichiestePmSqlDao);
 			cleanup(lRichPMTitSqlDao);
 			cleanup(lTitoloCumsqlDao);
@@ -3094,7 +3075,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lRichPmStEsecSqlDao);
 			cleanup(lStEsecCumSqlDao);
 			cleanup(lLibAntCumSqlDao);
-
 			cleanup(lStatoEsecTitoCumSqlDAO);
 			cleanup(lCompCumSqlDao);
 			cleanup(lMisSicSqlDao);
@@ -3103,7 +3083,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			if (aConn == null) {
 				cleanup(lConn);
 			}
-
 		}
 
 		if (aConn == null) {
@@ -3111,7 +3090,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		} else {
 			return lTreeRichiestaINV;
 		}
-
 	} // Chiude prelevaDatiRichiestaInviataCumulo()
 
 	/**
@@ -3129,14 +3107,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	private void AggiungiAlCalcoloPena(RichiestePmInCumuloModel lRichPMCumMod, String lNatura,
 			ProvvedimentoGeSorvCumModel lProvvMod, BeneficioCumuloModel lBeneficio) throws F3BException {
 
-		// siesLogger.debug("lRichPMCumMod: "+ lRichPMCumMod);
-		// siesLogger.debug("lBeneficio: "+ lBeneficio);
-
 		// Per ora non aggiungo nulla Funzione sostituita con apposito add
 		// delle richiesta al model di calcolo: AggiungiRichiesteDelPm
 		// if (1 == 1)
-		return;
-
 		// BeneficioCumuloModel lBenCum = new BeneficioCumuloModel();
 		// if (lProvvMod != null) {
 		// lBenCum = new BeneficioCumuloModel(lProvvMod);
@@ -3176,13 +3149,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		// // siesLogger.debug("--XXYYZZ-- aCalcoloPenaModel size =
 		// // "+aCalcoloPenaModel.getListaBenefici().size());
 	}
-
 	// =================================================================================
 
 	// serve per avere nelle stampe la PenaComplessiva data in sentenza (quella del TitoloCumulato) prima di
 	// Eventuali Revoche
 	private PenaComplessivaCumuloModel cercaPenaComplessivaCum(BigDecimal aKeyTitolo, Connection aConn)
 			throws F3BException {
+
 		PenaComplessivaCumuloModel lPcCum = null;
 		PenaComplessivaCumuloSqlDAO lPcCumSqlDao = null;
 
@@ -3203,13 +3176,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		return lPcCum;
 	}
 
-	/**
-	*
-	*/
 	public TreeModel prelevaDatiComunicazioniCumulo(FascicoloSiepModel lFascicoloModel,
 			UtenteModel aUtenteMod, UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, EventoNotificaModel aEventoNotModel,
 			String lDestinatario) throws F3BException {
+
 		siesLogger.debug("prelevaDatiComunicazioniCumulo INIZIO");
 
 		Connection lConn = null;
@@ -3475,11 +3446,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		}
 
 		return lTreeRoot;
-
 	} // Chiude prelevaDatiComunicazioniCumulo()
 
 	/**
-	 *
 	 * @param lTreeIstruMod
 	 * @param VecBenefici
 	 * @param CodDpr
@@ -3487,7 +3456,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 */
 	public void RiepilogoGeneraleIndulto(TreeModel lTreeIstruMod, Vector<BeneficioCumuloModel> VecBenefici,
 			String CodDpr) throws F3BException {
-		// siesLogger.debug("---XXXZ--- Prepara Indulti - Codice DPR = "+CodDpr);
 
 		String Dprsi = "";
 		Vector<BeneficioCumuloModel> lInduC = new Vector<>();
@@ -3573,9 +3541,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 			TreeModel lTreeRiepIndu = new TreeModel(lIndulto);
 			lTreeIstruMod.add(lTreeRiepIndu);
-
 		}
-
 	} // Chiude preparaIndulti()
 
 	/**
@@ -3585,6 +3551,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 * @return XModel
 	 */
 	public XModel createRootX(UfficioModel lUfficioMod, UtenteModel aUtenteModel) throws F3BException {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = lUfficioMod.getDescrTipoUfficio().toUpperCase();
@@ -3618,7 +3585,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		}
 
 		return lStampa;
-
 	} // Chiude createRootX()
 
 	/**
@@ -4301,9 +4267,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 				lTreeTitoloMod.add(lTreePenaResEspianda);
 
 			}
-
 			// ----------------------------------------------------------------------------------------
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException("StampaController.appendDatiAnalitici " + daoEx);
@@ -4319,10 +4283,8 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lMisCauSqlDao);
 			cleanup(lBenSqlDao);
 		}
-
 	} // Chiude appendDatiAnalitici()
-
-	// =================
+		// =================
 
 	/**
 	 * Metodo per aggiungere Lo Stato Esecuzione (Con tutti i PROVVEDIMENTI) legati al Titolo Cumulato
@@ -4344,7 +4306,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		ComputiCumuloSqlDAO lCompSqlDao = null;
 		NotificaCumuloSqlDAO lNotCumSqlDao = null;
 		IstitutoDetenzioneSqlDAO lIstSqlDao = null;
-
 		LibAnticipataCumuloSqlDAO lLibAntCumSqlDao = null;
 		PeriodoLibAntCumuloSqlDAO lPeriCumSqlDao = null;
 
@@ -4356,7 +4317,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			lCompSqlDao = new ComputiCumuloSqlDAO(lConn);
 			lNotCumSqlDao = new NotificaCumuloSqlDAO(lConn);
 			lIstSqlDao = new IstitutoDetenzioneSqlDAO(lConn);
-
 			lLibAntCumSqlDao = new LibAnticipataCumuloSqlDAO(lConn);
 			lPeriCumSqlDao = new PeriodoLibAntCumuloSqlDAO(lConn);
 
@@ -4463,7 +4423,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										aCalcoloPenaModel.addBeneficio(lBenCum);
 									}
 									// =======================================================================================
-
 								}
 							}
 						}
@@ -4499,7 +4458,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								|| lStEsecCumMod.getCodMotivo().compareTo("2250") == 0
 								|| lStEsecCumMod.getCodMotivo().compareTo("2790") == 0
 								|| lStEsecCumMod.getCodMotivo().compareTo("9027") == 0) {
-
 							lLibAntCumSqlDao.ricercaLibAnticipataCumuloByIdStatoEsec(
 									lStEsecCumMod.getIdStatoEsecTitoloCumulato());
 							lLibAntCumSqlDao.start();
@@ -4543,21 +4501,14 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 										lTreeLibAntCumMod.add(lTreeDatePeriodiLAMod);
 									}
-
 								}
 
 								lTreeStatoEsecCum.add(lTreeLibAntCumMod);
-
 								// ======= Fine DAL AL ===========================================
-
 							} // Chiude while (lLibAntCumSqlDao.next())
-
 						}
-
 						lTreeTitoloMod.add(lTreeStatoEsecCum);
-
 					} // Chiude(lStEsecCumMod != null)
-
 				} // Chiude ciclo while (lItxSta.hasNext()) (Ciclo StatoEsecTitoloCumulato
 			}
 		} catch (DAOException daoEx) {
@@ -4572,17 +4523,19 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lCompSqlDao);
 			cleanup(lNotCumSqlDao);
 			cleanup(lIstSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLibAntCumSqlDao);
+			cleanup(lPeriCumSqlDao);
 		}
-
 	} // CHIUDE appendStatoEsecuzioneTitoloCum()
 
 	/**
-	 *
 	 * @param lBen
 	 * @return
 	 * @throws F3BException
 	 */
 	private String DatiSentenzaRevoca(BeneficioCumuloModel lBen) throws F3BException {
+
 		String StringaDati = "";
 		String StringQuant = "";
 		String StringaRevo = "";
@@ -4639,12 +4592,12 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	}
 
 	/**
-	 *
 	 * @param beneficio
 	 * @return
 	 * @throws F3BException
 	 */
 	private String Datitotquant(BeneficioCumuloModel beneficio) throws F3BException {
+
 		String StringQuant = "";
 
 		// Preparazione Quantum Reclusione
@@ -4697,7 +4650,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	}
 
 	/**
-	 *
 	 * @param lKeySoggetto
 	 * @param lKeyFascicolo
 	 * @param lConn
@@ -4706,6 +4658,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 */
 	protected TreeModel getTreeSoggetto(BigDecimal lKeySoggetto, FascicoloSiepModel aFascicoloSiep,
 			Connection lConn) throws F3BException {
+
 		SoggettoSqlDAO lSogSqlDao = null;
 		ResidenzaSqlDAO lResDqlDao = null;
 		AliasSqlDAO lAliasSqlDAO = null;
@@ -4782,7 +4735,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	}
 
 	/**
-	 *
 	 * @param aIdIstruttoriaCumulo
 	 * @param aCalcoloPenaModel
 	 * @param aConn
@@ -4790,6 +4742,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	 */
 	private void AggiungiRichiesteDelPm(BigDecimal aIdIstruttoriaCumulo,
 			CalcoloPenaCumuloModel aCalcoloPenaModel, Connection aConn) throws Exception {
+
 		siesLogger.debug("================================ ");
 		siesLogger.debug("Recupero le richieste al GE/SORV ");
 		siesLogger.debug("================================ ");
@@ -4874,7 +4827,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 
 			siesLogger.debug("FINE CARICAMENTO RICHIESTE");
 			siesLogger.debug("" + aCalcoloPenaModel.toString());
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			siesLogger.error("DAOException: ", daoEx);
@@ -4886,14 +4838,13 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 		} finally {
 			cleanup(lRichPmInCumuloSqlDao);
 			cleanup(lProvvGeSorvSqlDao);
-
 		}
-
 	}
 
 	// MEV_70 ===========================================================
 	private PenaResiduaModel calcolaResiduoPenaAdOggi(PenaRideterminataCumuloModel aPenaRidetCumulo,
 			Date aOggi) throws Exception {
+
 		PenaResiduaModel lPenaInEspiazione = aPenaRidetCumulo.getPenaResidua();
 
 		// Calcolo il residuo pena se interrompessi Oggi

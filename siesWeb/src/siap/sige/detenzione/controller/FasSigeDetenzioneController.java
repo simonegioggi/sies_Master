@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.altracausa.controller.IAltraCausa;
 import siap.siep.altracausa.dao.AltraCausaDAO;
@@ -14,10 +18,6 @@ import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sige.detenzione.dao.FasSigeDetenzioneDAO;
 import siap.sige.detenzione.model.FasSigeDetenzioneModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -43,6 +43,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 
 	public FasSigeDetenzioneModel ExInserisciFasSigeDetenzione(FasSigeDetenzioneModel aFasSigeDetenzione)
 			throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasDetDao = null;
 		LuogoDetenzioneDAO lLuoDetDao = null;
@@ -62,8 +63,8 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 					lLuoDetDao.setCodOperatoreAggiornamento(lFasDetMod.getCodOperatoreInserimento());
 					lLuoDetDao.setCodUfficioAggiornamento(lFasDetMod.getCodUfficioInserimento());
 					lLuoDetDao.setDataAggiornamento(DateUtils.getSysDate());
-					lLuoDetDao.setDataFineDetenzione(lFasDetMod.getLuogoDetenzione()
-							.getDataInizioDetenzione());
+					lLuoDetDao
+							.setDataFineDetenzione(lFasDetMod.getLuogoDetenzione().getDataInizioDetenzione());
 					lLuoDetDao.update();
 					lLuoDetDao.stop();
 				}
@@ -113,7 +114,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 	/**
 	 * La funzione determina il luogo di Detenzione corrente (ultimo) legato ad un Fascicolo SIGE. SE esiste
 	 * il luogo di Detenzione può essere alternativamente un LuogoDetenzioneModel o AltraCausaModel.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @return FasSigeDetenzioneModel
 	 * @throws F3BException
@@ -121,6 +122,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 
 	public FasSigeDetenzioneModel ExRicercaUltimaDetenzioneFascicolo(BigDecimal aIdFasSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasDao = null;
 		FasSigeDetenzioneModel lDetenzione = null;
@@ -135,29 +137,27 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 				if (lDetenzione.getLdIdLuogoDetenzione() != null) {
 					// Ricerca Luogo Detenzione
 					ILuogoDetenzione lLdCtrl = SIEPLookupRemote.getLuogoDetenzioneRemote();
-					lDetenzione.setLuogoDetenzione(lLdCtrl.ExRicercaLuogoDetenzioneByKey(lDetenzione
-							.getLdIdLuogoDetenzione()));
+					lDetenzione.setLuogoDetenzione(
+							lLdCtrl.ExRicercaLuogoDetenzioneByKey(lDetenzione.getLdIdLuogoDetenzione()));
 				}
 				if (lDetenzione.getAcIdAltraCausa() != null) {
 					// Ricerca Altra Causa
 					IAltraCausa lAcCtrl = SIEPLookupRemote.getAltraCausa();
-					lDetenzione.setAltraCausa(lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lDetenzione
-							.getAcIdAltraCausa()));
+					lDetenzione.setAltraCausa(
+							lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lDetenzione.getAcIdAltraCausa()));
 				}
 				if (lDetenzione.getLdIdLuogoDetenzione() == null && lDetenzione.getAcIdAltraCausa() == null)
 					throw new F3BException(F3BException.USER_MESSAGE,
 							"Errore nella lettura del Luogo di Detenzione");
 			}
-
 		} catch (F3BException fEx) {
 			throw fEx;
 		} catch (DAOException daoEx) {
-			throw new F3BException("FasSigeDetenzioneController.ExRicercaUltimaDetenzioneFascicolo: " + daoEx);
+			throw new F3BException(
+					"FasSigeDetenzioneController.ExRicercaUltimaDetenzioneFascicolo: " + daoEx);
 		} catch (Exception eEx) {
 			throw new F3BException("FasSigeDetenzioneController.ExRicercaUltimaDetenzioneFascicolo " + eEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lFasDao);
 			cleanup(lConn);
 		}
@@ -167,13 +167,13 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 	/**
 	 * La funzione ricerca il FasSigeDetenzione per Chiave SE esiste il luogo di Detenzione può essere
 	 * alternativamente un LuogoDetenzioneModel o AltraCausaModel.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @return FasSigeDetenzioneModel
 	 * @throws F3BException
 	 */
-
 	public FasSigeDetenzioneModel ExRicercaFasSigeDetenzione(BigDecimal aIdFasSigeDet) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasDetDao = null;
 		FasSigeDetenzioneModel lDetenzione = null;
@@ -188,13 +188,13 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 				if (lDetenzione.getLdIdLuogoDetenzione() != null) {
 					// Ricerca Luogo Detenzione
 					ILuogoDetenzione lLdCtrl = SIEPLookupRemote.getLuogoDetenzioneRemote();
-					lDetenzione.setLuogoDetenzione(lLdCtrl.ExRicercaLuogoDetenzioneByKey(lDetenzione
-							.getLdIdLuogoDetenzione()));
+					lDetenzione.setLuogoDetenzione(
+							lLdCtrl.ExRicercaLuogoDetenzioneByKey(lDetenzione.getLdIdLuogoDetenzione()));
 				} else if (lDetenzione.getAcIdAltraCausa() != null) {
 					// Ricerca Altra Causa
 					IAltraCausa lAcCtrl = SIEPLookupRemote.getAltraCausa();
-					lDetenzione.setAltraCausa(lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lDetenzione
-							.getAcIdAltraCausa()));
+					lDetenzione.setAltraCausa(
+							lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lDetenzione.getAcIdAltraCausa()));
 				}
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE,
@@ -205,9 +205,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 			throw new F3BException("FasSigeDetenzioneController.ExRicercaFasSigeDetenzione: " + daoEx);
 		} catch (Exception eEx) {
 			throw new F3BException("FasSigeDetenzioneController.ExRicercaFasSigeDetenzione: " + eEx);
-		}
-
-		finally {
+		} finally {
 			cleanup(lFasDetDao);
 
 			cleanup(lConn);
@@ -217,12 +215,13 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 
 	/**
 	 * Funzione di ricerca dei luoghi di Detenzione legati ad un Fascicolo SIGE.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @return Vector <FasSigeDetenzioneModel>
 	 * @throws F3BException
 	 */
 	public Vector exRicercaLuoghiDetenzioneFascicoloSige(BigDecimal aIdFasSige) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasSigeDetDao = null;
 		FasSigeDetenzioneModel lDetenzione = new FasSigeDetenzioneModel();
@@ -241,13 +240,13 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 					if (lDetenzione.getLdIdLuogoDetenzione() != null) {
 						// Ricerca Luogo Detenzione
 						ILuogoDetenzione lLdCtrl = SIEPLookupRemote.getLuogoDetenzioneRemote();
-						lDetenzione.setLuogoDetenzione(lLdCtrl.ExRicercaLuogoDetenzioneByKey(lDetenzione
-								.getLdIdLuogoDetenzione()));
+						lDetenzione.setLuogoDetenzione(
+								lLdCtrl.ExRicercaLuogoDetenzioneByKey(lDetenzione.getLdIdLuogoDetenzione()));
 					} else if (lDetenzione.getAcIdAltraCausa() != null) {
 						// Ricerca Altra Causa
 						IAltraCausa lAcCtrl = SIEPLookupRemote.getAltraCausa();
-						lDetenzione.setAltraCausa(lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lDetenzione
-								.getAcIdAltraCausa()));
+						lDetenzione.setAltraCausa(
+								lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lDetenzione.getAcIdAltraCausa()));
 					} else
 						throw new F3BException(F3BException.USER_MESSAGE,
 								"Errore nella lettura del Luogo di Detenzione");
@@ -258,14 +257,12 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 		} catch (F3BException fEx) {
 			throw fEx;
 		} catch (DAOException daoEx) {
-			throw new F3BException("FasSigeDetenzioneController.exRicercaLuoghiDetenzioneFascicoloSige: "
-					+ daoEx);
+			throw new F3BException(
+					"FasSigeDetenzioneController.exRicercaLuoghiDetenzioneFascicoloSige: " + daoEx);
 		} catch (Exception eEx) {
-			throw new F3BException("FasSigeDetenzioneController.exRicercaLuoghiDetenzioneFascicoloSige -> "
-					+ eEx);
-		}
-
-		finally {
+			throw new F3BException(
+					"FasSigeDetenzioneController.exRicercaLuoghiDetenzioneFascicoloSige -> " + eEx);
+		} finally {
 			cleanup(lFasSigeDetDao);
 			cleanup(lConn);
 		}
@@ -275,9 +272,9 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 	/*
 	 * public FasSigeDetenzioneModel ExRicercaFasSigeDetenzioneByKey ( BigDecimal aKey) throws F3BException {
 	 * Connection lConn = null; FasSigeDetenzioneSqlDAO lFasDao = null; FasSigeDetenzioneModel lFasMod;
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * try { lConn = getDBConnection(); lFasDao = new FasSigeDetenzioneSqlDAO(lConn);
 	 * lFasDao.ricercaFasSigeDetenzioneByKey(aKey); lFasMod = (FasSigeDetenzioneModel)lFasDao.getModelByKey();
 	 * } catch (DAOException daoEx) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
@@ -291,6 +288,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 
 	public FasSigeDetenzioneModel ExModificaFasSigeDetenzione(FasSigeDetenzioneModel aFasSigeDetenzione)
 			throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasDetDao = null;
 		LuogoDetenzioneDAO lLuoDetDao = null;
@@ -306,16 +304,16 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 			lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 			lLuoDetDao.setIdLuogoDetenzione(aFasSigeDetenzione.getLuogoDetenzione().getIdLuogoDetenzione());
 			lLuoDetDao.setDAOFromModelForUpdate(aFasSigeDetenzione.getLuogoDetenzione());
-			lLuoDetDao.setIstDetIdIstitutoDetenzione(aFasSigeDetenzione.getLuogoDetenzione()
-					.getIstDetIdIstitutoDetenzione());
+			lLuoDetDao.setIstDetIdIstitutoDetenzione(
+					aFasSigeDetenzione.getLuogoDetenzione().getIstDetIdIstitutoDetenzione());
 			lLuoDetDao.update();
 			lLuoDetDao.stop();
 
 			lAltCauDao = new AltraCausaDAO(lConn);
 			lAltCauDao.setIdAltraCausa(aFasSigeDetenzione.getAltraCausa().getIdAltraCausa());
 			lAltCauDao.setDAOFromModelForUpdate(aFasSigeDetenzione.getAltraCausa());
-			lAltCauDao.setIstDetIdIstitutoDetenzione(aFasSigeDetenzione.getAltraCausa()
-					.getIstDetIdIstitutoDetenzione());
+			lAltCauDao.setIstDetIdIstitutoDetenzione(
+					aFasSigeDetenzione.getAltraCausa().getIstDetIdIstitutoDetenzione());
 			lAltCauDao.update();
 			lAltCauDao.stop();
 
@@ -335,6 +333,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 	}
 
 	public void ExCancellaFasSigeDetenzione(FasSigeDetenzioneModel aFasSigeDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasDao = null;
 
@@ -355,6 +354,7 @@ public class FasSigeDetenzioneController extends SiapController implements IFasS
 	}
 
 	public void exCancellaUltimaDetenzioneFascicoloSige(BigDecimal aIdFasSige) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeDetenzioneDAO lFasDetDao = null;
 		LuogoDetenzioneDAO lLuoDetDao = null;

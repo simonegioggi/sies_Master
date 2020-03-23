@@ -8,6 +8,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.controller.GenericController;
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.sige.SIGEException;
 import siap.sige.aula.dao.AulaSqlDAO;
 import siap.sige.aula.model.AulaUdienzaModel;
@@ -31,12 +37,6 @@ import siap.sige.udienza.dao.UdienzaSigeSqlDAO;
 import siap.sige.udienza.model.UdienzaSigeModel;
 import siap.sige.udienzaprocedimento.dao.UdienzaProcedimentoSigeSqlDAO;
 import siap.sige.udienzaprocedimento.model.UdienzaProcedimentoSigeModel;
-import f3b.controller.GenericController;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.Utils;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ import f3b.util.Utils;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -62,7 +62,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un UdienzaSige a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aUdienzaSige
 	 *            Model con i dati da inserire
 	 * @param aIdFascicoloSige
@@ -72,12 +72,13 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	 ****************************************************************************/
 	public UdienzaSigeModel ExInserisciUdienzaSige(UdienzaSigeModel aUdienzaSige, BigDecimal aIdFascicoloSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		UdienzaSigeDAO lUdiDao = null;
 		UdienzaSigeModel lUdiMod = null;
 		MagistratoAssegnatarioSqlDAO lMagSqlDAO = null;
 		MagistratoAssegnatarioModel lMagMod = null;
-		MagistratoAssegnatarioDAO lMagAssDao = null;	
+		MagistratoAssegnatarioDAO lMagAssDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -88,7 +89,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			// Quando si inserisce/modifica il Giudice viene chiesto conferma all'utente
 			// se bisogna procede anche alla modifica del Magistrato Assegnatario, impostando
 			// quest'ultimo uguale al codice del Giudice scelto.
-			
+
 			// QUESTO DOVREBBE ESSERE VERO SOLO PER LE MONOCRATICHE
 			if (aIdFascicoloSige != null) {
 				if (aUdienzaSige.getCodMagistratoAss() != null
@@ -125,7 +126,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 		} finally {
 			cleanup(lUdiDao);
 			cleanup(lMagSqlDAO);
-			cleanup(lMagAssDao);			
+			cleanup(lMagAssDao);
 			cleanup(lConn);
 		}
 
@@ -134,8 +135,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati UdienzaSige
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienzaSige
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -143,6 +143,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaUdienzaSige(UdienzaSigeModel aUdienzaSige) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienzeSige = new Vector();
 		UdienzaSigeSqlDAO lUdiDao = null;
@@ -154,7 +155,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			// lUdiDao.setOrderBy();
 			lUdiDao.start();
 			while (lUdiDao.next()) {
-				lUdienzeSige.add((UdienzaSigeModel) lUdiDao.getModel());
+				lUdienzeSige.add(lUdiDao.getModel());
 			}
 			lUdiDao.stop();
 		} catch (DAOException daoEx) {
@@ -169,13 +170,14 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public UdienzaSigeModel ExRicercaUdienzaSigeById(BigDecimal aIdUdienzaSige) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
@@ -212,8 +214,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 				Collection lColl = new ArrayList();
 				lColl = lColMagDao.getModels();
 
-				lColMod.setCollegioMagistrati((CollegioMagistratoModel[]) lColl
-						.toArray(new CollegioMagistratoModel[0]));
+				lColMod.setCollegioMagistrati(
+						(CollegioMagistratoModel[]) lColl.toArray(new CollegioMagistratoModel[0]));
 
 				// Recupero dei dati afferenti al Giudice Popolare.
 				lColGiuPopDao = new CollegioGiudicePopolareSqlDAO(lConn);
@@ -221,8 +223,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 				lColl = new ArrayList();
 				lColl = lColGiuPopDao.getModels();
 
-				lColMod.setCollegioGiudiciPopolari((CollegioGiudicePopolareModel[]) lColl
-						.toArray(new CollegioGiudicePopolareModel[0]));
+				lColMod.setCollegioGiudiciPopolari(
+						(CollegioGiudicePopolareModel[]) lColl.toArray(new CollegioGiudicePopolareModel[0]));
 
 				// Recupero dei dati afferenti al Giudice Popolare.
 				lColEspDao = new CollegioEspertoSqlDAO(lConn);
@@ -230,8 +232,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 				lColl = new ArrayList();
 				lColl = lColEspDao.getModels();
 
-				lColMod.setCollegioEsperti((CollegioEspertoModel[]) lColl
-						.toArray(new CollegioEspertoModel[0]));
+				lColMod.setCollegioEsperti(
+						(CollegioEspertoModel[]) lColl.toArray(new CollegioEspertoModel[0]));
 
 				lUdienzaSigeMod.setCollegio(lColMod);
 			}
@@ -249,10 +251,9 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 				SezioneModel sezioneModel = (SezioneModel) sezioneDao.getModelByKey();
 				lUdienzaSigeMod.setSezioneModel(sezioneModel);
 			}
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExRicercaUdienzaSigeById: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExRicercaUdienzaSigeById: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
 			cleanup(lColDao);
@@ -273,15 +274,17 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	 * Metodo che modifica i dati dell'UdienzaSige Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aUdienzaSige
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaUdienzaSige(UdienzaSigeModel aUdienzaSige) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
+
 		Connection lConn = null;
 		UdienzaSigeDAO lUdiDao = null;
 		UdienzaProcedimentoSigeSqlDAO lUdienzaProcSigeSqlDao = null;
@@ -289,26 +292,26 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 		MagistratoAssegnatarioSqlDAO lMagSqlDAO = null;
 		MagistratoAssegnatarioModel lMagMod = null;
 		MagistratoAssegnatarioDAO lMagAssDao = null;
-		
+
 		// intervento post collaudo
 		CollegioModel lColMod = new CollegioModel();
 		CollegioSqlDAO lColDao = null;
-		
+
 		try {
 			lConn = getDBConnection();
-			
+
 			// intervento post collaudo
 			if (aUdienzaSige != null && aUdienzaSige.getColIdCollegio() != null) {
 				lColDao = new CollegioSqlDAO(lConn);
 				lColDao.ricercaCollegioByKey(aUdienzaSige.getColIdCollegio());
 				lColMod = (CollegioModel) lColDao.getModelByKey();
-				
-				if(lColMod!= null && lColMod.getSezIdSezione() != null){
+
+				if (lColMod != null && lColMod.getSezIdSezione() != null) {
 					aUdienzaSige.setCodIdSezioneUdienza(lColMod.getSezIdSezione());
-				}				
-					
+				}
+
 			}
-			
+
 			lUdiDao = new UdienzaSigeDAO(lConn);
 			lUdiDao.setDAOFromModelForUpdate(aUdienzaSige);
 			// lUdiDao.selCondizioneUpdate( aUdienzaSige.getIdUdienzaSige());
@@ -317,10 +320,11 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			// Quando si inserisce/modifica il Giudice viene chiesto conferma all'utente
 			// se bisogna procede anche alla modifica del Magistrato Assegnatario, impostando
 			// quest'ultimo uguale al codice del Giudice scelto.
-			if (aUdienzaSige.getCodMagistratoAss() != null && !aUdienzaSige.getCodMagistratoAss().equals("")) {
+			if (aUdienzaSige.getCodMagistratoAss() != null
+					&& !aUdienzaSige.getCodMagistratoAss().equals("")) {
 				lUdienzaProcSigeSqlDao = new UdienzaProcedimentoSigeSqlDAO(lConn);
-				lUdienzaProcSigeSqlDao.ricercaUdienzaProcedimentoByIdUdienzaSige(aUdienzaSige
-						.getIdUdienzaSige());
+				lUdienzaProcSigeSqlDao
+						.ricercaUdienzaProcedimentoByIdUdienzaSige(aUdienzaSige.getIdUdienzaSige());
 				lUdiMod = (UdienzaProcedimentoSigeModel) lUdienzaProcSigeSqlDao.getModelByKey();
 
 				if (lUdiMod != null) {
@@ -335,11 +339,11 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 						lMagAssDao.setCodOperatoreAggiornamento(aUdienzaSige.getCodOperatoreAggiornamento());
 						lMagAssDao.setCodUfficioAggiornamento(aUdienzaSige.getCodUfficioAggiornamento());
 						lMagAssDao.setDataAggiornamento(DateUtils.getSysDate());
-						// inizio intervento per 11.2.1 
-						if(aUdienzaSige.getCodProcuratore() != null)
+						// inizio intervento per 11.2.1
+						if (aUdienzaSige.getCodProcuratore() != null)
 							lMagAssDao.setCodProcuratore(aUdienzaSige.getCodProcuratore());
-						if(aUdienzaSige.getCodIdAssistente()!= null)
-							lMagAssDao.setCodIdAssistente(aUdienzaSige.getCodIdAssistente());						
+						if (aUdienzaSige.getCodIdAssistente() != null)
+							lMagAssDao.setCodIdAssistente(aUdienzaSige.getCodIdAssistente());
 						// fine intervento per 11.2.1
 						lMagAssDao.setCondizioneUpdate(lMagMod.getFasSigeIdFascicoloSige(),
 								lMagMod.getMagCodMagistrato());
@@ -365,6 +369,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			cleanup(lUdienzaProcSigeSqlDao);
 			cleanup(lMagSqlDAO);
 			cleanup(lMagAssDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lColDao);
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -374,15 +380,16 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienzaSige
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaUdienzaSige(UdienzaSigeModel aUdienzaSige) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
+
 		Connection lConn = null;
 		UdienzaSigeDAO lUdiDao = null;
 
@@ -397,8 +404,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			if (daoEx.INTEGRITY_CONSTRAINT_VIOLATED)
 				throw new SIGEException(SIGEException.USER_MESSAGE,
 						"Cancellazione non effettuabile, per l'udienza indicata risultano procedimenti fissati! ");
-			throw new F3BException("UdienzaSigeController.ExCancellaUdienzaSige: Non posso cancellare : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExCancellaUdienzaSige: Non posso cancellare : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
 			throw new F3BException("UdienzaSigeController.ExCancellaUdienzaSige: Non posso leggere : " + ex);
@@ -414,13 +421,13 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * <p>
-	 * 
+	 *
 	 * @param aUdienzaSige
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountUdienzaSige(UdienzaSigeModel aUdienzaSige) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
@@ -438,8 +445,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			lCount = lUdienzaSigeSqlDao.getBigDecimal("HowManyRecords");
 			lUdienzaSigeSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExGetCountUdienzaSige: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExGetCountUdienzaSige: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
 			cleanup(lConn);
@@ -455,7 +462,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
 	 * <p>
-	 * 
+	 *
 	 * @param aUdienzaSige
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -464,6 +471,7 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaUdienzaSigePaged(UdienzaSigeModel aUdienzaSige, int aPage) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
@@ -477,8 +485,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			lUdienzaSigeSqlDao.ricercaUdienzaSigePaged(aUdienzaSige, aPage);
 			lUdienzaSigi = new Vector(lUdienzaSigeSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
 			cleanup(lConn);
@@ -491,16 +499,19 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 	/*****************************************************************************
 	 * Funzione di ricerca Udienza in base al magistrato e alla data
-	 * 
+	 *
 	 * @param codMag
 	 * @param dataUdienza
 	 * @return
 	 * @throws F3BException
 	 ****************************************************************************/
-	public Vector ExRicercaUdienzaCollegialeSige(String codMag, String dataUdienza, String codUfficioAppartenenza) throws F3BException {
+	public Vector ExRicercaUdienzaCollegialeSige(String codMag, String dataUdienza,
+			String codUfficioAppartenenza) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
+
 		Connection lConn = null;
 		Vector lUdienzaSigi = new Vector();
 		UdienzaSigeSqlDAO lUdienzaSigeSqlDao = null;
@@ -514,8 +525,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 				lUdienzaSigi.add(lUdienzaSigeSqlDao.getBigDecimal("id_udienza_sige"));
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
 			cleanup(lConn);
@@ -528,17 +539,20 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 	/*****************************************************************************
 	 * Funzione di ricerca Udienza in base al magistrato e alla data
-	 * 
+	 *
 	 * @param codMag
 	 * @param dataUdienza
 	 * @return
 	 * @throws F3BException
 	 ****************************************************************************/
 	// [EC] - 20171019 aggiungo parametro in input
-	public Vector ExRicercaUdienzaMonocraticaSige(String codMag, String dataUdienza, BigDecimal sez, String ufficioAppartenenza) throws F3BException {
+	public Vector ExRicercaUdienzaMonocraticaSige(String codMag, String dataUdienza, BigDecimal sez,
+			String ufficioAppartenenza) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
+
 		Connection lConn = null;
 		Vector lUdienzaSigi = new Vector();
 		UdienzaSigeSqlDAO lUdienzaSigeSqlDao = null;
@@ -547,15 +561,16 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			lConn = getDBConnection();
 			lUdienzaSigeSqlDao = new UdienzaSigeSqlDAO(lConn);
 			// [EC] - 20171019 aggiungo parametro in input
-			// [EC] 20190325:   AGGIUNGO IL PARAMETR COD_UFFICIO IN INPUT (L'UDIENZA DEVE ESSERE UNIVOCA PER UFFICIO)
+			// [EC] 20190325: AGGIUNGO IL PARAMETR COD_UFFICIO IN INPUT (L'UDIENZA DEVE ESSERE UNIVOCA PER
+			// UFFICIO)
 			lUdienzaSigeSqlDao.getIdUdienzaMonocratica(codMag, dataUdienza, sez, ufficioAppartenenza);
 			lUdienzaSigeSqlDao.start();
 			while (lUdienzaSigeSqlDao.next()) {
 				lUdienzaSigi.add(lUdienzaSigeSqlDao.getBigDecimal("id_udienza_sige"));
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
 			cleanup(lConn);
@@ -570,7 +585,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 	 * 20170914: [SG] aggiunto metodo di ricerca
 	 */
 	public Vector ExRicercaUdienzaCollegialeSige(String codMagis, String dataUdienza, BigDecimal idSezione,
-			BigDecimal idAssistente, String idProcuratore, String modalita, String codUfficioAppartenenza) throws F3BException {
+			BigDecimal idAssistente, String idProcuratore, String modalita, String codUfficioAppartenenza)
+			throws F3BException {
 
 		Connection lConn = null;
 		Vector lUdienzaSigi = new Vector();
@@ -585,7 +601,8 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			while (lUdienzaSigeSqlDao.next())
 				lUdienzaSigi.add(lUdienzaSigeSqlDao.getBigDecimal("id_udienza_sige"));
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExRicercaUdienzaCollegialeSige(3 params): " + daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExRicercaUdienzaCollegialeSige(3 params): " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
 			cleanup(lConn);
@@ -593,10 +610,13 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 		return lUdienzaSigi;
 	}
 
-	/* (non-Javadoc)
-	 * @see siap.sige.udienza.controller.IUdienzaSige#ExRicercaUdienzaSigePerFunzioniSupporto(siap.sige.udienza.model.UdienzaSigeModel)
+	/*
+	 * @see
+	 * siap.sige.udienza.controller.IUdienzaSige#ExRicercaUdienzaSigePerFunzioniSupporto(siap.sige.udienza.
+	 * model.UdienzaSigeModel)
 	 */
 	public Vector ExRicercaUdienzaSigePerFunzioniSupporto(UdienzaSigeModel aUdienzaSige) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUdienzeSige = new Vector();
 		UdienzaSigeSqlDAO lUdiDao = null;
@@ -604,10 +624,10 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 		try {
 			lConn = getDBConnection();
 			lUdiDao = new UdienzaSigeSqlDAO(lConn);
-			lUdiDao.ricercaUdienzaSigePerFunzioniSupporto(aUdienzaSige);			
+			lUdiDao.ricercaUdienzaSigePerFunzioniSupporto(aUdienzaSige);
 			lUdiDao.start();
 			while (lUdiDao.next()) {
-				lUdienzeSige.add((UdienzaSigeModel) lUdiDao.getExtendModel());
+				lUdienzeSige.add(lUdiDao.getExtendModel());
 			}
 			lUdiDao.stop();
 		} catch (DAOException daoEx) {
@@ -619,20 +639,22 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 
 		return lUdienzeSige;
 	}
-	
-	
+
 	/*****************************************************************************
 	 * Funzione di ricerca Udienza in base al magistrato e alla data
-	 * 
+	 *
 	 * @param codMag
 	 * @param dataUdienza
 	 * @return
 	 * @throws F3BException
 	 ****************************************************************************/
-	public Vector ExRicercaUdienzaCollegialeSige(UdienzaSigeModel aUdienzaSige, String codUfficioAppartenenza, String proven) throws F3BException {
+	public Vector ExRicercaUdienzaCollegialeSige(UdienzaSigeModel aUdienzaSige, String codUfficioAppartenenza,
+			String proven) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
+
 		Connection lConn = null;
 		Vector lUdienzaSigi = new Vector();
 		UdienzaSigeSqlDAO lUdienzaSigeSqlDao = null;
@@ -646,41 +668,48 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 			lUdienzaSigeSqlDao = new UdienzaSigeSqlDAO(lConn);
 			lUdienzaSigeSqlDao.ricercaUdienzaCollegiale(aUdienzaSige, codUfficioAppartenenza, proven);
 			lUdienzaSigeSqlDao.start();
-			String codPresidenteCollegio ="";			
-			ArrayList<MagistratoModel> lMagistrati = new ArrayList<MagistratoModel>();
+			String codPresidenteCollegio = "";
+			ArrayList<MagistratoModel> lMagistrati = new ArrayList<>();
 			while (lUdienzaSigeSqlDao.next()) {
-				UdienzaSigeModel udienzaCollegiale = (UdienzaSigeModel) lUdienzaSigeSqlDao.getModelUdienzaCollegiale();
-				
-				if(udienzaCollegiale.getColIdCollegio() != null){
+				UdienzaSigeModel udienzaCollegiale = (UdienzaSigeModel) lUdienzaSigeSqlDao
+						.getModelUdienzaCollegiale();
+
+				if (udienzaCollegiale.getColIdCollegio() != null) {
 					CollegioModel lColMod = new CollegioModel();
 					lColMod.setIdCollegio(udienzaCollegiale.getColIdCollegio());
 					lColMod.setCodCollegio(udienzaCollegiale.getCollegio().getCodCollegio());
 					codPresidenteCollegio = udienzaCollegiale.getCollegio().getMagCodMagistrato();
-					if(!"".equals(codPresidenteCollegio)){
+					if (!"".equals(codPresidenteCollegio)) {
 						// recupero i dati i dati anagrafici del magistrato firmatario dell'udienza collegial
-						 lMagDAO = new MagistratoSqlDAO(lConn);
-						 lMagDAO.ricercaMagistratoByCodUfficioCodMagistrato(codUfficioAppartenenza, codPresidenteCollegio);
-						 lMagistrati = new ArrayList(lMagDAO.getModels());
-						 if (lMagistrati.size() > 0) {
-							 MagistratoModel magPRed = lMagistrati.get(0);
-							 lColMod.setDescrMagistratoPresidente(magPRed.getCognome() + " " + magPRed.getNome());
-						 }
+						lMagDAO = new MagistratoSqlDAO(lConn);
+						lMagDAO.ricercaMagistratoByCodUfficioCodMagistrato(codUfficioAppartenenza,
+								codPresidenteCollegio);
+						lMagistrati = new ArrayList(lMagDAO.getModels());
+						if (lMagistrati.size() > 0) {
+							MagistratoModel magPRed = lMagistrati.get(0);
+							lColMod.setDescrMagistratoPresidente(
+									magPRed.getCognome() + " " + magPRed.getNome());
+						}
 					}
-					if(udienzaCollegiale.getCollegio()!= null && udienzaCollegiale.getCollegio().getSezione()!= null){
-						if(udienzaCollegiale.getCollegio().getSezione().getIdSezione()!=null)lColMod.setSezIdSezione(udienzaCollegiale.getCollegio().getSezione().getIdSezione());
+					if (udienzaCollegiale.getCollegio() != null
+							&& udienzaCollegiale.getCollegio().getSezione() != null) {
+						if (udienzaCollegiale.getCollegio().getSezione().getIdSezione() != null)
+							lColMod.setSezIdSezione(
+									udienzaCollegiale.getCollegio().getSezione().getIdSezione());
 						SezioneModel sez = udienzaCollegiale.getCollegio().getSezione();
-						if(udienzaCollegiale.getCollegio().getSezione().getDescrizione()!=null){
+						if (udienzaCollegiale.getCollegio().getSezione().getDescrizione() != null) {
 							sez.setDescrizione(udienzaCollegiale.getCollegio().getSezione().getDescrizione());
 							lColMod.setSezione(sez);
 						}
 					}
 					// Recupero dei dati afferenti al magistrato.
 					lColMagDao = new CollegioMagistratoSqlDAO(lConn);
-					lColMagDao.ricercaMagistratoByIdCollegioCodUff(udienzaCollegiale.getColIdCollegio(), codUfficioAppartenenza);
+					lColMagDao.ricercaMagistratoByIdCollegioCodUff(udienzaCollegiale.getColIdCollegio(),
+							codUfficioAppartenenza);
 					Collection lColl = new ArrayList();
 					lColl = lColMagDao.getModels();
-					lColMod.setCollegioMagistrati((CollegioMagistratoModel[]) lColl
-							.toArray(new CollegioMagistratoModel[0]));
+					lColMod.setCollegioMagistrati(
+							(CollegioMagistratoModel[]) lColl.toArray(new CollegioMagistratoModel[0]));
 					// Recupero dei dati afferenti al Giudice Popolare.
 					lColGiuPopDao = new CollegioGiudicePopolareSqlDAO(lConn);
 					lColGiuPopDao.ricercaGiudicePopolareByIdCollegio(udienzaCollegiale.getColIdCollegio());
@@ -693,19 +722,24 @@ public class UdienzaSigeController extends GenericController implements IUdienza
 					lColEspDao.ricercaEspertoByIdCollegio(udienzaCollegiale.getColIdCollegio());
 					lColl = new ArrayList();
 					lColl = lColEspDao.getModels();
-					lColMod.setCollegioEsperti((CollegioEspertoModel[]) lColl
-							.toArray(new CollegioEspertoModel[0]));
-					
+					lColMod.setCollegioEsperti(
+							(CollegioEspertoModel[]) lColl.toArray(new CollegioEspertoModel[0]));
+
 					udienzaCollegiale.setCollegio(lColMod);
 				}
 				lUdienzaSigi.add(udienzaCollegiale);
 			}
-			
 		} catch (DAOException daoEx) {
-			throw new F3BException("UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UdienzaSigeController.ExRicercaUdienzaSigePaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUdienzaSigeSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lColMagDao);
+			cleanup(lColGiuPopDao);
+			cleanup(lColEspDao);
+			cleanup(lMagDAO);
+
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

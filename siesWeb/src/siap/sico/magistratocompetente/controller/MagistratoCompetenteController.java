@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.magistrato.dao.MagistratoSqlDAO;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteDAO;
@@ -13,10 +17,6 @@ import siap.sico.magistratocompetente.dao.MagistratoCompetenteMagistratoSqlDAO;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteSqlDAO;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -42,6 +42,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public MagistratoCompetenteModel ExInserisciMagistratoCompetente(
 			MagistratoCompetenteModel aMagistratoCompetente) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteDAO lMagDao = null;
@@ -53,8 +54,8 @@ public class MagistratoCompetenteController extends SiapController implements IM
 			lMagMod = new MagistratoCompetenteModel(aMagistratoCompetente);
 			lMagDao = new MagistratoCompetenteDAO(lConn);
 			lMagDao.setDAOFromModel(aMagistratoCompetente);
-//			BigDecimal lKey = null;
-			/*lKey = */lMagDao.insert();
+			// BigDecimal lKey = null;
+			/* lKey = */lMagDao.insert();
 			commit(lConn);
 			// lMagMod.setIdMagistratoCompetente(lKey);
 		} catch (DAOException ex) {
@@ -73,6 +74,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public Vector ExRicercaMagistratoCompetente(MagistratoCompetenteModel aMagistratoCompetente)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lMagistratoCompetenti = new Vector();
@@ -103,6 +105,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public MagistratoCompetenteMagistratoModel ExRicercaMagistratoCompetenteByFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteMagistratoModel lModel = new MagistratoCompetenteMagistratoModel();
@@ -131,6 +134,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public MagistratoCompetenteMagistratoModel ExRicercaMagistratoCompetenteByFascicoloDataFine(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteMagistratoModel lModel = new MagistratoCompetenteMagistratoModel();
@@ -159,6 +163,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 	}
 
 	public MagistratoCompetenteModel ExRicercaMagistratoCompetenteByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteSqlDAO lMagDao = null;
@@ -173,8 +178,8 @@ public class MagistratoCompetenteController extends SiapController implements IM
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("MagistratoCompetenteController.ExRicercaMagistratoCompetenteByKey: "
-					+ daoEx);
+			throw new F3BException(
+					"MagistratoCompetenteController.ExRicercaMagistratoCompetenteByKey: " + daoEx);
 		} finally {
 			cleanup(lMagDao);
 			cleanup(lConn);
@@ -185,6 +190,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public MagistratoCompetenteModel ExModificaMagistratoCompetente(
 			MagistratoCompetenteModel aMagistratoCompetente) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteDAO lMagDao = null;
@@ -213,6 +219,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public void ExCancellaMagistratoCompetente(MagistratoCompetenteModel aMagistratoCompetente)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteDAO lMagDao = null;
@@ -236,6 +243,7 @@ public class MagistratoCompetenteController extends SiapController implements IM
 
 	public MagistratoCompetenteModel ExInserisciAggiornaMagistratoCompetente(
 			MagistratoCompetenteMagistratoModel aMagistratoCompetenteMagistrato) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteDAO lMagCompDao = null;
@@ -266,8 +274,8 @@ public class MagistratoCompetenteController extends SiapController implements IM
 				lMagCompDao.setDataFine(DateUtils.getSysDate());
 				lMagCompDao.setCodOperatoreAggiornamento(aMagistratoCompetenteMagistrato
 						.getMagistratoCompetente().getCodOperatoreInserimento());
-				lMagCompDao.setCodUfficioAggiornamento(aMagistratoCompetenteMagistrato
-						.getMagistratoCompetente().getCodUfficioInserimento());
+				lMagCompDao.setCodUfficioAggiornamento(
+						aMagistratoCompetenteMagistrato.getMagistratoCompetente().getCodUfficioInserimento());
 				lMagCompDao.setDataAggiornamento(DateUtils.getSysDate());
 				lMagCompDao.setCondizioneUpdate(lMagMod.getFasSieIdFascicoloSiep(),
 						lMagMod.getMagCodMagistrato());
@@ -294,8 +302,8 @@ public class MagistratoCompetenteController extends SiapController implements IM
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Impossibile inserire il Magistrato Competente! Esiste un Magistrato per lo stesso numero SIEP");
 
-			throw new F3BException("MagistratoCompetenteController.ExInserisciAggiornaMagistratoCompetente: "
-					+ ex);
+			throw new F3BException(
+					"MagistratoCompetenteController.ExInserisciAggiornaMagistratoCompetente: " + ex);
 		} finally {
 			cleanup(lMagCompDao);
 			cleanup(lMagDao);
@@ -334,8 +342,8 @@ public class MagistratoCompetenteController extends SiapController implements IM
 			} else {
 				lCodEsito = "01400";
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error(F3BException.USER_MESSAGE
-						+ " Impossibile inserire il Magistrato Competente! ");
+				siesLogger.error(
+						F3BException.USER_MESSAGE + " Impossibile inserire il Magistrato Competente! ");
 			}
 		} finally {
 			cleanup(lMagCompDao);
@@ -343,11 +351,9 @@ public class MagistratoCompetenteController extends SiapController implements IM
 		return lCodEsito;
 	}
 
-	/**
-   * 
-   */
 	public void ExModificaMultiplaMagistratoCompetente(MagistratoCompetenteModel aMagCompModel,
 			String[] aListaFascicoli) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoCompetenteDAO lMagCompDao = null;
@@ -397,15 +403,13 @@ public class MagistratoCompetenteController extends SiapController implements IM
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
-			throw new F3BException("MagistratoCompetenteController.ExModificaMultiplaMagistratoCompetente: "
-					+ ex);
+			throw new F3BException(
+					"MagistratoCompetenteController.ExModificaMultiplaMagistratoCompetente: " + ex);
 		} finally {
 			cleanup(lMagCompDao);
 
 			cleanup(lConn);
 		}
-
-		// return lMagMod;
 	}
 
 }

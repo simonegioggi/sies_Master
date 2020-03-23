@@ -16,6 +16,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -55,10 +59,6 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.sius.remissionedebito.dao.RichiestaRemissioneDAO;
 import siap.sius.remissionedebito.dao.RichiestaRemissioneSqlDAO;
 import siap.sius.remissionedebito.model.RichiestaRemissioneModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class RichiestaRemissioneController extends SiapController implements IRichiestaRemissione {
@@ -68,7 +68,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	/**
 	 * Effettua l'inserimento di un RichiestaRemissione a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -117,7 +117,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	/**
 	 * Effettua la ricerca dei dati RichiestaRemissione
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -126,6 +126,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 */
 	public Vector ExRicercaRichiestaRemissione(RichiestaRemissioneModel aRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaRemissioni = new Vector();
 		RichiestaRemissioneSqlDAO lRicDao = null;
@@ -136,7 +137,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 			lRicDao.ricercaRichiestaRemissione(aRichiestaRemissione);
 			lRicDao.start();
 			while (lRicDao.next()) {
-				lRichiestaRemissioni.add((RichiestaRemissioneModel) lRicDao.getModel());
+				lRichiestaRemissioni.add(lRicDao.getModel());
 			}
 			lRicDao.stop();
 		} catch (DAOException daoEx) {
@@ -153,7 +154,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	/**
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -161,6 +162,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 */
 	public RichiestaRemissioneModel ExRicercaRichiestaRemissioneById(BigDecimal aIdRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaRemissioneModel lRichiestaRemissioneMod = new RichiestaRemissioneModel();
 		RichiestaRemissioneSqlDAO lRichiestaRemissioneSqlDao = null;
@@ -188,13 +190,14 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 * Metodo che modifica i dati dell'RichiestaRemissione Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 */
 	public void ExModificaRichiestaRemissione(RichiestaRemissioneModel aRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaRemissioneDAO lRicDao = null;
 
@@ -220,12 +223,13 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	/**
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 * @throws F3BException
 	 */
 	public void ExCancellaRichiestaRemissione(RichiestaRemissioneModel aRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaRemissioneDAO lRicDao = null;
 
@@ -236,7 +240,6 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 			lRicDao.delete();
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -252,13 +255,14 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	/**
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountRichiestaRemissione(RichiestaRemissioneModel aRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		RichiestaRemissioneSqlDAO lRichiestaRemissioneSqlDao = null;
@@ -287,7 +291,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	/**
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -297,6 +301,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 */
 	public Vector ExRicercaRichiestaRemissionePaged(RichiestaRemissioneModel aRichiestaRemissione, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaRemissioni = new Vector();
 		RichiestaRemissioneSqlDAO lRichiestaRemissioneSqlDao = null;
@@ -326,7 +331,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 * disposizione del SuperSoggetto. inserisce evento di conversione sul Fascicolo pena detentiva (CLasse I)
 	 * inserisce fascicolo di Remissione delle pene pecuniare (CLasse VIII) inserisce rischiesta di
 	 * conversione
-	 * 
+	 *
 	 * @param: aSoggetto
 	 *             Model con i dati da inserire aEvento Model con i dati da inserire aFascicoloSiep Model con
 	 *             i dati da inserire aRichiestaRemissione Model con i dati da inserire
@@ -337,6 +342,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 			EventoModel aEvento, FascicoloSiepModel aFascicoloSiep,
 			DettaglioFascicoloModel aDettaglioFascicolo, RichiestaRemissioneModel aRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaRemissioneModel lRicMod = null;
 
@@ -411,13 +417,13 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 			 * // duplico pena complessiva collegandolo al nuovo fascicolo (errrato) // provo a crearla nuova
 			 * if (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva() != null){
 			 * lPenDao = new PenaComplessivaDAO(lConn);
-			 * 
+			 *
 			 * PenaComplessivaModel lPenMod =
 			 * aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva();
-			 * 
+			 *
 			 * lPenMod.setFasSieIdFascicoloSiep(aFascicoloSiep.getIdFascicoloSiep());
 			 * lPenDao.setDAOFromModel(lPenMod ); lSequence = lPenDao.insert();
-			 * 
+			 *
 			 * // duplico sanzione sostitutiva collegandolo al nuovo fascicolo if
 			 * (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva() != null){
 			 * lSanDao = new SanzioneSostitutivaDAO(lConn); SanzioneSostitutivaModel lSanMod =
@@ -617,7 +623,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	/**
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -625,6 +631,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 */
 	public RichiestaRemissioneModel ExRicercaRichiestaRemissioneByIdEvento(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaRemissioneModel lRichiestaRemissioneMod = new RichiestaRemissioneModel();
 		RichiestaRemissioneSqlDAO lRichiestaRemissioneSqlDao = null;
@@ -651,7 +658,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	/**
 	 * Effettua la ricerca dei dati RichiestaRemissione usando il RichiestaRemissioneSqlDAO. Creato per
 	 * puntare alle Richieste riferite a un fascicolo SIUS.
-	 * 
+	 *
 	 * @param aRichiestaRemissione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -660,6 +667,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 */
 	public Vector ExRicercaRichiesteRemissioneDebito(RichiestaRemissioneModel aRichiestaRemissione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaRemissioni = new Vector();
 		RichiestaRemissioneSqlDAO lRicSqlDao = null;
@@ -689,6 +697,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	public RichiestaRemissioneModel ExInserisciRichiestaEvento(RichiestaRemissioneModel aRichiestaRemissione,
 			EventoNotificaModel aEvento, PenaResiduaModel aPenaResidua, String StatoPro) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
@@ -697,7 +706,6 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 		PenaResiduaDAO lPenDao = null;
 		RichiestaRemissioneDAO lRicDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
-		// CampoNotaDAO lCampoNotaDao = null;
 
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
 
@@ -813,7 +821,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 			 * aEvento.getCampoNote()[count].setProgressivo(new BigDecimal((double) count + 1));
 			 * lCampoNotaDao.setDAOFromModel(aEvento.getCampoNote()[count]); lCampoNotaDao.insert();
 			 * lCampoNotaDao.stop();
-			 * 
+			 *
 			 * count++; } }
 			 */
 
@@ -823,7 +831,6 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 		} catch (Exception ex) {
 			throw new F3BException("EventoController.ExInserisciEventoNotifica: " + ex);
 		} finally {
-			// cleanup(lCampoNotaDao);
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lAutDao);
@@ -840,7 +847,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 
 	/**
 	 * Inserisci i records di Richiesta Remissione JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aRichiesteRemissione
 	 * @param lConn
 	 * @return lCodEsito
@@ -848,6 +855,7 @@ public class RichiestaRemissioneController extends SiapController implements IRi
 	 */
 	public String ExInserisciRichiesteRemissioniWithoutSequence(ArrayList aRichiesteRemissione,
 			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		RichiestaRemissioneDAO lRicConDao = null;
 		RichiestaRemissioneModel lRicConMod = null;

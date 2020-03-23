@@ -5,13 +5,13 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.jms.ICostantiJMS;
 import siap.jms.manage.ManageMessageNoSend;
 import siap.jms.messaggio.dao.MessaggioSqlDAO;
 import siap.jms.messaggio.model.MessaggioModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  *
@@ -27,7 +27,7 @@ import f3b.util.F3BException;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -42,33 +42,33 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 	 * public Vector ExRicercaMessaggioEsitoRicercaSoggettoPerUfficio(String aUfficioMittente, String
 	 * aCodiceUtente, String aTipoOperazione) throws F3BException, Exception { Connection lConn = null; Vector
 	 * lMessaggi = new Vector(); MessaggioSqlDAO lMesDao = null;
-	 * 
+	 *
 	 * try { lConn = getDBConnection(); lMesDao = new MessaggioSqlDAO(lConn);
 	 * lMesDao.ricercaMessaggioRichiestaRicercaSoggettoPerUfficio(aUfficioMittente, aCodiceUtente,
 	 * aTipoOperazione);
-	 * 
+	 *
 	 * lMessaggi = new Vector(lMesDao.getModels()); lMesDao.stop();
-	 * 
+	 *
 	 * if (lMessaggi.size() == 0) { throw new F3BException(F3BException.USER_MESSAGE,
 	 * "Nessun Messaggio di Ricerca in Attesa"); }
-	 * 
+	 *
 	 * //Collego ai Messaggi di tipo Esito trovati il Rispettivo Messagio di Richiesta for (int i = 0; i <
 	 * lMessaggi.size(); i++) { MessaggioModel aMess = (MessaggioModel) lMessaggi.get(i);
-	 * 
+	 *
 	 * lMesDao.ricercaMessaggioEsitoRicercaPerJmsId(aMess.getIdMessaggio().toString()); Vector lVect = new
 	 * Vector(lMesDao.getModels()); lMesDao.stop(); // ContatoreEsitiModel lContatore = new
 	 * ContatoreEsitiModel();
-	 * 
+	 *
 	 * if (lVect.size() > 0) { Vector lVectTemp = new Vector(); for (int y = 0; y < lVect.size(); y++) {
 	 * MessaggioModel lModelTemp = (MessaggioModel) lVect.get(y); //
 	 * aggiornaContatore(lModelTemp.getCodEsito(), lContatore); lVectTemp.add(lModelTemp); //Se non partito
 	 * rispedisco...
-	 * 
+	 *
 	 * if (lModelTemp.getCodEsito().equals(NON_SPEDITO)) {
-	 * 
+	 *
 	 * ManageMessageNoSend lMan = new ManageMessageNoSend(); lMan.rispedisciMessaggioNonSpedito(aMess,
 	 * lModelTemp);
-	 * 
+	 *
 	 * /*lMesDao.ricercaMessaggioByKey(aMess.getIdMessaggio()); MessaggioModel lModelDaRispedire =
 	 * (MessaggioModel) lMesDao.getModelByKey(); lModelDaRispedire.setCodUfficioDestinatario("-");
 	 * lModelDaRispedire.setCodBdiDestinataria(lModelTemp.getDescrBdiMittente());
@@ -82,7 +82,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 	// lVectTemp.add(lContatore);
 	/*
 	 * aMess.setMessaggiCorrelati(lVectTemp); lMessaggi.set(i, aMess); } }
-	 * 
+	 *
 	 * } catch (DAOException daoEx) { throw new
 	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + daoEx); } catch (SQLException
 	 * sqe) { throw new F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + sqe); } catch
@@ -90,15 +90,15 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 	 * ioe); } catch (ClassNotFoundException ioe) { throw new
 	 * F3BException("MessaggioController.ExRicercaMessaggioEsitoPerUfficio: " + ioe); } finally {
 	 * cleanup(lMesDao);
-	 * 
+	 *
 	 * cleanup(lConn); }
-	 * 
+	 *
 	 * return lMessaggi; }
 	 */
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aTipoOperazione
 	 * @return
@@ -106,6 +106,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 	 */
 	public Vector ExRicercaMessaggioEsitoRicercaPerUfficio(String aUfficio, String aTipoOperazione, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lMessaggi = new Vector();
 		MessaggioSqlDAO lMesDao = null;
@@ -167,7 +168,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito
-	 * 
+	 *
 	 * @param aUfficio
 	 * @param aTipoOperazione
 	 * @return
@@ -175,6 +176,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 	 */
 	public BigDecimal ExGetCountEsitoRicercaPerUfficio(String aUfficio, String aTipoOperazione)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MessaggioSqlDAO lMesDao = null;
@@ -201,7 +203,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito Ricerca Fascicoli
-	 * 
+	 *
 	 * @param lAnnoSiep
 	 * @param lProgrSiep
 	 * @param codUfficioMittente
@@ -219,6 +221,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 	public BigDecimal ExGetCountEsitoRicercaFascAltreBDI(String lAnnoSiep, String lProgrSiep,
 			String codUfficioMittente, String codUfficioDestinatario, String codUtente, String tipoEsito,
 			String codTipoOperazione, Date dataRicercaInizio, Date dataRicercaFine) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MessaggioSqlDAO lMesDao = null;
@@ -246,7 +249,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 
 	/**
 	 * RIcerca dei messaggi di tipo Esito Ricerca Soggetti
-	 * 
+	 *
 	 * @param codUtente
 	 * @param tipoEsito
 	 * @param aTipoOperazione
@@ -259,6 +262,7 @@ public class EsitoRicercaJMSController extends SiapController implements IEsitoR
 
 	public BigDecimal ExGetCountEsitoRicercaSoggAltreBDI(String codUfficioMittente, String codUtente,
 			String codTipoOperazione, Date dataRicercaInizio, Date dataRicercaFine) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MessaggioSqlDAO lMesDao = null;

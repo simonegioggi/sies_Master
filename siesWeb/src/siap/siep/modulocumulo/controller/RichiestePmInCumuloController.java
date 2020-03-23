@@ -1,11 +1,5 @@
 package siap.siep.modulocumulo.controller;
 
-/**
-* <p>Title: RichiestePmInCumuloController</p>
-* <p>Description: Classe Controller per RichiestePmInCumulo</p>
-* @version 1.0
-*/
-
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -70,8 +64,21 @@ import siap.siep.modulocumulo.model.StatoEsecTitoloCumulatoModel;
 import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 import siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils;
 
+/**
+ * <p>
+ * Title: RichiestePmInCumuloController
+ * </p>
+ * <p>
+ * Description: Classe Controller per RichiestePmInCumulo
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class RichiestePmInCumuloController extends SiapController implements IRichiestePmInCumulo {
+
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un RichiestePmInCumulo a partire dai dati contenuti nel Model
@@ -81,11 +88,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
 	 ****************************************************************************/
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo(
 			RichiestePmInCumuloModel aRichiestePmInCumulo) throws F3BException {
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
 		RichiestePmInCumuloModel lRicMod = null;
@@ -122,6 +127,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public Vector ExRicercaRichiestePmInCumulo(RichiestePmInCumuloModel aRichiestePmInCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestePmInCumuli = new Vector();
 		RichiestePmInCumuloDAO lRicDao = null;
@@ -159,15 +165,15 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public RichiestePmInCumuloModel ExRicercaRichiestePmInCumuloById(BigDecimal aIdRichiestePmInCumulo)
 			throws F3BException {
-		Connection lConn = null;
-		RichiestePmInCumuloModel lRichiestePmInCumuloMod = new RichiestePmInCumuloModel();
-		RichiestePmInCumuloSqlDAO lRichiestePmInCumuloSqlDao = null;
 
+		Connection lConn = null;
+		RichiestePmInCumuloSqlDAO lRichiestePmInCumuloSqlDao = null;
 		RichiesteInviateCumSqlDAO lRicInvSqlDao = null;
 		ProvvedimentoGeSorvCumSqlDAO lProvvSqlDao = null;
-
 		RichPMPenAccCumSqlDAO lRicPASqlDao = null;
 		RichPMMisSicCumSqlDAO lRicMSSqlDao = null;
+
+		RichiestePmInCumuloModel lRichiestePmInCumuloMod = new RichiestePmInCumuloModel();
 
 		try {
 			lConn = getDBConnection();
@@ -229,6 +235,10 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		} finally {
 			cleanup(lRichiestePmInCumuloSqlDao);
 			cleanup(lRicInvSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProvvSqlDao);
+			cleanup(lRicPASqlDao);
+			cleanup(lRicMSSqlDao);
 			cleanup(lConn);
 		}
 
@@ -246,6 +256,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 **********************************************************************************/
 	public void ExModificaRichiestePmInCumulo(RichiestePmInCumuloModel aRichiestePmInCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
 
@@ -279,11 +290,11 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 **********************************************************************************/
 	public void ExModificaRichiestaEProvvPmInCumulo(RichiestePmInCumuloModel aRichiestePmInCumulo,
 			String[] listaIdMisSic, String[] listaIdPeneAcc) throws F3BException {
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
 		ProvvedimentoGeSorvCumDAO lProvDao = null;
 		ProvvedimentoGeSorvCumSqlDAO lProvSqlDao = null;
-
 		RichPMPenAccCumDAO lRicPADao = null;
 		RichPMMisSicurCumDAO lRicMSDao = null;
 
@@ -384,6 +395,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public void ExCancellaRichiestePmInCumulo(RichiestePmInCumuloModel aRichiestePmInCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
 
@@ -412,9 +424,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaRichiestePmInCumuloFull(BigDecimal aIdRich) throws F3BException {
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
-
 		RichPMTitoloCumDAO lRicPmTitoDao = null;
 		RichPMMisSicurCumDAO lRicPmMisSicDao = null;
 		RichPMPenAccCumDAO lRicPmPenAccDao = null;
@@ -517,6 +529,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 * @throws F3BException
 	 **************************************************************************************************************/
 	public void ExCancellaDecisioneDellaRichiesta(BigDecimal aIdRich) throws F3BException {
+
 		Connection lConn = null;
 		ProvvedimentoGeSorvCumDAO lProvvDao = null;
 		RichPMMisSicurCumDAO lRicPmMisSicDao = null;
@@ -571,6 +584,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public BigDecimal ExGetCountRichiestePmInCumulo(RichiestePmInCumuloModel aRichiestePmInCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		RichiestePmInCumuloSqlDAO lRichiestePmInCumuloSqlDao = null;
@@ -609,6 +623,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public Vector ExRicercaRichiestePmInCumuloPaged(RichiestePmInCumuloModel aRichiestePmInCumulo, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestePmInCumuli = new Vector();
 		RichiestePmInCumuloSqlDAO lRichiestePmInCumuloSqlDao = null;
@@ -640,6 +655,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public Vector<RichiestePmInCumuloModel> ExRicercaRichiestePmInCumuloByIdIstruttoria(
 			BigDecimal aIdIstruttoria, String QualiRichieste) throws F3BException {
+
 		Connection lConn = null;
 		Vector<RichiestePmInCumuloModel> lRichiestePmInCumulo = new Vector<>();
 
@@ -714,6 +730,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public Vector<RichiestePmInCumuloModel> ExRicercaRichiestePmInCumuloByIdIstruttoriaTipoRichiesta(
 			BigDecimal aIdIstruttoria, String aCodTipoRic, String QualiRichieste) throws F3BException {
+
 		Connection lConn = null;
 		Vector<RichiestePmInCumuloModel> lRichiestePmInCumulo = new Vector<>();
 		ProvvedimentoGeSorvCumModel lProvvMod = null;
@@ -804,22 +821,22 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_GE_ApplicazioneBenefici(
 			RichiestePmInCumuloModel aRichPmInCum, Vector<TitoloCumulatoModel> VecTitoli)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_ApplicazioneBenefici ");
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
-		RichiestePmInCumuloModel lRicMod = null;
-		BigDecimal lKeyRich = null;
-		BigDecimal lKeyTito = null;
-		// String lFlagIntTitolo = null;
-
-		MisuraSicurezzaCumuloModel lMisMod = null;
-		PenaAccessoriaCumuloModel lPenAccMod = null;
-		ReatoCircostanzaCumuloModel lReaMod = null;
-
 		RichPMTitoloCumDAO lRicPmTitoDao = null;
 		RichPMMisSicurCumDAO lRicPmMisSicDao = null;
 		RichPMPenAccCumDAO lRicPmPenAccDao = null;
 		RichPMReatoCumDAO lRicPmReaDao = null;
+
+		RichiestePmInCumuloModel lRicMod = null;
+		BigDecimal lKeyRich = null;
+		BigDecimal lKeyTito = null;
+		MisuraSicurezzaCumuloModel lMisMod = null;
+		PenaAccessoriaCumuloModel lPenAccMod = null;
+		ReatoCircostanzaCumuloModel lReaMod = null;
 
 		try {
 			lConn = getDBConnection();
@@ -896,7 +913,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -913,7 +929,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiude ExInserisciRichiestePmInCumulo_GE_ApplicazioneBenefici
 
 	/*****************************************************************************
@@ -930,16 +945,16 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_GE_RevocaBenefici(
 			RichiestePmInCumuloModel aRichPmInCum, Vector<String> ListaIdBenefici, BigDecimal lIdProvv)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_RevocaBenefici ");
 		Connection lConn = null;
-		RichiestePmInCumuloDAO lRicDao = null;
+
 		RichiestePmInCumuloModel lRicMod = null;
 		BigDecimal lKeyRich = null;
 
+		RichiestePmInCumuloDAO lRicDao = null;
 		RichPMTitoloCumDAO lRicPmDao = null;
-
 		RichPMBeneficioCumDAO lRicBenDao = null;
-
 		RichPMStatoEsecCumDAO lRicStatoEsecDao = null;
 
 		try {
@@ -980,7 +995,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -996,11 +1010,11 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiude ExInserisciRichiestePmInCumulo_GE_RevocaBenefici()
 
 	public Vector<RichPMTitoloCumModel> ExRicercaRichPMTitoliCum(BigDecimal aRichIdRichiesta)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<RichPMTitoloCumModel> lVec = null;
 		// RichiestePmInCumuloModel lRichiestePmInCumuloMod = new RichiestePmInCumuloModel();
@@ -1027,7 +1041,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public Vector<TitoloCumulatoModel> ExRicercaAltriDatiRichiestaGE(
 			Vector<RichPMTitoloCumModel> VecRichTitoli) throws F3BException {
-		// siesLogger.debug("--XX-- >>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<< INIZIO");
+
 		Connection lConn = null;
 		Vector<TitoloCumulatoModel> lVec = new Vector<>();
 
@@ -1097,7 +1111,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 				lVec.add(lTitMod);
 
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1116,6 +1129,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public Vector<TitoloCumulatoModel> ExRicercaAggregatiAlTitolo(Vector<TitoloCumulatoModel> VecTitoliInput)
 			throws F3BException {
+
 		siesLogger.debug("--XX--    >>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<  INIZIO");
 
 		Connection lConn = null;
@@ -1177,9 +1191,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 				// Appendo il TitoloModel (con tutt le Entità correlate)
 				VecTitoliOutput.add(lTitMod);
-
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1193,7 +1205,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return VecTitoliOutput;
-
 	} // Chiude ExRicercaAggregatiAlTitolo()
 
 	/**
@@ -1210,6 +1221,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 */
 	public String ExInserisciRichiesteInviateCumWithoutSequence(Vector<RichiesteInviateCumModel> VecRichInv,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		RichiesteInviateCumDAO lRicInvDao = null;
 		RichiesteInviateCumModel lRicMod = null;
@@ -1257,7 +1269,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return EsitodiRitorno;
-
 	} // CHIUDE ExInserisciRichiesteInviateCumWithoutSequence()
 
 	/**
@@ -1269,10 +1280,10 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 */
 	public String ExInserisciRichiestePmInCumuloWithoutSequence(Vector<RichiestePmInCumuloModel> VecRichPM,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		RichiestePmInCumuloDAO lRicPMDao = null;
 		RichiestePmInCumuloModel lRicPmMod = null;
-
 		ProvvedimentoGeSorvCumDAO lProvvDao = null;
 		String lNomeTab = "";
 
@@ -1352,7 +1363,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public RichiesteInviateCumModel ExInserisciRichiesteInviateCumulo(RichiesteInviateCumModel aRichInviate,
 			String[] lIdRichCollegate) throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Sono nel  RichiesteInviateCumController - INIZIO");
+
 		Connection lConn = null;
 		RichiesteInviateCumDAO lRicInvDao = null;
 		RichiestePmInCumuloDAO lRicPMDao = null;
@@ -1416,7 +1429,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiude ExInserisciRichiesteDelPmInviateCumulo
 
 	/*****************************************************************************
@@ -1429,6 +1441,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public RichiesteInviateCumModel ExRicercaRichiesteInviateCumuloById(BigDecimal aIdRichiesteInviateCum)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		RichiesteInviateCumModel lRichInvMod = new RichiesteInviateCumModel();
@@ -1457,7 +1470,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 							.setListaRichiestePMinCumulo(this.TrovaTitoliperRichiesta(listaRichieste, lConn));
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1482,6 +1494,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public Vector<RichiesteInviateCumModel> ExRicercaRichiesteInviateCumuloByIdIstruttoria(
 			BigDecimal aIdIstruttoria) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<RichiesteInviateCumModel> lVecRic = null;
@@ -1518,7 +1531,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 					}
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1531,11 +1543,11 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lVecRic;
-
 	} // Chiude ExRicercaRichiesteInviateCumuloByIdIstruttoria()
 
 	public Vector<RichiesteInviateCumModel> ExRicercaRichiesteInviateCumuloByIdIstruttoria(
 			BigDecimal aIdIstruttoria, String aCodTipoRichiesta) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<RichiesteInviateCumModel> lVecRic = null;
@@ -1574,7 +1586,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 					}
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1587,7 +1598,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lVecRic;
-
 	} // Chiude ExRicercaRichiesteInviateCumuloByIdIstruttoria()
 
 	/**
@@ -1648,12 +1658,11 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return listaRichieste;
-
 	} // Chiude TrovaTitoliperRichiesta()
 
-	//
 	public void ExUpdateValidaRichiesteInviateCumulo(RichiesteInviateCumModel aRichiesteInv)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiesteInviateCumDAO lRicDao = null;
 
@@ -1677,15 +1686,15 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			cleanup(lRicDao);
 			cleanup(lConn);
 		}
-
 	} // Chiude ExUpdateValidaRichiesteInviateCumulo()
 
 	public void ExCancellaRichiesteInviateCumuloFull(BigDecimal aIdRichiestaInv, String CodUff, String CodOp)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> - INIZIO ExCancellaRichiesteInviateCumuloFull");
+
 		Connection lConn = null;
 		RichiesteInviateCumDAO lRicInvDao = null;
-
 		RichiestePmInCumuloDAO lRicPMDao = null;
 		RichiestePmInCumuloSqlDAO lRicPMSqlDao = null;
 
@@ -1721,7 +1730,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicInvDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1733,7 +1741,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			cleanup(lRicPMDao);
 			cleanup(lConn);
 		}
-
 	} // Chiude ExCancellaRichiesteInviateCumuloFull()
 
 	/**
@@ -1745,7 +1752,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExGetDocumento(RichiesteInviateCumModel aRichiesteInv) throws F3BException {
+
 		siesLogger.debug("--XX-- Start ExGetDocumento ------>");
+
 		Connection lConn = null;
 
 		RichiesteInviateCumDAO lRicDao = null;
@@ -1788,6 +1797,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public Vector<TitoloCumulatoModel> ExCaricaLibAntDelTitolo(Vector<TitoloCumulatoModel> VecTitoliInput)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<TitoloCumulatoModel> VecTitoliOutput = new Vector<>();
 
@@ -1866,21 +1876,21 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 						lLibAntSqlDao.stop();
 					} // end for y
-						///// }
 					lTitMod.setStatoEsecuzioneTitoloCumulato(lVectStati);
 
 					// Preparazione Vettore di Output.
 					VecTitoliOutput.add(lTitMod);
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
 					"RichiestePmInCumuloController.ExCaricaLibAntDelTitolo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSETCSqlDao);
-
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLibAntSqlDao);
+			cleanup(lPeriodoLibAntSqlDao);
 			cleanup(lConn);
 		}
 
@@ -1889,6 +1899,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliDiLibAntPerRichiesta(
 			Vector<RichPMTitoloCumModel> VecTitoliPerRichiesta) throws F3BException {
+
 		Connection lConn = null;
 		Vector<TitoloCumulatoModel> VecTitoliOutput = new Vector<>();
 
@@ -1961,9 +1972,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 				// Preparazione Vettore di Output.
 				VecTitoliOutput.add(lTitolo);
-
 			}
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -1971,6 +1980,10 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 							+ daoEx);
 		} finally {
 			cleanup(lSETCSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTitSqlDao);
+			cleanup(lLibAntSqlDao);
+			cleanup(lPeriodoLibAntSqlDao);
 
 			cleanup(lConn);
 		}
@@ -1988,6 +2001,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 */
 	public Vector<LibAnticipataCumuloModel> ExRicercaLibAntCumByTitoloCum(BigDecimal aTitoloKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		LibAnticipataCumuloSqlDAO lLibAntCumSqlDao = null;
 		Vector<LibAnticipataCumuloModel> lListLibAntCum = null;
@@ -2020,7 +2034,9 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_SORV_RevocaLA(
 			RichiestePmInCumuloModel aRichPmInCum, Vector<TitoloCumulatoModel> VecTitoli)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_SORV_RevocaLA ");
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
 		RichiestePmInCumuloModel lRicMod = null;
@@ -2085,7 +2101,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2101,7 +2116,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiudi ExInserisciRichiestePmInCumulo_SORV_RevocaLA()
 
 	/**************************************************************************************
@@ -2115,13 +2129,15 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 **************************************************************************************/
 	public TitoloCumulatoModel ExRicercaRichPMBeneficioCum(TitoloCumulatoModel aTitoloCum,
 			BigDecimal aIdRichiesta) throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExRicercaRichPMBeneficioCum ");
+
 		Connection lConn = null;
 
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
-
 		StatoEsecTitoloCumulatoSqlDAO lStatEsecSqlDao = null;
 		ComputiCumuloSqlDAO lCompSqlDao = null;
+
 		Vector<ComputiCumuloModel> lVecComp = new Vector();
 		ComputiCumuloModel lCompMod = null;
 
@@ -2180,7 +2196,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return aTitoloCum;
-
 	} // Chiude ExRicercaRichPMBeneficioCum()
 
 	/**************************************************************************************
@@ -2195,14 +2210,16 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_SORV_UnificaMS(
 			RichiestePmInCumuloModel aRichPmInCum, String[] lListaTitoli, String[] lListaMisureSicurezza)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_SORV_UnificaMS ");
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
-		RichiestePmInCumuloModel lRicMod = null;
-		BigDecimal lKeyRich = null;
-
 		RichPMTitoloCumDAO lRicPmTitDao = null;
 		RichPMMisSicurCumDAO lRicPmMisSicDao = null;
+
+		RichiestePmInCumuloModel lRicMod = null;
+		BigDecimal lKeyRich = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2210,10 +2227,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicDao.setDAOFromModel(aRichPmInCum);
 			lKeyRich = lRicDao.insert();
 			lRicDao.stop();
-
-			// siesLogger.debug("--XX-- >>>> Inserito RichPM_in_Cumulo - id = "+lKeyRich);
-			// siesLogger.debug("--XX-- >>>> Size lListaMisureSicurezza = "+lListaMisureSicurezza.length );
-
 			lRicPmTitDao = new RichPMTitoloCumDAO(lConn);
 			for (int ij = 0; ij < lListaTitoli.length; ij++) {
 				// Inserimento Relazione tra RICHIESTE_PM_IN_CUMULO --> TITOLO_CUMULATO (in RICHPM_TIOLO_CUM)
@@ -2223,9 +2236,7 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			}
 
 			lRicPmMisSicDao = new RichPMMisSicurCumDAO(lConn);
-			for (int ii = 0; ii < lListaMisureSicurezza.length; ii++)
-
-			{
+			for (int ii = 0; ii < lListaMisureSicurezza.length; ii++) {
 				// Inserimento Relazione tra RICHIESTE_PM_IN_CUMULO --> MISURE_SICUREZZA_CUMULO (in
 				// RICHPM_MISSICUR_CUM)
 				lRicPmMisSicDao.setRichIdRichiestePMinCumulo(lKeyRich);
@@ -2238,7 +2249,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2248,12 +2258,13 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		} finally {
 			cleanup(lRicDao);
 			cleanup(lRicPmMisSicDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lRicPmTitDao);
 
 			cleanup(lConn);
 		}
 
 		return lRicMod;
-
 	} // Chiudi ExInserisciRichiestePmInCumulo_SORV_UnificaMS()
 
 	/*****************************************************************************
@@ -2270,14 +2281,16 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_GE_RevocaSS(
 			RichiestePmInCumuloModel aRichPmInCum, String[] ListaIdTitoli, String[] ListaIdSanzioni)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_RevocaSS ");
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
-		RichiestePmInCumuloModel lRicMod = null;
-		BigDecimal lKeyRich = null;
-
 		RichPMTitoloCumDAO lRicPmTitDao = null;
 		RichPMSanzioneSostCumDAO lRicPMSSCumDao = null;
+
+		RichiestePmInCumuloModel lRicMod = null;
+		BigDecimal lKeyRich = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2311,7 +2324,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2326,12 +2338,11 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiude ExInserisciRichiestePmInCumulo_GE_RevocaSS()
 
 	public Vector<TitoloCumulatoModel> ExRicercaTitoli_e_SSCumByRichiestaGE(BigDecimal aIdRichiesta)
 			throws F3BException {
-		// siesLogger.debug("--XX-- ExRicercaTitoli_e_SSCumByRichiestaGE <<<<<<<< INIZIO");
+
 		Connection lConn = null;
 		Vector<TitoloCumulatoModel> lVec = new Vector<>();
 
@@ -2339,7 +2350,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		RichPMTitoloCumSqlDAO lRicSqlDao = null;
 		SanzioneSostitutivaCumuloSqlDAO lSSCumSqlDao = null;
 
-		// RichiestePmInCumuloModel lRichiestePmInCumuloMod = new RichiestePmInCumuloModel();
 		try {
 			lConn = getDBConnection();
 			lRicSqlDao = new RichPMTitoloCumSqlDAO(lConn);
@@ -2374,7 +2384,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			}
 
 			lRicSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -2388,11 +2397,11 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lVec;
-
 	} // Chiude ExRicercaTitoli_e_SSCumByRichiestaGE
 
 	public Vector<RichPMMisSicCumModel> ExRicercaRichPMMisSicCum(BigDecimal aRichIdRichiesta)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<RichPMMisSicCumModel> lVec = null;
 		// RichiestePmInCumuloModel lRichiestePmInCumuloMod = new RichiestePmInCumuloModel();
@@ -2404,7 +2413,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicPMMSSqlDao.ricercaRichPmMisSicCumByRichIdRich(aRichIdRichiesta);
 
 			lVec = new Vector<RichPMMisSicCumModel>(lRicPMMSSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -2420,14 +2428,16 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_GE_SostituzionePenaAccCum(
 			RichiestePmInCumuloModel aRichPmInCum, BigDecimal aTitoloKey, String[] listaIdPeneAcc)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_SostituzionePenaAccCum ");
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
-		RichiestePmInCumuloModel lRicMod = null;
-		BigDecimal lKeyRich = null;
-
 		RichPMTitoloCumDAO lRicPmTitDao = null;
 		RichPMPenAccCumDAO lRicPMPACumDao = null;
+
+		RichiestePmInCumuloModel lRicMod = null;
+		BigDecimal lKeyRich = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2462,7 +2472,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2481,14 +2490,15 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public TitoloCumulatoModel ExRicercaTitolo_e_PeneAccCumByRichiestaGE(BigDecimal aIdRichiesta)
 			throws F3BException {
-		// siesLogger.debug("--XX-- START ExRicercaTitolo_e_PeneAccCumByRichiestaGE");
+
 		TitoloCumulatoModel lTitMod = null;
-		Connection lConn = null;
 		Vector<PenaAccessoriaCumuloModel> lVec = new Vector<>();
 
+		Connection lConn = null;
 		TitoloCumulatoSqlDAO lTitSqlDao = null;
 		RichPMTitoloCumSqlDAO lRicSqlDao = null;
 		PenaAccessoriaCumuloSqlDAO lPACumSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lRicSqlDao = new RichPMTitoloCumSqlDAO(lConn);
@@ -2543,16 +2553,15 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public Vector<TitoloCumulatoModel> ExRicercaTitoli_e_PeneAccCumByRichiestaGE(BigDecimal aIdRichiesta)
 			throws F3BException {
-		// siesLogger.debug("--XX-- START ExRicercaTitoli_e_PeneAccCumByRichiestaGE");
+
 		TitoloCumulatoModel lTitMod = null;
 		Vector<TitoloCumulatoModel> lVecTito = new Vector<>();
 
 		Connection lConn = null;
-		// Vector<PenaAccessoriaCumuloModel> lVec = new Vector<PenaAccessoriaCumuloModel>();
-
 		TitoloCumulatoSqlDAO lTitSqlDao = null;
 		RichPMTitoloCumSqlDAO lRicSqlDao = null;
 		PenaAccessoriaCumuloSqlDAO lPACumSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lRicSqlDao = new RichPMTitoloCumSqlDAO(lConn);
@@ -2611,15 +2620,17 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_GE_RevocaPenaAccCum(
 			RichiestePmInCumuloModel aRichPmInCum, String[] lIdTitoli_PeneAcc) throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_RevocaPenaAccCum ");
+
 		Connection lConn = null;
 
 		RichiestePmInCumuloDAO lRicDao = null;
-		RichiestePmInCumuloModel lRicMod = null;
-		BigDecimal lKeyRich = null;
-
 		RichPMPenAccCumDAO lRicPmPADao = null;
 		RichPMTitoloCumDAO lRicPmTitDao = null;
+
+		RichiestePmInCumuloModel lRicMod = null;
+		BigDecimal lKeyRich = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2667,7 +2678,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2682,19 +2692,19 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiude ExInserisciRichiestePmInCumulo_GE_RevocaPenaAccCum()
 
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_GE_ApplicazionePenaAccCum(
 			RichiestePmInCumuloModel aRichPmInCum) throws F3BException {
-		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_ApplicazionePenaAccCum ");
-		Connection lConn = null;
 
+		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_GE_ApplicazionePenaAccCum ");
+
+		Connection lConn = null;
+		RichPMTitoloCumDAO lRicPmTitDao = null;
 		RichiestePmInCumuloDAO lRicDao = null;
+
 		RichiestePmInCumuloModel lRicMod = null;
 		BigDecimal lKeyRich = null;
-
-		RichPMTitoloCumDAO lRicPmTitDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2717,7 +2727,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2734,12 +2743,13 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	}
 
 	public TitoloCumulatoModel ExRicercaTitolo_ByRichiestaGE(BigDecimal aIdRichiesta) throws F3BException {
-		// siesLogger.debug("--XX-- START ExRicercaTitolo_ByRichiestaGE");
-		TitoloCumulatoModel lTitMod = null;
-		Connection lConn = null;
 
+		TitoloCumulatoModel lTitMod = null;
+
+		Connection lConn = null;
 		TitoloCumulatoSqlDAO lTitSqlDao = null;
 		RichPMTitoloCumSqlDAO lRicSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lRicSqlDao = new RichPMTitoloCumSqlDAO(lConn);
@@ -2774,10 +2784,10 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 
 	public RichiestePmInCumuloModel ExModificaRichiestePmInCumuloERichPMTitoloCum(
 			RichiestePmInCumuloModel aRichiestePmInCumulo) throws F3BException {
+
 		Connection lConn = null;
 		RichiestePmInCumuloDAO lRicDao = null;
 		RichiestePmInCumuloSqlDAO lRicSqlDao = null;
-
 		RichPMTitoloCumDAO lRicPmTitDao = null;
 
 		RichiestePmInCumuloModel lRicMod = null;
@@ -2815,7 +2825,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			commit(lConn);
 
 			lRicMod.setMessage("Modifica effettuata correttamente!");
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			siesLogger.error("DAOException: " + ex);
@@ -2836,14 +2845,15 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	// Inserimento Richiesta (Tipo = Altre Richieste Cod=014) del PM alla SORVEGLIANZA.
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_RichPMTitoloCum_SORV(
 			RichiestePmInCumuloModel aRichPmInCum) throws F3BException {
-		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_RichPMTitoloCum_SORV ");
-		Connection lConn = null;
 
+		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_RichPMTitoloCum_SORV ");
+
+		Connection lConn = null;
+		RichPMTitoloCumDAO lRicPmTitDao = null;
 		RichiestePmInCumuloDAO lRicDao = null;
+
 		RichiestePmInCumuloModel lRicMod = null;
 		BigDecimal lKeyRich = null;
-
-		RichPMTitoloCumDAO lRicPmTitDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2866,7 +2876,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2885,15 +2894,16 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	// Inserimento Richiesta (Tipo = 031 Richieste Revoca M.A.) del PM alla SORVEGLIANZA.
 	public RichiestePmInCumuloModel ExInserisciRichiestePmInCumulo_SORV_RevocaMisAlt(
 			RichiestePmInCumuloModel aRichPmInCum, BigDecimal aIdStatoEsec) throws F3BException {
+
 		siesLogger.debug("--XX-- >>>> Start ExInserisciRichiestePmInCumulo_SORV_RevocaMisAlt ");
+
 		Connection lConn = null;
-
-		RichiestePmInCumuloDAO lRicDao = null;
-		RichiestePmInCumuloModel lRicMod = null;
-		BigDecimal lKeyRich = null;
-
 		RichPMTitoloCumDAO lRicPmTitDao = null;
 		RichPMStatoEsecCumDAO lRicPmStatoCumDao = null;
+		RichiestePmInCumuloDAO lRicDao = null;
+
+		RichiestePmInCumuloModel lRicMod = null;
+		BigDecimal lKeyRich = null;
 
 		try {
 			lConn = getDBConnection();
@@ -2923,7 +2933,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			lRicMod.setIdRichiestePmInCumulo(lKeyRich);
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
@@ -2938,13 +2947,13 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		}
 
 		return lRicMod;
-
 	} // Chiude ExInserisciRichiestePmInCumulo_SORV_RevocaMisAlt()
 
 	public TitoloCumulatoModel ExRicercaTitolo_e_StatoEsecTitoloCumByRichiestaGE(BigDecimal aIdRichiesta)
 			throws F3BException {
-		// siesLogger.debug("--XX-- START ExRicercaTitolo_e_StatoEsecTitoloCumByRichiestaGE");
+
 		TitoloCumulatoModel lTitMod = null;
+
 		Connection lConn = null;
 
 		TitoloCumulatoSqlDAO lTitSqlDao = null;
@@ -3011,11 +3020,13 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 	 ****************************************************************************/
 	public String ExinserisciTabellediRelazioneWithoutSequence(RichiestePmInCumuloModel aRichPmInCumMod,
 			Connection lConn) throws F3BException {
+
 		siesLogger.info("--XX-- INIZIO ExinserisciTabellediRelazioneWithoutSequence --------------> ");
+
 		String EsitodiRitorno = "00000";
 		String NomeTab = "";
-		RichiestePmInCumuloDAO lRicDao = null;
 
+		RichiestePmInCumuloDAO lRicDao = null;
 		RichPMTitoloCumDAO lRicPmTitoDao = null;
 		RichPMMisSicurCumDAO lRicPmMisSicDao = null;
 		RichPMPenAccCumDAO lRicPmPenAccDao = null;
@@ -3025,7 +3036,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 		RichPMSanzioneSostCumDAO lRicSSCumDao = null;
 
 		try {
-			//
 			lRicDao = new RichiestePmInCumuloDAO(lConn);
 			lRicPmTitoDao = new RichPMTitoloCumDAO(lConn);
 			lRicPmMisSicDao = new RichPMMisSicurCumDAO(lConn);
@@ -3256,7 +3266,6 @@ public class RichiestePmInCumuloController extends SiapController implements IRi
 			cleanup(lRicPmSECDao);
 			cleanup(lRicBenCumDao);
 			cleanup(lRicSSCumDao);
-
 		}
 
 		return EsitodiRitorno;
