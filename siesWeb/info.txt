@@ -1,13 +1,2 @@
-VERSIONE_SIES_11.3_FINAL --> nasce dal branch VERSIONE_SIES_11.3_BIS in data 04/02/2020.
-
-1) Merged with VERSIONE_SIES_11.2.4 (25 updates + 15 conflicts) on 20200224
-
-Questo Branch (VERSIONE_SIES_11.2.4) nasce dal branch: "VERSIONE_SIES_11.2.3".
-In questo nuovo branch saranno presenti tutte le correzioni effettuate per i ticket OTRS del mese di Dicembre 2019.
-Branch creato il 04 Dicembre 2019!
-
-2) Merged with VERSIONE_SIES_11.2.5 (15 updates + 10 conflicts) on 20200224
-
-Questo Branch (VERSIONE_SIES_11.2.5) nasce dal branch: "VERSIONE_SIES_11.2.4".
-In questo nuovo branch saranno presenti tutte le correzioni effettuate per i ticket OTRS del mese di Gennaio 2020.
-Branch creato il 09 Gennaio 2020!
+MEV_6:
+1)	questo branch nasce dal branch DEVELOP;
