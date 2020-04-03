@@ -93,7 +93,7 @@ public class ActLoadCancellaProvvedimento extends ActionSiap implements ICostant
 		BigDecimal idFascicoloSiep = null;
 		if (!this.isSessionAttributeNullObj("fascicolo")) {
 			idFascicoloSiep = ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
-			lEveRic.setFasSieIdFascicoloSiep(idFascicoloSiep);
+			lEveRic.setFasSieIdFascicoloSiep(idFascicoloSiep); 
 		}		
 		//***** FINE INTERVENTO mac-otrs-20200331014 *****//
 
