@@ -100,7 +100,7 @@ public class ActLoadCancellaProvvedimento extends ActionSiap implements ICostant
 
 		lEveRic.setEveIdEvento(this.getRequestBigDecimalParameter("IdEvento"));
 	
-		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
+		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote(); 
 		EventoModel lEve = new EventoModel();
 		// EventoNotificaModel lEveNot = new EventoNotificaModel();
 
