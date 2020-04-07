@@ -2,7 +2,7 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2016.09.27 alle 02:09:58 PM CEST 
+// Generato il: 2020.02.10 alle 12:42:15 PM CET 
 //
 
 
@@ -49,7 +49,7 @@ public class RICERCASOGGETTO {
     protected DATISOGGETTOOUTPUT datisoggettooutput;
 
     /**
-     * Recupera il valore della proprietà datisoggettoinput.
+     * elemento contenitore dei dati di input alla ricerca soggetto
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class RICERCASOGGETTO {
     }
 
     /**
-     * Recupera il valore della proprietà datisoggettooutput.
+     * elemento contenitore dei dati di output alla ricerca soggetto
      * 
      * @return
      *     possible object is

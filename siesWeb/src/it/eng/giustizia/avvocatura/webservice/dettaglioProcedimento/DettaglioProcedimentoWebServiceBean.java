@@ -3,14 +3,6 @@
  */
 package it.eng.giustizia.avvocatura.webservice.dettaglioProcedimento;
 
-import f3b.log.LogF3B;
-import it.eng.giustizia.avvocatura.controller.IAvvocaturaSius;
-import it.eng.giustizia.avvocatura.util.AvvocaturaProperties;
-import it.eng.giustizia.avvocatura.util.Mapper;
-import it.eng.giustizia.avvocatura.util.PropertyUtil;
-import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.DATIPROCEDIMENTOINPUT;
-import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.DATIPROCEDIMENTOOUTPUT;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -20,6 +12,13 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import it.eng.giustizia.avvocatura.controller.IAvvocaturaSius;
+import it.eng.giustizia.avvocatura.util.AvvocaturaProperties;
+import it.eng.giustizia.avvocatura.util.Mapper;
+import it.eng.giustizia.avvocatura.util.PropertyUtil;
+import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.DATIPROCEDIMENTOINPUT;
+import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.DATIPROCEDIMENTOOUTPUT;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
@@ -45,33 +44,34 @@ public class DettaglioProcedimentoWebServiceBean {
 		// 3. LEGGERE L'OUTPUT DELLA PROCEDURA ORACLE
 		// 4. COSTRUIRE GLI OGGETTI JAVA DI RISPOSTA CHE SI ASPETTA IL WEB SERVICE
 		DATIPROCEDIMENTOOUTPUT datiProcedimentoOutput = null;
-		String path = AvvocaturaProperties.getProperty(AvvocaturaProperties.PREFISSO_PATH.concat("ricercasoggetticonprocedimenti"));
+		String path = AvvocaturaProperties
+				.getProperty(AvvocaturaProperties.PREFISSO_PATH.concat("ricercasoggetticonprocedimenti"));
 		JAXBContext jc = JAXBContext.newInstance(path);
 
 		DATIPROCEDIMENTOINPUT dpi = null;
 
 		// instanzio oggetti per la validazione in & out
-//		SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-//		InputStream inputStream = DettaglioProcedimentoWebServiceBean.class
-//				.getResourceAsStream("/dettaglio_procedimento.xsd");
-//		Source source = new StreamSource(inputStream);
-//		Schema schema = sf.newSchema(source);
-//		ValidationHandler vh = null;
+		// SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		// InputStream inputStream = DettaglioProcedimentoWebServiceBean.class
+		// .getResourceAsStream("/dettaglio_procedimento.xsd");
+		// Source source = new StreamSource(inputStream);
+		// Schema schema = sf.newSchema(source);
+		// ValidationHandler vh = null;
 
 		try {
 			// deserializzo il documento XML in oggetti Java
 			Unmarshaller unmarshaller = jc.createUnmarshaller();
 			// validazione in entrata
-//			unmarshaller.setSchema(schema);
-//			vh = new ValidationHandler();
-//			unmarshaller.setEventHandler(vh);
+			// unmarshaller.setSchema(schema);
+			// vh = new ValidationHandler();
+			// unmarshaller.setEventHandler(vh);
 			ByteArrayInputStream bais = new ByteArrayInputStream(datiProcedimentoInput.getBytes());
 			dpi = (DATIPROCEDIMENTOINPUT) unmarshaller.unmarshal(bais);
 
 			// controllo se ci sono eventi di errore in ingresso
 			String[] errori = new String[2];
 			errori = controllaValiditaDatiInput(dpi, errori);
-//			if (vh.hasEvents()) { // + vh.formatEvents()
+			// if (vh.hasEvents()) { // + vh.formatEvents()
 			if ("true".equals(errori[0])) {
 				datiProcedimentoOutput = new DATIPROCEDIMENTOOUTPUT();
 				// imposto l'ERRORE
@@ -86,10 +86,11 @@ public class DettaglioProcedimentoWebServiceBean {
 				// recupero i dati per invocare la store procedure
 				// PER LA VALORIZZAZIONE DEI DATI IN RISPOSTA AL WEBSERVICE
 				// E' STATA SVILUPPATA UNA PROCEDURA ORACLE
-			    IAvvocaturaSius ias = SIUSLookupRemote.getAvvocaturaSiusRemote();
-				datiProcedimentoOutput = ias.callRicercaFascicoloSius(dpi.getCodDistretto(), dpi
-						.getCodTipoUfficio(), dpi.getCodiceFiscaleAvvocato(), dpi.getAnnoProcedimento()
-						.intValue(), dpi.getNumeroProcedimento().intValue());
+				IAvvocaturaSius ias = SIUSLookupRemote.getAvvocaturaSiusRemote();
+				datiProcedimentoOutput = ias.callRicercaFascicoloSius(dpi.getCodDistretto(),
+						dpi.getCodTipoUfficio(), dpi.getCodiceFiscaleAvvocato(),
+						dpi.getAnnoProcedimento().intValue(), dpi.getNumeroProcedimento().intValue(),
+						dpi.getCodUfficio());// MEV_20_Avvocatura_SIES_Sede aggiunto parametro codUfficio
 			}
 		} catch (Exception e) {
 			// info per il log
@@ -106,23 +107,23 @@ public class DettaglioProcedimentoWebServiceBean {
 		Marshaller marshaller = jc.createMarshaller();
 		marshaller.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-1");
 		// validazione in uscita
-//		marshaller.setSchema(schema);
-//		vh = new ValidationHandler();
-//		marshaller.setEventHandler(vh);
+		// marshaller.setSchema(schema);
+		// vh = new ValidationHandler();
+		// marshaller.setEventHandler(vh);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		// serializzo gli oggetti Java in XML
 		marshaller.marshal(datiProcedimentoOutput, baos);
-//		if (vh.hasEvents()) {
-//			avvocaturaLogger.error("Errore di validazione in uscita: " + vh.formatEvents());
-//			// inizializzo l'oggetto di tipo "DATIPROCEDIMENTOOUTPUT"
-//			datiProcedimentoOutput = new DATIPROCEDIMENTOOUTPUT();
-//			// imposto l'ERRORE
-//			datiProcedimentoOutput.setERRORE(ErroreMapper.mapErroreProcedimento("002", vh.formatEvents()));
-//			baos = new ByteArrayOutputStream();
-//			marshaller.marshal(datiProcedimentoOutput, baos);
-//		} else
-//			// info per il log
-//			avvocaturaLogger.debug("Nessun Errore di validazione, stringa di ritorno: " + baos.toString());
+		// if (vh.hasEvents()) {
+		// avvocaturaLogger.error("Errore di validazione in uscita: " + vh.formatEvents());
+		// // inizializzo l'oggetto di tipo "DATIPROCEDIMENTOOUTPUT"
+		// datiProcedimentoOutput = new DATIPROCEDIMENTOOUTPUT();
+		// // imposto l'ERRORE
+		// datiProcedimentoOutput.setERRORE(ErroreMapper.mapErroreProcedimento("002", vh.formatEvents()));
+		// baos = new ByteArrayOutputStream();
+		// marshaller.marshal(datiProcedimentoOutput, baos);
+		// } else
+		// // info per il log
+		// avvocaturaLogger.debug("Nessun Errore di validazione, stringa di ritorno: " + baos.toString());
 
 		// eseguo la "pulizia" dello stream
 		baos.flush();
@@ -132,7 +133,7 @@ public class DettaglioProcedimentoWebServiceBean {
 
 	/**
 	 * Metodo di controllo validità dati input
-	 * 
+	 *
 	 * @param dpi
 	 * @param errori
 	 * @return
@@ -140,7 +141,8 @@ public class DettaglioProcedimentoWebServiceBean {
 	private String[] controllaValiditaDatiInput(DATIPROCEDIMENTOINPUT dpi, String[] errori) {
 
 		// info per il log
-		avvocaturaLogger.info("Classe DettaglioProcedimentoWebServiceBean, Metodo controllaValiditaDatiInput");
+		avvocaturaLogger
+				.info("Classe DettaglioProcedimentoWebServiceBean, Metodo controllaValiditaDatiInput");
 
 		if (!PropertyUtil.isPresent(dpi.getAnnoProcedimento())) {
 			errori[0] = "true";
@@ -157,6 +159,10 @@ public class DettaglioProcedimentoWebServiceBean {
 		} else if (!PropertyUtil.isPresent(dpi.getCodiceFiscaleAvvocato())) {
 			errori[0] = "true";
 			errori[1] = "014";
+		} // MEV_20_Avvocatura_SIES_Sede aggiunto controllo parametro sede
+		else if (isError(dpi.getCodUfficio(), dpi.getCodTipoUfficio())) {
+			errori[0] = "true";
+			errori[1] = "015";
 		} else {
 			errori[0] = "false";
 			errori[1] = "VALIDAZIONE DATI INPUT OK";
@@ -165,5 +171,21 @@ public class DettaglioProcedimentoWebServiceBean {
 		// valore di ritorno
 		return errori;
 	}
+
+	/*
+	 * ISSUE MEV : verifica se il parametro codUfficio è obbligatorio o meno Numero MEV :
+	 * 20_Avvocatura_SIES_Sede Autore : monica Data : 03/feb/2020 Branch : MEV_numero_MEV
+	 */
+	private boolean isError(String codUfficio, String codTipoUfficio) {
+
+		boolean error = false;
+		if (PropertyUtil.isPresent(codTipoUfficio) && "UDS".equals(codTipoUfficio)
+				&& !PropertyUtil.isPresent(codUfficio)) {
+			error = true;
+		}
+
+		return error;
+	}
+	// ***** FINE INTERVENTO MEV_numero_MEV *****//
 
 }

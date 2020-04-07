@@ -2,14 +2,13 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2016.09.02 alle 03:59:57 PM CEST 
+// Generato il: 2020.02.10 alle 12:41:34 PM CET 
 //
 
 
 package it.eng.giustizia.avvocatura.ws.type.elencoProcedimenti;
 
 import java.math.BigInteger;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -30,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="codiceFiscaleAvvocato" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="codTipoUfficio" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="codDistretto" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="codUfficioDistretto" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="idSoggetto" type="{http://www.w3.org/2001/XMLSchema}integer"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlType;
     "codiceFiscaleAvvocato",
     "codTipoUfficio",
     "codDistretto",
+    "codUfficioDistretto",
     "idSoggetto"
 })
 @XmlRootElement(name = "DATI_SOGGETTO_INPUT")
@@ -55,6 +56,8 @@ public class DATISOGGETTOINPUT {
     protected String codTipoUfficio;
     @XmlElement(required = true)
     protected String codDistretto;
+    @XmlElement(required = true)
+    protected String codUfficioDistretto;
     @XmlElement(required = true)
     protected BigInteger idSoggetto;
 
@@ -128,6 +131,30 @@ public class DATISOGGETTOINPUT {
      */
     public void setCodDistretto(String value) {
         this.codDistretto = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà codUfficioDistretto.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodUfficioDistretto() {
+        return codUfficioDistretto;
+    }
+
+    /**
+     * Imposta il valore della proprietà codUfficioDistretto.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodUfficioDistretto(String value) {
+        this.codUfficioDistretto = value;
     }
 
     /**

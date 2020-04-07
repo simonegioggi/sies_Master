@@ -13,6 +13,7 @@ import it.eng.giustizia.avvocatura.ws.type.ricercaSoggettiConProcedimenti.DATIPR
 public interface IAvvocaturaSius {
 
 	public DATIPROCEDIMENTOOUTPUT callRicercaFascicoloSius(String codDistretto, String codTipoUfficio,
-			String codiceFiscaleAvvocato, int annoProcedimento, int numeroProcedimento) throws F3BException;	
+			String codiceFiscaleAvvocato, int annoProcedimento, int numeroProcedimento, String codUfficio)
+			throws F3BException;// MEV_20_Avvocatura_SIES_Sede aggiunto parametro codUfficio
 
 }

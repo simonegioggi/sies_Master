@@ -2,7 +2,7 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2016.09.02 alle 03:59:57 PM CEST 
+// Generato il: 2020.02.10 alle 12:41:34 PM CET 
 //
 
 
@@ -49,7 +49,7 @@ public class ELENCOPROCEDIMENTI {
     protected ELENCOPROCEDIMENTIOUTPUT elencoprocedimentioutput;
 
     /**
-     * Recupera il valore della proprietà datisoggettoinput.
+     * elemento contentitore dei dati di input per la ricerca dell'elenco dei procedimenti
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class ELENCOPROCEDIMENTI {
     }
 
     /**
-     * Recupera il valore della proprietà elencoprocedimentioutput.
+     * elemento contentitore dei dati di outup della ricerca dell'elenco dei procedimenti
      * 
      * @return
      *     possible object is
