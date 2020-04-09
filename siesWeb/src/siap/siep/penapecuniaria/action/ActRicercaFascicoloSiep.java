@@ -81,22 +81,54 @@ public class ActRicercaFascicoloSiep extends ActionSiap
 		IPenaResidua lCtrlPR = SIEPLookupRemote.getPenaResiduaRemote();
 		PenaResiduaModel lPRMod = new PenaResiduaModel();
 
+		/* 
+		 * ISSUE MAC : Gli attributi multaResidua e ammendaResidua vengono passati alla request come
+		 * BigDecimal e non più come String 
+		 * Numero MAC : 20200408012
+		 * Autore    : monica
+		 * Data      : 08/apr/2020
+		 * Branch    : mac-otrs-20200408012
+		 */
+		setRequestAttribute("multaResidua", new BigDecimal("0"));
+		setRequestAttribute("ammendaResidua", new BigDecimal("0"));
+		//***** FINE INTERVENTO mac-otrs-20200408012 *****//
+		
 		int lFascProg = lFascMod.getChiaveProgr().intValue();
 		if (lFascProg > 70000 && lFascProg < 80000) {
 			// se sono in classe VII vado a cercare la richiesta di conversione legata al procedimento
 			lRicMod = lCtrlRic.ExRicercaRichiestaConversioneByIdFascicoloSiep(lidFascicoloSiep);
 			// se sono in classe VII vado a cercare la pena complessiva per passare i quantum.
 			lPCMod = lCtrlPC.ExRicercaPenaComplessivaByIdFascicolo(lidFascicoloSiep);
-			setRequestAttribute("multaResidua", lPCMod.getImportoMulta().toString());
-			setRequestAttribute("ammendaResidua", lPCMod.getImportoAmmenda().toString());
+			/* 
+			 * ISSUE MAC : Gli attributi multaResidua e ammendaResidua vengono passati alla request come
+			 * BigDecimal e non più come String 
+			 * Numero MAC : 20200408012
+			 * Autore    : monica
+			 * Data      : 08/apr/2020
+			 * Branch    : mac-otrs-20200408012
+			 */
+			setRequestAttribute("multaResidua",lPCMod.getImportoMulta());
+			setRequestAttribute("ammendaResidua",lPCMod.getImportoAmmenda());
+			//***** FINE INTERVENTO mac-otrs-20200408012 *****//
 		} else {
 			// se sono in classe I vado a cercare la richiesta di conversione legata al procedimento collegato
 			// ossia di classe VII
 			lRicMod = lCtrlRic.ExRicercaRichiestaConversioneByIdFascicoloSiepClasseI(lidFascicoloSiep);
 			// se sono in classe I vado a cercare la pena residua per passare i quantum.
 			lPRMod = lCtrlPR.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lidFascicoloSiep);
-			setRequestAttribute("multaResidua", lPRMod.getImportoMulta().toString());
-			setRequestAttribute("ammendaResidua", lPRMod.getImportoAmmenda().toString());
+			/* 
+			 * ISSUE MAC : Gli attributi multaResidua e ammendaResidua vengono passati alla request come
+			 * BigDecimal e non più come String 
+			 * Numero MAC : 20200408012
+			 * Autore    : monica
+			 * Data      : 08/apr/2020
+			 * Branch    : mac-otrs-20200408012
+			 */
+			if (lPRMod != null && lPRMod.getImportoMulta() != null)
+				setRequestAttribute("multaResidua", lPRMod.getImportoMulta());
+			if (lPRMod != null && lPRMod.getImportoAmmenda() != null)
+				setRequestAttribute("ammendaResidua", lPRMod.getImportoAmmenda());
+			//***** FINE INTERVENTO mac-otrs-20200408012 *****//
 		}
 
 		setRequestAttribute("richiestaconversione", lRicMod);
