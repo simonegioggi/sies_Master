@@ -1126,7 +1126,8 @@ public class ActionSiap extends Action {
 				 * Data      : 20/feb/2020
 				 * Branch    : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
 				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
@@ -1169,7 +1170,8 @@ public class ActionSiap extends Action {
 				 * Data      : 20/feb/2020
 				 * Branch    : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
 				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
@@ -1205,7 +1207,8 @@ public class ActionSiap extends Action {
 				 * Data      : 20/feb/2020
 				 * Branch    : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
 				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
@@ -1241,7 +1244,8 @@ public class ActionSiap extends Action {
 				 * Data      : 20/feb/2020
 				 * Branch    : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrMotivo() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrMotivo() : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
 				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
