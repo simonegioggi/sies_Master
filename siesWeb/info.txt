@@ -11,3 +11,4 @@ RELEASE 12.2.0: 20200227
 10)	riversatogli il branch mac-otrs-202003040112;
 11)	riversatogli il branch mac-otrs-20200319016;
 12)	riversatogli il branch mac-otrs-20200331014;
+13)	riversatogli il branch mac-otrs-20200408012;
