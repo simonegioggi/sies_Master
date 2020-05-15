@@ -1,14 +1,2 @@
-RELEASE 12.2.0: 20200227
-1)	questo branch nasce dal branch DEVELOP per la gestione dei ticket marzo-aprile 2020;
-2)	riversatogli il branch mac-otrs-20200220015;
-3)	riversatogli il branch mac-otrs-20200220016;
-4)	riversatogli il branch mac-otrs-20200220017;
-5)	riversatogli il branch mac-otrs-20200220018;
-6)	riversatogli il branch mac-otrs-20200224011;
-7)	riversatogli il branch mac-otrs-20200226013;
-8)	riversatogli il branch mac-otrs-20200303013;
-9)	riversatogli il branch mac-otrs-20200304018;
-10)	riversatogli il branch mac-otrs-202003040112;
-11)	riversatogli il branch mac-otrs-20200319016;
-12)	riversatogli il branch mac-otrs-20200331014;
-13)	riversatogli il branch mac-otrs-20200408012;
+RELEASE 12.3.0: 15/05/2020
+1)	nato dal merge della 12.1.0 con la versione 12.2.0
