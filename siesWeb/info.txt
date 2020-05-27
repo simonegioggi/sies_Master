@@ -1,2 +1,5 @@
+Branch per Ticket#20200525014 — emissione cumulo pene
+Nasce da:
 RELEASE 12.3.0: 15/05/2020
-1)	nato dal merge della 12.1.0 con la versione 12.2.0
+Nasce da:
+merge della 12.1.0 con la versione 12.2.0
