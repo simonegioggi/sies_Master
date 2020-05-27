@@ -1062,6 +1062,9 @@ public class StampaController extends SIAPStampaController implements IStampa {
 					if(enm!=null){
 						CampoNotaModel lCampoNota =new CampoNotaModel();
 						lCampoNota.setDescr(enm.getEvento().getCodMotivo());
+						// TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il provvedimento di Restituzione Ordine di Consegna
+						// apooggio questa informazione nell'oggetto CampoNota per poterla stampare sul template.
+						lCampoNota.setDataInserimento(enm.getEvento().getDataEmissione());
 						TreeModel mytree = new TreeModel((CampoNotaModel) lCampoNota);
 						if (mytree != null)
 							lTreeEveMod.add(mytree);

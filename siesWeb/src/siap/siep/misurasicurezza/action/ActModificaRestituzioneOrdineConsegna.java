@@ -52,8 +52,9 @@ public class ActModificaRestituzioneOrdineConsegna extends ActNotificheMS implem
 			String codiceOperatore = getCodUtenteConnesso();
 			String codiceUfficio = getCodUfficioUtenteConnesso();
 			// Preparo l'EventoNotifica
-			Date dataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
+			// TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il provvedimento di Restituzione Ordine di Consegna
+//			Date dataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+//					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
 			Date dataTrasmissione = getRequestDateParameter(
 					ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI,
 					ICostantiEvento.CAMPO_MESE_DATA_TRASMISSIONE_ATTI,
@@ -61,7 +62,8 @@ public class ActModificaRestituzioneOrdineConsegna extends ActNotificheMS implem
 			EventoNotificaModel enm = new EventoNotificaModel();
 			IEvento iEvento = SICOLookupRemote.getEventoRemote();
 			enm = iEvento.ExRicercaEventoNotificaByKey(idEvento);
-			enm.getEvento().setDataEmissione(dataEmissione);
+			// TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il provvedimento di Restituzione Ordine di Consegna			
+			enm.getEvento().setDataEmissione(DateUtils.getSysDate());
 			enm.getEvento().setCodOperatoreAggiornamento(codiceOperatore);
 			enm.getEvento().setDataAggiornamento(DateUtils.getSysDate());
 			enm.getEvento().setCodUfficioAggiornamento(codiceUfficio);
