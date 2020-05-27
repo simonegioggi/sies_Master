@@ -1114,6 +1114,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 			// DL 92/2014 Rimedi Risarcitori/ Reclamo Rimedi Risarcitori
 			if ("5491".equals(aEveModel.getEvento().getCodMotivo())
+					|| "9154".equals(aEveModel.getEvento().getCodMotivo()) // EC: gestione Ticket#20200508014 (aggiungo il codice mancante 9154) 
 					|| "5492".equals(aEveModel.getEvento().getCodMotivo())
 					|| "5493".equals(aEveModel.getEvento().getCodMotivo())
 					|| "5494".equals(aEveModel.getEvento().getCodMotivo())

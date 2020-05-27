@@ -1,2 +1,1 @@
-RELEASE 12.3.0: 15/05/2020
-1)	nato dal merge della 12.1.0 con la versione 12.2.0
+branch mac-otrs-20200508014 creato il 26/05/2020 nato dalla versione 12.3.0
