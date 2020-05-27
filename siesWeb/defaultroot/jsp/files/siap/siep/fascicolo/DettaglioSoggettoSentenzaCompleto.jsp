@@ -277,103 +277,101 @@ if( UtenteConnesso.getUfficioUtente().isUfficioDiCompetenza(fascicolo.getChiaveU
       </td>
     </tr>
 
-<% 
-// MEV26 Cumulo - Se fascicolo trasmesso x competenza x cumulo
-if (LastEveTrasm.getIdEvento() != null) {
-	String strAlertCumulo = "";
+<%
+// Ticket#20200525017 - archiviazione - versione 12.x: se archiviato (01) non faccio vedere il msg
+if (fascicolo.getCodStatoFascicolo() != null
+		&& !fascicolo.getCodStatoFascicolo().equals("01")) {
+	// MEV26 Cumulo - Se fascicolo trasmesso x competenza x cumulo
+	if (LastEveTrasm.getIdEvento() != null) {
+		String strAlertCumulo = "";
 %>
 	<tr>
       	<td class="L">
 <% 
-	if ("0340".equals(LastEveTrasm.getCodMotivo()) // Atti per Competenza per Emissione Cumulo
-			|| "5403".equals(LastEveTrasm.getCodMotivo())) { // Emissione Cumulo per Revoca Beneficio
-		strAlertCumulo += "Attenzione! Il procedimento risulta trasmesso in data " + DateUtils.getDateToString(LastEveTrasm.getDataTrasmissioneAtti(),"dd-MM-yyyy");
-       	strAlertCumulo += " a " + CompetenzaCumulo.getDescrTipoAutoritaComp() + " di " + CompetenzaCumulo.getDescrLuogoAutoritaComp();
-       	strAlertCumulo += " per assorbimento in cumulo";
-       	if (CompetenzaCumulo.getChiaveAnno() != null) {
-         	strAlertCumulo += " sul procedimento " + CompetenzaCumulo.getChiaveAnno() + "/" + CompetenzaCumulo.getChiaveProgr();
-       	}
-       	strAlertCumulo += ".";
-       	// Ticket#20200525017 - archiviazione - versione 12.x: se archiviato (01) non faccio vedere il msg
-        if (fascicolo.getCodStatoFascicolo() != null
-        		&& !fascicolo.getCodStatoFascicolo().equals("01")) {
+		if ("0340".equals(LastEveTrasm.getCodMotivo()) // Atti per Competenza per Emissione Cumulo
+				|| "5403".equals(LastEveTrasm.getCodMotivo())) { // Emissione Cumulo per Revoca Beneficio
+			strAlertCumulo += "Attenzione! Il procedimento risulta trasmesso in data " + DateUtils.getDateToString(LastEveTrasm.getDataTrasmissioneAtti(),"dd-MM-yyyy");
+	       	strAlertCumulo += " a " + CompetenzaCumulo.getDescrTipoAutoritaComp() + " di " + CompetenzaCumulo.getDescrLuogoAutoritaComp();
+	       	strAlertCumulo += " per assorbimento in cumulo";
+	       	if (CompetenzaCumulo.getChiaveAnno() != null) {
+	         	strAlertCumulo += " sul procedimento " + CompetenzaCumulo.getChiaveAnno() + "/" + CompetenzaCumulo.getChiaveProgr();
+	       	}
+	       	strAlertCumulo += ".";
 %>
 			<font color="red"> Procedimento trasmesso per assorbimento in cumulo il <%=StringUtils.toStringJSP(DateUtils.getDateToString(LastEveTrasm.getDataTrasmissioneAtti(),"dd-MM-yyyy"))%>
           	a <%=StringUtils.toStringJSP(CompetenzaCumulo.getDescrTipoAutoritaComp())%> di <%=StringUtils.toStringJSP(CompetenzaCumulo.getDescrLuogoAutoritaComp())%>
 <%
-			if (FascCompetenteCumulo.getIdFascicoloSiep() != null) {
+				if (FascCompetenteCumulo.getIdFascicoloSiep() != null) {
 %>
         	(titolo che determina la competenza: 
         	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=FascCompetenteCumulo.getIdFascicoloSiep()%>" title="Procedimento Competente al Cumulo">
           	<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveAnno())%>
           	/
           	<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveProgr())%>
-        	</a>&nbsp;
+        	</a>
         	)
 <%
-			} else if (CompetenzaCumulo.getChiaveAnno() != null) {
+				} else if (CompetenzaCumulo.getChiaveAnno() != null) {
 %>
         	(titolo che determina la competenza: <%=CompetenzaCumulo.getChiaveAnno() + "/" + CompetenzaCumulo.getChiaveProgr()%>)
+<%
+				}
+%>
+        	</font>
+<%
+		} else if ("5202".equals(LastEveTrasm.getCodMotivo())) { // Esito Trasmissione Atti per Competenza (ex artt. 663 e 665 comma 4 c.p.p.)
+			strAlertCumulo += "Attenzione! Il procedimento risulta " + AnnotazioneEsitoCumulo.getDescrEsito() + " in data " + DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy");
+	       	strAlertCumulo += " da " + AnnotazioneEsitoCumulo.getDescrTipoUfficioEsito() + " di "+AnnotazioneEsitoCumulo.getDescrComuneUfficioEsito();
+	      	//  strAlertCumulo += " per assorbimento in cumulo";
+	       	if (AnnotazioneEsitoCumulo.getChiaveAnno() != null) {
+	          	strAlertCumulo += " sul procedimento " + AnnotazioneEsitoCumulo.getChiaveAnno() + "/" + AnnotazioneEsitoCumulo.getChiaveProgr();
+	       	}
+	       	strAlertCumulo +=".";        
+%>
+        	<font color="red"> Procedimento <%=AnnotazioneEsitoCumulo.getDescrEsito()%> il <%=StringUtils.toStringJSP(DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy"))%>
+          	da <%=AnnotazioneEsitoCumulo.getDescrTipoUfficioEsito()%> di <%=AnnotazioneEsitoCumulo.getDescrComuneUfficioEsito()%>
+<%
+			if (FascCompetenteCumulo.getIdFascicoloSiep() != null) {
+%>
+        	(titolo che determina la competenza:
+       		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=FascCompetenteCumulo.getIdFascicoloSiep()%>" title="Procedimento Competente al Cumulo">
+          	<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveAnno())%>/<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveProgr())%>
+        	</a>
+        	)
 <%
 			}
 %>
         	</font>
 <%
-        } // FINE Ticket#20200525017
-	} else if ("5202".equals(LastEveTrasm.getCodMotivo())) { // Esito Trasmissione Atti per Competenza (ex artt. 663 e 665 comma 4 c.p.p.)
-		strAlertCumulo += "Attenzione! Il procedimento risulta " + AnnotazioneEsitoCumulo.getDescrEsito() + " in data " + DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy");
-       	strAlertCumulo += " da " + AnnotazioneEsitoCumulo.getDescrTipoUfficioEsito() + " di "+AnnotazioneEsitoCumulo.getDescrComuneUfficioEsito();
-      	//  strAlertCumulo += " per assorbimento in cumulo";
-       	if (AnnotazioneEsitoCumulo.getChiaveAnno() != null) {
-          	strAlertCumulo += " sul procedimento " + AnnotazioneEsitoCumulo.getChiaveAnno() + "/" + AnnotazioneEsitoCumulo.getChiaveProgr();
-       	}
-       	strAlertCumulo +=".";        
-%>
-        	<font color="red"> Procedimento <%=AnnotazioneEsitoCumulo.getDescrEsito()%> il <%=StringUtils.toStringJSP(DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy"))%>
-          	da <%=AnnotazioneEsitoCumulo.getDescrTipoUfficioEsito()%> di <%=AnnotazioneEsitoCumulo.getDescrComuneUfficioEsito()%>
-<%
-		if (FascCompetenteCumulo.getIdFascicoloSiep() != null) {
-%>
-        	(titolo che determina la competenza:
-       		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=FascCompetenteCumulo.getIdFascicoloSiep()%>" title="Procedimento Competente al Cumulo">
-          	<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveAnno())%>/<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveProgr())%>
-        	</a>&nbsp;
-        	)
-<%
-		}
-%>
-        	</font>
-<%
-	} else if ("1040".equals(LastEveTrasm.getCodMotivo())) { // Iscritto in Istruttoria PROPRIO UFFICIO
-		strAlertCumulo += "Attenzione! Il procedimento risulta " + AnnotazioneEsitoCumulo.getDescrEsito() + " in data " + DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy");
-       	// strAlertCumulo += " da "+AnnotazioneEsitoCumulo.getDescrTipoUfficioEsito()+" di "+AnnotazioneEsitoCumulo.getDescrComuneUfficioEsito();
-       	strAlertCumulo += " per assorbimento in cumulo";
-       	if (AnnotazioneEsitoCumulo.getChiaveAnno() != null){
-			strAlertCumulo += " sul procedimento " + AnnotazioneEsitoCumulo.getChiaveAnno() + "/" + AnnotazioneEsitoCumulo.getChiaveProgr();
-       	}
-       	strAlertCumulo +=".";
+		} else if ("1040".equals(LastEveTrasm.getCodMotivo())) { // Iscritto in Istruttoria PROPRIO UFFICIO
+			strAlertCumulo += "Attenzione! Il procedimento risulta " + AnnotazioneEsitoCumulo.getDescrEsito() + " in data " + DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy");
+	       	// strAlertCumulo += " da "+AnnotazioneEsitoCumulo.getDescrTipoUfficioEsito()+" di "+AnnotazioneEsitoCumulo.getDescrComuneUfficioEsito();
+	       	strAlertCumulo += " per assorbimento in cumulo";
+	       	if (AnnotazioneEsitoCumulo.getChiaveAnno() != null){
+				strAlertCumulo += " sul procedimento " + AnnotazioneEsitoCumulo.getChiaveAnno() + "/" + AnnotazioneEsitoCumulo.getChiaveProgr();
+	       	}
+	       	strAlertCumulo +=".";
 %>
         	<font color="red"> Procedimento <%=AnnotazioneEsitoCumulo.getDescrEsito()%> per assorbimento in cumulo il <%=StringUtils.toStringJSP(DateUtils.getDateToString(AnnotazioneEsitoCumulo.getDataEsito(),"dd-MM-yyyy"))%>
 <%
-		if (FascCompetenteCumulo.getIdFascicoloSiep() != null) {
+			if (FascCompetenteCumulo.getIdFascicoloSiep() != null) {
 %>
         	(titolo che determina la competenza:
         	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=FascCompetenteCumulo.getIdFascicoloSiep()%>" title="Procedimento Competente al Cumulo">
           	<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveAnno())%>
           	/
           	<%=StringUtils.toStringJSP(FascCompetenteCumulo.getChiaveProgr())%>
-        	</a>&nbsp;
+        	</a>
         	)
 <%
-		}
+			}
 %>
         	</font>
 <%
-	}
+		}
 %>
 		</td>
 	</tr>
-
 <script language="JavaScript">
 <%
 if (!"01".equals(fascicolo.getCodStatoFascicolo())
@@ -386,7 +384,8 @@ if (!"01".equals(fascicolo.getCodStatoFascicolo())
 %>  
 </script>    
 <%
-} // END MEV26
+	} // END MEV26
+} // FINE Ticket#20200525017
 %>
     
 <%
