@@ -1,2 +1,4 @@
-RELEASE 12.3.0: 15/05/2020
+Branch per Ticket#20200528012 — SIGE - inserimento parte civile / offesa su quadro "emissione ordinanza"
+Nasce da:
+RELEASE 12.3.0: 28/05/2020
 1)	nato dal merge della 12.1.0 con la versione 12.2.0
