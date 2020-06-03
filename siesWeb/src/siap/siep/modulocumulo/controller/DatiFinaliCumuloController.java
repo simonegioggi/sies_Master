@@ -1354,9 +1354,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
 			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
-			// settato a 02
+			// settato a 03
 			if (lFasModel != null && "01".equals(lFasModel.getCodStatoFascicolo()))
-				lFascDao.setCodStatoFascicolo("02");
+				lFascDao.setCodStatoFascicolo("03");
 
 			lFascDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
 			lFascDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
