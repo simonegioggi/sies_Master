@@ -1,3 +1,6 @@
+RELEASE 12.4.0: 08/06/2020
+1)	nato dal branch "release_12.3.0"
+
 RELEASE 12.3.0: 15/05/2020
 1)	nato dal merge della 12.1.0 con la versione 12.2.0
 
