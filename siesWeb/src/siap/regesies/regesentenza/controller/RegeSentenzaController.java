@@ -5,6 +5,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.regesies.regeavvocato.dao.RegeAvvocatoSqlDAO;
 import siap.regesies.regecircostanza.dao.RegeCircostanzaSqlDAO;
@@ -24,9 +27,6 @@ import siap.sico.util.SICOLookupRemote;
 import siap.siep.SIEPException;
 import siap.siep.sentenza.dao.SentenzaSqlDAO;
 import siap.siep.sentenza.model.SentenzaModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -48,29 +48,15 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	/*
-	 * public RegeSentenzaModel ExInserisciRegeSentenza(RegeSentenzaModel aRegeSentenza) throws F3BException {
-	 * Connection lConn = null; RegeSentenzaDAO lRegDao = null; RegeSentenzaModel lRegMod = null; try { lConn
-	 * = getDBConnection(); lRegMod = new RegeSentenzaModel(aRegeSentenza); lRegDao = new
-	 * RegeSentenzaDAO(lConn); lRegDao.setDAOFromModel(aRegeSentenza); String lKey = null; lKey =
-	 * lRegDao.insert().toString(); commit(lConn); lRegMod.setIdFile(lKey); } catch (DAOException ex) {
-	 * rollback(lConn); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-	 * di mLog siesLogger.error("DAOException: " + ex); throw new
-	 * F3BException("RegeSentenzaController.ExInserisci: Non posso inserire: " + ex); } catch (SQLException
-	 * sqe) { rollback(lConn); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
-	 * posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-	 * F3BException("RegeSentenzaController.ExInserisciRegeSentenza: Non posso inserire il soggetti : " +
-	 * sqe); } finally { cleanup(lRegDao); cleanup(lConn); } return lRegMod; }
-	 */
-
 	/**
 	 * Trova un provvedimento dai suoi estremi
-	 * 
+	 *
 	 * @param aRegeSentenza
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProvvedimentoModel ExRicercaRegeSentenza(RegeSentenzaModel aRegeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRegeSentenzi = new Vector();
 		RegeSentenzaSqlDAO lRegDao = null;
@@ -89,8 +75,8 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RegeSentenzaController.ExRicercaRegeSentenza: Non posso leggere: "
-					+ daoEx);
+			throw new F3BException(
+					"RegeSentenzaController.ExRicercaRegeSentenza: Non posso leggere: " + daoEx);
 		} finally {
 			cleanup(lRegDao);
 			cleanup(lConn);
@@ -100,16 +86,17 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Trova un vettore di provvedimenti
-	 * 
+	 *
 	 * @param aRegeSentenza
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaRegeSentenzaDaElenco(RegeSentenzaModel aRegeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRegeSentenzi = new Vector();
 		RegeSentenzaSqlDAO lRegDao = null;
-//		ProvvedimentoModel lProvvedimento = null;
+		// ProvvedimentoModel lProvvedimento = null;
 		try {
 			lConn = getDBConnection();
 			lRegDao = new RegeSentenzaSqlDAO(lConn);
@@ -132,13 +119,14 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Ricerca il dettaglio della sentenza/decreto
-	 * 
+	 *
 	 * @param aKey
 	 *            - Chiave dell'id del file
 	 * @return Rege Sentenza Model inserito
 	 * @throws F3BException
 	 */
 	public RegeSentenzaModel ExRicercaRegeSentenzaByKey(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		RegeSentenzaSqlDAO lRegDao = null;
 		RegeSentenzaModel lRegMod;
@@ -153,8 +141,8 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RegeSentenzaController.ExRicercaRegeSentenzaByKey: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"RegeSentenzaController.ExRicercaRegeSentenzaByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRegDao);
 			cleanup(lConn);
@@ -164,12 +152,13 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Modifica la sentenza Rege
-	 * 
+	 *
 	 * @param aRegeSentenza
 	 * @return RegeSentenzaModel modificato
 	 * @throws F3BException
 	 */
 	public RegeSentenzaModel ExModificaRegeSentenza(RegeSentenzaModel aRegeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		RegeSentenzaDAO lRegDao = null;
 		RegeSentenzaModel lRegMod = new RegeSentenzaModel(aRegeSentenza);
@@ -194,11 +183,12 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Elenco Provvedimenti
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaElencoProvvedimenti(int aPage, String aCodComune) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRegeSentenzi = new Vector();
 		RegeSentenzaElencoSqlDAO lRegDao = null;
@@ -229,11 +219,12 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Cancella la sentenza
-	 * 
+	 *
 	 * @param aRegeSentenza
 	 * @throws F3BException
 	 */
 	public void ExCancellaRegeSentenza(RegeSentenzaModel aRegeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		RegeSentenzaDAO lRegDao = null;
 
@@ -246,8 +237,8 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RegeSentenzaController.ExCancellaRegeSentenza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"RegeSentenzaController.ExCancellaRegeSentenza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRegDao);
 			cleanup(lConn);
@@ -256,11 +247,12 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Conta le occorrenze dei provvedimenti
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public int ExGetCountProvvedimenti(String aCodComune) throws F3BException {
+
 		int lCount = 0;
 		Connection lConn = null;
 		RegeSentenzaElencoSqlDAO lSenSqlDao = null;
@@ -293,12 +285,13 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Metodo per scoprire se esiste un provvedimento duplicato
-	 * 
+	 *
 	 * @param aRegeSentenza
 	 * @return Sentenza trovata in SIEP
 	 * @throws F3BException
 	 */
 	public SentenzaModel ExRicercaSentenzaDuplicata(RegeSentenzaModel aRegeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaModel lSen = null;
 		SentenzaSqlDAO lSenSQL = null;
@@ -336,20 +329,17 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 		}
 
 		return lSen;
-
 	}
 
 	/**
 	 * Dettaglio Provvedimento proveniente da Rege
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProvvedimentoModel ExDettaglioProvvedimento(String aKey) throws F3BException {
-//		RegeSoggettoSqlDAO lRegSoggDao = null;
-//		RegeSoggettoModel lRegeSoggMod = null;
-//		Connection lConn = null;
+
 		ProvvedimentoModel lProvvedimento = new ProvvedimentoModel();
 
 		RegeSentenzaModel lRegeSen = ExRicercaRegeSentenzaByKey(aKey);
@@ -362,7 +352,7 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Metodo per riempire il model Provvedimento con tutte le entità correlate
-	 * 
+	 *
 	 * @param lProvvedimento
 	 * @return Provvedimento trovato
 	 * @throws F3BException
@@ -370,6 +360,7 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 	 */
 	private ProvvedimentoModel ExRicercaElementiPerProvvedimento(ProvvedimentoModel lProvvedimento)
 			throws F3BException {
+
 		RegeSoggettoSqlDAO lRegSoggDao = null;
 		RegeSoggettoModel lRegeSoggMod = null;
 		Connection lConn = null;
@@ -410,8 +401,7 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 			} else
 				// Soggetto non Trovato
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Impossibile visualizzare il dettaglio del Provvedimento "
-								+ "<font class=\"cRosso\">"
+						"Impossibile visualizzare il dettaglio del Provvedimento " + "<font class=\"cRosso\">"
 								+ lProvvedimento.getRegeSentenza().getAnnoSentenza() + "/"
 								+ lProvvedimento.getRegeSentenza().getNumeroSentenza()
 								+ "</font>.<br>Nessun soggetto associato al Provvedimento selezionato.");
@@ -478,13 +468,14 @@ public class RegeSentenzaController extends SiapController implements IRegeSente
 
 	/**
 	 * Ricerca sentenza rege per estremi
-	 * 
+	 *
 	 * @param aRegeSentenza
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProvvedimentoModel ExRicercaRegeSentenzaPerEstremi(RegeSentenzaModel aRegeSentenza)
 			throws F3BException {
+
 		Connection lConn = null;
 		RegeSentenzaModel lRegeSentenzi = null;
 		ProvvedimentoModel lProvvedimento = null;

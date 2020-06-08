@@ -1,11 +1,5 @@
 package siap.siep.modulocumulo.controller;
 
-/**
-* <p>Title: PosizioneGiuridicaCumuloController</p>
-* <p>Description: Classe Controller per PosizioneGiuridicaCumulo</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Iterator;
@@ -21,12 +15,22 @@ import siap.siep.modulocumulo.dao.PosizioneGiuridicaCumuloDAO;
 import siap.siep.modulocumulo.dao.PosizioneGiuridicaCumuloSqlDAO;
 import siap.siep.modulocumulo.model.PosizioneGiuridicaCumuloModel;
 
+/**
+ * <p>
+ * Title: PosizioneGiuridicaCumuloController
+ * </p>
+ * <p>
+ * Description: Classe Controller per PosizioneGiuridicaCumulo
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PosizioneGiuridicaCumuloController extends SiapController implements IPosizioneGiuridicaCumulo {
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un PosizioneGiuridicaCumulo a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aPosizioneGiuridicaCumulo
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -37,6 +41,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 
 	public PosizioneGiuridicaCumuloModel ExInserisciPosizioneGiuridicaCumulo(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lComDao = null;
 		PosizioneGiuridicaCumuloModel lComMod = null;
@@ -67,7 +72,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati PosizioneGiuridicaCumulo
-	 * 
+	 *
 	 * @param aPosizioneGiuridicaCumulo
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -76,6 +81,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	 ****************************************************************************/
 	public Vector<PosizioneGiuridicaCumuloModel> ExRicercaPosizioneGiuridicaCumulo(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		Vector<PosizioneGiuridicaCumuloModel> lPosizioneGiuridicaCumuli = new Vector<>();
 		PosizioneGiuridicaCumuloDAO lComDao = null;
@@ -105,13 +111,14 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati di PosizioneGiuridicaCumulo
-	 * 
+	 *
 	 * @param aIdTitoloCumulato
 	 * @return un vettore di model con il risultato della ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector<PosizioneGiuridicaCumuloModel> ExRicercaPosizioneGiuridicaCumulobyIdTitCum(
 			BigDecimal aIdTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		Vector<PosizioneGiuridicaCumuloModel> lVectPosGiuCumulo = new Vector<>();
 		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumSqlDao = null;
@@ -136,7 +143,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -144,6 +151,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	 ****************************************************************************/
 	public PosizioneGiuridicaCumuloModel ExRicercaPosizioneGiuridicaCumuloById(
 			BigDecimal aIdPosizioneGiuridicaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloModel lPosizioneGiuridicaCumuloMod = new PosizioneGiuridicaCumuloModel();
 		PosizioneGiuridicaCumuloSqlDAO lPosizioneGiuridicaCumuloSqlDao = null;
@@ -171,13 +179,14 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	 * Metodo che modifica i dati dell'PosizioneGiuridicaCumulo Viene fatto l'update di tutti i campi del
 	 * record recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella
 	 * verranno impostati a null
-	 * 
+	 *
 	 * @param aPosizioneGiuridicaCumulo
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaPosizioneGiuridicaCumulo(PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lComDao = null;
 
@@ -202,12 +211,13 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aPosizioneGiuridicaCumulo
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaPosizioneGiuridicaCumuloBykey(BigDecimal aIdPosizioneGiuridicaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lComDao = null;
 
@@ -236,13 +246,14 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aPosizioneGiuridicaCumulo
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountPosizioneGiuridicaCumulo(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		PosizioneGiuridicaCumuloSqlDAO lPosizioneGiuridicaCumuloSqlDao = null;
@@ -271,7 +282,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aPosizioneGiuridicaCumulo
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -281,6 +292,7 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	 ****************************************************************************/
 	public Vector<PosizioneGiuridicaCumuloModel> ExRicercaPosizioneGiuridicaCumuloPaged(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector<PosizioneGiuridicaCumuloModel> lPosizioneGiuridicaCumuli = new Vector<>();
 		PosizioneGiuridicaCumuloSqlDAO lPosizioneGiuridicaCumuloSqlDao = null;
@@ -307,12 +319,13 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	/**
 	 * Recupera tutte le Richieste con Anticipazione (PosizioneGiuridica Cumulo) legati all'istruttoria
 	 * indicata
-	 * 
+	 *
 	 * @param aIdIstruttoria
 	 *            = id dell'istruttoria
 	 */
 	public Vector<PosizioneGiuridicaCumuloModel> ExRicercaPosizioneGiuridicaCumuloByIdIstruttoria(
 			BigDecimal aIdIstruttoria, BigDecimal aIdDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<PosizioneGiuridicaCumuloModel> lPosizioneGiuridicaCumulo = new Vector<>();
@@ -326,14 +339,10 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 
 			if (aIdDatiFinali == null) {
 				lPosizioneGiuridicaSqlDao.ricercaPosizioneGiuridicaCumuloByIdIstruttoria(aIdIstruttoria);
-			} else {
-				/// lPosizioneGiuridicaSqlDao.ricercaPosizioneGiuridicaCumuloByIdIstruttoriaDatiFinali
-				/// (aIdIstruttoria, aIdDatiFinali);
 			}
 
 			lPosizioneGiuridicaCumulo = new Vector<PosizioneGiuridicaCumuloModel>(
 					lPosizioneGiuridicaSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -358,10 +367,10 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 	// il valore della Primary_Key è già preimpostato;
 	// Questo metodo è usato nella funzione di presa in carico, per scaricare Tutti i dati del Fascicolo sulla
 	// nuova Base dati.
-
 	public String ExInserisciPosizioneGiuridicaCumuloWithoutSequence(
 			Vector<PosizioneGiuridicaCumuloModel> VecPosizioneGiuridicaCum, Connection lConn)
 			throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		PosizioneGiuridicaCumuloDAO lCompCumDao = null;
 		PosizioneGiuridicaCumuloModel lCompCumMod = null;
@@ -396,14 +405,11 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 		}
 
 		return EsitodiRitorno;
-
 	} // CHIUDE ExInserisciPosizioneGiuridicaCumuloWithoutSequence
 
-	/**
-	 * 
-	 */
 	public Vector<PosizioneGiuridicaCumuloModel> ExRicercaPosizioniGiuridicheTitoliByIdIstruttoria(
 			BigDecimal aIdIstruttoria) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<PosizioneGiuridicaCumuloModel> lListaPosizioniGiuridiche = new Vector<>();
@@ -417,7 +423,6 @@ public class PosizioneGiuridicaCumuloController extends SiapController implement
 			lPosizioneGiuridicaSqlDao.ricercaPosizioniGiuridicheTitoliByIdIstruttoria(aIdIstruttoria);
 			lListaPosizioniGiuridiche = new Vector<PosizioneGiuridicaCumuloModel>(
 					lPosizioneGiuridicaSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(

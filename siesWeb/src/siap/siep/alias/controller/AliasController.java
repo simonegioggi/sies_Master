@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.alias.dao.AliasDAO;
 import siap.siep.alias.dao.AliasSqlDAO;
 import siap.siep.alias.model.AliasModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,13 +24,14 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AliasController extends SiapController implements IAlias {
 
 	public AliasModel ExInserisciAlias(AliasModel aAlias) throws F3BException {
+
 		Connection lConn = null;
 		AliasDAO lAliDao = null;
 		AliasModel lAliMod = null;
@@ -55,6 +56,7 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public Vector ExRicercaAlias(AliasModel aAlias) throws F3BException {
+
 		Connection lConn = null;
 		Vector lAliai = new Vector();
 		AliasSqlDAO lAliDao = null;
@@ -77,6 +79,7 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public Vector ExRicercaAliasByIdSoggetto(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lAliai = new Vector();
 		AliasSqlDAO lAliDao = null;
@@ -89,7 +92,8 @@ public class AliasController extends SiapController implements IAlias {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("AliasController.ExRicercaAliasByIdSoggetto: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"AliasController.ExRicercaAliasByIdSoggetto: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAliDao);
 			cleanup(lConn);
@@ -98,6 +102,7 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public Vector ExRicercaAliasByIdSoggettoPaged(BigDecimal aKey, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lAliai = new Vector();
 		AliasSqlDAO lAliDao = null;
@@ -110,7 +115,8 @@ public class AliasController extends SiapController implements IAlias {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("AliasController.ExRicercaAliasByIdSoggetto: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"AliasController.ExRicercaAliasByIdSoggetto: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAliDao);
 			cleanup(lConn);
@@ -119,10 +125,11 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public BigDecimal ExGetCountAliasByIdSoggetto(BigDecimal aKey) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
-
 		AliasSqlDAO lAliSqlDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lAliSqlDao = new AliasSqlDAO(lConn);
@@ -141,6 +148,7 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public AliasModel ExRicercaAliasByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AliasSqlDAO lAliDao = null;
 		AliasModel lAliMod;
@@ -160,6 +168,7 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public AliasModel ExModificaAlias(AliasModel aAlias) throws F3BException {
+
 		Connection lConn = null;
 		AliasDAO lAliDao = null;
 		AliasModel lAliMod = new AliasModel(aAlias);
@@ -182,6 +191,7 @@ public class AliasController extends SiapController implements IAlias {
 	}
 
 	public void ExCancellaAlias(AliasModel aAlias) throws F3BException {
+
 		Connection lConn = null;
 		AliasDAO lAliDao = null;
 

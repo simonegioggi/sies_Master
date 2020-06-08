@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.bdmc.sbviewcapoimpu.dao.SbViewCapoimpuDAO;
 import siap.bdmc.sbviewcapoimpu.dao.SbViewCapoimpuSqlDAO;
 import siap.bdmc.sbviewcapoimpu.model.SbViewCapoimpuModel;
 import siap.controller.SiapController;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,7 +32,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SbViewCapoimpu a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSbViewCapoimpu
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -40,6 +40,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	 ****************************************************************************/
 	public SbViewCapoimpuModel ExInserisciSbViewCapoimpu(SbViewCapoimpuModel aSbViewCapoimpu)
 			throws F3BException {
+
 		Connection lConn = null;
 		SbViewCapoimpuDAO lSbVDao = null;
 		SbViewCapoimpuModel lSbVMod = null;
@@ -65,7 +66,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati SbViewCapoimpu
-	 * 
+	 *
 	 * @param aSbViewCapoimpu
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -73,6 +74,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbViewCapoimpu(SbViewCapoimpuModel aSbViewCapoimpu) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbViewCapoimpi = new Vector();
 		SbViewCapoimpuDAO lSbVDao = null;
@@ -84,12 +86,12 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 			lSbVDao.setOrderBy();
 			lSbVDao.start();
 			while (lSbVDao.next()) {
-				lSbViewCapoimpi.add((SbViewCapoimpuModel) lSbVDao.getModel());
+				lSbViewCapoimpi.add(lSbVDao.getModel());
 			}
 			lSbVDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("SbViewCapoimpuController.ExRicercaSbViewCapoimpu: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbViewCapoimpuController.ExRicercaSbViewCapoimpu: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbVDao);
 			cleanup(lConn);
@@ -100,7 +102,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -108,6 +110,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	 ****************************************************************************/
 	public SbViewCapoimpuModel ExRicercaSbViewCapoimpuById(BigDecimal aIdPren, BigDecimal aNumeProgCapoImpu)
 			throws F3BException {
+
 		Connection lConn = null;
 		SbViewCapoimpuModel lSbViewCapoimpuMod = new SbViewCapoimpuModel();
 		SbViewCapoimpuSqlDAO lSbViewCapoimpuSqlDao = null;
@@ -132,12 +135,13 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	 * Metodo che modifica i dati dell'SbViewCapoimpu Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aSbViewCapoimpu
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaSbViewCapoimpu(SbViewCapoimpuModel aSbViewCapoimpu) throws F3BException {
+
 		Connection lConn = null;
 		SbViewCapoimpuDAO lSbVDao = null;
 
@@ -159,11 +163,12 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aSbViewCapoimpu
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaSbViewCapoimpu(SbViewCapoimpuModel aSbViewCapoimpu) throws F3BException {
+
 		Connection lConn = null;
 		SbViewCapoimpuDAO lSbVDao = null;
 
@@ -175,8 +180,8 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("SbViewCapoimpuController.ExCancellaSbViewCapoimpu: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbViewCapoimpuController.ExCancellaSbViewCapoimpu: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbVDao);
 			cleanup(lConn);
@@ -186,12 +191,13 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aSbViewCapoimpu
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountSbViewCapoimpu(SbViewCapoimpuModel aSbViewCapoimpu) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		SbViewCapoimpuSqlDAO lSbViewCapoimpuSqlDao = null;
@@ -205,8 +211,8 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 			lCount = lSbViewCapoimpuSqlDao.getBigDecimal("HowManyRecords");
 			lSbViewCapoimpuSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("SbViewCapoimpuController.ExGetCountSbViewCapoimpu: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SbViewCapoimpuController.ExGetCountSbViewCapoimpu: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSbViewCapoimpuSqlDao);
 			cleanup(lConn);
@@ -218,7 +224,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aSbViewCapoimpu
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -228,6 +234,7 @@ public class SbViewCapoimpuController extends SiapController implements ISbViewC
 	 ****************************************************************************/
 	public Vector ExRicercaSbViewCapoimpuPaged(SbViewCapoimpuModel aSbViewCapoimpu, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbViewCapoimpi = new Vector();
 		SbViewCapoimpuSqlDAO lSbViewCapoimpuSqlDao = null;

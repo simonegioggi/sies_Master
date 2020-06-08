@@ -5,12 +5,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.certificato_omonimi_nsc.dao.CertificatoOmonimiNscDAO;
 import siap.sico.certificato_omonimi_nsc.dao.CertificatoOmonimiNscSqlDAO;
 import siap.sico.certificato_omonimi_nsc.model.CertificatoOmonimiNscModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -33,7 +33,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un CertificatoOmonimiNsc a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -41,6 +41,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	 ****************************************************************************/
 	public CertificatoOmonimiNscModel ExInserisciCertificatoOmonimiNsc(
 			CertificatoOmonimiNscModel aCertificatoOmonimiNsc) throws F3BException {
+
 		Connection lConn = null;
 		CertificatoOmonimiNscDAO lCerDao = null;
 		CertificatoOmonimiNscModel lCerMod = null;
@@ -67,7 +68,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati CertificatoOmonimiNsc
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -76,6 +77,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	 ****************************************************************************/
 	public Vector ExRicercaCertificatoOmonimiNsc(CertificatoOmonimiNscModel aCertificatoOmonimiNsc)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lCertificatoOmonimiNsi = new Vector();
 		CertificatoOmonimiNscDAO lCerDao = null;
@@ -87,7 +89,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 			lCerDao.setOrderBy();
 			lCerDao.start();
 			while (lCerDao.next()) {
-				lCertificatoOmonimiNsi.add((CertificatoOmonimiNscModel) lCerDao.getModel());
+				lCertificatoOmonimiNsi.add(lCerDao.getModel());
 			}
 			lCerDao.stop();
 		} catch (DAOException daoEx) {
@@ -104,7 +106,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -112,6 +114,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	 ****************************************************************************/
 	public CertificatoOmonimiNscModel ExRicercaCertificatoOmonimiNscById(BigDecimal aIdCertificatoOmonimi)
 			throws F3BException {
+
 		Connection lConn = null;
 		CertificatoOmonimiNscModel lCertificatoOmonimiNscMod = new CertificatoOmonimiNscModel();
 		CertificatoOmonimiNscSqlDAO lCertificatoOmonimiNscSqlDao = null;
@@ -138,13 +141,14 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	 * Metodo che modifica i dati dell'CertificatoOmonimiNsc Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaCertificatoOmonimiNsc(CertificatoOmonimiNscModel aCertificatoOmonimiNsc)
 			throws F3BException {
+
 		Connection lConn = null;
 		CertificatoOmonimiNscDAO lCerDao = null;
 
@@ -166,12 +170,13 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaCertificatoOmonimiNsc(CertificatoOmonimiNscModel aCertificatoOmonimiNsc)
 			throws F3BException {
+
 		Connection lConn = null;
 		CertificatoOmonimiNscDAO lCerDao = null;
 
@@ -194,11 +199,12 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la cancellazione dei record precedenti la data di sistema
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaCertificatoOmonimiNscByDate() throws F3BException {
+
 		Connection lConn = null;
 		CertificatoOmonimiNscDAO lCerDao = null;
 
@@ -222,13 +228,14 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountCertificatoOmonimiNsc(CertificatoOmonimiNscModel aCertificatoOmonimiNsc)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		CertificatoOmonimiNscSqlDAO lCertificatoOmonimiNscSqlDao = null;
@@ -256,7 +263,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aCertificatoOmonimiNsc
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -266,6 +273,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 	 ****************************************************************************/
 	public Vector ExRicercaCertificatoOmonimiNscPaged(CertificatoOmonimiNscModel aCertificatoOmonimiNsc,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lCertificatoOmonimiNsi = new Vector();
 		CertificatoOmonimiNscSqlDAO lCertificatoOmonimiNscSqlDao = null;
@@ -288,7 +296,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @return Array con il Documento recuperato dal DB
 	 * @throws F3BException
@@ -298,7 +306,7 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 		Connection lConn = null;
 		CertificatoOmonimiNscDAO lCerDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
-//		ByteArrayInputStream lByteArrayIn = null;
+		// ByteArrayInputStream lByteArrayIn = null;
 		try {
 			lConn = getDBConnection();
 			lCerDao = new CertificatoOmonimiNscDAO(lConn);
@@ -318,7 +326,6 @@ public class CertificatoOmonimiNscController extends SiapController implements I
 
 			if (lByteArrayOut.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {

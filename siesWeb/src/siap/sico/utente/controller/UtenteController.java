@@ -5,6 +5,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.security.model.ProfileModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.profilo.controller.ProfiloController;
 import siap.sico.profilo.model.ProfiloModel;
@@ -15,11 +20,6 @@ import siap.sico.utente.dao.UtenteDAO;
 import siap.sico.utente.dao.UtenteSqlDAO;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.utente.model.UtenteViewModel;
-import f3b.dao.DAOException;
-import f3b.security.model.ProfileModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.Utils;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import f3b.util.Utils;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -55,10 +55,10 @@ public class UtenteController extends SiapController implements IUtente {
 			lUteDao.setDAOFromModel(aUtente);
 			// BigDecimal lKey = null;
 			/* lKey = */lUteDao.insert();
-			lUteSDao.setUtente_Profilo(aUtente, ((ProfileModel) aUtente.getUserProfile()).getProfileId());
+			lUteSDao.setUtente_Profilo(aUtente, aUtente.getUserProfile().getProfileId());
 			lUteSDao.start();
 			lUteSDao.stop();
-			lUteSDao.setUtente_Ufficio(aUtente, ((UfficioModel) aUtente.getUfficioUtente()).getCodUfficio());
+			lUteSDao.setUtente_Ufficio(aUtente, aUtente.getUfficioUtente().getCodUfficio());
 			lUteSDao.start();
 			lUteSDao.stop();
 			commit(lConn);
@@ -99,6 +99,7 @@ public class UtenteController extends SiapController implements IUtente {
 	}
 
 	public Vector ExListaUtentiAttivi(int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUtenti = new Vector();
 		UtenteSqlDAO lUteDao = null;
@@ -137,7 +138,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * Metodo che ritorna la lista degli Utenti Attivi, suddivisi per pagina e prelevati dalla tabella di
 	 * View.
 	 * <p>
-	 * 
+	 *
 	 * @param aPage
 	 *            int numero di pagina
 	 * @throws F3BException
@@ -145,6 +146,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return Vector elenco degli utenti Attivi.
 	 */
 	public Vector ExListaUtentiAttiviFromView(int aPage, String aDistretto) throws F3BException {
+
 		return listaUtentiAttiviFromView(aPage, null, aDistretto);
 	}
 
@@ -152,7 +154,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * Metodo che ritorna la lista degli utenti attivi, filtrati per ufficio e paginati. I dati sono prelevati
 	 * dalla tabella di View.
 	 * <p>
-	 * 
+	 *
 	 * @param aPage
 	 *            int Paginazione
 	 * @param aUfficio
@@ -162,6 +164,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return Vector elenco degli utenti attivi.
 	 */
 	public Vector ExListaUtentiAttiviFromViewPerUfficio(int aPage, String aUfficio) throws F3BException {
+
 		return listaUtentiAttiviFromView(aPage, aUfficio, null);
 	}
 
@@ -169,7 +172,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * Metodo che ritorna la lista degli utenti non attivi e paginati. I dati sono prelevati dalla tabella di
 	 * View.
 	 * <p>
-	 * 
+	 *
 	 * @param aPage
 	 *            int Paginazione
 	 * @throws F3BException
@@ -177,13 +180,14 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return Vector elenco utenti non attivi.
 	 */
 	public Vector ExListaUtentiNonAttiviFromView(int aPage, String aDistretto) throws F3BException {
+
 		return listaUtentiNonAttiviFromView(aPage, null, aDistretto);
 	}
 
 	/**
 	 * Metodo che ritorna la lista degli utenti non attivi filtrati per ufficio
 	 * <p>
-	 * 
+	 *
 	 * @param aPage
 	 *            int numero di pagina
 	 * @param aUfficio
@@ -193,35 +197,16 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return Vector elenco utenti non attivi
 	 */
 	public Vector ExListaUtentiNonAttiviFromViewPerUfficio(int aPage, String aUfficio) throws F3BException {
+
 		return listaUtentiNonAttiviFromView(aPage, aUfficio, null);
 	}
-
-	/*
-	 * STUB : Da Eliminare public Vector ExListaUtentiAttiviFromView (int aPage) throws F3BException {
-	 * Connection lConn = null; Vector lUtenti = new Vector(); UtenteSqlDAO lUteDao = null;
-	 * 
-	 * try { lConn = getDBConnection(); lUteDao = new UtenteSqlDAO(lConn);
-	 * lUteDao.ListaUtentiAttiviFromView(aPage); lUtenti = new Vector(); lUteDao.start(); UtenteViewModel lUt;
-	 * 
-	 * while (lUteDao.next()) { lUt=lUteDao.getModelFromView(); lUtenti.add(lUt); }
-	 * 
-	 * lUteDao.stop();
-	 * 
-	 * if ( lUtenti.size() == 0 ) { throw new
-	 * F3BException(F3BException.USER_MESSAGE,"Nessun Elemento trovato"); } } catch (DAOException daoEx) {
-	 * throw new
-	 * F3BException("UtenteController.ExListaUtentiAttiviFromView: Non posso leggere : " + daoEx); } catch
-	 * (SQLException sqe) { throw new
-	 * F3BException("UtenteController.ExListaUtentiAttiviFromView: Non posso leggere  : " + sqe); } finally {
-	 * cleanup(lUteDao); cleanup(lConn); } return lUtenti; }
-	 */
 
 	/**
 	 * Metodo visibile all'interno del controller, richiede l'elenco degli utenti Attivi, filtrati per
 	 * ufficio. Se il parametro ufficio è pari a null, ritorna l'elenco degli utenti attivi per tutti gli
 	 * uffici.
 	 * <p>
-	 * 
+	 *
 	 * @param aPage
 	 *            int numero di pagina
 	 * @param aUfficio
@@ -232,6 +217,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 */
 	protected Vector listaUtentiAttiviFromView(int aPage, String aUfficio, String aDistretto)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lUtenti = new Vector();
 		UtenteSqlDAO lUteDao = null;
@@ -255,8 +241,8 @@ public class UtenteController extends SiapController implements IUtente {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("UtenteController.ExListaUtentiAttiviFromView: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UtenteController.ExListaUtentiAttiviFromView: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUteDao);
 			cleanup(lConn);
@@ -269,7 +255,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * ufficio. Se il parametro ufficio è pari a null, ritorna l'elenco degli utenti Non Attivi per tutti gli
 	 * uffici.
 	 * <p>
-	 * 
+	 *
 	 * @param aPage
 	 *            int numero di pagina
 	 * @param aUfficio
@@ -280,6 +266,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 */
 	protected Vector listaUtentiNonAttiviFromView(int aPage, String aUfficio, String aDistretto)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lUtenti = new Vector();
 		UtenteSqlDAO lUteDao = null;
@@ -303,8 +290,8 @@ public class UtenteController extends SiapController implements IUtente {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("UtenteController.ExListaUtentiNonAttiviFromView: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UtenteController.ExListaUtentiNonAttiviFromView: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUteDao);
 			cleanup(lConn);
@@ -312,27 +299,8 @@ public class UtenteController extends SiapController implements IUtente {
 		return lUtenti;
 	}
 
-	/*
-	 * STUB : Da Eliminare public Vector ExListaUtentiNonAttiviFromView (int aPage) throws F3BException {
-	 * Connection lConn = null; Vector lUtenti = new Vector(); UtenteSqlDAO lUteDao = null;
-	 * 
-	 * try { lConn = getDBConnection(); lUteDao = new UtenteSqlDAO(lConn);
-	 * lUteDao.ListaUtentiNonAttiviFromView(aPage); lUtenti = new Vector(); lUteDao.start(); UtenteViewModel
-	 * lUt;
-	 * 
-	 * while (lUteDao.next()) { lUt=lUteDao.getModelFromView(); lUtenti.add(lUt); }
-	 * 
-	 * lUteDao.stop();
-	 * 
-	 * if ( lUtenti.size() == 0 ) { throw new
-	 * F3BException(F3BException.USER_MESSAGE,"Nessun Elemento trovato"); } } catch (DAOException daoEx) {
-	 * throw new
-	 * F3BException("UtenteController.ExListaUtentiNonAttiviFromView: Non posso leggere : " + daoEx); } catch
-	 * (SQLException sqe) { throw new
-	 * F3BException("UtenteController.ExListaUtentiNonAttiviFromView: Non posso leggere  : " + sqe); } finally
-	 * { cleanup(lUteDao); cleanup(lConn); } return lUtenti; }
-	 */
 	public Vector ExListaUtentiNonAttivi(int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUtenti = new Vector();
 		UtenteSqlDAO lUteDao = null;
@@ -367,6 +335,7 @@ public class UtenteController extends SiapController implements IUtente {
 	}
 
 	public UtenteModel ExRicercaUtenteByKey(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		UtenteSqlDAO lUteDao = null;
 		UtenteModel lUteMod;
@@ -396,6 +365,7 @@ public class UtenteController extends SiapController implements IUtente {
 	}
 
 	public UtenteModel ExModificaUtente(UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		UtenteDAO lUteDao = null;
 		UtenteModel lUteMod = new UtenteModel(aUtente);
@@ -416,7 +386,8 @@ public class UtenteController extends SiapController implements IUtente {
 			lUteSDao.updateProfiloByCodUtente(aUtente.getUserId(), aUtente.getUserProfile().getProfileId());
 			lUteSDao.start();
 			lUteSDao.stop();
-			lUteSDao.updateUfficioByCodUtente(aUtente.getUserId(), aUtente.getUfficioUtente().getCodUfficio());
+			lUteSDao.updateUfficioByCodUtente(aUtente.getUserId(),
+					aUtente.getUfficioUtente().getCodUfficio());
 			lUteSDao.start();
 			lUteSDao.stop();
 			commit(lConn);
@@ -425,8 +396,8 @@ public class UtenteController extends SiapController implements IUtente {
 			throw new F3BException("UtenteController.ExModifica: Non posso inserire: " + daoex);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("UtenteController.ExModificaUtente: Non posso inserire il soggetti : "
-					+ ex);
+			throw new F3BException(
+					"UtenteController.ExModificaUtente: Non posso inserire il soggetti : " + ex);
 		} finally {
 			cleanup(lUteDao);
 			cleanup(lUteSDao); // sca
@@ -455,8 +426,8 @@ public class UtenteController extends SiapController implements IUtente {
 			throw new F3BException("UtenteController.ExModifica: Non posso inserire: " + daoex);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("UtenteController.ExModificaUtente: Non posso inserire il soggetti : "
-					+ ex);
+			throw new F3BException(
+					"UtenteController.ExModificaUtente: Non posso inserire il soggetti : " + ex);
 		} finally {
 			cleanup(lUteDao);
 			cleanup(lUteSDao);// sca
@@ -465,10 +436,8 @@ public class UtenteController extends SiapController implements IUtente {
 		}
 	}
 
-	/**
-   * 
-   */
 	public void ExCancellaUtente(UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		UtenteDAO lUteDao = null;
 		UtenteSqlDAO lUteSDao = null;
@@ -495,11 +464,9 @@ public class UtenteController extends SiapController implements IUtente {
 		}
 	}
 
-	/**
-   * 
-   */
 	public Vector ExRicercaUtentiPerUfficio(String codUfficio, String aCodDistretto, String cognome,
 			String nome, String codUt) throws F3BException {
+
 		Vector lUtenti = null;
 		UfficioUtenteDao lUffDao = null;
 		Connection lConn = null;
@@ -529,6 +496,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 */
 	public Vector ExRicercaUtentePerUfficioCognomeNome(String codUfficio, String cognome, String nome)
 			throws F3BException {
+
 		Vector lUtenti = null;
 		UfficioUtenteDao lUffDao = null;
 		Connection lConn = null;
@@ -557,36 +525,23 @@ public class UtenteController extends SiapController implements IUtente {
 		return lUtenti;
 	}
 
-	/*
-	 * STUB : Da Eliminare public BigDecimal ExGetCountUtentiAttivi() throws F3BException { BigDecimal lCount
-	 * = new BigDecimal(0); Connection lConn = null;
-	 * 
-	 * UtenteSqlDAO lUtenteSqlDAO = null; try { lConn = getDBConnection(); lUtenteSqlDAO = new
-	 * UtenteSqlDAO(lConn); lUtenteSqlDAO.getCountUtentiAttivi(); lUtenteSqlDAO.start(); lUtenteSqlDAO.next();
-	 * lCount = lUtenteSqlDAO.getBigDecimal("HowManyRecords"); lUtenteSqlDAO.stop(); } catch (DAOException
-	 * daoEx) { throw new
-	 * F3BException("UtenteController.ExRicercaUtente: Non posso leggere : " + daoEx); } catch (SQLException
-	 * sqe) { throw new
-	 * F3BException("UtenteController.ExRicercaUtente: Non posso leggere  : " + sqe); } finally {
-	 * cleanup(lUtenteSqlDAO); cleanup(lConn); } return lCount; }
-	 */
-
 	/**
 	 * Metodo che esegue il conteggio degli utenti Attivi.
 	 * <p>
-	 * 
+	 *
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 * @return BigDecimal ritorna il totale degli utenti Attivi
 	 */
 	public BigDecimal ExGetCountUtentiAttivi(String aDistretto) throws F3BException {
+
 		return getCountUtentiAttivi(null, aDistretto);
 	}
 
 	/**
 	 * Metodo che esegue il conteggio deli utenti attivi, opportunamente filtrati per il codice ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aUfficio
 	 *            String Codice ufficio
 	 * @throws F3BException
@@ -594,41 +549,27 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return BigDecimal totale degli utemnti attivi.
 	 */
 	public BigDecimal ExGetCountUtentiAttiviPerUfficio(String aUfficio) throws F3BException {
+
 		return getCountUtentiAttivi(aUfficio, null);
 	}
-
-	/*
-	 * STUB : Da Eliminare public BigDecimal ExGetCountUtentiNonAttivi() throws F3BException { BigDecimal
-	 * lCount = new BigDecimal(0); Connection lConn = null;
-	 * 
-	 * UtenteSqlDAO lUtenteSqlDAO = null; try { lConn = getDBConnection(); lUtenteSqlDAO = new
-	 * UtenteSqlDAO(lConn); lUtenteSqlDAO.getCountUtentiNonAttivi(); lUtenteSqlDAO.start();
-	 * lUtenteSqlDAO.next(); lCount = lUtenteSqlDAO.getBigDecimal("HowManyRecords"); lUtenteSqlDAO.stop(); }
-	 * catch (DAOException daoEx) { throw new
-	 * F3BException("UtenteController.ExRicercaUtente: Non posso leggere : " + daoEx); } catch (SQLException
-	 * sqe) { throw new
-	 * F3BException("UtenteController.ExRicercaUtente: Non posso leggere  : " + sqe); } finally {
-	 * cleanup(lUtenteSqlDAO); cleanup(lConn); }
-	 * 
-	 * return lCount; }
-	 */
 
 	/**
 	 * Metodo che ritorna il numero totale degli utenti non attivi, per tutti gli uffici.
 	 * <p>
-	 * 
+	 *
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione
 	 * @return BigDecimal ritorna il numero degli utenti non attivi
 	 */
 	public BigDecimal ExGetCountUtentiNonAttivi(String aDistretto) throws F3BException {
+
 		return getCountUtentiNonAttivi(null, aDistretto);
 	}
 
 	/**
 	 * Metodo che ritorna il numero totale degli utenti non attivi, opportunamente filtrati per Ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aUfficio
 	 *            String codice ufficio per il quale filtrare la lista degli utenti Attivi.
 	 * @throws F3BException
@@ -636,6 +577,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return BigDecimal ritorna il numero degli utenti non attivi.
 	 */
 	public BigDecimal ExGetCountUtentiNonAttiviPerUfficio(String aUfficio) throws F3BException {
+
 		return getCountUtentiNonAttivi(aUfficio, null);
 	}
 
@@ -644,7 +586,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * per un ufficio. Se il parametro ufficio è pari a null, ritorna il numero di utenti Non Attivi per tutti
 	 * gli uffici. taòle
 	 * <p>
-	 * 
+	 *
 	 * @param aUfficio
 	 *            String codice uffcio
 	 * @throws F3BException
@@ -652,6 +594,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return BigDecimal ritorna il numero degli utenti non attivi.
 	 */
 	protected BigDecimal getCountUtentiNonAttivi(String aUfficio, String aDistretto) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -679,8 +622,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * Metodo visibile interno al controller, che esegue l'interrogazione del numero degli utenti Attivi, per
 	 * un ufficio. Se il parametro ufficio è pari a null, ritorna il numero di utentu Attivi per tutti gli
 	 * uffici.
-	 * <p>
-	 * 
+	 *
 	 * @param aUfficio
 	 *            String codice uffcio
 	 * @throws F3BException
@@ -688,6 +630,7 @@ public class UtenteController extends SiapController implements IUtente {
 	 * @return BigDecimal ritorna il numero degli utenti non attivi.
 	 */
 	protected BigDecimal getCountUtentiAttivi(String aUfficio, String aDistretto) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -712,7 +655,7 @@ public class UtenteController extends SiapController implements IUtente {
 	/**
 	 * Metodo che restituisce la lista degli utenti Attivi per ufficio
 	 * <p>
-	 * 
+	 *
 	 * @param aUfficio
 	 *            String codice uffcio
 	 * @throws F3BException
@@ -736,8 +679,8 @@ public class UtenteController extends SiapController implements IUtente {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("UtenteController.ExRicercaUtentiAttiviPerUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"UtenteController.ExRicercaUtentiAttiviPerUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lUffDao);
 			cleanup(lConn);
@@ -746,8 +689,10 @@ public class UtenteController extends SiapController implements IUtente {
 	}
 
 	public UtenteModel ExModificaUtenteDatiAccessoNSC(UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		UtenteDAO lUteDao = null;
+
 		String pwdDecod = "";
 		if (aUtente.getPwdNSC() != null && !aUtente.getPwdNSC().equals("")) {
 			pwdDecod = Utils.pwdNSCEncode(aUtente.getPwdNSC());
@@ -781,6 +726,7 @@ public class UtenteController extends SiapController implements IUtente {
 	}
 
 	public UtenteModel ExResetDatiAccessoNSC(UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		UtenteDAO lUteDao = null;
 		aUtente.setUseridNSC(null);
@@ -797,12 +743,12 @@ public class UtenteController extends SiapController implements IUtente {
 			commit(lConn);
 		} catch (DAOException daoex) {
 			rollback(lConn);
-			throw new F3BException("UtenteController.ExResetDatiAccessoNSC: Non posso modificare utente: "
-					+ daoex);
+			throw new F3BException(
+					"UtenteController.ExResetDatiAccessoNSC: Non posso modificare utente: " + daoex);
 		} catch (Exception ex) {
 			rollback(lConn);
-			throw new F3BException("UtenteController.ExResetDatiAccessoNSC: Non posso modificare utente: "
-					+ ex);
+			throw new F3BException(
+					"UtenteController.ExResetDatiAccessoNSC: Non posso modificare utente: " + ex);
 		} finally {
 			cleanup(lUteDao);
 			cleanup(lConn);

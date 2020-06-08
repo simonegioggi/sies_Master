@@ -64,13 +64,20 @@ public class AvvocaturaSiusController extends GenericController implements IAvvo
 	 * @param codFiscaleAvvocato
 	 * @param annnoProcedimento
 	 * @param numeroProcedimento
+<<<<<<< HEAD
 	 * @param codTipoUfficio
+=======
+>>>>>>> MEV_6
 	 * @return DATIPROCEDIMENTOOUTPUT
 	 * @throws F3BException
 	 */
 	public DATIPROCEDIMENTOOUTPUT callRicercaFascicoloSius(String codDistretto, String codTipoUfficio,
+<<<<<<< HEAD
 			String codFiscaleAvvocato, int annoProcedimento, int numeroProcedimento, String codUfficio)
 			throws F3BException {// MEV_20_Avvocatura_SIES_Sede aggiunto parametro codUfficio
+=======
+			String codFiscaleAvvocato, int annnoProcedimento, int numeroProcedimento) throws F3BException {
+>>>>>>> MEV_6
 
 		// info per il log
 		avvocaturaLogger.info(
@@ -118,6 +125,10 @@ public class AvvocaturaSiusController extends GenericController implements IAvvo
 			stmt.registerOutParameter(11, java.sql.Types.STRUCT, T_ATTO);
 			stmt.registerOutParameter(12, java.sql.Types.ARRAY, T_OGGETTO);
 			stmt.registerOutParameter(13, java.sql.Types.ARRAY, T_OGGETTO_STRALCIATO);
+<<<<<<< HEAD
+=======
+
+>>>>>>> MEV_6
 			stmt.registerOutParameter(14, java.sql.Types.VARCHAR); // Error Code
 			stmt.registerOutParameter(15, java.sql.Types.VARCHAR); // Error Descr
 
@@ -136,10 +147,16 @@ public class AvvocaturaSiusController extends GenericController implements IAvvo
 			StructDescriptor itemDescriptor = StructDescriptor.createDescriptor("INP_AVV", oracleConnection);
 
 			// parametri di passaggio
+<<<<<<< HEAD
 			Object[] itemAtributes = new Object[] { new Integer(annoProcedimento),
 					new Integer(numeroProcedimento), codTipoUfficio, codDistretto, codFiscaleAvvocato,
 					// MEV_20_Avvocatura_SIES_Sede aggiunto parametro codUfficio
 					codUfficio };
+=======
+			Object[] itemAtributes = new Object[] { new Integer(annnoProcedimento),
+					new Integer(numeroProcedimento), new String(codTipoUfficio), new String(codDistretto),
+					new String(codFiscaleAvvocato) };
+>>>>>>> MEV_6
 
 			// definisco la struttura dati di input
 			STRUCT itemObject1 = new STRUCT(itemDescriptor, oracleConnection, itemAtributes);

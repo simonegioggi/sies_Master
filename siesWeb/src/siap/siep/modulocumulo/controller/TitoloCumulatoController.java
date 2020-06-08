@@ -1,11 +1,5 @@
 package siap.siep.modulocumulo.controller;
 
-/**
-* <p>Title: TitoloCumulatoController</p>
-* <p>Description: Classe Controller per TitoloCumulato</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -75,6 +69,16 @@ import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 
+/**
+ * <p>
+ * Title: TitoloCumulatoController
+ * </p>
+ * <p>
+ * Description: Classe Controller per TitoloCumulato
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TitoloCumulatoController extends SiapController implements ITitoloCumulato {
 
@@ -129,6 +133,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaTitoloCumulato(TitoloCumulatoModel aTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTitoloCumulati = new Vector();
 		TitoloCumulatoDAO lTitDao = null;
@@ -159,12 +164,13 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @para m aIdTitoloCumulato valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public TitoloCumulatoModel ExRicercaTitoloCumulatoById(BigDecimal aIdTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoModel lTitoloCumulatoMod = new TitoloCumulatoModel();
 		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
@@ -191,7 +197,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	/**
 	 * Ricerca il TITOLO_CUMULATO in istruttoria by idSentenzaOrigine
-	 * 
+	 *
 	 * @param aIdIstruttoria
 	 * @param aIdTitoloOrigine
 	 *            *
@@ -200,6 +206,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 */
 	public TitoloCumulatoModel ExRicercaTitoloCumulatoByIstrIdOrig(BigDecimal aIdIstruttoria,
 			BigDecimal aIdTitoloOrigine) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoModel lTitoloCumulatoMod = new TitoloCumulatoModel();
 		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
@@ -233,6 +240,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 ****************************************************************************/
 	public Vector<TitoloCumulatoModel> ExRicercaTitoloCumulatoPerRevocaBeneficio(BigDecimal aIdTitoloCumulato,
 			BigDecimal aIdIstru, String aTipoBen) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<TitoloCumulatoModel> lTitoloCumulati = new Vector<>();
@@ -281,6 +289,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaTitoloCumulato(TitoloCumulatoModel aTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoDAO lTitDao = null;
 
@@ -303,10 +312,8 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public void ExIncludiEscludiTitoloDaIstruttoria(TitoloCumulatoModel aTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoDAO lTitDao = null;
 
@@ -337,11 +344,12 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aTitoloCumulato
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaTitoloCumulato(TitoloCumulatoModel aTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoDAO lTitDao = null;
 
@@ -370,6 +378,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 */
 	public void ExCancellaTitoloDaIstruttoriaById(BigDecimal aIdTitoloCumulato, String aTipoIscrizione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Inizio Cancellazione Titolo aIdTitoloCumulato = " + aIdTitoloCumulato);
@@ -379,42 +388,32 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 		TitoloCumulatoDAO lTitDao = null;
 		ProcedimentoCumulatoDAO lProcCumDao = null;
 		SoggettoCumulatoDAO lSoggDao = null;
-
 		MisuraSicurezzaCumuloDAO lMisSicDao = null;
 		BeneficioCumuloDAO lBeneficioDAO = null;
 		BeneficioCumuloSqlDAO lBeneficioSqlDAO = null;
 		TipologiaOrarioDAO lTipologiaOrarioDAO = null;
-
 		ReatoCumuloSqlDAO lReaCumSqlDao = null;
 		ReatoCumuloDAO lReaCumDao = null;
 		CircostanzaCumuloDAO lCirCumDao = null;
 		CircostanzaCumuloSqlDAO lCirCumSqlDao = null;
-
 		PenaAccessoriaCumuloDAO lPenAccDao = null;
-
 		PenaComplessivaCumuloDAO lPenCompCumDao = null;
 		PenaComplessivaCumuloSqlDAO lPenCompCumSqlDao = null;
-
 		SanzioneSostitutivaCumuloDAO lSanSostDao = null;
 		ContinuazioneCumuloDAO lContCumDao = null;
 		ContinuazioneCumuloSqlDAO lContCumSqlDao = null;
-
 		MisuraCautelareCumuloDAO lMisuraCautelareDao = null;
-
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecSqlDao = null;
 		StatoEsecTitoloCumulatoDAO lStatoEsecDao = null;
 		ComputiCumuloDAO lComputiDao = null;
 		NotificaCumuloDAO lNotificaDao = null;
-
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
 		EventoDAO lEveDao = null;
 		AnnotazioneEsitoTrasmissioneDAO lAnnEsiDao = null;
 		AnnotazioneEsitoTrasmissioneSqlDAO lAnnEsiSqlDao = null;
-
 		LibAnticipataCumuloDAO lLibAntDao = null;
 		LibAnticipataCumuloSqlDAO lLibAntSqlDao = null;
 		PeriodoLibAntCumuloDAO lPeriodoLibAntDao = null;
-
 		PosizioneGiuridicaCumuloDAO lPosizGiurDao = null;
 
 		try {
@@ -797,34 +796,34 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 			cleanup(lTitDao);
 			cleanup(lSoggDao);
 			cleanup(lProcCumDao);
-
 			cleanup(lMisSicDao);
 			cleanup(lMisuraCautelareDao);
 			cleanup(lBeneficioDAO);
 			cleanup(lBeneficioSqlDAO);
 			cleanup(lTipologiaOrarioDAO);
-
 			cleanup(lCirCumDao);
 			cleanup(lCirCumSqlDao);
 			cleanup(lReaCumDao);
 			cleanup(lReaCumSqlDao);
-
 			cleanup(lPenAccDao);
-
 			cleanup(lPenCompCumSqlDao);
 			cleanup(lPenCompCumDao);
 			cleanup(lSanSostDao);
 			cleanup(lContCumDao);
 			cleanup(lContCumSqlDao);
-
 			cleanup(lComputiDao);
 			cleanup(lNotificaDao);
 			cleanup(lStatoEsecDao);
-
 			cleanup(lProcCumSqlDao);
 			cleanup(lEveDao);
 			cleanup(lAnnEsiSqlDao);
 			cleanup(lAnnEsiDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lStatoEsecSqlDao);
+			cleanup(lLibAntDao);
+			cleanup(lLibAntSqlDao);
+			cleanup(lPeriodoLibAntDao);
+			cleanup(lPosizGiurDao);
 
 			cleanup(lConn);
 		}
@@ -833,12 +832,13 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aTitoloCumulato
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountTitoloCumulato(TitoloCumulatoModel aTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
@@ -878,6 +878,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 ****************************************************************************/
 	public Vector ExRicercaTitoloCumulatoPaged(TitoloCumulatoModel aTitoloCumulato, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lTitoloCumulati = new Vector();
 		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
@@ -900,11 +901,9 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 		return lTitoloCumulati;
 	}
 
-	/**
-	 * 
-	 */
 	public ProcedimentoCumulatoModel ExRicercaProcedimentoCumulatoByIdTitolo(BigDecimal aIdTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		ProcedimentoCumulatoModel lProcedimentoCumulatoMod = new ProcedimentoCumulatoModel();
 		ProcedimentoCumulatoSqlDAO lProcedimentoCumulatoSqlDao = null;
@@ -931,13 +930,13 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	}
 
 	/**
-	 * 
 	 * @param aIdTitoloCumulato
 	 * @return
 	 * @throws F3BException
 	 */
 	public SoggettoCumulatoModel ExRicercaSoggettoCumulatoByIdTitolo(BigDecimal aIdTitoloCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		SoggettoCumulatoModel lSoggettoCumulatoMod = new SoggettoCumulatoModel();
@@ -963,11 +962,9 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 		return lSoggettoCumulatoMod;
 	}
 
-	/**
-	 * 
-	 */
 	public ProcedimentoCumulatoModel ExInserisciProcedimentoCumulato(
 			ProcedimentoCumulatoModel aProcedimentoCumulato) throws F3BException {
+
 		Connection lConn = null;
 		ProcedimentoCumulatoDAO lProDao = null;
 		ProcedimentoCumulatoModel lProMod = null;
@@ -997,13 +994,14 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	/**
 	 * Ricerca in chiave del ProcedimentoCumulato
-	 * 
+	 *
 	 * @param aIdProcedimentoCumulato
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProcedimentoCumulatoModel ExRicercaProcedimentoCumulatoById(BigDecimal aIdProcedimentoCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		ProcedimentoCumulatoModel lProcedimentoCumulatoMod = new ProcedimentoCumulatoModel();
 		ProcedimentoCumulatoSqlDAO lProcedimentoCumulatoSqlDao = null;
@@ -1031,13 +1029,14 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	/**
 	 * Ricerca del ProcedimentoCumulato per Fascicolo siep di origine
-	 * 
+	 *
 	 * @param aIdFascicoloSiep
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProcedimentoCumulatoModel ExRicercaProcedimentoCumulatoByDatiFascicoloSiep(
 			ProcedimentoCumulatoModel aProcedimentoCumulato, BigDecimal aIdIstruttoria) throws F3BException {
+
 		Connection lConn = null;
 		ProcedimentoCumulatoModel lProcedimentoCumulatoMod = new ProcedimentoCumulatoModel();
 		ProcedimentoCumulatoSqlDAO lProcedimentoCumulatoSqlDao = null;
@@ -1064,12 +1063,12 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	}
 
 	/**
-	 * 
 	 * @param aProcedimentoCumulato
 	 * @throws F3BException
 	 */
 	public void ExModificaProcedimentoCumulato(ProcedimentoCumulatoModel aProcedimentoCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		ProcedimentoCumulatoDAO lProDao = null;
 
@@ -1095,6 +1094,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	public void ExCancellaProcedimentoCumulato(ProcedimentoCumulatoModel aProcedimentoCumulato)
 			throws F3BException {
+
 		Connection lConn = null;
 		ProcedimentoCumulatoDAO lProDao = null;
 
@@ -1119,7 +1119,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	/**
 	 * Metodo che recupera lo stato di esecuzione di un titolo in istruttoria dal fascicolo Originario
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aPage
 	 *            se 0 la ricerca va fatto non paginata
@@ -1128,6 +1128,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 */
 	public Vector<MisuraAlternativaAggregatoModel> ExRicercaEventiPerStatoEsecuzioneByFascicoloSiepPaged(
 			BigDecimal aIdFascicolo, int aPage) throws F3BException {
+
 		Connection lConn = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1135,18 +1136,13 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 		siesLogger.debug("Recupero Stato esecuzione per fascicolo con id = " + aIdFascicolo);
 
 		EventoSimeoneSqlDAO lEveSqlDao = null;
-
 		TenoreSqlDAO lTenSqlDao = null;
-
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 
 		MisuraAlternativaModel lMisMod;
 		MisuraAlternativaAggregatoModel lMisAggregato = null;
-
-		// DepositoOrdinanzaPcModel lDepOrdPCMod = null;
-		// DepositoDecretoModel lDepDecMod = null;
 
 		Vector<MisuraAlternativaAggregatoModel> lAggregato = new Vector<>();
 		Vector<TenoreModel> lTenori = null;
@@ -1241,11 +1237,8 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 			siesLogger.error("Exception: " + ex, ex);
 			throw new F3BException(
 					"TitoloCumulatoController.ExRicercaEventiPerStatoEsecuzioneByFascicoloSiepPaged: " + ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveSqlDao);
-
 			cleanup(lDepOrdSqlDao);
 			cleanup(lDepDecSqlDao);
 			cleanup(lTenSqlDao);
@@ -1264,18 +1257,26 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequence. Il valore della
 	 * Primary_Key è già preimpostato; metodi usati nella funzione di presa in carico, per scaricare Tutti i
 	 * dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param aTitCumModel
 	 * @param lConn
 	 * @return
 	 * @since - MEV 42 Cumulo Step2
 	 */
-	public String ExInserisciTitoliCumulatiWithoutSequence(TitoloCumulatoModel aTitCumModel, Connection lConn)
+	public String ExInserisciTitoliCumulatiWithoutSequence(TitoloCumulatoModel aTitCumModel, Connection aConn)
 			throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		TitoloCumulatoDAO lTitoCumDao = null;
 
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
+
 		try {
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBTransaction();
 			lTitoCumDao = new TitoloCumulatoDAO(lConn);
 
 			if (aTitCumModel != null && aTitCumModel.getIdTitoloCumulato() != null) {
@@ -1296,18 +1297,28 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 			}
 		} finally {
 			cleanup(lTitoCumDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aConn == null)
+				cleanup(lConn);
 		}
 
 		return EsitodiRitorno;
-
 	} // CHIUDE ExInserisciTitoliCumulatiWithoutSequence()
 
 	public String ExInserisciProcedimentoCumulatoWithoutSequence(
-			ProcedimentoCumulatoModel aProcedimentoCumulato, Connection lConn) throws F3BException {
+			ProcedimentoCumulatoModel aProcedimentoCumulato, Connection aConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		ProcedimentoCumulatoDAO lProcCumDao = null;
 
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
+
 		try {
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBTransaction();
 			lProcCumDao = new ProcedimentoCumulatoDAO(lConn);
 
 			if (aProcedimentoCumulato != null && aProcedimentoCumulato.getIdProcedimentoCumulato() != null) {
@@ -1330,14 +1341,17 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 			}
 		} finally {
 			cleanup(lProcCumDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			if (aConn == null)
+				cleanup(lConn);
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciProcedimentoCumulatoWithoutSequence()
 
 	public TitoloCumulatoModel ExRicercaTitoloCumulatoPeneAccessorieCum(BigDecimal aIdTitoloCumulato,
 			Vector<String> listaIdPenaAcc) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoModel lTitoloCumulatoMod = new TitoloCumulatoModel();
 		Vector<PenaAccessoriaCumuloModel> VecPA = new Vector<>();
@@ -1377,12 +1391,13 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 							+ daoEx);
 		} finally {
 			cleanup(lTitoloCumulatoSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPACumSqlDao);
 
 			cleanup(lConn);
 		}
 
 		return lTitoloCumulatoMod;
-
 	} // chiude ExRicercaTitoloCumulatoPeneAccessorieCum()
 
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliCumulatiPeneAccessorieCum(String[] lIdTitoliSelezionati)
@@ -1469,6 +1484,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 
 	public TitoloCumulatoModel ExRicercaTitoloCumulatoStatoEsecTitoloCum(BigDecimal aIdTitoloCumulato,
 			BigDecimal aIdStatoEsecTCum) throws F3BException {
+
 		Connection lConn = null;
 		TitoloCumulatoModel lTitoloCumulatoMod = new TitoloCumulatoModel();
 		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
@@ -1501,6 +1517,8 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 							+ daoEx);
 		} finally {
 			cleanup(lTitoloCumulatoSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lStatoEseSqlDao);
 
 			cleanup(lConn);
 		}

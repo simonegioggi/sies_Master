@@ -205,6 +205,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			String aCodMagistrato, BigDecimal aIdEsperto, XModel aStampa, String aIdDocumento,
 			String aOrderBy, UtenteModel aUtenteModel, String aStatoProcedimento, String aTipoProc,
 			String aCodUfficioConnesso) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.info("inizio");
 
@@ -233,7 +234,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Classe Public per il prelievo dati del Fascicolo al fine di creare un report.
-	 * <p>
 	 *
 	 * @param aIdFasSige
 	 *            l'id del Fascicolo SIGE.
@@ -247,8 +247,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	public TreeModel ExPrelevaDatiStampa(BigDecimal aIdFasSige, int[] aTipoDati, int aTipoStampa,
 			String aCodiceUfficio, BigDecimal idEvento) throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeDati = null;
+
 		try {
 			lConn = getDBConnection();
 			lTreeDati = new TreeModel(CreateRoot(aCodiceUfficio, lConn));
@@ -259,9 +261,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeDati;
@@ -269,6 +269,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	public ByteArrayOutputStream ExPreStampaPareri(ParereModel aParere, Vector aListaRichieste,
 			UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -312,7 +313,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 				TreeModel lTreeParere = new TreeModel(lParMod);
 				lTreeRoot.add(lTreeParere);
 			}
-
 		} catch (Exception lEx) {
 			throw new SIGEException("StampaController.ExPreStampaPareri : " + lEx);
 		} finally {
@@ -320,8 +320,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		}
 
 		// generazione del documento con nome template fisso
-		// ReportGenerator lReport = new ReportGenerator();
-
 		ReportGenerator lReport = new ReportGenerator(aUtente.getUfficioUtente().getCodUfficio());
 		String lNomeTemplate = TemplateManager.getInstance().getTemplateName("SIGE_RP_005");
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -335,7 +333,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Classe Public per il prelievo dati SIGE a partire dall' IdEvento, al fine di creare un report.
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            Id dell'Evento. ( Nel caso di Impugnazione IdEvento è l'id dell'impugnazione )
@@ -351,8 +348,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	public TreeModel ExPrelevaDatiStampa(BigDecimal aIdEvento, BigDecimal aIdFasSige, int[] aTipoDati,
 			int aTipoStampa, String aCodiceUfficio) throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeDati = null;
+
 		try {
 			lConn = getDBConnection();
 			lTreeDati = new TreeModel(CreateRoot(aCodiceUfficio, lConn));
@@ -363,9 +362,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeDati;
@@ -374,8 +371,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	/**
 	 * Classe Public per il prelievo dati SIGE a partire dall' IdEvento per un decreto di unificazione, al
 	 * fine di creare un report.
-	 *
-	 * <p>
 	 *
 	 * @param aIdEvento
 	 *            Id dell'Evento.
@@ -392,8 +387,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	public TreeModel ExPrelevaDatiStampa(BigDecimal aIdEvento, BigDecimal aIdFasSige,
 			BigDecimal aIdFasSigeUnificante, int[] aTipoDati, int aTipoStampa, String aCodiceUfficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		TreeModel lTreeDati = null;
+
 		try {
 			lConn = getDBConnection();
 			lTreeDati = new TreeModel(CreateRoot(aCodiceUfficio, lConn));
@@ -404,9 +401,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + e);
 			throw e;
-		}
-
-		finally {
+		} finally {
 			cleanup(lConn);
 		}
 		return lTreeDati;
@@ -414,7 +409,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati del Soggetto.
-	 * <p>
 	 *
 	 * @param aIdSoggetto
 	 *            l'id del soggetto, prelevato dal fascicolo SIGE.
@@ -426,6 +420,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiSoggetto(BigDecimal aIdSoggetto, BigDecimal lIdFasSige, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeSoggetto = null;
 		TreeModel lTreeResidenza = null;
 		TreeModel lTreeDomicilio = null;
@@ -465,7 +460,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati Residenza e Domicilio del Soggetto.
-	 * <p>
 	 *
 	 * @param aIdFasSige
 	 *            l'id del fascicolo Sige.
@@ -477,8 +471,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiResidenzaDomicilio(BigDecimal aIdFasSige, char lTipo, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeResidenza = null; // new TreeModel();
 		ResidenzaSqlDAO lResSqlDao = null;
+
 		try {
 			lResSqlDao = new ResidenzaSqlDAO(aConn);
 			ResidenzaModel lResMod = new ResidenzaModel();
@@ -512,7 +508,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati del Magistrato Assegnatario.
-	 * <p>
 	 *
 	 * @param aIdFasSige
 	 *            l'id del Fascicolo SIGE.
@@ -524,6 +519,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiMagistratoAssegnatario(BigDecimal aIdFasSige, String codUffUtenteConnesso,
 			Connection aConn) throws F3BException {
+
 		TreeModel lTreeMagistrato = null; // new TreeModel();
 
 		MagistratoAssegnatarioSqlDAO lMagAssSqlDao = null;
@@ -579,6 +575,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 * @throws F3BException
 	 */
 	private XModel CreateRoot(String aCodiceUfficio, Connection aConn) throws F3BException {
+
 		UfficioSqlDAO lUDao = null;
 		UfficioModel lUffMod = null;
 		UfficioModel lUffCAP = null;
@@ -612,7 +609,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			}
 			if (lUffCAP.getDescrComune() != null)
 				lXMod.setUfficioCAP(lUffCAP.getDescrComune().toUpperCase());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -632,106 +628,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		return lXMod;
 	}
 
-	/*
-	 * private TemplateModel getTemplateByCodMotivo( String aCodMotivo, Connection aConn) throws F3BException
-	 * { TemplateSqlDAO lTemplateSqlDao = null; TemplateModel lTemplateMod = null;
-	 *
-	 * try { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("CodMotivo : " + aCodMotivo ); lTemplateSqlDao = new
-	 * TemplateSqlDAO(aConn); lTemplateSqlDao.ricercaTemplateByCodMotivo( aCodMotivo ); lTemplateMod =
-	 * (TemplateModel)lTemplateSqlDao.getModelByKey();
-	 *
-	 * if( lTemplateMod == null ) throw new F3BException(F3BException.USER_MESSAGE,
-	 * "Template non trovato per il codice motivo richiesto : " + aCodMotivo );
-	 *
-	 * } catch( DAOException daoEx ) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-	 * siesLogger al posto di LogF3B.getLogger() siesLogger.debug("DAOException: " + daoEx); throw new
-	 * F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : " + daoEx); } catch
-	 * (F3BException fe) { throw fe; } catch( Exception lEx ) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
-	 * variabile di istanza siesLogger al posto di LogF3B.getLogger() siesLogger.debug("Exception: " + lEx );
-	 * throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : " + lEx); }
-	 * finally { cleanup(lTemplateSqlDao); } return lTemplateMod; }
-	 */
-	/*
-	 * private TemplateModel getTemplateByCodMotivoFlagTemplate( String aCodMotivo, String aFlagTemplate,
-	 * Connection aConn) throws F3BException { TemplateSqlDAO lTemplateSqlDao = null; TemplateModel
-	 * lTemplateMod = null;
-	 *
-	 * try { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("CodMotivo : " + aCodMotivo ); lTemplateSqlDao = new
-	 * TemplateSqlDAO(aConn); lTemplateSqlDao.ricercaTemplateByCodMotivoFlagTemplate( aCodMotivo
-	 * ,aFlagTemplate); lTemplateMod = (TemplateModel)lTemplateSqlDao.getModelByKey();
-	 *
-	 * if( lTemplateMod == null ) throw new F3BException(F3BException.USER_MESSAGE,
-	 * "Template non trovato per il codice motivo richiesto : " + aCodMotivo +" Ufficio:"+aFlagTemplate);
-	 *
-	 * } catch( DAOException daoEx ) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-	 * siesLogger al posto di LogF3B.getLogger() siesLogger.debug("DAOException: " + daoEx); throw new
-	 * F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : " + daoEx); } catch
-	 * (F3BException fe) { throw fe; } catch( Exception lEx ) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
-	 * variabile di istanza siesLogger al posto di LogF3B.getLogger() siesLogger.debug("Exception: " + lEx );
-	 * throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : " + lEx); }
-	 * finally { cleanup(lTemplateSqlDao); } return lTemplateMod; }
-	 */
-	/*
-	 * private TemplateModel getTemplateByIdTemplate( String aIdTemplate, Connection aConn) throws
-	 * F3BException { TemplateSqlDAO lTemplateSqlDao = null; TemplateModel lTemplateMod = null;
-	 *
-	 * try { lTemplateSqlDao = new TemplateSqlDAO(aConn); lTemplateSqlDao.ricercaTemplateByKey( aIdTemplate );
-	 * lTemplateMod = (TemplateModel)lTemplateSqlDao.getModelByKey();
-	 *
-	 * if( lTemplateMod == null ) throw new F3BException(F3BException.USER_MESSAGE,
-	 * "Template non trovato per l'IdTemplate richiesto " + aIdTemplate ); } catch( DAOException daoEx ) { //
-	 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	 * LogF3B.getLogger() siesLogger.debug("DAOException: " + daoEx); throw new
-	 * F3BException("StampaSigeController.getTemplateByIdTemplate: " + daoEx); } catch (F3BException fe) {
-	 * throw fe; } catch( Exception lEx ) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-	 * siesLogger al posto di LogF3B.getLogger() siesLogger.debug("Exception: " + lEx ); throw new
-	 * F3BException("StampaSigeController.getTemplateByIdTemplate: " + lEx); } finally {
-	 * cleanup(lTemplateSqlDao); }
-	 *
-	 * return lTemplateMod; }
-	 */
-
-	/**
-	 * Esegue la ricerca di tenori SIGE.
-	 * <p>
-	 *
-	 * @param aKey
-	 *            chiave id del Fascicolo SIGE.
-	 * @return l'insieme dei tenori.
-	 * @throws F3BException
-	 *             propaga l'errore di eccezione.
-	 */
-	// private Vector getTenoriSige(BigDecimal aIdRichiesta, Connection aConn) throws F3BException {
-	// TenoreSigeSqlDAO lTenDao = null;
-	// Vector lTenori = new Vector();
-	//
-	// try {
-	// lTenDao = new TenoreSigeSqlDAO(aConn);
-	// lTenDao.ricercaTenoriByRichiesta(aIdRichiesta);
-	//
-	// lTenori = new Vector(lTenDao.getModels());
-	//
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.debug("##### Dati prelevati nel metodo ricercaTenoriByRichiesta : " + lTenori);
-	// } catch (DAOException daoEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.debug("DAOException: " + daoEx);
-	// throw new SIGEException("StampaSigeController.ricercaTenoriByRichiesta : " + daoEx);
-	// } catch (Exception lEx) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.debug("Exception: " + lEx);
-	// throw new SIGEException("StampaSigeController.ricercaTenoriByRichiesta : " + lEx);
-	// } finally {
-	// cleanup(lTenDao);
-	// }
-	// return lTenori;
-	// }
-
 	/**
 	 * Genera il TreeModel per la stampa del Luogo detenzione Corrente
 	 *
@@ -742,13 +638,17 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiLuogoDetenzioneSige(BigDecimal aIdFasSige, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeLuogoDetenzione = null;
+
 		FasSigeDetenzioneDAO lFasDetDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		IstitutoDetenzioneSqlDAO lIstDetDao = null;
+
 		FasSigeDetenzioneModel lDetenzioneSige = null;
 		LuogoDetenzioneModel lLuoDetenzione = null;
 		IstitutoDetenzioneModel lIstDetenzione = null;
+
 		try {
 			lFasDetDao = new FasSigeDetenzioneDAO(aConn);
 			lFasDetDao.setCondizioneUltimoLuogoByFascicolo(aIdFasSige);
@@ -817,7 +717,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati del FascicoloSIEP.
-	 * <p>
 	 *
 	 * @param lKeyFascicolo
 	 *            Chiave del Fascicolo SIEP.
@@ -829,22 +728,21 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiFascicoloSiep(BigDecimal lKeyFascicolo, BigDecimal aIdFasSige,
 			Connection aConn) throws F3BException {
+
 		TreeModel lTreeFasMod = new TreeModel();
 
 		SoggettoModel lSoggetto = null;
+
 		SoggettoSqlDAO lSogSqlDao = null;
 		FascicoloSiepSqlDAO lFasDao = null;
 		MisuraCautelareSqlDAO lMisDao = null;
 		ReatoSqlDAO lReaDao = null;
-
 		AvvocatoSiepxStampaSqlDAO lAvvDao = null;
-
 		PenaComplessivaSqlDAO lPenDao = null;
 		PenaAccessoriaSqlDAO lPenAccDao = null;
 		PosizioneGiuridicaSqlDAO lPosGiuDao = null;
 		BeneficioSqlDAO lBenDao = null;
 		LuogoDetenzioneSqlDAO lLuoDao = null;
-
 		AltraCausaSqlDAO lAltCauDao = null;
 		MisuraSicurezzaSqlDAO lMisSicDao = null;
 		PenaResiduaSqlDAO lPenaResDao = null;
@@ -987,7 +885,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati della Sentenza.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIEP
 	 *            id del FascicoloSIEP.
@@ -998,6 +895,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 *             propaga l'errore di eccezione.
 	 */
 	private TreeModel prelevaDatiSentenza(BigDecimal aIdFascicoloSIEP, Connection aConn) throws F3BException {
+
 		TreeModel lTreeSenMod = new TreeModel();
 
 		FascicoloSiepSqlDAO lFasDao = null;
@@ -1016,7 +914,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 				SentenzaModel lSenModel = (SentenzaModel) lSenDao.getModelByKey();
 
 				lTreeSenMod = new TreeModel(lSenModel);
-
 			} catch (DAOException daoEx) {
 				daoEx.printStackTrace();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1032,6 +929,8 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 						"StampaSigeController.prelevaDatiSentenza: Eccezione Generica: " + sqe);
 			} finally {
 				cleanup(lSenDao);
+				// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+				cleanup(lFasDao);
 			}
 		}
 		return lTreeSenMod;
@@ -1047,12 +946,15 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiProvvedimentoDefinitorio(BigDecimal aIdFasSige, Connection aConn)
 			throws F3BException {
+
 		TreeModel lTreeProvvedimento = null;
 		TreeModel lTreeEvento = null;
+
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		MotivazioneProvvedimentoSigeSqlDAO lMPSDao = null;
 		UfficioSqlDAO lUDao = null;
+
 		Vector lMotivazioni = null;
 
 		try {
@@ -1155,8 +1057,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiProvvedimentoByIdEvento(BigDecimal aIdEvento, BigDecimal aIdFasSige,
 			Connection aConn) throws F3BException {
+
 		TreeModel lTreeProvvedimento = null;
 		TreeModel lTreeEvento = null;
+
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		UfficioSqlDAO lUDao = null;
@@ -1258,10 +1162,13 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiProvvedimentoByIdImpugnazione(BigDecimal aIdImpugnazione,
 			BigDecimal aIdFasSige, Connection aConn) throws F3BException {
+
 		TreeModel lTreeProvvedimento = null;
+
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		ImpugnazioneSigeSqlDAO lImpSqlDao = null;
 		UfficioSqlDAO lUDao = null;
+
 		try {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1353,10 +1260,11 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiImpugnazioneByKey(BigDecimal aIdImpugnazione, BigDecimal aIdFasSige,
 			Connection aConn) throws F3BException {
+
 		TreeModel lTreeImpugnazione = null;
+
 		ImpugnazioneSigeSqlDAO lImpSqlDao = null;
 		UfficioSqlDAO lUDao = null;
-
 		NotificaSqlDAO notificaSqlDao = null;
 		AutoritaEsternaSqlDAO autoritaSqlDao = null;
 		UfficioSqlDAO ufficioSqlDao = null;
@@ -1486,6 +1394,9 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			cleanup(notificaSqlDao);
 			cleanup(autoritaSqlDao);
 			cleanup(lUDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(avvocatoSqlDao);
+
 		}
 		return lTreeImpugnazione;
 	}
@@ -1507,13 +1418,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			lUdienzaSigeSqlDao = new UdienzaSigeSqlDAO(aConn);
 			lUdienzaSigeSqlDao.ricercaUdienzaSigeByKey(aKey);
 			lUdienzaSigeMod = (UdienzaSigeModel) lUdienzaSigeSqlDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
-
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new SIGEException("StampaSigeController.prelevaDatiUdienza : " + daoEx);
 		} catch (Exception ex) {
-
 			siesLogger.debug("Exception: " + ex);
 			throw new SIGEException("StampaSigeController.prelevaDatiUdienza : " + ex);
 		} finally {
@@ -1524,9 +1432,11 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	}
 
 	private TreeModel prelevaDatiCollegioById(BigDecimal aKey, Connection aConn) throws F3BException {
+
 		CollegioSqlDAO lColDao = null;
 		CollegioMagistratoSqlDAO lColMagDao = null;
 		CollegioEspertoSqlDAO lColEspDao = null;
+
 		CollegioModel lColMod;
 
 		TreeModel lTreeCollegio = null;
@@ -1602,8 +1512,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	}
 
 	private TreeModel prelevaDatiEvento(EventoModel aEvento, Connection aConn) throws F3BException {
+
 		TreeModel lTreeEvento = null;
 		NotificaSqlDAO lNotDao = null;
+
 		try {
 			lTreeEvento = new TreeModel(aEvento);
 
@@ -1645,7 +1557,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati del Fascicolo Sige Esteso.
-	 * <p>
 	 *
 	 * @param aIdFascicoloSIGE
 	 *            .
@@ -1657,13 +1568,16 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private FascicoloSigeEstesoModel prelevaDatiFasSigeEsteso(BigDecimal aIdFascicoloSIGE, Connection aConn)
 			throws F3BException {
+
 		FascicoloSigeSqlDAO lFasSigeDao = null;
 		RichiestaSigeDAO lRicSigeDao = null;
 		UdienzaProcedimentoSigeSqlDAO lUdiSigeSqlDao = null;
+
 		FascicoloSigeModel lFasSigeMod;
 		RichiestaSigeModel lRicSigeMod;
 		UdienzaProcedimentoSigeModel lUdiSigeMod;
 		FascicoloSigeEstesoModel lFascicoloEsteso = new FascicoloSigeEstesoModel();
+
 		try {
 			// Ricerca del Fascicolo SIGE
 			lFasSigeDao = new FascicoloSigeSqlDAO(aConn);
@@ -1704,7 +1618,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 				lFascicoloEsteso.setUdienzaProcedimento(lUdiSigeMod);
 			}
 			lUdiSigeSqlDao.stop();
-
 		} catch (F3BException fE) {
 			throw fE;
 		} catch (DAOException daoEx) {
@@ -1726,7 +1639,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	private TreeModel prelevaDati(BigDecimal aIdEvento, BigDecimal aIdFasSige, int[] aTipoDati,
 			TreeModel lTreeDati, int aTipoStampa, String codUffUtenteConnesso, Connection lConn)
 			throws F3BException {
-		// ArrayOutput restituito dalla funzione
 
 		// Oggetti TreeModel componenti del documento di stampa
 		TreeModel lTreeSoggetto = null;
@@ -1739,11 +1651,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		TreeModel lTreeRicSIGE = null; // 02/12/2009
 		TreeModel lTreeImpugnazione = null;
 
-		// TreeModel lTreeAvvocatiSige = null;
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("PrelevaDati : inizio");
+
 		try {
 			FascicoloSigeEstesoModel lFascicoloSigeEsteso = prelevaDatiFasSigeEsteso(aIdFasSige, lConn);
 
@@ -1888,7 +1799,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			throw Fe;
 		} catch (Exception e) {
 			throw new F3BException("StampaSigeController.prelevaDati: " + e);
-		} finally {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -1899,7 +1809,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	private TreeModel prelevaDati(BigDecimal aIdEvento, BigDecimal aIdFasSige,
 			BigDecimal aIdFasSigeUnificante, int[] aTipoDati, TreeModel lTreeDati, int aTipoStampa,
 			String codUffUtenteConnesso, Connection lConn) throws F3BException {
-		// ArrayOutput restituito dalla funzione
 
 		// Oggetti TreeModel componenti del documento di stampa
 		TreeModel lTreeSoggetto = null;
@@ -1912,11 +1821,11 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		TreeModel lTreeUdienza = null;
 		TreeModel lTreeRicSIGE = null; // 02/12/2009
 		TreeModel lTreeImpugnazione = null;
-		// TreeModel lTreeAvvocatiSige = null;
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("PrelevaDati : inizio");
+
 		try {
 			FascicoloSigeEstesoModel lFascicoloSigeEsteso = prelevaDatiFasSigeEsteso(aIdFasSige, lConn);
 			FascicoloSigeEstesoModel lFascicoloSigeEstesoUnificante = prelevaDatiFasSigeEsteso(
@@ -2061,7 +1970,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			throw Fe;
 		} catch (Exception e) {
 			throw new F3BException("StampaSigeController.prelevaDati: " + e);
-		} finally {
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -2071,7 +1979,9 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	private Vector<NotificaModel> getDestinatari(Vector<NotificaModel> aNotifiche, Connection aConn)
 			throws F3BException {
+
 		Vector<NotificaModel> retNotifiche = new Vector<>();
+
 		AutoritaEsternaSqlDAO lAutoritaSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
 		CSSASqlDAO lCSSASqlDao = null;
@@ -2082,9 +1992,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		PartiUdienzaSqlDAO lPartiDao = null;
 
 		try {
-
 			for (NotificaModel lNotifica : aNotifiche) {
-
 				// Autorita Esterne
 				if (lNotifica.getAutEstIdAutoritaEsterna() != null) {
 					lAutoritaSqlDao = new AutoritaEsternaSqlDAO(aConn);
@@ -2182,8 +2090,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 									(siap.sico.avvocato.model.AvvocatoModel) avvocatoSqlDao.getModel());
 
 						avvocatoSqlDao.stop();
-
-						cleanup(avvocatoSqlDao);
 					}
 
 					// Modifica del 27/10/2015 MEV_15_S3
@@ -2206,7 +2112,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 							lNotifica.setFlagDomicilioDifensore(
 									lAnagParteMod.getResidenza().getFlgDomicilioDifensore());
 						}
-
 					}
 				}
 
@@ -2241,6 +2146,9 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			cleanup(lAvvDao);
 			cleanup(lAvvSigeDao);
 			cleanup(avvocatoSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstDao);
+			cleanup(lPartiDao);
 		}
 
 		return retNotifiche;
@@ -2248,6 +2156,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	private TreeModel prelevaDatiNotificheDestinatari(Vector<NotificaModel> lNotifiche, TreeModel aTree,
 			Connection aConn) throws F3BException {
+
 		TreeModel lTreeNotMod = null;
 		TreeModel lTreeAutMod = null;
 		TreeModel lTreeUffMod = null;
@@ -2323,7 +2232,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			siesLogger.debug("Exception: " + sqe);
 			throw new F3BException(
 					"StampaSigeController.prelevaDatiNotificheDestinatari: Eccezione Generica: " + sqe);
-		} finally {
 		}
 
 		return aTree;
@@ -2335,6 +2243,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiCampoNota(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
+
 		// CampoNote
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
 		Vector lCampiNote = null;
@@ -2366,6 +2275,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiAnnotazioneManuale(TreeModel aTree, EventoModel aEvento, Connection aConn)
 			throws Exception {
+
 		// AnnotazioneManuale
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
 		Vector lVectAnnMan = null;
@@ -2395,7 +2305,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 						lAnnManuale.calcolaStringaArresto();
 					}
 				}
-
 				LTreeAnnotazioni = new TreeModel(lAnnManuale);
 				aTree.add(LTreeAnnotazioni);
 			}
@@ -2417,6 +2326,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiFissazioneUdienza(BigDecimal aIdFasSige, BigDecimal aIdUdienza,
 			Connection aConn, BigDecimal idEvento) throws F3BException {
+
 		TreeModel lTreeFissazioneUdienza = null;
 		TreeModel lTreeUdienzaProcedimento = null;
 		TreeModel lTreeProvvedimento = null;
@@ -2515,7 +2425,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			}
 
 			lTreeFissazioneUdienza.add(lTreeProvvedimento);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2538,6 +2447,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	private TreeModel buildTreePartiCivili(List<ParteCivileUdienzaModel> partiCivili,
 			TreeModel provvedimento) {
+
 		for (ParteCivileUdienzaModel parteCivile : partiCivili) {
 			TreeModel parteCivileModel = new TreeModel(parteCivile);
 			List<PartiUdienzaDifensoreModel> difensori = parteCivile.getDifensori();
@@ -2558,6 +2468,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	private TreeModel buildTreePartiOffese(List<ParteOffesaUdienzaModel> partiOffese,
 			TreeModel provvedimento) {
+
 		for (ParteOffesaUdienzaModel parteOffesa : partiOffese) {
 			TreeModel parteOffesaModel = new TreeModel(parteOffesa);
 			List<PartiUdienzaDifensoreModel> difensori = parteOffesa.getDifensori();
@@ -2585,14 +2496,17 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiOrdinanzaRinvioUdienza(BigDecimal aIdFasSige, BigDecimal aIdUdienza,
 			Connection aConn) throws F3BException {
+
 		TreeModel lTreeFissazioneUdienza = null;
 		TreeModel lTreeUdienzaProcedimento = null;
 		TreeModel lTreeProvvedimento = null;
 		TreeModel lTreeEvento = null;
+
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		UdienzaSigeSqlDAO lUdiSigeSqlDao = null;
 		UdienzaProcedimentoSigeSqlDAO lUdiProSqlDao = null;
+
 		try {
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -2675,45 +2589,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	}
 
 	/**
-	 * Esegue il prelievo dati degli Avvocati Sige.
-	 * <p>
-	 *
-	 * @param aIdFascicoloSIGE
-	 *            .
-	 * @param aConn
-	 *            connessione al dbase.
-	 * @return dati degli Avvocati Sige come TreeModel.
-	 * @throws SIGEException
-	 *             propaga l'errore di eccezione.
-	 *
-	 *             private TreeModel prelevaDatiAvvocatiSige(BigDecimal aIdFascicoloSIGE, Connection aConn )
-	 *             throws F3BException { TreeModel lTreeAvvSige = null;
-	 *
-	 *             AvvocatoFascicoloSigeSqlDAO lAvvSqlDao = null; Vector lAvvocati = new Vector();
-	 *
-	 *             try { lAvvSqlDao = new AvvocatoFascicoloSigeSqlDAO(aConn);
-	 *             lAvvSqlDao.ricercaAvvocatiByFascicolo( aIdFascicoloSIGE );
-	 *
-	 *             lAvvocati = new Vector(lAvvSqlDao.getModels()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo
-	 *             la variabile di istanza siesLogger al posto di LogF3B.getLogger() siesLogger.debug("#####
-	 *             Numero di Avvocati prelevati nel metodo prelevaDatiAvvocatiSige : " + lAvvocati.size() );
-	 *
-	 *             if (lAvvocati != null) { if (lAvvocati.size() != 0) { Iterator lItx = lAvvocati.iterator();
-	 *             while( lItx.hasNext() ) { AvvocatoSigeModel lAvvSige = (AvvocatoSigeModel)lItx.next(); if
-	 *             (lTreeAvvSige != null) lTreeAvvSige.add(new TreeModel(lAvvSige)); else lTreeAvvSige = new
-	 *             TreeModel(lAvvSige); } } } } catch( DAOException daoEx ) { // [FT] - 03/08/2016 - MAC_LOG -
-	 *             Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	 *             siesLogger.debug("DAOException: " + daoEx ); throw new
-	 *             SIGEException("StampaSigeController.prelevaDatiAvvocatiSige : " + daoEx); } catch(
-	 *             Exception lEx ) { lEx.printStackTrace(); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la
-	 *             variabile di istanza siesLogger al posto di LogF3B.getLogger() siesLogger.debug("Exception:
-	 *             " + lEx ); throw new SIGEException("StampaSigeController.prelevaDatiAvvocatiSige : " +
-	 *             lEx); } finally { cleanup(lAvvSqlDao); } return lTreeAvvSige; }
-	 */
-
-	/**
 	 * Esegue il prelievo dati dei Tenori Sige a partire dal vettore di Tenori Estesi.
-	 * <p>
 	 *
 	 * @param aTenoriEstesi
 	 *            del Fascicolo SIGE.
@@ -2723,6 +2599,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel buildTreeTenoriEstesi(TreeModel lTreeProvvedimento,
 			Vector<TenoreSigeEstesoModel> lTenoriEstesi) throws F3BException {
+
 		// Si itera sull'elenco dei Tenori per caricare il TreeModel con Tenore, Sentenza e Reato.
 		TenoreSigeEstesoModel lTenEstesoPrec = new TenoreSigeEstesoModel();
 
@@ -2945,7 +2822,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	/**
 	 * 15/12/2009 Alimenta il TreeModel di Provvedimento con i dati di Tenori Sige a partire dal vettore di
 	 * Tenori Estesi. Legge e carica anche i DATI PROVVEDIMENTO per ogni singolo Tenore.
-	 * <p>
 	 *
 	 * @param aTenoriEstesi
 	 *            del Fascicolo SIGE.
@@ -2955,6 +2831,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel buildTreeTenoriEstesiConDatiProvvedimento(TreeModel lTreeProvvedimento,
 			Vector lTenoriEstesi, Connection lConn) throws F3BException {
+
 		// Si itera sull'elenco dei Tenori per caricare il TreeModel con Tenore, Sentenza e Reato.
 		// DatiProvvedimentoSigeSqlDAO lDatDao = null;
 		TenoreSigeEstesoModel lTenEstesoPrec = new TenoreSigeEstesoModel();
@@ -3050,7 +2927,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * Esegue il prelievo dati delle Sentenze Sige + FascicoloSIEP.
-	 * <p>
 	 *
 	 * @param aIdFasSige
 	 *            Chiave del Fascicolo SIGE.
@@ -3062,6 +2938,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel prelevaDatiSentenzeSige(TreeModel lTreeFasSige, BigDecimal aIdFasSige, Connection aConn)
 			throws F3BException {
+
 		SentenzaSqlDAO lSenDao = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		FascicoloSiepSqlDAO lFasDao = null;
@@ -3069,21 +2946,19 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		ReatoSqlDAO lReaDao = null;
 		MisuraSicurezzaSqlDAO lMisSicDao = null;
 		PenaResiduaSqlDAO lPenaResDao = null;
+		FasSigeSentenzaDAO lFasSenDao = null;
 
 		SentenzaModel lSentenza = null;
 		SentenzaSigeModel lFasSigeSentenza = new SentenzaSigeModel();
 		SoggettoModel lSoggetto = null;
 
 		TreeModel lTreeSentenzaSige = new TreeModel();
-
 		Vector lFasSigeSentenze = new Vector(); // Vettore delle FAS_SIGE_SENTENZA
 
 		lFasSigeSentenza.setFasIdFascicoloSige(aIdFasSige);
-
 		// Ricerca dei riferimenti a Sentenze nella tabella di relazione FAS_SIGE_SENTENZA
 		lFasSigeSentenza.setFasIdFascicoloSige(aIdFasSige);
 
-		FasSigeSentenzaDAO lFasSenDao = null;
 		try {
 			lSenDao = new SentenzaSqlDAO(aConn);
 			lFasSenDao = new FasSigeSentenzaDAO(aConn);
@@ -3153,13 +3028,14 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			cleanup(lMisDao);
 			cleanup(lMisSicDao);
 			cleanup(lPenaResDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSenDao);
 		}
 		return lTreeFasSige;
 	}
 
 	/**
 	 * Metodo che preleva i dati dei procedimenti per udienza.
-	 * <p>
 	 *
 	 * @param aValue
 	 * @param aCodMagistrato
@@ -3173,7 +3049,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 * @return
 	 * @throws F3BException
 	 */
-
 	private TreeModel prelevaDatiProcedimentixUdienza(Object aValue, BigDecimal aIdFascicolo,
 			String aCodMagistrato, BigDecimal aIdEsperto, XModel aStampaMod, String aOrderBy,
 			String aStatoProcedimento, String aTipoProc, String aCodUfficioConnesso, Connection aConn)
@@ -3201,6 +3076,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		BigDecimal lIdUdienza = null;
 		Date lDataUdienza = null;
 		String listaIdUdienze = null;
+
 		try {
 			lProxUdiDao = new ProcedimentixUdienzaSqlDAO(aConn);
 
@@ -3409,12 +3285,10 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 		siesLogger.info("fine");
 
 		return lTreeRoot;
-
 	}
 
 	/**
 	 * Esegue la ricerca di NOTIZIA_REATO per Fascicolo SIGE.
-	 * <p>
 	 *
 	 * @param aKey
 	 *            chiave id del Fascicolo SIGE.
@@ -3423,6 +3297,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 *             propaga l'errore di eccezione.
 	 */
 	private Vector getNotiziaReato(BigDecimal aIdFascicoloSige, Connection aConn) throws F3BException {
+
 		NotiziaReatoSqlDAO lNRSqlDao = null;
 		Vector lNotizieReato = new Vector();
 
@@ -3452,7 +3327,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	/**
 	 * 24/05/2010 Esegue la ricerca di DATI_PROVVEDIMENTO_SIGE.
-	 * <p>
 	 *
 	 * @param aIdTenoreSige
 	 *            chiave id del Tenore SIGE.
@@ -3462,8 +3336,9 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	private TreeModel getDatiProvvedimentoSige(TreeModel lTreeTenore, BigDecimal aIdTenoreSige,
 			Connection aConn) throws F3BException {
+
 		DatiProvvedimentoSigeSqlDAO lDatDao = null;
-		// Lettura Eventuali Dati Provvedimento Sige.
+
 		try {
 			lDatDao = new DatiProvvedimentoSigeSqlDAO(aConn);
 			lDatDao.ricercaDatiProvvedimentoSigeByIdTenore(aIdTenoreSige);
@@ -3489,7 +3364,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	/**
 	 * Genera il ByteArrayOutputStream per la stampa dell'Elenco di Procedimenti SIGE per estremi Foglio
 	 * Complementare.
-	 * <p>
 	 *
 	 * @param aFiltroRicerca
 	 *            (RicercaFogliCompModel)
@@ -3503,6 +3377,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	 */
 	public ByteArrayOutputStream ExPreStampaProcSigeXProv(RicercaFogliCompModel aFiltroRicerca,
 			Vector aElenco, UtenteModel aUtente) throws F3BException {
+
 		// Connessione al DB per il prelievo dei dati.
 		Connection lConn = null;
 
@@ -3559,7 +3434,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 				lTreeRoot.add(lTreeProcedimento);
 			}
-
 		} catch (Exception lEx) {
 			throw new SIGEException("StampaController.ExPreStampaProcSigeXProv : " + lEx);
 		} finally {
@@ -3590,6 +3464,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	@Override
 	public ByteArrayOutputStream ExPreStampaStatisticheFC(
 			StatisticheFogliComplementariContainerModel container) throws F3BException {
+
 		Connection lConn = null;
 
 		// ArrayOutput restituito dalla funzione
@@ -3642,6 +3517,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	@Override
 	public ByteArrayOutputStream ExStampaAttiInArchivio(EventoModel ev, FascicoloSigeEstesoModel fascicolo,
 			UtenteModel utenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		ByteArrayOutputStream lByteArrayOut = null;
 		TreeModel lTreeRoot = null; // radice dell'albero generale del documento
@@ -3668,7 +3544,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			lTreeRoot.add(new TreeModel(lDetenzione));
 			lTreeRoot.add(new TreeModel(ev));
 			lTreeRoot.add(new TreeModel(fascicoloSiep));
-
 		} catch (Exception lEx) {
 			throw new SIGEException("StampaController.ExStampaAttiInArchivio : " + lEx);
 		} finally {
@@ -3719,7 +3594,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 			lTreeRoot.add(new TreeModel(lDetenzione));
 			lTreeRoot.add(new TreeModel(ev));
 			lTreeRoot.add(new TreeModel(fascicoloSiep));
-
 		} catch (Exception lEx) {
 			throw new SIGEException("StampaController.ExStampaAttiInArchivio : " + lEx);
 		} finally {
@@ -3741,6 +3615,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	}
 
 	private Vector<TenoreSigeEstesoModel> cleanTenori(Vector<TenoreSigeEstesoModel> toClean) {
+
 		Vector<TenoreSigeEstesoModel> cleaned = new Vector<>();
 		HashMap<String, TenoreSigeEstesoModel> hashTenori = new HashMap<>();
 		for (TenoreSigeEstesoModel tenore : toClean) {
@@ -3755,17 +3630,20 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 	private List<ParteCivileUdienzaModel> prelevaPartiCivili(UdienzaProcedimentoSigeModel lUdiProSige)
 			throws F3BException {
+
 		IPartiUdienza ctrParti = SIGELookupRemote.getPartiUdienzaRemote();
 		return ctrParti.ExRicercaPartiCiviliUdienzaByIdUdienza(lUdiProSige.getIdUdienzaProcedimentoSige());
 	}
 
 	private List<ParteOffesaUdienzaModel> prelevaPartiOffese(UdienzaProcedimentoSigeModel lUdiProSige)
 			throws F3BException {
+
 		IPartiUdienza ctrParti = SIGELookupRemote.getPartiUdienzaRemote();
 		return ctrParti.ExRicercaPartiOffesaUdienzaByIdUdienza(lUdiProSige.getIdUdienzaProcedimentoSige());
 	}
 
 	private List<NotificaParteCivileModel> prelevaNotifichePartiCivili(ParteCivileUdienzaModel parteCivile) {
+
 		List<NotificaParteCivileModel> notifiche = new ArrayList<>();
 		// List<PartiUdienzaDifensoreModel> difensori = parteCivile.getDifensori();
 
@@ -3791,6 +3669,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 	}
 
 	private List<NotificaParteOffesaModel> prelevaNotifichePartiOffese(ParteOffesaUdienzaModel parteOffesa) {
+
 		List<NotificaParteOffesaModel> notifiche = new ArrayList<>();
 		// List<PartiUdienzaDifensoreModel> difensori = parteOffesa.getDifensori();
 
@@ -3937,7 +3816,6 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 
 			lTreeDati = prelevaDatiProcedimentixUdienza(idUdienze, aIdFascicolo, aCodMagistrato, aIdEsperto,
 					aStampa, aOrderBy, aStatoProcedimento, aTipoProc, aCodUfficioConnesso, lConn);
-
 		} catch (F3BException e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

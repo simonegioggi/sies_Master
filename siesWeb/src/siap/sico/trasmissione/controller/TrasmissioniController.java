@@ -7,13 +7,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.trasmissione.dao.TrasmissioniDAO;
 import siap.sico.trasmissione.dao.TrasmissioniSqlDAO;
 import siap.sico.trasmissione.model.TrasmissioniModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -38,13 +38,14 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un Trasmissioni a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aTrasmissioni
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
 	 ****************************************************************************/
 	public TrasmissioniModel ExInserisciTrasmissioni(TrasmissioniModel aTrasmissioni) throws F3BException {
+
 		Connection lConn = null;
 		TrasmissioniDAO lTraDao = null;
 		TrasmissioniModel lTraMod = null;
@@ -71,7 +72,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati Trasmissioni
-	 * 
+	 *
 	 * @param aTrasmissioni
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -79,6 +80,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaTrasmissioni(TrasmissioniModel aTrasmissioni) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTrasmissioni = new Vector();
 		TrasmissioniDAO lTraDao = null;
@@ -90,12 +92,12 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 			lTraDao.setOrderBy();
 			lTraDao.start();
 			while (lTraDao.next()) {
-				lTrasmissioni.add((TrasmissioniModel) lTraDao.getModel());
+				lTrasmissioni.add(lTraDao.getModel());
 			}
 			lTraDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("TrasmissioniController.ExRicercaTrasmissioni: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioniController.ExRicercaTrasmissioni: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTraDao);
 			cleanup(lConn);
@@ -106,13 +108,14 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public TrasmissioniModel ExRicercaTrasmissioniById(BigDecimal aIdTrasmissione) throws F3BException {
+
 		Connection lConn = null;
 		TrasmissioniModel lTrasmissioniMod = new TrasmissioniModel();
 		TrasmissioniSqlDAO lTrasmissioniSqlDao = null;
@@ -123,8 +126,8 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 			lTrasmissioniSqlDao.ricercaTrasmissioniByKey(aIdTrasmissione);
 			lTrasmissioniMod = (TrasmissioniModel) lTrasmissioniSqlDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("TrasmissioniController.ExRicercaTrasmissioniById: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioniController.ExRicercaTrasmissioniById: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTrasmissioniSqlDao);
 			cleanup(lConn);
@@ -137,12 +140,13 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	 * Metodo che modifica i dati dell'Trasmissioni Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aTrasmissioni
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaTrasmissioni(TrasmissioniModel aTrasmissioni) throws F3BException {
+
 		Connection lConn = null;
 		TrasmissioniDAO lTraDao = null;
 
@@ -164,11 +168,12 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aTrasmissioni
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaTrasmissioni(TrasmissioniModel aTrasmissioni) throws F3BException {
+
 		Connection lConn = null;
 		TrasmissioniDAO lTraDao = null;
 
@@ -180,8 +185,8 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("TrasmissioniController.ExCancellaTrasmissioni: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioniController.ExCancellaTrasmissioni: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTraDao);
 			cleanup(lConn);
@@ -191,12 +196,13 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aTrasmissioni
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountTrasmissioni(TrasmissioniModel aTrasmissioni) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		TrasmissioniSqlDAO lTrasmissioniSqlDao = null;
@@ -210,8 +216,8 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 			lCount = lTrasmissioniSqlDao.getBigDecimal("HowManyRecords");
 			lTrasmissioniSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("TrasmissioniController.ExGetCountTrasmissioni: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioniController.ExGetCountTrasmissioni: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTrasmissioniSqlDao);
 			cleanup(lConn);
@@ -223,7 +229,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aTrasmissioni
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -232,6 +238,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaTrasmissioniPaged(TrasmissioniModel aTrasmissioni, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lTrasmissioni = new Vector();
 		TrasmissioniSqlDAO lTrasmissioniSqlDao = null;
@@ -242,8 +249,8 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 			lTrasmissioniSqlDao.ricercaTrasmissioniPaged(aTrasmissioni, aPage);
 			lTrasmissioni = new Vector(lTrasmissioniSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("TrasmissioniController.ExRicercaTrasmissioniPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioniController.ExRicercaTrasmissioniPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTrasmissioniSqlDao);
 			cleanup(lConn);
@@ -254,6 +261,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	public Vector ExRicercaTrasmissioniPerDateTipoEsito(Date dataRicercaInizio, Date dataRicercaFine,
 			String lTipoTrasmissione, String lEsitoTrasmissione, String lUfficioUtenteConnesso, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lTrasmissioni = new Vector();
 		TrasmissioniSqlDAO lTrasmissioniSqlDao = null;
@@ -265,7 +273,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 					lTipoTrasmissione, lEsitoTrasmissione, lUfficioUtenteConnesso, aPage);
 			lTrasmissioniSqlDao.start();
 			while (lTrasmissioniSqlDao.next()) {
-				lTrasmissioni.add((TrasmissioniModel) lTrasmissioniSqlDao.getModel());
+				lTrasmissioni.add(lTrasmissioniSqlDao.getModel());
 			}
 			lTrasmissioniSqlDao.stop();
 
@@ -285,6 +293,7 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 	public BigDecimal ExGetCountPerDateTipoEsito(Date dataRicercaInizio, Date dataRicercaFine,
 			String lTipoTrasmissione, String lEsitoTrasmissione, String lUfficioUtenteConnesso)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		TrasmissioniSqlDAO lTrasmissioniSqlDao = null;
@@ -299,8 +308,8 @@ public class TrasmissioniController extends SiapController implements ITrasmissi
 			lCount = lTrasmissioniSqlDao.getBigDecimal("HowManyRecords");
 			lTrasmissioniSqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("TrasmissioniController.ExGetCountTrasmissioni: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioniController.ExGetCountTrasmissioni: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lTrasmissioniSqlDao);
 			cleanup(lConn);

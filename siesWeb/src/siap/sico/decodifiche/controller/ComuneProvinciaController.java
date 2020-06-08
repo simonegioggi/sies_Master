@@ -3,17 +3,18 @@ package siap.sico.decodifiche.controller;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.decodifiche.dao.ComuneSqlDAO;
 import siap.sico.decodifiche.model.ComuneProvinciaModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ComuneProvinciaController extends SiapController implements IComuneProvincia {
 
 	public Vector ExListaProv() throws F3BException {
+
 		Connection lConn = null;
 		ComuneSqlDAO lCPDao = null;
 		Vector lProv = new Vector();
@@ -49,6 +50,7 @@ public class ComuneProvinciaController extends SiapController implements IComune
 	}
 
 	public Vector ExListaProvPerTipoUfficio(String codTipoUfficio) throws F3BException {
+
 		Connection lConn = null;
 		ComuneSqlDAO lCPDao = null;
 		Vector lProv = new Vector();

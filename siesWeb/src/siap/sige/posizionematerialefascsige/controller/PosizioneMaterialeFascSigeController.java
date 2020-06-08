@@ -23,7 +23,7 @@ import siap.sige.posizionematerialefascsige.dao.PosizioneMaterialeFascSigeSqlDAO
  * <p>
  * Company: Engineering
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -68,6 +68,7 @@ public class PosizioneMaterialeFascSigeController extends SiapController
 
 	public Vector ExRicercaPosizioneMaterialeFasc(PosizioneMaterialeFascModel aPosizioneMaterialeFasc)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lPosizioneMaterialeFasi = new Vector();
 		PosizioneMaterialeFascSigeSqlDAO lPosDao = null;
@@ -90,6 +91,7 @@ public class PosizioneMaterialeFascSigeController extends SiapController
 
 	public Vector<PosizioneMaterialeFascModel> ExRicercaPosizioneMaterialeFascAttiva(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<PosizioneMaterialeFascModel> lPosizioneMaterialeFasi = new Vector<>();
 		PosizioneMaterialeFascSigeSqlDAO lPosDao = null;
@@ -116,6 +118,7 @@ public class PosizioneMaterialeFascSigeController extends SiapController
 	 */
 	public void ExCancellaPosizioneMaterialeFasc(PosizioneMaterialeFascModel aPosizioneMaterialeFasc)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneMaterialeFascSigeDAO lPosDao = null;
 		// PosizioneMaterialeFascModel lPosMod = null;

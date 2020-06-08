@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
@@ -15,22 +19,25 @@ import siap.sius.SIUSException;
 import siap.sius.curatore.dao.CuratoreSiusDAO;
 import siap.sius.curatore.dao.CuratoreSiusSqlDAO;
 import siap.sius.curatore.model.CuratoreSiusModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
-* <p>Title: CuratoreSiusController</p>
-* <p>Description: Classe Controller per CuratoreSius</p>
-* <p>Copyright: Copyright (c) 2011</p>
-* <p>Company: </p>
-* @version 1.0
-*/
+ * <p>
+ * Title: CuratoreSiusController
+ * </p>
+ * <p>
+ * Description: Classe Controller per CuratoreSius
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2011
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class CuratoreSiusController extends SiapController
-implements ICuratoreSius
- {
+public class CuratoreSiusController extends SiapController implements ICuratoreSius {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -39,7 +46,7 @@ implements ICuratoreSius
 	 * Esegue l'inserimento del curatore, verificando se il curatore da inserire è lo stesso di quello
 	 * corrente se non lo è, chiude il record precedente e inserisce quello nuovo.
 	 * <p>
-	 * 
+	 *
 	 * @param aCurSiusMod
 	 *            dati del curatore da inserire.
 	 * @return i dati del curatore appena inserito.
@@ -47,6 +54,7 @@ implements ICuratoreSius
 	 *             propaga errore di eccezione.
 	 */
 	public CuratoreSiusModel ExInserisciCuratoreSius(CuratoreSiusModel aCurSiusMod) throws F3BException {
+
 		Connection lConn = null;
 		// CuratoreSiusDAO lCurSiusDao = null;
 		CuratoreSiusDAO lCurSiusDao = null;
@@ -105,7 +113,7 @@ implements ICuratoreSius
 	/**
 	 * Esegue la ricerca dei curatori SIUS per id fascicolo.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id del fascicolo.
 	 * @return model aggregato con i dati del Curatore Sius e quelli del Curatore.
@@ -114,9 +122,10 @@ implements ICuratoreSius
 	 */
 	public Vector ExRicercaCurSiusByFascicolo(BigDecimal aKey, String codUfficioUtenteConnesso)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector lCuratori = new Vector();
 		CuratoreSiusSqlDAO lCurSiusSqlDao = null;
+		Vector lCuratori = new Vector();
 		CuratoreSiusModel lCurSiusMod;
 
 		try {
@@ -159,7 +168,7 @@ implements ICuratoreSius
 
 	/**
 	 * Esegue la ricerca del curatore precedente e corrente, per l'id del fascicolo sius.
-	 * 
+	 *
 	 * @param aKey
 	 *            id del fasciclo sius.
 	 * @return l'elenco dei magistrati Corrente e il precedente.
@@ -167,6 +176,7 @@ implements ICuratoreSius
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaCuratoreCorrentePrecedenteByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSiusSqlDAO lMagRelSqlDao = null;
 		Vector lMagistrati = null;
@@ -177,8 +187,8 @@ implements ICuratoreSius
 			lMagRelSqlDao.ricercaCuratoreSiusByDataFine(aKey);
 			lMagistrati = new Vector(lMagRelSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new SIUSException("CuratoreSiusController.ExRicercaCuratoreSiusCorrenteByFascicolo: "
-					+ daoEx);
+			throw new SIUSException(
+					"CuratoreSiusController.ExRicercaCuratoreSiusCorrenteByFascicolo: " + daoEx);
 		} finally {
 			cleanup(lMagRelSqlDao);
 			cleanup(lConn);
@@ -191,7 +201,7 @@ implements ICuratoreSius
 	 * <p>
 	 * Si effettua anche la ricerca del Magistrato.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id del fascicolo.
 	 * @return model aggregato con i dati del curatore e quelli del magistrato o dell'esperto.
@@ -199,6 +209,7 @@ implements ICuratoreSius
 	 *             propaga errore di eccezione.
 	 */
 	public CuratoreSiusModel ExRicercaCurSiusByFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSiusDAO lCurSiusDao = null;
 		CuratoreSiusModel lCurSius = null;
@@ -210,8 +221,8 @@ implements ICuratoreSius
 			lCurSiusDao.setCondizioneAttivo(aIdFascicolo);
 			lCurSius = (CuratoreSiusModel) lCurSiusDao.getModelByKey();
 			if (lCurSius != null)
-				lCurSius.setDescrTipo(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance()
-						.getTipoCuratore(), lCurSius.getFlagTipo()));
+				lCurSius.setDescrTipo(DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getTipoCuratore(), lCurSius.getFlagTipo()));
 		} catch (DAOException daoEx) {
 			throw new F3BException("CuratoreSiusController.ExRicercaCurSiusByFascicolo: " + daoEx);
 		} catch (Exception e) {
@@ -224,12 +235,12 @@ implements ICuratoreSius
 	}
 
 	/**
-   * 
-   */
+	* 
+	*/
 	public void ExModificaMultiplaCuratoreSius(CuratoreSiusModel aCurSiusModel, String[] aListaFascicoli)
 			throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		CuratoreSiusDAO lCurSiusDao = null;
 
 		try {
@@ -276,7 +287,6 @@ implements ICuratoreSius
 			throw new F3BException("CuratoreSiusController.ExModificaMultiplaCuratoreSius: " + ex);
 		} finally {
 			cleanup(lCurSiusDao);
-
 			cleanup(lConn);
 		}
 	}
@@ -285,13 +295,14 @@ implements ICuratoreSius
 	 * <p>
 	 * Description: : la funzione effettua la cancellazione di un curatore nella tabella
 	 * CURATORE_FASCICOLO_SIUS
-	 * 
+	 *
 	 * @param IdCuratore
 	 *            : identificatore CURATORE, IdFascicolo identificatore del fascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public void ExCancellaCuratoreSius(BigDecimal IdCuratore, BigDecimal IdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		CuratoreSiusDAO lCurSiusDao = null;
 		CuratoreSiusSqlDAO lCurSiusSqlDao = null;

@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -19,9 +22,6 @@ import siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel;
 import siap.sius.misurasicurezza.model.ProvvedimentoEventoTenoreFascicoloSiusModel;
 import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -220,6 +220,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	public PeriodoAltraMisuraModel ExInserisciPeriodoAltraMisura(PeriodoAltraMisuraModel lPerMod,
 			ScadenzarioSiusModel lScaMod1, EsecuzioneMisuraSicurezzaModel lEmsMod,
 			ScadenzarioSiusModel lScaMod2) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraMisuraDAO lPerDao = null;
 		EsecuzioneMisuraSicurezzaDAO lEseDao = null;
@@ -276,6 +277,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	public PeriodoAltraMisuraModel ExInserisciPeriodoAltraMisura(PeriodoAltraMisuraModel lPerMod,
 			EsecuzioneMisuraSicurezzaModel lEmsMod, ScadenzarioSiusModel lScaMod1,
 			ScadenzarioSiusModel lScaMod2) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraMisuraDAO lPerDao = null;
 		EsecuzioneMisuraSicurezzaDAO lEseDao = null;
@@ -362,9 +364,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 			lEseDao.update();
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -443,7 +443,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati PeriodoAltraMisura
-	 * 
+	 *
 	 * @param lEmsMod
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -463,7 +463,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 			lPerDao.setOrderBy();
 			lPerDao.start();
 			while (lPerDao.next()) {
-				lPeriodoAltraMisure.add((PeriodoAltraMisuraModel) lPerDao.getModel());
+				lPeriodoAltraMisure.add(lPerDao.getModel());
 			}
 			lPerDao.stop();
 		} catch (DAOException daoEx) {
@@ -480,7 +480,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 
 	/****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -513,6 +513,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	/*****************************************************************************/
 
 	public List ExRicercaMisuraSicurezzaByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraMisuraSqlDAO lPerDao = null;
 		List lLisPer = new ArrayList();
@@ -525,8 +526,8 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraMisuraController.ExRicercaMisuraSicurezzaByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"PeriodoAltraMisuraController.ExRicercaMisuraSicurezzaByIdFascicolo: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);
@@ -535,8 +536,8 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	}
 
 	/*****************************************************************************/
-
 	public List ExRicercaMisuraSicurezzaByIdSiep(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraMisuraSqlDAO lPerDao = null;
 		List lLisPer = new ArrayList();
@@ -559,7 +560,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 
 	/*****************************************************************************
 	 * Effettua la ricerca per id evento
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -568,7 +569,6 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
-
 	public PeriodoAltraMisuraModel ExRicercaMisuraSicurezzaByIdEvento(BigDecimal aKey) throws F3BException {
 
 		Connection lConn = null;
@@ -583,8 +583,8 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraMisuraController.ExRicercaMisuraSicurezzaByIdEvento: "
-					+ daoEx);
+			throw new F3BException(
+					"PeriodoAltraMisuraController.ExRicercaMisuraSicurezzaByIdEvento: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);
@@ -608,8 +608,8 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PeriodoAltraMisuraController.ExModificaDateInizioMisuraSicurezza: "
-					+ daoEx);
+			throw new F3BException(
+					"PeriodoAltraMisuraController.ExModificaDateInizioMisuraSicurezza: " + daoEx);
 		} finally {
 			cleanup(lPerDao);
 			cleanup(lConn);
@@ -623,9 +623,9 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	 * dei provvedimenti(Ord&Dec)/Esito/FascicoloSIUS in base all'IdFascicoloSIEP; L'interrogazione cerca nel
 	 * FASCICOLO_SIUS.FAS_SIE_ID_FASCICOLO_SIEP il procedimento SIEP Corrente e nel
 	 * EVENTO.FAS_SIE_ID_FASCICOLO_SIEP il procedimento SIEP Corrente.
-	 * 
+	 *
 	 * <p>
-	 * 
+	 *
 	 * @param aFascSiepKey
 	 *            id FASCICLO_SIEP
 	 * @return dati dell'ordinanza.
@@ -633,6 +633,7 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaProvvedimentoEventoByFascicoloSiep(BigDecimal aFascSiepKey) throws F3BException {
+
 		Connection lConn = null;
 		PeriodoAltraMisuraSqlDAO lPAMDao = null;
 		Vector lProvvVec = new Vector();
@@ -661,7 +662,6 @@ public class PeriodoAltraMisuraController extends SiapController implements IPer
 		}
 
 		return lProvvVec;
-
 	} // CHIUDE ExRicercaProvvedimentoEventoByFascicoloSiep
 
 }

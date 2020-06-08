@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.bdmc.fascicolosiepbdmc.dao.FascicoloSiepBdmcDAO;
 import siap.bdmc.fascicolosiepbdmc.dao.FascicoloSiepBdmcSqlDAO;
 import siap.bdmc.fascicolosiepbdmc.model.FascicoloSiepBdmcModel;
 import siap.controller.SiapController;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -32,7 +32,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un FascicoloSiepBdmc a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aFascicoloSiepBdmc
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -40,6 +40,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	 ****************************************************************************/
 	public FascicoloSiepBdmcModel ExInserisciFascicoloSiepBdmc(FascicoloSiepBdmcModel aFascicoloSiepBdmc)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepBdmcDAO lFasDao = null;
 		FascicoloSiepBdmcModel lFasMod = null;
@@ -66,7 +67,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati FascicoloSiepBdmc
-	 * 
+	 *
 	 * @param aFascicoloSiepBdmc
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -74,6 +75,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaFascicoloSiepBdmc(FascicoloSiepBdmcModel aFascicoloSiepBdmc) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoloSiepBdmi = new Vector();
 		FascicoloSiepBdmcDAO lFasDao = null;
@@ -85,7 +87,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 			lFasDao.setOrderBy();
 			lFasDao.start();
 			while (lFasDao.next()) {
-				lFascicoloSiepBdmi.add((FascicoloSiepBdmcModel) lFasDao.getModel());
+				lFascicoloSiepBdmi.add(lFasDao.getModel());
 			}
 			lFasDao.stop();
 		} catch (DAOException daoEx) {
@@ -101,7 +103,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -109,6 +111,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	 ****************************************************************************/
 	public FascicoloSiepBdmcModel ExRicercaFascicoloSiepBdmcById(BigDecimal aIdFascicoloBdmc)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepBdmcModel lFascicoloSiepBdmcMod = new FascicoloSiepBdmcModel();
 		FascicoloSiepBdmcSqlDAO lFascicoloSiepBdmcSqlDao = null;
@@ -134,12 +137,13 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	 * Metodo che modifica i dati dell'FascicoloSiepBdmc Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aFascicoloSiepBdmc
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaFascicoloSiepBdmc(FascicoloSiepBdmcModel aFascicoloSiepBdmc) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepBdmcDAO lFasDao = null;
 
@@ -161,11 +165,12 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aFascicoloSiepBdmc
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaFascicoloSiepBdmc(FascicoloSiepBdmcModel aFascicoloSiepBdmc) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiepBdmcDAO lFasDao = null;
 
@@ -188,13 +193,14 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aFascicoloSiepBdmc
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountFascicoloSiepBdmc(FascicoloSiepBdmcModel aFascicoloSiepBdmc)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		FascicoloSiepBdmcSqlDAO lFascicoloSiepBdmcSqlDao = null;
@@ -221,7 +227,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aFascicoloSiepBdmc
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -231,6 +237,7 @@ public class FascicoloSiepBdmcController extends SiapController implements IFasc
 	 ****************************************************************************/
 	public Vector ExRicercaFascicoloSiepBdmcPaged(FascicoloSiepBdmcModel aFascicoloSiepBdmc, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoloSiepBdmi = new Vector();
 		FascicoloSiepBdmcSqlDAO lFascicoloSiepBdmcSqlDao = null;

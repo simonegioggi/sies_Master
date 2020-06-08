@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.penapresunta.dao.PenaPresuntaDAO;
 import siap.siep.penapresunta.dao.PenaPresuntaSqlDAO;
 import siap.siep.penapresunta.model.PenaPresuntaModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,13 +24,14 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PenaPresuntaController extends SiapController implements IPenaPresunta {
 
 	public PenaPresuntaModel ExInserisciPenaPresunta(PenaPresuntaModel aPenaPresunta) throws F3BException {
+
 		Connection lConn = null;
 		PenaPresuntaDAO lPenDao = null;
 		PenaPresuntaModel lPenMod = null;
@@ -55,6 +56,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 	}
 
 	public Vector ExRicercaPenaPresunta(PenaPresuntaModel aPenaPresunta) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaPresunti = new Vector();
 		PenaPresuntaSqlDAO lPenDao = null;
@@ -68,8 +70,8 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaPresuntaController.ExRicercaPenaPresunta: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaPresuntaController.ExRicercaPenaPresunta: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -80,6 +82,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 	// pena presunta corrente
 	public PenaPresuntaModel ExRicercaPenaPresuntaCorrenteByFascicoloSiep(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaPresuntaSqlDAO lPenPresDao = null;
 		PenaPresuntaModel lPenPresMod;
@@ -100,6 +103,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 	}
 
 	public PenaPresuntaModel ExRicercaPenaPresuntaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PenaPresuntaSqlDAO lPenDao = null;
 		PenaPresuntaModel lPenMod;
@@ -110,8 +114,8 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 			lPenDao.ricercaPenaPresuntaByKey(aKey);
 			lPenMod = (PenaPresuntaModel) lPenDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaPresuntaController.ExRicercaPenaPresunta: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaPresuntaController.ExRicercaPenaPresunta: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -120,6 +124,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 	}
 
 	public PenaPresuntaModel ExModificaPenaPresunta(PenaPresuntaModel aPenaPresunta) throws F3BException {
+
 		Connection lConn = null;
 		PenaPresuntaDAO lPenDao = null;
 		PenaPresuntaModel lPenMod = new PenaPresuntaModel(aPenaPresunta);
@@ -141,6 +146,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 	}
 
 	public void ExCancellaPenaPresunta(PenaPresuntaModel aPenaPresunta) throws F3BException {
+
 		Connection lConn = null;
 		PenaPresuntaDAO lPenDao = null;
 
@@ -151,8 +157,8 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 			lPenDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaPresuntaController.ExCancellaPenaPresunta: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaPresuntaController.ExCancellaPenaPresunta: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -160,6 +166,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 	}
 
 	public void ExCancellaPenaPresuntaByIdFascicolo(PenaPresuntaModel aPenaPresunta) throws F3BException {
+
 		Connection lConn = null;
 		PenaPresuntaDAO lPenDao = null;
 
@@ -170,8 +177,8 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 			lPenDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("PenaPresuntaController.ExCancellaPenaPresunta: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PenaPresuntaController.ExCancellaPenaPresunta: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -180,6 +187,7 @@ public class PenaPresuntaController extends SiapController implements IPenaPresu
 
 	public String ExInserisciPenaPresuntaWithoutSequence(PenaPresuntaModel aPenaPresunta, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		PenaPresuntaDAO lPenDao = null;
 		try {

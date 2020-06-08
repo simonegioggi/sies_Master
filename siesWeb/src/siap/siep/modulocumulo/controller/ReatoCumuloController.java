@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
-
 import siap.controller.SiapController;
 import siap.siep.modulocumulo.dao.ReatoCumuloDAO;
 import siap.siep.modulocumulo.dao.ReatoCumuloSqlDAO;
@@ -26,7 +25,7 @@ import siap.siep.modulocumulo.model.ReatoCumuloModel;
  * <p>
  * Description: Classe Controller per Reato nell'ambito del CUMULO
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,7 +33,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 
 	/**
 	 * Inserimento di piu' reati in tabella REATO_CUMULO
-	 * 
+	 *
 	 * @param aReati
 	 *            - ArrayList di reati
 	 * @return ReatoModel - il reato inserito
@@ -45,6 +44,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public ReatoCumuloModel ExInserisciReatiCumulo(ArrayList aReati) throws F3BException {
+
 		Connection lConn = null;
 
 		ReatoCumuloDAO lReaCumDao = null;
@@ -94,7 +94,6 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			siesLogger.error("DAOException: ", ex);
@@ -115,11 +114,12 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 
 	/**
 	 * Ricerca i Reati e le Circostanze per il titolo passato nel model
-	 * 
+	 *
 	 */
 	public Vector<ReatoCumuloModel> ExRicercaReatoCumulo(ReatoCumuloModel aReatoCum) throws F3BException {
+
 		Connection lConn = null;
-		Vector<ReatoCumuloModel> lReati = new Vector<ReatoCumuloModel>();
+		Vector<ReatoCumuloModel> lReati = new Vector<>();
 		ReatoCumuloSqlDAO lReaCumDao = null;
 
 		try {
@@ -142,10 +142,11 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 
 	/**
 	 * Effettua la ricerca in chiave
-	 * 
+	 *
 	 * @param aIdReatoCumulo
 	 */
 	public ReatoCumuloModel ExRicercaReatoCumuloByKey(BigDecimal aIdReatoCumulo) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloSqlDAO lReaDao = null;
 		ReatoCumuloModel lReaMod;
@@ -172,13 +173,13 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 	/**
 	 * Modifica il Reato e eventuali altri record collegati che hanno lo stesso PROGR_REATO, quindi reato
 	 * principale o norme collegati, in funzione del tipo di reato passato in input.
-	 * 
+	 *
 	 * @param aReato
 	 *            - reato da Modificare
 	 * @throws F3BException
-	 * 
 	 */
 	public ReatoCumuloModel ExModificaReatoCumulo(ReatoCumuloModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaCumDao = null;
 
@@ -227,12 +228,10 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("ReatoCumuloController.ExModificaReatoCumulo: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
-
 			siesLogger.error("Exception: " + ex);
 			throw new F3BException("ReatoCumuloController.ExModificaReatoCumulo: " + ex);
 		} finally {
@@ -245,12 +244,13 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 
 	/**
 	 * Cancellaizone Reato_Cumulo
-	 * 
+	 *
 	 * @param aReato
 	 *            - reato da Cancellare
 	 * @throws F3BException
 	 */
 	public void ExCancellaReatoCumulo(ReatoCumuloModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaCumDao = null;
 
@@ -302,9 +302,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("ReatoCumuloController.ExCancellaReatoCumulo: " + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lReaCumDao);
 			cleanup(lConn);
 		}
@@ -319,6 +317,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 	 * @throws F3BException
 	 */
 	public void ExOrganizzaReatiCum(Vector reatiMod, Vector reatiCanc) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaDaoMod = null;
 		ReatoCumuloModel lReaMod = null;
@@ -421,6 +420,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 
 	public ReatoCumuloModel ExModificaPenaReatoCumulo(ReatoCumuloModel aReato, Vector aNormeUlteriori)
 			throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaDao = null;
 		ReatoCumuloModel lReaMod = new ReatoCumuloModel(aReato);
@@ -459,7 +459,6 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("ReatoCumuloController.ExModificaPenaReatoCumulo: " + daoEx);
 		} finally {
@@ -472,7 +471,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 
 	/**
 	 * Ricerca il ReatoCumulo e le circostanzeCumulo correlate per un TitoloCumulato
-	 * 
+	 *
 	 * @param aKey
 	 *            - Chiave Titolo cumulato
 	 * @return Vettore di Reati Circostanze cumulo
@@ -480,6 +479,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 	 */
 	public Vector<ReatoCircostanzaCumuloModel> ExRicercaReatoCircostanzaCumByTitoloCum(BigDecimal aTitoloKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloSqlDAO lReaSqlDao = null;
 		Vector<ReatoCircostanzaCumuloModel> lListReaCirc = null;
@@ -489,12 +489,12 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 			lReaSqlDao = new ReatoCumuloSqlDAO(lConn);
 			lReaSqlDao.ricercaReatiCumNoCircostanzaByIdTitolo(aTitoloKey);
 			Vector<ReatoCumuloModel> lReati = new Vector<ReatoCumuloModel>(lReaSqlDao.getModels());
-			lListReaCirc = new Vector<ReatoCircostanzaCumuloModel>();
+			lListReaCirc = new Vector<>();
 			Iterator<ReatoCumuloModel> lItx = lReati.iterator();
 
 			while (lItx.hasNext()) {
 				ReatoCircostanzaCumuloModel aModel = new ReatoCircostanzaCumuloModel();
-				aModel.setReatoCum((ReatoCumuloModel) lItx.next());
+				aModel.setReatoCum(lItx.next());
 				lReaSqlDao.ricercaCircostanzeReatoCumByReatoTitoloCum(aModel.getReatoCum().getProgrReato(),
 						aTitoloKey);
 				List lCircostanze = new ArrayList(lReaSqlDao.getModels());
@@ -516,7 +516,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della
 	 * Primary_Key è già preimpostato; metodi usati nella funzione di presa in carico, per scaricare Tutti i
 	 * dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -524,6 +524,7 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 	 */
 	public String ExInserisciReatiCumulatiWithoutSequence(Vector<ReatoCumuloModel> VecReatiCumu,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		ReatoCumuloDAO lReaCumDao = null;
 		ReatoCumuloModel lReaCumMod = null;
@@ -564,7 +565,6 @@ public class ReatoCumuloController extends SiapController implements IReatoCumul
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciReatiCumulatiWithoutSequence()
 
 } // CHIUDE ReatoCumuloController();

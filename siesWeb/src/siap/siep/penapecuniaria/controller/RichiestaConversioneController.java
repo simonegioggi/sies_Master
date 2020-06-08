@@ -11,6 +11,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.Utils;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoDAO;
@@ -84,13 +91,6 @@ import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.Utils;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -105,17 +105,18 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class RichiestaConversioneController extends SiapController implements IRichiestaConversione {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Effettua l'inserimento di un RichiestaConversione a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -123,6 +124,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public RichiestaConversioneModel ExInserisciRichiestaConversione(
 			RichiestaConversioneModel aRichiestaConversione) throws F3BException {
+
 		Connection lConn = null;
 
 		RichiestaConversioneDAO lRicDao = null;
@@ -146,12 +148,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRicMod.setIdRichiestaConversione(lSequence);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("RichiestaConversioneController.ExInserisciRichiestaConversione: " + ex);
 		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException("RichiestaConversioneController.ExInserisciRichiestaConversione: " + e);
 		} finally {
@@ -165,7 +169,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	/**
 	 * Effettua l'inserimento di un RichiestaConversione a partire dai dati contenuti nel Model inserisce
 	 * anche l'evento a cui la richiesta viene collegata
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -174,17 +178,16 @@ public class RichiestaConversioneController extends SiapController implements IR
 	public RichiestaConversioneModel ExInserisciRichiestaConversione(
 			RichiestaConversioneModel aRichiestaConversione, EventoModel aEvento,
 			DettaglioFascicoloModel aDettaglioFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		RichiestaConversioneDAO lRicDao = null;
-		RichiestaConversioneModel lRicMod = null;
-
 		EventoDAO lEveDao = null;
-
 		PenaComplessivaDAO lPenComDao = null;
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
-		// AnnotazioneManualeDAO lAnnDao = null;
+
+		RichiestaConversioneModel lRicMod = null;
 
 		try {
 			lConn = getDBConnection();
@@ -206,46 +209,48 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * // Paolo Cherubini 01/06/2011 devo detrarre gli importi inseriti per la richiesta dalla pena
 			 * residua //=============================================== //Pena Residua
 			 * //===============================================
-			 * 
+			 *
 			 * lPenResDao = new PenaResiduaDAO(lConn); lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 			 * PenaResiduaModel lPenResMod = new PenaResiduaModel();
-			 * 
+			 *
 			 * BigDecimal lkeyFasI =aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep();
 			 * lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lkeyFasI); lPenResMod =
 			 * (PenaResiduaModel) lPenResSqlDao.getModelByKey(); BigDecimal lkeyPenI = null; int aAmmenda = 0;
 			 * int aMulta = 0;
-			 * 
+			 *
 			 * if (lPenResMod != null && lPenResMod.getEveIdEvento() != null) { // esiste la pena residua
 			 * detraggo gli importi convertiti e scrivo un nuovo record pena residua if
 			 * (lPenResMod.getImportoAmmenda() != null) aAmmenda = lPenResMod.getImportoAmmenda().intValue();
 			 * if (aRichiestaConversione.getImportoAmmenda() != null) aAmmenda = aAmmenda -
 			 * aRichiestaConversione.getImportoAmmenda().intValue();
-			 * 
+			 *
 			 * if (lPenResMod.getImportoMulta() != null) aMulta = lPenResMod.getImportoMulta().intValue(); if
 			 * (aRichiestaConversione.getImportoMulta() != null) aMulta = aMulta -
 			 * aRichiestaConversione.getImportoMulta().intValue();
-			 * 
+			 *
 			 * lPenResMod.setImportoAmmenda(new BigDecimal(aAmmenda)); lPenResMod.setImportoMulta(new
 			 * BigDecimal(aMulta)); lPenResMod.setEveIdEvento(lEveClassI); lPenResMod.setFlagValidato("S");
 			 * lPenResMod.setFasSieIdFascicoloSiep(lkeyFasI);
 			 * lPenResMod.setDataInserimento(DateUtils.getSysDate()); lPenResDao.setDAOFromModel(lPenResMod);
 			 * lkeyPenI =lPenResDao.insert();
-			 * 
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > pena residua esistente1");
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI);
+			 *
+			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() //siesLogger.debug("Paolo ---- > pena residua esistente1"); //// [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() //siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI);
 			 * //LogF3B.getLogger(
 			 * ).debug("Paolo ---- > scritto pena residua per classe I = "+lPenResDao.getFasSieIdFascicoloSiep
-			 * ());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * ()); //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * //siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda()); ////
+			 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * //siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta()); //// [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * //siesLogger.debug("Paolo ---- > legata ad evento = "+lPenResDao.getEveIdEvento());
 			 * //lPenResDao.stop();
-			 * 
+			 *
 			 * }else{ // non esiste la pena residua detraggo gli importi convertiti dalla pena complessiva //
 			 * e scrivo un nuovo record pena residua if
 			 * (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva
@@ -254,14 +259,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * ().getPenaComplessiva().getImportoAmmenda().intValue(); if
 			 * (aRichiestaConversione.getImportoAmmenda()!= null) aAmmenda = aAmmenda -
 			 * aRichiestaConversione.getImportoAmmenda().intValue();
-			 * 
-			 * if
-			 * (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva().getImportoMulta
-			 * ()!= null) aMulta =
+			 *
+			 * if (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva().
+			 * getImportoMulta ()!= null) aMulta =
 			 * aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva
 			 * ().getImportoMulta().intValue(); if (aRichiestaConversione.getImportoMulta() != null) aMulta =
 			 * aMulta - aRichiestaConversione.getImportoMulta().intValue();
-			 * 
+			 *
 			 * lPenResMod.setImportoAmmenda(new BigDecimal(aAmmenda)); lPenResMod.setImportoMulta(new
 			 * BigDecimal(aMulta)); lPenResMod.setIdPenaResidua(lPenResMod.getIdPenaResidua());
 			 * lPenResMod.setEveIdEvento(lEveClassI); lPenResMod.setFlagValidato("S");
@@ -269,24 +273,26 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * lPenResMod.setCodUfficioAggiornamento(aEvento.getCodUfficioInserimento());
 			 * lPenResMod.setDataAggiornamento(DateUtils.getSysDate());
 			 * lPenResDao.setDAOFromModel(lPenResMod); lkeyPenI =lPenResDao.insert();
-			 * 
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > pena residua non esistente");
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI);
+			 *
+			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() //siesLogger.debug("Paolo ---- > pena residua non esistente"); //// [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() //siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI);
 			 * //LogF3B.getLogger(
 			 * ).debug("Paolo ---- > scritto pena residua per classe I = "+lPenResDao.getFasSieIdFascicoloSiep
-			 * ());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //siesLogger.debug("Paolo ---- > legata ad evento = "+lPenResDao.getEveIdEvento());
-			 * //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * //lPenResDao.stop(); } siesLogger.debug("AnnotazioneManualeModel"); // scrivo una
-			 * annotazione manuale con gli importi da detrarre AnnotazioneManualeModel lAnnMod = new
-			 * AnnotazioneManualeModel(); lAnnMod.setCodTipoAnnotazione("014"); // altro
+			 * ()); //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * //siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda()); ////
+			 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * //siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta()); //// [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * //siesLogger.debug("Paolo ---- > legata ad evento = "+lPenResDao.getEveIdEvento()); //// [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() //lPenResDao.stop(); } siesLogger.debug("AnnotazioneManualeModel"); //
+			 * scrivo una annotazione manuale con gli importi da detrarre AnnotazioneManualeModel lAnnMod =
+			 * new AnnotazioneManualeModel(); lAnnMod.setCodTipoAnnotazione("014"); // altro
 			 * lAnnMod.setFlagPiuMeno("-"); lAnnMod.setFlagConforme("-"); lAnnMod.setFlagValidato("S");
 			 * lAnnMod.setCodFonte("-"); lAnnMod.setCodSottonumerazione("-");
 			 * lAnnMod.setCodCausaleComputo("-"); lAnnMod.setCodDpr("-"); lAnnMod.setFlagAppProvvisoria("-");
@@ -295,26 +301,28 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * lAnnMod.setNumGiorniReclusione(new BigDecimal(0)); lAnnMod.setNumAnniArresto(new
 			 * BigDecimal(0)); lAnnMod.setNumMesiArresto(new BigDecimal(0)); lAnnMod.setNumGiorniArresto(new
 			 * BigDecimal(0));
-			 * 
+			 *
 			 * lAnnMod.setImportoAmmenda(aRichiestaConversione.getImportoAmmenda());
 			 * lAnnMod.setImportoMulta(aRichiestaConversione.getImportoMulta());
 			 * lAnnMod.setEveIdEvento(lEveClassI); lAnnMod.setFasSieIdFascicoloSiep(lkeyFasI);
 			 * lAnnMod.setPenResIdPenaResidua(lkeyPenI);
-			 * 
+			 *
 			 * lAnnMod.setCodOperatoreInserimento (aEvento.getCodOperatoreInserimento());
 			 * lAnnMod.setCodUfficioInserimento (aEvento.getCodUfficioInserimento());
 			 * lAnnMod.setDataInserimento (DateUtils.getSysDate());
-			 * 
+			 *
 			 * lAnnDao = new AnnotazioneManualeDAO(lConn); lAnnDao.setDAOFromModel(lAnnMod); lAnnDao.insert();
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto annotazione per classe I = "+lAnnMod.
-			 * getFasSieIdFascicoloSiep());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lAnnMod.getImportoAmmenda());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lAnnMod.getImportoMulta());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("Paolo ---- > scritto annotazione per classe I = "+lAnnMod.
+			 * getFasSieIdFascicoloSiep()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			 * siesLogger al posto di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lAnnMod.getImportoAmmenda()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lAnnMod.getImportoMulta()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > legata ad evento = "+lAnnMod.getEveIdEvento());
 			 * //lAnnDao.stop();
 			 */// 05/02/2015 Fine abolizione aggiornamento della pena residua.
@@ -326,8 +334,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					&& aDettaglioFascicolo.getFascicoloSiep().getFasSieIdFascicoloSiep() != null) {
 				FascicoloSiepDAO lFascDao = new FascicoloSiepDAO(lConn);
 				lFascDao.selCondizioneUpdate(aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep());
-				lFascDao.setFasSieIdFascicoloSiep(aDettaglioFascicolo.getFascicoloSiep()
-						.getFasSieIdFascicoloSiep());
+				lFascDao.setFasSieIdFascicoloSiep(
+						aDettaglioFascicolo.getFascicoloSiep().getFasSieIdFascicoloSiep());
 				lFascDao.setCodOperatoreAggiornamento(aEvento.getCodOperatoreInserimento());
 				lFascDao.setCodUfficioAggiornamento(aEvento.getCodUfficioInserimento());
 				lFascDao.setDataAggiornamento(DateUtils.getSysDate());
@@ -364,23 +372,29 @@ public class RichiestaConversioneController extends SiapController implements IR
 				}
 				lPenComMod.setImportoAmmenda(new BigDecimal(aAmmenda));
 				lPenComMod.setImportoMulta(new BigDecimal(aMulta));
-				lPenComMod.setFasSieIdFascicoloSiep(aDettaglioFascicolo.getFascicoloSiep()
-						.getIdFascicoloSiep());
+				lPenComMod.setFasSieIdFascicoloSiep(
+						aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep());
 				lPenComMod.setDataInserimento(DateUtils.getSysDate());
 				lPenComMod.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
 				lPenComMod.setCodUfficioInserimento(aEvento.getCodUfficioInserimento());
 				lPenComDao.setDAOFromModel(lPenComMod);
 				lPenComDao.insert();
 
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug(" ---- > pena complessiva scritta = "+lkeyFasI);
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				// siesLogger.debug(" ---- > scritto pena complessiva per classe VII = "+lPenComDao.getFasSieIdFascicoloSiep());
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				// siesLogger.debug(" ---- > scritto pena complessiva per classe VII =
+				// "+lPenComDao.getFasSieIdFascicoloSiep());
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug(" ---- > scritto aAmmenda = "+lPenComDao.getImportoAmmenda());
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug(" ---- > scritto aMulta = "+lPenComDao.getImportoMulta());
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				// siesLogger.debug(" ---- > legata ad evento = "+lPenComDao.getEveIdEvento());
 				// lPenComDao.stop();
 
@@ -425,22 +439,22 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRicMod.setIdRichiestaConversione(lSequence);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("RichiestaConversioneController.ExInserisciRichiestaConversione: " + ex);
 		} catch (Exception e) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new F3BException("RichiestaConversioneController.ExInserisciRichiestaConversione: " + e);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lRicDao);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lPenComDao);
-			// cleanup(lAnnDao);
 
 			cleanup(lConn);
 		}
@@ -450,7 +464,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca dei dati RichiestaConversione
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -459,6 +473,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public Vector ExRicercaRichiestaConversione(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaConversioni = new Vector();
 		RichiestaConversioneDAO lRicDao = null;
@@ -470,11 +485,12 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRicDao.setOrderBy();
 			lRicDao.start();
 			while (lRicDao.next()) {
-				lRichiestaConversioni.add((RichiestaConversioneModel) lRicDao.getModel());
+				lRichiestaConversioni.add(lRicDao.getModel());
 			}
 			lRicDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("RichiestaConversioneController.ExRicercaRichiestaConversione: " + daoEx);
 		} finally {
@@ -486,7 +502,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -494,6 +510,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public RichiestaConversioneModel ExRicercaRichiestaConversioneById(BigDecimal aIdRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneModel lRichiestaConversioneMod = new RichiestaConversioneModel();
 		RichiestaConversioneSqlDAO lRichiestaConversioneSqlDao = null;
@@ -505,10 +522,11 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRichiestaConversioneMod = (RichiestaConversioneModel) lRichiestaConversioneSqlDao
 					.getModelByKey();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RichiestaConversioneController.ExRicercaRichiestaConversioneById:  "
-					+ daoEx);
+			throw new F3BException(
+					"RichiestaConversioneController.ExRicercaRichiestaConversioneById:  " + daoEx);
 		} finally {
 			cleanup(lRichiestaConversioneSqlDao);
 			cleanup(lConn);
@@ -519,7 +537,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca per chiave evitando il filtro sull'evento
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -527,6 +545,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public RichiestaConversioneModel ExRicercaRichiestaConversioneByIdSenzaEvento(
 			BigDecimal aIdRichiestaConversione) throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneModel lRichiestaConversioneMod = new RichiestaConversioneModel();
 		RichiestaConversioneSqlDAO lRichiestaConversioneSqlDao = null;
@@ -538,7 +557,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRichiestaConversioneMod = (RichiestaConversioneModel) lRichiestaConversioneSqlDao
 					.getModelByKey();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"RichiestaConversioneController.ExRicercaRichiestaConversioneByIdSenzaEvento:  " + daoEx);
@@ -554,7 +574,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 * 29/09/2015 Ricerca l'Evento di Provv. Richiesta Conversione della Sorveglianza con StringArray di
 	 * inclusione per COD_MOTIVO e COD_TIPO_PROVVEDIMENTO ed esclusione per COD_ESITO. La condizione sullo
 	 * stato di validazione viene specificata nel model
-	 * 
+	 *
 	 * @param aModel
 	 * @param aTipoProv
 	 * @param aCodMotivo
@@ -564,6 +584,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public EventoModel ExRicercaEventoSorvDiRichiestaConversione(String aIdRicConv, EventoModel aModel,
 			String[] aTipoProv, String[] aCodMotivo, String[] aCodEsito) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lDao = null;
@@ -574,7 +595,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lDao = new EventoSqlDAO(lConn);
 			lDao.ricercaEventoValidoByRicConvFasSiusCodProvvCodMotivo(aIdRicConv, aModel, aTipoProv,
 					aCodMotivo, aCodEsito);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Eseguita la query");
 			lDao.start();
 			if (lDao.next())
@@ -587,7 +609,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lEvento = new EventoModel((EventoModel) lDao.getModelByKey());
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Eseguita la getModel");
 		} catch (Exception e) {
 			throw new F3BException(
@@ -604,13 +627,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 * Metodo che modifica i dati della RichiestaConversione. Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 */
 	public void ExModificaRichiestaConversione(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneDAO lRicDao = null;
 
@@ -626,7 +650,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("RichiestaConversioneController.ExModifica: Non posso inserire: " + ex);
 		} finally {
@@ -638,13 +663,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 	/**
 	 * Metodo che modifica (se non valorizzata) la DataDeposito della RichiestaConversione. La
 	 * RichiestaConversione viene individuata attraverso la relazione col Fascicolo SIEP.
-	 * 
+	 *
 	 * @param aIdFascicoloSIEP
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 */
 	public void ExModificaDataDepositoRichiestaConversione(BigDecimal aIdRichiestaConversione,
 			Date lDataEmissione) throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneDAO lRicDao = null;
 
@@ -661,7 +687,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException(
 					"RichiestaConversioneController.ExModificaDataDepositoRichiestaConversione: Non posso inserire: "
@@ -674,12 +701,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	public void ExModificaRichiestaConversione(RichiestaConversioneModel aRicConvMod,
 			FascicoloSiepModel aFasSiepMod) throws F3BException {
+
 		Connection lConn = null;
-		GeneraleProcedimentoModel lGenMod = null;
 		RichiestaConversioneDAO lRicDao = null;
-//		FascicoloSiusDAO lFasSiusDao = null;
 		GeneraleProcedimentoSqlDAO lGenDao = null;
 		NoteDAO lNoteDao = null;
+
+		GeneraleProcedimentoModel lGenMod = null;
 
 		try {
 			lConn = getDBConnection();
@@ -699,7 +727,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 			if (lGenMod.getCodOggettoProcedimento() != null
 					&& lGenMod.getCodOggettoProcedimento().compareTo("U070") == 0) {
 				NoteModel lNoteMod = new NoteModel();
-//				BigDecimal lKeyRes = null;
+				// BigDecimal lKeyRes = null;
 
 				lNoteMod.setData(DateUtils.getSysDate());
 				lNoteMod.setDescrizione("MODIFICATA LA RICHIESTA CONVERSIONE per il fascicolo SIEP "
@@ -714,12 +742,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 				lNoteDao = new NoteDAO(lConn);
 				lNoteDao.setDAOFromModel(lNoteMod);
-				/*lKeyRes = */lNoteDao.insert();
+				/* lKeyRes = */lNoteDao.insert();
 			}
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("RichiestaConversioneController.ExModifica: Non posso inserire: " + ex);
 		} finally {
@@ -732,12 +761,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 * @throws F3BException
 	 */
 	public void ExCancellaRichiestaConversione(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneDAO lRicDao = null;
 		ScadenzarioSiusDAO lScaDao = null;
@@ -757,14 +787,16 @@ public class RichiestaConversioneController extends SiapController implements IR
 			}
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			throw new F3BException("RichiestaConversioneController.ExCancellaRichiestaConversione: " + daoEx);
 		} finally {
 			cleanup(lRicDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScaDao);
 			cleanup(lConn);
 		}
 	}
@@ -772,13 +804,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 	/**
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountRichiestaConversione(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		RichiestaConversioneSqlDAO lRichiestaConversioneSqlDao = null;
@@ -792,7 +825,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lCount = lRichiestaConversioneSqlDao.getBigDecimal("HowManyRecords");
 			lRichiestaConversioneSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("RichiestaConversioneController.ExGetCountRichiestaConversione: " + daoEx);
 		} finally {
@@ -806,7 +840,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	/**
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -816,6 +850,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public Vector ExRicercaRichiestaConversionePaged(RichiestaConversioneModel aRichiestaConversione,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaConversioni = new Vector();
 		RichiestaConversioneSqlDAO lRichiestaConversioneSqlDao = null;
@@ -826,10 +861,11 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRichiestaConversioneSqlDao.ricercaRichiestaConversionePaged(aRichiestaConversione, aPage);
 			lRichiestaConversioni = new Vector(lRichiestaConversioneSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RichiestaConversioneController.ExRicercaRichiestaConversionePaged: "
-					+ daoEx);
+			throw new F3BException(
+					"RichiestaConversioneController.ExRicercaRichiestaConversionePaged: " + daoEx);
 		} finally {
 			cleanup(lRichiestaConversioneSqlDao);
 			cleanup(lConn);
@@ -845,9 +881,10 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 * inserisce fascicolo di Conversione delle pene pecuniare (CLasse VII) inserisce rischiesta di
 	 * conversione inserisce evento di conversione anche sul Fascicolo di classe VII riporta oltre i dati del
 	 * fascicolo la posizione giuridica e gli avvocati
-	 * 
-	 * @param: aSoggetto Model con i dati da inserire aEvento Model con i dati da inserire aFascicoloSiep
-	 *         Model con i dati da inserire aRichiestaConversione Model con i dati da inserire
+	 *
+	 * @param: aSoggetto
+	 *             Model con i dati da inserire aEvento Model con i dati da inserire aFascicoloSiep Model con
+	 *             i dati da inserire aRichiestaConversione Model con i dati da inserire
 	 * @return il model aRichiestaConversione con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
 	 */
@@ -855,8 +892,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			EventoModel aEvento, FascicoloSiepModel aFascicoloSiep,
 			DettaglioFascicoloModel aDettaglioFascicolo, RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
-		RichiestaConversioneModel lRicMod = null;
 
 		SoggettoDAO lSogDao = null;
 		EventoDAO lEveDao = null;
@@ -871,17 +908,19 @@ public class RichiestaConversioneController extends SiapController implements IR
 		CircostanzaDAO lCirDao = null;
 		PenaComplessivaDAO lPenDao = null;
 		SanzioneSostitutivaDAO lSanDao = null;
-
 		// Paolo Cherubini 27/04/2011
 		AvvocatoFascicoloSiepDAO lAvvFasDao = null;
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		AnnotazioneManualeDAO lAnnDao = null;
 
+		RichiestaConversioneModel lRicMod = null;
+
 		try {
 			lConn = getDBTransaction();
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Paolo ---- > ExInserisciRichiestaConversionedaClasseI");
 			BigDecimal lkeyFasI = aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep(); // salvo id
 																								// procedimento
@@ -895,7 +934,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			// PENA RESIDUA //
 			// --------------------------------------------------//
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Paolo ---- > procedimento classe I = " + lkeyFasI);
 
 			// inserisco l'evento di conversione nel fascicolo di classe I
@@ -903,59 +943,62 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lEveDao.setDAOFromModel(aEvento);
 			BigDecimal lEveClassI = lEveDao.insert();
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Paolo ---- > scritto evento per classe I = " + lEveClassI);
 
 			/*
 			 * 23/02/2015 sulla pena del classe I non deve più aggiornare la pena residua, né scrivere una
 			 * annotazione manuale con gli importi da detrarre.
-			 * 
+			 *
 			 * // Paolo Cherubini 03/05/2011 // quando inserisco una richiesta conversione devo detrarre gli
 			 * importi indicati, dalla pena residua // o dalla pena in sentenza se questa non esiste. // per
 			 * cui scrivo un record pena residua con la differenza // e una annotazione manuale con gli
 			 * importi da detrarre
-			 * 
+			 *
 			 * //=============================================== //Pena Residua
 			 * //=============================================== lPenResDao = new PenaResiduaDAO(lConn);
 			 * lPenResSqlDao = new PenaResiduaSqlDAO(lConn); PenaResiduaModel lPenResMod = new
 			 * PenaResiduaModel();
-			 * 
+			 *
 			 * lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lkeyFasI); lPenResMod =
 			 * (PenaResiduaModel) lPenResSqlDao.getModelByKey(); BigDecimal lkeyPenI = null; int aAmmenda = 0;
 			 * int aMulta = 0;
-			 * 
+			 *
 			 * if (lPenResMod != null && lPenResMod.getEveIdEvento() != null) { // esiste la pena residua
 			 * detraggo gli importi convertiti e scrivo un nuovo record pena residua if
 			 * (lPenResMod.getImportoAmmenda() != null) aAmmenda = lPenResMod.getImportoAmmenda().intValue();
 			 * if (aRichiestaConversione.getImportoAmmenda() != null) aAmmenda = aAmmenda -
 			 * aRichiestaConversione.getImportoAmmenda().intValue();
-			 * 
+			 *
 			 * if (lPenResMod.getImportoMulta() != null) aMulta = lPenResMod.getImportoMulta().intValue(); if
 			 * (aRichiestaConversione.getImportoMulta() != null) aMulta = aMulta -
 			 * aRichiestaConversione.getImportoMulta().intValue();
-			 * 
+			 *
 			 * lPenResMod.setImportoAmmenda(new BigDecimal(aAmmenda)); lPenResMod.setImportoMulta(new
 			 * BigDecimal(aMulta)); lPenResMod.setEveIdEvento(lEveClassI); lPenResMod.setFlagValidato("S");
 			 * lPenResMod.setFasSieIdFascicoloSiep(lkeyFasI);
 			 * lPenResMod.setDataInserimento(DateUtils.getSysDate()); lPenResDao.setDAOFromModel(lPenResMod);
 			 * lkeyPenI =lPenResDao.insert();
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > pena residua esistente1");
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("Paolo ---- > pena residua esistente1"); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI); // //
+			 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger
 			 * .debug("Paolo ---- > scritto pena residua per classe I = "+lPenResDao.getFasSieIdFascicoloSiep
-			 * ()); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda()); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta()); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * ()); // // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+			 * di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda()); // // [FT]
+			 * - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta()); // // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > legata ad evento = "+lPenResDao.getEveIdEvento()); //
 			 * lPenResDao.stop();
-			 * 
+			 *
 			 * }else{ // non esiste la pena residua detraggo gli importi convertiti dalla pena complessiva //
 			 * e scrivo un nuovo record pena residua if
 			 * (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva
@@ -964,14 +1007,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * ().getPenaComplessiva().getImportoAmmenda().intValue(); if
 			 * (aRichiestaConversione.getImportoAmmenda()!= null) aAmmenda = aAmmenda -
 			 * aRichiestaConversione.getImportoAmmenda().intValue();
-			 * 
-			 * if
-			 * (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva().getImportoMulta
-			 * ()!= null) aMulta =
+			 *
+			 * if (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva().
+			 * getImportoMulta ()!= null) aMulta =
 			 * aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva
 			 * ().getImportoMulta().intValue(); if (aRichiestaConversione.getImportoMulta() != null) aMulta =
 			 * aMulta - aRichiestaConversione.getImportoMulta().intValue();
-			 * 
+			 *
 			 * lPenResMod.setImportoAmmenda(new BigDecimal(aAmmenda)); lPenResMod.setImportoMulta(new
 			 * BigDecimal(aMulta)); lPenResMod.setIdPenaResidua(lPenResMod.getIdPenaResidua());
 			 * lPenResMod.setEveIdEvento(lEveClassI); lPenResMod.setFlagValidato("S");
@@ -979,54 +1021,59 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * lPenResMod.setCodUfficioAggiornamento(aFascicoloSiep.getCodUfficioInserimento());
 			 * lPenResMod.setDataAggiornamento(DateUtils.getSysDate());
 			 * lPenResDao.setDAOFromModel(lPenResMod); lkeyPenI =lPenResDao.insert();
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > pena residua non esistente");
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("Paolo ---- > pena residua non esistente"); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("Paolo ---- > pena residua scritta = "+lkeyPenI); // //
+			 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger
 			 * .debug("Paolo ---- > scritto pena residua per classe I = "+lPenResDao.getFasSieIdFascicoloSiep
-			 * ()); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda()); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta()); //
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * ()); // // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+			 * di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResDao.getImportoAmmenda()); // // [FT]
+			 * - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResDao.getImportoMulta()); // // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > legata ad evento = "+lPenResDao.getEveIdEvento()); //
 			 * lPenResDao.stop(); }
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("AnnotazioneManualeModel"); // scrivo una annotazione manuale con gli
-			 * importi da detrarre AnnotazioneManualeModel lAnnMod = new AnnotazioneManualeModel();
-			 * lAnnMod.setCodTipoAnnotazione("014"); // altro lAnnMod.setFlagPiuMeno("-");
-			 * lAnnMod.setFlagConforme("-"); lAnnMod.setFlagValidato("S"); lAnnMod.setCodFonte("-");
-			 * lAnnMod.setCodSottonumerazione("-"); lAnnMod.setCodCausaleComputo("-"); lAnnMod.setCodDpr("-");
-			 * lAnnMod.setFlagAppProvvisoria("-"); lAnnMod.setMotivazioni("conversione pena pecuniaria");
-			 * lAnnMod.setNumAnniReclusione(new BigDecimal(0)); lAnnMod.setNumMesiReclusione(new
-			 * BigDecimal(0)); lAnnMod.setNumGiorniReclusione(new BigDecimal(0));
-			 * lAnnMod.setNumAnniArresto(new BigDecimal(0)); lAnnMod.setNumMesiArresto(new BigDecimal(0));
-			 * lAnnMod.setNumGiorniArresto(new BigDecimal(0));
-			 * 
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("AnnotazioneManualeModel"); // scrivo una annotazione
+			 * manuale con gli importi da detrarre AnnotazioneManualeModel lAnnMod = new
+			 * AnnotazioneManualeModel(); lAnnMod.setCodTipoAnnotazione("014"); // altro
+			 * lAnnMod.setFlagPiuMeno("-"); lAnnMod.setFlagConforme("-"); lAnnMod.setFlagValidato("S");
+			 * lAnnMod.setCodFonte("-"); lAnnMod.setCodSottonumerazione("-");
+			 * lAnnMod.setCodCausaleComputo("-"); lAnnMod.setCodDpr("-"); lAnnMod.setFlagAppProvvisoria("-");
+			 * lAnnMod.setMotivazioni("conversione pena pecuniaria"); lAnnMod.setNumAnniReclusione(new
+			 * BigDecimal(0)); lAnnMod.setNumMesiReclusione(new BigDecimal(0));
+			 * lAnnMod.setNumGiorniReclusione(new BigDecimal(0)); lAnnMod.setNumAnniArresto(new
+			 * BigDecimal(0)); lAnnMod.setNumMesiArresto(new BigDecimal(0)); lAnnMod.setNumGiorniArresto(new
+			 * BigDecimal(0));
+			 *
 			 * lAnnMod.setImportoAmmenda(aRichiestaConversione.getImportoAmmenda());
 			 * lAnnMod.setImportoMulta(aRichiestaConversione.getImportoMulta());
 			 * lAnnMod.setEveIdEvento(lEveClassI); lAnnMod.setFasSieIdFascicoloSiep(lkeyFasI);
 			 * lAnnMod.setPenResIdPenaResidua(lkeyPenI);
-			 * 
+			 *
 			 * lAnnMod.setCodOperatoreInserimento (aFascicoloSiep.getCodOperatoreInserimento());
 			 * lAnnMod.setCodUfficioInserimento (aFascicoloSiep.getCodUfficioInserimento());
 			 * lAnnMod.setDataInserimento (DateUtils.getSysDate());
-			 * 
+			 *
 			 * lAnnDao = new AnnotazioneManualeDAO(lConn); lAnnDao.setDAOFromModel(lAnnMod); lAnnDao.insert();
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto annotazione per classe I = "+lAnnMod.
-			 * getFasSieIdFascicoloSiep());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lAnnMod.getImportoAmmenda());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lAnnMod.getImportoMulta());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("Paolo ---- > scritto annotazione per classe I = "+lAnnMod.
+			 * getFasSieIdFascicoloSiep()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			 * siesLogger al posto di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lAnnMod.getImportoAmmenda()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lAnnMod.getImportoMulta()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > legata ad evento = "+lAnnMod.getEveIdEvento());
 			 * //lAnnDao.stop();
 			 */
@@ -1035,7 +1082,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			// CLASSE VII //
 			// **************************************************//
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("CLASSE VII	");
 
 			// --------------------------------------------------//
@@ -1050,7 +1098,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			BigDecimal lkeySoggVII = lSogDao.insert();
 			aSoggetto.setIdSoggetto(lkeySoggVII);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SOGGETTO inserito	");
 
 			// --------------------------------------------------//
@@ -1089,7 +1138,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			BigDecimal lkeyFasVII = lFascDao.insert();
 			aFascicoloSiep.setIdFascicoloSiep(lkeyFasVII);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("fascicolo di classe VII inserito	");
 
 			// --------------------------------------------------//
@@ -1107,7 +1157,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 			// 23/02/2015 Inserimento della pena complessiva per il fascicolo di classe VII coi dati dalla
 			// pena residua del fascicolo di classe I.
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("PENA COMPLESSIVA");
 
 			lPenResDao = new PenaResiduaDAO(lConn);
@@ -1143,15 +1194,18 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lPenDao.setDAOFromModel(lPenMod);
 			lPenDao.insert();
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug(" ---- > Letta pena residua Classe I ");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			siesLogger
-					.debug(" ---- > scritto pena complessiva per classe VII = "
-							+ lPenMod.getFasSieIdFascicoloSiep());
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(" ---- > scritto pena complessiva per classe VII = "
+					+ lPenMod.getFasSieIdFascicoloSiep());
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug(" ---- > scritto aAmmenda = " + lPenMod.getImportoAmmenda());
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug(" ---- > scritto aMulta = " + lPenMod.getImportoMulta());
 
 			// Paolo Cherubini 04/05/2011 su indicazione di Michele Testa porto sempre
@@ -1162,10 +1216,10 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * fascicolo di classe VII. PenaComplessivaModel lPenMod = new PenaComplessivaModel(); lPenDao =
 			 * new PenaComplessivaDAO(lConn); if
 			 * (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva()!= null){
-			 * 
+			 *
 			 * lPenMod.setCodTipoPenaDetentiva("-"); lPenMod.setCodTipoRito("-");
 			 * lPenMod.setFlagPenaInContinuazione("N");
-			 * 
+			 *
 			 * lPenMod.setImportoMulta(aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().
 			 * getPenaComplessiva().getImportoMulta());
 			 * lPenMod.setImportoAmmenda(aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva
@@ -1173,17 +1227,19 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * lPenMod.setCodOperatoreInserimento(aFascicoloSiep.getCodOperatoreInserimento());
 			 * lPenMod.setCodUfficioInserimento(aFascicoloSiep.getCodUfficioInserimento());
 			 * lPenMod.setDataInserimento(DateUtils.getSysDate());
-			 * 
+			 *
 			 * lPenDao.setDAOFromModel(lPenMod );
-			 * 
+			 *
 			 * lPenDao.insert();
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto pena complessiva per classe VII = "+lPenMod.
-			 * getFasSieIdFascicoloSiep());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenMod.getImportoAmmenda());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * getFasSieIdFascicoloSiep()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			 * siesLogger al posto di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenMod.getImportoAmmenda()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenMod.getImportoMulta()); }
 			 */// 23/02/2015
 
@@ -1335,7 +1391,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			}
 
 			// Paolo Cherubini 26/04/2011 aggiungo anche copia avvocati
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("AVVOCATI PER FASCICOLO: " + lkeyFasVII);
 			if (aDettaglioFascicolo.getAvvocatiSIEP() != null) {
 				AvvocatoFascicoloSiepModel lAvvFasMod = new AvvocatoFascicoloSiepModel();
@@ -1345,7 +1402,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					lAvvFasMod = (AvvocatoFascicoloSiepModel) lLisAvv.get(i);
 					lAvvFasMod.setFasSieIdFascicoloSiep(lkeyFasVII);
 					lAvvFasDao.setDAOFromModel(lAvvFasMod);
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
 					// siesLogger.debug("lAvvFasMod: "+lAvvFasMod);
 					lAvvFasDao.insert();
 				}
@@ -1361,40 +1419,42 @@ public class RichiestaConversioneController extends SiapController implements IR
 			/*
 			 * 23/02/2015 Gestione decurtazione quantum Pena Residua e inserimento Annotazione Manuale
 			 * aboliti.
-			 * 
+			 *
 			 * // Paolo Cherubini 03/05/2011 // quando inserisco una richiesta conversione devo detrarre gli
 			 * importi indicati
-			 * 
+			 *
 			 * // pena residua classe VII = pena residua classe I // annotazione manuale classe VII = pena
 			 * complessiva - pena residua
-			 * 
+			 *
 			 * aAmmenda = 0; aMulta = 0;
-			 * 
+			 *
 			 * lPenResMod.setNumAnniReclusione(new BigDecimal(0)); lPenResMod.setNumMesiReclusione(new
 			 * BigDecimal(0)); lPenResMod.setNumGiorniReclusione(new BigDecimal(0));
 			 * lPenResMod.setNumAnniArresto(new BigDecimal(0)); lPenResMod.setNumMesiArresto(new
 			 * BigDecimal(0)); lPenResMod.setNumGiorniArresto(new BigDecimal(0));
-			 * 
+			 *
 			 * lPenResMod.setEveIdEvento(lkeyEveVII); lPenResMod.setFasSieIdFascicoloSiep(lkeyFasVII);
-			 * 
+			 *
 			 * lPenResDao.setDAOFromModel(lPenResMod); BigDecimal lkeyPenVII =lPenResDao.insert();
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto pena residua per classe VII = "+lPenResMod.
-			 * getFasSieIdFascicoloSiep());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * getFasSieIdFascicoloSiep()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			 * siesLogger al posto di LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto pena residua per evento VII = "
-			 * +lPenResMod.getEveIdEvento());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResMod.getImportoAmmenda());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * +lPenResMod.getEveIdEvento()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di
+			 * istanza siesLogger al posto di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto aAmmenda = "+lPenResMod.getImportoAmmenda()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto aMulta = "+lPenResMod.getImportoMulta());
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("AnnotazioneManualeModel");
-			 * 
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() siesLogger.debug("AnnotazioneManualeModel");
+			 *
 			 * lAnnMod = new AnnotazioneManualeModel(); lAnnDao = new AnnotazioneManualeDAO(lConn);
-			 * 
+			 *
 			 * lAnnMod.setCodTipoAnnotazione("014"); // altro lAnnMod.setFlagPiuMeno("-");
 			 * lAnnMod.setFlagConforme("-"); lAnnMod.setFlagValidato("S"); lAnnMod.setCodFonte("-");
 			 * lAnnMod.setCodSottonumerazione("-"); lAnnMod.setCodCausaleComputo("-"); lAnnMod.setCodDpr("-");
@@ -1403,32 +1463,34 @@ public class RichiestaConversioneController extends SiapController implements IR
 			 * BigDecimal(0)); lAnnMod.setNumGiorniReclusione(new BigDecimal(0));
 			 * lAnnMod.setNumAnniArresto(new BigDecimal(0)); lAnnMod.setNumMesiArresto(new BigDecimal(0));
 			 * lAnnMod.setNumGiorniArresto(new BigDecimal(0));
-			 * 
+			 *
 			 * if (lPenMod.getImportoAmmenda() != null) aAmmenda = lPenMod.getImportoAmmenda().intValue(); if
 			 * (lPenResMod.getImportoAmmenda() != null) aAmmenda = aAmmenda -
 			 * lPenResMod.getImportoAmmenda().intValue();
-			 * 
+			 *
 			 * if (lPenMod.getImportoMulta() != null) aMulta = lPenMod.getImportoMulta().intValue(); if
 			 * (lPenResMod.getImportoMulta() != null) aMulta = aMulta -
 			 * lPenResMod.getImportoMulta().intValue();
-			 * 
+			 *
 			 * lAnnMod.setImportoAmmenda(new BigDecimal(aAmmenda)); lAnnMod.setImportoMulta(new
 			 * BigDecimal(aMulta)); lAnnMod.setEveIdEvento(lkeyEveVII);
 			 * lAnnMod.setFasSieIdFascicoloSiep(lkeyFasVII); lAnnMod.setPenResIdPenaResidua(lkeyPenVII);
-			 * 
+			 *
 			 * lAnnMod.setCodOperatoreInserimento (aFascicoloSiep.getCodOperatoreInserimento());
 			 * lAnnMod.setCodUfficioInserimento (aFascicoloSiep.getCodUfficioInserimento());
 			 * lAnnMod.setDataInserimento (DateUtils.getSysDate());
-			 * 
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 *
+			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto annotazioni per classe VII = "+lAnnMod.
-			 * getFasSieIdFascicoloSiep());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * getFasSieIdFascicoloSiep()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			 * siesLogger al posto di LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto annotazioni per evento VII = "
-			 * +lAnnMod.getEveIdEvento());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * siesLogger.debug("Paolo ---- > scritto ammenda = "+lAnnMod.getImportoAmmenda());
-			 * // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			 * +lAnnMod.getEveIdEvento()); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+			 * siesLogger al posto di LogF3B.getLogger()
+			 * siesLogger.debug("Paolo ---- > scritto ammenda = "+lAnnMod.getImportoAmmenda()); // [FT] -
+			 * 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger()
 			 * siesLogger.debug("Paolo ---- > scritto multaaa = "+lAnnMod.getImportoMulta());
 			 * lAnnDao.setDAOFromModel(lAnnMod); lAnnDao.insert(); //lAnnDao.stop();
 			 */
@@ -1465,7 +1527,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			// lRicMod.setIdRichiestaConversione(lSequence);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException(
 					"RichiestaConversioneController.ExInserisciRichiestaConversionedaClasseI: Non posso inserire: "
@@ -1484,7 +1547,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 			cleanup(lCirDao);
 			cleanup(lPenDao);
 			cleanup(lSanDao);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lAvvFasDao);
@@ -1497,13 +1559,15 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * controller utilizzato per la stampa
-	 * 
-	 * @param: aEventoNotificaModel Model con i dati da inserire aUtente Model con i dati da inserire
+	 *
+	 * @param: aEventoNotificaModel
+	 *             Model con i dati da inserire aUtente Model con i dati da inserire
 	 * @return lByteArrayOut
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream exStampaCP(EventoNotificaModel aEvento, UtenteModel aUtente)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -1511,8 +1575,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 		try {
 			IEvento lEveCntrl = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEveMod = lEveCntrl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEveMod = lEveCntrl
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 			lEveMod.getEvento().setDescrUfficioEmittente(aEvento.getEvento().getDescrUfficioEmittente());
 			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aEvento.getNomeTemplate());
 			// QUI setto l'id del template con il nemo vero e proprio
@@ -1547,7 +1611,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -1555,6 +1619,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public RichiestaConversioneModel ExRicercaRichiestaConversioneByIdEvento(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneModel lRichiestaConversioneMod = new RichiestaConversioneModel();
 		RichiestaConversioneSqlDAO lRichiestaConversioneSqlDao = null;
@@ -1566,10 +1631,11 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRichiestaConversioneMod = (RichiestaConversioneModel) lRichiestaConversioneSqlDao
 					.getModelByKey();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RichiestaConversioneController.ExRicercaRichiestaConversioneByEvento: "
-					+ daoEx);
+			throw new F3BException(
+					"RichiestaConversioneController.ExRicercaRichiestaConversioneByEvento: " + daoEx);
 		} finally {
 			cleanup(lRichiestaConversioneSqlDao);
 			cleanup(lConn);
@@ -1580,7 +1646,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -1588,6 +1654,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public RichiestaConversioneModel ExRicercaRichiestaConversioneByIdFascicoloSiep(
 			BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneModel lRichiestaConversioneMod = new RichiestaConversioneModel();
 		RichiestaConversioneSqlDAO lRichiestaConversioneSqlDao = null;
@@ -1599,10 +1666,12 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRichiestaConversioneMod = (RichiestaConversioneModel) lRichiestaConversioneSqlDao
 					.getModelByKey();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"RichiestaConversioneController.ExRicercaRichiestaConversioneByIdFascicoloSiep: " + daoEx);
+					"RichiestaConversioneController.ExRicercaRichiestaConversioneByIdFascicoloSiep: "
+							+ daoEx);
 		} finally {
 			cleanup(lRichiestaConversioneSqlDao);
 			cleanup(lConn);
@@ -1613,7 +1682,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -1621,6 +1690,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public RichiestaConversioneModel ExRicercaRichiestaConversioneByIdFascicoloSiepClasseI(
 			BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		RichiestaConversioneModel lRicConMod = new RichiestaConversioneModel();
 		RichiestaConversioneSqlDAO lRicConSqlDao = null;
@@ -1640,12 +1710,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lRicConSqlDao.ricercaRichiestaConversioneByIdFascicoloSiep(lFasMod.getIdFascicoloSiep());
 				lRicConMod = (RichiestaConversioneModel) lRicConSqlDao.getModelByKey();
 			}
-
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"RichiestaConversioneController.ExRicercaRichiestaConversioneByIdFascicoloSiep: " + daoEx);
+					"RichiestaConversioneController.ExRicercaRichiestaConversioneByIdFascicoloSiep: "
+							+ daoEx);
 		} finally {
 			cleanup(lRicConSqlDao);
 			cleanup(lFascDao);
@@ -1658,7 +1729,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	/**
 	 * Effettua la ricerca dei dati RichiestaConversione usando il RichiestaConversioneSqlDAO. Creato per
 	 * puntare alle Richieste riferite a un fascicolo SIUS.
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -1667,6 +1738,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public Vector ExRicercaRichiesteConversionePenePecuniarie(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaConversioni = new Vector();
 		RichiestaConversioneSqlDAO lRicSqlDao = null;
@@ -1677,12 +1749,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRicSqlDao.ricercaRichiestaConversione(aRichiestaConversione);
 			lRichiestaConversioni = new Vector(lRicSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"RichiestaConversioneController.ExRicercaRichiesteConversionePenePecuniarie: " + daoEx);
 		} catch (Exception Ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + Ex);
 			throw new F3BException(
 					"RichiestaConversioneController.ExRicercaRichiesteConversionePenePecuniarie: " + Ex);
@@ -1695,7 +1769,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Effettua la ricerca dei dati RichiestaConversione Valide
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -1704,10 +1778,12 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public Vector ExRicercaRichiesteConversioniValide(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaConversioni = new Vector();
 		RichiestaConversioneDAO lRicDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
+
 		try {
 			lConn = getDBConnection();
 			lRicDao = new RichiestaConversioneDAO(lConn);
@@ -1721,16 +1797,17 @@ public class RichiestaConversioneController extends SiapController implements IR
 				EventoModel lEveMod = (EventoModel) lEveSqlDAO.getModelByKey();
 				if (lEveMod != null && lEveMod.getFlagDocumentoRegistrato() != null) {
 					if (lEveMod.getFlagDocumentoRegistrato().compareTo("S") == 0) {
-						lRichiestaConversioni.add((RichiestaConversioneModel) lRicDao.getModel());
+						lRichiestaConversioni.add(lRicDao.getModel());
 					}
 				}
 			}
 			lRicDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RichiestaConversioneController.ExRicercaRichiesteConversioniValide: "
-					+ daoEx);
+			throw new F3BException(
+					"RichiestaConversioneController.ExRicercaRichiesteConversioniValide: " + daoEx);
 		} finally {
 			cleanup(lRicDao);
 			cleanup(lEveSqlDAO);
@@ -1741,6 +1818,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	public Vector ExRicercaRichiesteConversionePenePecuniarieByIdFascicoloSius(BigDecimal aIdFascicoloSius)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiestaConversioni = new Vector();
 		RichiestaConversioneSqlDAO lRicSqlDao = null;
@@ -1751,12 +1829,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lRicSqlDao.ricercaRichiestaConversioneByIdFasSIUS(aIdFascicoloSius);
 			lRichiestaConversioni = new Vector(lRicSqlDao.getModels());
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"RichiestaConversioneController.ExRicercaRichiesteConversionePenePecuniarie: " + daoEx);
 		} catch (Exception Ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + Ex);
 			throw new F3BException(
 					"RichiestaConversioneController.ExRicercaRichiesteConversionePenePecuniarie: " + Ex);
@@ -1771,7 +1851,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 * Effettua la ricerca dei dati di RichiestaConversione usando il RichiestaConversioneSqlDAO. Creato per
 	 * puntare alle Richieste riferite a un fascicolo SIUS, carica il model esteso
 	 * RichiestaConversioneEstesaModel.
-	 * 
+	 *
 	 * @param aRichiestaConversione
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -1780,6 +1860,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public Vector ExRicercaRichiestaConversioneEstesa(RichiestaConversioneModel aRichiestaConversione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lRichiesteConversioni = new Vector();
 		RichiestaConversioneSqlDAO lRicSqlDao = null;
@@ -1792,8 +1873,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lEveSqlDAO = new EventoSqlDAO(lConn);
 
 			// lRicSqlDao.ricercaRichiestaConversione(aRichiestaConversione);
-			lRicSqlDao.ricercaRichiestaConversioneByIdFasSIUS(aRichiestaConversione
-					.getFasSiuIdFascicoloSius());
+			lRicSqlDao
+					.ricercaRichiestaConversioneByIdFasSIUS(aRichiestaConversione.getFasSiuIdFascicoloSius());
 			lRicSqlDao.start();
 
 			while (lRicSqlDao.next()) {
@@ -1824,15 +1905,17 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lRichiesteConversioni.add(lRicConvEstesa);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RichiestaConversioneController.ExRicercaRichiestaConversioneEstesa: "
-					+ daoEx);
+			throw new F3BException(
+					"RichiestaConversioneController.ExRicercaRichiestaConversioneEstesa: " + daoEx);
 		} catch (Exception Ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + Ex);
-			throw new F3BException("RichiestaConversioneController.ExRicercaRichiestaConversioneEstesa: "
-					+ Ex);
+			throw new F3BException(
+					"RichiestaConversioneController.ExRicercaRichiestaConversioneEstesa: " + Ex);
 		} finally {
 			cleanup(lRicSqlDao);
 			cleanup(lFasSieSqlDao);
@@ -1844,15 +1927,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	public void inserimentoScadenzario(RichiestaConversioneModel aRichiestaConversione, Connection lConn)
 			throws F3BException {
-		// Se iscrive SIUS viene inserito lo Scadenzario (Previa lettura del
-		// Parametro).
-		// Condizioni aggiuntive almeno uno dei tre seguenti parametri deve
-		// essere valorizzato:
+
+		// Se iscrive SIUS viene inserito lo Scadenzario (Previa lettura del Parametro).
+		// Condizioni aggiuntive almeno uno dei tre seguenti parametri deve essere valorizzato:
 		// DATA_IRREVOCABILITA, IMPORTO_MULTA, IMPORTO_AMMENDA.
 		if (aRichiestaConversione.getFasSiuIdFascicoloSius() != null
 				&& (aRichiestaConversione.getDataIrrevocabilita() != null
-						|| aRichiestaConversione.getImportoAmmenda() != null || aRichiestaConversione
-						.getImportoMulta() != null)) {
+						|| aRichiestaConversione.getImportoAmmenda() != null
+						|| aRichiestaConversione.getImportoMulta() != null)) {
 			ParametroSqlDAO lParDao = null;
 			ScadenzarioSiusDAO lScaSiusDao = null;
 
@@ -1866,7 +1948,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					lParMod.setGiorni(new BigDecimal(0));
 					lParMod.setMesi(new BigDecimal(0));
 					lParMod.setAnni(new BigDecimal(0));
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug(" Nessun importo multa/ammenda selezionato ");
 				} else {
 					if (!Utils.isNullObj(aRichiestaConversione.getImportoAmmenda()))
@@ -1947,12 +2030,14 @@ public class RichiestaConversioneController extends SiapController implements IR
 				}
 			} catch (DAOException ex) {
 				rollback(lConn);
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.error("DAOException: " + ex);
 				throw new F3BException("RichiestaConversioneController.inserimentoScadenzario: " + ex);
 			} catch (Exception e) {
 				rollback(lConn);
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.error("Exception: " + e);
 				throw new F3BException("RichiestaConversioneController.inserimentoScadenzario:  " + e);
 			} finally {
@@ -1960,12 +2045,12 @@ public class RichiestaConversioneController extends SiapController implements IR
 				cleanup(lScaSiusDao);
 			}
 		}
-
 	}
 
 	public RichiestaConversioneModel ExInserisciRichiestaEvento(
 			RichiestaConversioneModel aRichiestaConversione, EventoNotificaModel aEvento,
 			PenaResiduaModel aPenaResidua, String StatoPro) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
@@ -1974,7 +2059,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 		PenaResiduaDAO lPenDao = null;
 		RichiestaConversioneDAO lRicDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
-		// CampoNotaDAO lCampoNotaDao = null;
 
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
 
@@ -1993,11 +2077,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 			int count = 0;
 
 			if (aEvento != null && aEvento.getNotifiche() != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Presenti " + aEvento.getNotifiche().length + " notifiche");
 
 				while (count < aEvento.getNotifiche().length) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Notifica[" + count + "] = " + aEvento.getNotifiche()[count]);
 
 					if (aEvento.getNotifiche()[count] != null) {
@@ -2010,7 +2096,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 							if (lAutMod == null) {
 								lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
-								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
 								siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
 								aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 							} else {
@@ -2025,7 +2112,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 						lNotDao.insert();
 						lNotDao.stop();
 
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
 						siesLogger.debug("Inserito evento" + lKeyEvento);
 					}
 					count++;
@@ -2078,15 +2166,16 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lStatoDao.stop();
 			}
 			/*
-			 * // Inserimento delle eventuali note aggiuntive. lCampoNotaDao = new CampoNotaDAO(lConn); if
-			 * (// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			 * (aEvento.getCampoNote() != null) { siesLogger.debug("Inserimento Eventuali Note
-			 * Aggiuntive Numero note Aggiuntive : " + aEvento.getCampoNote().length); count = 0; while (count
-			 * < aEvento.getCampoNote().length) { aEvento.getCampoNote()[count].setEveIdEvento(lKeyEvento);
+			 * // Inserimento delle eventuali note aggiuntive. lCampoNotaDao = new CampoNotaDAO(lConn); if (//
+			 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			 * LogF3B.getLogger() (aEvento.getCampoNote() != null) { siesLogger.debug("Inserimento Eventuali
+			 * Note Aggiuntive Numero note Aggiuntive : " + aEvento.getCampoNote().length); count = 0; while
+			 * (count < aEvento.getCampoNote().length) {
+			 * aEvento.getCampoNote()[count].setEveIdEvento(lKeyEvento);
 			 * aEvento.getCampoNote()[count].setProgressivo(new BigDecimal((double) count + 1));
 			 * lCampoNotaDao.setDAOFromModel(aEvento.getCampoNote()[count]); lCampoNotaDao.insert();
 			 * lCampoNotaDao.stop();
-			 * 
+			 *
 			 * count++; } }
 			 */
 
@@ -2096,7 +2185,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 		} catch (Exception ex) {
 			throw new F3BException("EventoController.ExInserisciEventoNotifica: " + ex);
 		} finally {
-			// cleanup(lCampoNotaDao);
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lAutDao);
@@ -2113,7 +2201,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 	/**
 	 * Inserisci i records di Richiesta Conversione JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aRichiesteConversione
 	 * @param lConn
 	 * @return lCodEsito
@@ -2121,6 +2209,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 */
 	public String ExInserisciRichiesteConversioniWithoutSequence(ArrayList aRichiesteConversione,
 			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		RichiestaConversioneDAO lRicConDao = null;
 		RichiestaConversioneModel lRicConMod = null;
@@ -2165,13 +2254,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 	/**
 	 * Effettua l'inserimento della dell'evento SIEP di 'Annotazione' decisione richiesta conversione della
 	 * sorveglianza
-	 * 
+	 *
 	 * @param aEventoSIEP
 	 * @param aEventoSIUS
 	 * @param aRichiestaConversioneModel
 	 * @param aScambioSanzioneModel
 	 * @param
-	 * 
+	 *
 	 * @return
 	 */
 	public EventoNotificaModel ExInserisciDecisioneSorveglianza(EventoNotificaModel aEventoNotSIEP,
@@ -2187,7 +2276,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 		EventoDAO lEveDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
-
 		ScambioSanzioneDAO lScambioDao = null;
 		RichiestaConversioneDAO lRichiestaDao = null;
 		DepositoDecretoDAO lDepDAO = null;
@@ -2203,7 +2291,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			BigDecimal lKeyEventoSius = null;
 			if (aEventoSIUS != null) {
 				// Inserisco l'evento SIUS
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Inserisco Evento SIUS");
 
 				lEveDao.setDAOFromModel(aEventoSIUS);
@@ -2211,7 +2300,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lEveDao.stop();
 
 				if (aDepoDecModel != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Inserisco DEPOSITO_DECRETO");
 					lDepDAO = new DepositoDecretoDAO(lConn);
 					DepositoDecretoModel lDepDecretoMod = new DepositoDecretoModel(aDepoDecModel);
@@ -2220,7 +2310,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					BigDecimal lKeyDepDec = lDepDAO.insert();
 
 					// insert tenore
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Inserisco TENORE");
 					lTenDAO = new TenoreDAO(lConn);
 					aTenoreModel.setDepDecIdDepositoDecreto(lKeyDepDec);
@@ -2228,7 +2319,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					lTenDAO.setDAOFromModel(aTenoreModel);
 					lTenDAO.insert();
 				} else if (aDepOrdPcModel != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Inserisco DEPOSITO_ORDINANZA_PC");
 					lDepOrdDAO = new DepositoOrdinanzaPcDAO(lConn);
 					DepositoOrdinanzaPcModel lDepPCMod = new DepositoOrdinanzaPcModel(aDepOrdPcModel);
@@ -2237,7 +2329,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					BigDecimal lKeyDepOrd = lDepOrdDAO.insert();
 
 					// Insert tenore
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Inserisco TENORE");
 					lTenDAO = new TenoreDAO(lConn);
 					aTenoreModel.setDepOpidDepositoOrdinanzaPc(lKeyDepOrd);
@@ -2247,7 +2340,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 				}
 
 				// Inserisco scambio Sanzione legandola all'evento SIUS
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Inserisco SCAMBIO_SANZIONE");
 
 				aScambioSanzioneModel.setEveIdEvento(lKeyEventoSius);
@@ -2258,7 +2352,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 				// Aggiorno la tabella RICHIESTA_CONVERSIONE nei campi che vengono
 				// di norma valorizzati da SIUS
 				if (aRichiestaConversioneModel != null) {
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Aggiorno RICHIESTA_CONVERSIONE");
 
 					lRichiestaDao = new RichiestaConversioneDAO(lConn);
@@ -2277,8 +2372,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					lRichiestaDao.setValoreRata(aRichiestaConversioneModel.getValoreRata());
 					lRichiestaDao.setValoreUltimaRata(aRichiestaConversioneModel.getValoreUltimaRata());
 					lRichiestaDao.setDataInizioPagamento(aRichiestaConversioneModel.getDataInizioPagamento());
-					lRichiestaDao.setNumGGInizioPagamento(aRichiestaConversioneModel
-							.getNumeroGiorniInizioPagamento());
+					lRichiestaDao.setNumGGInizioPagamento(
+							aRichiestaConversioneModel.getNumeroGiorniInizioPagamento());
 
 					// Update in chiave
 					lRichiestaDao.selCondizioneUpdate(aRichiestaConversioneModel.getIdRichiestaConversione());
@@ -2288,7 +2383,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			}
 
 			// Inserisco l'evento
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Inserisco Evento SIEP");
 			if (lKeyEventoSius != null) {
 				// Lego l'evento SIEP all'evento SIUS
@@ -2325,7 +2421,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lNotDao = new NotificaDAO(lConn);
 			lAutDao = new AutoritaEsternaDAO(lConn);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Inserisco I detinatari");
 			BigDecimal lKeyAutorita = null;
 			int count = 0;
@@ -2335,16 +2432,17 @@ public class RichiestaConversioneController extends SiapController implements IR
 				while (count < aEventoNotSIEP.getNotifiche().length) {
 					if (aEventoNotSIEP.getNotifiche()[count] != null) {
 						if (aEventoNotSIEP.getNotifiche()[count].getAutoritaEsterna() != null) {
-							lAutDao.setRicercaByAutSede(aEventoNotSIEP.getNotifiche()[count]
-									.getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									aEventoNotSIEP.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
 							if (lAutMod == null) {
-								lAutDao.setDAOFromModel(aEventoNotSIEP.getNotifiche()[count]
-										.getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEventoNotSIEP.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
-								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
 								siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
 								aEventoNotSIEP.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 							} else {
@@ -2367,15 +2465,16 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 			// rollback(lConn);
 			commit(lConn);
-
 		} catch (DAOException ex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", ex);
 			rollback(lConn);
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Impossibile inserire l'Annotazione Conversione! ");
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("Exception: ", e);
 			rollback(lConn);
 			throw new F3BException("SanzioneSostitutivaController.ExInserisciDecisioneSorveglianza: " + e);
@@ -2383,13 +2482,10 @@ public class RichiestaConversioneController extends SiapController implements IR
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lAutDao);
-
 			cleanup(lDepDAO);
 			cleanup(lDepOrdDAO);
 			cleanup(lTenDAO);
-
 			cleanup(lPenDao);
-
 			cleanup(lScambioDao);
 			cleanup(lRichiestaDao);
 
@@ -2397,7 +2493,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 		}
 
 		return lEveNotRet;
-
 	}
 
 	/**
@@ -2407,11 +2502,12 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 * Inserisce evento di Annotazione Revoca Conversione Sanzione Sostitutiva x Pene Pecuniarie sul Fascicolo
 	 * di classe VII Archivia il Fascicolo di classe VII Inserisce il nuovo fascicolo di pena detentiva
 	 * (Classe I)
-	 * 
+	 *
 	 * Duplica le PeneAccessorie e i Benefici ( dal procedimento Classe VII al Classe I)
-	 * 
-	 * @param: aSoggetto Model con i dati da inserire aEvento Model con i dati da inserire aFascicoloSiep
-	 *         Model con i dati da inserire
+	 *
+	 * @param: aSoggetto
+	 *             Model con i dati da inserire aEvento Model con i dati da inserire aFascicoloSiep Model con
+	 *             i dati da inserire
 	 * @return il model aFascicolo con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
 	 */
@@ -2419,6 +2515,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 			FascicoloSiepModel aFascicoloSiep, DettaglioFascicoloModel aDettaglioFascicolo,
 			FascicoloSiepModel aFascicoloClasseVIISiep, AnnotazioneManualeModel AnnMan,
 			StatoProcedimentoModel aStatoProcMod) throws F3BException {
+
 		Connection lConn = null;
 
 		SoggettoDAO lSogDao = null;
@@ -2434,7 +2531,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 		ReatoDAO lReaDao = null;
 		CircostanzaDAO lCirDao = null;
 		PenaComplessivaDAO lPenDao = null;
-//		PenaResiduaDAO lPenResDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2482,17 +2578,18 @@ public class RichiestaConversioneController extends SiapController implements IR
 			// Inserimento della Pena Complessiva (dal classe VII)
 			lPenDao = new PenaComplessivaDAO(lConn);
 			if (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva() != null) {
-				if (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva() != null) {
-					PenaComplessivaModel lPenMod = aDettaglioFascicolo
-							.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva();
+				if (aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva()
+						.getPenaComplessiva() != null) {
+					PenaComplessivaModel lPenMod = aDettaglioFascicolo.getPenaComplessivaSanzioneSostitutiva()
+							.getPenaComplessiva();
 					lPenMod.setCodOperatoreInserimento(aFascicoloSiep.getCodOperatoreInserimento());
 					lPenMod.setCodUfficioInserimento(aFascicoloSiep.getCodUfficioInserimento());
 					lPenMod.setDataInserimento(DateUtils.getSysDate());
 					// 31/07/2015 Valorizzazione dei quantum della FORM di inserimento
 					lPenMod.setNumAnniReclusione(aDettaglioFascicolo.getPenaResidua().getNumAnniReclusione());
 					lPenMod.setNumMesiReclusione(aDettaglioFascicolo.getPenaResidua().getNumMesiReclusione());
-					lPenMod.setNumGiorniReclusione(aDettaglioFascicolo.getPenaResidua()
-							.getNumGiorniReclusione());
+					lPenMod.setNumGiorniReclusione(
+							aDettaglioFascicolo.getPenaResidua().getNumGiorniReclusione());
 					lPenMod.setNumAnniArresto(aDettaglioFascicolo.getPenaResidua().getNumAnniArresto());
 					lPenMod.setNumMesiArresto(aDettaglioFascicolo.getPenaResidua().getNumMesiArresto());
 					lPenMod.setNumGiorniArresto(aDettaglioFascicolo.getPenaResidua().getNumGiorniArresto());
@@ -2541,8 +2638,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lStaMod.setFasSieIdFascicoloSiep(aFascicoloSiep.getIdFascicoloSiep());
 			lStaMod.setProgressivo(new BigDecimal(1));
 			lStaMod.setCodStatoProcedimento("0108"); // iscritto
-			 // 19/02/2016 lStaMod.setData(null);
-      		lStaMod.setData(DateUtils.getSysDate());	// 19/02/2016
+			// 19/02/2016 lStaMod.setData(null);
+			lStaMod.setData(DateUtils.getSysDate()); // 19/02/2016
 			lStaDao.setDAOFromModel(lStaMod);
 			lStaDao.insert();
 
@@ -2706,10 +2803,10 @@ public class RichiestaConversioneController extends SiapController implements IR
 								}
 
 								if (ScrivoSiNo.equals("SI")) {
-									lBeneMod.setCodOperatoreInserimento(aFascicoloSiep
-											.getCodOperatoreInserimento());
-									lBeneMod.setCodUfficioInserimento(aFascicoloSiep
-											.getCodUfficioInserimento());
+									lBeneMod.setCodOperatoreInserimento(
+											aFascicoloSiep.getCodOperatoreInserimento());
+									lBeneMod.setCodUfficioInserimento(
+											aFascicoloSiep.getCodUfficioInserimento());
 									lBeneMod.setDataInserimento(DateUtils.getSysDate());
 									lBeneMod.setFasSieIdFascicoloSiep(aFascicoloSiep.getIdFascicoloSiep());
 									lBeneMod.setCodOperatoreAggiornamento(null);
@@ -2866,7 +2963,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			// / stati trovati nel distretto ma inseriti a mano dall'utente
 			// /====================================================================================================
 			// /if (!AnnMan.equals(null)){
-			// / // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// / // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			// / siesLogger.debug("ANNOTAZIONE per i dati della sentenza->" + AnnMan);
 			// / AnnotazioneManualeDAO lAnnotazioneManualeDao = new AnnotazioneManualeDAO(lConn);
 			// / AnnMan.setEveIdEvento(aEvento.getEveIdEvento());
@@ -2915,7 +3013,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			AnnotazioneManualeDAO lAnnotazManClasseIDao = null;
 
 			if (!AnnMan.equals(null) && lSequenceEveI != null) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("ANNOTAZIONE per i dati della sentenza in Classe I -> ");
 				lAnnotazManClasseIDao = new AnnotazioneManualeDAO(lConn);
 
@@ -2950,7 +3049,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lStat.setDataInserimento(DateUtils.getSysDate());
 			lStat.setCodUfficioInserimento(aFascicoloSiep.getCodUfficioInserimento());
 			lStat.setCodOperatoreInserimento(aFascicoloSiep.getCodOperatoreInserimento());
-			lStat.setData(DateUtils.getSysDate());	// 19/02/2016
+			lStat.setData(DateUtils.getSysDate()); // 19/02/2016
 			// 31/05/2016 Impostazione corretta di Stato Procedimento relativo all'Evento di
 			// Revoca/Conversione
 			// lStat.setCodStatoProcedimento("0349"); //Definito - Archiviazione per Revoca Beneficio ex artt
@@ -2969,10 +3068,10 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lStatoProcDao.insert();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException(
 					"RichiestaConversioneController.ExInserisciFascicolodaClasseVII: Non posso inserire: "
@@ -2993,7 +3092,6 @@ public class RichiestaConversioneController extends SiapController implements IR
 			cleanup(lEveSqlDAO);
 
 			cleanup(lConn);
-
 		}
 		return aFascicoloSiep;
 	}
@@ -3004,19 +3102,21 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 * Pecuniarie) - Sanzioni Sostitutive Delle Pene Detentive Brevi (Art. 66-108 L. 689/1981) -->
 	 * (Provvedimento della sorveglianza iscritto da SIEP) Eventuale riapertura da Archiviazione del fascicolo
 	 * SIEP di classe I se lFlagPenaScaduta = "N".
-	 * 
+	 *
 	 * @param FascicoloSiepModel
 	 *            aFasClasseVII, BigDecimal aIdEvento, String lFlagPenaScaduta.
 	 * @return aFasModel
 	 * @throws F3BException
 	 * @author Luigi
 	 */
-	public FascicoloSiepModel ExArchiviazioneClasseVII(FascicoloSiepModel aFasClasseVII,
-			BigDecimal aIdEvento, String lFlagPenaScaduta) throws F3BException {
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.info(
-				">>>>>>>>>>>>>>>>>>>>>>>>>  FascicoloSiepModel = " + aFasClasseVII.toString()
-						+ " <<<<<<<<<<<<<<<<<<<<<<<<<<");
+	public FascicoloSiepModel ExArchiviazioneClasseVII(FascicoloSiepModel aFasClasseVII, BigDecimal aIdEvento,
+			String lFlagPenaScaduta) throws F3BException {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(">>>>>>>>>>>>>>>>>>>>>>>>>  FascicoloSiepModel = " + aFasClasseVII.toString()
+				+ " <<<<<<<<<<<<<<<<<<<<<<<<<<");
+
 		Connection lConn = null;
 
 		FascicoloSiepDAO lFasDao = null;
@@ -3115,7 +3215,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lFasSqlDao.ricercaFascicoloByKey(aFasClasseVII.getFasSieIdFascicoloSiep());
 				FascicoloSiepModel lFascicolo = (FascicoloSiepModel) lFasSqlDao.getModelByKey();
 				lFasSqlDao.stop();
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("CodStatoFascicolo = " + lFascicolo.getCodStatoFascicolo());
 
 				if (lFascicolo.getCodStatoFascicolo().compareTo("01") == 0) {
@@ -3174,8 +3275,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 					lEveDao.setCodLuogoDestinatario("-");
 					lEveDao.setCodTipoUfficioDestinatario("-");
 
-//					BigDecimal lKeyEvento = null;
-					/*lKeyEvento = */lEveDao.insert();
+					// BigDecimal lKeyEvento = null;
+					/* lKeyEvento = */lEveDao.insert();
 					lEveDao.stop();
 				}
 			}
@@ -3253,12 +3354,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 				lPenModIns.setCodUfficioInserimento(aFasClasseVII.getCodUfficioAggiornamento());
 				lPenModIns.setDataInserimento(aFasClasseVII.getDataAggiornamento());
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug(" Inserimento della PenaResidua con Quantum a zero " + lPenModIns);
 
 				lPenResDao = new PenaResiduaDAO(lConn);
 				lPenResDao.setDAOFromModel(lPenModIns);
-				/*BigDecimal lIdPen = */lPenResDao.insert();
+				/* BigDecimal lIdPen = */lPenResDao.insert();
 				lPenResDao.stop();
 
 			}
@@ -3280,6 +3382,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			cleanup(lStatoProcDao);
 			cleanup(lRiapFasSie);
 			cleanup(lPenResDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSqlDao);
 			cleanup(lConn);
 		}
 

@@ -4,28 +4,18 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.SIUSException;
 import siap.sius.prescrizione.dao.PrescrizioneDAO;
 import siap.sius.prescrizione.dao.PrescrizioneSqlDAO;
 import siap.sius.prescrizione.model.PrescrizioneModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: PrescrizioneController
- * </p>
- * <p>
- * Description: Classe Controller per Prescrizione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
+ * Title: PrescrizioneController Description: Classe Controller per Prescrizione Copyright: Copyright (c) 2002
  * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,8 +24,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	/**
 	 * Effettua l'inserimento delle prescrizioni, inoltre cancella eventuali record prescrizioni esistenti per
 	 * l'id del deposito ordinanza.
-	 * <p>
-	 * 
+	 *
 	 * @param aPrescrizioni
 	 *            Array di model prescrizioni da inserire.
 	 * @param aKeyDepOrdPC
@@ -46,6 +35,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	 */
 	public PrescrizioneModel ExInserisciPrescrizioni(PrescrizioneModel[] aPrescrizioni,
 			BigDecimal aKeyDepOrdPC) throws F3BException {
+
 		Connection lConn = null;
 		PrescrizioneDAO lPreDao = null;
 		PrescrizioneModel lPreMod = null;
@@ -74,8 +64,8 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new SIUSException("PrescrizioneController.ExInserisciPrescrizioni: Non posso inserire: "
-					+ ex);
+			throw new SIUSException(
+					"PrescrizioneController.ExInserisciPrescrizioni: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lPreDao);
 			cleanup(lConn);
@@ -85,8 +75,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Inserisce una prescrizione.
-	 * <p>
-	 * 
+	 *
 	 * @param aPrescrizione
 	 *            model di prescrizione.
 	 * @return il model di prescrizione.
@@ -94,6 +83,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	 *             propaga errore di eccezione.
 	 */
 	public PrescrizioneModel ExInserisciPrescrizione(PrescrizioneModel aPrescrizione) throws F3BException {
+
 		Connection lConn = null;
 		PrescrizioneDAO lPreDao = null;
 		PrescrizioneModel lPreMod = null;
@@ -109,8 +99,8 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 			lPreMod.setIdPrescrizione(lKey);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new SIUSException("PrescrizioneController.ExInserisciPrescrizione: Non posso inserire: "
-					+ ex);
+			throw new SIUSException(
+					"PrescrizioneController.ExInserisciPrescrizione: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lPreDao);
 			cleanup(lConn);
@@ -120,8 +110,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Effettua la ricerca delle prescrizione per l'id del deposito ordinanza.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave deposito ordinanza per ricerca prescrizione.
 	 * @return l'elenco delle prescrizioni per il dep ordinaza pc.
@@ -129,6 +118,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaPrescrizioneByOrdinanza(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPrescrizioni = new Vector();
 		PrescrizioneSqlDAO lPreDao = null;
@@ -153,8 +143,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Effettua la ricerca delle prescrizione per l'id dell'evento collegato.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave evento per ricerca prescrizione.
 	 * @return l'elenco delle prescrizioni .
@@ -162,6 +151,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaPrescrizioneByEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPrescrizioni = new Vector();
 		PrescrizioneSqlDAO lPreDao = null;
@@ -186,14 +176,14 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Elenco delle prescrizioni
-	 * <p>
-	 * 
+	 *
 	 * @param aPrescrizione
 	 *            model delle prescrizioni.
 	 * @return elenco delle prescrizioni trovate.
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPrescrizione(PrescrizioneModel aPrescrizione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPrescrizioni = new Vector();
 		PrescrizioneSqlDAO lPreDao = null;
@@ -207,8 +197,8 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 			if (lPrescrizioni.size() == 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoEx) {
-			throw new SIUSException("PrescrizioneController.ExRicercaPrescrizione: Non posso leggere : "
-					+ daoEx);
+			throw new SIUSException(
+					"PrescrizioneController.ExRicercaPrescrizione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPreDao);
 			cleanup(lConn);
@@ -219,8 +209,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Ricerca una prescrizione per la propria chiave id
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            chiave della prescrizione da ricercare.
 	 * @return il model della prescrizione.
@@ -228,6 +217,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	 *             propaga errore di eccezione.
 	 */
 	public PrescrizioneModel ExRicercaPrescrizioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PrescrizioneSqlDAO lPreDao = null;
 		PrescrizioneModel lPreMod;
@@ -238,8 +228,8 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 			lPreDao.ricercaPrescrizioneByKey(aKey);
 			lPreMod = (PrescrizioneModel) lPreDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new SIUSException("PrescrizioneController.ExRicercaPrescrizione: Non posso leggere : "
-					+ daoEx);
+			throw new SIUSException(
+					"PrescrizioneController.ExRicercaPrescrizione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPreDao);
 			cleanup(lConn);
@@ -249,8 +239,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Effettua la modifica di una prescrizione.
-	 * <p>
-	 * 
+	 *
 	 * @param aPrescrizione
 	 *            prescrizione model.
 	 * @return la prscrizione modifica.
@@ -258,6 +247,7 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 	 *             propaga errore di eccezione.
 	 */
 	public PrescrizioneModel ExModificaPrescrizione(PrescrizioneModel aPrescrizione) throws F3BException {
+
 		Connection lConn = null;
 		PrescrizioneDAO lPreDao = null;
 		PrescrizioneModel lPreMod = new PrescrizioneModel(aPrescrizione);
@@ -281,14 +271,14 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 
 	/**
 	 * Effettua la cacellazione di una prescrizione.
-	 * <p>
-	 * 
+	 *
 	 * @param aPrescrizione
 	 *            prescrizione model
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	public void ExCancellaPrescrizione(PrescrizioneModel aPrescrizione) throws F3BException {
+
 		Connection lConn = null;
 		PrescrizioneDAO lPreDao = null;
 
@@ -299,8 +289,8 @@ public class PrescrizioneController extends SiapController implements IPrescrizi
 			lPreDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new SIUSException("PrescrizioneController.ExCancellaPrescrizione: Non posso leggere : "
-					+ daoEx);
+			throw new SIUSException(
+					"PrescrizioneController.ExCancellaPrescrizione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPreDao);
 			cleanup(lConn);

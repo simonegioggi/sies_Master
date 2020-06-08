@@ -10,14 +10,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.siep.reato.dao.ReatoDAO;
 import siap.siep.reato.dao.ReatoSqlDAO;
 import siap.siep.reato.model.ContinuazioneReatiModel;
 import siap.siep.reato.model.ReatoCircostanzaModel;
 import siap.siep.reato.model.ReatoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -43,17 +43,17 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 
 	/**
 	 * Cancellazione Continuazione Reati
-	 * 
+	 *
 	 * @param aReato
 	 * @throws F3BException
 	 */
 	public void ExCancellazioneContinuazioneReati(ReatoModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 		ReatoModel lReaMod = new ReatoModel(aReato);
 
 		try {
-
 			lConn = getDBConnection();
 
 			lReaDao = new ReatoDAO(lConn);
@@ -67,25 +67,23 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 			lReaDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			throw new F3BException("ReatoController.ExModificaContinuazioneReati: " + ex);
 		} finally {
 			cleanup(lReaDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/**
 	 * ExModificaContinuazioneReati
-	 * 
+	 *
 	 * @param aReati
 	 * @throws F3BException
 	 */
 	public void ExModificaContinuazioneReati(ArrayList aReati) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 		ReatoModel lReaMod = null;
@@ -131,23 +129,22 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 			}
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			throw new F3BException("ReatoController.ExModificaContinuazioneReati: " + ex);
 		} finally {
 			cleanup(lReaDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/**
 	 * ExGetMaxIdContinuazione - Get Max Id Continuazione
-	 * 
+	 *
 	 * @param idFas
 	 * @return Max Id COntinuazione
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetMaxIdContinuazione(BigDecimal idFas) throws F3BException {
+
 		Connection lConn = null;
 		ReatoDAO lReaDao = null;
 		ReatoSqlDAO lReaSqlDao = null;
@@ -164,10 +161,11 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 			return idContMax;
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			throw new F3BException("ReatoController.ExGetMaxIdCondizione: " + ex);
 		} finally {
 			cleanup(lReaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lReaSqlDao);
 			cleanup(lConn);
 		}
 	}
@@ -244,7 +242,7 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 
 	/**
 	 * getTableContinuazioni - calcola le continuazioni
-	 * 
+	 *
 	 * @param inVect
 	 * @return Hashtable con le continuazioni
 	 */
@@ -275,8 +273,9 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 				if (lReato.getIdContinuazioneReato() != null) {
 
 					idCont = lReato.getIdContinuazioneReato();
-					lProgressivo = (lReato.getProgrNumeroManuale() != null) ? lReato.getProgrNumeroManuale()
-							.toString() : lReato.getProgrReato().toString();
+					lProgressivo = (lReato.getProgrNumeroManuale() != null)
+							? lReato.getProgrNumeroManuale().toString()
+							: lReato.getProgrReato().toString();
 					str = lReato.getProgrReato().toString() + "@!" + lProgressivo;
 
 					Vector vect = new Vector();
@@ -299,37 +298,36 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 
 		/*
 		 * if (table.size() > 0) {
-		 * 
+		 *
 		 * String strRet = ""; Collection coll = table.values(); itx = coll.iterator();
-		 * 
+		 *
 		 * Vector vect2 = new Vector();
-		 * 
+		 *
 		 * while (itx.hasNext()) {
-		 * 
+		 *
 		 * vect2 = (Vector)itx.next();
-		 * 
+		 *
 		 * Iterator itx2 = vect2.iterator();
-		 * 
+		 *
 		 * while (itx2.hasNext()) {
-		 * 
+		 *
 		 * str = (String)itx.next(); strRet += str } } }
 		 */
 
 		return table;
-
 	}
 
 	/**
 	 * getContinuazioniReati - restituisce un vector di ContinuazioniReatiModel le continuazioni
-	 * 
+	 *
 	 * @param inVect
 	 * @return Hashtable con le continuazioni
 	 */
 	public Vector getContinuazioniReati(Hashtable continuazioni) {
 
 		String strCont = "";
-//		String progReatoCont = "";
-//		String tipoCont = "";
+		// String progReatoCont = "";
+		// String tipoCont = "";
 		Collection coll = continuazioni.values();
 		Iterator itxColl = coll.iterator();
 		int conta = 0;
@@ -362,7 +360,7 @@ public class ReatoContinuazioneController extends ReatoController implements IRe
 					// lMessaggio += lTipoContinuazione + " tra i reati di cui ai nr. ";
 				} else {
 					lMessaggio += arrStr[1] + " ";
-//					progReatoCont = arrStr[0];
+					// progReatoCont = arrStr[0];
 				}
 
 				conta++;

@@ -150,7 +150,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFSiusDao = null;
-
 		// paolo cherubini per supersoggetto 20/07/2009
 		SoggettoSqlDAO lSogSqlDao = null;
 		SoggettoDAO lSogDao = null;
@@ -519,9 +518,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lFasDao);
 			cleanup(lFasDaoSql);
 			cleanup(lGenProDao);
@@ -529,10 +526,15 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			cleanup(lTenDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogSqlDao);
+			cleanup(lSogDao);
+			cleanup(lResDao);
+
 			cleanup(lConn);
 		}
 
@@ -550,6 +552,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloGPModel ExInserisciFascicoloDaSius(FascicoloGPModel aFascicoloGPModel,
 			String aIdEventoInviato) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -565,7 +568,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFSiusDao = null;
-
 		// Paolo x SuperSoggetto
 		SoggettoDAO lSogDao = null;
 		SoggettoSqlDAO lSoggDao = null;
@@ -877,10 +879,15 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			cleanup(lEveDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogDao);
+			cleanup(lSoggDao);
+			cleanup(lResDao);
+
 			cleanup(lConn);
 		}
 
@@ -896,6 +903,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public FascicoloGPModel ExRicercaFascicoloByKey(BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloGPModel lFascicolo = null;
@@ -997,6 +1005,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	public Collection<FascicoloGPModel> ExRicercaFascicoloSiusByEstremi(FascicoloSiusModel aFascModel,
 			String sTipoAtto, CancAssFascSiusModel aCancAssFascSius, String aFiltroCollaboratore)
 			throws F3BException {
+
 		Connection lConn = null;
 		Collection<FascicoloGPModel> lFascicoli = new ArrayList<>();
 
@@ -1052,6 +1061,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	public ByteArrayOutputStream ExReportFascicoloSiusByEstremiXLS(FascicoloSiusModel aFasModel,
 			String aTipoAtto, CancAssFascSiusModel aCancAssFascSius, String aFiltroCollaboratore,
 			UfficioModel aUfficio, HashMap<String, Object> aParams) throws F3BException {
+
 		// Invocazione metodo estrazione dati.
 		Collection<FascicoloGPModel> lElenco = ExRicercaFascicoloSiusByEstremi(aFasModel, aTipoAtto,
 				aCancAssFascSius, aFiltroCollaboratore);
@@ -1256,8 +1266,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		return lBAOS;
 	}
 
-	// Da spostare in una classe di utils per la gestione delle celle.
-
 	/**
 	 * Ricerca paginata Fascicolo Sius per Estremi.
 	 * <p>
@@ -1271,6 +1279,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	public Vector ExRicercaFascicoloSiusByEstremiPagina(FascicoloSiusModel aFascModel, String sTipoAtto,
 			CancAssFascSiusModel aCancAssFascSius, String aFiltroCollaboratore, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -1325,6 +1334,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public BigDecimal ExGetNumRicercaFascicoloSiusByEstremi(FascicoloSiusModel aFascModel, String sTipoAtto,
 			CancAssFascSiusModel aCancAssFascSius, String aFiltroCollaboratore) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusSoggettoSqlDAO lFasSoggDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -1363,6 +1373,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaResidenzaByProcedimentoSius(BigDecimal aKeyFascicolo, char aTipoResidenza)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lResidenze = new Vector();
@@ -1422,6 +1433,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoloSiusBySoggetto(SoggettoModel aSogModel) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -1497,6 +1509,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoloSiusBySoggettoForStorico(SoggettoModel aSogModel) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -1558,6 +1571,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloGPModel ExRicercaFascicoloByAnnoProgrCodUfficioNoControl(BigDecimal aChiaveAnno,
 			BigDecimal aChiaveProgr, String ufficioUtenteConnesso) throws F3BException {
+
 		return ExRicercaFascicoloByAnnoProgrCodUfficio(aChiaveAnno, aChiaveProgr, ufficioUtenteConnesso,
 				false);
 	}
@@ -1573,6 +1587,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloGPModel ExRicercaFascicoloByAnnoProgrCodUfficio(BigDecimal aChiaveAnno,
 			BigDecimal aChiaveProgr, String ufficioUtenteConnesso) throws F3BException {
+
 		return ExRicercaFascicoloByAnnoProgrCodUfficio(aChiaveAnno, aChiaveProgr, ufficioUtenteConnesso,
 				true);
 	}
@@ -1586,6 +1601,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloGPModel ExRicercaFascicoloByAnnoProgrCodUfficioFast(BigDecimal aChiaveAnno,
 			BigDecimal aChiaveProgr, String ufficioUtenteConnesso, Connection lConn) throws F3BException {
+
 		FascicoloGPModel lFascicolo = null;
 		FascicoloGPSqlDAO lFascDao = null;
 		SoggettoSqlDAO lSoggDao = null;
@@ -1631,7 +1647,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			cleanup(lFascDao);
 			cleanup(lSoggDao);
 			cleanup(lTenDao);
-
 		}
 		return lFascicolo;
 	}
@@ -1647,6 +1662,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascicoloSiusPagina(FascicoloGPModel aProgSiusModel, int aPageNum)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 		FascicoloSiusSoggettoSqlDAO lFasProgDao = null;
@@ -1697,6 +1713,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascicoloSiusPaginaMinori(FascicoloGPModel aProgSiusModel, int aPageNum,
 			String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 		FascicoloSiusSoggettoSqlDAO lFasProgDao = null;
@@ -1750,6 +1767,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaFascicoloSius(FascicoloGPModel aProgSiusModel) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusSoggettoSqlDAO lFasProgDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -1788,6 +1806,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public FascicoloGPModel ExModificaFascicoloSius(FascicoloGPModel aFascicoloGPModel) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -1994,6 +2013,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloSiusModel ExModificaFascicoloSius(FascicoloSiusModel aFascicoloSiusModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -2039,6 +2059,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloSiusModel ExModificaIdFascicoloSiusOrigine(FascicoloSiusModel aFascicoloSiusModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -2085,6 +2106,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public ByteArrayOutputStream ExStampaProcedimento(BigDecimal aIdFascicolo, String lTipoUfficio,
 			UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		IStampaSius lCtrlSta = SIUSLookupRemote.getStampaRemote();
@@ -2124,6 +2146,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public ByteArrayOutputStream ExStampaProcedimentiDelSoggetto(BigDecimal aIdSoggetto, String aIdDocumento,
 			XModel aStampa, String aCodUff, UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		IStampaSius lCtrlSta = SIUSLookupRemote.getStampaRemote();
 
@@ -2149,6 +2172,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public FascicoloGPModel ExRicercaFascicoloByGenProc(BigDecimal aIdGenProc) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloGPModel lFascicolo = null;
 		FascicoloGPSqlDAO lFasGPSqlDao = null;
@@ -2227,6 +2251,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoliXIdOrigine(BigDecimal aIdFascicoloOrigine) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 		FascicoloGPSqlDAO lFasGPSqlDao = null;
@@ -2272,6 +2297,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascicoliByIdSoggettoCodOggetto(BigDecimal aIdSoggetto, String aCodOggetto)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = null;
 		FascicoloGPSqlDAO lFasGPSqlDao = null;
@@ -2299,7 +2325,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.warn("Totale fascicoli: " + lFascicoli.size());
+		siesLogger.debug("Totale fascicoli: " + lFascicoli.size());
 		return lFascicoli;
 	}
 
@@ -2315,6 +2341,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public void ExCancellaResidenzaProcedimentoSius(BigDecimal IdResidenza, BigDecimal IdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		ResidenzaFascicoloSiusDAO lResFasSiusDao = null;
 
@@ -2358,9 +2385,9 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public void ExCancellaDomicilioProcedimentoSius(BigDecimal IdResidenza, BigDecimal IdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		ResidenzaFascicoloSiusDAO lResFasSiusDao = null;
 
@@ -2406,6 +2433,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public ResidenzaAssociataModel ExInserisciResidenzaFascicoloSius(ResidenzaAssociataModel aResidenza)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaDAO lResDao = null;
@@ -2479,6 +2507,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public ResidenzaAssociataModel ExModificaResidenzaFascicoloSius(ResidenzaAssociataModel aResidenza)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ExModificaResidenzaFascicoloSius : inizio");
@@ -2549,7 +2578,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// Aggiornamento dati di uscita
 			aResidenza.setResidenza(lResidenza);
 			aResidenza.setResidenzaFascicoloSius(lResidenzaFascicolo);
-
 		} catch (Exception ex) {
 			rollback(lConn);
 			throw new SIUSException(F3BException.USER_MESSAGE,
@@ -2569,6 +2597,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	public ResidenzaAssociataModel ExRicercaResidenzaFascicoloSiusCorrente(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
@@ -2620,11 +2649,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @return Vettore di FascicoloSiusModel
 	 * @throws F3BException
 	 */
-
 	public Vector ExRicercaFascicoliBySoggettoPagina(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, String lCodUffOTrib, String lCodDistretto,
 			String lIncludeArchiviati, String lCodContenuto, Date dataDalInCanc, Date dataAlInCanc,
 			int aPageNum, String majorOffice) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -2722,6 +2751,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			String lCodUfficioUtenteConnesso, String lCodUffOTrib, String lCodDistretto,
 			String lIncludeArchiviati, String lCodContenuto, Date dataDalInCanc, Date dataAlInCanc)
 			throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusSoggettoSqlDAO lFasSoggDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -2762,6 +2792,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	public BigDecimal ExGetNumRicercaFascicoliPerDataFinePena(String lUfficioUtenteConnesso,
 			Date dataDalIscrizione, Date dataAlIscrizione, Date dataDalFinePena, Date dataAlFinePena,
 			String lIncludeArchiviati, String lCodPosGiuridica, String lCodContenuto) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusSoggettoSqlDAO lFasSoggDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -2813,6 +2844,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	public Vector ExRicercaFascicoliDelSoggetto(SoggettoModel aSogModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeArchiviati, String lCodContenuto,
 			Date dataDalInCanc, Date dataAlInCanc) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -2896,6 +2928,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaFascicoliPerNumeroSIEP(BigDecimal lId_FascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -2985,6 +3018,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	public Vector ExRicercaFascicoliPerDataFinePena(String lUfficioUtenteConnesso, Date dataDalIscrizione,
 			Date dataAlIscrizione, Date dataDalFinePena, Date dataAlFinePena, String lIncludeArchiviati,
 			String lCodPosGiuridica, String lCodContenuto, int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -3052,6 +3086,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			Date aDataDalIscrizione, Date aDataAlIscrizione, Date aDataDalFinePena, Date aDataAlFinePena,
 			String aIncludeArchiviati, String aCodPosGiuridica, String aCodContenuto,
 			String aDescrPosGiuridica, String aDescrContenuto) throws F3BException {
+
 		final int colonnaProgressivo = 0;
 		final int colonnaProcedimentoSIUS = 1;
 		final int colonnaSoggetto = 2;
@@ -3275,6 +3310,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public FascicoloGPModel ExInserisciFascicoloSiusManuale(FascicoloGPModel aFascicoloGPModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -3288,7 +3324,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFSiusDao = null;
-
 		// paolo cherubini per supersoggetto 20/07/2009
 		SoggettoSqlDAO lSogSqlDao = null;
 		SoggettoDAO lSogDao = null;
@@ -3584,9 +3619,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
-		}
-
-		finally {
+		} finally {
 			cleanup(lFasDao);
 			cleanup(lFasDaoSql);
 			cleanup(lGenProDao);
@@ -3594,10 +3627,14 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			cleanup(lTenDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogSqlDao);
+			cleanup(lSogDao);
+			cleanup(lResDao);
 			cleanup(lConn);
 		}
 
@@ -3613,6 +3650,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaElencoFascicoliUnificati(FascicoloSiusModel aModel) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lFascicoli = new Vector();
@@ -3676,6 +3714,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private FascicoloGPModel ExRicercaFascicoloByAnnoProgrCodUfficio(BigDecimal aChiaveAnno,
 			BigDecimal aChiaveProgr, String ufficioUtenteConnesso, boolean aControllo) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloGPModel lFascicolo = null;
@@ -3774,6 +3813,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	private void insRiferimentoSius(FascicoloGPModel aFasGPModel, Connection lConn) throws F3BException {
+
 		RiferimentoFascicoloSiusDAO lRFSDao = null;
 		if (!aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep().equals(null)) {
 			try {
@@ -3805,6 +3845,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	private BigDecimal getIdResidenzaFascicoloSiusCorrente(BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 
 		BigDecimal lId = null;
@@ -3848,6 +3889,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	private String existAnnoProgrSius(FascicoloSiusModel aFSModel, Connection lConn) throws F3BException {
+
 		String response = "";
 		FascicoloSiusSqlDAO lFSSqlDao = new FascicoloSiusSqlDAO(lConn);
 		try {
@@ -3881,6 +3923,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private void insEMAeScadenzario(FascicoloGPModel aFascicoloGPModel, boolean insertEMA, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		EsecuzioneMisuraAlternativaDAO lEsMisAltDao = null;
@@ -4091,6 +4134,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private void delEMAeScadenzario(FascicoloGPModel aFascicoloGPModel, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		EsecuzioneMisuraAlternativaDAO lEsMisAltDao = null;
 		ScadenzarioSiusDAO lScaDao = null;
@@ -4140,6 +4184,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private void insESSeScadenzario(FascicoloGPModel aFascicoloGPModel, boolean insertESS, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		EsecuzioneSanzioneSostitutivaDAO lEsSanzSostDao = null;
@@ -4344,6 +4389,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private void delESSeScadenzario(FascicoloGPModel aFascicoloGPModel, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		EsecuzioneSanzioneSostitutivaDAO lEsSanzSostDao = null;
 		// ScadenzarioSiusDAO lScaDao = null;
@@ -4392,6 +4438,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private void insEMSeScadenzario(FascicoloGPModel aFascicoloGPModel, boolean insertEMS, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		EsecuzioneMisuraSicurezzaDAO lEsMisSicDao = null;
@@ -4601,6 +4648,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private void delEMSeScadenzario(FascicoloGPModel aFascicoloGPModel, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		EsecuzioneMisuraSicurezzaDAO lEsMisSicDao = null;
 		// ScadenzarioSiusDAO lScaDao = null;
@@ -4649,6 +4697,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	private boolean stressoDistretto(FascicoloSiusModel aFascicoloSius, Connection aConn)
 			throws F3BException {
+
 		UfficioSqlDAO lUDao = null;
 		boolean aCond = false;
 
@@ -4662,7 +4711,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 				aCond = true;
 			}
 			lUDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4676,6 +4724,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	public void ExInserisciDefinizioneFascicoloSius(FascicoloGPModel aFasGPMod) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusDAO lFasDao = null;
 		GeneraleProcedimentoDAO lGenProcDao = null;
@@ -4730,12 +4779,23 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	// Ricerca della relazione Udiena-Procedimento Fissata o Prefissata
 	private UdienzaProcedimentoModel cercaUdiProcAttiva(BigDecimal aKey, Connection aConn) throws Exception {
+
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod = null;
 
-		lUdiDao = new UdienzaProcedimentoSqlDAO(aConn);
-		lUdiDao.ricercaUdienzaProcedimentoByGenProAndFlagRinviata(aKey, "'F','P'");
-		lUdiMod = (UdienzaProcedimentoModel) lUdiDao.getModelByKey();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		try {
+			lUdiDao = new UdienzaProcedimentoSqlDAO(aConn);
+			lUdiDao.ricercaUdienzaProcedimentoByGenProAndFlagRinviata(aKey, "'F','P'");
+			lUdiMod = (UdienzaProcedimentoModel) lUdiDao.getModelByKey();
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(lUdiDao);
+		}
 		return lUdiMod;
 	}
 
@@ -4749,6 +4809,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPareriPaginata(ParereModel aParereIn, int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lElencoPareri = new Vector();
 		ParereSqlDAO lParDao = null;
@@ -4800,6 +4861,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaPareri(ParereModel aParereIn) throws F3BException {
+
 		Connection lConn = null;
 		ParereSqlDAO lParDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -4831,6 +4893,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public FascicoloGPModel ExRicercaFascicoloCollegato(BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloGPModel lFascicolo = null;
@@ -4876,6 +4939,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 */
 	public Vector ExRicercaFascicoliByMagistratoSorvAssegnatario(String aCodMagistrato, String aCodUfficio,
 			String[] aStato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
 
@@ -4898,7 +4962,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		}
 
 		return lFascicoli;
-
 	}
 
 	/**
@@ -4914,6 +4977,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws Exception
 	 */
 	public Date ExGetDataDefinizineFinale(BigDecimal aIdFascicoloSius, Connection aConn) throws Exception {
+
 		Connection lConn = null;
 
 		FascicoloSiusSoggettoSqlDAO lFasSoggSqlDao = null;
@@ -4955,6 +5019,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	public ByteArrayOutputStream ExGetCertificatoPenale(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusSqlDAO lFasDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
@@ -4975,7 +5040,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 			if (lByteArrayOut.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {
@@ -4989,6 +5053,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	public void ExInsertCertificatoPenale(FascicoloSiusCertBlobModel fascicolo) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusDAO lFasDao = null;
 
@@ -5009,6 +5074,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	public BigDecimal ExGetLengthCertPenaleByIdFascicolo(BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusSqlDAO lFasDao = null;
@@ -5048,6 +5114,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	 * @throws F3BException
 	 */
 	public void ExModificaVisibilitaMinoreFascicoloSius(FascicoloGPModel lFasGPMod) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusDAO lFasDao = null;
 

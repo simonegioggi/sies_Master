@@ -6,13 +6,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sige.datiprovsige.dao.DatiProvvedimentoSigeDAO;
 import siap.sige.datiprovsige.dao.DatiProvvedimentoSigeSqlDAO;
 import siap.sige.datiprovsige.model.DatiProvvedimentoSigeModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -38,6 +38,7 @@ public class DatiProvvedimentoSigeController extends SiapController implements I
 
 	public DatiProvvedimentoSigeModel ExInserisciDatiProvvedimentoSige(
 			DatiProvvedimentoSigeModel aDatiProvvedimentoSige) throws F3BException {
+
 		Connection lConn = null;
 		DatiProvvedimentoSigeDAO lDatDao = null;
 		DatiProvvedimentoSigeModel lDatMod = null;
@@ -64,6 +65,7 @@ public class DatiProvvedimentoSigeController extends SiapController implements I
 	}
 
 	public Vector ExRicercaDatiProvvedimentoSigeByIdTenore(BigDecimal aIdTenore) throws F3BException {
+
 		Connection lConn = null;
 		Vector lDatiProvvedimentoSige = null;
 		DatiProvvedimentoSigeSqlDAO lDatDao = null;
@@ -91,6 +93,7 @@ public class DatiProvvedimentoSigeController extends SiapController implements I
 
 	public DatiProvvedimentoSigeModel ExRicercaDatiProvvedimentoSigeByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		DatiProvvedimentoSigeSqlDAO lDatDao = null;
 		DatiProvvedimentoSigeModel lDatMod;
@@ -115,6 +118,7 @@ public class DatiProvvedimentoSigeController extends SiapController implements I
 
 	public DatiProvvedimentoSigeModel ExModificaDatiProvvedimentoSige(
 			DatiProvvedimentoSigeModel aDatiProvvedimentoSige) throws F3BException {
+
 		Connection lConn = null;
 		DatiProvvedimentoSigeDAO lDatDao = null;
 		DatiProvvedimentoSigeModel lDatMod = new DatiProvvedimentoSigeModel(aDatiProvvedimentoSige);
@@ -140,6 +144,7 @@ public class DatiProvvedimentoSigeController extends SiapController implements I
 
 	public void ExCancellaDatiProvvedimentoSige(DatiProvvedimentoSigeModel aDatiProvvedimentoSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		DatiProvvedimentoSigeDAO lDatDao = null;
 

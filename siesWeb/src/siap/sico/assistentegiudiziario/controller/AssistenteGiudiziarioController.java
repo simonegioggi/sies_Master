@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.assistentegiudiziario.dao.AssistenteGiudiziarioDAO;
 import siap.sico.assistentegiudiziario.dao.AssistenteGiudiziarioSqlDAO;
 import siap.sico.assistentegiudiziario.model.AssistenteGiudiziarioModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,6 +34,7 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 
 	public AssistenteGiudiziarioModel ExInserisciAssistenteGiudiziario(
 			AssistenteGiudiziarioModel aAssistenteGiudiziario) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteGiudiziarioDAO lAssDao = null;
 		AssistenteGiudiziarioModel lAssMod = null;
@@ -63,6 +64,7 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 
 	public Vector ExRicercaAssistenteGiudiziario(AssistenteGiudiziarioModel aAssistenteGiudiziario)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lAssistenteGiudiziarii = new Vector();
 		AssistenteGiudiziarioSqlDAO lAssDao = null;
@@ -88,6 +90,7 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 
 	public AssistenteGiudiziarioModel ExRicercaAssistenteGiudiziarioByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		AssistenteGiudiziarioSqlDAO lAssDao = null;
 		AssistenteGiudiziarioModel lAssMod;
@@ -110,6 +113,7 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 
 	public AssistenteGiudiziarioModel ExModificaAssistenteGiudiziario(
 			AssistenteGiudiziarioModel aAssistenteGiudiziario) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteGiudiziarioDAO lAssDao = null;
 		AssistenteGiudiziarioModel lAssMod = new AssistenteGiudiziarioModel(aAssistenteGiudiziario);
@@ -133,6 +137,7 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 
 	public void ExCancellaAssistenteGiudiziario(AssistenteGiudiziarioModel aAssistenteGiudiziario)
 			throws F3BException {
+
 		Connection lConn = null;
 		AssistenteGiudiziarioDAO lAssDao = null;
 
@@ -159,13 +164,14 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 	/**
 	 *
 	 * <p>
-	 * 
+	 *
 	 * @param aEsperto
 	 * @return
 	 * @throws F3BException
 	 */
 
 	public Vector ExElencoCbxAssistenteGiudiziarioByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteGiudiziarioSqlDAO lAssDao = null;
 		Vector lEspDecMods = new Vector();
@@ -177,22 +183,17 @@ public class AssistenteGiudiziarioController extends SiapController implements I
 
 			lAssDao.start();
 
-			// da Considerare l'implematazione di metodi getDecodeModel nel genricDAO.
-			// .... penserò. Paolo
 			while (lAssDao.next()) {
 				String lIdAssistente = lAssDao.getBigDecimal("ID_ASSISTENTE_GIUDIZIARIO").toString();
 				String lNome = lAssDao.getString("NOME");
 				String lCognome = lAssDao.getString("COGNOME");
-
 				lEspDecMods.add(new DecodeModel(lIdAssistente, lCognome + " " + lNome));
 			}
 
 			lAssDao.stop();
-
-			// lMagMods = new Vector( lMagDao.getModels() );
 		} catch (DAOException daoEx) {
-			throw new F3BException("EspertoController.ExElencoCbxEspertiByCodUfficio: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"EspertoController.ExElencoCbxEspertiByCodUfficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAssDao);
 			cleanup(lConn);

@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -16,9 +19,6 @@ import siap.siep.misuracautelarebdmc.model.MisuraCautelareBdmcModel;
 import siap.siep.tipoeventibdmc.controller.ITipoEventiBdmc;
 import siap.siep.tipoeventibdmc.model.TipoEventiBdmcModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -33,7 +33,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -44,7 +44,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un MisuraCautelareBdmc a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -52,6 +52,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	 ****************************************************************************/
 	public MisuraCautelareBdmcModel ExInserisciMisuraCautelareBdmc(
 			MisuraCautelareBdmcModel aMisuraCautelareBdmc) throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareBdmcDAO lMisDao = null;
 		MisuraCautelareBdmcModel lMisMod = null;
@@ -78,7 +79,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati MisuraCautelareBdmc
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -87,6 +88,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	 ****************************************************************************/
 	public Vector ExRicercaMisuraCautelareBdmc(MisuraCautelareBdmcModel aMisuraCautelareBdmc)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisuraCautelareBdmi = new Vector();
 		MisuraCautelareBdmcDAO lMisDao = null;
@@ -98,7 +100,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 			lMisDao.setOrderBy();
 			lMisDao.start();
 			while (lMisDao.next()) {
-				lMisuraCautelareBdmi.add((MisuraCautelareBdmcModel) lMisDao.getModel());
+				lMisuraCautelareBdmi.add(lMisDao.getModel());
 			}
 			lMisDao.stop();
 		} catch (DAOException daoEx) {
@@ -115,7 +117,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -123,6 +125,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	 ****************************************************************************/
 	public MisuraCautelareBdmcModel ExRicercaMisuraCautelareBdmcById(BigDecimal aIdMisuraCautelare)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareBdmcModel lMisuraCautelareBdmcMod = new MisuraCautelareBdmcModel();
 		MisuraCautelareBdmcSqlDAO lMisuraCautelareBdmcSqlDao = null;
@@ -148,13 +151,14 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	 * Metodo che modifica i dati dell'MisuraCautelareBdmc Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaMisuraCautelareBdmc(MisuraCautelareBdmcModel aMisuraCautelareBdmc,
 			EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareBdmcDAO lMisDao = null;
 		boolean flagComunica = true;
@@ -169,7 +173,6 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 			Vector trovaEvento = lCtrlTipoEven.ExRicercaTipoEventiBdmc(lTipoEven);
 			if (trovaEvento != null && trovaEvento.size() == 0)
 				flagComunica = false;
-
 		}
 		if (flagComunica) {
 			try {
@@ -193,14 +196,14 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	 * Metodo che modifica i dati dell'MisuraCautelareBdmc Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaMisuraCautelareBdmcNoCommit(Connection lConn,
 			MisuraCautelareBdmcModel aMisuraCautelareBdmc, EventoModel aEvento) throws F3BException {
-		// Connection lConn = null;
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Sono dentro update misure cautelari bdmc no commit");
@@ -218,7 +221,6 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 			Vector trovaEvento = lCtrlTipoEven.ExRicercaTipoEventiBdmc(lTipoEven);
 			if (trovaEvento != null && trovaEvento.size() == 0)
 				flagComunica = false;
-
 		}
 
 		if (flagComunica) {
@@ -234,19 +236,19 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 				throw new F3BException("MisuraCautelareBdmcController.ExModifica: Non posso inserire: " + ex);
 			} finally {
 				cleanup(lMisDao);
-				// cleanup(lConn);
 			}
 		}
 	}
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaMisuraCautelareBdmc(MisuraCautelareBdmcModel aMisuraCautelareBdmc)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareBdmcDAO lMisDao = null;
 
@@ -270,13 +272,14 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountMisuraCautelareBdmc(MisuraCautelareBdmcModel aMisuraCautelareBdmc)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MisuraCautelareBdmcSqlDAO lMisuraCautelareBdmcSqlDao = null;
@@ -304,7 +307,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aMisuraCautelareBdmc
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -314,6 +317,7 @@ public class MisuraCautelareBdmcController extends SiapController implements IMi
 	 ****************************************************************************/
 	public Vector ExRicercaMisuraCautelareBdmcPaged(MisuraCautelareBdmcModel aMisuraCautelareBdmc, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisuraCautelareBdmi = new Vector();
 		MisuraCautelareBdmcSqlDAO lMisuraCautelareBdmcSqlDao = null;

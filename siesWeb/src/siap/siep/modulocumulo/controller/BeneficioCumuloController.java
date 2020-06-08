@@ -38,6 +38,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 
 	public void ExInserisciRevocaBeneficioCumulo(BeneficioCumuloModel aBeneficioRevoca,
 			BigDecimal aKeyBeneficio) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioCumuloDAO lBenDao = null;
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
@@ -82,7 +83,6 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 			cleanup(lBenSqlDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	// PARAMETRI: aKeyBeneficio = Key del BENEFICIO CONCESSO
@@ -92,6 +92,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 	public BeneficioCumuloModel ExModificaRevocaBeneficioCumulo(BeneficioCumuloModel aBeneficioRevoca,
 			BigDecimal aKeyBeneficio, String aDeassocia, BigDecimal aIdBeneficioConcesso)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		BeneficioCumuloDAO lBenDao = null;
@@ -120,13 +121,11 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 				if (lConcesso != null && lConcesso.getIdBeneficioCumulo() != null
 						&& lConcesso.getTitIdTitoloCumulatoCollegato() != null) {
 					lConcessoDao = new BeneficioCumuloDAO(lConn);
-
 					lConcesso.setTitIdTitoloCumulatoCollegato(null); // Deassocia
 					lConcessoDao.setDAOFromModelForUpdate(lConcesso);
 					lConcessoDao.update();
 					lConcessoDao.stop();
 				}
-
 			}
 
 			if (aIdBeneficioConcesso != null && aIdBeneficioConcesso.intValue() != 0) {
@@ -160,6 +159,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 	}
 
 	public Vector ExRicercaBeneficioCumulo(BeneficioCumuloModel aBeneficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lBeneficii = new Vector();
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
@@ -182,6 +182,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 
 	public BeneficioCumuloModel ExRicercaBeneficioCumuloByBenIdBeneficioCum(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		BeneficioCumuloSqlDAO lBenDao = null;
 		BeneficioCumuloModel lBenMod;
@@ -203,6 +204,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 	}
 
 	public BeneficioCumuloModel ExRicercaBeneficioCumuloByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
 		BeneficioCumuloModel lBenMod;
@@ -224,6 +226,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 
 	public BeneficioCumuloModel ExRicercaBeneficioCumuloByKeyBeneficioOrig(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
 		BeneficioCumuloModel lBenMod;
@@ -245,6 +248,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 	}
 
 	public void ExCancellaBeneficioCumuloRevoca(BeneficioCumuloModel aBeneficioRevoca) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioCumuloDAO lBenDao = null;
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
@@ -284,9 +288,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 						lConcBenDao.update();
 						lConcBenDao.stop();
 					}
-
 				}
-
 			}
 
 			// CANCELLAZIONE REVOCA
@@ -295,8 +297,8 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 				lBenDao.setCondizioneUpdate(aBeneficioRevoca.getIdBeneficioCumulo());
 				lBenDao.delete();
 				lBenDao.stop();
-			} else // Cancellazione logica
-			{
+			} else {
+				// Cancellazione logica
 				aBeneficioRevoca.setFlagStato("C");
 				aBeneficioRevoca.setTitIdTitoloCumulatoCollegato(null);
 
@@ -331,6 +333,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 	 */
 	public String ExInserisciBeneficiCumuloWithoutSequence(Vector<BeneficioCumuloModel> aBenefici,
 			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		BeneficioCumuloDAO lBenDao = null;
 		BeneficioCumuloModel aBeneficio = null;
@@ -340,7 +343,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 			if (aBenefici != null && aBenefici.size() > 0) {
 				for (int i = 0; i < aBenefici.size(); i++) {
 					try {
-						aBeneficio = (BeneficioCumuloModel) aBenefici.get(i);
+						aBeneficio = aBenefici.get(i);
 						lBenDao.setDAOFromModel(aBeneficio);
 						lBenDao.setWithoutSequence(true);
 						lBenDao.insert();
@@ -364,10 +367,8 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 		}
 
 		return lCodEsito;
-
 	} // Chiude ExInserisciBeneficiCumuloWithoutSequence()
-
-	// End MEV 26 Cumulo Step2
+		// End MEV 26 Cumulo Step2
 
 	/**
 	 * ExInserisciBeneficioCumuloTipOrario
@@ -381,6 +382,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 
 	public BeneficioCumuloModel ExInserisciBeneficioCumuloTipOrario(BeneficioCumuloModel aBenMod,
 			ArrayList aTipologie, String[] aIdPenAcc, BeneficioCumuloModel aBenNMMod) throws F3BException {
+
 		Connection lConn = null;
 
 		BeneficioCumuloDAO lBenDao = null;
@@ -401,8 +403,8 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 				lKey = lBenDao.insert();
 				aBeneficio.setIdBeneficioCumulo(lKey);
 				lBenDao.stop();
-			} else // sospensione condizionale
-			{
+			} else {
+				// sospensione condizionale
 				if (!(aBenNMMod != null && "-".equals(aBenMod.getCodSottotipoBeneficio()))) {
 					lBenDao.setDAOFromModel(aBenMod);
 					lKey = lBenDao.insert();
@@ -418,12 +420,9 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 					aBenNMMod.setIdBeneficioCumulo(lKeyNM);
 					lBenDao.stop();
 
-					if (lKey == null) {
+					if (lKey == null)
 						aBeneficio = aBenNMMod;
-					}
-
 				}
-
 			}
 
 			lPenAccDao = new PenaAccessoriaCumuloDAO(lConn);
@@ -453,10 +452,8 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 			lTipOrDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			throw new F3BException(
 					"BeneficioCumuloController.ExInserisciBeneficioCumuloTipOrario: Non posso inserire: "
 							+ ex);
@@ -468,7 +465,6 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 		}
 
 		return aBeneficio;
-
 	}
 
 	/**
@@ -482,12 +478,13 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 	 */
 	public BeneficioCumuloModel ExModificaBeneficioCumuloTipologiaOrario(BeneficioCumuloModel aBeneficio,
 			ArrayList aTipologie, String[] aIdPenAcc, BeneficioCumuloModel aBenNMMod) throws F3BException {
+
 		Connection lConn = null;
 		TipologiaOrarioDAO lTipOrDao = null;
 		BeneficioCumuloDAO lBenDao = null;
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
-		BeneficioCumuloModel lBenMod = new BeneficioCumuloModel(aBeneficio);
 		PenaAccessoriaCumuloDAO lPenAccDao = null;
+		BeneficioCumuloModel lBenMod = new BeneficioCumuloModel(aBeneficio);
 
 		try {
 			// LogF3B.getLogger().debug("--XX--ExModificaBeneficioCumuloTipologiaOrario lBeneModel =
@@ -519,8 +516,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 				BigDecimal lKey = lBenDao.insert();
 				lBenDao.stop();
 				aBenNMMod.setIdBeneficioCumulo(lKey);
-			} else // per tutti gli ALTRI CASI (SOSPENSIONE, INDULTO, ETC...)
-			{
+			} else { // per tutti gli ALTRI CASI (SOSPENSIONE, INDULTO, ETC...)
 				// Modifica il beneficio
 				lBenDao.setDAOFromModelForUpdate(lBenMod);
 				lBenDao.update();
@@ -531,27 +527,23 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 				BeneficioCumuloModel lBenNNMMod = (BeneficioCumuloModel) lBenSqlDao.getModelByKey();
 
 				if (lBenNNMMod != null && lBenNNMMod.getIdBeneficioCumulo() != null) {
-					if (aBenNMMod == null)// cancello
-					{
+					if (aBenNMMod == null) {
+						// cancello
 						lBenDao.setCondizioneUpdate(lBenNNMMod.getIdBeneficioCumulo());
 						lBenDao.delete();
 						lBenDao.stop();
 					}
-
-				} else if (aBenNMMod != null)// inserisco
-				{
-
+				} else if (aBenNMMod != null) {
+					// inserisco
 					lBenDao.setDAOFromModel(aBenNMMod);
 					lBenDao.setBenIdBeneficioCumulo(lBenMod.getIdBeneficioCumulo());
 					lBenDao.insert();
 					lBenDao.stop();
-
 				}
 
 				// gestione pena accessoria
 				// prima di aggiornare ripulisco il ben_id_benefecio_Cumulo delle pene_accessorie_Cumulo
 				// in questione
-
 				lPenAccDao = new PenaAccessoriaCumuloDAO(lConn);
 				lPenAccDao.setBenIdBeneficioCumulo(null);
 				lPenAccDao.selCondizioneUpdateBenIdBeneficioCumTitoloCum(lBenMod.getIdBeneficioCumulo(),
@@ -615,6 +607,7 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 
 	public void ExCancellaBeneficioCumuloTipologiaOrario(BeneficioCumuloModel aBeneficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		BeneficioCumuloDAO lBenDao = null;
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
@@ -675,8 +668,8 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 				lBenDao.setCondizioneUpdate(aBeneficio.getIdBeneficioCumulo());
 				lBenDao.delete();
 				lBenDao.stop();
-			} else // Cancellazione logica
-			{
+			} else {
+				// Cancellazione logica
 				lBenDao = new BeneficioCumuloDAO(lConn);
 				aBeneficio.setFlagStato("C");
 				lBenDao.setDAOFromModelForUpdate(aBeneficio);
@@ -706,8 +699,9 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 			Vector<String> aCodTipoBen) throws F3BException {
 
 		Connection lConn = null;
-		String ltipoSosp = "";
 		BeneficioCumuloSqlDAO lBenSqlDao = null;
+
+		String ltipoSosp = "";
 		BeneficioCumuloModel lBenMod = null;
 		// Vector<BeneficioCumuloModel> lVec = new Vector<BeneficioCumuloModel>();
 
@@ -725,7 +719,6 @@ public class BeneficioCumuloController extends SiapController implements IBenefi
 					} else if (lBenMod.getCodTipoBeneficio().equals("02")) {
 						ltipoSosp += "M";
 					}
-
 				}
 			}
 

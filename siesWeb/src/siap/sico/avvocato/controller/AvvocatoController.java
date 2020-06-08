@@ -10,12 +10,11 @@ package siap.sico.avvocato.controller;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.avvocato.dao.AvvocatoSqlDAO;
-import siap.sico.avvocato.model.AvvocatoModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AvvocatoController extends SiapController implements IAvvocato {
@@ -27,14 +26,15 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 	 * <p>
 	 * Description: Metodo che permette la ricerca dei fori di appartenenza per gli avvocati di un Distretto
 	 * </p>
-	 * 
+	 *
 	 * @version 1.0
 	 */
-
 	public Vector ExRicercaForo() throws F3BException {
+
 		Connection lConn = null;
-		Vector lFori = new Vector();
 		AvvocatoSqlDAO lAvvSqlDAO = null;
+
+		Vector lFori = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -42,9 +42,8 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvSqlDAO.ricercaForo();
 			lAvvSqlDAO.start();
 
-			while (lAvvSqlDAO.next()) {
-				lFori.add((AvvocatoModel) lAvvSqlDAO.getModelForo());
-			}
+			while (lAvvSqlDAO.next())
+				lFori.add(lAvvSqlDAO.getModelForo());
 
 			lAvvSqlDAO.stop();
 

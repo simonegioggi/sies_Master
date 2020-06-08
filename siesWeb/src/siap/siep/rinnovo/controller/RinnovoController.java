@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.dao.NotificaDAO;
@@ -27,10 +31,6 @@ import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -56,6 +56,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	public RinnovoModel ExInserisciRinnovoVerbale(RinnovoModel aRinnovo, VerbaleModel aVerbale)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoDAO lRinDao = null;
@@ -92,7 +93,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			lRinMod.setIdRinnovo(lKey);
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			throw new F3BException("RinnovoController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lRinDao);
@@ -105,6 +105,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public RinnovoModel ExInserisciRinnovo(RinnovoModel aRinnovo) throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoDAO lRinDao = null;
@@ -136,6 +137,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public Vector ExInserisciRinnovo(Vector aRinnovo) throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoDAO lRinDao = null;
@@ -171,6 +173,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public List ExRicercaRinnovoIdNotifica(BigDecimal aIdNotifica) throws F3BException {
+
 		Connection lConn = null;
 
 		List lRinnovi = new ArrayList();
@@ -186,8 +189,8 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 			lRinnovi = new ArrayList(lRinDao.getModels());
 		} catch (DAOException daoEx) {
-			throw new F3BException("RinnovoController.ExRicercaRinnovoIdNotifica: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"RinnovoController.ExRicercaRinnovoIdNotifica: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRinDao);
 
@@ -199,6 +202,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	public Vector ExRicercaRinnovoIdNotificaCodTipoRinnovo(BigDecimal aIdNotifica, String[] aTipoRinnovo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lRinnovi = new Vector();
@@ -227,6 +231,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public RinnovoModel ExRicercaRinnovoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		RinnovoSqlDAO lRinDao = null;
 		RinnovoModel lRinMod;
@@ -249,6 +254,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	// Aggiunto metodo relativamente alla segnalazione bb/rr/004 v.a. StatoEsecuzioneController
 	// prendo il più recente
 	public RinnovoModel ExRicercaRinnovoByKeyEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		RinnovoSqlDAO lRinDao = null;
 		RinnovoModel lRinMod;
@@ -259,8 +265,8 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			lRinDao.ricercaRinnovoByKeyEvento(aKey);
 			lRinMod = (RinnovoModel) lRinDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("RinnovoController.ExRicercaRinnovoByKeyEvento: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"RinnovoController.ExRicercaRinnovoByKeyEvento: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lConn);
@@ -269,6 +275,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public RinnovoModel ExModificaRinnovo(RinnovoModel aRinnovo) throws F3BException {
+
 		Connection lConn = null;
 		RinnovoDAO lRinDao = null;
 		RinnovoModel lRinMod = new RinnovoModel(aRinnovo);
@@ -291,6 +298,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public void ExCancellaRinnovo(RinnovoModel aRinnovo) throws F3BException {
+
 		Connection lConn = null;
 		RinnovoDAO lRinDao = null;
 		NotificaSqlDAO lNotSqlDao = null;
@@ -338,8 +346,8 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 			// decide lo stato della notifica
 			IOrdineEsecuzione lCtrl = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-			Date lDataAvvenutaNotifica = lCtrl.calcolaDataMaggiore((NotificaModel[]) lNotifiche
-					.toArray(new NotificaModel[0]));
+			Date lDataAvvenutaNotifica = lCtrl
+					.calcolaDataMaggiore((NotificaModel[]) lNotifiche.toArray(new NotificaModel[0]));
 			String lCoStatoNotifica = lCtrl.calcolaCodStatoNotifica(lNotifiche, lDataAvvenutaNotifica,
 					lRinnovoModel);
 
@@ -354,7 +362,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			lScaDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("RinnovoController.ExCancellaRinnovo: Non posso leggere : " + daoEx);
 		} finally {
@@ -369,6 +376,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	public RinnovoModel ExUpdateValidaRinnovo(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoDAO lRinDaoBlob = null;
@@ -376,7 +384,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		ScadenzarioDAO lScaDao = null;
 		ParametroSqlDAO lParSqlDao = null;
 		RinnovoSqlDAO lRinSql = null;
-		// NotificaDAO lNotDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -398,13 +405,13 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			 * //ricerca scadenzario lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("03",
 			 * aFasc.getIdFascicoloSiep()); ScadenzarioModel lScaMod = new ScadenzarioModel(); lScaMod =
 			 * (ScadenzarioModel)lScaSqlDao.getModelByKey();
-			 * 
+			 *
 			 * //ricerca parametro lParSqlDao.ricercaParametroScadenzario("VANE RICERCHE PERVENUTO",aRinnovo.
 			 * getCodUfficioAggiornamento()); Vector lVectPar = new Vector(lParSqlDao.getModels());
-			 * 
+			 *
 			 * if(lRinMod != null && lRinMod.getDataRinnovo()!= null) { Iterator lIter = lVectPar.iterator();
 			 * Date lSommaAnni = null; Date lSommaMesi = null; Date lFineScadenza = null;
-			 * 
+			 *
 			 * if (lIter.hasNext()) { ParametroModel lParModel = (ParametroModel) lIter.next(); lSommaAnni =
 			 * DateUtils.moveDateTo(lRinMod.getDataRinnovo(), java.util.Calendar.YEAR,
 			 * lParModel.getAnni().intValue()); lSommaMesi = DateUtils.moveDateTo(lSommaAnni,
@@ -413,13 +420,13 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			 * lParModel.getGiorni().intValue()); } // AMBROSINO -- In caso di Rinnovo NON va cambiata la data
 			 * Inizio Scadenza // lScaDao.setDataInizioScadenza(lRinMod.getDataRinnovo());
 			 * lScaDao.setDataFineScadenza(lFineScadenza); }
-			 * 
+			 *
 			 * if(lScaMod != null && lScaMod.getIdScadenzario() != null) {
 			 * lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
 			 * lScaDao.setCodOperatoreAggiornamento(aRinnovo.getCodOperatoreAggiornamento());
 			 * lScaDao.setCodUfficioAggiornamento(aRinnovo.getCodUfficioAggiornamento());
 			 * lScaDao.setDataAggiornamento(DateUtils.getSysDate());
-			 * 
+			 *
 			 * lScaDao.update(); lScaDao.stop(); } else { lScaDao.setCodTipoScadenzario("03");
 			 * lScaDao.setFasSieIdFascicoloSiep(aFasc.getIdFascicoloSiep());
 			 * lScaDao.setCodOperatoreInserimento(aRinnovo.getCodOperatoreAggiornamento());
@@ -473,7 +480,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			cleanup(lScaDao);
 			cleanup(lParSqlDao);
 			cleanup(lRinSql);
-			// cleanup(lNotDao);
 
 			cleanup(lConn);
 		}
@@ -483,6 +489,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	private void aggiornaStatoNotificaScadenzarioSimeone(Connection aConn, ScadenzarioDAO aScaDao,
 			RinnovoModel aRinMod, BigDecimal aIdFasicolo) throws F3BException {
+
 		NotificaDAO lNotDao = null;
 
 		try {
@@ -553,6 +560,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	public RinnovoModel ExUpdateValidaRinnovazioneNotifiche(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoDAO lRinDaoBlob = null;
@@ -583,14 +591,14 @@ public class RinnovoController extends SiapController implements IRinnovo {
 				lScaDao.setCodUfficioAggiornamento(aRinnovo.getCodUfficioAggiornamento());
 				lScaDao.setDataAggiornamento(DateUtils.getSysDate());
 				lScaDao.setDataInizioScadenza(lRinMod.getDataRinnovo());
-				lScaDao.setDataFineScadenza(DateUtils.moveDateTo(lRinMod.getDataRinnovo(),
-						java.util.Calendar.DAY_OF_MONTH, 30));
+				lScaDao.setDataFineScadenza(
+						DateUtils.moveDateTo(lRinMod.getDataRinnovo(), java.util.Calendar.DAY_OF_MONTH, 30));
 				lScaDao.update();
 				lScaDao.stop();
 			} else {
 				lScaDao.setDataInizioScadenza(lRinMod.getDataRinnovo());
-				lScaDao.setDataFineScadenza(DateUtils.moveDateTo(lRinMod.getDataRinnovo(),
-						java.util.Calendar.DAY_OF_MONTH, 30));
+				lScaDao.setDataFineScadenza(
+						DateUtils.moveDateTo(lRinMod.getDataRinnovo(), java.util.Calendar.DAY_OF_MONTH, 30));
 				lScaDao.setCodTipoScadenzario("01");
 				lScaDao.setFasSieIdFascicoloSiep(aFasc.getIdFascicoloSiep());
 				lScaDao.setCodOperatoreInserimento(aRinnovo.getCodOperatoreAggiornamento());
@@ -635,7 +643,9 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		return aRinnovo;
 	}
 
-	public RinnovoModel ExUpdateValidaRich8Bis(FascicoloSiepModel aFasc, Vector aRinnovi) throws F3BException {
+	public RinnovoModel ExUpdateValidaRich8Bis(FascicoloSiepModel aFasc, Vector aRinnovi)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoSqlDAO lRinSqlDao = null;
@@ -696,6 +706,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	}
 
 	public RinnovoModel ExUpdateDocument(RinnovoModel aRinnovo) throws F3BException {
+
 		Connection lConn = null;
 		RinnovoDAO lRinDao = null;
 		RinnovoModel lRinMod = new RinnovoModel(aRinnovo);
@@ -719,6 +730,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	public RinnovoModel ExUpdateValidaSolleciti(FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		RinnovoDAO lRinDaoBlob = null;
@@ -772,7 +784,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @return Array con il Documento recuperato dal DB
 	 * @throws F3BException
@@ -805,7 +817,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 			if (lByteArrayOut.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {
@@ -822,6 +833,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 	// metodi privati
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
 			RinnovoModel lRinModel, String lStatoProcMod) throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = null;
 
 		try {

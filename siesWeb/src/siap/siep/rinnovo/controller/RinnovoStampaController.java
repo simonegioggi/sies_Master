@@ -9,6 +9,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -32,11 +37,6 @@ import siap.siep.rinnovo.dao.RinnovoDAO;
 import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.verbale.dao.VerbaleSqlDAO;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -62,6 +62,7 @@ public class RinnovoStampaController extends SIAPStampaController implements IRi
 
 	public ByteArrayOutputStream ExStampaDocumento(RinnovoModel aRinnovo, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		RinnovoDAO lRinDao = null;
 
@@ -92,8 +93,8 @@ public class RinnovoStampaController extends SIAPStampaController implements IRi
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"EventoController.ExRicercaTemplateByCodMotivo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lConn);
@@ -102,9 +103,9 @@ public class RinnovoStampaController extends SIAPStampaController implements IRi
 	}
 
 	/*-------------------------------------Preleva i campi per la stampa-------------------------------------------*/
-
 	private TreeModel prelevaDatiRinnovo(RinnovoModel aRinModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 		NotificaSqlDAO lNotDao = null;
 		FascicoloSiepSqlDAO lFasDao = null;
@@ -195,15 +196,14 @@ public class RinnovoStampaController extends SIAPStampaController implements IRi
 
 			// Fascicolo le 4 righe relative al Dao sono state spostate sopra leggi nota1
 			// MEV a7-rr-311 riportare anche il vecchio codice RES
-			if (lFasModel != null
-					&& lFasModel.getCodUfficioInserimento() != null
-					&& (lFasModel.getCodOperatoreInserimento().startsWith("res") || lFasModel
-							.getCodOperatoreInserimento().startsWith("RES"))) {
+			if (lFasModel != null && lFasModel.getCodUfficioInserimento() != null
+					&& (lFasModel.getCodOperatoreInserimento().startsWith("res")
+							|| lFasModel.getCodOperatoreInserimento().startsWith("RES"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("lFasModel.getChiaveProgr()2:4 " + lFasModel.getChiaveProgr());
 				if (lFasModel.getChiaveProgr().intValue() > 1000000)
-					lFasModel.setCodiceRES(StampaUtils
-							.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
+					lFasModel.setCodiceRES(
+							StampaUtils.getCodiceOrigine(lFasModel.getChiaveProgr().toString()));
 			}
 
 			TreeModel lTreeSogMod = getTreeSoggetto(lFasModel.getSogIdSoggetto(), lKeyFascicolo, lConn, null);
@@ -227,7 +227,6 @@ public class RinnovoStampaController extends SIAPStampaController implements IRi
 			lTreeRoot.add(lTreeSogMod);
 			lTreeRoot.add(this.getTreeSentenza(lFasModel, lConn));
 			lTreeRoot.add(lTreeEveMod);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);

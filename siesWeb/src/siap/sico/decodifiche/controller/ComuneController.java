@@ -6,15 +6,15 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.decodifiche.dao.ComuneDAO;
 import siap.sico.decodifiche.dao.ComuneSqlDAO;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sius.SIUSException;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ComuneController extends SiapController implements IComune {
@@ -23,18 +23,22 @@ public class ComuneController extends SiapController implements IComune {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public ComuneModel ExGetCodiceComune(ComuneModel lModel) throws F3BException {
+
 		return ExGetComune(lModel, "N");
 	}
 
 	public ComuneModel ExGetCodiceComuneValidita(ComuneModel lModel) throws F3BException {
+
 		return ExGetComune(lModel, "S");
 	}
 
 	public ComuneModel ExGetDescComune(ComuneModel lModel) throws F3BException {
+
 		return ExGetComune(lModel, "N");
 	}
 
 	private ComuneModel ExGetComune(ComuneModel lModel, String FlagVal) throws F3BException {
+
 		Connection lConn = null;
 		ComuneDAO lComDao = null;
 		ComuneModel lComMod = new ComuneModel();
@@ -53,8 +57,8 @@ public class ComuneController extends SiapController implements IComune {
 				lComMod = (ComuneModel) lComDao.getModel();
 			} else {
 				if (lModel.getDescrizione() != null && lModel.getDescrizione().length() > 0)
-					throw new SICOException(SICOException.USER_MESSAGE, lModel.getDescrizione()
-							+ " - Comune non Esistente");
+					throw new SICOException(SICOException.USER_MESSAGE,
+							lModel.getDescrizione() + " - Comune non Esistente");
 				else
 					throw new SICOException(SICOException.USER_MESSAGE, "Comune non Esistente");
 			}
@@ -80,6 +84,7 @@ public class ComuneController extends SiapController implements IComune {
 	}
 
 	public Collection ExGetComuni() throws F3BException {
+
 		Connection lConn = null;
 		ComuneDAO lDao = null;
 
@@ -108,6 +113,7 @@ public class ComuneController extends SiapController implements IComune {
 	}
 
 	public Vector ExGetListaComuni(ComuneModel lModel) throws F3BException {
+
 		Connection lConn = null;
 		ComuneDAO lDao = null;
 
@@ -135,6 +141,7 @@ public class ComuneController extends SiapController implements IComune {
 	}
 
 	public Vector ExGetListaComuniTds() throws F3BException {
+
 		Connection lConn = null;
 		ComuneSqlDAO lDao = null;
 
@@ -163,6 +170,7 @@ public class ComuneController extends SiapController implements IComune {
 	}
 
 	public Vector ExGetListaComuniTdsm() throws F3BException {
+
 		Connection lConn = null;
 		ComuneSqlDAO lDao = null;
 
@@ -193,12 +201,13 @@ public class ComuneController extends SiapController implements IComune {
 	/**
 	 * Ricerca Comuni sedi UNEP per Distretto. La funzione restituisce l'elenco dei comuni (Vector di
 	 * ComuneModel) appartenenti ad un Distretto (individuato da aCodDistretto ) che sono sedi di uffici UNEP.
-	 * 
+	 *
 	 * @param aCodDistretto
 	 * @return Vector
 	 * @throws F3BException
 	 */
 	public Vector ExGetListaSediUNEPperDistretto(String aCodDistretto) throws F3BException {
+
 		Connection lConn = null;
 		ComuneSqlDAO lDao = null;
 
@@ -226,12 +235,13 @@ public class ComuneController extends SiapController implements IComune {
 
 	/**
 	 * Verifica se il Comune individuato dal suo codice può essere sede di ufficio UNEP.
-	 * 
+	 *
 	 * @param aCodComune
 	 * @return boolean
 	 * @throws F3BException
 	 */
 	public boolean ExIsComuneSedeUNEP(String aCodComune) throws F3BException {
+
 		Connection lConn = null;
 		ComuneSqlDAO lDao = null;
 
@@ -256,14 +266,14 @@ public class ComuneController extends SiapController implements IComune {
 	/**
 	 * La funzione effettua la ricerca del Comune univocamente individuato dal codice passato come argomento.
 	 * Viene restituito il ComuneModel se la ricerca ha successo, una eccezione negli altri casi.
-	 * 
+	 *
 	 * @param String
 	 *            aKey : codice comune.
 	 * @return ComuneModel.
 	 * @throws F3BException
 	 */
-
 	public ComuneModel ExRicercaComuneByKey(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		ComuneDAO lComDao = null;
 		ComuneModel lComMod = null;

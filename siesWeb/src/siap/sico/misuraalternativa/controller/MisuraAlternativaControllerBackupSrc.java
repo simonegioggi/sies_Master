@@ -7,6 +7,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -27,10 +31,6 @@ import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /*
  07-07-2006 -- DARIO
@@ -51,12 +51,12 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class MisuraAlternativaControllerBackupSrc extends SiapController implements
-		IMisuraAlternativaBackupSrc {
+public class MisuraAlternativaControllerBackupSrc extends SiapController
+		implements IMisuraAlternativaBackupSrc {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -67,13 +67,14 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	/**
 	 * ExRicercaMisuraAlternativaProrogaUltPeriodoByIdFascicolo - ricerca misura alternativa proroga ulteriore
 	 * periodo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaProrogaUltPeriodoByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -99,13 +100,14 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	/**
 	 * ExRicercaMisuraAlternativaRipristinoDetDomSpecByIdFascicolo - ricerca misura alternativa ripristino det
 	 * dom speciale
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaRipristinoDetDomSpecByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -130,13 +132,14 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExRicercaMisuraAlternativaDicEffAffInProvaByIdFascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaDicEffAffInProvaByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -165,13 +168,14 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	/**
 	 * ExRicercaMAAmmissioneADetDomByIdFascicolo - Ricerca Ammissione DA Detenzione Domiciliare Speciale A
 	 * Detenzione Domiciliare
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMAAmmissioneADetDomByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
@@ -195,9 +199,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 				lMisDao.ricercaMisuraAlternativaAmmissioneADetDomMAByIdEvento(lKeyEvento);
 				lMisMod = (MisuraAlternativaModel) lMisDao.getModelByKey();
 			}
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
@@ -213,7 +215,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaMADicEff
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -221,6 +223,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMADicEff(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -256,7 +259,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			// * Cerca le NOTIFICHE *
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 			// aggiorna le notifiche
 
 			// ------- EVENTO--------
@@ -297,7 +300,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaAmmissioneADetDom
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -305,6 +308,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaAmmissioneADetDom(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -344,7 +348,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
 			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
 			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
-//			String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
+			// String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
 
 			// SETTA LO STATO PROCEDIMENTO
 			String lStatoProcMod = null;
@@ -401,7 +405,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 					lEveModel, aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
 
 			// Aggiorna tabella nome_provvedimento
-//			String lPosizioneGiu = lPosMod.getCodPosizioneGiuridica();
+			// String lPosizioneGiu = lPosMod.getCodPosizioneGiuridica();
 
 			lNomProvvDAO = new NomeProvvedimentoDAO(lConn);
 			lNomProvvDAO.setCodNomeProvvedimento("NP054");
@@ -414,7 +418,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 			// aggiorna le notifiche
 
 			// ------- EVENTO--------
@@ -462,7 +466,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaMADetDomSpec
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -470,17 +474,16 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMADetDomSpec(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
-
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		ScadenzarioDAO lScaDao = null;
 		LuogoDetenzioneDAO lLuogoDAO = null;
 		MisuraAlternativaSqlDAO lMisSqlDao = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -634,7 +637,6 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	}
 
 	/**
-	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -642,6 +644,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMADetDomSpecSospProvv(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -649,7 +652,6 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		MisuraAlternativaSqlDAO lMisSqlDao = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -685,7 +687,9 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 				InserimentoAggiornamentoPosizioneGiuridica(lConn, "03", lPosMod, lEveApp.getDataEmissione(),
 						lEveModel, aFascicolo.getIdFascicoloSiep(), aEvento.getIdEvento());
 			}
-			/******************************************** FINE POSIZIONE GIURIDICA ***********************************************/
+			/********************************************
+			 * FINE POSIZIONE GIURIDICA
+			 ***********************************************/
 
 			// SETTA LO STATO PROCEDIMENTO
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
@@ -702,7 +706,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			// ** Cerca la Misura Alternativa
 			lMisSqlDao = new MisuraAlternativaSqlDAO(lConn);
 			lMisSqlDao.ricercaMisuraAlternativaByKey(lEveApp.getEveIdEvento());
-			/*MisuraAlternativaModel lMisAlt = (MisuraAlternativaModel) */lMisSqlDao.getModelByKey();
+			/* MisuraAlternativaModel lMisAlt = (MisuraAlternativaModel) */lMisSqlDao.getModelByKey();
 
 			// ------- EVENTO--------
 			// lConnBlob = getDBConnection();
@@ -722,8 +726,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			daoEx.printStackTrace();
-			throw new F3BException("MisuraAternativaController.ExUpdateValidaMADetDomSpecSospProvv : "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraAternativaController.ExUpdateValidaMADetDomSpecSospProvv : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -747,7 +751,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaMAProrogaUltPeriodo
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -755,13 +759,12 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMAProrogaUltPeriodo(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
-
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		ScadenzarioDAO lScaDao = null;
 		MisuraAlternativaSqlDAO lMisSqlDao = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -890,19 +893,20 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	/**
 	 * ExRicercaMisuraAlternativaDetDomSpeAmmAffByIdFascicolo ricerca misura alternativa con codDecisione = CO
 	 * concessa affidamento in prova
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaDetDomSpeAmmAffByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
 		EventoSqlDAO lEveSqlDAO = null;
-//		Vector lEveVec;
-//		EventoModel lEveMod;
+		// Vector lEveVec;
+		// EventoModel lEveMod;
 		try {
 			lConn = getDBConnection();
 			lMisDao = new MisuraAlternativaSqlDAO(lConn);
@@ -928,7 +932,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaMADetDomSpeAmmAff
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @param tipoMisura
@@ -937,6 +941,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMADetDomSpeAmmAff(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String tipoMisura) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDaoBlob = null;
 		// Connection lConnBlob = null;
@@ -978,7 +983,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
 			lPosSqlDao.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
 			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDao.getModelByKey();
-//			String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
+			// String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
 
 			// SETTA LO STATO PROCEDIMENTO
 			String lStatoProcMod = null;
@@ -995,7 +1000,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(aFascicolo.getIdFascicoloSiep());
 
-			/*PenaResiduaModel lPenResMod = (PenaResiduaModel) */lPenResSqlDao.getModelByKey();
+			/* PenaResiduaModel lPenResMod = (PenaResiduaModel) */lPenResSqlDao.getModelByKey();
 
 			// aggiorna misura alternativa
 			lMiDAO = new MisuraAlternativaDAO(lConn);
@@ -1060,7 +1065,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 			// aggiorna il luogo detenzione
 			if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
 				lLuogoDAO = new LuogoDetenzioneDAO(lConn);
@@ -1123,14 +1128,15 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * valida ripristino det dom spec
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
-	public EventoModel ExUpdateValidaMARipristinoDetDomSpec(EventoModel aEvento, FascicoloSiepModel aFascicolo)
-			throws F3BException {
+	public EventoModel ExUpdateValidaMARipristinoDetDomSpec(EventoModel aEvento,
+			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1139,7 +1145,6 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 		MisuraAlternativaSqlDAO lMisSqlDao = null;
 		LuogoDetenzioneDAO lLuogoDAO = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -1163,8 +1168,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 			// misura alternativa
 			lMisSqlDao = new MisuraAlternativaSqlDAO(lConn);
-			lMisSqlDao.ricercaMisuraAlternativaRipristinoDetDomSpecIdFascicolo(aFascicolo
-					.getIdFascicoloSiep());
+			lMisSqlDao
+					.ricercaMisuraAlternativaRipristinoDetDomSpecIdFascicolo(aFascicolo.getIdFascicoloSiep());
 			MisuraAlternativaModel lMisAlt = (MisuraAlternativaModel) lMisSqlDao.getModelByKey();
 
 			// SETTA LO STATO PROCEDIMENTO
@@ -1222,8 +1227,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			daoEx.printStackTrace();
-			throw new F3BException("MisuraAternativaController.ExUpdateValidaMARipristinoDetDomSpec : "
-					+ daoEx);
+			throw new F3BException(
+					"MisuraAternativaController.ExUpdateValidaMARipristinoDetDomSpec : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -1248,10 +1253,10 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	// upload Ulteriore Periodo Misura alternativa
 	public EventoModel ExUpdateValidaUlteriorePeriodoMA(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -1338,7 +1343,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// aggiorna il luogo detenzione
 			if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
@@ -1401,6 +1406,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	// upload concessione liberazione condizionale
 	public EventoModel ExUpdateValidaMACoLibCond(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			PosizioneGiuridicaModel aPosizione) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1453,7 +1459,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			// aggiorna misura alternativa
 			lMiDAO = new MisuraAlternativaDAO(lConn);
 			if (lCodPosizione.equals("12") || lCodPosizione.equals("13") || lCodPosizione.equals("14")) {
-				if (lMisModelOrder != null && lPosMod.getDataInizio() == lMisModelOrder.getDataInizioMisura()) {
+				if (lMisModelOrder != null
+						&& lPosMod.getDataInizio() == lMisModelOrder.getDataInizioMisura()) {
 					// se esiste occorrenza corrente
 					// aggiorno la misura
 					lMiDAO.setCondizioneUpdate(lMisModelOrder.getIdMisuraAlternativa());
@@ -1469,8 +1476,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 						lMiDAO.setDataFineMisura(lPenResMod.getDataFine());
 					} else {
 
-						lMisSqlDAO.ricercaMisuraAlternativaCorrenteByIdFascicolo(aFascicolo
-								.getIdFascicoloSiep());
+						lMisSqlDAO.ricercaMisuraAlternativaCorrenteByIdFascicolo(
+								aFascicolo.getIdFascicoloSiep());
 						Vector lMisuraPrec = new Vector(lMisSqlDAO.getModels());
 						MisuraAlternativaModel lMisModPrec = null;
 
@@ -1517,7 +1524,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 			// aggiorna il luogo detenzione
 			if (lMisModelOrder != null && lMisModelOrder.getDescrLuogoProva() != null) {
 
@@ -1576,13 +1583,14 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	// LIBERAZIONE CONDIZIONALE
 	public MisuraAlternativaModel ExRicercaMisuraAlternativaConcessioneLibCondByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaModel lMisMod;
 		EventoSqlDAO lEveSqlDAO = null;
-//		Vector lEveVec;
-//		Vector lEve;
-//		EventoModel lEveMod;
+		// Vector lEveVec;
+		// Vector lEve;
+		// EventoModel lEveMod;
 		try {
 			lConn = getDBConnection();
 			lMisDao = new MisuraAlternativaSqlDAO(lConn);
@@ -1607,7 +1615,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * ExUpdateValidaMAReLibCond
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -1615,6 +1623,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	public EventoModel ExUpdateValidaMAReLibCond(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
@@ -1624,7 +1633,6 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 		EventoModel lEveMod = new EventoModel(aEvento);
 		LuogoDetenzioneDAO lLuogoDAO = null;
 		MisuraAlternativaSqlDAO lMisSqlDAO = null;
-
 		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -1641,7 +1649,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lPosSqlDAO.ricercaPosGiuCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep());
 
 			PosizioneGiuridicaModel lPosMod = (PosizioneGiuridicaModel) lPosSqlDAO.getModelByKey();
-//			String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
+			// String lCodPosizione = lPosMod.getCodPosizioneGiuridica();
 
 			// SETTA LO STATO PROCEDIMENTO
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveModel,
@@ -1664,7 +1672,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-			/*Vector lNotifiche = new Vector(*/lNotEveDao.getModels()/*)*/;
+			/* Vector lNotifiche = new Vector( */lNotEveDao.getModels()/* ) */;
 
 			// aggiorna il luogo detenzione
 			lMisSqlDAO = new MisuraAlternativaSqlDAO(lConn);
@@ -1724,62 +1732,10 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	}
 
 	// METODI PRIVATI
-	/**
-	 * InserimentoAggiornamentoPenResMisuraAlternativa
-	 * 
-	 * @param lConn
-	 * @param lEveModel
-	 * @param aKey
-	 * @return
-	 * @throws DAOException
-	 * @throws F3BException
-	 */
-//	private PenaResiduaModel InserimentoAggiornamentoPenResMisuraAlternativa(Connection lConn,
-//			EventoModel lEveModel, BigDecimal aKey) throws DAOException, F3BException {
-//		PenaResiduaDAO lPenResDao = null;
-//		PenaResiduaSqlDAO lPenResSqlDao = null;
-//		PenaResiduaModel lPenResMod = null;
-//
-//		try {
-//			lPenResDao = new PenaResiduaDAO(lConn);
-//			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-//			lPenResMod = new PenaResiduaModel();
-//
-//			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(aKey);
-//			lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
-//
-//			if (lPenResMod.getEveIdEvento() == null) {
-//				lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
-//				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
-//				lPenResDao.setFlagValidato("S");
-//				lPenResDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
-//				lPenResDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
-//				lPenResDao.setDataAggiornamento(DateUtils.getSysDate());
-//				lPenResDao.selByKey();
-//				lPenResDao.update();
-//				lPenResDao.stop();
-//			} else {
-//				lPenResDao.setDAOFromModel(lPenResMod);
-//				lPenResDao.setFlagValidato("S");
-//				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
-//				lPenResDao.setDataInserimento(DateUtils.getSysDate());
-//				lPenResDao.setCodOperatoreInserimento(lEveModel.getCodOperatoreAggiornamento());
-//				lPenResDao.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
-//				lPenResDao.insert();
-//				lPenResDao.stop();
-//			}
-//		} finally {
-//			cleanup(lPenResDao);
-//			cleanup(lPenResSqlDao);
-//		}
-//
-//		return lPenResMod;
-//	}
-
 	// Aggiorna/inserisce POSIZIONE_GIURIDICA
 	/**
 	 * InserimentoAggiornamentoPosizioneGiuridica
-	 * 
+	 *
 	 * @param lConn
 	 * @param lPosizione
 	 * @param lPos
@@ -1794,6 +1750,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	private BigDecimal InserimentoAggiornamentoPosizioneGiuridica(Connection lConn, String lPosizione,
 			PosizioneGiuridicaModel lPos, Date lData, EventoModel lEveModel, BigDecimal aKeyFasc,
 			BigDecimal aKeyEve) throws DAOException, F3BException {
+
 		PosizioneGiuridicaDAO lPosDao = null;
 		BigDecimal lIdPosizioneGiuridica = null;
 
@@ -1823,9 +1780,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 				lIdPosizioneGiuridica = lPosDao.insert();
 				lPosDao.stop();
 			}
-		} finally // sca
-
-		{
+		} finally {
+			// sca
 			cleanup(lPosDao);
 		}
 
@@ -1834,7 +1790,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 
 	/**
 	 * InserimentoAggiornamentoScadenzarioFinePena
-	 * 
+	 *
 	 * @param lConn
 	 * @param lPenResMod
 	 * @param lEveModel
@@ -1845,6 +1801,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	private void InserimentoAggiornamentoScadenzarioFinePena(Connection lConn, PenaResiduaModel lPenResMod,
 			EventoModel lEveModel, Date lData, BigDecimal aKey) throws DAOException, F3BException {
+
 		ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
 		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 		ScadenzarioModel lScaMod = null;
@@ -1884,62 +1841,8 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	}
 
 	/**
-	 * InserimentoAggiornamentoScadenzarioMisuraAlternativa
-	 * 
-	 * @param lConn
-	 * @param lData
-	 * @param lPenResMod
-	 * @param lEveModel
-	 * @param aKey
-	 * @throws DAOException
-	 * @throws F3BException
-	 */
-//	private void InserimentoAggiornamentoScadenzarioMisuraAlternativa(Connection lConn, Date lData,
-//			PenaResiduaModel lPenResMod, EventoModel lEveModel, BigDecimal aKey) throws DAOException,
-//			F3BException {
-//		ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
-//		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(lConn);
-//		ScadenzarioModel lScaMod = null;
-//		try {
-//			lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("13", aKey);
-//			lScaMod = (ScadenzarioModel) lScaSqlDao.getModelByKey();
-//
-//			if (lScaMod != null) {
-//				lScaDao.setDataInizioScadenza(lData);
-//				lScaDao.setDataFineScadenza(lPenResMod.getDataFine());
-//				lScaDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
-//				lScaDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
-//				lScaDao.setDataAggiornamento(DateUtils.getSysDate());
-//				lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
-//				lScaDao.update();
-//				lScaDao.stop();
-//			} else {
-//				// inserisce scadenzario
-//				ScadenzarioModel lScaModel = new ScadenzarioModel();
-//				lScaModel.setCodTipoScadenzario("13");
-//				lScaModel.setDataInizioScadenza(lData);
-//				lScaModel.setDataFineScadenza(lPenResMod.getDataFine());
-//
-//				lScaModel.setCodOperatoreInserimento(lEveModel.getCodOperatoreAggiornamento());
-//				lScaModel.setDataInserimento(DateUtils.getSysDate());
-//				lScaModel.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
-//				lScaModel.setFasSieIdFascicoloSiep(aKey);
-//
-//				lScaDao.setDAOFromModel(lScaModel);
-//				lScaDao.insert();
-//				lScaDao.stop();
-//
-//			}
-//		} finally // sca
-//		{
-//			cleanup(lScaDao);
-//			cleanup(lScaSqlDao);
-//		}
-//	}
-
-	/**
 	 * InserimentoCancellazioneStatoProcedimento
-	 * 
+	 *
 	 * @param lConn
 	 * @param aKey
 	 * @param lEveModel
@@ -1949,6 +1852,7 @@ public class MisuraAlternativaControllerBackupSrc extends SiapController impleme
 	 */
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
 			EventoModel lEveModel, String lStatoProcMod) throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(lConn);
 
 		try {

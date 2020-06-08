@@ -22,7 +22,7 @@ import siap.siep.modulocumulo.model.CircostanzaCumuloModel;
  * <p>
  * Description: Classe Controller per Circostanza Cumulo
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -34,6 +34,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	// Inserisce solo UN Record CIRCOSTANZA_CUMULO da CircostanzaCumuloModel
 	public CircostanzaCumuloModel ExInserisciCircostanzaCumulo(CircostanzaCumuloModel aCircostanza)
 			throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaCumuloDAO lCirDao = null;
 		CircostanzaCumuloModel lCirMod = null;
@@ -62,6 +63,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	}
 
 	public CircostanzaCumuloModel ExRicercaCircostanzaCumuloByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaCumuloSqlDAO lCirCumSqlDao = null;
 		CircostanzaCumuloModel lCirCumMod;
@@ -88,6 +90,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	public CircostanzaCumuloModel ExModificaCircostanzaCumulo(CircostanzaCumuloModel aCircostanza,
 			boolean flagAgg, String flagGiudizio, String flagSentenza, String codBil, String noteBil,
 			BigDecimal idTitoloCumulato) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaCumuloDAO lCirCumDao = null;
 		CircostanzaCumuloModel lCirMod = new CircostanzaCumuloModel(aCircostanza);
@@ -127,6 +130,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	}
 
 	public void ExCancellaCircostanzaCumulo(CircostanzaCumuloModel aCircostanza) throws F3BException {
+
 		Connection lConn = null;
 		CircostanzaCumuloDAO lCirCumDao = null;
 
@@ -195,7 +199,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	/**
 	 * Il metodo inserisce una circostanza nella tabella "CIRCOSTANZE_CUMULO" Vengono passati i paramentri per
 	 * effettuare l'aggiornamento dei campi comuni a tutte le circostanze relative a titoloCumulato
-	 * 
+	 *
 	 * @param Vector
 	 *            aCircostanze
 	 * @param boolean
@@ -210,11 +214,12 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	 *            noteBil
 	 * @param BigDecimal
 	 *            aIdTitoCum
-	 * 
+	 *
 	 */
 	public void ExInserisciCircostanzeCumulo(Vector<CircostanzaCumuloModel> aCircostanze,
 			boolean aggiornamento, String flagGiudizio, String flagSentenza, String codBil, String noteBil,
 			BigDecimal aIdTitoCum) throws F3BException {
+
 		Connection lConn = null;
 
 		CircostanzaCumuloDAO lCirDao = null;
@@ -226,7 +231,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 			lCirDao = new CircostanzaCumuloDAO(lConn);
 
 			for (int i = 0; i < aCircostanze.size(); i++) {
-				lCirMod = new CircostanzaCumuloModel((CircostanzaCumuloModel) aCircostanze.get(i));
+				lCirMod = new CircostanzaCumuloModel(aCircostanze.get(i));
 				// pezza sbrigativa per evitare che nell'Attributo COD_BILANCIAMENTO_CIRCOSTANZE ci finisca il
 				// valore NULL
 				if (lCirMod.getCodBilanciamentoCircostanze() == null
@@ -266,6 +271,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 
 	public Vector<CircostanzaCumuloModel> ExRicercaCircostanzaCumulobyTitolo(BigDecimal aKeyTito)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<CircostanzaCumuloModel> lCircostanze = new Vector();
 		CircostanzaCumuloSqlDAO lCirSqlDao = null;
@@ -295,7 +301,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della
 	 * Primary_Key è già preimpostato; metodi usati nella funzione di presa in carico, per scaricare Tutti i
 	 * dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -303,6 +309,7 @@ public class CircostanzaCumuloController extends SiapController implements ICirc
 	 */
 	public String ExInserisciCircostanzeCumulateWithoutSequence(Vector<CircostanzaCumuloModel> VecCircoCumu,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		CircostanzaCumuloDAO lCirCumDao = null;
 		CircostanzaCumuloModel lCirCumMod = null;

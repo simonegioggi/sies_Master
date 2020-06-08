@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 RELEASE 12.4.0: 08/06/2020
 1)	nato dal branch "release_12.3.0"
 
@@ -6,3 +7,7 @@ RELEASE 12.3.0: 15/05/2020
 
 In data 20200603 eseguito merge col:
 branch mac-otrs-20200525015 creato il 27/05/2020 a partire dal branch 12.3.0
+=======
+MEV_6:
+1)	questo branch nasce dal branch DEVELOP;
+>>>>>>> MEV_6

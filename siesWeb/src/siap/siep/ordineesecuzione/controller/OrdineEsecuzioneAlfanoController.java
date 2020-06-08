@@ -7,6 +7,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.controller.IEvento;
@@ -40,12 +46,6 @@ import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -60,18 +60,19 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class OrdineEsecuzioneAlfanoController extends SiapController implements IOrdineEsecuzioneAlfano {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * legge 199/2010 (Decreto Alfano)
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -307,7 +308,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 					|| lCodPosizione.equals("07") || lCodPosizione.equals("10")
 					// MEV 10 S3
 					|| lCodPosizione.equals("70") || lCodPosizione.equals("71") || lCodPosizione.equals("72")
-					|| (aFascicolo.getFlagAltraCausa() != null && aFascicolo.getFlagAltraCausa().equals("S"))) {
+					|| (aFascicolo.getFlagAltraCausa() != null
+							&& aFascicolo.getFlagAltraCausa().equals("S"))) {
 				lPosDao = new PosizioneGiuridicaDAO(lConn);
 
 				lPosDao.setDataFine(DateUtils.getSysDate());
@@ -340,8 +342,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 					if (lNotifiche != null && lNotifiche.firstElement() != null) {
 						NotificaModel lFirstNot = (NotificaModel) lNotifiche.firstElement();
 						if (lFirstNot.getIstDetIdIstitutoDetenzione() != null) {
-							lLuoDetDao.setIstDetIdIstitutoDetenzione(lFirstNot
-									.getIstDetIdIstitutoDetenzione());
+							lLuoDetDao
+									.setIstDetIdIstitutoDetenzione(lFirstNot.getIstDetIdIstitutoDetenzione());
 							lLuoDetDao.setPosGiuIdPosizioneGiuridica(lIdPos);
 							lLuoDetDao.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
 							lLuoDetDao.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
@@ -395,10 +397,13 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 			cleanup(lScaDao);
 			cleanup(lScaSqlDao);
 			cleanup(lNomProvDao);
-			cleanup(lLicSqlDao);
 			cleanup(lEveSql);
-			cleanup(lConn);
+			cleanup(lLicSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLuoDetDao);
 			cleanup(lEveDaoBlob);
+
+			cleanup(lConn);
 			cleanup(lConnBlob);
 		}
 
@@ -407,7 +412,7 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 
 	/**
 	 * Stampa trasferimento Provvedimento
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -421,8 +426,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 		ByteArrayOutputStream lByteArrayOut = null;
 		try {
 			IEvento lEvCrtl = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEventoModel = lEvCrtl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEventoModel = lEvCrtl
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aEvento.getNomeTemplate());
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -435,7 +440,7 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 
 			lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocument(lTree, lNomeTemplate);
 
-//			ByteArrayInputStream lByteArrayInput = new ByteArrayInputStream(lByteArrayOut.toByteArray());
+			// ByteArrayInputStream lByteArrayInput = new ByteArrayInputStream(lByteArrayOut.toByteArray());
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("EVENTO >>> " + aEvento.getEvento().toString());
@@ -450,8 +455,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 		} catch (Exception Ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + Ex);
-			throw new F3BException("OrdineEsecuzioneAlfanoController.ExStampaTrasmissioneProvvedimento: "
-					+ Ex);
+			throw new F3BException(
+					"OrdineEsecuzioneAlfanoController.ExStampaTrasmissioneProvvedimento: " + Ex);
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
@@ -462,7 +467,7 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 
 	/**
 	 * METODO DI INSERIMENTO LEGGE SIMEONE
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aPenaResidua
 	 * @return
@@ -494,12 +499,13 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 			lSqlDAO = new EventoSqlDAO(lConn);
 
 			// lSqlDAO.ricercaOrdineEsecuzioneLSNonRegistratoByFascicoloSiep(aEvento.getEvento().getFasSieIdFascicoloSiep());
-			lSqlDAO.ricercaDecretoSospensioneLANonRegistratoByFascicoloSiep(aEvento.getEvento()
-					.getFasSieIdFascicoloSiep());
+			lSqlDAO.ricercaDecretoSospensioneLANonRegistratoByFascicoloSiep(
+					aEvento.getEvento().getFasSieIdFascicoloSiep());
 			EventoModel lEvePresente = (EventoModel) lSqlDAO.getModelByKey();
 
 			BigDecimal lKeyEvento = null;
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info(" Evento da inserire : " + aEvento.getEvento().toString());
 			if (lEvePresente == null) // Se non presente lo inserisce
 			{
@@ -563,7 +569,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 						if (lAutMod == null) {
 							lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
 							lKeyAutorita = lAutDao.insert();
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di mLog
 							siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
 							aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 						} else {
@@ -578,7 +585,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 					lNotDao.insert();
 					lNotDao.stop();
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("Inserito evento" + lKeyEvento);
 				}
 				count++;
@@ -625,8 +633,8 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-			throw new F3BException("OrdineEsecuzioneAlfanoController.ExInserisciOModificaLSNotifica: "
-					+ daoEx);
+			throw new F3BException(
+					"OrdineEsecuzioneAlfanoController.ExInserisciOModificaLSNotifica: " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -648,7 +656,7 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 
 	/**
 	 * legge 199/2010 (Decreto Alfano)
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -699,7 +707,7 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 			lNotEveDao = new NotificaEventoSqlDAO(lConn);
 
 			lNotEveDao.ricercaNotificaByEvento(aEvento.getIdEvento());
-//			Vector lNotifiche = new Vector(lNotEveDao.getModels());
+			// Vector lNotifiche = new Vector(lNotEveDao.getModels());
 
 			// Cerca POSIZIONE_GIURIDICA corrente
 			lPosSqlDao = new PosizioneGiuridicaSqlDAO(lConn);
@@ -855,7 +863,6 @@ public class OrdineEsecuzioneAlfanoController extends SiapController implements 
 		}
 
 		return lEveMod;
-
 	}
 
 } // Chiude la classe OrdineEsecuzioneAlfanoController

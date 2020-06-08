@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.beneficio.dao.BeneficioDAO;
 import siap.siep.beneficio.dao.BeneficioSqlDAO;
@@ -21,9 +24,6 @@ import siap.siep.tipologiaorario.dao.TipologiaOrarioDAO;
 import siap.siep.tipologiaorario.model.TipologiaOrarioModel;
 import siap.sige.beneficio.dao.BeneficioSenSigeDAO;
 import siap.sige.beneficio.model.BeneficioSigeModel;
-import f3b.dao.DAOException;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -38,18 +38,18 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BeneficioController extends SiapController implements IBeneficio {
 
 	public void ExInserisciBeneficio(Vector aBenefici) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioDAO lBenDao = null;
 
 		try {
-
 			lConn = getDBConnection();
 			BigDecimal lKey = null;
 			for (int i = 0; i < aBenefici.size(); i++) {
@@ -69,22 +69,21 @@ public class BeneficioController extends SiapController implements IBeneficio {
 			cleanup(lBenDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	public Vector ExRicercaBeneficio(BeneficioModel aBeneficio) throws F3BException {
+
 		Connection lConn = null;
-		Vector lBeneficii = new Vector();
 		BeneficioSqlDAO lBenDao = null;
+
+		Vector lBeneficii = new Vector();
 
 		try {
 			lConn = getDBConnection();
 			lBenDao = new BeneficioSqlDAO(lConn);
 			lBenDao.ricercaBeneficio(aBeneficio);
 			lBeneficii = new Vector(lBenDao.getModels());
-
 		} catch (DAOException daoEx) {
-
 			throw new F3BException("BeneficioController.ExRicercaBeneficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lBenDao);
@@ -94,6 +93,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 	}
 
 	public BeneficioModel ExRicercaBeneficioByBenIdBeneficio(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioSqlDAO lBenDao = null;
 		BeneficioModel lBenMod;
@@ -104,7 +104,6 @@ public class BeneficioController extends SiapController implements IBeneficio {
 			lBenDao.ricercaBeneficioByBenIdBeneficio(aKey);
 			lBenMod = (BeneficioModel) lBenDao.getModelByKey();
 		} catch (DAOException daoEx) {
-
 			throw new F3BException(
 					"BeneficioController.ExRicercaBeneficioByBenIdBeneficio: Non posso leggere : " + daoEx);
 		} finally {
@@ -115,6 +114,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 	}
 
 	public BeneficioModel ExRicercaBeneficioByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioSqlDAO lBenDao = null;
 		BeneficioModel lBenMod;
@@ -125,7 +125,6 @@ public class BeneficioController extends SiapController implements IBeneficio {
 			lBenDao.ricercaBeneficioByKey(aKey);
 			lBenMod = (BeneficioModel) lBenDao.getModelByKey();
 		} catch (DAOException daoEx) {
-
 			throw new F3BException("BeneficioController.ExRicercaBeneficio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lBenDao);
@@ -135,9 +134,10 @@ public class BeneficioController extends SiapController implements IBeneficio {
 	}
 
 	public BeneficioModel ExModificaBeneficio(BeneficioModel aBeneficio) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		BeneficioDAO lBenDao = null;
+
 		BeneficioModel lBenMod = new BeneficioModel(aBeneficio);
 
 		try {
@@ -159,6 +159,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 	}
 
 	public void ExCancellaBeneficio(BeneficioModel aBeneficio) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioDAO lBenDao = null;
 
@@ -179,6 +180,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 
 	public String ExInserisciBeneficioWithoutSequence(ArrayList aBenefici, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		BeneficioDAO lBenDao = null;
 
@@ -207,7 +209,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 
 	/**
 	 * ExInserisciBeneficioTipOrario
-	 * 
+	 *
 	 * @param aBenMod
 	 * @param aTipologie
 	 * @return aBeneficio
@@ -216,16 +218,16 @@ public class BeneficioController extends SiapController implements IBeneficio {
 
 	public BeneficioModel ExInserisciBeneficioTipOrario(BeneficioModel aBenMod, ArrayList aTipologie,
 			String[] aIdPenAcc, BeneficioModel aBenNMMod) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		BeneficioDAO lBenDao = null;
 		TipologiaOrarioDAO lTipOrDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
-		BeneficioModel aBeneficio = new BeneficioModel(aBenMod);
 		ScadenzarioDAO lScaDao = null;
 		FascicoloSiepSqlDAO lFasSql = null;
-
 		ScadenzarioSqlDAO lScaSqlDao = null;
+
+		BeneficioModel aBeneficio = new BeneficioModel(aBenMod);
 
 		try {
 			lConn = getDBTransaction();
@@ -240,8 +242,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 				lKey = lBenDao.insert();
 				aBeneficio.setIdBeneficio(lKey);
 				lBenDao.stop();
-			} else // sospensione condizionale
-			{
+			} else { // sospensione condizionale
 				if (!(aBenNMMod != null && "-".equals(aBenMod.getCodSottotipoBeneficio()))) {
 					lBenDao.setDAOFromModel(aBenMod);
 					lKey = lBenDao.insert();
@@ -260,9 +261,7 @@ public class BeneficioController extends SiapController implements IBeneficio {
 					if (lKey == null) {
 						aBeneficio = aBenNMMod;
 					}
-
 				}
-
 			}
 
 			// Beneficio SIGE.
@@ -314,7 +313,6 @@ public class BeneficioController extends SiapController implements IBeneficio {
 
 				if (lFascMod.getChiaveProgr().intValue() > 30000
 						&& lFascMod.getChiaveProgr().intValue() < 40000) {
-
 					// scadenzario termini ottemperanza obblighi tipo 16
 					if ("01".equals(aBenMod.getCodTipoBeneficio())
 							&& "03".equals(aBenMod.getCodSottotipoBeneficio())) {
@@ -334,16 +332,16 @@ public class BeneficioController extends SiapController implements IBeneficio {
 								Date lSommaAnni = null;
 								Date lSommaMesi = null;
 								Date lFineScadenza = null;
-								String lDataInizio = DateUtils.getDateToString(
-										lFascMod.getDataIrrevocabilita(), "dd/MM/yyyy");
+								String lDataInizio = DateUtils
+										.getDateToString(lFascMod.getDataIrrevocabilita(), "dd/MM/yyyy");
 								lSommaAnni = DateUtils.moveDateTo(
-										DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
-										java.util.Calendar.YEAR, aBenMod.getNumAnniAdempimento().intValue());
+										DateUtils.getDate(lDataInizio, "dd/MM/yyyy"), java.util.Calendar.YEAR,
+										aBenMod.getNumAnniAdempimento().intValue());
 								lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
 										aBenMod.getNumMesiAdempimento().intValue());
 								lFineScadenza = DateUtils.moveDateTo(lSommaMesi,
-										java.util.Calendar.DAY_OF_MONTH, aBenMod.getNumGiorniAdempimento()
-												.intValue());
+										java.util.Calendar.DAY_OF_MONTH,
+										aBenMod.getNumGiorniAdempimento().intValue());
 
 								lScaDao = new ScadenzarioDAO(lConn);
 								lScaDao.setCodTipoScadenzario("16");
@@ -376,9 +374,8 @@ public class BeneficioController extends SiapController implements IBeneficio {
 							String lDataInizio = DateUtils.getDateToString(lFascMod.getDataIrrevocabilita(),
 									"dd/MM/yyyy");
 
-							lFineScadenza = DateUtils.moveDateTo(
-									DateUtils.getDate(lDataInizio, "dd/MM/yyyy"), java.util.Calendar.YEAR,
-									aBenMod.getNumAnniSospensione().intValue());
+							lFineScadenza = DateUtils.moveDateTo(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
+									java.util.Calendar.YEAR, aBenMod.getNumAnniSospensione().intValue());
 
 							lScaDao = new ScadenzarioDAO(lConn);
 							lScaDao.setCodTipoScadenzario("17");
@@ -401,25 +398,25 @@ public class BeneficioController extends SiapController implements IBeneficio {
 
 		} catch (DAOException ex) {
 			rollback(lConn);
-
-			throw new F3BException("BeneficioController.ExInserisciBeneficioTipOrario: Non posso inserire: "
-					+ ex);
+			throw new F3BException(
+					"BeneficioController.ExInserisciBeneficioTipOrario: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lBenDao);
 			cleanup(lTipOrDao);
 			cleanup(lPenAccDao);
 			cleanup(lScaDao);
 			cleanup(lFasSql);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScaSqlDao);
 			cleanup(lConn);
 		}
 
 		return aBeneficio;
-
 	}
 
 	/**
 	 * ExModificaBeneficioTipologiaOrario
-	 * 
+	 *
 	 * @param aBeneficio
 	 * @param aTipologie
 	 * @return
@@ -427,16 +424,17 @@ public class BeneficioController extends SiapController implements IBeneficio {
 	 */
 	public BeneficioModel ExModificaBeneficioTipologiaOrario(BeneficioModel aBeneficio, ArrayList aTipologie,
 			String[] aIdPenAcc, BeneficioModel aBenNMMod) throws F3BException {
+
 		Connection lConn = null;
 		TipologiaOrarioDAO lTipOrDao = null;
 		BeneficioDAO lBenDao = null;
 		BeneficioSqlDAO lBenSqlDao = null;
-		BeneficioModel lBenMod = new BeneficioModel(aBeneficio);
 		PenaAccessoriaDAO lPenAccDao = null;
-
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
 		FascicoloSiepSqlDAO lFasSql = null;
+
+		BeneficioModel lBenMod = new BeneficioModel(aBeneficio);
 
 		try {
 			lConn = getDBTransaction();
@@ -468,8 +466,8 @@ public class BeneficioController extends SiapController implements IBeneficio {
 				aBenNMMod.setIdBeneficio(lKey);
 
 				// lBenMod = new BeneficioModel(aBenNMMod);
-			} else // per tutti gli altri casi
-			{
+			} else {
+				// per tutti gli altri casi
 				// inserisce il beneficio
 				lBenDao.setDAOFromModelForUpdate(lBenMod);
 				lBenDao.update();
@@ -480,27 +478,23 @@ public class BeneficioController extends SiapController implements IBeneficio {
 				BeneficioModel lBenNNMMod = (BeneficioModel) lBenSqlDao.getModelByKey();
 
 				if (lBenNNMMod != null && lBenNNMMod.getIdBeneficio() != null) {
-					if (aBenNMMod == null)// cancello
-					{
+					if (aBenNMMod == null) {
+						// cancello
 						lBenDao.setCondizioneUpdate(lBenNNMMod.getIdBeneficio());
 						lBenDao.delete();
 						lBenDao.stop();
 					}
-
-				} else if (aBenNMMod != null)// inserisco
-				{
-
+				} else if (aBenNMMod != null) {
+					// inserisco
 					lBenDao.setDAOFromModel(aBenNMMod);
 					lBenDao.setBenIdBeneficio(lBenMod.getIdBeneficio());
 					lBenDao.insert();
 					lBenDao.stop();
-
 				}
 
 				// gestione pena accessoria
 				// prima di aggiornare ripulisco il ben_id_benefeciodelle pene accessorie
 				// in questione
-
 				lPenAccDao = new PenaAccessoriaDAO(lConn);
 				lPenAccDao.setBenIdBeneficio(null);
 				lPenAccDao.selCondizioneUpdateBenIdBeneficioFascSiep(lBenMod.getIdBeneficio(),
@@ -548,7 +542,6 @@ public class BeneficioController extends SiapController implements IBeneficio {
 				// come da richiesta di Michele Testa a9-rr-074. aagiungo anche che se esiste lo scadenzario
 				// non lo trovo
 				// scadenzario sospensione condizionale -- va inserito sempre Michele Testa per classi III
-
 				if (lFascMod.getChiaveProgr().intValue() > 30000
 						&& lFascMod.getChiaveProgr().intValue() < 40000) {
 					// scadenzario termini ottemperanza obblighi tipo 16
@@ -575,17 +568,17 @@ public class BeneficioController extends SiapController implements IBeneficio {
 								Date lSommaMesi = null;
 								Date lFineScadenza = null;
 
-								String lDataInizio = DateUtils.getDateToString(
-										lFascMod.getDataIrrevocabilita(), "dd/MM/yyyy");
+								String lDataInizio = DateUtils
+										.getDateToString(lFascMod.getDataIrrevocabilita(), "dd/MM/yyyy");
 
 								lSommaAnni = DateUtils.moveDateTo(
-										DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
-										java.util.Calendar.YEAR, lBenMod.getNumAnniAdempimento().intValue());
+										DateUtils.getDate(lDataInizio, "dd/MM/yyyy"), java.util.Calendar.YEAR,
+										lBenMod.getNumAnniAdempimento().intValue());
 								lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
 										lBenMod.getNumMesiAdempimento().intValue());
 								lFineScadenza = DateUtils.moveDateTo(lSommaMesi,
-										java.util.Calendar.DAY_OF_MONTH, lBenMod.getNumGiorniAdempimento()
-												.intValue());
+										java.util.Calendar.DAY_OF_MONTH,
+										lBenMod.getNumGiorniAdempimento().intValue());
 
 								lScaDao.setCodTipoScadenzario("16");
 								lScaDao.setDataInizioScadenza(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"));
@@ -604,17 +597,17 @@ public class BeneficioController extends SiapController implements IBeneficio {
 								Date lSommaMesi = null;
 								Date lFineScadenza = null;
 
-								String lDataInizio = DateUtils.getDateToString(
-										lFascMod.getDataIrrevocabilita(), "dd/MM/yyyy");
+								String lDataInizio = DateUtils
+										.getDateToString(lFascMod.getDataIrrevocabilita(), "dd/MM/yyyy");
 
 								lSommaAnni = DateUtils.moveDateTo(
-										DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
-										java.util.Calendar.YEAR, lBenMod.getNumAnniAdempimento().intValue());
+										DateUtils.getDate(lDataInizio, "dd/MM/yyyy"), java.util.Calendar.YEAR,
+										lBenMod.getNumAnniAdempimento().intValue());
 								lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
 										lBenMod.getNumMesiAdempimento().intValue());
 								lFineScadenza = DateUtils.moveDateTo(lSommaMesi,
-										java.util.Calendar.DAY_OF_MONTH, lBenMod.getNumGiorniAdempimento()
-												.intValue());
+										java.util.Calendar.DAY_OF_MONTH,
+										lBenMod.getNumGiorniAdempimento().intValue());
 
 								lScaDao = new ScadenzarioDAO(lConn);
 								lScaDao.setCodTipoScadenzario("16");
@@ -646,9 +639,8 @@ public class BeneficioController extends SiapController implements IBeneficio {
 							String lDataInizio = DateUtils.getDateToString(lFascMod.getDataIrrevocabilita(),
 									"dd/MM/yyyy");
 
-							lFineScadenza = DateUtils.moveDateTo(
-									DateUtils.getDate(lDataInizio, "dd/MM/yyyy"), java.util.Calendar.YEAR,
-									lBenMod.getNumAnniSospensione().intValue());
+							lFineScadenza = DateUtils.moveDateTo(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
+									java.util.Calendar.YEAR, lBenMod.getNumAnniSospensione().intValue());
 
 							lScaDao = new ScadenzarioDAO(lConn);
 							lScaDao.setCodTipoScadenzario("17");
@@ -663,15 +655,13 @@ public class BeneficioController extends SiapController implements IBeneficio {
 							lScaDao.setCodStatoNotifica("N");
 							lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
 							lScaDao.update();
-
 						} else {
 							Date lFineScadenza = null;
 							String lDataInizio = DateUtils.getDateToString(lFascMod.getDataIrrevocabilita(),
 									"dd/MM/yyyy");
 
-							lFineScadenza = DateUtils.moveDateTo(
-									DateUtils.getDate(lDataInizio, "dd/MM/yyyy"), java.util.Calendar.YEAR,
-									lBenMod.getNumAnniSospensione().intValue());
+							lFineScadenza = DateUtils.moveDateTo(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
+									java.util.Calendar.YEAR, lBenMod.getNumAnniSospensione().intValue());
 
 							lScaDao = new ScadenzarioDAO(lConn);
 							lScaDao.setCodTipoScadenzario("17");
@@ -699,6 +689,10 @@ public class BeneficioController extends SiapController implements IBeneficio {
 			cleanup(lBenDao);
 			cleanup(lPenAccDao);
 			cleanup(lBenSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScaDao);
+			cleanup(lScaSqlDao);
+			cleanup(lFasSql);
 			cleanup(lConn);
 		}
 
@@ -707,18 +701,19 @@ public class BeneficioController extends SiapController implements IBeneficio {
 
 	/**
 	 * ExCancellaBeneficioTipologiaOrario
-	 * 
+	 *
 	 * @param aBeneficio
 	 * @throws F3BException
 	 */
-
 	public void ExCancellaBeneficioTipologiaOrario(BeneficioModel aBeneficio) throws F3BException {
+
 		Connection lConn = null;
 		BeneficioDAO lBenDao = null;
 		BeneficioSqlDAO lBenSqlDao = null;
 		TipologiaOrarioDAO lTipOrDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
 		ScadenzarioDAO lScaDao = null;
+
 		try {
 			lConn = getDBTransaction();
 			// Cancellazione record nella tabella di relazione per Beneficio SIGE
@@ -810,7 +805,6 @@ public class BeneficioController extends SiapController implements IBeneficio {
 						lScaDao.stop();
 					}
 				}
-
 			}
 
 			commit(lConn);
@@ -822,6 +816,8 @@ public class BeneficioController extends SiapController implements IBeneficio {
 			cleanup(lTipOrDao);
 			cleanup(lPenAccDao);
 			cleanup(lBenSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScaDao);
 			cleanup(lConn);
 		}
 	}

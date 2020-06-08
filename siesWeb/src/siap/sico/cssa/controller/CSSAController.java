@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.cssa.dao.CSSASqlDAO;
 import siap.sico.cssa.model.CSSAModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,21 +24,23 @@ import f3b.util.F3BException;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author unascribed
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CSSAController extends SiapController implements ICSSA {
+
 	/**
 	 * Ritorna l'elenco dei CSSA.
 	 * <p>
-	 * 
+	 *
 	 * @return elenco dei CSSA.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ListaCSSA() throws F3BException {
+
 		Connection lConn = null;
 		CSSASqlDAO lCDao = null;
 		Vector lCSSA = new Vector();
@@ -74,12 +76,13 @@ public class CSSAController extends SiapController implements ICSSA {
 	/**
 	 * Ritorna l'elenco dei USSM.
 	 * <p>
-	 * 
+	 *
 	 * @return elenco dei USSM.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ListaUSSM() throws F3BException {
+
 		Connection lConn = null;
 		CSSASqlDAO lCDao = null;
 		Vector lCSSA = new Vector();
@@ -115,7 +118,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	/**
 	 * Ricerca CSSA by DescrComune.
 	 * <p>
-	 * 
+	 *
 	 * @param aDescrComune
 	 *            descrizione del comune.
 	 * @return lCSSAMod model CSSA con i relativi dati.
@@ -123,6 +126,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	 *             propaga l'errore di eccezione.
 	 */
 	public CSSAModel getCSSAByDescrComune(String aDescrComune) throws F3BException {
+
 		Connection lConn = null;
 
 		CSSASqlDAO lCDao = null;
@@ -150,7 +154,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	/**
 	 * Ricerca CSSA by DescrComune.
 	 * <p>
-	 * 
+	 *
 	 * @param aDescrComune
 	 *            descrizione del comune.
 	 * @return lCSSAMod model per USSM con i relativi dati.
@@ -158,6 +162,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	 *             propaga l'errore di eccezione.
 	 */
 	public CSSAModel getUSSMByDescrComune(String aDescrComune) throws F3BException {
+
 		Connection lConn = null;
 
 		CSSASqlDAO lCDao = null;
@@ -182,7 +187,9 @@ public class CSSAController extends SiapController implements ICSSA {
 		return lCSSAMod;
 	}
 
-	public CSSAModel ExRicercaCSSAByIdFascicoloVerbaleNonFirmato(BigDecimal aIdFascicolo) throws F3BException {
+	public CSSAModel ExRicercaCSSAByIdFascicoloVerbaleNonFirmato(BigDecimal aIdFascicolo)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		CSSASqlDAO lCDao = null;
@@ -198,7 +205,8 @@ public class CSSAController extends SiapController implements ICSSA {
 			if (lCSSAMod == null)
 				throw new SICOException(SICOException.USER_MESSAGE, "CSSA inesistente");
 		} catch (DAOException daoEx) {
-			throw new SICOException("CSSAController.ExRicercaCSSAByIdFascicolo: Non posso leggere : " + daoEx);
+			throw new SICOException(
+					"CSSAController.ExRicercaCSSAByIdFascicolo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lCDao);
 			cleanup(lConn);
@@ -209,6 +217,7 @@ public class CSSAController extends SiapController implements ICSSA {
 
 	// Ricerca by Fascicolo
 	public CSSAModel ExRicercaCSSAByIdFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		CSSASqlDAO lCDao = null;
@@ -224,7 +233,8 @@ public class CSSAController extends SiapController implements ICSSA {
 			if (lCSSAMod == null)
 				throw new SICOException(SICOException.USER_MESSAGE, "CSSA inesistente");
 		} catch (DAOException daoEx) {
-			throw new SICOException("CSSAController.ExRicercaCSSAByIdFascicolo: Non posso leggere : " + daoEx);
+			throw new SICOException(
+					"CSSAController.ExRicercaCSSAByIdFascicolo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lCDao);
 			cleanup(lConn);
@@ -236,13 +246,14 @@ public class CSSAController extends SiapController implements ICSSA {
 	/**
 	 * Ricerca CSSA by Key
 	 * <p>
-	 * 
+	 *
 	 * @param aIdCSSA
 	 *            codice
 	 * @return lCSSAMod
 	 * @throws F3BException
 	 */
 	public CSSAModel getCSSAByKey(BigDecimal aIdCSSA) throws F3BException {
+
 		Connection lConn = null;
 
 		CSSASqlDAO lCDao = null;
@@ -268,6 +279,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	}
 
 	public Vector ExGetListaComuniCssa(CSSAModel lModel) throws F3BException {
+
 		Connection lConn = null;
 		CSSASqlDAO lDao = null;
 
@@ -283,7 +295,8 @@ public class CSSAController extends SiapController implements ICSSA {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoex) {
-			throw new SICOException("ComuneController.ExGetListaComuniCssa: Non posso leggere i comuni : " + daoex);
+			throw new SICOException(
+					"ComuneController.ExGetListaComuniCssa: Non posso leggere i comuni : " + daoex);
 		} finally {
 			cleanup(lDao);
 			cleanup(lConn);
@@ -293,6 +306,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	}
 
 	public Vector ExGetListaComuniCssaMinor(CSSAModel lModel) throws F3BException {
+
 		Connection lConn = null;
 		CSSASqlDAO lDao = null;
 
@@ -308,7 +322,8 @@ public class CSSAController extends SiapController implements ICSSA {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoex) {
-			throw new SICOException("ComuneController.ExGetListaComuniCssa: Non posso leggere i comuni : " + daoex);
+			throw new SICOException(
+					"ComuneController.ExGetListaComuniCssa: Non posso leggere i comuni : " + daoex);
 		} finally {
 			cleanup(lDao);
 			cleanup(lConn);
@@ -321,6 +336,7 @@ public class CSSAController extends SiapController implements ICSSA {
 	 * MEV10-s3: aggiunto metodo per estrarre il CSSA
 	 */
 	public CSSAModel getCSSAByDescrComuneETipo(String aDescrComune, String aTipo) throws F3BException {
+
 		Connection lConn = null;
 		CSSASqlDAO lCDao = null;
 		CSSAModel lCSSAMod = null;

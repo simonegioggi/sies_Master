@@ -7,6 +7,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.dao.TenoreSqlDAO;
@@ -17,9 +20,6 @@ import siap.sius.ulterioreistanza.model.UlterioreIstanzaModel;
 import siap.sius.ulterioreistanzatenore.dao.UlterioreIstanzaTenoreDAO;
 import siap.sius.ulterioreistanzatenore.dao.UlterioreIstanzaTenoreSqlDAO;
 import siap.sius.ulterioreistanzatenore.model.UlterioreIstanzaTenoreModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -45,8 +45,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 
 	/**
 	 * Il metodo esegue l'inserimento di una ulteriore istanza, per un determinato procedimento SIUS
-	 * <p>
-	 * 
+	 *
 	 * @param aUlterioreIstanza
 	 *            UlterioreIstanzaModel model con i parametri per l'inserimento.
 	 * @return UlterioreIstanzaModel Ritorna il model con i dati appena inseriti, in più l'id del record
@@ -56,13 +55,14 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	 */
 	public UlterioreIstanzaModel ExInserisciUlterioreIstanza(UlterioreIstanzaModel aUlterioreIstanza,
 			TenoreModel[] aTenori) throws F3BException {
+
 		Connection lConn = null;
 		UlterioreIstanzaDAO lUltDao = null;
-		UlterioreIstanzaModel lUltMod = null;
 		UlterioreIstanzaTenoreDAO lUltIstTenDao = null;
-
 		TenoreSqlDAO lTenSqlDao = null;
 		TenoreDAO lTenDao = null;
+
+		UlterioreIstanzaModel lUltMod = null;
 
 		try {
 			lConn = getDBConnection(); // Preleva connessione dal Dbase.
@@ -126,21 +126,13 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 				lTenSqlDao.stop();
 			}
 			commit(lConn); // Esegue la commit.
-
 		} catch (DAOException daoex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoex);
 			throw new F3BException(
 					"UlterioreIstanzaController.ExInserisciUlterioreIstanza: Non posso inserire: " + daoex);
-		}
-		/*
-		 * catch (SQLException sqex) { rollback(lConn); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile
-		 * di istanza siesLogger al posto di mLog siesLogger.error("SQLException: " + sqex); throw new
-		 * F3BException("UlterioreIstanzaController.ExInserisciUlterioreIstanza: Non posso inserire i dati : "
-		 * + sqex); }
-		 */
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -161,8 +153,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	 * Il metodo esegue la ricerca di Ulteriori Istanze, utilizzando come parametri di ricerca quelli
 	 * opportunamente contenuti nel model passato come parametro. Questo Metodo ritorna le occorrenze dei dati
 	 * contenuti nella tabella Ulteriore Istanze. Metodo utilizzato
-	 * <p>
-	 * 
+	 *
 	 * @param aUlterioreIstanza
 	 *            UlterioreIstanzaModel Model opportunamente popolato con i parametri di ricerca.
 	 * @return Vector elenco delle occorrenze ritornate.
@@ -170,6 +161,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaUlterioreIstanza(UlterioreIstanzaModel aUlterioreIstanza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lUlterioreIstanze = new Vector();
 		UlterioreIstanzaSqlDAO lUltSqlDao = null;
@@ -179,24 +171,12 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 			lUltSqlDao = new UlterioreIstanzaSqlDAO(lConn);
 			lUltSqlDao.ricercaUlterioreIstanza(aUlterioreIstanza);
 			lUlterioreIstanze = new Vector(lUltSqlDao.getModels());
-
-			/*
-			 * Commentato poichè tale controllo viene gestito nella JSP if ( lUlterioreIstanze.size() == 0 )
-			 * throw new F3BException(F3BException.USER_MESSAGE,"Nessun Elemento trovato");
-			 */
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"UlterioreIstanzaController.ExRicercaUlterioreIstanza: Non posso leggere : " + daoEx);
-		}
-		/*
-		 * catch (SQLException sqe) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-		 * siesLogger al posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-		 * F3BException("UlterioreIstanzaController.ExRicercaUlterioreIstanza: Non posso leggere  : " + sqe);
-		 * }
-		 */
-		finally {
+		} finally {
 			cleanup(lUltSqlDao);
 			cleanup(lConn);
 		}
@@ -207,8 +187,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	/**
 	 * Esegue la ricerca di una determinata Ulteriore Istanza, attraverso il proprio id. Tale valore è passato
 	 * come parametro al metodo.
-	 * <p>
-	 * 
+	 *
 	 * @param Id
 	 *            per il quale "puntare" alla UlterioreIstanza.
 	 * @return UlterioreIstanzaModel Istanza singola del model con i dati prelevati dal DBASE.
@@ -216,6 +195,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	 *             propaga errore di eccezione.
 	 */
 	public UlterioreIstanzaModel ExRicercaUlterioreIstanzaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		UlterioreIstanzaSqlDAO lUltSqlDao = null;
 		UlterioreIstanzaModel lUltMod = null;
@@ -243,14 +223,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"UlterioreIstanzaController.ExRicercaUlterioreIstanza: Non posso leggere : " + daoEx);
-		}
-		/*
-		 * catch (SQLException sqe) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-		 * siesLogger al posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-		 * F3BException("UlterioreIstanzaController.ExRicercaUlterioreIstanza: Non posso leggere  : " + sqe);
-		 * }
-		 */
-		finally {
+		} finally {
 			cleanup(lUltSqlDao);
 			cleanup(lUltTenSqlDao);
 			cleanup(lConn);
@@ -263,7 +236,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	 * Esegue la modifica di una Ulteriore Istanza, i quali dati opportunamente incapsulati nel model,
 	 * quest'ultimo vine passato come argomento.
 	 * <p>
-	 * 
+	 *
 	 * @param aUlterioreIstanza
 	 *            Istanza del Model, popolato con i valori per la modifica.
 	 * @return UlterioreIstanzaModel model con i dati appena modificati.
@@ -272,6 +245,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 	 */
 	public UlterioreIstanzaModel ExModificaUlterioreIstanza(UlterioreIstanzaModel aUlterioreIstanza)
 			throws F3BException {
+
 		Connection lConn = null;
 		UlterioreIstanzaDAO lUltDao = null;
 		UlterioreIstanzaModel lUltMod = null;
@@ -304,7 +278,6 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 
 			lUltMod.setIdUlterioreIstanza(lUltMod.getIdUlterioreIstanza());
 			commit(lConn); // Esegue la commit
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -319,22 +292,23 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 							+ ex);
 		} finally {
 			cleanup(lUltDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUltIstTenDao);
 			cleanup(lConn);
 		}
 		return lUltMod;
-
 	}
 
 	/**
 	 * Metodo che si occupa della cancellazione di una ulteriore istanza.
-	 * <p>
-	 * 
+	 *
 	 * @param Model
 	 *            con i criteri di rimozione
 	 * @throws F3Bexception
 	 *             propaga errore di eccezione.
 	 */
 	public void ExCancellaUlterioreIstanza(UlterioreIstanzaModel aUlterioreIstanza) throws F3BException {
+
 		Connection lConn = null;
 		UlterioreIstanzaDAO lUltDao = null;
 		UlterioreIstanzaTenoreDAO lUltIstTenDao = null;
@@ -359,14 +333,7 @@ public class UlterioreIstanzaController extends SiapController implements IUlter
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
 					"UlterioreIstanzaController.ExCancellaUlterioreIstanza: Non posso leggere : " + daoEx);
-		}
-		/*
-		 * catch (SQLException sqe) { // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-		 * siesLogger al posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-		 * F3BException("UlterioreIstanzaController.ExCancellaUlterioreIstanza: Non posso leggere  : " + sqe);
-		 * }
-		 */
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			rollback(lConn); // Esegue rollback
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);

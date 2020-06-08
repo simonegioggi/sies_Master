@@ -13,6 +13,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.decodifiche.dao.DecodificheDAO;
@@ -20,9 +23,6 @@ import siap.sico.decodifiche.dao.DecodificheSqlDAO;
 import siap.sico.decodifiche.model.DecodificheModel;
 // STUB 11/11/2003 Integrazione Dettaglio Oggetti.
 import siap.sico.decodifiche.model.OggettiModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -37,12 +37,13 @@ import f3b.util.F3BException;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author unascribed
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class DecodificheController extends SiapController implements IDecodifiche {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -54,7 +55,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 		try {
 			lConn = getDBConnection();
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			// siesLogger.debug("DecodificheController.ExRicercaDecodifiche: Connessione dal pool : "
 			// + lConn);
 			lDecDao = new DecodificheDAO(lConn);
@@ -62,12 +64,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodifiche: " + daoex);
@@ -93,7 +96,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.setCondizioni(aModel);
 			lDecMod = (DecodificheModel) lDecDao.getModelByKey();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheByAbbByHigh: " + daoex);
@@ -118,12 +122,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheRwLowValue: " + daoex);
@@ -145,10 +150,11 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lConn = getDBConnection();
 			lDecDao = new DecodificheSqlDAO(lConn);
 			lDecDao.ricercaProvvAnnMan(aCodice);
-//			lDecDao.start();
+			// lDecDao.start();
 			lDecodifiche = ((DecodificheModel) lDecDao.getModelByKey());
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheProvvAnnMan : " + daoex);
@@ -162,7 +168,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Ricerca Decodifiche con descrizione in Rv_Abbreviation
-	 * 
+	 *
 	 * @param aModel
 	 * @return lDecodifiche
 	 * @throws F3BException
@@ -175,8 +181,10 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 		try {
 			lConn = getDBConnection();
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			// siesLogger.debug("DecodificheController.ExRicercaDecodificheRvAbbreviation: Connessione dal pool : "
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			// siesLogger.debug("DecodificheController.ExRicercaDecodificheRvAbbreviation: Connessione dal
+			// pool : "
 			// + lConn);
 			lDecDao = new DecodificheDAO(lConn);
 			lDecDao.setCondizioni(aModel);
@@ -194,7 +202,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheRvAbbreviation : " + daoex);
@@ -220,12 +229,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheOrdinatePerCodice: " + daoex);
@@ -237,7 +247,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lDecodifiche;
 	}
 
-	public Collection ExRicercaDecodificheOrdinatePerDescrizione(DecodificheModel aModel) throws F3BException {
+	public Collection ExRicercaDecodificheOrdinatePerDescrizione(DecodificheModel aModel)
+			throws F3BException {
 
 		Connection lConn = null;
 		Collection lDecodifiche = new Vector();
@@ -252,12 +263,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheOrdinatePerDescrizione: " + daoex);
@@ -285,12 +297,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao.start();
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheOrdinatePerCodiceAlternativo: " + daoex);
@@ -319,14 +332,15 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheFiltroNull: " + daoex);
@@ -356,14 +370,15 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE, "Nessun Elemento trovato");
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheFiltroNullOrRvAbbreviation: " + daoex);
@@ -390,7 +405,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecodifiche = (DecodificheModel) lDecDao.getModelByKey();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDecodificheByHighValue: " + daoex);
@@ -418,7 +434,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE,
@@ -427,7 +443,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaEsitiByOggetto: " + daoex);
@@ -456,7 +473,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE,
@@ -465,7 +482,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaEsitiByOggetto: " + daoex);
@@ -479,7 +497,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Ricerca il corrispondente Codice Provvedimento per il Codice Esito Tenore dato
-	 * 
+	 *
 	 * @param lCodOggetto
 	 * @return lDecodifica.getCodiceAlternativo()
 	 * @throws F3BException
@@ -494,14 +512,13 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lConn = getDBConnection();
 			lDecDao = new DecodificheSqlDAO(lConn);
 			lDecDao.ricercaCodEsitoByEsitoTenore(lCodOggetto);
-//			lDecDao.start();
-
-//			if (lDecDao.next())
+			// lDecDao.start();
+			// if (lDecDao.next())
 			lDecodifica = (DecodificheModel) lDecDao.getModelByKey();
-
-//			lDecDao.stop();
+			// lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaCodEsitiProvByCodTenore: " + daoex);
@@ -516,7 +533,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Lista Oggetti legati al Contenuto (passato come parametro).
 	 * <p>
-	 * 
+	 *
 	 * @param aContenuto
 	 * @param aCodTipoUfficio
 	 * @return Vettore di Oggetti
@@ -547,16 +564,18 @@ public class DecodificheController extends SiapController implements IDecodifich
 				// STUB 13/09/2004 Inserimento Abbr. Oggetto.
 				String lAbbrOggetto = lDecSqlDao.getString("ABBR_OGGETTO");
 
-				// MERGE v10: aggiunto filtro solo per contenuto 'C046' --> passano solo gli oggetti 1215 e 1216
-				if (!"C046".equals(lCodContenuto) ||
-						("C046".equals(lCodContenuto) && ("1215".equals(lCodOggetto) || "1216".equals(lCodOggetto))))
+				// MERGE v10: aggiunto filtro solo per contenuto 'C046' --> passano solo gli oggetti 1215 e
+				// 1216
+				if (!"C046".equals(lCodContenuto) || ("C046".equals(lCodContenuto)
+						&& ("1215".equals(lCodOggetto) || "1216".equals(lCodOggetto))))
 					lOggetti.add(new OggettiModel(lCodOggetto, lDescOggetto, lCodContenuto, lDescContenuto,
 							lCodDettaglio, lDescDettaglio, lAbbrOggetto));
 			}
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaOggetti: " + daoEx);
 		} finally {
@@ -570,7 +589,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Lista Contenuti per Tipo Ufficio (passato come parametro).
 	 * <p>
-	 * 
+	 *
 	 * @param aCodTipoUfficio
 	 *            Codice del tipo Ufficio.
 	 * @return Stringa di Contenuti.
@@ -604,24 +623,27 @@ public class DecodificheController extends SiapController implements IDecodifich
 						|| lContenuto.getCode().indexOf("-") == 0) {
 					// MEV10-s3: per i minori elimino un elemento dalla lista vettoriale
 					if ("TDSM".equals(aCodTipoUfficio) || "UDSM".equals(aCodTipoUfficio)) {
-						// MERGE v10 COLLAUDO: per i minori continuo nello scorrimento della lista per i seguenti codici
+						// MERGE v10 COLLAUDO: per i minori continuo nello scorrimento della lista per i
+						// seguenti codici
 						// MEV63: il contenuto UO43 DEVE ESSERE VISIBILE AGLI UFFICI UDSM
-						if ("C015".equals(lContenuto.getCode()) || "C016".equals(lContenuto.getCode()) 		||
-								"U045".equals(lContenuto.getCode()) ||
-								"U051".equals(lContenuto.getCode()) || "U052".equals(lContenuto.getCode()) 	||
-								"U054".equals(lContenuto.getCode()) || "U066".equals(lContenuto.getCode()) 	||
-								"U067".equals(lContenuto.getCode()) || "U093".equals(lContenuto.getCode()))
+						if ("C015".equals(lContenuto.getCode()) || "C016".equals(lContenuto.getCode())
+								|| "U045".equals(lContenuto.getCode()) || "U051".equals(lContenuto.getCode())
+								|| "U052".equals(lContenuto.getCode()) || "U054".equals(lContenuto.getCode())
+								|| "U066".equals(lContenuto.getCode()) || "U067".equals(lContenuto.getCode())
+								|| "U093".equals(lContenuto.getCode()))
 							continue;
 					}
-					// MERGE v10 COLLAUDO: per i maggiori continuo nello scorrimento della lista per i seguenti codici
+					// MERGE v10 COLLAUDO: per i maggiori continuo nello scorrimento della lista per i
+					// seguenti codici
 					if ("TDS".equals(aCodTipoUfficio) || "UDS".equals(aCodTipoUfficio)) {
-						if ("C047".equals(lContenuto.getCode()) 	|| "C048".equals(lContenuto.getCode()) 	||
-								"U101".equals(lContenuto.getCode()) || "U102".equals(lContenuto.getCode()) 	||
-								"U110".equals(lContenuto.getCode())	|| "U112".equals(lContenuto.getCode())	||
-								"U113".equals(lContenuto.getCode())	|| "U114".equals(lContenuto.getCode())	||
+						if ("C047".equals(lContenuto.getCode()) || "C048".equals(lContenuto.getCode())
+								|| "U101".equals(lContenuto.getCode()) || "U102".equals(lContenuto.getCode())
+								|| "U110".equals(lContenuto.getCode()) || "U112".equals(lContenuto.getCode())
+								|| "U113".equals(lContenuto.getCode()) || "U114".equals(lContenuto.getCode())
+								||
 								// MEV_66: aggiunti 4 contenuti solo x minori
-								"U120".equals(lContenuto.getCode())	|| "U121".equals(lContenuto.getCode())	||
-								"U122".equals(lContenuto.getCode())	|| "U123".equals(lContenuto.getCode()))
+								"U120".equals(lContenuto.getCode()) || "U121".equals(lContenuto.getCode())
+								|| "U122".equals(lContenuto.getCode()) || "U123".equals(lContenuto.getCode()))
 							continue;
 					}
 					lContenuti.add(lContenuto);
@@ -662,7 +684,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoOS: " + daoEx);
 		} finally {
@@ -696,7 +719,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoOSLiberazioneAnticipataMA: " + daoEx);
 		} finally {
@@ -732,7 +756,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvMA: " + daoEx);
 		} finally {
@@ -768,7 +793,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvSospProvvMA: " + daoEx);
 		} finally {
@@ -804,7 +830,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvSospProvvMA: " + daoEx);
 		} finally {
@@ -838,7 +865,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvRipristinoMA: " + daoEx);
 		} finally {
@@ -874,7 +902,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvRevocaMA: " + daoEx);
 		} finally {
@@ -910,7 +939,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoRipristinoMA: " + daoEx);
 		} finally {
@@ -946,7 +976,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoDicEffMA: " + daoEx);
 		} finally {
@@ -983,7 +1014,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoRevocaProvvMA: " + daoEx);
 		} finally {
@@ -1019,7 +1051,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoCessazioneProvvMA: " + daoEx);
 		} finally {
@@ -1058,7 +1091,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoRevocaProvvMA: " + daoEx);
 		} finally {
@@ -1092,7 +1126,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 			}
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvAmmProvvisoria: " + daoEx);
 		} finally {
@@ -1131,7 +1166,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvMADetDomTemp: " + daoEx);
 		} finally {
@@ -1168,7 +1204,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvMAReLibCond: " + daoEx);
 		} finally {
@@ -1205,7 +1242,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvMACOLibCond: " + daoEx);
 		} finally {
@@ -1242,7 +1280,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvMACOLibCond: " + daoEx);
 		} finally {
@@ -1282,7 +1321,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvMACOLibCond: " + daoEx);
 		} finally {
@@ -1319,7 +1359,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvProrogaUltPeriodo: " + daoEx);
 		} finally {
@@ -1356,7 +1397,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvProrogaUltPeriodo: " + daoEx);
 		} finally {
@@ -1393,10 +1435,11 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("DecodificheController.ExListaMotivoProvvRipristinoDetDomSpeciale: "
-					+ daoEx);
+			throw new F3BException(
+					"DecodificheController.ExListaMotivoProvvRipristinoDetDomSpeciale: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -1434,7 +1477,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvSospDifferimento: " + daoEx);
 		} finally {
@@ -1469,7 +1513,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvSospDifferimentoProvv: " + daoEx);
 		} finally {
@@ -1504,7 +1549,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvSospDifferimentoDef: " + daoEx);
 		} finally {
@@ -1539,7 +1585,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvRevocaDifferimento: " + daoEx);
 		} finally {
@@ -1574,7 +1621,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvRevocaDifferimento: " + daoEx);
 		} finally {
@@ -1588,7 +1636,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Lista Tipi Decret0.
 	 * <p>
-	 * 
+	 *
 	 * @return Collection di model Decodifiche.
 	 * @throws F3BException
 	 */
@@ -1607,11 +1655,12 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecSqlDao.start();
 
 			while (lDecSqlDao.next()) {
-				lTipi.add((DecodificheModel) lDecSqlDao.getModel());
+				lTipi.add(lDecSqlDao.getModel());
 			}
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaTipiDecreto: " + daoEx);
 		} finally {
@@ -1626,7 +1675,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	 * Elenco dei tipi uffici cumulo, ordinati per la Descrizione ( RV_MEANING ) e filtrati per i valori di
 	 * RV_HIGH_VALUE pari a ( T,S e C ).
 	 * <p>
-	 * 
+	 *
 	 * @return Collection di model Decodifiche.
 	 * @throws F3BException
 	 */
@@ -1668,7 +1717,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	 * Elenco dei tipi uffici cumulo, ordinati per la Descrizione ( RV_MEANING ) e filtrati per i valori di
 	 * RV_HIGH_VALUE pari a ( T,S e C ) per RV_ABBREVIATION pari a V
 	 * <p>
-	 * 
+	 *
 	 * @return Collection di model Decodifiche.
 	 * @throws F3BException
 	 */
@@ -1710,7 +1759,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	 * Elenco dei tipi uffici cumulo, ordinati per la Descrizione ( RV_MEANING ) e filtrati per i valori di
 	 * RV_HIGH_VALUE pari a ( T,S,C e D ).
 	 * <p>
-	 * 
+	 *
 	 * @return Collection di model Decodifiche.
 	 * @throws F3BException
 	 */
@@ -1751,7 +1800,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Lista Oggetti ordinati per Contenuto (Prima quelli del Contenuto passato come parametro).
 	 * <p>
-	 * 
+	 *
 	 * @param aContenuto
 	 * @param aCodTipoUfficio
 	 * @return Vettore di Oggetti
@@ -1805,7 +1854,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaOggetti: " + daoEx);
 		} finally {
@@ -1833,15 +1883,16 @@ public class DecodificheController extends SiapController implements IDecodifich
 			while (lIter.hasNext()) {
 				DecodificheModel lDecMod = (DecodificheModel) lIter.next();
 
-				lDecDao.setCondizioni(new DecodificheModel("", "", "TIPO_UFFICIO_SOSP", lDecMod
-						.getCodiceAlternativo(), "", "", "", "", ""));
+				lDecDao.setCondizioni(new DecodificheModel("", "", "TIPO_UFFICIO_SOSP",
+						lDecMod.getCodiceAlternativo(), "", "", "", "", ""));
 
 				ArrayList lLista = new ArrayList(lDecDao.getModels());
 
 				lListaAutoritaSospensione.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaAutoritaSospensione: " + daoEx);
 		} finally {
@@ -1869,30 +1920,43 @@ public class DecodificheController extends SiapController implements IDecodifich
 			while (lIter.hasNext()) {
 				DecodificheModel lDecMod = (DecodificheModel) lIter.next();
 
-				lDecDao.setCondizioni(new DecodificheModel("", "", "OGGETTO_SOSPENSIONI", "", lDecMod
-						.getCodiceAlternativo(), "", "", "", ""));
+				lDecDao.setCondizioni(new DecodificheModel("", "", "OGGETTO_SOSPENSIONI", "",
+						lDecMod.getCodiceAlternativo(), "", "", "", ""));
 
 				ArrayList lLista = new ArrayList(lDecDao.getModels());
 
 				if (lDecMod.getCodiceAlternativo().equals("0001")) {
-					lLista.remove(new DecodificheModel("0005", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "",
-							"")); // RV_ABBREVIATION = 'C025'
-					lLista.remove(new DecodificheModel("0004", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "",
-							"")); // RV_ABBREVIATION = 'C020'
-					lLista.remove(new DecodificheModel("0023", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "",
-							"")); // RV_ABBREVIATION = 'U028'
-					lLista.remove(new DecodificheModel("0022", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "",
-							"")); // RV_ABBREVIATION = 'U003'
-					lLista.remove(new DecodificheModel("0001", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "",
-							"")); // RV_ABBREVIATION = 'C005'
-					lLista.remove(new DecodificheModel("0002", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "",
-							"")); // RV_ABBREVIATION = 'C014'
+					lLista.remove(
+							new DecodificheModel("0005", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "", "")); // RV_ABBREVIATION
+																												// =
+																												// 'C025'
+					lLista.remove(
+							new DecodificheModel("0004", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "", "")); // RV_ABBREVIATION
+																												// =
+																												// 'C020'
+					lLista.remove(
+							new DecodificheModel("0023", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "", "")); // RV_ABBREVIATION
+																												// =
+																												// 'U028'
+					lLista.remove(
+							new DecodificheModel("0022", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "", "")); // RV_ABBREVIATION
+																												// =
+																												// 'U003'
+					lLista.remove(
+							new DecodificheModel("0001", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "", "")); // RV_ABBREVIATION
+																												// =
+																												// 'C005'
+					lLista.remove(
+							new DecodificheModel("0002", "", "OGGETTO_SOSPENSIONI", "", "", "", "", "", "")); // RV_ABBREVIATION
+																												// =
+																												// 'C014'
 				}
 
 				lListaOggettiSospensione.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaOggettiSospensione: " + daoEx);
 		} finally {
@@ -1921,7 +1985,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 			}
 			lDecSqlDao.stop();
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + sqe);
 			throw new F3BException("DecodificheController.ExListaOggettiSospensioneDecisioneSor: " + sqe);
 		} finally {
@@ -1957,7 +2022,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecSqlDao.stop();
 
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + sqe);
 			throw new F3BException("DecodificheController.ExListaOggettiSospensioneDifferimento: " + sqe);
 		} finally {
@@ -1970,7 +2036,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Restituisce la lista degli oggetti dei Differimenti Provvisori
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	public Collection ExListaOggettiSospensioneDifferimentoProvv() throws F3BException {
@@ -1998,7 +2064,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + sqe);
 			throw new F3BException("DecodificheController.ExListaOggettiSospensioneDifferimento: " + sqe);
 		} finally {
@@ -2011,7 +2078,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Restituisce la lista degli oggetti del Differimento Definitivo
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	public Collection ExListaOggettiSospensioneDifferimentoDef() throws F3BException {
@@ -2039,7 +2106,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + sqe);
 			throw new F3BException("DecodificheController.ExListaOggettiSospensioneDifferimento: " + sqe);
 		} finally {
@@ -2052,7 +2120,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Restituisce la lista degli oggetti della Revoca del Differimenti
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	public Collection ExListaOggettiRevocaDifferimento() throws F3BException {
@@ -2080,7 +2148,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (SQLException sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: " + sqe);
 			throw new F3BException("DecodificheController.ExListaOggettiRevocaDifferimento: " + sqe);
 		} finally {
@@ -2115,7 +2184,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 				lListaOggettiRevoca.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaOggettiRevoca: " + daoEx);
 		} finally {
@@ -2151,7 +2221,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 				lListaMotiviProvvedimentoSospensione.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotiviProvvedimentoSospensione: " + daoEx);
 		} finally {
@@ -2162,7 +2233,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lListaMotiviProvvedimentoSospensione;
 	}
 
-	public Collection ExListaMotiviProvvedimentoRevoca(Collection aTipoRegistroOrdinanza) throws F3BException {
+	public Collection ExListaMotiviProvvedimentoRevoca(Collection aTipoRegistroOrdinanza)
+			throws F3BException {
 
 		Connection lConn = null;
 
@@ -2186,7 +2258,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 				lListaMotiviProvvedimentoRevoca.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotiviProvvedimentoRevoca: " + daoEx);
 		} finally {
@@ -2221,7 +2294,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 				lListaEsitiTenoreSospensione.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaEsitiTenoreSospensione: " + daoEx);
 		} finally {
@@ -2256,7 +2330,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 				lListaEsitiTenoreRevoca.add(lLista);
 			}
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaEsitiTenoreRevoca: " + daoEx);
 		} finally {
@@ -2293,7 +2368,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaAutoritaSospTDSUDS: " + daoEx);
 		} finally {
@@ -2307,7 +2383,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Recupera le descrizioni degli oggetti previsti della Sorveglianza (MDS,TDS) introdotti a seguito delle
 	 * modifiche del DL 146/2013 all'articolo 51bis del O.P.
-	 * 
+	 *
 	 * @param aTipo
 	 * @return
 	 * @throws F3BException
@@ -2337,7 +2413,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (Exception sqe) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("SQLException: ", sqe);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvedimentoProsecMA51Bis: " + sqe);
 		} finally {
@@ -2377,7 +2454,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvedimentoProsecProvvMA: " + daoEx);
 		} finally {
@@ -2417,10 +2495,11 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("DecodificheController.ExListaMotivoProvvedimentoProsecProvvMAffPro: "
-					+ daoEx);
+			throw new F3BException(
+					"DecodificheController.ExListaMotivoProvvedimentoProsecProvvMAffPro: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -2450,7 +2529,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException("DecodificheController.ExListaMotivoProvvedimentoEspulsione: " + daoEx);
 		} finally {
@@ -2488,10 +2568,11 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("DecodificheController.ExListaMotivoProvvedimentoProsecProvvMAffPro: "
-					+ daoEx);
+			throw new F3BException(
+					"DecodificheController.ExListaMotivoProvvedimentoProsecProvvMAffPro: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -2502,10 +2583,10 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * La funzione ritorna l'elenco dei Motivi di Inammissibilita' dalla CG_REF_CODES. Il criterio per la
-	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio MOTIVO_INAMMISSIBILITA
-	 * per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo RV_ABBREVIATION sia o nullo oppure
-	 * valorizzato con il codice aCodTipoUff, passato come parametro.
-	 * 
+	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio
+	 * MOTIVO_INAMMISSIBILITA per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo
+	 * RV_ABBREVIATION sia o nullo oppure valorizzato con il codice aCodTipoUff, passato come parametro.
+	 *
 	 * @param aTipoUff
 	 * @return Vector
 	 * @throws Exception
@@ -2514,7 +2595,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 		DecodificheModel lDecod = new DecodificheModel();
 		lDecod.setContesto("MOTIVO_INAMMISSIBILITA");
-		Set<String> motivazioniMinorenni = new HashSet<String>();
+		Set<String> motivazioniMinorenni = new HashSet<>();
 		boolean flagMinorenni = this.isUfficioMinorenni(aTipoUff);
 		if (flagMinorenni) {
 			motivazioniMinorenni.add("01");
@@ -2537,18 +2618,19 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 		Vector lVect = new Vector(ExRicercaDecodificheOrdinatePerCodiceAlternativo(lDecod));
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("N.ro Motivi : " + lVect.size());
 		if (lVect.size() > 0) {
 			Iterator lMotivCorr = lVect.iterator();
 			while (lMotivCorr.hasNext()) {
 				lDecod = (DecodificheModel) lMotivCorr.next();
-				if (lDecod.getCode().startsWith("C")
-						|| lDecod.getCodiceAlternativo() == null
+				if (lDecod.getCode().startsWith("C") || lDecod.getCodiceAlternativo() == null
 						|| lDecod.getCodiceAlternativo().trim().length() < 1
-						|| (lDecod.getFiltro() != null && lDecod.getFiltro().trim().length() > 0 && lDecod
-								.getFiltro().compareToIgnoreCase(aTipoUff) != 0)) {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+						|| (lDecod.getFiltro() != null && lDecod.getFiltro().trim().length() > 0
+								&& lDecod.getFiltro().compareToIgnoreCase(aTipoUff) != 0)) {
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
 					// siesLogger.debug("Rimosso : " + lDecod.getCode());
 					lMotivCorr.remove();
 					continue;
@@ -2560,7 +2642,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 					}
 				}
 			}
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("N.ro Motivi dopo il filtraggio : " + lVect.size());
 		}
 		return lVect;
@@ -2571,7 +2654,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio
 	 * MOTIVO_INAMMISSIBILITA+aTipoUff per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo
 	 * RV_ABBREVIATION sia o nullo oppure valorizzato con il codice aCodTipoUff, passato come parametro.
-	 * 
+	 *
 	 * @param aTipoUff
 	 * @return Vector
 	 * @throws Exception
@@ -2583,17 +2666,18 @@ public class DecodificheController extends SiapController implements IDecodifich
 		lDecod.setContesto("MOTIVO_INAMMISSIBILITA_" + aSottoSistema);
 		Vector lVect = new Vector(ExRicercaDecodificheOrdinatePerCodiceAlternativo(lDecod));
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("N.ro Motivi : " + lVect.size());
 		return lVect;
 	}
 
 	/**
 	 * La funzione ritorna l'elenco dei Motivi di Inammissibilita' dalla CG_REF_CODES. Il criterio per la
-	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio MOTIVO_INAMMISSIBILITA
-	 * per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo RV_ABBREVIATION sia valorizzato a
-	 * CPP.
-	 * 
+	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio
+	 * MOTIVO_INAMMISSIBILITA per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo
+	 * RV_ABBREVIATION sia valorizzato a CPP.
+	 *
 	 * @param aTipoUff
 	 * @return Vector
 	 * @throws Exception
@@ -2605,7 +2689,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 		lDecod.setContesto("MOTIVO_INAMMISSIBILITA");
 		Vector lVect = new Vector(ExRicercaDecodificheOrdinatePerCodiceAlternativo(lDecod));
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("N.ro Motivi : " + lVect.size());
 		if (lVect.size() > 0) {
 			Iterator lMotivCorr = lVect.iterator();
@@ -2616,12 +2701,14 @@ public class DecodificheController extends SiapController implements IDecodifich
 						&& (lDecod.getFiltro() != null && lDecod.getFiltro().compareToIgnoreCase("CPP") == 0))
 					;
 				else {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
 					// siesLogger.debug("Rimosso : " + lDecod.getCode());
 					lMotivCorr.remove();
 				}
 			}
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("N.ro Motivi dopo il filtraggio : " + lVect.size());
 		}
 		return lVect;
@@ -2629,10 +2716,10 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * La funzione ritorna l'elenco dei Motivi di Inammissibilita' dalla CG_REF_CODES. Il criterio per la
-	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio MOTIVO_INAMMISSIBILITA
-	 * per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo RV_ABBREVIATION sia valorizzato a
-	 * RD.
-	 * 
+	 * costruzione della lista e' la seguente: Vengono selezionati i records con dominio
+	 * MOTIVO_INAMMISSIBILITA per i quali il campo RV_HIGH_VALUE risulti valorizzato ed il campo
+	 * RV_ABBREVIATION sia valorizzato a RD.
+	 *
 	 * @param aTipoUff
 	 * @return Vector
 	 * @throws Exception
@@ -2644,24 +2731,27 @@ public class DecodificheController extends SiapController implements IDecodifich
 		lDecod.setContesto("MOTIVO_INAMMISSIBILITA");
 		Vector lVect = new Vector(ExRicercaDecodificheOrdinatePerCodiceAlternativo(lDecod));
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("N.ro Motivi : " + lVect.size());
 		if (lVect.size() > 0) {
 			Iterator lMotivCorr = lVect.iterator();
 			while (lMotivCorr.hasNext()) {
 				lDecod = (DecodificheModel) lMotivCorr.next();
 
-				if (lDecod.getCodiceAlternativo() != null
-						&& (lDecod.getFiltro() != null && lDecod.getFiltro().compareToIgnoreCase("RD") == 0)) {
+				if (lDecod.getCodiceAlternativo() != null && (lDecod.getFiltro() != null
+						&& lDecod.getFiltro().compareToIgnoreCase("RD") == 0)) {
 					// Conversione del carattere € per jsp
 					lDecod.setDescription(lDecod.getDescription().replace("€", "&#8364;"));
 				} else {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+					// di LogF3B.getLogger()
 					// siesLogger.debug("Rimosso : " + lDecod.getCode());
 					lMotivCorr.remove();
 				}
 			}
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("N.ro Motivi dopo il filtraggio : " + lVect.size());
 		}
 		return lVect;
@@ -2672,7 +2762,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	 * campo Code viene caricato il valore dell'RV_ABBREVIATION invece del RV_LOW_VALUE in quanto sono questi
 	 * i codici di interesse (anche per la costruzione delle Option)
 	 * <p>
-	 * 
+	 *
 	 * @return Insieme di dati.
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
@@ -2706,7 +2796,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaEsitiByOggetto: " + daoex);
@@ -2720,7 +2811,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Recupero la lista delle Attivita' relative ad un Incarico SIEPE.
-	 * 
+	 *
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
@@ -2750,7 +2841,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Metodo generico che setta una lista di decode model che come codici invece diprendere il low_value
 	 * prende l'high value. L'ordinamento viene fatto pero' per il low_value
-	 * 
+	 *
 	 * @param aDomain
 	 * @return Collectio di DecodeModel
 	 */
@@ -2792,7 +2883,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Restituisce l'elenco dei tipi di Ufficio SIGE.
-	 * 
+	 *
 	 * @return Collection
 	 * @throws F3BException
 	 */
@@ -2848,7 +2939,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Lista Contenuti SIGE.
 	 * <p>
-	 * 
+	 *
 	 * @return Vettore di Oggetti
 	 * @throws F3BException
 	 */
@@ -2888,7 +2979,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Lista Oggetti SIGE per Contenuto.
-	 * 
+	 *
 	 * @param codContenuto
 	 *            codice del contenuto selezionato
 	 * @return Vettore di Oggetti
@@ -2936,7 +3027,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Recupera il campo RV_MEANING nella tabella CG_REF_CODES corrispondente al codOggettoSige passato in
 	 * ingresso
-	 * 
+	 *
 	 * @param codOggettoSige
 	 * @return descrizione oggetto sige
 	 * @throws F3BException
@@ -2958,7 +3049,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDescrByCodOggettoSige: " + daoex);
@@ -2973,7 +3065,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Lista Oggetti-Contenuto SIGE.
 	 * <p>
-	 * 
+	 *
 	 * @return Vettore di Oggetti
 	 * @throws F3BException
 	 */
@@ -3021,7 +3113,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Ricerca degli esiti associati ad uno specifico oggetto SIGE.
-	 * 
+	 *
 	 * @param lCodOggetto
 	 * @return
 	 * @throws F3BException
@@ -3043,7 +3135,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE,
@@ -3067,7 +3159,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Ricerca dei Dati del Provvedimento SIGE associati ad uno specifico oggetto SIGE.
-	 * 
+	 *
 	 * @param lCodOggetto
 	 * @return
 	 * @throws F3BException
@@ -3088,7 +3180,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
@@ -3122,7 +3214,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
@@ -3143,7 +3235,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 		boolean ret = true;
 		// prende dalla sessione il codice dell'ufficio dell'utente connesso
-		Set<String> elenco = new HashSet<String>();
+		Set<String> elenco = new HashSet<>();
 		elenco.add("PMM");
 		elenco.add("DIBM");
 		elenco.add("GIPM");
@@ -3186,7 +3278,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 				lDecMod = new DecodificheModel();
 				lDecMod.setCode(lDecSqlDao.getModelRvLowValue());
 				// modifica 24-02-05 dario
-				//lDecMod.setDescription(lDecSqlDao.getModelRvAbbreviation());
+				// lDecMod.setDescription(lDecSqlDao.getModelRvAbbreviation());
 				lDecMod.setFiltro(lDecSqlDao.getModelRvAbbreviation());
 				lDecMod.setDescription(lDecSqlDao.getModelRvMeaning());
 				lContenuti.add(lDecMod);
@@ -3194,10 +3286,11 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("DecodificheController.ExListaMotivoProvvedimentoProsecProvvMAffPro: "
-					+ daoEx);
+			throw new F3BException(
+					"DecodificheController.ExListaMotivoProvvedimentoProsecProvvMAffPro: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -3247,7 +3340,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Metodo per il caricamento dei valori richiesti nella combo
-	 * 
+	 *
 	 * @param aModel
 	 * @param name
 	 * @return Collection
@@ -3294,7 +3387,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 	/**
 	 * Inner class responsabile dell'ordinamento di una collection
-	 * 
+	 *
 	 * @author sgioggi
 	 */
 	public class CodeComparator implements Comparator<DecodificheModel> {
@@ -3330,10 +3423,11 @@ public class DecodificheController extends SiapController implements IDecodifich
 			}
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("DecodificheController.ExRicercaDecodificheTipoMSMinorenniByNatura: "
-					+ daoEx);
+			throw new F3BException(
+					"DecodificheController.ExRicercaDecodificheTipoMSMinorenniByNatura: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -3342,16 +3436,16 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lContenuti;
 	}
 	// FINE MEV10-s3
-	
-	
+
 	/**
 	 * intervento post collaudo 11.2
-	 * 
+	 *
 	 * @param listaNotInValue
 	 * @return
 	 * @throws F3BException
 	 */
-	public Collection<DecodificheModel> ricercaAllTipoAutoritaNotIn(String [] listaNotInValue) throws F3BException {
+	public Collection<DecodificheModel> ricercaAllTipoAutoritaNotIn(String[] listaNotInValue)
+			throws F3BException {
 
 		Connection lConn = null;
 		DecodificheSqlDAO lDecSqlDao = null;
@@ -3370,8 +3464,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lDecSqlDao.stop();
 		} catch (DAOException daoEx) {
 			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("DecodificheController.ricercaAllTipoAutoritaNotIn: "
-					+ daoEx);
+			throw new F3BException("DecodificheController.ricercaAllTipoAutoritaNotIn: " + daoEx);
 		} finally {
 			cleanup(lDecSqlDao);
 			cleanup(lConn);
@@ -3379,10 +3472,14 @@ public class DecodificheController extends SiapController implements IDecodifich
 		// valore di ritorno
 		return lAut;
 	}
-	
-	/* (non-Javadoc)
-	 * @see siap.sico.decodifiche.controller.IDecodifiche#ExRicercaEsitiCompatibiliByEsitoOggettoU023(java.lang.String, java.lang.String)
-	 * 
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * siap.sico.decodifiche.controller.IDecodifiche#ExRicercaEsitiCompatibiliByEsitoOggettoU023(java.lang.
+	 * String, java.lang.String)
+	 *
 	 * 28/08/2018 : intervento post-collaudo
 	 */
 	public Collection ExRicercaEsitiCompatibiliByEsitoOggettoU023(String lCodOggetto, String lCodEsito)
@@ -3397,12 +3494,12 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao = new DecodificheSqlDAO(lConn);
 
-			lDecDao.ricercaEsitiCompatibiliByEsitoOggettoU023(lCodOggetto,  lCodEsito);
+			lDecDao.ricercaEsitiCompatibiliByEsitoOggettoU023(lCodOggetto, lCodEsito);
 
 			lDecDao.start();
 
 			while (lDecDao.next())
-				lDecodifiche.add((DecodificheModel) lDecDao.getModel());
+				lDecodifiche.add(lDecDao.getModel());
 
 			if (lDecodifiche.size() == 0)
 				throw new SICOException(SICOException.USER_MESSAGE,
@@ -3410,7 +3507,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 								+ " ) non prevede esiti !");
 
 			lDecDao.stop();
-		} catch (DAOException daoex) {			
+		} catch (DAOException daoex) {
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaEsitiByOggetto: " + daoex);
@@ -3425,7 +3522,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 	/**
 	 * Recupera il campo RV_MEANING nella tabella CG_REF_CODES corrispondente al codContenutoSige passato in
 	 * ingresso
-	 * 
+	 *
 	 * @param codContenutoSige
 	 * @return descrizione contenuto sige
 	 * @throws F3BException
@@ -3447,7 +3544,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 
 			lDecDao.stop();
 		} catch (DAOException daoex) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoex);
 			throw new SICOException(SICOException.USER_MESSAGE,
 					"DecodificheController.ExRicercaDescrByCodOggettoSige: " + daoex);

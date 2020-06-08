@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.SICOException;
 import siap.sico.evento.dao.EventoDAO;
@@ -16,10 +20,6 @@ import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteSqlDAO;
 import siap.sius.magistratorelatore.dao.MagistratoRelatoreSqlDAO;
 import siap.sius.udienza.dao.UdienzaSqlDAO;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -44,14 +44,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aMagistrato
 	 * @return
 	 * @throws F3BException
 	 */
 	public MagistratoModel ExInserisciMagistrato(MagistratoModel aMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoDAO lMagDao = null;
 		MagistratoModel lMagMod = null;
@@ -87,14 +85,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aMagistrato
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaMagistrato(MagistratoModel aMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMagistrati = new Vector();
 		MagistratoSqlDAO lMagDao = null;
@@ -119,6 +115,7 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	public Vector ExRicercaMagistratoPaged(MagistratoModel aMagistrato, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMagistrati = new Vector();
 		MagistratoSqlDAO lMagDao = null;
@@ -133,8 +130,8 @@ public class MagistratoController extends SiapController implements IMagistrato 
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 
 		} catch (DAOException daoEx) {
-			throw new F3BException("MagistratoController.ExRicercaMagistratoPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MagistratoController.ExRicercaMagistratoPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMagDao);
 			cleanup(lConn);
@@ -144,6 +141,7 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	public BigDecimal ExGetCountMagistratiPaged(MagistratoModel aMagistrato) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
@@ -167,36 +165,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
-	 * @param aKey
-	 * @return
-	 * @throws F3BException
-	 * 
-	 *             public MagistratoModel ExRicercaMagistratoByKey ( BigDecimal aKey ) throws F3BException {
-	 *             Connection lConn = null; MagistratoSqlDAO lMagDao = null; MagistratoModel lMagMod;
-	 * 
-	 *             try { lConn = getDBConnection(); lMagDao = new MagistratoSqlDAO(lConn);
-	 *             lMagDao.ricercaMagistratoByKey(aKey); lMagMod = (MagistratoModel)lMagDao.getModelByKey(); }
-	 *             catch (DAOException daoEx) { throw new
-	 *             F3BException("MagistratoController.ExRicercaMagistratoByKey: Non posso leggere : " +
-	 *             daoEx); } catch (SQLException sqe) { throw new
-	 *             F3BException("MagistratoController.ExRicercaMagistratoByKey: Non posso leggere  : " + sqe);
-	 *             } finally { cleanup(lMagDao); cleanup(lConn); }
-	 * 
-	 *             return lMagMod; }
-	 */
-
-	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aCod
 	 * @return
 	 * @throws F3BException
 	 */
 	public MagistratoModel ExRicercaMagistratoByCod(String aCod) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
 		MagistratoModel lMagMod;
@@ -208,8 +182,8 @@ public class MagistratoController extends SiapController implements IMagistrato 
 			lMagDao.ricercaMagistratoByCod(aCod);
 			lMagMod = (MagistratoModel) lMagDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("MagistratoController.ExRicercaMagistratoByCod: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MagistratoController.ExRicercaMagistratoByCod: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMagDao);
 			cleanup(lConn);
@@ -219,6 +193,7 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	public MagistratoModel ExRicercaMagistratoByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
 		MagistratoModel lMagMod;
@@ -240,14 +215,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aCodUfficio
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaMagistratoByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
 		Vector lMagMods = null;
@@ -270,14 +243,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aCodUfficio
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExElencoCbxMagistratiByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
 		Vector lMagDecMods = new Vector();
@@ -320,6 +291,7 @@ public class MagistratoController extends SiapController implements IMagistrato 
 
 	// RICERCA LISTA MAGISTRATO
 	public Vector ExRicercaMagistratoByCognome(String aCognome, String aUfficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMagistrati = new Vector();
 		MagistratoWMagistratoSqlDAO lMaDao = null;
@@ -332,10 +304,9 @@ public class MagistratoController extends SiapController implements IMagistrato 
 			if (lMagistrati.size() == 0) {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("MagistratoController.ExRicercaMagistratoByCognome: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"MagistratoController.ExRicercaMagistratoByCognome: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lMaDao);
 			cleanup(lConn);
@@ -345,15 +316,13 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aCodUfficio
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExElencoCbxMagByCodComuneCodTipoUff(String aCodComune, String aCodTipoUfficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
 		Vector lMagDecMods = new Vector();
@@ -396,14 +365,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aMagistrato
 	 * @return
 	 * @throws F3BException
 	 */
 	public MagistratoModel ExModificaMagistrato(MagistratoModel aMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoDAO lMagDao = null;
 		MagistratoModel lMagMod = new MagistratoModel(aMagistrato);
@@ -426,13 +393,11 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	}
 
 	/**
-	 *
-	 * <p>
-	 * 
 	 * @param aMagistrato
 	 * @throws F3BException
 	 */
 	public void ExCancellaMagistrato(String aCodMagistrato, String ACodUff) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoDAO lMagDao = null;
 		// 06/04/2007 Controllo cancellazione Magistrato solo se non assegnatario di procedimenti.
@@ -527,10 +492,8 @@ public class MagistratoController extends SiapController implements IMagistrato 
 		return lCodEsito;
 	}
 
-	/**
-   * 
-   */
 	public Vector ExRicercaMagistratoByCognomeUfficio(String aCognome, String aUfficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMagistrati = new Vector();
 		MagistratoWMagistratoSqlDAO lMagWSqlDao = null;
@@ -559,6 +522,7 @@ public class MagistratoController extends SiapController implements IMagistrato 
 	 * Ricerca magsitrato per id evento.
 	 */
 	public MagistratoModel ExRicercaMagistratoByEvento(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEventoDao = null;
 		// EventoModel lEventoModel = null;
@@ -579,18 +543,12 @@ public class MagistratoController extends SiapController implements IMagistrato 
 			lMagDao = new MagistratoSqlDAO(lConn);
 			lMagDao.ricercaMagistratoByCod(lCodMagistrato);
 			lMagMod = (MagistratoModel) lMagDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("MagistratoController.ExRicercaMagistratoByEvento: Non posso leggere : "
-					+ daoEx);
-		}
-		/*
-		 * catch (SQLException sqe) { throw new
-		 * F3BException("MagistratoController.ExRicercaMagistratoByFascicolo: Non posso leggere  : " + sqe); }
-		 */
-		catch (Exception ex) {
-			throw new F3BException("MagistratoController.ExRicercaMagistratoByEvento: Non posso leggere  : "
-					+ ex);
+			throw new F3BException(
+					"MagistratoController.ExRicercaMagistratoByEvento: Non posso leggere : " + daoEx);
+		} catch (Exception ex) {
+			throw new F3BException(
+					"MagistratoController.ExRicercaMagistratoByEvento: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lEventoDao);
 			cleanup(lMagDao);
@@ -601,12 +559,13 @@ public class MagistratoController extends SiapController implements IMagistrato 
 
 	/**
 	 * Ricerca i Magistrati validi (DATA_FINE_VALIDITA == NULL oppure DATA_FINE_VALIDITA > SYSDATE)
-	 * 
+	 *
 	 * @param aCodUfficio
 	 * @return Elenco Magistrati validi
 	 * @throws F3BException
 	 */
 	public Vector ExElencoCbxMagistratiValidiByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoSqlDAO lMagDao = null;
 		Vector lMagDecMods = new Vector();
@@ -617,10 +576,10 @@ public class MagistratoController extends SiapController implements IMagistrato 
 
 			lMagDao.ricercaMagistratiValidiByCodUfficio(aCodUfficio);
 			lMagDao.start();
-			
+
 			// MEV10-s3: aggiunto campo vuoto in testa all'elenco
 			lMagDecMods.add(new DecodeModel("-", "-"));
-						
+
 			while (lMagDao.next()) {
 				String lCod = ((MagistratoModel) lMagDao.getModel()).getCodMagistrato();
 				String lCognome = ((MagistratoModel) lMagDao.getModel()).getCognome();
@@ -629,7 +588,6 @@ public class MagistratoController extends SiapController implements IMagistrato 
 			}
 
 			lMagDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MagistratoController.ExElencoCbxMagistratiValidiByCodUfficio: Non posso leggere : "

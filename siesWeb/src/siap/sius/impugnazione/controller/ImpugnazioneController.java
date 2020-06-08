@@ -9,6 +9,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -28,10 +32,6 @@ import siap.sius.impugnazione.model.ImpugnazioneModel;
 import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
 import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.Utils;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ import f3b.util.Utils;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -59,6 +59,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			BigDecimal aIdFascicolo, String aTipo,
 			// MEV_AVVOCATURA - aggiunto parametro
 			Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneDAO lImpDao = null;
 		ImpugnazioneSqlDAO lImpSqlDao = null;
@@ -89,7 +90,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			lEveSqlDao.ricercaEventoByKey(aIdEvento);
 			lEveMod = new EventoModel((EventoModel) lEveSqlDao.getModelByKey());
 
-			// Recupero "del Deposito Ordinanza" o del "Deposito Decreto" 
+			// Recupero "del Deposito Ordinanza" o del "Deposito Decreto"
 			// o "Deposito Sentenza" a seconda del tipo di Provvedimento.
 			if (lEveMod.getCodTipoProvvedimento().equals("02")) // Decreto
 			{
@@ -197,19 +198,23 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			throw new F3BException("ImpugnazioneController.ExInserisciImpugnazione: " + ex);
 		} finally {
 			cleanup(lImpDao);
+			cleanup(lImpSqlDao);
 			cleanup(lEveSqlDao);
 			cleanup(lEveDao);
-			cleanup(lImpSqlDao);
 			cleanup(lScaDao);
 			cleanup(lDOPDao);
 			cleanup(lDDDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lDSPDao);
 			cleanup(lAvvisiAvvocatoDao);
+
 			cleanup(lConn);
 		}
 		return aImpugnazione;
 	}
 
 	public Vector ExRicercaImpugnazione(ImpugnazioneModel aImpugnazione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lImpugnazioni = new Vector();
 		ImpugnazioneSqlDAO lImpDao = null;
@@ -225,8 +230,8 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("ImpugnazioneController.ExRicercaImpugnazione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ImpugnazioneController.ExRicercaImpugnazione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
@@ -236,7 +241,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 
 	/**
 	 * La funzione ricerca le impugnazioni annullate per uno specifico Provvedimento.
-	 * 
+	 *
 	 * @param aIdProv
 	 *            : ID del Decreto o dell'Ordinanza
 	 * @param aTipoProv
@@ -246,6 +251,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	 */
 	public Vector ExRicercaImpugnazioniAnnullateByProv(BigDecimal aIdProv, String aTipoProv)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lImpugnazioni = null;
 		ImpugnazioneSqlDAO lImpDao = null;
@@ -261,9 +267,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			throw new F3BException("ImpugnazioneController.ExRicercaImpugnazioneAnnullatiByProv: " + daoEx);
 		} catch (Exception e) {
 			throw new F3BException("" + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
 		}
@@ -271,6 +275,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	public ImpugnazioneModel ExRicercaImpugnazioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSqlDAO lImpDao = null;
 		ImpugnazioneModel lImpMod;
@@ -283,8 +288,8 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("ImpugnazioneController.ExRicercaImpugnazione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ImpugnazioneController.ExRicercaImpugnazione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
@@ -293,6 +298,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	public ImpugnazioneModel ExModificaImpugnazione(ImpugnazioneModel aImpugnazione) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneDAO lImpDao = null;
 		ImpugnazioneModel lImpMod = new ImpugnazioneModel(aImpugnazione);
@@ -338,6 +344,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	public void ExCancellaImpugnazione(ImpugnazioneModel aImpugnazione) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneDAO lImpDao = null;
 
@@ -350,8 +357,8 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("ImpugnazioneController.ExCancellaImpugnazione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ImpugnazioneController.ExCancellaImpugnazione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
@@ -363,7 +370,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	 * <p>
 	 * La funzione effettua l'update di un record nella tabella IMPUGNAZIONE NOn aggiorna più la tabella
 	 * EVENTO.FLAG_PIU_MENO.
-	 * 
+	 *
 	 * @param aImpugnazione
 	 * @param aIdEvento
 	 * @throws F3BException
@@ -371,6 +378,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 
 	public void ExAnnullaImpugnazione(ImpugnazioneModel aImpugnazione, BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneDAO lImpDao = null;
 		EventoDAO lEveDao = null;
@@ -402,14 +410,12 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("ImpugnazioneController.ExAnnullaImpugnazione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ImpugnazioneController.ExAnnullaImpugnazione: Non posso leggere : " + daoEx);
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("" + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lImpDao);
 			cleanup(lEveDao);
 			cleanup(lConn);
@@ -417,7 +423,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @param aTipo
 	 * @param aTipoImpugnazione
@@ -427,6 +433,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	 */
 	public ImpugnazioneModel ExRicercaImpugnazioneByIdEventoTipoProvv(BigDecimal aIdEvento, String aTipo,
 			String[] aTipoImpugnazione, String aFlagAnnullate) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSqlDAO lImpDao = null;
 		ImpugnazioneModel lImpMod;
@@ -440,8 +447,8 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("ImpugnazioneController.ExRicercaImpugnazioneByIdEventoTipoProvv : "
-					+ daoEx);
+			throw new F3BException(
+					"ImpugnazioneController.ExRicercaImpugnazioneByIdEventoTipoProvv : " + daoEx);
 		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
@@ -450,14 +457,15 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	/**
-	 * Verifica se per il procedimento individuato e' attualmente impugnato. STUB 12/09/2003 Al momento il test
-	 * e' realizzato controllando il Campo FLAG_PIU_MENO, ma in futuro sarà gestito COD_STATO_EVENTO
-	 * 
+	 * Verifica se per il procedimento individuato e' attualmente impugnato. STUB 12/09/2003 Al momento il
+	 * test e' realizzato controllando il Campo FLAG_PIU_MENO, ma in futuro sarà gestito COD_STATO_EVENTO
+	 *
 	 * @param aFascKey
 	 * @return aResponse
 	 * @throws F3BException
 	 */
 	public boolean ExVerificaImpugnazione(BigDecimal aFascKey, String aTipoEvento) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.error("ImpugnazioneController.ExVerificaImpugnazione aFascKey + aTipoEvento = " + aFascKey
 				+ " " + aTipoEvento);
@@ -468,7 +476,6 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 		try {
 			lConn = getDBConnection();
 			lEveDao = new EventoSqlDAO(lConn);
-
 			lEveDao.ricercaEventoByFascicoloSius(aFascKey, aTipoEvento);
 			lEveDao.start();
 			while (lEveDao.next()) {
@@ -492,7 +499,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	/**
 	 * Esecuzione stampa dell'Impugnazione
 	 * <p>
-	 * 
+	 *
 	 * @param aKeyImp
 	 * @param aUfficioUtenteConnesso
 	 * @return ByteArrayOutputStream
@@ -515,6 +522,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	public String ExRicercaDataRicorso(BigDecimal aIdEvento, String aTipo) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSqlDAO lImpDao = null;
 		String retval = " ";
@@ -534,6 +542,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	public String ExRicercaDateRicorsi(BigDecimal aIdEvento, String aTipo) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSqlDAO lImpDao = null;
 
@@ -565,7 +574,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 
 	/**
 	 * Conteggio del N.ro delle impugnazioni afferenti ad un particolare provvedimento.
-	 * 
+	 *
 	 * @param aFascKey
 	 * @param aTipoEvento
 	 *            (02 - Decreto, 03 - Ordinanza)
@@ -580,7 +589,8 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			String[] aTipoImpugnazione, String aFlagAnnullate) throws F3BException {
 
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		// siesLogger.error("ImpugnazioneController.ExRicercaImpugnazioni aFascKey + aTipoEvento = "+aFascKey+" "+aTipoEvento);
+		// siesLogger.error("ImpugnazioneController.ExRicercaImpugnazioni aFascKey + aTipoEvento =
+		// "+aFascKey+" "+aTipoEvento);
 		Connection lConn = null;
 		Vector lVect = new Vector();
 		EventoSqlDAO lEveDao = null;
@@ -626,7 +636,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	// 06/11/2007 Nuova ricerca elenco impugnazioni del provvedimento
 	/**
 	 * La funzione ricerca le impugnazioni per uno specifico Provvedimento.
-	 * 
+	 *
 	 * @param aIdProv
 	 *            : ID del Decreto o dell'Ordinanza
 	 * @param aTipoProv
@@ -640,6 +650,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	 */
 	public Vector<ImpugnazioneModel> ExRicercaImpugnazioniDelProvvedimento(BigDecimal aIdProv,
 			String aTipoProv, String[] aTipoImpugnazione, String aFlagAnnullate) throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneModel> lImpugnazioni = null;
 		ImpugnazioneSqlDAO lImpDao = null;
@@ -648,7 +659,8 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			lConn = getDBConnection();
 			lImpDao = new ImpugnazioneSqlDAO(lConn);
 
-			lImpDao.ricercaImpugnazioniDelProvvedimento(aIdProv, aTipoProv, aTipoImpugnazione, aFlagAnnullate);
+			lImpDao.ricercaImpugnazioniDelProvvedimento(aIdProv, aTipoProv, aTipoImpugnazione,
+					aFlagAnnullate);
 
 			lImpugnazioni = new Vector<ImpugnazioneModel>(lImpDao.getModels());
 		} catch (DAOException daoEx) {
@@ -658,9 +670,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 			throw new F3BException("ImpugnazioneController.ExRicercaImpugnazioniDelProvvedimento: " + daoEx);
 		} catch (Exception e) {
 			throw new F3BException("" + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
 		}
@@ -668,7 +678,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @param aTipo
 	 * @param aTipoImpugnazione
@@ -679,6 +689,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	public Vector<ImpugnazioneModel> ExRicercaImpugnazioniByIdEventoTipoProvvTipoImpFlagAnn(
 			BigDecimal aIdEvento, String aTipo, String[] aTipoImpugnazione, String aFlagAnnullate)
 			throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSqlDAO lImpSqlDao = null;
 		Vector<ImpugnazioneModel> lImpModVect = null;
@@ -705,7 +716,7 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aImpugnazione
 	 * @param aIdEvento
 	 * @param aIdFascicolo
@@ -714,13 +725,13 @@ public class ImpugnazioneController extends SiapController implements IImpugnazi
 	 */
 	public ImpugnazioneModel ExInserisciOpposizione(ImpugnazioneModel aImpugnazione, BigDecimal aIdEvento,
 			Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato) throws F3BException {
+
 		Connection lConn = null;
 
 		ImpugnazioneDAO lImpDao = null;
 		ImpugnazioneSqlDAO lImpSqlDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		EventoDAO lEveDao = null;
-
 		DepositoOrdinanzaPcSqlDAO lDOPDao = null;
 		DepositoDecretoSqlDAO lDDDao = null;
 		// MEV_AVVOCATURA - aggiunta variabile

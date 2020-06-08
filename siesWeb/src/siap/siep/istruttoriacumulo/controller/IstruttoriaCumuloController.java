@@ -1,11 +1,5 @@
 package siap.siep.istruttoriacumulo.controller;
 
-/**
-* <p>Title: IstruttoriaCumuloController</p>
-* <p>Description: Classe Controller per IstruttoriaCumulo</p>
-* @version 1.0
-*/
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -122,6 +116,16 @@ import siap.siep.modulocumulo.util.CalcoloPenaCumuloModel;
 import siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * <p>
+ * Title: IstruttoriaCumuloController
+ * </p>
+ * <p>
+ * Description: Classe Controller per IstruttoriaCumulo
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class IstruttoriaCumuloController extends SiapController implements IIstruttoriaCumulo {
 
@@ -201,7 +205,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public BigDecimal ExCountIstruttoriaCumuloPaged(IstruttoriaCumuloModel aIstruttoriaCumulo)
 			throws F3BException {
-		// siesLogger.debug("--XX-- ExCountIstruttoriaCumuloPaged ...... INIZIO " );
+
 		Connection lConn = null;
 		BigDecimal HowManyRecords = null;
 		IstruttoriaCumuloSqlDAO lIstCumSqlDao = null;
@@ -243,8 +247,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 ****************************************************************************/
 	public Vector<IstruttoriaCumuloModel> ExRicercaIstruttoriaCumulo(
 			IstruttoriaCumuloModel aIstruttoriaCumulo) throws F3BException {
+
 		Connection lConn = null;
-		Vector<IstruttoriaCumuloModel> lIstruttoriaCumuli = new Vector<IstruttoriaCumuloModel>();
+		Vector<IstruttoriaCumuloModel> lIstruttoriaCumuli = new Vector<>();
 		IstruttoriaCumuloDAO lIstDao = null;
 
 		try {
@@ -271,6 +276,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public BigDecimal ExCountIstruttoriaPerTitoloCumulato(IstruttoriaCumuloModel aIstruttoriaCumulo)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- ExCountIstruttoriaPerTitoloCumulato ...... INIZIO  ");
 		Connection lConn = null;
 		BigDecimal HowManyRecords = null;
@@ -317,6 +323,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 *******************************************************************************************/
 	public Vector ExRicercaIstruttoriaPerTitoloCumulatoPaged(IstruttoriaCumuloModel aIstruttoriaCumulo,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lIstruttoriaCumuli = new Vector();
 		IstruttoriaCumuloSqlDAO lIstruttoriaCumuloSqlDao = null;
@@ -340,7 +347,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public BigDecimal ExCountIstruttoriaPerFasSIEP(FascicoloSiepModel aFasSiep, String ufficio)
 			throws F3BException {
-		// siesLogger.debug("--XX-- ExCountIstruttoriaPerFasSIEP ...... INIZIO " );
+
 		Connection lConn = null;
 		BigDecimal HowManyRecords = null;
 		IstruttoriaCumuloSqlDAO lIstCumSqlDao = null;
@@ -381,6 +388,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 *******************************************************************************************/
 	public Vector<IstruttoriaCumuloModel> ExRicercaIstruttoriaPerFasSIEPpaged(
 			FascicoloSiepModel aFascicoloSiep, String ufficio, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lIstruttoriaCumuli = new Vector();
 		IstruttoriaCumuloSqlDAO lIstruttoriaCumuloSqlDao = null;
@@ -412,6 +420,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 ****************************************************************************/
 	public IstruttoriaCumuloModel ExRicercaIstruttoriaCumuloById(BigDecimal aIdIstruttoriaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		IstruttoriaCumuloModel lIstruttoriaCumuloMod = new IstruttoriaCumuloModel();
 		IstruttoriaCumuloSqlDAO lIstruttoriaCumuloSqlDao = null;
@@ -444,6 +453,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		IstruttoriaCumuloDAO lIstDao = null;
 
@@ -472,6 +482,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		IstruttoriaCumuloDAO lIstDao = null;
 
@@ -502,6 +513,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 ****************************************************************************/
 	public BigDecimal ExGetCountIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		IstruttoriaCumuloSqlDAO lIstruttoriaCumuloSqlDao = null;
@@ -539,6 +551,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 ****************************************************************************/
 	public Vector ExRicercaIstruttoriaCumuloPaged(IstruttoriaCumuloModel aIstruttoriaCumulo, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lIstruttoriaCumuli = new Vector();
 		IstruttoriaCumuloSqlDAO lIstruttoriaCumuloSqlDao = null;
@@ -569,6 +582,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExAnnullaIstruttoriaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo) throws F3BException {
+
 		Connection lConn = null;
 
 		IstruttoriaCumuloDAO lIstruttoriaDao = null;
@@ -614,15 +628,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		}
 	}
 
-	/**
-	 *
-	 */
 	public Vector<MessaggioModel> ExRicercaFascicoliTrasmessi(BigDecimal aChiaveAnno, BigDecimal aChiaveProgr,
 			String aChiaveUfficio, String aFlagInCarico) throws F3BException {
+
 		// Effettua la ricerca sulla tabella messaggio
 		Connection lConn = null;
 
-		Vector<MessaggioModel> lListaMessaggi = new Vector<MessaggioModel>();
+		Vector<MessaggioModel> lListaMessaggi = new Vector<>();
 		MessaggioSqlDAO lMesSqlDao = null;
 
 		MessaggioModel lMessMod = new MessaggioModel();
@@ -659,6 +671,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliByIstruttoria(BigDecimal aIdIstruttoriaCumulo)
 			throws F3BException {
+
 		return ExRicercaTitoliByIstruttoriaOrderBy(aIdIstruttoriaCumulo, null);
 	}
 
@@ -669,9 +682,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliByIstruttoriaOrderBy(BigDecimal aIdIstruttoriaCumulo,
 			String aOrdinamento) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
@@ -740,11 +754,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return lTitoliInIstruttoria;
 	}
 
-	/**
-	 *
-	 */
 	public BigDecimal ExInserisciAnnotazioneEsitoTrasmComp(EventoNotificaModel aEventoNot,
 			AnnotazioneEsitoTrasmissioneModel aAnnotaModel, BigDecimal aIdMess) throws F3BException {
+
 		siesLogger.debug("Inizio inserimento annotazione...");
 
 		Connection lConn = null;
@@ -831,7 +843,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lEventoSqlDao);
 			cleanup(lCampoNotaDao);
 			cleanup(lAnnotaDao);
-
 			cleanup(lMesDao);
 			cleanup(lMesSqlDao);
 
@@ -842,6 +853,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public EventoModel ExUpdateValidaAnnotazioneEsitoTrasmComp(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -887,10 +899,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return lEveMod;
 	}
 
-	/**
-	 *
-	 */
 	public void ExUpdateOrdinamentoTitoli(IstruttoriaCumuloModel aIstruttoriaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		IstruttoriaCumuloDAO lIstDao = null;
 
@@ -914,9 +924,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliValidiByIstruttoriaOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		SoggettoCumulatoSqlDAO lSoggCumSqlDao = null;
@@ -996,10 +1007,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	public ByteArrayOutputStream ExStampaProspettoTitoliCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector aListaTitoli, FascicoloSiepModel lFascicoloModel, UtenteModel aUtenteMod,
 			UfficioModel lUfficioMod, String aIdTemplate) throws F3BException {
+
 		Connection lConn = null;
 		ByteArrayOutputStream lByteArrayOut = null;
-
-		// CertificatoStatoEsecDAO lCertSEDao = null;
 
 		try {
 			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aIdTemplate);
@@ -1028,19 +1038,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			 *
 			 * lCertSEDao.setDAOFromModel(aCertSE );
 			 */
-		}
-		/*
-		 * catch (DAOException daoEx) { rollback(lConn); daoEx.printStackTrace();
-		 * siesLogger.debug(" IstruttoriaCumuloController - ---------> DaoException"+daoEx, daoEx); throw new
-		 * F3BException("IstruttoriaCumuloController.ExStampaProspettoTitoli: " + daoEx); }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
 			siesLogger.debug("IstruttoriaCumuloController - -------> Exception: " + e, e);
 			throw new F3BException("IstruttoriaCumuloController.ExStampaProspettoTitoli: " + e);
 		} finally {
-			// cleanup(lEveDao);
 			cleanup(lConn);
 		}
 
@@ -1058,10 +1061,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	public ByteArrayOutputStream ExStampaProspettoPropostaCumulo(IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector aListaTitoli, FascicoloSiepModel lFascicoloModel, UtenteModel aUtenteMod,
 			UfficioModel lUfficioMod, String aIdTemplate) throws F3BException {
+
 		Connection lConn = null;
 		ByteArrayOutputStream lByteArrayOut = null;
-
-		// CertificatoStatoEsecDAO lCertSEDao = null;
 
 		try {
 			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aIdTemplate);
@@ -1089,19 +1091,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			 *
 			 * lCertSEDao.setDAOFromModel(aCertSE );
 			 */
-		}
-		/*
-		 * catch (DAOException daoEx) { rollback(lConn); daoEx.printStackTrace();
-		 * siesLogger.debug(" IstruttoriaCumuloController - ---------> DaoException"+daoEx, daoEx); throw new
-		 * F3BException("IstruttoriaCumuloController.ExStampaProspettoTitoli: " + daoEx); }
-		 */
-		catch (Exception e) {
+		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
 			siesLogger.debug("IstruttoriaCumuloController - -------> Exception: " + e, e);
 			throw new F3BException("IstruttoriaCumuloController.ExStampaProspettoPropostaCumulo: " + e);
 		} finally {
-			// cleanup(lEveDao);
 			cleanup(lConn);
 		}
 
@@ -1117,6 +1112,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public IstruttoriaCumuloModel ExCercaIsruttoriaPerAltriDatiCumulo(BigDecimal aIdFascicoloSiep,
 			BigDecimal aIdEvento, Connection aConn) throws F3BException {
+
 		siesLogger.debug("--XX-- inizio CercaIstruttoriaperDatiCumuloNew - IdFasc = " + aIdFascicoloSiep
 				+ " - IdEve = " + aIdEvento);
 		BigDecimal IdIstruttoria = null;
@@ -1274,7 +1270,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				// RICHIESTE_INVIATE_CUMULO
 				siesLogger.debug("--XX-- Ricerca delle Richieste del PM (Richieste_Inviate_Cum) ");
 				RichInvSqlDao.ricercaRichiesteInviateCumByIdIstruttoria(IdIstruttoria);
-				Vector<RichiesteInviateCumModel> VecRichInviate = new Vector<RichiesteInviateCumModel>();
+				Vector<RichiesteInviateCumModel> VecRichInviate = new Vector<>();
 
 				RichInvSqlDao.start();
 				while (RichInvSqlDao.next()) {
@@ -1432,8 +1428,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						}
 
 						// Misure Cautelari Cumulo
-						MisCauCumSqlDao = new MisuraCautelareCumuloSqlDAO(aConn);						
-						MisCauCumSqlDao.ricercaMisuraCautelareCumuloByIdTitolo(IdTitolo);						
+						MisCauCumSqlDao = new MisuraCautelareCumuloSqlDAO(aConn);
+						MisCauCumSqlDao.ricercaMisuraCautelareCumuloByIdTitolo(IdTitolo);
 						VecMisCauCum = new Vector<MisuraCautelareCumuloModel>(MisCauCumSqlDao.getModels());
 
 						if (VecMisCauCum != null && VecMisCauCum.size() > 0) {
@@ -1537,14 +1533,15 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(PenaRiCumSqlDao);
 			cleanup(DatiFinaUltSanSqlDao);
 			cleanup(CompCumSqlDao);
-
 			cleanup(TitoCumSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(RichInvSqlDao);
+			cleanup(RichPmSqlDao);
 			cleanup(SoggCumSqlDao);
 			cleanup(ProcCumSqlDao);
 			cleanup(PenaCompCumSqlDao);
 			cleanup(SanSosCumSqlDao);
 			cleanup(ContinuaCumSqlDao);
-
 			cleanup(ReatoCumuSqlDao);
 			cleanup(CircoCumSqlDao);
 			cleanup(MisSicCumSqlDao);
@@ -1553,11 +1550,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(BeneCumSqlDao);
 			cleanup(StEsecCumSqlDao);
 			cleanup(NotCumSqlDao);
-
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(LibAntCumSqldao);
+			cleanup(PeriodoSqldao);
 		}
 
 		return IstruCumMod;
-
 	} // CHIUDE ExCercaIsruttoriaPerAltriDatiCumulo
 
 	/**
@@ -1569,6 +1567,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public Vector<RichiestePmInCumuloModel> ScaricaDecisioneeAltriDatiRichiestePM(Connection lConn,
 			Vector<RichiestePmInCumuloModel> VecRichPmInCum) throws F3BException {
+
 		siesLogger.debug("--XX-- - ScaricaDecisioneeAltriDatiRichiestePM - Inizio ");
 
 		RichiestePmInCumuloModel RichPmModel = new RichiestePmInCumuloModel();
@@ -1676,11 +1675,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					if (VecRicStesecCum != null && VecRicStesecCum.size() > 0) {
 						RichPmModel.setListaRichPmStatoEsecCum(VecRicStesecCum);
 					}
-
 				} // Chiude RichPmModel.getIdRichiestePmInCumulo()!=null
-
 			} // Chiude ciclo while()
-
 		} catch (Exception e) {
 			// rollback(lConn);
 			e.printStackTrace();
@@ -1698,11 +1694,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(RicPmReaCumSqlDao);
 			cleanup(RicPmSSCumSqlDao);
 			cleanup(RicPmStatEsecCumSqlDao);
-
 		}
 
 		return VecRichPmInCum;
-
 	} // Chiude ScaricaDecisioneeAltriDatiRichiestePM
 
 	/**
@@ -1713,6 +1707,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public String ExInserisciIstruttoriaCumuloWithoutSequence(IstruttoriaCumuloModel aIstruttoriaCumModel,
 			Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		IstruttoriaCumuloDAO lIstruCumDao = null;
 
@@ -1740,10 +1735,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		}
 
 		return EsitodiRitorno;
-
 	} // Chiude ExInserisciIstruttoriaCumuloWithoutSequence()
-
-	// END MEV 26 Step2
+		// END MEV 26 Step2
 
 	// =========================================================================================================
 	// solo per PROVA
@@ -1755,6 +1748,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			Vector aListaTitoli, FascicoloSiepModel lFascicoloModel, UtenteModel aUtenteMod,
 			UfficioModel lUfficioMod, String aIdTemplate, RichiesteInviateCumModel lRichMod)
 			throws F3BException {
+
 		siesLogger.debug("--XX-- Start ExStampa");
 		Connection lConn = null;
 		ByteArrayOutputStream lByteArrayOut = null;
@@ -1765,12 +1759,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			IStampaCumulo lStampaC = SIEPLookupRemote.getStampaCumuloRemote();
 			TreeModel lTree = lStampaC.prelevaDatiIstruttoriaPerPropostaCumulo(lFascicoloModel, aUtenteMod,
 					lUfficioMod, aIstruttoriaCumulo, aListaTitoli, "Richiesta");
-	      
-	      Connection aConn = null;
+
+			Connection aConn = null;
 			lTree = lStampaC.prelevaDatiRichiestaInviataCumulo(aConn, lTree, aUtenteMod, lUfficioMod,
 					aIstruttoriaCumulo, lRichMod);
 
-	      String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aIdTemplate);
+			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aIdTemplate);
 			siesLogger.info("NOME TEMPLATE >>>" + lNomeTemplate);
 
 			ReportGenerator lReport = new ReportGenerator();
@@ -1808,9 +1802,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliByIstruttoriaDataReatoCumOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento, Date lDataRea) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
@@ -1885,26 +1880,25 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliBeneficiCumByIstruttoriaOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento, String aCodNaturaBen,
 			Vector<String> aCodTipiBen) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
 
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-		// SoggettoCumulatoSqlDAO lSoggCumSqlDao = null;
 		BeneficioCumuloSqlDAO lBenCumSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
 
 		TitoloCumulatoSqlDAO lTitoloSqlDaoStato = null;
-		Vector<TitoloCumulatoModel> lTitoliConStatoEsec = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliConStatoEsec = new Vector<>();
 
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecSqlDao = null;
 		StatoEsecTitoloCumulatoModel lStatoModel = null;
 
 		ComputiCumuloSqlDAO lCompSqlDao = null;
-		// ComputiCumuloModel lComputi = null;
 
 		lTitoloRicerca.setIstrIdIstruttoriaCumulo(aIdIstruttoriaCumulo);
 
@@ -1922,7 +1916,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			// ====================================================================================
 			// Ricerca dei Benefici assegnati in
 			// sentenza\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
 			lTitoloSqlDao.ricercaTitoloCumulatoJoinBeneficioCumByIstruttoriaOrderBy(aIdIstruttoriaCumulo,
 					aOrdinamento, aCodNaturaBen, aCodTipiBen);
 			lTitoloSqlDao.start();
@@ -1947,7 +1940,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				}
 
 				lBenCumSqlDao = new BeneficioCumuloSqlDAO(lConn);
-				Vector<BeneficioCumuloModel> lVecBenCum = new Vector<BeneficioCumuloModel>();
+				Vector<BeneficioCumuloModel> lVecBenCum = new Vector<>();
 				BeneficioCumuloModel lBenMod = null;
 				// String lCodNatBen = "C";
 				lBenCumSqlDao.ricercaBeneficioCumuloByTitoloCum(lTitolo.getIdTitoloCumulato(), aCodNaturaBen,
@@ -1966,20 +1959,18 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				if (lVecBenCum != null && lVecBenCum.size() > 0) {
 					lTitolo.setBeneficiCumulo(lVecBenCum);
 				}
-
 			}
 			lTitoloSqlDao.stop();
 
 			// ===================================================================
 			// == Ricerca delle Amnistia/Indulto assegnati con i provvedimenti
-
-			Vector<String> listaTipoEve = new Vector<String>();
+			Vector<String> listaTipoEve = new Vector<>();
 			listaTipoEve.add("01"); // Provvedimento
 
-			Vector<String> listaTipoProv = new Vector<String>();
+			Vector<String> listaTipoProv = new Vector<>();
 			listaTipoProv.add("03"); // Ordinanza
 
-			Vector<String> listaMotivo = new Vector<String>();
+			Vector<String> listaMotivo = new Vector<>();
 			listaMotivo.add("0284"); // Applicazione Amnistia/Indulto
 
 			lTitoloSqlDaoStato.ricercaTitoloCumulatoJoinStatoEsecTitoloCumByIstruttoria_e_Provvedimento(
@@ -2005,7 +1996,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				}
 
 				// Ricerca Stato_Esec E computi
-				Vector<StatoEsecTitoloCumulatoModel> lListaProvStatoEsec = new Vector<StatoEsecTitoloCumulatoModel>();
+				Vector<StatoEsecTitoloCumulatoModel> lListaProvStatoEsec = new Vector<>();
 				lStatoEsecSqlDao.ricercaStatoEsecTitoloCumulatoByIdTitolo(lTitoloStat.getIdTitoloCumulato(),
 						listaMotivo);
 				lStatoEsecSqlDao.start();
@@ -2019,35 +2010,29 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						lStatoModel.setListaComputi(lVecComp);
 
 					lListaProvStatoEsec.add(lStatoModel);
-
 				}
 
 				lTitoloStat.setStatoEsecuzioneTitoloCumulato(lListaProvStatoEsec);
 			}
 
 			lTitoloSqlDaoStato.stop();
-
 			// ================================================================================
 
 			// Unifico le liste ottenute dalle 2 Ricerche per Ottenere UN UNICA LISTA DI TITOLI
-			Vector<TitoloCumulatoModel> lTitoliDaAggiungere = new Vector<TitoloCumulatoModel>();
+			Vector<TitoloCumulatoModel> lTitoliDaAggiungere = new Vector<>();
 
 			Iterator itxSTE = lTitoliConStatoEsec.iterator();
 			while (itxSTE.hasNext()) {
 				TitoloCumulatoModel lTitoloSTE = (TitoloCumulatoModel) itxSTE.next();
 				Boolean lTrovato = false;
-
 				for (int kk = 0; kk < lTitoliInIstruttoria.size(); kk++) {
-					TitoloCumulatoModel lTitoloSENT = (TitoloCumulatoModel) lTitoliInIstruttoria.get(kk);
-
+					TitoloCumulatoModel lTitoloSENT = lTitoliInIstruttoria.get(kk);
 					if (lTitoloSTE.getIdTitoloCumulato().compareTo(lTitoloSENT.getIdTitoloCumulato()) == 0) {
 						lTitoloSENT.setStatoEsecuzioneTitoloCumulato(
 								lTitoloSTE.getStatoEsecuzioneTitoloCumulato());
 						lTrovato = true;
 					}
-
 				}
-
 				if (!lTrovato) {
 					lTitoliDaAggiungere.addElement(lTitoloSTE);
 				}
@@ -2055,7 +2040,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 			// ===
 			lTitoliInIstruttoria.addAll(lTitoliDaAggiungere);
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -2069,10 +2053,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		} finally {
 			cleanup(lTitoloSqlDao);
 			cleanup(lProcCumSqlDao);
-			// cleanup(lSoggCumSqlDao);
 			cleanup(lBenCumSqlDao);
 			cleanup(lUffSqlDao);
-
 			cleanup(lTitoloSqlDaoStato);
 			cleanup(lStatoEsecSqlDao);
 			cleanup(lCompSqlDao);
@@ -2089,15 +2071,15 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliMisureSicCumByIstruttoriaOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
 
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-		// BeneficioCumuloSqlDAO lBenCumSqlDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
 
@@ -2164,7 +2146,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		} finally {
 			cleanup(lTitoloSqlDao);
 			cleanup(lProcCumSqlDao);
-			// cleanup(lSoggCumSqlDao);
 			cleanup(lMisSicCumSqlDao);
 			cleanup(lUffSqlDao);
 
@@ -2181,9 +2162,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliSanzioneSostCumByIstruttoriaOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento, String[] lIdTitoliSelezionati)
 			throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
@@ -2255,7 +2237,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 					lSSCumSqlDao.stop();
 				}
-
 			}
 
 			lTitoloSqlDao.stop();
@@ -2279,7 +2260,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		}
 
 		return lTitoliInIstruttoria;
-
 	} // Chiude ExRicercaTitoliSanzioneSostCumByIstruttoriaOrderBy
 
 	/**
@@ -2289,15 +2269,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliPenaAccCumByIstruttoriaOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento, String[] lIdTitoliSelezionati)
 			throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
-
-		// SanzioneSostitutivaCumuloModel lSanSosCumMod = null;
-		// SanzioneSostitutivaCumuloSqlDAO lSSCumSqlDao = null;
 
 		PenaAccessoriaCumuloModel lPACumModel = null;
 		PenaAccessoriaCumuloSqlDAO lPACumSqlDao = null;
@@ -2356,7 +2334,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						lProcModel.setUfficioOrigine(lUffMod);
 					}
 
-					lListaPA = new Vector<PenaAccessoriaCumuloModel>();
+					lListaPA = new Vector<>();
 					lPACumSqlDao = new PenaAccessoriaCumuloSqlDAO(lConn);
 					lPACumSqlDao.ricercaPenaAccessoriaCumuloByTitoloCum(lTitolo.getIdTitoloCumulato());
 
@@ -2398,7 +2376,6 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		}
 
 		return lTitoliInIstruttoria;
-
 	} // Chiude ExRicercaTitoliPenaAccCumByIstruttoriaOrderBy
 
 	/**
@@ -2408,9 +2385,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	public Vector<TitoloCumulatoModel> ExRicercaTitoliStatoEsecTitoloCumByIstruttoriaOrderBy(
 			BigDecimal aIdIstruttoriaCumulo, String aOrdinamento, Vector<String> lCodici,
 			String[] lIdTitoliSelezionati) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<TitoloCumulatoModel>();
+		Vector<TitoloCumulatoModel> lTitoliInIstruttoria = new Vector<>();
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		TitoloCumulatoModel lTitoloRicerca = new TitoloCumulatoModel();
@@ -2471,8 +2449,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 					// Stato_Esec_Titolo_Cumulato
 					// 27/07/2018 Stato Esecuzione con le sole M.A. concesse.
-					Vector<StatoEsecTitoloCumulatoModel> lVecStato = new Vector<StatoEsecTitoloCumulatoModel>();
-					List<String> listCodEsiMAConc = new ArrayList<String>();
+					Vector<StatoEsecTitoloCumulatoModel> lVecStato = new Vector<>();
+					List<String> listCodEsiMAConc = new ArrayList<>();
 					listCodEsiMAConc.addAll(StatoEsecuzioneCumuloUtils.aCodEsiMisAltEsclusi);
 					lStatoCumSqlDao = new StatoEsecTitoloCumulatoSqlDAO(lConn);
 					lStatoCumSqlDao.ricercaStatoEsecTitoloCumulatoByIdTitolo(lTitolo.getIdTitoloCumulato(),
@@ -2506,13 +2484,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		}
 
 		return lTitoliInIstruttoria;
-
 	} // Chiude ExRicercaTitoliStatoEsecTitoloCumByIstruttoriaOrderBy
 
 	/**
 	 * Modulo che preleva i dati che concorrono al calcolo della pena per il cumulo
-	 * 
-   * @param aIdIstruttoriaCumulo
+	 *
+	 * @param aIdIstruttoriaCumulo
 	 * @param aIdTitolo
 	 *            - Se valorizzato effettua il calcolo recuperando solo i dati del titolo indicato
 	 * @param aComputaRichieste
@@ -2520,23 +2497,20 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public CalcoloPenaCumuloModel ExCalcolaPenaCumuloByIstruttoria(BigDecimal aIdIstruttoriaCumulo,
 			BigDecimal aIdTitolo, boolean aComputaRichieste) throws F3BException {
+
 		Connection lConn = null;
 
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-
 		PenaComplessivaCumuloSqlDAO lPenSqlDao = null;
 		SanzioneSostitutivaCumuloSqlDAO lSSCumSqlDao = null;
 		MisuraCautelareCumuloSqlDAO lMisCautCumSqlDao = null;
 		BeneficioCumuloSqlDAO lBeneficioSqlDao = null;
 		LibAnticipataCumuloSqlDAO lLibAnticSqlDao = null;
-
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
-
 		RichiestePmInCumuloSqlDAO lRichPmInCumuloSqlDao = null;
 		ProvvedimentoGeSorvCumSqlDAO lProvvGeSorvSqlDao = null;
-
 		UfficioSqlDAO lUffSqlDao = null;
 
 		CalcoloPenaCumuloModel lCalcoloPenaModel = new CalcoloPenaCumuloModel();
@@ -2548,8 +2522,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		// HashTable <IdTitolo, true = PenaSospesa, false = PenaNonSospesa>
 		// Hashtable<BigDecimal, TitoloCumulatoModel> lListaTitoliSospesi = new Hashtable<BigDecimal,
 		// TitoloCumulatoModel>();
-		Hashtable<BigDecimal, TitoloCumulatoModel> lListaTitoliSanSost = new Hashtable<BigDecimal, TitoloCumulatoModel>();
-		Hashtable<BigDecimal, TitoloCumulatoModel> lListaTitoliEsclusi = new Hashtable<BigDecimal, TitoloCumulatoModel>();
+		Hashtable<BigDecimal, TitoloCumulatoModel> lListaTitoliSanSost = new Hashtable<>();
+		Hashtable<BigDecimal, TitoloCumulatoModel> lListaTitoliEsclusi = new Hashtable<>();
 
 		try {
 			lConn = getDBConnection();
@@ -2588,10 +2562,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					lListaTitoliEsclusi.put(lTitolo.getIdTitoloCumulato(), lTitolo);
 					continue;
 				} else if (aIdTitolo != null && aIdTitolo.compareTo(lTitolo.getIdTitoloCumulato()) != 0) {
-          siesLogger.debug("Altro Titolo, lo salto");
-          lListaTitoliEsclusi.put (lTitolo.getIdTitoloCumulato(), lTitolo);
-          continue;
-        }
+					siesLogger.debug("Altro Titolo, lo salto");
+					lListaTitoliEsclusi.put(lTitolo.getIdTitoloCumulato(), lTitolo);
+					continue;
+				}
 
 				// ==============================================
 				// Recupero il ProcedimentoCumulato se presente
@@ -2700,18 +2674,16 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				if (!isPenaSospesa && (lSSCumModel == null || lSSCumModel.getIsRevocata())) {
 					siesLogger.debug("Pena NON Sospesa! Recupero le MC in sentenza ");
 					lMisCautCumSqlDao = new MisuraCautelareCumuloSqlDAO(lConn);
-					
-					/* 
-					 * ISSUE MAC : aggiunto parametro con valore false (visCanLog). la query non tira fuori le misure cautelari
-					 *  cancellate logicamente
-					 * Numero MAC : 20200110017
-					 * Autore    : monica
-					 * Data      : 14/gen/2020
-					 * Branch    : 11.2.5
+
+					/*
+					 * ISSUE MAC : aggiunto parametro con valore false (visCanLog). la query non tira fuori le
+					 * misure cautelari cancellate logicamente Numero MAC : 20200110017 Autore : monica Data :
+					 * 14/gen/2020 Branch : 11.2.5
 					 */
-					lMisCautCumSqlDao.ricercaMisuraCautelareCumuloByIdTitolo(lTitolo.getIdTitoloCumulato(), false);
-					//***** FINE INTERVENTO 20200110017 *****//
-					
+					lMisCautCumSqlDao.ricercaMisuraCautelareCumuloByIdTitolo(lTitolo.getIdTitoloCumulato(),
+							false);
+					// ***** FINE INTERVENTO 20200110017 *****//
+
 					lMisCautCumSqlDao.start();
 					while (lMisCautCumSqlDao.next()) {
 						MisuraCautelareCumuloModel lMCModel = (MisuraCautelareCumuloModel) lMisCautCumSqlDao
@@ -2737,7 +2709,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				if (!isPenaSospesa && (lSSCumModel == null || lSSCumModel.getIsRevocata())) {
 					siesLogger.debug("Pena NON Sospesa! Recupero benefici Concessi in sentenza ");
 
-					Vector<String> lCodTipiBen = new Vector<String>();
+					Vector<String> lCodTipiBen = new Vector<>();
 					lCodTipiBen.add("03"); // Indulto
 					lCodTipiBen.add("04"); // Amnistia
 
@@ -2766,7 +2738,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				if (!isPenaSospesa) {
 					siesLogger.debug("Pena NON Sospesa! Recupero benefici Revocati in sentenza ");
 
-					Vector<String> lCodTipiBen = new Vector<String>();
+					Vector<String> lCodTipiBen = new Vector<>();
 					lCodTipiBen.add("03"); // Indulto
 					// lCodTipiBen.add("04"); // Amnistia
 
@@ -2917,85 +2889,85 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			siesLogger.debug("================================ ");
 			siesLogger.debug("Recupero le richieste al GE/SORV ");
 			siesLogger.debug("================================ ");
-      
-      //if (aIdTitolo==null) {
+
+			// if (aIdTitolo==null) {
 			if (aComputaRichieste) {
-			lRichPmInCumuloSqlDao = new RichiestePmInCumuloSqlDAO(lConn);
-			lRichPmInCumuloSqlDao.ricercaRichiestePmInCumuloByIdIstruttoria(aIdIstruttoriaCumulo);
+				lRichPmInCumuloSqlDao = new RichiestePmInCumuloSqlDAO(lConn);
+				lRichPmInCumuloSqlDao.ricercaRichiestePmInCumuloByIdIstruttoria(aIdIstruttoriaCumulo);
 
-			Vector<RichiestePmInCumuloModel> lListaRichieste = new Vector<RichiestePmInCumuloModel>(
-					lRichPmInCumuloSqlDao.getModels());
+				Vector<RichiestePmInCumuloModel> lListaRichieste = new Vector<RichiestePmInCumuloModel>(
+						lRichPmInCumuloSqlDao.getModels());
 
-			lProvvGeSorvSqlDao = new ProvvedimentoGeSorvCumSqlDAO(lConn);
-			for (int i = 0; i < lListaRichieste.size(); i++) {
-				RichiestePmInCumuloModel lRichiestaModel = lListaRichieste.elementAt(i);
+				lProvvGeSorvSqlDao = new ProvvedimentoGeSorvCumSqlDAO(lConn);
+				for (int i = 0; i < lListaRichieste.size(); i++) {
+					RichiestePmInCumuloModel lRichiestaModel = lListaRichieste.elementAt(i);
 
-				// Rimuovo le richieste che non concorrono al calcolo
-				if (1 == 2 || (!"002".equals(lRichiestaModel.getCodTipoAnnotazione()) // Indulto
-						&& !"003".equals(lRichiestaModel.getCodTipoAnnotazione()) // Amnistia
-						&& !"004".equals(lRichiestaModel.getCodTipoAnnotazione()) // Depenalizzazione
-						&& !"021".equals(lRichiestaModel.getCodTipoAnnotazione()) // Revoca Beneficio
-						&& !"013".equals(lRichiestaModel.getCodTipoAnnotazione()) // Incostituzionalità
+					// Rimuovo le richieste che non concorrono al calcolo
+					if (1 == 2 || (!"002".equals(lRichiestaModel.getCodTipoAnnotazione()) // Indulto
+							&& !"003".equals(lRichiestaModel.getCodTipoAnnotazione()) // Amnistia
+							&& !"004".equals(lRichiestaModel.getCodTipoAnnotazione()) // Depenalizzazione
+							&& !"021".equals(lRichiestaModel.getCodTipoAnnotazione()) // Revoca Beneficio
+							&& !"013".equals(lRichiestaModel.getCodTipoAnnotazione()) // Incostituzionalità
 							&& !"017".equals(lRichiestaModel.getCodTipoAnnotazione()) // Illecito
 																						// amministrativo
 
-						&& !"020".equals(lRichiestaModel.getCodTipoAnnotazione()) // Revoca LA
-						&& !"023".equals(lRichiestaModel.getCodTipoAnnotazione()) // Revoca Sanzione
-																					// Sostitutiva
-				)) {
+							&& !"020".equals(lRichiestaModel.getCodTipoAnnotazione()) // Revoca LA
+							&& !"023".equals(lRichiestaModel.getCodTipoAnnotazione()) // Revoca Sanzione
+																						// Sostitutiva
+					)) {
 						siesLogger.debug("Rimuovo la richiesta: [" + lRichiestaModel.getCodTipoAnnotazione()
 								+ "," + lRichiestaModel.getFlagAppProvvisoria() + "] " + "[id: "
-							+ lRichiestaModel.getIdRichiestePmInCumulo() + "], "
-							+ lRichiestaModel.getDescrTipoAnnotazione() + ". ");
-					lListaRichieste.remove(i);
-					i--;
-				} else {
-					// Verifico se presente decisione
-					siesLogger.debug("Richiesta " + lRichiestaModel.getIdRichiestePmInCumulo() + "-"
-							+ lRichiestaModel.getCodTipoAnnotazione() + "-"
-							+ lRichiestaModel.getDescrTipoAnnotazione()
-							+ ": Verifico se presente la decisione");
-					lProvvGeSorvSqlDao.ricercaProvvedimentoGeSorvCumByIdRichiesta(
-							lRichiestaModel.getIdRichiestePmInCumulo());
-					ProvvedimentoGeSorvCumModel lDecisioneModel = (ProvvedimentoGeSorvCumModel) lProvvGeSorvSqlDao
-							.getModelByKey();
-					if (lDecisioneModel == null && !"A".equals(lRichiestaModel.getFlagAppProvvisoria())) {
-						siesLogger.debug("Richiesta " + lRichiestaModel.getDescrTipoAnnotazione()
-								+ " senza Anticipazione e Decisione assente: la rimuovo");
+								+ lRichiestaModel.getIdRichiestePmInCumulo() + "], "
+								+ lRichiestaModel.getDescrTipoAnnotazione() + ". ");
 						lListaRichieste.remove(i);
 						i--;
-					} else if (lDecisioneModel != null) {
-						siesLogger.debug("Richiesta con decisione: aggiungo la decisione "
-								+ lDecisioneModel.getIdProvvedimentoGeSorvCum() + " alla richiesta "
-								+ lRichiestaModel.getIdRichiestePmInCumulo());
-						lRichiestaModel.setDecisioneGeSorvCum(lDecisioneModel);
 					} else {
-						siesLogger.debug("Richiesta senza decisione ma con Anticipazione. La lascio.");
+						// Verifico se presente decisione
+						siesLogger.debug("Richiesta " + lRichiestaModel.getIdRichiestePmInCumulo() + "-"
+								+ lRichiestaModel.getCodTipoAnnotazione() + "-"
+								+ lRichiestaModel.getDescrTipoAnnotazione()
+								+ ": Verifico se presente la decisione");
+						lProvvGeSorvSqlDao.ricercaProvvedimentoGeSorvCumByIdRichiesta(
+								lRichiestaModel.getIdRichiestePmInCumulo());
+						ProvvedimentoGeSorvCumModel lDecisioneModel = (ProvvedimentoGeSorvCumModel) lProvvGeSorvSqlDao
+								.getModelByKey();
+						if (lDecisioneModel == null && !"A".equals(lRichiestaModel.getFlagAppProvvisoria())) {
+							siesLogger.debug("Richiesta " + lRichiestaModel.getDescrTipoAnnotazione()
+									+ " senza Anticipazione e Decisione assente: la rimuovo");
+							lListaRichieste.remove(i);
+							i--;
+						} else if (lDecisioneModel != null) {
+							siesLogger.debug("Richiesta con decisione: aggiungo la decisione "
+									+ lDecisioneModel.getIdProvvedimentoGeSorvCum() + " alla richiesta "
+									+ lRichiestaModel.getIdRichiestePmInCumulo());
+							lRichiestaModel.setDecisioneGeSorvCum(lDecisioneModel);
+						} else {
+							siesLogger.debug("Richiesta senza decisione ma con Anticipazione. La lascio.");
+						}
 					}
 				}
-			}
 
-			siesLogger.debug("Lista richieste dopo rimozione " + lListaRichieste.size());
-			for (RichiestePmInCumuloModel lRichiestaModel : lListaRichieste) {
-				String lLogRichDec = "";
-				lLogRichDec += lRichiestaModel.getIdRichiestePmInCumulo();
-				lLogRichDec += " - " + lRichiestaModel.getCodTipoAnnotazione();
-				lLogRichDec += " - " + lRichiestaModel.getDescrTipoAnnotazione();
-				lLogRichDec += " - " + lRichiestaModel.getFlagAppProvvisoria();
+				siesLogger.debug("Lista richieste dopo rimozione " + lListaRichieste.size());
+				for (RichiestePmInCumuloModel lRichiestaModel : lListaRichieste) {
+					String lLogRichDec = "";
+					lLogRichDec += lRichiestaModel.getIdRichiestePmInCumulo();
+					lLogRichDec += " - " + lRichiestaModel.getCodTipoAnnotazione();
+					lLogRichDec += " - " + lRichiestaModel.getDescrTipoAnnotazione();
+					lLogRichDec += " - " + lRichiestaModel.getFlagAppProvvisoria();
 
-				ProvvedimentoGeSorvCumModel lDecisioneModel = lRichiestaModel.getDecisioneGeSorvCum();
-				if (lDecisioneModel == null)
-					lLogRichDec += " - DECISIONE: ASSENTE";
-				else
-					lLogRichDec += " - DECISIONE: " + lDecisioneModel.getIdProvvedimentoGeSorvCum();
+					ProvvedimentoGeSorvCumModel lDecisioneModel = lRichiestaModel.getDecisioneGeSorvCum();
+					if (lDecisioneModel == null)
+						lLogRichDec += " - DECISIONE: ASSENTE";
+					else
+						lLogRichDec += " - DECISIONE: " + lDecisioneModel.getIdProvvedimentoGeSorvCum();
 
-				siesLogger.debug(lLogRichDec);
-			}
-			// Aggiungo la lista delle richieste
-			siesLogger.debug("Aggiungo la lista delle richieste");
-			lCalcoloPenaModel.setListaRichiestePM(lListaRichieste);
+					siesLogger.debug(lLogRichDec);
+				}
+				// Aggiungo la lista delle richieste
+				siesLogger.debug("Aggiungo la lista delle richieste");
+				lCalcoloPenaModel.setListaRichiestePM(lListaRichieste);
 
-      } // end Computa RIchieste
+			} // end Computa RIchieste
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
 			throw new F3BException(
@@ -3014,13 +2986,12 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			cleanup(lMisCautCumSqlDao);
 			cleanup(lBeneficioSqlDao);
 			cleanup(lLibAnticSqlDao);
-
 			cleanup(lStatoEsecSqlDao);
 			cleanup(lComputiSqlDao);
-
 			cleanup(lRichPmInCumuloSqlDao);
 			cleanup(lProvvGeSorvSqlDao);
-
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUffSqlDao);
 			cleanup(lConn);
 		}
 
@@ -3029,6 +3000,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public BigDecimal ExCountFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, int aPage) throws F3BException {
+
 		siesLogger.debug("--XX-- ExCountFascicoliBySoggettoProprioUfficioPaged ...... INIZIO  ");
 		Connection lConn = null;
 		BigDecimal HowManyRecords = null;
@@ -3063,6 +3035,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public Vector<FascicoloSiepModel> ExRicercaFascicoliBySoggettoProprioUfficioPaged(SoggettoModel aSogModel,
 			String lCodUfficioUtenteConnesso, int aPage, BigDecimal lIdIstruttoria) throws F3BException {
+
 		siesLogger.debug("--XX-- ExRicercaFascicoliBySoggettoProprioUfficioPaged ...... INIZIO  ");
 		Connection lConn = null;
 		Vector lFascicoli = new Vector();
@@ -3132,6 +3105,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public Vector<EsitoArchiviazioniCumuloModel> ExRicercaEsitoArchiviazionideiCumulatiByIdEvento(
 			BigDecimal aIdEvento) throws F3BException {
+
 		siesLogger.debug("--XX-- ExRicercaEsitoArchiviazionideiCumulatiByIdEvento ...... INIZIO  ");
 		Connection lConn = null;
 		Vector<EsitoArchiviazioniCumuloModel> VecEsiti = null;
@@ -3161,10 +3135,8 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 							lEsiModel.setDescrizione(lFascicoloMod.getDescrStatoFascicolo());
 						}
 					}
-
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			siesLogger.error("DAOException: ", daoEx);
@@ -3187,6 +3159,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 	public IstruttoriaCumuloModel ExRicercaIstruttoriaCumuloApertaByIdFasSiep(BigDecimal aIdFascicoloSiep)
 			throws F3BException {
+
 		IstruttoriaCumuloModel IstruModel = null;
 		Connection lConn = null;
 		IstruttoriaCumuloSqlDAO IstruCumSqldao = null;
@@ -3240,13 +3213,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 * @throws F3BException
 	 */
 	public BeneficioCumuloModel isPenaSospesa(BigDecimal aIdTitolo, Connection aConn) throws F3BException {
+
 		boolean isSospensioneRevocata = false;
 
 		BeneficioCumuloModel lSospCond = null;
 
 		BeneficioCumuloSqlDAO lBeneficioSqlDao = null;
 		StatoEsecTitoloCumulatoSqlDAO lStatoEsecSqlDao = null;
-
 		RichiestePmInCumuloSqlDAO lRichPmSqlDao = null;
 		RichPMBeneficioCumSqlDAO lRicPmBenSqlDao = null;
 		ProvvedimentoGeSorvCumSqlDAO lProvvGeSorvSqlDao = null;
@@ -3256,7 +3229,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			// Verifico se presente il beneficio della sospensiva in sentenza
 			siesLogger.debug(
 					"Verifico se presente il beneficio della sospensiva in sentenza IdTitolo=" + aIdTitolo);
-			Vector<String> lCodTipiBen = new Vector<String>();
+			Vector<String> lCodTipiBen = new Vector<>();
 			lCodTipiBen.add("01"); // Sospenzione Condizionale
 
 			lBeneficioSqlDao = new BeneficioCumuloSqlDAO(aConn);
@@ -3328,9 +3301,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				return lSospCond;
 			}
 
-      //========================================================================
-      // Eventuale annotazione di revoca (da classe III)
-      //========================================================================
+			// ========================================================================
+			// Eventuale annotazione di revoca (da classe III)
+			// ========================================================================
 			if (!isSospensioneRevocata) {
 				siesLogger.debug("Verifico se revocata con annotazione...");
 				// Non trovata la revoca su titolo in istruttoria. Cerco se presente
@@ -3338,10 +3311,10 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 				lStatoEsecSqlDao = new StatoEsecTitoloCumulatoSqlDAO(aConn);
 
-				Vector<String> listaTipoProvv = new Vector<String>();
+				Vector<String> listaTipoProvv = new Vector<>();
 				listaTipoProvv.add("25"); // Annotazione
 
-				Vector<String> listaMotivoProvv = new Vector<String>();
+				Vector<String> listaMotivoProvv = new Vector<>();
 				listaMotivoProvv.add("1100");
 				listaMotivoProvv.add("1101");
 				listaMotivoProvv.add("1102");
@@ -3359,7 +3332,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				lStatoEsecSqlDao.ricercaStatoEsecTitoloCumulatobylisteTipoMotivoProvv(lStatoRicerca,
 						listaTipoProvv, listaMotivoProvv);
 
-				Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<StatoEsecTitoloCumulatoModel>();
+				Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<>();
 				lListaProvvedimentiCumulo = new Vector(lStatoEsecSqlDao.getModels());
 
 				if (lListaProvvedimentiCumulo != null && lListaProvvedimentiCumulo.size() > 0) {
@@ -3380,52 +3353,52 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 				// Per ora non ho il dato! Va caricato su PROCEDIMENTO_CUMULATO
 			}
 
-      //========================================================================
-      // Verifico se Presente Decisione del GE - Altre Ordinanze/Decreti  
-      // - Revoca Altri Provvedimenti (art. 674 c.p.p.)
-      // - Revoca sospensinoe condizionale della pena (0818)
-      //========================================================================
+			// ========================================================================
+			// Verifico se Presente Decisione del GE - Altre Ordinanze/Decreti
+			// - Revoca Altri Provvedimenti (art. 674 c.p.p.)
+			// - Revoca sospensinoe condizionale della pena (0818)
+			// ========================================================================
 			if (!isSospensioneRevocata) {
-        siesLogger.debug("Verifico se revocata con Provv del GE...");
-       
-        lStatoEsecSqlDao = new StatoEsecTitoloCumulatoSqlDAO (aConn);
-        
-        Vector<String> listaTipoProvv = new Vector<String>();
-        listaTipoProvv.add("02");   //  Decreto
-        listaTipoProvv.add("03");   //  Ordinanza
-        
-        Vector<String> listaMotivoProvv = new Vector<String>();        
-        listaMotivoProvv.add("0818");   
+				siesLogger.debug("Verifico se revocata con Provv del GE...");
 
-        StatoEsecTitoloCumulatoModel lStatoRicerca = new StatoEsecTitoloCumulatoModel();
-        lStatoRicerca.setCodTipoEvento       ("01");
-        lStatoRicerca.setTitIdTitoloCumulato (aIdTitolo);
+				lStatoEsecSqlDao = new StatoEsecTitoloCumulatoSqlDAO(aConn);
+
+				Vector<String> listaTipoProvv = new Vector<>();
+				listaTipoProvv.add("02"); // Decreto
+				listaTipoProvv.add("03"); // Ordinanza
+
+				Vector<String> listaMotivoProvv = new Vector<>();
+				listaMotivoProvv.add("0818");
+
+				StatoEsecTitoloCumulatoModel lStatoRicerca = new StatoEsecTitoloCumulatoModel();
+				lStatoRicerca.setCodTipoEvento("01");
+				lStatoRicerca.setTitIdTitoloCumulato(aIdTitolo);
 
 				lStatoEsecSqlDao.ricercaStatoEsecTitoloCumulatobylisteTipoMotivoProvv(lStatoRicerca,
 						listaTipoProvv, listaMotivoProvv);
-        
-        Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<StatoEsecTitoloCumulatoModel>();
-        lListaProvvedimentiCumulo = new Vector(lStatoEsecSqlDao.getModels());
-        
-        if (lListaProvvedimentiCumulo!=null && lListaProvvedimentiCumulo.size()>0) {
-          siesLogger.debug("Presenti Ordinanza/Decreti di Revoca del GE. Testo l'esito !! ");
-          
-          // testo l'esito 0006 = 
-          for (StatoEsecTitoloCumulatoModel lStaEsec : lListaProvvedimentiCumulo) {
+
+				Vector<StatoEsecTitoloCumulatoModel> lListaProvvedimentiCumulo = new Vector<>();
+				lListaProvvedimentiCumulo = new Vector(lStatoEsecSqlDao.getModels());
+
+				if (lListaProvvedimentiCumulo != null && lListaProvvedimentiCumulo.size() > 0) {
+					siesLogger.debug("Presenti Ordinanza/Decreti di Revoca del GE. Testo l'esito !! ");
+
+					// testo l'esito 0006 =
+					for (StatoEsecTitoloCumulatoModel lStaEsec : lListaProvvedimentiCumulo) {
 						siesLogger.debug("Provv revoca: " + lStaEsec.getIdStatoEsecTitoloCumulato() + " - "
 								+ lStaEsec.getIdEventoOrigine() + " - Esito Tenore = "
 								+ lStaEsec.getCodEsitoTenore());
-            if ("0006".equals(lStaEsec.getCodEsitoTenore())) {
-              siesLogger.debug("Beneficio Revocato con Provvedimento del GE!! ");
-              lSospCond.setIsRevocato(true);
-              lSospCond.setStringaRevoca("Beneficio Revocato");
+						if ("0006".equals(lStaEsec.getCodEsitoTenore())) {
+							siesLogger.debug("Beneficio Revocato con Provvedimento del GE!! ");
+							lSospCond.setIsRevocato(true);
+							lSospCond.setStringaRevoca("Beneficio Revocato");
 
-              return lSospCond;
-            }
-          }          
-        }
-      }
-      
+							return lSospCond;
+						}
+					}
+				}
+			}
+
 			// Annotazione revoca non trovata sullo stato esecuzione verifico se presente
 			// una richiesta in cumulo con anticipazione. Ed eventuale decisione del GE.
 			// n.b. per ora NON POSSIBILE con anticipazione ma gestisco ugualmente il caso
@@ -3543,12 +3516,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			throw new SIEPException(F3BException.USER_MESSAGE,
 					"IstruttoriaCumuloController.isPenaSospesaRevocata" + e.getMessage());
 		} finally {
-			// siesLogger.error("FINALLY: ");
 			cleanup(lBeneficioSqlDao);
 			cleanup(lStatoEsecSqlDao);
 			cleanup(lRichPmSqlDao);
 			cleanup(lProvvGeSorvSqlDao);
 			cleanup(lTitoloSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lRicPmBenSqlDao);
 		}
 
 		return lSospCond;
@@ -3564,6 +3538,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 * @throws F3BException
 	 */
 	public boolean isPenaInContinuazione(BigDecimal aIdTitolo, Connection aConn) throws F3BException {
+
 		boolean isInContinuazione = false;
 
 		ContinuazioneCumuloSqlDAO lContinuazioneCumSqlDao = null;
@@ -3616,6 +3591,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 	 */
 	public boolean isSSRevocata(BigDecimal aIdIstruttoria, SanzioneSostitutivaCumuloModel aSanzioneSostMod,
 			Connection aConn) throws F3BException {
+
 		boolean isSSRevocata = false;
 
 		RichiestePmInCumuloSqlDAO lRichPmSqlDao = null;
@@ -3725,71 +3701,74 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		return isSSRevocata;
 	}
 
-  // 23/04/2019	MEV70
+	// 23/04/2019 MEV70
 	public BigDecimal ExCountPresenzeTitoloNellaStessaIstruttoria(BigDecimal aIdIstruttoria,
 			FascicoloSiepModel aFasSiep, String ufficio) throws F3BException {
-	  //siesLogger.debug("--XX-- ExCountPresenzeTitoloNellaStessaIstruttoria ...... INIZIO  " );
-	  Connection lConn = null;
-	  BigDecimal HowManyRecords = null;
-	  IstruttoriaCumuloSqlDAO lIstCumSqlDao = null;
+
+		Connection lConn = null;
+		BigDecimal HowManyRecords = null;
+		IstruttoriaCumuloSqlDAO lIstCumSqlDao = null;
 
 		try {
-		  lConn = getDBConnection();
-		  lIstCumSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
-		  lIstCumSqlDao.getCountPresenzeTitoloInIstruttoria(aIdIstruttoria, aFasSiep, ufficio);
-		  lIstCumSqlDao.start();
-		  lIstCumSqlDao.next();
-	      HowManyRecords = lIstCumSqlDao.getBigDecimal("HowManyRecords");
-	      siesLogger.debug("--XX-- totale record = "+HowManyRecords );
+			lConn = getDBConnection();
+			lIstCumSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+			lIstCumSqlDao.getCountPresenzeTitoloInIstruttoria(aIdIstruttoria, aFasSiep, ufficio);
+			lIstCumSqlDao.start();
+			lIstCumSqlDao.next();
+			HowManyRecords = lIstCumSqlDao.getBigDecimal("HowManyRecords");
+			siesLogger.debug("--XX-- totale record = " + HowManyRecords);
 
 		} catch (DAOException daoEx) {
-	      rollback(lConn);
-	      siesLogger.error("DAOException: " , daoEx);
+			rollback(lConn);
+			siesLogger.error("DAOException: ", daoEx);
 			throw new SIEPException(F3BException.USER_MESSAGE,
 					"IstruttoriaCumuloController.ExCountPresenzeTitoloNellaStessaIstruttoria: " + daoEx);
 		} catch (Exception e) {
-	      rollback(lConn);
-	      siesLogger.error("Exception: " , e);
-	      throw new SIEPException(F3BException.USER_MESSAGE, e.getMessage());
+			rollback(lConn);
+			siesLogger.error("Exception: ", e);
+			throw new SIEPException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
-	      cleanup(lIstCumSqlDao);
-	      cleanup(lConn);
-	  }
+			cleanup(lIstCumSqlDao);
+			cleanup(lConn);
+		}
 
-	  return HowManyRecords;
-  }
+		return HowManyRecords;
+	}
 
-  /**
-   * 30/04/2019 Metodo che estrae l'eventuale primo Titolo doppio per una Istruttoria Cumulo.
-   * 
-   * @param aIdIstruttoria
-   * @return TitoloCumulatoModel.
-   * @throws F3BException
-   */
+	/**
+	 * 30/04/2019 Metodo che estrae l'eventuale primo Titolo doppio per una Istruttoria Cumulo.
+	 *
+	 * @param aIdIstruttoria
+	 * @return TitoloCumulatoModel.
+	 * @throws F3BException
+	 */
 	public Vector<TitoloCumulatoModel> titoloDoppioInIstruttoria(BigDecimal aIdIstruttoria)
 			throws F3BException {
-	  Vector<TitoloCumulatoModel> titoliDoppi = null;
-	  IstruttoriaCumuloSqlDAO lIstCumSqlDao = null;
-    
-	  Connection lConn = null;
+
+		Vector<TitoloCumulatoModel> titoliDoppi = null;
+		IstruttoriaCumuloSqlDAO lIstCumSqlDao = null;
+
+		Connection lConn = null;
 
 		try {
-		  lConn = getDBConnection();
-		  lIstCumSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
-		  titoliDoppi = lIstCumSqlDao.titoloDoppioInIstruttoria(aIdIstruttoria);
-    
+			lConn = getDBConnection();
+			lIstCumSqlDao = new IstruttoriaCumuloSqlDAO(lConn);
+			titoliDoppi = lIstCumSqlDao.titoloDoppioInIstruttoria(aIdIstruttoria);
 		} catch (DAOException daoEx) {
-      siesLogger.error("DAOException: " , daoEx);
+			siesLogger.error("DAOException: ", daoEx);
 			throw new SIEPException(F3BException.USER_MESSAGE,
 					"IstruttoriaCumuloController.titoloDoppioInIstruttoria: " + daoEx);
 		} catch (Exception e) {
-      siesLogger.error("Exception: " , e);
+			siesLogger.error("Exception: ", e);
 			throw new SIEPException(F3BException.USER_MESSAGE,
 					"IstruttoriaCumuloController.titoloDoppioInIstruttoria" + e.getMessage());
 		} finally {
-      cleanup (lIstCumSqlDao);
-    }   
-    
-    return titoliDoppi;
-  }
+			cleanup(lIstCumSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lConn);
+		}
+
+		return titoliDoppi;
+	}
+
 } // Chiude Controller

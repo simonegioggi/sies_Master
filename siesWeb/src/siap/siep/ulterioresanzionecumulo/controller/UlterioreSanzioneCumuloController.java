@@ -7,33 +7,40 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.ulterioresanzionecumulo.dao.UlterioreSanzioneCumuloDAO;
 import siap.siep.ulterioresanzionecumulo.dao.UlterioreSanzioneCumuloSqlDAO;
 import siap.siep.ulterioresanzionecumulo.model.UlterioreSanzioneCumuloModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
- * <p>Title: UlterioreSanzioneCumuloController</p>
- * <p>Description: Classe Controller per UlterioreSanzioneCumulo</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
+ * <p>
+ * Title: UlterioreSanzioneCumuloController
+ * </p>
+ * <p>
+ * Description: Classe Controller per UlterioreSanzioneCumulo
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class UlterioreSanzioneCumuloController
-    extends SiapController
-    implements IUlterioreSanzioneCumulo
- {
+public class UlterioreSanzioneCumuloController extends SiapController implements IUlterioreSanzioneCumulo {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public UlterioreSanzioneCumuloModel ExInserisciUlterioreSanzioneCumulo(
 			UlterioreSanzioneCumuloModel aUlterioreSanzioneCumulo) throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloDAO lUltDao = null;
 		UlterioreSanzioneCumuloModel lUltMod = null;
@@ -49,7 +56,8 @@ public class UlterioreSanzioneCumuloController
 			lUltMod.setIdUlterioreSanzioneCumulo(lKey);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("UlterioreSanzioneCumuloController.ExInserisci: Non posso inserire: " + ex);
+			throw new F3BException(
+					"UlterioreSanzioneCumuloController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lUltDao);
 			cleanup(lConn);
@@ -59,12 +67,12 @@ public class UlterioreSanzioneCumuloController
 
 	public UlterioreSanzioneCumuloModel ExInserisciOModificaUlterioriSanzioniCumulo(Vector aSanzioni,
 			BigDecimal aIdFas) throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloDAO lUltDao = null;
 		UlterioreSanzioneCumuloSqlDAO lUltSqlDao = null;
 
 		UlterioreSanzioneCumuloModel lUltMod = null;
-//		UlterioreSanzioneCumuloModel lUltModEsist = null;
 
 		try {
 			lConn = getDBConnection();
@@ -91,14 +99,13 @@ public class UlterioreSanzioneCumuloController
 					lKey = lUltDao.insert();
 					lUltDao.stop();
 				}
-
-			}
-			// End Cla
+			} // End Cla
 			commit(lConn);
 			lUltMod.setIdUlterioreSanzioneCumulo(lKey);
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("UlterioreSanzioneCumuloController.ExInserisci: Non posso inserire: " + ex);
+			throw new F3BException(
+					"UlterioreSanzioneCumuloController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lUltDao);
 			cleanup(lUltSqlDao);
@@ -111,6 +118,7 @@ public class UlterioreSanzioneCumuloController
 
 	public Vector ExRicercaUlterioreSanzioneCumulo(UlterioreSanzioneCumuloModel aUlterioreSanzioneCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lUlterioreSanzioneCumuli = new Vector();
 		UlterioreSanzioneCumuloSqlDAO lUltDao = null;
@@ -136,6 +144,7 @@ public class UlterioreSanzioneCumuloController
 
 	public UlterioreSanzioneCumuloModel ExRicercaUlterioreSanzioneCumuloByKey(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloSqlDAO lUltDao = null;
 
@@ -159,11 +168,10 @@ public class UlterioreSanzioneCumuloController
 
 	public Vector ExRicercaUlterioreSanzioneCumuloByFascicoloCumulante(FascicoloSiepModel aModel)
 			throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloSqlDAO lUltDao = null;
 		Vector lUlterioreSanzioneCumuli = new Vector();
-
-//		UlterioreSanzioneCumuloModel lUltMod;
 
 		try {
 			lConn = getDBConnection();
@@ -172,11 +180,10 @@ public class UlterioreSanzioneCumuloController
 			lUltDao.start();
 
 			while (lUltDao.next()) {
-				lUlterioreSanzioneCumuli.add((UlterioreSanzioneCumuloModel) lUltDao.getModel());
+				lUlterioreSanzioneCumuli.add(lUltDao.getModel());
 			}
 
 			lUltDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"UlterioreSanzioneCumuloController.ExRicercaUlterioreSanzioneCumuloByFascicoloCumulante: Non posso leggere : "
@@ -191,7 +198,7 @@ public class UlterioreSanzioneCumuloController
 	/**
 	 * Ricerca tutti i record Ulteriore_sanzione_cumulo collegati al fascicolo specificato e al CUMULO
 	 * specificato.
-	 * 
+	 *
 	 * @param aIdFasc
 	 *            - id del fascicolo cumulante
 	 * @param aIdCum
@@ -201,6 +208,7 @@ public class UlterioreSanzioneCumuloController
 	 */
 	public Vector ExRicercaUlterioreSanzioneCumuloByFascicoloIDCumul0(BigDecimal aIdFasc, BigDecimal aIdCum)
 			throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloSqlDAO lUltDao = null;
 		Vector lUlterioreSanzioneCumuli = new Vector();
@@ -212,11 +220,10 @@ public class UlterioreSanzioneCumuloController
 			lUltDao.start();
 
 			while (lUltDao.next()) {
-				lUlterioreSanzioneCumuli.add((UlterioreSanzioneCumuloModel) lUltDao.getModel());
+				lUlterioreSanzioneCumuli.add(lUltDao.getModel());
 			}
 
 			lUltDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"UlterioreSanzioneCumuloController.ExRicercaUlterioreSanzioneCumuloByFascicoloCumulante: Non posso leggere : "
@@ -230,6 +237,7 @@ public class UlterioreSanzioneCumuloController
 
 	public UlterioreSanzioneCumuloModel ExModificaUlterioreSanzioneCumulo(
 			UlterioreSanzioneCumuloModel aUlterioreSanzioneCumulo) throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloDAO lUltDao = null;
 		UlterioreSanzioneCumuloModel lUltMod = new UlterioreSanzioneCumuloModel(aUlterioreSanzioneCumulo);
@@ -253,6 +261,7 @@ public class UlterioreSanzioneCumuloController
 
 	public void ExCancellaUlterioreSanzioneCumulo(UlterioreSanzioneCumuloModel aUlterioreSanzioneCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		UlterioreSanzioneCumuloDAO lUltDao = null;
 
@@ -312,8 +321,8 @@ public class UlterioreSanzioneCumuloController
 			} else {
 				lCodEsito = "01400";
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error(F3BException.USER_MESSAGE
-						+ " Impossibile inserire l'UlterioreSanzioneCumulo! ");
+				siesLogger.error(
+						F3BException.USER_MESSAGE + " Impossibile inserire l'UlterioreSanzioneCumulo! ");
 			}
 		} finally {
 			cleanup(lUltSanCumuloDao);

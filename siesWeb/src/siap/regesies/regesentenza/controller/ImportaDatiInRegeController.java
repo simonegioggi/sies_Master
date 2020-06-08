@@ -8,6 +8,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.regesies.regeavvocato.dao.RegeAvvocatoDAO;
 import siap.regesies.regeavvocato.model.RegeAvvocatoModel;
@@ -49,9 +52,6 @@ import siap.siep.sentenza.dao.SentenzaDAO;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -76,17 +76,19 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 	private Date mData = null;
 
 	public EsitoImportModel getEsito() {
+
 		return mEsito;
 	}
 
 	/**
 	 * Importa Provvedimento Rege
-	 * 
+	 *
 	 * @param aRegeProvvedimento
 	 * @return ProvvedimentoModel
 	 * @throws F3BException
 	 */
 	public BigDecimal ExImportaProvvedimentoRege(EsitoImportModel aEsito) throws F3BException {
+
 		Connection lConn = null;
 
 		BigDecimal lKeyFascicolo = null;
@@ -209,7 +211,8 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 				rollback(lConn);
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.info("Si è verificato un errore durante la cancellazione dei dati Rege!");
-				mEsito.setEsitoCancellazioneRege("Si è verificato un errore durante la cancellazione dei dati Rege!");
+				mEsito.setEsitoCancellazioneRege(
+						"Si è verificato un errore durante la cancellazione dei dati Rege!");
 				// throw new F3BException("Si è verificato un errore durante la cancellazione dei dati Rege");
 			}
 		} catch (Exception sqe) {
@@ -229,12 +232,13 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * Integrazione di un fascicolo esistente con i dati selezionati da Rege
-	 * 
+	 *
 	 * @param aRegeProvvedimento
 	 * @return
 	 * @throws F3BException
 	 */
 	public BigDecimal ExIntegraFascicoloSiep(EsitoImportModel aEsito) throws F3BException {
+
 		Connection lConn = null;
 		ProvvedimentoModel lRegeProvvedimento = aEsito.getProvvedimento();
 
@@ -308,7 +312,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento del Fascicolo Siep
-	 * 
+	 *
 	 * @param lConn
 	 * @param aFascicoloSiep
 	 * @return
@@ -323,8 +327,8 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 		try {
 			lFasDao = new FascicoloSiepDAO(lConn);
 			lFasDaoSql = new FascicoloSiepSqlDAO(lConn);
-//			BigDecimal chiaveProgrManuale = null;
-//			int annoCorrente = 0;
+			// BigDecimal chiaveProgrManuale = null;
+			// int annoCorrente = 0;
 
 			// Cerco il Progressivo rispettivamente al tipo progressivo impostato
 			lFasDaoSql.getProgressivoFascicoloSiep(aFascicoloSiep);
@@ -395,7 +399,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento delle residenza legarta al Provveidmento Rege
-	 * 
+	 *
 	 * @param lConn
 	 * @param aResidenza
 	 * @return
@@ -403,6 +407,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 	 */
 	private Vector inserisciResidenza(Connection lConn, Vector aResidenze, BigDecimal lKeyFascicolo,
 			BigDecimal lSogIdSoggetto) throws F3BException {
+
 		ResidenzaDAO lResDao = null;
 		ResidenzaModel lResidenza = null;
 		ResidenzaFascicoloSiepDAO lResFasDao = null;
@@ -432,8 +437,8 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 				lResidenze.add(lResidenza);
 
 				if (lResidenza != null) {
-					ResidenzaFascicoloSiepModel lResFasMod = new ResidenzaFascicoloSiepModel(new Date(),
-							null, lIdRes, lKeyFascicolo);
+					ResidenzaFascicoloSiepModel lResFasMod = new ResidenzaFascicoloSiepModel(new Date(), null,
+							lIdRes, lKeyFascicolo);
 
 					lResFasDao = new ResidenzaFascicoloSiepDAO(lConn);
 					lResFasDao.setDAOFromModel(lResFasMod);
@@ -463,7 +468,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * inserimento dei Reati
-	 * 
+	 *
 	 * @param lConn
 	 * @param aReati
 	 * @param lKeyFascicolo
@@ -471,6 +476,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 	 */
 	private Vector inserisciReati(Connection lConn, Vector aReati, BigDecimal lKeyFascicolo)
 			throws F3BException {
+
 		ReatoDAO lReaDao = null;
 		ReatoSqlDAO lReaSiepDao = null;
 		ReatoCircostanzaModel lReaPrincipale = null;
@@ -481,7 +487,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 			if (aReati != null && aReati.size() > 0) {
 				// Ci sono dei reati da inserire
 				// COntrollo che non ci siano gia' dei reati nel fascicolo da importare
-//				Vector lReatiSiep = new Vector();
+				// Vector lReatiSiep = new Vector();
 
 				lReaSiepDao = new ReatoSqlDAO(lConn);
 				int lProgrReatoEsistente = lReaSiepDao.getMaxProgrReato(lKeyFascicolo);
@@ -497,8 +503,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 					RegeReatoCircostanzaModel lRegeReatoCirc = (RegeReatoCircostanzaModel) lItx.next();
 
-					lReaPrincipale = new ReatoCircostanzaModel(
-							(ReatoCircostanzaModel) lRegeReatoCirc.toReatoCircostanze());
+					lReaPrincipale = new ReatoCircostanzaModel(lRegeReatoCirc.toReatoCircostanze());
 					if (lReaPrincipale != null && lReaPrincipale.getReato() != null) {
 						lReaPrincipale.getReato().setFasSieIdFascicoloSiep(lKeyFascicolo);
 						// Inserimento primo Reato
@@ -520,7 +525,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 						// Inserimento successivi
 						ReatoModel lReaMod = null;
-//						BigDecimal lProgrCircostanza = null;
+						// BigDecimal lProgrCircostanza = null;
 
 						Vector lCircostanze = null;
 						// Circostanze
@@ -530,7 +535,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 									lCircostanze = new Vector();
 									lReaMod = new ReatoModel();
 
-									lReaMod = (ReatoModel) lReaPrincipale.getCircostanze()[i];
+									lReaMod = lReaPrincipale.getCircostanze()[i];
 									lReaMod.setFasSieIdFascicoloSiep(lKeyFascicolo);
 									lReaMod.setCodOperatoreInserimento(mUtente);
 									lReaMod.setDataInserimento(mData);
@@ -538,15 +543,15 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 									// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 									// siesLogger al posto di mLog
-									siesLogger
-											.debug("-------------------------------------------------------------");
+									siesLogger.debug(
+											"-------------------------------------------------------------");
 									// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 									// siesLogger al posto di mLog
 									siesLogger.debug(lReaMod);
 									// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 									// siesLogger al posto di mLog
-									siesLogger
-											.debug("-------------------------------------------------------------");
+									siesLogger.debug(
+											"-------------------------------------------------------------");
 
 									// Gestione Progressivo Circostanza
 									lReaDao.setDAOFromModel(lReaMod);
@@ -577,6 +582,8 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 			throw new F3BException("ImportaDatiInRegeController.inserisciReati: " + sqe);
 		} finally {
 			cleanup(lReaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lReaSiepDao);
 			mEsito.setEsitoReati(lEsiti);
 		}
 		return lReati;
@@ -584,7 +591,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento delle Circostanze
-	 * 
+	 *
 	 * @param lConn
 	 * @param aCircostanze
 	 * @param lKeyFascicolo
@@ -592,6 +599,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 	 */
 	private Vector inserisciCircostanze(Connection lConn, Vector aCircostanze, BigDecimal lKeyFascicolo)
 			throws F3BException {
+
 		CircostanzaDAO lCirDao = null;
 		CircostanzaModel lCirMod = null;
 		Vector lCircostanze = new Vector();
@@ -625,13 +633,13 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 		} catch (DAOException ex) {
 			rollback(lConn);
 			lEsiti.add(ex.getMessage());
-			throw new F3BException("ImportaDatiInRegeController.inserisciCircostanze: Non posso inserire: "
-					+ ex);
+			throw new F3BException(
+					"ImportaDatiInRegeController.inserisciCircostanze: Non posso inserire: " + ex);
 		} catch (Exception sqe) {
 			rollback(lConn);
 			lEsiti.add(sqe.getMessage());
-			throw new F3BException("ImportaDatiInRegeController.inserisciCircostanze: Non posso inserire : "
-					+ sqe);
+			throw new F3BException(
+					"ImportaDatiInRegeController.inserisciCircostanze: Non posso inserire : " + sqe);
 		} finally {
 			cleanup(lCirDao);
 			mEsito.setEsitoCircostanze(lEsiti);
@@ -641,7 +649,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * Inserimento delle Notizia Reato
-	 * 
+	 *
 	 * @param lConn
 	 * @param aNotiziaReato
 	 * @param lKeyFascicolo
@@ -649,6 +657,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 	 */
 	private Vector inserisciNotizieReato(Connection lConn, Vector aNotiziaReato, BigDecimal lKeyFascicolo)
 			throws F3BException {
+
 		NotiziaReatoDAO lNotDao = null;
 		NotiziaReatoModel lNotMod = null;
 		Vector lNotizie = new Vector();
@@ -656,7 +665,6 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 		Vector lEsiti = new Vector();
 
 		try {
-
 			lNotDao = new NotiziaReatoDAO(lConn);
 			Iterator lItx = aNotiziaReato.iterator();
 
@@ -680,8 +688,8 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 		} catch (DAOException ex) {
 			rollback(lConn);
 			lEsiti.add(ex.getMessage());
-			throw new F3BException("ImportaDatiInRegeController.inserisciNotiziaReato: Non posso inserire: "
-					+ ex);
+			throw new F3BException(
+					"ImportaDatiInRegeController.inserisciNotiziaReato: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lNotDao);
 			mEsito.setEsitoNotizieDiReato(lEsiti);
@@ -699,6 +707,7 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 	 */
 	private NoteFascicoloModel inserisciDispositivoDifensori(Connection lConn, ProvvedimentoModel aProvv,
 			BigDecimal lKeyFascicolo) throws F3BException {
+
 		NoteFascicoloDAO lNotDao = null;
 		NoteFascicoloModel lNotMod = null;
 		String lEsitoDispositivo = "";
@@ -765,13 +774,14 @@ public class ImportaDatiInRegeController extends SiapController implements IImpo
 
 	/**
 	 * Fujnzione di eliminazione dei dati rege appena importati con successo in SIEP
-	 * 
+	 *
 	 * @param idFile
 	 * @param lConn
 	 * @return vero se sono stai cancellati tutti correttamente - false altrimenti
 	 * @throws F3BException
 	 */
 	private boolean deleteDatiRege(String idFile, Connection lConn) throws F3BException {
+
 		RegeSentenzaDAO lSenDao = null;
 		RegeSoggettoDAO lSoggDao = null;
 		RegeCircostanzaDAO lCircDao = null;

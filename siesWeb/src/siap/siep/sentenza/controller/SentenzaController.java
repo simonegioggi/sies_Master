@@ -89,8 +89,8 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public SentenzaModel ExInserisciSentenza(SentenzaModel aSentenza) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaModel lSen = null;
 		try {
@@ -104,10 +104,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("SentenzaController.ExInserisciSentenza -> " + e);
-		}
-
-		finally {
-
+		} finally {
 			cleanup(lConn);
 		}
 
@@ -115,43 +112,46 @@ public class SentenzaController extends SiapController implements ISentenza {
 	}
 
 	private SentenzaModel ExInserisciSentenza(SentenzaModel aSentenza, Connection aConn) throws Exception {
+
 		SentenzaDAO lSenDao = null;
 		SentenzaModel lSen = null;
 		SentenzaSqlDAO lSenSQL = null;
 
-		lSenSQL = new SentenzaSqlDAO(aConn);
-		SentenzaModel lRis = null;
-		// -- AMBROSINO 04/2011 - Non si accorgeva della differenza tra sentenza
-		// e sentenza cassazone
-		// lSenSQL.ricercaSentenzaDuplicata(aSentenza);
+		try {
+			lSenSQL = new SentenzaSqlDAO(aConn);
+			SentenzaModel lRis = null;
+			// -- AMBROSINO 04/2011 - Non si accorgeva della differenza tra sentenza
+			// e sentenza cassazone
+			// lSenSQL.ricercaSentenzaDuplicata(aSentenza);
 
-		lSenSQL.ricercaSentenzaDuplicataCassazione(aSentenza);
-		// --
-		Vector lRisRic = new Vector(lSenSQL.getModels());
+			lSenSQL.ricercaSentenzaDuplicataCassazione(aSentenza);
+			// --
+			Vector lRisRic = new Vector(lSenSQL.getModels());
 
-		if (lRisRic.size() > 0) {
+			if (lRisRic.size() > 0) {
+				lRis = (SentenzaModel) lRisRic.get(0);
+				String lDescrizioneProvv = "";
+				if (lRis.getCodTipoProvvedimento() != null && lRis.getCodTipoProvvedimento().equals("01"))
+					lDescrizioneProvv = "La sentenza ";
+				else
+					lDescrizioneProvv = "Il decreto ";
 
-			lRis = (SentenzaModel) lRisRic.get(0);
-			String lDescrizioneProvv = "";
-			if (lRis.getCodTipoProvvedimento() != null && lRis.getCodTipoProvvedimento().equals("01"))
-				lDescrizioneProvv = "La sentenza ";
-			else
-				lDescrizioneProvv = "Il decreto ";
+				throw new SIEPException(SIEPException.SENTENZA_PRESENTE_NEL_SISTEMA,
+						lDescrizioneProvv + lRis.getAnnoSentenza() + "/" + lRis.getNumeroSentenza() + " - "
+								+ lRis.getDescrTipoAutoritaEmittente() + " <br>di "
+								+ lRis.getDescrLuogoEmittente() + " è già presente in archivio.");
+			}
 
-			throw new SIEPException(SIEPException.SENTENZA_PRESENTE_NEL_SISTEMA,
-					lDescrizioneProvv + lRis.getAnnoSentenza() + "/" + lRis.getNumeroSentenza() + " - "
-							+ lRis.getDescrTipoAutoritaEmittente() + " <br>di "
-							+ lRis.getDescrLuogoEmittente() + " è già presente in archivio.");
+			lSenDao = new SentenzaDAO(aConn);
+			lSenDao.setDAOFromModel(aSentenza);
+			BigDecimal lSequence = lSenDao.insert();
+			lSen = new SentenzaModel(aSentenza);
+			lSen.setIdSentenza(lSequence);
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSenDao);
+			cleanup(lSenSQL);
 		}
-
-		lSenDao = new SentenzaDAO(aConn);
-		lSenDao.setDAOFromModel(aSentenza);
-		BigDecimal lSequence = lSenDao.insert();
-		lSen = new SentenzaModel(aSentenza);
-		lSen.setIdSentenza(lSequence);
-
-		cleanup(lSenDao);
-		cleanup(lSenSQL);
 
 		return lSen;
 	}
@@ -210,9 +210,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 							(FascicoloSiepModel[]) lFascicoli.toArray(new FascicoloSiepModel[0]));
 
 				lSentenzeFascicoli.add(lSenFasMod);
-
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -235,6 +233,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSentenzaPaged(SentenzaModel aSentenza, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSentenzi = new Vector();
 		SentenzaSqlDAO lSenDao = null;
@@ -268,6 +267,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSentenzaDuplicata(SentenzaModel aSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSentenzi = new Vector();
 		SentenzaSqlDAO lSenDao = null;
@@ -295,12 +295,12 @@ public class SentenzaController extends SiapController implements ISentenza {
 	}
 
 	/**
-	 *
 	 * @param aSentenza
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSentenza(SentenzaModel aSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSentenzi = new Vector();
 		SentenzaSqlDAO lSenDao = null;
@@ -362,6 +362,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @throws F3BException
 	 */
 	public SentenzaModel ExRicercaSentenzaByKey(BigDecimal aSentenzaKey) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaModel lSen = new SentenzaModel();
 		SentenzaSqlDAO lSenDao = null;
@@ -386,7 +387,6 @@ public class SentenzaController extends SiapController implements ISentenza {
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.debug("FAscicoli trovati = " + lSen.getEsistonoFascicoliAssociati());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -408,6 +408,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @throws F3BException
 	 */
 	public SentenzaModel ExModificaSentenza(SentenzaModel aSentenza) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaDAO lSenDao = null;
 		SentenzaModel lSen = null;
@@ -458,9 +459,9 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public SentenzaModel ExModificaSentenzaSige(SentenzaModel aSentenza, Vector aKeyFascicoli)
 			throws F3BException {
+
 		Connection lConn = null;
 		SentenzaModel lSen = null;
 		BigDecimal lIdFascSige = null;
@@ -521,6 +522,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 * @throws F3BException
 	 */
 	public void ExCancellaSentenza(SentenzaModel aSentenza) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaDAO lSenDao = null;
 
@@ -550,6 +552,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	 */
 	public String ExInserisciSentenzaWithoutSequence(SentenzaModel lSent, Connection lConn)
 			throws F3BException {
+
 		SentenzaDAO lSenDao = null;
 		String lCodEsito = "00000";
 
@@ -575,12 +578,12 @@ public class SentenzaController extends SiapController implements ISentenza {
 	}
 
 	/**
-	 *
 	 * @param aSentenza
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSentenzaFascicolo(SoggettoModel aSoggetto, String TipoBen) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaFascicoloSqlDAO lSenFasDao = null;
 		Vector lSentenzaFascicolo = new Vector();
@@ -608,6 +611,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 
 	public Vector ExRicercaSentenzeSoggettoPaged(SentenzaModel aSentenza, SoggettoModel aSoggetto, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSentenzi = new Vector();
 		SentenzaSoggettoSqlDAO lSenDao = null;
@@ -638,6 +642,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 
 	public BigDecimal ExGetCountSentenzeSoggetto(SoggettoModel aSoggetto, SentenzaModel aSentenza)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -713,7 +718,6 @@ public class SentenzaController extends SiapController implements ISentenza {
 				lSentenzeFascicoli.add(lSenFasMod);
 
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -732,6 +736,7 @@ public class SentenzaController extends SiapController implements ISentenza {
 	@Override
 	public BigDecimal ExGetCountaElencoTitoliEsecutiviIscrittiaSIGE(BigDecimal idFascicolo)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 

@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.model.DecodeModel;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sige.SIGEException;
 import siap.sige.giudicepopolare.dao.GiudicePopolareDAO;
 import siap.sige.giudicepopolare.dao.GiudicePopolareSqlDAO;
 import siap.sige.giudicepopolare.model.GiudicePopolareModel;
-import f3b.dao.DAOException;
-import f3b.model.DecodeModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -35,7 +35,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * Metodo che esegue l'inserimento di un curatore.
 	 * <p>
-	 * 
+	 *
 	 * @param aGiudicePopolare
 	 *            GiudicePopolareModel Il model con i dati da inserire.
 	 * @throws F3BException
@@ -44,6 +44,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 */
 	public GiudicePopolareModel ExInserisciGiudicePopolare(GiudicePopolareModel aGiudicePopolare)
 			throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareDAO lGiuPopDao = null;
 		GiudicePopolareModel lGiuPopMod = null;
@@ -80,7 +81,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * Metodo che esegue la ricerca di un GiudicePopolare.
 	 * <p>
-	 * 
+	 *
 	 * @param aGiudicePopolare
 	 *            Model popolato con i parametri necessari per la ricerca
 	 * @return ritorna l'insieme delle occorrenze.
@@ -88,6 +89,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaGiudicePopolare(GiudicePopolareModel aGiudicePopolare) throws F3BException {
+
 		Connection lConn = null;
 		Vector lGiudiciPopolari = new Vector();
 		GiudicePopolareSqlDAO lGiuPopDao = null;
@@ -115,7 +117,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 * Metodo che si occupa di recupera l'elenco degli esperti per popolare elementi Combobox oppurtamente
 	 * filtrati per il codice ufficio.
 	 * <p>
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            codice uffcio.
 	 * @return ritorna l'insieme di EsperoModel delle occorrenze.
@@ -123,6 +125,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExElencoCbxGiudiciPopolariByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareSqlDAO lGiuPopDao = null;
 		Vector lGiuPopDecMods = new Vector();
@@ -158,7 +161,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * Metodo che esegue la ricerca puntuale per l'id di un GiudicePopolare.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id chiave di puntamento al record.
 	 * @return GiudicePopolareModel ritorna il model opportunamente popolato.
@@ -166,6 +169,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 *             propga errore di eccezione.
 	 */
 	public GiudicePopolareModel ExRicercaGiudicePopolareByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareSqlDAO lGiuPopDao = null;
 		GiudicePopolareModel lGiuPopMod;
@@ -188,7 +192,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * Metodo che esegue la modifica dei dati di un GiudicePopolare.
 	 * <p>
-	 * 
+	 *
 	 * @param aGiudicePopolare
 	 *            Model GiudicePopolare.
 	 * @return model dell'e GiudicePopolare di ritorno.
@@ -197,6 +201,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 */
 	public GiudicePopolareModel ExModificaGiudicePopolare(GiudicePopolareModel aGiudicePopolare)
 			throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareDAO lGiuPopDao = null;
 		GiudicePopolareModel lGiuPopMod = new GiudicePopolareModel(aGiudicePopolare);
@@ -226,13 +231,14 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * <p>
 	 * Description: : la funzione effettua la cancellazione di un record nella tabella GiudicePopolare
-	 * 
+	 *
 	 * @param IdGiudicePopolare
 	 *            : identificatore univoco GiudicePopolare
 	 * @return
 	 * @throws F3BException
 	 */
 	public void ExCancellaGiudicePopolare(BigDecimal IdGiudicePopolare) throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareDAO lGiuPopDao = null;
 
@@ -264,7 +270,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * <p>
 	 * Description: : restituisce l'elenco degli Esperti per ufficio
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            : COdice ufficio di appartenenza
 	 * @return
@@ -272,6 +278,7 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	 *             propaga errore di eccezione.
 	 */
 	public Vector ExRicercaGiudicePopolareByCodUfficio(String aCodUfficio) throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareSqlDAO lGiuPopDao = null;
 		Vector lGiuPopMods = null;
@@ -297,12 +304,13 @@ public class GiudicePopolareController extends SiapController implements IGiudic
 	/**
 	 * Numero dei record occorsi.
 	 * <p>
-	 * 
+	 *
 	 * @param aGiudicePopolare
 	 * @return
 	 * @throws F3BException
 	 */
 	public int ExGetNumRicercaGiudicePopolare(GiudicePopolareModel aGiudicePopolare) throws F3BException {
+
 		Connection lConn = null;
 		GiudicePopolareSqlDAO lGiuPopDao = null;
 

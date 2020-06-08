@@ -6,14 +6,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.model.EventoModel;
 import siap.siep.annotazionemanuale.dao.AnnotazioneManualeSqlDAO;
 import siap.siep.annotazionemanuale.dao.UltimaAnnotazioneManualeSqlDAO;
 import siap.siep.annotazionemanuale.model.UltimaAnnotazioneModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version 1.0
  */
@@ -105,8 +105,8 @@ public class UltimaAnnotazioneManualeController extends SiapController implement
 				lUltimeAnnotazioni.addElement(lUltModel);
 			}
 		} catch (DAOException ex) {
-			throw new F3BException("UltimaAnnotazioneManualeController.ExRicercaUltimeAnnotazioniManuali: "
-					+ ex);
+			throw new F3BException(
+					"UltimaAnnotazioneManualeController.ExRicercaUltimeAnnotazioniManuali: " + ex);
 		} finally {
 			cleanup(lUltSqlDAO);
 			cleanup(lAnnManSqlDAO);

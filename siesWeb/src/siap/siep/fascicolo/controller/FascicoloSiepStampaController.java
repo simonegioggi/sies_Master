@@ -6,6 +6,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.sico.evento.model.XModel;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.magistratocompetente.dao.MagistratoCompetenteMagistratoSqlDAO;
@@ -27,11 +32,6 @@ import siap.siep.istruttoria.dao.IstruttoriaSqlDAO;
 import siap.siep.reato.dao.ReatoSqlDAO;
 import siap.siep.statoesecuzione.controller.StatoEsecuzioneController;
 import siap.util.SIESSwitch;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -56,7 +56,7 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 
 	/**
 	 * prelevaDatiStampaFascicolo
-	 * 
+	 *
 	 * @param aFascMod
 	 * @param aUtenteMod
 	 * @return TreeModel
@@ -79,13 +79,14 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 
 	/**
 	 * Crea la root del Documento
-	 * 
+	 *
 	 * @param aFascMod
 	 * @param aUtenteMod
 	 * @return XModel
 	 */
 	public XModel createRootFascicolo(FascicoloSiepModel aFascModel, UtenteModel aUtenteModel)
 			throws F3BException {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = aFascModel.getDescrTipoUfficio().toUpperCase();
@@ -110,7 +111,8 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 		}
 
 		if (descrTipoUff.indexOf("GENERALE") > 0) {// GDV modifica
-													// lStampa.setFirmatario("Il Sostituto Procuratore Generale");
+													// lStampa.setFirmatario("Il Sostituto Procuratore
+													// Generale");
 			lStampa.setFirmatario("Il Procuratore Generale");
 		} else {
 			lStampa.setFirmatario("Il Pubblico Ministero");
@@ -121,7 +123,7 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 
 	/**
 	 * Metodo che estrae i dati del fascicolo e crea il treemodel corretto
-	 * 
+	 *
 	 * @param aFascMod
 	 * @param aUtenteMod
 	 * @return
@@ -129,6 +131,7 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 	 */
 	private TreeModel prelevaDatiFascicolo(FascicoloSiepModel aFascMod, UtenteModel aUtenteMod,
 			Connection lConn, boolean aInserisciEvento) throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		SoggettoSqlDAO lSogDao = null;
@@ -249,23 +252,24 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 			lTreeRoot.add(lTreeFasMod);
 			lTreeRoot.add(lTreeSogMod);
 			lTreeRoot.add(this.getTreeSentenza(lFasModel, lConn));
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("FascicoloSiepStampaController.prelevaDatiStampaFascicolo: " + daoEx);
 		} finally {
-			cleanup(lReaDao);
 			cleanup(lSogDao);
 			cleanup(lResDao);
+			cleanup(lReaDao);
+			cleanup(lFasDao); // sca
 			cleanup(lAvvDao);
 			cleanup(lMagSql);
-			cleanup(lFasDao); // sca
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAliasSqlDAO);
 		}
 		return lTreeRoot;
 	}
 
 	/**
 	 * prelevaDatiStampaFascicoliMultipli - Metodo per la stampa di copertine multiple
-	 * 
+	 *
 	 * @param aFascMod
 	 * @param aUtenteMod
 	 * @return TreeModel
@@ -294,20 +298,17 @@ public class FascicoloSiepStampaController extends SIAPStampaController implemen
 				throw new F3BException("Nessun procedimento nell'intervallo impostato!");
 
 			while (lItx.hasNext()) {
-
 				FascicoloSiepModel lFascicolo = (FascicoloSiepModel) lItx.next();
 				TreeModel lTree = this.prelevaDatiFascicolo(lFascicolo, aUtenteMod, lConn, false);
-
 				lTreeRoot.add(lTree);
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("FascicoloSiepStampaController.prelevaDatiStampaFascicolo: " + daoEx);
-		}
-
-		finally {
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstrDao);
 			cleanup(lConn);
 		}
 		return lTreeRoot;

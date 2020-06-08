@@ -1,11 +1,5 @@
 package siap.siep.modulocumulo.controller;
 
-/**
-* <p>Title: MisuraSicurezzaCumuloController</p>
-* <p>Description: Classe Controller per MisuraSicurezzaCumulo</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Iterator;
@@ -28,12 +22,22 @@ import siap.siep.modulocumulo.model.MisuraSicurezzaCumuloModel;
 import siap.siep.modulocumulo.model.ProcedimentoCumulatoModel;
 import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 
+/**
+ * <p>
+ * Title: MisuraSicurezzaCumuloController
+ * </p>
+ * <p>
+ * Description: Classe Controller per MisuraSicurezzaCumulo
+ * </p>
+ * 
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MisuraSicurezzaCumuloController extends SiapController implements IMisuraSicurezzaCumulo {
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un MisuraSicurezzaCumulo a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aMisuraSicurezzaCumulo
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -44,6 +48,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 
 	public MisuraSicurezzaCumuloModel ExInserisciMisuraSicurezzaCumulo(
 			MisuraSicurezzaCumuloModel aMisuraSicurezzaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaCumuloDAO lMisDao = null;
 		MisuraSicurezzaCumuloModel lMisMod = null;
@@ -75,7 +80,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati MisuraSicurezzaCumulo
-	 * 
+	 *
 	 * @param aMisuraSicurezzaCumulo
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -84,6 +89,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 ****************************************************************************/
 	public Vector ExRicercaMisuraSicurezzaCumulo(MisuraSicurezzaCumuloModel aMisuraSicurezzaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisuraSicurezzaCumuli = new Vector();
 		MisuraSicurezzaCumuloSqlDAO lMisSqlDao = null;
@@ -113,7 +119,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -121,6 +127,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 ****************************************************************************/
 	public MisuraSicurezzaCumuloModel ExRicercaMisuraSicurezzaCumuloById(BigDecimal aIdMisuraSicurezzaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaCumuloModel lMisuraSicurezzaCumuloMod = new MisuraSicurezzaCumuloModel();
 		MisuraSicurezzaCumuloSqlDAO lMisuraSicurezzaCumuloSqlDao = null;
@@ -148,13 +155,14 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 * Metodo che modifica i dati dell'MisuraSicurezzaCumulo Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aMisuraSicurezzaCumulo
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaMisuraSicurezzaCumulo(MisuraSicurezzaCumuloModel aMisuraSicurezzaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaCumuloDAO lMisDao = null;
 
@@ -179,12 +187,13 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aMisuraSicurezzaCumulo
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaMisuraSicurezzaCumulo(MisuraSicurezzaCumuloModel aMisuraSicurezzaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaCumuloDAO lMisDao = null;
 
@@ -221,13 +230,14 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aMisuraSicurezzaCumulo
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountMisuraSicurezzaCumulo(MisuraSicurezzaCumuloModel aMisuraSicurezzaCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MisuraSicurezzaCumuloSqlDAO lMisuraSicurezzaCumuloSqlDao = null;
@@ -256,7 +266,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aMisuraSicurezzaCumulo
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -266,6 +276,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 ****************************************************************************/
 	public Vector ExRicercaMisuraSicurezzaCumuloPaged(MisuraSicurezzaCumuloModel aMisuraSicurezzaCumulo,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisuraSicurezzaCumuli = new Vector();
 		MisuraSicurezzaCumuloSqlDAO lMisuraSicurezzaCumuloSqlDao = null;
@@ -293,6 +304,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 */
 	public Vector<MisuraSicurezzaCumuloModel> ExRicercaMisureSicurezzaCumuloByIdIstruttoria(
 			BigDecimal aIdIstruttoria, boolean aFlagDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<MisuraSicurezzaCumuloModel> lMisuraSicurezzaCumuli = new Vector<>();
@@ -367,11 +379,9 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 		return lMisuraSicurezzaCumuli;
 	}
 
-	/**
-	 * 
-	 */
 	public void ExAggiornaMisureDatiFinaliCumulo(Vector<MisuraSicurezzaCumuloModel> aListaMisure,
 			BigDecimal aIdFascMS, BigDecimal aIdDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaCumuloDAO lMisDao = null;
@@ -438,7 +448,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della
 	 * Primary_Key è già preimpostato; metodi usati nella funzione di presa in carico, per scaricare Tutti i
 	 * dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -446,6 +456,7 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 	 */
 	public String ExInserisciMisuraSicurezzaCumuloWithoutSequence(
 			Vector<MisuraSicurezzaCumuloModel> aVecMisure, Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		MisuraSicurezzaCumuloDAO lMisDao = null;
 		MisuraSicurezzaCumuloModel lMisMod = null;
@@ -488,11 +499,11 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 		}
 
 		return lCodEsito;
-
 	} // chiude ExInserisciMisuraSicurezzaCumuloWithoutSequence()
 
 	public Vector<MisuraSicurezzaCumuloModel> ExRicercaMisureSicurezzaCumuloByIdTitoloCum(
 			BigDecimal aIdTitolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector<MisuraSicurezzaCumuloModel> lMisuraSicurezzaCumuli = new Vector<>();
 		MisuraSicurezzaCumuloSqlDAO lMisuraSicurezzaCumuloSqlDao = null;
@@ -512,7 +523,6 @@ public class MisuraSicurezzaCumuloController extends SiapController implements I
 			cleanup(lConn);
 		}
 		return lMisuraSicurezzaCumuli;
-
 	} // Chiude ExRicercaMisureSicurezzaCumuloByIdTitoloCum
 
 } // Chiude MisuraSicurezzaCumuloController

@@ -10,6 +10,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.messaggio.dao.MessaggioDAO;
 import siap.jms.messaggio.dao.MessaggioSqlDAO;
@@ -58,18 +63,12 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.sius.depositodecreto.dao.DepositoDecretoDAO;
 import siap.sius.depositodecreto.dao.DepositoDecretoSqlDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
-import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcDAO;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -79,14 +78,15 @@ import f3b.util.xml.TreeModel;
  * Description: Controller della richiesta
  * </p>
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class RichiestaController extends SiapController implements IRichiesta {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 * Stampa la richiesta
-	 * 
+	 * Stampa la richiesta??? A che serve??? usato da: ActRichiestaStampa.processRequest()
+	 *
 	 * @param aTreeModel
 	 * @param aTypeReport
 	 * @return
@@ -102,21 +102,21 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			 * //Creo il TreeMOdel non gerarchico uno per Soggetto,Fascicolo,Sentenza ModelTreeInputSource lIs
 			 * = new ModelTreeInputSource(aTreeModel); ParserModelTree lParser = new ParserModelTree();
 			 * XmlDocument lDocXML = lParser.parse(lIs); CharArrayWriter lWri = new CharArrayWriter();
-			 * 
+			 *
 			 * lDocXML.write(System.out); lDocXML.write(lWri);
-			 * 
+			 *
 			 * //ByteArrayInputStream lXML = new ByteArrayInputStream(lXMLData.getBytes());
 			 * ByteArrayInputStream lXML = new ByteArrayInputStream(lWri.toString().getBytes());
-			 * 
+			 *
 			 * //Settare il template rtf e il doc rtf di output FileInputStream lRTF = new
 			 * FileInputStream("C://template//IS02.rtf"); //ByteArrayInputStream lXML = new
 			 * ByteArrayInputStream(lXMLData.getBytes()); lOut = new ByteArrayOutputStream();
-			 * 
+			 *
 			 * ReportGenerator lReport = new ReportGenerator(lXML, lRTF, lOut);
 			 * lReport.setReport(aTypeReport);
-			 * 
+			 *
 			 * lReport.process(); lOutput = lOut.toString();
-			 * 
+			 *
 			 * //Chiudo le risorse. lRTF.close(); lXML.close();
 			 */
 		} catch (Throwable t) {
@@ -129,7 +129,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/**
 	 * Valida la Richiesta Acc Reato
-	 * 
+	 *
 	 * @param aEventoRid
 	 * @param aEvento
 	 * @param aFascicolo
@@ -138,6 +138,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExUpdateValidaRichiestaAccReato(EventoModel aEventoRid, EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -150,10 +151,6 @@ public class RichiestaController extends SiapController implements IRichiesta {
 		StatoProcedimentoDAO lStatoDao = null;
 		FungibilitaDAO lFungDao = null;
 		FungibilitaSqlDAO lFungSqlDao = null;
-
-		/*
-		 * Connection lConnBlob = null;
-		 */
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -330,10 +327,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			commit(lConn);
 		} catch (Exception ex) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaAccReato : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -348,7 +342,6 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lFungDao);
 			cleanup(lFungSqlDao);
 
-			// cleanup(lConnBlob);
 			cleanup(lConn);
 		}
 
@@ -359,7 +352,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 * Valida la richiesta con Codice. - Rideterminazione pena Amnistia/Indulto (revoca e concessione) -
 	 * Depenalizzazione - Incostituzionalita' - Anche le richieste di quantificazione pena su singolo reato
 	 * (art 671) - Restituzione Ordine di esecuzione - Ordine di scarcerazione provvisorio
-	 * 
+	 *
 	 * @param aEventoRid
 	 *            evento collegato all'evento da validare
 	 * @param aEvento
@@ -369,17 +362,19 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 * @return
 	 */
 	public EventoModel ExUpdateValidaRichiesteConCodice(EventoModel aEventoRid, EventoModel aEvento,
-			String lCodiceNomeProvv, FascicoloSiepModel aFascicolo, BigDecimal aGiorniLA) throws F3BException {
+			String lCodiceNomeProvv, FascicoloSiepModel aFascicolo, BigDecimal aGiorniLA)
+			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("####### inizio ######## ");
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("aEventoRid: " + aEventoRid);
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("aEvento: " + aEvento);
+
 		// ==========================================================================
 		// L'evento da validare (aEvento) e' collegato a una annotazione, a sua
 		// volta legata ad altro evento (aEventoRid)
@@ -401,18 +396,15 @@ public class RichiestaController extends SiapController implements IRichiesta {
 		ScadenzarioDAO lScaDAO = null;
 		FungibilitaDAO lFungDao = null;
 		FungibilitaSqlDAO lFungSqlDao = null;
-
-		EventoModel lEveMod = new EventoModel(aEvento);
-		AnnotazioneManualeModel lAnnMod = null;
-		PenaResiduaModel lPenResMod = null;
-
 		SospensioneSqlDAO lSospSqlDao = null;
 		SospensioneDAO lSospDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
-
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
+		AnnotazioneManualeModel lAnnMod = null;
+		PenaResiduaModel lPenResMod = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -453,8 +445,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			if (aEventoRid != null) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger
-						.debug("Presente evento fittizio, Ricerco le annotazioni manuali, le aggancio all'evento corrente e le Valido");
+				siesLogger.debug(
+						"Presente evento fittizio, Ricerco le annotazioni manuali, le aggancio all'evento corrente e le Valido");
 				lAnnSqlDAO.ricercaAnnotazioneManualeByIdEvento(aEventoRid.getIdEvento());
 
 				Vector lAnnVec = new Vector(lAnnSqlDAO.getModels());
@@ -554,8 +546,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 				} else {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.debug("Pena Residua su evento fittizio AGGIORNO "
-							+ lPenResModApp.getIdPenaResidua());
+					siesLogger.debug(
+							"Pena Residua su evento fittizio AGGIORNO " + lPenResModApp.getIdPenaResidua());
 					lPenResModApp.setFlagValidato("S");
 					lPenResModApp.setEveIdEvento(aEvento.getIdEvento());
 
@@ -622,13 +614,11 @@ public class RichiestaController extends SiapController implements IRichiesta {
 																											// di
 																											// scarcerazione
 					&& aEvento.getCodMotivo().equals("0367") // Provvisorio per concessione Indulto
-			&& aEvento.getAnnIdAnnotazioneManuale() != null // Dopo inserimento quantum
-					)
-					|| (aEvento.getCodTipoEvento().equals("01")
-							&& aEvento.getCodTipoProvvedimento().equals("26") // Richiesta
+					&& aEvento.getAnnIdAnnotazioneManuale() != null // Dopo inserimento quantum
+			) || (aEvento.getCodTipoEvento().equals("01") && aEvento.getCodTipoProvvedimento().equals("26") // Richiesta
 					&& aEvento.getCodMotivo().equals("0290") // Applicazione Benefici - ex art. 174 c.p. e 672
 																// c.p.p.
-					)) {
+			)) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Verifico lo stato della Pena Residua, trascorsa o ancora in decorrenza");
@@ -741,8 +731,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 				if (lIsPenaTerminata && (lAzzeraPena || lDuplicaEAzzeraPena)) { // OSP
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger
-							.debug("Interruzione per OSP, inserisco Sospensione e aggiorno PR azzerando i quantum ");
+					siesLogger.debug(
+							"Interruzione per OSP, inserisco Sospensione e aggiorno PR azzerando i quantum ");
 
 					PenaResiduaModel lPenModIns = new PenaResiduaModel(lPenResModApp);
 					;
@@ -838,8 +828,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 					// Inserisco sospensione
 					lSospDao = new SospensioneDAO(lConn);
 					lSospDao.setDAOFromModel(lSospMod);
-//					BigDecimal lKey = null;
-					/*lKey = */lSospDao.insert();
+					// BigDecimal lKey = null;
+					/* lKey = */lSospDao.insert();
 
 					// ====================================================================
 					// Aggiorno la POSIZIONE GIURIDICA in Libero
@@ -1024,13 +1014,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			daoEx.printStackTrace();
 
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiesteConCodice : " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			// rollback(lConnBlob);
-//			sqe.printStackTrace();
-//			throw new F3BException("RichiestaController.ExUpdateValidaRichiesteConCodice : " + sqe);
+			// } catch (SQLException sqe) {
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			// siesLogger.error("SQLException: " + sqe);
+			// rollback(lConn);
+			// // rollback(lConnBlob);
+			// sqe.printStackTrace();
+			// throw new F3BException("RichiestaController.ExUpdateValidaRichiesteConCodice : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -1052,16 +1042,12 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lNomProvvDAO);
 			cleanup(lFungDao);
 			cleanup(lFungSqlDao);
-
 			cleanup(lSospSqlDao);
 			cleanup(lSospDao);
 			cleanup(lPosSqlDao);
 			cleanup(lPosDao);
-
 			cleanup(lEveSqlDao);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
 
 			cleanup(lConn);
 		}
@@ -1090,6 +1076,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExUpdateValidaEmissioneComunicazioni(EventoModel aEventoRid, EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1101,8 +1088,6 @@ public class RichiestaController extends SiapController implements IRichiesta {
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		FungibilitaDAO lFungDao = null;
 		FungibilitaSqlDAO lFungSqlDao = null;
-
-//		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -1172,24 +1157,24 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			if (aEventoRid != null) {
 				lAnnSqlDAO = new AnnotazioneManualeSqlDAO(lConn);
 				lAnnSqlDAO.ricercaAnnotazioneManualeByIdEvento(aEventoRid.getIdEvento());
-//				String lAttProv = null;
+				// String lAttProv = null;
 
 				Vector lAnnVec = new Vector(lAnnSqlDAO.getModels());
 				for (int y = 0; y < lAnnVec.size(); y++) {
 					lAnnMod = (AnnotazioneManualeModel) lAnnVec.get(y);
 					if (lAnnMod.getFlagAppProvvisoria().equals("A"))
-//						lAttProv = lAnnMod.getFlagAppProvvisoria();
+						// lAttProv = lAnnMod.getFlagAppProvvisoria();
 
-					// Se Decisioni del GE (vengo da 'Rideterminazione della Pena')
-					if ("26".equals(aEventoRid.getCodTipoProvvedimento())) {
-						// Se esiste non validata lega l'annotazione
-						// all'EVENTO effettivo di cui l'utente ha fatto la stampa
-						// e di cui vede il dettaglio a video
-						// if ( lPenResMod != null && (!"S".equals(lPenResMod.getFlagValidato())) )
-						if (aEventoRid.getAnnIdAnnotazioneManuale() == null) {
-							lAnnMod.setEveIdEvento(aEvento.getIdEvento());
+						// Se Decisioni del GE (vengo da 'Rideterminazione della Pena')
+						if ("26".equals(aEventoRid.getCodTipoProvvedimento())) {
+							// Se esiste non validata lega l'annotazione
+							// all'EVENTO effettivo di cui l'utente ha fatto la stampa
+							// e di cui vede il dettaglio a video
+							// if ( lPenResMod != null && (!"S".equals(lPenResMod.getFlagValidato())) )
+							if (aEventoRid.getAnnIdAnnotazioneManuale() == null) {
+								lAnnMod.setEveIdEvento(aEvento.getIdEvento());
+							}
 						}
-					}
 
 					lAnnMod.setFlagValidato("S");
 
@@ -1346,14 +1331,14 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			daoEx.printStackTrace();
 
 			throw new F3BException("RichiestaController.ExUpdateValidaEmissioneComunicazioni : " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			// 2010-10-20 : Rimozione doppia connection
-//			// rollback(lConnBlob);
-//			sqe.printStackTrace();
-//			throw new F3BException("RichiestaController.ExUpdateValidaEmissioneComunicazioni : " + sqe);
+			// } catch (SQLException sqe) {
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			// siesLogger.error("SQLException: " + sqe);
+			// rollback(lConn);
+			// // 2010-10-20 : Rimozione doppia connection
+			// // rollback(lConnBlob);
+			// sqe.printStackTrace();
+			// throw new F3BException("RichiestaController.ExUpdateValidaEmissioneComunicazioni : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -1374,10 +1359,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lNomProvvDAO);
 			cleanup(lFungDao);
 			cleanup(lFungSqlDao);
-
 			cleanup(lEveDaoBlob);
-			// 2010-10-20 : Rimozione doppia connection
-			// cleanup(lConnBlob);
 
 			cleanup(lConn);
 		}
@@ -1387,12 +1369,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/**
 	 * Inserisce/Aggiorna l'evento e le notifiche
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel ExInserisciOModificaNotifica(EventoNotificaModel aEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1493,17 +1476,16 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			}
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			throw new F3BException("RichiestaController.ExInserisciOModificaNotifica: " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			throw new F3BException("RichiestaController.ExInserisciOModificaNotifica: " + sqe);
+			// } catch (SQLException sqe) {
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			// siesLogger.error("SQLException: " + sqe);
+			// rollback(lConn);
+			// throw new F3BException("RichiestaController.ExInserisciOModificaNotifica: " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -1534,7 +1516,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 * - sgancia la fungibilita' da tale evento e la riaggancia all'evento da validare<br>
 	 * - sgancia la pena residua da tale evento e la riaggancia all'evento da validare<br>
 	 * - elimina l'evento di appoggio <br>
-	 * 
+	 *
 	 * @param aEventoRid
 	 *            - Evento di appoggio a cui e' collegata l'annotazione (se presente)
 	 * @param aEvento
@@ -1545,6 +1527,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExUpdateValidaRichDetPenAboReato(EventoModel aEventoRid, EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1559,8 +1542,6 @@ public class RichiestaController extends SiapController implements IRichiesta {
 		ScadenzarioDAO lScaDAO = null;
 		FungibilitaDAO lFungDao = null;
 		FungibilitaSqlDAO lFungSqlDao = null;
-
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -1572,7 +1553,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 			// ** Aggiorna EVENTO **
 			lEveDao = new EventoDAO(lConn);
-//			EventoSqlDAO lEveSqlDAO = new EventoSqlDAO(lConn);
+			// EventoSqlDAO lEveSqlDAO = new EventoSqlDAO(lConn);
 			EventoModel lEveApp = new EventoModel();
 
 			lEveDao.setIdEvento(aEvento.getIdEvento());
@@ -1671,8 +1652,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 				} else {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
-					siesLogger.debug("Pena Residua su evento fittizio AGGIORNO "
-							+ lPenResModApp.getIdPenaResidua());
+					siesLogger.debug(
+							"Pena Residua su evento fittizio AGGIORNO " + lPenResModApp.getIdPenaResidua());
 					lPenResModApp.setFlagValidato("S");
 					lPenResModApp.setEveIdEvento(aEvento.getIdEvento());
 
@@ -1804,13 +1785,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			daoEx.printStackTrace();
 
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaAccReato : " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			// rollback(lConnBlob);
-//			sqe.printStackTrace();
-//			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaAccReato : " + sqe);
+			// } catch (SQLException sqe) {
+			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			// siesLogger.error("SQLException: " + sqe);
+			// rollback(lConn);
+			// // rollback(lConnBlob);
+			// sqe.printStackTrace();
+			// throw new F3BException("RichiestaController.ExUpdateValidaRichiestaAccReato : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -1833,10 +1814,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lNomProvvDAO);
 			cleanup(lFungDao);
 			cleanup(lFungSqlDao);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConn);
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
@@ -1844,7 +1823,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/**
 	 * VAlida al richiesta Generica
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -1852,13 +1831,15 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExUpdateValidaRichiestaGenerica(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
-		EventoModel lEveMod = new EventoModel(aEvento);
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -1876,11 +1857,11 @@ public class RichiestaController extends SiapController implements IRichiesta {
 				String lMotivo = lEveModel.getCodMotivo();
 				String lStatoProcMod = null;
 
-				//16/05/2016 Modifica per integrazione MEV2
-		        String lTipoUffDest = "";
-		        if (lEveModel.getCodTipoUfficioDestinatario() != null)
-		        	lTipoUffDest=lEveModel.getCodTipoUfficioDestinatario();
-				//16/05/2016 Modifica per integrazione MEV2
+				// 16/05/2016 Modifica per integrazione MEV2
+				String lTipoUffDest = "";
+				if (lEveModel.getCodTipoUfficioDestinatario() != null)
+					lTipoUffDest = lEveModel.getCodTipoUfficioDestinatario();
+				// 16/05/2016 Modifica per integrazione MEV2
 
 				if (lMotivo.equals("0320")) {
 					lStatoProcMod = "0141";
@@ -1910,20 +1891,20 @@ public class RichiestaController extends SiapController implements IRichiesta {
 					lStatoProcMod = "0139";
 				} else if (lMotivo.equals("2110")) {
 					// 16/05/2016 Modifica per integrazione MEV2
-		        	if (lTipoUffDest.equals("UDS"))
-		        		lStatoProcMod = "0510";	// Rich accertamento pericolosità sociale all'UDS
-		        	else if (lTipoUffDest.equals("UDSM"))
-		        		lStatoProcMod = "0552";	// Rich accertamento pericolosità sociale all'UDS Minori
-		            // 16/05/2016 FINE Modifica per integrazione MEV2
+					if (lTipoUffDest.equals("UDS"))
+						lStatoProcMod = "0510"; // Rich accertamento pericolosità sociale all'UDS
+					else if (lTipoUffDest.equals("UDSM"))
+						lStatoProcMod = "0552"; // Rich accertamento pericolosità sociale all'UDS Minori
+					// 16/05/2016 FINE Modifica per integrazione MEV2
 				} else if (lMotivo.equals("2114")) {
 					// 16/05/2016 Modifica per integrazione MEV2
-		        	if (lTipoUffDest.equals("UDS"))
+					if (lTipoUffDest.equals("UDS"))
 						lStatoProcMod = "0511"; // Rich accertamento pericolosità sociale e unificazione
 												// Misure Sicurezza all'UDS
-		        	else if (lTipoUffDest.equals("UDSM"))
+					else if (lTipoUffDest.equals("UDSM"))
 						lStatoProcMod = "0553"; // Rich accertamento pericolosità sociale e unificazione
 												// Misure Sicurezza all'UDS Minori
-		            // 16/05/2016 FINE Modifica per integrazione MEV2
+					// 16/05/2016 FINE Modifica per integrazione MEV2
 				} else
 				// 06/04/2010 Revisione Codici Motivo per Pene Accessorie.
 				// if (lMotivo.equals("5133")){
@@ -1946,26 +1927,17 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			lEveDaoBlob.stop();
 			// ---------------------
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			daoEx.printStackTrace();
-
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaGenerica : " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			sqe.printStackTrace();
-//			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaGenerica : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			ex.printStackTrace();
-
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaGenerica : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
@@ -1980,7 +1952,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/**
 	 * VAlida al richiesta esito espulsione
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -1988,16 +1960,15 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExUpdateValidaRichiestaEsitoEspulsione(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-		// 2010-10-20 : Rimozione doppia connection.
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -2021,22 +1992,22 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			/*
 			 * lPosDao.setIdPosizioneGiuridica(lPosMod.getIdPosizioneGiuridica());
 			 * lPosDao.setDataFine(lEveModel.getDataEmissione());
-			 * 
+			 *
 			 * lPosDao.selByKey(); lPosDao.update(); lPosDao.stop();
-			 * 
+			 *
 			 * //inserimento nuova occorrenza PosizioneGiuridicaModel lPosizione = new
 			 * PosizioneGiuridicaModel();
-			 * 
+			 *
 			 * lPosizione.setCodPosizioneGiuridica(lPosMod.getCodPosizioneGiuridica());
 			 * lPosizione.setDataInizio(lEveModel.getDataEmissione());
-			 * 
+			 *
 			 * lPosizione.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
 			 * lPosizione.setDataInserimento(aEvento.getDataAggiornamento());
 			 * lPosizione.setCodPosizioneProcessuale("-");
 			 * lPosizione.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
 			 * lPosizione.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
 			 * lPosizione.setIdEventoRiferimento(aEvento.getIdEvento());
-			 * 
+			 *
 			 * lPosDao.setDAOFromModel(lPosizione); lPosDao.insert(); lPosDao.stop();
 			 */
 
@@ -2065,27 +2036,15 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			rollback(lConn);
 			// 2010-10-20 : Rimozione doppia connection.
 			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaEsitoEspulsione : " + daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			// 2010-10-20 : Rimozione doppia connection.
-//			// rollback(lConnBlob);
-//			sqe.printStackTrace();
-//			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaEsitoEspulsione : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			// 2010-10-20 : Rimozione doppia connection.
 			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("RichiestaController.ExUpdateValidaRichiestaEsitoEspulsione : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
@@ -2094,9 +2053,6 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lEveDaoBlob);
 
 			cleanup(lConn);
-
-			// 2010-10-20 : Rimozione doppia connection.
-			// cleanup(lConnBlob);
 		}
 
 		return lEveMod;
@@ -2105,7 +2061,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	// METODI PRIVATI
 	/**
 	 * Inserimento Aggiornamento Pena Residua
-	 * 
+	 *
 	 * @param lConn
 	 * @param lEveModel
 	 * @param aKey
@@ -2115,6 +2071,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	private PenaResiduaModel InserimentoAggiornamentoPenRes(Connection lConn, EventoModel lEveModel,
 			BigDecimal aKey) throws DAOException, F3BException {
+
 		PenaResiduaDAO lPenResDao = new PenaResiduaDAO(lConn);
 		PenaResiduaSqlDAO lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 		PenaResiduaModel lPenResMod = new PenaResiduaModel();
@@ -2155,7 +2112,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/**
 	 * Inserimento Cancellazione Stato Procedimento
-	 * 
+	 *
 	 * @param lConn
 	 * @param aKey
 	 * @param lEveModel
@@ -2165,8 +2122,9 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 * @throws F3BException
 	 */
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
-			EventoModel lEveModel, String lStatoProcMod, BigDecimal aKeyEvento) throws DAOException,
-			F3BException {
+			EventoModel lEveModel, String lStatoProcMod, BigDecimal aKeyEvento)
+			throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(lConn);
 		try {
 			// cancellazione
@@ -2192,12 +2150,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/*****************************************************************************
 	 * Cancellazione Trasmissione per Competenza
-	 * 
+	 *
 	 * @param EventoNotificaModel
 	 *            aEveModel
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaTrasmissioneCompetenza(EventoNotificaModel lEveMod) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDAO = null;
@@ -2257,13 +2216,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	/*****************************************************************************
 	 * Aggiornamento dello stato del procedimento a seguito della presa in carico per competenza nella stessa
 	 * BDI
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws F3BException
 	 ****************************************************************************/
-
 	public void ExUpdStatoProcPresaincaricoStessaBDI(FascicoloSiepModel aFascicolo, Date dataEmissione,
 			Date dataInserimento, String codOperatore, String codUfficio) throws F3BException {
+
 		Connection lConn = null;
 
 		try {
@@ -2308,12 +2267,12 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/*****************************************************************************
 	 * Aggiornamento dello stato del procedimento a seguito alla restituzione degli atti
-	 * 
+	 *
 	 * @throws F3BException
 	 ****************************************************************************/
-
 	public void ExUpdStatoProcRestituzioneAttiStessaBDI(FascicoloSiepModel aFascicolo, Date dataEmissione,
 			Date dataInserimento, String codOperatore, String codUfficio) throws F3BException {
+
 		Connection lConn = null;
 
 		try {
@@ -2359,11 +2318,12 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	/**
 	 * Metodo privato che modifica lo stato del procedimento
-	 * 
+	 *
 	 * @param lConn
 	 */
 	private void changeStatoProcedimento(Connection lConn, StatoProcedimentoModel aStatoProcMod)
 			throws Exception {
+
 		StatoProcedimentoDAO lStatoDao = null;
 
 		try {
@@ -2389,7 +2349,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 * <p>
 	 * su DECISIONE di Applicazione Misure Sicurezza
 	 * </p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -2397,13 +2357,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExValidaAnnotazioneDecisioneDellaSorveglianza(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		FascicoloSiepDAO lFascDao = null;
-		EventoModel lEveMod = new EventoModel(aEvento);
 		EventoDAO lEveDaoBlob = null;
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
@@ -2411,6 +2371,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		MisuraSicurezzaSqlDAO lMisSqlDao = null;
 		MisuraSicurezzaDAO lMisDAO = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -2560,10 +2522,10 @@ public class RichiestaController extends SiapController implements IRichiesta {
 								// siesLogger.info("--XX-- Vecchia Misura - " + lMisOldMod);
 								if (lMisOldMod != null && lMisOldMod.getIdMisuraSicurezza() != null) {
 									lMisOldMod.setDataAggiornamento(lEveMod.getDataAggiornamento());
-									lMisOldMod.setCodUfficioAggiornamento(lEveMod
-											.getCodUfficioAggiornamento());
-									lMisOldMod.setCodOperatoreAggiornamento(lEveMod
-											.getCodOperatoreAggiornamento());
+									lMisOldMod
+											.setCodUfficioAggiornamento(lEveMod.getCodUfficioAggiornamento());
+									lMisOldMod.setCodOperatoreAggiornamento(
+											lEveMod.getCodOperatoreAggiornamento());
 									lMisOldMod.setDataFineValidita(lEveModel.getDataEmissione());
 
 									lMisDAO.setDAOFromModelForUpdate(lMisOldMod);
@@ -2585,30 +2547,20 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			lEveDaoBlob.stop();
 			// ---------------------
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			daoEx.printStackTrace();
-
-			throw new F3BException("RichiestaController.ExValidaAnnotazioneDecisioneDellaSorveglianza : "
-					+ daoEx);
-//		} catch (SQLException sqe) {
-//			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-//			siesLogger.error("SQLException: " + sqe);
-//			rollback(lConn);
-//			sqe.printStackTrace();
-//			throw new F3BException("RichiestaController.ExValidaAnnotazioneDecisioneDellaSorveglianza : "
-//					+ sqe);
+			throw new F3BException(
+					"RichiestaController.ExValidaAnnotazioneDecisioneDellaSorveglianza : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex, ex);
 			rollback(lConn);
 			ex.printStackTrace();
-
-			throw new F3BException("RichiestaController.ExValidaAnnotazioneDecisioneDellaSorveglianza : "
-					+ ex);
+			throw new F3BException(
+					"RichiestaController.ExValidaAnnotazioneDecisioneDellaSorveglianza : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
 			cleanup(lPenResSqlDao);
@@ -2619,12 +2571,13 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lDepOrdSqlDao);
 			cleanup(lDepDecDao);
 			cleanup(lDepDecSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisSqlDao);
+			cleanup(lMisDAO);
 			cleanup(lConn);
-
 		}
 
 		return lEveMod;
-
 	} // Chiude ExValidaAnnotazioneDecisioneDellaSorveglianza()
 
 	/**
@@ -2634,7 +2587,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 * <p>
 	 * OE Internato, OE Liberazione, Comunicazione/Ordine di Consegna, Richiesta DAP
 	 * </p>
-	 * 
+	 *
 	 * @param aEvento
 	 * @param aFascicolo
 	 * @return
@@ -2642,19 +2595,21 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExValidaAnnotazioneOComunicazioneApplicazioneMS(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		FascicoloSiepDAO lFascDao = null;
-		EventoModel lEveMod = new EventoModel(aEvento);
 		EventoDAO lEveDaoBlob = null;
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoDAO lDepDecDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		PosizioneGiuridicaSqlDAO pgsDAO = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -2663,34 +2618,35 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			lEveSqlDao = new EventoSqlDAO(lConn);
 			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
 			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
-		
+
 			// Aggiorna Inserisci PENA_RESIDUA
 			// InserimentoAggiornamentoPenRes(lConn, lEveModel, aFascicolo.getIdFascicoloSiep());
-			
-			// mwv 39: POSIZIONE_GIURIDICA per MOTIVO DEL PROVVEDIMENTO DI DIFFERIMENTO (1132) 
-			//aggiornamento: Libero in Differimento misura di sicurezza quando la da il tribunale  (codice 89)
-			// oppure in Libero in Differimento misura di sicurezza (Provvisorio) quando la da il magistrato (codice 90)
-			if("1132".equals(lEveModel.getCodMotivo())){
+
+			// mev_39: POSIZIONE_GIURIDICA per MOTIVO DEL PROVVEDIMENTO DI DIFFERIMENTO (1132)
+			// aggiornamento: Libero in Differimento misura di sicurezza quando la da il tribunale (codice 89)
+			// oppure in Libero in Differimento misura di sicurezza (Provvisorio) quando la da il magistrato
+			// (codice 90)
+			if ("1132".equals(lEveModel.getCodMotivo())) {
 				String posGiur = "89";
 				pgsDAO = new PosizioneGiuridicaSqlDAO(lConn);
 				pgsDAO.ricercaPosizioneGiuridicaByIdFascicoloDesc(aFascicolo.getIdFascicoloSiep());
-				PosizioneGiuridicaModel pgm = (PosizioneGiuridicaModel) pgsDAO.getModelByKey();		
-				
-				// ricerco il fascicolo sius				
-				if(lEveModel.getFasSiuIdFascicoloSius() != null){
-					IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-					IFascicoloSius iFS= SIUSLookupRemote.getFascicoloSiusRemote();
+				PosizioneGiuridicaModel pgm = (PosizioneGiuridicaModel) pgsDAO.getModelByKey();
+
+				// ricerco il fascicolo sius
+				if (lEveModel.getFasSiuIdFascicoloSius() != null) {
+					IFascicoloSius iFS = SIUSLookupRemote.getFascicoloSiusRemote();
 					FascicoloGPModel fgpm = iFS.ExRicercaFascicoloByKey(lEveModel.getFasSiuIdFascicoloSius());
-					
+
 					String codTipoUff = fgpm.getFascicoloSiusModel().getCodTipoUfficio();
-					
-					posGiur = "UDS".equals(codTipoUff) || "UDSM".equals(codTipoUff)  ? "90" : "89";
+
+					posGiur = "UDS".equals(codTipoUff) || "UDSM".equals(codTipoUff) ? "90" : "89";
 				}
-				pgsDAO.inserimentoAggiornamentoPosizioneGiuridica(lConn, posGiur, pgm, lEveMod.getDataEmissione(), lEveModel,
-						aFascicolo.getIdFascicoloSiep(), lEveModel.getIdEvento(), "N");				
+				pgsDAO.inserimentoAggiornamentoPosizioneGiuridica(lConn, posGiur, pgm,
+						lEveMod.getDataEmissione(), lEveModel, aFascicolo.getIdFascicoloSiep(),
+						lEveModel.getIdEvento(), "N");
 			}
-			// mwv 39: POSIZIONE_GIURIDICA: fine
-			
+			// mev_39: POSIZIONE_GIURIDICA: fine
+
 			// SETTA LO STATO PROCEDIMENTO
 			String lStatoProcMod = "";
 			if (lEveModel != null && lEveModel.getCodMotivo() != null) {
@@ -2747,7 +2703,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.info("ValidaProvv - lDepOrdMod legato all'Ordinanza: "
-								+ lDepOrdMod.getIdDepositoOrdinanzaPc());
+						+ lDepOrdMod.getIdDepositoOrdinanzaPc());
 
 				lDepOrdDao = new DepositoOrdinanzaPcDAO(lConn);
 				lDepOrdDao.setIdDepositoOrdinanzaPc(lDepOrdMod.getIdDepositoOrdinanzaPc());
@@ -2772,7 +2728,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.info("ValidaProvv - lDepODecreto legato all'Ordinanza: "
-								+ lDepDecMod.getIdDepositoDecreto());
+						+ lDepDecMod.getIdDepositoDecreto());
 
 				lDepDecDao = new DepositoDecretoDAO(lConn);
 				lDepDecDao.setIdDepositoDecreto(lDepDecMod.getIdDepositoDecreto());
@@ -2798,34 +2754,20 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			lEveDaoBlob.stop();
 			// ---------------------
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-
 			daoEx.printStackTrace();
-
-			throw new F3BException("RichiestaController.ExValidaAnnotazioneOComunicazioneApplicazioneMS : "
-					+ daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			//
-			// sqe.printStackTrace();
-			//
-			// throw new F3BException("RichiestaController.ExValidaAnnotazioneOComunicazioneApplicazioneMS : "
-			// + sqe);
+			throw new F3BException(
+					"RichiestaController.ExValidaAnnotazioneOComunicazioneApplicazioneMS : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex, ex);
 			rollback(lConn);
-
 			ex.printStackTrace();
-
-			throw new F3BException("RichiestaController.ExValidaAnnotazioneOComunicazioneApplicazioneMS : "
-					+ ex);
+			throw new F3BException(
+					"RichiestaController.ExValidaAnnotazioneOComunicazioneApplicazioneMS : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
 			cleanup(lPenResSqlDao);
@@ -2836,6 +2778,8 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			cleanup(lDepOrdSqlDao);
 			cleanup(lDepDecSqlDao);
 			cleanup(lDepDecDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(pgsDAO);
 			cleanup(lConn);
 		}
 
@@ -2844,15 +2788,16 @@ public class RichiestaController extends SiapController implements IRichiesta {
 
 	// 09-2015 MEV_2 (Misure Sicurezza) - STEP_2
 	// Validazione Archiviazione per Provv Giudice/Cassazione (Mis Sic Provvisoria o disposta Fuori Sentenza)
-
 	public EventoModel ExValidaArchiviazionePerProvvGiudiceEsecuzione(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		FascicoloSiepDAO lFascDao = null;
-		EventoModel lEveMod = new EventoModel(aEvento);
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -2902,29 +2847,16 @@ public class RichiestaController extends SiapController implements IRichiesta {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
-
 			daoEx.printStackTrace();
-
-			throw new F3BException("RichiestaController.ExValidaArchiviazionePerProvvGiudiceEsecuzione : "
-					+ daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			//
-			// sqe.printStackTrace();
-			//
-			// throw new F3BException("RichiestaController.ExValidaArchiviazionePerProvvGiudiceEsecuzione : "
-			// + sqe);
+			throw new F3BException(
+					"RichiestaController.ExValidaArchiviazionePerProvvGiudiceEsecuzione : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex, ex);
 			rollback(lConn);
-
 			ex.printStackTrace();
-
-			throw new F3BException("RichiestaController.ExValidaArchiviazionePerProvvGiudiceEsecuzione : "
-					+ ex);
+			throw new F3BException(
+					"RichiestaController.ExValidaArchiviazionePerProvvGiudiceEsecuzione : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
 			cleanup(lEveDaoBlob);
@@ -2933,9 +2865,7 @@ public class RichiestaController extends SiapController implements IRichiesta {
 		}
 
 		return lEveMod;
-
 	} // Chiude ExValidaArchiviazionePerProvvGiudiceEsecuzione()
-
 
 	/**
 	 * Validazione del provvedimento di Trasmissione Atti per Competenza ai fini di Emissione Provvedimento di
@@ -2943,208 +2873,201 @@ public class RichiestaController extends SiapController implements IRichiesta {
 	 */
 	public EventoModel ExValidaTrasmissioneAttiPerCompetenza(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo, CompetenzaModel aCompetenza) throws F3BException {
-      Connection lConn = null;
 
-      EventoSqlDAO lEveSqlDao = null;
-      EventoModel lEveMod = new EventoModel(aEvento);
-      EventoDAO lEveDaoBlob = null;
+		Connection lConn = null;
 
-      MessaggioModel lMessage = null;
-      MessaggioDAO lMessDAO = null;
-      MessaggioSqlDAO lMessSqlDAO = null;
+		EventoSqlDAO lEveSqlDao = null;
+		EventoDAO lEveDaoBlob = null;
+		MessaggioDAO lMessDAO = null;
+		MessaggioSqlDAO lMessSqlDAO = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
+		MessaggioModel lMessage = null;
 
 		try {
-        lConn = getDBTransaction();
+			lConn = getDBTransaction();
 
-  // ** Aggiorna EVENTO **
-        lEveSqlDao = new EventoSqlDAO(lConn);
-        lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
-        EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
+			// ** Aggiorna EVENTO **
+			lEveSqlDao = new EventoSqlDAO(lConn);
+			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
+			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
 
-  // Aggiorna Inserisci PENA_RESIDUA
-        InserimentoAggiornamentoPenRes(lConn, lEveModel, aFascicolo.getIdFascicoloSiep());
+			// Aggiorna Inserisci PENA_RESIDUA
+			InserimentoAggiornamentoPenRes(lConn, lEveModel, aFascicolo.getIdFascicoloSiep());
 
-  // SETTA LO STATO PROCEDIMENTO
+			// SETTA LO STATO PROCEDIMENTO
 			if (lEveModel != null && lEveModel.getCodMotivo() != null) {
-            String lMotivo = lEveModel.getCodMotivo();
-            String lStatoProcMod = null;
-            
+				String lMotivo = lEveModel.getCodMotivo();
+				String lStatoProcMod = null;
+
 				// String lTipoUffDest="";
 				// if (lEveModel.getCodTipoUfficioDestinatario() != null)
 				// lTipoUffDest = lEveModel.getCodTipoUfficioDestinatario();
-  
+
 				if (lMotivo.equals("0340")) {
-              lStatoProcMod = "0139";
-            }
+					lStatoProcMod = "0139";
+				}
 				if (lMotivo.equals("5403")) {
-              lStatoProcMod = "0153";         
-            }
-  
+					lStatoProcMod = "0153";
+				}
+
 				if (lStatoProcMod != null) {
-              BigDecimal lKeyEvento = lEveModel.getIdEvento();
+					BigDecimal lKeyEvento = lEveModel.getIdEvento();
 					InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(),
 							lEveModel, lStatoProcMod, lKeyEvento);
-            }
-        }
-        
-        // MESSAGGIO
+				}
+			}
+
+			// MESSAGGIO
 			if (aCompetenza.getIdMessaggioRichiesta() != null) {
-          lMessSqlDAO = new MessaggioSqlDAO(lConn);
-          lMessSqlDAO.ricercaMessaggioPerJmsIdOnly(aCompetenza.getIdMessaggioRichiesta().toString());
-          lMessage = (MessaggioModel)lMessSqlDAO.getModelByKey();
-          
-          lMessage.setFlagVisto("S");
-          lMessage.setCodEsito("01006");
-  	      lMessage.setDataEsito(DateUtils.getSysDate());
-          
-          lMessDAO = new MessaggioDAO(lConn);
-          lMessDAO.setDAOFromModelForUpdate(lMessage);
-          lMessDAO.update();
-          lMessDAO.stop();
-        }
+				lMessSqlDAO = new MessaggioSqlDAO(lConn);
+				lMessSqlDAO.ricercaMessaggioPerJmsIdOnly(aCompetenza.getIdMessaggioRichiesta().toString());
+				lMessage = (MessaggioModel) lMessSqlDAO.getModelByKey();
 
-  //------- EVENTO--------
-        lEveDaoBlob = new EventoDAO(lConn);
-        lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+				lMessage.setFlagVisto("S");
+				lMessage.setCodEsito("01006");
+				lMessage.setDataEsito(DateUtils.getSysDate());
 
-        lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
-        lEveDaoBlob.update();
-        lEveDaoBlob.stop();
-  //---------------------
-        commit(lConn);
+				lMessDAO = new MessaggioDAO(lConn);
+				lMessDAO.setDAOFromModelForUpdate(lMessage);
+				lMessDAO.update();
+				lMessDAO.stop();
+			}
 
+			// ------- EVENTO--------
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+
+			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// ---------------------
+			commit(lConn);
 		} catch (DAOException daoEx) {
-        // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-        siesLogger.error("DAOException: ",daoEx);
-        rollback(lConn);
-        //daoEx.printStackTrace();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: ", daoEx);
+			rollback(lConn);
+			// daoEx.printStackTrace();
 
-        throw new F3BException("RichiestaController.ExValidaTrasmissioneAttiPerCompetenza : " + daoEx);
+			throw new F3BException("RichiestaController.ExValidaTrasmissioneAttiPerCompetenza : " + daoEx);
 		} catch (SQLException sqe) {
-        // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-        siesLogger.error("SQLException: ",sqe);
-        rollback(lConn);
-        //sqe.printStackTrace();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("SQLException: ", sqe);
+			rollback(lConn);
+			// sqe.printStackTrace();
 
-        throw new F3BException("RichiestaController.ExValidaTrasmissioneAttiPerCompetenza : " + sqe);
+			throw new F3BException("RichiestaController.ExValidaTrasmissioneAttiPerCompetenza : " + sqe);
 		} catch (Exception ex) {
-        // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-        siesLogger.error("Exception: ",ex);
-        rollback(lConn);
-        //ex.printStackTrace();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("Exception: ", ex);
+			rollback(lConn);
+			// ex.printStackTrace();
 
-        throw new F3BException("RichiestaController.ExValidaTrasmissioneAttiPerCompetenza : " + ex);
+			throw new F3BException("RichiestaController.ExValidaTrasmissioneAttiPerCompetenza : " + ex);
 		} finally {
-        cleanup(lEveSqlDao);
-        cleanup(lEveDaoBlob);
-        cleanup(lConn);
-      }
+			cleanup(lEveSqlDao);
+			cleanup(lEveDaoBlob);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMessDAO);
+			cleanup(lMessSqlDAO);
+			cleanup(lConn);
+		}
 
-      return lEveMod;
-  }  
-      
- /**
-  * Validazione del provvedimento di 'Comunicazione Rigetto Richiesta Atti per Competenza' 
-  * ai fini di Emissione Provvedimento di Cumulo
-  * 
-  */
- public EventoModel ExValidaRigettoRichiestaAttiPerCompetenza(EventoModel aEvento, FascicoloSiepModel aFascicolo, CompetenzaModel aCompetenza) throws F3BException
-{
-	    Connection lConn = null;
+		return lEveMod;
+	}
 
-	    EventoSqlDAO lEveSqlDao = null;
-	    EventoModel lEveMod = new EventoModel(aEvento);
-	    EventoDAO lEveDaoBlob = null;
+	/**
+	 * Validazione del provvedimento di 'Comunicazione Rigetto Richiesta Atti per Competenza' ai fini di
+	 * Emissione Provvedimento di Cumulo
+	 *
+	 */
+	public EventoModel ExValidaRigettoRichiestaAttiPerCompetenza(EventoModel aEvento,
+			FascicoloSiepModel aFascicolo, CompetenzaModel aCompetenza) throws F3BException {
 
-	    MessaggioModel lMessage = null;
-	    MessaggioDAO lMessDAO = null;
-	    MessaggioSqlDAO lMessSqlDAO = null;
+		Connection lConn = null;
 
-	    try
-	    {
-	      lConn = getDBTransaction();
+		EventoSqlDAO lEveSqlDao = null;
+		EventoDAO lEveDaoBlob = null;
+		MessaggioDAO lMessDAO = null;
+		MessaggioSqlDAO lMessSqlDAO = null;
 
-	// ** Aggiorna EVENTO **
-	      lEveSqlDao = new EventoSqlDAO(lConn);
-	      lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
-	      EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
+		MessaggioModel lMessage = null;
+		EventoModel lEveMod = new EventoModel(aEvento);
 
-	// Aggiorna Inserisci PENA_RESIDUA
-	      InserimentoAggiornamentoPenRes(lConn, lEveModel, aFascicolo.getIdFascicoloSiep());
+		try {
+			lConn = getDBTransaction();
 
-	      // MESSAGGIO di RICHIESTA, 
-	      if (aCompetenza.getIdMessaggioRichiesta()!=null) 
-	      {
-   	      lMessSqlDAO = new MessaggioSqlDAO(lConn);
-   	      lMessSqlDAO.ricercaMessaggioPerJmsIdOnly(aCompetenza.getIdMessaggioRichiesta().toString());
-   	      lMessage = (MessaggioModel)lMessSqlDAO.getModelByKey();
-   	      
-   	      lMessage.setFlagVisto("S");		// S=Visto ed elaborato 
-   	      lMessage.setCodEsito("01007");    // 01007 = Rigettato
-   	      lMessage.setDataEsito(DateUtils.getSysDate());
-   	      
-   	      lMessage.setCodUfficioInoltro(null);
-   	      lMessage.setCodBdiInoltro(null);
-   	      lMessage.setCodUfficioReplyTo(null);
-   	      lMessage.setCodBdiReplyTo(null);
-   	      lMessage.setJmsCorrelationReplyTo(null);
-   	      lMessage.setIdMessaggioSollecitato(null);
-   	      
-   	      lMessDAO = new MessaggioDAO(lConn);
-   	      lMessDAO.setDAOFromModelForUpdate(lMessage);
-   	      lMessDAO.update();
-   	      lMessDAO.stop();
-	      }
+			// ** Aggiorna EVENTO **
+			lEveSqlDao = new EventoSqlDAO(lConn);
+			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
+			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
 
-	//------- EVENTO--------
-	      lEveDaoBlob = new EventoDAO(lConn);
-	      lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+			// Aggiorna Inserisci PENA_RESIDUA
+			InserimentoAggiornamentoPenRes(lConn, lEveModel, aFascicolo.getIdFascicoloSiep());
 
-	      lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
-	      lEveDaoBlob.update();
-	      lEveDaoBlob.stop();
-	//---------------------
-	      commit(lConn);
+			// MESSAGGIO di RICHIESTA,
+			if (aCompetenza.getIdMessaggioRichiesta() != null) {
+				lMessSqlDAO = new MessaggioSqlDAO(lConn);
+				lMessSqlDAO.ricercaMessaggioPerJmsIdOnly(aCompetenza.getIdMessaggioRichiesta().toString());
+				lMessage = (MessaggioModel) lMessSqlDAO.getModelByKey();
 
-	    }
-	    catch (DAOException daoEx)
-	    {
-	      siesLogger.error("DAOException: ",daoEx);
-	      rollback(lConn);
-	      daoEx.printStackTrace();
+				lMessage.setFlagVisto("S"); // S=Visto ed elaborato
+				lMessage.setCodEsito("01007"); // 01007 = Rigettato
+				lMessage.setDataEsito(DateUtils.getSysDate());
 
-	      throw new F3BException("RichiestaController.ExValidaRigettoRichiestaAttiPerCompetenza : " + daoEx);
-	    }
-	    catch (SQLException sqe)
-	    {
-	      siesLogger.error("SQLException: ",sqe);
-	      rollback(lConn);
-	      sqe.printStackTrace();
+				lMessage.setCodUfficioInoltro(null);
+				lMessage.setCodBdiInoltro(null);
+				lMessage.setCodUfficioReplyTo(null);
+				lMessage.setCodBdiReplyTo(null);
+				lMessage.setJmsCorrelationReplyTo(null);
+				lMessage.setIdMessaggioSollecitato(null);
 
-	      throw new F3BException("RichiestaController.ExValidaRigettoRichiestaAttiPerCompetenza : " + sqe);
-	    }
-	    catch (Exception ex)
-	    {
-	      siesLogger.error("Exception: ",ex);
-	      rollback(lConn);
-	      ex.printStackTrace();
+				lMessDAO = new MessaggioDAO(lConn);
+				lMessDAO.setDAOFromModelForUpdate(lMessage);
+				lMessDAO.update();
+				lMessDAO.stop();
+			}
 
-	      throw new F3BException("RichiestaController.ExValidaRigettoRichiestaAttiPerCompetenza : " + ex);
-	    }
-	    finally
-	    {
-	      cleanup(lEveSqlDao);
-	      cleanup(lEveDaoBlob);
-	      cleanup(lConn);
-	    }
+			// ------- EVENTO--------
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
 
-	    return lEveMod;
-	    
- }	// Chiude ExValidaRigettoRichiestaAttiPerCompetenza() 
+			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			// ---------------------
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			rollback(lConn);
+			daoEx.printStackTrace();
+			throw new F3BException(
+					"RichiestaController.ExValidaRigettoRichiestaAttiPerCompetenza : " + daoEx);
+		} catch (SQLException sqe) {
+			siesLogger.error("SQLException: ", sqe);
+			rollback(lConn);
+			sqe.printStackTrace();
+			throw new F3BException("RichiestaController.ExValidaRigettoRichiestaAttiPerCompetenza : " + sqe);
+		} catch (Exception ex) {
+			siesLogger.error("Exception: ", ex);
+			rollback(lConn);
+			ex.printStackTrace();
+			throw new F3BException("RichiestaController.ExValidaRigettoRichiestaAttiPerCompetenza : " + ex);
+		} finally {
+			cleanup(lEveSqlDao);
+			cleanup(lEveDaoBlob);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMessDAO);
+			cleanup(lMessSqlDAO);
+			cleanup(lConn);
+		}
+
+		return lEveMod;
+	} // Chiude ExValidaRigettoRichiestaAttiPerCompetenza()
 
 	/**
 	 * MEV_39: aggiunto metodo per la validazione di un evento di archiviazione provvedimento di cumulo
-	 * 
+	 *
 	 * @param em
 	 * @param fsm
 	 * @throws F3BException

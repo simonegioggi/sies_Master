@@ -8,6 +8,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.dao.EventoDAO;
@@ -53,10 +57,6 @@ import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcDAO;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.tenore.dao.TenoreDAO;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -74,12 +74,13 @@ import f3b.util.F3BException;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class OrdineScarcerazioneController extends SiapController implements IOrdineScarcerazione {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Inserisce/Aggiorna l'evento. Inserisce le notifiche. Inserisce le note.
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -87,7 +88,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 	public EventoNotificaModel ExInserisciOModificaEventoNotifica(EventoNotificaModel aEvento)
 			throws F3BException {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ExInserisciOModificaEventoNotifica");
 
 		Connection lConn = null;
@@ -174,7 +176,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 						if (lAutMod == null) {
 							lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
 							lKeyAutorita = lAutDao.insert();
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di mLog
 							siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
 							aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 						} else {
@@ -187,7 +190,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					lNotDao.insert();
 					lNotDao.stop();
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("Inserito evento" + lKeyEvento);
 				}
 				count++;
@@ -236,17 +240,20 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 																			// concessione risarcimento danni
 																			// D.L. 92/2014 - condannato in
 																			// misura alternativa
-					// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi risarcitori 
+					// inizio ticket 20190805017 - Mancata attribuzione dei giorni di detrazione rimedi
+					// risarcitori
 					|| "9254".equals(aEvento.getEvento().getCodMotivo()) // Nuova scadenza pena a seguito
-																			// concessione reclamo risarcimento danni
+																			// concessione reclamo
+																			// risarcimento danni
 																			// D.L. 92/2014 - condannato in
 																			// misura alternativa
 					|| "9154".equals(aEvento.getEvento().getCodMotivo()) // Nuova scadenza pena a seguito
-																			// concessione reclamo risarcimento danni
+																			// concessione reclamo
+																			// risarcimento danni
 																			// D.L. 92/2014 - condannato in
 																			// misura alternativa
-					// inizio ticket 20190805017
-					
+			// inizio ticket 20190805017
+
 			) {
 				lFunDao = new FungibilitaDAO(lConn);
 
@@ -256,17 +263,19 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 				// Ricerco l'ultima pena residua e la aggancio all'evento se non validata
 				// n.b. dovrebbe essere quella calcolata in fase di registrazione dell'LA
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Ricerco l'ultima PR ");
 				lPenaResSqlDAO = new PenaResiduaSqlDAO(lConn);
 				PenaResiduaModel lPenResMod = null;
-				lPenaResSqlDAO.ricercaPenaResiduaCorrenteByFascicoloSiep(aEvento.getEvento()
-						.getFasSieIdFascicoloSiep());
+				lPenaResSqlDAO.ricercaPenaResiduaCorrenteByFascicoloSiep(
+						aEvento.getEvento().getFasSieIdFascicoloSiep());
 				lPenResMod = (PenaResiduaModel) lPenaResSqlDAO.getModelByKey();
 				if (lPenResMod != null && lPenResMod.getIdPenaResidua() != null
 						&& lPenResMod.getEveIdEvento() == null // non deve essere legata ad alcun evento
 				) { // Aggancio la pena Residua all'evento
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.debug("Aggancio la PR ");
 					lPenaResDAO = new PenaResiduaDAO(lConn);
 					lPenaResDAO.setEveIdEvento(aEvento.getEvento().getIdEvento());
@@ -281,20 +290,12 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			siesLogger.error("DAOException: " + daoEx);
 			daoEx.printStackTrace();
 			rollback(lConn);
-			throw new F3BException("OrdineScarcerazioneController.ExInserisciOModificaEventoNotifica: "
-					+ daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			// throw new F3BException("OrdineScarcerazioneController.ExInserisciOModificaEventoNotifica: " +
-			// sqe);
+			throw new F3BException(
+					"OrdineScarcerazioneController.ExInserisciOModificaEventoNotifica: " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
-
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException("OrdineScarcerazioneController.ExInserisciOModificaEventoNotifica: " + ex);
 		} finally {
@@ -304,7 +305,6 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			cleanup(lAutDao);
 			cleanup(lSqlDAO);
 			cleanup(lFunDao);
-
 			cleanup(lPenaResSqlDAO);
 			cleanup(lPenaResDAO);
 
@@ -317,7 +317,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 	/**
 	 * Effettua la validazione dell'Ordine di Scarcerazione per nuova scadenza pena nel caso delle decisioni
 	 * del GE Amnistia/Indulto - Depenalizzazione - Incostituzionalità
-	 * 
+	 *
 	 * @param aEvento
 	 *            - Ordine di scarcerazione
 	 * @param aFascicolo
@@ -331,7 +331,6 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDao = null;
-
 		NomeProvvedimentoDAO lNomProvvDAO = null;
 		StatoProcedimentoDAO lStatoDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
@@ -344,7 +343,6 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 		FungibilitaDAO lFunDao = null;
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraAlternativaDAO lMisAltDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
@@ -506,10 +504,12 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 				if (!lCodMotivo.equals("0161") && !lCodMotivo.equals("0162") && !lCodMotivo.equals("0163")) {
 					lEveSqlDao = new EventoSqlDAO(lConn);
 					lEveSqlDao.ricercaEventoByKey(aEvento.getEveIdEvento());
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("ricerca evento");
 					EventoModel lEveProvv = (EventoModel) lEveSqlDao.getModelByKey();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("EVENTO 04" + lEveProvv);
 
 					EventoModel EveOrd = new EventoModel();
@@ -521,11 +521,13 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					lEveSqlDao.ricercaEventoNonRegistrato(EveOrd);
 					EventoModel EveOrdRic = (EventoModel) lEveSqlDao.getModelByKey();
 					if (EveOrdRic != null) {
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di mLog
 						siesLogger.debug("EVENTO 03" + EveOrdRic);
 
 						EveOrdRic.setFlagDocumentoRegistrato("S");
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di mLog
 						siesLogger.debug("MODEL CHE UPDATA" + EveOrdRic);
 
 						lEveDao.setDAOFromModelForUpdate(EveOrdRic);
@@ -583,8 +585,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			if (lPosMod.isMisAlt()) {
 				// *** Commentata da Rework 15/03/2005 per farlo uguale a OS per LA
 				/*
-				 * lMisAltSqlDao.ricercaMisuraAlternativaCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep())
-				 * ; MisuraAlternativaModel lMisAltMod = (MisuraAlternativaModel)
+				 * lMisAltSqlDao.ricercaMisuraAlternativaCorrenteByIdFascicolo(aFascicolo.getIdFascicoloSiep()
+				 * ) ; MisuraAlternativaModel lMisAltMod = (MisuraAlternativaModel)
 				 * lMisAltSqlDao.getModelByKey(); // Cerca la penultima PENA_RESIDUA PenaResiduaModel
 				 * lPenultimaPenResMod = new PenaResiduaModel();
 				 * lPenResSqlDao.ricercaPenaResiduaByIdFascicoloDataDesc(aFascicolo.getIdFascicoloSiep());
@@ -646,27 +648,15 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
-			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOrdineScarcerazione : "
-					+ daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			// rollback(lConnBlob);
-			// sqe.printStackTrace();
-			// throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOrdineScarcerazione : " +
-			// sqe);
+			throw new F3BException(
+					"OrdineScarcerazioneController.ExUpdateValidaOrdineScarcerazione : " + daoEx);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOrdineScarcerazione : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -683,9 +673,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			cleanup(lFunDao);
 			cleanup(lMisAltSqlDao);
 			cleanup(lMisAltDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
 			cleanup(lConnBlob);
 		}
@@ -695,7 +683,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 	/**
 	 * Si inserisce la Misura alternativa... e la sua risposta
-	 * 
+	 *
 	 * @param aMisura
 	 * @return
 	 * @throws F3BException
@@ -740,7 +728,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					if (lEventoNot.getNotifiche()[count] != null) {
 						if (lEventoNot.getNotifiche()[count].getAutoritaEsterna() != null) {
 
-							lAutDao.setRicercaByAutSede(lEventoNot.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									lEventoNot.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
@@ -856,15 +845,15 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 	/**
 	 * inserisciOModificaMANotifica
-	 * 
+	 *
 	 * @param aEvento
 	 * @param tipoMisura
 	 * @param aConn
 	 * @return EventoNotificaModel inserito
 	 * @throws F3BException
 	 */
-	protected EventoNotificaModel inserisciOModificaMANotifica(EventoNotificaModel aEvento,
-			String tipoMisura, Connection aConn) throws Exception {
+	protected EventoNotificaModel inserisciOModificaMANotifica(EventoNotificaModel aEvento, String tipoMisura,
+			Connection aConn) throws Exception {
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lSqlDAO = null;
@@ -883,8 +872,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 			lSqlDAO = new EventoSqlDAO(aConn);
 
-			lSqlDAO.ricercaEventoMANonRegistratoMAByFascicoloSiep(aEvento.getEvento()
-					.getFasSieIdFascicoloSiep(), aEvento.getEvento().getEveIdEvento());
+			lSqlDAO.ricercaEventoMANonRegistratoMAByFascicoloSiep(
+					aEvento.getEvento().getFasSieIdFascicoloSiep(), aEvento.getEvento().getEveIdEvento());
 
 			EventoModel lEveModel = (EventoModel) lSqlDAO.getModelByKey();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -947,7 +936,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 				siesLogger.debug("Notifica[" + count + "] = " + aEvento.getNotifiche()[count]);
 				if (aEvento.getNotifiche()[count] != null) {
 					if (aEvento.getNotifiche()[count].getAutoritaEsterna() != null) {
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di mLog
 						siesLogger.debug("autorità esterna@@@@@@@@@@@@@@@"
 								+ aEvento.getNotifiche()[count].getAutoritaEsterna());
 						lAutDao.setRicercaByAutSede(aEvento.getNotifiche()[count].getAutoritaEsterna());
@@ -956,7 +946,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 						if (lAutMod == null) {
 							lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
 							lKeyAutorita = lAutDao.insert();
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di mLog
 							siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
 							aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 						} else {
@@ -971,7 +962,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					lNotDao.insert();
 					lNotDao.stop();
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("Inserito evento" + lKeyEvento);
 				}
 				count++;
@@ -998,10 +990,6 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw daoEx;
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// throw sqe;
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -1032,14 +1020,12 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
 		ScadenzarioDAO lScaDao = null;
-		// ScadenzarioSqlDAO lScadeDao = null;
 		NomeProvvedimentoDAO lNomProvDao = null;
-		// EventoSqlDAO lEveSql = null;
 		FungibilitaDAO lFungiDAO = null;
-		EventoModel lEveMod = new EventoModel(aEvento);
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 
 		try {
 			lConn = getDBTransaction();
@@ -1136,7 +1122,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 				/*
 				 * for (int ins = 1; ins < 3; ins++) { lStatoProcMod.setProgressivo(new BigDecimal(ins));
 				 * lStatoDao.setDAOFromModel(lStatoProcMod); lStatoDao.insert(); lStatoDao.stop();
-				 * 
+				 *
 				 * if (ins == 1) { lStatoProcMod.setCodStatoProcedimento("0006"); } else {
 				 */
 				lStatoProcMod.setCodStatoProcedimento("0021");
@@ -1163,9 +1149,13 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 				lStatoDao.insert();
 				lStatoDao.stop();
 			}
-			/************************************************* FINE **************************************************************/
+			/*************************************************
+			 * FINE
+			 **************************************************************/
 
-			/************************************************ NOME PROVVEDIMENTO ************************************************/
+			/************************************************
+			 * NOME PROVVEDIMENTO
+			 ************************************************/
 			NomeProvvedimentoModel lNomProvMod = new NomeProvvedimentoModel();
 			lNomProvDao = new NomeProvvedimentoDAO(lConn);
 
@@ -1174,9 +1164,13 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			lNomProvMod.setEveIdEvento(aEvento.getIdEvento());
 			lNomProvDao.setDAOFromModel(lNomProvMod);
 			lNomProvDao.insert();
-			/********************************************* FINE NOME PROVVEDIMENTO **********************************************/
+			/*********************************************
+			 * FINE NOME PROVVEDIMENTO
+			 **********************************************/
 
-			/******************************************** POSIZIONE GIURIDICA **************************************************/
+			/********************************************
+			 * POSIZIONE GIURIDICA
+			 **************************************************/
 
 			// Aggiorna POSIZIONE_GIURIDICA
 
@@ -1186,15 +1180,15 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 
 			/*
 			 * lPosDao = new PosizioneGiuridicaDAO(lConn);
-			 * 
+			 *
 			 * lPosDao.setDataFine(DateUtils.getSysDate());
 			 * lPosDao.setDataAggiornamento(DateUtils.getSysDate());
 			 * lPosDao.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
 			 * lPosDao.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 			 * lPosDao.setCondizioneUpdate(lPosMod.getIdPosizioneGiuridica());
-			 * 
+			 *
 			 * lPosDao.update(); lPosDao.stop();
-			 * 
+			 *
 			 * //inserisco la nuova posizione giuridica lPosDao.setCodPosizioneGiuridica(lCodPosizione);
 			 * lPosDao.setCodPosizioneProcessuale("-");
 			 * lPosDao.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
@@ -1203,11 +1197,13 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			 * lPosDao.setDataInizio(DateUtils.getSysDate());
 			 * lPosDao.setFasSieIdFascicoloSiep(aFascicolo.getIdFascicoloSiep());
 			 * lPosDao.setIdEventoRiferimento(aEvento.getIdEvento());
-			 * 
+			 *
 			 * lPosDao.insert(); lPosDao.stop();
 			 */
 
-			/******************************************** FINE POSIZIONE GIURIDICA ***********************************************/
+			/********************************************
+			 * FINE POSIZIONE GIURIDICA
+			 ***********************************************/
 
 			/*
 			 * Aggiorna PENA_RESIDUA lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
@@ -1285,25 +1281,14 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOS : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			// rollback(lConnBlob);
-			// sqe.printStackTrace();
-			// throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOS : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOS : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -1332,7 +1317,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 	 * collegata all'OS - Le LA collegate all'ordinanza (FLAG_ELABORATO a S) - L'ultima pena residua trovata
 	 * (validata o meno :-( ) Vengono aggiornati: - stato procedimento - nome procedimento - La misura
 	 * alternativa (data fine) se il condannato è in misura - Lo scadenzario fine pena
-	 * 
+	 *
 	 * @param aEvento
 	 *            - Ordine di scarcerazione da validare
 	 * @param aFascicolo
@@ -1363,12 +1348,10 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 		DepositoOrdinanzaPcSqlDAO lDepSql = null;
 		DepositoOrdinanzaPcDAO lDepDAO = null;
 		DepositoOrdinanzaPcModel lDepMod = null;
-
 		LicenzaLibanticipataSqlDAO lLibSql = null;
 		LicenzaLibanticipataDAO lLibDAO = null;
 		LicenzaLibAnticipataModel lLibMod = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
-
 		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 		EventoDAO lEventoDao = null;
@@ -1423,7 +1406,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					lEvePresente = (EventoModel) lEveSql.getModelByKey();
 				}
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("lEvePresente--->" + lEvePresente);
 
 				// Valido l'ordinanza - e il DepositoOrdinanzaPC
@@ -1452,7 +1436,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					}
 				}
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("liberazione anticipata-->" + lLibMod);
 				// Valida la LA
 				lLibMod.setFlagElaborato("S");
@@ -1499,8 +1484,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 				// Controllo se IdEvento di PenaResidua è uguale a null, se è uguale a null Aggiorno
 				// PenaResidua altrimenti Inserisco PenaResidua(sempre con l'evento corrente)
 				IPenaResidua lCtrl = SIEPLookupRemote.getPenaResiduaRemote();
-				lPenResMod = lCtrl.ExRicercaPenaResiduaCorrenteByFascicoloSiep(aFascicolo
-						.getIdFascicoloSiep());
+				lPenResMod = lCtrl
+						.ExRicercaPenaResiduaCorrenteByFascicoloSiep(aFascicolo.getIdFascicoloSiep());
 
 				if (lPenResMod.getEveIdEvento() == null) {
 					lPenResDao.setEveIdEvento(aEvento.getIdEvento());
@@ -1511,7 +1496,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					lPenResDao.selByKey();
 					lPenResDao.update();
 					lPenResDao.stop();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("§§§Sto nell'aggiornamento!!");
 				} else {
 					lPenResMod.setEveIdEvento(aEvento.getIdEvento());
@@ -1521,7 +1507,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					IPenaResidua lCtrlPen = SIEPLookupRemote.getPenaResiduaRemote();
 					// Attenzione alla transazione (dalla v. 10 su VSS 05/03/2004) Vedi anche ExUpdateValidaOS
 					/* PenaResiduaModel llPenModRet = */lCtrlPen.ExInserisciPenaResidua(lPenResMod);
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("§§§Sto nell'inserisci!!");
 				}
 			}
@@ -1572,8 +1559,12 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			 * BigDecimal(1)); lStatoDao.setDAOFromModel(lStatoProcMod); lStatoDao.insert(); lStatoDao.stop();
 			 * }
 			 */
-			/************************************************* FINE **************************************************************/
-			/************************************************ NOME PROVVEDIMENTO ************************************************/
+			/*************************************************
+			 * FINE
+			 **************************************************************/
+			/************************************************
+			 * NOME PROVVEDIMENTO
+			 ************************************************/
 			NomeProvvedimentoModel lNomProvMod = new NomeProvvedimentoModel();
 			lNomProvDao = new NomeProvvedimentoDAO(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1765,25 +1756,14 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOSLibAnt : " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			// rollback(lConnBlob);
-			// sqe.printStackTrace();
-			// throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOSLibAnt : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			rollback(lConn);
 			rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("OrdineScarcerazioneController.ExUpdateValidaOSLibAnt : " + ex);
 		} finally {
 			cleanup(lEveDao);
@@ -1807,7 +1787,6 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			cleanup(lNomProvDao);
 			cleanup(lFunDao);
 			cleanup(lFunSqlDao);
-
 			cleanup(lConn);
 			cleanup(lConnBlob);
 		}
@@ -1824,6 +1803,7 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
+
 		BigDecimal lKeyEvento = null;
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvento);
 
@@ -1892,7 +1872,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 						if (lAutMod == null) {
 							lAutDao.setDAOFromModel(aEvento.getNotifiche()[count].getAutoritaEsterna());
 							lKeyAutorita = lAutDao.insert();
-							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di mLog
 							siesLogger.debug("Inserita AUTORITA con ID = " + lKeyAutorita);
 							aEvento.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 						} else {
@@ -1907,7 +1888,8 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 					lNotDao.insert();
 					lNotDao.stop();
 
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// mLog
 					siesLogger.debug("Inserito evento" + lKeyEvento);
 				}
 
@@ -1936,16 +1918,10 @@ public class OrdineScarcerazioneController extends SiapController implements IOr
 			siesLogger.error("DAOException: " + daoEx);
 			rollback(lConn);
 			throw new F3BException("OrdineScarcerazioneController.ExInserisciOModificaNotifica: " + daoEx);
-			// } catch (SQLException sqe) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			// siesLogger.error("SQLException: " + sqe);
-			// rollback(lConn);
-			// throw new F3BException("OrdineScarcerazioneController.ExInserisciOModificaNotifica: " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
 			ex.printStackTrace();
-
 			rollback(lConn);
 			throw new F3BException("OrdineScarcerazioneController.ExInserisciOModificaNotifica: " + ex);
 		} finally {

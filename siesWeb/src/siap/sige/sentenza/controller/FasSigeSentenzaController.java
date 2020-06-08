@@ -62,7 +62,7 @@ import siap.sige.tenore.dao.TenoreSentenzaReatoDAO;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -73,6 +73,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 
 	public SentenzaSigeModel ExInserisciFasSigeSentenza(SentenzaSigeModel aFasSigeSentenza)
 			throws F3BException {
+
 		Connection lConn = null;
 		FasSigeSentenzaDAO lFasDao = null;
 		SentenzaSigeModel lFasMod = null;
@@ -102,13 +103,14 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 * L'assegnazione di una sentenza ad un Fascicolo SIGE viene effettuata inserendo un record nella tabella
 	 * FAS_SIGE_SEN. Se esiste anche il legame ad un Fascicolo SIEP vengono associati alla Sentenza-Sige anche
 	 * i Reati legati al Fascicolo SIEP:
-	 * 
+	 *
 	 * @param SentenzaSigeModel
 	 * @return SentenzaSigeModel
 	 * @throws F3BException
 	 */
 	public SentenzaSigeModel ExAssegnaSentenzaFascicoloSige(SentenzaSigeModel aFasSigeSentenza)
 			throws F3BException {
+
 		Connection lConn = null;
 		SentenzaSigeModel lFasMod = null;
 
@@ -141,12 +143,12 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 * De-Assegnazione. La De-Assegnazione viene effettuata cancellando nelle tabelle di relazione
 	 * PENA_COMPLESSIVA_SENTENZA_SIGE, PENA_ACCESSORIA_SENTENZA_SIGE e REATO_SENTENZA_SIGE i riferimenti al
 	 * record nella tabella FAS_SIGE_SENTENZA che esprime l'assegnazione e che viene infine cancellato.
-	 * 
+	 *
 	 * @param aIdFasSigeSentenza
 	 * @throws F3BException
 	 */
-
 	public void ExDeAssegnaSentenzaFascicoloSige(BigDecimal aIdFasSigeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeSentenzaDAO lFasDao = null;
 		TenoreSentenzaReatoDAO lTenSenReaDAO = null;
@@ -155,6 +157,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		ReatoSentenzaSigeDAO lReaSenDAO = null;
 		CircostanzaSenSigeDAO lCircostanzaSigeDAO = null;
 		BeneficioSenSigeDAO lBeneficioSigeDAO = null;
+
 		SentenzaSigeModel lSentSige = null;
 
 		try {
@@ -219,19 +222,21 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 			cleanup(lFasDao);
 			cleanup(lTenSenReaDAO);
 			cleanup(lPenComSenSigeDAO);
-			cleanup(lPenComSenSigeDAO);
+			cleanup(lPenaAccSigeDAO);
 			cleanup(lReaSenDAO);
 			cleanup(lCircostanzaSigeDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lBeneficioSigeDAO);
+
 			cleanup(lConn);
 		}
-		return;
 	}
 
 	/**
 	 * Funzione che implementa l'inserimento nella tabella FAS_SIGE_SENTENZA del record che esprime
 	 * l'associazione tra Fascicolo SIGE e Sentenza. Questa funzione utilizza una connessione passata come
 	 * parametro per poter operare in una transazione unica gestita dalla funzione chiamante. aperta e chiusa
-	 * 
+	 *
 	 * @param aFasSigeSentenza
 	 * @param lConn
 	 * @return
@@ -239,6 +244,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 */
 	private SentenzaSigeModel assegnaSentenzaFascicoloSige(SentenzaSigeModel aFasSigeSentenza,
 			Connection lConn) throws F3BException {
+
 		FasSigeSentenzaDAO lFasDao = null;
 		SentenzaSigeModel lFasMod = null;
 
@@ -262,7 +268,6 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 			else
 				throw new F3BException("FasSigeSentenzaController.ExAssegnaSentenzaFascicoloSige:  " + ex);
 		} catch (Exception e) {
-
 			throw new F3BException("FasSigeSentenzaController.ExAssegnaSentenzaFascicoloSige : " + e);
 		} finally {
 			cleanup(lFasDao);
@@ -274,6 +279,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 * La funzione effettua ricerca nella sola tabella FAS_SIGE_SENTENZA.
 	 */
 	public Vector ExRicercaFasSigeSentenza(SentenzaSigeModel aFasSigeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFasSigeSentenze = new Vector();
 		FasSigeSentenzaDAO lFasSenDao = null;
@@ -298,13 +304,13 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 * la funzione ricerca tutte le sentenze associate ad un FASCICOLO_SIGE. L'argomento di ingresso della
 	 * funzione è l'ID del Fascicolo SIGE. La ricerca viene effettuata richiamando la funzione
 	 * ExRicercaSentenzeSige(...).
-	 * 
+	 *
 	 */
 	public Vector ExRicercaSentenzeAssegnateFascicolo(BigDecimal aIdFascicoloSige) throws F3BException {
-		//
+
 		SentenzaSigeModel lFasSigeSentenza = new SentenzaSigeModel();
 
-		Vector<FasSigeSentenzaModel> lSentenze = new Vector<FasSigeSentenzaModel>();
+		Vector<FasSigeSentenzaModel> lSentenze = new Vector<>();
 
 		// Valorizzazione del model da passare alla funzione di ricerca
 		lFasSigeSentenza.setFasIdFascicoloSige(aIdFascicoloSige);
@@ -314,14 +320,13 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 
 		return lSentenze;
 	}
-		
 
 	/**
 	 * Funzione di ricerca delle Sentenze SIGE. In base alle condizioni codificate nel SentenzaSigeModel
 	 * passato come argomento, la funzione effettua una ricerca nella tabella FAS_SIGE_SENTENZA. Per ognuno
 	 * dei record trovati che rappresenta l'aggregato FASCICOLO_SIGE - SENTENZA, viene poi ricercata la
 	 * sentenza nella tabella SENTENZA. Infine il risultato viene restituito come Vector di SentenzaSigeModel.
-	 * 
+	 *
 	 * @param aFasSigeSentenza
 	 * @return Vector
 	 * @throws F3BException
@@ -342,9 +347,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		lFasSentenze = ExRicercaFasSigeSentenza(aFasSigeSentenza);
 
 		if (lFasSentenze != null) {
-
 			try {
-
 				lConn = getDBConnection();
 				lSenDao = new SentenzaSqlDAO(lConn);
 
@@ -358,8 +361,8 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 
 					// Ricerca del Fascicolo SIEP
 					if (lFasSigeSen.getFasSieIdFascicoloSiep() != null)
-						lFasSigeSen.setFascicoloSiep(lCtrlSIEP.ExRicercaFascicoloByKeyNoError(lFasSigeSen
-								.getFasSieIdFascicoloSiep()));
+						lFasSigeSen.setFascicoloSiep(lCtrlSIEP
+								.ExRicercaFascicoloByKeyNoError(lFasSigeSen.getFasSieIdFascicoloSiep()));
 
 					// Costruzione del SentenzaSigeModel
 					lSenSige = new SentenzaSigeModel(lFasSigeSen, lSen);
@@ -372,7 +375,6 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				cleanup(lSenDao);
 				cleanup(lConn);
 			}
-
 		}
 		return lSentenze;
 	}
@@ -382,7 +384,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 * passato come argomento, la funzione effettua una ricerca nella tabella FAS_SIGE_SENTENZA. Per ognuno
 	 * dei record trovati che rappresenta l'aggregato FASCICOLO_SIGE - SENTENZA, viene poi ricercata la
 	 * sentenza nella tabella SENTENZA. Infine il risultato viene restituito come Vector di SentenzaSigeModel.
-	 * 
+	 *
 	 * @param aFasSigeSentenza
 	 * @return Vector
 	 * @throws F3BException
@@ -405,9 +407,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		Vector VCumuli = lCtrCum.ricercaCumuloSentenzaFascicoloSige(aModelCum);
 
 		if (VCumuli != null) {
-
 			try {
-
 				lConn = getDBConnection();
 				lSenDao = new SentenzaSqlDAO(lConn);
 
@@ -415,7 +415,6 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				while (itx.hasNext()) {
 					CumuloModel lCumulo = (CumuloModel) itx.next();
 					sentenza = lCumulo.getSentenza();
-
 					lSentenze.add(sentenza);
 				}
 			} catch (Exception e) {
@@ -424,17 +423,16 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				cleanup(lSenDao);
 				cleanup(lConn);
 			}
-
 		}
 		return lSentenze;
 	}
 
 	/**
 	 * La funzione effettua la ricerca di una sentenza a partire dall'ID_FAS_SIGE_SENTENZA.
-	 * 
+	 *
 	 */
-
 	public SentenzaSigeModel ExRicercaFasSigeSentenzaByKey(BigDecimal aKey) throws F3BException {
+
 		SentenzaSigeModel lFasMod = null;
 		Vector lRisultatiRicerca = null;
 
@@ -451,14 +449,14 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 
 	/**
 	 * Funzione di Modifica.
-	 * 
+	 *
 	 * @param aFasSigeSentenza
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public SentenzaSigeModel ExModificaFasSigeSentenza(SentenzaSigeModel aFasSigeSentenza)
 			throws F3BException {
+
 		Connection lConn = null;
 		FasSigeSentenzaDAO lFasDao = null;
 		SentenzaSigeModel lFasMod = new SentenzaSigeModel(aFasSigeSentenza);
@@ -493,6 +491,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	}
 
 	public void ExCancellaFasSigeSentenza(SentenzaSigeModel aFasSigeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		FasSigeSentenzaDAO lFasDao = null;
 
@@ -515,7 +514,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 
 	/**
 	 * La funzione assegna ad un Procedimento SIGE la Sentenza ed i Reati collegati ad un Fascicolo SIEP.
-	 * 
+	 *
 	 * @param aFasSigeSentenza
 	 * @param aIdFasSiep
 	 * @param aConn
@@ -524,6 +523,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 */
 	public SentenzaSigeModel ExAssegnaSentenzaReatiFasSiep(SentenzaSigeModel aFasSigeSentenza,
 			Connection aConn) throws F3BException {
+
 		// Model relativo alla relazione FascicoloSige-Sentenza
 		SentenzaSigeModel lFasSen = null;
 		// Fascicolo SIEP
@@ -544,9 +544,10 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				// Viene creata la relazione Sentenza - Fascicolo SIGE
 				lFasSen = assegnaSentenzaFascicoloSige(lFasSen, aConn);
 				// Vengono assegnati anche i Reati SIEP alla Sentenza - Fascicolo SIGE
-				//@emma 20072018 intervento post COLLAUDO 11.2
-				if(lFasSen.getFasSieIdFascicoloSiep() != null){
-					assegnaReatiSiep(lFasSen.getFasSieIdFascicoloSiep(), lFasSen.getIdFasSigeSentenza(), aConn);
+				// @emma 20072018 intervento post COLLAUDO 11.2
+				if (lFasSen.getFasSieIdFascicoloSiep() != null) {
+					assegnaReatiSiep(lFasSen.getFasSieIdFascicoloSiep(), lFasSen.getIdFasSigeSentenza(),
+							aConn);
 				}
 			} else
 				throw new F3BException("Errore: Fascicolo SIEP non risulta associato ad una sentenza !");
@@ -561,13 +562,14 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	/**
 	 * Funzione per la ricerca Fascicolo SIEP. Alla funzione viene passata anche la connessione per poterla
 	 * utilizzare in una unica transazione.
-	 * 
+	 *
 	 * @param aIdFasSiep
 	 * @param lConn
 	 * @return
 	 * @throws F3BException
 	 */
 	private FascicoloSiepModel getFascicoloSIEP(BigDecimal aIdFasSiep, Connection lConn) throws F3BException {
+
 		FascicoloSiepModel lFascicolo = null;
 		FascicoloSiepDAO lFascDao = null;
 
@@ -588,18 +590,18 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		}
 
 		return lFascicolo;
-
 	}
 
 	/**
 	 * Effettua una ricerca di tutti i Reati legati allo stesso Fascicolo SIEP.
-	 * 
+	 *
 	 * @param aIdFasSiep
 	 * @param lConn
 	 * @return ArrayList
 	 * @throws F3BException
 	 */
 	private ArrayList getReatiFascicoloSIEP(BigDecimal aIdFasSiep, Connection lConn) throws F3BException {
+
 		// DAO di accesso alla tabella REATO
 		ReatoDAO lReatoDao = null;
 		// Elenco dei Reati risultato della ricerca
@@ -618,13 +620,12 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		}
 
 		return lReati;
-
 	}
 
 	/**
 	 * La Funzione assegna i reati, la pena complessiva e le pene accessorie legati ad un Fascicolo SIEP ad
 	 * una sentenza legata ad un Fascicolo SIGE.
-	 * 
+	 *
 	 * @param aIdFascicoloSiep
 	 *            : id del Fascicolo SIEP
 	 * @param aIdFasSigeSentenza
@@ -633,8 +634,9 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 *            : connessione
 	 * @throws F3BException
 	 */
-	private void assegnaReatiSiep(BigDecimal aIdFascicoloSiep, BigDecimal aIdFasSigeSentenza, Connection aConn)
-			throws F3BException {
+	private void assegnaReatiSiep(BigDecimal aIdFascicoloSiep, BigDecimal aIdFasSigeSentenza,
+			Connection aConn) throws F3BException {
+
 		// Elenco di Reati collegati al Fascicolo SIEP
 		ArrayList lReati = null;
 		// Reato corrente
@@ -643,6 +645,12 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		ReatoSentenzaSigeDAO lReatoSigeDao = null;
 		// Relazione FascicoloSige-Sentenza - Reato
 		ReatoSentenzaSigeModel lReatoSige = null;
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		BeneficioSenSigeDAO lBeneficioSigeDAO = null;
+		CircostanzaSenSigeDAO lCircostanzaSigeDAO = null;
+		PenaAccSenSigeDAO lPenaAccSigeDAO = null;
+		PenaCompSenSigeDAO lPenaCompSigeDAO = null;
 
 		try {
 			// Ricerca reati
@@ -663,7 +671,6 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 					lReatoSigeDao.insert();
 					lReatoSigeDao.stop();
 				}
-				cleanup(lReatoSigeDao);
 			}
 
 			// Ricerca Pena Complessiva
@@ -675,11 +682,10 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				// Inserimento record di relazione in PENA_COMPLESSIVA_SENTENZA_SIGE
 				PenaCompSigeModel lPenaCompSige = new PenaCompSigeModel(lPenMod.getIdPenaComplessiva(),
 						aIdFasSigeSentenza);
-				PenaCompSenSigeDAO lPenaCompSigeDAO = new PenaCompSenSigeDAO(aConn);
+				lPenaCompSigeDAO = new PenaCompSenSigeDAO(aConn);
 				lPenaCompSigeDAO.setDAOFromModel(lPenaCompSige);
 				lPenaCompSigeDAO.insert();
 				lPenaCompSigeDAO.stop();
-				cleanup(lPenaCompSigeDAO);
 			}
 
 			// Ricerca Pene Accessorie legate al Fascicolo SIEP
@@ -692,7 +698,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				PenaAccessoriaModel lPenAccMod = null;
 
 				// Inserimento record di relazione in PENA_ACCESSORIA_SENTENZA_SIGE
-				PenaAccSenSigeDAO lPenaAccSigeDAO = new PenaAccSenSigeDAO(aConn);
+				lPenaAccSigeDAO = new PenaAccSenSigeDAO(aConn);
 				PenaAccSigeModel lPenaAccSige = null;
 
 				Iterator itx = lPeneAccessorie.iterator();
@@ -703,7 +709,6 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 					lPenaAccSigeDAO.insert();
 					lPenaAccSigeDAO.stop();
 				}
-				cleanup(lPenaAccSigeDAO);
 			}
 
 			// Circostanze
@@ -717,7 +722,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				CircostanzaModel lCircostanza = null;
 
 				// Inserimento record di relazione in CIRCOSTANZA_SENTENZA_SIGE
-				CircostanzaSenSigeDAO lCircostanzaSigeDAO = new CircostanzaSenSigeDAO(aConn);
+				lCircostanzaSigeDAO = new CircostanzaSenSigeDAO(aConn);
 				CircostanzaSigeModel lCircostanzaSige = null;
 
 				Iterator itx = lCircostanze.iterator();
@@ -729,7 +734,6 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 					lCircostanzaSigeDAO.insert();
 					lCircostanzaSigeDAO.stop();
 				}
-				cleanup(lCircostanzaSigeDAO);
 			}
 
 			// Benefici
@@ -743,7 +747,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 				BeneficioModel lBeneficio = null;
 
 				// Inserimento record di relazione in BENEFICIO_SENTENZA_SIGE
-				BeneficioSenSigeDAO lBeneficioSigeDAO = new BeneficioSenSigeDAO(aConn);
+				lBeneficioSigeDAO = new BeneficioSenSigeDAO(aConn);
 				BeneficioSigeModel lBeneficioSige = null;
 
 				Iterator itx = lBenefici.iterator();
@@ -754,19 +758,24 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 					lBeneficioSigeDAO.insert();
 					lBeneficioSigeDAO.stop();
 				}
-				cleanup(lBeneficioSigeDAO);
 			}
-
 		} catch (F3BException fe) {
 			throw fe;
 		} catch (Exception e) {
 			throw new F3BException("FasSigeSentenzaController.assegnaReatiSiep : " + e);
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lReatoSigeDao);
+			cleanup(lPenaCompSigeDAO);
+			cleanup(lPenaAccSigeDAO);
+			cleanup(lCircostanzaSigeDAO);
+			cleanup(lBeneficioSigeDAO);
 		}
 	}
 
 	/**
 	 * Ricerca la Sentenze riferite da Fascicoli SIGE.
-	 * 
+	 *
 	 * @param aSentenza
 	 * @return
 	 * @throws F3BException
@@ -790,8 +799,8 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 
 			if (lSentenzeSige.isEmpty())
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
-			else // Caricamento SentenzeModel.
-			{
+			else {
+				// Caricamento SentenzeModel.
 				lSenSqlDao = new SentenzaSqlDAO(lConn);
 				for (int i = 0; i < lSentenzeSige.size(); i++) {
 					FasSigeSentenzaRicercaModel lFasSigeSentenza = (FasSigeSentenzaRicercaModel) lSentenzeSige
@@ -808,6 +817,8 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException("FasSigeSentenzaController.ExRicercaSentenzePerSIGEPaged: " + daoEx);
 		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSenSqlDao);
 			cleanup(lFSSSqlDao);
 			cleanup(lConn);
 		}
@@ -816,6 +827,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	}
 
 	public BigDecimal ExGetCountFasSigeSentenze(SentenzaModel aSentenza) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -845,6 +857,7 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 	 * 20/01/2010 La funzione effettua ricerca nella tabella FAS_SIGE_SENTENZA.
 	 */
 	public Vector ExRicercaFSSentenza(FasSigeSentenzaModel aFasSigeSentenza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lFasSigeSentenze = new Vector();
 		FasSigeSentenzaDAO lFasSenDao = null;
@@ -864,16 +877,17 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 		}
 		return lFasSigeSentenze;
 	}
-	
+
 	/**
 	 * La funzione verifica se la Sentenza passata come parametro è già associata al Fascicolo Sige passato
 	 * come argomento
 	 */
 	public Vector ExRicercaFascicoloSigeSentenzaAssociata(BigDecimal aSenIdSentenza,
 			BigDecimal aIdFascicoloSige) throws F3BException {
+
 		Connection lConn = null;
 
-		Vector<FasSigeSentenzaModel> lSentenze = new Vector<FasSigeSentenzaModel>();
+		Vector<FasSigeSentenzaModel> lSentenze = new Vector<>();
 
 		// SentenzaSqlDAO lSenSqlDao = null;
 		FasSigeSentenzaSqlDAO lFSSSqlDao = null;
@@ -896,6 +910,8 @@ public class FasSigeSentenzaController extends SiapController implements IFasSig
 			throw new F3BException("FasSigeSentenzaController.ExRicercaFasSigeSentenza -> " + sqe);
 		} finally {
 			cleanup(lFSSSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lConn);
 		}
 		return lSentenze;
 	}

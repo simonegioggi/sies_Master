@@ -10,14 +10,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import siap.sius.SIUSException;
-import siap.sius.avvocatura.dao.AvvisiAvvocatoDAO;
-import siap.sius.avvocatura.dao.AvvisiAvvocatoSqlDAO;
-import siap.sius.avvocatura.model.AvvisiElencoModel;
 import f3b.controller.GenericController;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.sius.SIUSException;
+import siap.sius.avvocatura.dao.AvvisiAvvocatoDAO;
+import siap.sius.avvocatura.dao.AvvisiAvvocatoSqlDAO;
+import siap.sius.avvocatura.model.AvvisiElencoModel;
 
 /**
  * @author caporizzo
@@ -29,7 +29,7 @@ public class AvvisiSiusController extends GenericController implements IAvvisiSi
 
 	/**
 	 * Metodo per l'aggiornamento degli avvisi per avvocato
-	 * 
+	 *
 	 * @param idAvviso
 	 * @throws F3BException
 	 */
@@ -45,7 +45,8 @@ public class AvvisiSiusController extends GenericController implements IAvvisiSi
 
 		try {
 			// prendo la connessione
-			connection = getDBConnection();
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			connection = getDBTransaction();
 			// riempio il model avvisi avvocato
 			aad = new AvvisiAvvocatoDAO(connection);
 			// aggiorno la tabella "AVVISI_AVVOCATO"
@@ -79,7 +80,7 @@ public class AvvisiSiusController extends GenericController implements IAvvisiSi
 
 	/**
 	 * Il metodo effettua una ricerca di avvisi dati i parametri di input
-	 * 
+	 *
 	 * @param datiAvviso
 	 * @return
 	 * @throws F3BException
@@ -92,8 +93,9 @@ public class AvvisiSiusController extends GenericController implements IAvvisiSi
 		avvocaturaLogger.info("Starting Point della classe: AvvisiSiusController, metodo: ricercaAvvisiSius");
 
 		Connection connection = null;
-		Vector<AvvisiElencoModel> elencoAvvisi = new Vector<AvvisiElencoModel>();
 		AvvisiAvvocatoSqlDAO sqldao = null;
+
+		Vector<AvvisiElencoModel> elencoAvvisi = new Vector<>();
 		AvvisiElencoModel elencom = null;
 
 		try {
@@ -111,8 +113,8 @@ public class AvvisiSiusController extends GenericController implements IAvvisiSi
 		} catch (DAOException daoEx) {
 			rollback(connection);
 			avvocaturaLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "AvvisiSiusController.ricercaAvvisiSius: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"AvvisiSiusController.ricercaAvvisiSius: " + daoEx);
 		} catch (Exception e) {
 			rollback(connection);
 			avvocaturaLogger.error("Exception: " + e);

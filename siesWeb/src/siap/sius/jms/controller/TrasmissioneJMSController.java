@@ -9,6 +9,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.assistentegiudiziario.dao.AssistenteGiudiziarioSqlDAO;
@@ -84,12 +90,6 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.udienza.dao.UdienzaSqlDAO;
 import siap.sius.udienza.model.UdienzaModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -99,7 +99,7 @@ import f3b.util.xml.TreeModel;
  * Description:
  * </p>
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TrasmissioneJMSController extends SiapController implements ITrasmissioneJMS {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -107,7 +107,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Preleva i dati dal DB per la stampe di Ordinanza
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @return
 	 * @throws F3BException
@@ -132,7 +132,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraSicurezzaSqlDAO lMisSicSqlDao = null;
 		ImpugnazioneSqlDAO lImpDao = null;
-
 		// inserite 11/01/2005 serena
 		LicenzaLibanticipataSqlDAO lLibAntSqlDAO = null;
 		PeriodoLibanticipataSqlDAO lPerAntSqlDAO = null;
@@ -145,7 +144,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		// STUB 14/04/2005.
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		RiferimentoFascicoloSiepSqlDAO lRFSSqlDao = null;
-
 		// 21/02/2008
 		EsecuzioneSanzioneSostitutivaSqlDAO lESSSqlDao = null;
 		PeriodoAltraSanzioneSqlDAO lPASSqlDao = null;
@@ -184,8 +182,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// Lettura del BLOB e suo inserimento nel formato utile al trasferimento (byte[])
 			IDocumentoAllegato lCtrlDA = SIUSLookupRemote.getDocumentoAllegatoRemote();
 			if (lDAModel != null)
-				lDAModel.setDocPerTrasferimento(lCtrlDA.ExGetDocPerTrasferimento(lDAModel
-						.getIdDocumentoAllegato()));
+				lDAModel.setDocPerTrasferimento(
+						lCtrlDA.ExGetDocPerTrasferimento(lDAModel.getIdDocumentoAllegato()));
 			// lDAModel.setDocPerTrasferimento(lDAModel.getDocBlobOut().toByteArray()) ;
 
 			lTreeRoot.add(new TreeModel(lDAModel));
@@ -223,8 +221,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// 12/10/2010 FASCICOLO SIEP - SENTENZA - SOGGETTO
 			if (lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lFasSiepDao = new FascicoloSiepSqlDAO(lConn);
-				lFasSiepDao.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lFasSiepDao
+						.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				FascicoloSiepModel lFasSiep = (FascicoloSiepModel) lFasSiepDao.getModelByKey();
 				cleanup(lFasSiepDao);
 
@@ -255,7 +253,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 				lResSqlDao.ricercaResidenzaByFascicoloSius(lKeyFascicolo);
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
-					lResFasSiuMod = (ResidenzaFascicoloSiusModel) lResSqlDao.getModelResidenzaFascicoloSius();
+					lResFasSiuMod = lResSqlDao.getModelResidenzaFascicoloSius();
 				}
 				ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
 				lResAss.setResidenza(lResMod);
@@ -297,12 +295,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			DepositoOrdinanzaPcModel lDepOrd = (DepositoOrdinanzaPcModel) lOrdDao.getModelByKey();
 
 			if (lDepOrd != null) {
-				lDepOrd.setAnnoDataCameraConsiglio(DateUtils.getDateToString(
-						lDepOrd.getDataCameraConsiglio(), "yyyy"));
-				lDepOrd.setGiornoDataCameraConsiglio(DateUtils.getDateToString(
-						lDepOrd.getDataCameraConsiglio(), "dd"));
-				lDepOrd.setMeseDataCameraConsiglio(DateUtils.getDateToString(
-						lDepOrd.getDataCameraConsiglio(), "MMMM"));
+				lDepOrd.setAnnoDataCameraConsiglio(
+						DateUtils.getDateToString(lDepOrd.getDataCameraConsiglio(), "yyyy"));
+				lDepOrd.setGiornoDataCameraConsiglio(
+						DateUtils.getDateToString(lDepOrd.getDataCameraConsiglio(), "dd"));
+				lDepOrd.setMeseDataCameraConsiglio(
+						DateUtils.getDateToString(lDepOrd.getDataCameraConsiglio(), "MMMM"));
 
 				// LICENZA LIBERAZIONE ANTICIPATA E PERIODI inserito 11/01/2005
 				lLibAntSqlDAO = new LicenzaLibanticipataSqlDAO(lConn);
@@ -320,8 +318,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 					aModel.setLicenza(lLicenzaMod);
 					lPerAntSqlDAO.ricercaPeriodoLibanticipataByLic(lLicenzaMod.getIdLicenzaLibanticipata());
 					lPeriodi = new ArrayList(lPerAntSqlDAO.getModels());
-					aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
-							.toArray(new PeriodoLibAnticipataModel[1]));
+					aModel.setPeriodi(
+							(PeriodoLibAnticipataModel[]) lPeriodi.toArray(new PeriodoLibAnticipataModel[1]));
 				}
 				lDepOrd.setLicenzaPeriodiLibAnticipata(aModel);
 				lTreeRoot.add(new TreeModel(lDepOrd));
@@ -346,8 +344,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 					lPeriodi = null;
 					if (lLicenzaMod != null) {
 						aModel.setLicenza(lLicenzaMod);
-						lPerAntSqlDAO.ricercaPeriodoLibanticipataByLic(lLicenzaMod
-								.getIdLicenzaLibanticipata());
+						lPerAntSqlDAO
+								.ricercaPeriodoLibanticipataByLic(lLicenzaMod.getIdLicenzaLibanticipata());
 						lPeriodi = new ArrayList(lPerAntSqlDAO.getModels());
 						aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
 								.toArray(new PeriodoLibAnticipataModel[1]));
@@ -359,8 +357,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 						// EventoPermessoLicenzaModel[1]));
 
 						// 23/06/2008 Corretto Recupero dati degli eventi permessi licenze.
-						lEvPermLicSqlDAO.ricercaEventoPermessoLicenzaByKeyLicLib(lLicenzaMod
-								.getIdLicenzaLibanticipata());
+						lEvPermLicSqlDAO.ricercaEventoPermessoLicenzaByKeyLicLib(
+								lLicenzaMod.getIdLicenzaLibanticipata());
 						lEventiPermLic = new ArrayList(lEvPermLicSqlDAO.getModels());
 						aModel.setEventiPermLic((EventoPermessoLicenzaModel[]) lEventiPermLic
 								.toArray(new EventoPermessoLicenzaModel[1]));
@@ -436,8 +434,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			FascicoloGPTPModel lFasGPTPModel = new FascicoloGPTPModel();
 			if (lFasModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0) {
 				lESSSqlDao = new EsecuzioneSanzioneSostitutivaSqlDAO(lConn);
-				lESSSqlDao.ricercaEsecuzioneSanzioneSostitutivaByIdFascicolo(lFasModel
-						.getFascicoloSiusModel().getIdFascicoloSius());
+				lESSSqlDao.ricercaEsecuzioneSanzioneSostitutivaByIdFascicolo(
+						lFasModel.getFascicoloSiusModel().getIdFascicoloSius());
 				EsecuzioneSanzioneSostitutivaModel lESSMod = (EsecuzioneSanzioneSostitutivaModel) lESSSqlDao
 						.getModelByKey();
 				lFasGPTPModel.getDatiSiusPerTrasferimento().setESS(lESSMod);
@@ -447,8 +445,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			if (lFasModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U019") == 0) {
 				Vector lPAS = new Vector();
 				lPASSqlDao = new PeriodoAltraSanzioneSqlDAO(lConn);
-				lPASSqlDao.ricercaSanzioneSostitutivaByIdFascicolo(lFasModel.getFascicoloSiusModel()
-						.getIdFascicoloSius(), "DESC");
+				lPASSqlDao.ricercaSanzioneSostitutivaByIdFascicolo(
+						lFasModel.getFascicoloSiusModel().getIdFascicoloSius(), "DESC");
 				lPAS = new Vector(lPASSqlDao.getModels());
 				if (lPAS.size() > 0)
 					lFasGPTPModel.getDatiSiusPerTrasferimento().setPAS(lPAS);
@@ -462,9 +460,9 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			if (lFasModel.getGeneraleProcedimentoModel() != null
 					&& lFasModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null
 					&& (lFasModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.compareTo(ICostantiDepositoOrdinanzaPc.OGG_APPL_SANZ_SOSTITUTIVE) == 0 || lFasModel
-							.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
-							.compareTo(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE) == 0)) {
+							.compareTo(ICostantiDepositoOrdinanzaPc.OGG_APPL_SANZ_SOSTITUTIVE) == 0
+							|| lFasModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+									.compareTo(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE) == 0)) {
 				lSSSqlDao = new ScambioSanzioneSqlDAO(lConn);
 				ScambioSanzioneModel lSSMod = new ScambioSanzioneModel();
 				// 28/11/2011 Corretto il riferimento al model valorizzato (lFasModel invece di
@@ -492,8 +490,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 							.compareTo(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE) == 0) {
 				Vector lRCPP = new Vector();
 				lRCSqlDao = new RichiestaConversioneSqlDAO(lConn);
-				lRCSqlDao.ricercaRichiestaConversioneByIdFasSIUS(lFasModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lRCSqlDao.ricercaRichiestaConversioneByIdFasSIUS(
+						lFasModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lRCPP = new Vector(lRCSqlDao.getModels());
 				if (lRCPP.size() > 0)
 					lFasGPTPModel.getDatiSiusPerTrasferimento().setRCPP(lRCPP);
@@ -550,9 +548,11 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			cleanup(lESSSqlDao);
 			cleanup(lPASSqlDao);
 			cleanup(lSSSqlDao);
-			// /cleanup(lEvPermLicDAO);
 			cleanup(lEvPermLicSqlDAO);
 			cleanup(lRCSqlDao); // 23/03/2009
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLuoDetSqlDao);
+			cleanup(lRFSSqlDao);
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -564,11 +564,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Crea la root del Documento
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private XModel createRoot(EventoModel lEve) {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = lEve.getDescrUfficioEmittente().toUpperCase();
@@ -587,11 +588,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Crea la root per il Riferimento Fascicolo Sius
-	 * 
+	 *
 	 * @param lRiFaSiusModel
 	 * @return
 	 */
 	private XModel createRoot(RiferimentoFascicoloSiusModel lRiFaSiusModel) {
+
 		XModel lRiFaSius = new XModel();
 
 		String descrTipoUff = lRiFaSiusModel.getDescrUffFascicoloSius();
@@ -602,7 +604,9 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		return lRiFaSius;
 	}
 
-	private FascicoloGPModel RicercaFascicolo(Connection aConn, BigDecimal aKeyFascicolo) throws F3BException {
+	private FascicoloGPModel RicercaFascicolo(Connection aConn, BigDecimal aKeyFascicolo)
+			throws F3BException {
+
 		FascicoloGPModel lFasModel = null;
 		FascicoloGPSqlDAO lFasDao = null;
 		try {
@@ -617,37 +621,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		return lFasModel;
 	}
 
-//	private SoggettoModel RicercaSoggetto(Connection aConn, BigDecimal aKeySoggetto) throws F3BException {
-//		SoggettoModel lSogModel = null;
-//		SoggettoSqlDAO lSogSqlDao = null;
-//		try {
-//			// SOGGETTO SIUS ( IL SOGGETTO IN REALTA' E' QUELLO LEGATO AL FASCICOLO SIEP )
-//			lSogSqlDao = new SoggettoSqlDAO(aConn);
-//			lSogSqlDao.ricercaSoggettoByKey(aKeySoggetto);
-//			lSogModel = (SoggettoModel) lSogSqlDao.getModelByKey();
-//		} catch (DAOException daoEx) {
-//			throw new F3BException("TrasmissioneJMSController.RicercaSoggetto: " + daoEx);
-//		} catch (SQLException sqe) {
-//			throw new F3BException("TrasmissioneJMSController.RicercaSoggetto: " + sqe);
-//		} finally {
-//			cleanup(lSogSqlDao);
-//		}
-//		return lSogModel;
-//	}
-
-	/*
-	 * STUB 25/11/2004 Esclusione di dati non utilizzati in presa in carico. private UdienzaModel
-	 * RicercaUdienza( Connection aConn, BigDecimal aKeyUdienza) throws F3BException { UdienzaModel lUdienza =
-	 * null; UdienzaSqlDAO lUdiDao = null; try { lUdiDao = new UdienzaSqlDAO(aConn);
-	 * lUdiDao.ricercaUdienzaByKey(aKeyUdienza); lUdienza = (UdienzaModel)lUdiDao.getModelByKey(); } catch
-	 * (DAOException daoEx) { throw new
-	 * F3BException("TrasmissioneJMSController.RicercaUdienza: " + daoEx); } catch (SQLException sqe) {
-	 * throw new
-	 * F3BException("TrasmissioneJMSController.RicercaUdienza: " + sqe); } finally { cleanup(lUdiDao); return
-	 * lUdienza; } }
-	 */
-
 	private DepositoDecretoModel RicercaDecreto(Connection aConn, BigDecimal aKeyEvento) throws F3BException {
+
 		DepositoDecretoModel lDepDecrMod = null;
 		DepositoDecretoSqlDAO lDepDecDao = null;
 		try {
@@ -664,6 +639,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 	}
 
 	private ArrayList RicercaMotivazioniDecreto(Connection aConn, BigDecimal aKeyDepDec) throws F3BException {
+
 		MotivazioneDecretoSqlDAO lMotDecDao = null;
 		ArrayList lMotivazioniDecreti = null;
 		try {
@@ -681,6 +657,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	private ImpugnazioneModel RicercaImpugnazioneByDecreto(Connection aConn, BigDecimal aKeyDepDec)
 			throws F3BException {
+
 		ImpugnazioneSqlDAO lImpDao = null;
 		ImpugnazioneModel lImpMod = null;
 		try {
@@ -697,12 +674,13 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Preleva i dati dal DB per la trasmissione del decreto
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel getMessageForDecreto(BigDecimal aKeyEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiepSqlDAO lFasSiepDao = null;
@@ -712,19 +690,14 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		SoggettoSqlDAO lSogSqlDao = null;
 		MessaggioModel lMessage = null;
-
 		AssistenteGiudiziarioSqlDAO lAssGiuDao = null;
 		EspertoSqlDAO lEspertoDao = null;
 		MagistratoSqlDAO lMagDao = null;
 		UdienzaSqlDAO lUdiDao = null;
-
 		// STUB 21/03/2005
 		LicenzaLibanticipataSqlDAO lLibAntSqlDAO = null;
 		PeriodoLibanticipataSqlDAO lPerAntSqlDAO = null;
-
-		// /EventoPermessoLicenzaDAO lEvPermLicDAO = null;
 		EventoPermessoLicenzaSqlDAO lEvPermLicSqlDAO = null;
-
 		// STUB 07/04/2005.
 		AvvocatoFascicoloSiusSqlDAO lAvvDao = null;
 		// STUB 12/04/2005.
@@ -755,8 +728,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			lTreeRoot.add(new TreeModel(lDAModel));
 
 			// FASCICOLO SIUS - GENERALE PROCEDIMENTO
-			FascicoloGPModel lFasModel = RicercaFascicolo(lConn, lEveNot.getEvento()
-					.getFasSiuIdFascicoloSius());
+			FascicoloGPModel lFasModel = RicercaFascicolo(lConn,
+					lEveNot.getEvento().getFasSiuIdFascicoloSius());
 
 			if (lFasModel == null)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
@@ -793,8 +766,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// 12/10/2010 FASCICOLO SIEP - SENTENZA - SOGGETTO
 			if (lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lFasSiepDao = new FascicoloSiepSqlDAO(lConn);
-				lFasSiepDao.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lFasSiepDao
+						.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				FascicoloSiepModel lFasSiep = (FascicoloSiepModel) lFasSiepDao.getModelByKey();
 				cleanup(lFasSiepDao);
 
@@ -815,19 +788,19 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 			// RESIDENZA FASCICOLO SIUS
 			lResSqlDao = new ResidenzaSqlDAO(lConn);
-			lResSqlDao.ricercaResidenzaByFascicoloSius(lFasModel.getFascicoloSiusModel()
-					.getFasSiuIdFascicoloSius());
+			lResSqlDao.ricercaResidenzaByFascicoloSius(
+					lFasModel.getFascicoloSiusModel().getFasSiuIdFascicoloSius());
 			ResidenzaModel lResMod = (ResidenzaModel) lResSqlDao.getModelByKey();
 
 			if (lResMod != null) {
 				ResidenzaFascicoloSiusModel lResFasSiuMod = null;
 
 				lResSqlDao.stop();
-				lResSqlDao.ricercaResidenzaByFascicoloSius(lFasModel.getFascicoloSiusModel()
-						.getFasSiuIdFascicoloSius());
+				lResSqlDao.ricercaResidenzaByFascicoloSius(
+						lFasModel.getFascicoloSiusModel().getFasSiuIdFascicoloSius());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
-					lResFasSiuMod = (ResidenzaFascicoloSiusModel) lResSqlDao.getModelResidenzaFascicoloSius();
+					lResFasSiuMod = lResSqlDao.getModelResidenzaFascicoloSius();
 				}
 
 				ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
@@ -876,8 +849,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 					lPeriodi = null;
 					if (lLicenzaMod != null) {
 						aModel.setLicenza(lLicenzaMod);
-						lPerAntSqlDAO.ricercaPeriodoLibanticipataByLic(lLicenzaMod
-								.getIdLicenzaLibanticipata());
+						lPerAntSqlDAO
+								.ricercaPeriodoLibanticipataByLic(lLicenzaMod.getIdLicenzaLibanticipata());
 						lPeriodi = new ArrayList(lPerAntSqlDAO.getModels());
 						aModel.setPeriodi((PeriodoLibAnticipataModel[]) lPeriodi
 								.toArray(new PeriodoLibAnticipataModel[1]));
@@ -889,8 +862,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 						// EventoPermessoLicenzaModel[1]));
 
 						// 23/06/2008 Corretto Recupero dati degli eventi permessi licenze.
-						lEvPermLicSqlDAO.ricercaEventoPermessoLicenzaByKeyLicLib(lLicenzaMod
-								.getIdLicenzaLibanticipata());
+						lEvPermLicSqlDAO.ricercaEventoPermessoLicenzaByKeyLicLib(
+								lLicenzaMod.getIdLicenzaLibanticipata());
 						lEventiPermLic = new ArrayList(lEvPermLicSqlDAO.getModels());
 						aModel.setEventiPermLic((EventoPermessoLicenzaModel[]) lEventiPermLic
 								.toArray(new EventoPermessoLicenzaModel[1]));
@@ -948,13 +921,16 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			cleanup(lAssGiuDao);
 			cleanup(lEspertoDao);
 			cleanup(lMagDao);
-			// /cleanup(lEvPermLicDAO);
 			cleanup(lEvPermLicSqlDAO);
 			cleanup(lFasSiepDao);
 			cleanup(lSentenzaDao);
 			cleanup(lSogSqlDao);
 			cleanup(lAvvDao); // STUB 07/04/2005.
 			cleanup(lAllSqlDao); // STUB 12/04/2005.
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUdiDao);
+			cleanup(lLibAntSqlDAO);
+			cleanup(lPerAntSqlDAO);
 
 			cleanup(lConn);
 		}
@@ -963,13 +939,14 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Prepara il Messaggio per la Trasmissione del Riferimento Fascicolo SIUS.
-	 * 
+	 *
 	 * @param aKeyRiFaSius
 	 * @return lMessage
 	 * @throws F3BException
 	 */
 	public MessaggioModel getMessageForRiFaSius(BigDecimal annoFaSius, BigDecimal progrFaSius,
 			String codUfficioFaSius, BigDecimal idFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiusDAO lRiFaSiusDao = null;
 
@@ -1011,7 +988,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Prepara il Messaggio per la Trasmissione del Ricorso / Impugnazione.
-	 * 
+	 *
 	 * @param lImpKey
 	 * @param lEveKey
 	 * @param lTipoUfficio
@@ -1020,6 +997,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 	 */
 	public MessaggioModel getMessageForImpugnazione(BigDecimal lEveKey, String lTipoProvvedimento)
 			throws F3BException {
+
 		MessaggioModel lMessage = null;
 
 		if (lTipoProvvedimento.compareTo("02") == 0)
@@ -1034,12 +1012,13 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Preleva i dati dal DB per la trasmissione della Richiesta al CSSA
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @return MessaggioModel
 	 * @throws F3BException
 	 */
 	public MessaggioModel getMessageForRichiesta(BigDecimal aKeyEvento) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".getMessageForRichiesta: inizio");
@@ -1113,8 +1092,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// 12/10/2010 FASCICOLO SIEP - SENTENZA - SOGGETTO
 			if (lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lFasSiepDao = new FascicoloSiepSqlDAO(lConn);
-				lFasSiepDao.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lFasSiepDao
+						.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				FascicoloSiepModel lFasSiep = (FascicoloSiepModel) lFasSiepDao.getModelByKey();
 				cleanup(lFasSiepDao);
 
@@ -1145,7 +1124,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 				lResSqlDao.ricercaResidenzaByFascicoloSius(lKeyFascicolo);
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
-					lResFasSiuMod = (ResidenzaFascicoloSiusModel) lResSqlDao.getModelResidenzaFascicoloSius();
+					lResFasSiuMod = lResSqlDao.getModelResidenzaFascicoloSius();
 				}
 				ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
 				lResAss.setResidenza(lResMod);
@@ -1188,7 +1167,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Treemodel nel messaggio " + lRep.debugTreeXML(lTreeRoot));
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("TrasmissioneJMSController.getMessageForRichiesta: " + daoEx);
 		} finally {
@@ -1212,12 +1190,13 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Preleva i dati dal DB per la stampe di Sentenza
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @return MessaggioModel
 	 * @throws F3BException
 	 */
 	public MessaggioModel getMessageForSentenza(BigDecimal aKeyEvento) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".getMessageForSentenza: inizio");
@@ -1228,7 +1207,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		SentenzaSqlDAO lSentenzaDao = null;
 		FascicoloGPSqlDAO lFasDao = null;
 		UdienzaSqlDAO lUdiDao = null;
-		// DepositoOrdinanzaPcSqlDAO lOrdDao = null;
 		DepositoSentenzaSqlDAO lSenDao = null;
 		PrescrizioneSqlDAO lPreDao = null;
 		TenoreSqlDAO lTenDao = null;
@@ -1237,11 +1215,9 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
 		MisuraSicurezzaSqlDAO lMisSicSqlDao = null;
 		ImpugnazioneSqlDAO lImpDao = null;
-
 		// inserite 11/01/2005 serena
 		LicenzaLibanticipataSqlDAO lLibAntSqlDAO = null;
 		PeriodoLibanticipataSqlDAO lPerAntSqlDAO = null;
-		// /EventoPermessoLicenzaDAO lEvPermLicDAO = null;
 		EventoPermessoLicenzaSqlDAO lEvPermLicSqlDAO = null;
 		// STUB 07/04/2005.
 		AvvocatoFascicoloSiusSqlDAO lAvvDao = null;
@@ -1250,7 +1226,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		// STUB 14/04/2005.
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		RiferimentoFascicoloSiepSqlDAO lRFSSqlDao = null;
-
 		// 21/02/2008
 		EsecuzioneSanzioneSostitutivaSqlDAO lESSSqlDao = null;
 		PeriodoAltraSanzioneSqlDAO lPASSqlDao = null;
@@ -1288,8 +1263,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 			// Lettura del BLOB e suo inserimento nel formato utile al trasferimento (byte[])
 			IDocumentoAllegato lCtrlDA = SIUSLookupRemote.getDocumentoAllegatoRemote();
-			lDAModel.setDocPerTrasferimento(lCtrlDA.ExGetDocPerTrasferimento(lDAModel
-					.getIdDocumentoAllegato()));
+			lDAModel.setDocPerTrasferimento(
+					lCtrlDA.ExGetDocPerTrasferimento(lDAModel.getIdDocumentoAllegato()));
 			// lDAModel.setDocPerTrasferimento(lDAModel.getDocBlobOut().toByteArray()) ;
 
 			lTreeRoot.add(new TreeModel(lDAModel));
@@ -1327,8 +1302,8 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// 12/10/2010 FASCICOLO SIEP - SENTENZA - SOGGETTO
 			if (lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lFasSiepDao = new FascicoloSiepSqlDAO(lConn);
-				lFasSiepDao.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lFasSiepDao
+						.ricercaFascicoloByKey(lFasModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				FascicoloSiepModel lFasSiep = (FascicoloSiepModel) lFasSiepDao.getModelByKey();
 				cleanup(lFasSiepDao);
 
@@ -1359,7 +1334,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 				lResSqlDao.ricercaResidenzaByFascicoloSius(lKeyFascicolo);
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
-					lResFasSiuMod = (ResidenzaFascicoloSiusModel) lResSqlDao.getModelResidenzaFascicoloSius();
+					lResFasSiuMod = lResSqlDao.getModelResidenzaFascicoloSius();
 				}
 				ResidenzaAssociataModel lResAss = new ResidenzaAssociataModel();
 				lResAss.setResidenza(lResMod);
@@ -1411,14 +1386,14 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 				// LICENZA LIBERAZIONE ANTICIPATA E PERIODI inserito 11/01/2005
 				/*
 				 * lLibAntSqlDAO = new LicenzaLibanticipataSqlDAO(lConn);
-				 * 
+				 *
 				 * lLibAntSqlDAO.ricercaLicenzaLibanticipataByEve(lDepOrd.getIdEventoGenerato());
 				 * LicenzaLibAnticipataModel lLicenzaMod =
 				 * (LicenzaLibAnticipataModel)lLibAntSqlDAO.getModelByKey();
-				 * 
+				 *
 				 * LicenzaPeriodiLibAnticipataModel aModel = new LicenzaPeriodiLibAnticipataModel();
 				 * lPerAntSqlDAO = new PeriodoLibanticipataSqlDAO(lConn);
-				 * 
+				 *
 				 * ArrayList lPeriodi = null; ArrayList lEventiPermLic = null; // 23/08/2006 if(lLicenzaMod!=
 				 * null) { aModel.setLicenza(lLicenzaMod);
 				 * lPerAntSqlDAO.ricercaPeriodoLibanticipataByLic(lLicenzaMod.getIdLicenzaLibanticipata());
@@ -1426,33 +1401,33 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 				 * aModel.setPeriodi((PeriodoLibAnticipataModel[])lPeriodi.toArray(new
 				 * PeriodoLibAnticipataModel[1]) ); } lDepOrd.setLicenzaPeriodiLibAnticipata(aModel);
 				 * lTreeRoot.add(new TreeModel(lDepOrd)); lLibAntSqlDAO.stop();
-				 * 
+				 *
 				 * // STUB 21/03/2005 ARRAY LIST LICENZE LIBERAZIONE ANTICIPATA E PERIODI 21/03/2005.
 				 * lLibAntSqlDAO = new LicenzaLibanticipataSqlDAO(lConn);
-				 * 
+				 *
 				 * Vector lLicenze = null;
 				 * lLibAntSqlDAO.ricercaLicenzaLibanticipataByEve(lDepOrd.getIdEventoGenerato()); lLicenze =
 				 * new Vector(lLibAntSqlDAO.getModels());
-				 * 
+				 *
 				 * Iterator it = lLicenze.iterator(); while (it.hasNext()) { lLicenzaMod =
 				 * (LicenzaLibAnticipataModel)it.next();
-				 * 
+				 *
 				 * // Periodi per la LicenzaLibAnticipata Corrente. aModel = new
 				 * LicenzaPeriodiLibAnticipataModel(); lPerAntSqlDAO = new PeriodoLibanticipataSqlDAO(lConn);
 				 * lEvPermLicSqlDAO = new EventoPermessoLicenzaSqlDAO(lConn); // 23/06/2008
-				 * 
+				 *
 				 * lPeriodi = null; if(lLicenzaMod!= null) { aModel.setLicenza(lLicenzaMod);
 				 * lPerAntSqlDAO.ricercaPeriodoLibanticipataByLic(lLicenzaMod.getIdLicenzaLibanticipata());
 				 * lPeriodi = new ArrayList(lPerAntSqlDAO.getModels());
 				 * aModel.setPeriodi((PeriodoLibAnticipataModel[])lPeriodi.toArray(new
 				 * PeriodoLibAnticipataModel[1]) );
-				 * 
+				 *
 				 * // Recupero dati degli eventi permessi licenze. ///lEvPermLicDAO.setCondizioneByIdLic(
 				 * lLicenzaMod.getIdLicenzaLibanticipata() ); ///lEventiPermLic = new
 				 * ArrayList(lEvPermLicDAO.getModels());
 				 * ///aModel.setEventiPermLic((EventoPermessoLicenzaModel[])lEventiPermLic.toArray(new
 				 * EventoPermessoLicenzaModel[1]));
-				 * 
+				 *
 				 * // 23/06/2008 Corretto Recupero dati degli eventi permessi licenze.
 				 * lEvPermLicSqlDAO.ricercaEventoPermessoLicenzaByKeyLicLib
 				 * (lLicenzaMod.getIdLicenzaLibanticipata()); lEventiPermLic = new
@@ -1465,7 +1440,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 				/*
 				 * lPreDao = new PrescrizioneSqlDAO(lConn); //Le prescrizioni sono collegate all'evento e non
 				 * più //al deposito ordinanza. lPreDao.ricercaPrescrizioneByIdEve(aKeyEvento);
-				 * 
+				 *
 				 * List lPrescrizioni = new ArrayList(lPreDao.getModels()); Iterator lItx =
 				 * lPrescrizioni.iterator(); while (lItx.hasNext()) { lTreeRoot.add(new
 				 * TreeModel((PrescrizioneModel) lItx.next())); }
@@ -1579,7 +1554,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			 * lRCSqlDao.ricercaRichiestaConversioneByIdFasSIUS(lFasModel.getFascicoloSiusModel
 			 * ().getIdFascicoloSius() ); lRCPP = new Vector(lRCSqlDao.getModels()); if ( lRCPP.size() > 0 )
 			 * lFasGPTPModel.getDatiSiusPerTrasferimento().setRCPP(lRCPP); }
-			 * 
+			 *
 			 * if( lFasGPTPModel != null ) { lTreeRoot.add(new TreeModel(lFasGPTPModel)); }
 			 */
 
@@ -1615,9 +1590,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			cleanup(lESSSqlDao);
 			cleanup(lPASSqlDao);
 			cleanup(lSSSqlDao);
-			// /cleanup(lEvPermLicDAO);
 			cleanup(lEvPermLicSqlDAO);
 			cleanup(lRCSqlDao); // 23/03/2009
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lLuoDetSqlDao);
+			cleanup(lRFSSqlDao);
+
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1629,13 +1607,14 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Prepara il Messaggio per la Trasmissione dell'Opposizione/Ricorso.
-	 * 
+	 *
 	 * @param aKeyImpugSige
 	 * @return lMessage
 	 * @throws F3BException
 	 */
 	public MessaggioModel getMessageForOpposizioneRicorso(BigDecimal aKeyEvento, BigDecimal aKeyImpugSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeDAO lImpugSigeDao = null;
 		ImpugnazioneSigeModel lImpugSigeModel = null;

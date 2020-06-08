@@ -54,6 +54,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaTipoUfficiDescr() throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -91,6 +92,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaUfficiAccorpati(String tipoUfficio, String ufficioCompetente) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -123,6 +125,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaDistretti() throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -158,6 +161,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaTDSM() throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -191,6 +195,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaPMM() throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -225,9 +230,11 @@ public class UfficioController extends SiapController implements IUfficio {
 
 	public Vector ExGetListaComuniUfficiPerDistretto(String aDistretto, String aComune, String aCodUfficio)
 			throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
+
 		try {
 			lConn = getDBConnection();
 
@@ -245,7 +252,6 @@ public class UfficioController extends SiapController implements IUfficio {
 				// fine while
 			}
 			lUDao.stop();
-
 		} catch (DAOException daoex) {
 			throw new SICOException("ComuneController.ExGetListaComuniUfficiPerDistretto: " + daoex);
 		} finally {
@@ -254,19 +260,6 @@ public class UfficioController extends SiapController implements IUfficio {
 		}
 		return lUfficio;
 	}
-
-	/*
-	 * public String getCodUfficioByDescrComune(String aDescrComune) throws F3BException {
-	 *
-	 * UfficioModel lUffMod = new UfficioModel();
-	 *
-	 * lUffMod.setDescrComune( aDescrComune.toUpperCase());
-	 *
-	 * IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote(); UfficioModel lUffModRitorno = new
-	 * UfficioModel(lUffCtrl.GetCodiceComune(lComMod));
-	 *
-	 * return lComModRitorno; }
-	 */
 
 	public String getDescTipoUffByCodUfficio(String aCodTipoUfficio) throws F3BException {
 
@@ -289,11 +282,11 @@ public class UfficioController extends SiapController implements IUfficio {
 		}
 
 		return lDescr;
-
 	}
 
 	public UfficioModel getUfficioByCodTipoUffDescrComune(String aCodTipoUfficio, String aDescrComune)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		UfficioSqlDAO lUDao = null;
@@ -321,6 +314,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public UfficioModel ExRicercaSedeUfficioEmittenteByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUffDao = null;
 		UfficioModel lUffMod;
@@ -342,6 +336,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public UfficioModel ExRicercaSedeByFascicolo(BigDecimal aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUffDao = null;
 		UfficioModel lUffMod;
@@ -361,6 +356,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaUfficiPerTipo(String aCodTipoUfficio) throws F3BException {
+
 		return ListaUfficiPerTipo(aCodTipoUfficio, null);
 	}
 
@@ -372,6 +368,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public Vector ListaUfficiPerTipo(String aCodTipoUfficio, String aFlagAccorp) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -412,6 +409,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public Vector ListaUfficiPerTipoUfficiCumulo(String aCodTipoUfficio) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -445,6 +443,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaUfficiDistretto(String CodDistretto) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -480,6 +479,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaUfficiMinorDistretto(String CodDistretto) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -515,6 +515,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public boolean verifyUfficioByDescrComune(String aDescrComune) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		boolean aUfficio = false;
@@ -551,6 +552,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public UfficioModel getUfficioByKey(String aCodiceUfficio) throws F3BException {
+
 		Connection lConn = null;
 
 		UfficioSqlDAO lUDao = null;
@@ -584,6 +586,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public Vector ListaUDS() throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -623,6 +626,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public Vector ListaUDSM() throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -656,6 +660,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaUfficiCompletaDistretto(String CodDistretto) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -691,6 +696,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public Vector ListaUfficiCompletaDistrettoAbilitatiLogin(String CodDistretto) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -737,6 +743,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public Vector ListaUfficiProcuraXDistrettoAbilitatiLogin(String CodDistretto) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -804,6 +811,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 */
 	public UfficioModel getUfficioUDSTDS(String aCodDistretto, String aCodTipoUfficio, String aCodComune)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		UfficioSqlDAO lUDao = null;
@@ -830,9 +838,11 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public String getPrefissoUtenteUfficio(String aCodDistretto) throws F3BException {
+
 		String lPrefix = "";
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
+
 		try {
 			lConn = getDBConnection();
 			lUDao = new UfficioSqlDAO(lConn);
@@ -861,6 +871,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 */
 	public Vector ListaUfficiInteressatiProvvedimento(BigDecimal aIdFascicoloSius,
 			BigDecimal aNumFascUnificati, String aCodOggettoProc) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUDao = null;
 		Vector lUfficio = new Vector();
@@ -892,17 +903,15 @@ public class UfficioController extends SiapController implements IUfficio {
 				lUfficio.add(lUmod);
 
 				// MEV_39 03/01/2018 ***** inizio *****
-
 				// Solo in fase di trasmissione da parte dell'ufficio TDS,
 				// tra le Autorità Destinatarie oltre all'Ufficio della Procura presso il Tribunale
 				// 'proprietario' del titolo esecutivo di classe IV viene inserito anche
 				// l'Ufficio della Procura presso il Tribunale 'proprietario' del titolo esecutivo di classe I
 				if (aCodOggettoProc != null
 						&& ("C036".equals(aCodOggettoProc) || "C029".equals(aCodOggettoProc)
-								|| "U077".equals(aCodOggettoProc) || "U082".equals(aCodOggettoProc))								
-								// intervento post collaudo 13.3 (terza sessione) per risolvere anomalia 4
-								|| "U023".equals(aCodOggettoProc)
-								) {
+								|| "U077".equals(aCodOggettoProc) || "U082".equals(aCodOggettoProc))
+						// intervento post collaudo 13.3 (terza sessione) per risolvere anomalia 4
+						|| "U023".equals(aCodOggettoProc)) {
 
 					if (lUmod.getFasSiepOrigine() != null && !lUmod.getFasSiepOrigine().equals("")) {
 						lFascMsModel = new FascMsToFascSiepModel();
@@ -927,19 +936,19 @@ public class UfficioController extends SiapController implements IUfficio {
 									// null,
 									null);
 							lUfficio.add(lUmod);
-
 						}
 					}
 				}
 				// MEV_39 03/01/2018 ***** fine *****
-
 			}
 			lUDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new SICOException("UfficioController.listaUfficiInteressati: " + daoEx);
 		} finally {
 			cleanup(lUDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFascMsToSiepDao);
+			cleanup(lFasSiepDao);
 			cleanup(lConn);
 		}
 		return lUfficio;
@@ -955,6 +964,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 */
 	public boolean stressoDistretto(BigDecimal aCodUfficio1, BigDecimal aCodUfficio2, Connection aConn)
 			throws F3BException {
+
 		UfficioSqlDAO lUDao = null;
 		boolean aCond = false;
 
@@ -967,7 +977,6 @@ public class UfficioController extends SiapController implements IUfficio {
 				aCond = true;
 			}
 			lUDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new SICOException("UfficioController.stessoDistretto: " + daoEx);
 		} finally {
@@ -977,6 +986,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public UfficioModel ExModificaUfficio(UfficioModel aUfficio) throws F3BException {
+
 		Connection lConn = null;
 		UfficioDAO lUffDao = null;
 		UfficioModel lUffMod = new UfficioModel(aUfficio);
@@ -998,6 +1008,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	}
 
 	public UfficioModel ExRicercaUfficioByCod(String aCod) throws F3BException {
+
 		Connection lConn = null;
 		UfficioSqlDAO lUffDao = null;
 		UfficioModel lUffMod = null;
@@ -1007,7 +1018,6 @@ public class UfficioController extends SiapController implements IUfficio {
 			lUffDao = new UfficioSqlDAO(lConn);
 			lUffDao.selUfficioByCod(aCod);
 			lUffMod = (UfficioModel) lUffDao.getModelByKey();
-
 		} catch (Exception daoEx) {
 			throw new F3BException("UfficioController.ExRicercaUfficio: Non posso leggere : " + daoEx);
 		} finally {
@@ -1020,11 +1030,9 @@ public class UfficioController extends SiapController implements IUfficio {
 		return lUffMod;
 	}
 
-	/**
-	*
-	*/
 	public UfficioModel getUfficioAccorpatoByAccorpanteIncrement(String aCodUfficioAccorpante,
 			String aIncremento) throws F3BException {
+
 		Connection lConn = null;
 
 		UfficioSqlDAO lUffSqlDao = null;
@@ -1038,7 +1046,6 @@ public class UfficioController extends SiapController implements IUfficio {
 			lUffSqlDao.getUfficioAccorpatoByCodUffAccorpanteIncrement(aCodUfficioAccorpante, aIncremento);
 
 			lUffMod = (UfficioModel) lUffSqlDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1069,6 +1076,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 */
 	public UfficioModel getUfficioByCodTipoUffCodComune(String aCodTipoUfficio, String aCodComune)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		UfficioSqlDAO lUffSqlDao = null;
@@ -1110,6 +1118,7 @@ public class UfficioController extends SiapController implements IUfficio {
 	 * @throws F3BException
 	 */
 	public String getTipoUfficioUtente(String aCodDistretto) throws F3BException {
+
 		// 13/03/2018 metodo introdotto per anomalia m_dg.DOG07.28-02-2018.0007015.U (parametro scadenziario
 		// mancante)
 		// in fase di associazioni di un utente ad un ufficio andiamo a controllare se è stato inserito in

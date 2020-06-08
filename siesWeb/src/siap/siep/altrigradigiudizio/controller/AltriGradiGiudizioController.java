@@ -7,6 +7,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepDAO;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepSqlDAO;
@@ -15,9 +18,6 @@ import siap.siep.altrigradigiudizio.dao.AltriGradiGiudizioDAO;
 import siap.siep.altrigradigiudizio.dao.AltriGradiGiudizioSqlDAO;
 import siap.siep.altrigradigiudizio.model.AltriGradiGiudizioModel;
 import siap.siep.sentenza.dao.SentenzaFascicoloSqlDAO;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -41,11 +41,9 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	// [FT] - 03/08/2016 - MAC_LOG - Commento la dichiarazione di mLog in favore della variabile siesLogger
-	// //static Logger mLog = LogF3B.getLogger();
-
 	public AltriGradiGiudizioModel ExInserisciAltriGradiGiudizio(AltriGradiGiudizioModel aAltriGradiGiudizio)
 			throws F3BException {
+
 		Connection lConn = null;
 		AltriGradiGiudizioDAO lAltDao = null;
 		AltriGradiGiudizioModel lAltMod = null;
@@ -73,9 +71,11 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 
 	public Vector ExRicercaAltriGradiGiudizio(AltriGradiGiudizioModel aAltriGradiGiudizio)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector lAltriGradiGiudizii = new Vector();
 		AltriGradiGiudizioSqlDAO lAltDao = null;
+
+		Vector lAltriGradiGiudizii = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -98,10 +98,11 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 	}
 
 	public AltriGradiGiudizioModel ExRicercaAltriGradiGiudizioByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AltriGradiGiudizioSqlDAO lAltDao = null;
-		AltriGradiGiudizioModel lAltMod;
 		SentenzaFascicoloSqlDAO lFasSenDao = null;
+		AltriGradiGiudizioModel lAltMod;
 
 		try {
 			lConn = getDBConnection();
@@ -119,7 +120,6 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 			siesLogger.debug("FAscicoli trovati = " + lCount);
 			if (lCount > 0)
 				lAltMod.setEsistonoFascicoliAssociati(true);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -127,6 +127,8 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 					"AltriGradiGiudizioController.ExRicercaAltriGradiGiudizio: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lAltDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSenDao);
 			cleanup(lConn);
 		}
 		return lAltMod;
@@ -134,6 +136,7 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 
 	public AltriGradiGiudizioModel ExModificaAltriGradiGiudizio(AltriGradiGiudizioModel aAltriGradiGiudizio)
 			throws F3BException {
+
 		Connection lConn = null;
 		AltriGradiGiudizioDAO lAltDao = null;
 		AltriGradiGiudizioModel lAltMod = new AltriGradiGiudizioModel(aAltriGradiGiudizio);
@@ -157,7 +160,9 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 		return lAltMod;
 	}
 
-	public void ExCancellaAltriGradiGiudizio(AltriGradiGiudizioModel aAltriGradiGiudizio) throws F3BException {
+	public void ExCancellaAltriGradiGiudizio(AltriGradiGiudizioModel aAltriGradiGiudizio)
+			throws F3BException {
+
 		Connection lConn = null;
 		AltriGradiGiudizioDAO lAltDao = null;
 
@@ -171,7 +176,8 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"AltriGradiGiudizioController.ExCancellaAltriGradiGiudizio: Non posso leggere : " + daoEx);
+					"AltriGradiGiudizioController.ExCancellaAltriGradiGiudizio: Non posso leggere : "
+							+ daoEx);
 		} finally {
 			cleanup(lAltDao);
 			cleanup(lConn);
@@ -181,12 +187,12 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 	public AltriGradiGiudizioModel ExInserisciAltriGradiGiudizioFascicoloSiep(
 			AltriGradiGiudizioModel aAltriGradiGiudizio, AgdgFascicoloSiepModel aAltriGradiGiudizioFasSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		AltriGradiGiudizioDAO lSenDao = null;
-		AltriGradiGiudizioModel lSenMod = null;
-
 		AgdgFascicoloSiepDAO lSenFascDao = null;
-//		AgdgFascicoloSiepModel lSenFascMod = null;
+
+		AltriGradiGiudizioModel lSenMod = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -202,12 +208,12 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 
 			// inserisco il record di relazione col fascicolo
 			aAltriGradiGiudizioFasSiep.setAgdgIdAltrigradigiudizio(lKey);
-//			lSenFascMod = new AgdgFascicoloSiepModel(aAltriGradiGiudizioFasSiep);
+			// lSenFascMod = new AgdgFascicoloSiepModel(aAltriGradiGiudizioFasSiep);
 
 			lSenFascDao = new AgdgFascicoloSiepDAO(lConn);
 			lSenFascDao.setDAOFromModel(aAltriGradiGiudizioFasSiep);
-//			BigDecimal lfascKey = null;
-			/*lfascKey = */lSenFascDao.insert();
+			// BigDecimal lfascKey = null;
+			/* lfascKey = */lSenFascDao.insert();
 
 			commit(lConn);
 		} catch (DAOException ex) {
@@ -223,9 +229,11 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 
 	public Vector ExRicercaAltriGradiGiudizioFascSiep(AgdgFascicoloSiepModel aAltriGradiGiudizio)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector lAltriGradiGiudizio = new Vector();
 		AgdgFascicoloSiepSqlDAO lSenDao = null;
+
+		Vector lAltriGradiGiudizio = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -249,7 +257,8 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 
 	public void ExAggiornaAltriGradiGiudizioFascicolo(AgdgFascicoloSiepModel aAltriGradiGiudizioFasSiep,
 			int modo) throws F3BException {
-//		BigDecimal lfascKey = null;
+
+		// BigDecimal lfascKey = null;
 		Connection lConn = null;
 		AgdgFascicoloSiepDAO lSenFascDao = null;
 
@@ -261,12 +270,12 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 			lSenFascDao.setDAOFromModel(aAltriGradiGiudizioFasSiep);
 
 			if (modo == 1)
-				/*lfascKey = */lSenFascDao.insert();
+				/* lfascKey = */lSenFascDao.insert();
 			if (modo == 2) {
 				lSenFascDao.setCondizioneUpdate(aAltriGradiGiudizioFasSiep.getIdAgdgFascicoloSiep());
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("CHIAVE da CANCELLARE="
-						+ aAltriGradiGiudizioFasSiep.getIdAgdgFascicoloSiep());
+				siesLogger
+						.info("CHIAVE da CANCELLARE=" + aAltriGradiGiudizioFasSiep.getIdAgdgFascicoloSiep());
 
 				lSenFascDao.delete();
 			}
@@ -285,19 +294,20 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 
 	/**
 	 * Inserisci i records di Altri Gradi Giudizio per JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aAltriGradiGiudizio
 	 * @param lConn
 	 * @return lCodEsito
 	 * @throws F3BException
 	 */
-	public String ExInserisciAltriGradiGiudizioWithoutSequence(ArrayList aAltriGradiGiudizio, Connection lConn)
-			throws F3BException {
+	public String ExInserisciAltriGradiGiudizioWithoutSequence(ArrayList aAltriGradiGiudizio,
+			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		AgdgFascicoloSiepDAO lAgdgFasSiepDao = null;
 		AltriGradiGiudizioDAO lAGDGDao = null;
 		AgdgFascicoloSiepModel lAGDGFasSiepModel = null;
-//		AltriGradiGiudizioModel lAltGraGiuModel = null;
+		// AltriGradiGiudizioModel lAltGraGiuModel = null;
 
 		try {
 			lAGDGDao = new AltriGradiGiudizioDAO(lConn);
@@ -313,10 +323,10 @@ public class AltriGradiGiudizioController extends SiapController implements IAlt
 							lAGDGDao.insert();
 							lAGDGDao.stop();
 
-							lAgdgFasSiepDao.setAgdgIdAltrigradigiudizio(lAGDGFasSiepModel
-									.getAgdgIdAltrigradigiudizio());
-							lAgdgFasSiepDao.setFasSieIdFascicoloSiep(lAGDGFasSiepModel
-									.getFasSieIdFascicoloSiep());
+							lAgdgFasSiepDao.setAgdgIdAltrigradigiudizio(
+									lAGDGFasSiepModel.getAgdgIdAltrigradigiudizio());
+							lAgdgFasSiepDao
+									.setFasSieIdFascicoloSiep(lAGDGFasSiepModel.getFasSieIdFascicoloSiep());
 							lAgdgFasSiepDao
 									.setIdAgdgFascicoloSiep(lAGDGFasSiepModel.getIdAgdgFascicoloSiep());
 							lAgdgFasSiepDao.setWithoutSequence(true);

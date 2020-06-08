@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.parametro.dao.ParametroDAO;
 import siap.siep.parametro.dao.ParametroSqlDAO;
 import siap.siep.parametro.model.ParametroModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -56,6 +56,7 @@ public class ParametroController extends SiapController implements IParametro {
 	}
 
 	public Vector ExRicercaParametro(ParametroModel aParametro) throws F3BException {
+
 		Connection lConn = null;
 		Vector lParametri = new Vector();
 		ParametroSqlDAO lParDao = null;
@@ -80,6 +81,7 @@ public class ParametroController extends SiapController implements IParametro {
 	}
 
 	public ParametroModel ExRicercaParametroByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ParametroSqlDAO lParDao = null;
 		ParametroModel lParMod;
@@ -99,6 +101,7 @@ public class ParametroController extends SiapController implements IParametro {
 	}
 
 	public Vector ExRicercaParametroScadenzario(ParametroModel aParametro) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lParametri = new Vector();
@@ -117,8 +120,8 @@ public class ParametroController extends SiapController implements IParametro {
 				lParDao.ricercaParametroScadenzario(aParametro.getNomeParametro(), null);
 				lParametro = new Vector(lParDao.getModels());
 				if (lParametro.size() == 0) {
-					throw new F3BException(F3BException.USER_MESSAGE, "Parametro "
-							+ aParametro.getNomeParametro() + " non impostato");
+					throw new F3BException(F3BException.USER_MESSAGE,
+							"Parametro " + aParametro.getNomeParametro() + " non impostato");
 				}
 			}
 		} catch (DAOException daoEx) {
@@ -136,6 +139,7 @@ public class ParametroController extends SiapController implements IParametro {
 	}
 
 	public Vector ExRicercaParametroUfficioConnesso(ParametroModel aParametro) throws F3BException {
+
 		Connection lConn = null;
 		Vector lParametri = new Vector();
 		ParametroSqlDAO lParDao = null;
@@ -157,6 +161,7 @@ public class ParametroController extends SiapController implements IParametro {
 	}
 
 	public ParametroModel ExModificaParametro(ParametroModel aParametro) throws F3BException {
+
 		Connection lConn = null;
 
 		ParametroDAO lParDao = null;
@@ -182,6 +187,7 @@ public class ParametroController extends SiapController implements IParametro {
 	}
 
 	public void ExCancellaParametro(ParametroModel aParametro) throws F3BException {
+
 		Connection lConn = null;
 
 		ParametroDAO lParDao = null;
@@ -204,6 +210,7 @@ public class ParametroController extends SiapController implements IParametro {
 
 	public ParametroModel ExRicercaParametroUfficioConnesso(String aNomeParametro, String aUfficioValidita)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ParametroSqlDAO lParSqlDao = null;

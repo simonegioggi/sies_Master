@@ -24,7 +24,7 @@ import siap.siep.modulocumulo.model.TitoloCumulatoModel;
  * <p>
  * Description: Classe Controller per PenaAccessoriaCumulo
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -35,6 +35,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 
 	public PenaAccessoriaCumuloModel ExInserisciPenaAccessoriaCumulo(
 			PenaAccessoriaCumuloModel aPenaAccessoria) throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaCumuloDAO lPenDao = null;
 
@@ -66,7 +67,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 
 	/**
 	 * Ricerca Tutte le PEne Accessorie relative ad un Tutolo Cumulato
-	 * 
+	 *
 	 * @param PenaAccessoriaCumuloModel
 	 *            aPenaAccessoria
 	 * @return
@@ -74,6 +75,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	 */
 	public Vector ExRicercaPenaAccessoriaCumulo(PenaAccessoriaCumuloModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaAccessorie = new Vector();
 		PenaAccessoriaCumuloSqlDAO lPenSqlDao = null;
@@ -91,11 +93,6 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 			throw new F3BException(
 					"PenaAccessoriaCumuloController.ExRicercaPenaAccessoriaCumulo: Non posso leggere : "
 							+ daoEx);
-			// } catch (SQLException sqe) {
-			// siesLogger.error("SQLException: " + sqe);
-			// throw new F3BException(
-			// "PenaAccessoriaCumuloController.ExRicercaPenaAccessoriaCumulo: Non posso leggere : "
-			// + sqe);
 		} finally {
 			cleanup(lPenSqlDao);
 			cleanup(lConn);
@@ -105,7 +102,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 
 	/**
 	 * Ricerca Tutte le PEne Accessorie relative ad un Tutolo Cumulato con Flag_Stato Diverso da C
-	 * 
+	 *
 	 * @param PenaAccessoriaCumuloModel
 	 *            aPenaAccessoria
 	 * @return
@@ -113,6 +110,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	 */
 	public Vector ExRicercaPeneAccessorieCumulo_Valide(PenaAccessoriaCumuloModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaAccessorie = new Vector();
 		PenaAccessoriaCumuloSqlDAO lPenSqlDao = null;
@@ -130,11 +128,6 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 			throw new F3BException(
 					"PenaAccessoriaCumuloController.ExRicercaPeneAccessorieCumulo_Valide: Non posso leggere : "
 							+ daoEx);
-//		} catch (SQLException sqe) {
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException(
-//					"PenaAccessoriaCumuloController.ExRicercaPeneAccessorieCumulo_Valide: Non posso leggere  : "
-//							+ sqe);
 		} finally {
 			cleanup(lPenSqlDao);
 			cleanup(lConn);
@@ -144,7 +137,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 
 	/**
 	 * Ricerca la Pena Accessoria di Titolo Cumulato per la chiave
-	 * 
+	 *
 	 * @param PenaAccessoriaCumuloModel
 	 *            aPenaAccessoria
 	 * @return
@@ -152,6 +145,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	 */
 	public PenaAccessoriaCumuloModel ExRicercaPenaAccessoriaCumuloByKey(BigDecimal aIdPenaCum)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaCumuloSqlDAO lPenDao = null;
 		PenaAccessoriaCumuloModel lPenMod = null;
@@ -170,11 +164,6 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 			throw new F3BException(
 					"PenaAccessoriaCumuloController.ExRicercaPenaAccessoriaCumulo: Non posso leggere : "
 							+ daoEx);
-//		} catch (SQLException sqe) {
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException(
-//					"PenaAccessoriaCumuloController.ExRicercaPenaAccessoriaCumulo: Non posso leggere  : "
-//							+ sqe);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -184,7 +173,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 
 	/**
 	 * MOdifica Pena Accessoria Titolo Cumulato
-	 * 
+	 *
 	 * @param PenaAccessoriaCumuloModel
 	 *            aPenaAccessoria
 	 * @return
@@ -192,6 +181,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	 */
 	public PenaAccessoriaCumuloModel ExModificaPenaAccessoriaCumulo(PenaAccessoriaCumuloModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaCumuloDAO lPenDao = null;
 
@@ -202,15 +192,10 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 			lPenDao.selCondizioneUpdate(aPenaAccessoria.getIdPenaAccessoriaCumulo());
 			lPenDao.update();
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("PenaAccessoriaCumuloController.ExModificaPenaAccessoriaCumulo: " + ex);
-//		} catch (SQLException sqe) {
-//			rollback(lConn);
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException("PenaAccessoriaCumuloController.ExModificaPenaAccessoriaCumulo: " + sqe);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -220,13 +205,14 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 
 	/**
 	 * Cancella Pena Accessoria di un Titolo Cumulato
-	 * 
+	 *
 	 * @param PenaAccessoriaCumuloModel
 	 *            aPenaAccessoria
 	 * @throws F3BException
 	 */
 	public void ExCancellaPenaAccessoriaCumulo(PenaAccessoriaCumuloModel aPenaAccessoria)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaCumuloDAO lPenDao = null;
 
@@ -251,11 +237,6 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 			throw new F3BException(
 					"PenaAccessoriaCumuloController.ExCancellaPenaAccessoriaCumulo: Non posso leggere : "
 							+ daoEx);
-//		} catch (SQLException sqe) {
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException(
-//					"PenaAccessoriaCumuloController.ExCancellaPenaAccessoriaCumulo: Non posso leggere  : "
-//							+ sqe);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
@@ -265,13 +246,14 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	/**
 	 * Recupera tutte le PA iscritte sui Titoli iscritti nell'istruttoria Aggiunge ad ogni
 	 * PenaAccessoriaCumuloModel anche i dati del titolo di riferimento
-	 * 
+	 *
 	 * @param aIdIstruttoria
 	 * @param aFlagDatiFinali
 	 *            = true se vanno recuperate le PA selezionate x Dati Finali
 	 */
 	public Vector<PenaAccessoriaCumuloModel> ExRicercaPenaAccessoriaCumuloByIdIstruttoria(
 			BigDecimal aIdIstruttoria, boolean aFlagDatiFinali) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<PenaAccessoriaCumuloModel> lPeneAccessorieCumulo = new Vector<>();
@@ -324,12 +306,12 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	}
 
 	/**
-	 * 
 	 * @param aListaPeneAccessorie
 	 * @throws F3BException
 	 */
 	public void ExAggiornaPeneAccessorieDatiFinaliCumulo(
 			Vector<PenaAccessoriaCumuloModel> aListaPeneAccessorie) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaAccessoriaCumuloDAO lPenaAccDao = null;
@@ -373,11 +355,10 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	}
 
 	/**
-	 * 
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della
 	 * Primary_Key è già preimpostato; metodi usati nella funzione di presa in carico, per scaricare Tutti i
 	 * dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -385,6 +366,7 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 	 */
 	public String ExInserisciPeneAccessorieCumuloWithoutSequence(
 			Vector<PenaAccessoriaCumuloModel> aPeneAccessorie, Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		PenaAccessoriaCumuloDAO lPenaCumDao = null;
 		PenaAccessoriaCumuloModel lPenaCumMod = null;
@@ -422,11 +404,11 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 		}
 
 		return lCodEsito;
-
 	} // Chiude ExInserisciPeneAccessorieCumuloWithoutSequence
 
 	public Vector<PenaAccessoriaCumuloModel> ExRicercaPenaAccessoriaCumuloByIdTitoloCum(BigDecimal aIdTitolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaAccessoriaCumuloSqlDAO lPenDao = null;
 		Vector<PenaAccessoriaCumuloModel> VecPen = null;
@@ -442,17 +424,11 @@ public class PenaAccessoriaCumuloController extends SiapController implements IP
 			throw new F3BException(
 					"PenaAccessoriaCumuloController.ExRicercaPenaAccessoriaCumuloByIdTitoloCum: Non posso leggere : "
 							+ daoEx);
-//		} catch (SQLException sqe) {
-//			siesLogger.error("SQLException: " + sqe);
-//			throw new F3BException(
-//					"PenaAccessoriaCumuloController.ExRicercaPenaAccessoriaCumuloByIdTitoloCum: Non posso leggere  : "
-//							+ sqe);
 		} finally {
 			cleanup(lPenDao);
 			cleanup(lConn);
 		}
 		return VecPen;
-
 	} // Chiude ExRicercaPenaAccessoriaCumuloByIdTitoloCum
 
 }

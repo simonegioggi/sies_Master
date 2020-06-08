@@ -3,12 +3,12 @@ package siap.sico.w_magistrato.controller;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.w_magistrato.dao.WMagistratoDAO;
 import siap.sico.w_magistrato.dao.WMagistratoSqlDAO;
 import siap.sico.w_magistrato.model.WMagistratoModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -23,13 +23,14 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class WMagistratoController extends SiapController implements IWMagistrato {
 
 	public WMagistratoModel ExInserisciWMagistrato(WMagistratoModel aWMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		WMagistratoDAO lWMaDao = null;
 		WMagistratoModel lWMaMod = null;
@@ -39,8 +40,8 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 			lWMaMod = new WMagistratoModel(aWMagistrato);
 			lWMaDao = new WMagistratoDAO(lConn);
 			lWMaDao.setDAOFromModel(aWMagistrato);
-//			BigDecimal lKey = null;
-			/*lKey = */lWMaDao.insert();
+			// BigDecimal lKey = null;
+			/* lKey = */lWMaDao.insert();
 			commit(lConn);
 			// lWMaMod.setIdWMagistrato(lKey); commento Luigi:8-5-03
 		} catch (DAOException ex) {
@@ -54,6 +55,7 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 	}
 
 	public Vector ExRicercaWMagistratoByCognome(String aCognome) throws F3BException {
+
 		Connection lConn = null;
 		Vector lWMagistrati = new Vector();
 		WMagistratoSqlDAO lWMaDao = null;
@@ -67,7 +69,8 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("WMagistratoController.ExRicercaWMagistrato: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"WMagistratoController.ExRicercaWMagistrato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lWMaDao);
 			cleanup(lConn);
@@ -76,6 +79,7 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 	}
 
 	public Vector ExRicercaWMagistrato(WMagistratoModel aWMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lWMagistrati = new Vector();
 		WMagistratoSqlDAO lWMaDao = null;
@@ -89,7 +93,8 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("WMagistratoController.ExRicercaWMagistrato: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"WMagistratoController.ExRicercaWMagistrato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lWMaDao);
 			cleanup(lConn);
@@ -98,6 +103,7 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 	}
 
 	public WMagistratoModel ExRicercaWMagistratoByKey(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		WMagistratoSqlDAO lWMaDao = null;
 		WMagistratoModel lWMaMod;
@@ -108,7 +114,8 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 			lWMaDao.ricercaWMagistratoByKey(aKey);
 			lWMaMod = (WMagistratoModel) lWMaDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("WMagistratoController.ExRicercaWMagistrato: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"WMagistratoController.ExRicercaWMagistrato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lWMaDao);
 			cleanup(lConn);
@@ -117,6 +124,7 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 	}
 
 	public WMagistratoModel ExModificaWMagistrato(WMagistratoModel aWMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		WMagistratoDAO lWMaDao = null;
 		WMagistratoModel lWMaMod = new WMagistratoModel(aWMagistrato);
@@ -139,6 +147,7 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 	}
 
 	public void ExCancellaWMagistrato(WMagistratoModel aWMagistrato) throws F3BException {
+
 		Connection lConn = null;
 		WMagistratoDAO lWMaDao = null;
 
@@ -149,8 +158,8 @@ public class WMagistratoController extends SiapController implements IWMagistrat
 			lWMaDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("WMagistratoController.ExCancellaWMagistrato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"WMagistratoController.ExCancellaWMagistrato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lWMaDao);
 			cleanup(lConn);

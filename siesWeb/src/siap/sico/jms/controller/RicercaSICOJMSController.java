@@ -48,12 +48,13 @@ public class RicercaSICOJMSController extends SiapController implements IRicerca
 
 	/**
 	 * Spedisci la Richiesta della ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExSpedisciRichiestaRicerca(GenericModel aModel) throws F3BException {
+
 		TreeModel lTreeRoot = null;
 		if (aModel instanceof SoggettoModel) {
 			lTreeRoot = new TreeModel(createRoot(1));
@@ -68,23 +69,25 @@ public class RicercaSICOJMSController extends SiapController implements IRicerca
 
 	/**
 	 * Ricerca Soggetto
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel ExRicercaSoggetto(SoggettoModel aModel, String CodBDIMittente) throws F3BException {
+
 		return ExRicercaSoggetto(aModel, CodBDIMittente, false);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see siap.sico.jms.controller.IRicercaSICOJMS#ExRicercaSoggetto(siap.sico.soggetto.model.SoggettoModel,
 	 * java.lang.String, boolean)
 	 */
 	public MessaggioModel ExRicercaSoggetto(SoggettoModel aModel, String CodBDIMittente, boolean checkMin_Maj)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggetti = null;
 		MessaggioModel lMessage = new MessaggioModel();
@@ -169,11 +172,12 @@ public class RicercaSICOJMSController extends SiapController implements IRicerca
 
 	/**
 	 * Crea la Root della Ricerca Soggetto
-	 * 
+	 *
 	 * @param caseSwitch
 	 * @return
 	 */
 	private RootJMSModel createRoot(int caseSwitch) {
+
 		RootJMSModel aModel = new RootJMSModel();
 
 		switch (caseSwitch) {
@@ -184,7 +188,6 @@ public class RicercaSICOJMSController extends SiapController implements IRicerca
 			aModel.setDescrTipoOperazione("RICERCA SOGGETTO");
 			aModel.setEsito(NON_TROVATO);
 			break;
-
 		case 1: // Soggetto
 			aModel.setCodTipoMessaggio(ESITO_RICERCA);
 			aModel.setCodTipoOperazione(ESITO_RICERCA_SOGGETTO);
@@ -199,20 +202,20 @@ public class RicercaSICOJMSController extends SiapController implements IRicerca
 			aModel.setDescrTipoOperazione("RICERCA SOGGETTO COMPLETA");
 			aModel.setEsito(TROVATO);
 			break;
-
 		}
 		return aModel;
 	}
 
 	/**
 	 * ExRicercaFascicoloSiepSoggettoPerTrasferimento
-	 * 
+	 *
 	 * @param aModel
 	 * @return Vettore di fascicolo Siep associati al soggetto
 	 * @throws F3BException
 	 */
 	private Vector ExRicercaFascicoloSiepSoggettoPerTrasferimento(SoggettoModel aModel, String CodBDIMittente)
 			throws F3BException {
+
 		// 07/02/2008 Rework con chiamata al metodo ExRicercaFascicoloSiepPerTrasferimento.
 		Connection lConn = null;
 		FascicoloSiepSqlDAO lFasSql = null;
@@ -273,11 +276,12 @@ public class RicercaSICOJMSController extends SiapController implements IRicerca
 
 	/**
 	 * ExRicercaAllBDI
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaAllBDI() throws F3BException {
+
 		Connection lConn = null;
 		Vector lJmsCodi = new Vector();
 		JmsCodeSqlDAO lJmsDao = null;

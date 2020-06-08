@@ -6,6 +6,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -29,10 +33,6 @@ import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoSqlDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -58,12 +58,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Inserimento dell'Istanza
-	 * 
+	 *
 	 * @param aIstanza
 	 * @return Istanza inserita
 	 * @throws F3BException
 	 */
 	public IstanzaModel ExInserisciIstanza(IstanzaModel aIstanza) throws F3BException {
+
 		Connection lConn = null;
 
 		IstanzaDAO lIstDao = null;
@@ -108,7 +109,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Inserisce l'istanza ed il soggetto
-	 * 
+	 *
 	 * @param aIstanza
 	 * @param aSoggetto
 	 * @return
@@ -116,6 +117,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 	 */
 	public IstanzaModel ExInserisciIstanzaSoggetto(IstanzaModel aIstanza, SoggettoModel aSoggetto)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		IstanzaDAO lIstDao = null;
@@ -191,7 +193,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Inserisce istanza legata ad un fascicolo - Crea un evento di tipo istanza 03-08
-	 * 
+	 *
 	 * @param aIstanza
 	 * @param aFascicoloSiep
 	 * @return
@@ -199,6 +201,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 	 */
 	public IstanzaModel ExInserisciIstanzaFascicoloSiep(IstanzaModel aIstanza,
 			FascicoloSiepModel aFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -290,7 +293,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 			if (lProcModel != null && lProcModel.getCodStatoProcedimento() != null
 					&& (lProcModel.getCodStatoProcedimento().equals("0011") // Emesso Ordine di Esecuzione con
 																			// Contestuale Sospensione il
-					|| lProcModel.getCodStatoProcedimento().equals("0013") // Atti Trasmessi al TDS il
+							|| lProcModel.getCodStatoProcedimento().equals("0013") // Atti Trasmessi al TDS il
 					)) {
 				codStatoMax = lStatoSqlDao.getProgressivo(aFascicoloSiep.getIdFascicoloSiep());
 				codStatoMax = new BigDecimal(codStatoMax.intValue() + 1);
@@ -348,12 +351,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerco l'istanza
-	 * 
+	 *
 	 * @param aIstanza
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaIstanza(IstanzaModel aIstanza) throws F3BException {
+
 		Connection lConn = null;
 		Vector lIstanzi = new Vector();
 		IstanzaSqlDAO lIstDao = null;
@@ -380,12 +384,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerco l'istanza dalla chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public IstanzaModel ExRicercaIstanzaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		IstanzaSqlDAO lIstDao = null;
 		IstanzaModel lIstMod;
@@ -409,7 +414,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerca soggetto, fascicolo ed evento dall'id dell'istanza
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
@@ -417,6 +422,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	public IstanzaSoggettoEventoFascicoloSiepModel ExRicercaIstanzaSoggettoEventoFascicoloSiepByKey(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		IstanzaSqlDAO lIstDao = null;
@@ -500,8 +506,8 @@ public class IstanzaController extends SiapController implements IIstanza {
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("IstanzaController.ExRicercaIstanzaSoggettoEventoFascicoloSiepByKey: "
-					+ daoEx);
+			throw new F3BException(
+					"IstanzaController.ExRicercaIstanzaSoggettoEventoFascicoloSiepByKey: " + daoEx);
 		} finally {
 			cleanup(lIstDao);
 			cleanup(lSoggSqlDao);
@@ -517,13 +523,14 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerca Istanza e tutto dall'id evento
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public IstanzaSoggettoEventoFascicoloSiepModel ExRicercaIstanzaSoggettoEventoFascicoloSiepByIdEvento(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		IstanzaSqlDAO lIstDao = null;
@@ -607,8 +614,8 @@ public class IstanzaController extends SiapController implements IIstanza {
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("IstanzaController.ExRicercaIstanzaSoggettoEventoFascicoloSiepByKey: "
-					+ daoEx);
+			throw new F3BException(
+					"IstanzaController.ExRicercaIstanzaSoggettoEventoFascicoloSiepByKey: " + daoEx);
 		} finally {
 			cleanup(lIstDao);
 			cleanup(lSoggSqlDao);
@@ -624,12 +631,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * MOdifica Istanza
-	 * 
+	 *
 	 * @param aIstanza
 	 * @return
 	 * @throws F3BException
 	 */
 	public IstanzaModel ExModificaIstanza(IstanzaModel aIstanza) throws F3BException {
+
 		Connection lConn = null;
 
 		IstanzaDAO lIstDao = null;
@@ -656,7 +664,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * MOdifica Istanza Legata a fascicolo
-	 * 
+	 *
 	 * @param aIstanza
 	 * @param aFascicoloSiep
 	 * @return
@@ -664,11 +672,11 @@ public class IstanzaController extends SiapController implements IIstanza {
 	 */
 	public IstanzaModel ExModificaIstanzaFascicoloSiep(IstanzaModel aIstanza,
 			FascicoloSiepModel aFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		IstanzaDAO lIstDao = null;
 		IstanzaSqlDAO lIstSqlDAO = null;
 
@@ -785,12 +793,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * RIcerca le Istanze associate ad un Fascicolo SIEP
-	 * 
+	 *
 	 * @param aIstanza
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaIstanzaByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lIstanzi = new Vector();
@@ -808,7 +817,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 			// lIstanzi = new Vector(lEveDao.getModels());
 			lDao.start();
 			while (lDao.next()) {
-				lIstanzi.add((IstanzaSoggettoEventoFascicoloSiepModel) lDao.getModelIstEve());
+				lIstanzi.add(lDao.getModelIstEve());
 			}
 			lDao.stop();
 
@@ -830,12 +839,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerca Istanza dal Soggetto
-	 * 
+	 *
 	 * @param aSogMod
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaIstanzaSoggetto(SoggettoModel aSogMod) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lIstVect = new Vector();
@@ -850,7 +860,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 			lIstSqlDao.start();
 
 			while (lIstSqlDao.next()) {
-				lIstVect.add((IstanzaSoggettoEventoFascicoloSiepModel) lIstSqlDao.getModelIstSogEveFasc());
+				lIstVect.add(lIstSqlDao.getModelIstSogEveFasc());
 			}
 
 			lIstSqlDao.stop();
@@ -871,13 +881,14 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerca Istanza paginandola
-	 * 
+	 *
 	 * @param aSogMod
 	 * @param aPage
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaIstanzaSoggettoPaged(SoggettoModel aSogMod, int aPage) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lIstVect = new Vector();
@@ -892,8 +903,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 			lIstSqlDao.start();
 
 			while (lIstSqlDao.next()) {
-				lIstVect.add((IstanzaSoggettoEventoFascicoloSiepModel) lIstSqlDao
-						.getModelIstSogEveFascForPaged());
+				lIstVect.add(lIstSqlDao.getModelIstSogEveFascForPaged());
 			}
 
 			lIstSqlDao.stop();
@@ -914,12 +924,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Count istanza per soggetto
-	 * 
+	 *
 	 * @param aSogMod
 	 * @return
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountIstanzaSoggettoPaged(SoggettoModel aSogMod) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -943,12 +954,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Count istanze
-	 * 
+	 *
 	 * @param aIstMod
 	 * @return
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetCountIstanzaOggettoPaged(IstanzaModel aIstMod) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -972,13 +984,14 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerca per Oggetto
-	 * 
+	 *
 	 * @param aIstMod
 	 * @param aPage
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaIstanzaOggettoPaged(IstanzaModel aIstMod, int aPage) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lIstVect = new Vector();
@@ -992,8 +1005,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 			lIstSqlDao.start();
 			while (lIstSqlDao.next()) {
-				lIstVect.add((IstanzaSoggettoEventoFascicoloSiepModel) lIstSqlDao
-						.getModelIstSogEveFascForPaged());
+				lIstVect.add(lIstSqlDao.getModelIstSogEveFascForPaged());
 
 			}
 			lIstSqlDao.stop();
@@ -1014,12 +1026,13 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * Ricerca Istanza Oggetto
-	 * 
+	 *
 	 * @param aIstMod
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaIstanzaOggetto(IstanzaModel aIstMod) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lIstVect = new Vector();
@@ -1033,7 +1046,7 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 			lIstSqlDao.start();
 			while (lIstSqlDao.next()) {
-				lIstVect.add((IstanzaSoggettoEventoFascicoloSiepModel) lIstSqlDao.getModelIstSogEveFasc());
+				lIstVect.add(lIstSqlDao.getModelIstSogEveFasc());
 			}
 			lIstSqlDao.stop();
 
@@ -1053,14 +1066,15 @@ public class IstanzaController extends SiapController implements IIstanza {
 
 	/**
 	 * annullamento Istanza
-	 * 
+	 *
 	 * @param aIstMod
 	 * @param aCampoNota
 	 * @return
 	 * @throws F3BException
 	 */
-	public IstanzaModel ExAnnulamentoIstanzaInserisciCampoNota(IstanzaModel aIstMod, CampoNotaModel aCampoNota)
-			throws F3BException {
+	public IstanzaModel ExAnnulamentoIstanzaInserisciCampoNota(IstanzaModel aIstMod,
+			CampoNotaModel aCampoNota) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -1118,10 +1132,11 @@ public class IstanzaController extends SiapController implements IIstanza {
 			rollback(lConn);
 			throw new F3BException("IstanzaController.ExAnnulamentoIstanzaInserisciCampoNota: " + ex);
 		} finally {
-			cleanup(lCampoNotaDao);
 			cleanup(lEveDao);
 			cleanup(lEveSqlDAO);
-
+			cleanup(lCampoNotaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstaDao);
 			cleanup(lConn);
 		}
 		return lIstMod;

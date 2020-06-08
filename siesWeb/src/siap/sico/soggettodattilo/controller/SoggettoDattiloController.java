@@ -7,13 +7,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.soggettodattilo.dao.SoggettoDattiloDAO;
 import siap.sico.soggettodattilo.dao.SoggettoDattiloSqlDAO;
 import siap.sico.soggettodattilo.model.SoggettoDattiloModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -39,6 +39,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 
 	public SoggettoDattiloModel ExInserisciSoggettoDattilo(SoggettoDattiloModel aSoggettoDattilo)
 			throws F3BException {
+
 		Connection lConn = null;
 		SoggettoDattiloDAO lSogDao = null;
 		SoggettoDattiloModel lSogMod = null;
@@ -65,6 +66,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 	}
 
 	public Vector ExRicercaSoggettoDattilo(SoggettoDattiloModel aSoggettoDattilo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSoggettoDattili = new Vector();
 		SoggettoDattiloSqlDAO lSogDao = null;
@@ -80,8 +82,8 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("SoggettoDattiloController.ExRicercaSoggettoDattilo: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SoggettoDattiloController.ExRicercaSoggettoDattilo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSogDao);
 			cleanup(lConn);
@@ -90,6 +92,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 	}
 
 	public SoggettoDattiloModel ExRicercaSoggettoDattiloByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoDattiloSqlDAO lSogDao = null;
 		SoggettoDattiloModel lSogMod;
@@ -102,8 +105,8 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("SoggettoDattiloController.ExRicercaSoggettoDattilo: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SoggettoDattiloController.ExRicercaSoggettoDattilo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSogDao);
 			cleanup(lConn);
@@ -113,6 +116,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 
 	public SoggettoDattiloModel ExModificaSoggettoDattilo(SoggettoDattiloModel aSoggettoDattilo)
 			throws F3BException {
+
 		Connection lConn = null;
 		SoggettoDattiloDAO lSogDao = null;
 		SoggettoDattiloModel lSogMod = new SoggettoDattiloModel(aSoggettoDattilo);
@@ -137,6 +141,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 	}
 
 	public void ExCancellaSoggettoDattilo(SoggettoDattiloModel aSoggettoDattilo) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoDattiloDAO lSogDao = null;
 
@@ -158,6 +163,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 	}
 
 	public SoggettoDattiloModel ExUpdateDocument(SoggettoDattiloModel aSoggettoDattilo) throws F3BException {
+
 		Connection lConn = null;
 		SoggettoDattiloDAO lSogDao = null;
 		SoggettoDattiloDAO lSogDaoBlob = null;
@@ -200,6 +206,7 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 		Connection lConn = null;
 		SoggettoDattiloDAO lDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
+
 		try {
 			lConn = getDBConnection();
 			lDao = new SoggettoDattiloDAO(lConn);
@@ -219,7 +226,6 @@ public class SoggettoDattiloController extends SiapController implements ISogget
 
 			if (lByteArrayOut.size() == 0)
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {

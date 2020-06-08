@@ -8,6 +8,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -26,10 +30,6 @@ import siap.sius.documentoallegato.dao.DocumentoAllegatoSqlDAO;
 import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
 import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -44,17 +44,18 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class DocumentoAllegatoController extends SiapController implements IDocumentoAllegato {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
 	 * Inserisce DocumentoAllegato
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @return lDocAllRet
 	 * @throws F3BException
@@ -80,7 +81,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			BigDecimal lKeyDocumentoAllegato = lDocAllDao.insert();
 			lDocAllRet.setIdDocumentoAllegato(lKeyDocumentoAllegato);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Inserito documento allegato id = " + lKeyDocumentoAllegato);
 			commit(lConn);
 		} catch (Exception ex) {
@@ -96,7 +98,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Inserisce Foglio Complementare
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @return lDocAllRet
 	 * @throws F3BException
@@ -123,7 +125,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			BigDecimal lKeyDocumentoAllegato = lDocAllDao.insert();
 			lDocAllRet.setIdDocumentoAllegato(lKeyDocumentoAllegato);
 			lDocAllRet.setProgrFoglioComplementare(aDocumentoAllegato.getProgrFoglioComplementare());
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Inserito foglio complementare id = " + lKeyDocumentoAllegato);
 
 			// Prelevo Decreto
@@ -136,7 +139,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 				lDecDao.setDataAggiornamento(DateUtils.getSysDate());
 				lDecDao.setDataCompFoglioComplementare(aDocumentoAllegato.getDataEmissione());
 				lDecDao.setCondizioneUpdate(aId);
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("Fase di aggiornamento per DepositoDecreto (Data Deposito)");
 				lDecDao.update();
 			}
@@ -152,7 +156,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 				lDepDao.setDataAggiornamento(DateUtils.getSysDate());
 				lDepDao.setDataCompFoglioComplementare(aDocumentoAllegato.getDataEmissione());
 				lDepDao.setCondizioneUpdate(aId);
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("Fase di aggiornamento per DepositoOrdinanza (Data Ordinanza)");
 				lDepDao.update();
 			}
@@ -173,7 +178,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	/**
 	 * Metodo responsabile della modifica del foglio Complementare.
 	 * <p>
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 *            dati del documento allaegato da modificare.
 	 * @param aCodTipo
@@ -221,7 +226,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 				lDecDao.setDataCompFoglioComplementare(aDocumentoAllegato.getDataEmissione());
 				lDecDao.setCondizioneUpdate(aId);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("Fase di aggiornamento per DepositoDecreto (Data Deposito)");
 
 				lDecDao.update();
@@ -236,7 +242,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 				lDepDao.setDataCompFoglioComplementare(aDocumentoAllegato.getDataEmissione());
 				lDepDao.setCondizioneUpdate(aId);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.info("Fase di aggiornamento per DepositoOrdinanza (Data Ordinanza)");
 
 				lDepDao.update();
@@ -256,7 +263,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Ricerca DocumentoAllegato
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @return
 	 * @throws F3BException
@@ -286,7 +293,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Ricerca DocumentoAllegato
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @return Vector
 	 * @throws F3BException
@@ -316,7 +323,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Seleziona un singolo documento dal BLOB nella tabella e lo restituisce come ByteArrayOutputStream.
-	 * 
+	 *
 	 * @param aKey
 	 * @return ByteArray con il Documento recuperato dal DB
 	 * @throws F3BException
@@ -365,7 +372,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Modifica del Documento Stampato...
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @throws F3BException
 	 */
@@ -415,7 +422,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Funzione di cancellazione logica del record.
-	 * 
+	 *
 	 * @param aModel
 	 * @throws F3BException
 	 */
@@ -447,7 +454,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Stampa un documento di Ordine d'esecuzione per condannato Libero
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @return lByteArrayOut
 	 * @throws F3BException
@@ -460,8 +467,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 		ByteArrayOutputStream lByteArrayOut = null;
 		try {
-			DocumentoAllegatoModel lDocAllMod = this.ExRicercaDocumentoAllegatoByKey(aDocumentoAllegato
-					.getIdDocumentoAllegato());
+			DocumentoAllegatoModel lDocAllMod = this
+					.ExRicercaDocumentoAllegatoByKey(aDocumentoAllegato.getIdDocumentoAllegato());
 
 			// Prelevamento di EventoNotificaModel Per Estrazione Dati Stampa.
 			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
@@ -479,7 +486,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			// String lNomeTemplate =
 			// TemplateManager.getInstance().getTemplateName(aDocumentoAllegato.getNomeTemplate());
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("NOME TEMPLATE >>>" + lNomeTemplate);
 			lByteArrayOut = (ByteArrayOutputStream) lReport.generateDocument(lTree, lNomeTemplate);
 
@@ -505,7 +513,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Effettua l'operazione di update di un documento mandato tramite upload
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @throws F3BException
 	 */
@@ -569,8 +577,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 				throw new SIUSException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 
 		} catch (Exception sqe) {
-			throw new SIUSException("DocumentoAllegatoController.ExRicercaDocumentoAllegatoByIdEvento: "
-					+ sqe);
+			throw new SIUSException(
+					"DocumentoAllegatoController.ExRicercaDocumentoAllegatoByIdEvento: " + sqe);
 		} finally {
 			cleanup(llDocAllDao);
 			cleanup(lConn);
@@ -654,13 +662,15 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			// Si settano le condizioni di ricerca
 			lDocAllMod.setEveIdEvento(aIdEvento);
 			lDocAllMod.setCodTipoDocumento(aCodTipo);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Ricerca allegato1: " + lDocAllMod);
 			// Ricerca
 			llDocAllDao.ricercaDocumentoAllegato(lDocAllMod);
 			// STUB: si presuppone che il documento sia unico
 			lDocAllMod = (DocumentoAllegatoModel) llDocAllDao.getModelByKey();
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Ricerca allegato2: " + lDocAllMod);
 		} catch (Exception sqe) {
 			throw new SIUSException(
@@ -693,8 +703,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 			LDocumenti = new Vector(llDocAllDao.getModels());
 		} catch (Exception daoEx) {
-			throw new F3BException("DocumentoAllegatoController.ExRicercaDocAllAnnulatiByIdEventoCodTipo: "
-					+ daoEx);
+			throw new F3BException(
+					"DocumentoAllegatoController.ExRicercaDocAllAnnulatiByIdEventoCodTipo: " + daoEx);
 		} finally {
 			cleanup(llDocAllDao);
 			cleanup(lConn);
@@ -705,7 +715,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	/**
 	 * Effettua l'operazione di update del campo FLAG_DOCUMENTO_REGISTRATO. La chiave di selezione dell'UPDATE
 	 * può essere in alternativa ID_DOCUMENTO_ALLEGATO O EVE_ID_EVENTO.
-	 * 
+	 *
 	 * @param aEvento
 	 * @throws F3BException
 	 */
@@ -741,7 +751,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Estrae il BLOB dal DOCUMENTO_ALLEGATO e lo restituisce come Byte Array.
-	 * 
+	 *
 	 * @param aIdDocumentoAllegato
 	 *            ,
 	 * @return byte[].
@@ -769,7 +779,6 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 			if (lByteArrayOut != null && lByteArrayOut.size() > 0)
 				lDocPerTrasferimento = lByteArrayOut.toByteArray();
-
 		} catch (Exception e) {
 			throw new F3BException(F3BException.EX_OPERATION_FAILED, e.toString());
 		} finally {
@@ -783,7 +792,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	 * Ricerca DocumentoAllegatoModel da ANNO, NUM, cod Ufficio, e CodTipoDocumento. Mentre i primi 3
 	 * parametri vengono passati attraverso il model argomento, il CodTipoDocumento viene valorizzato dalla
 	 * funzione stessa.
-	 * 
+	 *
 	 * @param DocumentoAllegatoModel
 	 * @return
 	 * @throws F3BException
@@ -824,7 +833,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	/**
 	 * Esecuzione stampa Foglio Complementare
 	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @return ByteArrayOutputStream
 	 * @throws F3BException
@@ -872,7 +881,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			commit(lConn);
 		} catch (Exception daoex) {
 			rollback(lConn);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Exception: " + daoex);
 			throw new F3BException("DocumentoAllegatoController.ExStampaFoglioComp: " + daoex);
 		} finally {
@@ -898,17 +908,19 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 			// Si settano le condizioni di ricerca
 			lDocAllMod.setEveIdEvento(aIdEvento);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Ricerca allegato: " + lDocAllMod);
 			// Ricerca
 			llDocAllDao.ricercaDocumentoAllegato(lDocAllMod);
 			// STUB: si presuppone che il documento sia unico
 			lDocAllMod = (DocumentoAllegatoModel) llDocAllDao.getModelByKey();
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Ricerca allegato2: " + lDocAllMod);
 		} catch (Exception sqe) {
-			throw new SIUSException("DocumentoAllegatoController.ExRicercaDocumentoAllegatoByKeyEvento: "
-					+ sqe);
+			throw new SIUSException(
+					"DocumentoAllegatoController.ExRicercaDocumentoAllegatoByKeyEvento: " + sqe);
 		} finally {
 			cleanup(llDocAllDao);
 			cleanup(lConn);
@@ -918,13 +930,13 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	/**
 	 * Inserisce Foglio Complementare
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 * @return lDocAllRet
 	 * @throws F3BException
 	 */
-	public DocumentoAllegatoModel ExInserisciFoglioComplementareNsc(
-			DocumentoAllegatoModel aDocumentoAllegato, String aCodTipo) throws F3BException {
+	public DocumentoAllegatoModel ExInserisciFoglioComplementareNsc(DocumentoAllegatoModel aDocumentoAllegato,
+			String aCodTipo) throws F3BException {
 
 		Connection lConn = null;
 		DocumentoAllegatoDAO lDocAllDao = null;
@@ -944,7 +956,8 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			BigDecimal lKeyDocumentoAllegato = lDocAllDao.insert();
 			lDocAllRet.setIdDocumentoAllegato(lKeyDocumentoAllegato);
 			lDocAllRet.setProgrFoglioComplementare(aDocumentoAllegato.getProgrFoglioComplementare());
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.info("Inserito foglio complementare id = " + lKeyDocumentoAllegato);
 
 			commit(lConn);
@@ -962,7 +975,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	/**
 	 * Metodo responsabile della modifica del foglio Complementare.
 	 * <p>
-	 * 
+	 *
 	 * @param aDocumentoAllegato
 	 *            dati del documento allaegato da modificare.
 	 * @param aCodTipo
@@ -1023,12 +1036,14 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 			// Si settano le condizioni di ricerca
 			lDocAllMod.setEveIdEvento(lIdEvento);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Ricerca allegato: " + lDocAllMod);
 			// Ricerca
 			llDocAllDao.ricDocAllByIdEvento(lDocAllMod);
 			lDocAllMod = (DocumentoAllegatoModel) llDocAllDao.getModelByKey();
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Ricerca allegato2: " + lDocAllMod);
 		} catch (Exception sqe) {
 			throw new SIUSException("DocumentoAllegatoController.ricDocAllByIdEvento: " + sqe);
@@ -1040,16 +1055,16 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	}
 
 	// MEV_AVVOCATURA: aggiungo un nuovo metodo ExUpdateDocument, con in input il lFlgAvvocatura
-    // per inserire un avviso
+	// per inserire un avviso
 	/**
-	 * Effettua l'operazione di update di un documento mandato tramite upload ed inserisce un avviso
-	 * quando trattasi di deposito ordinanza e deposito decreto
-	 * 
+	 * Effettua l'operazione di update di un documento mandato tramite upload ed inserisce un avviso quando
+	 * trattasi di deposito ordinanza e deposito decreto
+	 *
 	 * @param aDocumentoAllegato
 	 * @throws F3BException
 	 */
-	public DocumentoAllegatoModel ExUpdateDocument(DocumentoAllegatoModel aDocumentoAllegato, Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato)
-			throws F3BException {
+	public DocumentoAllegatoModel ExUpdateDocument(DocumentoAllegatoModel aDocumentoAllegato,
+			Vector<AvvisiAvvocatoModel> lAvvvisiAvvocato) throws F3BException {
 
 		Connection lConn = null;
 		DocumentoAllegatoDAO llDocAllDao = null;
@@ -1057,34 +1072,38 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 		AvvisiAvvocatoDAO lAvvisiAvvocatoDao = null;
 
 		try {
-			lConn = getDBConnection();
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			lConn = getDBTransaction();
 			llDocAllDao = new DocumentoAllegatoDAO(lConn);
-			lAvvisiAvvocatoDao = new AvvisiAvvocatoDAO(lConn);			 
+			lAvvisiAvvocatoDao = new AvvisiAvvocatoDAO(lConn);
 			llDocAllDao.setDAOFromModelForUpdateBlob(aDocumentoAllegato);
 			llDocAllDao.setCondizioneUpdate(aDocumentoAllegato.getIdDocumentoAllegato());
 			llDocAllDao.update();
-			
+
 			// inserisco gli avvisi sulla tabella AVVISI_AVVOCATO
-			  if(lAvvvisiAvvocato != null && lAvvvisiAvvocato.size() > 0){
-				for (AvvisiAvvocatoModel avvisoAvvocato : lAvvvisiAvvocato){
-					// 20180111 [EC] : punto 2 nuovo PLO avvocatura (SIGI_PL_PO_2017 07 21-1.0-PLO MEV SIUS_AVVOCATURA.DOC)
-					if (!ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_ORDINANZA.equals(avvisoAvvocato
-							.getTestoAvviso())
-							&& !ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_DECRETO.equals(avvisoAvvocato
-									.getTestoAvviso())) {
+			if (lAvvvisiAvvocato != null && lAvvvisiAvvocato.size() > 0) {
+				for (AvvisiAvvocatoModel avvisoAvvocato : lAvvvisiAvvocato) {
+					// 20180111 [EC] : punto 2 nuovo PLO avvocatura (SIGI_PL_PO_2017 07 21-1.0-PLO MEV
+					// SIUS_AVVOCATURA.DOC)
+					if (!ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_ORDINANZA
+							.equals(avvisoAvvocato.getTestoAvviso())
+							&& !ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_DECRETO
+									.equals(avvisoAvvocato.getTestoAvviso())) {
 						lAvvisiAvvocatoDao.setDAOFromModel(avvisoAvvocato);
 						lAvvisiAvvocatoDao.insert();
 						lAvvisiAvvocatoDao.stop();
 					}
 				}
-			  }
-			  
+			}
+
 			commit(lConn);
 		} catch (Exception sqe) {
 			rollback(lConn);
 			throw new F3BException("DocumentoAllegatoController.ExUpdateDocument: " + sqe);
 		} finally {
 			cleanup(llDocAllDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAvvisiAvvocatoDao);
 			cleanup(lConn);
 		}
 		return lDocAllMod;

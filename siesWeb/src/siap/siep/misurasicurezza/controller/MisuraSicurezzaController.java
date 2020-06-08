@@ -125,11 +125,13 @@ import siap.sius.util.SIUSLookupRemote;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MisuraSicurezzaController extends SiapController implements IMisuraSicurezza {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public MisuraSicurezzaModel ExInserisciMisuraSicurezza(MisuraSicurezzaModel aMisuraSicurezza)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaDAO lMisDao = null;
@@ -166,7 +168,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException(
@@ -182,6 +183,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	public Vector ExRicercaMisuraSicurezza(MisuraSicurezzaModel aMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lMisuraSicurezza = new Vector();
@@ -211,7 +213,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			}
 
 			lMisDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraSicurezzaController.ExRicercaMisuraSicurezza: Non posso leggere : " + daoEx);
@@ -228,6 +229,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	public Vector ExRicercaMisuraSicurezzaEstesa(MisuraSicurezzaModel aMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lMisuraSicurezzi = new Vector();
@@ -239,7 +241,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lMisDao = new MisuraSicurezzaSqlDAO(lConn);
 			lMisDao.ricercaMisuraSicurezzaEstesa(aMisuraSicurezza);
 			lMisuraSicurezzi = new Vector(lMisDao.getModels());
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraSicurezzaController.ExRicercaMisuraSicurezzaEstesa: Non posso leggere : " + daoEx);
@@ -256,6 +257,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 	public List ExRicercaFascicoliMisuraSicurezza(String aCodUfficioUtenteConnesso, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaSqlDAO lMisFasDao = null;
@@ -313,6 +315,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 	public BigDecimal ExGetCountFascicoliMisuraSicurezza(String aCodUfficioUtenteConnesso)
 			throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 
 		Connection lConn = null;
@@ -344,6 +347,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	public MisuraSicurezzaModel ExRicercaMisuraSicurezzaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaSqlDAO lMisDao = null;
 		MisuraSicurezzaModel lMisMod;
@@ -366,6 +370,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	// 06-03-2015 - Ritorna un Vector e non piu' il Model
 	// public MisuraSicurezzaModel ExRicercaMisuraSicurezzaByEventoKey(BigDecimal aKey) throws F3BException
 	public Vector ExRicercaMisuraSicurezzaByEventoKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaSqlDAO lMisDao = null;
 		// MisuraSicurezzaModel lMisMod;
@@ -385,14 +390,13 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			cleanup(lMisDao);
 			cleanup(lConn);
 		}
-		// return lMisMod;
 		return MisSicVec;
 	}
-
 	// END AMBROS
 
 	public MisuraSicurezzaModel ExModificaMisuraSicurezza(MisuraSicurezzaModel aMisuraSicurezza)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaDAO lMisDao = null;
 		MisuraSicurezzaModel lMisMod = new MisuraSicurezzaModel(aMisuraSicurezza);
@@ -414,6 +418,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	public void ExCancellaMisuraSicurezza(MisuraSicurezzaModel aMisuraSicurezza) throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaDAO lMisDao = null;
 
@@ -444,6 +449,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	public List ExRicercaMisuraSicurezzaByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaSqlDAO lMisDao = null;
@@ -475,6 +481,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 	// 10-11-2015 - Ricerca che NON Rialncia l'eccezione
 	public List ExRicercaMisuraSicurezzaByIdFascicoloNONRilancia(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaSqlDAO lMisDao = null;
@@ -596,6 +603,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	 */
 	public EventoModel ExUpdateValidaTrasmissioneCompetenza(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -663,7 +671,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lEveDaoBlob.stop();
 
 			commit(lConn);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -689,13 +696,13 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	/**
-	 *
 	 * @param aFascMsToFascSiepModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector<FascMsToFascSiepModel> ExRicercaFascMsToFascSiepByFascSiep(
 			FascMsToFascSiepModel aFascMsToFascSiepModel) throws F3BException {
+
 		Connection lConn = null;
 
 		FascMsToFascSiepSqlDAO lFasMsToFascSiepSqlDao = null;
@@ -711,7 +718,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lLista = new Vector<FascMsToFascSiepModel>(lFasMsToFascSiepSqlDao.getModels());
 
 			lFasMsToFascSiepSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -727,13 +733,13 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	}
 
 	/**
-	 *
 	 * @param aIdFascicoloSiep
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector<FascMsToFascSiepModel> ExRicercaFascicoliCollegati(BigDecimal aIdFascicoloSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascMsToFascSiepSqlDAO lFasMsToFascSiepSqlDao = null;
@@ -749,7 +755,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lLista = new Vector<FascMsToFascSiepModel>(lFasMsToFascSiepSqlDao.getModels());
 
 			lFasMsToFascSiepSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -789,6 +794,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			, Vector<String> aListaEsiti, String aFlagVisto, BigDecimal aChiaveAnnoSiep,
 			BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep, String aCodUfficioMitt,
 			String aCodUfficioDest, Date aDataTrasmissioneDal, Date aDataTrasmissioneAl) throws Exception {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MessaggioSqlDAO lMesSqlDao = null;
@@ -859,6 +865,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep, String aCodUfficioMitt,
 			String aCodUfficioDest, Date aDataTrasmissioneDal, Date aDataTrasmissioneAl, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MessaggioSqlDAO lMessaggioSqlDAO = null;
@@ -884,7 +891,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lLista = new Vector<MessaggioModel>(lMessaggioSqlDAO.getModels());
 
 			lMessaggioSqlDAO.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -899,12 +905,10 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		return lLista;
 	}
 
-	/**
-	*
-	*/
 	public Vector<MessaggioModel> ExRicercaSollecitiByIdRich(String aDeliveryMode, String aCodTipoMessaggio,
 			String aCodTipoOperazione, BigDecimal aIdMessRichiesta, String aFlagVisto, String aCodUfficioDest)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		MessaggioSqlDAO lMessaggioSqlDAO = null;
@@ -930,7 +934,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lLista = new Vector<MessaggioModel>(lMessaggioSqlDAO.getModels());
 
 			lMessaggioSqlDAO.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -986,21 +989,16 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		// SanzioneSostitutivaDAO lSanzioneSostitutivaDAO = null;
 		SentenzaSqlDAO lSenSqlDao = null;
 		SentenzaDAO lSenDao = null;
-
 		LuogoDetenzioneDAO lLuogoDetDao = null;
 		PenaResiduaDAO lPenaResiduaDao = null;
 		AltraCausaDAO lAltraCausaDao = null;
-
 		SentenzaRiunitaFascSiepSqlDAO lSentenzaRiunitaFascSiepSqlDao = null;
 		SentenzaRiunitaFascSiepDAO lSentenzaRiunitaFascSiepDao = null;
 		SentenzaRiunitaDAO lSentenzaRiunitaDao = null;
-
 		AgdgFascicoloSiepSqlDAO lAgdgFascicoloSiepSqlDao = null;
 		AgdgFascicoloSiepDAO lAgdgFascicoloSiepDao = null;
 		AltriGradiGiudizioDAO lAltriGradiDAO = null;
-
 		StatoProcedimentoDAO lStatoProcDao = null;
-
 		// INIZIO MEV_39 (in fase di inserimento di un procedimento di classe IV deve essere previsto anche
 		// l'inserimento nello scadenzario_siep con il nuovo codice_tipo_scadenzario = 20)
 		ScadenzarioDAO lScaDao = null;
@@ -1791,47 +1789,36 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			cleanup(lFascSiepDao);
 			cleanup(lMisuraSicurezzaDao);
 			cleanup(lFascMsToFascSiepDao);
-
 			cleanup(lResidenzaDao);
 			cleanup(lResidenzaFascicoloSiepDAO);
-
 			cleanup(lAvvFasDao);
 			// cleanup(lReaDao);
 			// cleanup(lCirDao);
-
 			cleanup(lPosDao);
 			// cleanup(lPenaComplessivaDao);
 			// cleanup(lSanzioneSostitutivaDAO);
-
 			cleanup(lSenSqlDao);
 			cleanup(lSenDao);
 			cleanup(lLuogoDetDao);
 			cleanup(lPenaResiduaDao);
-
 			cleanup(lAltraCausaDao);
-
 			cleanup(lSentenzaRiunitaFascSiepSqlDao);
 			cleanup(lSentenzaRiunitaFascSiepDao);
 			cleanup(lSentenzaRiunitaDao);
-
 			cleanup(lAgdgFascicoloSiepSqlDao);
 			cleanup(lAgdgFascicoloSiepDao);
 			cleanup(lAltriGradiDAO);
-
 			cleanup(lStatoProcDao);
 			// MEV_39
 			cleanup(lScaDao);
 
 			cleanup(lConn);
 		}
-		return;
 	}
 
-	/**
-	*
-	*/
 	public BigDecimal ExInserisciAnnotazioneEsito(EventoNotificaModel aEventoNot,
 			AnnotazioneEsitoTrasmissioneModel aAnnotaModel) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Inizio inserimento annotazione...");
@@ -1918,6 +1905,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	 */
 	public EventoModel ExUpdateValidaAnnotazioneEsito(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2064,7 +2052,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lEveDaoBlob.stop();
 
 			commit(lConn);
-
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -2088,6 +2075,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	// Recupero le Misure di Sicurezza e i Riferimenti Titolo Esecutivo associati alla stessa
 	public Vector ExRicercaMisuraSicurezzaAndRifTitoloEsec(MisuraSicurezzaModel aMisuraSicurezza)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lMisuraSicurezza = new Vector();
@@ -2132,13 +2120,10 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 				misSicMod.setRiferimentoFascicoloSiep(rifFascSiepMod);
 				misSicMod.setFascicoloSiep(fascSiepMod);
-
 				lMisuraSicurezza.add(misSicMod);
-
 			}
 
 			lMisDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraSicurezzaController.ExRicercaMisuraSicurezzaAndRifTitoloEsec: Non posso leggere : "
@@ -2150,6 +2135,8 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		} finally {
 			cleanup(lMisDao);
 			cleanup(rifFascSiepDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(fascSiepDao);
 
 			cleanup(lConn);
 		}
@@ -2167,12 +2154,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lMisDao = new MisuraSicurezzaSqlDAO(lConn);
 			lMisDao.ricercaMisuraSicurezzaByIdFascicoloSIUS(aKey);
 			lMisure = new Vector(lMisDao.getModels());
-
-			/*
-			 * if (lMisure.size() == 0) { throw new F3BException(F3BException.USER_MESSAGE,
-			 * "Misura di Sicurezza non trovata"); }
-			 */
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MisuraSicurezzaController.ExRicercaMisuraSicurezzaByIdFascicoloSIUS: Non posso leggere : "
@@ -2186,6 +2167,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 	public List<MisuraSicurezzaModel> ExRicercaMisuraSicurezzaByIdEvento(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaSqlDAO lMisDao = null;
 		List<MisuraSicurezzaModel> lMisure = null;
@@ -2208,6 +2190,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 	// 10-02-2014
 	public List ExRicercaMisuraSicurezzaByIdFascicoloOrd(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaSqlDAO lMisDao = null;
@@ -2239,6 +2222,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 
 	// 17-12-2014
 	public List ExRicercaTutteMisureSicurezzaByIdFascicoloOrd(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		MisuraSicurezzaSqlDAO lMisDao = null;
@@ -2269,6 +2253,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	*/
 	public BigDecimal ExInserisciSollecitoEsito(EventoNotificaModel aEventoNot,
 			SollecitoEsitoTrasmissioneModel aSollecitoModel) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Inizio inserimento sollecito...");
@@ -2276,12 +2261,10 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		Connection lConn = null;
 
 		EventoSqlDAO lEventoSqlDao = null;
-
 		EventoDAO lEveDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
-
 		SollecitoEsitoTrasmissioneDAO lSollecitoDAO = null;
 
 		BigDecimal lKeyEvento = null;
@@ -2395,7 +2378,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			throw new F3BException("MisuraSicurezzaController.ExInserisciSollecitoEsito: " + e);
 		} finally {
 			cleanup(lEventoSqlDao);
-
 			cleanup(lEveDao);
 			cleanup(lCampoNotaDao);
 			cleanup(lNotDao);
@@ -2417,6 +2399,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	 */
 	public EventoModel ExUpdateValidaSollecitoEsito(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2509,6 +2492,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	 */
 	public EventoModel ExUpdateValidaAnnotazioneDesignazioneIst(EventoModel aEvento,
 			FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -2671,7 +2655,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lEveDaoBlob.stop();
 
 			commit(lConn);
-
 		} catch (F3BException fex) {
 			rollback(lConn);
 			fex.printStackTrace();
@@ -2704,10 +2687,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			SoggettoModel aSogMod, MisuraSicurezzaModel aMisMod, FascicoloSiepModel aFascMod, String aTipo,
 			BigDecimal aIdOrd, BigDecimal aIdFascSius) throws F3BException {
 
-		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		// siesLogger.debug(
-		// "-- XXXXXXXXX -- MisuraController - Id Ordinanza = "+aIdOrd+" - idFasc SIUS = "+aIdFascSius);
 		Connection lConn = null;
 		SentenzaDAO lSenDao = null;
 		SoggettoDAO lSogDao = null;
@@ -2722,7 +2701,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		NoteDAO lNoteDao = null;
 		// MEV_39
 		FascMsToFascSiepDAO lFascMsToFascSiepDao = null;
-		EventoSqlDAO lEveDao= null;
+		EventoSqlDAO lEveDao = null;
 
 		BigDecimal lKeyFascicolo = null;
 		try {
@@ -2907,7 +2886,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 					lFascMsToFascSiepDao.insert();
 					lFascMsToFascSiepDao.stop();
 
-					// mev 39: intervento post collaudo 11.3 
+					// mev 39: intervento post collaudo 11.3
 					// devo creare il collegato anche sul classe I (collegatmento tra I e IV oltre che IV e I)
 					lFascMsToFascSiepModel.setFasSieIdFascicoloSiep(fascSiepClasseI);
 					lFascMsToFascSiepModel.setChiaveAnnoSiep(lFasModClasseI.getChiaveAnno());
@@ -2925,25 +2904,30 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 					lFascMsToFascSiepDao.setDAOFromModel(lFascMsToFascSiepModel);
 					lFascMsToFascSiepDao.insert();
 					lFascMsToFascSiepDao.stop();
-					
+
 					// mev 39 : le fuori sentenza agganciate ad un classe I devono andare in scadenziario
 					// tenendo conto della Pena Residua del classe I
-					
+
 					DettaglioFascicoloModel aDettaglioFasOrig = null;
 					IFascicoloSiep lCtrlFas = SIEPLookupRemote.getFascicoloSiepRemote();
-					aDettaglioFasOrig = lCtrlFas.ExDettaglioFascicoloSiep(fascSiepClasseI);					
+					aDettaglioFasOrig = lCtrlFas.ExDettaglioFascicoloSiep(fascSiepClasseI);
 					PosizioneGiuridicaModel lPosMod = aDettaglioFasOrig.getPosizioneGiuridica();
 					ScadenzarioDAO lScaDao = new ScadenzarioDAO(lConn);
-					if (aDettaglioFasOrig.getPenaResidua() != null && lPosMod.getCodPosizioneGiuridica() != null) {						
+					if (aDettaglioFasOrig.getPenaResidua() != null
+							&& lPosMod.getCodPosizioneGiuridica() != null) {
 						PenaResiduaModel lPenResModel = aDettaglioFasOrig.getPenaResidua();
 						if (lPenResModel != null && lPenResModel.getFlagValidato() != null
-								&& "S".equals(lPenResModel.getFlagValidato()) && lPenResModel.getDataFine() != null) {
-							String[] posizioneGiuridica = { "07", "10", "16", "17", "20", "26", "30", "46", "47" };
-							// inoltre si prosegue con l'inserimento in scadenzario solo per determinati codici della
+								&& "S".equals(lPenResModel.getFlagValidato())
+								&& lPenResModel.getDataFine() != null) {
+							String[] posizioneGiuridica = { "07", "10", "16", "17", "20", "26", "30", "46",
+									"47" };
+							// inoltre si prosegue con l'inserimento in scadenzario solo per determinati
+							// codici della
 							// posizione giuridica (diversi da quelli nell'array)
 							// (ho visto lo stesso controllo previsto alla riga 4096 della classe
 							// OrdineEsecuzioneController)
-							if (Arrays.binarySearch(posizioneGiuridica, lPosMod.getCodPosizioneGiuridica()) < 0) {
+							if (Arrays.binarySearch(posizioneGiuridica,
+									lPosMod.getCodPosizioneGiuridica()) < 0) {
 								if (lPenResModel.getDataInizio() != null) {
 									ScadenzarioModel lScaMod = new ScadenzarioModel();
 									// inserisce scadenzario
@@ -2957,7 +2941,9 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 									lScaMod.setCodUfficioInserimento(aFascMod.getCodUfficioInserimento());
 									lScaMod.setIdFascicoloSiepOrigine(
 											aDettaglioFasOrig.getFascicoloSiep().getIdFascicoloSiep()); // fascicolo
-																										// di CLasse I
+																										// di
+																										// CLasse
+																										// I
 									lScaDao.setDAOFromModel(lScaMod);
 									lScaDao.insert();
 									lScaDao.stop();
@@ -2966,9 +2952,11 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 						}
 					} // se non ho la pena residua???FIXME
 					else {
-						// si procede con l'inserimento in scadenzario_siep di un record con tipo_Scadenzario=20
+						// si procede con l'inserimento in scadenzario_siep di un record con
+						// tipo_Scadenzario=20
 						// ma i campi DATA_INIZIO_SCADENZA e DATA_FINE_SCADENZA non posso recuperarli dalla
-						// PenaResidua, pertanto in dataInizioScadenza inserisco sysdate e data_fine_scadenza null
+						// PenaResidua, pertanto in dataInizioScadenza inserisco sysdate e data_fine_scadenza
+						// null
 						ScadenzarioModel lScaMod = new ScadenzarioModel();
 						// inserisce scadenzario
 						lScaMod.setCodTipoScadenzario("20"); // Inizio_Misura
@@ -2985,8 +2973,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 						lScaDao.stop();
 					}
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////
-					
-					
+
 					aMisMod.setFasSieIdFascicoloSiepRif(fascSiepClasseI);
 				}
 				// MEV_39 FINE
@@ -3021,25 +3008,27 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 				lNoteMod.setFasSieIdFascicoloSiep(lKeyFascicolo);
 				lNoteDao.setDAOFromModel(lNoteMod);
 				/* lKeyRes = */lNoteDao.insert();
-				
-				// ANOMALIA SEGNALATA DA MICHELE IN FASE DI TEST SULLA 11.3 (NON APPAIONO IL PROC. DI SORVEGLIANZA SUI PROC. NATI FUORI SENTENZA)
-				// legare anche fascicolo IV e fascicolo sius sulla tabella evento 
+
+				// ANOMALIA SEGNALATA DA MICHELE IN FASE DI TEST SULLA 11.3 (NON APPAIONO IL PROC. DI
+				// SORVEGLIANZA SUI PROC. NATI FUORI SENTENZA)
+				// legare anche fascicolo IV e fascicolo sius sulla tabella evento
 				if (fascSiepClasseI != null) {
-					// devo recuperare l'evento relativo al siep di classe I e al sius collegato e spostarlo su siep classe IV
+					// devo recuperare l'evento relativo al siep di classe I e al sius collegato e spostarlo
+					// su siep classe IV
 					Vector lEventi = new Vector();
 					lEveDao = new EventoSqlDAO(lConn);
-					EventoModel evM= new EventoModel();
+					EventoModel evM = new EventoModel();
 					evM.setFasSieIdFascicoloSiep(fascSiepClasseI);
-					evM.setFasSiuIdFascicoloSius(aIdFascSius);					
+					evM.setFasSiuIdFascicoloSius(aIdFascSius);
 					lEveDao.ricercaEvento(evM);
 					lEventi = new Vector(lEveDao.getModels());
-					if (lEventi.size() == 1){
-						EventoModel ee =  (EventoModel) lEventi.get(0);
-						EventoDAO lEveDaoU  = new EventoDAO(lConn);
+					if (lEventi.size() == 1) {
+						EventoModel ee = (EventoModel) lEventi.get(0);
+						EventoDAO lEveDaoU = new EventoDAO(lConn);
 						lEveDaoU.setFasSieIdFascicoloSiep(lKeyFascicolo);
 						lEveDaoU.selCondizioneUpdate(ee.getIdEvento());
 						lEveDaoU.update();
-					}									
+					}
 				}
 			} // Chiude if(aTipo.compareTo("FUORI_SENTENZA")==0
 
@@ -3054,7 +3043,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lMisDao.setDAOFromModel(aMisMod);
 			lMisDao.insert();
 			lMisDao.stop();
-			
+
 			// STATO_PROCEDIMENTO
 			// ========================================================================
 			// Fascicolo nasce ora, quindi metto cod = 0108 e progressivo = 1
@@ -3074,7 +3063,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			lStatoDao.stop();
 
 			commit(lConn);
-
 		} catch (SIEPException fex) {
 			rollback(lConn);
 			fex.printStackTrace();
@@ -3109,12 +3097,17 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			cleanup(lFasSiusDAO);
 			cleanup(lFDAO);
 			cleanup(lNoteDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFascMsToFascSiepDao);
+			cleanup(lEveDao);
+
 			cleanup(lConn);
 		}
 		return lKeyFascicolo;
 	} // CHIUDE ExInserisciProcedimentoMisuraProvvisoriaeoFuoriSenteneza()
 
 	public Vector ExRicercaMisuraSicurezzaByMisIdMisuraSicurezza(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaSqlDAO lMisDao = null;
 		Vector lMisVec = null;
@@ -3152,6 +3145,7 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 	 * @throws F3BException
 	 */
 	public String ExRicercaCodTipoMisuraByIdEvento(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		MisuraSicurezzaSqlDAO lMSSqlDao = null;
 		String lCodTipoMisura = null;
@@ -3180,11 +3174,9 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		return lCodTipoMisura;
 	}
 
-	/**
-	*
-	*/
 	public boolean ExEsistonoFascicoliClasseIVAnno(UfficioModel aUfficio, BigDecimal aAnno)
 			throws F3BException {
+
 		boolean lEsisteFascicolo = true;
 
 		Connection lConn = null;
@@ -3346,7 +3338,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			cleanup(lConn);
 		}
 		return lRetModel;
-
 	} // CHIUDE ExAggiornaEventoNotificheXComunicazioneMS()
 
 	/**
@@ -3465,10 +3456,8 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			cleanup(lConn);
 		}
 		return lRetModel;
-
 	} // CHIUDE ExAggiornaEventoNotificheXArchiviazioneMS()
 
-	//
 	/**
 	 * Giugno 2015 Aggiorna evento, CampoNota
 	 *
@@ -3569,10 +3558,8 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		}
 
 		return lRetModel;
-
 	} // CHIUDE ExAggiornaEventoCampoNotaXRichiestaDapMS()
 
-	//
 	/**
 	 * Giugno 2015 Aggiorna evento e Verbale
 	 *
@@ -3633,7 +3620,6 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 		}
 
 		return lEveMod;
-
 	} // CHIUDE ExAggiornaEventoVerbaleXDesignazioneIstitutoMS()
 
 	/**
@@ -3701,6 +3687,8 @@ public class MisuraSicurezzaController extends SiapController implements IMisura
 			throw new F3BException("MisuraSicurezzaController.ExRicercaMSNotificateByIdFascIdEve : " + daoEx);
 		} finally {
 			cleanup(mssDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lIstDao);
 			cleanup(lConn);
 		}
 

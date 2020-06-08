@@ -10,14 +10,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.siep.modulocumulo.dao.ReatoCumuloDAO;
 import siap.siep.modulocumulo.dao.ReatoCumuloSqlDAO;
 import siap.siep.modulocumulo.model.ContinuazioneReatiCumuloModel;
 import siap.siep.modulocumulo.model.ReatoCircostanzaCumuloModel;
 import siap.siep.modulocumulo.model.ReatoCumuloModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 
 	/**
 	 * Cancellazione Continuazione Reati
-	 * 
+	 *
 	 * @param aReato
 	 * @throws F3BException
 	 */
@@ -45,12 +45,12 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public void ExCancellazioneContinuazioneReati(ReatoCumuloModel aReato) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaDao = null;
 		ReatoCumuloModel lReaMod = new ReatoCumuloModel(aReato);
 
 		try {
-
 			lConn = getDBConnection();
 
 			lReaDao = new ReatoCumuloDAO(lConn);
@@ -64,25 +64,24 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 			lReaDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("ReatoContinuazioneCumuloController.ExCancellazioneContinuazioneReati: "
-					+ ex);
+			throw new F3BException(
+					"ReatoContinuazioneCumuloController.ExCancellazioneContinuazioneReati: " + ex);
 		} finally {
 			cleanup(lReaDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/**
 	 * ExModificaContinuazioneReati
-	 * 
+	 *
 	 * @param aReati
 	 * @throws F3BException
 	 */
 	public void ExModificaContinuazioneReati(ArrayList aReati) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaDao = null;
 		ReatoCumuloModel lReaMod = null;
@@ -124,10 +123,8 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 
 				commit(lConn);
 			}
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-
 			siesLogger.error("DAOException: ", ex);
 			throw new F3BException("ReatoContinuazioneCumuloController.ExModificaContinuazioneReati: " + ex);
 		} catch (Exception ex) {
@@ -138,23 +135,22 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 			cleanup(lReaDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	/**
 	 * ExGetMaxIdContinuazione - Get Max Id Continuazione
-	 * 
+	 *
 	 * @param idFas
 	 * @return Max Id COntinuazione
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetMaxIdContinuazione(BigDecimal idFas) throws F3BException {
+
 		Connection lConn = null;
 		ReatoCumuloDAO lReaDao = null;
 		ReatoCumuloSqlDAO lReaSqlDao = null;
 
 		try {
-
 			lConn = getDBConnection();
 
 			lReaDao = new ReatoCumuloDAO(lConn);
@@ -168,6 +164,8 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 			throw new F3BException("ReatoContinuazioneCumuloController.ExGetMaxIdCondizione: " + ex);
 		} finally {
 			cleanup(lReaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lReaSqlDao);
 			cleanup(lConn);
 		}
 	}
@@ -175,7 +173,7 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 	/**
 	 * Compone una stringa per ogni 'reato' comprendente tutte le fonti presenti nel reato. Quindi solo la
 	 * sezione che descrive la norma violata.
-	 * 
+	 *
 	 * @param inVect
 	 *            <String> - Una Stringa per ogni reato (Progr_circ = 1)
 	 * @return
@@ -246,10 +244,10 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 	 * Teoricamente restituisce una HashTable avente per chiave l'idContinuazione e come valore un vettore di
 	 * stringhe in cui il primo elemento è il TipoContinuazione e i successivi elementi sono stringhe che
 	 * rappresentano il progressivo reato nel formato: progr@!progr o progr@!progrManuale
-	 * 
+	 *
 	 * es: idContinuazione 1 - TipoCont - Progr 1@1 - Progr 3@3 idContinuazione 2 - TipoCont - Progr 2@2 -
 	 * Progr 4@4
-	 * 
+	 *
 	 * I reati con progressivi 1 e 3 sono in continuazionwe. I reati 2 e 4 sono in continuazione
 	 *
 	 * @param inVect
@@ -258,6 +256,7 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 	 *         <String>(tipoContinuazione,progr@!progr)]
 	 */
 	public Hashtable getTableContinuazioni(Vector inVect) {
+
 		Hashtable table = new Hashtable();
 
 		String str = new String("");
@@ -281,8 +280,9 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 				if (lReato.getIdContinuazioneReatoCum() != null) {
 					idCont = lReato.getIdContinuazioneReatoCum();
 
-					lProgressivo = (lReato.getProgrNumeroManuale() != null) ? lReato.getProgrNumeroManuale()
-							.toString() : lReato.getProgrReato().toString();
+					lProgressivo = (lReato.getProgrNumeroManuale() != null)
+							? lReato.getProgrNumeroManuale().toString()
+							: lReato.getProgrReato().toString();
 
 					str = lReato.getProgrReato().toString() + "@!" + lProgressivo;
 
@@ -303,12 +303,11 @@ public class ReatoContinuazioneCumuloController extends ReatoCumuloController im
 		}
 
 		return table;
-
 	}
 
 	/**
 	 * getContinuazioniReati - restituisce un vector di ContinuazioniReatiCumuloModel le continuazioni
-	 * 
+	 *
 	 * @param inVect
 	 * @return Hashtable con le continuazioni
 	 */

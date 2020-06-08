@@ -7,6 +7,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
 import siap.controller.SiapController;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
 import siap.siep.fungibilita.dao.FungibilitaSqlDAO;
@@ -16,13 +19,10 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.statoesecuzione.config.StampaProperties;
 import siap.siep.statoesecuzione.dao.StatoEsecuzioneSqlDAO;
 import siap.siep.statoesecuzione.model.EventoSorveglianzaModel;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
 
 /**
  * Classe di Utilità per le query su DB surante la creazione dello stato esecuzione
- * 
+ *
  * @author Giselda De Vita
  *
  */
@@ -37,7 +37,7 @@ public class StatoEsecuzioneUtilController extends SiapController {
 	/**
 	 * getDataSopsensione - Restituisce la data sospensione. Metodo utile per quei provvedimenti interruttivi
 	 * che al posto della data di emissione cdevono visualizzare la data di sospensione.
-	 * 
+	 *
 	 * @return Data inizio esecuzione
 	 */
 	Date getDataSospensione(BigDecimal aIdFascicolo) throws F3BException {
@@ -61,9 +61,7 @@ public class StatoEsecuzioneUtilController extends SiapController {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("StatoEsecuzioneUtilController.getDataSospensione: ", sqe);
 			throw new F3BException("StatoEsecuzioneUtilController.getDataSospensione: " + sqe);
-		}
-
-		finally {
+		} finally {
 			cleanup(lSospSql);
 			cleanup(lConn);
 		}
@@ -73,15 +71,18 @@ public class StatoEsecuzioneUtilController extends SiapController {
 
 	/**
 	 * get Anno Numero Sius
-	 * 
+	 *
 	 * @param aEveSorv
 	 */
 	void getAnnoNumeroSius(EventoSorveglianzaModel aEveSorv) {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("--XX-- getAnnoNumeroSius - di StatoEsecuzioneUTILController");
+
 		Connection lConn = null;
 		StatoEsecuzioneSqlDAO lStatEsec = null;
+
 		try {
 			lConn = getDBConnection();
 			lStatEsec = new StatoEsecuzioneSqlDAO(lConn);
@@ -102,6 +103,8 @@ public class StatoEsecuzioneUtilController extends SiapController {
 				cleanup(lStatEsec);
 				cleanup(lConn);
 			} catch (Exception eee) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+				siesLogger.error("Errore in getAnnoNumeroSius - 2");
 			}
 
 		}
@@ -111,6 +114,7 @@ public class StatoEsecuzioneUtilController extends SiapController {
 	 * getAnnotazioneTotale Restituisce la stringa totale delle Annotazioni
 	 */
 	public String getAnnotazioneTotale(Vector lAnnotazioni) throws F3BException {
+
 		String lReturn = "";
 		CalcoloPenaModel lAnnPenaMod = new CalcoloPenaModel();
 
@@ -149,17 +153,17 @@ public class StatoEsecuzioneUtilController extends SiapController {
 			lReturn += lIndultoMulta + lIndultoAmmenda;
 
 		return lReturn;
-
 	}
 
 	/**
 	 * getFungibilita
-	 * 
+	 *
 	 * @param lIdEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public String getFungibilita(BigDecimal lIdEvento) throws F3BException {
+
 		FungibilitaSqlDAO lFunDao = null;
 		Connection lConn = null;
 		String lFungibilita = "";

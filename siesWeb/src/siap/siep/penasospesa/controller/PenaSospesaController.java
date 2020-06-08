@@ -92,7 +92,7 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -102,6 +102,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public EventoModel ExInserisciAnnotazioneRevoca(EventoModel aPenaSospesa) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lPenDao = null;
 
@@ -137,7 +138,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	 * inserisce evento di Annotazione Revoca Pena sospesa sul Fascicolo di classe III archivia il Fascicolo
 	 * di classe III inserisce il nuovo fascicolo di pena detentiva (Classe I) AMBROSINO -- 04/2013 Duplica le
 	 * PeneAccessorie e i Benefici ( dal procedimento Classe III al Classe I)
-	 * 
+	 *
 	 * @param: aSoggetto
 	 *             Model con i dati da inserire aEvento Model con i dati da inserire aFascicoloSiep Model con
 	 *             i dati da inserire
@@ -147,6 +148,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	public FascicoloSiepModel ExInserisciFascicolodaClasseIII(SoggettoModel aSoggetto, EventoModel aEvento,
 			FascicoloSiepModel aFascicoloSiep, DettaglioFascicoloModel aDettaglioFascicolo,
 			FascicoloSiepModel aFascicoloClasseIIISiep, AnnotazioneManualeModel AnnMan) throws F3BException {
+
 		Connection lConn = null;
 
 		SoggettoDAO lSogDao = null;
@@ -163,6 +165,9 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 		PenaComplessivaDAO lPenDao = null;
 		// 19/04/2019 - MEV70 Aggiunto il passaggio della Misura Cautelare da Classe III a Classe I.
 		MisuraCautelareDAO lMCDao = null;
+		AnnotazioneManualeDAO lAnnotazManClasseIDao = null;
+		PenaAccessoriaDAO lPenAccDao = null;
+		BeneficioDAO lBeneDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -363,10 +368,8 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 
 			if (aDettaglioFascicolo.getPeneAccessorie() != null) {
 				List listaPeneAcc = aDettaglioFascicolo.getPeneAccessorie();
-				// PenaAccessoriaModel lPenAccMod = new PenaAccessoriaModel();
-
 				for (int i = 0; i <= listaPeneAcc.size() - 1; i++) {
-					PenaAccessoriaDAO lPenAccDao = null;
+					lPenAccDao = null;
 					PenaAccessoriaModel lPenAccMod = new PenaAccessoriaModel(
 							(PenaAccessoriaModel) listaPeneAcc.get(i));
 
@@ -386,7 +389,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 						// BeneficioModel lBeneMod = new BeneficioModel();
 						// cerco il Beneficio al quale è legata la P.Acc
 						for (int j = 0; j <= listaBenefici.size() - 1; j++) {
-							BeneficioDAO lBeneDao = null;
+							lBeneDao = null;
 							BeneficioModel lBeneMod = new BeneficioModel(
 									(BeneficioModel) listaBenefici.get(j));
 							if (lBeneMod.getIdBeneficio().equals(lPenAccMod.getBenIdBeneficio())) {
@@ -433,13 +436,8 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 									lSequence = lPenAccDao.insert();
 									lPenAccDao.stop();
 								}
-
 							} // END if(lBeneMod.getIdBeneficio().equals(lPenAccMod.getBenIdBeneficio()
-
-							cleanup(lBeneDao);
-
 						} // End ciclo for j
-
 					} // End if(lPenAccMod.getBenIdBeneficio() != null)
 					else {
 						lPenAccDao = new PenaAccessoriaDAO(lConn);
@@ -447,19 +445,14 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 						lSequence = lPenAccDao.insert();
 						lPenAccDao.stop();
 					}
-
-					cleanup(lPenAccDao);
-
 				} // End ciclo for (int i=0
-
 			} // End if (aDettaglioFascicolo.getPeneAccessorie() != null)
 
 			// --> BENEFICI -- (solo quelli che non erano legati alle PeneAccessorie
-
 			if (aDettaglioFascicolo.getBenefici() != null) {
 				List listaBenefici = aDettaglioFascicolo.getBenefici();
 				for (int i = 0; i <= listaBenefici.size() - 1; i++) {
-					BeneficioDAO lBeneDao = null;
+					lBeneDao = null;
 					BeneficioModel lBeneMod = new BeneficioModel((BeneficioModel) listaBenefici.get(i));
 					lBeneMod.setCodOperatoreInserimento(aFascicoloSiep.getCodOperatoreInserimento());
 					lBeneMod.setCodUfficioInserimento(aFascicoloSiep.getCodUfficioInserimento());
@@ -482,14 +475,9 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 						lSequence = lBeneDao.insert();
 						lBeneDao.stop();
 					}
-
-					cleanup(lBeneDao);
-
 				} // End ciclo for i
-
 			} // End if Dettaglio.getbenefici
-
-			// FINE AMBROSINO 04/2013 - duplicazione PeneAccessorie e Benefici da Classe III a classe I
+				// FINE AMBROSINO 04/2013 - duplicazione PeneAccessorie e Benefici da Classe III a classe I
 
 			// 19/04/2019 - MEV70 Aggiunto il passaggio delle Misure Cautelari da Classe III a Classe I.
 			if (aDettaglioFascicolo.getMisureCautelari() != null) {
@@ -545,7 +533,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 				lEveDao.setAnnIdAnnotazioneManuale(lSeqAnn);
 				lEveDao.selCondizioneUpdate(lSequenceEveIII);
 				lEveDao.update();
-
 			}
 
 			// ================================================================
@@ -563,7 +550,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 							|| aEvento.getCodMotivo().equals("1108"))) {
 				lEveDaoRevo = new EventoDAO(lConn);
 				lEveDaoRevo.setDAOFromModel(aEvento);
-
 				lEveDaoRevo.setFasSieIdFascicoloSiep(aFascicoloSiep.getIdFascicoloSiep());
 				lSequenceEveI = lEveDaoRevo.insert();
 			}
@@ -571,9 +557,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			// ========================================================================
 			// Annotazione_Manuale
 			// ========================================================================
-
-			AnnotazioneManualeDAO lAnnotazManClasseIDao = null;
-
 			if (!AnnMan.equals(null) && lSequenceEveI != null) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
@@ -591,11 +574,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 				lEveDaoRevo.setAnnIdAnnotazioneManuale(lSeqAnnClI);
 				lEveDaoRevo.selCondizioneUpdate(lSequenceEveI);
 				lEveDaoRevo.update();
-
-				cleanup(lAnnotazManClasseIDao);
-				cleanup(lEveDaoRevo);
 			}
-
 			// END 10/05/2014 -MEV PACK 1
 			// ================================================================
 
@@ -644,7 +623,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 				}
 			}
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -666,9 +644,12 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			cleanup(lMCDao); // MEV70
 			cleanup(lPenDao);
 			cleanup(lEveDaoRevo);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lBeneDao);
+			cleanup(lPenAccDao);
+			cleanup(lAnnotazManClasseIDao);
 
 			cleanup(lConn);
-
 		}
 		return aFascicoloSiep;
 	}
@@ -679,17 +660,20 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	public EventoNotificaModel ExInserisciRichiestaRevoca(AnnotazioneManualeModel aAnnotazioneManuale,
 			EventoNotificaModel aEventoNotifica, CampoNotaModel aCampoNote, Vector aReati,
 			DettaglioPenaComplessivaModel aDettaglioPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
 		AnnotazioneManualeModel lAnnMod = null;
-
 		AutoritaEsternaDAO lAutDao = null;
 		NotificaDAO lNotDao = null;
-
 		EventoDAO lEveDao = null;
-
 		CampoNotaDAO lCampoNoteDAO = null;
+		ReatoDAO lReaDao = null;
+		AnnmanReatoDAO lannman_reatoDAo = null;
+		PenaComplessivaDAO lPenDao = null;
+		SanzioneSostitutivaDAO lSanzDao = null;
+		AnnmanPenacomplDAO lannman_penacomplDAo = null;
 
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEventoNotifica);
 
@@ -761,7 +745,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 				lEveDao.setAnnIdAnnotazioneManuale(lKey);
 				lEveDao.selCondizioneUpdate(lKeyEvento);
 				lEveDao.update();
-
 			}
 			// =====================================
 			// Inserisco il campo note
@@ -782,7 +765,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			// Inserisco i reati se presenti
 			// =====================================
 			if (aReati.size() > 0) {
-				ReatoDAO lReaDao = null;
 				ReatoModel lReaPrincipale = new ReatoModel((ReatoModel) aReati.get(0));
 
 				// Gestione Progressivo Reato
@@ -803,7 +785,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 				lReaDao.stop();
 
 				// inserisco l'associazione annotazione_manuale-reato
-				AnnmanReatoDAO lannman_reatoDAo = null;
 				AnnmanReatoModel lannman_reato = new AnnmanReatoModel();
 				lannman_reato.setAnnotazionemanualeId(lKey);
 				lannman_reato.setReatoId(lKeyReato);
@@ -861,8 +842,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 
 					}
 				}
-				cleanup(lReaDao);
-				cleanup(lannman_reatoDAo);
 			}
 
 			// =====================================
@@ -880,9 +859,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 					aSanzioneSostitutiva = aDettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva()
 							.getSanzioneSostitutiva();
 
-				PenaComplessivaDAO lPenDao = null;
-				SanzioneSostitutivaDAO lSanzDao = null;
-
 				// Inserimento Pena Complessiva
 				lPenDao = new PenaComplessivaDAO(lConn);
 
@@ -899,13 +875,10 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 					BigDecimal lKeySanzioneSostitutiva = null;
 					lKeySanzioneSostitutiva = lSanzDao.insert();
 					aSanzioneSostitutiva.setIdSanzioneSostitutiva(lKeySanzioneSostitutiva);
-
-					cleanup(lSanzDao);
 				}
 
 				// eventulamnete inserisco l'associazione annotazione_manuale-penacomplessiva
 				if (lKey != null) {
-					AnnmanPenacomplDAO lannman_penacomplDAo = null;
 					AnnmanPenacomplModel lannman_penacompl = new AnnmanPenacomplModel();
 					lannman_penacompl.setAnnotazionemanualeId(lKey);
 					lannman_penacompl.setPenacomplessivaId(lKeyPenaComplessiva);
@@ -913,10 +886,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 					lannman_penacomplDAo.setDAOFromModel(lannman_penacompl);
 					lannman_penacomplDAo.insert();
 					lannman_penacomplDAo.stop();
-					cleanup(lannman_penacomplDAo);
 				}
-
-				cleanup(lPenDao);
 			}
 
 			commit(lConn);
@@ -935,6 +905,13 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			cleanup(lEveDao);
 			cleanup(lAutDao);
 			cleanup(lNotDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lCampoNoteDAO);
+			cleanup(lReaDao);
+			cleanup(lannman_reatoDAo);
+			cleanup(lSanzDao);
+			cleanup(lPenDao);
+			cleanup(lannman_penacomplDAo);
 
 			cleanup(lConn);
 		}
@@ -943,6 +920,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	}
 
 	public Vector ExRicercaReatiByAnnotazioneMan(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lReati = new Vector();
 		AnnmanReatoSqlDAO lannman_reatoDAo = null;
@@ -973,7 +951,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 					lRea = (ReatoModel) (lReaDao.getModelByKey());
 					lReati.add(lRea);
 				}
-				cleanup(lReaDao);
 			}
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -981,6 +958,8 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			throw new F3BException("PenaSospesaController.ExRicercaReatiByAnnotazioneMan: " + daoEx);
 		} finally {
 			cleanup(lannman_reatoDAo);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lReaDao);
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -990,10 +969,10 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 
 	public PenaComplessivaSanzioneSostitutivaModel ExRicercaPenaComplessivaByAnnotazioneMan(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		AnnmanPenacomplSqlDAO lannman_pcomplDAo = null;
-
 		PenaComplessivaSqlDAO lPenDao = null;
 		SanzioneSostitutivaSqlDAO lSanDao = null;
 
@@ -1032,7 +1011,6 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 
 					lPenSanMod = new PenaComplessivaSanzioneSostitutivaModel(lPenMod, lSanMod);
 				}
-
 			}
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1040,6 +1018,9 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			throw new F3BException("PenaSospesaController.ExRicercaReatiByAnnotazioneMan: " + daoEx);
 		} finally {
 			cleanup(lannman_pcomplDAo);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPenDao);
+			cleanup(lSanDao);
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1049,13 +1030,14 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 
 	/**
 	 * Stampa trasferimento Nuova Istanza
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExStampaRichiestaRevoca(EventoNotificaModel aEvento, UtenteModel aUtente)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -1105,7 +1087,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	 * Inserisce l'Annotazione Manuale, l'Evento. Lo Scadenzario di tipo "16" viene inserito o aggiornato solo
 	 * se il parametro aCancellaScadenzario è false ed è valorizzata la data di irrevocabilità. Se invece
 	 * aCancellaScadenzario è true lo scadenzario viene cancellato.
-	 * 
+	 *
 	 * @param boolean
 	 *            aCancellaScadenzario richiede la cancellazione dello scadenzario
 	 * @param AnnotazioneManualeModel
@@ -1117,6 +1099,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 	public AnnotazioneManualeModel ExInserisciAnnotazioneEventoScadenzario(
 			AnnotazioneManualeModel aAnnotazioneManuale, EventoModel aEvento, Date aDataIrrevocabilita,
 			boolean aCancellaScadenzario) throws F3BException {
+
 		Connection lConn = null;
 
 		AnnotazioneManualeDAO lAnnDao = null;
@@ -1177,101 +1160,120 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 
 	/**
 	 * Inserisce Scadenzario di Ottemperanza Termini
-	 * 
+	 *
 	 * @param aAnnMod
 	 * @param lConn
 	 */
-
 	void InsScadenzarioOttemperanzaTermini(AnnotazioneManualeModel aAnnMod, Date aDataIrrevocabilita,
 			Connection aConn) throws Exception {
+
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
-		if (aDataIrrevocabilita == null)
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-			siesLogger.debug("Scadenzario non inserito perchè data di irrevocabilità assente");
-		else {
 
-			if (aAnnMod.getNumAnniReclusione().intValue() == 0
-					&& aAnnMod.getNumMesiReclusione().intValue() == 0
-					&& aAnnMod.getNumGiorniReclusione().intValue() == 0) {
-
-				// non viene inserito lo scadenzario
+		try {
+			if (aDataIrrevocabilita == null)
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.debug("Scadenzario non inserito perchè Termini non definiti");
-
-			} else {
-				// Ricerca Scadenzario per decidere se fare un update o un nuovo inserimento
-				lScaSqlDao = new ScadenzarioSqlDAO(aConn);
-				lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("16",
-						aAnnMod.getFasSieIdFascicoloSiep());
-				ScadenzarioModel lScaMod = new ScadenzarioModel();
-				lScaMod = (ScadenzarioModel) lScaSqlDao.getModelByKey();
-				lScaSqlDao.stop();
-
-				// Inizializzazione Scadenzario
-				Date lSommaAnni = null;
-				Date lSommaMesi = null;
-				Date lFineScadenza = null;
-				String lDataInizio = DateUtils.getDateToString(aDataIrrevocabilita, "dd/MM/yyyy");
-				lSommaAnni = DateUtils.moveDateTo(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
-						java.util.Calendar.YEAR, aAnnMod.getNumAnniReclusione().intValue());
-				lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
-						aAnnMod.getNumMesiReclusione().intValue());
-				lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
-						aAnnMod.getNumGiorniReclusione().intValue());
-
-				lScaDao = new ScadenzarioDAO(aConn);
-				lScaDao.setCodTipoScadenzario("16");
-				lScaDao.setDataInizioScadenza(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"));
-				lScaDao.setDataFineScadenza(lFineScadenza);
-				lScaDao.setFasSieIdFascicoloSiep(aAnnMod.getFasSieIdFascicoloSiep());
-				lScaDao.setEveIdEvento(aAnnMod.getEveIdEvento());
-				lScaDao.setFlagVisto("N");
-				lScaDao.setCodStatoNotifica("N");
-
-				if (lScaMod != null && lScaMod.getIdScadenzario() != null) {
-					// Update
-					lScaDao.setCodOperatoreAggiornamento(aAnnMod.getCodOperatoreInserimento());
-					lScaDao.setCodUfficioAggiornamento(aAnnMod.getCodUfficioInserimento());
-					lScaDao.setDataAggiornamento(DateUtils.getSysDate());
-					lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
-					lScaDao.update();
+				siesLogger.debug("Scadenzario non inserito perchè data di irrevocabilità assente");
+			else {
+				if (aAnnMod.getNumAnniReclusione().intValue() == 0
+						&& aAnnMod.getNumMesiReclusione().intValue() == 0
+						&& aAnnMod.getNumGiorniReclusione().intValue() == 0) {
+					// non viene inserito lo scadenzario
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
-					siesLogger.debug("Aggiornamento di scadenzario già esistente.");
+					siesLogger.debug("Scadenzario non inserito perchè Termini non definiti");
 				} else {
-					lScaDao.setCodOperatoreInserimento(aAnnMod.getCodOperatoreInserimento());
-					lScaDao.setCodUfficioInserimento(aAnnMod.getCodUfficioInserimento());
-					lScaDao.setDataInserimento(DateUtils.getSysDate());
-					lScaDao.insert();
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// mLog
-					siesLogger.debug("Inserito nuovo cadenzario.");
-				}
-				lScaDao.stop();
-				cleanup(lScaDao);
+					// Ricerca Scadenzario per decidere se fare un update o un nuovo inserimento
+					lScaSqlDao = new ScadenzarioSqlDAO(aConn);
+					lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("16",
+							aAnnMod.getFasSieIdFascicoloSiep());
+					ScadenzarioModel lScaMod = new ScadenzarioModel();
+					lScaMod = (ScadenzarioModel) lScaSqlDao.getModelByKey();
+					lScaSqlDao.stop();
 
+					// Inizializzazione Scadenzario
+					Date lSommaAnni = null;
+					Date lSommaMesi = null;
+					Date lFineScadenza = null;
+					String lDataInizio = DateUtils.getDateToString(aDataIrrevocabilita, "dd/MM/yyyy");
+					lSommaAnni = DateUtils.moveDateTo(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"),
+							java.util.Calendar.YEAR, aAnnMod.getNumAnniReclusione().intValue());
+					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
+							aAnnMod.getNumMesiReclusione().intValue());
+					lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
+							aAnnMod.getNumGiorniReclusione().intValue());
+
+					lScaDao = new ScadenzarioDAO(aConn);
+					lScaDao.setCodTipoScadenzario("16");
+					lScaDao.setDataInizioScadenza(DateUtils.getDate(lDataInizio, "dd/MM/yyyy"));
+					lScaDao.setDataFineScadenza(lFineScadenza);
+					lScaDao.setFasSieIdFascicoloSiep(aAnnMod.getFasSieIdFascicoloSiep());
+					lScaDao.setEveIdEvento(aAnnMod.getEveIdEvento());
+					lScaDao.setFlagVisto("N");
+					lScaDao.setCodStatoNotifica("N");
+
+					if (lScaMod != null && lScaMod.getIdScadenzario() != null) {
+						// Update
+						lScaDao.setCodOperatoreAggiornamento(aAnnMod.getCodOperatoreInserimento());
+						lScaDao.setCodUfficioAggiornamento(aAnnMod.getCodUfficioInserimento());
+						lScaDao.setDataAggiornamento(DateUtils.getSysDate());
+						lScaDao.setCondizioneUpdate(lScaMod.getIdScadenzario());
+						lScaDao.update();
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di mLog
+						siesLogger.debug("Aggiornamento di scadenzario già esistente.");
+					} else {
+						lScaDao.setCodOperatoreInserimento(aAnnMod.getCodOperatoreInserimento());
+						lScaDao.setCodUfficioInserimento(aAnnMod.getCodUfficioInserimento());
+						lScaDao.setDataInserimento(DateUtils.getSysDate());
+						lScaDao.insert();
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di mLog
+						siesLogger.debug("Inserito nuovo cadenzario.");
+					}
+					lScaDao.stop();
+				}
 			}
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("Exception: ", e);
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScaDao);
+			cleanup(lScaSqlDao);
 		}
 	}
 
 	void CancellazioneScadenzario(BigDecimal aIdFascicoloSiep, String aTipoScadenzario, Connection aConn)
 			throws Exception {
-		ScadenzarioSqlDAO lScaSqlDao = new ScadenzarioSqlDAO(aConn);
-		ScadenzarioDAO lScaDao = new ScadenzarioDAO(aConn);
+
+		ScadenzarioSqlDAO lScaSqlDao = null;
+		ScadenzarioDAO lScaDao = null;
+
 		ScadenzarioModel lScaMod = null;
 
-		lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo(aTipoScadenzario, aIdFascicoloSiep);
-		lScaMod = (ScadenzarioModel) lScaSqlDao.getModelByKey();
-		if (lScaMod != null && lScaMod.getIdScadenzario() != null) {
-			lScaDao.setCondizioneDelete(lScaMod.getIdScadenzario());
-			lScaDao.delete();
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("Cancellazione Scadenzario tipo " + aTipoScadenzario);
+		try {
+			lScaSqlDao = new ScadenzarioSqlDAO(aConn);
+			lScaDao = new ScadenzarioDAO(aConn);
+
+			lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo(aTipoScadenzario, aIdFascicoloSiep);
+			lScaMod = (ScadenzarioModel) lScaSqlDao.getModelByKey();
+			if (lScaMod != null && lScaMod.getIdScadenzario() != null) {
+				lScaDao.setCondizioneDelete(lScaMod.getIdScadenzario());
+				lScaDao.delete();
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Cancellazione Scadenzario tipo " + aTipoScadenzario);
+			}
+			lScaDao.stop();
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("Exception: ", e);
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lScaSqlDao);
+			cleanup(lScaDao);
 		}
-		lScaDao.stop();
-		cleanup(lScaDao);
 	}
 
 }

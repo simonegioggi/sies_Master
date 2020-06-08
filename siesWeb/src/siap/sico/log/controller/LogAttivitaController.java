@@ -5,12 +5,12 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.log.dao.LogAttivitaDAO;
 import siap.sico.log.dao.LogAttivitaSqlDAO;
 import siap.sico.log.model.LogAttivitaModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -25,16 +25,14 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class LogAttivitaController extends SiapController implements ILogAttivita {
 
-	/**
-   * 
-   */
 	public LogAttivitaModel ExInserisciLogAttivita(LogAttivitaModel aLogAttivita) throws F3BException {
+
 		Connection lConn = null;
 		LogAttivitaDAO lLogDao = null;
 		LogAttivitaModel lLogMod = null;
@@ -45,8 +43,8 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 			lLogMod = new LogAttivitaModel(aLogAttivita);
 			lLogDao = new LogAttivitaDAO(lConn);
 			lLogDao.setDAOFromModel(aLogAttivita);
-//			BigDecimal lKey = null;
-			/*lKey = */lLogDao.insert();
+			// BigDecimal lKey = null;
+			/* lKey = */lLogDao.insert();
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
@@ -59,11 +57,9 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 		return lLogMod;
 	}
 
-	/**
-   * 
-   */
 	public Vector ExRicercaLogAttivita(LogAttivitaModel aLogAttivita, Date aDataInizio, Date aDataFine,
 			String FiltroUtenteConnesso) throws F3BException {
+
 		Connection lConn = null;
 		Vector lLogAttiviti = new Vector();
 		LogAttivitaSqlDAO lLogDao = null;
@@ -78,7 +74,8 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("LogAttivitaController.ExRicercaLogAttivita: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"LogAttivitaController.ExRicercaLogAttivita: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lLogDao);
 			cleanup(lConn);
@@ -87,10 +84,8 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 		return lLogAttiviti;
 	}
 
-	/**
-   * 
-   */
 	public LogAttivitaModel ExRicercaLogAttivitaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		LogAttivitaSqlDAO lLogDao = null;
 		LogAttivitaModel lLogMod;
@@ -101,8 +96,8 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 			lLogDao.ricercaLogAttivitaByKey(aKey);
 			lLogMod = (LogAttivitaModel) lLogDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("LogAttivitaController.ExRicercaLogAttivitaByKey: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"LogAttivitaController.ExRicercaLogAttivitaByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lLogDao);
 			cleanup(lConn);
@@ -111,10 +106,8 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 		return lLogMod;
 	}
 
-	/**
-   * 
-   */
 	public LogAttivitaModel ExModificaLogAttivita(LogAttivitaModel aLogAttivita) throws F3BException {
+
 		Connection lConn = null;
 		LogAttivitaDAO lLogDao = null;
 		LogAttivitaModel lLogMod = new LogAttivitaModel(aLogAttivita);
@@ -136,10 +129,8 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 		return lLogMod;
 	}
 
-	/**
-   * 
-   */
 	public void ExCancellaLogAttivita(LogAttivitaModel aLogAttivita) throws F3BException {
+
 		Connection lConn = null;
 		LogAttivitaDAO lLogDao = null;
 
@@ -148,10 +139,9 @@ public class LogAttivitaController extends SiapController implements ILogAttivit
 			lLogDao = new LogAttivitaDAO(lConn);
 			// lLogDao.setCondizioneUpdate(aLogAttivita.getIdLogAttivita());
 			lLogDao.delete();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("LogAttivitaController.ExCancellaLogAttivita: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"LogAttivitaController.ExCancellaLogAttivita: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lLogDao);
 			cleanup(lConn);

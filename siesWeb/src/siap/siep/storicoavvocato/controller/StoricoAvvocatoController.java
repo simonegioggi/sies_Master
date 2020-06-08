@@ -4,29 +4,35 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.storicoavvocato.dao.StoricoAvvocatoDAO;
 import siap.siep.storicoavvocato.dao.StoricoAvvocatoSqlDAO;
 import siap.siep.storicoavvocato.model.StoricoAvvocatoModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
-
-
-
 
 /**
-* <p>Title: StoricoAvvocatoController</p>
-* <p>Description: Classe Controller per StoricoAvvocato</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
+ * <p>
+ * Title: StoricoAvvocatoController
+ * </p>
+ * <p>
+ * Description: Classe Controller per StoricoAvvocato
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
+ * @version 1.0
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class StoricoAvvocatoController extends SiapController implements IStoricoAvvocato
- {
+public class StoricoAvvocatoController extends SiapController implements IStoricoAvvocato {
 
 	public StoricoAvvocatoModel ExInserisciStoricoAvvocato(StoricoAvvocatoModel aStoricoAvvocato)
 			throws F3BException {
+
 		Connection lConn = null;
 		StoricoAvvocatoDAO lStoDao = null;
 		StoricoAvvocatoModel lStoMod = null;
@@ -51,6 +57,7 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 	}
 
 	public Vector ExRicercaStoricoAvvocato(StoricoAvvocatoModel aStoricoAvvocato) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStoricoAvvocati = new Vector();
 		StoricoAvvocatoSqlDAO lStoDao = null;
@@ -64,8 +71,8 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("StoricoAvvocatoController.ExRicercaStoricoAvvocato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StoricoAvvocatoController.ExRicercaStoricoAvvocato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lStoDao);
 			cleanup(lConn);
@@ -74,6 +81,7 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 	}
 
 	public Vector ExRicercaStoricoAvvocatoByIdAvvocato(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lStoricoAvvocati = new Vector();
 		StoricoAvvocatoSqlDAO lStoDao = null;
@@ -87,8 +95,8 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("StoricoAvvocatoController.ExRicercaStoricoAvvocato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StoricoAvvocatoController.ExRicercaStoricoAvvocato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lStoDao);
 			cleanup(lConn);
@@ -97,6 +105,7 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 	}
 
 	public StoricoAvvocatoModel ExRicercaStoricoAvvocatoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		StoricoAvvocatoSqlDAO lStoDao = null;
 		StoricoAvvocatoModel lStoMod;
@@ -107,8 +116,8 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 			lStoDao.ricercaStoricoAvvocatoByKey(aKey);
 			lStoMod = (StoricoAvvocatoModel) lStoDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("StoricoAvvocatoController.ExRicercaStoricoAvvocato: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"StoricoAvvocatoController.ExRicercaStoricoAvvocato: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lStoDao);
 			cleanup(lConn);
@@ -118,6 +127,7 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 
 	public StoricoAvvocatoModel ExModificaStoricoAvvocato(StoricoAvvocatoModel aStoricoAvvocato)
 			throws F3BException {
+
 		Connection lConn = null;
 		StoricoAvvocatoDAO lStoDao = null;
 		StoricoAvvocatoModel lStoMod = new StoricoAvvocatoModel(aStoricoAvvocato);
@@ -140,6 +150,7 @@ public class StoricoAvvocatoController extends SiapController implements IStoric
 	}
 
 	public void ExCancellaStoricoAvvocato(StoricoAvvocatoModel aStoricoAvvocato) throws F3BException {
+
 		Connection lConn = null;
 		StoricoAvvocatoDAO lStoDao = null;
 

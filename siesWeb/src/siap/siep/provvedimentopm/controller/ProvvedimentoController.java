@@ -1,13 +1,5 @@
 package siap.siep.provvedimentopm.controller;
 
-/**
- * <p>Title: ProvvedimentoController</p>
- * <p>Description: Classe Controller per Provvedimento</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -18,6 +10,14 @@ import java.util.Vector;
 
 import org.w3c.dom.Document;
 
+//import org.apache.crimson.tree.XmlDocument;
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.ModelTreeInputSource;
+import f3b.util.xml.ParserModelTree;
+import f3b.util.xml.TreeModel;
+import f3b.util.xml.XMLUtils;
 import siap.controller.SiapController;
 import siap.sico.soggetto.controller.ISoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -40,16 +40,24 @@ import siap.siep.sentenza.controller.ISentenza;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.util.SIAPPathProperties;
-//import org.apache.crimson.tree.XmlDocument;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.ModelTreeInputSource;
-import f3b.util.xml.ParserModelTree;
-import f3b.util.xml.TreeModel;
-import f3b.util.xml.XMLUtils;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+/**
+ * <p>
+ * Title: ProvvedimentoController
+ * </p>
+ * <p>
+ * Description: Classe Controller per Provvedimento
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
+ * @version 1.0
+ */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProvvedimentoController extends SiapController implements IProvvedimento {
 
 	// NUOVA INFRASTRUTTURA: aggiunte variabili di classe
@@ -58,12 +66,13 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 
 	/**
 	 * Inserisce il Provvedimento
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExInserisciProvvedimento(ProvvedimentoModel aProvvedimento,
 			UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoDAO lProDao = null;
@@ -83,7 +92,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 			lProDao = new ProvvedimentoDAO(lConn);
 			lProDao.setDAOFromModel(aProvvedimento);
 
-			/*BigDecimal lIndex = */lProDao.insert();
+			/* BigDecimal lIndex = */lProDao.insert();
 
 			// Set del Blob
 			// lProDao.setDocBlob(lByteArrayInput, lIndex);
@@ -102,14 +111,13 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 
 	/**
 	 * Seleziona un singolo documento rtf sul DB e lo restituisce come ByteArrayOutputStream
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @return Array con il Documento recuperato dal DB
 	 * @throws F3BException
 	 */
-	public ByteArrayOutputStream ExGetDocumento(ProvvedimentoModel aProvvedimento) throws F3BException
+	public ByteArrayOutputStream ExGetDocumento(ProvvedimentoModel aProvvedimento) throws F3BException {
 
-	{
 		Connection lConn = null;
 		ProvvedimentoDAO lProDao = null;
 
@@ -143,6 +151,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public Vector ExRicercaProvvedimento(ProvvedimentoModel aProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 		Vector lProvvedimenti = new Vector();
 		ProvvedimentoSqlDAO lProDao = null;
@@ -155,14 +164,14 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 			lProDao.start();
 
 			while (lProDao.next())
-				lProvvedimenti.add((ProvvedimentoModel) lProDao.getModel());
+				lProvvedimenti.add(lProDao.getModel());
 
 			if (lProvvedimenti.size() == 0)
 				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
 
 		} catch (DAOException daoEx) {
-			throw new F3BException("ProvvedimentoController.ExRicercaProvvedimento: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ProvvedimentoController.ExRicercaProvvedimento: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lProDao);
 			cleanup(lConn);
@@ -172,8 +181,9 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public void ExModificaProvvedimento(ProvvedimentoModel aProvvedimento) throws F3BException {
+
 		Connection lConn = null;
-//		Vector lProvvedimenti = new Vector();
+		// Vector lProvvedimenti = new Vector();
 		ProvvedimentoDAO lProDao = null;
 
 		try {
@@ -192,6 +202,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public void ExCancellaProvvedimento(ProvvedimentoModel aProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 		ProvvedimentoDAO lProDao = null;
 
@@ -202,8 +213,8 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 			lProDao.delete();
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("ProvvedimentoController.ExCancellaProvvedimento: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ProvvedimentoController.ExCancellaProvvedimento: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lProDao);
 			cleanup(lConn);
@@ -213,7 +224,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	/**
 	 * Metodo per la generazione del documento. ( Presumibilmente da Generalizzare )
 	 * <p>
-	 * 
+	 *
 	 * @param aXML
 	 * @param aTemplateRTF
 	 * @return
@@ -221,6 +232,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	 */
 	private OutputStream generaDocumento(ByteArrayInputStream aXML, String aFileTemplateRTF)
 			throws F3BException {
+
 		ByteArrayOutputStream lOut = new ByteArrayOutputStream();
 		try {
 			FileInputStream lFis = new FileInputStream(aFileTemplateRTF);
@@ -238,6 +250,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public TreeModel prelevaDati(ProvvedimentoModel aProModel, UtenteModel aUtente) throws F3BException {
+
 		// Fascicolo
 		FascicoloSiepModel lFasModel = new FascicoloSiepModel();
 		lFasModel.setIdFascicoloSiep(aProModel.getFasSieIdFascicoloSiep());
@@ -305,6 +318,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public FascicoloSiepModel ricercaFascicolo(FascicoloSiepModel aModel) throws F3BException {
+
 		IFascicoloSiep lFascCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
 		Vector lFascicoli = lFascCtrl.ExRicercaFascicoloSiep(aModel);
 		FascicoloSiepModel lModel = new FascicoloSiepModel();
@@ -314,6 +328,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public SoggettoModel ricercaSoggetto(SoggettoModel aModel) throws F3BException {
+
 		ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
 		Vector lSoggetti = lSogCtrl.ExRicercaSoggetto(aModel);
 		SoggettoModel lModel = new SoggettoModel();
@@ -323,6 +338,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public SentenzaModel ricercaSentenza(SentenzaModel aModel) throws F3BException {
+
 		ISentenza lSenCtrl = SIEPLookupRemote.getSentenzaRemote();
 		Vector lSentenze = lSenCtrl.ExRicercaSentenza(aModel);
 		SentenzaModel lModel = new SentenzaModel();
@@ -332,6 +348,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public PosizioneGiuridicaModel ricercaPosizione(PosizioneGiuridicaModel aModel) throws F3BException {
+
 		IPosizioneGiuridica lPosGiuridica = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 		PosizioneGiuridicaModel lModel = new PosizioneGiuridicaModel();
 		lModel = lPosGiuridica.ExRicercaPosizioneGiuridicaCorrente(aModel);
@@ -340,6 +357,7 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	}
 
 	public Vector ricercaReati(ReatoModel aModel) throws F3BException {
+
 		IReato lReatoCtrl = SIEPLookupRemote.getReatoRemote();
 		Vector lReato = lReatoCtrl.ExRicercaReato(aModel);
 
@@ -353,9 +371,10 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	 * @throws F3BException
 	 */
 	public Vector ricercaAvvocati(AvvocatoFascicoloSiepModel aAvvFascModel) throws F3BException {
+
 		IAvvocato lAvvocatoCtrl = SIEPLookupRemote.getAvvocatoRemote();
-		Vector lAvvocati = lAvvocatoCtrl
-				.ExRicercaAvvocatiAttualiFascicolo(new AvvocatoModel(), aAvvFascModel);
+		Vector lAvvocati = lAvvocatoCtrl.ExRicercaAvvocatiAttualiFascicolo(new AvvocatoModel(),
+				aAvvFascModel);
 
 		return lAvvocati;
 	}
@@ -363,22 +382,23 @@ public class ProvvedimentoController extends SiapController implements IProvvedi
 	/**
 	 * Metodo che si occupa di effettuare il parseTree ( Chissà forse da generalizzare )
 	 * <p>
-	 * 
+	 *
 	 * @param aTreeModel
 	 * @return
 	 * @throws F3BException
 	 */
 	private ByteArrayInputStream parseTreeXML(TreeModel aTreeModel) throws F3BException {
+
 		ByteArrayInputStream lXML;
 
 		try {
 			ModelTreeInputSource lIs = new ModelTreeInputSource(aTreeModel);
 			ParserModelTree lParser = new ParserModelTree();
 			Document lDocXML = lParser.parse(lIs);
-//			CharArrayWriter lWri = new CharArrayWriter();
+			// CharArrayWriter lWri = new CharArrayWriter();
 			XMLUtils.serialize(lDocXML, System.out);
-//			OutputStream out = null;
-//			XMLUtils.serialize(lDocXML, out);
+			// OutputStream out = null;
+			// XMLUtils.serialize(lDocXML, out);
 			lXML = new ByteArrayInputStream(System.out.toString().getBytes());
 		} catch (Throwable t) {
 			throw new F3BException("Errore di generazione report" + t);

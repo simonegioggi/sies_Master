@@ -5,12 +5,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import siap.sico.magistrato.model.MagistratoModel;
-import siap.siep.statis.dao.MagistratoFirmatarioSqlDAO;
 import f3b.controller.GenericController;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.sico.magistrato.model.MagistratoModel;
+import siap.siep.statis.dao.MagistratoFirmatarioSqlDAO;
 
 /**
  * <p>
@@ -29,8 +29,9 @@ public class MagistratoFirmatarioController extends GenericController {
 	// aFine, String Accorpato1, String Accorpato2, String Accorpato3)
 	public Vector<MagistratoModel> ExRicercaMagistratiFirmatari(String aUfficio, String aInizio, String aFine)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector<MagistratoModel> lMagistrati = new Vector<MagistratoModel>();
+		Vector<MagistratoModel> lMagistrati = new Vector<>();
 		MagistratoFirmatarioSqlDAO lMagSqlDao = null;
 
 		try {
@@ -60,9 +61,8 @@ public class MagistratoFirmatarioController extends GenericController {
 		return lMagistrati;
 	}
 
-	// public Vector<MagistratoModel> ExRicercaMagistratiFirmatari(String aUfficio, String aInizio, String
-	// aFine, String Accorpato1, String Accorpato2, String Accorpato3)
 	public MagistratoModel ExRicercaW_MagistratoByCod(String aCod) throws F3BException {
+
 		Connection lConn = null;
 		MagistratoModel MagModel = new MagistratoModel();
 		MagistratoFirmatarioSqlDAO lMagSqlDao = null;
@@ -74,19 +74,18 @@ public class MagistratoFirmatarioController extends GenericController {
 			lMagSqlDao.start();
 
 			MagModel = (MagistratoModel) lMagSqlDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"MagistratoFirmatarioController.ExRicercaW_MagistratoByCod: Non posso leggere : " + daoEx);
+					"MagistratoFirmatarioController.ExRicercaW_MagistratoByCod: Non posso leggere : "
+							+ daoEx);
 		} finally {
 			cleanup(lMagSqlDao);
 			cleanup(lConn);
 		}
 
 		return MagModel;
-
 	} // Chiude ExRicercaW_MagistratoByCod
 
 } // Chiude controller

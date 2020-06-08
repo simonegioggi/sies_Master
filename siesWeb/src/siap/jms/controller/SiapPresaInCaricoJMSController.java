@@ -92,9 +92,8 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 		CampoNotaDAO lCampoNotaDao = null; // Dopo Evento
 		AvvocatoDAO lAvvDao = null;
 		AvvocatoFascicoloSiusDAO lAvvFasSiuDao = null;
-		String lRapporto = new String("");
 
-		// Vector lCodEsito = new Vector();
+		String lRapporto = new String("");
 
 		try {
 			// int length = 0;
@@ -123,7 +122,6 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 			int count = 0;
 
 			while (count < lNotifiche.length) {
-
 				if (lNotifiche[count] != null) {
 					try {
 						// AUTORITA ESTERNA
@@ -206,9 +204,10 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 				count++;
 			}
 		} catch (Exception e) {
-		}
-
-		finally {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+			// posto di LogF3B.getLogger()
+			siesLogger.error("inserisciEventoNotificheAvvocati: " + e);
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lAutDao);
@@ -226,6 +225,7 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 		String[] lEsito = new String[2]; // 21/01/2008
 		String lEsitoEvento = "00000"; // 21/01/2008
 		String lCodEsito = "00000";
+
 		EventoDAO lEveDao = null; // Dopo FascicoloSiep
 		NotificaDAO lNotDao = null; // Dopo Evento/Autorita Esterna
 		AutoritaEsternaDAO lAutDao = null;
@@ -239,6 +239,7 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 		AvvocatoFascicoloSiepDAO lAvvFasSieDao = null;
 		siap.sius.avvocato.dao.AvvocatoDAO lAvvSiusDao = null;
 		AvvocatoFascicoloSiusDAO lAvvFasSiusDao = null;
+
 		String lRapporto = new String("");
 
 		// STUB 26/04/2005 - AGGREGATO FASCICOLO SIUS PRIMA DELL'EVENTO.
@@ -249,7 +250,6 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 			// 22/06/2010 Inserimento soggetto SIUS.
 			if (lEve.getFascicoloGPTP().getFascicoloSiusModel() != null
 					&& lEve.getFascicoloGPTP().getFascicoloSiusModel().getSoggetto() != null) {
-
 				try {
 					SoggettoDAO lSogDao = new SoggettoDAO(lConn);
 					lSogDao.setDAOFromModel(lEve.getFascicoloGPTP().getFascicoloSiusModel().getSoggetto());
@@ -577,9 +577,7 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 				throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire le Note! ");
 
 			lRapporto += buildRapporto("Inserimento ", "Note ", lCodEsito);
-		}
-
-		finally {
+		} finally {
 			cleanup(lEveDao);
 			cleanup(lNotDao);
 			cleanup(lAutDao);
@@ -608,6 +606,7 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 	 * @return
 	 */
 	protected String buildRapporto(String tipoOper, String arg, String esito) {
+
 		String lString = "";
 
 		lString = "<tr><td class=\"l\"> " + tipoOper + arg + " con esito </td>";
@@ -646,10 +645,12 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 	 */
 	private String inserisciTenoriEProvvedimenti(String aRapporto, EventoNotificaModel lEve, Connection lConn)
 			throws F3BException {
+
 		// Fase di inserimento dei Provvedimenti e relativi Tenore.
 		DepositoDecretoDAO lDepDecDao = null;
 		DepositoOrdinanzaPcDAO lDepOrdDao = null;
 		TenoreDAO lTenDao = null;
+
 		String lCodEsito = "";
 
 		if (lEve.getFascicoloGPTP() != null && lEve.getFascicoloGPTP().getTenori() != null) {
@@ -745,7 +746,6 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 				}
 
 				// Fase di inserimento per i Tenore. 20/08/2010 Aggiunto controllo su IdTenore.
-
 				if (lEve.getFascicoloGPTP().getTenori()[i] != null
 						&& lEve.getFascicoloGPTP().getTenori()[i].getTenore() != null
 						&& lEve.getFascicoloGPTP().getTenori()[i].getTenore().getIdTenore() != null) {
@@ -798,15 +798,14 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 	 */
 	private String inserisciAllegati(String aRapporto, EventoNotificaModel lEve, Connection lConn)
 			throws F3BException {
+
 		// Fase di inserimento degli Allegati.
 		DocumentoAllegatoDAO lAllegatoDao = null;
 		String lCodEsito;
 
 		if (!Utils.isNullObj(lEve.getFascicoloGPTP())
-				&& !Utils.isNullObj(lEve.getFascicoloGPTP().getAllegati()))
-		// Fase di inserimento degli Allegati.
-		{
-
+				&& !Utils.isNullObj(lEve.getFascicoloGPTP().getAllegati())) {
+			// Fase di inserimento degli Allegati.
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.warn("Numero Allegati trattati : " + lEve.getFascicoloGPTP().getAllegati().size());
@@ -856,10 +855,13 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
 								+ ex.getMessage());
 					}
+				} finally {
+					// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+					cleanup(lAllegatoDao);
 				}
 			}
 		}
-		cleanup(lAllegatoDao);
+
 		return aRapporto;
 	}
 
@@ -873,605 +875,170 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 	 */
 	private String inserisciAltriDatiSius(String aRapporto, EventoNotificaModel lEve, Connection lConn)
 			throws F3BException {
+
 		// Fase di inserimento degli Avvocati.
 		siap.sius.avvocato.dao.AvvocatoDAO lAvvDao = null;
 		AvvocatoFascicoloSiusDAO lAvvFasSiusDao = null;
-		String lCodEsito;
-		if (!Utils.isNullObj(lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()) && (!Utils
-				.isNullObj(lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius()))) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Avvocati trattati :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius() );
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.warn("Numero Avvocati trattati : "
-					+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius().size());
-			for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius()
-					.size(); i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("Nel ciclo FOR x gli Avvocati");
-				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Avvocato Fascicolo SIUS = "
-					// +((AvvocatoSiusModel)(lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius().get(i)))
-					// );
-					AvvocatoSiusModel lAvvSIUS = (AvvocatoSiusModel) (lEve.getFascicoloGPTP()
-							.getDatiSiusPerTrasferimento().getAvvocatiFasSius().get(i));
 
-					lAvvDao = new siap.sius.avvocato.dao.AvvocatoDAO(lConn);
-
-					lAvvDao.setDAOFromModel(lAvvSIUS.getAvvocato());
-					lAvvDao.setWithoutSequence(true);
-					lAvvDao.insert();
-					lAvvDao.stop();
-					lCodEsito = "00000";
-
-					lAvvFasSiusDao = new AvvocatoFascicoloSiusDAO(lConn);
-					lAvvFasSiusDao.setDAOFromModel(lAvvSIUS.getAvvocatoFascicoloSiusModel());
-					lAvvFasSiusDao.setAvvIdAvvocato(lAvvSIUS.getAvvocato().getIdAvvocato());
-					lAvvFasSiusDao.setWithoutSequence(true);
-					lAvvFasSiusDao.insert();
-					lAvvFasSiusDao.stop();
-					lCodEsito = "00000";
-
-					aRapporto += buildRapporto("Inserimento ",
-							"Avvocato " + lAvvSIUS.getAvvocato().getIdAvvocato() + " x il Fascicolo "
-									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-							lCodEsito);
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						lCodEsito = "00001";
-					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-						lCodEsito = "00002";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
-								+ " - " + ex.getMessage());
-					} else {
-						lCodEsito = "33333";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
-								+ ex.getMessage());
-					}
-				}
-			}
-		}
-
-		// Fase di inserimento delle Residenze/Domicilii.
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		MisuraSicurezzaDAO lMSDao = null;
+		RichiestaConversioneDAO lRCDao = null;
+		ScambioSanzioneDAO lSSDao = null;
 		ResidenzaFascicoloSiusDAO lResFasSiuDao = null;
 		ResidenzaDAO lResDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getListResidenzaFasSius() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Residenze trattate :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getListResidenzaFasSius() );
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.warn("Numero Residenze trattate : "
-					+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getListResidenzaFasSius().size());
-			for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
-					.getListResidenzaFasSius().size(); i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("Nel ciclo FOR x le Residenze ");
-				ResidenzaAssociataModel lResSIUS = (ResidenzaAssociataModel) (lEve.getFascicoloGPTP()
-						.getDatiSiusPerTrasferimento().getListResidenzaFasSius().get(i));
-				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Residenza x SIUS = " + lResSIUS.getResidenza().getIdResidenza() );
-
-					lResDao = new ResidenzaDAO(lConn);
-
-					lResDao.setDAOFromModel(lResSIUS.getResidenza());
-					lResDao.setWithoutSequence(true);
-					lResDao.insert();
-					lResDao.stop();
-					lCodEsito = "00000";
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						lCodEsito = "00001";
-					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-						lCodEsito = "00002";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
-								+ " - " + ex.getMessage());
-					} else {
-						lCodEsito = "33333";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
-								+ ex.getMessage());
-					}
-				}
-				aRapporto += buildRapporto("Inserimento ",
-						"Residenza " + lResSIUS.getResidenza().getIdResidenza() + " x il Fascicolo "
-								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-						lCodEsito);
-
-				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Residenza Fascicolo SIUS = "
-					// +lResSIUS.getResidenzaFascicoloSius().getResIdResidenza() );
-
-					lResFasSiuDao = new ResidenzaFascicoloSiusDAO(lConn);
-					lResFasSiuDao.setDAOFromModel(lResSIUS.getResidenzaFascicoloSius());
-					lResFasSiuDao.setResIdResidenza(lResSIUS.getResidenza().getIdResidenza());
-					lResFasSiuDao.setWithoutSequence(true);
-					lResFasSiuDao.insert();
-					lResFasSiuDao.stop();
-					lCodEsito = "00000";
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						lCodEsito = "00001";
-					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-						lCodEsito = "00002";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
-								+ " - " + ex.getMessage());
-					} else {
-						lCodEsito = "33333";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
-								+ ex.getMessage());
-					}
-				}
-				aRapporto += buildRapporto("Inserimento ",
-						"Residenza SIUS " + lResSIUS.getResidenzaFascicoloSius().getResIdResidenza()
-								+ " x il Fascicolo "
-								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-						lCodEsito);
-			}
-		}
-
-		// Fase di inserimento del MAGISTRATO RELATORE.
 		MagistratoRelatoreDAO lMagRelDao = null;
 		MagistratoDAO lMagDao = null;
-		MagistratoRelatoreModel lMagRelMod = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMagistratoRelatore() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMagistratoRelatore()
-						.getMagistrato() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Magistrato trattato :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMagistratoRelatore().getMagistrato()
-			// );
-			try {
-				lMagRelMod = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMagistratoRelatore();
-
-				lMagDao = new MagistratoDAO(lConn);
-				lMagDao.setDAOFromModel(lMagRelMod.getMagistrato());
-				lMagDao.setWithoutSequence(true);
-				lMagDao.insert();
-				lMagDao.stop();
-				lCodEsito = "00000";
-			} catch (DAOException ex) {
-				if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-					lCodEsito = "00001";
-				else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-					lCodEsito = "00002";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode() + " - "
-							+ ex.getMessage());
-				} else {
-					lCodEsito = "33333";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error(
-							"Errore DAO non Classificato : " + ex.getErrorCode() + " - " + ex.getMessage());
-				}
-			}
-			aRapporto += buildRapporto("Inserimento ",
-					"Magistrato " + lMagRelMod.getMagistrato().getCodMagistrato() + " x il Fascicolo "
-							+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-					lCodEsito);
-
-			try {
-				lMagRelDao = new MagistratoRelatoreDAO(lConn);
-
-				// 14/07/2008 Segnalazione interna: In fase di presa in carico Dati SIUS, il Mag. Relatore,
-				// privo di Sequence, veniva comunque inserito, con duplicazioni.
-				lMagRelDao.setCondizionePerFascicoloSius(lMagRelMod.getFasSiuIdFascicoloSius());
-				lMagRelDao.delete();
-				lMagRelDao.stop();
-
-				lMagRelDao.setDAOFromModel(lMagRelMod);
-				lMagRelDao.setWithoutSequence(true);
-				lMagRelDao.insert();
-				lMagRelDao.stop();
-				lCodEsito = "00000";
-			} catch (DAOException ex) {
-				if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-					lCodEsito = "00001";
-				else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-					lCodEsito = "00002";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode() + " - "
-							+ ex.getMessage());
-				} else {
-					lCodEsito = "33333";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error(
-							"Errore DAO non Classificato : " + ex.getErrorCode() + " - " + ex.getMessage());
-				}
-			}
-			aRapporto += buildRapporto("Inserimento ",
-					"Magistrato Relatore " + lMagRelMod.getMagCodMagistrato() + " x il Fascicolo "
-							+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-					lCodEsito);
-		}
-
-		// Fase di inserimento del LuogoDetenzione.
-		LuogoDetenzioneDAO lLuoDetDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getLuogoDetenzione() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getLuogoDetenzione()
-						.getIdLuogoDetenzione() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Luogo Detenzione :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getLuogoDetenzione() );
-
-			LuogoDetenzioneModel lLuogoDet = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
-					.getLuogoDetenzione();
-			try {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("LuogoDetenzione x SIUS = " + lLuogoDet.getIdLuogoDetenzione() );
-
-				lLuoDetDao = new LuogoDetenzioneDAO(lConn);
-
-				lLuoDetDao.setDAOFromModel(lLuogoDet);
-				lLuoDetDao.setWithoutSequence(true);
-				lLuoDetDao.insert();
-				lLuoDetDao.stop();
-				lCodEsito = "00000";
-			} catch (DAOException ex) {
-				if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-					lCodEsito = "00001";
-				else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-					lCodEsito = "00002";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode() + " - "
-							+ ex.getMessage());
-				} else {
-					lCodEsito = "33333";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error(
-							"Errore DAO non Classificato : " + ex.getErrorCode() + " - " + ex.getMessage());
-				}
-			}
-			aRapporto += buildRapporto("Inserimento ",
-					"LuogoDetenzione " + lLuogoDet.getIdLuogoDetenzione() + " x il Fascicolo "
-							+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-					lCodEsito);
-		}
-
-		// Fase di inserimento delle Note per ID Fascicolo SIUS.
 		NoteDAO lNoteDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Note trattate :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote() );
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.warn("Numero Note trattate : "
-					+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote().size());
-			for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote().size(); i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("Nel ciclo FOR x le Note ");
-				NoteModel lNote = (NoteModel) (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote()
-						.get(i));
-				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Nota x SIUS = " + lNote.getIdNote() );
-
-					lNoteDao = new NoteDAO(lConn);
-
-					lNoteDao.setDAOFromModel(lNote);
-					lNoteDao.setWithoutSequence(true);
-					lNoteDao.insert();
-					lNoteDao.stop();
-					lCodEsito = "00000";
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						lCodEsito = "00001";
-					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-						lCodEsito = "00002";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
-								+ " - " + ex.getMessage());
-					} else {
-						lCodEsito = "33333";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
-								+ ex.getMessage());
-					}
-				}
-				aRapporto += buildRapporto("Inserimento ",
-						"Nota " + lNote.getIdNote() + " x il Fascicolo "
-								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-						lCodEsito);
-			}
-		}
-
-		// 25/02/2008 Fase di inserimento dell' EsecuzioneSanzioneSostitutiva.
+		LuogoDetenzioneDAO lLuoDetDao = null;
 		EsecuzioneSanzioneSostitutivaDAO lESSDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getESS() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getESS()
-						.getIdEsecuzioneSanzioneSost() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Esec. Sanz. Sost. :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getESS() );
-
-			EsecuzioneSanzioneSostitutivaModel lESSMod = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
-					.getESS();
-			try {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("Esecuzione Sanz. Sost. x SIUS = " + lESSMod.getIdEsecuzioneSanzioneSost()
-				// );
-
-				lESSDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
-
-				lESSDao.setDAOFromModel(lESSMod);
-				lESSDao.setWithoutSequence(true);
-				lESSDao.insert();
-				lESSDao.stop();
-				lCodEsito = "00000";
-			} catch (DAOException ex) {
-				if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-					lCodEsito = "00001";
-				else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-					lCodEsito = "00002";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode() + " - "
-							+ ex.getMessage());
-				} else {
-					lCodEsito = "33333";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error(
-							"Errore DAO non Classificato : " + ex.getErrorCode() + " - " + ex.getMessage());
-				}
-			}
-			aRapporto += buildRapporto("Inserimento ",
-					"Esec. Sanz. Sost. " + lESSMod.getIdEsecuzioneSanzioneSost() + " x il Fascicolo "
-							+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-					lCodEsito);
-		}
-
-		// 25/02/2008 Fase di inserimento dei Periodi Altra Sanzione per ID Fascicolo SIUS.
 		PeriodoAltraSanzioneDAO lPASDao = null;
 
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Periodi SS trattate :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS() );
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.warn("Numero Periodi SS trattati : "
-					+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS().size());
-			for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS().size(); i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		String lCodEsito;
+
+		try {
+			if (!Utils.isNullObj(lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()) && (!Utils
+					.isNullObj(lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius()))) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				// siesLogger.info("Nel ciclo FOR x i Periodi SS ");
-				PeriodoAltraSanzioneModel lPASMod = (PeriodoAltraSanzioneModel) (lEve.getFascicoloGPTP()
-						.getDatiSiusPerTrasferimento().getPAS().get(i));
-				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Periodo SS x SIUS = " + lPASMod.getIdPeriodoAltraSanzione() );
+				siesLogger.warn("Numero Avvocati trattati : "
+						+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius().size());
+				for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getAvvocatiFasSius()
+						.size(); i++) {
+					try {
+						AvvocatoSiusModel lAvvSIUS = (AvvocatoSiusModel) (lEve.getFascicoloGPTP()
+								.getDatiSiusPerTrasferimento().getAvvocatiFasSius().get(i));
 
-					lPASDao = new PeriodoAltraSanzioneDAO(lConn);
+						lAvvDao = new siap.sius.avvocato.dao.AvvocatoDAO(lConn);
 
-					lPASDao.setDAOFromModel(lPASMod);
-					lPASDao.setWithoutSequence(true);
-					lPASDao.insert();
-					lPASDao.stop();
-					lCodEsito = "00000";
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-						lCodEsito = "00001";
-					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-						lCodEsito = "00002";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
-								+ " - " + ex.getMessage());
-					} else {
-						lCodEsito = "33333";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
-								+ ex.getMessage());
-					}
-				}
-				aRapporto += buildRapporto("Inserimento ",
-						"Periodo Altra Sanzione " + lPASMod.getIdPeriodoAltraSanzione() + " x il Fascicolo "
+						lAvvDao.setDAOFromModel(lAvvSIUS.getAvvocato());
+						lAvvDao.setWithoutSequence(true);
+						lAvvDao.insert();
+						lAvvDao.stop();
+						lCodEsito = "00000";
+
+						lAvvFasSiusDao = new AvvocatoFascicoloSiusDAO(lConn);
+						lAvvFasSiusDao.setDAOFromModel(lAvvSIUS.getAvvocatoFascicoloSiusModel());
+						lAvvFasSiusDao.setAvvIdAvvocato(lAvvSIUS.getAvvocato().getIdAvvocato());
+						lAvvFasSiusDao.setWithoutSequence(true);
+						lAvvFasSiusDao.insert();
+						lAvvFasSiusDao.stop();
+						lCodEsito = "00000";
+
+						aRapporto += buildRapporto("Inserimento ", "Avvocato "
+								+ lAvvSIUS.getAvvocato().getIdAvvocato() + " x il Fascicolo "
 								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-						lCodEsito);
-			}
-		}
-
-		// 25/02/2008 Fase di inserimento di Scambio Sanzione.
-		ScambioSanzioneDAO lSSDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS()
-						.getIdScambioSanzione() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Scambio Sanzione :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS() );
-
-			ScambioSanzioneModel lSSMod = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS();
-			try {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("Scambio Sanzione x SIUS = " + lSSMod.getIdScambioSanzione() );
-
-				lSSDao = new ScambioSanzioneDAO(lConn);
-
-				lSSDao.setDAOFromModel(lSSMod);
-				lSSDao.setWithoutSequence(true);
-				lSSDao.insert();
-				lSSDao.stop();
-				lCodEsito = "00000";
-			} catch (DAOException ex) {
-				if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-					lCodEsito = "00001";
-				else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-					lCodEsito = "00002";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode() + " - "
-							+ ex.getMessage());
-				} else {
-					lCodEsito = "33333";
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-					// LogF3B.getLogger()
-					siesLogger.error(
-							"Errore DAO non Classificato : " + ex.getErrorCode() + " - " + ex.getMessage());
-				}
-			}
-			aRapporto += buildRapporto("Inserimento ",
-					"Scambio Sanzione " + lSSMod.getIdScambioSanzione() + " x il Fascicolo "
-							+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-					lCodEsito);
-		}
-
-		// 23/03/2009 Fase di inserimento delle Richieste Conversione Pena Pecuniaria ID Fascicolo SIUS.
-		RichiestaConversioneDAO lRCDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP() != null) {
-			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			// siesLogger.info("Richieste Conv. PP trattate :
-			// "+lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP() );
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.warn("Numero Richieste Conv. PP trattate : "
-					+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP().size());
-			for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP().size(); i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				// siesLogger.info("Nel ciclo FOR x le Richieste Conv. PP ");
-				RichiestaConversioneModel lRCMod = (RichiestaConversioneModel) (lEve.getFascicoloGPTP()
-						.getDatiSiusPerTrasferimento().getRCPP().get(i));
-				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Richiesta Conv. PP x SIUS = " + lRCMod.getIdRichiestaConversione() );
-
-					lRCDao = new RichiestaConversioneDAO(lConn);
-
-					lRCDao.setDAOFromModel(lRCMod);
-					lRCDao.setWithoutSequence(true);
-					/* RichiestaConversioneModel lRCM = (RichiestaConversioneModel) */lRCDao.getModelByKey();
-					lRCDao.insert();
-					lRCDao.stop();
-					lCodEsito = "00000";
-				} catch (DAOException ex) {
-					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
-					// 03/03/2015 In caso già esista la Richiesta Conversione, occorre aggiornarla coi dati
-					// elaborati dalla Sorveglianza.
-					{
-						try {
-							lRCDao = new RichiestaConversioneDAO(lConn);
-							lRCDao.setDAOFromModel(lRCMod);
-							lRCDao.selCondizioneUpdate(lRCMod.getIdRichiestaConversione());
-							lRCDao.update();
-							lRCDao.stop();
-							lCodEsito = "00000";
-						} catch (DAOException ex2) {
+								lCodEsito);
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
 							lCodEsito = "00001";
+						else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto
+							// di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							siesLogger.error("Errore di Costraint di Integrità violata su update : "
-									+ ex2.getErrorCode() + " - " + ex2.getMessage());
-
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
 						}
-					} else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
-						lCodEsito = "00002";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
-								+ " - " + ex.getMessage());
-					} else {
-						lCodEsito = "33333";
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-						// di LogF3B.getLogger()
-						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
-								+ ex.getMessage());
 					}
 				}
-				aRapporto += buildRapporto("Inserimento ",
-						"Periodo Altra Sanzione " + lRCMod.getIdRichiestaConversione() + " x il Fascicolo "
-								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
-						lCodEsito);
 			}
-		}
 
-		// 08/01/2013 Fase di inserimento delle Misure di Sicurezza Applicata per ID Fascicolo SIUS.
-		MisuraSicurezzaDAO lMSDao = null;
-
-		if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
-				&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMSA() != null) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.warn("Numero Misure di Sicurezza trattate : "
-					+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMSA().size());
-			for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMSA().size(); i++) {
-				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// Fase di inserimento delle Residenze/Domicilii.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null && lEve.getFascicoloGPTP()
+					.getDatiSiusPerTrasferimento().getListResidenzaFasSius() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				// siesLogger.info("Nel ciclo FOR x le Misure di Sicurezza ");
-				MisuraSicurezzaModel lMSMod = (MisuraSicurezzaModel) (lEve.getFascicoloGPTP()
-						.getDatiSiusPerTrasferimento().getMSA().get(i));
+				siesLogger.warn("Numero Residenze trattate : " + lEve.getFascicoloGPTP()
+						.getDatiSiusPerTrasferimento().getListResidenzaFasSius().size());
+				for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
+						.getListResidenzaFasSius().size(); i++) {
+					ResidenzaAssociataModel lResSIUS = (ResidenzaAssociataModel) (lEve.getFascicoloGPTP()
+							.getDatiSiusPerTrasferimento().getListResidenzaFasSius().get(i));
+					try {
+						lResDao = new ResidenzaDAO(lConn);
+
+						lResDao.setDAOFromModel(lResSIUS.getResidenza());
+						lResDao.setWithoutSequence(true);
+						lResDao.insert();
+						lResDao.stop();
+						lCodEsito = "00000";
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							lCodEsito = "00001";
+						else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
+						}
+					}
+					aRapporto += buildRapporto("Inserimento ",
+							"Residenza " + lResSIUS.getResidenza().getIdResidenza() + " x il Fascicolo "
+									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+							lCodEsito);
+
+					try {
+						lResFasSiuDao = new ResidenzaFascicoloSiusDAO(lConn);
+						lResFasSiuDao.setDAOFromModel(lResSIUS.getResidenzaFascicoloSius());
+						lResFasSiuDao.setResIdResidenza(lResSIUS.getResidenza().getIdResidenza());
+						lResFasSiuDao.setWithoutSequence(true);
+						lResFasSiuDao.insert();
+						lResFasSiuDao.stop();
+						lCodEsito = "00000";
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							lCodEsito = "00001";
+						else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
+						}
+					}
+					aRapporto += buildRapporto("Inserimento ",
+							"Residenza SIUS " + lResSIUS.getResidenzaFascicoloSius().getResIdResidenza()
+									+ " x il Fascicolo "
+									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+							lCodEsito);
+				}
+			}
+
+			// Fase di inserimento del MAGISTRATO RELATORE.
+			MagistratoRelatoreModel lMagRelMod = null;
+
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMagistratoRelatore() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMagistratoRelatore()
+							.getMagistrato() != null) {
 				try {
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di LogF3B.getLogger()
-					// siesLogger.info("Misura di Sicurezza trattata = " + lMSMod.getIdMisuraSicurezza() );
+					lMagRelMod = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
+							.getMagistratoRelatore();
 
-					lMSDao = new MisuraSicurezzaDAO(lConn);
-
-					lMSDao.setDAOFromModel(lMSMod);
-					lMSDao.setWithoutSequence(true);
-					lMSDao.insert();
-					lMSDao.stop();
+					lMagDao = new MagistratoDAO(lConn);
+					lMagDao.setDAOFromModel(lMagRelMod.getMagistrato());
+					lMagDao.setWithoutSequence(true);
+					lMagDao.insert();
+					lMagDao.stop();
 					lCodEsito = "00000";
 				} catch (DAOException ex) {
 					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
@@ -1491,156 +1058,363 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 					}
 				}
 				aRapporto += buildRapporto("Inserimento ",
-						"Misura di Sicurezza " + lMSMod.getIdMisuraSicurezza() + " x il Fascicolo "
+						"Magistrato " + lMagRelMod.getMagistrato().getCodMagistrato() + " x il Fascicolo "
+								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+						lCodEsito);
+
+				try {
+					lMagRelDao = new MagistratoRelatoreDAO(lConn);
+
+					// 14/07/2008 Segnalazione interna: In fase di presa in carico Dati SIUS, il Mag.
+					// Relatore, privo di Sequence, veniva comunque inserito, con duplicazioni.
+					lMagRelDao.setCondizionePerFascicoloSius(lMagRelMod.getFasSiuIdFascicoloSius());
+					lMagRelDao.delete();
+					lMagRelDao.stop();
+
+					lMagRelDao.setDAOFromModel(lMagRelMod);
+					lMagRelDao.setWithoutSequence(true);
+					lMagRelDao.insert();
+					lMagRelDao.stop();
+					lCodEsito = "00000";
+				} catch (DAOException ex) {
+					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+						lCodEsito = "00001";
+					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+						lCodEsito = "00002";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+								+ " - " + ex.getMessage());
+					} else {
+						lCodEsito = "33333";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+								+ ex.getMessage());
+					}
+				}
+				aRapporto += buildRapporto("Inserimento ",
+						"Magistrato Relatore " + lMagRelMod.getMagCodMagistrato() + " x il Fascicolo "
 								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
 						lCodEsito);
 			}
-		}
 
-		cleanup(lAvvFasSiusDao);
-		cleanup(lAvvDao);
-		cleanup(lResDao);
-		cleanup(lResFasSiuDao);
-		cleanup(lMagDao);
-		cleanup(lMagRelDao);
-		cleanup(lNoteDao);
-		cleanup(lLuoDetDao);
-		cleanup(lESSDao);
-		cleanup(lPASDao);
-		cleanup(lSSDao);
-		cleanup(lRCDao);
-		cleanup(lMSDao); // 08/01/2015
+			// Fase di inserimento del LuogoDetenzione.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getLuogoDetenzione() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getLuogoDetenzione()
+							.getIdLuogoDetenzione() != null) {
+				LuogoDetenzioneModel lLuogoDet = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
+						.getLuogoDetenzione();
+				try {
+					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
+
+					lLuoDetDao.setDAOFromModel(lLuogoDet);
+					lLuoDetDao.setWithoutSequence(true);
+					lLuoDetDao.insert();
+					lLuoDetDao.stop();
+					lCodEsito = "00000";
+				} catch (DAOException ex) {
+					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+						lCodEsito = "00001";
+					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+						lCodEsito = "00002";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+								+ " - " + ex.getMessage());
+					} else {
+						lCodEsito = "33333";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+								+ ex.getMessage());
+					}
+				}
+				aRapporto += buildRapporto("Inserimento ",
+						"LuogoDetenzione " + lLuogoDet.getIdLuogoDetenzione() + " x il Fascicolo "
+								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+						lCodEsito);
+			}
+
+			// Fase di inserimento delle Note per ID Fascicolo SIUS.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.warn("Numero Note trattate : "
+						+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote().size());
+				for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getNote()
+						.size(); i++) {
+					NoteModel lNote = (NoteModel) (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento()
+							.getNote().get(i));
+					try {
+						lNoteDao = new NoteDAO(lConn);
+
+						lNoteDao.setDAOFromModel(lNote);
+						lNoteDao.setWithoutSequence(true);
+						lNoteDao.insert();
+						lNoteDao.stop();
+						lCodEsito = "00000";
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							lCodEsito = "00001";
+						else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
+						}
+					}
+					aRapporto += buildRapporto("Inserimento ",
+							"Nota " + lNote.getIdNote() + " x il Fascicolo "
+									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+							lCodEsito);
+				}
+			}
+
+			// 25/02/2008 Fase di inserimento dell' EsecuzioneSanzioneSostitutiva.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getESS() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getESS()
+							.getIdEsecuzioneSanzioneSost() != null) {
+				EsecuzioneSanzioneSostitutivaModel lESSMod = lEve.getFascicoloGPTP()
+						.getDatiSiusPerTrasferimento().getESS();
+				try {
+					lESSDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
+					lESSDao.setDAOFromModel(lESSMod);
+					lESSDao.setWithoutSequence(true);
+					lESSDao.insert();
+					lESSDao.stop();
+					lCodEsito = "00000";
+				} catch (DAOException ex) {
+					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+						lCodEsito = "00001";
+					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+						lCodEsito = "00002";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+								+ " - " + ex.getMessage());
+					} else {
+						lCodEsito = "33333";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+								+ ex.getMessage());
+					}
+				}
+				aRapporto += buildRapporto("Inserimento ",
+						"Esec. Sanz. Sost. " + lESSMod.getIdEsecuzioneSanzioneSost() + " x il Fascicolo "
+								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+						lCodEsito);
+			}
+
+			// 25/02/2008 Fase di inserimento dei Periodi Altra Sanzione per ID Fascicolo SIUS.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.warn("Numero Periodi SS trattati : "
+						+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS().size());
+				for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getPAS()
+						.size(); i++) {
+					PeriodoAltraSanzioneModel lPASMod = (PeriodoAltraSanzioneModel) (lEve.getFascicoloGPTP()
+							.getDatiSiusPerTrasferimento().getPAS().get(i));
+					try {
+						lPASDao = new PeriodoAltraSanzioneDAO(lConn);
+						lPASDao.setDAOFromModel(lPASMod);
+						lPASDao.setWithoutSequence(true);
+						lPASDao.insert();
+						lPASDao.stop();
+						lCodEsito = "00000";
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							lCodEsito = "00001";
+						else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
+						}
+					}
+					aRapporto += buildRapporto("Inserimento ",
+							"Periodo Altra Sanzione " + lPASMod.getIdPeriodoAltraSanzione()
+									+ " x il Fascicolo "
+									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+							lCodEsito);
+				}
+			}
+
+			// 25/02/2008 Fase di inserimento di Scambio Sanzione.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS()
+							.getIdScambioSanzione() != null) {
+				ScambioSanzioneModel lSSMod = lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getSS();
+				try {
+					lSSDao = new ScambioSanzioneDAO(lConn);
+					lSSDao.setDAOFromModel(lSSMod);
+					lSSDao.setWithoutSequence(true);
+					lSSDao.insert();
+					lSSDao.stop();
+					lCodEsito = "00000";
+				} catch (DAOException ex) {
+					if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+						lCodEsito = "00001";
+					else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+						lCodEsito = "00002";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+								+ " - " + ex.getMessage());
+					} else {
+						lCodEsito = "33333";
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
+						siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+								+ ex.getMessage());
+					}
+				}
+				aRapporto += buildRapporto("Inserimento ",
+						"Scambio Sanzione " + lSSMod.getIdScambioSanzione() + " x il Fascicolo "
+								+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+						lCodEsito);
+			}
+
+			// 23/03/2009 Fase di inserimento delle Richieste Conversione Pena Pecuniaria ID Fascicolo SIUS.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.warn("Numero Richieste Conv. PP trattate : "
+						+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP().size());
+				for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getRCPP()
+						.size(); i++) {
+					RichiestaConversioneModel lRCMod = (RichiestaConversioneModel) (lEve.getFascicoloGPTP()
+							.getDatiSiusPerTrasferimento().getRCPP().get(i));
+					try {
+						lRCDao = new RichiestaConversioneDAO(lConn);
+						lRCDao.setDAOFromModel(lRCMod);
+						lRCDao.setWithoutSequence(true);
+						/* RichiestaConversioneModel lRCM = (RichiestaConversioneModel) */lRCDao
+								.getModelByKey();
+						lRCDao.insert();
+						lRCDao.stop();
+						lCodEsito = "00000";
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
+							// 03/03/2015 In caso già esista la Richiesta Conversione, occorre aggiornarla coi
+							// dati elaborati dalla Sorveglianza.
+							try {
+								lRCDao = new RichiestaConversioneDAO(lConn);
+								lRCDao.setDAOFromModel(lRCMod);
+								lRCDao.selCondizioneUpdate(lRCMod.getIdRichiestaConversione());
+								lRCDao.update();
+								lRCDao.stop();
+								lCodEsito = "00000";
+							} catch (DAOException ex2) {
+								lCodEsito = "00001";
+								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
+								// al posto di LogF3B.getLogger()
+								siesLogger.error("Errore di Costraint di Integrità violata su update : "
+										+ ex2.getErrorCode() + " - " + ex2.getMessage());
+							}
+						} else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
+						}
+					}
+					aRapporto += buildRapporto("Inserimento ",
+							"Periodo Altra Sanzione " + lRCMod.getIdRichiestaConversione()
+									+ " x il Fascicolo "
+									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+							lCodEsito);
+				}
+			}
+
+			// 08/01/2013 Fase di inserimento delle Misure di Sicurezza Applicata per ID Fascicolo SIUS.
+			if (lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento() != null
+					&& lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMSA() != null) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.warn("Numero Misure di Sicurezza trattate : "
+						+ lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMSA().size());
+				for (int i = 0; i < lEve.getFascicoloGPTP().getDatiSiusPerTrasferimento().getMSA()
+						.size(); i++) {
+					MisuraSicurezzaModel lMSMod = (MisuraSicurezzaModel) (lEve.getFascicoloGPTP()
+							.getDatiSiusPerTrasferimento().getMSA().get(i));
+					try {
+						lMSDao = new MisuraSicurezzaDAO(lConn);
+						lMSDao.setDAOFromModel(lMSMod);
+						lMSDao.setWithoutSequence(true);
+						lMSDao.insert();
+						lMSDao.stop();
+						lCodEsito = "00000";
+					} catch (DAOException ex) {
+						if (ex.UNIQUE_CONSTRAINT_VIOLATED)
+							lCodEsito = "00001";
+						else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+							lCodEsito = "00002";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore di Costraint di Integrità violata : " + ex.getErrorCode()
+									+ " - " + ex.getMessage());
+						} else {
+							lCodEsito = "33333";
+							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
+							// posto di LogF3B.getLogger()
+							siesLogger.error("Errore DAO non Classificato : " + ex.getErrorCode() + " - "
+									+ ex.getMessage());
+						}
+					}
+					aRapporto += buildRapporto("Inserimento ",
+							"Misura di Sicurezza " + lMSMod.getIdMisuraSicurezza() + " x il Fascicolo "
+									+ lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius(),
+							lCodEsito);
+				}
+			}
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAvvFasSiusDao);
+			cleanup(lAvvDao);
+			cleanup(lResDao);
+			cleanup(lResFasSiuDao);
+			cleanup(lMagDao);
+			cleanup(lMagRelDao);
+			cleanup(lNoteDao);
+			cleanup(lLuoDetDao);
+			cleanup(lESSDao);
+			cleanup(lPASDao);
+			cleanup(lSSDao);
+			cleanup(lRCDao);
+			cleanup(lMSDao); // 08/01/2015
+		}
 
 		return aRapporto;
 	}
-
-	/**
-	 * Verifica se 2 Codici Ufficio appartengono allo stesso distretto.
-	 *
-	 * @param aFascicoloSius
-	 * @param aConn
-	 * @return aCond
-	 * @throws F3BException
-	 */
-	// private boolean stressoDistretto(String codUfficio1, String codUfficio2, Connection aConn)
-	// throws F3BException {
-	// UfficioSqlDAO lUDao = null;
-	// boolean aCond = false;
-	//
-	// try {
-	// lUDao = new UfficioSqlDAO(aConn);
-	// lUDao.stessoDistretto(new BigDecimal(codUfficio1), new BigDecimal(codUfficio2));
-	// lUDao.start();
-	//
-	// if (lUDao.next()) {
-	// aCond = true;
-	// }
-	// lUDao.stop();
-	//
-	// } catch (Exception Ex) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.error("StessoDistretto Exception: " + Ex.getMessage());
-	// } finally {
-	// cleanup(lUDao);
-	// }
-	// return aCond;
-	// }
-
-	/**
-	 * Cancellazione del Fascicolo SIUS e suoi collegati.
-	 *
-	 * @param lEve
-	 * @param aConn
-	 * @throws F3BException
-	 */
-	// private void delFascicoloSius(EventoNotificaModel lEve, Connection lConn) throws F3BException {
-	// FascicoloSiusDAO lFasSiusDao = null;
-	// GeneraleProcedimentoDAO lGenProDao = null;
-	// TenoreDAO lTenDao = null;
-	// DepositoDecretoDAO lDepDecDao = null;
-	// DepositoOrdinanzaPcDAO lDepOrdDao = null;
-	//
-	// // Fase di cancellazione per i Tenore (e relativi provvedimenti).
-	// if (lEve.getFascicoloGPTP().getTenori() != null && lEve.getFascicoloGPTP().getTenori().length > 0) {
-	// try {
-	// for (int i = 0; i < lEve.getFascicoloGPTP().getTenori().length - 1; i++) {
-	// // Cancellazione dei Provvedimenti.
-	// if (lEve.getFascicoloGPTP().getTenori()[i].getTenore() != null
-	// && lEve.getFascicoloGPTP().getTenori()[i].getTenore()
-	// .getDepDecIdDepositoDecreto() != null) {
-	// lDepDecDao = new DepositoDecretoDAO(lConn);
-	// lDepDecDao.setCondizioneUpdate(
-	// lEve.getFascicoloGPTP().getTenori()[i].getDecreto().getIdDepositoDecreto());
-	// lDepDecDao.delete();
-	// lDepDecDao.stop();
-	// }
-	// if (lEve.getFascicoloGPTP().getTenori()[i].getTenore() != null
-	// && lEve.getFascicoloGPTP().getTenori()[i].getTenore()
-	// .getDepOpidDepositoOrdinanzaPc() != null) {
-	// lDepOrdDao = new DepositoOrdinanzaPcDAO(lConn);
-	// lDepOrdDao.setCondizioneUpdate(lEve.getFascicoloGPTP().getTenori()[i].getOrdinanza()
-	// .getIdDepositoOrdinanzaPc());
-	// lDepOrdDao.delete();
-	// lDepOrdDao.stop();
-	// }
-	//
-	// // Cancellazione del tenore.
-	// lTenDao = new TenoreDAO(lConn);
-	// lTenDao.setCondizioneUpdate(
-	// lEve.getFascicoloGPTP().getTenori()[i].getTenore().getIdTenore());
-	// lTenDao.delete();
-	// lTenDao.stop();
-	// }
-	// } catch (DAOException ex) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.error("Errore Durante la cancellazione del tenore : " + ex.getErrorCode() + " - "
-	// + ex.getMessage());
-	// } finally {
-	// cleanup(lDepDecDao);
-	// cleanup(lDepOrdDao);
-	// cleanup(lTenDao);
-	// }
-	// }
-	//
-	// // Cancellazione del Generale Procedimento.
-	// if (lEve.getFascicoloGPTP().getGeneraleProcedimentoModel() != null && lEve.getFascicoloGPTP()
-	// .getGeneraleProcedimentoModel().getIdGeneraleProcedimento() != null) {
-	// try {
-	// lGenProDao = new GeneraleProcedimentoDAO(lConn);
-	// lGenProDao.setCondizioneUpdate(
-	// lEve.getFascicoloGPTP().getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-	// lGenProDao.delete();
-	// lGenProDao.stop();
-	// } catch (DAOException ex) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.error("Errore Durante la cancellazione del Generale Procedimento : "
-	// + ex.getErrorCode() + " - " + ex.getMessage());
-	// } finally {
-	// cleanup(lGenProDao);
-	// }
-	// }
-	//
-	// // Cancellazione del Fascicolo SIUS.
-	// if (lEve.getFascicoloGPTP().getFascicoloSiusModel() != null
-	// && lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius() != null) {
-	// try {
-	// lFasSiusDao = new FascicoloSiusDAO(lConn);
-	// lFasSiusDao.setCondizioneUpdate(
-	// lEve.getFascicoloGPTP().getFascicoloSiusModel().getIdFascicoloSius());
-	// lFasSiusDao.delete();
-	// lFasSiusDao.stop();
-	// } catch (DAOException ex) {
-	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-	// // LogF3B.getLogger()
-	// siesLogger.error("Errore Durante la cancellazione del Fascicolo SIUS : " + ex.getErrorCode()
-	// + " - " + ex.getMessage());
-	// } finally {
-	// cleanup(lFasSiusDao);
-	// }
-	// }
-	// }
 
 }

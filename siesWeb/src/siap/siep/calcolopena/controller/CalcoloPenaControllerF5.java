@@ -10,6 +10,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
@@ -42,10 +46,6 @@ import siap.siep.sanzionesostitutiva.dao.SanzioneSostitutivaSqlDAO;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.siep.sospensione.dao.SospensioneSqlDAO;
 import siap.siep.sospensione.model.SospensioneModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloPenaF5 {
@@ -59,11 +59,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * validazione dell'evento a cui è associata la pena iniziale (tranne Pena in sentenza per la quale è
 	 * null, non ha senso vanno presi in considerazione tutti i dati) dataAl = data validazione dell'evento in
 	 * input (se passato), se l'evento non è validato...???
-	 * 
+	 *
 	 * @param aFascID
 	 * @param aIdEvento
 	 */
 	public CalcoloPenaModel exGetPenaIniziale(BigDecimal aFascID, BigDecimal aIdEvento) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Determino la Pena Iniziale...");
@@ -130,11 +131,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			 * che: - sia VALIDATO - non sia ANNULLATO - abbia data inserimento<data evento di riferimento Le
 			 * ricerche possono restituire più di un evento, in questo caso devo prendere quello più recente.
 			 * Possono essere presenti più Cumuli, Interruzioni, Differimenti....
-			 * 
+			 *
 			 * Effettuo una sola ricerca per evento generico con data inserimento<data evento di riferimento,
 			 * scorro la lista fino a che non trovo un evento di interesse (cumulo, interruzione....) e
 			 * scegliere questo come evento iniziale.
-			 * 
+			 *
 			 * Attenzione!!! Nel caso di Differimento/Sospensione/Interruzione non è detto che la pena sia
 			 * stata ricalcolata, ciò avviene solo se è in espiazione. Se il soggetto è libero non viene
 			 * calcolato nulla. In questo caso l'evento non costituisce una Pena Iniziale.
@@ -152,7 +153,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			lEveSqlDao.start();
 
 			while (lEveSqlDao.next()) {
-				lListaEventi.add((EventoModel) lEveSqlDao.getModel());
+				lListaEventi.add(lEveSqlDao.getModel());
 			}
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -168,15 +169,15 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				siesLogger.debug("Lista eventi recuperati...");
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger
-						.debug("| Tipo Evento | Tipo provv. | Cod. Motivo |       Data Ins        |       Data Agg        | Validato |");
+				siesLogger.debug(
+						"| Tipo Evento | Tipo provv. | Cod. Motivo |       Data Ins        |       Data Agg        | Validato |");
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger
-						.debug("|-------------|-------------|-------------|-----------------------|-----------------------|----------|");
+				siesLogger.debug(
+						"|-------------|-------------|-------------|-----------------------|-----------------------|----------|");
 				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				// siesLogger.debug("|     01      |      09     |     0099    | 01/10/2006 19:34:15.0 | 01/10/2006 19:34:15.0 |     S    |");
+				// siesLogger.debug("| 01 | 09 | 0099 | 01/10/2006 19:34:15.0 | 01/10/2006 19:34:15.0 | S |");
 				Iterator itx = lListaEventi.iterator();
 				while (itx.hasNext()) {
 					EventoModel lEveMod = (EventoModel) itx.next();
@@ -479,30 +480,37 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 						lTipoPenaIniziale = "Pena Irrogata in Sentenza";
 					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_IN_CUMULO) {
 						lTipoPenaIniziale = "Pena Irrogata in Cumulo";
-					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_IN_CUMULO_NEW) {
+					} else if (lCalcoloPenaMod
+							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_IN_CUMULO_NEW) {
 						lTipoPenaIniziale = "Pena Irrogata in Cumulo (nuovo cumulo)";
 					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_SOSPENSIONE
-							|| lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_SOSPENSIONE_RES) {
+							|| lCalcoloPenaMod
+									.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_SOSPENSIONE_RES) {
 						lTipoPenaIniziale = "Pena Residua dopo Interruzione/Sospensione";
 					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_REVOCA_MA) {
 						lTipoPenaIniziale = "Pena Residua dopo Revoca MA";
-					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_CESSAZIONE_MA) {
+					} else if (lCalcoloPenaMod
+							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_CESSAZIONE_MA) {
 						lTipoPenaIniziale = "Pena Residua dopo Cessazione MA";
-					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_REVOCA_INDULTINO) {
+					} else if (lCalcoloPenaMod
+							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_REVOCA_INDULTINO) {
 						lTipoPenaIniziale = "Pena Residua dopo Revoca Indultino";
 					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_MANUALE) {
 						lTipoPenaIniziale = "Pena Residua Manuale";
-					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_MANUALE_RES) {
+					} else if (lCalcoloPenaMod
+							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_MANUALE_RES) {
 						lTipoPenaIniziale = "Pena Residua da Forzatura RES";
-					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_ARCHIVIATA_RES
-							|| lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_ARCHIVIATA_SIEP) {
+					} else if (lCalcoloPenaMod
+							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_ARCHIVIATA_RES
+							|| lCalcoloPenaMod
+									.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_ARCHIVIATA_SIEP) {
 						lTipoPenaIniziale = "Pena Residua dopo Archiviazione";
-					} else if (lCalcoloPenaMod.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_DA_INDULTO) {
+					} else if (lCalcoloPenaMod
+							.getTipoPenaIniziale() == ICostantiCalcoloPena.PENA_DA_INDULTO) {
 						lTipoPenaIniziale = "Pena Residua dopo Scarcerazione Indulto";
 					}
 
-					throw new F3BException(
-							F3BException.USER_MESSAGE,
+					throw new F3BException(F3BException.USER_MESSAGE,
 							"Impossibile ricostruire la Pena da Espiare. Dati a sistema inconsistenti, manca pena residua associata all'evento di "
 									+ lTipoPenaIniziale
 									+ ". Utilizzare la funzione di Pena Residua Manuale o segnalare l'anomalia all'help desk.");
@@ -610,8 +618,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			if (fex.getErrorCode() == F3BException.USER_MESSAGE) {
 				throw fex;
 			} else {
-				throw new F3BException("CalcoloPenaControllerF5.exGetPenaIniziale: Non posso leggere  : "
-						+ fex);
+				throw new F3BException(
+						"CalcoloPenaControllerF5.exGetPenaIniziale: Non posso leggere  : " + fex);
 			}
 		} catch (Exception ex) {
 			throw new F3BException("CalcoloPenaControllerF5.exGetPenaIniziale: Non posso leggere  : " + ex);
@@ -630,9 +638,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	}
 
 	/**
-   * 
-   */
+	*
+	*/
 	public Vector exGetBenefici(BeneficioModel aBeneficio) throws F3BException {
+
 		Connection lConn = null;
 		Vector lListaBenefici = new Vector();
 		BeneficioSqlDAO lBenSqlDao = null;
@@ -657,48 +666,41 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Ritorna la Sanzione Sostitutiva Disposta dal Giudice in sentenza se presente
-	 * 
+	 *
 	 * @param aPenaComplID
 	 *            - Id Della Pena Complessiva
 	 * @return la SS o null se non esiste
 	 * @throws F3BException
 	 */
 	public SanzioneSostitutivaModel exGetSanzioneSostitutiva(BigDecimal aPenaComplID) throws F3BException {
+
 		Connection lConn = null;
-
-		SanzioneSostitutivaModel lSanzioneModel = null;
-
 		SanzioneSostitutivaSqlDAO lSanzSqlDao = null;
+		SanzioneSostitutivaModel lSanzioneModel = null;
 
 		try {
 			lConn = getDBConnection();
-
 			lSanzSqlDao = new SanzioneSostitutivaSqlDAO(lConn);
-
 			lSanzSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessiva(aPenaComplID);
-
 			lSanzioneModel = (SanzioneSostitutivaModel) lSanzSqlDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetSanzioneSostitutiva: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetSanzioneSostitutiva: Non posso leggere : " + daoEx);
 		} catch (Exception e) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetSanzioneSostitutiva: Non posso leggere  : "
-					+ e);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetSanzioneSostitutiva: Non posso leggere  : " + e);
 		} finally {
 			cleanup(lSanzSqlDao);
-
 			cleanup(lConn);
 		}
 
 		return lSanzioneModel;
-
 	}
 
 	/**
 	 * Recupera tutte le Annotazioni Manuali inserite in fase di <b>Richiesta al GE</b> solo quelle con
 	 * anticipazione degli effetti. Vengono recuperati:<br>
-	 * 
+	 *
 	 * - Depenalizzazione (004)<br>
 	 * - Incostituzionalità (013)<br>
 	 * - Amnistia (003)<br>
@@ -707,10 +709,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 *
 	 * Per distinguere le Richieste (con o senza anticipazione) dalle Decisioni viene utilizzato il
 	 * FlagApprovazioneProvvisoria che nel caso delle Richieste vale R o A mentre nelle decisioni vale '-'
-	 * 
+	 *
 	 * Una richiesta con anticipazione degli effetti va conputa nei calcoli solo se non è legata a una
 	 * decisione del GE. In questo caso fanno fede i quantum inseriti con la decisione.
-	 * 
+	 *
 	 * @param aFascID
 	 *            idFascicolo
 	 * @param aDataDal
@@ -718,13 +720,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * @return Vettore di AnnotazioniManualiModel
 	 */
 	public Vector exGetRichiesteAlGE(BigDecimal aFascID, Date aDataDal, Date aDataAl) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Ricerco le Richieste al GE con anticipazione...");
 		Connection lConn = null;
-		Vector lListaRichiesteAlGE = new Vector();
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
+		Vector lListaRichiesteAlGE = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -732,26 +734,22 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			AnnotazioneManualeModel lAnnManMod = new AnnotazioneManualeModel();
 			lAnnManMod.setFasSieIdFascicoloSiep(aFascID);
 			lAnnManSqlDao = new AnnotazioneManualeSqlDAO(lConn);
-
-			lAnnManSqlDao
-					.ricercaAnnManualeRichiesteGEByIdFascicoloDateValidazione(aFascID, aDataDal, aDataAl);
-
+			lAnnManSqlDao.ricercaAnnManualeRichiesteGEByIdFascicoloDateValidazione(aFascID, aDataDal,
+					aDataAl);
 			lAnnManSqlDao.start();
 
 			while (lAnnManSqlDao.next()) {
 				lAnnManMod = (AnnotazioneManualeModel) lAnnManSqlDao.getModel();
-
 				lListaRichiesteAlGE.add(lAnnManMod);
 			}
 			lAnnManSqlDao.stop();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetRichiesteAlGE: Non posso leggere : " + daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetRichiesteAlGE: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException("CalcoloPenaControllerF5.exGetRichiesteAlGE: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAnnManSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -760,30 +758,29 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Recupera tutte le Annotazioni Manuali inserite con le <b>Decisioni Del GE</b> Vengono recuperati:<br>
-	 * 
+	 *
 	 * - Depenalizzazione (004)<br>
 	 * - Incostituzionalità (013)<br>
 	 * - Amnistia (003)<br>
 	 * - Indulto (002)<br>
 	 * - Illecito Amministrativo (017)<br>
-	 * 
+	 *
 	 * Per distinguere le Richieste (con o senza anticipazione) dalle Decisioni viene utilizzato il
 	 * FlagApprovazioneProvvisoria che nel caso delle Richieste vale R o A mentre nelle decisioni vale '-'
-	 * 
+	 *
 	 * @param aFascID
 	 * @param aDataDal
 	 * @param aDataAl
 	 * @return Vettore di AnnotazioneManualeModel
 	 */
 	public Vector exGetDecisioniDelGE(BigDecimal aFascID, Date aDataDal, Date aDataAl) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Recupero le decisioni del GE...");
 		Connection lConn = null;
-
-		Vector lListaDecisioniDelGE = new Vector();
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
+		Vector lListaDecisioniDelGE = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -791,16 +788,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			AnnotazioneManualeModel lAnnManMod = new AnnotazioneManualeModel();
 			lAnnManMod.setFasSieIdFascicoloSiep(aFascID);
 			lAnnManSqlDao = new AnnotazioneManualeSqlDAO(lConn);
-
 			// lAnnManSqlDao.ricercaAnnotazioneManualeByIdFascicoloDateIns(aFascID, aDataDal, aDataAl);
-			lAnnManSqlDao
-					.ricercaAnnManualeDecisioniGEByIdFascicoloDateValidazione(aFascID, aDataDal, aDataAl);
-
+			lAnnManSqlDao.ricercaAnnManualeDecisioniGEByIdFascicoloDateValidazione(aFascID, aDataDal,
+					aDataAl);
 			lAnnManSqlDao.start();
-
 			while (lAnnManSqlDao.next()) {
 				lAnnManMod = (AnnotazioneManualeModel) lAnnManSqlDao.getModel();
-
 				// if( lAnnManMod.getFlagAppProvvisoria() != null
 				// && lAnnManMod.getFlagAppProvvisoria().equals("-") // Decisioni
 				// && lAnnManMod.getFlagValidato() != null
@@ -817,15 +810,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				// }
 			}
 			lAnnManSqlDao.stop();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetDecisioniDelGE: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetDecisioniDelGE: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException("CalcoloPenaControllerF5.exGetDecisioniDelGE: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAnnManSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -833,13 +824,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	}
 
 	/**
-	 * Recupera tutte le Annotazioni Manuali inserite con gli <b>Indulti Migrati RES</b> Vengono recuperati:<br>
-	 * 
+	 * Recupera tutte le Annotazioni Manuali inserite con gli <b>Indulti Migrati RES</b> Vengono
+	 * recuperati:<br>
+	 *
 	 * - richieste con anticipazione (evento 0161 tipo annotazione 002, flag app_provv = 'A') - decisioni
 	 * (evento 0284 tipo annotazione 002 flag app_provv = '-')<br>
-	 * 
+	 *
 	 * n.b. vengono recuperati solo i dati iscritti res in ordine cronologico dal più recente
-	 * 
+	 *
 	 * @param aFascID
 	 * @param aDataDal
 	 * @param aDataAl
@@ -847,32 +839,25 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * @throws F3BException
 	 */
 	public Vector exGetIndultiRES(BigDecimal aFascID, Date aDataDal, Date aDataAl) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Recupero gli Indulti RES...");
 		Connection lConn = null;
-
-		Vector lListaIndultiRES = new Vector();
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
+		Vector lListaIndultiRES = new Vector();
 
 		try {
 			lConn = getDBConnection();
-
 			AnnotazioneManualeModel lAnnManMod = new AnnotazioneManualeModel();
 			lAnnManSqlDao = new AnnotazioneManualeSqlDAO(lConn);
-
 			lAnnManSqlDao.ricercaAnnManualeIndultiRESByIdFascicoloDateValidazione(aFascID, aDataDal, aDataAl);
-
 			lAnnManSqlDao.start();
-
 			while (lAnnManSqlDao.next()) {
 				lAnnManMod = (AnnotazioneManualeModel) lAnnManSqlDao.getModel();
-
 				lListaIndultiRES.add(lAnnManMod);
 			}
 			lAnnManSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("CalcoloPenaControllerF5.exGetIndultiRES: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
@@ -891,43 +876,38 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * e validati nell'intervallo di date specificato: - Presofferto Altro Reato (005-Pena Espiata per lo
 	 * Stesso Titolo) - Fungibilità altro Reato - Misura Cautelare (006-Pena Espiata per Altro Titolo) - Pena
 	 * Detentiva (007-Pena Espiata Senza Titolo) - Altro (014-Altro)
-	 * 
+	 *
 	 * - Computi iscritti RES (evento '0162' di rideterminazione pena con cod tipo annotazione ='-'))
-	 * 
+	 *
 	 * n.b. la data validazione coincide con la data di aggiornamento
-	 * 
+	 *
 	 * @param lFascID
 	 * @param dataDal
 	 * @param dataAl
 	 * @return Vettore di AnnotazioneManualeModel
-	 ************************************************************************** */
+	 */
 	public Vector exGetComputi(BigDecimal aFascID, Date aDataDal, Date aDataAl) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("Recupero i computi iscritti: dal "
-				+ DateUtils.getDateToString(aDataDal, "dd/MM/yyyy") + " al "
-				+ DateUtils.getDateToString(aDataAl, "dd/MM/yyyy)"));
+		siesLogger
+				.debug("Recupero i computi iscritti: dal " + DateUtils.getDateToString(aDataDal, "dd/MM/yyyy")
+						+ " al " + DateUtils.getDateToString(aDataAl, "dd/MM/yyyy)"));
 
 		Connection lConn = null;
-
-		Vector lListaComputi = new Vector();
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
+		Vector lListaComputi = new Vector();
 
 		try {
 			lConn = getDBConnection();
-
 			AnnotazioneManualeModel lAnnManMod = new AnnotazioneManualeModel();
 			lAnnManMod.setFasSieIdFascicoloSiep(aFascID);
 			lAnnManSqlDao = new AnnotazioneManualeSqlDAO(lConn);
-
 			lAnnManSqlDao.ricercaAnnManualeComputiByIdFascicoloDataValidazione(aFascID, aDataDal, aDataAl);
-
 			lAnnManSqlDao.start();
 
 			while (lAnnManSqlDao.next()) {
 				lAnnManMod = (AnnotazioneManualeModel) lAnnManSqlDao.getModel();
-
 				// if( lAnnManMod.getFlagValidato() != null
 				// && lAnnManMod.getFlagValidato().equals("S") // Solo quelle validate
 				// && lAnnManMod.getCodTipoAnnotazione() != null
@@ -945,14 +925,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				// }
 			}
 			lAnnManSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException("CalcoloPenaControllerF5.exGetComputi: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException("CalcoloPenaControllerF5.exGetComputi: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAnnManSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -966,24 +944,23 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * condannato libero - a un ordine di scarcerazione per rideterminazione pena, nel caso in cui le LA sono
 	 * state concesse a un condannato detenuto, per cui sono state utilizzate per anticipare il fine pena - a
 	 * un cumulo - a una pena residua manuale - Liberazione Manuale Anticipata ????
-	 * 
+	 *
 	 * @param lFascID
 	 * @param dataDal
 	 * @param dataAl
 	 * @return Vettore di LicenzaLibAnticipataModel
-	 ************************************************************************** */
+	 */
 	public Vector exGetLiberazioneAnticipata(BigDecimal aFascID, Date aDataDal, Date aDataAl)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Recupero le LA iscritte: dal " + DateUtils.getDateToString(aDataDal, "dd/MM/yyyy")
 				+ " al " + DateUtils.getDateToString(aDataAl, "dd/MM/yyyy)"));
 
 		Connection lConn = null;
-
-		Vector lListaLA = new Vector();
-
 		LicenzaLibanticipataSqlDAO lLASqlDao = null;
+		Vector lListaLA = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1003,14 +980,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			}
 			lLASqlDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetLiberazioneAnticipata: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetLiberazioneAnticipata: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException(
 					"CalcoloPenaControllerF5.exGetLiberazioneAnticipata: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lLASqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -1024,12 +1000,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * - Incostituzionalità (013)<br>
 	 * - Amnistia/Indulto (003/002)<br>
 	 * - Illecito Amministrativo (017)<br>
-	 * 
+	 *
 	 * Decisioni del GE - Depenalizzazione (004)<br>
 	 * - Incostituzionalità (013)<br>
 	 * - Amnistia/Indulto (003/002)<br>
 	 * - Illecito Amministrativo (017)<br>
-	 * 
+	 *
 	 * Computi - Presofferto Altro Reato (005-Pena Espiata per lo Stesso Titolo) - Fungibilità altro Reato -
 	 * Misura Cautelare (006-Pena Espiata per Altro Titolo) - Pena Detentiva (007-Pena Espiata Senza Titolo) -
 	 * Altro (014-Altro)
@@ -1040,19 +1016,19 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 *            ('A' = richieste al GE, '-' altro)
 	 * @param aFlagConcesseRevocate
 	 *            ('+' = revocate, '-' = concesse) per ora non usato
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector exGetAnnotazioniManualiDaComputare(BigDecimal aFascID, String aCodTipoAnnotazione,
 			String aFlagAppProvvisoria, String aFlagConcesseRevocate) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		Connection lConn = null;
-		Vector lListaAnnotazioni = new Vector();
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
+		Vector lListaAnnotazioni = new Vector();
 
 		try {
 			lConn = getDBConnection();
@@ -1077,8 +1053,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 						&& lAnnManMod.getFlagAppProvvisoria() != null
 						&& lAnnManMod.getFlagAppProvvisoria().equals(aFlagAppProvvisoria) // con anticipazione
 						&& lAnnManMod.getCodTipoAnnotazione() != null
-						&& (lAnnManMod.getFlagValidato() == null || (lAnnManMod.getFlagValidato() != null && lAnnManMod
-								.getFlagValidato().equals("N")))) {
+						&& (lAnnManMod.getFlagValidato() == null || (lAnnManMod.getFlagValidato() != null
+								&& lAnnManMod.getFlagValidato().equals("N")))) {
 					// Vengono considerate solo annotazioni dello stesso tipo di
 					// aCodTipoAnnotazione non validate.
 					// n.b. AMNISTIA/INDULTO vengono considerata insieme in quanto possono
@@ -1100,7 +1076,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			}
 
 			lAnnManSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"CalcoloPenaControllerF5.exGetAnnotazioniManualiDaComputare: Non posso leggere : "
@@ -1110,7 +1085,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					"CalcoloPenaControllerF5.exGetAnnotazioniManualiDaComputare: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAnnManSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -1121,11 +1095,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * Verifica se l'evento passato in input è relativo a un Cumulo e può essere considerato come Pena
 	 * Iniziale. n.b. il metodo non verifica se l'evento è validato o annullato n.b. Il cumulo può essere
 	 * sempre considaretao come pena iniziale
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isCumulo(EventoModel aEveModel) {
+
 		boolean isCumulo = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -1139,10 +1114,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 						|| aEveModel.getCodMotivo().equals("0224") // 0224-di unificazione di pene concorrenti
 																	// (da espiarsi in regime di misura
 																	// alternativa)
-				// || aEveModel.getCodMotivo().equals("0225") // 0225-di unificazione di pene concorrenti (con
-				// contestuale Decreto di Sospensione ex art. 656 Comma 5° CPP)
-				|| aEveModel.getCodMotivo().equals("0277") // 0277-di unificazione di pene concorrenti
-															// (generico)
+						// || aEveModel.getCodMotivo().equals("0225") // 0225-di unificazione di pene
+						// concorrenti (con
+						// contestuale Decreto di Sospensione ex art. 656 Comma 5° CPP)
+						|| aEveModel.getCodMotivo().equals("0277") // 0277-di unificazione di pene concorrenti
+																	// (generico)
 				)) {
 			// Attenzione!! In alcuni casi, per motivi ignoti, non esiste una pena
 			// associata al cumulo
@@ -1154,11 +1130,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Nuovi codici Cumulo MEV26 per ora compresi tra 0630 e 0651
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isNuovoCumulo(EventoModel aEveModel) {
+
 		boolean isNuovoCumulo = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -1168,9 +1145,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// && ( Integer.parseInt(aEveModel.getCodMotivo())>=630
 		// && Integer.parseInt(aEveModel.getCodMotivo())<=651
 		// )
-		) {
+		)
 			isNuovoCumulo = true;
-		}
 
 		return isNuovoCumulo;
 	}
@@ -1178,14 +1154,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a una Sospensione SIEP, e può essere considerato come
 	 * Pena Iniziale. n.b. il metodo non verifica se l'evento è validato o annullato
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isSospensione(EventoModel aEveModel) throws F3BException {
+
 		boolean isSospensione = false;
 		Connection lConn = null;
-
 		SospensioneSqlDAO lSospSqlDao = null;
 
 		// ==========================================================================
@@ -1216,12 +1192,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			// scarcerato/da scarcerare per cui non fornisce indicazioni sul
 			// fatto che la pena sia stata ricalcolata o meno.
 			// ========================================================================
-			if (aEveModel.getCodTipoEvento() != null
-					&& aEveModel.getCodTipoProvvedimento() != null
-					&& aEveModel.getCodMotivo() != null
-					&& aEveModel.getCodTipoEvento().equals("01")
-					&& (aEveModel.getCodTipoProvvedimento().equals("09") || aEveModel
-							.getCodTipoProvvedimento().equals("12"))
+			if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+					&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
+					&& (aEveModel.getCodTipoProvvedimento().equals("09")
+							|| aEveModel.getCodTipoProvvedimento().equals("12"))
 					&& aEveModel.getCodMotivo().equals("0265")) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
@@ -1260,16 +1234,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			// scarcerato/da scarcerare per cui non fornisce indicazioni sul
 			// fatto che la pena sia stata ricalcolata o meno.
 			// ========================================================================
-			else if (aEveModel.getCodTipoEvento() != null
-					&& aEveModel.getCodTipoProvvedimento() != null
-					&& aEveModel.getCodMotivo() != null
-					&& aEveModel.getCodTipoEvento().equals("01")
-					&& (aEveModel.getCodTipoProvvedimento().equals("09") || aEveModel
-							.getCodTipoProvvedimento().equals("04"))
+			else if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+					&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
+					&& (aEveModel.getCodTipoProvvedimento().equals("09")
+							|| aEveModel.getCodTipoProvvedimento().equals("04"))
 					&& (aEveModel.getCodMotivo().equals("0900") || aEveModel.getCodMotivo().equals("0901")
 							|| aEveModel.getCodMotivo().equals("0902")
-							|| aEveModel.getCodMotivo().equals("0903") || aEveModel.getCodMotivo().equals(
-							"0937"))) {
+							|| aEveModel.getCodMotivo().equals("0903")
+							|| aEveModel.getCodMotivo().equals("0937"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Sospensione del PM");
@@ -1297,13 +1269,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			// 0241-Sospensione esecuzione pena detentiva ex artt. 90 e 91/4 DPR 09.10.1990 n. 309
 			//
 			// ========================================================================
-			else if (aEveModel.getCodTipoEvento() != null
-					&& aEveModel.getCodTipoProvvedimento() != null
-					&& aEveModel.getCodMotivo() != null
-					&& aEveModel.getCodTipoEvento().equals("01")
-					&& (aEveModel.getCodTipoProvvedimento().equals("09") || aEveModel
-							.getCodTipoProvvedimento().equals("12") // se già liberato dalla Sorveglianza
-					) && (aEveModel.getCodMotivo().equals("0263") || aEveModel.getCodMotivo().equals("0241"))) {
+			else if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+					&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
+					&& (aEveModel.getCodTipoProvvedimento().equals("09")
+							|| aEveModel.getCodTipoProvvedimento().equals("12") // se già liberato dalla
+																				// Sorveglianza
+					)
+					&& (aEveModel.getCodMotivo().equals("0263") || aEveModel.getCodMotivo().equals("0241"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Sospensione della Sorveglianza");
@@ -1327,7 +1299,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			throw new F3BException("CalcoloPenaControllerF5.isSospensione: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lSospSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -1337,10 +1308,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a un Differimento e può essere considerato come Pena
 	 * Iniziale. n.b. il metodo non verifica se l'evento è validato o annullato
-	 * 
+	 *
 	 * Attenzione!! Per il differimento esistono 4 casi: - SIEP nuova versione (dalla 2.0 01/02/2007) - SIEP
 	 * vecchia versione - RES nuova versione - RES vecchia versione
-	 * 
+	 *
 	 * Non sempre il differimento interrompe la pena. Il differimento da Libero o assimilati non interrompe la
 	 * pena. Il problema è che non è agevole verificare se il differimento ha interrotto o meno la pena in
 	 * quanto si dovrebbe far riferimento a strutture dati differenti e dati scritti in modo diverso. Per
@@ -1351,30 +1322,30 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * In questo caso si potrebbe verificare se esistono i quantum sulla pena e in caso negativo non
 	 * considerarla come pena iniziale. Che senso ha differire la pena a un soggetto che non ha un residuo da
 	 * espiare?
-	 * 
+	 *
 	 * n.b. i differimenti non sono eventi frequenti per cui i casi di errato calcolo dovrebbero essere
 	 * contenuti.
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isDifferimento(EventoModel aEveModel) throws F3BException {
+
 		boolean isDifferimento = false;
 
 		Connection lConn = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaModel lPenResMod = null;
 
-		if (aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& (aEveModel.getCodTipoProvvedimento().equals("09")
-						|| aEveModel.getCodTipoProvvedimento().equals("12") || aEveModel
-						.getCodTipoProvvedimento().equals("04") // n.b. il cod. 04 è previsto solo nel nuovo
-																// diff. per le posizioni giuridiche non
-																// gestite
+						|| aEveModel.getCodTipoProvvedimento().equals("12")
+						|| aEveModel.getCodTipoProvvedimento().equals("04") // n.b. il cod. 04 è previsto solo
+																			// nel nuovo
+																			// diff. per le posizioni
+																			// giuridiche non
+																			// gestite
 				) && (aEveModel.getCodMotivo().equals("0274") || aEveModel.getCodMotivo().equals("0221"))) {
 			// Differimento Provvisorio
 			// Tipo Evento: 01 = Provvedimento
@@ -1410,21 +1381,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					lPenResSqlDao.stop();
 
 					if (lPenResMod != null
-							&& (CalendarUtil.getTotGiorni(lPenResMod.getQuantumReclusione()) > 0 || CalendarUtil
-									.getTotGiorni(lPenResMod.getQuantumArresto()) > 0)) { // Quatum positivi
-																							// può essere
-																							// considerato un
-																							// evento
-																							// interruttivo
-																							// [FT] -
-																							// 03/08/2016 -
-																							// MAC_LOG -
-																							// Utilizzo la
-																							// variabile di
-																							// istanza
-																							// siesLogger al
-																							// posto di
-																							// LogF3B.getLogger()
+							&& (CalendarUtil.getTotGiorni(lPenResMod.getQuantumReclusione()) > 0
+									|| CalendarUtil.getTotGiorni(lPenResMod.getQuantumArresto()) > 0)) {
+						// Quatum positivi può essere considerato un evento interruttivo
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
 						siesLogger.debug("Differimento RES OK quantum positivi");
 						isDifferimento = true;
 					} else {
@@ -1434,14 +1395,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 						isDifferimento = false;
 					}
 				} catch (DAOException daoEx) {
-					throw new F3BException("CalcoloPenaControllerF5.isDifferimento: Non posso leggere : "
-							+ daoEx);
+					throw new F3BException(
+							"CalcoloPenaControllerF5.isDifferimento: Non posso leggere : " + daoEx);
 				} catch (Exception ex) {
-					throw new F3BException("CalcoloPenaControllerF5.isDifferimento: Non posso leggere  : "
-							+ ex);
+					throw new F3BException(
+							"CalcoloPenaControllerF5.isDifferimento: Non posso leggere  : " + ex);
 				} finally {
 					cleanup(lPenResSqlDao);
-
 					cleanup(lConn);
 				}
 			}
@@ -1453,14 +1413,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a un Interruzione e può essere considerato come Pena
 	 * Iniziale. n.b. il metodo non verifica se l'evento è validato o annullato
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isInterruzione(EventoModel aEveModel) throws F3BException {
+
 		boolean isInterruzione = false;
 		Connection lConn = null;
-
 		SospensioneSqlDAO lSospSqlDao = null;
 
 		// ==========================================================================
@@ -1492,15 +1452,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// - siano <>0 i campi NUM_xxx_PENA_ESPIATA
 		// ==========================================================================
 		try {
-			if (aEveModel.getCodTipoEvento() != null
-					&& aEveModel.getCodTipoEvento().equals("01")
+			if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoEvento().equals("01")
 					&& aEveModel.getCodTipoProvvedimento() != null
-					&& (aEveModel.getCodTipoProvvedimento().equals("12") || aEveModel
-							.getCodTipoProvvedimento().equals("25"))
+					&& (aEveModel.getCodTipoProvvedimento().equals("12")
+							|| aEveModel.getCodTipoProvvedimento().equals("25"))
 					&& aEveModel.getCodMotivo() != null
 					&& (aEveModel.getCodMotivo().equals("0266") || aEveModel.getCodMotivo().equals("0267")
-							|| aEveModel.getCodMotivo().equals("0270") || aEveModel.getCodMotivo().equals(
-							"0366"))) {
+							|| aEveModel.getCodMotivo().equals("0270")
+							|| aEveModel.getCodMotivo().equals("0366"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Trovata Interruzione");
@@ -1522,7 +1481,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			throw new F3BException("CalcoloPenaControllerF5.isInterruzione: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lSospSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -1532,11 +1490,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a un Interruzione Migrata RES e può essere considerato
 	 * come Pena Iniziale. n.b. il metodo non verifica se l'evento è validato o annullato
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isInterruzioneRES(EventoModel aEveModel) throws F3BException {
+
 		boolean isInterruzione = false;
 
 		// ==========================================================================
@@ -1552,13 +1511,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// 01-25-0366 Interruzioni per indulto migrate RES
 		// ==========================================================================
 		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1
-				&& aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
-				&& ((aEveModel.getCodTipoProvvedimento().equals("12") && aEveModel.getCodMotivo().equals(
-						"0267")) || (aEveModel.getCodTipoProvvedimento().equals("25") && aEveModel
-						.getCodMotivo().equals("0366")))) {
+				&& aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
+				&& ((aEveModel.getCodTipoProvvedimento().equals("12")
+						&& aEveModel.getCodMotivo().equals("0267"))
+						|| (aEveModel.getCodTipoProvvedimento().equals("25")
+								&& aEveModel.getCodMotivo().equals("0366")))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Interruzione RES");
@@ -1572,11 +1530,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * Verifica se l'evento passato in input è relativo a una RevocaMA e può essere considerato come Pena
 	 * Iniziale. Viene considerata solo la revoca Affidamento in prova n.b. il metodo non verifica se l'evento
 	 * è validato o annullato
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isRevocaMA(EventoModel aEveModel) throws F3BException {
+
 		boolean isRevocaMA = false;
 		// ==========================================================================
 		// Revoca Affidamento in Prova
@@ -1591,13 +1550,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// è stato effettuato il ricalcolo della pena per cui non può
 		// essere considerato come Pena Iniziale
 		// ==========================================================================
-		if (aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("06")
-				&& (aEveModel.getCodMotivo().equals("0086") || aEveModel.getCodMotivo().equals("0014") || aEveModel
-						.getCodMotivo().equals("0015"))) {
+				&& (aEveModel.getCodMotivo().equals("0086") || aEveModel.getCodMotivo().equals("0014")
+						|| aEveModel.getCodMotivo().equals("0015"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Revoca Affidamento in prova");
@@ -1611,8 +1568,9 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				&& aEveModel.getCodTipoProvvedimento().equals("06")
 				&& (aEveModel.getCodMotivo().equals("0316") // Revoca esecuzione presso domicilio della pena
 															// detentiva (TDS)
-				|| aEveModel.getCodMotivo().equals("2640") // Revoca esecuzione presso domicilio della pena
-															// detentiva (MDS)
+						|| aEveModel.getCodMotivo().equals("2640") // Revoca esecuzione presso domicilio della
+																	// pena
+																	// detentiva (MDS)
 				)) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1622,7 +1580,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			siesLogger.debug("Verifico se presente record Sospensione...");
 
 			Connection lConn = null;
-
 			SospensioneSqlDAO lSospSqlDao = null;
 
 			try {
@@ -1633,10 +1590,9 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				SospensioneModel lSospMod = (SospensioneModel) lSospSqlDao.getModelByKey();
 				lSospSqlDao.stop();
 
-				if (lSospMod != null
-						&& (lSospMod.getNumAnniPenaEspiata().intValue() > 0
-								|| lSospMod.getNumMesiPenaEspiata().intValue() > 0 || lSospMod
-								.getNumGiorniPenaEspiata().intValue() > 0))
+				if (lSospMod != null && (lSospMod.getNumAnniPenaEspiata().intValue() > 0
+						|| lSospMod.getNumMesiPenaEspiata().intValue() > 0
+						|| lSospMod.getNumGiorniPenaEspiata().intValue() > 0))
 					isRevocaMA = true;
 				else
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1649,7 +1605,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				throw new F3BException("CalcoloPenaControllerF5.isRevocaMA: Non posso leggere  : " + ex);
 			} finally {
 				cleanup(lSospSqlDao);
-
 				cleanup(lConn);
 			}
 		}
@@ -1660,14 +1615,15 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a una CessazioneMA e può essere considerato come Pena
 	 * Iniziale.
-	 * 
+	 *
 	 * n.b. il metodo non verifica se l'evento è validato o annullato
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @since 04/2014
 	 */
 	private boolean isCessazioneMA(EventoModel aEveModel) throws F3BException {
+
 		boolean isCessazioneMA = false;
 		// ==========================================================================
 		// Cessazione Misura di Sicurezza
@@ -1679,8 +1635,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// è stato effettuato il ricalcolo della pena per cui non può
 		// essere considerato come Pena Iniziale
 		// ==========================================================================
-		List<String> lCodiciCessTDSOrd = Arrays.asList("0167", "0168", "0166", "0024", "0110", "0111",
-				"0112", "0169", "0172");
+		List<String> lCodiciCessTDSOrd = Arrays.asList("0167", "0168", "0166", "0024", "0110", "0111", "0112",
+				"0169", "0172");
 		List<String> lCodiciCessTDS51bis = Arrays.asList("5450", "5451", "5452", "5453", "5454", "5455",
 				"5456", "5457", "5458", "5459");
 		List<String> lCodiciCessMDS51bis = Arrays.asList("5430", "5431", "5432", "5433", "5434", "5435",
@@ -1755,7 +1711,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				throw new F3BException("CalcoloPenaControllerF5.isCessazioneMA: Non posso leggere  : " + ex);
 			} finally {
 				cleanup(lSospSqlDao);
-
 				cleanup(lConn);
 			}
 		}
@@ -1763,18 +1718,18 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// Verifico se la cessazione ha rideterminato la pena e quindi se va
 		// considerata come evento di pena iniziale.
 		// n.b. NON SEMPRE LA CESSAZIONE RIDETERMINA LA PENA
-
 		return isCessazioneMA;
 	}
 
 	/**
 	 * Verifica se l'evento passato in input è relativo a una RevocaIndultino e può essere considerato come
 	 * Pena Iniziale. n.b. il metodo non verifica se l'evento è validato o annullato
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isRevocaIndultino(EventoModel aEveModel) {
+
 		boolean isRevocaIndultino = false;
 		// ==========================================================================
 		// Revoca Indultino
@@ -1801,20 +1756,20 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Verifica se l'evento passato in input è legato a una pena Residua Manuale
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isPenaManuale(EventoModel aEveModel) {
+
 		boolean isPenaManuale = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
 				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("04")
-				&& (aEveModel.getCodMotivo().equals("0925") || aEveModel.getCodMotivo().equals("1018"))) // 07/05/2015
-																											// mev
-																											// 27
-		{
+				&& (aEveModel.getCodMotivo().equals("0925")
+						// 07/05/2015 mev 27
+						|| aEveModel.getCodMotivo().equals("1018"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Pena Manuale");
@@ -1829,15 +1784,15 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * eventi di tipo 01-04-0162 legate ad annotazioni manuali con cod_tipo_annotazione = '003'. I quantum di
 	 * pena in questo caso devono essere recuperati dal record pena residua e solo se i quantum sono positivi.
 	 * In alcuni casi i quantum sono nulli per mancata migrazione, ma sono valorizzati i quantum di AM
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isForzaturaRes(EventoModel aEveModel) throws F3BException {
+
 		boolean isForzaturaRes = false;
 
 		Connection lConn = null;
-
 		AnnotazioneManualeSqlDAO lAnnoManSqlDao = null;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -1859,15 +1814,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					isForzaturaRes = true;
 				}
 			} catch (DAOException daoEx) {
-				throw new F3BException("CalcoloPenaControllerF5.isForzaturaRes: Non posso leggere : " + daoEx);
+				throw new F3BException(
+						"CalcoloPenaControllerF5.isForzaturaRes: Non posso leggere : " + daoEx);
 			} catch (Exception ex) {
 				throw new F3BException("CalcoloPenaControllerF5.isForzaturaRes: Non posso leggere  : " + ex);
 			} finally {
 				cleanup(lAnnoManSqlDao);
-
 				cleanup(lConn);
 			}
-
 		}
 
 		return isForzaturaRes;
@@ -1886,7 +1840,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * dal territorio dello Stato art.7 L.39/70 '0909' - Sospensione esecuzione - differimento pena '0910' -
 	 * Sospensione esecuzione - attesa provvedimento altro ufficio '0911' - Sospensione esecuzione - revoca
 	 * Ordine di esecuzione '0912' - Sospensione esecuzione - Grazia ex art. 147 n.1 c.p.
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
@@ -1896,16 +1850,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSqlDao = null;
 
-		if (aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("04")
 				&& (aEveModel.getCodMotivo().equals("0904") || aEveModel.getCodMotivo().equals("0905")
 						|| aEveModel.getCodMotivo().equals("0906") || aEveModel.getCodMotivo().equals("0907")
 						|| aEveModel.getCodMotivo().equals("0908") || aEveModel.getCodMotivo().equals("0909")
-						|| aEveModel.getCodMotivo().equals("0910") || aEveModel.getCodMotivo().equals("0911") || aEveModel
-						.getCodMotivo().equals("0912"))) {
+						|| aEveModel.getCodMotivo().equals("0910") || aEveModel.getCodMotivo().equals("0911")
+						|| aEveModel.getCodMotivo().equals("0912"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Sospensione Res");
@@ -1923,11 +1875,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					isSospensioneMigrata = true;
 
 			} catch (DAOException daoEx) {
-				throw new F3BException("CalcoloPenaControllerF5.isSospensioneMigrata: Non posso leggere : "
-						+ daoEx);
+				throw new F3BException(
+						"CalcoloPenaControllerF5.isSospensioneMigrata: Non posso leggere : " + daoEx);
 			} catch (Exception ex) {
-				throw new F3BException("CalcoloPenaControllerF5.isSospensioneMigrata: Non posso leggere  : "
-						+ ex);
+				throw new F3BException(
+						"CalcoloPenaControllerF5.isSospensioneMigrata: Non posso leggere  : " + ex);
 			} finally {
 				cleanup(lSospSqlDao);
 				cleanup(lConn);
@@ -1940,17 +1892,18 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a una Sospensione Res che, ha gli stessi codici delle
 	 * sospensioni SIEP, ma comportamento diverso.
-	 * 
+	 *
 	 * Per le sospensioni RES infatti le comunicazioni (12) non vanno mai considerati come pena iniziali in
 	 * quanto hanno quantum sempre nulli. E' presente un codice aggiuntivo per le sosp della SORV (0264). Non
 	 * sono mai valorizzati i quantum di pena espiata sul record Sospensione, dove presente. In questo caso si
 	 * è deciso di considerare SEMPRE la sospensione RES come evento di pena iniziale dato che non è possibile
 	 * comunque sapere se ha interroto o meno a pena.
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isSospensioneRes(EventoModel aEveModel) throws F3BException {
+
 		boolean isSospensione = false;
 
 		// ==========================================================================
@@ -1962,10 +1915,9 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			// ========================================================================
 			// Sospensioni del GE
 			// ========================================================================
-			if (aEveModel.getCodTipoEvento().equals("01")
-					&& (aEveModel.getCodTipoProvvedimento().equals("09")
-					// || aEveModel.getCodTipoProvvedimento().equals("12")
-					) && aEveModel.getCodMotivo().equals("0265")) {
+			if (aEveModel.getCodTipoEvento().equals("01") && (aEveModel.getCodTipoProvvedimento().equals("09")
+			// || aEveModel.getCodTipoProvvedimento().equals("12")
+			) && aEveModel.getCodMotivo().equals("0265")) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Sospensione del GE RES");
@@ -1979,8 +1931,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					// || aEveModel.getCodTipoProvvedimento().equals("12") // n.b. in SIEP è 04
 					)
 					&& (aEveModel.getCodMotivo().equals("0900") || aEveModel.getCodMotivo().equals("0901")
-							|| aEveModel.getCodMotivo().equals("0902") || aEveModel.getCodMotivo().equals(
-							"0903"))) {
+							|| aEveModel.getCodMotivo().equals("0902")
+							|| aEveModel.getCodMotivo().equals("0903"))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Sospensione del PM RES");
@@ -1994,8 +1946,8 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					// || aEveModel.getCodTipoProvvedimento().equals("12") // NON vanno considerate le
 					// comunicazioni
 					) && (aEveModel.getCodMotivo().equals("0264") // n.b. solo RES
-					// || aEveModel.getCodMotivo().equals("0241")
-					|| aEveModel.getCodMotivo().equals("0263") // n.b. in RES non è presente
+							// || aEveModel.getCodMotivo().equals("0241")
+							|| aEveModel.getCodMotivo().equals("0263") // n.b. in RES non è presente
 					)) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
@@ -2018,10 +1970,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * Verifica se l'evento passato in input è legato a una archiviazione migrata RES. In questo caso viene
 	 * considerato come evento iniziale e come pena di partenza verrà recuperata l'ultima pena validata prima
 	 * dell'archiviazione.
-	 * 
+	 *
 	 * n.b. almeno per la archiviazioni migrate, all'evento non è mai collegata una pena residua. La pena da
 	 * archiviazione, se è stata caricata, viene agganciata in genere all'evento precedente.
-	 * 
+	 *
 	 * I codici delle Archiviazione sono vari e appartenenti a diversi sottodomini. RV_HIGH_VALUE = ARCH tipo
 	 * evento = '01' tipo provvedimento = '04' cod motivo = '0400' - Archiviazione per assorbimento in Cumulo
 	 * '0401' - Archiviazione per avvenuta espiazione '0402' - Archiviazione per estinzione pena per morte del
@@ -2030,7 +1982,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * reato '0406' - Archiviazione per sospensione esecuzione ex art. 90 DPR 309/90 '0407' - Archiviazione
 	 * per pena espiata in presofferto '0408' - Archiviazione per pena interamente condonata '0409' -
 	 * Archiviato DA COMPLETARE CON EVENTUALI ALTRI CODICI DI ARCHIVIAZIONE
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
@@ -2039,16 +1991,15 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		boolean isArchiviazione = false;
 
 		if (aEveModel.getCodOperatoreInserimento().indexOf("res") != -1 // solo RES
-				&& aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+				&& aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("04")
 				&& (aEveModel.getCodMotivo().equals("0400") || aEveModel.getCodMotivo().equals("0401")
 						|| aEveModel.getCodMotivo().equals("0402") || aEveModel.getCodMotivo().equals("0403")
 						|| aEveModel.getCodMotivo().equals("0404") || aEveModel.getCodMotivo().equals("0405")
 						|| aEveModel.getCodMotivo().equals("0406") || aEveModel.getCodMotivo().equals("0407")
-						|| aEveModel.getCodMotivo().equals("0408") || aEveModel.getCodMotivo().equals("0409"))) {
+						|| aEveModel.getCodMotivo().equals("0408")
+						|| aEveModel.getCodMotivo().equals("0409"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Archiviazione Res");
@@ -2062,14 +2013,15 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * Verifica se l'evento passato in input è legato a una archiviazione iscritta SIEP che ha comportato
 	 * l'azzeramento della pena. In questo caso viene considerato come evento iniziale e come pena di partenza
 	 * verrà recuperata la pena associata all'evento di archiviazione.
-	 * 
+	 *
 	 * n.b. questo metodo verifica solo che l'evento sia iscritto SIEP e sia del tipo Archiviazione. La
 	 * presenza e il recupero della pena viene verificato dal metodo getPena.
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private boolean isArchiviazioneSIEP(EventoModel aEveModel) throws F3BException {
+
 		boolean isArchiviazione = false;
 
 		// Se l'evento è migrato non lo considero
@@ -2088,15 +2040,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// 0006 - archiviazione per pena espiata in presofferto
 		// 0008 - archiviazione per pena interamente condonata (in sentenza)
 		// ==========================================================================
-		if (aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("25")
 				&& (aEveModel.getCodMotivo().equals("0353") || aEveModel.getCodMotivo().equals("0009")
 						|| aEveModel.getCodMotivo().equals("0120") || aEveModel.getCodMotivo().equals("0007")
-						|| aEveModel.getCodMotivo().equals("0478") || aEveModel.getCodMotivo().equals("0006") || aEveModel
-						.getCodMotivo().equals("0008"))) {
+						|| aEveModel.getCodMotivo().equals("0478") || aEveModel.getCodMotivo().equals("0006")
+						|| aEveModel.getCodMotivo().equals("0008"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Archiviazione SIEP - NON LUOGO A PROVVEDERE");
@@ -2115,15 +2065,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// 0480 - archiviazione per pena espiata in regime di libertà controllata
 		// 0481 - archiviazione per pena espiata in regime di lavoro sostitutivo
 		// ==========================================================================
-		if (aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("25")
 				&& (aEveModel.getCodMotivo().equals("0096") || aEveModel.getCodMotivo().equals("0097")
 						|| aEveModel.getCodMotivo().equals("0098") || aEveModel.getCodMotivo().equals("0099")
 						|| aEveModel.getCodMotivo().equals("0473") || aEveModel.getCodMotivo().equals("0479")
-						|| aEveModel.getCodMotivo().equals("0480") || aEveModel.getCodMotivo().equals("0481"))) {
+						|| aEveModel.getCodMotivo().equals("0480")
+						|| aEveModel.getCodMotivo().equals("0481"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Archiviazione SIEP - FINE ESPIAZIONE");
@@ -2175,25 +2124,21 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 		// 0474 - archiviazione per pena espiata in regime di sospensione della parte finale della pena
 		// (L.207/2003)
 		// ==========================================================================
-		if (aEveModel.getCodTipoEvento() != null
-				&& aEveModel.getCodTipoProvvedimento() != null
-				&& aEveModel.getCodMotivo() != null
-				&& aEveModel.getCodTipoEvento().equals("01")
+		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+				&& aEveModel.getCodMotivo() != null && aEveModel.getCodTipoEvento().equals("01")
 				&& aEveModel.getCodTipoProvvedimento().equals("25")
-				&& (aEveModel.getCodMotivo().equals("0421")
-						|| aEveModel.getCodMotivo().equals("0422")
-						// Giudice Sorveglianza
-						|| aEveModel.getCodMotivo().equals("0424")
-						|| aEveModel.getCodMotivo().equals("0425")
-						|| aEveModel.getCodMotivo().equals("0426")
-						|| aEveModel.getCodMotivo().equals("0474")
+				&& (aEveModel.getCodMotivo().equals("0421") || aEveModel.getCodMotivo().equals("0422")
+				// Giudice Sorveglianza
+						|| aEveModel.getCodMotivo().equals("0424") || aEveModel.getCodMotivo().equals("0425")
+						|| aEveModel.getCodMotivo().equals("0426") || aEveModel.getCodMotivo().equals("0474")
 						// Giudice Esecuzione
 						|| aEveModel.getCodMotivo().equals("0411") || aEveModel.getCodMotivo().equals("0412")
 						|| aEveModel.getCodMotivo().equals("0413") || aEveModel.getCodMotivo().equals("0414")
 						|| aEveModel.getCodMotivo().equals("0415") || aEveModel.getCodMotivo().equals("0416")
 						|| aEveModel.getCodMotivo().equals("0417") || aEveModel.getCodMotivo().equals("0418")
 						|| aEveModel.getCodMotivo().equals("0419") || aEveModel.getCodMotivo().equals("0420")
-						|| aEveModel.getCodMotivo().equals("0476") || aEveModel.getCodMotivo().equals("0477"))) {
+						|| aEveModel.getCodMotivo().equals("0476")
+						|| aEveModel.getCodMotivo().equals("0477"))) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Trovata Archiviazione SIEP - PROVVEDIMENTO ALTRA AUTORITA");
@@ -2244,48 +2189,51 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * della pena veniva associato al Provvedimento, ed effettuato solo se condannato detenuto. SOLO in questo
 	 * caso il record pena residua è puntato da un record SOSPENSIONE contenente i dati della pena espiata e
 	 * delle pena da espiare Ai fini del CP considero quindi solo il Provvedimento
-	 * 
+	 *
 	 * Nella nuova versione dell'espulsione l'evento che ridetermina la pena è la Comunicazione (12) del
 	 * Verbale di Avvenuta Espulsione con relativa data. (01-12-2141) Avvenuta Espulsione straniero a titolo
 	 * di sanzione alternativa (art. 16 comma 5 D.Lvo 286/1998 e succ.mod.) In questo caso all'evento è
 	 * associata una PR con a sua volta associata un record SOSPENSIONE riportante il quantum espiato e il
 	 * residuo da espiare. Anche in questo caso è sufficiente recuperare i quantum dal record PR
-	 * 
+	 *
 	 * Dalle versione 3.0 aggiunto il caso dell'espulsione a titolo di Sanzione Sostitutiva Evento 01-12-0927
 	 * oppure 01-25-0927 Inserisce sempre Pena residua e sospensione
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	private boolean isEspulsione(EventoModel aEveModel) throws F3BException {
+
 		boolean isEspulsione = false;
 
 		Connection lConn = null;
-
 		SospensioneSqlDAO lSospSqlDao = null;
+
 		try {
 
 			if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
-					&& aEveModel.getCodMotivo() != null
-					&& ( // Vecchia espulsione
+					&& aEveModel.getCodMotivo() != null && ( // Vecchia espulsione
 					(aEveModel.getCodTipoEvento().equals("01")
-							&& aEveModel.getCodTipoProvvedimento().equals("04") && aEveModel.getCodMotivo()
-							.equals("0275") // 0275 - Verbale di Espulsione
-							)
-							|| // Nuova espulsione
+							&& aEveModel.getCodTipoProvvedimento().equals("04")
+							&& aEveModel.getCodMotivo().equals("0275") // 0275 - Verbale di Espulsione
+					) || // Nuova espulsione
 							(aEveModel.getCodTipoEvento().equals("01")
-									&& aEveModel.getCodTipoProvvedimento().equals("12") && aEveModel
-									.getCodMotivo().equals("2141") // 2141 - Avvenuta Espulsione straniero a
-																	// titolo di sanzione alternativa (art. 16
-																	// comma 5 D.Lvo 286/1998 e succ.mod.)
+									&& aEveModel.getCodTipoProvvedimento().equals("12")
+									&& aEveModel.getCodMotivo().equals("2141") // 2141 - Avvenuta Espulsione
+																				// straniero a
+																				// titolo di sanzione
+																				// alternativa (art. 16
+																				// comma 5 D.Lvo 286/1998 e
+																				// succ.mod.)
 							) || // Nuova espulsione come Sanzione Sostitutiva
-					(aEveModel.getCodTipoEvento().equals("01")
-							&& (aEveModel.getCodTipoProvvedimento().equals("12") // Comunicazione
-							|| aEveModel.getCodTipoProvvedimento().equals("25") // Annotazione
-							) && aEveModel.getCodMotivo().equals("0927") // 0927 - Comunicazione scadenza
-																			// termini espulsione
-					))) {
+							(aEveModel.getCodTipoEvento().equals("01")
+									&& (aEveModel.getCodTipoProvvedimento().equals("12") // Comunicazione
+											|| aEveModel.getCodTipoProvvedimento().equals("25") // Annotazione
+									) && aEveModel.getCodMotivo().equals("0927") // 0927 - Comunicazione
+																					// scadenza
+																					// termini espulsione
+							))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Trovata Espulsione SIEP");
@@ -2308,7 +2256,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			throw new F3BException("CalcoloPenaControllerF5.isEspulsione: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lSospSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -2320,37 +2267,37 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * anticipazione degli effetti di indulto che ha determinato la Liberazione del condannato con azzeramento
 	 * della pena. Gli eventi possibili sono 2: 01-09-0367 Ordine Scarcerazione - Provvisorio per concessione
 	 * Indulto 01-26-0290 Richiesta - Applicazione Benefici - ex art. 174 c.p. e 672 c.p.p.
-	 * 
+	 *
 	 * Non sempre questi eventi generano una interruzione. Perchè l'evento possa essere considerato
 	 * interruttivo deve avere associata una SOSPENSIONE
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	private boolean isInterruzioneIndulto(EventoModel aEveModel) throws F3BException {
+
 		boolean isInterruzioneIndulto = false;
 
 		Connection lConn = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		SospensioneSqlDAO lSospSqlDao = null;
 
 		try {
-			if (aEveModel.getCodTipoEvento() != null
-					&& aEveModel.getCodTipoProvvedimento() != null
-					&& aEveModel.getCodMotivo() != null
-					&& ( // OSP
+			if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
+					&& aEveModel.getCodMotivo() != null && ( // OSP
 					(aEveModel.getCodTipoEvento().equals("01")
 							&& aEveModel.getCodTipoProvvedimento().equals("09") // 09 - Ordine di
 																				// scarcerazione
-					&& aEveModel.getCodMotivo().equals("0367") // 0367 - Provvisorio per concessione Indulto
+							&& aEveModel.getCodMotivo().equals("0367") // 0367 - Provvisorio per concessione
+																		// Indulto
 					) || // RIchiesta
-					(aEveModel.getCodTipoEvento().equals("01")
-							&& aEveModel.getCodTipoProvvedimento().equals("26") // 26 - Richiesta
-					&& aEveModel.getCodMotivo().equals("0290") // 0290 - Applicazione Benefici - ex art. 174
-																// c.p. e 672 c.p.p.
-					))) {
+							(aEveModel.getCodTipoEvento().equals("01")
+									&& aEveModel.getCodTipoProvvedimento().equals("26") // 26 - Richiesta
+									&& aEveModel.getCodMotivo().equals("0290") // 0290 - Applicazione Benefici
+																				// - ex art. 174
+																				// c.p. e 672 c.p.p.
+							))) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Trovata Richiesta/OSP Indulto");
@@ -2389,15 +2336,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				}
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.isInterruzioneIndulto: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.isInterruzioneIndulto: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
-			throw new F3BException("CalcoloPenaControllerF5.isInterruzioneIndulto: Non posso leggere  : "
-					+ ex);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.isInterruzioneIndulto: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lSospSqlDao);
 			cleanup(lPenResSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -2407,20 +2353,21 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento passato in input è relativo a una Revoca Sanzione Sostitutiva (senza cumulo) che
 	 * determina i nuovi quantum di pena da eseguire.
-	 * 
+	 *
 	 * Gli eventi sono OE con o senza sospensione: 01-06-0397 Per la carcerazione - Libero - Conversione
 	 * Sanzione Sostitutiva 01-06-0398 Per la carcerazione - Detenuto altra causa - Conversione Sanzione
 	 * Sostitutiva 01-06-0490 Ordine esecuzione con sospensione - Libero - Conversione Sanzione Sostitutiva
 	 * 01-06-0491 Ordine esecuzione con sospensione - Detenuto altra causa - Conversione Sanzione Sostitutiva
-	 * 
+	 *
 	 * Non sempre questi eventi generano una interruzione. Perchè l'evento possa essere considerato
 	 * interruttivo deve avere associata una SOSPENSIONE
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	private boolean isRevocaSanzioneSostitutiva(EventoModel aEveModel) throws F3BException {
+
 		boolean isRevocaSanzioneSostitutiva = false;
 
 		if (aEveModel.getCodTipoEvento() != null && aEveModel.getCodTipoProvvedimento() != null
@@ -2434,9 +2381,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 						|| aEveModel.getCodMotivo().equals("0490") // 0490 - Ordine esecuzione con sospensione
 																	// - Libero - Conversione Sanzione
 																	// Sostitutiva
-				|| aEveModel.getCodMotivo().equals("0491") // 0491 - Ordine esecuzione con sospensione -
-															// Detenuto altra causa - Conversione Sanzione
-															// Sostitutiva
+						|| aEveModel.getCodMotivo().equals("0491") // 0491 - Ordine esecuzione con sospensione
+																	// -
+																	// Detenuto altra causa - Conversione
+																	// Sanzione
+																	// Sostitutiva
 				))
 
 		{
@@ -2453,102 +2402,103 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Verifica se l'evento è un Indultino (Art. 2 L. 207/2003) migrato RES e se può essere considerato come
 	 * pena Interruttiva e quindi come pena iniziale.
-	 * 
+	 *
 	 * n.b. in SIES l'indultino non interrompe la pena e quindi non è un evento di pena iniziale. In RES
 	 * invece spesso interrompe la pena.
-	 * 
+	 *
 	 * L'indultimo migrato viene iscritto con due eventi:
-	 * 
+	 *
 	 * 03-Ordinanza 2245-Sospensione Condizionata della Pena Detentiva Art. 2 L. 207/2003
-	 * 
+	 *
 	 * 09-Ordine Scarcerazione 2245-Sospensione Condizionata della Pena Detentiva Art. 2 L. 207/2003
-	 * 
+	 *
 	 * L'evento viene considerato come pena iniziale solo se la PR associata ha i quantum valorizzati. Infatti
 	 * spesso i quantum associati sono migrati nulli per cui non è possibile utilizzare la pena come iniziale.
-	 * 
+	 *
 	 * n.b. non è mai presente il record sospensione associato
-	 * 
+	 *
 	 * @since sperimentale 06/11/2007
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
-	 * 
+	 *
 	 */
-//	private boolean isIndultinoRES(EventoModel aEveModel) throws F3BException {
-//		boolean isIndultinoRES = false;
-//
-//		// Se non è un evento migrato esco subito
-//		if (aEveModel.getCodOperatoreInserimento().indexOf("res") == -1) {
-//			return false;
-//		}
-//
-//		Connection lConn = null;
-//		PenaResiduaSqlDAO lPenResSqlDao = null;
-//
-//		try {
-//
-//			if (aEveModel.getCodTipoEvento() != null
-//					&& aEveModel.getCodTipoProvvedimento() != null
-//					&& aEveModel.getCodMotivo() != null
-//					&& (aEveModel.getCodTipoEvento().equals("01")
-//							&& aEveModel.getCodTipoProvvedimento().equals("09") // 09 - Ordine di
-//																				// scarcerazione
-//					&& aEveModel.getCodMotivo().equals("2245") // 2245 - Sospensione Condizionata della Pena
-//																// Detentiva Art. 2 L. 207/2003
-//					)) {
-//				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//				// LogF3B.getLogger()
-//				siesLogger.debug("Trovato Indulto RES");
-//
-//				lConn = getDBConnection();
-//				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-//
-//				// n.b. Un indultino REZ è un evento di pena iniziale se ha collegata
-//				// una PENA_RESIDUA con quantum di pena valorizzati
-//				//
-//				PenaResiduaModel lPenResMod = null;
-//
-//				lPenResSqlDao.ricercaPenaResiduaByKeyEvento(aEveModel.getIdEvento());
-//				lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
-//				lPenResSqlDao.stop();
-//
-//				if (lPenResMod != null
-//						&& (CalendarUtil.getTotGiorni(lPenResMod.getQuantumReclusione()) > 0 || CalendarUtil
-//								.getTotGiorni(lPenResMod.getQuantumArresto()) > 0)) {
-//					isIndultinoRES = true;
-//					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//					// LogF3B.getLogger()
-//					siesLogger.debug("Indultino RES con quantum valorizzati");
-//				} else {
-//					isIndultinoRES = false;
-//					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-//					// LogF3B.getLogger()
-//					siesLogger.debug("Indultino RES senza quantum, scartato");
-//				}
-//			}
-//		} catch (DAOException daoEx) {
-//			throw new F3BException("CalcoloPenaControllerF5.isIndultinoRES: Non posso leggere : " + daoEx);
-//		} catch (Exception ex) {
-//			throw new F3BException("CalcoloPenaControllerF5.isIndultinoRES: Non posso leggere  : " + ex);
-//		} finally {
-//			cleanup(lPenResSqlDao);
-//
-//			cleanup(lConn);
-//		}
-//
-//		return isIndultinoRES;
-//	}
+	// private boolean isIndultinoRES(EventoModel aEveModel) throws F3BException {
+	// boolean isIndultinoRES = false;
+	//
+	// // Se non è un evento migrato esco subito
+	// if (aEveModel.getCodOperatoreInserimento().indexOf("res") == -1) {
+	// return false;
+	// }
+	//
+	// Connection lConn = null;
+	// PenaResiduaSqlDAO lPenResSqlDao = null;
+	//
+	// try {
+	//
+	// if (aEveModel.getCodTipoEvento() != null
+	// && aEveModel.getCodTipoProvvedimento() != null
+	// && aEveModel.getCodMotivo() != null
+	// && (aEveModel.getCodTipoEvento().equals("01")
+	// && aEveModel.getCodTipoProvvedimento().equals("09") // 09 - Ordine di
+	// // scarcerazione
+	// && aEveModel.getCodMotivo().equals("2245") // 2245 - Sospensione Condizionata della Pena
+	// // Detentiva Art. 2 L. 207/2003
+	// )) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Trovato Indulto RES");
+	//
+	// lConn = getDBConnection();
+	// lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
+	//
+	// // n.b. Un indultino REZ è un evento di pena iniziale se ha collegata
+	// // una PENA_RESIDUA con quantum di pena valorizzati
+	// //
+	// PenaResiduaModel lPenResMod = null;
+	//
+	// lPenResSqlDao.ricercaPenaResiduaByKeyEvento(aEveModel.getIdEvento());
+	// lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+	// lPenResSqlDao.stop();
+	//
+	// if (lPenResMod != null
+	// && (CalendarUtil.getTotGiorni(lPenResMod.getQuantumReclusione()) > 0 || CalendarUtil
+	// .getTotGiorni(lPenResMod.getQuantumArresto()) > 0)) {
+	// isIndultinoRES = true;
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Indultino RES con quantum valorizzati");
+	// } else {
+	// isIndultinoRES = false;
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Indultino RES senza quantum, scartato");
+	// }
+	// }
+	// } catch (DAOException daoEx) {
+	// throw new F3BException("CalcoloPenaControllerF5.isIndultinoRES: Non posso leggere : " + daoEx);
+	// } catch (Exception ex) {
+	// throw new F3BException("CalcoloPenaControllerF5.isIndultinoRES: Non posso leggere : " + ex);
+	// } finally {
+	// cleanup(lPenResSqlDao);
+	//
+	// cleanup(lConn);
+	// }
+	//
+	// return isIndultinoRES;
+	// }
 
 	/**
 	 * Restituisce l'elenco di tutte le pene residue VALIDATE per il fascicolo ordinate per data inserimento
 	 * decrescente ma inserite prima della data passata in input
-	 * 
+	 *
 	 * @param aFascID
 	 * @param aDataIns
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector getElencoPeneResidueDataInsDesc(BigDecimal aFascID, Date aDataIns) throws F3BException {
+
 		Connection lConn = null;
 		PenaResiduaSqlDAO lPenDao = null;
 
@@ -2578,17 +2528,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Restituisce un vettore di SospensioneModel contenente tutte le sospensioni inserite e VALIDATE nel
 	 * periodo specificato
-	 * 
+	 *
 	 * @param aFascID
-	 *            id del Fascicolo
-	 * @param aDataDal
-	 *            data dal
-	 * @param aDataAl
-	 *            data al
-	 * @return vettore di SospensioneModel
-	 * @throws
+	 *            id del Fascicolo @param aDataDal data dal @param aDataAl data al @return vettore di
+	 *            SospensioneModel @throws
 	 */
 	public Vector exGetPeneEspiate(BigDecimal aFascID, Date aDataDal, Date aDataAl) throws F3BException {
+
 		Connection lConn = null;
 
 		SospensioneSqlDAO lSospSqlDao = null;
@@ -2614,7 +2560,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			throw new F3BException("CalcoloPenaControllerF5.exGetPeneEspiate: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lSospSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -2624,18 +2569,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	/**
 	 * Restituisce un vettore di FungibilitaModel contenente tutte le pene espiate in eccesso inserite e
 	 * VALIDATE nel periodo specificato
-	 * 
+	 *
 	 * @param aFascID
-	 *            id del Fascicolo
-	 * @param aDataDal
-	 *            data dal
-	 * @param aDataAl
-	 *            data al
-	 * @return vettore di FungibilitaModel
-	 * @throws
+	 *            id del Fascicolo @param aDataDal data dal @param aDataAl data al @return vettore di
+	 *            FungibilitaModel @throws
 	 */
 	public Vector exGetPeneEspiateInEccesso(BigDecimal aFascID, Date aDataDal, Date aDataAl)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FungibilitaSqlDAO lFungSqlDao = null;
@@ -2655,16 +2596,14 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				lListaPeneEspiateInEccesso.add(lFungModel);
 			}
 			lFungSqlDao.stop();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetPeneEspiateInEccesso: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetPeneEspiateInEccesso: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetPeneEspiateInEccesso: Non posso leggere  : "
-					+ ex);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetPeneEspiateInEccesso: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lFungSqlDao);
-
 			cleanup(lConn);
 		}
 		return lListaPeneEspiateInEccesso;
@@ -2675,10 +2614,11 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * n.b. la data di scarcerazione viene ricostruita in quanto non viene salvata in alcun modo sul DB. Tale
 	 * data viene utilizzata per i calcoli della fungibilità e della pena espiata nel caso di Amnistia/Indulto
 	 * (richieste e decisioni).
-	 * 
+	 *
 	 * @return la presunta data di scarcerazione o null se non presente o non determinabile
 	 */
 	public Date getDataScarcerazione(BigDecimal aFascID) throws F3BException {
+
 		// ==========================================================================
 		// La data di scarcerazione viene utilizzata al posto della data di sistema
 		// nei calcoli della pena.
@@ -2712,12 +2652,12 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			 * data fine < data inserimento vuol dire che i calcoli sono stati // effettuati utilizzando come
 			 * data di sistema la data scarcerazione // non è vero!! se è stato imputato un quantum eccessivo,
 			 * la data fine pena // calcolata può essere < alla data di sistema generando fungibilità.
-			 * 
+			 *
 			 * Vector lListaPeneResidue = new Vector();
-			 * 
+			 *
 			 * lPenDao.ricercaPenaResiduaRichestaAmnistiaIndulto(aFascID); lListaPeneResidue = new
 			 * Vector(lPenDao.getModels());
-			 * 
+			 *
 			 * if (lListaPeneResidue.size()>0){ PenaResiduaModel lPenMod = (PenaResiduaModel)
 			 * lListaPeneResidue.elementAt(0); if (lPenMod.getDataInserimento()!=null &&
 			 * lPenMod.getDataFine()!=null){ if (DateUtils.isLower(lPenMod.getDataFine(),
@@ -2741,35 +2681,29 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Restituisce l'elenco delle richieste con o senza anticipazione collegate a una decisione
-	 * 
+	 *
 	 * @param aIdDecisione
 	 *            id dell'annotazione che rappresenta la decisione
 	 * @return vettore di AnnotazioneManualeModel
 	 * @throws F3BException
 	 */
 	public Vector exGetRichiesteAlGEbyIdDecisione(BigDecimal aIdDecisione) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Ricerco le Richieste al GE collegate alla decisione: " + aIdDecisione);
 		Connection lConn = null;
-		Vector lListaRichiestePerDecisione = new Vector();
-
 		AnnotazioneManualeSqlDAO lAnnManSqlDao = null;
+		Vector lListaRichiestePerDecisione = new Vector();
 
 		try {
 			lConn = getDBConnection();
-
 			AnnotazioneManualeModel lAnnManMod = new AnnotazioneManualeModel();
-
 			lAnnManSqlDao = new AnnotazioneManualeSqlDAO(lConn);
-
 			lAnnManSqlDao.ricercaAnnManualeRichiesteGEByIdDecisione(aIdDecisione);
-
 			lAnnManSqlDao.start();
-
 			while (lAnnManSqlDao.next()) {
 				lAnnManMod = (AnnotazioneManualeModel) lAnnManSqlDao.getModel();
-
 				lListaRichiestePerDecisione.add(lAnnManMod);
 			}
 			lAnnManSqlDao.stop();
@@ -2782,7 +2716,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					"CalcoloPenaControllerF5.exGetRichiesteAlGEbyIdDecisione: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lAnnManSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -2791,7 +2724,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Recupera i fascicoli su cui effettuare il check della pena
-	 * 
+	 *
 	 * @param aChiaveUfficio
 	 * @param aIscritto
 	 * @param aProgrAnno
@@ -2799,43 +2732,36 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 */
 	public Vector exGetFascicoliPerCheckPena(String aChiaveUfficio, String aIscritto, String aProgrAnno)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Ricerco i fascicolo: ");
 
 		Connection lConn = null;
-		Vector lListaFascicoli = new Vector();
-
 		FascicoloSiepSqlDAO lFascSiepSqlDao = null;
+		Vector lListaFascicoli = new Vector();
 
 		try {
 			lConn = getDBConnection();
-
 			FascicoloSiepModel lFascSiepModel = new FascicoloSiepModel();
-
 			lFascSiepSqlDao = new FascicoloSiepSqlDAO(lConn);
-
 			lFascSiepSqlDao.ricercaFascicoloPerCheckPena(aChiaveUfficio, aIscritto, aProgrAnno);
-
 			lFascSiepSqlDao.start();
 
 			while (lFascSiepSqlDao.next()) {
 				lFascSiepModel = (FascicoloSiepModel) lFascSiepSqlDao.getModel();
-
 				lListaFascicoli.add(lFascSiepModel);
 			}
 
 			lFascSiepSqlDao.stop();
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("CalcoloPenaControllerF5.exGetFascicoliPerCheckPena: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"CalcoloPenaControllerF5.exGetFascicoliPerCheckPena: Non posso leggere : " + daoEx);
 		} catch (Exception ex) {
 			throw new F3BException(
 					"CalcoloPenaControllerF5.exGetFascicoliPerCheckPena: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lFascSiepSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -2846,7 +2772,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * Restituisce la pena residua associata all'evento passato in input. Tale evento è l'evento di pena
 	 * iniziale, ma a causa di incoerenza sui dati a sistema non sempre è possibile recuperare la pena
 	 * associata a tali eventi.
-	 * 
+	 *
 	 * @param aEveIniziale
 	 *            - Evento di pena iniziale
 	 * @return PenaResiduaModel - pena residua associata all'evento, null se non è stato possibile determinare
@@ -2854,6 +2780,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 	 * @throws F3BException
 	 */
 	public PenaResiduaModel getPena(EventoModel aEventoIniziale, int aTipoPena) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaResiduaSqlDAO lPenaResSqlDao = null;
@@ -2913,20 +2840,30 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 				// LogF3B.getLogger()
 				// siesLogger.debug("Pena da Arch : "+lPenaResMod);
 
-				if (lPenaResMod != null
-						&& (CalendarUtil.getTotGiorni(lPenaResMod.getQuantumReclusione()) != 0 || CalendarUtil
-								.getTotGiorni(lPenaResMod.getQuantumArresto()) != 0)) { // Se i quantum sono
-																						// valorizzati vuol
-																						// dire che non c'è
-																						// stato azzeramento
-																						// quindi devo
-																						// scartare la pena
-																						// [FT] - 03/08/2016 -
-																						// MAC_LOG - Utilizzo
-																						// la variabile di
-																						// istanza siesLogger
-																						// al posto di
-																						// LogF3B.getLogger()
+				if (lPenaResMod != null && (CalendarUtil.getTotGiorni(lPenaResMod.getQuantumReclusione()) != 0
+						|| CalendarUtil.getTotGiorni(lPenaResMod.getQuantumArresto()) != 0)) { // Se i quantum
+																								// sono
+																								// valorizzati
+																								// vuol
+																								// dire che
+																								// non c'è
+																								// stato
+																								// azzeramento
+																								// quindi devo
+																								// scartare la
+																								// pena
+																								// [FT] -
+																								// 03/08/2016
+																								// -
+																								// MAC_LOG -
+																								// Utilizzo
+																								// la
+																								// variabile
+																								// di
+																								// istanza
+																								// siesLogger
+																								// al posto di
+																								// LogF3B.getLogger()
 					siesLogger.debug("Scarto la pena da ARCH SIEP perchè con quantum positivi.");
 					lPenaResMod = null;
 				}
@@ -2978,10 +2915,9 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					lPenaResMod.setNumGiorniArresto(lAnnoMod.getNumGiorniArresto());
 					lPenaResMod.setNumMesiArresto(lAnnoMod.getNumMesiArresto());
 					lPenaResMod.setNumAnniArresto(lAnnoMod.getNumAnniArresto());
-					lPenaResMod.setImportoAmmenda(lAnnoMod.getImportoAmmenda()); // Attenzione mancano i
-																					// decimali
+					// Attenzione mancano i decimali
+					lPenaResMod.setImportoAmmenda(lAnnoMod.getImportoAmmenda());
 				}
-
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException("CalcoloPenaControllerF5.getPena: Non posso leggere : " + daoEx);
@@ -2991,7 +2927,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			cleanup(lPenaResSqlDao);
 			cleanup(lSospSqlDAO);
 			cleanup(lAnnoManSqlDao);
-
 			cleanup(lConn);
 		}
 
@@ -3000,12 +2935,13 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 	/**
 	 * Verifica se l'Evento passato è di tipo interrutivo
-	 * 
+	 *
 	 * @param aEvento
 	 *            - Evento da verificare
 	 * @return boolean - Restituisce vero se è un evento di tipo interruttivo
 	 */
 	public boolean isInterruzionePerStatoEsecuzione(EventoModel aEveModel) throws F3BException {
+
 		// Verifico se l'evento passato è di tipo interrutivo utilizzando tutti i
 		// metodi privati già sviluppati.
 
@@ -3013,7 +2949,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 
 		/*
 		 * L'archiviazione viene controllata a monte if(isArchiviazioneRes(aEveModel)) return true;
-		 * 
+		 *
 		 * if(isArchiviazioneSIEP(aEveModel)) return true;
 		 */
 
@@ -3065,18 +3001,17 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			return true;
 
 		return false;
-
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aFascID
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel exRicercaUltimoEvento(BigDecimal aFascID) throws F3BException {
-		Connection lConn = null;
 
+		Connection lConn = null;
 		EventoSqlDAO lEveSqlDao = null;
 
 		EventoModel lEventoMod = null;
@@ -3089,7 +3024,7 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			lEveSqlDao.start();
 
 			while (lEveSqlDao.next()) {
-				lListaEventi.add((EventoModel) lEveSqlDao.getModel());
+				lListaEventi.add(lEveSqlDao.getModel());
 			}
 			lEveSqlDao.stop();
 
@@ -3102,7 +3037,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 			throw new F3BException("CalcoloPenaControllerF5.getPena: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
-
 			cleanup(lConn);
 		}
 

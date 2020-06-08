@@ -6,14 +6,14 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import siap.controller.SiapController;
-import siap.siepe.assistentesocialeattivita.dao.AssistenteSocialeAttivitaDAO;
-import siap.siepe.assistentesocialeattivita.dao.AssistenteSocialeAttivitaSqlDAO;
-import siap.siepe.assistentesocialeattivita.model.AssistenteSocialeAttivitaModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import siap.controller.SiapController;
+import siap.siepe.assistentesocialeattivita.dao.AssistenteSocialeAttivitaDAO;
+import siap.siepe.assistentesocialeattivita.dao.AssistenteSocialeAttivitaSqlDAO;
+import siap.siepe.assistentesocialeattivita.model.AssistenteSocialeAttivitaModel;
 
 /**
  * <p>
@@ -28,17 +28,19 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class AssistenteSocialeAttivitaController extends SiapController implements IAssistenteSocialeAttivita {
+public class AssistenteSocialeAttivitaController extends SiapController
+		implements IAssistenteSocialeAttivita {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public AssistenteSocialeAttivitaModel ExInserisciAssistenteSocialeAttivita(
 			AssistenteSocialeAttivitaModel aAssistenteSocialeAttivita, Connection aConn) throws F3BException {
+
 		AssistenteSocialeAttivitaDAO lAssDao = null;
 		AssistenteSocialeAttivitaModel lAssMod = null;
 		boolean lAssistentePresente = false;
@@ -67,7 +69,6 @@ public class AssistenteSocialeAttivitaController extends SiapController implemen
 				lAssDao.setDAOFromModel(aAssistenteSocialeAttivita);
 				lAssDao.insert();
 			}
-
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
@@ -81,12 +82,13 @@ public class AssistenteSocialeAttivitaController extends SiapController implemen
 	/**
 	 * Funzione di ricerca. Trova tutti gli Assistenti Sociali associati ad una attività specificata
 	 * attraverso la sua chiave.
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaAssistentiSocialiXAttivita(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeAttivitaSqlDAO lAssSocDao = null;
 		Vector lEspertiAttivita = new Vector();
@@ -109,12 +111,13 @@ public class AssistenteSocialeAttivitaController extends SiapController implemen
 	/**
 	 * Funzione di ricerca. Trova tutti gli Assistenti Sociali associati ad una attività specificata che siano
 	 * attivi, ovvero che abbiano un periodo di abilitazione che comprenda la data di sistema.
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaAssistentiSocialiAttiiviXAttivita(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeAttivitaSqlDAO lAssSocDao = null;
 		Vector lEspertiAttivita = new Vector();
@@ -136,6 +139,7 @@ public class AssistenteSocialeAttivitaController extends SiapController implemen
 
 	public AssistenteSocialeAttivitaModel ExModificaAssistenteSocialeAttivita(
 			AssistenteSocialeAttivitaModel aAssistenteSocialeAttivita) throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeAttivitaDAO lAssDao = null;
 		AssistenteSocialeAttivitaModel lAssMod = new AssistenteSocialeAttivitaModel(
@@ -151,8 +155,8 @@ public class AssistenteSocialeAttivitaController extends SiapController implemen
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + ex);
-			throw new F3BException("AssistenteSocialeAttivitaController.ExModifica: Non posso inserire: "
-					+ ex);
+			throw new F3BException(
+					"AssistenteSocialeAttivitaController.ExModifica: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lAssDao);
 			cleanup(lConn);
@@ -162,6 +166,7 @@ public class AssistenteSocialeAttivitaController extends SiapController implemen
 
 	public void ExCancellaAssistenteSocialeAttivita(AssistenteSocialeAttivitaModel aAssistenteSocialeAttivita)
 			throws F3BException {
+
 		Connection lConn = null;
 		AssistenteSocialeAttivitaDAO lAssDao = null;
 

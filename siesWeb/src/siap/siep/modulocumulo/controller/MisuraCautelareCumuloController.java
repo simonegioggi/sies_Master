@@ -21,7 +21,7 @@ import siap.siep.modulocumulo.model.MisuraCautelareCumuloModel;
  * <p>
  * Description: Classe Controller per MisuraCautelareCumulo
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -29,7 +29,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un MisuraCautelareCumulo a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aMisuraCautelareCumulo
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
@@ -40,6 +40,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	public MisuraCautelareCumuloModel ExInserisciMisuraCautelareCumulo(
 			MisuraCautelareCumuloModel aMisuraCautelareCumulo) throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareCumuloDAO lMisDao = null;
 		MisuraCautelareCumuloModel lMisMod = null;
@@ -67,7 +68,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati MisuraCautelareCumulo
-	 * 
+	 *
 	 * @param aMisuraCautelareCumulo
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -76,6 +77,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	 ****************************************************************************/
 	public Vector<MisuraCautelareCumuloModel> ExRicercaMisuraCautelareCumulo(
 			MisuraCautelareCumuloModel aMisuraCautelareCumulo) throws F3BException {
+
 		Connection lConn = null;
 		Vector<MisuraCautelareCumuloModel> lMisuraCautelareCumuli = new Vector<>();
 		MisuraCautelareCumuloDAO lMisDao = null;
@@ -105,12 +107,13 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	/**
 	 * Effettua la ricerca delle MC presenti sul titolo ordinate per data inizio misura
-	 * 
+	 *
 	 * @param aIdTitolo
 	 * @return Vector <MisuraCautelareCumuloModel>
 	 */
 	public Vector<MisuraCautelareCumuloModel> ExRicercaMisureCautelariCumuloByIdTitolo(BigDecimal aIdTitolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<MisuraCautelareCumuloModel> lMisuraCautelareCumuli = new Vector<>();
 		MisuraCautelareCumuloSqlDAO lMisSqlDao = null;
@@ -143,7 +146,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
@@ -151,6 +154,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	 ****************************************************************************/
 	public MisuraCautelareCumuloModel ExRicercaMisuraCautelareCumuloById(BigDecimal aIdMisuraCautelareCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareCumuloModel lMisuraCautelareCumuloMod = new MisuraCautelareCumuloModel();
 		MisuraCautelareCumuloSqlDAO lMisuraCautelareCumuloSqlDao = null;
@@ -178,13 +182,14 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	 * Metodo che modifica i dati dell'MisuraCautelareCumulo Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aMisuraCautelareCumulo
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaMisuraCautelareCumulo(MisuraCautelareCumuloModel aMisuraCautelareCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareCumuloDAO lMisDao = null;
 
@@ -209,6 +214,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	public void ExCancellaMisuraCautelareCumuloLogica(MisuraCautelareCumuloModel aMisuraCautelareCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareCumuloDAO lMisDao = null;
 
@@ -243,11 +249,12 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aIdMisuraCautelareCumulo
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaMisuraCautelareCumulo(BigDecimal aIdMisuraCautelareCumulo) throws F3BException {
+
 		Connection lConn = null;
 		MisuraCautelareCumuloDAO lMisDao = null;
 
@@ -274,13 +281,14 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aMisuraCautelareCumulo
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountMisuraCautelareCumulo(MisuraCautelareCumuloModel aMisuraCautelareCumulo)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		MisuraCautelareCumuloSqlDAO lMisuraCautelareCumuloSqlDao = null;
@@ -309,7 +317,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aMisuraCautelareCumulo
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -319,6 +327,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	 ****************************************************************************/
 	public Vector ExRicercaMisuraCautelareCumuloPaged(MisuraCautelareCumuloModel aMisuraCautelareCumulo,
 			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lMisuraCautelareCumuli = new Vector();
 		MisuraCautelareCumuloSqlDAO lMisuraCautelareCumuloSqlDao = null;
@@ -344,7 +353,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	 * La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della
 	 * Primary_Key è già preimpostato; metodi usati nella funzione di presa in carico, per scaricare Tutti i
 	 * dati del Fascicolo sulla nuova Base dati.
-	 * 
+	 *
 	 * @param
 	 * @param
 	 * @return
@@ -352,6 +361,7 @@ public class MisuraCautelareCumuloController extends SiapController implements I
 	 */
 	public String ExInserisciMisuraCautelareCumuloWithoutSequence(
 			Vector<MisuraCautelareCumuloModel> aVecMisureCautelari, Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		MisuraCautelareCumuloDAO lMisCauDao = null;
 		MisuraCautelareCumuloModel lMisCauMod = null;

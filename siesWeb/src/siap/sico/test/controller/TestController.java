@@ -15,6 +15,12 @@ import javax.xml.ws.WebServiceException;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.F3BProperties;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.jms.config.JMSProperties;
 import siap.jms.connection.ConnectionPoolJMS;
 import siap.jms.jmscode.model.JmsCodeModel;
@@ -25,12 +31,6 @@ import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.versione.util.VersionProperties;
 import siap.sico.webservice.config.NscProperties;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.F3BProperties;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -56,7 +56,7 @@ public class TestController {
 
 	/**
 	 * UNico metodo publico che stampa i risultati del test del sistema
-	 * 
+	 *
 	 * @param aUtente
 	 * @return
 	 * @throws F3BException
@@ -122,12 +122,11 @@ public class TestController {
 				JmsCodeModel lCode = (JmsCodeModel) lItx.next();
 				if (lBDINome.compareTo(lCode.getCodice()) == 0) {
 					if (lProgressivo.compareTo(lCode.getDescrizione()) != 0) {
-						lTest.setErroreProgressivo("con progressivo ERRATO. Nel file di configurazione e' presente "
-								+ lProgressivo
-								+ " ma dovrebbe essere "
-								+ lCode.getDescrizione()
-								+ ". Provvedere alla sostituzione del paramentro nel file f3b.properties nella directory "
-								+ lTest.getProperties() + ".");
+						lTest.setErroreProgressivo(
+								"con progressivo ERRATO. Nel file di configurazione e' presente "
+										+ lProgressivo + " ma dovrebbe essere " + lCode.getDescrizione()
+										+ ". Provvedere alla sostituzione del paramentro nel file f3b.properties nella directory "
+										+ lTest.getProperties() + ".");
 					}
 					lTrovato = true;
 				}
@@ -157,7 +156,7 @@ public class TestController {
 
 	/**
 	 * Preleva i dati del test
-	 * 
+	 *
 	 * @param aUtente
 	 * @return
 	 */
@@ -182,12 +181,11 @@ public class TestController {
 		lTreeRoot.add(new TreeModel(aUtente));
 
 		return lTreeRoot;
-
 	}
 
 	/**
 	 * Crea la root del Documento
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
@@ -203,14 +201,15 @@ public class TestController {
 
 	/**
 	 * NUOVA INFRASTRUTTURA: interrogo il WS
-	 * 
+	 *
 	 * @param cases
 	 * @return String
 	 * @throws F3BException
 	 */
 	private String interrogateWS(String cases) throws F3BException {
 
-		String messaggio = "", iscriviProvvedimentoProvvisorio = "", iscriviProvvedimentoEsecuzione = "", trasferisciFoglioComplementare = "", richiestaCertificato = "";
+		String messaggio = "", iscriviProvvedimentoProvvisorio = "", iscriviProvvedimentoEsecuzione = "",
+				trasferisciFoglioComplementare = "", richiestaCertificato = "";
 		NscProperties nscProperty = NscProperties.getInstance();
 		try {
 			if ("webserver".equals(cases)) {
@@ -299,7 +298,7 @@ public class TestController {
 
 	/**
 	 * Metodo che ritorna la risposta al test di connessione
-	 * 
+	 *
 	 * @param stringaConnessione
 	 * @return String[]
 	 * @throws MalformedURLException

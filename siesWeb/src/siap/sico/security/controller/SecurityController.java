@@ -7,6 +7,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.security.SecurityException;
+import f3b.security.model.FunctionModel;
+import f3b.security.model.ProfileModel;
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.security.ICostantiFunzioni;
 import siap.sico.security.dao.SecuritySqlDAO;
@@ -15,16 +22,8 @@ import siap.sico.ufficio.model.UfficioAccorpatoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.dao.UtenteSqlDAO;
 import siap.sico.utente.model.UtenteModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.security.SecurityException;
-import f3b.security.model.FunctionModel;
-import f3b.security.model.ProfileModel;
-import f3b.util.F3BException;
-import f3b.util.Utils;
 
 /**
- *
  * <p>
  * Title: SecurityController
  * </p>
@@ -43,13 +42,14 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * ExLogin - Effettua la login dell'Utente in un ufficio
-	 * 
+	 *
 	 * @param aUtente
 	 * @param aUfficio
 	 * @return Utente riconosciuto
 	 * @throws F3BException
 	 */
 	public UtenteModel ExLogin(UtenteModel aUtente, UfficioModel aUfficio) throws F3BException {
+
 		// verifica che l'utente sia valido (definito per l'ufficio richiesto e in corso di validità)
 		UtenteModel lUtente = getUtenteValido(aUtente, aUfficio);
 
@@ -83,12 +83,13 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Login del solo utente
-	 * 
+	 *
 	 * @param aUtente
 	 * @return utente riconosciuto
 	 * @throws F3BException
 	 */
 	public UtenteModel ExLogin(UtenteModel aUtente) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("SecurityController.ExLogin INIZIO");
 
@@ -128,12 +129,13 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Restituisce il profilo per un dato utente
-	 * 
+	 *
 	 * @param aCodUtente
 	 * @return
 	 * @throws F3BException
 	 */
 	private ProfileModel getProfiloByCodiceUtente(String aCodUtente) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("SecurityController.getProfiloByCodiceUtente INIZIO");
 
@@ -172,36 +174,6 @@ public class SecurityController extends SiapController implements ISecurity {
 	}
 
 	/**
-	 * Funzioni figlie dal profilo
-	 * 
-	 * @param aCodProfilo
-	 * @param aFunzioneModel
-	 * @throws F3BException
-	 */
-	// private void loadFunzioniFiglieByCodiceProfilo(BigDecimal aCodProfilo, FunctionModel aFunzioneModel)
-	// throws F3BException
-	// {
-	// ArrayList lFunzioniFiglie =
-	// getFunFiglieByCodProfilo(aCodProfilo, aFunzioneModel.getFunctionId());
-	//
-	// aFunzioneModel.setDaughtersFunctions(lFunzioniFiglie);
-	//
-	// if ((lFunzioniFiglie == null) || (lFunzioniFiglie.size() == 0))
-	// return;
-	//
-	// Iterator lIt = lFunzioniFiglie.iterator();
-	//
-	// FunctionModel lFunzioneModel = null;
-	//
-	// while (lIt.hasNext())
-	// {
-	// lFunzioneModel = (FunctionModel) lIt.next();
-	//
-	// loadFunzioniFiglieByCodiceProfilo(aCodProfilo, lFunzioneModel);
-	// }
-	// }
-
-	/**
 	 * Load il menu delle funzioni figlie del tipo menu specificato nel model aFunzionePadre.
 	 *
 	 * @param aProfiloUtente
@@ -211,6 +183,7 @@ public class SecurityController extends SiapController implements ISecurity {
 	 */
 	public FunctionModel ExLoadFunzioniMenu(ProfileModel aProfiloUtente, FunctionModel aFunzionePadre)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("SecurityController.ExLoadFunctionMenu INIZIO");
 
@@ -235,6 +208,7 @@ public class SecurityController extends SiapController implements ISecurity {
 	 */
 	public FunctionModel ExLoadFunzioniMenuSceltaRapida(ProfileModel aProfiloUtente,
 			FunctionModel aFunzionePadre) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("SecurityController.ExLoadFunzioniMenuSceltaRapida INIZIO");
 
@@ -251,7 +225,7 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Trova la funzione dal nome passato e dal profilo utente
-	 * 
+	 *
 	 * @param aNomeAzione
 	 * @param aCodProfilo
 	 * @return La funzione selezionata
@@ -259,6 +233,7 @@ public class SecurityController extends SiapController implements ISecurity {
 	 */
 	public FunctionModel getFunzioneByAzioneCodProfilo(String aNomeAzione, BigDecimal aCodProfilo)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("SecurityController.getFunzioneByAzioneCodProfilo");
 
@@ -300,7 +275,7 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Restituisce le funzioni figlie
-	 * 
+	 *
 	 * @param aCodProfilo
 	 * @param aIdFunzPadre
 	 * @return Lista di funzioni figlie
@@ -308,6 +283,7 @@ public class SecurityController extends SiapController implements ISecurity {
 	 */
 	public ArrayList getFunFiglieByCodProfilo(BigDecimal aCodProfilo, BigDecimal aIdFunzPadre)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		siesLogger.debug("SecurityController.getFunFiglieByCodProfilo");
 
@@ -357,7 +333,7 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Restituisce le FUnzioni Figlie per il profilo utente
-	 * 
+	 *
 	 * @param aCodProfilo
 	 * @param aIdFunzPadre
 	 * @param aTipoVisualizzazione
@@ -366,6 +342,7 @@ public class SecurityController extends SiapController implements ISecurity {
 	 */
 	public ArrayList getFunFiglieByCodProfiloTipoVis(BigDecimal aCodProfilo, BigDecimal aIdFunzPadre,
 			String aTipoVisualizzazione) throws F3BException {
+
 		Connection lConn = null;
 		SecuritySqlDAO lDao = null;
 
@@ -408,13 +385,14 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Verifica la validità di un utente
-	 * 
+	 *
 	 * @param aUtente
 	 * @param aUfficio
 	 * @return Utente
 	 * @throws F3BException
 	 */
 	public UtenteModel getUtenteValido(UtenteModel aUtente, UfficioModel aUfficio) throws F3BException {
+
 		Connection lConn = null;
 		SecuritySqlDAO lDao = null;
 		UtenteModel lUtente = null;
@@ -447,12 +425,13 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Ricerca Ufficio dell'Utente
-	 * 
+	 *
 	 * @param aUtente
 	 * @return
 	 * @throws F3BException
 	 */
 	public UfficioModel getUfficioUtente(UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		SecuritySqlDAO lDao = null;
 		UfficioModel lUfficioUtente = null;
@@ -506,12 +485,13 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Set dell'ora di Login
-	 * 
+	 *
 	 * @param aCodUtente
 	 * @param aIP
 	 * @throws F3BException
 	 */
 	public void Utente_setOraLogin(String aCodUtente, String aIP) throws F3BException {
+
 		Connection lConn = null;
 		UtenteSqlDAO lDao = null;
 		try {
@@ -534,12 +514,13 @@ public class SecurityController extends SiapController implements ISecurity {
 
 	/**
 	 * Verifica la Validità di un utente
-	 * 
+	 *
 	 * @param aUtente
 	 * @return
 	 * @throws F3BException
 	 */
 	public UtenteModel getUtenteValido(UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		SecuritySqlDAO lDao = null;
 		UtenteModel lUtente = null;

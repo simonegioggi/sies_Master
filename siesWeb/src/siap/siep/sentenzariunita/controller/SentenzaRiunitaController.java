@@ -7,6 +7,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+//fine modifica marzo 2010
 import siap.controller.SiapController;
 import siap.siep.sentenzariunita.dao.SentenzaRiunitaDAO;
 import siap.siep.sentenzariunita.dao.SentenzaRiunitaFascSiepDAO;
@@ -15,27 +19,32 @@ import siap.siep.sentenzariunita.dao.SentenzaRiunitaSqlDAO;
 // inizio modifica marzo 2010
 import siap.siep.sentenzariunita.model.SentenzaRiunitaFascSiepModel;
 import siap.siep.sentenzariunita.model.SentenzaRiunitaModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-//fine modifica marzo 2010
 
 /**
- * <p>Title: SentenzaRiunitaController</p>
- * <p>Description: Classe Controller per SentenzaRiunita</p>
- * <p>Copyright: Copyright (c) 2002</p>
- * <p>Company: Bull</p>
+ * <p>
+ * Title: SentenzaRiunitaController
+ * </p>
+ * <p>
+ * Description: Classe Controller per SentenzaRiunita
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class SentenzaRiunitaController extends SiapController implements ISentenzaRiunita
- {
+public class SentenzaRiunitaController extends SiapController implements ISentenzaRiunita {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public SentenzaRiunitaModel ExInserisciSentenzaRiunita(SentenzaRiunitaModel aSentenzaRiunita)
 			throws F3BException {
+
 		Connection lConn = null;
 		SentenzaRiunitaDAO lSenDao = null;
 		SentenzaRiunitaModel lSenMod = null;
@@ -60,6 +69,7 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 	}
 
 	public Vector ExRicercaSentenzaRiunita(SentenzaRiunitaModel aSentenzaRiunita) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSentenzaRiuniti = new Vector();
 		SentenzaRiunitaSqlDAO lSenDao = null;
@@ -75,8 +85,8 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSenDao);
 			cleanup(lConn);
@@ -85,6 +95,7 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 	}
 
 	public SentenzaRiunitaModel ExRicercaSentenzaRiunitaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaRiunitaSqlDAO lSenDao = null;
 		SentenzaRiunitaModel lSenMod;
@@ -97,8 +108,8 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSenDao);
 			cleanup(lConn);
@@ -108,6 +119,7 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 
 	public SentenzaRiunitaModel ExModificaSentenzaRiunita(SentenzaRiunitaModel aSentenzaRiunita)
 			throws F3BException {
+
 		Connection lConn = null;
 		SentenzaRiunitaDAO lSenDao = null;
 		SentenzaRiunitaModel lSenMod = new SentenzaRiunitaModel(aSentenzaRiunita);
@@ -132,6 +144,7 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 	}
 
 	public void ExCancellaSentenzaRiunita(SentenzaRiunitaModel aSentenzaRiunita) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaRiunitaDAO lSenDao = null;
 
@@ -153,15 +166,15 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 	}
 
 	// inizio modifica marzo 2010
-	public SentenzaRiunitaModel ExInserisciSentenzaRiunitaFascicoloSiep(
-			SentenzaRiunitaModel aSentenzaRiunita, SentenzaRiunitaFascSiepModel aSentenzaRiunitaFasSiep)
-			throws F3BException {
+	public SentenzaRiunitaModel ExInserisciSentenzaRiunitaFascicoloSiep(SentenzaRiunitaModel aSentenzaRiunita,
+			SentenzaRiunitaFascSiepModel aSentenzaRiunitaFasSiep) throws F3BException {
+
 		Connection lConn = null;
 		SentenzaRiunitaDAO lSenDao = null;
 		SentenzaRiunitaModel lSenMod = null;
 
 		SentenzaRiunitaFascSiepDAO lSenFascDao = null;
-//		SentenzaRiunitaFascSiepModel lSenFascMod = null;
+		// SentenzaRiunitaFascSiepModel lSenFascMod = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -177,12 +190,12 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 
 			// inserisco il record di relazione col fascicolo
 			aSentenzaRiunitaFasSiep.setSenRiuIdSentenzaRiunita(lKey);
-//			lSenFascMod = new SentenzaRiunitaFascSiepModel(aSentenzaRiunitaFasSiep);
+			// lSenFascMod = new SentenzaRiunitaFascSiepModel(aSentenzaRiunitaFasSiep);
 
 			lSenFascDao = new SentenzaRiunitaFascSiepDAO(lConn);
 			lSenFascDao.setDAOFromModel(aSentenzaRiunitaFasSiep);
-//			BigDecimal lfascKey = null;
-			/*lfascKey = */lSenFascDao.insert();
+			// BigDecimal lfascKey = null;
+			/* lfascKey = */lSenFascDao.insert();
 
 			commit(lConn);
 		} catch (DAOException ex) {
@@ -198,6 +211,7 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 
 	public Vector ExRicercaSentenzaRiunitaFascSiep(SentenzaRiunitaFascSiepModel aSentenzaRiunita)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lSentenzaRiuniti = new Vector();
 		SentenzaRiunitaFascSiepSqlDAO lSenDao = null;
@@ -213,8 +227,8 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSenDao);
 			cleanup(lConn);
@@ -224,7 +238,8 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 
 	public void ExAggiornaSentenzaRiunitaFascicolo(SentenzaRiunitaFascSiepModel aSentenzaRiunitaFasSiep,
 			int modo) throws F3BException {
-//		BigDecimal lfascKey = null;
+
+		// BigDecimal lfascKey = null;
 		Connection lConn = null;
 		SentenzaRiunitaFascSiepDAO lSenFascDao = null;
 		SentenzaRiunitaFascSiepModel lSenFascMod = null;
@@ -238,12 +253,12 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 			lSenFascDao.setDAOFromModel(aSentenzaRiunitaFasSiep);
 
 			if (modo == 1)
-				/*lfascKey = */lSenFascDao.insert();
+				/* lfascKey = */lSenFascDao.insert();
 			if (modo == 2) {
 				lSenFascDao.setCondizioneUpdate(aSentenzaRiunitaFasSiep.getIdSentenzaRiunitaFascSiep());
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-				siesLogger.error("CHIAVE da CANCELLARE="
-						+ aSentenzaRiunitaFasSiep.getIdSentenzaRiunitaFascSiep());
+				siesLogger.error(
+						"CHIAVE da CANCELLARE=" + aSentenzaRiunitaFasSiep.getIdSentenzaRiunitaFascSiep());
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 				siesLogger.error("2 CHIAVE da CANCELLARE=" + lSenFascMod.getIdSentenzaRiunitaFascSiep());
 				lSenFascDao.delete();
@@ -252,8 +267,8 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"SentenzaRiunitaController.ExRicercaSentenzaRiunita: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lSenFascDao);
 			cleanup(lConn);
@@ -262,15 +277,16 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 
 	/**
 	 * Restituisce le Sentenze Riunite associate al fascicolo Siep con id passato in input
-	 * 
+	 *
 	 * @param aIdFascicoloSiep
 	 * @return Vector <SentenzaRiunitaFascSiepModel>
 	 * @throws F3BException
 	 */
 	public Vector<SentenzaRiunitaFascSiepModel> ExRicercaSentenzeRiuniteByIdFascSiep(
 			BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
-		Vector<SentenzaRiunitaFascSiepModel> lListaSentenzeRiunite = new Vector<SentenzaRiunitaFascSiepModel>();
+		Vector<SentenzaRiunitaFascSiepModel> lListaSentenzeRiunite = new Vector<>();
 		SentenzaRiunitaFascSiepSqlDAO lSenSqlDao = null;
 
 		try {
@@ -281,7 +297,6 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 			lSenSqlDao.ricercaSentenzaRiunitaFascSiepByIdFasciolo(aIdFascicoloSiep);
 
 			lListaSentenzeRiunite = new Vector<SentenzaRiunitaFascSiepModel>(lSenSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: ", daoEx);
@@ -297,7 +312,7 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 
 	/**
 	 * Inserisci i records di Sentenza Riunita per JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aSentenzeRiunite
 	 * @param lConn
 	 * @return lCodEsito
@@ -305,13 +320,14 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 	 */
 	public String ExInserisciSentenzaRiunitaWithoutSequence(ArrayList aSentenzeRiunite, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 
 		SentenzaRiunitaFascSiepDAO lSentRiunitFasSiepDAO = null;
 		SentenzaRiunitaDAO lSentRiunitDAO = null;
 
 		SentenzaRiunitaFascSiepModel lSentRiunitaFascSiepModel = null;
-//		SentenzaRiunitaModel lSentRiunitaModel = null;
+		// SentenzaRiunitaModel lSentRiunitaModel = null;
 
 		try {
 			lSentRiunitDAO = new SentenzaRiunitaDAO(lConn);
@@ -324,19 +340,19 @@ public class SentenzaRiunitaController extends SiapController implements ISenten
 					if (lSentRiunitaFascSiepModel != null) {
 						if (lSentRiunitaFascSiepModel.getSentenzaRiunitaModel() != null) {
 							// Inserisco SENTENZA_RIUNITA
-							lSentRiunitDAO.setDAOFromModel(lSentRiunitaFascSiepModel
-									.getSentenzaRiunitaModel());
+							lSentRiunitDAO
+									.setDAOFromModel(lSentRiunitaFascSiepModel.getSentenzaRiunitaModel());
 							lSentRiunitDAO.setWithoutSequence(true);
 							lSentRiunitDAO.insert();
 							lSentRiunitDAO.stop();
 
 							// Inserisco SENTENZARIUNITA_FASC_SIEP
-							lSentRiunitFasSiepDAO.setIdSentenzaRiunitaFascSiep(lSentRiunitaFascSiepModel
-									.getIdSentenzaRiunitaFascSiep());
-							lSentRiunitFasSiepDAO.setSenRiuIdSentenzaRiunita(lSentRiunitaFascSiepModel
-									.getSenRiuIdSentenzaRiunita());
-							lSentRiunitFasSiepDAO.setFasSieIdFascicoloSiep(lSentRiunitaFascSiepModel
-									.getFasSieIdFascicoloSiep());
+							lSentRiunitFasSiepDAO.setIdSentenzaRiunitaFascSiep(
+									lSentRiunitaFascSiepModel.getIdSentenzaRiunitaFascSiep());
+							lSentRiunitFasSiepDAO.setSenRiuIdSentenzaRiunita(
+									lSentRiunitaFascSiepModel.getSenRiuIdSentenzaRiunita());
+							lSentRiunitFasSiepDAO.setFasSieIdFascicoloSiep(
+									lSentRiunitaFascSiepModel.getFasSieIdFascicoloSiep());
 
 							lSentRiunitFasSiepDAO.setWithoutSequence(true);
 							lSentRiunitFasSiepDAO.insert();

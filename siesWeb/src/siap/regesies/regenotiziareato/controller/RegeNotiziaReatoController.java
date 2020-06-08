@@ -5,13 +5,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.regesies.regenotiziareato.dao.RegeNotiziaReatoDAO;
 import siap.regesies.regenotiziareato.dao.RegeNotiziaReatoSqlDAO;
 import siap.regesies.regenotiziareato.model.RegeNotiziaReatoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -26,7 +26,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -35,30 +35,15 @@ public class RegeNotiziaReatoController extends SiapController implements IRegeN
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	/*
-	 * public RegeNotiziaReatoModel ExInserisciRegeNotiziaReato (RegeNotiziaReatoModel aRegeNotiziaReato )
-	 * throws F3BException { Connection lConn = null; RegeNotiziaReatoDAO lRegDao = null;
-	 * RegeNotiziaReatoModel lRegMod = null; try { lConn = getDBConnection(); lRegMod = new
-	 * RegeNotiziaReatoModel(aRegeNotiziaReato); lRegDao = new RegeNotiziaReatoDAO(lConn);
-	 * lRegDao.setDAOFromModel(aRegeNotiziaReato ); BigDecimal lKey = null; lKey = lRegDao.insert();
-	 * commit(lConn); lRegMod.setIdRegeNotiziaReato(lKey); } catch (DAOException ex) { rollback(lConn); //
-	 * [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-	 * siesLogger.error("DAOException: " + ex); throw new
-	 * F3BException("RegeNotiziaReatoController.ExInserisci: Non posso inserire: " + ex); } catch
-	 * (SQLException sqe) { rollback(lConn); // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-	 * siesLogger al posto di mLog siesLogger.error("SQLException: " + sqe); throw new
-	 * F3BException("RegeNotiziaReatoController.ExInserisciRegeNotiziaReato: Non posso inserire il soggetti : "
-	 * + sqe); } finally { cleanup(lRegDao); cleanup(lConn); } return lRegMod; }
-	 */
-
 	/**
 	 * Ricerca le notizie di reato associate ad un provvedimento rege
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaRegeNotiziaReato(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRegeNotiziaReati = new Vector();
 		RegeNotiziaReatoSqlDAO lRegDao = null;
@@ -84,12 +69,13 @@ public class RegeNotiziaReatoController extends SiapController implements IRegeN
 
 	/**
 	 * Ricerca una Notizia di reato basandosi sulla sua chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public RegeNotiziaReatoModel ExRicercaRegeNotiziaReatoByKey(String aKey, int aProgr) throws F3BException {
+
 		Connection lConn = null;
 		RegeNotiziaReatoSqlDAO lRegDao = null;
 		RegeNotiziaReatoModel lRegMod;
@@ -112,13 +98,14 @@ public class RegeNotiziaReatoController extends SiapController implements IRegeN
 
 	/**
 	 * Metodo per la modifica della notizia di reato
-	 * 
+	 *
 	 * @param aRegeNotiziaReato
 	 * @return notizia di reato modificata
 	 * @throws F3BException
 	 */
 	public RegeNotiziaReatoModel ExModificaRegeNotiziaReato(RegeNotiziaReatoModel aRegeNotiziaReato)
 			throws F3BException {
+
 		Connection lConn = null;
 		RegeNotiziaReatoDAO lRegDao = null;
 		RegeNotiziaReatoModel lRegMod = new RegeNotiziaReatoModel(aRegeNotiziaReato);
@@ -143,11 +130,12 @@ public class RegeNotiziaReatoController extends SiapController implements IRegeN
 
 	/**
 	 * Realizza la cancellazione della Notizia di reato
-	 * 
+	 *
 	 * @param aRegeNotiziaReato
 	 * @throws F3BException
 	 */
 	public void ExCancellaRegeNotiziaReato(RegeNotiziaReatoModel aRegeNotiziaReato) throws F3BException {
+
 		Connection lConn = null;
 		RegeNotiziaReatoDAO lRegDao = null;
 

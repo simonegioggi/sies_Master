@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.bdmc.sbpren.dao.SbPrenDAO;
 import siap.bdmc.sbpren.dao.SbPrenSqlDAO;
 import siap.bdmc.sbpren.model.ProvvedimentoModelBDMC;
@@ -12,8 +14,6 @@ import siap.controller.SiapController;
 import siap.sico.soggetto.controller.ISoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.util.SICOLookupRemote;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -36,13 +36,14 @@ public class SbPrenController extends SiapController implements ISbPren {
 
 	/*****************************************************************************
 	 * Effettua l'inserimento di un SbPren a partire dai dati contenuti nel Model
-	 * 
+	 *
 	 * @param aSbPren
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
 	 ****************************************************************************/
 	public SbPrenModel ExInserisciSbPren(SbPrenModel aSbPren) throws F3BException {
+
 		Connection lConn = null;
 		SbPrenDAO lSbPDao = null;
 		SbPrenModel lSbPMod = null;
@@ -69,7 +70,7 @@ public class SbPrenController extends SiapController implements ISbPren {
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati SbPren
-	 * 
+	 *
 	 * @param aSbPren
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -77,6 +78,7 @@ public class SbPrenController extends SiapController implements ISbPren {
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbPren(SbPrenModel aSbPren) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbPrei = new Vector();
 		SbPrenDAO lSbPDao = null;
@@ -88,12 +90,12 @@ public class SbPrenController extends SiapController implements ISbPren {
 			lSbPDao.setOrderBy();
 			lSbPDao.start();
 			while (lSbPDao.next()) {
-				lSbPrei.add((SbPrenModel) lSbPDao.getModel());
+				lSbPrei.add(lSbPDao.getModel());
 			}
 			lSbPDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("Problemi durante la connessione alla Banca Dati Misure Cautelari: "
-					+ daoEx);
+			throw new F3BException(
+					"Problemi durante la connessione alla Banca Dati Misure Cautelari: " + daoEx);
 		} finally {
 			cleanup(lSbPDao);
 			cleanup(lConn);
@@ -104,7 +106,7 @@ public class SbPrenController extends SiapController implements ISbPren {
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei soggetti omonimi in SIES
-	 * 
+	 *
 	 * @param SbPren
 	 *            Model
 	 * @return il modellone con i dati trovati
@@ -168,13 +170,14 @@ public class SbPrenController extends SiapController implements ISbPren {
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public SbPrenModel ExRicercaSbPrenById(BigDecimal aIdPren) throws F3BException {
+
 		Connection lConn = null;
 		SbPrenModel lSbPrenMod = new SbPrenModel();
 		SbPrenSqlDAO lSbPrenSqlDao = null;
@@ -198,12 +201,13 @@ public class SbPrenController extends SiapController implements ISbPren {
 	 * Metodo che modifica i dati dell'SbPren Viene fatto l'update di tutti i campi del record recuperando i
 	 * valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno impostati a
 	 * null
-	 * 
+	 *
 	 * @param aSbPren
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaSbPren(SbPrenModel aSbPren) throws F3BException {
+
 		Connection lConn = null;
 		SbPrenDAO lSbPDao = null;
 
@@ -225,11 +229,12 @@ public class SbPrenController extends SiapController implements ISbPren {
 
 	/*****************************************************************************
 	 * Effettua la cancellazione del record
-	 * 
+	 *
 	 * @param aSbPren
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaSbPren(SbPrenModel aSbPren) throws F3BException {
+
 		Connection lConn = null;
 		SbPrenDAO lSbPDao = null;
 
@@ -251,12 +256,13 @@ public class SbPrenController extends SiapController implements ISbPren {
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aSbPren
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountSbPren(SbPrenModel aSbPren) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		SbPrenSqlDAO lSbPrenSqlDao = null;
@@ -282,7 +288,7 @@ public class SbPrenController extends SiapController implements ISbPren {
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aSbPren
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -291,6 +297,7 @@ public class SbPrenController extends SiapController implements ISbPren {
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaSbPrenPaged(SbPrenModel aSbPren, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lSbPrei = new Vector();
 		SbPrenSqlDAO lSbPrenSqlDao = null;

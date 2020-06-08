@@ -9,6 +9,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.altracausa.dao.AltraCausaDAO;
 import siap.siep.altracausa.dao.AltraCausaSqlDAO;
@@ -28,10 +32,6 @@ import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -57,13 +57,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Inserisce la Posizione Giuridica
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExInserisciPosizioneGiuridica(PosizioneGiuridicaModel aPosizioneGiuridica)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaDAO lPosDao = null;
 		PosizioneGiuridicaModel lPosMod = null;
@@ -95,7 +96,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * ExInserisciPosizioneGiuridicaVerbaleSotto - Inserisce la posizione giudica o esegue l'update
-	 * 
+	 *
 	 * @param aPosMod
 	 * @param aKeyFasc
 	 * @return
@@ -103,6 +104,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	 */
 	public PosizioneGiuridicaModel ExInserisciPosizioneGiuridicaVerbaleSotto(PosizioneGiuridicaModel aPosMod,
 			BigDecimal aKeyFasc) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -136,12 +138,10 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 				lPosDao.stop();
 			}
 			// insert
-
 			lPosDao.setDAOFromModel(aPosMod);
-//			BigDecimal lKeyPosGiu = null;
-			/*lKeyPosGiu = */lPosDao.insert();
+			// BigDecimal lKeyPosGiu = null;
+			/* lKeyPosGiu = */lPosDao.insert();
 			lPosDao.stop();
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -151,7 +151,6 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			cleanup(lPosDao);
 			cleanup(lPosSqlDao);
 			cleanup(lConn);
-
 		}
 
 		return lPosMod;
@@ -160,7 +159,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	/**
 	 * ExInserisciPosizioneGiuridicaModificaFascicoloSiepAssociato - inserisce o modifica la posizione
 	 * giuridica
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @param aFascicoloModel
 	 * @return
@@ -169,6 +168,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	public PosizioneGiuridicaModel ExInserisciPosizioneGiuridicaModificaFascicoloSiepAssociato(
 			PosizioneGiuridicaModel aPosizioneGiuridica, FascicoloSiepModel aFascicoloModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -182,8 +182,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			// Inserimento la Posizione Giuridica (storicizzando quella eventualmente presente)
 
 			// 1- Storicizza l'ultima occorrenza eventualmente presente
-			BigDecimal lIdPosGiuCorrente = this.getIdPosizioneGiuridicaCorrente(aFascicoloModel
-					.getIdFascicoloSiep());
+			BigDecimal lIdPosGiuCorrente = this
+					.getIdPosizioneGiuridicaCorrente(aFascicoloModel.getIdFascicoloSiep());
 
 			lPosDao = new PosizioneGiuridicaDAO(lConn);
 			if (lIdPosGiuCorrente != null) {
@@ -244,7 +244,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * inserisce la posiizone giuridica ed il luogo di detenzione
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @param aFascicoloModel
 	 * @param aLuogoDetenzione
@@ -255,6 +255,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	public PosizioneGiuridicaModel ExInserisciPosizioneLuogoDetenzioneAltraCausaModificaFascicolo(
 			PosizioneGiuridicaModel aPosizioneGiuridica, FascicoloSiepModel aFascicoloModel,
 			LuogoDetenzioneModel aLuogoDetenzione, AltraCausaModel aAltraCausa) throws F3BException {
+
 		return ExInserisciPosizioneLuogoDetenzioneAltraCausaModificaFascicolo(aPosizioneGiuridica,
 				aFascicoloModel, aLuogoDetenzione, aAltraCausa, null);
 	}
@@ -263,6 +264,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			PosizioneGiuridicaModel aPosizioneGiuridica, FascicoloSiepModel aFascicoloModel,
 			LuogoDetenzioneModel aLuogoDetenzione, AltraCausaModel aAltraCausa,
 			MisuraCautelareModel aMisuraCautelare) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -285,8 +287,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			// Inserimento la Posizione Giuridica (storicizzando quella eventualmente presente)
 
 			// 1- Storicizza l'ultima occorrenza eventualmente presente
-			BigDecimal lIdPosGiuCorrente = this.getIdPosizioneGiuridicaCorrente(aFascicoloModel
-					.getIdFascicoloSiep());
+			BigDecimal lIdPosGiuCorrente = this
+					.getIdPosizioneGiuridicaCorrente(aFascicoloModel.getIdFascicoloSiep());
 
 			lPosDao = new PosizioneGiuridicaDAO(lConn);
 			// Se presente una posizione giuridica..
@@ -394,17 +396,17 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 				// }
 			} else {
 				// Gestione Altra Causa
-//				if (lAltraCausa != null) { // Cancella
-//					// metto a null il campo che lega la posizione giuridica ad altra causa
-//					lPosDao.setCondizioneUpdateCampoLegatoAltraCausa(lAltraCausa.getIdAltraCausa());
-//					lPosDao.setAltCauIdAltraCausa(null);
-//					lPosDao.update();
-//					lPosDao.stop();
-//					// elimino altra causa
-//					lAltraCausaDao.setIdAltraCausa(lAltraCausa.getIdAltraCausa());
-//					lAltraCausaDao.selByKey();
-//					lAltraCausaDao.delete();
-//				}
+				// if (lAltraCausa != null) { // Cancella
+				// // metto a null il campo che lega la posizione giuridica ad altra causa
+				// lPosDao.setCondizioneUpdateCampoLegatoAltraCausa(lAltraCausa.getIdAltraCausa());
+				// lPosDao.setAltCauIdAltraCausa(null);
+				// lPosDao.update();
+				// lPosDao.stop();
+				// // elimino altra causa
+				// lAltraCausaDao.setIdAltraCausa(lAltraCausa.getIdAltraCausa());
+				// lAltraCausaDao.selByKey();
+				// lAltraCausaDao.delete();
+				// }
 
 				// TODO verificare
 				// Modifica 27/04/2015
@@ -462,7 +464,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					aMisuraCautelare.setDataInizio(aPosizioneGiuridica.getDataInizio());
 					aMisuraCautelare.setFlagComputabile("S");
 					lMisCauDao.setDAOFromModel(aMisuraCautelare);
-					/*BigDecimal lKeyMisura = */lMisCauDao.insert();
+					/* BigDecimal lKeyMisura = */lMisCauDao.insert();
 				} else {
 					// altrimenti lascio vuoto
 				}
@@ -695,7 +697,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 				} else {
 					lMisMod.setPosGiuIdPosizioneGiuridica(lKeyPosGiu);
 					lMisCauBisDao.setDAOFromModel(lMisMod);
-					/*BigDecimal lKeyMisura = */lMisCauBisDao.insert();
+					/* BigDecimal lKeyMisura = */lMisCauBisDao.insert();
 					lMisCauBisDao.stop();
 				}
 			}
@@ -740,13 +742,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca le posizioni giuridiche
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @return Vector
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPosizioneGiuridica(PosizioneGiuridicaModel aPosizioneGiuridica)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lPosizioneGiuridici = new Vector();
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -773,12 +776,13 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca la posizione giuridica dalla chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExRicercaPosizioneGiuridicaByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -806,7 +810,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca posizione giuridica e luogo detenzione dalla chiave
-	 * 
+	 *
 	 * @param aKey
 	 *            - id posizione giuridica
 	 * @return
@@ -814,13 +818,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneModel ExRicercaPosizioneGiuridicaLuogoDetenzioneByKey(
 			BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 
 		PosizioneGiuridicaModel lPosMod;
-//		LuogoDetenzioneModel lLuoDet;
+		// LuogoDetenzioneModel lLuoDet;
 
 		PosizioneGiuridicaLuogoDetenzioneModel lPosGiuLuoDetMod = new PosizioneGiuridicaLuogoDetenzioneModel();
 
@@ -851,13 +856,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca posizione giuridica, istituto detenzione, altra causa per l'id fascicolo siep
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneLuogoDetAltraCausaByIdFascicoloDataFineNull(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -868,8 +874,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 		IstitutoDetenzioneModel lIstDetMod = null;
 
 		PosizioneGiuridicaModel lPosMod = null;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
+		// LuogoDetenzioneModel lLuoDet;
+		// AltraCausaModel lAltCau;
 
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lMod = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 
@@ -890,14 +896,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			LuogoDetenzioneModel lLuogoDetenzione = (LuogoDetenzioneModel) lLuoDetDao.getModelByKey();
 
 			// modifica relativa al tipo istituto
-			/**************************************** Istituto Detenzione **************************************/
+			/****************************************
+			 * Istituto Detenzione
+			 **************************************/
 			if (lLuogoDetenzione != null) {
 				lIstDetMod = new IstitutoDetenzioneModel();
 				lIstDao.ricercaIstitutoDetenzioneByKey(lLuogoDetenzione.getIstDetIdIstitutoDetenzione());
 				lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 				lLuogoDetenzione.setIstitutoDetenzione(lIstDetMod);
 			}
-			/**************************************** Fine Istituto Detenzione *************************************/
+			/****************************************
+			 * Fine Istituto Detenzione
+			 *************************************/
 			lMod.setLuogoDetenzione(lLuogoDetenzione);
 
 			// ** Altra Causa **
@@ -906,14 +916,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 
 			// modifica relativa al tipo istituto
-			/**************************************** Istituto Detenzione **************************************/
+			/****************************************
+			 * Istituto Detenzione
+			 **************************************/
 			if (lAltraCausa != null) {
 				lIstDetMod = new IstitutoDetenzioneModel();
 				lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 				lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 				lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 			}
-			/**************************************** Fine Istituto Detenzione *************************************/
+			/****************************************
+			 * Fine Istituto Detenzione
+			 *************************************/
 
 			lMod.setAltraCausa(lAltraCausa);
 		} catch (DAOException daoEx) {
@@ -937,30 +951,26 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca posizione giuridica corrente, istituto detenzione, altra causa per l'id fascicolo siep
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaMisuraCautelareCorrentiByIdFascicolo(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		AltraCausaSqlDAO lAltCauDao = null;
 		MisuraCautelareSqlDAO lMisCauDao = null;
-
+		FascicoloSiepDAO lFascDao = null;
 		// modifica relativa al tipo istituto
 		IstitutoDetenzioneSqlDAO lIstDao = null;
+
 		IstitutoDetenzioneModel lIstDetMod = null;
-
-		FascicoloSiepDAO lFascDao = null;
-
 		PosizioneGiuridicaModel lPosMod = null;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
-
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lMod = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 
 		try {
@@ -995,22 +1005,26 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 
 					// modifica relativa al tipo istituto
-					/**************************************** Istituto Detenzione **************************************/
+					/****************************************
+					 * Istituto Detenzione
+					 **************************************/
 					if (lAltraCausa != null && lAltraCausa.getIstDetIdIstitutoDetenzione() != null) {
 						lIstDetMod = new IstitutoDetenzioneModel();
 						lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 						lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 						lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 					}
-					/**************************************** Fine Istituto Detenzione *************************************/
+					/****************************************
+					 * Fine Istituto Detenzione
+					 *************************************/
 
 					lMod.setAltraCausa(lAltraCausa);
 
 					lMisCauDao = new MisuraCautelareSqlDAO(lConn);
 					MisuraCautelareModel lMisCau = null;
 					if (lPosMod != null) {
-						lMisCauDao.ricercaMisuraCautelareByPosizioneGiuridica(lPosMod
-								.getIdPosizioneGiuridica());
+						lMisCauDao.ricercaMisuraCautelareByPosizioneGiuridica(
+								lPosMod.getIdPosizioneGiuridica());
 						lMisCau = (MisuraCautelareModel) lMisCauDao.getModelByKey();
 					}
 
@@ -1024,15 +1038,20 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					LuogoDetenzioneModel lLuogoDetenzione = (LuogoDetenzioneModel) lLuoDetDao.getModelByKey();
 
 					// modifica relativa al tipo istituto
-					/**************************************** Istituto Detenzione **************************************/
-					if (lLuogoDetenzione != null && lLuogoDetenzione.getIstDetIdIstitutoDetenzione() != null) {
+					/****************************************
+					 * Istituto Detenzione
+					 **************************************/
+					if (lLuogoDetenzione != null
+							&& lLuogoDetenzione.getIstDetIdIstitutoDetenzione() != null) {
 						lIstDetMod = new IstitutoDetenzioneModel();
-						lIstDao.ricercaIstitutoDetenzioneByKey(lLuogoDetenzione
-								.getIstDetIdIstitutoDetenzione());
+						lIstDao.ricercaIstitutoDetenzioneByKey(
+								lLuogoDetenzione.getIstDetIdIstitutoDetenzione());
 						lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 						lLuogoDetenzione.setIstitutoDetenzione(lIstDetMod);
 					}
-					/**************************************** Fine Istituto Detenzione *************************************/
+					/****************************************
+					 * Fine Istituto Detenzione
+					 *************************************/
 					lMod.setLuogoDetenzione(lLuogoDetenzione);
 				}
 				// ** Altra Causa **
@@ -1048,7 +1067,6 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			cleanup(lLuoDetDao);
 			cleanup(lAltCauDao);
 			cleanup(lMisCauDao);
-
 			// modifica relativa al tipo istituto
 			cleanup(lIstDao);
 			cleanup(lFascDao);
@@ -1061,30 +1079,26 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca posizione giuridica corrente, istituto detenzione, altra causa per l'id fascicolo siep
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		AltraCausaSqlDAO lAltCauDao = null;
 		MisuraCautelareSqlDAO lMisCauDao = null;
-
+		FascicoloSiepDAO lFascDao = null;
 		// modifica relativa al tipo istituto
 		IstitutoDetenzioneSqlDAO lIstDao = null;
+
 		IstitutoDetenzioneModel lIstDetMod = null;
-
-		FascicoloSiepDAO lFascDao = null;
-
 		PosizioneGiuridicaModel lPosMod = null;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
-
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lMod = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 
 		try {
@@ -1118,14 +1132,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 
 					// modifica relativa al tipo istituto
-					/**************************************** Istituto Detenzione **************************************/
+					/****************************************
+					 * Istituto Detenzione
+					 **************************************/
 					if (lAltraCausa != null && lAltraCausa.getIstDetIdIstitutoDetenzione() != null) {
 						lIstDetMod = new IstitutoDetenzioneModel();
 						lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 						lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 						lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 					}
-					/**************************************** Fine Istituto Detenzione *************************************/
+					/****************************************
+					 * Fine Istituto Detenzione
+					 *************************************/
 
 					lMod.setAltraCausa(lAltraCausa);
 
@@ -1143,15 +1161,20 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					LuogoDetenzioneModel lLuogoDetenzione = (LuogoDetenzioneModel) lLuoDetDao.getModelByKey();
 
 					// modifica relativa al tipo istituto
-					/**************************************** Istituto Detenzione **************************************/
-					if (lLuogoDetenzione != null && lLuogoDetenzione.getIstDetIdIstitutoDetenzione() != null) {
+					/****************************************
+					 * Istituto Detenzione
+					 **************************************/
+					if (lLuogoDetenzione != null
+							&& lLuogoDetenzione.getIstDetIdIstitutoDetenzione() != null) {
 						lIstDetMod = new IstitutoDetenzioneModel();
-						lIstDao.ricercaIstitutoDetenzioneByKey(lLuogoDetenzione
-								.getIstDetIdIstitutoDetenzione());
+						lIstDao.ricercaIstitutoDetenzioneByKey(
+								lLuogoDetenzione.getIstDetIdIstitutoDetenzione());
 						lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 						lLuogoDetenzione.setIstitutoDetenzione(lIstDetMod);
 					}
-					/**************************************** Fine Istituto Detenzione *************************************/
+					/****************************************
+					 * Fine Istituto Detenzione
+					 *************************************/
 					lMod.setLuogoDetenzione(lLuogoDetenzione);
 				}
 				// ** Altra Causa **
@@ -1167,7 +1190,6 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			cleanup(lLuoDetDao);
 			cleanup(lAltCauDao);
 			cleanup(lMisCauDao);
-
 			// modifica relativa al tipo istituto
 			cleanup(lIstDao);
 			cleanup(lFascDao);
@@ -1180,26 +1202,24 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca posizione giuridica, istituto detenzione, altra causa per l'id posizione giuridica
-	 * 
+	 *
 	 * @param aIdPosizione
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaByKey(
 			BigDecimal aIdPosizione) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		AltraCausaSqlDAO lAltCauDao = null;
 		MisuraCautelareSqlDAO lMisCauDao = null;
-
 		// modifica relativa al tipo istituto
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 
 		PosizioneGiuridicaModel lPosMod;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
 		// modifica relativa al tipo istituto
 		IstitutoDetenzioneModel lIstDetMod;
 
@@ -1243,14 +1263,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					lAltCauDao.ricercaAltraCausaByIdFascicolo(lPosMod.getFasSieIdFascicoloSiep());
 				AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 				// modifica relativa al tipo istituto
-				/**************************************** Istituto Detenzione **************************************/
+				/****************************************
+				 * Istituto Detenzione
+				 **************************************/
 				if (lAltraCausa != null) {
 					lIstDetMod = new IstitutoDetenzioneModel();
 					lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 					lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 					lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 				}
-				/**************************************** Fine Istituto Detenzione *************************************/
+				/****************************************
+				 * Fine Istituto Detenzione
+				 *************************************/
 
 				lMod.setAltraCausa(lAltraCausa);
 
@@ -1272,7 +1296,6 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			cleanup(lLuoDetDao);
 			cleanup(lAltCauDao);
 			cleanup(lMisCauDao);
-
 			// modifica relativa al tipo istituto
 			cleanup(lIstDao);
 			cleanup(lConn);
@@ -1283,13 +1306,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca posizione giuridica, istituto detenzione, altra causa per l'id evento
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaByIdEvento(
 			BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1299,8 +1323,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 
 		PosizioneGiuridicaModel lPosMod;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
+		// LuogoDetenzioneModel lLuoDet;
+		// AltraCausaModel lAltCau;
 		// modifica relativa al tipo istituto
 		IstitutoDetenzioneModel lIstDetMod;
 
@@ -1344,14 +1368,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 				AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 				// modifica relativa al tipo istituto
 
-				/**************************************** Istituto Detenzione **************************************/
+				/****************************************
+				 * Istituto Detenzione
+				 **************************************/
 				if (lAltraCausa != null) {
 					lIstDetMod = new IstitutoDetenzioneModel();
 					lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 					lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 					lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 				}
-				/**************************************** Fine Istituto Detenzione *************************************/
+				/****************************************
+				 * Fine Istituto Detenzione
+				 *************************************/
 
 				lMod.setAltraCausa(lAltraCausa);
 			}
@@ -1375,12 +1403,13 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca la posizione giuridica tramite la chiave del fascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @return List
 	 * @throws F3BException
 	 */
 	public List ExRicercaPosizioneGiuridicaByIdFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1401,8 +1430,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaByIdFascicolo: " + daoEx);
 		} finally {
 			cleanup(lPosDao);
 			cleanup(lConn);
@@ -1413,13 +1442,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca la posizione giuridica tramite l'Id Evento
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExRicercaPosizioneGiuridicaByIdEvento(BigDecimal aIdEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1433,8 +1463,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaByIdEvento: "
-					+ daoEx);
+			throw new F3BException(
+					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaByIdEvento: " + daoEx);
 		} finally {
 			cleanup(lPosDao);
 			cleanup(lConn);
@@ -1445,7 +1475,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * ricerca posizione giuridica precedente
-	 * 
+	 *
 	 * @param aKey
 	 *            Id Fascicolo
 	 * @return
@@ -1453,6 +1483,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	 */
 	public PosizioneGiuridicaModel ExRicercaPosizioneGiuridicaPrecedenteByIdFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1484,12 +1515,13 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca Posizione Giuridica By Id Fascicolo senza rilanciare errore di non trovato
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public List ExRicercaPosizioneGiuridicaByIdFascicoloNoError(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1504,8 +1536,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaByIdFascicolo: "
-					+ daoEx);
+			throw new F3BException(
+					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaByIdFascicolo: " + daoEx);
 		} finally {
 			cleanup(lPosDao);
 			cleanup(lConn);
@@ -1516,13 +1548,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Modifica posizioni Giuridiche
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExModificaPosizioneGiuridica(PosizioneGiuridicaModel aPosizioneGiuridica)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -1551,13 +1584,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Modifica posizioni Giuridiche
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExModificaPosizioneGiuridicaIdPosGiu(
 			PosizioneGiuridicaModel aPosizioneGiuridica) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -1587,7 +1621,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Modifica Posizione Giuridica Modifica Fascicolo Siep Associato
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @param aFascicoloModel
 	 * @return
@@ -1596,6 +1630,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	public PosizioneGiuridicaModel ExModificaPosizioneGiuridicaModificaFascicoloSiepAssociato(
 			PosizioneGiuridicaModel aPosizioneGiuridica, FascicoloSiepModel aFascicoloModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaModel lPosMod = aPosizioneGiuridica;
@@ -1645,7 +1680,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Modifica Posizione Giuridica Modifica FascicoloSiep Associato e LuogoD etenzione
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @param aFascicoloModel
 	 * @param aLuogoDetenzione
@@ -1655,6 +1690,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	public PosizioneGiuridicaModel ExModificaPosizioneGiuridicaModificaFascicoloSiepAssociatoLuogoDetenzione(
 			PosizioneGiuridicaModel aPosizioneGiuridica, FascicoloSiepModel aFascicoloModel,
 			LuogoDetenzioneModel aLuogoDetenzione) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaModel lPosMod = aPosizioneGiuridica;
@@ -1730,13 +1766,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca la Posizione Giuridica corrente
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExRicercaPosizioneGiuridicaCorrente(
 			PosizioneGiuridicaModel aPosizioneGiuridica) throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaModel lModel = new PosizioneGiuridicaModel();
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1754,8 +1791,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaCorrente: "
-					+ daoEx);
+			throw new F3BException(
+					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaCorrente: " + daoEx);
 		} finally {
 			cleanup(lPosDao);
 			cleanup(lConn);
@@ -1766,13 +1803,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca Posizione Giuridica Corrente By Id Fascicolo
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExRicercaPosizioneGiuridicaCorrenteByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaModel lModel = null;
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1791,7 +1829,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaCorrenteByIdFascicolo: " + daoEx);
+					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaCorrenteByIdFascicolo: "
+							+ daoEx);
 		} finally {
 			cleanup(lPosDao);
 			cleanup(lConn);
@@ -1802,13 +1841,14 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca Posizione Giuridica Corrente By Id Fascicolo con data fine = null
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return PosizioneGiuridicaModel
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaModel ExRicercaPosizioneGiuridicaCorrenteByIdFascicoloDataFineNull(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaModel lModel = null;
 		PosizioneGiuridicaSqlDAO lPosDao = null;
@@ -1828,7 +1868,8 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
 			throw new F3BException(
-					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaCorrenteByIdFascicolo: " + daoEx);
+					"PosizioneGiuridicaController.ExRicercaPosizioneGiuridicaCorrenteByIdFascicolo: "
+							+ daoEx);
 		} finally {
 			cleanup(lPosDao);
 			cleanup(lConn);
@@ -1839,11 +1880,13 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Cancella la posizione giuridica
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @throws F3BException
 	 */
-	public void ExCancellaPosizioneGiuridica(PosizioneGiuridicaModel aPosizioneGiuridica) throws F3BException {
+	public void ExCancellaPosizioneGiuridica(PosizioneGiuridicaModel aPosizioneGiuridica)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -1866,12 +1909,13 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * get Id Posizione Giuridica Corrente
-	 * 
+	 *
 	 * @param aIdFascicoloSiep
 	 * @return
 	 * @throws F3BException
 	 */
 	private BigDecimal getIdPosizioneGiuridicaCorrente(BigDecimal aIdFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lId = null;
 		PosizioneGiuridicaSqlDAO lSqlDao = null;
@@ -1899,7 +1943,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Ricerca Posizione Giuridica Luogo Detenzione Altra Causa Correnti By Id Fascicolo Sius
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param aIdFascicoloSius
 	 * @return
@@ -1907,18 +1951,16 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicoloSius(
 			BigDecimal aIdFascicolo, BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		AltraCausaSqlDAO lAltCauDao = null;
 		IstitutoDetenzioneSqlDAO lIstDao = null;
+
 		IstitutoDetenzioneModel lIstDetMod = null;
-
 		PosizioneGiuridicaModel lPosMod = null;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
-
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lMod = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 
 		try {
@@ -1937,14 +1979,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			lLuoDetDao.ricercaLuogoDetenzioneCorrenteByFascicoloSius(aIdFascicoloSius);
 			LuogoDetenzioneModel lLuogoDetenzione = (LuogoDetenzioneModel) lLuoDetDao.getModelByKey();
 
-			/**************************************** Istituto Detenzione **************************************/
+			/****************************************
+			 * Istituto Detenzione
+			 **************************************/
 			if (lLuogoDetenzione != null) {
 				lIstDetMod = new IstitutoDetenzioneModel();
 				lIstDao.ricercaIstitutoDetenzioneByKey(lLuogoDetenzione.getIstDetIdIstitutoDetenzione());
 				lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 				lLuogoDetenzione.setIstitutoDetenzione(lIstDetMod);
 			}
-			/**************************************** Fine Istituto Detenzione *************************************/
+			/****************************************
+			 * Fine Istituto Detenzione
+			 *************************************/
 			lMod.setLuogoDetenzione(lLuogoDetenzione);
 
 			// ** Altra Causa **
@@ -1952,14 +1998,18 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 			lAltCauDao.ricercaAltraCausaByIdFascicolo(aIdFascicolo);
 			AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 
-			/**************************************** Istituto Detenzione **************************************/
+			/****************************************
+			 * Istituto Detenzione
+			 **************************************/
 			if (lAltraCausa != null) {
 				lIstDetMod = new IstitutoDetenzioneModel();
 				lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 				lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 				lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 			}
-			/**************************************** Fine Istituto Detenzione *************************************/
+			/****************************************
+			 * Fine Istituto Detenzione
+			 *************************************/
 
 			lMod.setAltraCausa(lAltraCausa);
 		} catch (DAOException daoEx) {
@@ -1981,7 +2031,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 
 	/**
 	 * Inserisci Posizione Giuridica WithoutSequence
-	 * 
+	 *
 	 * @param lPos
 	 * @param lConn
 	 * @return
@@ -1989,6 +2039,7 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	 */
 	public String ExInserisciPosizioneGiuridicaWithoutSequence(PosizioneGiuridicaModel lPos, Connection lConn)
 			throws F3BException {
+
 		PosizioneGiuridicaDAO lPosDao = null;
 		String lCodEsito = "00000";
 
@@ -2019,27 +2070,27 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 	 * Ricerca posizione giuridica corrente, istituto detenzione, altra causa per l'id fascicolo siep
 	 * Modificata dall'originale per la gestione del Luogo Detenzione che ora viene recuperato anche per
 	 * detenuto Altra Causa
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo2(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		AltraCausaSqlDAO lAltCauDao = null;
+		FascicoloSiepDAO lFascDao = null;
 		// modifica relativa al tipo istituto
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 		IstitutoDetenzioneModel lIstDetMod = null;
 
-		FascicoloSiepDAO lFascDao = null;
-
 		PosizioneGiuridicaModel lPosMod = null;
-//		LuogoDetenzioneModel lLuoDet;
-//		AltraCausaModel lAltCau;
+		// LuogoDetenzioneModel lLuoDet;
+		// AltraCausaModel lAltCau;
 
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lMod = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 
@@ -2077,29 +2128,38 @@ public class PosizioneGiuridicaController extends SiapController implements IPos
 					AltraCausaModel lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
 
 					// modifica relativa al tipo istituto
-					/**************************************** Istituto Detenzione **************************************/
+					/****************************************
+					 * Istituto Detenzione
+					 **************************************/
 					if (lAltraCausa != null && lAltraCausa.getIstDetIdIstitutoDetenzione() != null) {
 						lIstDetMod = new IstitutoDetenzioneModel();
 						lIstDao.ricercaIstitutoDetenzioneByKey(lAltraCausa.getIstDetIdIstitutoDetenzione());
 						lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 						lAltraCausa.setIstitutoDetenzione(lIstDetMod);
 					}
-					/**************************************** Fine Istituto Detenzione *************************************/
+					/****************************************
+					 * Fine Istituto Detenzione
+					 *************************************/
 
 					lMod.setAltraCausa(lAltraCausa);
 
 				} else {
 
 					// modifica relativa al tipo istituto
-					/**************************************** Istituto Detenzione **************************************/
-					if (lLuogoDetenzione != null && lLuogoDetenzione.getIstDetIdIstitutoDetenzione() != null) {
+					/****************************************
+					 * Istituto Detenzione
+					 **************************************/
+					if (lLuogoDetenzione != null
+							&& lLuogoDetenzione.getIstDetIdIstitutoDetenzione() != null) {
 						lIstDetMod = new IstitutoDetenzioneModel();
-						lIstDao.ricercaIstitutoDetenzioneByKey(lLuogoDetenzione
-								.getIstDetIdIstitutoDetenzione());
+						lIstDao.ricercaIstitutoDetenzioneByKey(
+								lLuogoDetenzione.getIstDetIdIstitutoDetenzione());
 						lIstDetMod = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 						lLuogoDetenzione.setIstitutoDetenzione(lIstDetMod);
 					}
-					/**************************************** Fine Istituto Detenzione *************************************/
+					/****************************************
+					 * Fine Istituto Detenzione
+					 *************************************/
 
 				}
 				// ** Altra Causa **

@@ -7,15 +7,15 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sige.documentoallegato.dao.DocumentoAllegatoDAO;
 import siap.sige.documentoallegato.dao.DocumentoAllegatoSqlDAO;
 import siap.sige.documentoallegato.model.DocumentoAllegatoModel;
 import siap.sius.SIUSException;
 import siap.sius.depositodecreto.dao.DepositoDecretoDAO;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 public class DocumentoAllegatoController extends SiapController implements IDocumentoAllegato {
 
@@ -24,6 +24,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	@Override
 	public DocumentoAllegatoModel ExRicercaFCByKeyEvento(BigDecimal idEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
@@ -46,6 +47,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	@Override
 	public DocumentoAllegatoModel ExRicercaFCById(BigDecimal idDoc) throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
 
@@ -70,7 +72,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			throws F3BException {
 
 		Connection lConn = null;
-		Vector<DocumentoAllegatoModel> fogli = new Vector<DocumentoAllegatoModel>();
+		Vector<DocumentoAllegatoModel> fogli = new Vector<>();
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
 
 		try {
@@ -104,6 +106,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	@Override
 	public DocumentoAllegatoModel ExInserisciFoglioComplementare(DocumentoAllegatoModel aDocumentoAllegato)
 			throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoDAO lDocAllDao = null;
 		DocumentoAllegatoSqlDAO lSqlDAO = null;
@@ -141,6 +144,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	@Override
 	public DocumentoAllegatoModel ExRicercaFoglioComplementareByFascicolo(BigDecimal idFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
 
@@ -161,6 +165,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 
 	@Override
 	public void ExEliminaSollecito(BigDecimal idDocumento) throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoDAO llDocAllDao = null;
 
@@ -178,11 +183,11 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			cleanup(llDocAllDao);
 			cleanup(lConn);
 		}
-
 	}
 
 	@Override
 	public ByteArrayOutputStream ExGetDocumentoByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoDAO lDocAlDao = null;
 		ByteArrayOutputStream lByteArrayOut = null;
@@ -218,6 +223,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Vector<DocumentoAllegatoModel> ExRicercaSollecitoByIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
 		Vector<DocumentoAllegatoModel> lDocs = null;
@@ -239,6 +245,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	@Override
 	public BigDecimal countDecretiDepositoFissazioneUdienzaNonValidati(BigDecimal idFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
 
@@ -261,6 +268,7 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 	@Override
 	public BigDecimal countDecretiDepositoFissazioneUdienzaValidati(BigDecimal idFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoSqlDAO llDocAllDao = null;
 

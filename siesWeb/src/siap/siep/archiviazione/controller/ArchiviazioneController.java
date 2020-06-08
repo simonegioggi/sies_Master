@@ -7,6 +7,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.cssa.dao.CSSASqlDAO;
 import siap.sico.cssa.model.CSSAModel;
@@ -15,7 +19,6 @@ import siap.sico.evento.dao.EventoSimeoneSqlDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
-import siap.siep.archiviazione.controller.IArchiviazione;
 import siap.siep.archiviazione.dao.ArchiviazioneDAO;
 import siap.siep.archiviazione.dao.ArchiviazioneSqlDAO;
 import siap.siep.archiviazione.model.ArchiviazioneModel;
@@ -36,10 +39,6 @@ import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -54,7 +53,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -65,6 +64,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	public ArchiviazioneModel ExInserisciEventoNotificaArchiviazione(EventoNotificaModel aEveNotMod,
 			ArchiviazioneModel aArchiviazione, FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		ArchiviazioneDAO lArcDao = null;
@@ -101,27 +101,24 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 			BigDecimal lKey = null;
 
-			if (lEvePresente != null
-					&& lEvePresente.getCodTipoProvvedimento() != null
+			if (lEvePresente != null && lEvePresente.getCodTipoProvvedimento() != null
 					&& (lEvePresente.getCodTipoProvvedimento().equals("20")
 							|| lEvePresente.getCodTipoProvvedimento().equals("21")
 							|| lEvePresente.getCodTipoProvvedimento().equals("22")
-							|| lEvePresente.getCodTipoProvvedimento().equals("23") || lEvePresente
-							.getCodTipoProvvedimento().equals("25")) // STUB 17/10/2005 REWORK STATO
-																		// ESECUZIONE
-					&& (!"S".equals(lEvePresente.getFlagDocumentoRegistrato()) && !"A".equals(lEvePresente
-							.getFlagDocumentoRegistrato()))) // aggiorno
-			{
+							|| lEvePresente.getCodTipoProvvedimento().equals("23")
+							|| lEvePresente.getCodTipoProvvedimento().equals("25")) // STUB 17/10/2005 REWORK
+																					// STATO
+																					// ESECUZIONE
+					&& (!"S".equals(lEvePresente.getFlagDocumentoRegistrato())
+							&& !"A".equals(lEvePresente.getFlagDocumentoRegistrato()))) {
+				// aggiorno
 				lKey = lEvePresente.getIdEvento();
-
 				lEveDao.setDAOFromModel(lEveMod);
 				lEveDao.setFlagDocumentoRegistrato(null); // Per costringere a rieffettuare la stampa
 				lEveDao.setCodOperatoreAggiornamento(lEveMod.getCodOperatoreAggiornamento());
 				lEveDao.setDataAggiornamento(lEveMod.getDataAggiornamento());
 				lEveDao.setCodUfficioAggiornamento(lEveMod.getCodUfficioAggiornamento());
-
 				lEveDao.setIdEvento(lKey);
-
 				lEveDao.selByKey();
 				lEveDao.update();
 				lEveDao.stop();
@@ -143,8 +140,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 				lNotDao.delete();
 				lNotDao.stop();
-			} else // Se non presente lo inserisco
-			{
+			} else {
+				// Se non presente lo inserisco
 				// inserimento evento definizione procedimento
 				lEveDao.setDAOFromModel(lEveMod);
 				lKey = lEveDao.insert();
@@ -157,23 +154,19 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 				lKeyArc = lArcDao.insert();
 				lArchMod.setIdArchiviazione(lKeyArc);
 				lArcDao.stop();
-
 			}
 
 			// aggiornamento fascicolo
 			if (lArchMod.getCodTipoProvvedimento().equals("22")
-					|| lArchMod.getCodTipoProvvedimento().equals("25")) // STUB 17/10/2005 REWORK STATO
-																		// ESECUZIONE
-			{
+					|| lArchMod.getCodTipoProvvedimento().equals("25")) {
+				// STUB 17/10/2005 REWORK STATO ESECUZIONE
 				lFasDao.setAnnoFascicoloUnione(aFascicolo.getAnnoFascicoloUnione());
 				lFasDao.setNumFascicoloUnione(aFascicolo.getNumFascicoloUnione());
 				lFasDao.setDataUnione(aFascicolo.getDataUnione());
 				lFasDao.setCodUfficioUnione(aFascicolo.getCodUfficioUnione());
-
 				lFasDao.setDataAggiornamento(aFascicolo.getDataAggiornamento());
 				lFasDao.setCodUfficioAggiornamento(aFascicolo.getCodUfficioAggiornamento());
 				lFasDao.setCodOperatoreAggiornamento(aFascicolo.getCodOperatoreAggiornamento());
-
 				lFasDao.selCondizioneUpdate(aFascicolo.getIdFascicoloSiep());
 				lFasDao.update();
 				lFasDao.stop();
@@ -186,12 +179,14 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 				while (count < aEveNotMod.getNotifiche().length) {
 					if (aEveNotMod.getNotifiche()[count] != null) {
 						if (aEveNotMod.getNotifiche()[count].getAutoritaEsterna() != null) {
-							lAutDao.setRicercaByAutSede(aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
 							if (lAutMod == null) {
-								lAutDao.setDAOFromModel(aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
 								aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 							} else {
@@ -226,9 +221,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			throw new F3BException(
 					"ArchiviazioneController.ExInserisciEventoNotificaArchiviazione: Non posso inserire il soggetti : "
 							+ ex);
-		}
-
-		finally {
+		} finally {
 			cleanup(lArcDao);
 			cleanup(lEveDao);
 			cleanup(lNotDao);
@@ -244,6 +237,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	}
 
 	public Vector ExRicercaArchiviazione(ArchiviazioneModel aArchiviazione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lArchiviazioni = new Vector();
 		ArchiviazioneSqlDAO lArcDao = null;
@@ -258,8 +252,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 			}
 		} catch (DAOException daoEx) {
-			throw new F3BException("ArchiviazioneController.ExRicercaArchiviazione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ArchiviazioneController.ExRicercaArchiviazione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lArcDao);
 			cleanup(lConn);
@@ -269,6 +263,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	}
 
 	public ArchiviazioneModel ExRicercaArchiviazioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ArchiviazioneSqlDAO lArcDao = null;
@@ -280,8 +275,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			lArcDao.ricercaArchiviazioneByKey(aKey);
 			lArcMod = (ArchiviazioneModel) lArcDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("ArchiviazioneController.ExRicercaArchiviazione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ArchiviazioneController.ExRicercaArchiviazione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lArcDao);
 			cleanup(lConn);
@@ -292,6 +287,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	public ArchiviazioneModel ExRicercaArchiviazioneCssaIstitutoByIdEvento(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ArchiviazioneSqlDAO lArcDao = null;
@@ -326,7 +322,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 				lCssaMod = (CSSAModel) lCssaDao.getModelByKey();
 				lArcMod.setCssa(lCssaMod);
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"ArchiviazioneController.ExRicercaArchiviazioneCssaIstitutoByIdEvento: Non posso leggere : "
@@ -343,6 +338,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	}
 
 	public ArchiviazioneModel ExRicercaArchiviazioneByIdEvento(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 
 		ArchiviazioneSqlDAO lArcDao = null;
@@ -358,7 +354,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 					"ArchiviazioneController.ExRicercaArchiviazioneByIdEvento: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lArcDao);
-
 			cleanup(lConn);
 		}
 
@@ -367,6 +362,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	public EventoModel ExUpdateValidaArchiviazione(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		return ExUpdateValidaArchiviazione(aEvento, aFascicolo, null);
 	}
 
@@ -381,9 +377,9 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 		ArchiviazioneSqlDAO lArchSqlDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
 		ScadenzarioDAO lScaDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
-		EventoDAO lEveDaoBlob = null;
 		String lRapp = "";
 
 		try {
@@ -431,7 +427,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 							lStato = "0337";
 
 						lMotivoArchiviazione = "09";
-
 					}
 					if (lArchMod.getCodTipoProvvedimento().equals("21")) {
 						if (lArchMod.getCodOggettoDefinizione().equals("0097"))
@@ -452,7 +447,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 							lStato = "0340";
 
 						lMotivoArchiviazione = "02";
-
 					} else if (lArchMod.getCodTipoProvvedimento().equals("22")) {
 						if (lArchMod.getCodOggettoDefinizione().equals("0019"))
 							lStato = "0315";
@@ -553,9 +547,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 					Date lData = lArchMod.getDataDefinizione();
 					lRapp = "InserimentoCancellazioneStatoProcedimento";
-					InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(),
-							lEveMod, lStato, lData);
-
+					InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
+							lStato, lData);
 				}
 			}
 
@@ -644,13 +637,11 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			cleanup(lScaSqlDao);
 			cleanup(lScaDao);
 			cleanup(lArchSqlDao);
+			cleanup(lEveDaoBlob);
 
 			if (aDBConnection == null) {
 				cleanup(lConn);
 			}
-
-			cleanup(lEveDaoBlob);
-
 		}
 
 		return lEveMod;
@@ -658,14 +649,13 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	public EventoModel ExUpdateValidaVistoAttesa(EventoModel aEvento, FascicoloSiepModel aFascicolo,
 			String aStato) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		FascicoloSiepDAO lFascDao = null;
 		ScadenzarioDAO lScaDao = null;
-
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveMod = new EventoModel(aEvento);
@@ -680,8 +670,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 			// SETTA LO STATO PROCEDIMENTO
 			Date lData = lEveMod.getDataEmissione();
-			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
-					aStato, lData);
+			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod, aStato,
+					lData);
 
 			// Aggiorna Inserisci PENA_RESIDUA
 			InserimentoAggiornamentoPenaResidua(lConn, lEveMod, aFascicolo.getIdFascicoloSiep());
@@ -698,8 +688,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			lScaDao.delete();
 
 			// ------- EVENTO--------
-			// lConnBlob = getDBConnection();
-
 			lEveDaoBlob = new EventoDAO(lConn);
 			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
 			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
@@ -707,31 +695,23 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			lEveDaoBlob.stop();
 			// ---------------------
 
-			// commit(lConnBlob);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			daoEx.printStackTrace();
-
 			throw new F3BException("ArchiviazioneController.ExUpdateValidaVistoPm : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
-			// rollback(lConnBlob);
-
 			ex.printStackTrace();
-
 			throw new F3BException("ArchiviazioneController.ExUpdateValidaVistoPm : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
 			cleanup(lPosSqlDao);
 			cleanup(lFascDao);
 			cleanup(lScaDao);
-			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
+
+			cleanup(lConn);
 		}
 
 		return lEveMod;
@@ -739,6 +719,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	public EventoModel ExUpdateValidaAnnProvCumulo(EventoModel aEvento, FascicoloSiepModel aFascicolo)
 			throws F3BException {
+
 		return ExUpdateValidaAnnProvCumulo(aEvento, aFascicolo, null);
 	}
 
@@ -746,13 +727,13 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			Connection aDBConnection) throws F3BException {
 
 		Connection lConn = null;
-		EventoModel lEveMod = new EventoModel(aEvento);
-
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveMod = new EventoModel(aEvento);
 		String lRapp = "";
 		try {
-			siesLogger
-					.debug("--XX-- >>>>>>>>>>>>>>>>>>>>>  - ArchiviazioneController - ExUpdateValidaAnnProvCumulo");
+			siesLogger.debug(
+					"--XX-- >>>>>>>>>>>>>>>>>>>>>  - ArchiviazioneController - ExUpdateValidaAnnProvCumulo");
 			if (aDBConnection != null) {
 				siesLogger.debug("Utilizzo connessione in input ");
 				lConn = aDBConnection;
@@ -764,8 +745,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			// STATO PROCEDIMENTO
 			lRapp = "InserimentoCancellazioneStatoProcedimento";
 			Date lData = DateUtils.getSysDate();
-			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
-					"0132", lData);
+			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod, "0132",
+					lData);
 
 			// PENA RESIDUA
 			lRapp = "InserimentoAggiornamentoPenaResidua";
@@ -807,7 +788,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			}
 
 			cleanup(lEveDaoBlob);
-
 		}
 
 		return lEveMod;
@@ -816,6 +796,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	// metodi privati
 	private PenaResiduaModel InserimentoAggiornamentoPenaResidua(Connection lConn, EventoModel lEveModel,
 			BigDecimal aKey) throws DAOException, F3BException {
+
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaModel lPenResMod = null;
@@ -858,6 +839,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	private PenaResiduaModel AzzeramentoPenaResidua(Connection lConn, EventoModel lEveModel, BigDecimal aKey,
 			String lAzzeraMultaAmmenda) throws DAOException, F3BException {
+
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -910,7 +892,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 					lPenResMod.setCodOperatoreAggiornamento(null);
 					lPenResMod.setDataAggiornamento(null);
 					lPenResMod.setCodUfficioAggiornamento(null);
-
 					lPenResMod.setDataInizio(null);
 					lPenResMod.setDataFine(null);
 					lPenResMod.setDataFinePresunta(null);
@@ -920,7 +901,6 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 						lPenResMod.setImportoAmmenda(new BigDecimal(0));
 						lPenResMod.setImportoMulta(new BigDecimal(0));
 					}
-
 					lPenResMod.setDataInserimento(DateUtils.getSysDate());
 					lPenResMod.setCodOperatoreInserimento(lEveModel.getCodOperatoreAggiornamento());
 					lPenResMod.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
@@ -941,6 +921,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 	private void InserimentoCancellazioneStatoProcedimento(Connection lConn, BigDecimal aKey,
 			EventoModel lEveModel, String lStatoProcMod, Date lData) throws DAOException, F3BException {
+
 		StatoProcedimentoDAO lStatoDao = new StatoProcedimentoDAO(lConn);
 
 		try {
@@ -966,6 +947,7 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	private BigDecimal InserimentoAggiornamentoPosizioneGiuridica(Connection lConn, String lPosizione,
 			PosizioneGiuridicaModel lPos, Date lData, EventoModel lEveModel, BigDecimal aKeyFasc,
 			BigDecimal aKeyEve) throws DAOException, F3BException {
+
 		PosizioneGiuridicaDAO lPosDao = null;
 		BigDecimal lIdPosizioneGiuridica = null;
 
@@ -1006,21 +988,20 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	 * Effettua l'archiviazione semplificata dei fascicolo migrati RES. - Aggiorna il fascicolo SIEP -
 	 * Aggiorna la posizione giuridica in Libero - Aggiorna lo stato procedimento - Cancella eventuali
 	 * scadenzari - Azzera la pena residua e le date.
-	 * 
+	 *
 	 * @param aFascicolo
 	 * @throws F3BException
 	 */
 	public void ExArchiviazioneSemplificataRES(FascicoloSiepModel aFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
-
 		FascicoloSiepDAO lFascDao = null;
 		ScadenzarioSqlDAO lScaSqlDao = null;
 		ScadenzarioDAO lScaDao = null;
 		StatoProcedimentoDAO lStatoDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -1186,10 +1167,8 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 
 				lPenResDao.insert();
 				lPenResDao.stop();
-
 			}
 
-			// rollback(lConn);
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -1204,15 +1183,12 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 			cleanup(lPosDao);
 			cleanup(lFascDao);
 			cleanup(lStatoDao);
-
 			cleanup(lScaSqlDao);
 			cleanup(lScaDao);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 
 			cleanup(lConn);
-
 		}
 	}
 

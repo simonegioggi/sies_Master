@@ -31,19 +31,16 @@ import f3b.util.F3BProperties;
  */
 public class GenericController {
 
-	// Attributo che indica il logger su cui scrive l'applicazione
-	// Tutti i controller automaticamente ereditano tale attributo
-
 	/**
 	 * Metodo che effettua il rollback di una transazione al DBase.
-	 * <p>
-	 * 
+	 *
 	 * @param aConn
 	 *            Connessione SQL
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
 	protected void rollback(Connection aConn) throws F3BException {
+
 		try {
 			if (aConn != null)
 				aConn.rollback();
@@ -54,14 +51,14 @@ public class GenericController {
 
 	/**
 	 * Effettua la commit di una trasazione di dati al DBASE
-	 * <p>
-	 * 
+	 *
 	 * @param aConn
 	 *            Connessione al DBASE
 	 * @throws F3BException
 	 *             Propaga l'errore di eccezione.
 	 */
 	protected void commit(Connection aConn) throws F3BException {
+
 		try {
 			if (aConn != null)
 				aConn.commit();
@@ -73,17 +70,17 @@ public class GenericController {
 	// STUB : 20030524 - Da Riscrivere .
 	/**
 	 * Ritorna la connessione dal POOL impostando l'autocommit a <code>false</code>.
-	 * <p>
-	 * 
+	 *
 	 * @return la connessione al DBase prelevata dal pool.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	protected static synchronized Connection getDBConnection() throws F3BException {
+
 		try {
 			Context lInitialCtx = new InitialContext();
-			DataSource lDataSource = (DataSource) lInitialCtx.lookup(F3BProperties
-					.getProperty("datasource.ctx"));
+			DataSource lDataSource = (DataSource) lInitialCtx
+					.lookup(F3BProperties.getProperty("datasource.ctx"));
 
 			Connection lConn = lDataSource.getConnection();
 			lConn.setAutoCommit(false);
@@ -101,17 +98,17 @@ public class GenericController {
 	// STUB: 20030524 - Da riscrivere.
 	/**
 	 * Ritorna una connessione prelevata dal POOL, impostanto il massimo livello di TRANSAZIONALITA'.
-	 * <p>
-	 * 
+	 *
 	 * @return la connessione al DBase in transazione.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	protected static synchronized Connection getDBTransaction() throws F3BException {
+
 		try {
 			Context lInitialCtx = new InitialContext();
-			DataSource lDataSource = (DataSource) lInitialCtx.lookup(F3BProperties
-					.getProperty("datasource.ctx"));
+			DataSource lDataSource = (DataSource) lInitialCtx
+					.lookup(F3BProperties.getProperty("datasource.ctx"));
 
 			Connection lConn = lDataSource.getConnection();
 
@@ -132,8 +129,7 @@ public class GenericController {
 
 	/**
 	 * Ritorna il data source.
-	 * <p>
-	 * 
+	 *
 	 * @return oggetto <code>DataSource</code>.
 	 * @throws NamingException
 	 *             propaga l'errore di eccezione di Naming.
@@ -141,6 +137,7 @@ public class GenericController {
 	 *             propaga l'errore di eccezione di F3B.
 	 */
 	protected static DataSource getDataSource() throws NamingException, F3BException {
+
 		Context lInitialCtx = new InitialContext();
 		Context lEnvCtx = (Context) lInitialCtx.lookup(F3BProperties.getProperty("ctx.env"));
 		DataSource lDataSource = (DataSource) lEnvCtx.lookup(F3BProperties.getProperty("datasource.ctx"));
@@ -150,14 +147,14 @@ public class GenericController {
 
 	/**
 	 * Effettua il rilascio della connessione al DBASE.
-	 * <p>
-	 * 
+	 *
 	 * @param aConn
 	 *            Connessione al DB da rilasciare.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	protected void cleanup(Connection aConn) throws F3BException {
+
 		try {
 			if (aConn != null && !aConn.isClosed())
 				aConn.close();
@@ -168,14 +165,14 @@ public class GenericController {
 
 	/**
 	 * Effettua la chisura di uno <code>Statement</code> SQL.
-	 * <p>
-	 * 
+	 *
 	 * @param aStat
 	 *            Oggetto <code>Statement</code> SQL.
 	 * @throws F3BException
 	 *             propga l'errore di eccezione.
 	 */
 	protected void cleanup(Statement aStat) throws F3BException {
+
 		try {
 			if (aStat != null)
 				aStat.close();
@@ -186,14 +183,14 @@ public class GenericController {
 
 	/**
 	 * Effettua la chiusura di un <code>PreparedStatement</code> SQL.
-	 * <p>
-	 * 
+	 *
 	 * @param aPStat
 	 *            Oggetto <code>PreparedStatement</code> SQL:
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	protected void cleanup(PreparedStatement aPStat) throws F3BException {
+
 		try {
 			if (aPStat != null)
 				aPStat.close();
@@ -204,14 +201,14 @@ public class GenericController {
 
 	/**
 	 * Effettua lo stop di un oggetto DAO.
-	 * <p>
-	 * 
+	 *
 	 * @param aDao
 	 *            Oggetto della classe <code>GenericDAO</code>
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
 	protected void cleanup(GenericDAO aDao) throws F3BException {
+
 		try {
 			if (aDao != null)
 				aDao.stop();

@@ -7,6 +7,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.evento.controller.IEvento;
@@ -39,10 +43,6 @@ import siap.sius.fascicolo.model.FascicoloGPTPModel;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.tenore.model.TenoreProvvedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -57,7 +57,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author not attributable
  * @version 1.0
  */
@@ -70,7 +70,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 	/**
 	 * Preleva i dati dal DB per Nuova Istanza.
 	 * <p>
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
@@ -78,6 +78,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 	 */
 	public MessaggioModel getMessageForNuovaIstanza(BigDecimal aKeyEvento, BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info("inizio");
@@ -91,8 +92,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		SentenzaSqlDAO lSentDao = null;
 		EventoSqlDAO lEveDao = null;
 		NotificaSqlDAO lNotDao = null;
-
-		// IstanzaSqlDAO lIstDao = null;
 		NuovaIstanzaSqlDAO lIstDao = null;
 
 		FascicoloSiepModel lFascicolo = null;
@@ -166,16 +165,10 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.info("fine");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"TrasmissioneJMSController.getMessageForNuovaIstanza: Non posso leggere : " + daoEx);
-		}
-		/*
-		 * catch (SQLException sqe) { throw new
-		 * F3BException("TrasmissioneJMSController.getMessageForNuovaIstanza: Non posso leggere  : " + sqe); }
-		 */
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new F3BException(
 					"TrasmissioneJMSController.getMessageForNuovaIstanza : Non posso leggere : " + ex);
 		} finally {
@@ -193,13 +186,14 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Preleva i dati dal DB per le stampe di IStruttoria
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public MessaggioModel getMessageForIstanza(BigDecimal aKeyEvento, BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -275,10 +269,9 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 			lMessage = new MessaggioModel();
 			lMessage.setTreeModel(lTreeRoot);
-
 		} catch (DAOException daoEx) {
-			throw new F3BException("TrasmissioneJMSController.getMessageForIstanza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"TrasmissioneJMSController.getMessageForIstanza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lFascDao);
 			cleanup(lSoggDao);
@@ -294,7 +287,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Preleva i dati dal DB per trasmettere i dati di provv. - Legge Simeone.
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @param aKeyFascicolo
 	 * @return lMessage
@@ -302,6 +295,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 	 */
 	public MessaggioModel getMessageForProvvedimento(BigDecimal aKeyEvento, BigDecimal aKeyFascicolo)
 			throws F3BException {
+
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -311,6 +305,7 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 		SentenzaSqlDAO lSentDao = null;
 		EventoSqlDAO lEveDao = null;
 		NotificaSqlDAO lNotDao = null;
+
 		FascicoloSiepModel lFascicolo = null;
 		SoggettoModel lSoggMod = null;
 		SentenzaModel lSentMod = null;
@@ -383,7 +378,6 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			// siesLogger.info(getClass().getPackage().getName() + ".getMessageForProvvedimento: fine");
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"TrasmissioneJMSController.getMessageForProvvedimento: Non posso leggere : " + daoEx);
@@ -402,11 +396,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Crea la root del Documento
-	 * 
+	 *
 	 * @param aEveModel
 	 * @return
 	 */
 	private XModel createRoot(EventoModel lEve) {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = lEve.getDescrUfficioEmittente();
@@ -428,16 +423,17 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 	/**
 	 * Ricerca del fascicolo Siep
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	private TreeModel ricercaFascicoloSiepCompleto(BigDecimal aKeyFascicolo) throws F3BException {
+
 		IFascicoloSiep lFasc = SIEPLookupRemote.getFascicoloSiepRemote();
 
 		TreeModel lTreeRoot = null;
-//		MessaggioModel lMessage = new MessaggioModel();
+
 		DepositoDecretoSqlDAO lDepDecSqlDAO = null;
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDAO = null;
 		FascicoloGPSqlDAO lFasGPSqlDao = null;
@@ -473,12 +469,12 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 				while (lEveItx.hasNext()) {
 					EventoModel lEveTemp = (EventoModel) lEveItx.next();
-					EventoNotificaModel lEveNotModel = lEveCtrl.ExRicercaEventoNotificaByKey(lEveTemp
-							.getIdEvento());
+					EventoNotificaModel lEveNotModel = lEveCtrl
+							.ExRicercaEventoNotificaByKey(lEveTemp.getIdEvento());
 					// Se c'e' il BLOB ... Luigi 22-3-05
 					if (lEveTemp.getDocBlobOut() != null)
-						lEveNotModel.getEvento().setDocPerTrasferimento(
-								lEveTemp.getDocBlobOut().toByteArray());
+						lEveNotModel.getEvento()
+								.setDocPerTrasferimento(lEveTemp.getDocBlobOut().toByteArray());
 
 					if (lEveTemp.getFasSiuIdFascicoloSius() != null) {
 						FascicoloGPTPModel lFasGPTPModel = new FascicoloGPTPModel();
@@ -497,14 +493,14 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 
 						// 21/06/2010 Caricamento Soggetto SIUS.
 						lSogSqlDao = new SoggettoSqlDAO(lConn);
-						lSogSqlDao.ricercaSoggettoByKey(lFasGPModel.getFascicoloSiusModel()
-								.getSogIdSoggetto());
+						lSogSqlDao
+								.ricercaSoggettoByKey(lFasGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 						SoggettoModel lSogModel = (SoggettoModel) lSogSqlDao.getModelByKey();
 						lFasGPModel.getFascicoloSiusModel().setSoggetto(lSogModel);
 
 						lTenSqlDao = new TenoreSqlDAO(lConn);
-						lTenSqlDao.ricercaTenoreByGeneraleProc(lFasGPModel.getGeneraleProcedimentoModel()
-								.getIdGeneraleProcedimento());
+						lTenSqlDao.ricercaTenoreByGeneraleProc(
+								lFasGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 						Vector lVectTenori = new Vector(lTenSqlDao.getModels());
 						if (lVectTenori != null) {
 							TenoreModel[] lTenoriModel = (TenoreModel[]) lVectTenori
@@ -523,17 +519,17 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 							lTenProModel.setTenore(lFasGPModel.getTenori()[j]);
 							if (lTenProModel.getTenore().getDepDecIdDepositoDecreto() != null) {
 								lDepDecSqlDAO = new DepositoDecretoSqlDAO(lConn);
-								lDepDecSqlDAO.ricercaDepositoDecretoByKey(lTenProModel.getTenore()
-										.getDepDecIdDepositoDecreto());
+								lDepDecSqlDAO.ricercaDepositoDecretoByKey(
+										lTenProModel.getTenore().getDepDecIdDepositoDecreto());
 								lTenProModel.setDecreto((DepositoDecretoModel) lDepDecSqlDAO.getModelByKey());
 								lDepDecSqlDAO.stop();
 							}
 							if (lTenProModel.getTenore().getDepOpidDepositoOrdinanzaPc() != null) {
 								lDepOrdSqlDAO = new DepositoOrdinanzaPcSqlDAO(lConn);
-								lDepOrdSqlDAO.ricercaDepositoOrdinanzaPcByKey(lTenProModel.getTenore()
-										.getDepOpidDepositoOrdinanzaPc());
-								lTenProModel.setOrdinanza((DepositoOrdinanzaPcModel) lDepOrdSqlDAO
-										.getModelByKey());
+								lDepOrdSqlDAO.ricercaDepositoOrdinanzaPcByKey(
+										lTenProModel.getTenore().getDepOpidDepositoOrdinanzaPc());
+								lTenProModel.setOrdinanza(
+										(DepositoOrdinanzaPcModel) lDepOrdSqlDAO.getModelByKey());
 							}
 							// Si carica l'Array di aggregati dei tenori.
 							lTenoriProModel[j] = lTenProModel;
@@ -564,12 +560,13 @@ public class TrasmissioneJMSController extends SiapController implements ITrasmi
 	/**
 	 * La funzione ricerca l'Evento da trasmettere. Inserisce l'eventuale BLOB nel formato richiesto per la
 	 * trasmissione.
-	 * 
+	 *
 	 * @param aKeyEvento
 	 * @return EventoModel
 	 * @throws F3BException
 	 */
 	private EventoModel ricercaEvento(BigDecimal aKeyEvento) throws F3BException {
+
 		// Lettura dell'Evento
 		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
 		EventoModel lEvento = lCtrl.ExRicercaEventoByKey(aKeyEvento);

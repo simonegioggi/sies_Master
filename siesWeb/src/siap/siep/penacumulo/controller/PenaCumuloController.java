@@ -7,13 +7,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.penacumulo.dao.PenaCumuloDAO;
 import siap.siep.penacumulo.dao.PenaCumuloSqlDAO;
 import siap.siep.penacumulo.model.PenaCumuloModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -39,10 +39,11 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 
 	/**
 	 * Funzione di inserimento di un record PENA_CUMULO
-	 * 
+	 *
 	 * @param aPenaCumulo
 	 */
 	public PenaCumuloModel ExInserisciPenaCumulo(PenaCumuloModel aPenaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloDAO lPenDao = null;
 		PenaCumuloModel lPenMod = null;
@@ -69,9 +70,9 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 
 	/**
 	 * Metodo di ricerca
-	 *
 	 */
 	public Vector ExRicercaPenaCumulo(PenaCumuloModel aPenaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPenaCumuli = new Vector();
 		PenaCumuloSqlDAO lPenDao = null;
@@ -93,13 +94,13 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 		}
 
 		return lPenaCumuli;
-
 	}
 
 	/**
 	 * Ricerca PENA_CUMULO per id pena
 	 */
 	public PenaCumuloModel ExRicercaPenaCumuloByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloSqlDAO lPenDao = null;
 		PenaCumuloModel lPenMod;
@@ -117,15 +118,15 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 		}
 
 		return lPenMod;
-
 	}
 
 	/**
 	 * Ricerca PENA_COMULO per id Cumulo
-	 * 
+	 *
 	 * @param idClumulo
 	 */
 	public PenaCumuloModel ExRicercaPenaCumuloByIdCumulo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloSqlDAO lPenDao = null;
 		PenaCumuloModel lPenMod;
@@ -149,6 +150,7 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 	 * Aggiornamento PENA_CUMULO
 	 */
 	public PenaCumuloModel ExModificaPenaCumulo(PenaCumuloModel aPenaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloDAO lPenDao = null;
 		PenaCumuloModel lPenMod = new PenaCumuloModel(aPenaCumulo);
@@ -169,15 +171,15 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 		}
 
 		return lPenMod;
-
 	}
 
 	/**
 	 * Effettua la cancellazione di un record pena cumulo
-	 * 
+	 *
 	 * @param aPenaCumulo
 	 */
 	public void ExCancellaPenaCumulo(PenaCumuloModel aPenaCumulo) throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloDAO lPenDao = null;
 
@@ -197,7 +199,7 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 
 	/**
 	 * Ricerca l'ultima PENA_CUMULO inserita per il fascicolo e VALIDATA
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            id del fascicolo
 	 * @return ultima pena cumulo o null se non presente
@@ -205,6 +207,7 @@ public class PenaCumuloController extends SiapController implements IPenaCumulo 
 	 */
 	public PenaCumuloModel ExRicercaUltimaPenaCumuloByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaCumuloSqlDAO lPenDao = null;
 		PenaCumuloModel lPenMod;

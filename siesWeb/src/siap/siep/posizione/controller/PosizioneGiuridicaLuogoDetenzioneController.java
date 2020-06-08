@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.altracausa.dao.AltraCausaDAO;
 import siap.siep.altracausa.dao.AltraCausaSqlDAO;
@@ -20,8 +22,6 @@ import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -36,16 +36,16 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController implements
-		IPosizioneGiuridicaLuogoDetenzione {
+public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController
+		implements IPosizioneGiuridicaLuogoDetenzione {
 
 	/**
 	 * Ricerca le posizioni giuridiche
-	 * 
+	 *
 	 * @param aPosizioneGiuridica
 	 * @return Vector
 	 * @throws F3BException
@@ -53,13 +53,14 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 
 	public Vector ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 
 		IstitutoDetenzioneModel lIstDetMod = null;
-//		LuogoDetenzioneModel lLuoDet = null;
+		// LuogoDetenzioneModel lLuoDet = null;
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lMod = null;
 		Vector lPosizioneLuogoAltraCausa = new Vector();
 		Vector lPosizioni = null;
@@ -120,16 +121,16 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 
 	public PosizioneGiuridicaLuogoDetenzioneAltraCausaModel ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaByKey(
 			BigDecimal aId) throws F3BException {
+
 		Connection lConn = null;
 		PosizioneGiuridicaSqlDAO lPosDao = null;
 		LuogoDetenzioneSqlDAO lLuoDetDao = null;
 		IstitutoDetenzioneSqlDAO lIstDao = null;
-
-//		AltraCausaDAO lAltraCausaDao = null;
+		// AltraCausaDAO lAltraCausaDao = null;
 		AltraCausaSqlDAO lAltraCausaSqlDao = null;
 
 		IstitutoDetenzioneModel lIstDetMod = null;
-//		LuogoDetenzioneModel lLuoDet = null;
+		// LuogoDetenzioneModel lLuoDet = null;
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPosAltraMod = null;
 		PosizioneGiuridicaModel lPosMod = null;
 
@@ -171,7 +172,6 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 
 				// setto il luogo Detenzione giuridica nel in PosizioneGiuridicaLuogoDetenzioneAltraCausaModel
 				lPosAltraMod.setLuogoDetenzione(lLuogoDetenzione);
-
 			}
 		} catch (DAOException daoEx) {
 			throw new F3BException(
@@ -181,6 +181,8 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 			cleanup(lPosDao);
 			cleanup(lLuoDetDao);
 			cleanup(lIstDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lAltraCausaSqlDao);
 			cleanup(lConn);
 		}
 
@@ -189,6 +191,7 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 
 	public void ExCancellaPosizioneGiuridicaLuogoDetenzioneAltraCausa(
 			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel aPosGiu) throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneDAO lLuoDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -217,8 +220,8 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 			}
 			if (aPosGiu.getPosizioneGiuridica().getIdPosizioneGiuridica() != null) {
 				lMisCauDao = new MisuraCautelareDAO(lConn);
-				lMisCauDao.setCondizioneDeleteByIdPosGiuridica(aPosGiu.getPosizioneGiuridica()
-						.getIdPosizioneGiuridica());
+				lMisCauDao.setCondizioneDeleteByIdPosGiuridica(
+						aPosGiu.getPosizioneGiuridica().getIdPosizioneGiuridica());
 				lMisCauDao.delete();
 				lMisCauDao.stop();
 			}
@@ -239,6 +242,9 @@ public class PosizioneGiuridicaLuogoDetenzioneController extends SiapController 
 			cleanup(lPosDao);
 			cleanup(lAltraDao);
 			cleanup(lLuoDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lMisCauDao);
+			cleanup(lFasDao);
 			cleanup(lConn);
 		}
 	}

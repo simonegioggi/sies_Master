@@ -92,7 +92,7 @@ import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -102,8 +102,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Ricerca un Provvedimento Definitorio per il Fascicolo SIGE.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id di Provvedimento SIGE.
 	 * @return ProvvedimentoSigeEventoModel della verifica.
@@ -171,7 +170,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 					lProvvEveModel.setMotiviProvvedSige(lMotivazioni);
 
 				// @emma- inizio 10/11/2016 aggiungo l'estrazione delle impugnazioni
-				List<ImpugnazioneSigeModel> impugnazioni = new ArrayList<ImpugnazioneSigeModel>();
+				List<ImpugnazioneSigeModel> impugnazioni = new ArrayList<>();
 				impSqlDao = new ImpugnazioneSigeSqlDAO(lConn);
 				impSqlDao.ricercaImpugnazioniByIdProvvTipoImp(lProvModel.getIdProvvedimentoSige(), "01");
 				impugnazioni.addAll(impSqlDao.getModels());
@@ -197,6 +196,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lProvSqlDao);
 			cleanup(lEveSqlDao);
 			cleanup(lMPSDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(impSqlDao);
 			cleanup(lConn);
 		}
 		return lProvvEveModel;
@@ -204,8 +205,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Inserisce Provvedimento, Evento e Notifiche.
-	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id di Provvedimento SIGE.
 	 * @return ProvvedimentoSigeEventoModel della verifica.
@@ -279,9 +279,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 			// COMMIT
 			commit(lConn);
-		}
-
-		catch (F3BException fe) {
+		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
 		} catch (DAOException ex) {
@@ -302,7 +300,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		lProvvSigeEvento.setEventoNotifica(lEveNot);
 
 		return lProvvSigeEvento;
-
 	}
 
 	/**
@@ -319,7 +316,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
 	 * <p>
 	 * FASCICOLO_SIGE : ?? update dello stato del FASCICOLO.
-	 * 
+	 *
 	 * @param IdFascicoloSige
 	 * @param ProvvedimentoSigeEventoModel
 	 * @param Vector
@@ -496,25 +493,30 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		} // endif
 
 		return aListaTenori;
-
 	}
 
 	private void aggiornaTipoGiudizioFascicolo(ProvvedimentoSigeModel aProvvedimento, String aCodTipoGiudizio,
 			Connection aConn) throws Exception {
 
-		// Valorizzazione del FascicoloSigeModel
-		FascicoloSigeModel lFascicolo = new FascicoloSigeModel();
-		lFascicolo.setIdFascicoloSige(aProvvedimento.getFasIdFascicoloSige());
-		lFascicolo.setCodTipoGiudizio(aCodTipoGiudizio);
-		lFascicolo.setCodOperatoreAggiornamento(aProvvedimento.getCodOperatoreInserimento());
-		lFascicolo.setCodUfficioAggiornamento(aProvvedimento.getCodUfficioInserimento());
-		lFascicolo.setDataAggiornamento(aProvvedimento.getDataInserimento());
+		FascicoloSigeDAO lFasDAO = null;
 
-		// Update del Tipo Giudizio del Fascicolo
-		FascicoloSigeDAO lFasDAO = new FascicoloSigeDAO(aConn);
-		lFasDAO.setDAOFromModelForUpdateTipoGiudizio(lFascicolo);
-		lFasDAO.update();
-		cleanup(lFasDAO);
+		try {
+			// Valorizzazione del FascicoloSigeModel
+			FascicoloSigeModel lFascicolo = new FascicoloSigeModel();
+			lFascicolo.setIdFascicoloSige(aProvvedimento.getFasIdFascicoloSige());
+			lFascicolo.setCodTipoGiudizio(aCodTipoGiudizio);
+			lFascicolo.setCodOperatoreAggiornamento(aProvvedimento.getCodOperatoreInserimento());
+			lFascicolo.setCodUfficioAggiornamento(aProvvedimento.getCodUfficioInserimento());
+			lFascicolo.setDataAggiornamento(aProvvedimento.getDataInserimento());
+
+			// Update del Tipo Giudizio del Fascicolo
+			lFasDAO = new FascicoloSigeDAO(aConn);
+			lFasDAO.setDAOFromModelForUpdateTipoGiudizio(lFascicolo);
+			lFasDAO.update();
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasDAO);
+		}
 	}
 
 	public void ExInserisciProvvedimentoSige(ProvvedimentoSigeModel aProvvedimentoSige) throws F3BException {
@@ -547,11 +549,10 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	}
 
 	/**
-	 * Description: Funzione di ricerca dei provvedimenti SIGE validati per consentirne il Deposito.
-	 * </p>
-	 * I parametri di ricerca (Ordinanza/Decreto, Data Emissione,... etc.) vengono impostati nel parametro
+	 * Description: Funzione di ricerca dei provvedimenti SIGE validati per consentirne il Deposito. I
+	 * parametri di ricerca (Ordinanza/Decreto, Data Emissione,... etc.) vengono impostati nel parametro
 	 * ProvvedimentoSigeModel)
-	 * 
+	 *
 	 * @param ProvvedimentoSigeModel
 	 * @throws F3BException
 	 * @return Vector di ProvvedimentoSigeEventoModel
@@ -668,7 +669,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 				lAnnDao.setDAOFromModelForUpdate(lAnnMod);
 				lAnnDao.setCondizioneUpdate(lAnnMod.getIdAnnotazioneManuale());
 				lAnnDao.update();
-				cleanup(lAnnDao);
 			}
 
 			// Eventuali Motivazioni
@@ -689,7 +689,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 					lMPSDao.insert();
 					lMPSDao.stop();
 				}
-				cleanup(lMPSDao);
 			}
 
 			commit(lConn);
@@ -699,6 +698,10 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		} finally {
 			cleanup(lProDao);
 			cleanup(lAnnSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEveDao);
+			cleanup(lMPSDao);
+			cleanup(lAnnDao);
 			cleanup(lConn);
 		}
 	}
@@ -707,12 +710,11 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Cancellazione Provvedimento SIGE e tutti i dati ad esso collegato. Tabelle coinvolte:
 	 * PROVVEDIMENTO_SIGE, EVENTO, DATI_PROVVEDIMENTO_SIGE, TENORE_SENTENZA_REATO, TENORE_SIGE,
 	 * MOTIVAZIONE_PROVVED_SIGE.
-	 * 
+	 *
 	 * @param ProvvedimentoSigeModel
 	 *            aProvModel
 	 * @throws F3BException
 	 */
-
 	public void ExCancellaProvvedimentoSige(ProvvedimentoSigeModel aProvModel) throws F3BException {
 
 		Connection lConn = null;
@@ -726,8 +728,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		AnnotazioneManualeDAO lAnnDao = null;
 		MotivazioneProvvedimentoSigeDAO lMPSDao = null;
 		UdienzaProcedimentoSigeDAO udiProcDao = null;
+
 		ProvvedimentoSigeModel lProvvedimento = null;
-		// TenoreSigeSqlDAO lTenSqlDao = null;
 
 		try {
 			// inizializzazione della connessione
@@ -980,9 +982,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			lEveDAO.stop();
 
 			commit(lConn);
-		} catch (
-
-		F3BException fEx) {
+		} catch (F3BException fEx) {
 			fEx.printStackTrace();
 			rollback(lConn);
 			throw fEx;
@@ -1004,6 +1004,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lAnnDao);
 			cleanup(lTenDAO);
 			cleanup(lMPSDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(udiProcDao);
 			cleanup(lConn);
 		}
 	}
@@ -1011,12 +1013,13 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	/**
 	 * Ricerca dell'unico provvedimento di tipo "definitorio" relativo al Fascicolo SIGE specificato dal suo
 	 * ID. Se il provvedimento non esiste la funzione restituisce null.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @return ProvvedimentoSigeModel
 	 * @throws F3BException
 	 */
 	public ProvvedimentoSigeModel ExRicercaProvDefinitorioByFasc(BigDecimal aIdFasSige) throws F3BException {
+
 		Connection lConn = null;
 		ProvvedimentoSigeDAO lProvDAO = null;
 		ProvvedimentoSigeModel lProvvedimento = null;
@@ -1041,13 +1044,14 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Ricerca il Provvedimento ed Evento collegato attraverso la chiave IdProvvedimento.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProvvedimentoSigeEventoModel ExRicercaProvvedimentoById(BigDecimal aIdProvvedimento)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ExRicercaProvvedimentoById: inizio");
@@ -1114,7 +1118,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 					lProvvEveModel.setEventoNotifica(lEveNotifica);
 				}
-				// cleanup(lEvDAO);
 
 				// Lettura Eventuali Motivi Provvedimento Sige.
 				lMotivazioni = ricercaMotivazioni(lProvvedimento.getIdProvvedimentoSige(),
@@ -1162,10 +1165,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 								lProvvGeneratoEveModel.setEventoNotifica(lEveNotifica);
 							}
 						}
-
 						opposizione.setProvvedimentoSigeGenerato(lProvvGeneratoEveModel);
 					}
-
 				} // for (ImpugnazioneSigeModel opposizione : opposizioni){
 
 				for (ImpugnazioneSigeModel ricorso : ricorsi) {
@@ -1218,6 +1219,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(impSqlDao);
 			cleanup(lConn);
 			cleanup(lEvDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lUDao);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -1229,13 +1232,14 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	/**
 	 * Ricerca del provvedimento legato ad uno specifico TENORE_SIGE. Se il provvedimento non esiste la
 	 * funzione restituisce una Exception.
-	 * 
+	 *
 	 * @param aIdTenoreSige
 	 * @return ProvvedimentoSigeModel
 	 * @throws F3BException
 	 */
 	public ProvvedimentoSigeModel ExRicercaProvedimentoByIdTenore(BigDecimal aIdTenoreSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		ProvvedimentoSigeDAO lProvDAO = null;
 		ProvvedimentoSigeModel lProvvedimento = null;
@@ -1263,7 +1267,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	/**
 	 * Esecuzione stampa Ordinanza.
 	 * <p>
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @param lProvEvento
 	 * @param lTipoUfficio
@@ -1273,6 +1277,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 */
 	public ByteArrayOutputStream ExStampaProvvedimento(EventoModel lEvento, BigDecimal aIdFascicolo,
 			String lTipoUfficio, UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 
 		IStampaSige lCtrlSta = SIGELookupRemote.getStampaRemote();
@@ -1318,7 +1323,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		// Inserisce il documento generato nel model di ritorno
 		// In esso inserisce il Nome del template di ritorno
 		// e il documento generato.
-
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -1358,7 +1362,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	/**
 	 * Inserisce la data di deposito del provvedimento, aggiorna l'evento e inserisce una notifica per ogni
 	 * destinatario.
-	 * 
+	 *
 	 * @param aFasSige
 	 * @param aProvvedimentoSige
 	 * @param aEveNot
@@ -1369,6 +1373,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	public DocumentoAllegatoModel ExInserisciDataDeposito(FascicoloSigeModel aFasSige,
 			ProvvedimentoSigeEventoModel aProvvedimento, EventoNotificaModel aEveNot, String[] lCheck)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		NotificaDAO lNotDao = null;
@@ -1377,8 +1382,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		DocumentoAllegatoDAO lDocAllDao = null;
 		DocumentoAllegatoSqlDAO lDocAllSqlDao = null;
-		DocumentoAllegatoModel lDocAMod = null;
 		FascicoloSigeDAO lFasSigeDao = null;
+
+		DocumentoAllegatoModel lDocAMod = null;
 
 		ProvvedimentoSigeModel lProvMod = new ProvvedimentoSigeModel(aProvvedimento.getProvvedimento());
 
@@ -1494,7 +1500,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			if (lCheck != null) {
 				for (int z = 0; z < lCheck.length; z++) {
 					lNotDao.start();
-					lNotDao.setCondizioneUpdate((BigDecimal) new BigDecimal(lCheck[z].toUpperCase()));
+					lNotDao.setCondizioneUpdate(new BigDecimal(lCheck[z].toUpperCase()));
 					lNotDao.delete();
 					lNotDao.stop();
 				}
@@ -1557,9 +1563,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
@@ -1579,7 +1583,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lAutDao);
 			cleanup(lDocAllDao);
 			cleanup(lDocAllSqlDao);
-			cleanup(lProvDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProvSqlDao);
+			cleanup(lFasSigeDao);
 
 			cleanup(lConn);
 		}
@@ -1589,25 +1595,29 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Ricerca il Provvedimento ed Evento collegato attraverso la chiave IdProvvedimento.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @return
 	 * @throws F3BException
 	 */
 	public ProvvedimentoSigeEventoModel ExRicercaProvvedimentoByIdEvento(BigDecimal aIdEvento)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ExRicercaProvvedimentoByIdEvento: inizio");
 
 		Connection lConn = null;
 		ProvvedimentoSigeDAO lProvDAO = null;
-		ProvvedimentoSigeModel lProvvedimento = null;
 		EventoDAO lEvDAO = null;
-		ProvvedimentoSigeEventoModel lProvvEveModel = null;
 		MotivazioneProvvedimentoSigeSqlDAO lMPSDao = null;
-		Vector lMotivazioni = null;
 		ImpugnazioneSigeSqlDAO impSqlDao = null;
+
+		ProvvedimentoSigeModel lProvvedimento = null;
+		ProvvedimentoSigeEventoModel lProvvEveModel = null;
+
+		Vector lMotivazioni = null;
+
 		try {
 			lConn = getDBConnection();
 			lProvDAO = new ProvvedimentoSigeDAO(lConn);
@@ -1661,6 +1671,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		} finally {
 			cleanup(lProvDAO);
 			cleanup(lMPSDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEvDAO);
+			cleanup(impSqlDao);
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1672,7 +1685,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Stampa il documento allegato al Provvedimento
-	 * 
+	 *
 	 * @param aIdFascicoloSige
 	 * @param aDAMod
 	 * @param aCodUff
@@ -1682,6 +1695,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	public ByteArrayOutputStream ExStampaDocumentoAllegato(BigDecimal aIdFascicolo,
 			DocumentoAllegatoModel aDAMod, String aCodUff, UtenteModel aUtenteModel, BigDecimal idEvento)
 			throws F3BException {
+
 		Connection lConn = null;
 		DocumentoAllegatoDAO lDADao = null;
 
@@ -1739,7 +1753,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			lDADao.setCondizioneUpdate(aDAMod.getIdDocumentoAllegato());
 			lDADao.update();
 			commit(lConn);
-
 		} catch (SQLException sqe) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1762,7 +1775,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	/**
 	 * Esegue la cancellazione di un record di Provvedimento SIGE.
 	 * <p>
-	 * 
+	 *
 	 * @param aProvvedimento
 	 *            : model ProvvedimentoSige in cui siano valorizzati almeno i campi IDProvvedimentoSige e
 	 *            IDEventoGenerato.
@@ -1887,12 +1900,13 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lTenDao);
 			cleanup(lProvDao);
 			cleanup(lEveDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSenReaDAO);
 		}
 		return;
 	}
 
 	/**
-	 * 
 	 * @param aEventoNotifiche
 	 * @param aProvvedimento
 	 * @return
@@ -1900,6 +1914,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 */
 	public ProvvedimentoSigeModel ExInserisciEventoNotificaProv(EventoNotificaModel aEventoNotifiche,
 			ProvvedimentoSigeModel aProvvedimento) throws F3BException {
+
 		// Provvedimento inserito
 		ProvvedimentoSigeModel lProvvedimento = new ProvvedimentoSigeModel(aProvvedimento);
 
@@ -1931,9 +1946,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 			// COMMIT
 			commit(lConn);
-		}
-
-		catch (F3BException fe) {
+		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
 		} catch (DAOException ex) {
@@ -1953,13 +1966,14 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Description: Funzione di ricerca dei provvedimenti SIGE.
 	 * </p>
 	 * Parametro di ricerca: Id_FascicoloSige.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @throws F3BException
 	 * @return Vector di ProvvedimentoSigeEventoModel
 	 */
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaProvvedimentiSigePerIdFasSige(BigDecimal aIdFasSige)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -1967,8 +1981,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		TenoreSigeSqlDAO lTenSqlDao = null;
 
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
-
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		Vector<TenoreSigeEstesoModel> lTenoriSige = null;
 
 		try {
@@ -2049,13 +2062,14 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Description: Funzione di ricerca dei provvedimenti SIGE.
 	 * </p>
 	 * Parametro di ricerca: Id_FascicoloSige.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @throws F3BException
 	 * @return Vector di ProvvedimentoSigeEventoModel
 	 */
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaProvvedimentiSigePerIdFasSigePerIdSoggetto(
 			BigDecimal aIdSoggettoSige, String codTipoProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -2063,8 +2077,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		TenoreSigeSqlDAO lTenSqlDao = null;
 
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
-
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		Vector<TenoreSigeEstesoModel> lTenoriSige = null;
 
 		try {
@@ -2146,12 +2159,13 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Description: Funzione di ricerca dei provvedimenti di sospensione per un provvedimento SIGE.
 	 * </p>
 	 * Parametro di ricerca: Provv_Id_Provvedimentosige.
-	 * 
+	 *
 	 * @param aProvvId
 	 * @throws F3BException
 	 * @return Vector di ProvvedimentoSigeEventoModel
 	 */
 	public Vector ExRicercaOrdinanzaSospensioneSigeByProvvId(BigDecimal aProvvId) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -2194,7 +2208,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Description: Funzione di ricerca dei provvedimenti SIGE.
 	 * </p>
 	 * Parametro di ricerca: Id_FascicoloSige.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvvedimento
 	 *            : e' una stringa del tipo "('02','03')" per consentire
@@ -2213,7 +2227,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
 
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 
 		try {
 			lConn = getDBConnection();
@@ -2337,6 +2351,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lProvSqlDao);
 			cleanup(lEveSqlDao);
 			cleanup(lTenSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(impSqlDao);
 			cleanup(lConn);
 		}
 		return lProvvedimentiSige;
@@ -2346,7 +2362,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Description: Funzione di ricerca dei provvedimenti SIGE.
 	 * </p>
 	 * Parametro di ricerca: Id_FascicoloSige.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvvedimento
 	 *            : e' una stringa del tipo "('02','03')" per consentire
@@ -2357,6 +2373,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 */
 	public Vector ExRicercaProvvSigePerIdFasSigeTipiProvvProvvSige(BigDecimal aIdFasSige,
 			String aTipiProvvedimento, String aCodTipoProvvSige) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -2447,7 +2464,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Aggiorna l'EVENTO nel campo FLAG_DOCUMENTO_REGISTRATO ( con 'A' ). Inserisce le motivazioni
 	 * dell'annullamento in CAMPO_NOTA. Aggiorna eventualmente il FASCICOLO_SIGE nel campo COD_STATO_FASCICOLO
 	 * ( con '02' = "Iscritto").
-	 * 
+	 *
 	 * @param aCampoNota
 	 * @param aIdFascicoloSige
 	 * @param lTenori
@@ -2455,6 +2472,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 */
 	public void ExAnnullaProvvedimento(CampoNotaModel aCampoNota, BigDecimal aIdFascicoloSige,
 			ProvvedimentoSigeEventoModel aProvvSige, String codiceStatoFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
@@ -2725,6 +2743,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lUdiProDao);
 			cleanup(lUdiProSqlDao);
 			cleanup(lTenDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(provvDao);
 			cleanup(lConn);
 		}
 		return;
@@ -2732,7 +2752,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Aggiorna lo stato del fascicolo sige con il codice passato in imput
-	 * 
+	 *
 	 * @param aCampoNota
 	 * @param aIdFascicoloSige
 	 * @param lConn
@@ -2744,19 +2764,26 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	private void aggiornaStatoFascicolo(CampoNotaModel aCampoNota, BigDecimal aIdFascicoloSige,
 			Connection lConn, ProvvedimentoSigeModel lProSige, String codiceStatoFascicolo)
 			throws DAOException, F3BException {
-		FascicoloSigeDAO lFasSigeDao = new FascicoloSigeDAO(lConn);
-		lFasSigeDao.setCodStatoFascicolo(codiceStatoFascicolo);
-		lFasSigeDao.setDataDefinizione(null);
-		lFasSigeDao.setDataAggiornamento(aCampoNota.getDataInserimento());
-		lFasSigeDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-		lFasSigeDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-		lFasSigeDao.setCondizioneUpdate(aIdFascicoloSige);
-		lFasSigeDao.update();
-		lFasSigeDao.stop();
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.info("Aggiornamento Stato Fascicolo SIGE: " + aIdFascicoloSige);
-		cleanup(lFasSigeDao);
+
+		FascicoloSigeDAO lFasSigeDao = null;
+
+		try {
+			lFasSigeDao = new FascicoloSigeDAO(lConn);
+			lFasSigeDao.setCodStatoFascicolo(codiceStatoFascicolo);
+			lFasSigeDao.setDataDefinizione(null);
+			lFasSigeDao.setDataAggiornamento(aCampoNota.getDataInserimento());
+			lFasSigeDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+			lFasSigeDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+			lFasSigeDao.setCondizioneUpdate(aIdFascicoloSige);
+			lFasSigeDao.update();
+			lFasSigeDao.stop();
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.info("Aggiornamento Stato Fascicolo SIGE: " + aIdFascicoloSige);
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasSigeDao);
+		}
 	}
 
 	/**
@@ -2773,7 +2800,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
 	 * <p>
 	 * FASCICOLO_SIGE : ?? update dello stato del FASCICOLO.
-	 * 
+	 *
 	 * @param IdFascicoloSige
 	 * @param ProvvedimentoSigeEventoModel
 	 * @param Vector
@@ -2784,6 +2811,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	public ProvvedimentoSigeEventoModel ExInserisciProvvedimento(ProvvedimentoSigeEventoModel lProvEveModel,
 			Vector lTenori, String aCodTipoGiudizio, MotivazioneProvvedimentoSigeModel[] lMotivazioni)
 			throws Exception {
+
 		// Models da inserire e valorizzare in return.
 		ProvvedimentoSigeEventoModel lProvvSigeEvento = new ProvvedimentoSigeEventoModel();
 		ProvvedimentoSigeModel lProvvedimento = new ProvvedimentoSigeModel(lProvEveModel.getProvvedimento());
@@ -2910,7 +2938,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * TENORE : vengono inseriti i nuovi tenori senza storicizzare i precedenti;
 	 * <p>
 	 * FASCICOLO_SIGE : ?? update dello stato del FASCICOLO.
-	 * 
+	 *
 	 * @param IdFascicoloSige
 	 * @param ProvvedimentoSigeEventoModel
 	 * @param Vector
@@ -2921,6 +2949,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	public ProvvedimentoSigeEventoModel ExInserisciProvvSospensione(
 			ProvvedimentoSigeEventoModel lProvEveModel, Vector lTenori, String aCodTipoGiudizio,
 			MotivazioneProvvedimentoSigeModel[] lMotivazioni) throws Exception {
+
 		// Models da inserire e valorizzare in return.
 		ProvvedimentoSigeEventoModel lProvvSigeEvento = new ProvvedimentoSigeEventoModel();
 		ProvvedimentoSigeModel lProvvedimento = new ProvvedimentoSigeModel(lProvEveModel.getProvvedimento());
@@ -3017,26 +3046,33 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	private Vector aggiornaCodEsitoTenore(String aCodTipoProvvedimento, Vector aListaTenori, Connection aConn)
 			throws Exception {
-		TenoreSigeSqlDAO lTenSqlDAO = new TenoreSigeSqlDAO(aConn);
-		if (aListaTenori != null) {
-			for (int j = 0; j < aListaTenori.size(); j++) {
-				TenoreSigeModel lTenore = (TenoreSigeModel) aListaTenori.elementAt(j);
 
-				lTenore.setCodEsitoSige(
-						lTenSqlDAO.getCodEsitoTenoreSige(aCodTipoProvvedimento, lTenore.getCodOggettoSige()));
+		TenoreSigeSqlDAO lTenSqlDAO = null;
 
-				aListaTenori.setElementAt(lTenore, j);
-			}
-		} // endif
+		try {
+			lTenSqlDAO = new TenoreSigeSqlDAO(aConn);
+			if (aListaTenori != null) {
+				for (int j = 0; j < aListaTenori.size(); j++) {
+					TenoreSigeModel lTenore = (TenoreSigeModel) aListaTenori.elementAt(j);
 
-		cleanup(lTenSqlDAO);
+					lTenore.setCodEsitoSige(lTenSqlDAO.getCodEsitoTenoreSige(aCodTipoProvvedimento,
+							lTenore.getCodOggettoSige()));
+
+					aListaTenori.setElementAt(lTenore, j);
+				}
+			} // endif
+		} finally {
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lTenSqlDAO);
+		}
+
 		return aListaTenori;
 	}
 
 	/**
 	 * Inserisce la data di deposito del provvedimento, aggiorna l'evento e inserisce una notifica per ogni
 	 * destinatario.
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @param aEveNot
 	 * @return DocumentoAllegatoModel
@@ -3053,10 +3089,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		ProvvedimentoSigeDAO lProSigeDao = null;
 		DocumentoAllegatoDAO lDocAllDao = null;
 		DocumentoAllegatoSqlDAO lDocAllSqlDao = null;
-		DocumentoAllegatoModel lDocAMod = null;
 		FascicoloSigeDAO lFasSigeDao = null;
 
-		// ProvvedimentoSigeModel lProSigeMod = new ProvvedimentoSigeModel(aProvvedimento);
+		DocumentoAllegatoModel lDocAMod = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -3171,7 +3206,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 				if (lCheck != null) {
 					for (int z = 0; z < lCheck.length; z++) {
 						lNotDaoCanc.start();
-						lNotDaoCanc.setCondizioneUpdate((BigDecimal) new BigDecimal(lCheck[z].toUpperCase()));
+						lNotDaoCanc.setCondizioneUpdate(new BigDecimal(lCheck[z].toUpperCase()));
 						lNotDaoCanc.delete();
 						lNotDaoCanc.stop();
 					}
@@ -3213,6 +3248,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lAutDao);
 			cleanup(lDocAllDao);
 			cleanup(lDocAllSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProSigeDao);
+			cleanup(lFasSigeDao);
 
 			cleanup(lConn);
 		}
@@ -3222,7 +3260,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/************************************************************
 	 * aggiorna l'evento, inserisce una notifica per ogni destinatario e aggiorna CampoNota.
-	 * 
+	 *
 	 * @param aProvvedimento
 	 * @param aEveNot
 	 * @throws F3BException
@@ -3326,7 +3364,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 				if (lCheck != null) {
 					for (int z = 0; z < lCheck.length; z++) {
 						lNotDaoCanc.start();
-						lNotDaoCanc.setCondizioneUpdate((BigDecimal) new BigDecimal(lCheck[z].toUpperCase()));
+						lNotDaoCanc.setCondizioneUpdate(new BigDecimal(lCheck[z].toUpperCase()));
 						lNotDaoCanc.delete();
 						lNotDaoCanc.stop();
 					}
@@ -3352,6 +3390,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			cleanup(lNotDaoCanc);
 			cleanup(lAutDao);
 			cleanup(lCampoNotaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lProSigeDao);
 
 			cleanup(lConn);
 		}
@@ -3359,7 +3399,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Ricerca delle Motivazioni Provvedimento SIGE legate ad uno specifico Provvedimento.
-	 * 
+	 *
 	 * @param aIdProvvedimentoSige
 	 *            : ID del Provvedimento SIGE
 	 * @param aCodTipoProv
@@ -3371,19 +3411,24 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 */
 	private Vector ricercaMotivazioni(BigDecimal aIdProvvedimentoSige, String aCodTipoProv, Connection aConn)
 			throws Exception {
+
 		Vector lMotivazioni = null;
+		MotivazioneProvvedimentoSigeSqlDAO lMPSDao = null;
 
-		// Lettura Motivi Provvedimento Sige.
-		MotivazioneProvvedimentoSigeSqlDAO lMPSDao = new MotivazioneProvvedimentoSigeSqlDAO(aConn);
+		try {
+			// Lettura Motivi Provvedimento Sige.
+			lMPSDao = new MotivazioneProvvedimentoSigeSqlDAO(aConn);
 
-		// Switch sul tipo di Inammissibilità
-		if (aCodTipoProv.equalsIgnoreCase(ICostantiProvvedimentoSige.COD_ORDINANZA_INCOMPETENZA)
-				|| aCodTipoProv.equalsIgnoreCase(ICostantiProvvedimentoSige.COD_ORDINANZA_NDPNLP))
-			lMPSDao.ricercaMotivazioneProvvedSigeByIdProvv(aIdProvvedimentoSige);
-		else
-			lMPSDao.ricercaMotivazioneDecretoInammissibilitaByIdProvSige(aIdProvvedimentoSige);
-		lMotivazioni = new Vector(lMPSDao.getModels());
-		cleanup(lMPSDao);
+			// Switch sul tipo di Inammissibilità
+			if (aCodTipoProv.equalsIgnoreCase(ICostantiProvvedimentoSige.COD_ORDINANZA_INCOMPETENZA)
+					|| aCodTipoProv.equalsIgnoreCase(ICostantiProvvedimentoSige.COD_ORDINANZA_NDPNLP))
+				lMPSDao.ricercaMotivazioneProvvedSigeByIdProvv(aIdProvvedimentoSige);
+			else
+				lMPSDao.ricercaMotivazioneDecretoInammissibilitaByIdProvSige(aIdProvvedimentoSige);
+			lMotivazioni = new Vector(lMPSDao.getModels());
+		} finally {
+			cleanup(lMPSDao);
+		}
 
 		return lMotivazioni;
 	}
@@ -3393,7 +3438,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 * Complementare.
 	 * </p>
 	 * Parametro di ricerca: Id_FascicoloSige.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 * @param aTipiProvvedimento
 	 *            : e' una stringa del tipo "('02','03')" per consentire
@@ -3403,6 +3448,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	 */
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaProvvSigeXCFC(BigDecimal aIdFasSige,
 			String aTipiProvvedimento, String aTipoEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -3411,7 +3457,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
 
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		Vector lTenoriSige = null;
 		IDocumentoAllegato docController = SIGELookupRemote.getDocumentoAllegatoController();
 
@@ -3499,7 +3545,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 	/**
 	 * Ricerca Altri Provvedimento collegati al Fascicolo Sige.
-	 * 
+	 *
 	 * @param aIdFasSige
 	 *            chiave Fascicolo Sige
 	 * @param aTipoEvento
@@ -3513,7 +3559,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		Connection lConn = null;
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 
 		try {
 			lConn = getDBConnection();
@@ -3533,9 +3579,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 				lProvvEveModel.setEventoNotifica(lEveNotifica);
 
 				lProvvedimentiSige.add(lProvvEveModel);
-
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"ProvvedimentoSigeController.ExRicercaAltriProvvByFascicoloSige DAOException:  " + daoEx);
@@ -3553,8 +3597,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	@Override
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaDecretiDaDepositare(
 			ProvvedimentoSigeModel aProvvedimentoSige) throws F3BException {
+
 		Connection lConn = null;
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
@@ -3617,8 +3662,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	@Override
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaOrdinanzeDaDepositare(
 			ProvvedimentoSigeModel aProvvedimentoSige) throws F3BException {
+
 		Connection lConn = null;
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
@@ -3703,9 +3749,10 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	@Override
 	public Vector<FoglioComplementareModel> ExRicercaFogliComplementariByFascicolo(BigDecimal idFascicolo,
 			String lTipiProvv) throws F3BException {
+
 		Vector<ProvvedimentoSigeEventoModel> provvedimenti = this.ExRicercaProvvSigeXCFC(idFascicolo,
 				lTipiProvv, "01");
-		Vector<FoglioComplementareModel> fogli = new Vector<FoglioComplementareModel>();
+		Vector<FoglioComplementareModel> fogli = new Vector<>();
 
 		Iterator<ProvvedimentoSigeEventoModel> it = provvedimenti.iterator();
 		while (it.hasNext()) {
@@ -3781,6 +3828,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	public DocumentoAllegatoModel ExInserisciDataDepositoFissazioneUdienza(FascicoloSigeModel aFasSige,
 			ProvvedimentoSigeEventoModel aProvvedimento, EventoNotificaModel aEveNot, String[] lCheck)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 		NotificaDAO lNotDao = null;
@@ -3788,9 +3836,9 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 		ProvvedimentoSigeDAO lProvDao = null;
 		DocumentoAllegatoDAO lDocAllDao = null;
 		DocumentoAllegatoSqlDAO lDocAllSqlDao = null;
-		DocumentoAllegatoModel lDocAMod = null;
 		FascicoloSigeDAO lFasSigeDao = null;
 
+		DocumentoAllegatoModel lDocAMod = null;
 		ProvvedimentoSigeModel lProvMod = new ProvvedimentoSigeModel(aProvvedimento.getProvvedimento());
 
 		try {
@@ -3881,7 +3929,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			if (lCheck != null) {
 				for (int z = 0; z < lCheck.length; z++) {
 					lNotDao.start();
-					lNotDao.setCondizioneUpdate((BigDecimal) new BigDecimal(lCheck[z].toUpperCase()));
+					lNotDao.setCondizioneUpdate(new BigDecimal(lCheck[z].toUpperCase()));
 					lNotDao.delete();
 					lNotDao.stop();
 				}
@@ -3944,9 +3992,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 			}
 
 			commit(lConn);
-		}
-
-		catch (DAOException daoEx) {
+		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("DAOException: " + daoEx);
@@ -3977,6 +4023,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	@Override
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaProvvedimentiUdienzeByIdFascicolo(
 			BigDecimal idFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -3985,7 +4032,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
 
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		Vector lTenoriSige = null;
 
 		try {
@@ -4066,6 +4113,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	@Override
 	public ProvvedimentoSigeModel ExRicercaOrdinanzaRinvioUdienzaDaValidareByFascicolo(BigDecimal idFascicolo)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("ExRicercaProvvedimentoByIdEvento: inizio");
@@ -4083,7 +4131,6 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 				lProvvedimento = (ProvvedimentoSigeModel) lProvSqlDao.getModel();
 			}
 			lProvSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"ProvvedimentoSigeController.ExRicercaOrdinanzaRinvioUdienzaDaValidareByFascicolo DAOException:  "
@@ -4107,6 +4154,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 	@Override
 	public Vector<ProvvedimentoSigeEventoModel> ExRicercaProvvedimentiSigePerOpposizioni(
 			BigDecimal aIdFasSige) throws F3BException {
+
 		Connection lConn = null;
 
 		ProvvedimentoSigeSqlDAO lProvSqlDao = null;
@@ -4115,7 +4163,7 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 
 		ProvvedimentoSigeEventoModel lProvvEveModel = null;
 
-		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<ProvvedimentoSigeEventoModel>();
+		Vector<ProvvedimentoSigeEventoModel> lProvvedimentiSige = new Vector<>();
 		try {
 			lConn = getDBConnection();
 

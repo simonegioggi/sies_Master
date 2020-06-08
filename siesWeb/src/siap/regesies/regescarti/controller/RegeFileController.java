@@ -6,13 +6,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.regesies.regescarti.dao.RegeFileDAO;
 import siap.regesies.regescarti.dao.RegeFileSqlDAO;
 import siap.regesies.regescarti.model.RegeFileModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -36,10 +36,8 @@ public class RegeFileController extends SiapController implements IRegeFile {
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	// [FT] - 03/08/2016 - MAC_LOG - Commento la dichiarazione di mLog in favore della variabile siesLogger
-	// static Logger mLog = LogF3B.getLogger();
-
 	public RegeFileModel ExInserisciRegeFile(RegeFileModel aRegeFile) throws F3BException {
+
 		Connection lConn = null;
 		RegeFileDAO lRegDao = null;
 		RegeFileModel lRegMod = null;
@@ -48,8 +46,8 @@ public class RegeFileController extends SiapController implements IRegeFile {
 			lRegMod = new RegeFileModel(aRegeFile);
 			lRegDao = new RegeFileDAO(lConn);
 			lRegDao.setDAOFromModel(aRegeFile);
-//			BigDecimal lKey = null;
-			/*lKey = */lRegDao.insert();
+			// BigDecimal lKey = null;
+			/* lKey = */lRegDao.insert();
 			commit(lConn);
 			// lRegMod.setIdRegeFile(lKey);
 		} catch (DAOException ex) {
@@ -65,6 +63,7 @@ public class RegeFileController extends SiapController implements IRegeFile {
 	}
 
 	public BigDecimal ExgetCountFileRege(RegeFileModel aRegeFile) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -90,6 +89,7 @@ public class RegeFileController extends SiapController implements IRegeFile {
 	}
 
 	public Vector ExRicercaRegeFilePage(RegeFileModel aRegeFile, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lRegeFili = new Vector();
 		RegeFileSqlDAO lRegDao = null;
@@ -114,6 +114,7 @@ public class RegeFileController extends SiapController implements IRegeFile {
 	}
 
 	public RegeFileModel ExRicercaRegeFileByKey(String aKey) throws F3BException {
+
 		Connection lConn = null;
 		RegeFileSqlDAO lRegDao = null;
 		RegeFileModel lRegMod;
@@ -135,6 +136,7 @@ public class RegeFileController extends SiapController implements IRegeFile {
 	}
 
 	public RegeFileModel ExModificaRegeFile(RegeFileModel aRegeFile) throws F3BException {
+
 		Connection lConn = null;
 		RegeFileDAO lRegDao = null;
 		RegeFileModel lRegMod = new RegeFileModel(aRegeFile);
@@ -163,6 +165,7 @@ public class RegeFileController extends SiapController implements IRegeFile {
 	}
 
 	public void ExCancellaRegeFile(RegeFileModel aRegeFile) throws F3BException {
+
 		Connection lConn = null;
 		RegeFileDAO lRegDao = null;
 

@@ -7,6 +7,11 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.model.DecodeModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.model.EventoModel;
@@ -26,11 +31,6 @@ import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.rifasiep.dao.RiferimentoFascicoloSiepSqlDAO;
 import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.model.DecodeModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -56,6 +56,7 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 	public FascicoloGPModel ExAssegnaTitoloEsecutivo(FascicoloGPModel aFascicoloGP,
 			FascicoloSiepModel lFasSiepMod) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -80,43 +81,43 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			EventoModel aEvento = new EventoModel();
 			aEvento.setFasSieIdFascicoloSiep(aFascicoloGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 			aEvento.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
-			aEvento.setCodOperatoreAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
-			aEvento.setCodUfficioAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			aEvento.setCodOperatoreAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodOperatoreAggiornamento());
+			aEvento.setCodUfficioAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			aEvento.setDataAggiornamento(DateUtils.getSysDate());
 
 			// Set del DAO e aggiornamento dell'Evento.
 			lEveDao.setDAOFromModelForUpdateIdFascicoloSius(aEvento);
 
-			lEveDao.selCondizioneUpdateXIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lEveDao.selCondizioneUpdateXIdFascicoloSius(
+					aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
 			lEveDao.update();
 			lEveDao.stop();
 
 			// Set del DAO e aggiornamento delle Notifiche.
-			lNotDao.setDAOFromModelForUpdateIdSoggetto(aEvento, aFascicoloGP.getFascicoloSiusModel()
-					.getSogIdSoggetto());
+			lNotDao.setDAOFromModelForUpdateIdSoggetto(aEvento,
+					aFascicoloGP.getFascicoloSiusModel().getSogIdSoggetto());
 			lNotDao.update();
 			lNotDao.stop();
 
 			// 18/03/2008 Caricamento del model della LicenzaLibAnticipata.
 			LicenzaLibAnticipataModel aLicLibAnticipata = new LicenzaLibAnticipataModel();
-			aLicLibAnticipata.setFasSieIdFascicoloSiep(aFascicoloGP.getFascicoloSiusModel()
-					.getFasSieIdFascicoloSiep());
-			aLicLibAnticipata.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
-			aLicLibAnticipata.setCodOperatoreAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
-			aLicLibAnticipata.setCodUfficioAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			aLicLibAnticipata.setFasSieIdFascicoloSiep(
+					aFascicoloGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+			aLicLibAnticipata
+					.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
+			aLicLibAnticipata.setCodOperatoreAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodOperatoreAggiornamento());
+			aLicLibAnticipata.setCodUfficioAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			aLicLibAnticipata.setDataAggiornamento(DateUtils.getSysDate());
 
 			// 18/03/2008 Set del DAO e aggiornamento della LicenzaLibAnticipata.
 			lLLADao.setDAOFromModelForUpdateIdFascicoloSiep(aLicLibAnticipata);
 
-			lLLADao.selCondizioneUpdateXIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lLLADao.selCondizioneUpdateXIdFascicoloSius(
+					aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
 			lLLADao.update();
 			lLLADao.stop();
 
@@ -128,7 +129,6 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 			// COMMIT
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("TitoloEsecutivoController.ExInserisciTitoloEsecutivo:  : " + ex);
@@ -136,6 +136,9 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			cleanup(lFasDao);
 			cleanup(lEveDao);
 			cleanup(lLLADao); // 18/03/2008
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotDao);
+
 			cleanup(lConn);
 		}
 
@@ -144,6 +147,7 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 	public FascicoloGPModel ExAssegnaTitoloEsecutivo(FascicoloGPModel aFascicoloGP,
 			FascicoloSiepModel lFasSiepMod, FascicoloSiepModel lFasSiepOld) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -168,43 +172,43 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			EventoModel aEvento = new EventoModel();
 			aEvento.setFasSieIdFascicoloSiep(aFascicoloGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 			aEvento.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
-			aEvento.setCodOperatoreAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
-			aEvento.setCodUfficioAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			aEvento.setCodOperatoreAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodOperatoreAggiornamento());
+			aEvento.setCodUfficioAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			aEvento.setDataAggiornamento(DateUtils.getSysDate());
 
 			// Set del DAO e aggiornamento dell'Evento.
 			lEveDao.setDAOFromModelForUpdateIdFascicoloSius(aEvento);
 
-			lEveDao.selCondizioneUpdateXIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lEveDao.selCondizioneUpdateXIdFascicoloSius(
+					aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
 			lEveDao.update();
 			lEveDao.stop();
 
 			// Set del DAO e aggiornamento delle Notifiche.
-			lNotDao.setDAOFromModelForUpdateIdSoggetto(aEvento, aFascicoloGP.getFascicoloSiusModel()
-					.getSogIdSoggetto());
+			lNotDao.setDAOFromModelForUpdateIdSoggetto(aEvento,
+					aFascicoloGP.getFascicoloSiusModel().getSogIdSoggetto());
 			lNotDao.update();
 			lNotDao.stop();
 
 			// 18/03/2008 Caricamento del model della LicenzaLibAnticipata.
 			LicenzaLibAnticipataModel aLicLibAnticipata = new LicenzaLibAnticipataModel();
-			aLicLibAnticipata.setFasSieIdFascicoloSiep(aFascicoloGP.getFascicoloSiusModel()
-					.getFasSieIdFascicoloSiep());
-			aLicLibAnticipata.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
-			aLicLibAnticipata.setCodOperatoreAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
-			aLicLibAnticipata.setCodUfficioAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			aLicLibAnticipata.setFasSieIdFascicoloSiep(
+					aFascicoloGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
+			aLicLibAnticipata
+					.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
+			aLicLibAnticipata.setCodOperatoreAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodOperatoreAggiornamento());
+			aLicLibAnticipata.setCodUfficioAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			aLicLibAnticipata.setDataAggiornamento(DateUtils.getSysDate());
 
 			// 18/03/2008 Set del DAO e aggiornamento della LicenzaLibAnticipata.
 			lLLADao.setDAOFromModelForUpdateIdFascicoloSiep(aLicLibAnticipata);
 
-			lLLADao.selCondizioneUpdateXIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lLLADao.selCondizioneUpdateXIdFascicoloSius(
+					aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
 			lLLADao.update();
 			lLLADao.stop();
 
@@ -216,7 +220,6 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 			// COMMIT
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("TitoloEsecutivoController.ExInserisciTitoloEsecutivo:  : " + ex);
@@ -224,6 +227,9 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			cleanup(lFasDao);
 			cleanup(lEveDao);
 			cleanup(lLLADao); // 18/03/2008
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotDao);
+
 			cleanup(lConn);
 		}
 
@@ -232,6 +238,7 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 	public FascicoloGPModel ExDeassegnaTitoloEsecutivo(FascicoloGPModel aFascicoloGP,
 			FascicoloSiepModel lFasSiepMod) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -256,42 +263,42 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			EventoModel aEvento = new EventoModel();
 			aEvento.setFasSieIdFascicoloSiep(null);
 			aEvento.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
-			aEvento.setCodOperatoreAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
-			aEvento.setCodUfficioAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			aEvento.setCodOperatoreAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodOperatoreAggiornamento());
+			aEvento.setCodUfficioAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			aEvento.setDataAggiornamento(DateUtils.getSysDate());
 
 			// Set del DAO e aggiornamento dell'Evento.
 			lEveDao.setDAOFromModelForUpdateIdFascicoloSius(aEvento);
 
-			lEveDao.selCondizioneUpdateXIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lEveDao.selCondizioneUpdateXIdFascicoloSius(
+					aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
 			lEveDao.update();
 			lEveDao.stop();
 
 			// Set del DAO e aggiornamento delle Notifiche.
-			lNotDao.setDAOFromModelForUpdateIdSoggetto(aEvento, aFascicoloGP.getFascicoloSiusModel()
-					.getSogIdSoggetto());
+			lNotDao.setDAOFromModelForUpdateIdSoggetto(aEvento,
+					aFascicoloGP.getFascicoloSiusModel().getSogIdSoggetto());
 			lNotDao.update();
 			lNotDao.stop();
 
 			// 18/03/2008 Caricamento del model della LicenzaLibAnticipata.
 			LicenzaLibAnticipataModel aLicLibAnticipata = new LicenzaLibAnticipataModel();
 			aLicLibAnticipata.setFasSieIdFascicoloSiep(null);
-			aLicLibAnticipata.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
-			aLicLibAnticipata.setCodOperatoreAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
-			aLicLibAnticipata.setCodUfficioAggiornamento(aFascicoloGP.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			aLicLibAnticipata
+					.setFasSiuIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
+			aLicLibAnticipata.setCodOperatoreAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodOperatoreAggiornamento());
+			aLicLibAnticipata.setCodUfficioAggiornamento(
+					aFascicoloGP.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			aLicLibAnticipata.setDataAggiornamento(DateUtils.getSysDate());
 
 			// 18/03/2008 Set del DAO e aggiornamento della LicenzaLibAnticipata.
 			lLLADao.setDAOFromModelForUpdateIdFascicoloSiep(aLicLibAnticipata);
 
-			lLLADao.selCondizioneUpdateXIdFascicoloSius(aFascicoloGP.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lLLADao.selCondizioneUpdateXIdFascicoloSius(
+					aFascicoloGP.getFascicoloSiusModel().getIdFascicoloSius());
 			lLLADao.update();
 			lLLADao.stop();
 
@@ -305,7 +312,6 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 			// COMMIT
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("TitoloEsecutivoController.ExDeassegnaTitoloEsecutivo:  : " + ex);
@@ -313,6 +319,9 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			cleanup(lFasDao);
 			cleanup(lEveDao);
 			cleanup(lLLADao); // 18/03/2008
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotDao);
+
 			cleanup(lConn);
 		}
 
@@ -322,13 +331,13 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 	/**
 	 * Metodo di correzione delle RESIDENZA_FASCICOLO_SIUS a partire da aFasGPModel, per effetto di modifica
 	 * Soggetto.
-	 * <p>
-	 * 
+	 *
 	 * @param aFasGPModel
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void insResidenzeSius(FascicoloGPModel aFasGPModel, Connection lConn) throws F3BException {
+
 		ResidenzaDAO lResDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFasSiusDao = null;
@@ -338,8 +347,8 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			lResFasSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 
 			// Puntamento alle eventuali Residenze riferite al Procedimento SIUS.
-			lResSqlDao.ricercaResidenzeByFascicoloSius(aFasGPModel.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lResSqlDao.ricercaResidenzeByFascicoloSius(
+					aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 
 			// Lettura dei dati delle residenze.
 			lResSqlDao.start();
@@ -353,11 +362,11 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 				// Si duplicano le residenze per consentire l'associazione al nuovo soggetto.
 				if (lResMod != null) {
-					lResMod.setCodOperatoreInserimento(aFasGPModel.getFascicoloSiusModel()
-							.getCodOperatoreAggiornamento());
+					lResMod.setCodOperatoreInserimento(
+							aFasGPModel.getFascicoloSiusModel().getCodOperatoreAggiornamento());
 					lResMod.setDataInserimento(aFasGPModel.getFascicoloSiusModel().getDataAggiornamento());
-					lResMod.setCodUfficioInserimento(aFasGPModel.getFascicoloSiusModel()
-							.getCodUfficioAggiornamento());
+					lResMod.setCodUfficioInserimento(
+							aFasGPModel.getFascicoloSiusModel().getCodUfficioAggiornamento());
 					lResMod.setSogIdSoggetto(aFasGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 					lResDao.setDAOFromModel(lResMod);
 					lKeyRes = lResDao.insert();
@@ -367,49 +376,46 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 				if (lResFasMod != null) {
 					lResFasMod.setResIdResidenza(lKeyRes);
 					lResFasSiusDao.setDAOFromModelForUpdate(lResFasMod);
-					lResFasSiusDao.setCondizioneFasicoloResidenza(aFasGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius(), lKeyRes);
+					lResFasSiusDao.setCondizioneFasicoloResidenza(
+							aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius(), lKeyRes);
 					lResFasSiusDao.update();
 					lResFasSiusDao.stop();
 				}
 			}
 
 			lResSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.insResidenzeSius: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.insResidenzeSius: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("Exception: " + e);
 			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
 		} finally {
-
 			cleanup(lResDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFasSiusDao);
-
 		}
 	}
 
 	/**
 	 * Metodo di inserimento delle NOTE per l' INSERIMENTO TITOLO ESECUTIVO.
-	 * <p>
-	 * 
+	 *
 	 * @param aFasGPModel
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void inserimentoNote(FascicoloGPModel aFasGPModel, FascicoloSiepModel lFasSiepMod,
 			Connection lConn) throws F3BException {
+
 		NoteDAO lNoteDao = null;
 		try {
 			lNoteDao = new NoteDAO(lConn);
-//			BigDecimal lKeyRes = null;
+			// BigDecimal lKeyRes = null;
 
 			// Caricamento della Nota di Inserimento Titolo Esecutivo.
 			NoteModel lNoteMod = new NoteModel();
@@ -419,22 +425,22 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 					+ lFasSiepMod.getChiaveProgr() + " " + lFasSiepMod.getDescrTipoUfficio() + " di "
 					+ lFasSiepMod.getDescrComuneUfficio()
 					+ " successivamente all'iscrizione del procedimento");
-			lNoteMod.setCodOperatoreInserimento(aFasGPModel.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
+			lNoteMod.setCodOperatoreInserimento(
+					aFasGPModel.getFascicoloSiusModel().getCodOperatoreAggiornamento());
 			lNoteMod.setDataInserimento(aFasGPModel.getFascicoloSiusModel().getDataAggiornamento());
-			lNoteMod.setCodUfficioInserimento(aFasGPModel.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			lNoteMod.setCodUfficioInserimento(
+					aFasGPModel.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			lNoteMod.setFasSiuIdFascicoloSius(aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 			lNoteMod.setFasSieIdFascicoloSiep(aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 
 			lNoteDao.setDAOFromModel(lNoteMod);
-			/*lKeyRes = */lNoteDao.insert();
+			/* lKeyRes = */lNoteDao.insert();
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.inserimentoNote: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.inserimentoNote: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -447,18 +453,18 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 	/**
 	 * Metodo di inserimento delle NOTE per la RIDEFINIZIONE TITOLO ESECUTIVO.
-	 * <p>
-	 * 
+	 *
 	 * @param aFasGPModel
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void inserimentoNote(FascicoloGPModel aFasGPModel, FascicoloSiepModel lFasSiepMod,
 			FascicoloSiepModel lFasSiepOld, Connection lConn) throws F3BException {
+
 		NoteDAO lNoteDao = null;
 		try {
 			lNoteDao = new NoteDAO(lConn);
-//			BigDecimal lKeyRes = null;
+			// BigDecimal lKeyRes = null;
 
 			// Caricamento della Nota di Ridefinizione Titolo Esecutivo.
 			NoteModel lNoteMod = new NoteModel();
@@ -469,22 +475,22 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 					+ lFasSiepOld.getDescrComuneUfficio() + " AL " + lFasSiepMod.getChiaveAnno() + "/"
 					+ lFasSiepMod.getChiaveProgr() + " " + lFasSiepMod.getDescrTipoUfficio() + " di "
 					+ lFasSiepMod.getDescrComuneUfficio());
-			lNoteMod.setCodOperatoreInserimento(aFasGPModel.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
+			lNoteMod.setCodOperatoreInserimento(
+					aFasGPModel.getFascicoloSiusModel().getCodOperatoreAggiornamento());
 			lNoteMod.setDataInserimento(aFasGPModel.getFascicoloSiusModel().getDataAggiornamento());
-			lNoteMod.setCodUfficioInserimento(aFasGPModel.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			lNoteMod.setCodUfficioInserimento(
+					aFasGPModel.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			lNoteMod.setFasSiuIdFascicoloSius(aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 			lNoteMod.setFasSieIdFascicoloSiep(aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 
 			lNoteDao.setDAOFromModel(lNoteMod);
-			/*lKeyRes = */lNoteDao.insert();
+			/* lKeyRes = */lNoteDao.insert();
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.inserimentoNote: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.inserimentoNote: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -497,18 +503,18 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 
 	/**
 	 * Metodo di inserimento delle NOTE per l' INSERIMENTO TITOLO ESECUTIVO.
-	 * <p>
-	 * 
+	 *
 	 * @param aFasGPModel
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void inserimentoNoteDeassegnazione(FascicoloGPModel aFasGPModel, FascicoloSiepModel lFasSiepMod,
 			Connection lConn) throws F3BException {
+
 		NoteDAO lNoteDao = null;
 		try {
 			lNoteDao = new NoteDAO(lConn);
-//			BigDecimal lKeyRes = null;
+			// BigDecimal lKeyRes = null;
 
 			// Caricamento della Nota di Inserimento Titolo Esecutivo.
 			NoteModel lNoteMod = new NoteModel();
@@ -517,22 +523,22 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			lNoteMod.setDescrizione("DEASSEGNATO TITOLO ESECUTIVO " + lFasSiepMod.getChiaveAnno() + "/"
 					+ lFasSiepMod.getChiaveProgr() + " " + lFasSiepMod.getDescrTipoUfficio() + " di "
 					+ lFasSiepMod.getDescrComuneUfficio());
-			lNoteMod.setCodOperatoreInserimento(aFasGPModel.getFascicoloSiusModel()
-					.getCodOperatoreAggiornamento());
+			lNoteMod.setCodOperatoreInserimento(
+					aFasGPModel.getFascicoloSiusModel().getCodOperatoreAggiornamento());
 			lNoteMod.setDataInserimento(aFasGPModel.getFascicoloSiusModel().getDataAggiornamento());
-			lNoteMod.setCodUfficioInserimento(aFasGPModel.getFascicoloSiusModel()
-					.getCodUfficioAggiornamento());
+			lNoteMod.setCodUfficioInserimento(
+					aFasGPModel.getFascicoloSiusModel().getCodUfficioAggiornamento());
 			lNoteMod.setFasSiuIdFascicoloSius(aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 			lNoteMod.setFasSieIdFascicoloSiep(aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 
 			lNoteDao.setDAOFromModel(lNoteMod);
-			/*lKeyRes = */lNoteDao.insert();
+			/* lKeyRes = */lNoteDao.insert();
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "TitoloEsecutivoController.inserimentoNote: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"TitoloEsecutivoController.inserimentoNote: " + daoEx);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -543,8 +549,8 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 		}
 	}
 
-	// TODO carmela verificare
 	public Vector ExRicercaTitoloEsecutivoByIdFascicoloSius(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		RiferimentoFascicoloSiepSqlDAO lFasDao = null;
 		// FascicoloSiusDAO lFasDao = null;
@@ -603,14 +609,12 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 					} else {
 						if (flagMS.equals("M")) {
 							annoNumero = ((RiferimentoFascicoloSiepModel) lFasDao.getModelRifTitoloEsec())
-									.getAnnoFascicoloSiep()
-									+ "/MS "
+									.getAnnoFascicoloSiep() + "/MS "
 									+ ((RiferimentoFascicoloSiepModel) lFasDao.getModelRifTitoloEsec())
 											.getProgrFascicoloSiep();
 						} else {
 							annoNumero = ((RiferimentoFascicoloSiepModel) lFasDao.getModelRifTitoloEsec())
-									.getAnnoFascicoloSiep()
-									+ "/PP "
+									.getAnnoFascicoloSiep() + "/PP "
 									+ ((RiferimentoFascicoloSiepModel) lFasDao.getModelRifTitoloEsec())
 											.getProgrFascicoloSiep();
 						}
@@ -630,7 +634,6 @@ public class TitoloEsecutivoController extends SiapController implements ITitolo
 			}
 
 			lFasDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"TitoloEsecutivoController.ExRicercaTitoloEsecutivoByIdFascicoloSius: Non posso leggere : "

@@ -9,6 +9,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
@@ -71,10 +75,6 @@ import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -89,7 +89,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -101,12 +101,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Ricerca il Fascicolo SIUS in Banca Dati per primary key
 	 * <p>
-	 * 
+	 *
 	 * @param aModel
 	 * @return FascicoloGPModel
 	 * @throws F3BException
 	 */
 	public FascicoloGPModel ExRicercaFascicoloByKey(BigDecimal aIdFascicoloSius) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloGPModel lFascicolo = null;
@@ -136,8 +137,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			lFascicolo.getFascicoloSiusModel().setSoggetto(lSoggMod);
 
 			// Carico i records eventuali di Tenore
-			lTenDao.ricercaTenoreByGeneraleProc(lFascicolo.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lTenDao.ricercaTenoreByGeneraleProc(
+					lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 
 			// Carico i dati del tenore nell'array di Tenori in FascicoloGPModel.
 			Vector lVectTenori = new Vector(lTenDao.getModels());
@@ -147,22 +148,22 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			}
 
 			// Lettura del Magistrato Relatore.
-			lMagRelSqlDao.ricercaMagistratoRelatoreCorrenteByFascicolo(lFascicolo.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lMagRelSqlDao.ricercaMagistratoRelatoreCorrenteByFascicolo(
+					lFascicolo.getFascicoloSiusModel().getIdFascicoloSius());
 			MagistratoRelatoreModel lMagRelMod = new MagistratoRelatoreModel();
 			lMagRelMod = (MagistratoRelatoreModel) lMagRelSqlDao.getModelByKey();
 
 			// Caricamento del Magistrato Relatore Cod_Magistrato sull'Autorità Delegata del Generale
 			// Procedimento.
 			if (lMagRelMod != null)
-				lFascicolo.getGeneraleProcedimentoModel().setCodAutoritaDelegata(
-						lMagRelMod.getMagCodMagistrato());
+				lFascicolo.getGeneraleProcedimentoModel()
+						.setCodAutoritaDelegata(lMagRelMod.getMagCodMagistrato());
 
 			// Udienza_Procedimento
 			if (lFascicolo != null && lFascicolo.getGeneraleProcedimentoModel() != null
 					&& lFascicolo.getGeneraleProcedimentoModel().getUdiIdUdienza() != null)
-				lFascicolo.setUdiPro(cercaUdiProcAttiva(lFascicolo.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento(), lConn));
+				lFascicolo.setUdiPro(cercaUdiProcAttiva(
+						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), lConn));
 
 		} catch (DAOException dex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -195,7 +196,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Inserisce il Fascicolo Sius per l'UDS
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 *            ;
 	 * @return aFascicoloGPModel;
@@ -204,6 +205,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	public FascicoloGPModel ExInserisciFascicoloSiusUDS(FascicoloGPModel aFascicoloGPModel,
 			String aIdEventoInviato, int aDurataEsitoAnni, int aDurataEsitoMesi, int aDurataEsitoGiorni)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -217,7 +219,6 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFSiusDao = null;
-
 		// paolo cherubini per supersoggetto 20/07/2009
 		SoggettoSqlDAO lSogSqlDao = null;
 		SoggettoDAO lSogDao = null;
@@ -257,8 +258,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 			// paolo cherubini per supersoggetto 20/07/2009
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
-			lSogSqlDao.getCountFascicoliPerSoggetto(aFascicoloGPModel.getFascicoloSiusModel()
-					.getSogIdSoggetto());
+			lSogSqlDao.getCountFascicoliPerSoggetto(
+					aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 			lSogSqlDao.start();
 			lSogSqlDao.next();
 			BigDecimal lCount = lSogSqlDao.getBigDecimal("HowManyRecords");
@@ -269,10 +270,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lSogSqlDao = new SoggettoSqlDAO(lConn);
 				lSogSqlDao.ricercaSoggettoByKey(aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 				lSoggMod = (SoggettoModel) lSogSqlDao.getModelByKey();
-				lSoggMod.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lSoggMod.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lSoggMod.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lSoggMod.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 				lSoggMod.setDataInserimento(DateUtils.getSysDate());
 				lSoggMod.setCodOperatoreAggiornamento(null);
 				lSoggMod.setCodUfficioAggiornamento(null);
@@ -308,10 +309,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1() == null) {
 				// STUB 11/02/2004 ProgrS1 e AnnoS1 di GP vengono altrimenti impostati con i valori di
 				// FascicoloSius inserito.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
 			}
 			// Il flag viene impostato nel caso in cui sto iscrivendo da soggetto un procedimento di E.M.A. e
 			// sono valorizzati Anno/Progressivo dell'Ordinanza.
@@ -354,18 +355,18 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Dati nuovo Magistrato.
 				// lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getTenoreModel().getCodMagistrato());
-				lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodAutoritaDelegata());
-				lMagistrato.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lMagistrato.setMagCodMagistrato(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
+				lMagistrato.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lMagistrato.setDataInizio(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
 				lMagistrato.setCodRuoloMagistrato("01");
 				lMagistrato
 						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-				lMagistrato.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMagistrato.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lMagistrato.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMagistrato.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 
 				// Si Esegue l'inserimento del Nuovo Magistrato.
 				lMagRelDao.setDAOFromModel(lMagistrato);
@@ -379,8 +380,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				AltraCausaModel lAltCauModel = new AltraCausaModel();
 
 				lAltCauSqlDao = new AltraCausaSqlDAO(lConn);
-				lAltCauSqlDao.ricercaAltraCausaByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdAltraCausa()));
+				lAltCauSqlDao.ricercaAltraCausaByKey(
+						new BigDecimal(aFascicoloGPModel.getGeneraleProcedimentoModel().getIdAltraCausa()));
 				lAltCauModel = (AltraCausaModel) lAltCauSqlDao.getModelByKey();
 
 				if (lAltCauModel == null)
@@ -390,14 +391,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 				lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-				lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
+				lLuoDetModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lLuoDetModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lLuoDetModel.setDataInizioDetenzione(DateUtils.getSysDate());
 				// lLuoDetModel.setDataFineDetenzione(aFascicoloGPModel.getGeneraleProcedimentoModel().getDataFinePena());
-				lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lLuoDetModel.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lLuoDetModel.setAltroLuogo(lAltCauModel.getAltroLuogo());
 				lLuoDetModel.setIstDetIdIstitutoDetenzione(lAltCauModel.getIstDetIdIstitutoDetenzione());
 				lLuoDetModel.setNote("DETENUTO ALTRA CAUSA");
@@ -409,26 +410,27 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Aggiornamento/Inserimento del luogo Detenzione.
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetSqlDao = new LuogoDetenzioneSqlDAO(lConn);
-				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
+				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
 				lLuoDetSqlDao.start();
 				if (lLuoDetSqlDao.next())
 					lLuoDetModel = (LuogoDetenzioneModel) lLuoDetSqlDao.getModel();
 				else
-					throw new SIUSException(F3BException.USER_MESSAGE, "Errore: Luogo Detenzione non trovato");
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Errore: Luogo Detenzione non trovato");
 
 				lLuoDetSqlDao.stop();
 
 				// Se il Luogo detenzione non ha il campo FasSiuIdFascicoloSius impostato, lo aggiorno;
 				// se è già stato assegnato ad un Fascicolo Sius, ne inserisco un altro.
 				if (lLuoDetModel.getFasSiuIdFascicoloSius() == null) {
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataAggiornamento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 					lLuoDetDao.setIdLuogoDetenzione(lLuoDetModel.getIdLuogoDetenzione());
@@ -437,13 +439,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lLuoDetDao.stop();
 				} else {
 					// Set dei campi del nuovo record Luogo Detenzione e Inserimento.
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
@@ -459,13 +461,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// Validazione Residenza SIEP.
 			if (aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaResidenzaByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaResidenzaByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -483,8 +484,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						cleanup(lResFSiusDao);
 					}
@@ -493,13 +494,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Validazione Domicilio SIEP.
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaDomicilioByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaDomicilioByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -518,8 +518,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						lResFSiusDao.stop();
 						cleanup(lResFSiusDao);
@@ -537,14 +537,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - ISCRIZIONE.
 				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Sanzioni Sostitutive (U019), vengono inserite le occorrenze di
@@ -558,14 +558,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Update del Generale Procedimento appena inserito nei campi ANNO_S1 & PROGR_S1 poichè in
 				// essi hanno "viaggiato" Anno e Numero Ordinanza.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Misure Sicurezz (U024), vengono inserite le occorrenze di
@@ -578,10 +578,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 							aDurataEsitoMesi, aDurataEsitoGiorni);
 				// Update del Generale Procedimento appena inserito nei campi ANNO_S1 & PROGR_S1 poichè in
 				// essi hanno "viaggiato" Anno e Numero Ordinanza.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				if (oggEsecDaAMS != "") {
 					// L'oggetto viene forzato alla misura applicata o ereditata da trasf ems
 					// Prima però devo considerare che i tenori sono già inseriti
@@ -604,16 +604,16 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						TenoreModel lTenoriMisura[] = new TenoreModel[1];
 						TenoreModel lTenoreMisura = new TenoreModel();
 						lTenoreMisura.setCodOggettoTenore(oggEsecDaAMS);
-						lTenoreMisura.setGenPridGeneraleProcedimento(aFascicoloGPModel
-								.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+						lTenoreMisura.setGenPridGeneraleProcedimento(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 						// lTenoreMisura[0].setDescrOggettoTenore( "-");
-						lTenoreMisura.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-								.getCodUfficioInserimento());
-						lTenoreMisura.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-								.getCodOperatoreInserimento());
+						lTenoreMisura.setCodUfficioInserimento(
+								aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+						lTenoreMisura.setCodOperatoreInserimento(
+								aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 						lTenoreMisura.setDataInserimento(DateUtils.getSysDate());
-						lTenoreMisura.setCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-								.getCodAutoritaDelegata());
+						lTenoreMisura.setCodMagistrato(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
 						lTenoreMisura.setProgrTenore(new BigDecimal((double) (1)));
 						lTenoreMisura.setCodEsitoTenore("-");
 
@@ -628,8 +628,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				}
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 
@@ -656,10 +656,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			cleanup(lTenDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogSqlDao);
+			cleanup(lSogDao);
+			cleanup(lResDao);
 
 			cleanup(lConn);
 		}
@@ -670,7 +674,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Inserisce il Fascicolo Sius per l'UDS
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 *            ;
 	 * @return aFascicoloGPModel;
@@ -681,6 +685,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	public FascicoloGPModel ExInserisciFascicoloSiusUDS(FascicoloGPModel aFascicoloGPModel,
 			String aIdEventoInviato, BigDecimal aIdPadreEsec, int aDurataEsitoAnni, int aDurataEsitoMesi,
 			int aDurataEsitoGiorni) throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -694,7 +699,6 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFSiusDao = null;
-
 		// paolo cherubini per supersoggetto 20/07/2009
 		SoggettoSqlDAO lSogSqlDao = null;
 		SoggettoDAO lSogDao = null;
@@ -734,8 +738,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 			// paolo cherubini per supersoggetto 20/07/2009
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
-			lSogSqlDao.getCountFascicoliPerSoggetto(aFascicoloGPModel.getFascicoloSiusModel()
-					.getSogIdSoggetto());
+			lSogSqlDao.getCountFascicoliPerSoggetto(
+					aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 			lSogSqlDao.start();
 			lSogSqlDao.next();
 			BigDecimal lCount = lSogSqlDao.getBigDecimal("HowManyRecords");
@@ -746,10 +750,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lSogSqlDao = new SoggettoSqlDAO(lConn);
 				lSogSqlDao.ricercaSoggettoByKey(aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 				lSoggMod = (SoggettoModel) lSogSqlDao.getModelByKey();
-				lSoggMod.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lSoggMod.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lSoggMod.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lSoggMod.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 				lSoggMod.setDataInserimento(DateUtils.getSysDate());
 				lSoggMod.setCodOperatoreAggiornamento(null);
 				lSoggMod.setCodUfficioAggiornamento(null);
@@ -785,10 +789,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1() == null) {
 				// STUB 11/02/2004 ProgrS1 e AnnoS1 di GP vengono altrimenti impostati con i valori di
 				// FascicoloSius inserito.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
 			}
 			// Il flag viene impostato nel caso in cui sto iscrivendo da soggetto un procedimento di EMA, ESS
 			// o EMS e sono valorizzati Anno/Progressivo dell'Ordinanza.
@@ -831,18 +835,18 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Dati nuovo Magistrato.
 				// lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getTenoreModel().getCodMagistrato());
-				lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodAutoritaDelegata());
-				lMagistrato.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lMagistrato.setMagCodMagistrato(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
+				lMagistrato.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lMagistrato.setDataInizio(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
 				lMagistrato.setCodRuoloMagistrato("01");
 				lMagistrato
 						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-				lMagistrato.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMagistrato.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lMagistrato.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMagistrato.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 
 				// Si Esegue l'inserimento del Nuovo Magistrato.
 				lMagRelDao.setDAOFromModel(lMagistrato);
@@ -856,8 +860,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				AltraCausaModel lAltCauModel = new AltraCausaModel();
 
 				lAltCauSqlDao = new AltraCausaSqlDAO(lConn);
-				lAltCauSqlDao.ricercaAltraCausaByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdAltraCausa()));
+				lAltCauSqlDao.ricercaAltraCausaByKey(
+						new BigDecimal(aFascicoloGPModel.getGeneraleProcedimentoModel().getIdAltraCausa()));
 				lAltCauModel = (AltraCausaModel) lAltCauSqlDao.getModelByKey();
 
 				if (lAltCauModel == null)
@@ -867,14 +871,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 				lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-				lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
+				lLuoDetModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lLuoDetModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lLuoDetModel.setDataInizioDetenzione(DateUtils.getSysDate());
 				// lLuoDetModel.setDataFineDetenzione(aFascicoloGPModel.getGeneraleProcedimentoModel().getDataFinePena());
-				lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lLuoDetModel.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lLuoDetModel.setAltroLuogo(lAltCauModel.getAltroLuogo());
 				lLuoDetModel.setIstDetIdIstitutoDetenzione(lAltCauModel.getIstDetIdIstitutoDetenzione());
 				lLuoDetModel.setNote("DETENUTO ALTRA CAUSA");
@@ -886,26 +890,27 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Aggiornamento/Inserimento del luogo Detenzione.
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetSqlDao = new LuogoDetenzioneSqlDAO(lConn);
-				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
+				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
 				lLuoDetSqlDao.start();
 				if (lLuoDetSqlDao.next())
 					lLuoDetModel = (LuogoDetenzioneModel) lLuoDetSqlDao.getModel();
 				else
-					throw new SIUSException(F3BException.USER_MESSAGE, "Errore: Luogo Detenzione non trovato");
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Errore: Luogo Detenzione non trovato");
 
 				lLuoDetSqlDao.stop();
 
 				// Se il Luogo detenzione non ha il campo FasSiuIdFascicoloSius impostato, lo aggiorno;
 				// se è già stato assegnato ad un Fascicolo Sius, ne inserisco un altro.
 				if (lLuoDetModel.getFasSiuIdFascicoloSius() == null) {
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataAggiornamento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 					lLuoDetDao.setIdLuogoDetenzione(lLuoDetModel.getIdLuogoDetenzione());
@@ -914,13 +919,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lLuoDetDao.stop();
 				} else {
 					// Set dei campi del nuovo record Luogo Detenzione e Inserimento.
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
@@ -942,8 +947,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiusModel lResFSiusModel = new ResidenzaFascicoloSiusModel();
-					lResFSiusModel = (ResidenzaFascicoloSiusModel) lResSqlDao
-							.getModelResidenzaFascicoloSius();
+					lResFSiusModel = lResSqlDao.getModelResidenzaFascicoloSius();
 					if (lResFSiusModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -961,8 +965,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiusModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiusModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiusModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						cleanup(lResFSiusDao);
 						attivaResidenzaSiep = false;
@@ -976,8 +980,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiusModel lResFSiusModel = new ResidenzaFascicoloSiusModel();
-					lResFSiusModel = (ResidenzaFascicoloSiusModel) lResSqlDao
-							.getModelResidenzaFascicoloSius();
+					lResFSiusModel = lResSqlDao.getModelResidenzaFascicoloSius();
 					if (lResFSiusModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -996,8 +999,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiusModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiusModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiusModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						lResFSiusDao.stop();
 						cleanup(lResFSiusDao);
@@ -1011,20 +1014,19 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			if ((aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null)
 					&& (attivaResidenzaSiep || attivaDomicilioSiep)) {
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaResidenzaByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaResidenzaByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						if (attivaResidenzaSiep)
 							lResFSiusDao.insert();
 						cleanup(lResFSiusDao);
@@ -1034,21 +1036,20 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Validazione Domicilio SIEP.
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaDomicilioByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaDomicilioByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						if (attivaDomicilioSiep)
 							lResFSiusDao.insert();
 
@@ -1069,14 +1070,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - ISCRIZIONE.
 				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Sanzioni Sostitutive (U019), vengono inserite le occorrenze di
@@ -1089,14 +1090,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 							aDurataEsitoGiorni);
 				// Update del Generale Procedimento appena inserito nei campi ANNO_S1 & PROGR_S1 poichè in
 				// essi hanno "viaggiato" Anno e Numero Ordinanza.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Misure Sicurezza (U024), vengono inserite le occorrenze di
@@ -1110,10 +1111,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Update del Generale Procedimento appena inserito nei campi ANNO_S1 & PROGR_S1 poichè in
 				// essi hanno "viaggiato" Anno e Numero Ordinanza.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				if (oggEsecDaAMS != "") {
 					// L'oggetto viene forzato alla misura applicata o ereditata da trasf ems
 					// Prima però devo considerare che i tenori sono già inseriti
@@ -1137,16 +1138,16 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						TenoreModel lTenoriMisura[] = new TenoreModel[1];
 						TenoreModel lTenoreMisura = new TenoreModel();
 						lTenoreMisura.setCodOggettoTenore(oggEsecDaAMS);
-						lTenoreMisura.setGenPridGeneraleProcedimento(aFascicoloGPModel
-								.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+						lTenoreMisura.setGenPridGeneraleProcedimento(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 						// lTenoreMisura[0].setDescrOggettoTenore( "-");
-						lTenoreMisura.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-								.getCodUfficioInserimento());
-						lTenoreMisura.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-								.getCodOperatoreInserimento());
+						lTenoreMisura.setCodUfficioInserimento(
+								aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+						lTenoreMisura.setCodOperatoreInserimento(
+								aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 						lTenoreMisura.setDataInserimento(DateUtils.getSysDate());
-						lTenoreMisura.setCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-								.getCodAutoritaDelegata());
+						lTenoreMisura.setCodMagistrato(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
 						lTenoreMisura.setProgrTenore(new BigDecimal((double) (1)));
 						lTenoreMisura.setCodEsitoTenore("-");
 
@@ -1160,8 +1161,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				}
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 
@@ -1188,10 +1189,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			cleanup(lTenDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogSqlDao);
+			cleanup(lSogDao);
+			cleanup(lResDao);
 
 			cleanup(lConn);
 		}
@@ -1202,7 +1207,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Verifica l'esistenza del Procedimento di Esecuzione per Anno/Progressivo/Ufficio/Codice Contenuto/Tipo
 	 * Registro/Soggetto
-	 * 
+	 *
 	 * @param aChiaveAnno
 	 * @param aChiaveProgr
 	 * @param aCodContenuto
@@ -1215,6 +1220,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	public boolean ExistProcedimentoEsecuzione(BigDecimal aChiaveAnno, BigDecimal aChiaveProgr,
 			String aCodContenuto, String aTipoRegistro, String ufficioUtenteConnesso, BigDecimal idSoggetto)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		GeneraleProcedimentoSqlDAO lGPSqlDao = null;
@@ -1233,9 +1239,9 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lTipoProcedimento = "della Sanzione Sostitutiva";
 				if (aTipoRegistro.compareTo("S22") == 0)
 					lTipoProcedimento = "della Misura Alternativa";
-				throw new SIUSException(F3BException.USER_MESSAGE, "Procedimento di Esecuzione "
-						+ lTipoProcedimento + " " + aChiaveAnno + "/" + aChiaveProgr
-						+ " inesistente o non riferito al soggetto in esame ");
+				throw new SIUSException(F3BException.USER_MESSAGE,
+						"Procedimento di Esecuzione " + lTipoProcedimento + " " + aChiaveAnno + "/"
+								+ aChiaveProgr + " inesistente o non riferito al soggetto in esame ");
 			}
 
 		} catch (DAOException dex) {
@@ -1265,17 +1271,16 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Inserisce il Fascicolo Sius per l'ufficio, partendo da un Fascicolo SIUS in ricezione.
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 * @param aIdEventoInviato
 	 * @return FascicoloGPModel
 	 * @throws F3BException
 	 */
-	// public FascicoloGPModel ExInserisciFascicoloDaSiusUDS (FascicoloGPModel aFascicoloGPModel, String
-	// aIdEventoInviato )
 	public FascicoloGPModel ExInserisciFascicoloDaSiusUDS(FascicoloGPModel aFascicoloGPModel,
 			String aIdEventoInviato, int aDurataEsitoAnni, int aDurataEsitoMesi, int aDurataEsitoGiorni)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -1299,7 +1304,6 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 		EsecuzioneSanzioneSostitutivaDAO lEsSanSosDao = null;
 		EsecuzioneMisuraSicurezzaDAO lEsMisSicDao = null;
 		EsecuzioneMisuraSicurezzaSqlDAO lEseMisSicSqlDao = null;
-
 		// Paolo x SuperSoggetto
 		SoggettoDAO lSogDao = null;
 		SoggettoSqlDAO lSoggDao = null;
@@ -1352,10 +1356,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			lSoggDao = new SoggettoSqlDAO(lConn);
 			lSoggDao.ricercaSoggettoByKey(aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 			lSoggMod = (SoggettoModel) lSoggDao.getModelByKey();
-			lSoggMod.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodOperatoreInserimento());
-			lSoggMod.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodUfficioInserimento());
+			lSoggMod.setCodOperatoreInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+			lSoggMod.setCodUfficioInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 			lSoggMod.setDataInserimento(DateUtils.getSysDate());
 			lSoggMod.setCodOperatoreAggiornamento(null);
 			lSoggMod.setCodUfficioAggiornamento(null);
@@ -1379,8 +1383,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 			// STUB 25/02/2004 Si Aggiorna l'evento precedentemente letto.
 			aEvento.setDataRicezioneAtti(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-			aEvento.setFasSiuIdFascicoloSiusDest(aFascicoloGPModel.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			aEvento.setFasSiuIdFascicoloSiusDest(
+					aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 
 			// Si Setta il DAO dal Model ed aggiorno l'Evento.
 			lEveDao.setDAOFromModel(aEvento);
@@ -1394,10 +1398,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1() == null) {
 				// ProgrS1 e AnnoS1 di GP vengono altrimenti impostati con i valori di FascicoloSius inserito.
 				// Commentato il contenuto precedente che calcola in base all'anno/progr/ufficio/registro.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
 			}
 			// Setto l'IdFascicoloSius del Model di Generale Procedimento con il MAX + 1
 			aFascicoloGPModel.getGeneraleProcedimentoModel().setFasSiuIdFascicoloSius(lChiave);
@@ -1440,18 +1444,18 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lMagRelDao = new MagistratoRelatoreDAO(lConn);
 
 				// Dati nuovo Magistrato.
-				lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodAutoritaDelegata());
-				lMagistrato.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lMagistrato.setMagCodMagistrato(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
+				lMagistrato.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lMagistrato.setDataInizio(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
 				lMagistrato.setCodRuoloMagistrato("01");
 				lMagistrato
 						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-				lMagistrato.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMagistrato.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lMagistrato.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMagistrato.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 
 				// Si Esegue l'inserimento del Nuovo Magistrato.
 				lMagRelDao.setDAOFromModel(lMagistrato);
@@ -1465,8 +1469,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				AltraCausaModel lAltCauModel = new AltraCausaModel();
 
 				lAltCauSqlDao = new AltraCausaSqlDAO(lConn);
-				lAltCauSqlDao.ricercaAltraCausaByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdAltraCausa()));
+				lAltCauSqlDao.ricercaAltraCausaByKey(
+						new BigDecimal(aFascicoloGPModel.getGeneraleProcedimentoModel().getIdAltraCausa()));
 				lAltCauModel = (AltraCausaModel) lAltCauSqlDao.getModelByKey();
 
 				if (lAltCauModel == null)
@@ -1476,13 +1480,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 				lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-				lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
+				lLuoDetModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lLuoDetModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lLuoDetModel.setDataInizioDetenzione(DateUtils.getSysDate());
-				lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lLuoDetModel.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lLuoDetModel.setAltroLuogo(lAltCauModel.getAltroLuogo());
 				lLuoDetModel.setIstDetIdIstitutoDetenzione(lAltCauModel.getIstDetIdIstitutoDetenzione());
 				lLuoDetModel.setNote("DETENUTO ALTRA CAUSA");
@@ -1494,26 +1498,27 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Aggiornamento/Inserimento del luogo Detenzione.
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetSqlDao = new LuogoDetenzioneSqlDAO(lConn);
-				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
+				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
 				lLuoDetSqlDao.start();
 				if (lLuoDetSqlDao.next())
 					lLuoDetModel = (LuogoDetenzioneModel) lLuoDetSqlDao.getModel();
 				else
-					throw new SIUSException(F3BException.USER_MESSAGE, "Errore: Luogo Detenzione non trovato");
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Errore: Luogo Detenzione non trovato");
 
 				lLuoDetSqlDao.stop();
 
 				// Se il Luogo detenzione non ha il campo FasSiuIdFascicoloSius impostato, lo aggiorno;
 				// se è già stato assegnato ad un Fascicolo Sius, ne inserisco un altro.
 				if (lLuoDetModel.getFasSiuIdFascicoloSius() == null) {
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataAggiornamento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 					lLuoDetDao.setIdLuogoDetenzione(lLuoDetModel.getIdLuogoDetenzione());
@@ -1522,13 +1527,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lLuoDetDao.stop();
 				} else {
 					// Set dei campi del nuovo record Luogo Detenzione e Inserimento.
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
@@ -1544,13 +1549,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// Validazione Residenza SIEP.
 			if (aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaResidenzaByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaResidenzaByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -1568,8 +1572,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						cleanup(lResFSiusDao);
 					}
@@ -1578,13 +1582,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Validazione Domicilio SIEP.
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaDomicilioByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaDomicilioByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -1603,8 +1606,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						lResFSiusDao.stop();
 						cleanup(lResFSiusDao);
@@ -1647,22 +1650,22 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lMisAltModel.setLuogoEsecuzioneMisura(lDepDecMod.getLuogoSvolgimentoProva());
 				}
 
-				lMisAltModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMisAltModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lMisAltModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getDataInserimento());
-				lMisAltModel.setGenPridGeneraleProcedimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lMisAltModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMisAltModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lMisAltModel
+						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lMisAltModel.setGenPridGeneraleProcedimento(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lMisAltModel.setDataOrdinanza(aEvento.getDataEmissione());
 				lMisAltModel.setCodAutoritaEmittOrd(aEvento.getCodUfficioEmittente());
 
 				// Valorizzazione dei dati del Mittente dell'atto.
-				lMisAltModel.setCodTipoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodTipoMittenteAtto());
-				lMisAltModel.setCodLuogoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodSedeMittente());
+				lMisAltModel.setCodTipoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodTipoMittenteAtto());
+				lMisAltModel.setCodLuogoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodSedeMittente());
 				// CodTipoMisura valorizzato con il primo CodOggettoTenore.
 				if (aFascicoloGPModel.getTenori().length > 0 && aFascicoloGPModel.getTenori()[0] != null
 						&& aFascicoloGPModel.getTenori()[0].getCodOggettoTenore() != null)
@@ -1671,8 +1674,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lMisAltModel.setCodTipoMisura("-");
 				// Valorizzazione del codice Ufficio mittente, se presente.
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
-					lMisAltModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente().trim());
+					lMisAltModel.setCodAutoritaEmittOrd(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().trim());
 
 				lMisAltModel.setCodTipoMisura(aEvento.getCodMotivo());
 
@@ -1703,14 +1706,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 						.equals("U004")) {
-					aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-							aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-					aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-							aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+					aFascicoloGPModel.getGeneraleProcedimentoModel()
+							.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+					aFascicoloGPModel.getGeneraleProcedimentoModel()
+							.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 					// Set del DAO e aggiornamento del GeneraleProcedimento.
 					lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-					lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getIdGeneraleProcedimento());
+					lGenProDao.setCondizioneUpdate(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lGenProDao.update();
 				}
 
@@ -1718,8 +1721,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lScaDao = new ScadenzarioSiusDAO(lConn);
 				ScadenzarioSiusModel lScaMod = new ScadenzarioSiusModel();
 				lScaMod.setCodTipoScadenzario("70"); // ESECUZIONE MISURA ALTERNATIVA.
-				lScaMod.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lScaMod.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 
 				// Valorizzazione dell'ID_EVENTO, solo se è stato caricato l'evento in precedenza.
 				if (aEvento != null && aEvento.getIdEvento() != null)
@@ -1736,10 +1739,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lScaMod.setDataFineScadenza(DateUtils.moveDateTo(lScaMod.getDataFineScadenza(),
 						java.util.Calendar.YEAR, lParMod.getAnni().intValue()));
 
-				lScaMod.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lScaMod.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lScaMod.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lScaMod.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 				lScaMod.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
 
 				lScaDao.setDAOFromModel(lScaMod);
@@ -1791,22 +1794,22 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lSanSosModel.setLuogoEsecuzioneSanzione(lDepDecMod.getLuogoSvolgimentoProva());
 				}
 
-				lSanSosModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lSanSosModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lSanSosModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getDataInserimento());
-				lSanSosModel.setGenPridGeneraleProcedimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lSanSosModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lSanSosModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lSanSosModel
+						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lSanSosModel.setGenPridGeneraleProcedimento(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lSanSosModel.setDataOrdinanza(aEvento.getDataEmissione());
 				lSanSosModel.setCodAutoritaEmittOrd(aEvento.getCodUfficioEmittente());
 
 				// Valorizzazione dei dati del Mittente dell'atto.
-				lSanSosModel.setCodTipoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodTipoMittenteAtto());
-				lSanSosModel.setCodLuogoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodSedeMittente());
+				lSanSosModel.setCodTipoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodTipoMittenteAtto());
+				lSanSosModel.setCodLuogoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodSedeMittente());
 				// CodTipoSanzione valorizzato con il primo CodOggettoTenore.
 				if (aFascicoloGPModel.getTenori().length > 0 && aFascicoloGPModel.getTenori()[0] != null
 						&& aFascicoloGPModel.getTenori()[0].getCodOggettoTenore() != null)
@@ -1815,8 +1818,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lSanSosModel.setCodTipoSanzione("-");
 				// Valorizzazione del codice Ufficio mittente, se presente.
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
-					lSanSosModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente().trim());
+					lSanSosModel.setCodAutoritaEmittOrd(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().trim());
 
 				// 19/03/2015 lSanSosModel.setCodTipoSanzione(aEvento.getCodMotivo());
 
@@ -1828,14 +1831,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 						.equals("U019")) {
-					aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-							aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-					aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-							aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+					aFascicoloGPModel.getGeneraleProcedimentoModel()
+							.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+					aFascicoloGPModel.getGeneraleProcedimentoModel()
+							.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 					// Set del DAO e aggiornamento del GeneraleProcedimento.
 					lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-					lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getIdGeneraleProcedimento());
+					lGenProDao.setCondizioneUpdate(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lGenProDao.update();
 				}
 			}
@@ -1855,19 +1858,19 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lDepDecSqlDao = new DepositoDecretoSqlDAO(lConn);
 				lDepDecSqlDao.ricercaDepositoDecretoByIdEveGenerato(aEvento.getIdEvento());
 				lDepDecMod = (DepositoDecretoModel) lDepDecSqlDao.getModelByKey();
-				
-				//INIZIOO 17/01/2020  ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
+
+				// INIZIOO 17/01/2020 ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
 				if (lDepOrdMod == null) {
 					DepositoOrdinanzaPcModel lDepOrdAMSMod = new DepositoOrdinanzaPcModel();
 					if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente() != null)
-						lDepOrdAMSMod.setCodUfficioInserimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-								.getCodUfficioMittente());
+						lDepOrdAMSMod.setCodUfficioInserimento(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente());
 					lDepOrdAMSMod.setAnnoS3(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
 					lDepOrdAMSMod.setNumS3(aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1());
 					lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByS3(lDepOrdAMSMod);
 					lDepOrdMod = (DepositoOrdinanzaPcModel) lDepOrdSqlDao.getModelByKey();
 				}
-				//FINE 17/01/2020  ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
+				// FINE 17/01/2020 ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
 
 				// Inserimento dell' ESECUZIONE_MISURA_SICUREZZA.
 				lEsMisSicDao = new EsecuzioneMisuraSicurezzaDAO(lConn);
@@ -1944,15 +1947,18 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					else { // per il Riesame e la trasformazione misura TM i quantum sono nell'esecuzione
 							// legata all'ordinanza
 						lEseMisSicSqlDao = new EsecuzioneMisuraSicurezzaSqlDAO(lConn);
-						lEseMisSicSqlDao.ricercaEsecuzioneMisuraSicurezzaByIdOrdinanza(lDepOrdMod
-								.getIdDepositoOrdinanzaPc());
-			
-			// INZIO RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI  + Ticket#20200124013 — errore iscrizione procedimento 
-			EsecuzioneMisuraSicurezzaModel lMisSicModelRice= (EsecuzioneMisuraSicurezzaModel) lEseMisSicSqlDao.getModelByKey();
-			if(lMisSicModelRice!= null)
-				lMisSicModel = lMisSicModelRice;
-			// FINE RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI + Ticket#20200124013 — errore iscrizione procedimento 
-			
+						lEseMisSicSqlDao.ricercaEsecuzioneMisuraSicurezzaByIdOrdinanza(
+								lDepOrdMod.getIdDepositoOrdinanzaPc());
+
+						// INZIO RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI +
+						// Ticket#20200124013 — errore iscrizione procedimento
+						EsecuzioneMisuraSicurezzaModel lMisSicModelRice = (EsecuzioneMisuraSicurezzaModel) lEseMisSicSqlDao
+								.getModelByKey();
+						if (lMisSicModelRice != null)
+							lMisSicModel = lMisSicModelRice;
+						// FINE RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI +
+						// Ticket#20200124013 — errore iscrizione procedimento
+
 						lMisSicModel.setDepOpidDepositoOrdinanzaPc(null); // Questa misura non è legata
 																			// all'ordinanza. Verificare
 																			// effetti
@@ -1971,32 +1977,33 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lMisSicModel.setDepDecIdDepositoDecreto(lDepDecMod.getIdDepositoDecreto());
 					if (lDepDecMod.getLuogoSvolgimentoProva() != null)
 						lMisSicModel.setLuogoEsecuzioneMisura(lDepDecMod.getLuogoSvolgimentoProva());
-				//INIZIOO 17/01/2020  ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
-				}else if (lDepOrdMod == null){ 
+					// INIZIOO 17/01/2020 ---->>> aggiungo per anomalia in fase di inserimento del contenuto
+					// U024
+				} else if (lDepOrdMod == null) {
 					if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
 						lMisSicModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-								.getCodUfficioMittente().trim());				
+								.getCodUfficioMittente().trim());
 					lMisSicModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
 					lMisSicModel.setProgrS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1());
 				}
-				//FINEE 17/01/2020  ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
-				
-				lMisSicModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMisSicModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lMisSicModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getDataInserimento());
-				lMisSicModel.setGenPridGeneraleProcedimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				// FINEE 17/01/2020 ---->>> aggiungo per anomalia in fase di inserimento del contenuto U024
+
+				lMisSicModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMisSicModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lMisSicModel
+						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lMisSicModel.setGenPridGeneraleProcedimento(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lMisSicModel.setDataOrdinanza(aEvento.getDataEmissione());
 				lMisSicModel.setCodAutoritaEmittOrd(aEvento.getCodUfficioEmittente());
 
 				// Valorizzazione dei dati del Mittente dell'atto.
-				lMisSicModel.setCodTipoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodTipoMittenteAtto());
-				lMisSicModel.setCodLuogoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodSedeMittente());
+				lMisSicModel.setCodTipoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodTipoMittenteAtto());
+				lMisSicModel.setCodLuogoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodSedeMittente());
 				// La misura è sempre l'oggetto del fascicolo di esecuzione
 				// 02/05/2011
 				if (codOggettoEsecuzioneAMS == "") {
@@ -2010,8 +2017,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 																			// misura applicata
 				// Valorizzazione del codice Ufficio mittente, se presente.
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
-					lMisSicModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente().trim());
+					lMisSicModel.setCodAutoritaEmittOrd(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().trim());
 
 				// lMisSicModel.setCodTipoMisura(aEvento.getCodMotivo()); // Il motivo evento è l'oggetto
 				// dell'ord di aplicazione!
@@ -2024,10 +2031,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 						.equals("U024")) {
-					aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-							aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-					aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-							aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+					aFascicoloGPModel.getGeneraleProcedimentoModel()
+							.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+					aFascicoloGPModel.getGeneraleProcedimentoModel()
+							.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 					if (codOggettoEsecuzioneAMS != "") {
 						// L'oggetto viene forzato alla misura applicata.
 						// Prima però devo considerare che i tenori sono già inseriti
@@ -2049,8 +2056,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					}
 					// Set del DAO e aggiornamento del GeneraleProcedimento.
 					lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-					lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getIdGeneraleProcedimento());
+					lGenProDao.setCondizioneUpdate(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lGenProDao.update();
 				}
 			}
@@ -2083,17 +2090,23 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			cleanup(lEveDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
-			cleanup(lEsMisAltDao);
-			cleanup(lEsSanSosDao); // 19/08/2008
-			cleanup(lEsMisSicDao);
-			cleanup(lScaDao);
-			cleanup(lParDao);
 			cleanup(lDepOrdSqlDao);
 			cleanup(lDepDecSqlDao);
+			cleanup(lEsMisAltDao);
+			cleanup(lScaDao);
+			cleanup(lParDao);
+			cleanup(lEsSanSosDao); // 19/08/2008
+			cleanup(lEsMisSicDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEseMisSicSqlDao);
+			cleanup(lSogDao);
+			cleanup(lSoggDao);
+			cleanup(lResDao);
+
 			cleanup(lConn);
 		}
 		return aFascicoloGPModel;
@@ -2102,7 +2115,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Inserisce il Fascicolo Sius per l'UDS
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 *            ;
 	 * @return aFascicoloGPModel;
@@ -2111,6 +2124,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 	public FascicoloGPModel ExInserisciFascicoloSiusUDSManuale(FascicoloGPModel aFascicoloGPModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FascicoloSiusDAO lFasDao = null;
@@ -2124,7 +2138,6 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 		LuogoDetenzioneSqlDAO lLuoDetSqlDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiusDAO lResFSiusDao = null;
-
 		// paolo cherubini per supersoggetto 20/07/2009
 		SoggettoSqlDAO lSogSqlDao = null;
 		SoggettoDAO lSogDao = null;
@@ -2143,8 +2156,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// Controllo di esistenza di un Fascicolo con stessi CHIAVE_ANNO e CHIAVE_PROGR:
 			String response = existAnnoProgrSius(aFascicoloGPModel.getFascicoloSiusModel(), lConn);
 			if (response != "")
-				throw new SIUSException(F3BException.USER_MESSAGE, "Attenzione: Esiste gia il procedimento "
-						+ response + " per questo ufficio!");
+				throw new SIUSException(F3BException.USER_MESSAGE,
+						"Attenzione: Esiste gia il procedimento " + response + " per questo ufficio!");
 
 			// Controllo di esistenza di un Atto con stessi:
 			// COD_TIPO_ATTO, DATA_RICHIESTA, COD_TIPO_MITTENTE_ATTO, COD_SEDE_MITTENTE,
@@ -2170,15 +2183,15 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			if ((lBigDec != null)
 					&& (lBigDec.intValue() < (aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr()
 							.intValue()))
-					&& (aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno().toString().equals(DateUtils
-							.getYearToString(DateUtils.getSysDate()))))
+					&& (aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno().toString()
+							.equals(DateUtils.getYearToString(DateUtils.getSysDate()))))
 				throw new SIUSException(F3BException.USER_MESSAGE,
 						"Attenzione: Il progressivo SIUS non può essere maggiore di " + lBigDec.toString());
 
 			// paolo cherubini per supersoggetto 20/07/2009
 			lSogSqlDao = new SoggettoSqlDAO(lConn);
-			lSogSqlDao.getCountFascicoliPerSoggetto(aFascicoloGPModel.getFascicoloSiusModel()
-					.getSogIdSoggetto());
+			lSogSqlDao.getCountFascicoliPerSoggetto(
+					aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 			lSogSqlDao.start();
 			lSogSqlDao.next();
 			BigDecimal lCount = lSogSqlDao.getBigDecimal("HowManyRecords");
@@ -2189,10 +2202,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lSogSqlDao = new SoggettoSqlDAO(lConn);
 				lSogSqlDao.ricercaSoggettoByKey(aFascicoloGPModel.getFascicoloSiusModel().getSogIdSoggetto());
 				lSoggMod = (SoggettoModel) lSogSqlDao.getModelByKey();
-				lSoggMod.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lSoggMod.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lSoggMod.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lSoggMod.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 				lSoggMod.setDataInserimento(DateUtils.getSysDate());
 				lSoggMod.setCodOperatoreAggiornamento(null);
 				lSoggMod.setCodUfficioAggiornamento(null);
@@ -2227,19 +2240,19 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// FascicoloSius inserito.
 				// STUB 11/02/2004 Commentato il contenuto precedente che calcola in base
 				// all'anno/progr/ufficio/registro.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
 				/*
 				 * lGenProDaoSql.getProgrS1TipoReg(aFascicoloGPModel.getGeneraleProcedimentoModel());
 				 * lGenProDaoSql.start();
-				 * 
+				 *
 				 * //Imposto la sequence per GeneraleProcedimento lBigDec = null; if (lGenProDaoSql.next() )
 				 * lBigDec = lGenProDaoSql.getBigDecimal("aMAX"); lGenProDaoSql.stop();
-				 * 
+				 *
 				 * if (lBigDec == null) lBigDec = new BigDecimal(0);
-				 * 
+				 *
 				 * //Setto il ProgressivoS1 del Model di Generale Procedimento con il MAX + 1
 				 * aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(new
 				 * BigDecimal(lBigDec.intValue() + 1) );
@@ -2291,18 +2304,18 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Dati nuovo Magistrato.
 				// lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getTenoreModel().getCodMagistrato());
-				lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodAutoritaDelegata());
-				lMagistrato.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lMagistrato.setMagCodMagistrato(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
+				lMagistrato.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lMagistrato.setDataInizio(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
 				lMagistrato.setCodRuoloMagistrato("01");
 				lMagistrato
 						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-				lMagistrato.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMagistrato.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lMagistrato.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMagistrato.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 
 				// Si Esegue l'inserimento del Nuovo Magistrato.
 				lMagRelDao.setDAOFromModel(lMagistrato);
@@ -2316,8 +2329,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				AltraCausaModel lAltCauModel = new AltraCausaModel();
 
 				lAltCauSqlDao = new AltraCausaSqlDAO(lConn);
-				lAltCauSqlDao.ricercaAltraCausaByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdAltraCausa()));
+				lAltCauSqlDao.ricercaAltraCausaByKey(
+						new BigDecimal(aFascicoloGPModel.getGeneraleProcedimentoModel().getIdAltraCausa()));
 				lAltCauModel = (AltraCausaModel) lAltCauSqlDao.getModelByKey();
 
 				if (lAltCauModel == null)
@@ -2327,14 +2340,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 				lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-				lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
+				lLuoDetModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lLuoDetModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lLuoDetModel.setDataInizioDetenzione(DateUtils.getSysDate());
 				// lLuoDetModel.setDataFineDetenzione(aFascicoloGPModel.getGeneraleProcedimentoModel().getDataFinePena());
-				lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-						.getIdFascicoloSius());
+				lLuoDetModel.setFasSiuIdFascicoloSius(
+						aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 				lLuoDetModel.setAltroLuogo(lAltCauModel.getAltroLuogo());
 				lLuoDetModel.setIstDetIdIstitutoDetenzione(lAltCauModel.getIstDetIdIstitutoDetenzione());
 				lLuoDetModel.setNote("DETENUTO ALTRA CAUSA");
@@ -2346,26 +2359,27 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Aggiornamento/Inserimento del luogo Detenzione.
 				LuogoDetenzioneModel lLuoDetModel = new LuogoDetenzioneModel();
 				lLuoDetSqlDao = new LuogoDetenzioneSqlDAO(lConn);
-				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
+				lLuoDetSqlDao.ricercaLuogoDetenzioneByKey(new BigDecimal(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdLuogoDetenzione()));
 				lLuoDetSqlDao.start();
 				if (lLuoDetSqlDao.next())
 					lLuoDetModel = (LuogoDetenzioneModel) lLuoDetSqlDao.getModel();
 				else
-					throw new SIUSException(F3BException.USER_MESSAGE, "Errore: Luogo Detenzione non trovato");
+					throw new SIUSException(F3BException.USER_MESSAGE,
+							"Errore: Luogo Detenzione non trovato");
 
 				lLuoDetSqlDao.stop();
 
 				// Se il Luogo detenzione non ha il campo FasSiuIdFascicoloSius impostato, lo aggiorno;
 				// se è già stato assegnato ad un Fascicolo Sius, ne inserisco un altro.
 				if (lLuoDetModel.getFasSiuIdFascicoloSius() == null) {
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataAggiornamento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreAggiornamento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreAggiornamento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					// lLuoDetModel.setDataFineDetenzione(aFascicoloGPModel.getGeneraleProcedimentoModel().getDataFinePena());
 
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
@@ -2375,13 +2389,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					lLuoDetDao.stop();
 				} else {
 					// Set dei campi del nuovo record Luogo Detenzione e Inserimento.
-					lLuoDetModel.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
+					lLuoDetModel.setFasSiuIdFascicoloSius(
+							aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 					lLuoDetModel.setDataInserimento(DateUtils.getSysDate());
-					lLuoDetModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lLuoDetModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
+					lLuoDetModel.setCodUfficioInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lLuoDetModel.setCodOperatoreInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
@@ -2397,13 +2411,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// Validazione Residenza SIEP.
 			if (aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep() != null) {
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaResidenzaByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaResidenzaByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 						// Paolo x SuperSoggetto
 						ResidenzaModel lResMod = new ResidenzaModel();
@@ -2421,8 +2434,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						cleanup(lResFSiusDao);
 					}
@@ -2431,13 +2444,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Validazione Domicilio SIEP.
 				lResSqlDao = new ResidenzaSqlDAO(lConn);
-				lResSqlDao.ricercaDomicilioByFascicolo(aFascicoloGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lResSqlDao.ricercaDomicilioByFascicolo(
+						aFascicoloGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lResSqlDao.start();
 				if (lResSqlDao.next()) {
 					ResidenzaFascicoloSiepModel lResFSiepModel = new ResidenzaFascicoloSiepModel();
-					lResFSiepModel = (ResidenzaFascicoloSiepModel) lResSqlDao
-							.getModelResidenzaFascicoloSiep();
+					lResFSiepModel = lResSqlDao.getModelResidenzaFascicoloSiep();
 					if (lResFSiepModel != null) {
 
 						// Paolo x SuperSoggetto
@@ -2457,8 +2469,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
 						lResFSiusDao.setResIdResidenza(lResFSiepModel.getResIdResidenza());
-						lResFSiusDao.setFasSiuIdFascicoloSius(aFascicoloGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						lResFSiusDao.setFasSiuIdFascicoloSius(
+								aFascicoloGPModel.getFascicoloSiusModel().getIdFascicoloSius());
 						lResFSiusDao.insert();
 						lResFSiusDao.stop();
 						cleanup(lResFSiusDao);
@@ -2471,7 +2483,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// ESECUZIONE_MISURA_ALTERNATIVA e SCADENZARIO_SIUS.
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.warn(">>>>>>>>>>>>> 31/03/2004 inserimento di ESECUZIONE_MISURA_ALTERNATIVA e SCADENZARIO_SIUS. ");
+			// siesLogger.warn(">>>>>>>>>>>>> 31/03/2004 inserimento di ESECUZIONE_MISURA_ALTERNATIVA e
+			// SCADENZARIO_SIUS. ");
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")) {
 				// Sostituita tutta la parte di Ins. di EMA e Scadenzario con la chiamata a un metodo private.
 				if (insertEMA_ESS == true)
@@ -2480,14 +2493,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - ISCRIZIONE.
 				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
 				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Sanzioni Sostitutive (U019), viene inserita l'ccorrenza di
@@ -2500,14 +2513,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Update del Generale Procedimento appena inserito nei campi ANNO_S1 & PROGR_S1 poichè in
 				// essi hanno "viaggiato" Anno e Numero Ordinanza.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// In caso di Applicazione Misure Sicurezza (U024), viene inserita l'ccorrenza di
@@ -2519,10 +2532,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					oggEsecDaAMS = insertEMS(aFascicoloGPModel, null, lConn, 0, 0, 0);
 				// Update del Generale Procedimento appena inserito nei campi ANNO_S1 & PROGR_S1 poichè in
 				// essi hanno "viaggiato" Anno e Numero Ordinanza.
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setAnnoS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
-				aFascicoloGPModel.getGeneraleProcedimentoModel().setProgrS1(
-						aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
 				if (oggEsecDaAMS != "") {
 					// L'oggetto viene forzato alla misura applicata o ereditata da trasf ems
 					// Prima però devo considerare che i tenori sono già inseriti
@@ -2545,16 +2558,16 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 						TenoreModel lTenoriMisura[] = new TenoreModel[1];
 						TenoreModel lTenoreMisura = new TenoreModel();
 						lTenoreMisura.setCodOggettoTenore(oggEsecDaAMS);
-						lTenoreMisura.setGenPridGeneraleProcedimento(aFascicoloGPModel
-								.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+						lTenoreMisura.setGenPridGeneraleProcedimento(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 						// lTenoreMisura[0].setDescrOggettoTenore( "-");
-						lTenoreMisura.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-								.getCodUfficioInserimento());
-						lTenoreMisura.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-								.getCodOperatoreInserimento());
+						lTenoreMisura.setCodUfficioInserimento(
+								aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+						lTenoreMisura.setCodOperatoreInserimento(
+								aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 						lTenoreMisura.setDataInserimento(DateUtils.getSysDate());
-						lTenoreMisura.setCodMagistrato(aFascicoloGPModel.getGeneraleProcedimentoModel()
-								.getCodAutoritaDelegata());
+						lTenoreMisura.setCodMagistrato(
+								aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata());
 						lTenoreMisura.setProgrTenore(new BigDecimal((double) (1)));
 						lTenoreMisura.setCodEsitoTenore("-");
 
@@ -2569,8 +2582,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				}
 				// Set del DAO e aggiornamento del GeneraleProcedimento.
 				lGenProDao.setDAOFromModelForUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel());
-				lGenProDao.setCondizioneUpdate(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
+				lGenProDao.setCondizioneUpdate(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lGenProDao.update();
 			}
 			// COMMIT
@@ -2599,10 +2612,15 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			cleanup(lTenDao);
 			cleanup(lMagRelDao);
 			cleanup(lAltCauSqlDao);
-			cleanup(lLuoDetSqlDao);
 			cleanup(lLuoDetDao);
+			cleanup(lLuoDetSqlDao);
 			cleanup(lResSqlDao);
 			cleanup(lResFSiusDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSogSqlDao);
+			cleanup(lSogDao);
+			cleanup(lResDao);
+
 			cleanup(lConn);
 		}
 		return aFascicoloGPModel;
@@ -2611,8 +2629,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	// -----------------
 	// METODI PRIVATE
 	// -----------------
-
 	private void insRiferimentoSius(FascicoloGPModel aFasGPModel, Connection lConn) throws F3BException {
+
 		RiferimentoFascicoloSiusDAO lRFSDao = null;
 		if (!aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep().equals(null)) {
 			try {
@@ -2622,13 +2640,12 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lRFSDao.setProgrFascicoloSius(aFasGPModel.getFascicoloSiusModel().getChiaveProgr());
 				lRFSDao.setCodUffFascicoloSius(aFasGPModel.getFascicoloSiusModel().getChiaveUfficio());
 				lRFSDao.setDataRicezione(aFasGPModel.getFascicoloSiusModel().getDataInserimento());
-				lRFSDao.setCodOggettoProcedimento(aFasGPModel.getGeneraleProcedimentoModel()
-						.getCodOggettoProcedimento());
-				lRFSDao.setFasSieIdFascicoloSiep(aFasGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lRFSDao.setCodOggettoProcedimento(
+						aFasGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
+				lRFSDao.setFasSieIdFascicoloSiep(
+						aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				BigDecimal lChiaveRFS = lRFSDao.insert();
 				lRFSModel.setIdRiferimentoFascicoloSius(lChiaveRFS);
-
 			} catch (DAOException daoEx) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
@@ -2649,12 +2666,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Metodo di ricerca di un FASCICOLO_SIUS con stessi: CHIAVE_ANNO, CHIAVE_PROGR, CHIAVE_UFFICIO.
 	 * <p>
-	 * 
+	 *
 	 * @param aFSModel
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private String existAnnoProgrSius(FascicoloSiusModel aFSModel, Connection lConn) throws F3BException {
+
 		String response = "";
 		FascicoloSiusSqlDAO lFSSqlDao = new FascicoloSiusSqlDAO(lConn);
 		try {
@@ -2664,8 +2682,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + ex);
-			throw new SIUSException(F3BException.USER_MESSAGE, "FascicoloSiusUDSController.existAttoSius: "
-					+ ex);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusUDSController.existAttoSius: " + ex);
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2681,13 +2699,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	 * Metodo di scrittura di ESECUZIONE_MISURA_ALTERNATIVA e SCADENZARIO_SIUS. a partire da
 	 * aFascicoloGPModel.
 	 * <p>
-	 * 
+	 *
 	 * @param aFasGPModel
 	 * @param lConn
 	 * @throws F3BException
 	 */
 	private void insEMAeScadenzario(FascicoloGPModel aFascicoloGPModel, boolean insertEMA, Connection lConn)
 			throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		EsecuzioneMisuraAlternativaDAO lEsMisAltDao = null;
@@ -2704,23 +2723,23 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lEsMisAltDao = new EsecuzioneMisuraAlternativaDAO(lConn);
 				lMisAltModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
 				lMisAltModel.setProgrS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1());
-				lMisAltModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodOperatoreInserimento());
-				lMisAltModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
-				lMisAltModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-						.getDataInserimento());
-				lMisAltModel.setGenPridGeneraleProcedimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getIdGeneraleProcedimento());
-				lMisAltModel.setDataOrdinanza(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getDataRichiesta());
-				lMisAltModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getFascicoloSiusModel()
-						.getCodUfficioInserimento());
+				lMisAltModel.setCodOperatoreInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+				lMisAltModel.setCodUfficioInserimento(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+				lMisAltModel
+						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lMisAltModel.setGenPridGeneraleProcedimento(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+				lMisAltModel.setDataOrdinanza(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getDataRichiesta());
+				lMisAltModel.setCodAutoritaEmittOrd(
+						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 				// Valorizzazione dei dati del Mittente dell'atto.
-				lMisAltModel.setCodTipoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodTipoMittenteAtto());
-				lMisAltModel.setCodLuogoAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-						.getCodSedeMittente());
+				lMisAltModel.setCodTipoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodTipoMittenteAtto());
+				lMisAltModel.setCodLuogoAutoritaEmittOrd(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getCodSedeMittente());
 				// CodTipoMisura valorizzato con il primo CodOggettoTenore.
 				if (aFascicoloGPModel.getTenori().length > 0 && aFascicoloGPModel.getTenori()[0] != null
 						&& aFascicoloGPModel.getTenori()[0].getCodOggettoTenore() != null)
@@ -2730,8 +2749,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 				// Valorizzazione del codice Ufficio mittente, se presente.
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
-					lMisAltModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente().trim());
+					lMisAltModel.setCodAutoritaEmittOrd(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().trim());
 
 				lMisAltModel.setDepOpidDepositoOrdinanzaPc(null);
 
@@ -2744,8 +2763,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				DepositoDecretoModel lDepDecMod = new DepositoDecretoModel();
 				EventoModel aEvento = new EventoModel();
 				lDepOrdSqlDao = new DepositoOrdinanzaPcSqlDAO(lConn);
-				lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByGenProcedimento(aFascicoloGPModel
-						.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+				lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByGenProcedimento(
+						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lDepOrdMod = (DepositoOrdinanzaPcModel) lDepOrdSqlDao.getModelByKey();
 
 				if (lDepOrdMod != null && (lDepOrdMod.getIdEventoGenerato() != null)) {
@@ -2760,8 +2779,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				} else // Lettura dell'Eventuale Decreto collegato.
 				{
 					lDepDecSqlDao = new DepositoDecretoSqlDAO(lConn);
-					lDepDecSqlDao.ricercaDepositoDecretoByIdGenProc(aFascicoloGPModel
-							.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+					lDepDecSqlDao.ricercaDepositoDecretoByIdGenProc(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lDepDecMod = (DepositoDecretoModel) lDepDecSqlDao.getModelByKey();
 
 					if (lDepDecMod != null && (lDepDecMod.getIdEventoGenerato() != null)) {
@@ -2795,14 +2814,14 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 							lMisAltModel.setLuogoEsecuzioneMisura(lDepDecMod.getLuogoSvolgimentoProva());
 					}
 
-					lMisAltModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
-					lMisAltModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
-					lMisAltModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-							.getDataInserimento());
-					lMisAltModel.setGenPridGeneraleProcedimento(aFascicoloGPModel
-							.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+					lMisAltModel.setCodOperatoreInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+					lMisAltModel.setCodUfficioInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
+					lMisAltModel.setDataInserimento(
+							aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					lMisAltModel.setGenPridGeneraleProcedimento(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lMisAltModel.setDataOrdinanza(aEvento.getDataEmissione());
 					lMisAltModel.setCodAutoritaEmittOrd(aEvento.getCodUfficioEmittente());
 					lMisAltModel.setCodTipoAutoritaEmittOrd("-");
@@ -2857,10 +2876,10 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			lScaMod.setDataFineScadenza(DateUtils.moveDateTo(lScaMod.getDataFineScadenza(),
 					java.util.Calendar.YEAR, lParMod.getAnni().intValue()));
 
-			lScaMod.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodOperatoreInserimento());
-			lScaMod.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodUfficioInserimento());
+			lScaMod.setCodOperatoreInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+			lScaMod.setCodUfficioInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 			lScaMod.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
 
 			lScaDao.setDAOFromModel(lScaMod);
@@ -2894,7 +2913,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	 * Metodo di scrittura di ESECUZIONE_SANZIONE_SOSTITUTIVA a partire da aFascicoloGPModel (STUB 08/05/2008
 	 * RIVISTO). (STUB 19/08/2008 RIVISTO).
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 * @param aIdEventoInviato
 	 * @param lConn
@@ -2902,6 +2921,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	 */
 	private void insertESS(FascicoloGPModel aFascicoloGPModel, String aIdEventoInviato, Connection lConn,
 			int aDurataEsitoAnni, int aDurataEsitoMesi, int aDurataEsitoGiorni) throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		EsecuzioneSanzioneSostitutivaDAO lEsSanSosDao = null;
@@ -2981,20 +3001,20 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				lSanSosModel.setCodTipoSanzione(aEvento.getCodMotivo());
 			} else {
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
-					lSanSosModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente().trim());
+					lSanSosModel.setCodAutoritaEmittOrd(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().trim());
 				lSanSosModel.setCodTipoSanzione("-");
 				lSanSosModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
 				lSanSosModel.setProgrS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1());
 
 			}
-			lSanSosModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodOperatoreInserimento());
-			lSanSosModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodUfficioInserimento());
+			lSanSosModel.setCodOperatoreInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+			lSanSosModel.setCodUfficioInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 			lSanSosModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-			lSanSosModel.setGenPridGeneraleProcedimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lSanSosModel.setGenPridGeneraleProcedimento(
+					aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 			lSanSosModel.setCodTipoAutoritaEmittOrd("-");
 			lSanSosModel.setCodLuogoAutoritaEmittOrd("-");
 
@@ -3019,8 +3039,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "FascicoloSiusUDSController.insertESS: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusUDSController.insertESS: " + daoEx);
 		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
@@ -3041,7 +3061,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	/**
 	 * Metodo di scrittura di ESECUZIONE_MISURA_SICUREZZA a partire da aFascicoloGPModel
 	 * <p>
-	 * 
+	 *
 	 * @param aFascicoloGPModel
 	 * @param aIdEventoInviato
 	 * @param lConn
@@ -3049,6 +3069,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	 */
 	private String insertEMS(FascicoloGPModel aFascicoloGPModel, String aIdEventoInviato, Connection lConn,
 			int aDurataEsitoAnni, int aDurataEsitoMesi, int aDurataEsitoGiorni) throws F3BException {
+
 		DepositoOrdinanzaPcSqlDAO lDepOrdSqlDao = null;
 		DepositoDecretoSqlDAO lDepDecSqlDao = null;
 		EsecuzioneMisuraSicurezzaDAO lEsMisSicDao = null;
@@ -3091,8 +3112,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			if (lDepOrdMod == null) {
 				DepositoOrdinanzaPcModel lDepOrdAMSMod = new DepositoOrdinanzaPcModel();
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente() != null)
-					lDepOrdAMSMod.setCodUfficioInserimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente());
+					lDepOrdAMSMod.setCodUfficioInserimento(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente());
 				lDepOrdAMSMod.setAnnoS3(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
 				lDepOrdAMSMod.setNumS3(aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1());
 				lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByS3(lDepOrdAMSMod);
@@ -3172,15 +3193,18 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 					else { // per il Riesame e la trasformazione misura TM i quantum sono nell'esecuzione
 							// legata all'ordinanza
 						lEseMisSicSqlDao = new EsecuzioneMisuraSicurezzaSqlDAO(lConn);
-						lEseMisSicSqlDao.ricercaEsecuzioneMisuraSicurezzaByIdOrdinanza(lDepOrdMod
-								.getIdDepositoOrdinanzaPc());
-  			
-  		    // INZIO RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI + Ticket#20200124013 — errore iscrizione procedimento 
-				EsecuzioneMisuraSicurezzaModel lMisSicModelRice= (EsecuzioneMisuraSicurezzaModel) lEseMisSicSqlDao.getModelByKey();
-				if(lMisSicModelRice!= null)
-					lMisSicModel = lMisSicModelRice;
-			// FINE RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI Ticket#20200124013 — errore iscrizione procedimento 
-  					
+						lEseMisSicSqlDao.ricercaEsecuzioneMisuraSicurezzaByIdOrdinanza(
+								lDepOrdMod.getIdDepositoOrdinanzaPc());
+
+						// INZIO RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI +
+						// Ticket#20200124013 — errore iscrizione procedimento
+						EsecuzioneMisuraSicurezzaModel lMisSicModelRice = (EsecuzioneMisuraSicurezzaModel) lEseMisSicSqlDao
+								.getModelByKey();
+						if (lMisSicModelRice != null)
+							lMisSicModel = lMisSicModelRice;
+						// FINE RISOLUZIONE Ticket#20200109018 — PRESA IN CARICO ATTI PERVENUTI
+						// Ticket#20200124013 — errore iscrizione procedimento
+
 						lMisSicModel.setDepOpidDepositoOrdinanzaPc(null); // Questa misura non è legata
 																			// all'ordinanza. Verificare
 																			// effetti
@@ -3205,20 +3229,20 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 				// lMisSicModel.setCodTipoMisura(aEvento.getCodMotivo());
 			} else {
 				if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().length() > 1)
-					lMisSicModel.setCodAutoritaEmittOrd(aFascicoloGPModel.getGeneraleProcedimentoModel()
-							.getCodUfficioMittente().trim());
+					lMisSicModel.setCodAutoritaEmittOrd(
+							aFascicoloGPModel.getGeneraleProcedimentoModel().getCodUfficioMittente().trim());
 				// lMisSicModel.setCodTipoMisura("-");
 				lMisSicModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
 				lMisSicModel.setProgrS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getProgrS1());
 
 			}
-			lMisSicModel.setCodOperatoreInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodOperatoreInserimento());
-			lMisSicModel.setCodUfficioInserimento(aFascicoloGPModel.getFascicoloSiusModel()
-					.getCodUfficioInserimento());
+			lMisSicModel.setCodOperatoreInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+			lMisSicModel.setCodUfficioInserimento(
+					aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 			lMisSicModel.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
-			lMisSicModel.setGenPridGeneraleProcedimento(aFascicoloGPModel.getGeneraleProcedimentoModel()
-					.getIdGeneraleProcedimento());
+			lMisSicModel.setGenPridGeneraleProcedimento(
+					aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 			lMisSicModel.setCodTipoAutoritaEmittOrd("-");
 			lMisSicModel.setCodLuogoAutoritaEmittOrd("-");
 
@@ -3256,8 +3280,8 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIUSException(F3BException.USER_MESSAGE, "FascicoloSiusUDSController.insertEMS: "
-					+ daoEx);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusUDSController.insertEMS: " + daoEx);
 		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
@@ -3279,6 +3303,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	}
 
 	public void ExInserisciDefinizioneFascicoloSius(FascicoloGPModel aFasGPMod) throws F3BException {
+
 		Connection lConn = null;
 		FascicoloSiusDAO lFasDao = null;
 		GeneraleProcedimentoDAO lGenProcDao = null;
@@ -3336,18 +3361,28 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 	// Ricerca della relazione Udiena-Procedimento Fissata o Prefissata
 	private UdienzaProcedimentoModel cercaUdiProcAttiva(BigDecimal aKey, Connection aConn) throws Exception {
+
 		UdienzaProcedimentoSqlDAO lUdiDao = null;
 		UdienzaProcedimentoModel lUdiMod = null;
 
-		lUdiDao = new UdienzaProcedimentoSqlDAO(aConn);
-		lUdiDao.ricercaUdienzaProcedimentoByGenProAndFlagRinviata(aKey, "'F','P'");
-		lUdiMod = (UdienzaProcedimentoModel) lUdiDao.getModelByKey();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		try {
+			lUdiDao = new UdienzaProcedimentoSqlDAO(aConn);
+			lUdiDao.ricercaUdienzaProcedimentoByGenProAndFlagRinviata(aKey, "'F','P'");
+			lUdiMod = (UdienzaProcedimentoModel) lUdiDao.getModelByKey();
+		} catch (Exception e) {
+			// LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(lUdiDao);
+		}
 		return lUdiMod;
 	}
 
 	/**
 	 * Ricerca paginata di "Richieste Parere su Fascicolo Sius"
-	 * 
+	 *
 	 * @param aFascicoloSius
 	 * @param aPageNum
 	 *            : numero pagina > 0
@@ -3355,6 +3390,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaPareriPaginata(ParereModel aParereIn, int aPageNum) throws F3BException {
+
 		Connection lConn = null;
 		Vector lElencoPareri = new Vector();
 		ParereSqlDAO lParDao = null;
@@ -3404,12 +3440,13 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 
 	/**
 	 * Ritorna n.ro di record risultato della ExRicercaPareriPagina
-	 * 
+	 *
 	 * @param aParereIn
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
 	public BigDecimal ExGetNumRicercaPareri(ParereModel aParereIn) throws F3BException {
+
 		Connection lConn = null;
 		ParereSqlDAO lParDao = null;
 		BigDecimal lCont = new BigDecimal(0);
@@ -3432,6 +3469,7 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 	}
 
 	private void updRichiestaConversione(FascicoloGPModel aFasGPModel, Connection lConn) throws F3BException {
+
 		RichiestaConversioneSqlDAO lRCSqlDAO = null;
 		RichiestaConversioneDAO lRCDAO = null;
 		Vector lRicConversioni = new Vector();
@@ -3439,11 +3477,11 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 		if (!aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep().equals(null)) {
 			try {
 				RichiestaConversioneModel lRCModel = new RichiestaConversioneModel();
-				lRCModel.setFasSieIdFascicoloSiep(aFasGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lRCModel.setFasSieIdFascicoloSiep(
+						aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lRCSqlDAO = new RichiestaConversioneSqlDAO(lConn);
-				lRCSqlDAO.ricercaRichiestaConversioneByIdFasSIEP(aFasGPModel.getFascicoloSiusModel()
-						.getFasSieIdFascicoloSiep());
+				lRCSqlDAO.ricercaRichiestaConversioneByIdFasSIEP(
+						aFasGPModel.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 				lRicConversioni = new Vector(lRCSqlDAO.getModels());
 
 				// 30/10/2009 Si gestisce anche il caso di assenza di Richiesta Conversione.
@@ -3452,28 +3490,27 @@ public class FascicoloSiusUDSController extends SiapController implements IFasci
 							.firstElement();
 
 					if (lRC1Model.getFasSiuIdFascicoloSius() != null)
-						throw new F3BException(
-								F3BException.USER_MESSAGE,
+						throw new F3BException(F3BException.USER_MESSAGE,
 								"Attenzione! Per il Titolo Esecutivo selezionato risulta già iscritto un Fascicolo di Conversione Pena Pecuniaria");
 					else {
 						lRCDAO = new RichiestaConversioneDAO(lConn);
-						lRCDAO.setFasSiuIdFascicoloSius(aFasGPModel.getFascicoloSiusModel()
-								.getIdFascicoloSius());
-						lRCDAO.setCodOperatoreAggiornamento(aFasGPModel.getFascicoloSiusModel()
-								.getCodOperatoreInserimento());
-						lRCDAO.setCodUfficioAggiornamento(aFasGPModel.getFascicoloSiusModel()
-								.getCodUfficioInserimento());
+						lRCDAO.setFasSiuIdFascicoloSius(
+								aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius());
+						lRCDAO.setCodOperatoreAggiornamento(
+								aFasGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+						lRCDAO.setCodUfficioAggiornamento(
+								aFasGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 						lRCDAO.setDataAggiornamento(aFasGPModel.getFascicoloSiusModel().getDataInserimento());
 						lRCDAO.setCondizioni(lRCModel);
 						lRCDAO.update();
 					}
 					// inserimento scadenzario.
-					lRC1Model.setFasSiuIdFascicoloSius(aFasGPModel.getFascicoloSiusModel()
-							.getIdFascicoloSius());
-					lRC1Model.setCodOperatoreAggiornamento(aFasGPModel.getFascicoloSiusModel()
-							.getCodOperatoreInserimento());
-					lRC1Model.setCodUfficioAggiornamento(aFasGPModel.getFascicoloSiusModel()
-							.getCodUfficioInserimento());
+					lRC1Model.setFasSiuIdFascicoloSius(
+							aFasGPModel.getFascicoloSiusModel().getIdFascicoloSius());
+					lRC1Model.setCodOperatoreAggiornamento(
+							aFasGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
+					lRC1Model.setCodUfficioAggiornamento(
+							aFasGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 					lRC1Model.setDataAggiornamento(aFasGPModel.getFascicoloSiusModel().getDataInserimento());
 					IRichiestaConversione lCtrlRC = SIEPLookupRemote.getRichiestaConversioneRemote();
 					lCtrlRC.inserimentoScadenzario(lRC1Model, lConn);

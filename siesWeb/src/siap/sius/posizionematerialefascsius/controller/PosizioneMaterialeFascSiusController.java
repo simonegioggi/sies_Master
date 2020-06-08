@@ -68,6 +68,7 @@ public class PosizioneMaterialeFascSiusController extends SiapController
 
 	public Vector ExRicercaPosizioneMaterialeFasc(PosizioneMaterialeFascModel aPosizioneMaterialeFasc)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lPosizioneMaterialeFasi = new Vector();
 		PosizioneMaterialeFascSiusSqlDAO lPosDao = null;
@@ -89,6 +90,7 @@ public class PosizioneMaterialeFascSiusController extends SiapController
 	}
 
 	public Vector ExRicercaPosizioneMaterialeFascAttiva(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		Vector lPosizioneMaterialeFasi = new Vector();
 		PosizioneMaterialeFascSiusSqlDAO lPosDao = null;

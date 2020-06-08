@@ -11,6 +11,12 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
@@ -51,20 +57,17 @@ import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
- * <p>Title: SanzioneSostitutivaController</p>
- * <p>Description: Controller della SanzioniSostitutive</p>
+ * <p>
+ * Title: SanzioneSostitutivaController
+ * </p>
+ * <p>
+ * Description: Controller della SanzioniSostitutive
+ * </p>
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva
- {
+public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -72,7 +75,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	/**
 	 * Metodo per registrare l'annotazione dell'avvenuta espulsione. Inserisce un evento Verbale, il verbale e
 	 * l'evento di Comunicazione/Annotazione Inserisce la PENA_RESIDUA il record SOSPENSIONE.
-	 * 
+	 *
 	 * @param aEvVerbale
 	 * @param aEvComunicazione
 	 * @param aVerbale
@@ -86,13 +89,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	public EventoNotificaModel exInserisciAnnotazioneEspulsione(EventoModel aEvVerbale,
 			EventoNotificaModel aEvNotComunicazione, VerbaleModel aVerbaleMod,
 			PenaResiduaModel aPenaResiduaMod, SospensioneModel aSospMod) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
 		VerbaleDAO lVerbaleDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		SospensioneDAO lSospDao = null;
@@ -170,8 +173,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							// posto di LogF3B.getLogger()
 							siesLogger.debug("Autorita = "
 									+ aEvNotComunicazione.getNotifiche()[count].getAutoritaEsterna());
-							lAutDao.setRicercaByAutSede(aEvNotComunicazione.getNotifiche()[count]
-									.getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									aEvNotComunicazione.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
@@ -179,8 +182,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
 								siesLogger.debug("Inserisco AUTORITA");
-								lAutDao.setDAOFromModel(aEvNotComunicazione.getNotifiche()[count]
-										.getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEvNotComunicazione.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
@@ -266,7 +269,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			}
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("SanzioneSostitutivaController.exInserisciAnnotazioneEspulsione: " + ex);
@@ -281,7 +283,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lVerbaleDao);
 			cleanup(lNotDao);
 			cleanup(lAutDao);
-
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lSospDao);
@@ -290,19 +291,19 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
-
 	}
 
 	/**
 	 * Effettua la validazione della Cominucazione Scadenza Termini Espulsione e contestualmente del Verbale
 	 * di Avvenuta Espulsione - Valida la Pena Residua - Modifica la posizione giuridica (26 - Espulso) -
 	 * modifica lo stato procedimento (0240) - aggiorna lo scadenzario (15 - Espulsione)
-	 * 
+	 *
 	 * @param aEvComunicazione
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel exUpdateAnnotazioneEspulsione(EventoModel aEvComunicazione) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Validazione Comunicazione Espulsione");
@@ -311,25 +312,17 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		SospensioneSqlDAO lSospSqlDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
-
 		NomeProvvedimentoDAO lNomProvvDAO = null;
-
 		ScadenzarioDAO lScaDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveRet = new EventoModel(aEvComunicazione);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBConnection();
@@ -594,12 +587,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lStatoDao);
 			cleanup(lNomProvvDAO);
 			cleanup(lScaDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
-
 		}
 
 		return lEveRet;
@@ -607,7 +596,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Inserisce Evento Annotazione Mancata Espulsione e Notifiche Comunicazione Sollecito
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @param aVerbaleMod
 	 *            - Verbale con i dati della nato mancata espulsione
@@ -618,6 +607,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	 */
 	public EventoNotificaModel exInserisciMancataEspulsione(EventoNotificaModel aEvNotModel,
 			VerbaleModel aVerbaleMod, CampoNotaModel aCampoNota) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
@@ -625,7 +615,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
 		CampoNotaDAO lCampoNotaDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -714,10 +703,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							siesLogger.debug("Autorita = "
-									+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
-							lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count]
-									.getAutoritaEsterna());
+							siesLogger.debug(
+									"Autorita = " + aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
@@ -725,8 +714,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
 								siesLogger.debug("Inserisco AUTORITA");
-								lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]
-										.getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
@@ -771,8 +760,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// LogF3B.getLogger()
 			siesLogger.debug("Inserimento Pena Residua");
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvNotModel.getEvento()
-					.getFasSieIdFascicoloSiep());
+			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(
+					aEvNotModel.getEvento().getFasSieIdFascicoloSiep());
 			PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 			lPenResSqlDao.stop();
 
@@ -799,8 +788,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				// LogF3B.getLogger()
 				siesLogger.debug("Nessuna pena non validata, duplico l'ultima pena validata");
 				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(aEvNotModel.getEvento()
-						.getFasSieIdFascicoloSiep());
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(
+						aEvNotModel.getEvento().getFasSieIdFascicoloSiep());
 				PenaResiduaModel lUltimaPenaValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 				lPenResSqlDao.stop();
 
@@ -808,10 +797,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				lUltimaPenaValidata.setEveIdEvento(lIdEvento);
 				lUltimaPenaValidata.setFlagValidato("N");
 
-				lUltimaPenaValidata.setCodOperatoreInserimento(aEvNotModel.getEvento()
-						.getCodOperatoreInserimento());
-				lUltimaPenaValidata.setCodUfficioInserimento(aEvNotModel.getEvento()
-						.getCodUfficioInserimento());
+				lUltimaPenaValidata
+						.setCodOperatoreInserimento(aEvNotModel.getEvento().getCodOperatoreInserimento());
+				lUltimaPenaValidata
+						.setCodUfficioInserimento(aEvNotModel.getEvento().getCodUfficioInserimento());
 				lUltimaPenaValidata.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
 
 				// Inserisco
@@ -848,17 +837,17 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
-
 	}
 
 	/**
 	 * Effettua la validazione della Annotazione Mancata Espulsione
-	 * 
+	 *
 	 * @param aEvAnnotazione
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel exUpdateMancataEspulsione(EventoModel aEvAnnotazione) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Validazione Annotazione Mancata Espulsione");
@@ -867,16 +856,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveRet = new EventoModel(aEvAnnotazione);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBConnection();
@@ -980,7 +965,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// -----------------------
 			commit(lConn);
 			// commit(lConnBlob);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// rollback(lConnBlob);
@@ -998,12 +982,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lPenResSqlDao);
 			cleanup(lPenResDao);
 			cleanup(lStatoDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
-
 		}
 
 		return lEveRet;
@@ -1011,18 +991,18 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Inserisce Evento Richieste Revoca Espulsione e Notifiche al GE
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel exInserisciRichiestaRevocaEspulsione(EventoNotificaModel aEvNotModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
 		NotificaDAO lNotDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -1090,8 +1070,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// LogF3B.getLogger()
 			siesLogger.debug("Inserimento Pena Residua");
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvNotModel.getEvento()
-					.getFasSieIdFascicoloSiep());
+			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(
+					aEvNotModel.getEvento().getFasSieIdFascicoloSiep());
 			PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 			lPenResSqlDao.stop();
 
@@ -1118,8 +1098,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				// LogF3B.getLogger()
 				siesLogger.debug("Nessuna pena non validata, duplico l'ultima pena validata");
 				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(aEvNotModel.getEvento()
-						.getFasSieIdFascicoloSiep());
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(
+						aEvNotModel.getEvento().getFasSieIdFascicoloSiep());
 				PenaResiduaModel lUltimaPenaValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 				lPenResSqlDao.stop();
 
@@ -1127,10 +1107,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				lUltimaPenaValidata.setEveIdEvento(lIdEvento);
 				lUltimaPenaValidata.setFlagValidato("N");
 
-				lUltimaPenaValidata.setCodOperatoreInserimento(aEvNotModel.getEvento()
-						.getCodOperatoreInserimento());
-				lUltimaPenaValidata.setCodUfficioInserimento(aEvNotModel.getEvento()
-						.getCodUfficioInserimento());
+				lUltimaPenaValidata
+						.setCodOperatoreInserimento(aEvNotModel.getEvento().getCodOperatoreInserimento());
+				lUltimaPenaValidata
+						.setCodUfficioInserimento(aEvNotModel.getEvento().getCodUfficioInserimento());
 				lUltimaPenaValidata.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
 
 				// Inserisco
@@ -1146,18 +1126,17 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 			// rollback(lConn);
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciRichiestaRevocaEspulsione: "
-					+ ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exInserisciRichiestaRevocaEspulsione: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Eccezione Generica");
-			throw new F3BException("SanzioneSostitutivaController.exInserisciRichiestaRevocaEspulsione: "
-					+ ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exInserisciRichiestaRevocaEspulsione: " + ex);
 		} finally {
 			cleanup(lEventoDao);
 			cleanup(lNotDao);
@@ -1168,12 +1147,11 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
-
 	}
 
 	/**
 	 * Effettua la validazione della Richiesta Revoca SS
-	 * 
+	 *
 	 * @param aEvRichiesta
 	 * @return
 	 * @throws F3BException
@@ -1184,16 +1162,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveRet = new EventoModel(aEvRichiesta);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBConnection();
@@ -1295,7 +1269,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// -----------------------
 			commit(lConn);
 			// commit(lConnBlob);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// rollback(lConnBlob);
@@ -1313,12 +1286,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lPenResSqlDao);
 			cleanup(lPenResDao);
 			cleanup(lStatoDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
-
 		}
 
 		return lEveRet;
@@ -1326,12 +1295,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Effettua la validazione della Richiesta Revoca Espulsione
-	 * 
+	 *
 	 * @param aEvRichiesta
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel exUpdateRichiestaRevocaEspulsione(EventoModel aEvRichiesta) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Validazione Richiesta Revoca Espulsione");
@@ -1340,16 +1310,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveRet = new EventoModel(aEvRichiesta);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBConnection();
@@ -1486,12 +1452,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lPenResSqlDao);
 			cleanup(lPenResDao);
 			cleanup(lStatoDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
-
 		}
 
 		return lEveRet;
@@ -1499,19 +1461,19 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Inserisce la comunicazione per il nuovo residuo pena
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoNotificaModel exInserisciComunicazioneNuovoResiduoPena(EventoNotificaModel aEvNotModel)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -1567,10 +1529,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							siesLogger.debug("Autorita = "
-									+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
-							lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count]
-									.getAutoritaEsterna());
+							siesLogger.debug(
+									"Autorita = " + aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
@@ -1578,8 +1540,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
 								siesLogger.debug("Inserisco AUTORITA");
-								lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]
-										.getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
@@ -1624,8 +1586,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// LogF3B.getLogger()
 			siesLogger.debug("Inserimento Pena Residua");
 			lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(aEvNotModel.getEvento()
-					.getFasSieIdFascicoloSiep());
+			lPenResSqlDao.ricercaPenaResiduaFlagNonValidatoDesc(
+					aEvNotModel.getEvento().getFasSieIdFascicoloSiep());
 			PenaResiduaModel lUltimaPenaNonValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 			lPenResSqlDao.stop();
 
@@ -1652,8 +1614,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				// LogF3B.getLogger()
 				siesLogger.debug("Nessuna pena non validata, duplico l'ultima pena validata");
 				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(aEvNotModel.getEvento()
-						.getFasSieIdFascicoloSiep());
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiepDataDesc(
+						aEvNotModel.getEvento().getFasSieIdFascicoloSiep());
 				PenaResiduaModel lUltimaPenaValidata = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 				lPenResSqlDao.stop();
 
@@ -1661,10 +1623,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				lUltimaPenaValidata.setEveIdEvento(lIdEvento);
 				lUltimaPenaValidata.setFlagValidato("N");
 
-				lUltimaPenaValidata.setCodOperatoreInserimento(aEvNotModel.getEvento()
-						.getCodOperatoreInserimento());
-				lUltimaPenaValidata.setCodUfficioInserimento(aEvNotModel.getEvento()
-						.getCodUfficioInserimento());
+				lUltimaPenaValidata
+						.setCodOperatoreInserimento(aEvNotModel.getEvento().getCodOperatoreInserimento());
+				lUltimaPenaValidata
+						.setCodUfficioInserimento(aEvNotModel.getEvento().getCodUfficioInserimento());
 				lUltimaPenaValidata.setDataInserimento(aEvNotModel.getEvento().getDataInserimento());
 
 				// Inserisco
@@ -1680,18 +1642,17 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 			// rollback(lConn);
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciComunicazioneNuovoResiduoPena: "
-					+ ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exInserisciComunicazioneNuovoResiduoPena: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Eccezione Generica");
-			throw new F3BException("SanzioneSostitutivaController.exInserisciComunicazioneNuovoResiduoPena: "
-					+ ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exInserisciComunicazioneNuovoResiduoPena: " + ex);
 		} finally {
 			cleanup(lEventoDao);
 			cleanup(lNotDao);
@@ -1703,18 +1664,18 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
-
 	}
 
 	/**
 	 * Effettua la validazione della Comunicazione Nuovo Residuo Pena
-	 * 
+	 *
 	 * @param aEvComunicazione
 	 * @return
 	 * @throws F3BException
 	 */
 	public EventoModel exUpdateComunicazioneNuovoResiduoPena(EventoModel aEvComunicazione)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Validazione Comunicazione Nuovo Residuo Pena");
@@ -1723,14 +1684,11 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
+		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveRet = new EventoModel(aEvComunicazione);
-
-		// Connection lConnBlob = null;
-		EventoDAO lEveDaoBlob = null;
 
 		try {
 			lConn = getDBConnection();
@@ -1799,27 +1757,23 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// rollback(lConnBlob);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateComunicazioneNuovoResiduoPena: "
-					+ ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exUpdateComunicazioneNuovoResiduoPena: " + ex);
 		} catch (Exception ex) {
 			rollback(lConn);
 			// rollback(lConnBlob);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Eccezione Generica");
-			throw new F3BException("SanzioneSostitutivaController.exUpdateComunicazioneNuovoResiduoPena: "
-					+ ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exUpdateComunicazioneNuovoResiduoPena: " + ex);
 		} finally {
 			cleanup(lEventoDao);
 			cleanup(lEveSqlDAO);
 			cleanup(lPenResSqlDao);
 			cleanup(lPenResDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
-
 		}
 
 		return lEveRet;
@@ -1828,7 +1782,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	/**
 	 * Effettua l'inserimento dell'OE a seguito revoca/conversione SS su fascicolo con cumulo. Inserisce la
 	 * pena residua rideterminata
-	 * 
+	 *
 	 * @param aEvNotModel
 	 * @param aPenResMod
 	 *            pena rideterminata
@@ -1837,12 +1791,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	 */
 	public EventoNotificaModel exInserisciOENuovoResiduoPena(EventoNotificaModel aEvNotModel,
 			PenaResiduaModel aPenResMod) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
-
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
@@ -1891,8 +1845,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
 							// gi‡ l'autorit‡ esterna specificata nella form (dalla form ho solo
 							// codice e sede)
-							lAutDao.setRicercaByAutSede(aEvNotModel.getNotifiche()[count]
-									.getAutoritaEsterna());
+							lAutDao.setRicercaByAutSede(
+									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
@@ -1901,8 +1855,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 													// istanza siesLogger al posto di LogF3B.getLogger()
 								siesLogger.debug("Ins Aut Est = "
 										+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
-								lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]
-										.getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
 								lKeyAutorita = lAutDao.insert();
 								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
 							} else {
@@ -1965,7 +1919,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			// {
 			// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			// siesLogger.debug("Recuperata pena residua ("+lPenaGi‡Rideterminata.getIdPenaResidua()+") non validata non agganciata da alcun evento. La aggancio all'evento corrente");
+			// siesLogger.debug("Recuperata pena residua ("+lPenaGi‡Rideterminata.getIdPenaResidua()+") non
+			// validata non agganciata da alcun evento. La aggancio all'evento corrente");
 			// lPenResDao = new PenaResiduaDAO(lConn);
 			//
 			// lPenaGi‡Rideterminata.setIdPenaResidua(null);
@@ -1998,7 +1953,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 			// rollback(lConn);
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("SanzioneSostitutivaController.exInserisciOENuovoResiduoPena: " + ex);
@@ -2019,12 +1973,11 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
-
 	}
 
 	/**
 	 * Effettua la validazione dell'OE a seguito revoca/conversione SS su fascicolo con cumulo
-	 * 
+	 *
 	 * @param aEventoModel
 	 * @return
 	 * @throws F3BException
@@ -2035,23 +1988,17 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		EventoDAO lEventoDao = null;
 		EventoSqlDAO lEveSqlDAO = null;
-
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		PenaResiduaDAO lPenResDao = null;
-
 		StatoProcedimentoDAO lStatoDao = null;
-
 		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
-
 		NotificaEventoSqlDAO lNotEveDao = null;
-		EventoModel lEveRet = new EventoModel(aEventoModel);
-
 		ScadenzarioDAO lScaDao = null;
 		ScadenzarioSqlDAO lScadeSqlDao = null;
-
-		// Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
+
+		EventoModel lEveRet = new EventoModel(aEventoModel);
 
 		try {
 			lConn = getDBConnection();
@@ -2177,8 +2124,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			} else {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug("La Posizione Giuridica " + lPosMod.getCodPosizioneGiuridica()
-						+ " resta invariata");
+				siesLogger.debug(
+						"La Posizione Giuridica " + lPosMod.getCodPosizioneGiuridica() + " resta invariata");
 			}
 
 			// SCADENZARIO
@@ -2218,8 +2165,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					ParametroModel lParModel = (ParametroModel) lIter.next();
 					lSommaAnni = DateUtils.moveDateTo(lScaMod.getDataInizioScadenza(),
 							java.util.Calendar.YEAR, lParModel.getAnni().intValue());
-					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH, lParModel
-							.getMesi().intValue());
+					lSommaMesi = DateUtils.moveDateTo(lSommaAnni, java.util.Calendar.MONTH,
+							lParModel.getMesi().intValue());
 					lFineScadenza = DateUtils.moveDateTo(lSommaMesi, java.util.Calendar.DAY_OF_MONTH,
 							lParModel.getGiorni().intValue());
 				}
@@ -2247,8 +2194,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					lScaMod.setEveIdEvento(aEventoModel.getIdEvento());
 
 					lScaDao.setDAOFromModel(lScaMod);
-//					BigDecimal lKeyScad = null;
-					/*lKeyScad = */lScaDao.insert();
+					// BigDecimal lKeyScad = null;
+					/* lKeyScad = */lScaDao.insert();
 				} else {
 					ScadenzarioModel lScaModID = (ScadenzarioModel) lScadenzarii.get(0);
 					lScaMod.setIdScadenzario(lScaModID.getIdScadenzario());
@@ -2313,12 +2260,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lScadeSqlDao);
 			cleanup(lScaDao);
 			cleanup(lNotEveDao);
-
 			cleanup(lConn);
-
 			cleanup(lEveDaoBlob);
-			// cleanup(lConnBlob);
-
 		}
 
 		return lEveRet;
@@ -2326,7 +2269,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Restituisce l'ultima Sanzione Sostitutiva Residua per il fascicolo passato in input se esiste
-	 * 
+	 *
 	 * @param aIdFascicoloSiep
 	 * @param aFlagValidata
 	 *            . Se 'S' recupera l'ultima validata, se 'N' l'ultima non validata, se null l'ultima in
@@ -2336,6 +2279,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	 */
 	public SanzioneSostResiduaModel getUltimaSSResidua(BigDecimal aIdFascicoloSiep, String aFlagValidata)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
@@ -2350,7 +2294,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			lSSSqlDAO.ricercaUltimaSanzioneSostResiduaByIdFasc(aIdFascicoloSiep, aFlagValidata);
 
 			lSSResiduaModel = (SanzioneSostResiduaModel) lSSSqlDAO.getModelByKey();
-
 		} catch (DAOException ex) {
 			throw new F3BException("SanzioneSostitutivaController.getUltimaSSResidua: " + ex);
 		} catch (Exception ex) {
@@ -2362,7 +2305,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lSSSqlDAO);
 
 			cleanup(lConn);
-
 		}
 
 		return lSSResiduaModel;
@@ -2370,12 +2312,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Restituisce la SS residua collegata alla pena residua passata in input
-	 * 
+	 *
 	 * @param aIdPenaResidua
 	 * @return
 	 * @throws F3BException
 	 */
 	public SanzioneSostResiduaModel getSSByIdPenaResidua(BigDecimal aIdPenaResidua) throws F3BException {
+
 		Connection lConn = null;
 
 		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
@@ -2407,11 +2350,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		return lSSResiduaModel;
 	}
 
-	/**
-   *
-   */
 	public ByteArrayOutputStream exStampaSS(EventoNotificaModel aEvento, UtenteModel aUtente)
 			throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
@@ -2419,8 +2360,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		try {
 			IEvento lEveCntrl = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEveMod = lEveCntrl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEveMod = lEveCntrl
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			lEveMod.getEvento().setDescrUfficioEmittente(aEvento.getEvento().getDescrUfficioEmittente());
 			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aEvento.getNomeTemplate());
@@ -2459,12 +2400,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	// 25/03/2008
 	/**
 	 * Ricerca Sanzioni Sost. Residua tramite chiave Fascicolo
-	 * 
+	 *
 	 * @param aIdFasicolo
 	 * @return
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaSanzioneSostResiduaByIdFascicolo(BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lSSResidua = new Vector();
@@ -2490,7 +2432,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 	/**
 	 * Inserisci i records di Sanzione Sost. Residua per JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aSanzioneSostResidua
 	 * @param lConn
 	 * @return lCodEsito
@@ -2498,6 +2440,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	 */
 	public String ExInserisciSanzioniSostResidueWithoutSequence(ArrayList aSanzioneSostResidua,
 			Connection lConn) throws F3BException {
+
 		String lCodEsito = "00000";
 		SanzioneSostResiduaDAO lSSResDao = null;
 		SanzioneSostResiduaModel lSSResMod = null;

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import f3b.dao.DAOException;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.posizionemateriale.dao.PosizioneMaterialeDAO;
@@ -14,8 +16,6 @@ import siap.siep.posizionemateriale.model.PosizioneMaterialeModel;
 import siap.siep.posizionematerialefasc.dao.PosizioneMaterialeFascSqlDAO;
 import siap.siep.posizionematerialefasc.model.PosizioneMaterialeFascicoliModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
-import f3b.dao.DAOException;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -69,6 +69,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 
 	public Vector ExRicercaPosizioneMateriale(PosizioneMaterialeModel aPosizioneMateriale)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		Vector lPosizioneMateriali = new Vector();
@@ -100,6 +101,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 
 	public PosizioneMaterialeFascicoliModel ExRicercaPosizioneMaterialeFascicoli(
 			PosizioneMaterialeModel aPosizioneMateriale) throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneMaterialeFascicoliModel lPosizioneFascicoli = new PosizioneMaterialeFascicoliModel();
@@ -178,7 +180,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 
 	/**
 	 * Ricerca Posizione Materiale paginata
-	 * 
+	 *
 	 * @param PosizioneMaterialeModel
 	 * @param aPageNum
 	 *            : numero pagina > 0
@@ -187,6 +189,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 	 */
 	public Vector ExRicercaPosizioneMaterialePagina(PosizioneMaterialeModel aPosizioneMateriale, int aPageNum)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PosizioneMaterialeSqlDAO lPosDao = null;
@@ -226,7 +229,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 
 	/**
 	 * Ritorna n.ro di record risultato di una ExRicercaPosizioneMaterialePagina
-	 * 
+	 *
 	 * @param PosizioneMaterialeModel
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
@@ -257,6 +260,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 
 	public PosizioneMaterialeModel ExModificaPosizioneMateriale(PosizioneMaterialeModel aPosizioneMateriale)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneMaterialeDAO lPosDao = null;
 		PosizioneMaterialeModel lPosMod = new PosizioneMaterialeModel(aPosizioneMateriale);
@@ -279,6 +283,7 @@ public class PosizioneMaterialeController extends SiapController implements IPos
 
 	public void ExCancellaPosizioneMateriale(PosizioneMaterialeModel aPosizioneMateriale)
 			throws F3BException {
+
 		Connection lConn = null;
 		PosizioneMaterialeDAO lPosDao = null;
 

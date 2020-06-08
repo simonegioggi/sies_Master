@@ -14,6 +14,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.model.DecodeModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.Utils;
+import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.controller.IEvento;
@@ -101,13 +108,6 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.rifasiep.controller.IRiferimentoFascicoloSiep;
 import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.model.DecodeModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.Utils;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -139,12 +139,13 @@ public class SIAPStampaController extends SiapController {
 
 	/**
 	 * Crea la root del Documento recuperando i dati dell'ufficio dell'utente passato in input
-	 * 
+	 *
 	 * @param aEveModel
 	 * @param aUtenteModel
 	 * @return
 	 */
 	protected XModel createRoot(EventoNotificaModel aEveModel, UtenteModel aUtenteModel) throws F3BException {
+
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = aEveModel.getEvento().getDescrUfficioEmittente().toUpperCase();
@@ -186,16 +187,16 @@ public class SIAPStampaController extends SiapController {
 
 	/**
 	 * Metodo per aggiungere tutte le entita' del Fascicolo SIEP
-	 * 
+	 *
 	 * @param lConn
 	 * @param lKeyFascicolo
 	 * @param aTreeFasMod
 	 * @param aAltraCausa
 	 * @throws F3BException
 	 */
-
 	protected void appendTableToFascicoloSiep(Connection lConn, BigDecimal lKeyFascicolo,
 			TreeModel aTreeFasMod, String aAltraCausa) throws F3BException {
+
 		ReatoSqlDAO lReaDao = null;
 		MisuraCautelareSqlDAO lMisDao = null;
 		PenaComplessivaSqlDAO lPenDao = null;
@@ -206,10 +207,11 @@ public class SIAPStampaController extends SiapController {
 		MisuraSicurezzaSqlDAO lMisSicDao = null;
 		CircostanzaSqlDAO lCircDao = null;
 		SanzioneSostitutivaSqlDAO lSanDao = null;
-		PenaComplessivaSanzioneSostitutivaModel lPenSanMod = null;
 		ContinuazioneSqlDAO lContSqlDAO = null;
-		Vector lContinuazioni = null;
 		EventoSqlDAO lEveSqlDAO = null;
+
+		PenaComplessivaSanzioneSostitutivaModel lPenSanMod = null;
+		Vector lContinuazioni = null;
 
 		try {
 			// Pena Complessiva
@@ -393,13 +395,13 @@ public class SIAPStampaController extends SiapController {
 
 			// mev56 INIZIO ***************************
 			FascMsToFascSiepSqlDAO lFasMsToFascSiepSqlDao = null;
-			Vector<FascMsToFascSiepModel> lLista = new Vector<FascMsToFascSiepModel>();
+			Vector<FascMsToFascSiepModel> lLista = new Vector<>();
 			// Vector vectFasIV = new Vector();
 			BigDecimal fascColl = null;
 			if (lMisureSic != null && lMisureSic.size() == 0) {
 
 				lFasMsToFascSiepSqlDao = new FascMsToFascSiepSqlDAO(lConn);
-				
+
 				lFasMsToFascSiepSqlDao.ricercaCollegamentiSiep(lKeyFascicolo);
 
 				lLista = new Vector<FascMsToFascSiepModel>(lFasMsToFascSiepSqlDao.getModels());
@@ -415,13 +417,13 @@ public class SIAPStampaController extends SiapController {
 						lMisSicDao.ricercaTutteMisureSicurezzaByIdFascicoloOrd(fascColl);
 						lMisureSic = new Vector(lMisSicDao.getModels());
 					}
-				}
-				else if(lLista.size() == 0) {
-					// rifaccio  la ricerca in modo da cercarlo però con FascMSMod.getFasSieIdFascicoloSiep(); e non con FascMSMod.getFasSieIdFascicoloCollegato();
+				} else if (lLista.size() == 0) {
+					// rifaccio la ricerca in modo da cercarlo però con FascMSMod.getFasSieIdFascicoloSiep();
+					// e non con FascMSMod.getFasSieIdFascicoloCollegato();
 					lFasMsToFascSiepSqlDao.ricercaCollegamentiSiepSorv(lKeyFascicolo);
-					
+
 					lLista = new Vector<FascMsToFascSiepModel>(lFasMsToFascSiepSqlDao.getModels());
-					
+
 					if (lLista.size() > 0) {
 						Iterator iteIV = lLista.iterator();
 						while (iteIV.hasNext()) {
@@ -439,7 +441,7 @@ public class SIAPStampaController extends SiapController {
 			// Posizione Giuridica
 
 			/*
-			 * 
+			 *
 			 * lPosGiuDao = new PosizioneGiuridicaSqlDAO(lConn);
 			 * lPosGiuDao.ricercaPosGiuCorrenteByIdFascicolo(lKeyFascicolo); PosizioneGiuridicaModel lPosMod =
 			 * (PosizioneGiuridicaModel) lPosGiuDao.getModelByKey();
@@ -479,23 +481,23 @@ public class SIAPStampaController extends SiapController {
 			 * Luogo Detenzione if (aAltraCausa != null) { if (aAltraCausa.compareTo("S") != 0) {
 			 * ILuogoDetenzione lLuogo = SIEPLookupRemote.getLuogoDetenzioneRemote(); LuogoDetenzioneModel
 			 * lLuoMod = lLuogo.ExRicercaLuogoDetenzioneCorrenteByFascicoloSiep(lKeyFascicolo);
-			 * 
+			 *
 			 * if (lLuoMod != null) { if (lLuoMod.getIstitutoDetenzione() != null) {
 			 * lLuoMod.setDescrTipoIstituto(lLuoMod.getIstitutoDetenzione().getDescrTipoIstituto());
 			 * lLuoMod.setDescrLuogo(lLuoMod.getIstitutoDetenzione().getDescrComune() + ", " +
 			 * lLuoMod.getIstitutoDetenzione().getIndirizzo()); } else
 			 * lLuoMod.setDescrTipoIstituto(lLuoMod.getAltroLuogo());
-			 * 
+			 *
 			 * aTreeFasMod.add(new TreeModel(lLuoMod)); } } else { //Altra Causa IAltraCausa lAltraCausa =
 			 * SIEPLookupRemote.getAltraCausa(); AltraCausaModel lAltCau =
 			 * lAltraCausa.ExRicercaAltraCausaIstitutoByFascicolo(lKeyFascicolo);
-			 * 
+			 *
 			 * if (lAltCau != null) { if (lAltCau.getIstitutoDetenzione() != null) {
 			 * lAltCau.setDescrTipoIstituto(lAltCau.getIstitutoDetenzione().getDescrTipoIstituto());
 			 * lAltCau.setDescrLuogo(lAltCau.getIstitutoDetenzione().getDescrComune() + ", " +
 			 * lAltCau.getIstitutoDetenzione().getIndirizzo()); } //Add Luogo di Detenzione
 			 * aTreeFasMod.add(new TreeModel(lAltCau)); } } }
-			 * 
+			 *
 			 * if (lPosMod != null) //Posizione Giuridica aTreeFasMod.add(new TreeModel(lPosMod));
 			 */
 
@@ -640,8 +642,8 @@ public class SIAPStampaController extends SiapController {
 					// Sorveglianza o Tribunale
 					// legato alla Misura di Sicurezza
 					EventoModel lEventoMs = new EventoModel();
-					lEventoMs.setFlagDocumentoRegistrato("S");					
-					lEventoMs.setFasSieIdFascicoloSiep(lMis.getFasSieIdFascicoloSiep());					
+					lEventoMs.setFlagDocumentoRegistrato("S");
+					lEventoMs.setFasSieIdFascicoloSiep(lMis.getFasSieIdFascicoloSiep());
 					lEventoMs.setCodTipoEvento("01");
 
 					// Di seguito i MOTIVO_PROVVEDIMENTO legati ai seguenti
@@ -650,15 +652,13 @@ public class SIAPStampaController extends SiapController {
 					// OGGETTO_PROCEDIMENTO ('U023', 'U077', 'U082', 'U088', 'U086'
 					// 'U089')
 					String[] lCodMotivoProvvedimento = { "0258", "0259", "0260", "0428", "0429", "0430",
-							"0431", "0432", "0433", "2110", "2111", "2112", "2113", "2114", "2116", "2550", "2551",
-							"2552", "2553", "2554", "2555", "2660", "2670", "2404", "2405", "2406", "2407",
-							"2409", "2408", "2422", "2416",
-							//EC[14062018] : 2440,2441,2442,9073,9074,9075 (questi motivi sono relativi ai contenuti 'U114', 'U067' e cioè del Riesame della Pericolosità sociale)
+							"0431", "0432", "0433", "2110", "2111", "2112", "2113", "2114", "2116", "2550",
+							"2551", "2552", "2553", "2554", "2555", "2660", "2670", "2404", "2405", "2406",
+							"2407", "2409", "2408", "2422", "2416",
+							// EC[14062018] : 2440,2441,2442,9073,9074,9075 (questi motivi sono relativi ai
+							// contenuti 'U114', 'U067' e cioè del Riesame della Pericolosità sociale)
 							// è in dubbio se devono essere inclusi o meno.
-							"2440","2441","2442","9073","9074","9075"		
-					};
-
-					
+							"2440", "2441", "2442", "9073", "9074", "9075" };
 
 					String[] lCodTipoProvvedimento = { "02", "03" };
 
@@ -667,49 +667,46 @@ public class SIAPStampaController extends SiapController {
 							lEventoMs);
 
 					lEveSqlDAO.start();
-					
-					 if( lEveSqlDAO.next() )
-				      {
-						 lAgg = (MisuraAlternativaAggregatoModel) lEveSqlDAO
-									.getModelDecretoOrdinanzaUfficio();
-							
-				      }
-					
-					
-					// ripeto la ricerca per il collegato
-					if((lAgg == null || lAgg.getEventoNotifica() == null) && lMis.getFasSieIdFascicoloSiepRif() != null){
-						
-						lEventoMs.setFasSieIdFascicoloSiep(lMis.getFasSieIdFascicoloSiepRif());	
-						lEveSqlDAO.ricercaEventoPerMotivoProvv(lCodMotivoProvvedimento, lCodTipoProvvedimento,
-								lEventoMs);
 
-						lEveSqlDAO.start();
-						if( lEveSqlDAO.next() )
-					      {
-							 lAgg = (MisuraAlternativaAggregatoModel) lEveSqlDAO
-										.getModelDecretoOrdinanzaUfficio();
-								
-					      }
+					if (lEveSqlDAO.next()) {
+						lAgg = lEveSqlDAO.getModelDecretoOrdinanzaUfficio();
+
 					}
-					
-					// ripeto ancora se lAgg è null sul collegato di classe IV (anomalia 2 del VERBALE ANNOTAZIONI SORVEGLIANZA IN CLASSE I), PAR. 9.3 DELLA MEV39
-					if((lAgg == null || lAgg.getEventoNotifica() == null) && ( lVecFascMS !=null && lVecFascMS.size()>0 ) ){
-						BigDecimal collegato = ((FascMsToFascSiepModel ) lVecFascMS.get(0)).getFasSieIdFascicoloCollegato();
-						if(collegato!= null){
-						lEventoMs.setFasSieIdFascicoloSiep(collegato);	
+
+					// ripeto la ricerca per il collegato
+					if ((lAgg == null || lAgg.getEventoNotifica() == null)
+							&& lMis.getFasSieIdFascicoloSiepRif() != null) {
+
+						lEventoMs.setFasSieIdFascicoloSiep(lMis.getFasSieIdFascicoloSiepRif());
 						lEveSqlDAO.ricercaEventoPerMotivoProvv(lCodMotivoProvvedimento, lCodTipoProvvedimento,
 								lEventoMs);
 
 						lEveSqlDAO.start();
-						if( lEveSqlDAO.next() )
-					      {
-							 lAgg = (MisuraAlternativaAggregatoModel) lEveSqlDAO
-										.getModelDecretoOrdinanzaUfficio();
-								
-					      }
+						if (lEveSqlDAO.next()) {
+							lAgg = lEveSqlDAO.getModelDecretoOrdinanzaUfficio();
+
 						}
 					}
-					
+
+					// ripeto ancora se lAgg è null sul collegato di classe IV (anomalia 2 del VERBALE
+					// ANNOTAZIONI SORVEGLIANZA IN CLASSE I), PAR. 9.3 DELLA MEV39
+					if ((lAgg == null || lAgg.getEventoNotifica() == null)
+							&& (lVecFascMS != null && lVecFascMS.size() > 0)) {
+						BigDecimal collegato = ((FascMsToFascSiepModel) lVecFascMS.get(0))
+								.getFasSieIdFascicoloCollegato();
+						if (collegato != null) {
+							lEventoMs.setFasSieIdFascicoloSiep(collegato);
+							lEveSqlDAO.ricercaEventoPerMotivoProvv(lCodMotivoProvvedimento,
+									lCodTipoProvvedimento, lEventoMs);
+
+							lEveSqlDAO.start();
+							if (lEveSqlDAO.next()) {
+								lAgg = lEveSqlDAO.getModelDecretoOrdinanzaUfficio();
+
+							}
+						}
+					}
+
 					EventoModel lEveMS = null;
 					if (lAgg != null && lAgg.getEventoNotifica() != null
 							&& lAgg.getEventoNotifica().getEvento() != null) {
@@ -731,7 +728,7 @@ public class SIAPStampaController extends SiapController {
 							if (lAgg.getDepositoDecreto().getNumS72() != null)
 								lMis.setNumOrdDec(lAgg.getDepositoDecreto().getNumS72().toString());
 							// ANNO DECRETO
-							if (lAgg.getDepositoDecreto().getAnnoS72()!= null)
+							if (lAgg.getDepositoDecreto().getAnnoS72() != null)
 								lMis.setAnnoOrdDec(lAgg.getDepositoDecreto().getAnnoS72().toString());
 						}
 
@@ -743,12 +740,12 @@ public class SIAPStampaController extends SiapController {
 						lMis.setCodEsito(lEveMS.getCodEsito());
 						// DESC ESITO
 						lMis.setDescEsitoTemplate(lEveMS.getDescEsitoTemplate());
-						//AUTORITA EMITTENTE (aggiungo post collaudo 11.3 per MEV 39)
+						// AUTORITA EMITTENTE (aggiungo post collaudo 11.3 per MEV 39)
 						lMis.setDescrUfficioInserimento(lEveMS.getDescrUfficioEmittente());
 						// TIPO PROVVEDIMENTO (DECRETO O ORDINANZA)
 						lMis.setDescTipoOrdDec(lEveMS.getDescrTipoProvvedimento());
 						// MOTIVO PROVVEDIMENTO
-						lMis.setDescrMotivoOrdDec(lEveMS.getDescrMotivo());						
+						lMis.setDescrMotivoOrdDec(lEveMS.getDescrMotivo());
 
 					} else {
 						// NON ESISTE DECISIONE DEL MAGISTRATO DI SORVEGLIANZA
@@ -826,7 +823,6 @@ public class SIAPStampaController extends SiapController {
 				TreeModel lTreeSanMod = new TreeModel(lPenSanMod.getSanzioneSostitutiva());
 				aTreeFasMod.add(lTreeSanMod);
 			}
-
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
@@ -856,13 +852,15 @@ public class SIAPStampaController extends SiapController {
 			cleanup(lSanDao);
 			cleanup(lMisSicDao);
 			cleanup(lCircDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lContSqlDAO);
+			cleanup(lEveSqlDAO);
 		}
-
 	}
 
 	/**
 	 * getTreeUltimeAnnotazioniManuali
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @param aTreeFasc
 	 * @return
@@ -870,6 +868,7 @@ public class SIAPStampaController extends SiapController {
 	 */
 	protected TreeModel getTreeUltimeAnnotazioniManuali(BigDecimal aKeyFascicolo, TreeModel aTreeFasc,
 			EventoModel aEventoCorrente) throws F3BException {
+
 		Connection lConn = null;
 
 		FungibilitaSqlDAO lFungDAO = null;
@@ -1020,7 +1019,7 @@ public class SIAPStampaController extends SiapController {
 
 	/**
 	 * getTreeEventoPrecedenteAnnotazioniManuali
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @param aEveModel
 	 * @return
@@ -1028,6 +1027,7 @@ public class SIAPStampaController extends SiapController {
 	 */
 	protected TreeModel getTreeEventoPrecedenteAnnotazioniManuali(BigDecimal aKeyFascicolo, String aCodMotivo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		FungibilitaSqlDAO lFungDAO = null;
@@ -1145,16 +1145,18 @@ public class SIAPStampaController extends SiapController {
 
 	/**
 	 * getTreeEventoPrecedenteOEPerIstanza
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @param aEveModel
 	 * @return
 	 * @throws F3BException
 	 */
 	protected TreeModel getTreeEventoPrecedenteOEPerIstanza(BigDecimal aKeyFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		EventoPrecedenteSqlDAO lEveDAO = null;
 		TreeModel lTreeEventoPrecedente = null;
+
 		try {
 			lConn = getDBConnection();
 			lEveDAO = new EventoPrecedenteSqlDAO(lConn);
@@ -1168,7 +1170,6 @@ public class SIAPStampaController extends SiapController {
 			lEveDAO.ricercaEvento(lEveModRic);
 			EventoPrecedenteModel lEveMod = (EventoPrecedenteModel) lEveDAO.getModelByKey();
 			lTreeEventoPrecedente = new TreeModel(lEveMod);
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 			// siesLogger al posto di mLog
@@ -1178,19 +1179,19 @@ public class SIAPStampaController extends SiapController {
 			cleanup(lEveDAO);
 
 			cleanup(lConn);
-
 		}
 		return lTreeEventoPrecedente;
 	}
 
 	/**
 	 * Ricava l'albero del soggetto con Alias e Residenza
-	 * 
+	 *
 	 * @param lKeySoggetto
 	 * @return
 	 */
 	protected TreeModel getTreeSoggetto(BigDecimal lKeySoggetto, BigDecimal lKeyFascicolo, Connection lConn,
 			FascicoloSiepModel lFasModel) throws F3BException {
+
 		SoggettoSqlDAO lSogDao = null;
 		ResidenzaSqlDAO lResDao = null;
 		AliasSqlDAO lAliasSqlDAO = null;
@@ -1198,7 +1199,6 @@ public class SIAPStampaController extends SiapController {
 		Iterator lItx = null;
 
 		try {
-
 			// Soggetto
 			lSogDao = new SoggettoSqlDAO(lConn);
 			lSogDao.ricercaSoggettoByKey(lKeySoggetto);
@@ -1270,12 +1270,14 @@ public class SIAPStampaController extends SiapController {
 			cleanup(lAliasSqlDAO);
 			cleanup(lResDao);
 			cleanup(lSogDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lSenDao);
 		}
 	}
 
 	/**
 	 * getPenaCumulo
-	 * 
+	 *
 	 * @param lKeyFascicolo
 	 * @param lConn
 	 * @return
@@ -1288,11 +1290,10 @@ public class SIAPStampaController extends SiapController {
 		CumuloSqlDAO lCumuloSQl = null;
 		EventoSqlDAO lEveSqlDAO = null;
 		PenaCumuloSqlDAO lPenaCumuloSQl = null;
+		PenaRideterminataCumuloSqlDAO lPenaRidetermSqlDao = null;
 
 		PenaCumuloModel lPenCumMod = new PenaCumuloModel();
 		TreeModel lPenCumModTree = null;
-
-		PenaRideterminataCumuloSqlDAO lPenaRidetermSqlDao = null;
 
 		try {
 			lPenResDao = new PenaResiduaSqlDAO(lConn);
@@ -1312,12 +1313,12 @@ public class SIAPStampaController extends SiapController {
 			// Codici che caratterizzano la nuova versione del Cumulo
 			Collection<DecodeModel> lListaCodiciCumNew = DecodificheManager.getInstance()
 					.getMotiviProvvCumuloNew();
-			List<String> lListaCodici = new ArrayList<String>();
+			List<String> lListaCodici = new ArrayList<>();
 			for (DecodeModel lDecode : lListaCodiciCumNew) {
 				lListaCodici.add(lDecode.getCode());
 			}
 			// String[] lCodMotivoProvvedimentoNewCumulo = lListaCodici.toArray(new String[0]);
-			List<String> lListaCodiciAll = new ArrayList<String>();
+			List<String> lListaCodiciAll = new ArrayList<>();
 			lListaCodiciAll.add("0222");
 			lListaCodiciAll.add("0223");
 			lListaCodiciAll.add("0224");
@@ -1478,13 +1479,14 @@ public class SIAPStampaController extends SiapController {
 			cleanup(lCumuloSQl);
 			cleanup(lPenaCumuloSQl);
 			cleanup(lEveSqlDAO);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lPenaRidetermSqlDao);
 		}
 		return lPenCumModTree;
 	}
 
 	/**
 	 * Add la posizione giuridca al TreeModel del fascicolo Siep
-	 *
 	 */
 	protected void addPosizioneGiuridica(Connection lConn, BigDecimal lKeyFascicolo, TreeModel aTreeFasMod,
 			String aAltraCausa) throws F3BException {
@@ -1628,19 +1630,17 @@ public class SIAPStampaController extends SiapController {
 
 	/**
 	 * Ricava la sentenza e le sentenze riunite utilizzando il model FascicoloSiepPadreModel
-	 * 
+	 *
 	 * @param FascicoloSiepPadreModel
 	 * @return
 	 */
 	protected TreeModel getTreeSentenza(FascicoloSiepPadreModel lFasModel, Connection lConn)
-			throws F3BException
-	// protected TreeModel getTreeSentenza(BigDecimal lKeySentenza, Connection
-	// lConn) throws F3BException
+			throws F3BException {
 
-	{
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 		// siesLogger al posto di mLog
 		siesLogger.debug("SIAPStampaController.getTreeSentenza con FascicoloSiepPadreModel:");
+
 		SentenzaSqlDAO lSenDao = null;
 		// SentenzaRiunitaSqlDAO lSenRiuDao = null;
 		SentenzaRiunitaFascSiepSqlDAO lSenRiuDao = null;
@@ -1717,10 +1717,10 @@ public class SIAPStampaController extends SiapController {
 				siesLogger.debug("Iterator");
 				while (lItSR.hasNext()) {
 					// lSenRiuMod = (SentenzaRiunitaModel) lItSR.next();
-					lSenRiuModFas = (SentenzaRiunitaFascSiepModel) lItSR.next();
+					lSenRiuModFas = lItSR.next();
 					if (lSenRiuModFas.getFasSieIdFascicoloSiep() != null) {
 						lSenRiuMod = lSenRiuModFas.getSentenzaRiunitaModel();
-						LTreeSR = new TreeModel((SentenzaRiunitaModel) lSenRiuMod);
+						LTreeSR = new TreeModel(lSenRiuMod);
 						lTreeSenMod.add(LTreeSR);
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile
 						// di istanza siesLogger al posto
@@ -1738,7 +1738,6 @@ public class SIAPStampaController extends SiapController {
 		} finally {
 			cleanup(lSenDao);
 			cleanup(lSenRiuDao);
-
 		}
 
 		return lTreeSenMod;
@@ -1746,15 +1745,12 @@ public class SIAPStampaController extends SiapController {
 
 	/**
 	 * Ricava la sentenza e le sentenze riunite utilizzando il model FascicoloSiepModel
-	 * 
+	 *
 	 * @param FascicoloSiepModel
 	 * @return
 	 */
-	protected TreeModel getTreeSentenza(FascicoloSiepModel lFasModel, Connection lConn) throws F3BException
-	// protected TreeModel getTreeSentenza(BigDecimal lKeySentenza, Connection
-	// lConn) throws F3BException
+	protected TreeModel getTreeSentenza(FascicoloSiepModel lFasModel, Connection lConn) throws F3BException {
 
-	{
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 		// siesLogger al posto di mLog
 		siesLogger.debug("SIAPStampaController.getTreeSentenza con FascicoloSiepModel:");
@@ -1840,7 +1836,7 @@ public class SIAPStampaController extends SiapController {
 				siesLogger.debug("Iterator");
 				while (lItSR.hasNext()) {
 					// lSenRiuMod = (SentenzaRiunitaModel) lItSR.next();
-					lSenRiuModFas = (SentenzaRiunitaFascSiepModel) lItSR.next();
+					lSenRiuModFas = lItSR.next();
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di
 					// istanza siesLogger al posto di
 					// mLog
@@ -1851,7 +1847,7 @@ public class SIAPStampaController extends SiapController {
 						// di mLog
 						siesLogger.debug("!= null");
 						lSenRiuMod = lSenRiuModFas.getSentenzaRiunitaModel();
-						LTreeSR = new TreeModel((SentenzaRiunitaModel) lSenRiuMod);
+						LTreeSR = new TreeModel(lSenRiuMod);
 						lTreeSenMod.add(LTreeSR);
 						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile
 						// di istanza siesLogger al posto
@@ -1869,7 +1865,6 @@ public class SIAPStampaController extends SiapController {
 		} finally {
 			cleanup(lSenDao);
 			cleanup(lSenRiuDao);
-
 		}
 
 		return lTreeSenMod;

@@ -9,6 +9,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.sico.residenza.dao.ResidenzaDAO;
 import siap.sico.residenza.dao.ResidenzaSqlDAO;
@@ -31,9 +34,6 @@ import siap.sige.udienzaparti.model.ParteCivileUdienzaModel;
 import siap.sige.udienzaparti.model.ParteOffesaUdienzaModel;
 import siap.sige.udienzaparti.model.PartiUdienzaDifensoreModel;
 import siap.sige.udienzaparti.model.UdienzaPartiModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Engineering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -60,7 +60,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	/**
 	 * Metodo che esegue la ricerca delle parti (Offese o Civili) associate ad una udienza
 	 * <p>
-	 * 
+	 *
 	 * @param aIdUdienza
 	 *            idUdienza
 	 * @param aCodTipoPart
@@ -71,8 +71,9 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	 */
 	public Vector<AnagraficaPartiUdienzaModel> ExRicercaPartiUdienzaByIdUdienza(BigDecimal aIdUdienza,
 			String aCodTipoPart) throws F3BException {
+
 		Connection lConn = null;
-		Vector<AnagraficaPartiUdienzaModel> lParti = new Vector<AnagraficaPartiUdienzaModel>();
+		Vector<AnagraficaPartiUdienzaModel> lParti = new Vector<>();
 
 		PartiUdienzaSqlDAO lPartiDao = null;
 		PartiUdienzaDifensoreSqlDAO lDifensDao = null;
@@ -120,6 +121,9 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 		} finally {
 			cleanup(lPartiDao);
 			cleanup(lDifensDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lResidenzaDao);
+			cleanup(notificaDao);
 			cleanup(lConn);
 		}
 
@@ -128,7 +132,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 
 	/**
 	 * Inserisce la Parte (Offesa/Civile) associata all'udienza.
-	 * 
+	 *
 	 * @param aAnagParteUdienzaModel
 	 * @param aUdienzaParteModel
 	 * @return AnagraficaPartiUdienzaModel
@@ -174,7 +178,6 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			lResidenzaDao.insert();
 
 			commit(lConn);
-
 		} catch (F3BException fe) {
 			rollback(lConn);
 			throw fe;
@@ -187,25 +190,28 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 		} finally {
 			cleanup(iUdienzaPartiDao);
 			cleanup(lPartiDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lResidenzaDao);
 			cleanup(lConn);
 		}
 
 		return lAnagPartiUdienzaMod;
-
 	}
 
 	/**
 	 * Metodo che esegue la ricerca della parte (Offesa o Civile - Fisica o Giuridica) associata ad una
 	 * udienza
 	 * <p>
-	 * 
+	 *
 	 * @param aIdSoggetto
 	 *            identificativo della parte da ricercare
 	 * @return ritorna la parte ricercata.
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
-	public AnagraficaPartiUdienzaModel ExRicercaParteUdienzaByKey(BigDecimal aIdSoggetto) throws F3BException {
+	public AnagraficaPartiUdienzaModel ExRicercaParteUdienzaByKey(BigDecimal aIdSoggetto)
+			throws F3BException {
+
 		Connection lConn = null;
 
 		AnagraficaPartiUdienzaModel lAnagParteMod = new AnagraficaPartiUdienzaModel();
@@ -231,12 +237,11 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			lResidenzaDao = new ResidenzaSqlDAO(lConn);
 			lResidenzaDao.ricercaDomicilioCorrenteByIdParteUdienza(lAnagParteMod.getIdSoggetto());
 			lAnagParteMod.setResidenza((ResidenzaModel) lResidenzaDao.getModelByKey());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new SIEPException("PartiUdienzaController.ExRicercaParteUdienzaByKey: Non posso leggere : "
-					+ daoEx);
+			throw new SIEPException(
+					"PartiUdienzaController.ExRicercaParteUdienzaByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lPartiDao);
 			cleanup(lResidenzaDao);
@@ -249,7 +254,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 
 	/**
 	 * Metodo che esegue la ricerca dei difensori assegnati alla Parte (Offesa o Civile)
-	 * 
+	 *
 	 * @param aIdSoggetto
 	 *            parte associata all'udienza
 	 * @return ritorna l'insieme delle occorrenze.
@@ -258,8 +263,9 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	 */
 	public Vector<PartiUdienzaDifensoreModel> ExRicercaDifensoreByIdSoggetto(BigDecimal aIdSoggetto)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector<PartiUdienzaDifensoreModel> lDifensori = new Vector<PartiUdienzaDifensoreModel>();
+		Vector<PartiUdienzaDifensoreModel> lDifensori = new Vector<>();
 
 		PartiUdienzaDifensoreSqlDAO lDifensoriDao = null;
 		NotificaSqlDAO lNotificaDao = null;
@@ -311,7 +317,6 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			}
 
 			lDifensoriDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"PartiUdienzaController.ExRicercaDifensoreByIdSoggetto: Non posso leggere : " + daoEx);
@@ -319,6 +324,9 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			throw new F3BException("PartiUdienzaController.ExRicercaDifensoreByIdSoggetto: " + e);
 		} finally {
 			cleanup(lDifensoriDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotificaDao);
+			cleanup(lAutoritaSqlDao);
 			cleanup(lConn);
 		}
 
@@ -327,7 +335,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 
 	/**
 	 * Modifica Parte Udienza. Inserimento Notifiche avvovati (max 2), soggetto.
-	 * 
+	 *
 	 * @param aParteUdienza
 	 * @param aNotifiche
 	 * @param aEveIdEvento
@@ -336,6 +344,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	 */
 	public void ExModificaParteUdienza(AnagraficaPartiUdienzaModel aParteUdienza, ArrayList aNotifiche,
 			BigDecimal aEveIdEvento) throws F3BException {
+
 		Connection lConn = null;
 
 		ResidenzaDAO lResidenzaDao = null;
@@ -345,7 +354,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 		AutoritaEsternaDAO lAutDao = null;
 
 		try {
-//			EventoNotificaModel lEve = new EventoNotificaModel();
+			// EventoNotificaModel lEve = new EventoNotificaModel();
 
 			// Prende una connessione in transazione.
 			lConn = getDBTransaction();
@@ -441,15 +450,17 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 		} finally {
 			cleanup(lResidenzaDao);
 			cleanup(lPartiDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotSqlDao);
+			cleanup(lNotificaDao);
+			cleanup(lAutDao);
 			cleanup(lConn);
 		}
-
-		return;
 	}
 
 	/**
 	 * Metodo che esegue la ricerca della notifica Al Soggetto (Parte Offesa/Civile)
-	 * 
+	 *
 	 * @param aIdSoggetto
 	 *            parte associata all'udienza
 	 * @return NotificaModel ritorna l'occorrenza trovata.
@@ -457,6 +468,7 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	 *             propaga errore di eccezione.
 	 */
 	public NotificaModel ExRicercaNotificaByIdSoggetto(BigDecimal aIdSoggetto) throws F3BException {
+
 		Connection lConn = null;
 		NotificaModel lNotificaSoggetto = null;
 		NotificaSqlDAO lNotificaDao = null;
@@ -473,9 +485,8 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			lNotificaDao.ricercaNotificaByIdSoggetto(aIdSoggetto);
 			lNotificaDao.start();
 
-			while (lNotificaDao.next()) {
+			while (lNotificaDao.next())
 				lNotificaSoggetto = (NotificaModel) lNotificaDao.getModel();
-			}
 
 			// Autorita Destinazione
 			if (lNotificaSoggetto.getAutEstIdAutoritaEsterna() != null) {
@@ -487,7 +498,6 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			}
 
 			lAutoritaSqlDao.stop();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"PartiUdienzaController.ExRicercaNotificaByIdSoggetto: Non posso leggere : " + daoEx);
@@ -495,6 +505,8 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			throw new F3BException("PartiUdienzaController.ExRicercaNotificaByIdSoggetto: " + e);
 		} finally {
 			cleanup(lAutoritaSqlDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lNotificaDao);
 			cleanup(lConn);
 		}
 
@@ -503,13 +515,14 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 
 	/**
 	 * Metodo che esegue la cancellazione di una Parte di una Udienza
-	 * 
+	 *
 	 * @param aIdSoggetto
 	 *            parte associata all'udienza
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
 	 */
 	public void ExCancellaParteUdienza(BigDecimal aIdSoggetto) throws F3BException {
+
 		Connection lConn = null;
 
 		NotificaDAO lNotificaDao = null;
@@ -558,13 +571,15 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 
 			commit(lConn);
 		} catch (DAOException daoEx) {
-			throw new F3BException("PartiUdienzaController.ExCancellaParteUdienza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"PartiUdienzaController.ExCancellaParteUdienza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNotificaDao);
 			cleanup(lPartiUdienzaDifDao);
 			cleanup(lUdienzaPartiDao);
 			cleanup(lPartiUdienzaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lResidenzaDao);
 			cleanup(lConn);
 		}
 	}
@@ -572,9 +587,10 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	@Override
 	public List<ParteOffesaUdienzaModel> ExRicercaPartiOffesaUdienzaByIdUdienza(
 			BigDecimal idUdienzaProcedimentoSige) throws F3BException {
-		Vector<AnagraficaPartiUdienzaModel> parti = this.ExRicercaPartiUdienzaByIdUdienza(
+
+		Vector<AnagraficaPartiUdienzaModel> parti = ExRicercaPartiUdienzaByIdUdienza(
 				idUdienzaProcedimentoSige, "O");
-		List<ParteOffesaUdienzaModel> partiOffese = new ArrayList<ParteOffesaUdienzaModel>();
+		List<ParteOffesaUdienzaModel> partiOffese = new ArrayList<>();
 		for (AnagraficaPartiUdienzaModel parte : parti) {
 			partiOffese.add(new ParteOffesaUdienzaModel(parte));
 		}
@@ -585,9 +601,10 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 	@Override
 	public List<ParteCivileUdienzaModel> ExRicercaPartiCiviliUdienzaByIdUdienza(
 			BigDecimal idUdienzaProcedimentoSige) throws F3BException {
-		Vector<AnagraficaPartiUdienzaModel> parti = this.ExRicercaPartiUdienzaByIdUdienza(
+
+		Vector<AnagraficaPartiUdienzaModel> parti = ExRicercaPartiUdienzaByIdUdienza(
 				idUdienzaProcedimentoSige, "C");
-		List<ParteCivileUdienzaModel> partiCivili = new ArrayList<ParteCivileUdienzaModel>();
+		List<ParteCivileUdienzaModel> partiCivili = new ArrayList<>();
 		for (AnagraficaPartiUdienzaModel parte : parti) {
 			partiCivili.add(new ParteCivileUdienzaModel(parte));
 		}

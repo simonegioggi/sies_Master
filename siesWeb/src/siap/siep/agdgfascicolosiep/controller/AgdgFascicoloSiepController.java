@@ -7,13 +7,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepDAO;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepSqlDAO;
 import siap.siep.agdgfascicolosiep.model.AgdgFascicoloSiepModel;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ import f3b.util.F3BException;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -39,6 +39,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 
 	public AgdgFascicoloSiepModel ExInserisciAgdgFascicoloSiep(AgdgFascicoloSiepModel aAgdgFascicoloSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		AgdgFascicoloSiepDAO lAgdDao = null;
 		AgdgFascicoloSiepModel lAgdMod = null;
@@ -65,6 +66,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 	}
 
 	public Vector ExRicercaAgdgFascicoloSiep(AgdgFascicoloSiepModel aAgdgFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		Vector lAgdgFascicoloSiei = new Vector();
 		AgdgFascicoloSiepSqlDAO lAgdDao = null;
@@ -89,10 +91,11 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Vector ExRicercaAgdgFascicoloSiepByIdFascicoloSiep(BigDecimal aIdFascicoloSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector lAgdgFascicoloSiep = new Vector();
 		AgdgFascicoloSiepSqlDAO lAgdDao = null;
@@ -120,6 +123,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 	}
 
 	public AgdgFascicoloSiepModel ExRicercaAgdgFascicoloSiepByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		AgdgFascicoloSiepSqlDAO lAgdDao = null;
 		AgdgFascicoloSiepModel lAgdMod;
@@ -143,6 +147,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 
 	public AgdgFascicoloSiepModel ExModificaAgdgFascicoloSiep(AgdgFascicoloSiepModel aAgdgFascicoloSiep)
 			throws F3BException {
+
 		Connection lConn = null;
 		AgdgFascicoloSiepDAO lAgdDao = null;
 		AgdgFascicoloSiepModel lAgdMod = new AgdgFascicoloSiepModel(aAgdgFascicoloSiep);
@@ -167,6 +172,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 	}
 
 	public void ExCancellaAgdgFascicoloSiep(AgdgFascicoloSiepModel aAgdgFascicoloSiep) throws F3BException {
+
 		Connection lConn = null;
 		AgdgFascicoloSiepDAO lAgdDao = null;
 
@@ -189,7 +195,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 
 	/**
 	 * Inserisci i records di AGDG Fascicolo SIEP per JMS senza assegnare la sequence
-	 * 
+	 *
 	 * @param aAGDGFasSiep
 	 * @param lConn
 	 * @return lCodEsito
@@ -197,6 +203,7 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 	 */
 	public String ExInserisciAGDGFasSiepWithoutSequence(ArrayList aAGDGFasSiep, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		AgdgFascicoloSiepDAO lAGDGFasSiepDao = null;
 		AgdgFascicoloSiepModel lGDGFasSiepMod = null;
@@ -215,8 +222,8 @@ public class AgdgFascicoloSiepController extends SiapController implements IAgdg
 							siesLogger.info("=========> AGDG_FASCICOLO_SIEP scritta----->");
 							// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al
 							// posto di LogF3B.getLogger()
-							siesLogger.info("IdAgdgFascicoloSiep = "
-									+ lGDGFasSiepMod.getIdAgdgFascicoloSiep());
+							siesLogger
+									.info("IdAgdgFascicoloSiep = " + lGDGFasSiepMod.getIdAgdgFascicoloSiep());
 
 							lAGDGFasSiepDao.setWithoutSequence(true);
 							lAGDGFasSiepDao.insert();

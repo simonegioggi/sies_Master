@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
-
 import siap.controller.SiapController;
 import siap.siep.modulocumulo.dao.ContinuazioneCumuloDAO;
 import siap.siep.modulocumulo.dao.ContinuazioneCumuloSqlDAO;
@@ -27,16 +26,8 @@ import siap.siep.modulocumulo.model.PenaComplessivaSanzioneSostitutivaCumuloMode
 import siap.siep.modulocumulo.model.SanzioneSostitutivaCumuloModel;
 
 /**
- * <p>
- * Title: PenaComplessivaCumuloController
- * </p>
- * <p>
- * Description: Classe Controller per PenaComplessivaCumulo
- * </p>
- * <p>
- * in ambito Cumulo (Pena_complessiva_Cumulo)
- * </p>
- *
+ * Title: PenaComplessivaCumuloController Description: Classe Controller per PenaComplessivaCumulo in ambito
+ * Cumulo (Pena_complessiva_Cumulo)
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PenaComplessivaCumuloController extends SiapController implements IPenaComplessivaCumulo {
@@ -81,20 +72,17 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 	/**
 	 * Metodo ceh effettua l'inserimento contestuale della Pena Complessiva, Sanzione sostitutiva e Sentenze
 	 * in continuazione per un titolo iscritto in cumulo.
-	 * 
+	 *
 	 * @param aPenaComplessivaCum
-	 *            -
 	 * @param aSanzioneSostitutivaCum
-	 *            -
 	 * @param aContinuazioniCum
 	 *            - Lista delle sentenza in continuazione
-	 * 
-	 * 
 	 */
 	public PenaComplessivaCumuloModel ExInserisciPenaCompSanzioneSostContinuazioniCum(
 			PenaComplessivaCumuloModel aPenaComplessivaCum,
 			SanzioneSostitutivaCumuloModel aSanzioneSostitutivaCum, List aContinuazioniCum)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloDAO lPenDao = null;
@@ -167,10 +155,8 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 		return aPenaComplessivaCum;
 	}
 
-	/**
-	 * 
-	 */
 	public void ExInserisciUlterioriContinuazioniCumulo(List aContinuazioni) throws F3BException {
+
 		Connection lConn = null;
 
 		ContinuazioneCumuloDAO lContDao = null;
@@ -220,12 +206,9 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 		}
 	}
 
-	/**
-	 * 
-	 *
-	 */
 	public DettaglioPenaComplessivaCumuloModel ExRicercaPenaCompSanzioneSostContinuazioniCumByIdTitolo(
 			BigDecimal aIdTitolo) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloSqlDAO lPenSqlDao = null;
@@ -285,12 +268,9 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 		return lDettPenCompl;
 	}
 
-	/**
-	 * 
-	 *
-	 */
 	public PenaComplessivaCumuloModel ExRicercaPenaComplessivaCumByIdTitolo(BigDecimal aIdTitolo)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloSqlDAO lPenSqlDao = null;
@@ -302,7 +282,6 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 			lPenSqlDao = new PenaComplessivaCumuloSqlDAO(lConn);
 			lPenSqlDao.ricercaPenaComplessivaCumuloByIdTitolo(aIdTitolo);
 			lPenMod = (PenaComplessivaCumuloModel) lPenSqlDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			siesLogger.error("", daoEx);
 			throw new F3BException(
@@ -321,11 +300,9 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 		return lPenMod;
 	}
 
-	/**
-	 * 
-	 */
 	public DettaglioPenaComplessivaCumuloModel ExRicercaPenaCompSanzioneSostContinuazioniCumByKey(
 			BigDecimal aIdPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloSqlDAO lPenCumDao = null;
@@ -392,15 +369,16 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 
 	/**
 	 * Effettua la ricerca della PENA_COMPLESSIVA_CUMULO, SANZIONE_SOST_CUM
-	 * 
+	 *
 	 * Non Recupera le sentenze in continuazione!!!!!!!!!!!!Perchè
-	 * 
+	 *
 	 * @param aKeyPenCompCum
 	 * @return PenaComplessivaSanzioneSostitutivaCumuloModel - Model Aggregato
-	 * 
+	 *
 	 */
 	public PenaComplessivaSanzioneSostitutivaCumuloModel ExRicercaPenaComplessivaSanzioneSostitutivaCumByKey(
 			BigDecimal aIdPenaComplessivaCum) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloSqlDAO lPenDao = null;
@@ -456,6 +434,7 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 	 */
 	public void ExCancellaPenaComplessivaCumulo(PenaComplessivaCumuloModel aPenaComplessiva)
 			throws F3BException {
+
 		Connection lConn = null;
 		PenaComplessivaCumuloDAO lPenDao = null;
 		try {
@@ -478,11 +457,9 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public void ExCancellaPenaComplessivaSanzioneSostitutivaContinuazioniCum(
 			PenaComplessivaCumuloModel aPenaComplessiva) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloDAO lPenDao = null;
@@ -540,6 +517,7 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 	public PenaComplessivaSanzioneSostitutivaCumuloModel ExModificaPenaComplessivaSanzioneSostitutivaCum(
 			PenaComplessivaCumuloModel aPenaComplessiva, SanzioneSostitutivaCumuloModel aSanzioneSostitutiva,
 			boolean aflagSanzioneSostitutiva) throws F3BException {
+
 		Connection lConn = null;
 
 		PenaComplessivaCumuloDAO lPenDao = null;
@@ -611,7 +589,7 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 	 * modalità 'NO SEQUENCE', senza utilizzare le sequnce. il valore della Primary_Key è già preimpostato;
 	 * metodi usati nella funzione di presa in carico, per scaricare Tutti i dati del Fascicolo sulla nuova
 	 * Base dati.
-	 * 
+	 *
 	 * @param aPenaComplessiva
 	 * @param lConn
 	 * @return
@@ -619,16 +597,16 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 	 */
 	public String ExInserisciPenaComplessivaSanzioneSostContinuazioniCumuloWithoutSequence(
 			PenaComplessivaCumuloModel aPenaComplessiva, Connection lConn) throws F3BException {
+
 		String EsitodiRitorno = "00000";
 		String QualeOggetto = "";
 		BigDecimal QualeId = null;
 
 		PenaComplessivaCumuloDAO lPenCumDao = null;
-
 		SanzioneSostitutivaCumuloDAO lSanzCumDao = null;
-		SanzioneSostitutivaCumuloModel lSanzCumMod = null;
-
 		ContinuazioneCumuloDAO lContCumDao = null;
+
+		SanzioneSostitutivaCumuloModel lSanzCumMod = null;
 		ContinuazioneCumuloModel lContCumMod = null;
 
 		try {
@@ -658,8 +636,7 @@ public class PenaComplessivaCumuloController extends SiapController implements I
 
 			// Sanzione_Sostitutiva:Cumulo
 			if (aPenaComplessiva != null && aPenaComplessiva.getSanzioneSostitutivaCumulo() != null) {
-				lSanzCumMod = (SanzioneSostitutivaCumuloModel) aPenaComplessiva
-						.getSanzioneSostitutivaCumulo();
+				lSanzCumMod = aPenaComplessiva.getSanzioneSostitutivaCumulo();
 
 				if (lSanzCumMod != null && lSanzCumMod.getIdSanzioneSostitutivaCum() != null) {
 					QualeOggetto = "Sanzione_Sostitutiva_Cumulo";

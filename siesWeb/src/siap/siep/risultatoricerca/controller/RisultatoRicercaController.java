@@ -17,6 +17,11 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
 import siap.controller.SiapController;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.siep.risultatoricerca.dao.RisultatoRicercaSqlDAO;
@@ -24,11 +29,6 @@ import siap.siep.risultatoricerca.dao.RisultatoRicercaStoreProcedureDAO;
 import siap.siep.risultatoricerca.model.RisultatoRicercaModel;
 import siap.sius.SIUSException;
 import siap.sius.fascicolo.util.HSSFUtils;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
 
 /**
  * <p>
@@ -43,7 +43,7 @@ import f3b.util.StringUtils;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -58,6 +58,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 			BigDecimal aAnniRes, BigDecimal aMesiRes, BigDecimal aGiorniRes, String aDataPr,
 			BigDecimal aPosAggregata, String aCodPosGiuridica, BigDecimal aAnniSen, BigDecimal aMesiSen,
 			BigDecimal aGiorniSen, String aNazione) throws F3BException {
+
 		Connection lConn = null;
 
 		BigDecimal lId = null;
@@ -112,6 +113,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	}
 
 	public Vector ExRicercaRisultatoRicercaByKeyPage(BigDecimal aKey, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		RisultatoRicercaSqlDAO lRisDao = null;
 		Vector lVect = null;
@@ -135,6 +137,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	}
 
 	public BigDecimal ExGetCountRicercaRisultatoByKey(BigDecimal aKey) throws F3BException {
+
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
 
@@ -157,6 +160,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	}
 
 	public Vector ExRicercaCompletoById(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		RisultatoRicercaSqlDAO lRisDao = null;
 		Vector lVect = null;
@@ -169,8 +173,8 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("RisultatoRicercaController.ExRicercaCompletoById: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"RisultatoRicercaController.ExRicercaCompletoById: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRisDao);
 			cleanup(lConn);
@@ -182,7 +186,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	 * creazione nuovo metodo di ricerca non paginata, per stampa foglio xls. Ricerca Procedimenti per
 	 * Applicazione Benefici
 	 * <p>
-	 * 
+	 *
 	 * @param aIdRisultatoRicerca
 	 * @param aUfficio
 	 * @param aParams
@@ -191,15 +195,16 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	 */
 	public ByteArrayOutputStream ExReportRicercaByIdExcel(String aIdRisultatoRicerca, UfficioModel aUfficio,
 			HashMap<String, Object> aParams) throws F3BException {
+
 		// Invocazione metodo estrazione dati.
-		Collection<RisultatoRicercaModel> lElenco = (Collection<RisultatoRicercaModel>) ExRicercaRisultatoRicerca(aIdRisultatoRicerca);
+		Collection<RisultatoRicercaModel> lElenco = ExRicercaRisultatoRicerca(aIdRisultatoRicerca);
 
 		// Preparazione foglio excel.
 		HSSFWorkbook lWb = new HSSFWorkbook();
 		HSSFSheet lSheet;
 		HSSFCellStyle lCellStyleNull;
 		HSSFCellStyle lCellStyleCenter;
-//		HSSFCellStyle lCellStyleBold;
+		// HSSFCellStyle lCellStyleBold;
 		HSSFRow lRow;
 		Iterator<RisultatoRicercaModel> lItx;
 		int lContatore = 0;
@@ -281,11 +286,8 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		}
 
 		lRow = lSheet.createRow(lRowCounter);
-		HSSFUtils.getInstance().setCell(
-				lRow,
-				0,
-				"Quantum di pena residua da espiare: Anni: " + lAnniRes + " Mesi:" + lMesiRes + " Giorni: "
-						+ lGiorniRes, lCellStyleNull);
+		HSSFUtils.getInstance().setCell(lRow, 0, "Quantum di pena residua da espiare: Anni: " + lAnniRes
+				+ " Mesi:" + lMesiRes + " Giorni: " + lGiorniRes, lCellStyleNull);
 		lRowCounter++;
 
 		// Posizione giuridica aggregata
@@ -330,11 +332,8 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 		}
 
 		lRow = lSheet.createRow(lRowCounter);
-		HSSFUtils.getInstance().setCell(
-				lRow,
-				0,
-				"Quantum pena irrogata in sentenza: Anni: " + lAnniSen + " Mesi:" + lMesiSen + " Giorni: "
-						+ lGiorniSen, lCellStyleNull);
+		HSSFUtils.getInstance().setCell(lRow, 0, "Quantum pena irrogata in sentenza: Anni: " + lAnniSen
+				+ " Mesi:" + lMesiSen + " Giorni: " + lGiorniSen, lCellStyleNull);
 		lRowCounter++;
 
 		// Nazionalità
@@ -393,7 +392,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 
 		while (lItx.hasNext()) {
 			lContatore++;
-			RisultatoRicercaModel lModel = (RisultatoRicercaModel) lItx.next();
+			RisultatoRicercaModel lModel = lItx.next();
 
 			lRow = lSheet.createRow(lRowCounter++);
 
@@ -419,12 +418,11 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 					StringUtils.cStrForJS(DateUtils.getDateToString(lModel.getDataFinePena(), lDatePattern)),
 					lCellStyleCenter);
 
-			HSSFUtils.getInstance().setCell(
-					lRow,
-					(short) 7,
+			HSSFUtils.getInstance().setCell(lRow, (short) 7,
 					"Anni: " + StringUtils.toStringJSP(lModel.getNumAnniPenaRes(), "-") + " Mesi: "
 							+ StringUtils.toStringJSP(lModel.getNumMesiPenaRes(), "-") + " Giorni: "
-							+ StringUtils.toStringJSP(lModel.getNumGiorniPenaRes(), "-"), lCellStyleCenter);
+							+ StringUtils.toStringJSP(lModel.getNumGiorniPenaRes(), "-"),
+					lCellStyleCenter);
 
 			HSSFUtils.getInstance().setCell(lRow, (short) 8,
 					StringUtils.toStringJSP(lModel.getDescrPosizioneGiuridica(), "-"), lCellStyleCenter);
@@ -453,7 +451,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	 * creazione nuovo metodo di ricerca non paginata, per stampa folglio xls. Ricerca Procedimenti per
 	 * Applicazione Benefici
 	 * <p>
-	 * 
+	 *
 	 * @param aFascModel
 	 * @param sTipoAtto
 	 * @param aCancAssFascSius
@@ -465,7 +463,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 			throws F3BException {
 
 		Connection lConn = null;
-		Collection<RisultatoRicercaModel> lRisultatoRicerca = new ArrayList<RisultatoRicercaModel>();
+		Collection<RisultatoRicercaModel> lRisultatoRicerca = new ArrayList<>();
 
 		RisultatoRicercaSqlDAO lRisDao = null;
 

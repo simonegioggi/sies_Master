@@ -7,6 +7,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
 import siap.controller.SiapController;
 import siap.siep.altracausa.dao.AltraCausaDAO;
 import siap.siep.altracausa.model.AltraCausaModel;
@@ -16,10 +20,6 @@ import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneSqlDAO;
 import siap.siep.luogodetenzione.model.LuogoDetenzioneModel;
 import siap.sius.SIUSException;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
 
 /**
  * <p>
@@ -34,7 +34,7 @@ import f3b.util.StringUtils;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -45,11 +45,12 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	public LuogoDetenzioneModel ExInserisciLuogoDetenzioneSius(LuogoDetenzioneModel aLuogoDetenzioneOld,
 			LuogoDetenzioneModel aLuogoDetenzione, AltraCausaModel aAltraCausa) throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod = null;
 		AltraCausaDAO lAltraCausaDao = null;
-//		AltraCausaModel lAltraCausaMod = null;
+		// AltraCausaModel lAltraCausaMod = null;
 
 		// Prendo la connessione
 		lConn = getDBTransaction();
@@ -94,6 +95,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	public LuogoDetenzioneModel ExInserisciLuogoDetenzione(LuogoDetenzioneModel aLuogoDetenzione)
 			throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod = null;
@@ -118,6 +120,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 	}
 
 	public Vector ExRicercaLuogoDetenzione(LuogoDetenzioneModel aLuogoDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		Vector lLuogoDetenzioni = new Vector();
 		LuogoDetenzioneSqlDAO lLuoDao = null;
@@ -133,8 +136,8 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("LuogoDetenzioneController.ExRicercaLuogoDetenzione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"LuogoDetenzioneController.ExRicercaLuogoDetenzione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lLuoDao);
 			cleanup(lConn);
@@ -143,6 +146,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 	}
 
 	public LuogoDetenzioneModel ExRicercaLuogoDetenzioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod;
@@ -158,8 +162,8 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("LuogoDetenzioneController.ExRicercaLuogoDetenzione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"LuogoDetenzioneController.ExRicercaLuogoDetenzione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lLuoDao);
 			cleanup(lConn);
@@ -169,12 +173,13 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	/**
 	 * Ricerca Luogo Det By Fascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public LuogoDetenzioneModel ExRicercaLuogoDetByFascicolo(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod;
@@ -187,8 +192,8 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("LuogoDetenzioneController.ExRicercaLuogoDetenzione: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"LuogoDetenzioneController.ExRicercaLuogoDetenzione: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lLuoDao);
 			cleanup(lConn);
@@ -198,13 +203,14 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	/**
 	 * Ricerca Luogo detenzione Corrente
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public LuogoDetenzioneModel ExRicercaLuogoDetenzioneCorrenteByFascicoloSiep(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod;
@@ -240,13 +246,14 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	/**
 	 * Ricerca Luogo detenzione Corrente
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 * @throws F3BException
 	 */
 	public LuogoDetenzioneModel ExRicercaLuogoDetenzioneCorrenteByFascicoloSius(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneSqlDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod;
@@ -282,6 +289,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	public LuogoDetenzioneModel ExModificaLuogoDetenzione(LuogoDetenzioneModel aLuogoDetenzione)
 			throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneDAO lLuoDao = null;
 		LuogoDetenzioneModel lLuoMod = new LuogoDetenzioneModel(aLuogoDetenzione);
@@ -303,6 +311,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 	}
 
 	public void ExCancellaLuogoDetenzione(LuogoDetenzioneModel aLuogoDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneDAO lLuoDao = null;
 
@@ -325,13 +334,14 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	/**
 	 * Genera il Vector per l'Elenco dei Luoghi detenzione Sius
-	 * 
+	 *
 	 * @param aKey
 	 * @return dati del soggetto come TreeModel.
 	 * @throws SIUSException
 	 *             propaga l'errore di eccezione.
 	 */
 	public Vector ExElencoDatiLuogoDetenzioneSius(BigDecimal aKey) throws F3BException {
+
 		Vector lLuoMod = new Vector(); // new TreeModel();
 		Vector lLuoModOut = new Vector(); // new TreeModel();
 		LuogoDetenzioneSqlDAO lLuoDao = null;
@@ -375,6 +385,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	private LuogoDetenzioneModel RicercaIstitutoDetenzione(LuogoDetenzioneModel aLuoModTemp, Connection aConn)
 			throws F3BException {
+
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 		IstitutoDetenzioneModel lIstModel = null;
 		try {
@@ -385,14 +396,11 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 				lIstDao.ricercaIstitutoDetenzioneByKey(aLuoModTemp.getIstDetIdIstitutoDetenzione());
 				lIstModel = (IstitutoDetenzioneModel) lIstDao.getModelByKey();
 				aLuoModTemp.setIstitutoDetenzione(lIstModel);
-				aLuoModTemp
-						.setDescrTipoIstituto(StringUtils.toStringJSP(aLuoModTemp.getIstitutoDetenzione()
-								.getDescrTipoIstituto())
-								+ " di "
-								+ StringUtils.toStringJSP(aLuoModTemp.getIstitutoDetenzione()
-										.getDescrComune())
-								+ " - "
-								+ StringUtils.toStringJSP(aLuoModTemp.getIstitutoDetenzione().getIndirizzo()));
+				aLuoModTemp.setDescrTipoIstituto(StringUtils
+						.toStringJSP(aLuoModTemp.getIstitutoDetenzione().getDescrTipoIstituto()) + " di "
+						+ StringUtils.toStringJSP(aLuoModTemp.getIstitutoDetenzione().getDescrComune())
+						+ " - "
+						+ StringUtils.toStringJSP(aLuoModTemp.getIstitutoDetenzione().getIndirizzo()));
 				aLuoModTemp.setDescrLuogo(aLuoModTemp.getIstitutoDetenzione().getDescrComune());
 
 			}
@@ -408,7 +416,7 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 
 	/**
 	 * Inserimento Luogo detenzione
-	 * 
+	 *
 	 * @param aLuogoDetenzione
 	 * @param lConn
 	 * @return
@@ -440,10 +448,10 @@ public class LuogoDetenzioneController extends SiapController implements ILuogoD
 		}
 
 		return lCodEsito;
-
 	}
 
 	public void ExModificaDataFineLuogoDetenzione(LuogoDetenzioneModel aLuogoDetenzione) throws F3BException {
+
 		Connection lConn = null;
 		LuogoDetenzioneDAO lLuoDao = null;
 

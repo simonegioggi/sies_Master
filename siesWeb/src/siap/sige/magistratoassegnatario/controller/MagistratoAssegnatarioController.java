@@ -34,7 +34,7 @@ import siap.sige.magistratoassegnatario.model.MagistratoAssegnatarioModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class MagistratoAssegnatarioController extends SiapController implements IMagistratoAssegnatario {
@@ -90,25 +90,23 @@ public class MagistratoAssegnatarioController extends SiapController implements 
 	/**
 	 * Ricerca il Magistrato Assegnatario corrente (ovvero con data fine a null ) assegnato ad un determinato
 	 * Fascicolo SIGE.
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
-
 	public MagistratoAssegnatarioModel ExRicercaMagAssCorrenteXFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
 		MagistratoAssegnatarioDAO lMagDao = null;
 		MagistratoAssegnatarioModel lMagAssegnatario = null;
 
 		try {
-
 			lConn = getDBConnection();
 			lMagDao = new MagistratoAssegnatarioDAO(lConn);
 			lMagDao.setCondizioneAttivo(aIdFascicolo);
 			lMagAssegnatario = (MagistratoAssegnatarioModel) lMagDao.getModelByKey();
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"MagistratoAssegnatarioController.ExRicercaMagAssCorrenteXFascicolo: " + daoEx);
@@ -127,7 +125,7 @@ public class MagistratoAssegnatarioController extends SiapController implements 
 	 * <p>
 	 * Se il Magistrato Assegnatario viene trovato si effettua anche la ricerca del Magistrato.
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            id del fascicolo.
 	 * @return model aggregato con i dati del magistrato relatore e quelli del magistrato o dell'esperto.
@@ -136,6 +134,7 @@ public class MagistratoAssegnatarioController extends SiapController implements 
 	 */
 	public MagistratoAssegnatarioModel ExRicercaEstesaMagAssCorrenteXFascicolo(BigDecimal aKey)
 			throws F3BException {
+
 		MagistratoAssegnatarioModel lMagAss = null;
 
 		// Magistrato Assegnatario
@@ -153,6 +152,7 @@ public class MagistratoAssegnatarioController extends SiapController implements 
 
 	public MagistratoAssegnatarioModel ExInserisciAggiornaMagistratoAssegnatario(
 			MagistratoAssegnatarioMagistratoModel aMagistratoAssegnatarioMagistrato) throws F3BException {
+
 		Connection lConn = null;
 
 		MagistratoAssegnatarioDAO lMagAssDao = null;
@@ -226,7 +226,7 @@ public class MagistratoAssegnatarioController extends SiapController implements 
 
 	/**
 	 * Ritorna il vettore di MagistratoAssegnatarioModel riferite al Fascicolo SIGE in esame
-	 * 
+	 *
 	 * @param aKeyFascicolo
 	 * @return Vector di ResidenzaAssociataModel
 	 * @throws F3BException
@@ -283,79 +283,79 @@ public class MagistratoAssegnatarioController extends SiapController implements 
 	}
 
 	/**
-	 * Metodo che aggiorna il record su magistrato_Assegnatario
-	 * per idFascSIGE
-	 * 
+	 * Metodo che aggiorna il record su magistrato_Assegnatario per idFascSIGE
+	 *
 	 * @param aMagistratoAssegnatarioMagistrato
 	 * @param aIdFascicolo
 	 * @return
 	 * @throws F3BException
 	 */
-	public MagistratoAssegnatarioModel ExAggiornaMagistratoAssegnatarioXFascicolo (MagistratoAssegnatarioMagistratoModel aMagistratoAssegnatarioMagistrato, String flagBlocco)
-	throws F3BException
-	{
+	public MagistratoAssegnatarioModel ExAggiornaMagistratoAssegnatarioXFascicolo(
+			MagistratoAssegnatarioMagistratoModel aMagistratoAssegnatarioMagistrato, String flagBlocco)
+			throws F3BException {
+
 		Connection lConn = null;
-		
+
 		MagistratoAssegnatarioDAO lMagAssDao = null;
 		MagistratoAssegnatarioModel lMagMod = null;
 		MagistratoAssegnatarioModel lNuovoMagMod = null;
 		MagistratoSqlDAO lMagDao = null;
-		MagistratoAssegnatarioSqlDAO  lMagSqlDAO = null;
-		
-		try
-		{
-		  lConn = getDBTransaction();		
-		
-		  //ricerca magistrato esistenete per aggiornare il codProcuratore e idAssistente(cancelliere)
-		
-		  lMagSqlDAO = new MagistratoAssegnatarioSqlDAO(lConn);
-		  lMagSqlDAO.ricercaMagistratoEsistente(aMagistratoAssegnatarioMagistrato);
-		  lMagMod = (MagistratoAssegnatarioModel)lMagSqlDAO.getModelByKey();
-		  lMagAssDao = new MagistratoAssegnatarioDAO(lConn);
-		  if ( lMagMod  != null )
-		  {
-		   
-//		    lMagAssDao.setCodOperatoreAggiornamento(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodOperatoreInserimento());
-//		    lMagAssDao.setCodUfficioAggiornamento(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodUfficioInserimento());
-//		    lMagAssDao.setDataAggiornamento(DateUtils.getSysDate());
-			if(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getMagCodMagistrato() != null && !"".equals(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getMagCodMagistrato()))
-				lMagAssDao.setMagCodMagistrato(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getMagCodMagistrato());
-			else
-				lMagAssDao.setMagCodMagistrato(lMagMod.getMagCodMagistrato());
-			
-		    if(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodProcuratore()!= null)
-		    	lMagAssDao.setCodProcuratore(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodProcuratore()); 
-		    if(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getIdAssistente()!= null)
-		    	lMagAssDao.setCodIdAssistente(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getIdAssistente()); 
-		    
-		    lMagAssDao.setCondizioneUpdateExtend(lMagMod.getFasSigeIdFascicoloSige(),lMagMod.getMagCodMagistrato(), flagBlocco); 
-		    lMagAssDao.update();
-		    lMagAssDao.stop();
-		    commit(lConn);
-		  }
-		  lNuovoMagMod = aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario();
-		}
-		catch (DAOException ex)
-		{
-		  rollback(lConn);
-		  siesLogger.error("DAOException: " + ex);		
-		 	
-		  throw new F3BException("MagistratoAssegnatarioController.ExAggiornaMagistratoAssegnatario: " + ex);
-		}
-		catch (Exception e)
-		{
-		  rollback(lConn);		
-		  siesLogger.error("SQLException: " + e);
-		  throw new F3BException("MagistratoAssegnatarioController.ExAggiornaMagistratoAssegnatario: " + e);
-		}
-		finally
-		{
-		  cleanup(lMagAssDao);
-		  cleanup(lMagDao);
-		  cleanup(lMagSqlDAO);
-		  cleanup(lConn);
+		MagistratoAssegnatarioSqlDAO lMagSqlDAO = null;
+
+		try {
+			lConn = getDBTransaction();
+
+			// ricerca magistrato esistenete per aggiornare il codProcuratore e idAssistente(cancelliere)
+
+			lMagSqlDAO = new MagistratoAssegnatarioSqlDAO(lConn);
+			lMagSqlDAO.ricercaMagistratoEsistente(aMagistratoAssegnatarioMagistrato);
+			lMagMod = (MagistratoAssegnatarioModel) lMagSqlDAO.getModelByKey();
+			lMagAssDao = new MagistratoAssegnatarioDAO(lConn);
+			if (lMagMod != null) {
+
+				// lMagAssDao.setCodOperatoreAggiornamento(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodOperatoreInserimento());
+				// lMagAssDao.setCodUfficioAggiornamento(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodUfficioInserimento());
+				// lMagAssDao.setDataAggiornamento(DateUtils.getSysDate());
+				if (aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario()
+						.getMagCodMagistrato() != null
+						&& !"".equals(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario()
+								.getMagCodMagistrato()))
+					lMagAssDao.setMagCodMagistrato(aMagistratoAssegnatarioMagistrato
+							.getMagistratoAssegnatario().getMagCodMagistrato());
+				else
+					lMagAssDao.setMagCodMagistrato(lMagMod.getMagCodMagistrato());
+
+				if (aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getCodProcuratore() != null)
+					lMagAssDao.setCodProcuratore(aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario()
+							.getCodProcuratore());
+				if (aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getIdAssistente() != null)
+					lMagAssDao.setCodIdAssistente(
+							aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario().getIdAssistente());
+
+				lMagAssDao.setCondizioneUpdateExtend(lMagMod.getFasSigeIdFascicoloSige(),
+						lMagMod.getMagCodMagistrato(), flagBlocco);
+				lMagAssDao.update();
+				lMagAssDao.stop();
+				commit(lConn);
+			}
+			lNuovoMagMod = aMagistratoAssegnatarioMagistrato.getMagistratoAssegnatario();
+		} catch (DAOException ex) {
+			rollback(lConn);
+			siesLogger.error("DAOException: " + ex);
+
+			throw new F3BException(
+					"MagistratoAssegnatarioController.ExAggiornaMagistratoAssegnatario: " + ex);
+		} catch (Exception e) {
+			rollback(lConn);
+			siesLogger.error("SQLException: " + e);
+			throw new F3BException("MagistratoAssegnatarioController.ExAggiornaMagistratoAssegnatario: " + e);
+		} finally {
+			cleanup(lMagAssDao);
+			cleanup(lMagDao);
+			cleanup(lMagSqlDAO);
+			cleanup(lConn);
 		}
 		return lNuovoMagMod;
 	}
-	
+
 }

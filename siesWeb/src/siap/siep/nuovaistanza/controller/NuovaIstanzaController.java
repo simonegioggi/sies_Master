@@ -10,6 +10,13 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.controller.GenericController;
+import f3b.dao.DAOException;
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.report.ReportGenerator;
+import f3b.util.xml.TreeModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.controller.IEvento;
@@ -37,13 +44,6 @@ import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoSqlDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
-import f3b.controller.GenericController;
-import f3b.dao.DAOException;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.report.ReportGenerator;
-import f3b.util.xml.TreeModel;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ import f3b.util.xml.TreeModel;
  * <p>
  * Company: Agile
  * </p>
- * 
+ *
  * @version 5.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -69,6 +69,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	public NuovaIstanzaModel ExInserisciNuovaIstanza(EventoModel aEveMod, NuovaIstanzaModel aNuovaIstanza,
 			SentenzaModel aSenMod, SoggettoModel aSogMod, FascicoloSiepModel aFascMod) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 		EventoDAO lEveDao = null;
@@ -180,7 +181,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			if (lProcModel != null && lProcModel.getCodStatoProcedimento() != null
 					&& (lProcModel.getCodStatoProcedimento().equals("0011") // Emesso Ordine di Esecuzione con
 																			// Contestuale Sospensione il
-					|| lProcModel.getCodStatoProcedimento().equals("0013") // Atti Trasmessi al TDS il
+							|| lProcModel.getCodStatoProcedimento().equals("0013") // Atti Trasmessi al TDS il
 					)) {
 				codStatoMax = lStatoSqlDao.getProgressivo(aEveMod.getFasSieIdFascicoloSiep());
 				codStatoMax = new BigDecimal(codStatoMax.intValue() + 1);
@@ -213,7 +214,6 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			rollback(lConn);
 			throw new F3BException("NuovaIstanzaController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
-
 			cleanup(lEveDao);
 			cleanup(lNuoDao);
 			cleanup(lSenDao);
@@ -223,7 +223,6 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			cleanup(lStatoDao);
 			cleanup(lStatoSqlDao);
 			cleanup(lConn);
-
 		}
 
 		return aNuovaIstanza;
@@ -231,7 +230,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati NuovaIstanza
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 *            Model utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato nel model
 	 *            verrà utilizzato per imporre una condizione di ricerca
@@ -240,8 +239,9 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 ****************************************************************************/
 	public Vector<NuovaIstanzaModel> ExRicercaNuovaIstanza(NuovaIstanzaModel aNuovaIstanza)
 			throws F3BException {
+
 		Connection lConn = null;
-		Vector<NuovaIstanzaModel> lNuovaIstanzi = new Vector<NuovaIstanzaModel>();
+		Vector<NuovaIstanzaModel> lNuovaIstanzi = new Vector<>();
 		NuovaIstanzaDAO lNuoDao = null;
 
 		try {
@@ -255,8 +255,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			}
 			lNuoDao.stop();
 		} catch (DAOException daoEx) {
-			throw new F3BException("NuovaIstanzaController.ExRicercaNuovaIstanza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExRicercaNuovaIstanza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuoDao);
 			cleanup(lConn);
@@ -267,7 +267,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati NuovaIstanza per id Fascicolo
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            id fascicolo SIEP utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato
 	 *            nel model verrà utilizzato per imporre una condizione di ricerca
@@ -276,8 +276,9 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 ****************************************************************************/
 	public Collection<NuovaIstanzaModel> ExRicercaNuovaIstanzaByIdFascicolo(BigDecimal aIdFascicolo)
 			throws F3BException {
+
 		Connection lConn = null;
-		Collection<NuovaIstanzaModel> lNuovaIstanzi = new Vector<NuovaIstanzaModel>();
+		Collection<NuovaIstanzaModel> lNuovaIstanzi = new Vector<>();
 		NuovaIstanzaSqlDAO lNuoDao = null;
 		NuovaIstanzaModel lModel;
 		AvvocatoModel lAvvocato;
@@ -320,7 +321,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	/*****************************************************************************
 	 * Effettua la ricerca dei dati NuovaIstanza per id Fascicolo. La NuovaIstanza non deve essere stata
 	 * annullata
-	 * 
+	 *
 	 * @param aIdFascicolo
 	 *            id fascicolo SIEP utilizzato per costruire le condizioni di ricerca Ogni valore attualizzato
 	 *            nel model verrà utilizzato per imporre una condizione di ricerca
@@ -329,8 +330,9 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 ****************************************************************************/
 	public Collection<NuovaIstanzaModel> ExRicercaNuovaIstanzaNonAnnullataByIdFascicolo(
 			BigDecimal aIdFascicolo) throws F3BException {
+
 		Connection lConn = null;
-		Collection<NuovaIstanzaModel> lNuovaIstanzi = new Vector<NuovaIstanzaModel>();
+		Collection<NuovaIstanzaModel> lNuovaIstanzi = new Vector<>();
 		NuovaIstanzaSqlDAO lNuoDao = null;
 		NuovaIstanzaModel lModel;
 		AvvocatoModel lAvvocato;
@@ -356,8 +358,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("", daoEx);
-			throw new F3BException("ExRicercaNuovaIstanzaNonAnnullataByIdFascicolo: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"ExRicercaNuovaIstanzaNonAnnullataByIdFascicolo: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuoDao);
 			cleanup(lConn);
@@ -368,17 +370,17 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/*****************************************************************************
 	 * Effettua la ricerca per chiave
-	 * 
+	 *
 	 * @param akey
 	 *            valore della chiave del record da ricercare
 	 * @return il model con i dati trovati
 	 * @throws F3BException
 	 ****************************************************************************/
 	public NuovaIstanzaModel ExRicercaNuovaIstanzaById(BigDecimal aIdNuovaIstanza) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaModel lNuovaIstanzaMod = new NuovaIstanzaModel();
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
-		// AvvocatoSqlDAO lAvvSqlDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -388,18 +390,17 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 			// 15/03/2010 Lettura Avvocato
 			if (lNuovaIstanzaMod.getAvvIdAvvocato() != null)
-				lNuovaIstanzaMod.setAvvocatoPresentante(this.getAvvocatoByIdFascicolo(
-						lNuovaIstanzaMod.getAvvIdAvvocatoPresentante(), lConn));
+				lNuovaIstanzaMod.setAvvocatoPresentante(
+						this.getAvvocatoByIdFascicolo(lNuovaIstanzaMod.getAvvIdAvvocatoPresentante(), lConn));
 			// 15/03/2010 Lettura Avvocato Presentante
 			if (lNuovaIstanzaMod.getAvvIdAvvocatoPresentante() != null)
-				lNuovaIstanzaMod.setAvvocatoPresentante(this.getAvvocatoByIdFascicolo(
-						lNuovaIstanzaMod.getAvvIdAvvocatoPresentante(), lConn));
-
+				lNuovaIstanzaMod.setAvvocatoPresentante(
+						this.getAvvocatoByIdFascicolo(lNuovaIstanzaMod.getAvvIdAvvocatoPresentante(), lConn));
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NuovaIstanzaController.ExRicercaNuovaIstanzaById: Non posso leggere: "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExRicercaNuovaIstanzaById: Non posso leggere: " + daoEx);
 		} finally {
 			cleanup(lNuovaIstanzaSqlDao);
 			cleanup(lConn);
@@ -410,13 +411,13 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/**
 	 * ExRicercaNuovaIstanzaByEveIdEvento
-	 * 
+	 *
 	 * @param aEveIdEvento
 	 * @return NuovaIstanzaModel
 	 * @throws F3BException
 	 */
-
 	public NuovaIstanzaModel ExRicercaNuovaIstanzaByEveIdEvento(BigDecimal aEveIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaModel lNuovaIstanzaMod = new NuovaIstanzaModel();
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -443,12 +444,13 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 * Metodo che modifica i dati dell'NuovaIstanza Viene fatto l'update di tutti i campi del record
 	 * recuperando i valori dal Model Se mancano dati nel model i corrispondenti valori della tabella verranno
 	 * impostati a null
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 *            Model con i nuovi valori
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaNuovaIstanza(NuovaIstanzaModel aNuovaIstanza) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 
@@ -472,7 +474,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/**
 	 * annullamento Istanza
-	 * 
+	 *
 	 * @param aIstMod
 	 * @param aCampoNota
 	 * @return
@@ -480,6 +482,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 */
 	public void ExAnnulamentoIstanza(NuovaIstanzaModel aIstMod, CampoNotaModel aCampoNota)
 			throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -544,11 +547,11 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 			cleanup(lConn);
 		}
-
 	}
 
 	public void ExAnnullamentoInoltroIstanza(BigDecimal aIdEventoNuovaIstanza, BigDecimal aIdIstanza,
 			CampoNotaModel aCampoNota, String TipoOp) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -619,11 +622,11 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 			cleanup(lConn);
 		}
-
 	}
 
 	public void ExAnnullamentoDisposizioneIstanza(BigDecimal aIdEventoNuovaIstanza, BigDecimal aIdIstanza,
 			CampoNotaModel aCampoNota, String TipoOp) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
@@ -697,18 +700,18 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 			cleanup(lConn);
 		}
-
 	}
 
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountNuovaIstanza(NuovaIstanzaModel aNuovaIstanza) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -724,8 +727,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NuovaIstanzaController.ExGetCountNuovaIstanza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExGetCountNuovaIstanza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuovaIstanzaSqlDao);
 			cleanup(lConn);
@@ -737,13 +740,14 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountNuovaIstanzaByAnnoProgr(NuovaIstanzaModel aNuovaIstanza, int annoIni,
 			int progrIni, int annoFine, int progrFine) throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -760,8 +764,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NuovaIstanzaController.ExGetCountNuovaIstanza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExGetCountNuovaIstanza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuovaIstanzaSqlDao);
 			cleanup(lConn);
@@ -773,13 +777,14 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	/*****************************************************************************
 	 * Recupera il numero di record restituiti della ricerca. Utile in caso di ricerche paginate per ottenere
 	 * il numero totale di record
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 * @return numero di record trovati dalla funzione dei ricerca
 	 * @throws F3BException
 	 ****************************************************************************/
 	public BigDecimal ExGetCountNuovaIstanzaBySoggetto(NuovaIstanzaModel aNuovaIstanza, SoggettoModel aSogMod)
 			throws F3BException {
+
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -795,8 +800,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NuovaIstanzaController.ExGetCountNuovaIstanza: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExGetCountNuovaIstanza: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuovaIstanzaSqlDao);
 			cleanup(lConn);
@@ -808,7 +813,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -817,6 +822,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaNuovaIstanzaPaged(NuovaIstanzaModel aNuovaIstanza, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNuovaIstanzi = new Vector();
 		// Vector lNuoIst = new Vector();
@@ -841,7 +847,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -851,6 +857,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 ****************************************************************************/
 	public Vector ExRicercaNuoveIstanzeByAnnoProgrPaged(NuovaIstanzaModel aNuovaIstanza, int annoIni,
 			int progrIni, int annoFine, int progrFine, int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNuovaIstanzi = new Vector();
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -864,8 +871,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NuovaIstanzaController.ExRicercaNuovaIstanzaPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExRicercaNuovaIstanzaPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuovaIstanzaSqlDao);
 			cleanup(lConn);
@@ -876,7 +883,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	/*****************************************************************************
 	 * Funzione di ricerca utilizzata per la paginazione che restituisce i risultati da visualizzare nella
 	 * pagina specificata in input
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 *            model contenete i parametri della ricerca
 	 * @param aPage
@@ -884,8 +891,9 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 * @return Vettore di model con i record da visualizzare nella pagina specificata in input
 	 * @throws F3BException
 	 ****************************************************************************/
-	public Vector ExRicercaNuoveIstanzeBySoggettoPaged(NuovaIstanzaModel aNuovaIstanza,
-			SoggettoModel aSogMod, int aPage) throws F3BException {
+	public Vector ExRicercaNuoveIstanzeBySoggettoPaged(NuovaIstanzaModel aNuovaIstanza, SoggettoModel aSogMod,
+			int aPage) throws F3BException {
+
 		Connection lConn = null;
 		Vector lNuovaIstanzi = new Vector();
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -898,8 +906,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException("NuovaIstanzaController.ExRicercaNuovaIstanzaPaged: Non posso leggere : "
-					+ daoEx);
+			throw new F3BException(
+					"NuovaIstanzaController.ExRicercaNuovaIstanzaPaged: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lNuovaIstanzaSqlDao);
 			cleanup(lConn);
@@ -909,13 +917,13 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/**
 	 * metodo di utilita' per il recupero dell'avocato associato al fascicolo
-	 * 
+	 *
 	 * @param lKeyFascicolo
 	 * @return
 	 */
-
 	private AvvocatoModel getAvvocatoByIdFascicolo(BigDecimal lKeyAvvocato, Connection lConn)
 			throws F3BException {
+
 		AvvocatoSqlDAO lAvvDao = null;
 		AvvocatoModel lAvv = null;
 		try {
@@ -928,7 +936,6 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("getAvvocatoByIdFascicolo: Non posso leggere : " + ex);
-
 		} finally {
 			cleanup(lAvvDao);
 		}
@@ -938,7 +945,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/**
 	 * Stampa trasferimento Nuova Istanza
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
@@ -946,14 +953,15 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	// 20180110: [SG] aggiunto parametro di passaggio x gestione NOTIFICHE: prendo solo l'ultima
 	public ByteArrayOutputStream ExStampaTrasmissioneNuovaIstanza(EventoNotificaModel aEvento,
 			UtenteModel aUtente, String tipologia) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
 		ByteArrayOutputStream lByteArrayOut = null;
 		try {
 			IEvento lEvCrtl = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEventoModel = lEvCrtl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEventoModel = lEvCrtl
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			// 20180110: [SG] gestione NOTIFICHE: prendo solo l'ultima
 			if ("TI".equals(tipologia)) {
@@ -986,8 +994,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 					+ lEventoModel.getEvento().getFlagDocumentoRegistrato());
 
 			// aEvento.getEvento().setFlagDocumentoRegistrato("N");
-			aEvento.getEvento().setFlagDocumentoRegistrato(
-					lEventoModel.getEvento().getFlagDocumentoRegistrato());
+			aEvento.getEvento()
+					.setFlagDocumentoRegistrato(lEventoModel.getEvento().getFlagDocumentoRegistrato());
 			aEvento.getEvento().setDocBlobIn(lByteArrayInput);
 			lConn = getDBConnection();
 			lEveDao = new EventoDAO(lConn);
@@ -1011,21 +1019,22 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/**
 	 * Stampa trasferimento Nuova Istanza
-	 * 
+	 *
 	 * @param aEvento
 	 * @return
 	 * @throws F3BException
 	 */
-	public ByteArrayOutputStream ExStampaRicevutaNuovaIstanza(EventoNotificaModel aEvento, UtenteModel aUtente)
-			throws F3BException {
+	public ByteArrayOutputStream ExStampaRicevutaNuovaIstanza(EventoNotificaModel aEvento,
+			UtenteModel aUtente) throws F3BException {
+
 		Connection lConn = null;
 		EventoDAO lEveDao = null;
 
 		ByteArrayOutputStream lByteArrayOut = null;
 		try {
 			IEvento lEvCrtl = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEventoModel = lEvCrtl.ExRicercaEventoNotificaByKey(aEvento.getEvento()
-					.getIdEvento());
+			EventoNotificaModel lEventoModel = lEvCrtl
+					.ExRicercaEventoNotificaByKey(aEvento.getEvento().getIdEvento());
 
 			IStampa lStampa = SICOLookupRemote.getStampaRemote();
 			TreeModel lTree = lStampa.prelevaDatiIstruttoria(lEventoModel, aUtente);
@@ -1066,7 +1075,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/**
 	 * Inserisci i records di Nuova Istanza senza assegnare la sequence
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 * @param lConn
 	 * @return lCodEsito
@@ -1074,6 +1083,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 */
 	public String ExInserisciNuovaIstanzaWithoutSequence(ArrayList aNuovaIstanza, Connection lConn)
 			throws F3BException {
+
 		String lCodEsito = "00000";
 		NuovaIstanzaDAO lNuoIstDao = null;
 		NuovaIstanzaModel lRicConMod = null;
@@ -1106,8 +1116,8 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + e);
-			throw new F3BException("SanzioneSostitutivaController.ExInserisciNuovaIstanzaWithoutSequence: "
-					+ e);
+			throw new F3BException(
+					"SanzioneSostitutivaController.ExInserisciNuovaIstanzaWithoutSequence: " + e);
 		} finally {
 			cleanup(lNuoIstDao);
 		}
@@ -1116,6 +1126,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	public NuovaIstanzaModel ExInoltraNuovaIstanza(EventoModel aEveMod, NuovaIstanzaModel aNuovaIstanza)
 			throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 		EventoDAO lEveDao = null;
@@ -1158,7 +1169,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			 * lStatoSqlDao.ricercaStatoProcedimentoByFascicoloSiepDesc(aEveMod.getFasSieIdFascicoloSiep());
 			 * lProcModel = (StatoProcedimentoModel)lStatoSqlDao.getModelByKey(); BigDecimal codStatoMax =
 			 * null;
-			 * 
+			 *
 			 * //======================================================================== // Se l'ultimo stato
 			 * procedimento è: // 0011 - Emesso Ordine di Esecuzione con Contestuale Sospensione il // oppure
 			 * // 0013 - Atti Trasmessi al TDS il // Vado in append aggiungendo 0012 - Presentata Istanza il,
@@ -1172,44 +1183,41 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			 * BigDecimal(codStatoMax.intValue() + 1); } else {
 			 * lStatoDao.setCondizioneByIdFascicolo(aEveMod.getFasSieIdFascicoloSiep()); lStatoDao.delete();
 			 * lStatoDao.stop(); codStatoMax = new BigDecimal(1); }
-			 * 
+			 *
 			 * StatoProcedimentoModel lStatoUno = new StatoProcedimentoModel();
-			 * 
+			 *
 			 * //Presentata istanza lStatoUno.setProgressivo(codStatoMax);
-			 * 
+			 *
 			 * lStatoUno.setCodStatoProcedimento("0012"); // Presentata Istanza il
 			 * lStatoUno.setData(DateUtils.getSysDate());
 			 * lStatoUno.setFasSieIdFascicoloSiep(aEveMod.getFasSieIdFascicoloSiep());
 			 * lStatoUno.setCodOperatoreInserimento(aNuovaIstanza.getCodOperatoreInserimento());
 			 * lStatoUno.setDataInserimento(aNuovaIstanza.getDataInserimento());
 			 * lStatoUno.setCodUfficioInserimento(aNuovaIstanza.getCodUfficioInserimento());
-			 * 
+			 *
 			 * lStatoDao.setDAOFromModel(lStatoUno); lStatoDao.insert(); lStatoDao.stop();
 			 */
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("NuovaIstanzaController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
-
 			cleanup(lEveDao);
 			cleanup(lNuoDao);
 			cleanup(lStatoDao);
 			cleanup(lStatoSqlDao);
 			cleanup(lConn);
-
 		}
 
 		return aNuovaIstanza;
 	}
 
 	public EventoModel ExUpdateValidaInoltroNuovaIstanza(EventoModel aEvento) throws F3BException {
+
 		Connection lConn = null;
+		Connection lConnBlob = null;
 
 		EventoDAO lEveDao = null;
-
-		Connection lConnBlob = null;
 		EventoDAO lEveDaoBlob = null;
 
 		EventoModel lEveModOE = null;
@@ -1269,6 +1277,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	public EventoNotificaModel ExDisposizioneNuovaIstanza(NuovaIstanzaModel aNuovaIstanza,
 			EventoNotificaModel lEve) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 
@@ -1304,7 +1313,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/*****************************************************************************
 	 * Funzione di ricerca flag di validazione
-	 * 
+	 *
 	 * @param aIdEventoNuovaIstanza
 	 * @param aPage
 	 *            pagina per la quale si vogliono ottenere i risultati
@@ -1312,6 +1321,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 ****************************************************************************/
 	public String ExRicercaFlagValNuovaIstanzaPaged(BigDecimal aIdEventoNuovaIstanza, int aPage)
 			throws F3BException {
+
 		Connection lConn = null;
 		String lNuovaIstanzi = null;
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;
@@ -1338,6 +1348,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	// Conversione RI in Fascicolo SIEP
 	public FascicoloSiepModel ExConvertiNuovaIstanza(SoggettoModel aSogMod, FascicoloSiepModel aFascMod)
 			throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 		SoggettoDAO lSogDao = null;
@@ -1434,12 +1445,10 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			lStatoDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException("NuovaIstanzaController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
-
 			cleanup(lNuoDao);
 			cleanup(lSogDao);
 			cleanup(lFasDao);
@@ -1447,7 +1456,6 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			cleanup(lStatoDao);
 			cleanup(lStatoSqlDao);
 			cleanup(lConn);
-
 		}
 
 		return aFascMod;
@@ -1456,6 +1464,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	// Nuova Conversione RI in Fascicolo SIEP
 	public FascicoloSiepModel ExConvertiNuovaIstanza(SoggettoModel aSogMod, FascicoloSiepModel aFascMod,
 			FascicoloSiepModel aRIMod, EventoModel aEveMod, NuovaIstanzaModel aNuoMod) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 		SoggettoDAO lSogDao = null;
@@ -1579,13 +1588,11 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			lStatoNIDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("NuovaIstanzaController.ExConvertiNuovaIstanza: Non posso convertire: "
-					+ ex);
+			throw new F3BException(
+					"NuovaIstanzaController.ExConvertiNuovaIstanza: Non posso convertire: " + ex);
 		} finally {
-
 			cleanup(lNuoDao);
 			cleanup(lSogDao);
 			cleanup(lFasDao);
@@ -1596,7 +1603,6 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			cleanup(lStatoNIDao);
 			cleanup(lEveDao);
 			cleanup(lConn);
-
 		}
 
 		return aFascMod;
@@ -1605,6 +1611,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	// Associazione RI a Fascicolo SIEP
 	public FascicoloSiepModel ExAssociaNuovaIstanza(BigDecimal aIdFascSiep, FascicoloSiepModel aRIMod,
 			EventoModel aEveMod, NuovaIstanzaModel aNuoMod) throws F3BException {
+
 		Connection lConn = null;
 		StatoProcedimentoDAO lStatoNIDao = null;
 		FascicoloSiepDAO lRIDao = null;
@@ -1662,13 +1669,16 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			lStatoNIDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("NuovaIstanzaController.ExAssociaNuovaIstanza: Non posso associare: " + ex);
+			throw new F3BException(
+					"NuovaIstanzaController.ExAssociaNuovaIstanza: Non posso associare: " + ex);
 		} finally {
 			cleanup(lRIDao);
 			cleanup(lStatoNIDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lEveDao);
+			cleanup(lNuoDao);
 			cleanup(lConn);
 		}
 
@@ -1677,6 +1687,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	// Annullamento dell'Associazione RI a Fascicolo SIEP
 	public FascicoloSiepModel ExAnnullaAssociaNuovaIstanza(FascicoloSiepModel aRIMod) throws F3BException {
+
 		Connection lConn = null;
 		StatoProcedimentoDAO lStatoNIDao = null;
 		StatoProcedimentoSqlDAO lStatoSqlDao = null;
@@ -1711,7 +1722,6 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			lStatoNIDao.stop();
 
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			throw new F3BException(
@@ -1729,12 +1739,13 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/*****************************************************************************
 	 * Metodo che modifica lo Stato della NuovaIstanza
-	 * 
+	 *
 	 * @param aNuovaIstanza
 	 *            Model
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaStatoNuovaIstanza(NuovaIstanzaModel aNuovaIstanza) throws F3BException {
+
 		Connection lConn = null;
 		NuovaIstanzaDAO lNuoDao = null;
 
@@ -1770,7 +1781,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 
 	/*****************************************************************************
 	 * ANNA Funzione di ricerca flag di validazione Inoltro
-	 * 
+	 *
 	 * @param aIdEventoNuovaIstanza
 	 * @param aPage
 	 *            pagina per la quale si vogliono ottenere i risultati
@@ -1778,6 +1789,7 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 	 ****************************************************************************/
 	public String ExRicercaFlagValNuovaIstanza(BigDecimal aIdEventoNuovaIstanza, String Tipo)
 			throws F3BException {
+
 		Connection lConn = null;
 		String lNuovaIstanzi = "";
 		NuovaIstanzaSqlDAO lNuovaIstanzaSqlDao = null;

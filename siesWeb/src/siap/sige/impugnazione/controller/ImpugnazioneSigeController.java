@@ -214,13 +214,11 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 			siesLogger.error("DAOException: " + ex);
 			throw new F3BException("ImpugnazioneSigeController.ExInserisciImpugnazione: " + ex);
 		} finally {
-
 			cleanup(lImpSigeDao);
 			cleanup(lEveSqlDao);
 			cleanup(lEveDao);
 			cleanup(lImpSigeSqlDao);
 			cleanup(lScaDao);
-			// cleanup(lDOPDao);
 			cleanup(lPSDao);
 			cleanup(lFasDAO);
 			cleanup(lConn);
@@ -230,6 +228,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazione(ImpugnazioneSigeModel aImpugnazione)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = new Vector<>();
 		ImpugnazioneSigeSqlDAO lImpDao = null;
@@ -265,6 +264,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	 */
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioniAnnullateByProv(BigDecimal aIdProv)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
@@ -281,9 +281,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 					"ImpugnazioneSigeController.ExRicercaImpugnazioneAnnullatiByProv: " + daoEx);
 		} catch (Exception e) {
 			throw new F3BException("" + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
 		}
@@ -292,6 +290,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	@Override
 	public ImpugnazioneSigeModel ExRicercaImpugnazioneByKey(BigDecimal aKey) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
 		ImpugnazioneSigeModel impugnazione;
@@ -361,6 +360,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	public ImpugnazioneSigeModel ExModificaImpugnazione(ImpugnazioneSigeModel aImpugnazione)
 			throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeDAO lImpDao = null;
 		ImpugnazioneSigeModel lImpMod = new ImpugnazioneSigeModel(aImpugnazione);
@@ -445,9 +445,11 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 		} finally {
 			cleanup(lConn);
 			cleanup(lImpDao);
-			cleanup(autoritaEsternaDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(eventoDao);
 			cleanup(notificaDao);
 			cleanup(notificaSqlDao);
+			cleanup(autoritaEsternaDao);
 		}
 		return lImpMod;
 	}
@@ -461,9 +463,9 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	 * @param aFascicoloSige
 	 * @throws F3BException
 	 */
-
 	public void ExAnnullaImpugnazione(ImpugnazioneSigeModel aImpugnazione, FascicoloSigeModel aFascicoloSige)
 			throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeDAO lImpDao = null;
 		FascicoloSigeDAO lFasDao = null;
@@ -564,16 +566,18 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 		} catch (Exception e) {
 			rollback(lConn);
 			throw new F3BException("" + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lImpDao);
 			cleanup(lFasDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lImpSqlDao);
+			cleanup(lProvSqlDao);
 			cleanup(lConn);
 		}
 	}
 
 	public ImpugnazioneSigeModel ExRicercaImpugnazioneByIdEvento(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
 		ImpugnazioneSigeModel lImpMod;
@@ -597,6 +601,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	public ImpugnazioneSigeModel ExRicercaImpugnazioneByIdProvvTipoImp(BigDecimal aIdProvv, String aTipo)
 			throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
 		ImpugnazioneSigeModel lImpMod;
@@ -627,6 +632,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	 * @throws F3BException
 	 */
 	public boolean ExVerificaImpugnazione(BigDecimal aFascKey, String aTipoEvento) throws F3BException {
+
 		siesLogger.error("ImpugnazioneSigeController.ExVerificaImpugnazione aFascKey + aTipoEvento = "
 				+ aFascKey + " " + aTipoEvento);
 		boolean aResponse = false;
@@ -672,6 +678,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	// String aCodUff, UtenteModel aUtenteModel)
 	public ByteArrayOutputStream ExStampaImpugnazioneSige(BigDecimal aIdFascicolo, BigDecimal aIdImpugnazione,
 			String aCodTemplate, String aCodUff, UtenteModel aUtenteModel) throws F3BException {
+
 		ByteArrayOutputStream lByteArrayOut = null;
 		EventoDAO lEveDao = null;
 		Connection lConn = null;
@@ -719,6 +726,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	}
 
 	public String ExRicercaDataRicorso(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
 		String retval = " ";
@@ -738,6 +746,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	}
 
 	public String ExRicercaDateRicorsi(BigDecimal aIdEvento) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
 
@@ -776,8 +785,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	 */
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioniFascicoloSige(BigDecimal aFascKey,
 			String aTipoRicorso) throws F3BException {
-		// siesLogger.error("ImpugnazioneSigeController.ExRicercaImpugnazioni aFascKey + aTipoEvento =
-		// "+aFascKey+" "+aTipoEvento);
+
 		Connection lConn = null;
 
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = new Vector<>();
@@ -808,7 +816,6 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 					}
 					lImpugnazioni.add(impugnazione);
 				}
-
 			}
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -835,6 +842,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	 */
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioniProvvedimentoSige(BigDecimal aIdProv,
 			String aTipoRicorso) throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
@@ -858,9 +866,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 					"ImpugnazioneSigeController.ExRicercaImpugnazioniProvvedimentoSige: " + daoEx);
 		} catch (Exception e) {
 			throw new F3BException("" + e);
-		}
-
-		finally {
+		} finally {
 			cleanup(lImpDao);
 			cleanup(lConn);
 		}
@@ -877,6 +883,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	 */
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioniProvvedimentoSige(BigDecimal aIdProv)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = null;
 		ImpugnazioneSigeSqlDAO lImpDao = null;
@@ -902,6 +909,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioneByIdProvvedimentoSige(BigDecimal aKey)
 			throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = new Vector<>();
 		ImpugnazioneSigeSqlDAO lImpDao = null;
@@ -931,6 +939,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioniFascicoloSigePerEsitoDecisione(
 			BigDecimal aFascKey, String aTipoRicorso) throws F3BException {
+
 		Connection lConn = null;
 
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = new Vector<>();
@@ -977,6 +986,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	@Override
 	public ImpugnazioneSigeModel ExImpostaEsitoImpugnazione(ImpugnazioneSigeModel impugnazione,
 			EventoModel evento, BigDecimal idFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeDAO lImpSigeDao = null;
 		ImpugnazioneSigeSqlDAO lImpSigeSqlDao = null;
@@ -1060,7 +1070,6 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 					.ExRicercaProvvedimentoById(impugnazione.getIdProvvedimentoGenerato());
 			impugnazione.setProvvedimentoSige(provvedimento);
 			impugnazione.setProvvedimentoSigeGenerato(provvedimentoGenerato);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1081,6 +1090,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	@Override
 	public ImpugnazioneSigeModel ExAggiornaEsitoImpugnazione(ImpugnazioneSigeModel impugnazione,
 			BigDecimal idFascicolo) throws F3BException {
+
 		Connection lConn = null;
 		ImpugnazioneSigeDAO lImpSigeDao = null;
 		EventoDAO lEveDao = null;
@@ -1201,17 +1211,18 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	@Override
 	public ImpugnazioneSigeModel ExEliminaImpugnazione(ImpugnazioneSigeModel impugnazione)
 			throws F3BException {
+
 		ProvvedimentoSigeDAO provvDao = null;
 		EventoDAO eventoDao = null;
 		ImpugnazioneSigeDAO impDao = null;
 		FascicoloSigeDAO lFasDAO = null;
 		NotificaDAO lNotDao = null;
 		Connection lConn = null;
+
 		try {
 			lConn = getDBTransaction();
 
 			if (impugnazione.getProvvedimentoSigeGenerato() != null) {
-
 				// Cancellazione Notifiche
 				if (impugnazione.getNotifiche() != null
 						&& impugnazione.getProvvedimentoSigeGenerato().getEventoNotifica() != null
@@ -1241,7 +1252,6 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 			if (impugnazione.getSoggettoImpugnante() != null
 					&& impugnazione.getSoggettoImpugnante().startsWith("Opposizione")
 					&& impugnazione.getIdOpposizioneConvRicorso() != null) {
-
 				impDao = new ImpugnazioneSigeDAO(lConn);
 				impDao.setConvRicorsoInCass("N");
 				impDao.setDataAggiornamento(new Date());
@@ -1296,8 +1306,10 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 			throw new F3BException("ImpugnazioneSigeController.ExEliminaImpugnazione: " + ex);
 		} finally {
 			cleanup(provvDao);
-			cleanup(impDao);
 			cleanup(eventoDao);
+			cleanup(impDao);
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			cleanup(lFasDAO);
 			cleanup(lNotDao);
 			cleanup(lConn);
 		}
@@ -1306,6 +1318,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 
 	public Vector<ImpugnazioneSigeModel> ExRicercaImpugnazioniAccolteByIdProvvedimento(
 			BigDecimal idProvvedimento) throws F3BException {
+
 		Connection lConn = null;
 		Vector<ImpugnazioneSigeModel> lImpugnazioni = new Vector<>();
 		ImpugnazioneSigeSqlDAO lImpDao = null;
@@ -1332,6 +1345,7 @@ public class ImpugnazioneSigeController extends SiapController implements IImpug
 	@Override
 	public ImpugnazioneSigeModel ExEliminaEsitoImpugnazione(ImpugnazioneSigeModel impugnazione,
 			BigDecimal idFascicolo) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
