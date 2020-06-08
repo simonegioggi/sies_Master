@@ -164,10 +164,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 ****************************************************************************/
 	public DatiFinaliCumuloModel ExInserisciDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		DatiFinaliCumuloDAO lDatDao = null;
 		DatiFinaliCumuloModel lDatMod = null;
@@ -205,10 +202,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * @throws F3BException
 	 ****************************************************************************/
 	public Vector ExRicercaDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		Vector lDatiFinaliCumuli = new Vector();
 		DatiFinaliCumuloDAO lDatDao = null;
@@ -247,10 +241,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 ****************************************************************************/
 	public DatiFinaliCumuloModel ExRicercaDatiFinaliCumuloById(BigDecimal aIdDatiFinaliCumulo)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		DatiFinaliCumuloModel lDatiFinaliCumuloMod = new DatiFinaliCumuloModel();
 		DatiFinaliCumuloSqlDAO lDatiFinaliCumuloSqlDao = null;
@@ -282,10 +273,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExModificaDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		DatiFinaliCumuloDAO lDatDao = null;
 
@@ -314,10 +302,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 * @throws F3BException
 	 ****************************************************************************/
 	public void ExCancellaDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		DatiFinaliCumuloDAO lDatDao = null;
 
@@ -348,10 +333,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 ****************************************************************************/
 	public BigDecimal ExGetCountDatiFinaliCumulo(DatiFinaliCumuloModel aDatiFinaliCumulo)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		BigDecimal lCount = new BigDecimal(0);
 		DatiFinaliCumuloSqlDAO lDatiFinaliCumuloSqlDao = null;
@@ -383,10 +365,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public DatiFinaliCumuloModel ExRicercaDatiFinaliCumuloByIdIstrutt(BigDecimal aIdIstruttoria)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		DatiFinaliCumuloModel lDatiFinaliCumuloMod = null;
 		DatiFinaliCumuloSqlDAO lDatiFinaliCumuloSqlDao = null;
@@ -416,18 +395,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 	/**
 	 * Metodo che recupera tutti i dati finali cumulo presenti in istruttoria
-<<<<<<< HEAD
-	 *
-	 *
-	 */
-	public DatiFinaliCumuloAggregatoModel ExRicercaDatiFinaliAggregatiByIdIstruttoria(
-			BigDecimal aIdIstruttoria) throws F3BException {
-=======
 	 */
 	public DatiFinaliCumuloAggregatoModel ExRicercaDatiFinaliAggregatiByIdIstruttoria(
 			BigDecimal aIdIstruttoria) throws F3BException {
 
->>>>>>> MEV_6
 		Connection lConn = null;
 
 		DatiFinaliCumuloAggregatoModel lDatiFinaliAggregatoMod = new DatiFinaliCumuloAggregatoModel();
@@ -551,10 +522,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public PenaRideterminataCumuloModel ExInserisciPenaRideterminataCumulo(
 			PenaRideterminataCumuloModel aPenaRideterminataCumulo) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		PenaRideterminataCumuloDAO lPenDao = null;
 		PenaRideterminataCumuloModel lPenMod = null;
@@ -589,10 +557,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public void ExModificaPenaRideterminataCumulo(PenaRideterminataCumuloModel aPenaRideterminataCumulo)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		PenaRideterminataCumuloDAO lPenDao = null;
 
@@ -622,10 +587,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public void ExCancellaPenaRideterminataCumulo(PenaRideterminataCumuloModel aPenaRideterminataCumulo)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		PenaRideterminataCumuloDAO lPenDao = null;
 
@@ -655,10 +617,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public void ExCRUDPeneRideterminateUlterioriSanzioniCumulo(
 			DatiFinaliCumuloAggregatoModel aDatiFInaliAggregato) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 
 		PenaRideterminataCumuloDAO lPenDao = null;
@@ -853,10 +812,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 			cleanup(lConn);
 		}
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 	}
 
 	/**
@@ -864,10 +819,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public PosizioneGiuridicaCumuloModel ExInserisciPosizioneGiuridicaCumulo(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lPosDao = null;
 		PosizioneGiuridicaCumuloModel lPosMod = null;
@@ -905,10 +857,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public void ExModificaPosizioneGiuridicaCumulo(PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 		PosizioneGiuridicaCumuloDAO lPosDao = null;
 
@@ -943,10 +892,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public EventoNotificaModel ExInserisciProvvedimentoCumulo(EventoNotificaModel aEveNotModel,
 			BigDecimal aIdDatiFinali) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 
 		EventoNotificaModel lEveNot = null;
@@ -995,10 +941,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	*/
 	public EventoNotificaModel ExModificaProvvedimentoCumulo(EventoNotificaModel aEveNotModel,
 			BigDecimal aIdDatiFinali) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 
 		EventoNotificaModel lEveNot = null;
@@ -1062,10 +1005,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public Vector<ProcedimentoCumulatoModel> ExRicercaProcedimentiClasseIVPerRibaltamentoByIdIstru(
 			BigDecimal aIdIstruttoria, String aChiaveUfficio) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 
 		Vector<ProcedimentoCumulatoModel> lProcedimenti = new Vector<>();
@@ -1119,47 +1059,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	 */
 	public void ExUpdateValidaProvvedimentoCumulo(EventoModel aEvento,
 			Vector<TitoloCumulatoModel> alistaTitoli) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
 		StatoProcedimentoDAO lStatoProcDao = null;
 		EventoDAO lEveDaoBlob = null;
-<<<<<<< HEAD
-
-		PenaResiduaDAO lPenResDao = null;
-		PenaResiduaSqlDAO lPenResSqlDao = null;
-
-		LicenzaLibanticipataDAO lLicenzaDao = null;
-		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDAO = null;
-
-		PosizioneGiuridicaSqlDAO lPosSqlDao = null;
-		PosizioneGiuridicaDAO lPosDao = null;
-
-		ScadenzarioDAO lScaDao = null;
-		ScadenzarioSqlDAO lScadeSqlDao = null;
-
-		FascicoloSiepDAO lFascDao = null;
-		FascicoloSiepSqlDAO lFascSqlDao = null;
-
-		IstruttoriaCumuloDAO lIstruttoriaDao = null;
-
-		DatiFinaliCumuloSqlDAO lDatiFinaliSqlDao = null;
-		DatiFinaliCumuloDAO lDatiFinaliDao = null;
-
-		PenaRideterminataCumuloSqlDAO lPenaRidetCumuloSqlDao = null;
-		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumuloSqlDao = null;
-
-		ParametroSqlDAO lParSqlDao = null;
-
-		EventoDAO lEveDao = null;
-		ArchiviazioneDAO lArcDao = null;
-		AnnotazioneEsitoTrasmissioneDAO lAnnotaEsitoDao = null;
-
-=======
 		PenaResiduaDAO lPenResDao = null;
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 		LicenzaLibanticipataDAO lLicenzaDao = null;
@@ -1179,7 +1084,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		EventoDAO lEveDao = null;
 		ArchiviazioneDAO lArcDao = null;
 		AnnotazioneEsitoTrasmissioneDAO lAnnotaEsitoDao = null;
->>>>>>> MEV_6
 		PenaAccessoriaCumuloSqlDAO lPenAccCumSqlDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
 
@@ -1449,8 +1353,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// LogF3B.getLogger()
 			siesLogger.debug("Aggiorno FASCICOLO_SIEP.FLAG_CUMULANTE = 'S'");
 			lFascDao = new FascicoloSiepDAO(lConn);
-<<<<<<< HEAD
+
 			lFascDao.selCondizioneUpdate(lEveModel.getFasSieIdFascicoloSiep());
+
 			lFascDao.setFlagCumulante("S");
 
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
@@ -1458,12 +1363,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// settato a 03
 			if (lFasModel != null && "01".equals(lFasModel.getCodStatoFascicolo()))
 				lFascDao.setCodStatoFascicolo("03");
-=======
-
-			lFascDao.selCondizioneUpdate(lEveModel.getFasSieIdFascicoloSiep());
-
-			lFascDao.setFlagCumulante("S");
->>>>>>> MEV_6
 
 			lFascDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
 			lFascDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
@@ -2169,36 +2068,16 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							"Errore durante l'elaborazione del titolo " + lTitolo.getIdTitoloCumulato());
 					rollback(lConn);
 				} finally {
-<<<<<<< HEAD
-
-				}
-			} // Chiude ciclo while
-
-=======
 					siesLogger.debug(
 							"Errore durante l'elaborazione del titolo " + lTitolo.getIdTitoloCumulato());
 				}
 			} // Chiude ciclo while
->>>>>>> MEV_6
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
 			ex.printStackTrace();
 			throw new F3BException("DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo : " + ex);
 		} finally {
-<<<<<<< HEAD
-			cleanup(lPenResDao);
-			cleanup(lPenResSqlDao);
-			cleanup(lLicenzaDao);
-
-			cleanup(lPosSqlDao);
-			cleanup(lPosDao);
-
-			cleanup(lScaDao);
-			cleanup(lFascDao);
-			cleanup(lFascSqlDao);
-
-=======
 			cleanup(lEveSqlDao);
 			cleanup(lStatoProcDao);
 			cleanup(lEveDaoBlob);
@@ -2214,36 +2093,19 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lFascDao);
 			cleanup(lFascSqlDao);
 			cleanup(lIstruttoriaDao);
->>>>>>> MEV_6
 			cleanup(lDatiFinaliSqlDao);
 			cleanup(lDatiFinaliDao);
 			cleanup(lPenaRidetCumuloSqlDao);
 			cleanup(lPosGiuCumuloSqlDao);
-<<<<<<< HEAD
-
-			cleanup(lEveSqlDao);
-			cleanup(lStatoProcDao);
-
-			cleanup(lEveDaoBlob);
-
-			cleanup(lEveDao);
-			cleanup(lArcDao);
-
-=======
 			cleanup(lParSqlDao);
 			cleanup(lEveDao);
 			cleanup(lArcDao);
 			cleanup(lAnnotaEsitoDao);
->>>>>>> MEV_6
 			cleanup(lPenAccCumSqlDao);
 			cleanup(lPenAccDao);
 
 			cleanup(lConn);
 		}
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 	} // CHIUDE ExUpdateValidaProvvedimentoCumulo()
 
 	/**
@@ -2259,22 +2121,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	public ByteArrayOutputStream ExStampaProvvedimentoCumulo(EventoNotificaModel aEventoNotModel,
 			FascicoloSiepModel aFascicoloModel, UtenteModel aUtenteMod, UfficioModel aUfficioMod)
 			throws F3BException {
-<<<<<<< HEAD
-		Connection lConn = null;
-
-		ByteArrayOutputStream lByteArrayOut = null;
-
-		EventoDAO lEveDao = null;
-
-		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
-
-=======
 
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
->>>>>>> MEV_6
 		IstruttoriaCumuloSqlDAO lIstrCumSqlDao = null;
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		SoggettoCumulatoSqlDAO lSoggCumSqlDao = null;
@@ -2283,21 +2134,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		DatiFinaliUlterioriSanzioniSqlDAO lUlterioriSanzioniSqlDao = null;
 		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumSalDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDAO = null;
-<<<<<<< HEAD
-
-		UfficioSqlDAO lUffSqlDao = null;
-		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
-
-		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
-		ComputiCumuloSqlDAO lComputiSqlDao = null;
-
-		DecodificheDAO lDecDao = null;
-		ComuneDAO lComDao = null;
-
-		Vector<UfficioModel> lListaUffEsecuzione = new Vector<>();
-		Vector<UfficioModel> lListaUffCancelleria = new Vector<>();
-		EventoSqlDAO lEveSqlDAO = null;
-=======
 		UfficioSqlDAO lUffSqlDao = null;
 		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
@@ -2309,7 +2145,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		Vector<UfficioModel> lListaUffEsecuzione = new Vector<>();
 		Vector<UfficioModel> lListaUffCancelleria = new Vector<>();
 		ByteArrayOutputStream lByteArrayOut = null;
->>>>>>> MEV_6
 
 		try {
 			lConn = getDBTransaction();
@@ -2852,14 +2687,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lUlterioriSanzioniSqlDao);
 			cleanup(lPosGiuCumSalDao);
 			cleanup(lMisSicCumSqlDAO);
-<<<<<<< HEAD
-
-			cleanup(lUffSqlDao);
-			cleanup(lIstitutoSqlDao);
-
-			cleanup(lComDao);
-			cleanup(lDecDao);
-=======
 			cleanup(lUffSqlDao);
 			cleanup(lIstitutoSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
@@ -2868,7 +2695,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lDecDao);
 			cleanup(lComDao);
 			cleanup(lEveSqlDAO);
->>>>>>> MEV_6
 
 			cleanup(lConn);
 		}
@@ -2890,24 +2716,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	public ByteArrayOutputStream ExStampaComunicazioni(EventoNotificaModel aEventoNotModel,
 			FascicoloSiepModel aFascicoloModel, UtenteModel aUtenteMod, UfficioModel aUfficioMod,
 			String lDestinatario) throws F3BException {
-<<<<<<< HEAD
-		Connection lConn = null;
-
-		ByteArrayOutputStream lByteArrayOut = null;
-
-		EventoDAO lEveDao = null;
-		NotificaSqlDAO lNotSqlDAO = null;
-
-		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
-
-=======
 
 		Connection lConn = null;
 
 		EventoDAO lEveDao = null;
 		NotificaSqlDAO lNotSqlDAO = null;
 		AvvocatoSiepxStampaSqlDAO lAvvSqlDao = null;
->>>>>>> MEV_6
 		IstruttoriaCumuloSqlDAO lIstrCumSqlDao = null;
 		TitoloCumulatoSqlDAO lTitoloSqlDao = null;
 		SoggettoCumulatoSqlDAO lSoggCumSqlDao = null;
@@ -2916,29 +2730,16 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		DatiFinaliUlterioriSanzioniSqlDAO lUlterioriSanzioniSqlDao = null;
 		PosizioneGiuridicaCumuloSqlDAO lPosGiuCumSalDao = null;
 		MisuraSicurezzaCumuloSqlDAO lMisSicCumSqlDAO = null;
-<<<<<<< HEAD
-
-		UfficioSqlDAO lUffSqlDao = null;
-		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
-
-		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
-		ComputiCumuloSqlDAO lComputiSqlDao = null;
-
-=======
 		UfficioSqlDAO lUffSqlDao = null;
 		IstitutoDetenzioneSqlDAO lIstitutoSqlDao = null;
 		TipologiaOrarioSqlDAO lTipologiaOrarioSqlDao = null;
 		ComputiCumuloSqlDAO lComputiSqlDao = null;
->>>>>>> MEV_6
 		DecodificheDAO lDecDao = null;
 		ComuneDAO lComDao = null;
 
 		Vector<UfficioModel> lListaUffEsecuzione = new Vector<>();
 		Vector<UfficioModel> lListaUffCancelleria = new Vector<>();
-<<<<<<< HEAD
-=======
 		ByteArrayOutputStream lByteArrayOut = null;
->>>>>>> MEV_6
 
 		try {
 			lConn = getDBTransaction();
@@ -3525,10 +3326,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			}
 
 			commit(lConn);
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 		} catch (Exception e) {
 			rollback(lConn);
 			e.printStackTrace();
@@ -3536,10 +3333,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			throw new F3BException("DatiFinaliCumuloController.ExStampaComunicazioni: " + e);
 		} finally {
 			cleanup(lEveDao);
-<<<<<<< HEAD
-=======
 			cleanup(lNotSqlDAO);
->>>>>>> MEV_6
 			cleanup(lAvvSqlDao);
 			cleanup(lIstrCumSqlDao);
 			cleanup(lTitoloSqlDao);
@@ -3549,15 +3343,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lUlterioriSanzioniSqlDao);
 			cleanup(lPosGiuCumSalDao);
 			cleanup(lMisSicCumSqlDAO);
-<<<<<<< HEAD
-
-			cleanup(lUffSqlDao);
-			cleanup(lIstitutoSqlDao);
-
-			cleanup(lComDao);
-			cleanup(lDecDao);
-			cleanup(lNotSqlDAO);
-=======
 			cleanup(lUffSqlDao);
 			cleanup(lIstitutoSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
@@ -3565,7 +3350,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lComputiSqlDao);
 			cleanup(lDecDao);
 			cleanup(lComDao);
->>>>>>> MEV_6
 
 			cleanup(lConn);
 		}
@@ -3573,17 +3357,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		return lByteArrayOut;
 	}
 
-<<<<<<< HEAD
-	/**
-	*
-	*/
-	private PenaResiduaModel calcolaResiduoPenaAdOggi(PenaRideterminataCumuloModel aPenaRidetCumulo,
-			Date aOggi) throws Exception {
-=======
 	private PenaResiduaModel calcolaResiduoPenaAdOggi(PenaRideterminataCumuloModel aPenaRidetCumulo,
 			Date aOggi) throws Exception {
 
->>>>>>> MEV_6
 		PenaResiduaModel lPenaInEspiazione = aPenaRidetCumulo.getPenaResidua();
 
 		// Calcolo il residuo pena se interrompessi Oggi
@@ -3775,42 +3551,16 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 		SoggettoDAO lSoggDao = null;
 		SoggettoSqlDAO lSoggSqlDao = null;
-<<<<<<< HEAD
-
-		ResidenzaDAO lResidenzaDao = null;
-		ResidenzaSqlDAO lResSqlDao = null;
-		ResidenzaFascicoloSiepDAO lResidenzaFascicoloSiepDAO = null;
-
-		SentenzaRiunitaFascSiepSqlDAO lSentenzaRiunitaFascSiepSqlDao = null;
-		SentenzaRiunitaFascSiepDAO lSentenzaRiunitaFascSiepDao = null;
-
-=======
 		ResidenzaDAO lResidenzaDao = null;
 		ResidenzaSqlDAO lResSqlDao = null;
 		ResidenzaFascicoloSiepDAO lResidenzaFascicoloSiepDAO = null;
 		SentenzaRiunitaFascSiepSqlDAO lSentenzaRiunitaFascSiepSqlDao = null;
 		SentenzaRiunitaFascSiepDAO lSentenzaRiunitaFascSiepDao = null;
->>>>>>> MEV_6
 		FascicoloSiepSqlDAO lFascSiepSqlDao = null;
 		FascicoloSiepDAO lFascSiepDao = null;
 		MisuraSicurezzaDAO lMisuraSicurezzaDao = null;
 		FascMsToFascSiepDAO lFascMsToFascSiepDao = null;
 		RiferimentoFascicoloSiepDAO lRifFasSiepDao = null;
-<<<<<<< HEAD
-
-		AvvocatoFascicoloSiepSqlDAO lAccFascSiepDao = null;
-		AvvocatoFascicoloSiepDAO lAvvFasDao = null;
-
-		PosizioneGiuridicaDAO lPosDao = null;
-
-		PenaResiduaDAO lPenaResiduaDao = null;
-
-		AgdgFascicoloSiepSqlDAO lAgdgFascicoloSiepSqlDao = null;
-		AgdgFascicoloSiepDAO lAgdgFascicoloSiepDao = null;
-
-		StatoProcedimentoDAO lStatoProcDao = null;
-
-=======
 		AvvocatoFascicoloSiepSqlDAO lAccFascSiepDao = null;
 		AvvocatoFascicoloSiepDAO lAvvFasDao = null;
 		PosizioneGiuridicaDAO lPosDao = null;
@@ -3818,7 +3568,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		AgdgFascicoloSiepSqlDAO lAgdgFascicoloSiepSqlDao = null;
 		AgdgFascicoloSiepDAO lAgdgFascicoloSiepDao = null;
 		StatoProcedimentoDAO lStatoProcDao = null;
->>>>>>> MEV_6
 		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
 
@@ -4413,11 +4162,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			throw new F3BException(
 					"DatiFinaliCumuloController.iscriviProcedimentoDiClasseIV: Non posso inserire: " + ex);
 		} finally {
-<<<<<<< HEAD
-			if (aDBConnection == null) {
-				cleanup(lConn);
-			}
-=======
 			if (aDBConnection == null)
 				cleanup(lConn);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
@@ -4442,7 +4186,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lStatoProcDao);
 			cleanup(lTitCumSqlDao);
 			cleanup(lProcCumSqlDao);
->>>>>>> MEV_6
 		}
 	}
 
@@ -4467,20 +4210,10 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		MisuraSicurezzaDAO lMisuraSicurezzaDao = null;
 		FascMsToFascSiepDAO lFascMsToFascSiepDao = null;
 		RiferimentoFascicoloSiepDAO lRifFasSiepDao = null;
-<<<<<<< HEAD
-
-		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
-		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
-
-		FascicoloSiepSqlDAO lFascSiepSqlDao = null;
-		UfficioSqlDAO lUffSqlDao = null;
-
-=======
 		TitoloCumulatoSqlDAO lTitCumSqlDao = null;
 		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
 		FascicoloSiepSqlDAO lFascSiepSqlDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
->>>>>>> MEV_6
 		FascMsToFascSiepSqlDAO lFascMsToFascSiepSqlDao = null;
 
 		try {
@@ -4824,21 +4557,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lFascMsToFascSiepDao);
 			cleanup(lFascMsToFascSiepSqlDao);
 			cleanup(lRifFasSiepDao);
-<<<<<<< HEAD
-
-			cleanup(lTitCumSqlDao);
-			cleanup(lProcCumSqlDao);
-
-			cleanup(lFascSiepSqlDao);
-			cleanup(lUffSqlDao);
-
-			if (aDBConnection == null) {
-				cleanup(lConn);
-			}
-		}
-	}
-
-=======
 			cleanup(lTitCumSqlDao);
 			cleanup(lProcCumSqlDao);
 			cleanup(lFascSiepSqlDao);
@@ -4848,7 +4566,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				cleanup(lConn);
 		}
 	}
->>>>>>> MEV_6
 	// MEV 26 Cumulo Step2
 
 	// La Insert viene fatta in modalità 'NO SEQUENCE', senza utilizzare le sequnce, ma inserendo
@@ -4858,10 +4575,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	//
 	public String ExInserisciDatiFinaliCumuloWithoutSequence(DatiFinaliCumuloModel aDatiFinaliCumulo,
 			Connection lConn) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		String EsitodiRitorno = "00000";
 		DatiFinaliCumuloDAO lDatiFinCumDao = null;
 		// DatiFinaliCumuloModel lDatiFin = null;
@@ -4889,18 +4603,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 
 		return EsitodiRitorno;
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 	} // Chiude ExInserisciDatiFinaliCumuloWithoutSequence()
 
 	public String ExInserisciPosizioneGiuridicaCumuloWithoutSequence(
 			PosizioneGiuridicaCumuloModel aPosizioneGiuridicaCumulo, Connection lConn) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		String EsitodiRitorno = "00000";
 		PosizioneGiuridicaCumuloDAO lPosCumDao = null;
 		// PosizioneGiuridicaCumuloModel lPosizione = null;
@@ -4914,13 +4621,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lPosCumDao.setWithoutSequence(true);
 				lPosCumDao.insert();
 				lPosCumDao.stop();
-<<<<<<< HEAD
-
 			}
-
-=======
-			}
->>>>>>> MEV_6
 		} catch (DAOException daoEx) {
 			if (daoEx.UNIQUE_CONSTRAINT_VIOLATED) {
 				siesLogger.error("Posizione Giuridica Cumulo gia' presente...>"
@@ -4936,18 +4637,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 
 		return EsitodiRitorno;
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 	} // Chiude ExInserisciPosizioneGiuridicaCumuloWithoutSequence()
 
 	public String ExInserisciPeneRideterminateCumuloWithoutSequence(
 			PenaRideterminataCumuloModel aPenaRidetCumModel, Connection lConn) throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		String EsitodiRitorno = "00000";
 		PenaRideterminataCumuloDAO lPeneCumDao = null;
 
@@ -4975,19 +4669,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		}
 
 		return EsitodiRitorno;
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 	} // Chiude ExInserisciPeneRideterminateCumuloWithoutSequence
 
 	public String ExInserisciUlerioriSanzioniCumuloWithoutSequence(
 			DatiFinaliUlterioriSanzioniModel aDatiFinaliUlterioriSanzioniModel, Connection lConn)
 			throws F3BException {
-<<<<<<< HEAD
-=======
 
->>>>>>> MEV_6
 		String EsitodiRitorno = "00000";
 		DatiFinaliUlterioriSanzioniDAO lUlterioriDao = null;
 
@@ -5047,22 +4734,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	// }
 
 	/*
-	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
-	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
+	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo
+	 * Numero MAC : 20191128013 
+	 * Autore : monica 
+	 * Data : 19/dic/2019 
+	 * Branch : 11.2.4
 	 */
-<<<<<<< HEAD
-
-	/**
-	 * Aggiorna il flag altra causa sul fascicolo
-	 *
-	 */
-	public void ExUpdateFlagAltraCausaFascicolo(FascicoloSiepModel aFascicolo, String flagAltraCausa)
-			throws F3BException {
-		Connection lConn = null;
-
-		EventoSqlDAO lEveSqlDao = null;
-
-=======
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
 	 */
@@ -5072,7 +4749,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		Connection lConn = null;
 
 		EventoSqlDAO lEveSqlDao = null;
->>>>>>> MEV_6
 		FascicoloSiepDAO lFascDao = null;
 		FascicoloSiepSqlDAO lFascSqlDao = null;
 
@@ -5100,30 +4776,19 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lFascDao.setFlagAltraCausa(flagAltraCausa);
 			lFascDao.update();
 			commit(lConn);
-<<<<<<< HEAD
-
-=======
->>>>>>> MEV_6
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
 			ex.printStackTrace();
 			throw new F3BException("DatiFinaliCumuloController.ExUpdateFlagAltraCausaFascicolo : " + ex);
 		} finally {
-<<<<<<< HEAD
-
 			cleanup(lFascDao);
 			cleanup(lFascSqlDao);
-
-=======
-			cleanup(lFascDao);
-			cleanup(lFascSqlDao);
->>>>>>> MEV_6
 			cleanup(lEveSqlDao);
 
 			cleanup(lConn);
 		}
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
-		// ***** FINE INTERVENTO 20191128013 *****//
+	// ***** FINE INTERVENTO 20191128013 *****//
 
 }
