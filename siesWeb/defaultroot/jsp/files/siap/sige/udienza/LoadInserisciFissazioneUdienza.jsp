@@ -338,7 +338,9 @@
 
       	// 20171003: [SG] aggiunto controllo sulla sezione
       	if (document.LoadInserisciFissazioneUdienza.<%=ICostantiUdienzaSige.CAMPO_ID_UDIENZA_SIGE%>.value == ""
-      			&& dataUdienza != "//"
+      			// Ticket#20200528012 - SIGE - inserimento parte civile / offesa su quadro "emissione ordinanza"
+      			// && dataUdienza != "//" --> modificato controllo
+      			&& dataUdienza == "//"
       			&& document.LoadInserisciFissazioneUdienza.<%=ICostantiFascicoloSige.CAMPO_COD_TIPO_GIUDIZIO%>.value == 'C'
       			&& <%=ufficioConSezioni%>) {
 <%--       			&& document.LoadInserisciFissazioneUdienza.<%=ICostantiUdienzaSige.CAMPO_COD_SEZIONE_UDIENZA%>.value == "-") { --%>

@@ -11,6 +11,7 @@ import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.residenza.model.ResidenzaModel;
+import siap.sige.SIGEException;
 import siap.sige.fascicolo.action.ICostantiFascicoloSige;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
 import siap.sige.udienza.action.ICostantiUdienzaSige;
@@ -34,7 +35,7 @@ import siap.sige.web.ActionSige;
  * <p>
  * Company: Engineeering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActInserisciParteUdienza extends ActionSige implements ICostantiPartiUdienza {
@@ -44,7 +45,7 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 	/**
 	 * Effettua Inserimento della Parte (Offesa/Civile) di una Udienza.
 	 * <p>
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione.
 	 *         <p>
 	 * @throws Exception
@@ -292,8 +293,19 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 
 		UdienzaPartiModel lUdienzaParteModel = new UdienzaPartiModel();
 
-		lUdienzaParteModel.setIdUdienzaProcedimentoSige(getRequestBigDecimalParameter(
-				ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE));
+		// Ticket#20200528012 - SIGE - inserimento parte civile / offesa su quadro "emissione ordinanza"
+		// gestito numberformatexception poichè significa che l'udienza del procedimento non esiste ancora
+		try {
+			lUdienzaParteModel.setIdUdienzaProcedimentoSige(getRequestBigDecimalParameter(
+					ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE));
+		} catch (Exception e) {
+			throw new SIGEException(SIGEException.USER_MESSAGE,
+//					"Attenzione! L'inserimento delle parti civili o delle parti offese va fatto dopo aver "
+//							+ "fissato l'udienza da apposita funzione (Udienze/Fissazione/Rinvio/Ruolo >> Fissazione Udienza).");
+					"Attenzione! L'inserimento delle parti civili o delle parti offese è previsto dopo"
+					+ " l'emissione del Decreto di Fissazione Udienza.");
+		}
+		// FINE Ticket#20200528012
 
 		lUdienzaParteModel.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lUdienzaParteModel.setDataInserimento(DateUtils.getSysDate());

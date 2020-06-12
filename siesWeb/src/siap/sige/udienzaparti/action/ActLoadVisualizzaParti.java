@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sige.SIGEException;
 import siap.sige.fascicolo.action.ICostantiFascicoloSige;
@@ -14,8 +16,6 @@ import siap.sige.udienzaparti.model.AnagraficaPartiUdienzaModel;
 import siap.sige.udienzaprocedimento.action.ICostantiUdienzaProcedimentoSige;
 import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
-import f3b.util.Utils;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -30,18 +30,21 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Engineering
  * </p>
- * 
+ *
  * @version 1.0
  */
-public class ActLoadVisualizzaParti extends ActionSige implements ICostantiPartiUdienza,
-		ICostantiUdienzaSige, ICostantiEvento {
+public class ActLoadVisualizzaParti extends ActionSige
+		implements ICostantiPartiUdienza, ICostantiUdienzaSige, ICostantiEvento {
 
 	String mRetPage = PG_LOAD_VISUALIZZA_PARTI_UDIENZA;
 
 	public String processRequest() throws Exception {
 
 		// Gestione pulsante di ritorno.
-		setLinkRitorno();
+		// Ticket#20200528012 - SIGE - inserimento parte civile / offesa su quadro "emissione ordinanza"
+		// cambiata gestione ritorno poichè tornava sempre prima su se stessa
+		// setLinkRitorno();
+		gestioneRitorno();
 
 		if (IsFascicoloSigeIscrittoCompetenza() == false)
 			throw new SIGEException(SIGEException.USER_MESSAGE, ICostantiFascicoloSige.MSG_NON_MODIFICABILE);
@@ -62,14 +65,16 @@ public class ActLoadVisualizzaParti extends ActionSige implements ICostantiParti
 				&& Utils.isPresent(mFasEsteso.getUdienzaProcedimento().getIdUdienzaProcedimentoSige())) {
 			if (!isRequestParameterNullObj(CAMPO_ID_UDIENZA_SIGE))
 				idUdienzaSIGE = getRequestStringParameter(CAMPO_ID_UDIENZA_SIGE);
-			if (!isRequestParameterNullObj(ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE))
-				idUdienzaProcedimentoSIGE = getRequestStringParameter(ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE);
+			if (!isRequestParameterNullObj(
+					ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE))
+				idUdienzaProcedimentoSIGE = getRequestStringParameter(
+						ICostantiUdienzaProcedimentoSige.CAMPO_ID_UDIENZA_PROCEDIMENTO_SIGE);
 			if (!isRequestParameterNullObj(CAMPO_ID_EVENTO))
 				idEventoUdienza = getRequestStringParameter(CAMPO_ID_EVENTO);
 		}
 
 		// chiama il controller
-		List<AnagraficaPartiUdienzaModel> lParti = new ArrayList<AnagraficaPartiUdienzaModel>();
+		List<AnagraficaPartiUdienzaModel> lParti = new ArrayList<>();
 		if (Utils.isPresent(idUdienzaProcedimentoSIGE)) {
 			IPartiUdienza lCtrl = SIGELookupRemote.getPartiUdienzaRemote();
 			lParti = lCtrl.ExRicercaPartiUdienzaByIdUdienza(new BigDecimal(idUdienzaProcedimentoSIGE),
