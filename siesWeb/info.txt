@@ -6,6 +6,7 @@ branch mac-otrs-20200508014 creato il 26/05/2020 nato dalla versione 12.3.0
 branch mac-otrs-20200525014 creato il 27/05/2020 nato dalla versione 12.3.0
 branch mac-otrs-20200525017 creato il 26/05/2020 nato dalla versione 12.3.0
 branch mac-otrs-20200528012 creato il 28/05/2020 nato dalla versione 12.3.0
+branch mac-otrs-20200610014 creato il 11/06/2020 nato dalla versione 12.4.0
 #################################################################################
 RELEASE 12.4.0: 08/06/2020
 1)	nato dal branch "release_12.3.0"
