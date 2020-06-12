@@ -145,6 +145,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	public TreeModel prelevaDatiIstruttoriaCumulo(FascicoloSiepModel lFascicoloModel, UtenteModel aUtenteMod,
 			UfficioModel lUfficioMod, IstruttoriaCumuloModel aIstruttoriaCumulo,
 			Vector<TitoloCumulatoModel> aListaTitoli, Date lDataEmissione) throws F3BException {
+
 		siesLogger.debug("prelevaDatiIstruttoriaCumulo INIZIO");
 
 		Connection lConn = null;
@@ -1058,7 +1059,9 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 				 * lRiepilogo.setTotGiorniPresofferto(new BigDecimal(lTotPre.getNumGiorni()));
 				 *
 				 * // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX TreeModel
-				 * lTreeRiepilogo = new TreeModel(lRiepilogo); lTreeIstruMod.add(lTreeRiepilogo); //
+				 * lTreeRiepilogo = new TreeModel(lRiepilogo);
+				 *
+				 * lTreeIstruMod.add(lTreeRiepilogo); //
 				 * XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 				 *
 				 * } // Chiude VecMisCau
@@ -3546,6 +3549,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	} // Chiude prelevaDatiComunicazioniCumulo()
 
 	/**
+	 *
 	 * @param lTreeIstruMod
 	 * @param VecBenefici
 	 * @param CodDpr
@@ -4489,8 +4493,6 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								lStEsecCumMod.getIdStatoEsecTitoloCumulato());
 						lVecCompCum = new Vector<ComputiCumuloModel>(lCompSqlDao.getModels());
 						if (lVecCompCum != null && lVecCompCum.size() > 0) {
-							// siesLogger.debug("--XX-- trovati computi - N. do computi =
-							// "+lVecCompCum.size());
 							Iterator lItxCmp = lVecCompCum.iterator();
 							while (lItxCmp.hasNext()) {
 								lCompMod = (ComputiCumuloModel) lItxCmp.next();
@@ -4530,14 +4532,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 											|| lStEsecCumMod.getCodMotivo().compareTo("0267") == 0
 											|| lStEsecCumMod.getCodMotivo().compareTo("0270") == 0
 											|| lStEsecCumMod.getCodMotivo().compareTo("0675") == 0
-											// =======
 											|| lStEsecCumMod.getCodMotivo().compareTo("0121") == 0
 											|| lStEsecCumMod.getCodMotivo().compareTo("0212") == 0
-											|| lStEsecCumMod.getCodMotivo().compareTo("0213") == 0
-									// ==========
-									) {
+											|| lStEsecCumMod.getCodMotivo().compareTo("0213") == 0) {
 										aCalcoloPenaModel.addComputi(lCompMod);
-
 										// Aggiungo tutti gli ESPIATI al Vettore 'VecComputi' per i Riepiloghi
 										// finali
 										VecComputi.add(lCompMod);
@@ -4554,24 +4552,25 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 										lBenCum.setIdBeneficioCumulo(lCompMod.getIdComputiCumulo());
 										// ============================================================
 
-										if (lCompMod.getFlagPiuMeno().equals("-"))
+										// Ticket#20200525014 — emissione cumulo pene: gestito nullpointer
+										// il campo "FlagPiuMeno" in banca dati è nullable
+										if ("-".equals(lCompMod.getFlagPiuMeno()))
 											lBenCum.setCodNaturaBeneficio("C");
-										else if (lCompMod.getFlagPiuMeno().equals("+"))
+										else if ("+".equals(lCompMod.getFlagPiuMeno()))
 											lBenCum.setCodNaturaBeneficio("R");
 
-										if (lCompMod.getCodTipoAnnotazione().equals("002")) {
+										if ("002".equals(lCompMod.getCodTipoAnnotazione())) {
 											lBenCum.setCodTipoBeneficio("03");
 											lBenCum.setDescrTipoBeneficio("INDULTO");
-										} else if (lCompMod.getCodTipoAnnotazione().equals("003")) {
+										} else if ("003".equals(lCompMod.getCodTipoAnnotazione())) {
 											lBenCum.setCodTipoBeneficio("04");
 											lBenCum.setDescrTipoBeneficio("AMNISTIA");
 										}
+										// FINE Ticket#20200525014
 
 										// Aggiungo il Model alla Lista dei Benefici per il calcoloPena
 										aCalcoloPenaModel.addBeneficio(lBenCum);
 									}
-									// =======================================================================================
-
 								}
 							}
 						}
@@ -4581,15 +4580,11 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								lStEsecCumMod.getIdStatoEsecTitoloCumulato());
 						lVecNotifiche = new Vector<NotificaCumuloModel>(lNotCumSqlDao.getModels());
 						if (lVecNotifiche != null && lVecNotifiche.size() > 0) {
-							// siesLogger.debug("--XX-- trovate Notifiche - N. di notifiche =
-							// "+lVecNotifiche.size());
 							Iterator lItxNot = lVecNotifiche.iterator();
 							while (lItxNot.hasNext()) {
 								lNotMod = (NotificaCumuloModel) lItxNot.next();
 								if (lNotMod != null && lNotMod.getIdNotificaCumulo() != null) {
-
 									TreeModel lTreeNotMod = new TreeModel(lNotMod);
-
 									lTreeStatoEsecCum.add(lTreeNotMod);
 								}
 							}
@@ -4607,18 +4602,15 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								|| lStEsecCumMod.getCodMotivo().compareTo("2250") == 0
 								|| lStEsecCumMod.getCodMotivo().compareTo("2790") == 0
 								|| lStEsecCumMod.getCodMotivo().compareTo("9027") == 0) {
-
 							lLibAntCumSqlDao.ricercaLibAnticipataCumuloByIdStatoEsec(
 									lStEsecCumMod.getIdStatoEsecTitoloCumulato());
 							lLibAntCumSqlDao.start();
 							while (lLibAntCumSqlDao.next()) {
 								LibAnticipataCumuloModel lLibAntCumMod = (LibAnticipataCumuloModel) lLibAntCumSqlDao
 										.getModel();
-
 								// if ("C".equals(lLibAntCumMod.getFlagConcesso())) {
 								if (!"SL".equals(lLibAntCumMod.getCodTipoLicenza())
 										&& lLibAntCumMod.getNumeroGiorni() != null) {
-
 									if (lStringaPeriodo.length() > 0)
 										lStringaPeriodo += ", ";
 
@@ -4644,28 +4636,19 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 											.getModel();
 									if (lPeriodo != null && lPeriodo.getIdPeriodoLibAntCumulo() != null) {
 										DatePeriodiLACumModel lDateLA = new DatePeriodiLACumModel(lPeriodo);
-
 										lDateLA.setStringaPeriodoDalAl(lDateLA.FormaStringaDatePeriodo());
-
 										TreeModel lTreeDatePeriodiLAMod = new TreeModel(lDateLA);
-
 										lTreeLibAntCumMod.add(lTreeDatePeriodiLAMod);
 									}
-
 								}
 
 								lTreeStatoEsecCum.add(lTreeLibAntCumMod);
-
 								// ======= Fine DAL AL ===========================================
-
 							} // Chiude while (lLibAntCumSqlDao.next())
-
 						}
 
 						lTreeTitoloMod.add(lTreeStatoEsecCum);
-
 					} // Chiude(lStEsecCumMod != null)
-
 				} // Chiude ciclo while (lItxSta.hasNext()) (Ciclo StatoEsecTitoloCumulato
 			}
 		} catch (DAOException daoEx) {
@@ -4684,10 +4667,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 			cleanup(lLibAntCumSqlDao);
 			cleanup(lPeriCumSqlDao);
 		}
-
 	} // CHIUDE appendStatoEsecuzioneTitoloCum()
 
 	/**
+	 *
 	 * @param lBen
 	 * @return
 	 * @throws F3BException
@@ -4749,6 +4732,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	}
 
 	/**
+	 *
 	 * @param beneficio
 	 * @return
 	 * @throws F3BException
@@ -4806,6 +4790,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	}
 
 	/**
+	 *
 	 * @param lKeySoggetto
 	 * @param lKeyFascicolo
 	 * @param lConn
@@ -4890,6 +4875,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	}
 
 	/**
+	 *
 	 * @param aIdIstruttoriaCumulo
 	 * @param aCalcoloPenaModel
 	 * @param aConn
@@ -5001,6 +4987,7 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 	// MEV_70 ===========================================================
 	private PenaResiduaModel calcolaResiduoPenaAdOggi(PenaRideterminataCumuloModel aPenaRidetCumulo,
 			Date aOggi) throws Exception {
+
 		PenaResiduaModel lPenaInEspiazione = aPenaRidetCumulo.getPenaResidua();
 
 		// Calcolo il residuo pena se interrompessi Oggi
