@@ -1,5 +1,5 @@
-Branch per Ticket#20200625017 — siep-iachetta
-Nasce da:
+Branch per Ticket#20200625014 — sius-rito2
+Nasce in data 26/06/2020 da:
 
 RELEASE 12.5.0: 11/06/2020
 1)	nato dal branch "release_12.4.0"
