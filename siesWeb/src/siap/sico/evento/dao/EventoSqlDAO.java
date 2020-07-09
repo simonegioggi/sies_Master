@@ -2603,12 +2603,6 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aModel.getFasSieIdFascicoloSiep();
 		}
 
-		// INTERVENTO POST 12.3.0.2: ripristinata condizione
-		// 12/12/2019 - Ticket 201911260116 - Impostazione della condizione per EVE_ID_EVENTO.
-		if (aModel.getEveIdEvento() != null) {
-			lCondizioni += " AND EVE_ID_EVENTO=" + aModel.getEveIdEvento();
-		}
-
 		// Paolo Cherubini modifico con quella sotto per accettare piu' motivi
 		/*
 		 * if (aModel.getCodMotivo() != null) { if (aModel.getCodMotivo().compareTo("") != 0) lCondizioni +=
