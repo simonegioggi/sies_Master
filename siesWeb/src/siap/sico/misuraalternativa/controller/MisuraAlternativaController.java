@@ -5539,12 +5539,17 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			if ("S".equals(lRevocaCalcolo)) {
 				lPenResMod.setEveIdEvento(null);
 			}
-
+			
+			// ticket#202007070114 [D.F.]- Aggiorno i dati del model da restituire alla chiamante
+			lPenResMod.setFlagValidato("S");
+			lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
+			// end ticket#202007070114 
+			
 			if (lPenResMod.getEveIdEvento() == null) {
 				lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
 				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
 				lPenResDao.setFlagValidato("S");
-
+				
 				lPenResDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
 				lPenResDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
 				lPenResDao.setDataAggiornamento(DateUtils.getSysDate());
