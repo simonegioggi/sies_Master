@@ -2024,8 +2024,14 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 			// ** Aggiorna SCADENZARIO FINE PENA**
 			ScadenzarioModel lScaMod = null;
+			// Ticket#202007070114 - Il test sul flagValidato è inutile e faceva fallire la condizione non 
+			// inserendo lo scadenzario fine pena. La lPenResMod è la pena appena inserita e collegata
+			// al provvedimento che si sta validando ed è quindi sicuramente validata.
+			// Come intervento: commentato && lPenResMod.getFlagValidato().equals("S")
 			if (lPenResMod != null && lPenResMod.getDataInizio() != null && lPenResMod.getDataFine() != null
-					&& lPenResMod.getFlagValidato().equals("S")) {
+				//	&& lPenResMod.getFlagValidato().equals("S")
+			) 
+			{
 				InserimentoAggiornamentoScadenzarioFinePena(lConn, lPenResMod, lEveModel,
 						lPenResMod.getDataFine(), aFascicolo.getIdFascicoloSiep());
 			}
