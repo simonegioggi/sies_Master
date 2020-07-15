@@ -10,9 +10,15 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.SICOException;
 import siap.sico.cssa.controller.ICSSA;
-import siap.sico.cssa.model.CSSAModel;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.controller.IDecodifiche;
 import siap.sico.decodifiche.model.DecodificheModel;
@@ -51,13 +57,6 @@ import siap.sius.provvedimento.util.RicercaProvvedimentiUtil;
 import siap.sius.tenore.action.ICostantiTenore;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
-import f3b.util.Utils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 @SuppressWarnings("rawtypes")
 public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDepositoOrdinanzaPc {
@@ -119,29 +118,32 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		// i Procedimenti con contenuto "Applicazione Misura di Sicurezza" (U023)
 		if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
 				&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("U023")) {
-			
+
 			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			aMisuraSicurezza.setFasSiuIdFascicoloSius(mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
 			Vector lVect = lCtrl.ExRicercaMisuraSicurezzaAndRifTitoloEsec(aMisuraSicurezza);
-			//@emma 16072018 intervento post COLLAUDO 11.2 (a misura di sicurezza è obbligatoria solo per alcuni codici esito)
-			if (lVect.size() == 0) {				
+			// @emma 16072018 intervento post COLLAUDO 11.2 (a misura di sicurezza è obbligatoria solo per
+			// alcuni codici esito)
+			if (lVect.size() == 0) {
 				// recupero gli esiti/esito inserito
-				String[]esiti = new String[]{"1190", "1191", "1198", "1990", "1991", "1992", "1993", "1206", "2720"};
-				if (!isRequestParameterNullObj(ICostantiTenore.CAMPO_COD_ESITO_TENORE)){
+				String[] esiti = new String[] { "1190", "1191", "1198", "1990", "1991", "1992", "1993",
+						"1206", "2720" };
+				if (!isRequestParameterNullObj(ICostantiTenore.CAMPO_COD_ESITO_TENORE)) {
 					String[] lCodEsiti = getRequestStringParameters(ICostantiTenore.CAMPO_COD_ESITO_TENORE);
-					if(lCodEsiti.length > 0){
+					if (lCodEsiti.length > 0) {
 						for (int i = 0; i < lCodEsiti.length; i++) {
-							if(Arrays.binarySearch(esiti, lCodEsiti[i]) >= 0){
+							if (Arrays.binarySearch(esiti, lCodEsiti[i]) >= 0) {
 								throw new SIUSException(SIUSException.USER_MESSAGE,
 										"E' obbligatorio inserire la Misura di Sicurezza attraverso il link presente nella funzionalità.");
 							}
 						}
 					}
-				}				
-//				throw new SIUSException(SIUSException.USER_MESSAGE,
-//						"E' obbligatorio inserire la Misura di Sicurezza attraverso il link presente nella funzionalità.");
-			}		
+				}
+				// throw new SIUSException(SIUSException.USER_MESSAGE,
+				// "E' obbligatorio inserire la Misura di Sicurezza attraverso il link presente nella
+				// funzionalità.");
+			}
 		}
 
 		// Viene effettuato il controllo sulla preesistenza di un Provvedimento declaratorio
@@ -730,11 +732,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			} // if(dataDecorrenzaMS != null){
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029
-			 * Numero MEV : 39
-			 * Autore : Gioggi
-			 * Data : 19/giu/2017
-			 * Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
+			 * 19/giu/2017 Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();
@@ -748,19 +747,21 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 						misuraSicurezzaModel.setEveIdEvento(idEvento);
 						misuraSicurezzaModel.setCodTipo(getRequestStringParameter("codiTipoNuovaMisura"));
 						Collection c = DecodificheManager.getInstance().getTipoMisuraSicurezza();
-						String natura = DecodificheUtils.getFiltrobyCode(c, getRequestStringParameter("codiTipoNuovaMisura"));
+						String natura = DecodificheUtils.getFiltrobyCode(c,
+								getRequestStringParameter("codiTipoNuovaMisura"));
 						misuraSicurezzaModel.setCodNatura(natura);
-						misuraSicurezzaModel
-								.setFlFormaMisura(getBigDecimalParameter(ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA));
-						misuraSicurezzaModel
-								.setDescrizioneComunita(getStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA));
+						misuraSicurezzaModel.setFlFormaMisura(
+								getBigDecimalParameter(ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA));
+						misuraSicurezzaModel.setDescrizioneComunita(
+								getStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA));
 						misuraSicurezzaModel.setCodUfficioInserimento(mCodiceUfficio);
 						misuraSicurezzaModel.setCodOperatoreInserimento(mCodiceOperatore);
-						misuraSicurezzaModel.setFasSiuIdFascicoloSius(mFasGPMod.getFascicoloSiusModel()
-								.getIdFascicoloSius());
+						misuraSicurezzaModel.setFasSiuIdFascicoloSius(
+								mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 						misuraSicurezzaModel.setNumAnni(getRequestBigDecimalParameter("anniDurataNuovaMS"));
 						misuraSicurezzaModel.setNumMesi(getRequestBigDecimalParameter("mesiDurataNuovaMS"));
-						misuraSicurezzaModel.setNumGiorni(getRequestBigDecimalParameter("giorniDurataNuovaMS"));
+						misuraSicurezzaModel
+								.setNumGiorni(getRequestBigDecimalParameter("giorniDurataNuovaMS"));
 						Date dataDecorrenzaNuovaMS = null;
 						if (!isRequestParameterNullObj("annoDataDecorrenzaNuovaMS")) {
 							dataDecorrenzaNuovaMS = getRequestDateParameter("annoDataDecorrenzaNuovaMS",
@@ -775,11 +776,12 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			// ***** FINE INTERVENTO MEV_39 *****//
 
 			// Preparazione della pagina di destinazione per l'inserimento delle Prescrizioni
-			if (!isRequestParameterNullObj(CAMPO_CK_PRESCRIZIONI) && isRequestChecked(CAMPO_CK_PRESCRIZIONI)) {
+			if (!isRequestParameterNullObj(CAMPO_CK_PRESCRIZIONI)
+					&& isRequestChecked(CAMPO_CK_PRESCRIZIONI)) {
 				// Per Sanzioni Sostitutive
 				if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals(
-								"U017")) {
+						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+								.equals("U017")) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("Prescrizioni SS: ");
@@ -799,8 +801,8 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				}
 				// Per Conversione Pene Pecuniarie.
 				else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals(
-								ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE)) {
+						&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+								.equals(ICostantiDepositoOrdinanzaPc.OGG_CONV_PENE_PECUNIARIE)) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("Conversione PP: ");
@@ -820,10 +822,11 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				}
 				// Per Misure Sicurezza
 				else if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-						&& (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals(
-								"U023")
+						&& (getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+								.equals("U023")
 								|| getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
-										.equals("U086") || mCodTipoRegistro.equals("S09"))) {
+										.equals("U086")
+								|| mCodTipoRegistro.equals("S09"))) {
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()
 					siesLogger.debug("Misure Sicurezza: ");
@@ -876,7 +879,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -950,8 +953,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 
 	/**
 	 * Prepara con i dati il Model per il Deposito Ordinanza.
-	 * <p>
-	 * 
+	 *
 	 * @param aDataEmissione
 	 *            Date data di emissione
 	 * @throws F3BException
@@ -1011,8 +1013,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 
 	/**
 	 * Prepara con i relativi dati, il Model per l'evento.
-	 * <p>
-	 * 
+	 *
 	 * @param aDataEmissione
 	 *            Date data di emissione.
 	 * @throws F3BException
@@ -1051,7 +1052,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 
 	/**
 	 * Funzione di lettura dei dati opzionali
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 * @throws F3BException
@@ -1080,8 +1081,9 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 				lDepOrdModel.setDescrComuneCssaComp(
 						getRequestStringParameter(CAMPO_COMUNE_CSSA_COMP).toUpperCase());
 				ICSSA lCSSACtrl = SICOLookupRemote.getCSSARemote();
-				lDepOrdModel.setIdCssaComp(((CSSAModel) lCSSACtrl.getCSSAByDescrComune(
-						getRequestStringParameter(CAMPO_COMUNE_CSSA_COMP).toUpperCase())).getIdCSSA());
+				lDepOrdModel.setIdCssaComp(lCSSACtrl
+						.getCSSAByDescrComune(getRequestStringParameter(CAMPO_COMUNE_CSSA_COMP).toUpperCase())
+						.getIdCSSA());
 			} else
 				lDepOrdModel.setIdCssaComp(new BigDecimal("9999"));
 		}
@@ -1092,9 +1094,9 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			// 10/03/2015 Controllo Esistenza CSSA.
 			if (mDescComuneUSSM != null && mDescComuneUSSM.length() > 1) {
 				ICSSA lCSSACtrl = SICOLookupRemote.getCSSARemote();
-				lDepOrdModel.setCodUssm(((CSSAModel) lCSSACtrl
-						.getUSSMByDescrComune(getRequestStringParameter(CAMPO_UFFICIO_USSM).toUpperCase()))
-								.getIdCSSA());
+				lDepOrdModel.setCodUssm(lCSSACtrl
+						.getUSSMByDescrComune(getRequestStringParameter(CAMPO_UFFICIO_USSM).toUpperCase())
+						.getIdCSSA());
 				lDepOrdModel.setDescrComuneUssmComp(mDescComuneUSSM);
 			} else
 				lDepOrdModel.setCodUssm(null);
@@ -1365,7 +1367,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 
 	/**
 	 * Funzione di lettura dei dati del Decreto
-	 * 
+	 *
 	 * @param aDepOrdModel
 	 * @return
 	 * @throws F3BException
@@ -1536,7 +1538,9 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		return aDepOrdModel;
 	}
 
-	private OrdinanzaEventoTenoriGProcModel inserimento(OrdinanzaEventoTenoriGProcModel aOrdEveTenGP)
+	// Ticket#20200625014 - sius-rito2: questo metodo deve essere PUBLIC poichè
+	// in conflitto con ActInserisciOrdinanzaLiberAnt.inserimento(...)
+	public OrdinanzaEventoTenoriGProcModel inserimento(OrdinanzaEventoTenoriGProcModel aOrdEveTenGP)
 			throws F3BException {
 
 		OrdinanzaEventoTenoriGProcModel lObjRet = null;
