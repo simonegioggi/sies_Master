@@ -1,37 +1,5 @@
-RELEASE 12.4.0: 08/06/2020
-1)	nato dal branch "release_12.3.0"
+RELEASE 12.4.1.0: 20/07/2020
+1)	nato dal branch "release_12.4.0"
 
-In data 20200608 eseguito merge col branch:
-MEV_6:
-1)	questo branch nasce dal branch DEVELOP.
-###################################################################################################
-RELEASE 12.3.0: 15/05/2020
-1)	nato dal merge della 12.1.0 con la versione 12.2.0
-
-In data 20200603 eseguito merge col:
-branch mac-otrs-20200525015 creato il 27/05/2020 a partire dal branch 12.3.0
-###################################################################################################
-
-In data 15/07/2020 eseguito il merge col branch:
-
-RELEASE_12.3.0.2: 04/07/2020
-1)	nato dal branch RELEASE_12.3.0
-
-RELEASE_12.3.0: 15/05/2020
->>>>>>> release_12.3.0.2
-1)	nato dal merge della 12.1.0 con la versione 12.2.0
-
-###################################################################################################
-
-In data 20200704 eseguito merge coi branches:
-1)	mac-otrs-20200508014 (creato il 26/05/2020 nato dalla versione 12.3.0)
-	siesWeb.src.siap.sico.stampa.controller.StampaController.java
-
-2)	mac-otrs-20200610014
-	siesWeb.src.siap.sius.fascicolo.controller.FascicoloSiusController.java
-	
-3)	mac-otrs-20200625014
-	siesWeb.src.siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS.java
-
-4)	mac-otrs-20200625017
-	siesWeb.defaultroot.jsp.files.siap.siep.provvedimentogenerico.LoadInserisciProvvedimentoGenerico.jsp
+In data 20200720 eseguito merge col branch:
+mac-otrs-20200525017
