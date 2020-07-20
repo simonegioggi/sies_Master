@@ -5,3 +5,5 @@ In data 20200720 eseguito merge col branch:
 mac-otrs-20200525017
 mac-otrs-20200525014
 mac-otrs-20200528012
+mac-otr-202007070114
+mac-otrs-20200715013

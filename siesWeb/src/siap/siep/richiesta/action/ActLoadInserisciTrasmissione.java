@@ -34,7 +34,7 @@ import siap.web.ISIAPCostantiWeb;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActLoadInserisciTrasmissione extends ActionSiap implements ICostantiRichiesta {
@@ -158,6 +158,27 @@ public class ActLoadInserisciTrasmissione extends ActionSiap implements ICostant
 		// ufficio pubblico ministero
 		lOption = new Option(DecodificheManager.getInstance().getTipoUfficioPM());
 		setRequestAttribute("ufficiopm", "" + lOption);
+
+		// [SG] #Ticket#20200715013 — Mancata visualizzazione autorità destinatarie trasmissione atti
+		// MEV_66: aggiunta combo di scelta tds + tdsm
+		Option lOptionUffSorv = new Option(DecodificheManager.getInstance().getTipoUfficioSiepTDSMUDSM());
+		lOptionUffSorv.setFilter(new String[] { "-", "TDS", "TDSM" });
+		setRequestAttribute("ufficioTdS", "" + lOptionUffSorv);
+
+		// MEV_66: aggiunta combo di scelta uds + udsm
+		Option lOptionUffSIUS = new Option(DecodificheManager.getInstance().getTipoUfficioSiepTDSMUDSM());
+		lOptionUffSIUS.setFilter(new String[] { "-", "UDS", "UDSM" });
+		setRequestAttribute("ufficioMdS", "" + lOptionUffSIUS);
+
+		// MEV_66: aggiunta lista uepe
+		lOption = new Option(DecodificheManager.getInstance().getTipoUffEsePenEstSerSocMin(), "-");
+		String[] lFiltro = new String[3];
+		lFiltro[0] = "-";
+		lFiltro[1] = "UEPE";
+		lFiltro[2] = "USSM";
+		lOption.setFilter(lFiltro);
+		setRequestAttribute("uepe", "" + lOption);
+		// FINE #Ticket#20200715013
 
 		setRequestAttribute("titolo", "TRASMISSIONE ATTI");
 
