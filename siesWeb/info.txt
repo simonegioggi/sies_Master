@@ -4,3 +4,4 @@ RELEASE 12.4.1.0: 20/07/2020
 In data 20200720 eseguito merge col branch:
 mac-otrs-20200525017
 mac-otrs-20200525014
+mac-otrs-20200528012
