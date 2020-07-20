@@ -104,7 +104,9 @@
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAIndultino&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
 <%
     }
-    else if(misuraalternativa.getCodTipoMisura().equals("2630"))
+    else if(   misuraalternativa.getCodTipoMisura().equals("2630")
+            || misuraalternativa.getCodTipoMisura().equals("0610") //Ticket#20200720013 aggiunto codice del TDS
+           )
     {
 %>
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAEspPressoDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
@@ -170,7 +172,9 @@
         <td class="l" colspan=2>Concessione Sospensione Condizionata esecuzione parte finale pena detentiva</td>
      <%}
        else
-         if(misuraalternativa.getCodTipoMisura().equals("2630"))
+         if(   misuraalternativa.getCodTipoMisura().equals("2630") 
+            || misuraalternativa.getCodTipoMisura().equals("0610") //Ticket#20200720013 aggiunto codice del TDS
+           )
          {%>
           <td class="l" colspan=2>Concessione Espiazione Pena presso Domicilio</td>
        <%}
