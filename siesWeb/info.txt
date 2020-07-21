@@ -8,3 +8,7 @@ mac-otrs-20200528012
 mac-otr-202007070114
 mac-otrs-20200715013
 mac-otrs-20200715018
+
+In data 20200721 eseguito merge con i branch:
+mac-otrs-20200720013
+mac-otrs-20200715012
