@@ -507,9 +507,25 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								// in caso esista, legata alla PENA COMPLESSIVA
 								// Sanzione Sostitutiva Cumulo
 								SanzioneSostitutivaCumuloModel lSSCumMod1 = new SanzioneSostitutivaCumuloModel();
+
+								//==========================================================================================
+								// Ticket#20200715012 - la pena complessiva potrebbe non essere presente.
+								BigDecimal idPenaCompCumulo = null;
+								if (lPenaCum!=null) 
+									idPenaCompCumulo = lPenaCum.getIdPenaComplessivaCum();
+									
 								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-										lPenaCum.getIdPenaComplessivaCum(),
+										idPenaCompCumulo,
 										lRichTitCumMod.getTitIdTitoloCumulato());
+								
+//								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
+//										lPenaCum.getIdPenaComplessivaCum(),
+//										lRichTitCumMod.getTitIdTitoloCumulato());								
+								// END Ticket#20200715012
+								//==========================================================================================
+								
+								
+								
 								lSSCumSqlDao.start();
 								while (lSSCumSqlDao.next()) {
 
@@ -1814,11 +1830,26 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 							// Ricerca Sanzione Sost Cum Dao");
 							// ======= >>>>>>>>>>>>>>>>> MEV_70 - Aggiungo sempre la SanzioneSostitutiva, in
 							// caso esista, legata alla PENA COMPLESSIVA
-							// Sanzione Sostitutiva Cumulo
+							// Sanzione Sostitutiva Cumulo							
 							SanzioneSostitutivaCumuloModel lSSCumMod1 = new SanzioneSostitutivaCumuloModel();
+							
+							//==========================================================================================
+							// Ticket#20200715012 - la pena complessiva potrebbe non essere presente.
+							BigDecimal idPenaCompCumulo = null;
+							if (lPenaCum!=null) 
+								idPenaCompCumulo = lPenaCum.getIdPenaComplessivaCum();
+								
 							lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-									lPenaCum.getIdPenaComplessivaCum(),
+									idPenaCompCumulo,
 									lRichTitCumMod.getTitIdTitoloCumulato());
+							
+//							lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
+//									lPenaCum.getIdPenaComplessivaCum(),
+//									lRichTitCumMod.getTitIdTitoloCumulato());	
+							
+							// END Ticket#20200715012
+							//==========================================================================================
+							
 							lSSCumSqlDao.start();
 							while (lSSCumSqlDao.next()) {
 
@@ -2676,9 +2707,31 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 								// in caso esista, legata alla PENA COMPLESSIVA
 								// Sanzione Sostitutiva Cumulo
 								SanzioneSostitutivaCumuloModel lSSCumMod1 = new SanzioneSostitutivaCumuloModel();
+								
+								//==========================================================================================
+								// Ticket#20200715012 - la pena complessiva potrebbe non essere presente.
+								BigDecimal idPenaCompCumulo = null;
+								if (lPenaCum!=null) 
+									idPenaCompCumulo = lPenaCum.getIdPenaComplessivaCum();
+									
 								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
-										lPenaCum.getIdPenaComplessivaCum(),
+										idPenaCompCumulo,
 										lRichTitCumMod.getTitIdTitoloCumulato());
+								
+								
+//								lSSCumSqlDao.ricercaSanzioneSostitutivaByIdPenaComplessivaCumTitoloCum(
+//										lPenaCum.getIdPenaComplessivaCum(),
+//										lRichTitCumMod.getTitIdTitoloCumulato());								
+								// END Ticket#20200715012
+								//==========================================================================================
+								
+								
+								
+								
+
+								
+								
+								
 								lSSCumSqlDao.start();
 								while (lSSCumSqlDao.next()) {
 
