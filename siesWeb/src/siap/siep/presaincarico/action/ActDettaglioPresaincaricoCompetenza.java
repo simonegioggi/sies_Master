@@ -122,9 +122,12 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 			setSessionAttribute("soggetto", null);
 			setSessionAttribute("sentenza", null);
 			// metto in Sessione il Fascicolo Cumulante
-			setSessionAttribute("fascicolo", mFas);
-			setSessionAttribute("soggetto", mFas.getSoggetto());
-			setSessionAttribute("sentenza", mFas.getSentenza());
+			// Ticket#20200730015 - Se il cumulante on viene trovato a sistema andava in nullPointer mFas.getSoggetto()
+			if (mFas!=null) {
+				setSessionAttribute("fascicolo", mFas);
+				setSessionAttribute("soggetto", mFas.getSoggetto());
+				setSessionAttribute("sentenza", mFas.getSentenza());
+			}
 
 			setRequestAttribute("fascicoloCumulante", mFas);
 		}
