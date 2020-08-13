@@ -46,8 +46,10 @@ if (FascSiepTrovato.getChiaveAnno() != null )
   aChiaveUfficio = FascSiepTrovato.getChiaveUfficio();
   aSedeUfficio = FascSiepTrovato.getDescrComuneUfficio();
   aDataProvvedimento = StringUtils.toStringJSP( DateUtils.getDateToString(FascSiepTrovato.getSentenza().getDataProvvedimento(),"dd/MM/yyyy"));
-  aAnnoSentenza = FascSiepTrovato.getSentenza().getAnnoSentenza().toString();
-  aNumeroSentenza = FascSiepTrovato.getSentenza().getNumeroSentenza();
+  //Ticket#20200812012 - Anno e numero sentenza non sono obbligatori in caso di Ordinanza Mis. Sic. andava in nullpointer
+  aAnnoSentenza   = StringUtils.toStringJSP(FascSiepTrovato.getSentenza().getAnnoSentenza()," ");
+  aNumeroSentenza = StringUtils.toStringJSP(FascSiepTrovato.getSentenza().getNumeroSentenza()," ");
+  //end Ticket#20200812012  
 //modifica conseguente alla variazione di SentenzaModel - Romaggioli 29/07/2009
   //aDataIrrevocabilità = StringUtils.toStringJSP( DateUtils.getDateToString(FascSiepTrovato.getSentenza().getDataIrrevocabilita(),"dd/MM/yyyy"));
   aNote = "";
