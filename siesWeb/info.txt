@@ -1,14 +1,6 @@
-RELEASE 12.4.1.0: 20/07/2020
-1)	nato dal branch "release_12.4.0"
+RELEASE_12.4.2.0: 13/08/2020
+1)	nato dal branch "release_12.4.1.0"
 
-In data 20200720 eseguito merge col branch:
-mac-otrs-20200525017
-mac-otrs-20200525014
-mac-otrs-20200528012
-mac-otr-202007070114
-mac-otrs-20200715013
-mac-otrs-20200715018
-
-In data 20200721 eseguito merge con i branch:
-mac-otrs-20200720013
-mac-otrs-20200715012
+In data 20200814 eseguito merge coi branch:
+1)	mac-otrs-20200730015 (creato in data 30/07/2020 per gestire il Ticket#20200730015 — Impossibile gestire atto pervenuto);
+2)	mac-otrs-20200812012 (creato in data 12/08/2020 per gestire il Ticket#20200812012 — SIUS Errore in inserimento Titolo Esecutivo);
