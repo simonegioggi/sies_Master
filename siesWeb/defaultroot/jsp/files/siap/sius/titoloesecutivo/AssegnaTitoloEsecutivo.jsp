@@ -39,45 +39,43 @@ String aNomeRif = "";
 String aComuneNasRif = "";
 String aDataNasRif = "";
 
-if (FascSiepTrovato.getChiaveAnno() != null )
-{
-  aChiaveAnno = FascSiepTrovato.getChiaveAnno().toString();
-  aChiaveProgr = FascSiepTrovato.getChiaveProgr().toString();
-  aChiaveUfficio = FascSiepTrovato.getChiaveUfficio();
-  aSedeUfficio = FascSiepTrovato.getDescrComuneUfficio();
-  aDataProvvedimento = StringUtils.toStringJSP( DateUtils.getDateToString(FascSiepTrovato.getSentenza().getDataProvvedimento(),"dd/MM/yyyy"));
-  //Ticket#20200812012 - Anno e numero sentenza non sono obbligatori in caso di Ordinanza Mis. Sic. andava in nullpointer
-  aAnnoSentenza   = StringUtils.toStringJSP(FascSiepTrovato.getSentenza().getAnnoSentenza()," ");
-  aNumeroSentenza = StringUtils.toStringJSP(FascSiepTrovato.getSentenza().getNumeroSentenza()," ");
-  //end Ticket#20200812012  
-//modifica conseguente alla variazione di SentenzaModel - Romaggioli 29/07/2009
-  //aDataIrrevocabilità = StringUtils.toStringJSP( DateUtils.getDateToString(FascSiepTrovato.getSentenza().getDataIrrevocabilita(),"dd/MM/yyyy"));
-  aNote = "";
-  aCognomeRif = FascSiepTrovato.getSoggetto().getCognome();
-  aNomeRif = FascSiepTrovato.getSoggetto().getNome();
-  aComuneNasRif = FascSiepTrovato.getSoggetto().getDescrComuneNascita();
-  aDataNasRif = FascSiepTrovato.getSoggetto().getDataNascita().toString();
+if (FascSiepTrovato.getChiaveAnno() != null) {
+	aChiaveAnno = FascSiepTrovato.getChiaveAnno().toString();
+	aChiaveProgr = FascSiepTrovato.getChiaveProgr().toString();
+	aChiaveUfficio = FascSiepTrovato.getChiaveUfficio();
+	aSedeUfficio = FascSiepTrovato.getDescrComuneUfficio();
+	aDataProvvedimento = StringUtils.toStringJSP( DateUtils.getDateToString(FascSiepTrovato.getSentenza().getDataProvvedimento(), "dd/MM/yyyy"));
+	// Ticket#20200812012 - Anno e numero sentenza non sono obbligatori in caso di Ordinanza Mis. Sic. andava in nullpointer
+	aAnnoSentenza   = StringUtils.toStringJSP(FascSiepTrovato.getSentenza().getAnnoSentenza(), " ");
+	aNumeroSentenza = StringUtils.toStringJSP(FascSiepTrovato.getSentenza().getNumeroSentenza(), " ");
+	// anche la data di nascita può essere null
+	aDataNasRif = StringUtils.toStringJSP(FascSiepTrovato.getSoggetto().getDataNascita(), " ");
+	// end Ticket#20200812012
+	// modifica conseguente alla variazione di SentenzaModel - Romaggioli 29/07/2009
+  	// aDataIrrevocabilità = StringUtils.toStringJSP( DateUtils.getDateToString(FascSiepTrovato.getSentenza().getDataIrrevocabilita(), "dd/MM/yyyy"));
+  	// aNote = "";
+ 	aCognomeRif = FascSiepTrovato.getSoggetto().getCognome();
+  	aNomeRif = FascSiepTrovato.getSoggetto().getNome();
+  	aComuneNasRif = FascSiepTrovato.getSoggetto().getDescrComuneNascita();
 }
-else
-{
-  aDataProvvedimento = "";
-  aAnnoSentenza = "";
-  aNumeroSentenza = "";
-  aDataIrrevocabilità = "";
-  aNote = "";
-}
+/*else {
+	aDataProvvedimento = "";
+	aAnnoSentenza = "";
+	aNumeroSentenza = "";
+	aDataIrrevocabilità = "";
+	aNote = "";
+}*/
 
 // Controllo soggetti.
 String aCognome = "";
 String aNome = "";
 String aComuneNas = "";
 String aDataNas = "";
-if (fascicoloSiusGP.getFascicoloSiusModel().getSoggetto() != null )
-{
-  aCognome = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getCognome();
-  aNome = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getNome();
-  aComuneNas = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getDescrComuneNascita();
-  aDataNas = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getDataNascita().toString();
+if (fascicoloSiusGP.getFascicoloSiusModel().getSoggetto() != null) {
+	aCognome = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getCognome();
+	aNome = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getNome();
+	aComuneNas = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getDescrComuneNascita();
+	aDataNas = fascicoloSiusGP.getFascicoloSiusModel().getSoggetto().getDataNascita().toString();
 }
 
 %>
