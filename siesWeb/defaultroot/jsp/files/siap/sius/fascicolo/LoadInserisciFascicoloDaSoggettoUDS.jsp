@@ -603,8 +603,8 @@ function Verify() {
     </td>
     <td class="label">
       <div id=S22_b style="visibility='visible';">
-        <input Title="Anno"  type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22 %>" maxlength="4" size="4" <%=lDisable%>>/
-        <input Title="Numero" type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22 %>" maxlength="6" size="6" <%=lDisable%>>
+        <input Title="Anno"  type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22 %>" maxlength="4" size="4" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" <%=lDisable%>>/
+        <input Title="Numero" type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22 %>" maxlength="6" size="6" onkeypress="return TicTabNumField(this,event)" <%=lDisable%>>
       </div>
     </td>
   </tr>
