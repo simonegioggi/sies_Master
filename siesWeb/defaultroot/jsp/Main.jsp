@@ -72,27 +72,30 @@ if (MultipartContent.isMultipartContent(request)) {
   	if (request.getParameter(IWebConstants.ACTION_FIELD) != null)
    		lStrAction = (String)request.getParameter(IWebConstants.ACTION_FIELD);
 }
-if (lStrAction == null)
-	throw new Exception( "Parametro Action mancante ! " );
+if (lStrAction == null) {
+	// [SG] Ticket#20200818015 - errori JBWEB000236 su server.log e Debug.log
+	// 	throw new Exception("Parametro Action mancante!");
+	siesLogger.info("java.lang.Exception: Parametro Action mancante!");
+	return; // esco invece di rilanciare l'eccezione
+}
 
 /** Implementazione tabella di lock per le modifiche delle entità
  * 	1) Entrando nella main , unlock per default tutti i lock dell'utente
  */
 
 if (!lStrAction.equals("siap.sico.sessionstate.action.ActVediSessioneSIEP")) {
-//   if (lockTable==null)
-//       lockTable=new Hashtable();
-
-  // 1)
-  if (lockTable.containsKey(session.getId()))
-      lockTable.remove(session.getId());
+	//   if (lockTable==null)
+	//       lockTable=new Hashtable();
+  	// 1)
+  	if (lockTable.containsKey(session.getId()))
+		lockTable.remove(session.getId());
 }
 
 String lPage = null;
 // Controllo sull'avvenuto accesso attraverso il login
-if ((session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null)
+if (session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
 		&& !lStrAction.equals("siap.sico.security.action.ActLogin")) {
-    session.invalidate();
+	session.invalidate();
     request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
     request.setAttribute("Messagge",	"Sessione utente terminata, effettuare di nuovo il login...");
 %>
