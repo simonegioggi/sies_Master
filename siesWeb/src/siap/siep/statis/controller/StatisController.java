@@ -4513,6 +4513,7 @@ public class StatisController extends GenericController {
 		// Variabili per la gestione degli Oggetti senza riscontro
 		Vector<String> lCodiciConRiscontri = new Vector<>();
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		Connection lConn = null;
 		IspMotivoOggettoDAO lIspOggettiSenzaRiscontriDAO = null;
 		IspMotivoOggettoModel lOggettoSenzaRiscontroModel = null;
@@ -4643,6 +4644,7 @@ public class StatisController extends GenericController {
 
 		try {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// Ticket#202008250110 - SIES - chiusura connessione a DB
 			lConn = getDBConnection();
 			// lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
 			lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(lConn);
@@ -4683,6 +4685,7 @@ public class StatisController extends GenericController {
 			throw new F3BException("StatisController.creaFoglioOggettiPendenti: " + ex);
 		}
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		finally {
 			cleanup(lIspOggettiSenzaRiscontriDAO);
 			cleanup(lConn);
@@ -4718,6 +4721,7 @@ public class StatisController extends GenericController {
 		// Variabili per la gestione degli Oggetti senza riscontro
 		Vector<String> lCodiciConRiscontri = new Vector<>();
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		Connection lConn = null;
 		IspMotivoOggettoDAO lIspOggettiSenzaRiscontriDAO = null;
 		IspMotivoOggettoModel lOggettoSenzaRiscontroModel = null;
@@ -4814,6 +4818,7 @@ public class StatisController extends GenericController {
 
 		try {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			// Ticket#202008250110 - SIES - chiusura connessione a DB
 			lConn = getDBConnection();
 			// lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
 			lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(lConn);
@@ -4845,6 +4850,7 @@ public class StatisController extends GenericController {
 			throw new F3BException("StatisController.creaFoglioOggettiPendenti: " + ex);
 		}
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		// Ticket#202008250110 - SIES - chiusura connessione a DB
 		finally {
 			cleanup(lIspOggettiSenzaRiscontriDAO);
 			cleanup(lConn);
