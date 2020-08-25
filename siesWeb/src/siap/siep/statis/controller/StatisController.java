@@ -4512,6 +4512,8 @@ public class StatisController extends GenericController {
 
 		// Variabili per la gestione degli Oggetti senza riscontro
 		Vector<String> lCodiciConRiscontri = new Vector<>();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
 		IspMotivoOggettoDAO lIspOggettiSenzaRiscontriDAO = null;
 		IspMotivoOggettoModel lOggettoSenzaRiscontroModel = null;
 		Vector lOggettiSenzaRiscontri = new Vector();
@@ -4640,7 +4642,10 @@ public class StatisController extends GenericController {
 		}
 
 		try {
-			lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			lConn = getDBConnection();
+			// lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
+			lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(lConn);
 			lIspOggettiSenzaRiscontriDAO.setCondizioneEsclusioneCodiciOggetto(lCodiciConRiscontri,
 					aUuffUteConnesso.getCodUfficio());
 			lIspOggettiSenzaRiscontriDAO.setOrdine("DESC_OGGETTO");
@@ -4677,6 +4682,11 @@ public class StatisController extends GenericController {
 			siesLogger.error("F3BException: " + ex);
 			throw new F3BException("StatisController.creaFoglioOggettiPendenti: " + ex);
 		}
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		finally {
+			cleanup(lIspOggettiSenzaRiscontriDAO);
+			cleanup(lConn);
+		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -4707,6 +4717,8 @@ public class StatisController extends GenericController {
 
 		// Variabili per la gestione degli Oggetti senza riscontro
 		Vector<String> lCodiciConRiscontri = new Vector<>();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		Connection lConn = null;
 		IspMotivoOggettoDAO lIspOggettiSenzaRiscontriDAO = null;
 		IspMotivoOggettoModel lOggettoSenzaRiscontroModel = null;
 		Vector lOggettiSenzaRiscontri = new Vector();
@@ -4801,7 +4813,10 @@ public class StatisController extends GenericController {
 		}
 
 		try {
-			lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
+			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+			lConn = getDBConnection();
+			// lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(getDBConnection());
+			lIspOggettiSenzaRiscontriDAO = new IspMotivoOggettoDAO(lConn);
 			lIspOggettiSenzaRiscontriDAO.setCondizioneEsclusioneCodiciMotivo(lCodiciConRiscontri,
 					aUuffUteConnesso.getCodUfficio());
 			lIspOggettiSenzaRiscontriDAO.setOrdine("DESC_MOTIVO");
@@ -4828,6 +4843,11 @@ public class StatisController extends GenericController {
 			// LogF3B.getLogger()
 			siesLogger.error("F3BException: " + ex);
 			throw new F3BException("StatisController.creaFoglioOggettiPendenti: " + ex);
+		}
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		finally {
+			cleanup(lIspOggettiSenzaRiscontriDAO);
+			cleanup(lConn);
 		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
