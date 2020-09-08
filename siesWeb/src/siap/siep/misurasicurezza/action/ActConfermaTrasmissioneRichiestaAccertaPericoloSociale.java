@@ -165,7 +165,6 @@ public class ActConfermaTrasmissioneRichiestaAccertaPericoloSociale extends Acti
 			//}
 		}
 		
-		siesLogger.error("Fuori dal catch");
 		// setta la risposta nella request
 		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Trasmissione Provvedimento sottomessa al Sistema!");
 
