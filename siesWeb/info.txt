@@ -1,7 +1,7 @@
-RELEASE_12.4.2.0: 13/08/2020
-1)	nato dal branch "release_12.4.1.0"
+RELEASE_12.4.3.0: 08/09/2020
+1)	nato dal branch "release_12.4.2.0"
 
-In data 20200814 eseguito merge coi branch:
-1)	mac-otrs-20200730015 (creato in data 30/07/2020 per gestire il Ticket#20200730015 — Impossibile gestire atto pervenuto);
-2)	mac-otrs-20200812012 (creato in data 12/08/2020 per gestire il Ticket#20200812012 — SIUS Errore in inserimento Titolo Esecutivo);
-3)	mac-otrs-202008250110 (creato in data 25/08/2020 per gestire il Ticket#202008250110 — SIES - chiusura connessione a DB);
+In data 202009dd eseguito merge coi branch:
+1)	
+2)	
+3)	
