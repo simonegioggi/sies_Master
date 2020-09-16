@@ -1,7 +1,6 @@
 package siap.siep.misurasicurezza.action;
 
 import java.math.BigDecimal;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -21,9 +20,6 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
-import siap.siep.avvocato.controller.IAvvocato;
-import siap.siep.avvocato.model.AvvocatoFascicoloSiepModel;
-import siap.siep.avvocato.model.AvvocatoModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istanza.action.ICostantiIstanza;
 import siap.siep.jms.controller.ITrasmissioneJMS;
@@ -56,7 +52,7 @@ public class ActConfermaTrasmissioneRichiestaAccertaPericoloSociale extends Acti
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	@SuppressWarnings("rawtypes")
+	// @SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
 		BigDecimal lEveId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
@@ -99,23 +95,23 @@ public class ActConfermaTrasmissioneRichiestaAccertaPericoloSociale extends Acti
 
 		NotificaModel lNot = new NotificaModel(lNotEvento.getNotifiche()[0]);
 
-		// Ticket#20200902016 - Commentato il controllo sull'obbligatorietà della presenza dell'avvocato come da richiesta
-		//                      Il sistema consentiva l'inserimento, stampa e validazione in assenza di avvocato ma bloccava la 
-		//                      sola trasmissione. Testata trasmissione e presa in carico SIUS, stessa e altra BDI, non 
-		//                      c'è evidenza di nullpointer in assenza di avvocato.
+		// Ticket#20200902016 - Commentato il controllo sull'obbligatorietà della presenza dell'avvocato come
+		// da richiesta. Il sistema consentiva l'inserimento, stampa e validazione in assenza di avvocato ma
+		// bloccava la sola trasmissione. Testata trasmissione e presa in carico SIUS, stessa e altra BDI, non
+		// c'è evidenza di nullpointer in assenza di avvocato.
 		// inizio intervento post 11.3 per la gestione del nullPointer sull'avvocato
-//		try {
-//			AvvocatoModel lAvvMod = new AvvocatoModel();
-//			AvvocatoFascicoloSiepModel lAvvFascMod = new AvvocatoFascicoloSiepModel();
-//			lAvvFascMod.setFasSieIdFascicoloSiep(
-//					((FascicoloSiepModel) (getSessionAttribute("fascicolo"))).getIdFascicoloSiep());
-//			IAvvocato lCtrlavv = SIEPLookupRemote.getAvvocatoRemote();
-//			Vector lVect = lCtrlavv.ExRicercaAvvocatiAttualiFascicolo(lAvvMod, lAvvFascMod);
-//			if (lVect == null || lVect.size() == 0)
-//				throw new F3BException(F3BException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
-//		} catch (siap.siep.SIEPException e) {
-//			throw new F3BException(F3BException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
-//		}
+		// try {
+		// AvvocatoModel lAvvMod = new AvvocatoModel();
+		// AvvocatoFascicoloSiepModel lAvvFascMod = new AvvocatoFascicoloSiepModel();
+		// lAvvFascMod.setFasSieIdFascicoloSiep(
+		// ((FascicoloSiepModel) (getSessionAttribute("fascicolo"))).getIdFascicoloSiep());
+		// IAvvocato lCtrlavv = SIEPLookupRemote.getAvvocatoRemote();
+		// Vector lVect = lCtrlavv.ExRicercaAvvocatiAttualiFascicolo(lAvvMod, lAvvFascMod);
+		// if (lVect == null || lVect.size() == 0)
+		// throw new F3BException(F3BException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
+		// } catch (siap.siep.SIEPException e) {
+		// throw new F3BException(F3BException.USER_MESSAGE, "Nessun avvocato associato al fascicolo.");
+		// }
 		// fine intervento post 11.3 per la gestione del nullPointer sull'avvocato
 		// Ticket#20200902016 - FINE
 
@@ -156,15 +152,18 @@ public class ActConfermaTrasmissioneRichiestaAccertaPericoloSociale extends Acti
 			/* EventoNotificaModel lEveNotMod = */lCtrl.ExConfermaTrasferisciIstanza(lEveMod, lNot,
 					lStatoProcedimento);
 		} catch (F3BException e) {
-			siesLogger.error("Eccezione in fase di trasmissione. ErrCode "+e.getErrorCode(),e);
-			// Ticket#20200902016 - Collateralmente al ticket è stato riilevato che con servizio JMS down veniva rilanciato 
-			// un nullpointer sulla siccessiva istruzino lRedirigi.setParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO, lMessage.getIdMessaggio().toString());
-			// In casi di eccezione va sempre rilanciata, non ha senso andare avanti indicando che la "trasmissione è stata sottomessa"
-			//if (e.getErrorCode() != F3BException.USER_MESSAGE) {
-				throw e;
-			//}
+			siesLogger.error("Eccezione in fase di trasmissione. ErrCode " + e.getErrorCode(), e);
+			// Ticket#20200902016 - Collateralmente al ticket è stato riilevato che con servizio JMS down
+			// veniva rilanciato un nullpointer sulla successiva istruzione
+			// lRedirigi.setParameter(ICostantiMessaggio.CAMPO_ID_MESSAGGIO,
+			// lMessage.getIdMessaggio().toString());
+			// In casi di eccezione va sempre rilanciata, non ha senso andare avanti indicando che la
+			// "trasmissione è stata sottomessa"
+			// if (e.getErrorCode() != F3BException.USER_MESSAGE) {
+			throw e;
+			// }
 		}
-		
+
 		// setta la risposta nella request
 		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Trasmissione Provvedimento sottomessa al Sistema!");
 
