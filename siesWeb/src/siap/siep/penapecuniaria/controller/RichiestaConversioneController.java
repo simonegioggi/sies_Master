@@ -1266,8 +1266,11 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lStaMod.setCodOperatoreInserimento(aFascicoloSiep.getCodOperatoreInserimento());
 			lStaMod.setCodUfficioInserimento(aFascicoloSiep.getCodUfficioInserimento());
 			lStaMod.setDataInserimento(DateUtils.getSysDate());
-			lStaMod.setEveIdEvento(lEveClassI);
-
+			// Ticket#20200915015 - il puntamento all'evento del classe I impedisce la presa in  carica su altr BDI
+			//                      E' inoltre inutile legare lo STATO_PROCEDIMENTO 0109 (validato) a un evento
+			//lStaMod.setEveIdEvento(lEveClassI);
+			lStaMod.setEveIdEvento(null);
+			// END Ticket#20200915015
 			lStaMod.setFasSieIdFascicoloSiep(lkeyFasVII);
 			lStaMod.setProgressivo(new BigDecimal(1));
 			lStaMod.setCodStatoProcedimento("0109"); // validato
@@ -2640,6 +2643,13 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lStaMod.setCodStatoProcedimento("0108"); // iscritto
 			// 19/02/2016 lStaMod.setData(null);
 			lStaMod.setData(DateUtils.getSysDate()); // 19/02/2016
+			//Ticket#20200915015 - In pratica duplica l'ultimo (solo) record STATO_PROCEDIMENTO del classe 7 riscrivendo 
+			//                     tutti i campi. Tanto vale inserire un record nuovo pulito. Lascia sporco solo il 
+			//                     campo EveIdEvento rischiando di far puntare lo SP del nuovo classe 1 ad un evento 
+			//                     del classe 7
+			//
+			lStaMod.setEveIdEvento(null); //resetto il campo
+			// END - Ticket#20200915015
 			lStaDao.setDAOFromModel(lStaMod);
 			lStaDao.insert();
 
