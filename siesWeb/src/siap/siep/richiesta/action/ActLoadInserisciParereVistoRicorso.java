@@ -33,13 +33,14 @@ import siap.web.ISIAPCostantiWeb;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
-
 public class ActLoadInserisciParereVistoRicorso extends ActionSiap implements ICostantiRichiesta {
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
+
 		if (this.isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
@@ -101,9 +102,8 @@ public class ActLoadInserisciParereVistoRicorso extends ActionSiap implements IC
 			return IWebConstants.PG_MESSAGE;
 		}
 
-		if (lPenaResMod != null && "N".equals(lPenaResMod.getFlagValidato())) {
+		if (lPenaResMod != null && "N".equals(lPenaResMod.getFlagValidato()))
 			setRequestAttribute("dataeditabile", "S");
-		}
 
 		setRequestAttribute("penaresidua", lPenaResMod);
 
@@ -133,6 +133,27 @@ public class ActLoadInserisciParereVistoRicorso extends ActionSiap implements IC
 		// ufficio pubblico ministero
 		lOption = new Option(DecodificheManager.getInstance().getTipoUfficioPM());
 		setRequestAttribute("ufficiopm", "" + lOption);
+
+		// [SG] Mancata visualizzazione autorità destinatarie trasmissione atti
+		// MEV_66: aggiunta combo di scelta tds + tdsm
+		Option lOptionUffSorv = new Option(DecodificheManager.getInstance().getTipoUfficioSiepTDSMUDSM());
+		lOptionUffSorv.setFilter(new String[] { "-", "TDS", "TDSM" });
+		setRequestAttribute("ufficioTdS", "" + lOptionUffSorv);
+
+		// MEV_66: aggiunta combo di scelta uds + udsm
+		Option lOptionUffSIUS = new Option(DecodificheManager.getInstance().getTipoUfficioSiepTDSMUDSM());
+		lOptionUffSIUS.setFilter(new String[] { "-", "UDS", "UDSM" });
+		setRequestAttribute("ufficioMdS", "" + lOptionUffSIUS);
+
+		// MEV_66: aggiunta lista uepe
+		lOption = new Option(DecodificheManager.getInstance().getTipoUffEsePenEstSerSocMin(), "-");
+		String[] lFiltro = new String[3];
+		lFiltro[0] = "-";
+		lFiltro[1] = "UEPE";
+		lFiltro[2] = "USSM";
+		lOption.setFilter(lFiltro);
+		setRequestAttribute("uepe", "" + lOption);
+		// FINE [SG] Mancata visualizzazione autorità destinatarie trasmissione atti
 
 		setRequestAttribute("titolo", "PARERE/VISTO/RICORSO");
 
