@@ -1266,8 +1266,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lStaMod.setCodOperatoreInserimento(aFascicoloSiep.getCodOperatoreInserimento());
 			lStaMod.setCodUfficioInserimento(aFascicoloSiep.getCodUfficioInserimento());
 			lStaMod.setDataInserimento(DateUtils.getSysDate());
-			// Ticket#20200915015 - il puntamento all'evento del classe I impedisce la presa in carica su altr
-			// BDI
+			// Ticket#20200915015 - il puntamento all'evento del classe I impedisce la presa in carica su
+			// altre BDI
 			// E' inoltre inutile legare lo STATO_PROCEDIMENTO 0109 (validato) a un evento
 			// lStaMod.setEveIdEvento(lEveClassI);
 			lStaMod.setEveIdEvento(null);
@@ -1314,14 +1314,23 @@ public class RichiestaConversioneController extends SiapController implements IR
 			}
 
 			// duplico posizione giuridica collegandolo al nuovo fascicolo
+			// siesLogger.debug(">>>> duplico posizione giuridica ");
 			lPosDao = new PosizioneGiuridicaDAO(lConn);
 			if (aDettaglioFascicolo.getPosizioneGiuridica() != null) {
+				// siesLogger.debug(">>>> PG Presente
+				// "+aDettaglioFascicolo.getPosizioneGiuridica().getIdPosizioneGiuridica());
 				PosizioneGiuridicaModel lPosMod = aDettaglioFascicolo.getPosizioneGiuridica();
 				lPosMod.setFasSieIdFascicoloSiep(lkeyFasVII);
 				lPosMod.setIdEventoRiferimento(null); // 24/07/2015
+				// Ticket#20200915015 - se detenuto AC non può puntare il record AC del fascicolo di origina
+				// siesLogger.debug(">>>> PG idAC "+lPosMod.getAltCauIdAltraCausa());
+				lPosMod.setAltCauIdAltraCausa(null);
+				// siesLogger.debug(">>>> PG idAC "+lPosMod.getAltCauIdAltraCausa());
+				// END Ticket#20200915015
 				lPosDao.setDAOFromModel(lPosMod);
 			} else {
 				// creo posizione giuridica a libero
+				siesLogger.debug(">>>> PG assente la creo... ");
 				lPosDao = new PosizioneGiuridicaDAO(lConn);
 				PosizioneGiuridicaModel lPosMod = new PosizioneGiuridicaModel();
 				lPosMod.setCodPosizioneGiuridica("07");
