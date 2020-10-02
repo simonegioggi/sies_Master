@@ -717,10 +717,16 @@ public class SIAPStampaController extends SiapController {
 
 						if (lEveMS.getCodTipoProvvedimento().equals("03")
 								&& lAgg.getDepositoOrdinanzaPc() != null) {
+							// 01/10/2020 Ticket#20200930012 - Possono esistere ordinanza non depositate per cui 
+							//            mancanti di anno e numero. Andavano in nullpointer sul toString(). 
+							//            Aggiunto test su != null
 							// NUMERO ORDINANZA
-							lMis.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
+							if (lAgg.getDepositoOrdinanzaPc().getNumS3() != null)
+								lMis.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
 							// ANNO ORDINANZA
-							lMis.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
+							if (lAgg.getDepositoOrdinanzaPc().getAnnoS3() != null)
+								lMis.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
+							// END 01/10/2020 Ticket#20200930012
 
 						} else if (lEveMS.getCodTipoProvvedimento().equals("02")
 								&& lAgg.getDepositoDecreto() != null) {
