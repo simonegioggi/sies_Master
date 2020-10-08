@@ -317,8 +317,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// BigDecimal lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
 		// .getIdFascicoloSiusOrigine();
 		// }
-		if (lCodTipoDec == null)
-			throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo ordinanza automatico non definito");
+		// if (lCodTipoDec == null)
+		// throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo ordinanza automatico non definito");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
