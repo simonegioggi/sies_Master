@@ -136,7 +136,7 @@ public class ActLoadDettaglioSospensioneEsecPenaDispPm extends ActSIESDettaglioP
 
 			// AUTORITA DI POLIZIA
 			if (lNotifiche[i].getAutoritaEsterna() != null
-					& lNotifiche[i].getCodTipoNotifica().equals("ND")) {
+					&& lNotifiche[i].getCodTipoNotifica().equals("ND")) {
 				setRequestAttribute("autorita", lNotifiche[i].getAutoritaEsterna());
 				setRequestAttribute("Noteautorita", lNotifiche[i].getNote());
 			}
