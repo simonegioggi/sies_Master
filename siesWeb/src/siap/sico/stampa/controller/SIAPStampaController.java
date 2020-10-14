@@ -111,9 +111,9 @@ import siap.sius.util.SIUSLookupRemote;
 
 /**
  * Title:SIAPStampaController
- * Description: Classe padre della stampa. Riunisce tutti i metodi comuni alle varie classi specializzate di
- * stampa
- * Copyright: Copyright (c) 2004
+ * Description: Classe padre della stampa. Riunisce tutti i metodi comuni alle
+ * 				varie classi specializzate di stampa 
+ * Copyright: Copyright (c) 2004 
  * Company: Bull Italia S.p.A.
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -711,9 +711,9 @@ public class SIAPStampaController extends SiapController {
 							// cui mancanti di anno e numero. Andavano in nullpointer sul toString().
 							// Aggiunto test su != null
 							// NUMERO ORDINANZA
-							lMis.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
+							if (lAgg.getDepositoOrdinanzaPc().getNumS3() != null)
+								lMis.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
 							// ANNO ORDINANZA
-							lMis.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
 							if (lAgg.getDepositoOrdinanzaPc().getAnnoS3() != null)
 								lMis.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
 							// END 01/10/2020 Ticket#20200930012
