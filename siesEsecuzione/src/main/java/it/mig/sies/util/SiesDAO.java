@@ -1,5 +1,13 @@
 package it.mig.sies.util;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
+
 import it.mig.sies.model.ConversionePPCumulo;
 import it.mig.sies.model.DatiPubblicoMinistero;
 import it.mig.sies.model.DatiTribunaleSorveglianza;
@@ -25,15 +33,6 @@ import it.mig.sies.model.Utente;
 import it.mig.sies.type.esecuzione_NEW.ChiaviAnagrafica;
 import it.mig.sies.type.esecuzione_NEW.ChiaviProvvedimentoEsecutivo;
 import it.mig.sies.type.esecuzione_NEW.ChiaviProvvedimentoGiudiziario;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
 
 /**
  * SIES FASE 2 - Classe DAO generale per le operazioni sugli entity definiti tramite MyBatis
@@ -65,59 +64,88 @@ public class SiesDAO {
 	 * Update del soggetto con le nuovi chiavi tornate come risposta
 	 */
 	public void updateSoggetto(ChiaviAnagrafica chiaviAnagrafica) {
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
 		// Apertura connessione
-		SqlSession session = getSession();
+			session = getSession();
 		Soggetto soggetto = new Soggetto();
 		soggetto.setChiaveNSC(chiaviAnagrafica.getNsc().longValue());
 		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
 		int i = session.update("it.mig.sies.model.Soggetto.update", soggetto);
 		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
 				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
 	 * Update dei dati del Tribunale di Sorveglianza con le nuove chiavi tornate come risposta
 	 */
 	public void updateDTS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiTribunaleSorveglianza dts = new DatiTribunaleSorveglianza();
 		dts.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
 		dts.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiTribunaleSorveglianza.update", dts);
 		logger.info("Update chiavi DTS: NSC[" + dts.getChiaveNSC() + "] SIES[" + dts.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
 	 * Update dei dati dell'Ufficio di Sorveglianza con le nuove chiavi tornate come risposta
 	 */
 	public void updateDUS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiUfficioSorveglianza dus = new DatiUfficioSorveglianza();
 		dus.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
 		dus.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiUfficioSorveglianza.update", dus);
 		logger.info("Update chiavi DUS: NSC[" + dus.getChiaveNSC() + "] SIES[" + dus.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
 	 * Salvataggio della risposta
 	 */
 	public void insertResponse(ResponseData responseData) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		session.insert("it.mig.sies.model.ResponseData.insert", responseData);
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -142,15 +170,23 @@ public class SiesDAO {
 	 * Caricamento di un soggetto collegato ad uno specifico idEvento
 	 */
 	public Soggetto loadSoggetto(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		Soggetto soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.lookupPrincipale",
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		Soggetto soggetto = null;
+		try {
+			session = getSession();
+			soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.lookupPrincipale",
 				new Long(idEvento));
 		if (soggetto == null)
-			soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.lookup", new Long(idEvento));
-
+				soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.lookup",
+						new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return soggetto;
 	}
 
@@ -158,12 +194,20 @@ public class SiesDAO {
 	 * Caricamento della lista di titoli principali collegati ad uno specifico idEvento
 	 */
 	public List<TitoloGiudiziario> loadTitoloGiudiziario(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		List<TitoloGiudiziario> titoloGiudiziarioList = session
-				.selectList("it.mig.sies.model.TitoloGiudiziario.lookup", new Long(idEvento));
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		List<TitoloGiudiziario> titoloGiudiziarioList = null;
+		try {
+			session = getSession();
+			titoloGiudiziarioList = session.selectList("it.mig.sies.model.TitoloGiudiziario.lookup",
+					new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return titoloGiudiziarioList;
 	}
 
@@ -171,16 +215,23 @@ public class SiesDAO {
 	 * Update dei dati del titolo principale con le nuove chiavi tornate come risposta
 	 */
 	public void updateTitoloGiudiziario(ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		Map<String, Long> parameters = new HashMap<String, Long>(2);
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
+			Map<String, Long> parameters = new HashMap<>(2);
 		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 		parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
 		int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
 		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
 				+ parameters.get("sies") + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	private boolean testDeclaratoriaEstinzionePena(SqlSession session, String idEvento) {
@@ -238,19 +289,23 @@ public class SiesDAO {
 	 * Caricamento dei dati relativi all'Ufficio di Sorveglianza per uno specifico idEvento
 	 */
 	public DatiUfficioSorveglianza loadUDS(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		DatiUfficioSorveglianza datiUfficioSorveglianza = (DatiUfficioSorveglianza) session
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		DatiUfficioSorveglianza datiUfficioSorveglianza = null;
+		try {
+			session = getSession();
+			datiUfficioSorveglianza = (DatiUfficioSorveglianza) session
 				.selectOne("it.mig.sies.model.DatiUfficioSorveglianza.lookup", new Long(idEvento));
-		List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = (List<PeriodoLibertaAnticipata>) session
+			List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = session
 				.selectList("it.mig.sies.model.PeriodoLibertaAnticipata.lookup", new Long(idEvento));
 		datiUfficioSorveglianza.setPeriodoLibertaAnticipataList(periodoLibertaAnticipataList);
 
 		// Verifica se siamo nel caso di L. A. Speciale (Mev 11 - s2)
 		if (testLACode(datiUfficioSorveglianza.getCodiceUnivocoProvvedimento())) {
 			// Recupera le informazioni relative alle possibili combinazioni
-			LiberazioneAnticipata tenori = (LiberazioneAnticipata) session
-					.selectOne("it.mig.sies.model.LiberazioneAnticipata.lookupTenori", new Long(idEvento));
+				LiberazioneAnticipata tenori = (LiberazioneAnticipata) session.selectOne(
+						"it.mig.sies.model.LiberazioneAnticipata.lookupTenori", new Long(idEvento));
 
 			// Procede nella verifica dei casi con piu' di una L.A. per impostare il codice univoco
 			if (tenori.getTotale() > 1) {
@@ -275,9 +330,12 @@ public class SiesDAO {
 		if (testDeclaratoriaEstinzionePena(session, idEvento)) {
 			datiUfficioSorveglianza.setCodiceUnivocoProvvedimento(CUP_DEP);
 		}
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return datiUfficioSorveglianza;
 	}
 
@@ -285,14 +343,18 @@ public class SiesDAO {
 	 * Caricamento dei dati relativi al Tribunale di Sorveglianza per uno specifico idEvento
 	 */
 	public DatiTribunaleSorveglianza loadTDS(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		DatiTribunaleSorveglianza datiTribunaleSorveglianza = (DatiTribunaleSorveglianza) session
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		DatiTribunaleSorveglianza datiTribunaleSorveglianza = null;
+		try {
+			session = getSession();
+			datiTribunaleSorveglianza = (DatiTribunaleSorveglianza) session
 				.selectOne("it.mig.sies.model.DatiTribunaleSorveglianza.lookup", new Long(idEvento));
 		if (!PropertyUtil.isPresent(datiTribunaleSorveglianza))
 			logger.error(
 					"ATTENZIONE!!! Dati TdS non trovati! Provvedimento non trasmissibile come Foglio Complementare!");
-		List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = (List<PeriodoLibertaAnticipata>) session
+			List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = session
 				.selectList("it.mig.sies.model.PeriodoLibertaAnticipata.lookup", new Long(idEvento));
 
 		// [SG]: 20190208 aggiunto controllo consistenza del dato per gestione nullpointer
@@ -329,9 +391,12 @@ public class SiesDAO {
 				datiTribunaleSorveglianza.setCodiceUnivocoProvvedimento(CUP_DEP);
 			}
 		}
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return datiTribunaleSorveglianza;
 	}
 
@@ -339,60 +404,88 @@ public class SiesDAO {
 	 * Delete logica del soggetto
 	 */
 	public void deleteLogicaSoggetto(ChiaviAnagrafica chiaviAnagrafica) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		Soggetto soggetto = new Soggetto();
 		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
 		int i = session.update("it.mig.sies.model.Soggetto.deleteLogica", soggetto);
 		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
 				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
 	 * Delete logica dei dati del Tribunale di Sorveglianza
 	 */
 	public void deleteLogicaDTS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiTribunaleSorveglianza dts = new DatiTribunaleSorveglianza();
 		dts.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiTribunaleSorveglianza.deleteLogica", dts);
 		logger.info("Update chiavi DTS: NSC[" + dts.getChiaveNSC() + "] SIES[" + dts.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
 	 * Delete logica dei dati dell'Ufficio di Sorveglianza
 	 */
 	public void deleteLogicaDUS(ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiUfficioSorveglianza dus = new DatiUfficioSorveglianza();
 		dus.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiUfficioSorveglianza.deleteLogica", dus);
 		logger.info("Update chiavi DUS: NSC[" + dus.getChiaveNSC() + "] SIES[" + dus.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
 	 * Delete logica del titolo principale
 	 */
 	public void deleteLogicaTitoloGiudiziario(ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		Map<String, Long> parameters = new HashMap<String, Long>(2);
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
+			Map<String, Long> parameters = new HashMap<>(2);
 		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 		int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
 		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
 				+ parameters.get("sies") + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -409,12 +502,20 @@ public class SiesDAO {
 	 * Caricamento dei dettagli relativi ad un singolo idEvento
 	 */
 	public DettagliFascicolo loadDettagliFascicolo(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		DettagliFascicolo dettagliFascicolo = (DettagliFascicolo) session
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		DettagliFascicolo dettagliFascicolo = null;
+		try {
+			session = getSession();
+			dettagliFascicolo = (DettagliFascicolo) session
 				.selectOne("it.mig.sies.model.DettagliFascicolo.lookup", new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return dettagliFascicolo;
 	}
 
@@ -422,12 +523,20 @@ public class SiesDAO {
 	 * Caricamento del campo note di un Tribunale di Sorveglianza
 	 */
 	public String loadNoteTribunaleSorveglianza(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		String note = (String) session.selectOne("it.mig.sies.model.DatiTribunaleSorveglianza.lookupNote",
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		String note = "";
+		try {
+			session = getSession();
+			note = (String) session.selectOne("it.mig.sies.model.DatiTribunaleSorveglianza.lookupNote",
 				new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return note;
 	}
 
@@ -435,12 +544,20 @@ public class SiesDAO {
 	 * Caricamento del campo idRevocato (terzo collegato) per l'Ufficio di Sorveglianza
 	 */
 	public long loadIdRevocatoUfficioSorveglianza(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		Object objectReturned = session.selectOne("it.mig.sies.model.DatiUfficioSorveglianza.lookupRevocato",
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		Object objectReturned = null;
+		try {
+			session = getSession();
+			objectReturned = session.selectOne("it.mig.sies.model.DatiUfficioSorveglianza.lookupRevocato",
 				new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		if (objectReturned == null)
 			return 0;
 		else
@@ -453,12 +570,20 @@ public class SiesDAO {
 	 * Caricamento del terzo collegato per il Tribunale di Sorveglianza
 	 */
 	public List<ProvvedimentoCollegato> loadRevocatoTribunaleSorveglianza(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		List<ProvvedimentoCollegato> objectReturned = session
-				.selectList("it.mig.sies.model.DatiTribunaleSorveglianza.lookupRevocato", new Long(idEvento));
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		List<ProvvedimentoCollegato> objectReturned = null;
+		try {
+			session = getSession();
+			objectReturned = session.selectList("it.mig.sies.model.DatiTribunaleSorveglianza.lookupRevocato",
+					new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		if ((objectReturned == null) || (objectReturned.size() == 0))
 			return null;
 		else
@@ -469,13 +594,19 @@ public class SiesDAO {
 	 * Caricamento di una lista di titoli da trasferire
 	 */
 	public List<TitoloEsecutivo> loadTrasferEntry(String tipologia) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		List<TitoloEsecutivo> entryList;
-		entryList = (List<TitoloEsecutivo>) session
-				.selectList("it.mig.sies.model.TitoloEsecutivo.lookupTrasfer", tipologia);
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		List<TitoloEsecutivo> entryList = null;
+		try {
+			session = getSession();
+			entryList = session.selectList("it.mig.sies.model.TitoloEsecutivo.lookupTrasfer", tipologia);
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return entryList;
 	}
 
@@ -483,12 +614,20 @@ public class SiesDAO {
 	 * Caricamento del titolo esecutivo relativo ad uno specifico idEvento
 	 */
 	public TitoloEsecutivo loadTitoloEsecutivo(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		TitoloEsecutivo titoloEsecutivo = (TitoloEsecutivo) session
-				.selectOne("it.mig.sies.model.TitoloEsecutivo.lookup", new Long(idEvento));
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		TitoloEsecutivo titoloEsecutivo = null;
+		try {
+			session = getSession();
+			titoloEsecutivo = (TitoloEsecutivo) session.selectOne("it.mig.sies.model.TitoloEsecutivo.lookup",
+					new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return titoloEsecutivo;
 	}
 
@@ -496,12 +635,20 @@ public class SiesDAO {
 	 * Caricamento della risposta di una specifica operazione
 	 */
 	public ResponseData loadResponse(String id) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		ResponseData responseData = (ResponseData) session.selectOne("it.mig.sies.model.ResponseData.lookup",
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		ResponseData responseData = null;
+		try {
+			session = getSession();
+			responseData = (ResponseData) session.selectOne("it.mig.sies.model.ResponseData.lookup",
 				new Long(id));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return responseData;
 	}
 
@@ -509,22 +656,38 @@ public class SiesDAO {
 	 * Caricamento delle operazioni effettuate su un singolo idEvento
 	 */
 	public List<ResponseData> loadResponseList(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		List<ResponseData> responseDataList = session.selectList("it.mig.sies.model.ResponseData.search",
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		List<ResponseData> responseDataList = null;
+		try {
+			session = getSession();
+			responseDataList = session.selectList("it.mig.sies.model.ResponseData.search",
 				new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return responseDataList;
 	}
 
 	public List<MisuraSicurezza> loadMisuraSicurezza(String idEvento) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		List<MisuraSicurezza> misuraSicurezzaList = session
-				.selectList("it.mig.sies.model.MisuraSicurezza.lookup", new Long(idEvento));
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		List<MisuraSicurezza> misuraSicurezzaList = null;
+		try {
+			session = getSession();
+			misuraSicurezzaList = session.selectList("it.mig.sies.model.MisuraSicurezza.lookup",
+					new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return misuraSicurezzaList;
 	}
 
@@ -532,11 +695,19 @@ public class SiesDAO {
 	 * MEV 35253 Caricamento dei profili relativi all'utente
 	 */
 	public List<String> loadProfiliUtente(String idUtente) {
-		// Apertura connessione
-		SqlSession session = getSession();
-		List<String> profiliList = session.selectList("it.mig.sies.model.Utente.verificaProfili", idUtente);
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		List<String> profiliList = null;
+		try {
+			session = getSession();
+			profiliList = session.selectList("it.mig.sies.model.Utente.verificaProfili", idUtente);
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return profiliList;
 	}
 
@@ -547,16 +718,24 @@ public class SiesDAO {
 		String codiceOggetto = codiceUnivoco.substring(0, 4);
 		String codiceMotivo = codiceUnivoco.substring(4, 8);
 		String codiceEsito = codiceUnivoco.substring(8, 12);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("codiceOggetto", codiceOggetto);
 		params.put("codiceMotivo", codiceMotivo);
 		params.put("codiceEsito", codiceEsito);
-		// Apertura connessione
-		SqlSession session = getSession();
-		DescrizioneProvvedimento descrizioneProvvedimento = (DescrizioneProvvedimento) session
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		DescrizioneProvvedimento descrizioneProvvedimento = null;
+		try {
+			session = getSession();
+			descrizioneProvvedimento = (DescrizioneProvvedimento) session
 				.selectOne("it.mig.sies.model.DescrizioneProvvedimento.lookup", params);
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		if ("MISURECAUTE1".equals(codiceUnivoco))
 			descrizioneProvvedimento = new DescrizioneProvvedimento();
 		descrizioneProvvedimento.setCodiceUnivoco(codiceUnivoco);
@@ -571,8 +750,11 @@ public class SiesDAO {
 	 * Annullamento del FC viene settato il campo FLAG_DOCUMENTO_REGISTRATO uguale ad 'A' sulla tabella EVENTO
 	 */
 	public void updateDocumentoAllegato(String idEvento, String action) {
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		if (action.equals("INSERT")) {
 			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoTras", new Long(idEvento));
 		} else if (action.equals("UPDATE")) {
@@ -580,13 +762,19 @@ public class SiesDAO {
 		} else if (action.equals("DELETE")) {
 			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoCanc", new Long(idEvento));
 		} else if (action.equals("ANNULLA")) {
-			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoAnnul", new Long(idEvento));
+				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoAnnul",
+						new Long(idEvento));
 			session.update("it.mig.sies.model.TitoloEsecutivo.updateEventoAnnul", new Long(idEvento));
 		} else if (action.equals("ANNULLACFC")) {
-			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoAnnul", new Long(idEvento));
+				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoAnnul",
+						new Long(idEvento));
 		}
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -595,13 +783,20 @@ public class SiesDAO {
 	 */
 	public boolean verificaPresenza(String idEvento) {
 		boolean presente = false;
-		// Apertura connessione
-		SqlSession session = getSession();
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		int count = (Integer) session.selectOne("it.mig.sies.model.ResponseData.verificaPresenza",
 				new Long(idEvento));
 		presente = count > 0 ? true : false;
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return presente;
 	}
 
@@ -613,13 +808,19 @@ public class SiesDAO {
 	 */
 	public String getDescComune(String codiceLuogoNascita) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		String descComune = (String) session.selectOne("it.mig.sies.model.Soggetto.getDescComune",
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		String descComune = "";
+		try {
+			session = getSession();
+			descComune = (String) session.selectOne("it.mig.sies.model.Soggetto.getDescComune",
 				codiceLuogoNascita);
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return descComune;
 	}
 
@@ -631,13 +832,19 @@ public class SiesDAO {
 	 */
 	public String getDescNazione(String codiceNazioneNascita) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		String descNazione = (String) session.selectOne("it.mig.sies.model.Soggetto.getDescNazione",
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		String descNazione = "";
+		try {
+			session = getSession();
+			descNazione = (String) session.selectOne("it.mig.sies.model.Soggetto.getDescNazione",
 				codiceNazioneNascita);
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return descNazione;
 	}
 
@@ -649,13 +856,19 @@ public class SiesDAO {
 	 */
 	public Soggetto getSoggettoByID(String idSoggetto) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		Soggetto soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.getSoggettoByID",
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		Soggetto soggetto = null;
+		try {
+			session = getSession();
+			soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.getSoggettoByID",
 				new Long(idSoggetto));
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return soggetto;
 	}
 
@@ -667,12 +880,19 @@ public class SiesDAO {
 	 */
 	public TitoloEsecutivo getTitoloEsecutivoByID(String idEvento) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		TitoloEsecutivo titoloEsecutivo = (TitoloEsecutivo) session
-				.selectOne("it.mig.sies.model.TitoloEsecutivo.getTitoloEsecutivoByID", new Long(idEvento));
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		TitoloEsecutivo titoloEsecutivo = null;
+		try {
+			session = getSession();
+			titoloEsecutivo = (TitoloEsecutivo) session.selectOne(
+					"it.mig.sies.model.TitoloEsecutivo.getTitoloEsecutivoByID", new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return titoloEsecutivo;
 	}
 
@@ -690,12 +910,14 @@ public class SiesDAO {
 			// MEV 16 CUMULO: aggiunto parametro di passaggio
 			boolean isForCumulo, String idEvento) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
 		// MEV 16 CUMULO: aggiunte query per estrazioni dati cumulo
 		List<TitoloGiudiziario> titoloGiudiziarioList = null;
-		Map<String, Long> param = new HashMap<String, Long>(2);
+		try {
+			session = getSession();
+
+			Map<String, Long> param = new HashMap<>(2);
 		if (isForCumulo) {
 			param.put("idFascicoloSiep", new Long(idFascicoloSiep));
 			param.put("idEvento", new Long(idEvento));
@@ -710,8 +932,12 @@ public class SiesDAO {
 			titoloGiudiziarioList = session
 					.selectList("it.mig.sies.model.TitoloGiudiziario.getTitoloGiudiziarioByID", param);
 		}
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return titoloGiudiziarioList;
 	}
 
@@ -725,16 +951,16 @@ public class SiesDAO {
 
 		// Apertura connessione
 		SqlSession session = getSession();
+		Utente utente = null;
 		try {
-			Utente utente = (Utente) session.selectOne("it.mig.sies.model.Utente.getUtenteByID", idUtente);
-			return utente;
+			utente = (Utente) session.selectOne("it.mig.sies.model.Utente.getUtenteByID", idUtente);
 		} catch (Throwable t) {
 			logger.error(ExceptionUtils.getFullStackTrace(t));
 		} finally {
 			// Chiusura connessione
 			closeSession(session);
 		}
-		return null;
+		return utente;
 	}
 
 	/**
@@ -749,19 +975,22 @@ public class SiesDAO {
 	public List<DatiPubblicoMinistero> loadDatiProvvedimentoPM(String idEvento, String idFascicoloSiep,
 			boolean isForCumulo, boolean isAvvenutaEsecuzionePena) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
 		List<DatiPubblicoMinistero> datiPubblicoMinisteroList = null;
+		try {
+			session = getSession();
+
 		// controllo se trattasi di cumulo, cambia la query di estrazione dati
 		if (isForCumulo) {
-			datiPubblicoMinisteroList = (ArrayList<DatiPubblicoMinistero>) session
-					.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupCumulo", new Long(idEvento));
+				datiPubblicoMinisteroList = session.selectList(
+						"it.mig.sies.model.DatiPubblicoMinistero.lookupCumulo", new Long(idEvento));
 			// MEV 16 CUMULO: aggiunta gestione MS + PA + altri dati associati al cumulo
 			if (datiPubblicoMinisteroList != null && !datiPubblicoMinisteroList.isEmpty()) {
 				DatiPubblicoMinistero dpm = datiPubblicoMinisteroList.get(0);
-				List<MisuraSicurezzaCumulo> msc = (ArrayList<MisuraSicurezzaCumulo>) session.selectList(
+					List<MisuraSicurezzaCumulo> msc = session.selectList(
 						"it.mig.sies.model.DatiPubblicoMinistero.findMSCumulo", new Long(idEvento));
-				List<PenaAccessoriaCumulo> pac = (ArrayList<PenaAccessoriaCumulo>) session.selectList(
+					List<PenaAccessoriaCumulo> pac = session.selectList(
 						"it.mig.sies.model.DatiPubblicoMinistero.findPACumulo", new Long(idEvento));
 
 				// Popolo le liste
@@ -784,8 +1013,7 @@ public class SiesDAO {
 						"it.mig.sies.model.DatiPubblicoMinistero.getEspulsioneStatoSSCumuloByIDEvento",
 						new Long(idEvento));
 				// 4 Pena Pecuniaria
-				List<SanzioniSostitutiveCumulo> ppSS = (ArrayList<SanzioniSostitutiveCumulo>) session
-						.selectList(
+					List<SanzioniSostitutiveCumulo> ppSS = session.selectList(
 								"it.mig.sies.model.DatiPubblicoMinistero.getPenePecuniarieSSCumuloByIDEvento",
 								new Long(idEvento));
 				// 5 Lavoro Pubblica Utilita'
@@ -823,7 +1051,7 @@ public class SiesDAO {
 						new Long(idEvento));
 
 				// Richieste GE
-				List<RichiesteGECumulo> rgec = (ArrayList<RichiesteGECumulo>) session.selectList(
+					List<RichiesteGECumulo> rgec = session.selectList(
 						"it.mig.sies.model.DatiPubblicoMinistero.getRichiesteGECumuloByIDEvento",
 						new Long(idEvento));
 
@@ -923,18 +1151,21 @@ public class SiesDAO {
 				datiPubblicoMinisteroList.add(0, dpm);
 			}
 		} else if (isAvvenutaEsecuzionePena) {
-			Map<String, Long> parameters = new HashMap<String, Long>(2);
+				Map<String, Long> parameters = new HashMap<>(2);
 			parameters.put("idFascicoloSiep", new Long(idFascicoloSiep));
 			parameters.put("idEvento", new Long(idEvento));
-			datiPubblicoMinisteroList = (ArrayList<DatiPubblicoMinistero>) session
+				datiPubblicoMinisteroList = session
 					.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupAEP", parameters);
 		} else {
-			datiPubblicoMinisteroList = (ArrayList<DatiPubblicoMinistero>) session
+				datiPubblicoMinisteroList = session
 					.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupSP", new Long(idEvento));
 		}
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 
 		// valore di ritorno
 		return datiPubblicoMinisteroList;
@@ -948,12 +1179,19 @@ public class SiesDAO {
 	 */
 	public DettagliFascicolo getFascicoloByID(String idEvento) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		DettagliFascicolo dettagliFascicolo = (DettagliFascicolo) session
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		DettagliFascicolo dettagliFascicolo = null;
+		try {
+			session = getSession();
+			dettagliFascicolo = (DettagliFascicolo) session
 				.selectOne("it.mig.sies.model.DettagliFascicolo.getFascicoloByID", new Long(idEvento));
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return dettagliFascicolo;
 	}
 
@@ -965,15 +1203,21 @@ public class SiesDAO {
 	public void deleteLogicaSoggettoFC(
 			it.mig.sies.type.foglicomplementari.ChiaviAnagrafica chiaviAnagrafica) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		Soggetto soggetto = new Soggetto();
 		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
 		int i = session.update("it.mig.sies.model.Soggetto.deleteLogica", soggetto);
 		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
 				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -984,15 +1228,21 @@ public class SiesDAO {
 	public void deleteLogicaTitoloGiudiziarioFC(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		Map<String, Long> parameters = new HashMap<String, Long>(2);
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
+			Map<String, Long> parameters = new HashMap<>(2);
 		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 		int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
 		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
 				+ parameters.get("sies") + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -1003,15 +1253,21 @@ public class SiesDAO {
 	public void deleteLogicaPM(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
 		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.deleteLogica", dpm);
 		logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -1021,16 +1277,23 @@ public class SiesDAO {
 	 */
 	public void updateSoggettoFC(it.mig.sies.type.foglicomplementari.ChiaviAnagrafica chiaviAnagrafica) {
 
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
 		// Apertura connessione
-		SqlSession session = getSession();
+			session = getSession();
 		Soggetto soggetto = new Soggetto();
 		soggetto.setChiaveNSC(chiaviAnagrafica.getNsc().longValue());
 		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
 		int i = session.update("it.mig.sies.model.Soggetto.update", soggetto);
 		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
 				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -1041,16 +1304,22 @@ public class SiesDAO {
 	public void updateTitoloGiudiziarioFC(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoGiudiziario chiaviProvvedimentoGiudiziario) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		Map<String, Long> parameters = new HashMap<String, Long>(2);
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
+			Map<String, Long> parameters = new HashMap<>(2);
 		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 		parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
 		int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
 		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
 				+ parameters.get("sies") + "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -1061,16 +1330,22 @@ public class SiesDAO {
 	public void updatePM(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
 		dpm.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
 		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.update", dpm);
 		logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -1081,30 +1356,43 @@ public class SiesDAO {
 	public void updateMisCautelare(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
 		dpm.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
 		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.updateMisuraCautelare", dpm);
 		logger.info("Update chiavi MC: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	public void deleteLogicaMisCautelare(
 			it.mig.sies.type.foglicomplementari.ChiaviProvvedimentoEsecutivo chiaviProvvedimentoEsecutivo) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
 		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
 		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.deleteLogicaMisuraCautelare", dpm);
+			int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.deleteLogicaMisuraCautelare",
+					dpm);
 		logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
 				+ "] Risultato[" + i + "]");
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+	}
 	}
 
 	/**
@@ -1116,12 +1404,20 @@ public class SiesDAO {
 	public boolean isCumulo(String codMotivo) {
 
 		boolean isCumulo = false;
-		// Apertura connessione
-		SqlSession session = getSession();
-		int count = (Integer) session.selectOne("it.mig.sies.model.TitoloGiudiziario.isCumulo", codMotivo);
+
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		try {
+			session = getSession();
+			int count = (Integer) session.selectOne("it.mig.sies.model.TitoloGiudiziario.isCumulo",
+					codMotivo);
 		isCumulo = count > 0 ? true : false;
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return isCumulo;
 	}
 
@@ -1133,13 +1429,19 @@ public class SiesDAO {
 	 */
 	public String getDescAutorita(String codiceAutorita) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		String descAutorita = (String) session
-				.selectOne("it.mig.sies.model.TitoloGiudiziario.getDescAutorita", codiceAutorita);
-
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		String descAutorita = "";
+		try {
+			session = getSession();
+			descAutorita = (String) session.selectOne("it.mig.sies.model.TitoloGiudiziario.getDescAutorita",
+					codiceAutorita);
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return descAutorita;
 	}
 
@@ -1151,13 +1453,19 @@ public class SiesDAO {
 	 */
 	public String getDescSedeAutorita(String codiceSedeAutorita) {
 
-		// Apertura connessione
-		SqlSession session = getSession();
-		String descSedeAutorita = (String) session
+		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
+		SqlSession session = null;
+		String descSedeAutorita = "";
+		try {
+			session = getSession();
+			descSedeAutorita = (String) session
 				.selectOne("it.mig.sies.model.TitoloGiudiziario.getDescSedeAutorita", codiceSedeAutorita);
-
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
+		} finally {
 		// Chiusura connessione
 		closeSession(session);
+		}
 		return descSedeAutorita;
 	}
 
