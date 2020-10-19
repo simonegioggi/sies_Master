@@ -110,11 +110,8 @@ import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title:SIAPStampaController
- * Description: Classe padre della stampa. Riunisce tutti i metodi comuni alle
- * 				varie classi specializzate di stampa 
- * Copyright: Copyright (c) 2004 
- * Company: Bull Italia S.p.A.
+ * Title:SIAPStampaController Description: Classe padre della stampa. Riunisce tutti i metodi comuni alle
+ * varie classi specializzate di stampa Copyright: Copyright (c) 2004 Company: Bull Italia S.p.A.
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SIAPStampaController extends SiapController {
@@ -707,16 +704,16 @@ public class SIAPStampaController extends SiapController {
 					if (lEveMS != null && lEveMS.getIdEvento() != null) {
 						if (lEveMS.getCodTipoProvvedimento().equals("03")
 								&& lAgg.getDepositoOrdinanzaPc() != null) {
-							// 01/10/2020 Ticket#20200930012 - Possono esistere ordinanza non depositate per
-							// cui mancanti di anno e numero. Andavano in nullpointer sul toString().
-							// Aggiunto test su != null
+							// 01/10/2020 Ticket#20200930012 + Ticket#20201015014
+							// Possono esistere ordinanza non depositate per cui mancanti di anno e numero.
+							// Andavano in nullpointer sul toString(). Aggiunto test su != null
 							// NUMERO ORDINANZA
 							if (lAgg.getDepositoOrdinanzaPc().getNumS3() != null)
 								lMis.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
 							// ANNO ORDINANZA
 							if (lAgg.getDepositoOrdinanzaPc().getAnnoS3() != null)
 								lMis.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
-							// END 01/10/2020 Ticket#20200930012
+							// END 01/10/2020 Ticket#20200930012 + Ticket#20201015014
 						} else if (lEveMS.getCodTipoProvvedimento().equals("02")
 								&& lAgg.getDepositoDecreto() != null) {
 							// NUMERO DECRETO
