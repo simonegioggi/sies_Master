@@ -1,5 +1,4 @@
 .metadata
-.sonarlint
 RemoteSystemsTempFiles
 **/target
 **/bin
