@@ -8,6 +8,11 @@ import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.SICOException;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.action.ICostantiEvento;
@@ -33,11 +38,6 @@ import siap.sius.richiestaatti.action.ICostantiRichiestaAtti;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.udienza.action.ICostantiUdienza;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
  * <p>
@@ -49,7 +49,7 @@ import f3b.web.RedirectTo;
  * <p>
  * Company: Engineering S.p.A.
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -105,8 +105,7 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		RicercaProvvedimentiUtil lRicerca = new RicercaProvvedimentiUtil(mIdGenProc);
 		boolean lEsistenzaDoc = lRicerca.verificaEsistenzaProv();
 		if (lEsistenzaDoc)
-			throw new SIUSException(
-					SIUSException.USER_MESSAGE,
+			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Per il procedimento indicato è già stato emesso un provvedimento. Non è consentito emettere un nuovo provvedimento");
 
 		// Switch tipo decreto. Anticipato per effettuare il controllo
@@ -122,8 +121,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 
 		// Ricerca del Magistrato Relatore
 		IMagistratoRelatore lMagCtrl = SIUSLookupRemote.getMagistratoRelatoreRemote();
-		MagistratoRelatoreModel lMagRel = lMagCtrl.ExRicercaEstesaMagRelByFascicolo(lFasGPMod
-				.getFascicoloSiusModel().getIdFascicoloSius());
+		MagistratoRelatoreModel lMagRel = lMagCtrl
+				.ExRicercaEstesaMagRelByFascicolo(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 
 		// Prelevare il codice Magistrato_Relatore
 		if (lMagRel != null && lMagRel.getMagistrato() != null)
@@ -150,8 +149,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		siesLogger.debug("N.ro Descr. oggetti ->" + lStDescr.countTokens());
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("Descr. oggetti ->"
-				+ getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO));
+		siesLogger.debug(
+				"Descr. oggetti ->" + getRequestStringParameter(ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO));
 
 		int lSizeVector = lStCodice.countTokens();
 
@@ -219,20 +218,20 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 
 			// Chiamata al Controller per inserimento NOTIFICA
 			INotifica lCtrlNot = SIEPLookupRemote.getNotificaRemote();
-			listaNotifiche = lCtrlNot.ExInserisciNotifiche((ArrayList) listaNotifiche);
+			listaNotifiche = lCtrlNot.ExInserisciNotifiche(listaNotifiche);
 
 			// aggiornamento dei dati in sessione
 			IFascicoloSius lFasCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
-			lFasGPMod = lFasCtrl.ExRicercaFascicoloByKey(lFasGPMod.getFascicoloSiusModel()
-					.getIdFascicoloSius());
+			lFasGPMod = lFasCtrl
+					.ExRicercaFascicoloByKey(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			setSessionAttribute("fascicoloSiusGP", lFasGPMod);
 
 			// pagina dettaglio della sentenza
 			RedirectTo lRedirectTo = new RedirectTo();
 			lRedirectTo.setPage(IWebConstants.PG_MAIN);
 			lRedirectTo.setAction("siap.sius.depositosentenza.action.ActLoadDettaglioSentenza");
-			lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO, lSenEveTenGP.getEvento().getIdEvento()
-					.toString());
+			lRedirectTo.setParameter(ICostantiEvento.CAMPO_ID_EVENTO,
+					lSenEveTenGP.getEvento().getIdEvento().toString());
 			mRetPage = lRedirectTo.toString();
 		} catch (SICOException daoex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -265,15 +264,15 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo lCodContenuto = " + lCodContenuto);
 		// lettura tipo di sentenza Sempre automatica 13-9-04
-		String lCodTipoDec = null;
 
 		// Generazione automatica in base al contenuto
 		Collection lOggetti = DecodificheManager.getInstance().getOggettoProcedimento();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("lOggetti = " + lOggetti.toString());
+		// String lCodTipoDec = null;
 		// lCodTipoDec = DecodificheUtils.getCodAltebyCode(lOggetti, lCodContenuto);
-		lCodTipoDec = ICostantiDepositoSentenza.RIMESSIONE_ATTI;
+		String lCodTipoDec = ICostantiDepositoSentenza.RIMESSIONE_ATTI;
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo Sentenza = " + lCodTipoDec);
@@ -285,9 +284,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		 * FascicoloGPModel((FascicoloGPModel)getSessionAttribute("fascicoloSiusGP")); BigDecimal
 		 * lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine(); }
 		 */
-
-		if (lCodTipoDec == null)
-			throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo sentenza automatico non definito");
+		// if (lCodTipoDec == null)
+		// throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo sentenza automatico non definito");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -300,8 +298,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// Istanzia model generale procedimento.
 		GeneraleProcedimentoModel lGenProcModel = new GeneraleProcedimentoModel();
 		lGenProcModel.setIdGeneraleProcedimento(mIdGenProc);
-		lGenProcModel
-				.setCodOggettoProcedimento(getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO));
+		lGenProcModel.setCodOggettoProcedimento(
+				getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO));
 		lGenProcModel.setDataAggiornamento(mOggi);
 		lGenProcModel.setCodUfficioAggiornamento(mCodiceUfficio);
 		lGenProcModel.setCodOperatoreAggiornamento(mCodiceOperatore);
@@ -316,7 +314,7 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 	/**
 	 * Prepara con i dati il Model per il Deposito Sentenza.
 	 * <p>
-	 * 
+	 *
 	 * @param aDataEmissione
 	 *            Date data di emissione
 	 * @throws F3BException
@@ -345,7 +343,7 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 	/**
 	 * Prepara con i relativi dati, il Model per l'evento.
 	 * <p>
-	 * 
+	 *
 	 * @param aDataEmissione
 	 *            Date data di emissione.
 	 * @throws F3BException
@@ -383,7 +381,7 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 	/**
 	 * Prepara con i relativi dati, il vettore delle Notifiche.
 	 * <p>
-	 * 
+	 *
 	 * @param aDataEmissione
 	 *            Date data di emissione.
 	 * @throws F3BException
@@ -510,7 +508,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 			String autoritaDestinazionePerSoggetto = "";
 			String sedeAutorita = "";
 
-			autoritaDestinazionePerSoggetto = getRequestStringParameter(ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO);
+			autoritaDestinazionePerSoggetto = getRequestStringParameter(
+					ICostantiRichiestaAtti.CAMPO_COD_DESTINATARIO);
 			sedeAutorita = getRequestStringParameter(ICostantiRichiestaAtti.CAMPO_SEDE);
 
 			if (!autoritaDestinazionePerSoggetto.equals("-") && !sedeAutorita.equals("")) {
@@ -526,7 +525,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 				// lNot.setUffCodUfficio("-");
 				if (lFasGPMod == null) {
 					if (this.isSessionAttributeNullObj("fascicoloSiusGP"))
-						throw new SIUSException(SIUSException.USER_MESSAGE, "fascicoloSiusGP non in sessione");
+						throw new SIUSException(SIUSException.USER_MESSAGE,
+								"fascicoloSiusGP non in sessione");
 					lFasGPMod = new FascicoloGPModel(
 							(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
 				}
@@ -548,9 +548,11 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 
 		// Notifiche per Avvocato/i
 		String lSediAvvocato[] = getRequestStringParameters(ICostantiRichiestaAtti.CAMPO_SEDE_AVVOCATO);
-		String lDestinatariAvvocato[] = getRequestStringParameters(ICostantiRichiestaAtti.CAMPO_COD_AVVOCATO_DESTINATARIO);
+		String lDestinatariAvvocato[] = getRequestStringParameters(
+				ICostantiRichiestaAtti.CAMPO_COD_AVVOCATO_DESTINATARIO);
 		String lAvvocato[] = getRequestStringParameters(ICostantiUdienza.CAMPO_COD_AVVOCATO);
-		String[] lIndirizziAvvocato = getRequestStringParameters(ICostantiRichiestaAtti.CAMPO_INDIRIZZO_AVVOCATO);
+		String[] lIndirizziAvvocato = getRequestStringParameters(
+				ICostantiRichiestaAtti.CAMPO_INDIRIZZO_AVVOCATO);
 
 		// Avvocati
 		int lSize = lDestinatariAvvocato.length;
@@ -722,7 +724,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 
 		// Variazione Fascicolo SIUS Origine
 		if (!isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS_ORIGINE)) {
-			BigDecimal lIdFascOrigineNew = getRequestBigDecimalParameter(ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS_ORIGINE);
+			BigDecimal lIdFascOrigineNew = getRequestBigDecimalParameter(
+					ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS_ORIGINE);
 			BigDecimal lIdFascOrigineOld = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine();
 			// Aggiornamento ID Fascicolo Origine solo se variato
 			if (lIdFascOrigineOld == null || lIdFascOrigineNew.compareTo(lIdFascOrigineOld) != 0) {
@@ -733,8 +736,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		} else if (aSenEveTenGP.getTenori() != null)
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug("Test sui tenori aSenEveTenGP.getTenori().length "
-					+ aSenEveTenGP.getTenori().length);
+			siesLogger.debug(
+					"Test sui tenori aSenEveTenGP.getTenori().length " + aSenEveTenGP.getTenori().length);
 		else
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()

@@ -296,15 +296,15 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo lCodContenuto = " + lCodContenuto);
 		// lettura tipo di ordinanza Sempre automatica 13-9-04
-		String lCodTipoDec = null;
 
 		// Generazione automatica in base al contenuto
 		Collection lOggetti = DecodificheManager.getInstance().getOggettoProcedimento();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("N° Oggetti = " + lOggetti.size());
+		// String lCodTipoDec = null;
 		// lCodTipoDec = DecodificheUtils.getCodAltebyCode(lOggetti, lCodContenuto);
-		lCodTipoDec = RIMESSIONE_ATTI;
+		String lCodTipoDec = RIMESSIONE_ATTI;
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo Ordinanza = " + lCodTipoDec);
@@ -317,8 +317,8 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// BigDecimal lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel()
 		// .getIdFascicoloSiusOrigine();
 		// }
-		if (lCodTipoDec == null)
-			throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo ordinanza automatico non definito");
+		// if (lCodTipoDec == null)
+		// throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo ordinanza automatico non definito");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
