@@ -7,6 +7,9 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.action.ICostantiEvento;
@@ -21,17 +24,12 @@ import siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.model.EsitoArchiviazioniCumuloModel;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
-import siap.siep.modulocumulo.action.ActionModuloCumulo;
-import siap.siep.modulocumulo.action.ICostantiModuloCumulo;
 import siap.siep.modulocumulo.model.DatiFinaliCumuloAggregatoModel;
 import siap.siep.modulocumulo.model.DatiFinaliCumuloModel;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
 import siap.siep.modulocumulo.model.PosizioneGiuridicaCumuloModel;
 import siap.siep.modulocumulo.util.ModuloCumuloUtils;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 public class ActLoadDettaglioProvvedimentoCumulo extends ActionModuloCumulo implements ICostantiModuloCumulo {
 
@@ -118,15 +116,12 @@ public class ActLoadDettaglioProvvedimentoCumulo extends ActionModuloCumulo impl
 
 				return PG_LOAD_DETTAGLIO_PROVVEDIMENTO_CUMULO;
 			} else {
-				String lPage = IWebConstants.PG_MAIN
-						+ "?"
-						+ IWebConstants.ACTION_FIELD
-						+ "=siap.siep.modulocumulo.action.ActLoadInserisciProvvedimentoCumulo"
-						+ "&"
-						+ ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO
-						+ "="
+				String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+						+ "=siap.siep.modulocumulo.action.ActLoadInserisciProvvedimentoCumulo" + "&"
+						+ ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO + "="
 						+ lDatiFinaliAggModel.getProvvedimentoCumulo().getEvento()
-								.getIstruIdIstruttoriaCumulo() + "&" + ICostantiModuloCumulo.MODALITA + "="
+								.getIstruIdIstruttoriaCumulo()
+						+ "&" + ICostantiModuloCumulo.MODALITA + "="
 						+ ICostantiModuloCumulo.MODALITA_MODIFICA;
 				return lPage;
 			}
@@ -149,7 +144,7 @@ public class ActLoadDettaglioProvvedimentoCumulo extends ActionModuloCumulo impl
 
 	/**
 	 * Restituisce true se il Provvedimento è coerente con la PG
-	 * 
+	 *
 	 * @param aPosizione
 	 * @param aEvento
 	 * @return
