@@ -36,7 +36,7 @@ import it.mig.sies.type.esecuzione_NEW.ChiaviProvvedimentoGiudiziario;
 
 /**
  * SIES FASE 2 - Classe DAO generale per le operazioni sugli entity definiti tramite MyBatis
- * 
+ *
  * @author Federico Paparoni
  */
 @SuppressWarnings("unchecked")
@@ -68,20 +68,20 @@ public class SiesDAO {
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
-		// Apertura connessione
+			// Apertura connessione
 			session = getSession();
-		Soggetto soggetto = new Soggetto();
-		soggetto.setChiaveNSC(chiaviAnagrafica.getNsc().longValue());
-		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
-		int i = session.update("it.mig.sies.model.Soggetto.update", soggetto);
-		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
-				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+			Soggetto soggetto = new Soggetto();
+			soggetto.setChiaveNSC(chiaviAnagrafica.getNsc().longValue());
+			soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
+			int i = session.update("it.mig.sies.model.Soggetto.update", soggetto);
+			logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
+					+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -93,18 +93,18 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiTribunaleSorveglianza dts = new DatiTribunaleSorveglianza();
-		dts.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
-		dts.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiTribunaleSorveglianza.update", dts);
-		logger.info("Update chiavi DTS: NSC[" + dts.getChiaveNSC() + "] SIES[" + dts.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiTribunaleSorveglianza dts = new DatiTribunaleSorveglianza();
+			dts.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
+			dts.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiTribunaleSorveglianza.update", dts);
+			logger.info("Update chiavi DTS: NSC[" + dts.getChiaveNSC() + "] SIES[" + dts.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -116,18 +116,18 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiUfficioSorveglianza dus = new DatiUfficioSorveglianza();
-		dus.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
-		dus.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiUfficioSorveglianza.update", dus);
-		logger.info("Update chiavi DUS: NSC[" + dus.getChiaveNSC() + "] SIES[" + dus.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiUfficioSorveglianza dus = new DatiUfficioSorveglianza();
+			dus.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
+			dus.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiUfficioSorveglianza.update", dus);
+			logger.info("Update chiavi DUS: NSC[" + dus.getChiaveNSC() + "] SIES[" + dus.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -139,13 +139,13 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		session.insert("it.mig.sies.model.ResponseData.insert", responseData);
+			session.insert("it.mig.sies.model.ResponseData.insert", responseData);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -177,15 +177,15 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.lookupPrincipale",
-				new Long(idEvento));
-		if (soggetto == null)
+					new Long(idEvento));
+			if (soggetto == null)
 				soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.lookup",
 						new Long(idEvento));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return soggetto;
 	}
@@ -205,8 +205,8 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return titoloGiudiziarioList;
 	}
@@ -221,17 +221,17 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			Map<String, Long> parameters = new HashMap<>(2);
-		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
-		parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
-		int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
-		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
-				+ parameters.get("sies") + "] Risultato[" + i + "]");
+			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
+			parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
+			int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
+			logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
+					+ parameters.get("sies") + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	private boolean testDeclaratoriaEstinzionePena(SqlSession session, String idEvento) {
@@ -296,45 +296,45 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			datiUfficioSorveglianza = (DatiUfficioSorveglianza) session
-				.selectOne("it.mig.sies.model.DatiUfficioSorveglianza.lookup", new Long(idEvento));
+					.selectOne("it.mig.sies.model.DatiUfficioSorveglianza.lookup", new Long(idEvento));
 			List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = session
-				.selectList("it.mig.sies.model.PeriodoLibertaAnticipata.lookup", new Long(idEvento));
-		datiUfficioSorveglianza.setPeriodoLibertaAnticipataList(periodoLibertaAnticipataList);
+					.selectList("it.mig.sies.model.PeriodoLibertaAnticipata.lookup", new Long(idEvento));
+			datiUfficioSorveglianza.setPeriodoLibertaAnticipataList(periodoLibertaAnticipataList);
 
-		// Verifica se siamo nel caso di L. A. Speciale (Mev 11 - s2)
-		if (testLACode(datiUfficioSorveglianza.getCodiceUnivocoProvvedimento())) {
-			// Recupera le informazioni relative alle possibili combinazioni
+			// Verifica se siamo nel caso di L. A. Speciale (Mev 11 - s2)
+			if (testLACode(datiUfficioSorveglianza.getCodiceUnivocoProvvedimento())) {
+				// Recupera le informazioni relative alle possibili combinazioni
 				LiberazioneAnticipata tenori = (LiberazioneAnticipata) session.selectOne(
 						"it.mig.sies.model.LiberazioneAnticipata.lookupTenori", new Long(idEvento));
 
-			// Procede nella verifica dei casi con piu' di una L.A. per impostare il codice univoco
-			if (tenori.getTotale() > 1) {
-				String laCode = formattaLACode(tenori,
-						datiUfficioSorveglianza.getCodiceUnivocoProvvedimento());
-				if (!"".equals(laCode)) {
-					datiUfficioSorveglianza.setCodiceUnivocoProvvedimento(laCode);
+				// Procede nella verifica dei casi con piu' di una L.A. per impostare il codice univoco
+				if (tenori.getTotale() > 1) {
+					String laCode = formattaLACode(tenori,
+							datiUfficioSorveglianza.getCodiceUnivocoProvvedimento());
+					if (!"".equals(laCode)) {
+						datiUfficioSorveglianza.setCodiceUnivocoProvvedimento(laCode);
+					}
+				}
+
+				// Procede nella verifica delle L.A. per impostare il tipo di giorni
+				if (tenori.getTotale() > 0) {
+					LiberazioneAnticipata licenza = (LiberazioneAnticipata) session.selectOne(
+							"it.mig.sies.model.LiberazioneAnticipata.lookupLicenza", new Long(idEvento));
+					datiUfficioSorveglianza.setNumGiorniLibAnticipata(licenza.getAnticipata());
+					datiUfficioSorveglianza.setNumGiorniLibAnticipataLs(licenza.getSpeciale());
+					datiUfficioSorveglianza.setNumGiorniLibAnticipataLi(licenza.getIntegrazione());
 				}
 			}
 
-			// Procede nella verifica delle L.A. per impostare il tipo di giorni
-			if (tenori.getTotale() > 0) {
-				LiberazioneAnticipata licenza = (LiberazioneAnticipata) session.selectOne(
-						"it.mig.sies.model.LiberazioneAnticipata.lookupLicenza", new Long(idEvento));
-				datiUfficioSorveglianza.setNumGiorniLibAnticipata(licenza.getAnticipata());
-				datiUfficioSorveglianza.setNumGiorniLibAnticipataLs(licenza.getSpeciale());
-				datiUfficioSorveglianza.setNumGiorniLibAnticipataLi(licenza.getIntegrazione());
+			// Verifica se siamo nel caso di Declaratoria Estinzione Pena (Mev 11 - s3)
+			if (testDeclaratoriaEstinzionePena(session, idEvento)) {
+				datiUfficioSorveglianza.setCodiceUnivocoProvvedimento(CUP_DEP);
 			}
-		}
-
-		// Verifica se siamo nel caso di Declaratoria Estinzione Pena (Mev 11 - s3)
-		if (testDeclaratoriaEstinzionePena(session, idEvento)) {
-			datiUfficioSorveglianza.setCodiceUnivocoProvvedimento(CUP_DEP);
-		}
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return datiUfficioSorveglianza;
 	}
@@ -350,52 +350,52 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			datiTribunaleSorveglianza = (DatiTribunaleSorveglianza) session
-				.selectOne("it.mig.sies.model.DatiTribunaleSorveglianza.lookup", new Long(idEvento));
-		if (!PropertyUtil.isPresent(datiTribunaleSorveglianza))
-			logger.error(
-					"ATTENZIONE!!! Dati TdS non trovati! Provvedimento non trasmissibile come Foglio Complementare!");
+					.selectOne("it.mig.sies.model.DatiTribunaleSorveglianza.lookup", new Long(idEvento));
+			if (!PropertyUtil.isPresent(datiTribunaleSorveglianza))
+				logger.error(
+						"ATTENZIONE!!! Dati TdS non trovati! Provvedimento non trasmissibile come Foglio Complementare!");
 			List<PeriodoLibertaAnticipata> periodoLibertaAnticipataList = session
-				.selectList("it.mig.sies.model.PeriodoLibertaAnticipata.lookup", new Long(idEvento));
+					.selectList("it.mig.sies.model.PeriodoLibertaAnticipata.lookup", new Long(idEvento));
 
-		// [SG]: 20190208 aggiunto controllo consistenza del dato per gestione nullpointer
-		if (PropertyUtil.isPresent(datiTribunaleSorveglianza)) {
-			datiTribunaleSorveglianza.setPeriodoLibertaAnticipataList(periodoLibertaAnticipataList);
+			// [SG]: 20190208 aggiunto controllo consistenza del dato per gestione nullpointer
+			if (PropertyUtil.isPresent(datiTribunaleSorveglianza)) {
+				datiTribunaleSorveglianza.setPeriodoLibertaAnticipataList(periodoLibertaAnticipataList);
 
-			// Verifica se siamo nel caso di L. A. Speciale (Mev 11 - s2)
-			if (testLACode(datiTribunaleSorveglianza.getCodiceUnivocoProvvedimento())) {
-				// Recupera le informazioni relative alle possibili combinazioni
-				LiberazioneAnticipata tenori = (LiberazioneAnticipata) session.selectOne(
-						"it.mig.sies.model.LiberazioneAnticipata.lookupTenori", new Long(idEvento));
+				// Verifica se siamo nel caso di L. A. Speciale (Mev 11 - s2)
+				if (testLACode(datiTribunaleSorveglianza.getCodiceUnivocoProvvedimento())) {
+					// Recupera le informazioni relative alle possibili combinazioni
+					LiberazioneAnticipata tenori = (LiberazioneAnticipata) session.selectOne(
+							"it.mig.sies.model.LiberazioneAnticipata.lookupTenori", new Long(idEvento));
 
-				// Procede nella verifica dei casi con piu' di una L.A. per impostare il codice univoco
-				if (tenori.getTotale() > 1) {
-					String laCode = formattaLACode(tenori,
-							datiTribunaleSorveglianza.getCodiceUnivocoProvvedimento());
-					if (!"".equals(laCode)) {
-						datiTribunaleSorveglianza.setCodiceUnivocoProvvedimento(laCode);
+					// Procede nella verifica dei casi con piu' di una L.A. per impostare il codice univoco
+					if (tenori.getTotale() > 1) {
+						String laCode = formattaLACode(tenori,
+								datiTribunaleSorveglianza.getCodiceUnivocoProvvedimento());
+						if (!"".equals(laCode)) {
+							datiTribunaleSorveglianza.setCodiceUnivocoProvvedimento(laCode);
+						}
+					}
+
+					// Procede nella verifica delle L.A. per impostare il tipo di giorni
+					if (tenori.getTotale() > 0) {
+						LiberazioneAnticipata licenza = (LiberazioneAnticipata) session.selectOne(
+								"it.mig.sies.model.LiberazioneAnticipata.lookupLicenza", new Long(idEvento));
+						datiTribunaleSorveglianza.setGiorniLibertaAnticipata(licenza.getAnticipata());
+						datiTribunaleSorveglianza.setGiorniLibertaAnticipataLs(licenza.getSpeciale());
+						datiTribunaleSorveglianza.setGiorniLibertaAnticipataLi(licenza.getIntegrazione());
 					}
 				}
 
-				// Procede nella verifica delle L.A. per impostare il tipo di giorni
-				if (tenori.getTotale() > 0) {
-					LiberazioneAnticipata licenza = (LiberazioneAnticipata) session.selectOne(
-							"it.mig.sies.model.LiberazioneAnticipata.lookupLicenza", new Long(idEvento));
-					datiTribunaleSorveglianza.setGiorniLibertaAnticipata(licenza.getAnticipata());
-					datiTribunaleSorveglianza.setGiorniLibertaAnticipataLs(licenza.getSpeciale());
-					datiTribunaleSorveglianza.setGiorniLibertaAnticipataLi(licenza.getIntegrazione());
+				// Verifica se siamo nel caso di Declaratoria Estinzione Pena (Mev 11 - s3)
+				if (testDeclaratoriaEstinzionePena(session, idEvento)) {
+					datiTribunaleSorveglianza.setCodiceUnivocoProvvedimento(CUP_DEP);
 				}
 			}
-
-			// Verifica se siamo nel caso di Declaratoria Estinzione Pena (Mev 11 - s3)
-			if (testDeclaratoriaEstinzionePena(session, idEvento)) {
-				datiTribunaleSorveglianza.setCodiceUnivocoProvvedimento(CUP_DEP);
-			}
-		}
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return datiTribunaleSorveglianza;
 	}
@@ -409,17 +409,17 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		Soggetto soggetto = new Soggetto();
-		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
-		int i = session.update("it.mig.sies.model.Soggetto.deleteLogica", soggetto);
-		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
-				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+			Soggetto soggetto = new Soggetto();
+			soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
+			int i = session.update("it.mig.sies.model.Soggetto.deleteLogica", soggetto);
+			logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
+					+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -431,17 +431,17 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiTribunaleSorveglianza dts = new DatiTribunaleSorveglianza();
-		dts.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiTribunaleSorveglianza.deleteLogica", dts);
-		logger.info("Update chiavi DTS: NSC[" + dts.getChiaveNSC() + "] SIES[" + dts.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiTribunaleSorveglianza dts = new DatiTribunaleSorveglianza();
+			dts.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiTribunaleSorveglianza.deleteLogica", dts);
+			logger.info("Update chiavi DTS: NSC[" + dts.getChiaveNSC() + "] SIES[" + dts.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -453,17 +453,17 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiUfficioSorveglianza dus = new DatiUfficioSorveglianza();
-		dus.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiUfficioSorveglianza.deleteLogica", dus);
-		logger.info("Update chiavi DUS: NSC[" + dus.getChiaveNSC() + "] SIES[" + dus.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiUfficioSorveglianza dus = new DatiUfficioSorveglianza();
+			dus.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiUfficioSorveglianza.deleteLogica", dus);
+			logger.info("Update chiavi DUS: NSC[" + dus.getChiaveNSC() + "] SIES[" + dus.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -476,21 +476,21 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			Map<String, Long> parameters = new HashMap<>(2);
-		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
-		int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
-		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
-				+ parameters.get("sies") + "] Risultato[" + i + "]");
+			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
+			int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
+			logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
+					+ parameters.get("sies") + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * Chiude la sessione aperta verso il database
-	 * 
+	 *
 	 * @param session
 	 */
 	public void closeSession(SqlSession session) {
@@ -509,12 +509,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			dettagliFascicolo = (DettagliFascicolo) session
-				.selectOne("it.mig.sies.model.DettagliFascicolo.lookup", new Long(idEvento));
+					.selectOne("it.mig.sies.model.DettagliFascicolo.lookup", new Long(idEvento));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return dettagliFascicolo;
 	}
@@ -530,12 +530,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			note = (String) session.selectOne("it.mig.sies.model.DatiTribunaleSorveglianza.lookupNote",
-				new Long(idEvento));
+					new Long(idEvento));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return note;
 	}
@@ -551,12 +551,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			objectReturned = session.selectOne("it.mig.sies.model.DatiUfficioSorveglianza.lookupRevocato",
-				new Long(idEvento));
+					new Long(idEvento));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		if (objectReturned == null)
 			return 0;
@@ -566,7 +566,7 @@ public class SiesDAO {
 
 	/**
 	 * MEV 23010 - Modificato oggetto di ritorno per mappare chiave SIES
-	 * 
+	 *
 	 * Caricamento del terzo collegato per il Tribunale di Sorveglianza
 	 */
 	public List<ProvvedimentoCollegato> loadRevocatoTribunaleSorveglianza(String idEvento) {
@@ -581,8 +581,8 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		if ((objectReturned == null) || (objectReturned.size() == 0))
 			return null;
@@ -604,8 +604,8 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return entryList;
 	}
@@ -625,8 +625,8 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return titoloEsecutivo;
 	}
@@ -642,12 +642,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			responseData = (ResponseData) session.selectOne("it.mig.sies.model.ResponseData.lookup",
-				new Long(id));
+					new Long(id));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return responseData;
 	}
@@ -663,12 +663,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			responseDataList = session.selectList("it.mig.sies.model.ResponseData.search",
-				new Long(idEvento));
+					new Long(idEvento));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return responseDataList;
 	}
@@ -685,8 +685,8 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return misuraSicurezzaList;
 	}
@@ -705,8 +705,8 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return profiliList;
 	}
@@ -729,12 +729,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			descrizioneProvvedimento = (DescrizioneProvvedimento) session
-				.selectOne("it.mig.sies.model.DescrizioneProvvedimento.lookup", params);
+					.selectOne("it.mig.sies.model.DescrizioneProvvedimento.lookup", params);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		if ("MISURECAUTE1".equals(codiceUnivoco))
 			descrizioneProvvedimento = new DescrizioneProvvedimento();
@@ -755,26 +755,26 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		if (action.equals("INSERT")) {
-			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoTras", new Long(idEvento));
-		} else if (action.equals("UPDATE")) {
-			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoMod", new Long(idEvento));
-		} else if (action.equals("DELETE")) {
-			session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoCanc", new Long(idEvento));
-		} else if (action.equals("ANNULLA")) {
+			if (action.equals("INSERT")) {
+				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoTras", new Long(idEvento));
+			} else if (action.equals("UPDATE")) {
+				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoMod", new Long(idEvento));
+			} else if (action.equals("DELETE")) {
+				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoCanc", new Long(idEvento));
+			} else if (action.equals("ANNULLA")) {
 				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoAnnul",
 						new Long(idEvento));
-			session.update("it.mig.sies.model.TitoloEsecutivo.updateEventoAnnul", new Long(idEvento));
-		} else if (action.equals("ANNULLACFC")) {
+				session.update("it.mig.sies.model.TitoloEsecutivo.updateEventoAnnul", new Long(idEvento));
+			} else if (action.equals("ANNULLACFC")) {
 				session.update("it.mig.sies.model.TitoloEsecutivo.updateDocAllegatoAnnul",
 						new Long(idEvento));
-		}
+			}
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
@@ -788,21 +788,21 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		int count = (Integer) session.selectOne("it.mig.sies.model.ResponseData.verificaPresenza",
-				new Long(idEvento));
-		presente = count > 0 ? true : false;
+			int count = (Integer) session.selectOne("it.mig.sies.model.ResponseData.verificaPresenza",
+					new Long(idEvento));
+			presente = count > 0 ? true : false;
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return presente;
 	}
 
 	/**
 	 * MEV 16 + MEV 31: metodo per il recupero della descrizione del comune di nascita del sinonimo
-	 * 
+	 *
 	 * @param codiceLuogoNascita
 	 * @return String
 	 */
@@ -814,19 +814,19 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			descComune = (String) session.selectOne("it.mig.sies.model.Soggetto.getDescComune",
-				codiceLuogoNascita);
+					codiceLuogoNascita);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return descComune;
 	}
 
 	/**
 	 * MEV 16 + MEV 31: metodo per il recupero della descrizione della nazione di nascita del sinonimo
-	 * 
+	 *
 	 * @param codiceNazioneNascita
 	 * @return String
 	 */
@@ -838,19 +838,19 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			descNazione = (String) session.selectOne("it.mig.sies.model.Soggetto.getDescNazione",
-				codiceNazioneNascita);
+					codiceNazioneNascita);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return descNazione;
 	}
 
 	/**
 	 * MEV 16: Recupero dati Soggetto dato il suo ID
-	 * 
+	 *
 	 * @param idSoggetto
 	 * @return String
 	 */
@@ -862,19 +862,19 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			soggetto = (Soggetto) session.selectOne("it.mig.sies.model.Soggetto.getSoggettoByID",
-				new Long(idSoggetto));
+					new Long(idSoggetto));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return soggetto;
 	}
 
 	/**
 	 * MEV 16: Recupero dati titolo esecutivo dato il suo ID
-	 * 
+	 *
 	 * @param idEvento
 	 * @return TitoloEsecutivo
 	 */
@@ -890,15 +890,15 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return titoloEsecutivo;
 	}
 
 	/**
 	 * MEV 16: Recupero dati titolo giudiziario dato il suo ID
-	 * 
+	 *
 	 * @param idSentenza
 	 * @param idFascicoloSiep
 	 * @param idEvento
@@ -918,32 +918,32 @@ public class SiesDAO {
 			session = getSession();
 
 			Map<String, Long> param = new HashMap<>(2);
-		if (isForCumulo) {
-			param.put("idFascicoloSiep", new Long(idFascicoloSiep));
-			param.put("idEvento", new Long(idEvento));
-			String idIstruttoriaCumulo = (String) session
-					.selectOne("it.mig.sies.model.TitoloGiudiziario.getIdIstruttoriaCumuloByID", param);
-			titoloGiudiziarioList = session.selectList(
-					"it.mig.sies.model.TitoloGiudiziario.getTitoliEsecutiviPerCumuloByID",
-					new Long(idIstruttoriaCumulo));
-		} else {
-			param.put("idSentenza", new Long(idSentenza));
-			param.put("idFascicoloSiep", new Long(idFascicoloSiep));
-			titoloGiudiziarioList = session
-					.selectList("it.mig.sies.model.TitoloGiudiziario.getTitoloGiudiziarioByID", param);
-		}
+			if (isForCumulo) {
+				param.put("idFascicoloSiep", new Long(idFascicoloSiep));
+				param.put("idEvento", new Long(idEvento));
+				String idIstruttoriaCumulo = (String) session
+						.selectOne("it.mig.sies.model.TitoloGiudiziario.getIdIstruttoriaCumuloByID", param);
+				titoloGiudiziarioList = session.selectList(
+						"it.mig.sies.model.TitoloGiudiziario.getTitoliEsecutiviPerCumuloByID",
+						new Long(idIstruttoriaCumulo));
+			} else {
+				param.put("idSentenza", new Long(idSentenza));
+				param.put("idFascicoloSiep", new Long(idFascicoloSiep));
+				titoloGiudiziarioList = session
+						.selectList("it.mig.sies.model.TitoloGiudiziario.getTitoloGiudiziarioByID", param);
+			}
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return titoloGiudiziarioList;
 	}
 
 	/**
 	 * MEV 16: Recupero dati utente dato il suo ID
-	 * 
+	 *
 	 * @param idUtente
 	 * @return Utente
 	 */
@@ -965,7 +965,7 @@ public class SiesDAO {
 
 	/**
 	 * MEV 16: Caricamento dei dati relativi al Pubblico Ministero per uno specifico idEvento
-	 * 
+	 *
 	 * @param idEvento
 	 * @param idFascicoloSiep
 	 * @param isForCumulo
@@ -981,190 +981,190 @@ public class SiesDAO {
 		try {
 			session = getSession();
 
-		// controllo se trattasi di cumulo, cambia la query di estrazione dati
-		if (isForCumulo) {
+			// controllo se trattasi di cumulo, cambia la query di estrazione dati
+			if (isForCumulo) {
 				datiPubblicoMinisteroList = session.selectList(
 						"it.mig.sies.model.DatiPubblicoMinistero.lookupCumulo", new Long(idEvento));
-			// MEV 16 CUMULO: aggiunta gestione MS + PA + altri dati associati al cumulo
-			if (datiPubblicoMinisteroList != null && !datiPubblicoMinisteroList.isEmpty()) {
-				DatiPubblicoMinistero dpm = datiPubblicoMinisteroList.get(0);
+				// MEV 16 CUMULO: aggiunta gestione MS + PA + altri dati associati al cumulo
+				if (datiPubblicoMinisteroList != null && !datiPubblicoMinisteroList.isEmpty()) {
+					DatiPubblicoMinistero dpm = datiPubblicoMinisteroList.get(0);
 					List<MisuraSicurezzaCumulo> msc = session.selectList(
-						"it.mig.sies.model.DatiPubblicoMinistero.findMSCumulo", new Long(idEvento));
+							"it.mig.sies.model.DatiPubblicoMinistero.findMSCumulo", new Long(idEvento));
 					List<PenaAccessoriaCumulo> pac = session.selectList(
-						"it.mig.sies.model.DatiPubblicoMinistero.findPACumulo", new Long(idEvento));
+							"it.mig.sies.model.DatiPubblicoMinistero.findPACumulo", new Long(idEvento));
 
-				// Popolo le liste
-				if (PropertyUtil.isPresent(msc))
-					dpm.setListaMisureSicurezzaCumulo(msc);
-				if (PropertyUtil.isPresent(pac))
-					dpm.setListaPeneAccessorieCumulo(pac);
+					// Popolo le liste
+					if (PropertyUtil.isPresent(msc))
+						dpm.setListaMisureSicurezzaCumulo(msc);
+					if (PropertyUtil.isPresent(pac))
+						dpm.setListaPeneAccessorieCumulo(pac);
 
-				// Sanzioni Sostitutive
-				// 1 Semidetenzione
-				SanzioniSostitutiveCumulo sdSS = (SanzioniSostitutiveCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getSemidetenzioneSSCumuloByIDEvento",
-						new Long(idEvento));
-				// 2 Liberta' Controllata
-				SanzioniSostitutiveCumulo lcSS = (SanzioniSostitutiveCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLibertaControllataSSCumuloByIDEvento",
-						new Long(idEvento));
-				// 3 Espulsione Stato
-				SanzioniSostitutiveCumulo esSS = (SanzioniSostitutiveCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getEspulsioneStatoSSCumuloByIDEvento",
-						new Long(idEvento));
-				// 4 Pena Pecuniaria
+					// Sanzioni Sostitutive
+					// 1 Semidetenzione
+					SanzioniSostitutiveCumulo sdSS = (SanzioniSostitutiveCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getSemidetenzioneSSCumuloByIDEvento",
+							new Long(idEvento));
+					// 2 Liberta' Controllata
+					SanzioniSostitutiveCumulo lcSS = (SanzioniSostitutiveCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLibertaControllataSSCumuloByIDEvento",
+							new Long(idEvento));
+					// 3 Espulsione Stato
+					SanzioniSostitutiveCumulo esSS = (SanzioniSostitutiveCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getEspulsioneStatoSSCumuloByIDEvento",
+							new Long(idEvento));
+					// 4 Pena Pecuniaria
 					List<SanzioniSostitutiveCumulo> ppSS = session.selectList(
-								"it.mig.sies.model.DatiPubblicoMinistero.getPenePecuniarieSSCumuloByIDEvento",
-								new Long(idEvento));
-				// 5 Lavoro Pubblica Utilita'
-				SanzioniSostitutiveCumulo lpuSS = (SanzioniSostitutiveCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLavoroPubblicaUtilitaSSCumuloByIDEvento",
-						new Long(idEvento));
-				// 6 CPP - Lavoro Sostitutivo
-				ConversionePPCumulo lsCPP = (ConversionePPCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLavoroSostitutivoCPPCumuloByIDEvento",
-						new Long(idEvento));
-				// 7 CPP - Libertà Controllata
-				ConversionePPCumulo lcCPP = (ConversionePPCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLibertaControllataCPPCumuloByIDEvento",
-						new Long(idEvento));
-				// 8 GP - Permanenza Domiciliare
-				SanzioniGPCumulo pdGP = (SanzioniGPCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getPermanenzaDomiciliareGPCumuloByIDEvento",
-						new Long(idEvento));
-				// 9 GP - Lavoro Sostitutivo
-				SanzioniGPCumulo lsGP = (SanzioniGPCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLavoroSostitutivoGPCumuloByIDEvento",
-						new Long(idEvento));
-				// 10 GP - Lavoro Pubblica Utilita'
-				SanzioniGPCumulo lpuGP = (SanzioniGPCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLavoroPubblicaUtilitaGPCumuloByIDEvento",
-						new Long(idEvento));
-				// 11 GP - Espulsione Stato
-				SanzioniGPCumulo esGP = (SanzioniGPCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getEspulsioneStatoGPCumuloByIDEvento",
-						new Long(idEvento));
+							"it.mig.sies.model.DatiPubblicoMinistero.getPenePecuniarieSSCumuloByIDEvento",
+							new Long(idEvento));
+					// 5 Lavoro Pubblica Utilita'
+					SanzioniSostitutiveCumulo lpuSS = (SanzioniSostitutiveCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLavoroPubblicaUtilitaSSCumuloByIDEvento",
+							new Long(idEvento));
+					// 6 CPP - Lavoro Sostitutivo
+					ConversionePPCumulo lsCPP = (ConversionePPCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLavoroSostitutivoCPPCumuloByIDEvento",
+							new Long(idEvento));
+					// 7 CPP - Libertà Controllata
+					ConversionePPCumulo lcCPP = (ConversionePPCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLibertaControllataCPPCumuloByIDEvento",
+							new Long(idEvento));
+					// 8 GP - Permanenza Domiciliare
+					SanzioniGPCumulo pdGP = (SanzioniGPCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getPermanenzaDomiciliareGPCumuloByIDEvento",
+							new Long(idEvento));
+					// 9 GP - Lavoro Sostitutivo
+					SanzioniGPCumulo lsGP = (SanzioniGPCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLavoroSostitutivoGPCumuloByIDEvento",
+							new Long(idEvento));
+					// 10 GP - Lavoro Pubblica Utilita'
+					SanzioniGPCumulo lpuGP = (SanzioniGPCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLavoroPubblicaUtilitaGPCumuloByIDEvento",
+							new Long(idEvento));
+					// 11 GP - Espulsione Stato
+					SanzioniGPCumulo esGP = (SanzioniGPCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getEspulsioneStatoGPCumuloByIDEvento",
+							new Long(idEvento));
 
-				// Liberazione Anticipata
-				LiberazioneAnticipataCumulo lac = (LiberazioneAnticipataCumulo) session.selectOne(
-						"it.mig.sies.model.DatiPubblicoMinistero.getLiberazioneAnticipataCumuloByIDEvento",
-						new Long(idEvento));
+					// Liberazione Anticipata
+					LiberazioneAnticipataCumulo lac = (LiberazioneAnticipataCumulo) session.selectOne(
+							"it.mig.sies.model.DatiPubblicoMinistero.getLiberazioneAnticipataCumuloByIDEvento",
+							new Long(idEvento));
 
-				// Richieste GE
+					// Richieste GE
 					List<RichiesteGECumulo> rgec = session.selectList(
-						"it.mig.sies.model.DatiPubblicoMinistero.getRichiesteGECumuloByIDEvento",
-						new Long(idEvento));
+							"it.mig.sies.model.DatiPubblicoMinistero.getRichiesteGECumuloByIDEvento",
+							new Long(idEvento));
 
-				// Popolo gli altri dati
-				SanzioniSostitutiveCumulo ssc = null;
-				ConversionePPCumulo cppc = null;
-				SanzioniGPCumulo sgpc = null;
+					// Popolo gli altri dati
+					SanzioniSostitutiveCumulo ssc = null;
+					ConversionePPCumulo cppc = null;
+					SanzioniGPCumulo sgpc = null;
 
-				if (sdSS != null || lcSS != null || esSS != null || PropertyUtil.isPresent(ppSS)
-						|| lpuSS != null)
-					ssc = new SanzioniSostitutiveCumulo();
-				if (lsCPP != null || lcCPP != null)
-					cppc = new ConversionePPCumulo();
-				if (pdGP != null || lsGP != null || lpuGP != null || esGP != null)
-					sgpc = new SanzioniGPCumulo();
+					if (sdSS != null || lcSS != null || esSS != null || PropertyUtil.isPresent(ppSS)
+							|| lpuSS != null)
+						ssc = new SanzioniSostitutiveCumulo();
+					if (lsCPP != null || lcCPP != null)
+						cppc = new ConversionePPCumulo();
+					if (pdGP != null || lsGP != null || lpuGP != null || esGP != null)
+						sgpc = new SanzioniGPCumulo();
 
-				if (sdSS != null) {
-					ssc.setAnniSemidetenzione(sdSS.getAnniSemidetenzione());
-					ssc.setMesiSemidetenzione(sdSS.getMesiSemidetenzione());
-					ssc.setGiorniSemidetenzione(sdSS.getGiorniSemidetenzione());
-				}
-				if (lcSS != null) {
-					ssc.setAnniLibertaControllata(lcSS.getAnniLibertaControllata());
-					ssc.setMesiLibertaControllata(lcSS.getMesiLibertaControllata());
-					ssc.setGiorniLibertaControllata(lcSS.getGiorniLibertaControllata());
-				}
-				if (esSS != null) {
-					ssc.setAnniEspulsioneStato(esSS.getAnniEspulsioneStato());
-					ssc.setMesiEspulsioneStato(esSS.getMesiEspulsioneStato());
-					ssc.setGiorniEspulsioneStato(esSS.getGiorniEspulsioneStato());
-					ssc.setCodiceTipoEspulsioneStato(esSS.getCodiceTipoEspulsioneStato());
-				}
-				if (ppSS != null) {
-					for (SanzioniSostitutiveCumulo elem : ppSS) {
-						if (elem.getImportoAmmenda() != 0)
-							ssc.setImportoAmmenda(elem.getImportoAmmenda());
-						if (elem.getImportoMulta() != 0)
-							ssc.setImportoMulta(elem.getImportoMulta());
+					if (sdSS != null) {
+						ssc.setAnniSemidetenzione(sdSS.getAnniSemidetenzione());
+						ssc.setMesiSemidetenzione(sdSS.getMesiSemidetenzione());
+						ssc.setGiorniSemidetenzione(sdSS.getGiorniSemidetenzione());
 					}
-				}
-				if (lpuSS != null) {
-					ssc.setAnniLavoroPubblicaUtilita(lpuSS.getAnniLavoroPubblicaUtilita());
-					ssc.setMesiLavoroPubblicaUtilita(lpuSS.getMesiLavoroPubblicaUtilita());
-					ssc.setGiorniLavoroPubblicaUtilita(lpuSS.getGiorniLavoroPubblicaUtilita());
-					ssc.setOreLavoroPubblicaUtilita(lpuSS.getOreLavoroPubblicaUtilita());
-					ssc.setCodTipoLavoroPubblicaUtilita(lpuSS.getCodTipoLavoroPubblicaUtilita());
-				}
-				if (lsCPP != null) {
-					cppc.setAnniLavoroSostitutivo(lsCPP.getAnniLavoroSostitutivo());
-					cppc.setMesiLavoroSostitutivo(lsCPP.getMesiLavoroSostitutivo());
-					cppc.setGiorniLavoroSostitutivo(lsCPP.getGiorniLavoroSostitutivo());
-				}
-				if (lcCPP != null) {
-					cppc.setAnniLibertaControllata(lcCPP.getAnniLibertaControllata());
-					cppc.setMesiLibertaControllata(lcCPP.getMesiLibertaControllata());
-					cppc.setGiorniLibertaControllata(lcCPP.getGiorniLibertaControllata());
-				}
-				if (pdGP != null) {
-					sgpc.setAnniPermanenzaDomiciliare(pdGP.getAnniPermanenzaDomiciliare());
-					sgpc.setMesiPermanenzaDomiciliare(pdGP.getMesiPermanenzaDomiciliare());
-					sgpc.setGiorniPermanenzaDomiciliare(pdGP.getGiorniPermanenzaDomiciliare());
-				}
-				if (lsGP != null) {
-					sgpc.setAnniLavoroSostitutivo(lsGP.getAnniLavoroSostitutivo());
-					sgpc.setMesiLavoroSostitutivo(lsGP.getMesiLavoroSostitutivo());
-					sgpc.setGiorniLavoroSostitutivo(lsGP.getGiorniLavoroSostitutivo());
+					if (lcSS != null) {
+						ssc.setAnniLibertaControllata(lcSS.getAnniLibertaControllata());
+						ssc.setMesiLibertaControllata(lcSS.getMesiLibertaControllata());
+						ssc.setGiorniLibertaControllata(lcSS.getGiorniLibertaControllata());
+					}
+					if (esSS != null) {
+						ssc.setAnniEspulsioneStato(esSS.getAnniEspulsioneStato());
+						ssc.setMesiEspulsioneStato(esSS.getMesiEspulsioneStato());
+						ssc.setGiorniEspulsioneStato(esSS.getGiorniEspulsioneStato());
+						ssc.setCodiceTipoEspulsioneStato(esSS.getCodiceTipoEspulsioneStato());
+					}
+					if (ppSS != null) {
+						for (SanzioniSostitutiveCumulo elem : ppSS) {
+							if (elem.getImportoAmmenda() != 0)
+								ssc.setImportoAmmenda(elem.getImportoAmmenda());
+							if (elem.getImportoMulta() != 0)
+								ssc.setImportoMulta(elem.getImportoMulta());
+						}
+					}
+					if (lpuSS != null) {
+						ssc.setAnniLavoroPubblicaUtilita(lpuSS.getAnniLavoroPubblicaUtilita());
+						ssc.setMesiLavoroPubblicaUtilita(lpuSS.getMesiLavoroPubblicaUtilita());
+						ssc.setGiorniLavoroPubblicaUtilita(lpuSS.getGiorniLavoroPubblicaUtilita());
+						ssc.setOreLavoroPubblicaUtilita(lpuSS.getOreLavoroPubblicaUtilita());
+						ssc.setCodTipoLavoroPubblicaUtilita(lpuSS.getCodTipoLavoroPubblicaUtilita());
+					}
+					if (lsCPP != null) {
+						cppc.setAnniLavoroSostitutivo(lsCPP.getAnniLavoroSostitutivo());
+						cppc.setMesiLavoroSostitutivo(lsCPP.getMesiLavoroSostitutivo());
+						cppc.setGiorniLavoroSostitutivo(lsCPP.getGiorniLavoroSostitutivo());
+					}
+					if (lcCPP != null) {
+						cppc.setAnniLibertaControllata(lcCPP.getAnniLibertaControllata());
+						cppc.setMesiLibertaControllata(lcCPP.getMesiLibertaControllata());
+						cppc.setGiorniLibertaControllata(lcCPP.getGiorniLibertaControllata());
+					}
+					if (pdGP != null) {
+						sgpc.setAnniPermanenzaDomiciliare(pdGP.getAnniPermanenzaDomiciliare());
+						sgpc.setMesiPermanenzaDomiciliare(pdGP.getMesiPermanenzaDomiciliare());
+						sgpc.setGiorniPermanenzaDomiciliare(pdGP.getGiorniPermanenzaDomiciliare());
+					}
+					if (lsGP != null) {
+						sgpc.setAnniLavoroSostitutivo(lsGP.getAnniLavoroSostitutivo());
+						sgpc.setMesiLavoroSostitutivo(lsGP.getMesiLavoroSostitutivo());
+						sgpc.setGiorniLavoroSostitutivo(lsGP.getGiorniLavoroSostitutivo());
 
-				}
-				if (lpuGP != null) {
-					sgpc.setAnniLavoroPubblicaUtilita(lpuGP.getAnniLavoroPubblicaUtilita());
-					sgpc.setMesiLavoroPubblicaUtilita(lpuGP.getMesiLavoroPubblicaUtilita());
-					sgpc.setGiorniLavoroPubblicaUtilita(lpuGP.getGiorniLavoroPubblicaUtilita());
+					}
+					if (lpuGP != null) {
+						sgpc.setAnniLavoroPubblicaUtilita(lpuGP.getAnniLavoroPubblicaUtilita());
+						sgpc.setMesiLavoroPubblicaUtilita(lpuGP.getMesiLavoroPubblicaUtilita());
+						sgpc.setGiorniLavoroPubblicaUtilita(lpuGP.getGiorniLavoroPubblicaUtilita());
 
-				}
-				if (esGP != null) {
-					sgpc.setAnniEspulsioneStato(esGP.getAnniEspulsioneStato());
-					sgpc.setMesiEspulsioneStato(esGP.getMesiEspulsioneStato());
-					sgpc.setGiorniEspulsioneStato(esGP.getGiorniEspulsioneStato());
-					sgpc.setCodiceTipoEspulsioneStato(esGP.getCodiceTipoEspulsioneStato());
-				}
+					}
+					if (esGP != null) {
+						sgpc.setAnniEspulsioneStato(esGP.getAnniEspulsioneStato());
+						sgpc.setMesiEspulsioneStato(esGP.getMesiEspulsioneStato());
+						sgpc.setGiorniEspulsioneStato(esGP.getGiorniEspulsioneStato());
+						sgpc.setCodiceTipoEspulsioneStato(esGP.getCodiceTipoEspulsioneStato());
+					}
 
-				// Popolo il model dei dati PM
-				if (ssc != null)
-					dpm.setSanzioniSostitutiveCumulo(ssc);
-				if (cppc != null)
-					dpm.setConversionePPCumulo(cppc);
-				if (sgpc != null)
-					dpm.setSanzioniGPCumulo(sgpc);
-				if (lac != null)
-					dpm.setLiberazioneAnticipataCumulo(lac);
-				if (PropertyUtil.isPresent(rgec))
-					dpm.setListaRichiesteGECumulo(rgec);
+					// Popolo il model dei dati PM
+					if (ssc != null)
+						dpm.setSanzioniSostitutiveCumulo(ssc);
+					if (cppc != null)
+						dpm.setConversionePPCumulo(cppc);
+					if (sgpc != null)
+						dpm.setSanzioniGPCumulo(sgpc);
+					if (lac != null)
+						dpm.setLiberazioneAnticipataCumulo(lac);
+					if (PropertyUtil.isPresent(rgec))
+						dpm.setListaRichiesteGECumulo(rgec);
 
-				// pulisco la lista
-				datiPubblicoMinisteroList.clear();
-				// e la aggiorno di nuovo
-				datiPubblicoMinisteroList.add(0, dpm);
-			}
-		} else if (isAvvenutaEsecuzionePena) {
+					// pulisco la lista
+					datiPubblicoMinisteroList.clear();
+					// e la aggiorno di nuovo
+					datiPubblicoMinisteroList.add(0, dpm);
+				}
+			} else if (isAvvenutaEsecuzionePena) {
 				Map<String, Long> parameters = new HashMap<>(2);
-			parameters.put("idFascicoloSiep", new Long(idFascicoloSiep));
-			parameters.put("idEvento", new Long(idEvento));
+				parameters.put("idFascicoloSiep", new Long(idFascicoloSiep));
+				parameters.put("idEvento", new Long(idEvento));
 				datiPubblicoMinisteroList = session
-					.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupAEP", parameters);
-		} else {
+						.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupAEP", parameters);
+			} else {
 				datiPubblicoMinisteroList = session
-					.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupSP", new Long(idEvento));
-		}
+						.selectList("it.mig.sies.model.DatiPubblicoMinistero.lookupSP", new Long(idEvento));
+			}
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 
 		// valore di ritorno
@@ -1173,7 +1173,7 @@ public class SiesDAO {
 
 	/**
 	 * MEV 16: Caricamento dei dati relativi al fascicolo per uno specifico idEvento
-	 * 
+	 *
 	 * @param idEvento
 	 * @return DettagliFascicolo
 	 */
@@ -1185,19 +1185,19 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			dettagliFascicolo = (DettagliFascicolo) session
-				.selectOne("it.mig.sies.model.DettagliFascicolo.getFascicoloByID", new Long(idEvento));
+					.selectOne("it.mig.sies.model.DettagliFascicolo.getFascicoloByID", new Long(idEvento));
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return dettagliFascicolo;
 	}
 
 	/**
 	 * MEV 16: metodo che esegue la cancellazione logica del soggetto
-	 * 
+	 *
 	 * @param chiaviAnagrafica
 	 */
 	public void deleteLogicaSoggettoFC(
@@ -1207,22 +1207,22 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		Soggetto soggetto = new Soggetto();
-		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
-		int i = session.update("it.mig.sies.model.Soggetto.deleteLogica", soggetto);
-		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
-				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+			Soggetto soggetto = new Soggetto();
+			soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
+			int i = session.update("it.mig.sies.model.Soggetto.deleteLogica", soggetto);
+			logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
+					+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16: metodo che esegue la cancellazione logica del titolo principale
-	 * 
+	 *
 	 * @param chiaviProvvedimentoGiudiziario
 	 */
 	public void deleteLogicaTitoloGiudiziarioFC(
@@ -1233,21 +1233,21 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			Map<String, Long> parameters = new HashMap<>(2);
-		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
-		int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
-		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
-				+ parameters.get("sies") + "] Risultato[" + i + "]");
+			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
+			int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
+			logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
+					+ parameters.get("sies") + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16: metodo che esegue la cancellazione logica dei dati del PM
-	 * 
+	 *
 	 * @param chiaviProvvedimentoEsecutivo
 	 */
 	public void deleteLogicaPM(
@@ -1257,22 +1257,22 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
-		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.deleteLogica", dpm);
-		logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
+			dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.deleteLogica", dpm);
+			logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16: Update del soggetto con le nuovi chiavi tornate come risposta
-	 * 
+	 *
 	 * @param chiaviAnagrafica
 	 */
 	public void updateSoggettoFC(it.mig.sies.type.foglicomplementari.ChiaviAnagrafica chiaviAnagrafica) {
@@ -1280,25 +1280,25 @@ public class SiesDAO {
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 		SqlSession session = null;
 		try {
-		// Apertura connessione
+			// Apertura connessione
 			session = getSession();
-		Soggetto soggetto = new Soggetto();
-		soggetto.setChiaveNSC(chiaviAnagrafica.getNsc().longValue());
-		soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
-		int i = session.update("it.mig.sies.model.Soggetto.update", soggetto);
-		logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
-				+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
+			Soggetto soggetto = new Soggetto();
+			soggetto.setChiaveNSC(chiaviAnagrafica.getNsc().longValue());
+			soggetto.setChiaveSies(chiaviAnagrafica.getSies().longValue());
+			int i = session.update("it.mig.sies.model.Soggetto.update", soggetto);
+			logger.info("Update chiavi soggetto: NSC[" + soggetto.getChiaveNSC() + "] SIES["
+					+ soggetto.getChiaveSies() + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16: Update dei dati del titolo principale con le nuove chiavi tornate come risposta
-	 * 
+	 *
 	 * @param chiaviProvvedimentoGiudiziario
 	 */
 	public void updateTitoloGiudiziarioFC(
@@ -1309,22 +1309,22 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			Map<String, Long> parameters = new HashMap<>(2);
-		parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
-		parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
-		int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
-		logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
-				+ parameters.get("sies") + "] Risultato[" + i + "]");
+			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
+			parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
+			int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
+			logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
+					+ parameters.get("sies") + "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16: metodo che esegue l'aggiornamento dei dati del PM
-	 * 
+	 *
 	 * @param chiaviProvvedimentoEsecutivo
 	 */
 	public void updatePM(
@@ -1334,23 +1334,23 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
-		dpm.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
-		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.update", dpm);
-		logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
+			dpm.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
+			dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.update", dpm);
+			logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16: metodo per l'aggiornamento della tabella "MISURA_CAUTELARE"
-	 * 
+	 *
 	 * @param chiaviProvvedimentoEsecutivo
 	 */
 	public void updateMisCautelare(
@@ -1360,18 +1360,18 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
-		dpm.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
-		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
-		int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.updateMisuraCautelare", dpm);
-		logger.info("Update chiavi MC: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
+			dpm.setChiaveNSC(chiaviProvvedimentoEsecutivo.getNsc().longValue());
+			dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.updateMisuraCautelare", dpm);
+			logger.info("Update chiavi MC: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	public void deleteLogicaMisCautelare(
@@ -1381,23 +1381,23 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-		DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
-		dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
+			DatiPubblicoMinistero dpm = new DatiPubblicoMinistero();
+			dpm.setChiaveSies(chiaviProvvedimentoEsecutivo.getSies().longValue());
 			int i = session.update("it.mig.sies.model.DatiPubblicoMinistero.deleteLogicaMisuraCautelare",
 					dpm);
-		logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
-				+ "] Risultato[" + i + "]");
+			logger.info("Update chiavi DPM: NSC[" + dpm.getChiaveNSC() + "] SIES[" + dpm.getChiaveSies()
+					+ "] Risultato[" + i + "]");
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
-	}
+			// Chiusura connessione
+			closeSession(session);
+		}
 	}
 
 	/**
 	 * MEV 16 CUMULO: aggiunto metodo di controllo
-	 * 
+	 *
 	 * @param codMotivo
 	 * @return
 	 */
@@ -1411,19 +1411,19 @@ public class SiesDAO {
 			session = getSession();
 			int count = (Integer) session.selectOne("it.mig.sies.model.TitoloGiudiziario.isCumulo",
 					codMotivo);
-		isCumulo = count > 0 ? true : false;
+			isCumulo = count > 0 ? true : false;
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return isCumulo;
 	}
 
 	/**
 	 * MEV 16 CUMULO: metodo per il recupero della descrizione dell'autorità
-	 * 
+	 *
 	 * @param codiceAutorita
 	 * @return String
 	 */
@@ -1439,15 +1439,15 @@ public class SiesDAO {
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return descAutorita;
 	}
 
 	/**
 	 * MEV 16 CUMULO: metodo per il recupero della descrizione della sede autorità
-	 * 
+	 *
 	 * @param codiceSedeAutorita
 	 * @return String
 	 */
@@ -1459,12 +1459,12 @@ public class SiesDAO {
 		try {
 			session = getSession();
 			descSedeAutorita = (String) session
-				.selectOne("it.mig.sies.model.TitoloGiudiziario.getDescSedeAutorita", codiceSedeAutorita);
+					.selectOne("it.mig.sies.model.TitoloGiudiziario.getDescSedeAutorita", codiceSedeAutorita);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getFullStackTrace(e));
 		} finally {
-		// Chiusura connessione
-		closeSession(session);
+			// Chiusura connessione
+			closeSession(session);
 		}
 		return descSedeAutorita;
 	}

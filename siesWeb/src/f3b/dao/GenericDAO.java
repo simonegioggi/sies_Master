@@ -515,7 +515,7 @@ public class GenericDAO {
 	/**
 	 * Sposta il cursore del <code>ResulSet</code> di una unità.
 	 * <p>
-	 * 
+	 *
 	 * @throws DAOException
 	 */
 	public void start() throws DAOException {
@@ -556,12 +556,6 @@ public class GenericDAO {
 		mLastRec = aLastRec;
 
 		try {
-			// fvender 02/08/2018: aggiunto controllo per la gestione della problematica della chiusura delle
-			// connessioni
-			if (mPs != null) {
-				// siesLogger.debug("Aggiungo prepared statement a lista.");
-				oldPs.add(mPs);
-			}
 			// fvender 02/08/2018: aggiunto controllo per la gestione della problematica della chiusura delle
 			// connessioni
 			if (mPs != null) {
@@ -644,7 +638,7 @@ public class GenericDAO {
 	/**
 	 * Si sposta alla prossima occorrenza nel <code>ResultSet</code>.
 	 * <p>
-	 * 
+	 *
 	 * @return ritorna il flag che indica se esistono prossime occorrenze.
 	 * @throws DAOException
 	 *             propaga l'errore di eccezione.
@@ -678,7 +672,7 @@ public class GenericDAO {
 	/**
 	 * Esegue lo statement SQL per l'inserimento di un record.
 	 * <p>
-	 * 
+	 *
 	 * @return ritorna l'id della sequence.
 	 * @throws DAOException
 	 *             propaga l'errore di eccezione.
@@ -752,13 +746,6 @@ public class GenericDAO {
 			if (mStatement.trim().toUpperCase().indexOf("WHERE") == -1)
 				throw new DAOException(
 						"Operazione di DELETE non permessa! Comando SQL senza condizione di WHERE.");
-
-			// fvender 02/08/2018: aggiunto controllo per la gestione della problematica della chiusura delle
-			// connessioni
-			if (mPs != null) {
-				// siesLogger.debug("Aggiungo prepared statement a lista.");
-				oldPs.add(mPs);
-			}
 
 			// fvender 02/08/2018: aggiunto controllo per la gestione della problematica della chiusura delle
 			// connessioni
@@ -859,7 +846,7 @@ public class GenericDAO {
 	/**
 	 * Ritorna il model come padre, tale metodo è da ridefinire in tutte le classi derivate.
 	 * <p>
-	 * 
+	 *
 	 * @return una nuova istanza di <code>GenericModel</code>.
 	 * @throws DAOException
 	 */
@@ -882,7 +869,7 @@ public class GenericDAO {
 	/**
 	 * Ritorna l'insieme di model, per tutte le occorrenze.
 	 * <p>
-	 * 
+	 *
 	 * @return l'insieme di models.
 	 * @throws DAOException
 	 *             propaga l'errore di ecceione.
@@ -920,7 +907,7 @@ public class GenericDAO {
 	 * Ritorna un model solo usato per le selezione tramite chiave. Come parametri viene passato il range di
 	 * occorrenze.
 	 * <p>
-	 * 
+	 *
 	 * @return il model opportunamente popolato.
 	 * @throws DAOException
 	 */
