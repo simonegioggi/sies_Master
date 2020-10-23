@@ -212,18 +212,18 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
 <%
 for (int i=0; i< tenori.length;i++) {
 %>
-       <tr>
-        <td class="l"colspan=2 >
-          <input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size=60%>
-          <input Title="Cod Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>" >
-          <input Title="Cod Dettaglio Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>" >
+	<tr>
+		<td class="l"colspan=2 >
+          	<input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size="60%">
+          	<input Title="Cod Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>">
+          	<input Title="Cod Dettaglio Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>">
         </td>
-          <td class="l"colspan=2 >
-           <select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onChange="enableForma();">
-             <%=esiti[i]%>
-          </select>
-        </td>
-      </tr>
+		<td class="l"colspan=2 >
+           	<select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onChange="enableForma();">
+             	<%=esiti[i]%>
+          	</select>
+		</td>
+	</tr>
 <%
 }
 %>
@@ -248,115 +248,115 @@ for (int i=0; i< tenori.length;i++) {
 if ("TDSM".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio())
 		|| "UDSM".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio()) ){
 %>
-		<tr>
-	        <td class="l">USSM Competente </td>
-	        <td class="l">
-	          	<input Title="USSM" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM %>" value="" size=35 >
-	  			<a href="Javascript:ListaUSSM('InserisciOrdinanzaMA','<%= ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM %>');">
-	            <img src="/images/filefolder.gif" border=0> </a>        
-			</td>
-	    </tr>
-	<%
-    }
-    
-	if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio())) { %>
-		    <tr>
-		        <td class="l">Tribunale di Sorveglianza Competente </td>
-		        <td class="l">
-		          <input Title="Tribunale" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size=35 >
-		          <a href="Javascript:ListaProcure('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
-		          <img src="/images/filefolder.gif" border=0></a>
-		        </td>
-		    </tr>
-<%  } else if ("UDSM".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio())) { %>   
-		    <tr>
-			    <td class="l">Tribunale di sorveglianza per i Minorenni competente </td>
-			    <td class="l" colspan="3">
-			      <input type="text" Title="Magistrato" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35  >
-			      <a href="Javascript:ListaComuniEmitTdsMinor('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
-			        <img src="/images/filefolder.gif" border=0>
-			      </a>
-			    </td>
-		    </tr>  
-<%  } else if (fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio().equalsIgnoreCase("TDS")) {
-	%>   
-	    <tr>
-	      <td class="l">Ufficio di sorveglianza Competente </td>
-	      <td class="l">
-	        <input Title="Magistrato" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" value="" size=35 >
-	        <a href="Javascript:ListaUDS('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
-	        <img src="/images/filefolder.gif" border=0></a>
-	      </td>
-	    </tr>
-	<%
-	} else if (fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio().equalsIgnoreCase("TDSM")) {
-	%>
-		<tr>
-	      <td class="l">Ufficio di Sorveglianza per i Minorenni competente </td>     
-	      <td class="l">
-	          <input Title="Magistrato" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35 type="text" onChange="pulisciId();">
-	          <a href="Javascript:ListaComuniEmitUdsMinor('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
-	            <img src="/images/filefolder.gif" border=0>
-	          </a>
-	      </td>        
-	    </tr>
-<%  } %>
-
-    <tr>
-      <td class="l">Luogo svolgimento della prova </td>
-      <td class="l">
-        <input Title="Luogo svolgimento della prova" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA %>" value="" size=35 >
-      </td>
+	<tr>
+       	<td class="l">USSM Competente </td>
+       	<td class="l">
+			<input Title="USSM" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM %>" value="" size=35 >
+			<a href="Javascript:ListaUSSM('InserisciOrdinanzaMA','<%= ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM %>');">
+	          	<img src="/images/filefolder.gif" border=0>
+			</a>        
+		</td>
+	</tr>
+<%
+}
+if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio())) {
+%>
+	<tr>
+	    <td class="l">Tribunale di Sorveglianza Competente </td>
+	    <td class="l">
+	      	<input Title="Tribunale" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size=35 >
+			<a href="Javascript:ListaProcure('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
+	      		<img src="/images/filefolder.gif" border=0>
+	      	</a>
+	    </td>
+	</tr>
+<%
+} else if ("UDSM".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio())) {
+%>   
+	<tr>
+	 	<td class="l">Tribunale di sorveglianza per i Minorenni competente </td>
+	 	<td class="l" colspan="3">
+	   		<input type="text" Title="Magistrato" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35  >
+			<a href="Javascript:ListaComuniEmitTdsMinor('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
+	     		<img src="/images/filefolder.gif" border=0>
+	   		</a>
+	 	</td>
+	</tr>
+<%
+} else if (fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio().equalsIgnoreCase("TDS")) {
+%>   
+	<tr>
+	  	<td class="l">Ufficio di sorveglianza Competente </td>
+	  	<td class="l">
+	    	<input Title="Magistrato" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" value="" size=35 >
+			<a href="Javascript:ListaUDS('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
+	    		<img src="/images/filefolder.gif" border=0>
+	    	</a>
+	  	</td>
+	</tr>
+<%
+} else if (fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUfficio().equalsIgnoreCase("TDSM")) {
+%>
+	<tr>
+     	<td class="l">Ufficio di Sorveglianza per i Minorenni competente </td>     
+		<td class="l">
+			<input Title="Magistrato" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35 type="text" onChange="pulisciId();">
+  			<a href="Javascript:ListaComuniEmitUdsMinor('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
+	        	<img src="/images/filefolder.gif" border=0>
+	      	</a>
+		</td>
+	</tr>
+<%
+}
+%>
+	<tr>
+      	<td class="l">Luogo svolgimento della prova </td>
+      	<td class="l">
+        	<input Title="Luogo svolgimento della prova" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA %>" value="" size=35 >
+      	</td>
     </tr>
-
-    <tr>
-      <td class="l">Servizio terapeutico competente </td>
-      <td class="l">
-        <input Title="Servizio terapeutico competente " name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP %>" value="" size=35 >
-      </td>
+	<tr>
+      	<td class="l">Servizio terapeutico competente </td>
+      	<td class="l">
+        	<input Title="Servizio terapeutico competente " name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP %>" value="" size=35 >
+      	</td>
     </tr>
     <tr>
-      <td class="l">In caso di Differimento Pena/Detenz. Dom. speciale indicare:</td>
+      	<td class="l">In caso di Differimento Pena/Detenz. Dom. speciale indicare:</td>
     </tr>
     <tr>
-      <td class="l">Data Termine Misura (gg-mm-aaaa)</td>
-      <td class="L">
-        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
-        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
-        <input value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
-      </td>
+      	<td class="l">Data Termine Misura (gg-mm-aaaa)</td>
+      	<td class="L">
+	        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
+	        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
+	        <input value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
+      	</td>
     </tr>
-      <td class="l">oppure (solo per Differimento Pena)</td>
     <tr>
-      <td class="l">Durata Misura(AA-MM-GG)</td>
-      <td class="L">
-        <input value="" title="Numero Anni Detenzione" type="text" size="3" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM %>"  > -
-        <input value="" title="Numero Mesi Detenzione" type="text" size="3" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM %>"  > -
-        <input value="" title="Numero Giorni Detenzione" type="text" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM %>"  >
-      </td>
+   		<td class="l">oppure (solo per Differimento Pena)</td>
+	</tr>
+	<tr>
+		<td class="l">Durata Misura(AA-MM-GG)</td>
+		<td class="L">
+			<input value="" title="Numero Anni Detenzione" type="text" size="3" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM %>"  > -
+	        <input value="" title="Numero Mesi Detenzione" type="text" size="3" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM %>"  > -
+	        <input value="" title="Numero Giorni Detenzione" type="text" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM %>"  >
+      	</td>
     </tr>
-
-  	<tr> 
-  		<td>&nbsp;</td>
-  	</tr>
-    
+  	<tr><td>&nbsp;</td></tr>
     <tr>
     	<td class="l">Controllo tramite mezzi elettronici 
-      	<input value="E" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>" onClick="javascript:updateCkCtrlE()">	
-      </td>
-      <td class="l">Controllo tramite altri strumenti tecnici 
-      	<input value="T" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>" onClick="javascript:updateCkCtrlT()">	
-      </td>
+      		<input value="E" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>" onClick="javascript:updateCkCtrlE()">	
+      	</td>
+      	<td class="l">Controllo tramite altri strumenti tecnici 
+      		<input value="T" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>" onClick="javascript:updateCkCtrlT()">	
+      	</td>
     </tr>
-
-  	<tr> 
-  		<td>&nbsp;</td>
-  	</tr>
+  	<tr><td>&nbsp;</td></tr>
   	<tr><td>&nbsp;</td></tr>
 	<tr>
     	<td class="l">Inserimento Prescrizioni <input value="06" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>"></td>
   	</tr>
-
 	<%-- MEV10-s3: refactoring del layout della pagina --%>
 	<tr><td>&nbsp;</td></tr>
    	<table title="tableInForma" id="tableInForma" style="display: none;">
@@ -377,32 +377,28 @@ if ("TDSM".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUf
    			</td>
    		</tr>
    	</table>
-
   	<tr><td>&nbsp;</td></tr>
     <tr>
-      <td>
-        <input class="bottone" type="submit" value="Conferma" >
-      </td>
+      	<td>
+        	<input class="bottone" type="submit" value="Conferma" >
+      	</td>
     </tr>
- </table>
+</table>
 
-    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
-    <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>" value="<%=contenuto%>" >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="<%=tipo_decreto%>" >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DATA_EMISSIONE%>" value=<%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%> >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_CSSA_COMP%>">
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>">
+<input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>" value="<%=contenuto%>">
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="<%=tipo_decreto%>">
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DATA_EMISSIONE%>" value=<%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%>>
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_CSSA_COMP%>">
 
-  </form>
-  <script language="JavaScript" type="text/javascript">
-    var frmvalidator = new Validator("InserisciOrdinanzaMA");
-    frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>","numeric");
-    frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>","numeric");
-    frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>","numeric");
-    /*frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_PERMESSO_ACCORDATI%>","numeric"); */
-    frmvalidator.setAddnlValidationFunction("Verify");
-  </script>
-
-
- </body>
-
+</form>
+<script language="JavaScript" type="text/javascript">
+var frmvalidator = new Validator("InserisciOrdinanzaMA");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>","numeric");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>","numeric");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>","numeric");
+/*frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_PERMESSO_ACCORDATI%>","numeric"); */
+frmvalidator.setAddnlValidationFunction("Verify");
+</script>
+</body>
 </html>
