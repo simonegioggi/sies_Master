@@ -1,6 +1,5 @@
-RELEASE_12.4.4.0: 02/10/2020
-1)	nato dal branch "release_12.4.3.0"
+Branch creato per i seguenti ticket (stesso problema)
+1) Ticket#20201106019 - DUE PROCURE/PROCURE GENERALI - CON I RISPETTIVI SIEP
+2) Ticket#202011180111 - SIUS tribunale Sorveglianza Fasc. aggancia al momento del deposito ordinanza [...
 
-In data 20201002 eseguito merge coi branch:
-1)	Ticket#20200930012 - SIEP - Problemi di stampa richiesta di Accertamento Pericolosità Sociale;
-2)	Ticket#20201015014 - Errore SIUS in "dettagli Richiesta Istruttoria Generica".
+

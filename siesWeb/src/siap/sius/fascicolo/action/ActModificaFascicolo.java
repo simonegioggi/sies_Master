@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
@@ -42,7 +45,8 @@ import siap.sius.util.SIUSLookupRemote;
  * </p>
  */
 public class ActModificaFascicolo extends ActionSiap implements ICostantiFascicoloSius {
-
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
@@ -244,8 +248,10 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 				lFasGPMod.getGeneraleProcedimentoModel()
 						.setProgrS1(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22));
 			}
-		} else
-			lFasGPMod.getGeneraleProcedimentoModel().setAnnoS1(new BigDecimal(DateUtils.getSysDate("yyyy")));
+		} else {
+			// Ticket#20201106019 e Ticket#202011180111. Commentata la riga che modificava erroneamente l'anno del GP
+			//lFasGPMod.getGeneraleProcedimentoModel().setAnnoS1(new BigDecimal(DateUtils.getSysDate("yyyy")));
+		}
 		// FINE MEV_66
 
 		IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
