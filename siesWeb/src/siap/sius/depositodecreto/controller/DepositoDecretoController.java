@@ -3509,4 +3509,122 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 		return lDepMod;
 	}
 
+	/*
+	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore Numero MEV : 9
+	 * Autore : Gioggi Data : 17 nov 2020 Branch : MEV_9
+	 */
+	@Override
+	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
+			DepositoDecretoEventoModel ddem) throws F3BException {
+
+		Connection c = null;
+
+		GeneraleProcedimentoDAO gpDAO = null;
+		TenoreDAO tDAO = null;
+		TenoreSqlDAO tsDAO = null;
+		DepositoDecretoDAO ddDAO = null;
+		EventoDAO eDAO = null;
+
+		GPTenoreModel gptmNew = new GPTenoreModel(gptm);
+		DepositoDecretoModel ddm = new DepositoDecretoModel(ddem.getDepositoDecreto());
+		EventoModel em = new EventoModel(ddem.getEvento());
+		DepositoDecretoEventoModel ddemNew = null;
+
+		try {
+			c = getDBTransaction();
+
+			gpDAO = new GeneraleProcedimentoDAO(c);
+			tDAO = new TenoreDAO(c);
+			tsDAO = new TenoreSqlDAO(c);
+			ddDAO = new DepositoDecretoDAO(c);
+			eDAO = new EventoDAO(c);
+
+			// Update GeneraleProcedimento
+			gpDAO.setCodOggettoProcedimento(
+					gptmNew.getGeneraleProcedimentoModel().getCodOggettoProcedimento());
+			gpDAO.setDataAggiornamento(gptmNew.getGeneraleProcedimentoModel().getDataAggiornamento());
+			gpDAO.setCodUfficioAggiornamento(
+					gptmNew.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
+			gpDAO.setCodOperatoreAggiornamento(
+					gptmNew.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
+			gpDAO.setCondizioneUpdate(gptmNew.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+			gpDAO.update();
+
+			// Insert DepositoDecreto
+			ddDAO.setDAOFromModel(ddm);
+			BigDecimal depDecIdDepositoDecreto = ddDAO.insert();
+			ddDAO.stop();
+
+			// Parte Gestione Tenori
+			BigDecimal idGeneraleProcedimento = gptmNew.getGeneraleProcedimentoModel()
+					.getIdGeneraleProcedimento();
+			TenoreModel tm = new TenoreModel();
+			// Valorizzazione dei campi da aggiornare & update
+			tm.setCodOperatoreAggiornamento(
+					gptmNew.getGeneraleProcedimentoModel().getCodOperatoreAggiornamento());
+			tm.setCodUfficioAggiornamento(
+					gptmNew.getGeneraleProcedimentoModel().getCodUfficioAggiornamento());
+			tm.setDataAggiornamento(gptmNew.getGeneraleProcedimentoModel().getDataAggiornamento());
+			tm.setDataFine(gptmNew.getGeneraleProcedimentoModel().getDataAggiornamento());
+			tm.setGenPridGeneraleProcedimento(
+					gptmNew.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+			tm.setCodUfficioInserimento(ddm.getCodUfficioInserimento());
+			tm.setDescrUfficioInserimento(ddm.getDescrUfficioInserimento());
+			tDAO.setDAOFromModelForUpdateDataFine(tm);
+			tDAO.update();
+			tDAO.stop();
+
+			// Insert dei tenori
+			TenoreModel[] tmArray = gptmNew.getTenori();
+			int lCount = tmArray.length;
+			for (int x = 0; x < lCount; x++) {
+				tmArray[x].setGenPridGeneraleProcedimento(idGeneraleProcedimento);
+				tmArray[x].setDepDecIdDepositoDecreto(depDecIdDepositoDecreto);
+				tmArray[x].setCodUfficioInserimento(ddm.getCodUfficioInserimento());
+				tmArray[x].setDescrUfficioInserimento(ddm.getDescrUfficioInserimento());
+				tDAO.setDAOFromModel(tmArray[x]);
+				tDAO.insert();
+				tDAO.stop();
+			}
+
+			// Ricerca dati del tenore
+			tsDAO.ricercaTenoriByDecretoOrderByPeso(depDecIdDepositoDecreto);
+			tm = new TenoreModel((TenoreModel) tsDAO.getModelByKey());
+			// Insert Evento, imposta COD_MOTIVO e IdTenore, nel model
+			em.setCodMotivo(tm.getCodOggettoTenore());
+			em.setTenIdTenore(tm.getIdTenore());
+			eDAO.setDAOFromModel(em);
+			BigDecimal idEvento = eDAO.insert();
+
+			// Effettua update del campo evento_generato
+			ddDAO.setCondizioneUpdate(depDecIdDepositoDecreto);
+			ddDAO.setIdEventoGenerato(idEvento);
+			ddDAO.update();
+
+			// Prepara il model di ritorno
+			ddemNew = new DepositoDecretoEventoModel();
+			ddemNew.getEvento().setIdEvento(idEvento);
+			ddemNew.getDepositoDecreto().setIdDepositoDecreto(depDecIdDepositoDecreto);
+
+			commit(c);
+		} catch (DAOException daoEx) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("DAOException: " + daoEx);
+			throw new SIUSException(
+					"DepositoDecretoController.ExInserisciDecretoMagistratoRelatore: " + daoEx);
+		} finally {
+			cleanup(gpDAO);
+			cleanup(tDAO);
+			cleanup(tsDAO);
+			cleanup(ddDAO);
+			cleanup(eDAO);
+			cleanup(c);
+		}
+
+		return ddemNew;
+	}
+	// ***** FINE INTERVENTO MEV_9 *****//
+
 }

@@ -33,7 +33,10 @@ import siap.sius.avvocato.controller.IAvvocato;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
 import siap.sius.avvocatura.action.ICostantiAvvisiAvvocato;
 import siap.sius.avvocatura.model.AvvisiAvvocatoModel;
+import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
+import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
@@ -110,13 +113,10 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// Se si proviene dalla form di Warning non si effettua il controllo sul BLOB
 		if (!isRequestParameterNullObj(CAMPO_CK_WARNING))
 			lControlloBlob = false;
-
 		if (lControlloBlob) {
 			// Lettura del file di Upload
-
 			InputStream lInput = null;
 			lInput = getFile(ICostantiEvento.CAMPO_BLOB);
-
 			if (lInput != null && lInput.available() > 0) {
 				byte[] lBuffer = new byte[lInput.available()];
 				lInput.read(lBuffer);
@@ -202,21 +202,16 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 				lisUpdate = false;
 				lPage = PG_WARNING;
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-						"Attenzione: E' stata richiesta la validazione di un documento privo di stampa !");
+						"Attenzione: E' stata richiesta la validazione di un documento privo di stampa!");
 				passaggioParametri();
 			}
 		}
 		// Update
 		if (lisUpdate) {
-
 			// INIZIO @emma 12072018 intervento post COLLAUDO 11.2
 			if ("S".equals(lFlagValidazioneEsito)) {
 				// se è stata chiesta la validazione dell'esito, devo updatare
 				// il nuovo campo flag_validazione_esito ='S' sulla tabella IMPUGNAZIONE_SIGE
-
-				// Lettura ID Impugnazione
-				// BigDecimal lIdImpu =
-				// getRequestBigDecimalParameter(ICostantiImpugnazioneSige.CAMPO_ID_IMPUGNAZIONE);
 				IImpugnazioneSige lCtrl = SIGELookupRemote.getImpugnazioneSigeRemote();
 				ImpugnazioneSigeModel impugnazione = lCtrl.ExRicercaImpugnazioneByKey(lIdImpu);
 				impugnazione.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -231,11 +226,30 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			// MEV_AVVOCATURA aggiunto parametro lFlgAvvocatura al metodo updateTabella
 			// ***********************************************************************
 			updateTabella(lId, lFlgAvvocatura);
-			// updateTabella(lId);
 			// Prepara la "pagina" di destinAction
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Aggiornamento Documento Avvenuto Correttamente!");
+
+			/*
+			 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM
+			 * Numero MEV : 9
+			 * Autore : Gioggi
+			 * Data : 19 nov 2020
+			 * Branch : MEV_9
+			 */
+			if ("SIUS".equals(stato) && ("0610".equals(em.getCodEsito()) || "0271".equals(em.getCodEsito()))) {
+				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+				FascicoloSiusModel fsm = new FascicoloSiusModel();
+				fsm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+				fsm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+				fsm.setDataAggiornamento(DateUtils.getSysDate());
+				fsm.setCodStatoFascicolo(ICostantiDepositoDecreto.STATO_FASCICOLO_EMESSO_DECRETO_DESIGNAZIONE);
+				fsm.setIdFascicoloSius(em.getFasSiuIdFascicoloSius());
+				ifs.aggiornaStatoFascicoloSius(fsm);
+			}
+			// ***** FINE INTERVENTO MEV_9 *****//
 		}
+
 		// Se c'è lo stack di ritorno effettua un ritorno in cima
 		String lRitorno = goToRitorno();
 		if (lRitorno == null && !isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO)) {
@@ -364,7 +378,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 	// ***********************************************************************
 	// MEV_AVVOCATURA aggiunto parametro lFlgAvvocatura al metodo updateTabella
 	// ***********************************************************************
-	// public void updateTabella(BigDecimal aId) throws Exception
 	public void updateTabella(BigDecimal aId, String lFlgAvvocatura) throws Exception {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -393,7 +406,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 		// MEV_AVVOCATURA - INIZIO
 		// **********************************************
 		if (!lFlgAvvocatura.equals("")) {
-
 			String testoAvviso = "";
 			if (lFlgAvvocatura.equals(ICostantiAvvisiAvvocato.FISSAZIONE_UDIENZA)) {
 				testoAvviso = ICostantiAvvisiAvvocato.CONTENUTO_FISSAZIONE_UDIENZA;
@@ -448,24 +460,24 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			// Recupero i dati del soggetto dalla sessione @emma 25/08/2016 - avvocatura
 			String cognomeSoggetto = "";
-			String nomeSoggetto = "";	
-			
-			/* 
-			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di Roma:
-			 * Eliminato recupero dalla session del soggetto che viene inserito nella tabella 
-			 * degli avvisi_avvocato 
+			String nomeSoggetto = "";
+
+			/*
+			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di
+			 * 				Roma: Eliminato recupero dalla session del soggetto che viene inserito nella
+			 * 				tabella degli avvisi_avvocato
 			 * Numero MEV : MEV_20
-			 * Autore    : monica
-			 * Data      : 13/mar/2020
-			 * Branch    : MEV_20 
+			 * Autore : monica
+			 * Data : 13/mar/2020
+			 * Branch : MEV_20
 			 */
-			/*if (!isSessionAttributeNullObj("soggetto")) {
-				SoggettoModel datiSoggetto = (SoggettoModel) getSessionAttribute("soggetto");
-				cognomeSoggetto = datiSoggetto.getCognome();
-				nomeSoggetto = datiSoggetto.getNome();
-			} else */
-				//***** FINE INTERVENTO MEV_20  *****//
-				if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
+			/*
+			 * if (!isSessionAttributeNullObj("soggetto")) { SoggettoModel datiSoggetto = (SoggettoModel)
+			 * getSessionAttribute("soggetto"); cognomeSoggetto = datiSoggetto.getCognome(); nomeSoggetto =
+			 * datiSoggetto.getNome(); } else
+			 */
+			// ***** FINE INTERVENTO MEV_20 *****//
+			if (lFasGPMod != null && lFasGPMod.getFascicoloSiusModel() != null) {
 				// provo a verificare se è presente nell'oggetto FascicoloGPModel
 				cognomeSoggetto = lFasGPMod.getFascicoloSiusModel().getSoggetto() != null
 						? lFasGPMod.getFascicoloSiusModel().getSoggetto().getCognome()
@@ -510,7 +522,6 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 			}
 
 			mEveCtrl.ExUpdateDocument(lModel, lAvvvisiAvvocato);
-
 		} else {
 			mEveCtrl.ExUpdateDocument(lModel);
 		}

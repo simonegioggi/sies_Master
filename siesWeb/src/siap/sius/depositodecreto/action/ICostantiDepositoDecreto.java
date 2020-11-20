@@ -15,7 +15,7 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public interface ICostantiDepositoDecreto {
@@ -450,5 +450,26 @@ public interface ICostantiDepositoDecreto {
 			+ "files/siap/sius/depositodecreto/InserisciDecretoRinvioMisureSicurezza.jsp";
 	public static final String PG_DETTAGLIO_RINVIO_ESECUZIONE_MS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/DettaglioDecretoRinvioMisureSicurezza.jsp";
+
+	// MEV_9: create nuove pagine
+	public static final String PG_LOAD_INSERISCI_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/LoadInserisciDesignazioneMagistratoRelatore.jsp";
+	public static final String PG_LOAD_INSERISCI_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/LoadInserisciConfermaDecisioneMagistratoRelatore.jsp";
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C050";
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C051";
+	public static final String DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA = "DM";
+	public static final String CAMPO_GIORNO_DATA_TERMINE_EMISSIONE = "GiornoDataTermineEmissione";
+	public static final String CAMPO_MESE_DATA_TERMINE_EMISSIONE = "MeseDataTermineEmissione";
+	public static final String CAMPO_ANNO_DATA_TERMINE_EMISSIONE = "AnnoDataTermineEmissione";
+	public static final String PG_LOAD_DETTAGLIO_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/DettaglioDesignazioneMagistratoRelatore.jsp";
+	public static final String PG_LOAD_DETTAGLIO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/DettaglioConfermaDecisioneMagistratoRelatore.jsp";
+	public static final String TEMPLATE_DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE = "SIUS_DE_0610";
+	public static final String TEMPLATE_DECRETO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = "SIUS_DE_0271";
+	public static final String STATO_FASCICOLO_EMESSO_DECRETO_DESIGNAZIONE = "22";
+
+	// FINE MEV_9
 
 }

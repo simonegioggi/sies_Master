@@ -3,8 +3,8 @@ package siap.sius.depositodecreto.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import siap.sico.ufficio.model.UfficioModel;
 import f3b.model.GenericModel;
+import siap.sico.ufficio.model.UfficioModel;
 
 /**
  * <p>
@@ -19,13 +19,13 @@ import f3b.model.GenericModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class DepositoDecretoModel extends GenericModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2057270908061067016L;
 
@@ -85,21 +85,19 @@ public class DepositoDecretoModel extends GenericModel {
 	private BigDecimal mSospensioneGGSS;
 	private BigDecimal mSospensioneMMSS;
 	private BigDecimal mSospensioneAASS;
-
 	private String mFlagNominaComActa;
 	private String mDescrCommActa;
-
 	private String mCodTipoControlloEsecuzione;
 	private String mDescrTipoControlloEsecuzione;
 	// 07/2014
 	private BigDecimal mNumGiorniRevocaLA;
-
 	// DL 92 2014 Violazione CEDU
 	private BigDecimal mNumGiorniRiduzionePena;
 	private BigDecimal mSommaRisarcimentoDanni;
-
 	// 02/2015 Mis.Sic
 	private String mFlagElaborato;
+	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	private Date mDataTermineEmissione;
 
 	// COSTRUTTORE DI DEFAULT
 	public DepositoDecretoModel() {
@@ -161,21 +159,19 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSospensioneGGSS = null;
 		this.mSospensioneMMSS = null;
 		this.mSospensioneAASS = null;
-
 		this.mFlagNominaComActa = null;
 		this.mDescrCommActa = null;
-
 		this.mCodTipoControlloEsecuzione = null;
 		this.mDescrTipoControlloEsecuzione = null;
 		// 07/2014
 		this.mNumGiorniRevocaLA = null;
-
 		// DL 92 2014 Violazione CEDU
 		this.mNumGiorniRiduzionePena = null;
 		this.mSommaRisarcimentoDanni = null;
-
 		// 02/2015
 		this.mFlagElaborato = "";
+		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		this.mDataTermineEmissione = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -236,21 +232,19 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSospensioneGGSS = aModel.mSospensioneGGSS;
 		this.mSospensioneMMSS = aModel.mSospensioneMMSS;
 		this.mSospensioneAASS = aModel.mSospensioneAASS;
-
 		this.mFlagNominaComActa = aModel.mFlagNominaComActa;
 		this.mDescrCommActa = aModel.mDescrCommActa;
-
 		this.mCodTipoControlloEsecuzione = aModel.mCodTipoControlloEsecuzione;
 		this.mDescrTipoControlloEsecuzione = aModel.mDescrTipoControlloEsecuzione;
 		// 07/2014
 		this.mNumGiorniRevocaLA = aModel.mNumGiorniRevocaLA;
-
 		// DL 92 2014 Violazione CEDU
 		this.mNumGiorniRiduzionePena = aModel.mNumGiorniRiduzionePena;
 		this.mSommaRisarcimentoDanni = aModel.mSommaRisarcimentoDanni;
-
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aModel.mFlagElaborato;
+		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		this.mDataTermineEmissione = aModel.mDataTermineEmissione;
 	}
 
 	// COSTRUTTORE MODEL
@@ -279,11 +273,12 @@ public class DepositoDecretoModel extends GenericModel {
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
 			// 07/2014
 			BigDecimal aNumGiorniRevocaLA,
-
 			// DL 92 2014 Violazione CEDU
 			BigDecimal aNumGiorniRiduzionePena, BigDecimal aSommaRisarcimentoDanni,
 			// 02/2015 Mis.Sic.
-			String aFlagElaborato) {
+			String aFlagElaborato,
+			// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+			Date aDataTermineEmissione) {
 		this.mIdDepositoDecreto = aIdDepositoDecreto;
 		this.mAnnoS72 = aAnnoS72;
 		this.mNumS72 = aNumS72;
@@ -340,21 +335,19 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSospensioneGGSS = aSospensioneGGSS;
 		this.mSospensioneMMSS = aSospensioneMMSS;
 		this.mSospensioneAASS = aSospensioneAASS;
-
 		this.mFlagNominaComActa = aFlagNominaComActa;
 		this.mDescrCommActa = aDescrCommActa;
-
 		this.mCodTipoControlloEsecuzione = aCodTipoControlloEsecuzione;
 		this.mDescrTipoControlloEsecuzione = aDescrTipoControlloEsecuzione;
 		// 07/2014
 		this.mNumGiorniRevocaLA = aNumGiorniRevocaLA;
-
 		// DL 92 2014 Violazione CEDU
 		this.mNumGiorniRiduzionePena = aNumGiorniRiduzionePena;
 		this.mSommaRisarcimentoDanni = aSommaRisarcimentoDanni;
-
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aFlagElaborato;
+		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		this.mDataTermineEmissione = aDataTermineEmissione;
 	}
 
 	//
@@ -625,6 +618,11 @@ public class DepositoDecretoModel extends GenericModel {
 		return mFlagElaborato;
 	}
 
+	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	public Date getDataTermineEmissione() {
+		return mDataTermineEmissione;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -877,10 +875,14 @@ public class DepositoDecretoModel extends GenericModel {
 		mFlagElaborato = aValore;
 	}
 
+	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	public void setDataTermineEmissione(Date aValore) {
+		mDataTermineEmissione = aValore;
+	}
+
 	// Metodo toString.
 	public String toString() {
 		String lStr = new String();
-
 		lStr = "" + mIdDepositoDecreto + " - " + mAnnoS72 + " - " + mNumS72 + " - " + mCodTipoDecreto + " - "
 				+ mDescrTipoDecreto + " - " + mDataEmissione + " - " + mDataDeposito + " - " + mCodMagistrato
 				+ " - " + mDescrMagistrato + " - " + mAltriDestinatari + " - " + mDataParerePg + " - "
@@ -904,7 +906,8 @@ public class DepositoDecretoModel extends GenericModel {
 				+ mSospensioneAASS + " - " + mFlagNominaComActa + " - " + mDescrCommActa + " - "
 				+ mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - "
 				+ mNumGiorniRevocaLA + " - " + mNumGiorniRiduzionePena + " - " + mSommaRisarcimentoDanni
-				+ " - " + mFlagElaborato;
+				+ " - " + mFlagElaborato // 02/2015 Mis.Sic.
+				+ " - " + mDataTermineEmissione; // MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
 
 		if (this.mUfficioCompetente != null)
 			lStr += " - UFFICIO COMP.: " + mUfficioCompetente;

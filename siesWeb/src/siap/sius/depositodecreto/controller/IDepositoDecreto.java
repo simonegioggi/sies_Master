@@ -173,4 +173,8 @@ public interface IDepositoDecreto {
 			BigDecimal idFascicoloSiep, BigDecimal idFascSius, BigDecimal idEveFascSius, BigDecimal idEvento)
 			throws F3BException;
 
+	// MEV_9: aggiunto metodo di inserimento
+	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
+			DepositoDecretoEventoModel ddem) throws F3BException;
+
 }

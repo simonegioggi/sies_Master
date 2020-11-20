@@ -59,6 +59,7 @@ import siap.sius.SIUSException;
 import siap.sius.avvocato.dao.AvvocatoSqlDAO;
 import siap.sius.avvocato.model.AvvocatoModel;
 import siap.sius.cancassfascsius.model.CancAssFascSiusModel;
+import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.depositodecreto.dao.DepositoDecretoSqlDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO;
@@ -69,6 +70,7 @@ import siap.sius.esecuzionemisurasicurezza.dao.EsecuzioneMisuraSicurezzaDAO;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.dao.FascicoloGPSqlDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO;
@@ -328,8 +330,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 					lLuoDetModel.setCodOperatoreAggiornamento(
 							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
-					// lLuoDetModel.setDataFineDetenzione(aFascicoloGPModel.getGeneraleProcedimentoModel().getDataFinePena());
-
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 					lLuoDetDao.setIdLuogoDetenzione(lLuoDetModel.getIdLuogoDetenzione());
 					lLuoDetDao.setDAOFromModelForUpdate(lLuoDetModel);
@@ -347,9 +347,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
-
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
-
 					lLuoDetDao.setDAOFromModel(lLuoDetModel);
 					lChiave = lLuoDetDao.insert();
 					lLuoDetDao.stop();
@@ -377,7 +375,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiusModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.setDataInizioValidita(lResFSiusModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiusModel.getDataFineValidita());
@@ -410,7 +407,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiusModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiusModel.getDataInizioValidita());
@@ -480,7 +476,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiepModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
@@ -663,12 +658,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			lEveDao.selCondizioneUpdate(aEvento.getIdEvento());
 			lEveDao.update();
 
-			// 18/12/2003 Inserimento del Magistrato Relatore Cod_Magistrato Appoggiato sull'Autorit? //
-			// Delegata.
+			// 18/12/2003 Inserimento del Magistrato Relatore Cod_Magistrato Appoggiato sull'Autorita'
+			// Delegata
 			if (!aFascicoloGPModel.getGeneraleProcedimentoModel().getCodAutoritaDelegata().startsWith("-")) {
 				MagistratoRelatoreModel lMagistrato = new MagistratoRelatoreModel();
 				lMagRelDao = new MagistratoRelatoreDAO(lConn);
-
 				// Dati nuovo Magistrato.
 				// lMagistrato.setMagCodMagistrato(aFascicoloGPModel.getTenoreModel().getCodMagistrato());
 				lMagistrato.setMagCodMagistrato(
@@ -683,7 +677,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lMagistrato.setCodUfficioInserimento(
 						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-
 				// Si Esegue l'inserimento del Nuovo Magistrato.
 				lMagRelDao.setDAOFromModel(lMagistrato);
 				lMagRelDao.insert();
@@ -749,8 +742,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
 					lLuoDetModel.setCodOperatoreAggiornamento(
 							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
-					// lLuoDetModel.setDataFineDetenzione(aFascicoloGPModel.getGeneraleProcedimentoModel().getDataFinePena());
-
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
 					lLuoDetDao.setIdLuogoDetenzione(lLuoDetModel.getIdLuogoDetenzione());
 					lLuoDetDao.setDAOFromModelForUpdate(lLuoDetModel);
@@ -768,9 +759,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					lLuoDetModel.setDataAggiornamento(null);
 					lLuoDetModel.setCodUfficioAggiornamento("");
 					lLuoDetModel.setCodOperatoreAggiornamento("");
-
 					lLuoDetDao = new LuogoDetenzioneDAO(lConn);
-
 					lLuoDetDao.setDAOFromModel(lLuoDetModel);
 					lChiave = lLuoDetDao.insert();
 					lLuoDetDao.stop();
@@ -798,7 +787,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiepModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
 						lResFSiusDao.setDataFineValidita(lResFSiepModel.getDataFineValidita());
@@ -831,7 +819,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						lResFSiepModel.setResIdResidenza(lKey);
 						cleanup(lResDao);
 						// fine Paolo x SuperSoggetto
-
 						lResFSiusDao = new ResidenzaFascicoloSiusDAO(lConn);
 						lResFSiusDao.start();
 						lResFSiusDao.setDataInizioValidita(lResFSiepModel.getDataInizioValidita());
@@ -954,7 +941,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					&& lFascicolo.getGeneraleProcedimentoModel().getUdiIdUdienza() != null)
 				lFascicolo.setUdiPro(cercaUdiProcAttiva(
 						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), lConn));
-
 		} catch (DAOException dex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -1042,7 +1028,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	/**
 	 * 20131206 - creazione nuovo metodo di ricerca non paginata, per stampa folglio xls. Ricerca Fascicolo
 	 * Sius per Estremi
-	 * <p>
 	 *
 	 * @param aFascModel
 	 * @param sTipoAtto
@@ -1157,7 +1142,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		}
 
 		// ==========================================================================
-
 		lRow = lSheet.createRow(lRowCounter);
 
 		HSSFUtils.getInstance().setCell(lRow, (short) 0, "", lCellStyleNull);
@@ -1387,7 +1371,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			ResidenzaFascicoloSiusModel lResFasMod = null;
 			while (lDao.next()) {
 				lResAssMod = new ResidenzaAssociataModel();
-
 				lResMod = (ResidenzaModel) lDao.getModel();
 				lResFasMod = lDao.getModelResidenzaFascicoloSius();
 				lResAssMod.setResidenza(lResMod);
@@ -1419,7 +1402,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicolo Sius per Soggetto, Anno e Ufficio
-	 * <p>
 	 *
 	 * @param aFascicoloSius
 	 * @return Vettore di FascicoloSiusModel
@@ -1495,7 +1477,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicolo Sius per Soggetto
-	 * <p>
 	 *
 	 * @param aFascicoloSius
 	 * @return Vettore di FascicoloSiusModel
@@ -1525,7 +1506,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			while (lFasSoggDao.next()) {
 				lFascicolo = (FascicoloGPModel) lFasSoggDao.getFascicoloSiusGPModelForStorico();
 				lFascicolo.getFascicoloSiusModel().setSoggetto(aSogModel);
-
 				lFascicoli.add(lFascicolo);
 			}
 
@@ -1843,7 +1823,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					insertEMS = true;
 				if (lGenMod.getCodOggettoProcedimento().compareTo("U024") == 0)
 					deleteEMS = true;
-
 			}
 
 			// Set del DAO e aggiornamento del FascicoloSius.
@@ -2023,7 +2002,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Modifica il Fascicolo Sius
-	 * <p>
 	 *
 	 * @param aFascicoloSiusModel
 	 * @return FascicoloSiusModel
@@ -2039,8 +2017,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		try {
 			lConn = getDBTransaction();
 			lFasDao = new FascicoloSiusDAO(lConn);
-
-			// Set del DAO e aggiornamento del FascicoloSius.
+			// Set del DAO e aggiornamento del FascicoloSius
 			lFasDao.setDAOFromModelForUpdate(aFascicoloSiusModel);
 			lFasDao.update();
 			lFasDao.stop();
@@ -2183,7 +2160,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 	/**
 	 * Ricerca Fascicolo Sius by Generale Procedimento
-	 * <p>
 	 *
 	 * @param aIdGenProc
 	 * @return FascicoloGPModel
@@ -2232,7 +2208,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 					&& lFascicolo.getGeneraleProcedimentoModel().getUdiIdUdienza() != null)
 				lFascicolo.setUdiPro(cercaUdiProcAttiva(
 						lFascicolo.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), lConn));
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -5334,7 +5309,6 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		while (lItx.hasNext()) {
 			lEventoDep = (EventoModel) lItx.next();
 			tm.add(new TreeModel(lEventoDep));
-
 		}
 
 		// instanzio ed inizializzo un oggetto di tipo "ReportGenerator"
@@ -5395,5 +5369,59 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		// valore di ritorno
 		return am.getCodUffAppartenenza();
 	}
+
+	/*
+	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM
+	 * Numero MEV : 9
+	 * Autore : Gioggi
+	 * Data : 19 nov 2020
+	 * Branch : MEV_9
+	 */
+	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException {
+
+		Connection lConn = null;
+
+		FascicoloSiusDAO lFasDao = null;
+
+		try {
+			lConn = getDBTransaction();
+			lFasDao = new FascicoloSiusDAO(lConn);
+			if (ICostantiDepositoDecreto.STATO_FASCICOLO_EMESSO_DECRETO_DESIGNAZIONE
+					.equals(fsm.getCodStatoFascicolo())
+					|| ICostantiFascicoloSius.COD_ISCRITTO.equals(fsm.getCodStatoFascicolo())) {
+				FascicoloGPModel fgpm = ExRicercaFascicoloByKey(fsm.getIdFascicoloSius());
+				FascicoloSiusModel fsmOld = fgpm.getFascicoloSiusModel();
+				// Set del DAO e aggiornamento del FascicoloSius
+				lFasDao.setDAOFromModel(fsmOld);
+				lFasDao.setDataAggiornamento(fsm.getDataAggiornamento());
+				lFasDao.setCodOperatoreAggiornamento(fsm.getCodOperatoreAggiornamento());
+				lFasDao.setCodUfficioAggiornamento(fsm.getCodUfficioAggiornamento());
+				lFasDao.setCodStatoFascicolo(fsm.getCodStatoFascicolo());
+				lFasDao.setCondizioneUpdateStatoFascicolo(fsmOld.getIdFascicoloSius(),
+						fsmOld.getCodStatoFascicolo());
+			}
+			lFasDao.update();
+			lFasDao.stop();
+
+			// COMMIT
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: " + ex);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusController.aggiornaStatoFascicoloSius: " + ex);
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("Exception: " + e);
+			throw new SIUSException(F3BException.USER_MESSAGE, e.getMessage());
+		} finally {
+			cleanup(lFasDao);
+			cleanup(lConn);
+		}
+	}
+	// ***** FINE INTERVENTO MEV_9 *****//
 
 }
