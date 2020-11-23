@@ -7,17 +7,16 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.jms.ICostantiJMS;
 import siap.jms.JMSLookupRemote;
 import siap.jms.messaggio.controller.IMessaggio;
 import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.modulocumulo.controller.IModuloCumulo;
-import siap.siep.richiesta.action.ICostantiRichiesta;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -58,11 +57,11 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
 			lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);
 
-		Vector<String> lListaTipoMessaggio = new Vector<String>();
+		Vector<String> lListaTipoMessaggio = new Vector<>();
 		lListaTipoMessaggio.add(ICostantiJMS.ESITO);
 		lListaTipoMessaggio.add(ICostantiJMS.RICHIESTA);
 
-		Vector<String> lListaTipoOperazione = new Vector<String>();
+		Vector<String> lListaTipoOperazione = new Vector<>();
 		lListaTipoOperazione.add(ICostantiJMS.ESITO_TRASFERIMENTO_COMPETENZA);
 		lListaTipoOperazione.add(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
 		lListaTipoOperazione.add(ICostantiJMS.ESITO_SEGUITO_ATTI);
@@ -103,7 +102,7 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 					, null // aChiaveAnnoFasCumulante
 					, null // aChiaveProgrFasCumulante
 					, null // aChiaveUfficioFasCumulante
-					);
+			);
 		} else {
 			lCountRisultati = getRequestBigDecimalParameter("CountRisultati");
 		}
@@ -120,14 +119,14 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 
 		/*
 		 * OLD
-		 * 
+		 *
 		 * this.setLinkRitorno();
-		 * 
+		 *
 		 * MessaggioModel lMessaggio = new MessaggioModel(); lMessaggio.setCodTipoMessaggio
 		 * (ICostantiJMS.ESITO); lMessaggio.setCodTipoOperazione
 		 * (ICostantiJMS.ESITO_TRASFERIMENTO_COMPETENZA); lMessaggio.setCodUfficioDestinatario
 		 * (getCodUfficioUtenteConnesso());
-		 * 
+		 *
 		 * // Ricerca Messaggi IMessaggio lCrtl = JMSLookupRemote.getMessaggioRemote(); Vector lVect =
 		 * lCrtl.ExRicercaMessaggio(lMessaggio);
 		 */
@@ -139,18 +138,17 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 		MessaggioModel lMessSoll = null;
 
 		for (int k = 0; k < lVect.size(); k++) {
-			lMess = (MessaggioModel) lVect.get(k);
+			lMess = lVect.get(k);
 			if (lMess != null && lMess.getIdMessaggio() != null) {
 				if ("00067".equals(lMess.getCodTipoOperazione())) {
 					IMessaggio CtrlMess = JMSLookupRemote.getMessaggioRemote();
-					lVecSoll = new Vector<MessaggioModel>(
-							CtrlMess.ExRicercaMessaggioByIdMessaggioSollecitato("00068",
-									"" + lMess.getIdMessaggio()));
+					lVecSoll = new Vector<>(CtrlMess.ExRicercaMessaggioByIdMessaggioSollecitato("00068",
+							"" + lMess.getIdMessaggio()));
 
 					// La Ricerca Solleciti è Ordinata in modo decrescente; Il Primo elemento è Il Sollecito
 					// con MAX Data_Invio
 					if (lVecSoll != null && lVecSoll.size() > 0) {
-						lMessSoll = (MessaggioModel) lVecSoll.get(0);
+						lMessSoll = lVecSoll.get(0);
 						lMess.setDataUltimoSollecito(lMessSoll.getDataInvio());
 					}
 				}
@@ -163,7 +161,7 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aVect
 	 * @param aDataIniziale
 	 * @param aDataFinale
@@ -186,7 +184,7 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 
 	/**
 	 * Recupera solo i parametri di ricerca da passare alla JSP per la costruzione del link "torna indietro"
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
