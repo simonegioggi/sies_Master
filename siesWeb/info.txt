@@ -1,5 +1,7 @@
-Branch creato per i seguenti ticket (stesso problema)
-1) Ticket#20201106019 - DUE PROCURE/PROCURE GENERALI - CON I RISPETTIVI SIEP
-2) Ticket#202011180111 - SIUS tribunale Sorveglianza Fasc. aggancia al momento del deposito ordinanza [...
+RELEASE_12.4.5.0: 23/11/2020
+1)	nato dal branch "release_12.4.4.0"
 
+In data 20201123 eseguito merge col branch mac-otrs-20201106019 comprendente i tickets:
 
+1) Ticket#20201106019 - DUE PROCURE/PROCURE GENERALI - CON I RISPETTIVI SIEP;
+2) Ticket#202011180111 - SIUS tribunale Sorveglianza Fasc. aggancia al momento del deposito ordinanza un altro titolo legato ad un Siep di altra sede;
