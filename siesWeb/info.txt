@@ -1,8 +1,7 @@
-MASTER = VERSIONE SIES 12.4.4.0 consegnata il 23/10/2020
+RELEASE_12.4.5.0: consegnata il 27/11/2020
+1)	nata dal branch "release_12.4.4.0"
 
-RELEASE_12.4.4.0: 02/10/2020
-1)	nato dal branch "release_12.4.3.0"
+In data 20201123 eseguito merge col branch mac-otrs-20201106019 comprendente i tickets:
 
-In data 20201002 eseguito merge coi branch:
-1)	Ticket#20200930012 - SIEP - Problemi di stampa richiesta di Accertamento Pericolosità Sociale;
-2)	Ticket#20201015014 - Errore SIUS in "dettagli Richiesta Istruttoria Generica".
+1) Ticket#20201106019 - DUE PROCURE/PROCURE GENERALI - CON I RISPETTIVI SIEP;
+2) Ticket#202011180111 - SIUS tribunale Sorveglianza Fasc. aggancia al momento del deposito ordinanza un altro titolo legato ad un Siep di altra sede;

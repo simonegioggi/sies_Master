@@ -61,29 +61,28 @@
       </tr>
       <tr>
         <td class="cVerde">N.ro Procedimento M.A. : <font class="cVerde"><%=fascicoloEsecuzione.getFascicoloSiusModel().getChiaveAnno()%>/<%=fascicoloEsecuzione.getFascicoloSiusModel().getChiaveProgr()%></font></td>
-        <td class="c" colspan="2">  relativo a: <font class="campo"><%=misuraAlternativa.getDescrTipoMisura() %></font></td>
+        <td class="c" colspan="2"> relativo a: <font class="campo"><%=misuraAlternativa.getDescrTipoMisura() %></font></td>
       </tr>
       <tr>
         <td class="c"><%=lStrOrdDec%> <font class="campo"><%=misuraAlternativa.getAnnoS07()%>/<%=misuraAlternativa.getProgrS07()%>
         <td class="c" colspan="2"><font class="campo"> <%=misuraAlternativa.getDescrTipoAutoritaEmittOrd()%> - <%=misuraAlternativa.getDescrLuogoAutoritaEmittOrd()%>
-        </font><font class="label">del: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraAlternativa.getDataOrdinanza(),"dd-MM-yyyy"),"-")%>
+        </font><font class="label"> del: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraAlternativa.getDataOrdinanza(),"dd-MM-yyyy"),"-")%>
       </font></td> </font></td>
       </tr>
       <tr>
-        <td class="c">Soggetto: <font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getCognome()%>
+        <td class="c">Soggetto: <font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getCognome()%>&nbsp;
         <%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getNome()%>
-        <td class="c" colspan="2"><font class="label">  nato/a il: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getDataNascita(),"dd-MM-yyyy"),"-")%>
-        </font><font class="label">in : </font><font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getDescrComuneNascita()%>
+        <td class="c" colspan="2"><font class="label"> nato/a il: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getDataNascita(),"dd-MM-yyyy"),"-")%>
+        </font><font class="label"> in : </font><font class="campo"><%=fascicoloEsecuzione.getFascicoloSiusModel().getSoggetto().getDescrComuneNascita()%>
         </font></td> </font></td>
       </tr>
 
-<%    if ( dettaglioFascSiep !=null  )
-      {
+<%    if (dettaglioFascSiep != null) {
 %>
         <tr>
           <td class="c">Titolo Esecutivo N.ro Siep : <font class="campo"><%=dettaglioFascSiep.getFascicoloSiep().getChiaveAnno()%>/<%=dettaglioFascSiep.getFascicoloSiep().getChiaveProgr()%></font></td>
           <td class="c" colspan="2"><font class="campo"> <%=dettaglioFascSiep.getFascicoloSiep().getDescrTipoUfficio()%> - <%=dettaglioFascSiep.getFascicoloSiep().getDescrComuneUfficio()%>
-          </font><font class="label">del: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettaglioFascSiep.getFascicoloSiep().getDataIscrizione(),"dd-MM-yyyy"),"-")%>
+          </font><font class="label"> del: </font><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dettaglioFascSiep.getFascicoloSiep().getDataIscrizione(),"dd-MM-yyyy"),"-")%>
           </font></td>
         </tr>
       <%}%>
