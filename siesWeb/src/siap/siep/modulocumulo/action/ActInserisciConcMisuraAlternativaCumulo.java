@@ -26,6 +26,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActInserisciConcMisuraAlternativaCumulo extends ActionModuloCumulo
 		implements ICostantiStatoEsecTitoloCumulato, ICostantiComputiCumulo {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -132,6 +133,7 @@ public class ActInserisciConcMisuraAlternativaCumulo extends ActionModuloCumulo
 	 * @throws F3BException
 	 */
 	private StatoEsecTitoloCumulatoModel getDatiProvvedimento(String aTipoOper) throws F3BException {
+
 		StatoEsecTitoloCumulatoModel lStaMod = new StatoEsecTitoloCumulatoModel();
 
 		lStaMod.setIdStatoEsecTitoloCumulato(
@@ -187,6 +189,7 @@ public class ActInserisciConcMisuraAlternativaCumulo extends ActionModuloCumulo
 	 * @throws F3BException
 	 */
 	private ComputiCumuloModel getDatiComputo(String aTipoOper) throws F3BException {
+
 		// ==============================================================================
 		// Recupero i dati della Concessione Misura Alternativa.
 		// ==============================================================================

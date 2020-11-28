@@ -263,14 +263,14 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo lCodContenuto = " + lCodContenuto);
-		// lettura tipo di sentenza Sempre automatica 13-9-04
-		String lCodTipoDec = null;
 
 		// Generazione automatica in base al contenuto
 		Collection lOggetti = DecodificheManager.getInstance().getOggettoProcedimento();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("lOggetti = " + lOggetti.toString());
+		// lettura tipo di sentenza Sempre automatica 13-9-04
+		String lCodTipoDec = null;
 		// lCodTipoDec = DecodificheUtils.getCodAltebyCode(lOggetti, lCodContenuto);
 		lCodTipoDec = ICostantiDepositoSentenza.RIMESSIONE_ATTI;
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

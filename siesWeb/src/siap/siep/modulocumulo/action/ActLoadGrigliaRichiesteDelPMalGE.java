@@ -16,10 +16,9 @@ import siap.siep.util.SIEPLookupRemote;
  * @author
  */
 public class ActLoadGrigliaRichiesteDelPMalGE extends ActionModuloCumulo implements ICostantiModuloCumulo {
-	/**
-	 * 
-	 */
+
 	public String processRequest() throws F3BException {
+
 		if (this.isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
