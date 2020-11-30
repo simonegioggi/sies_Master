@@ -77,10 +77,10 @@ if (Utils.isPresent(codMagistratoOld)) {
 		if (document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>.value != '<%=codMagistratoOld%>') {
 			if (!confirm("Attenzione: si sta inserendo un Magistrato Relatore diverso da quello già assegnato al fascicolo! Procedere con l'inserimento del nuovo Magistrato Relatore?"))
 				return false;
-		} else {
+		}/* else {
 			alert('Attenzione: si sta inserendo lo stesso Magistrato Relatore già assegnato al fascicolo!');
 			return false;
-		}
+		}*/
 <%
 }
 %>

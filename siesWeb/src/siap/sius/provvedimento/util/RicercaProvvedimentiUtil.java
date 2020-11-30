@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.depositodecreto.controller.IDepositoDecreto;
 import siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc;
@@ -11,7 +12,6 @@ import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositosentenza.action.ICostantiDepositoSentenza;
 import siap.sius.depositosentenza.controller.IDepositoSentenza;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
 
 /**
  * <p>
@@ -27,11 +27,12 @@ import f3b.log.LogF3B;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @author Luigi
  * @version 1.0
  */
 public class RicercaProvvedimentiUtil {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -40,9 +41,10 @@ public class RicercaProvvedimentiUtil {
 
 	// Tipi di decreti da escludere dalla ricerca perchè di tipo non definitorio.
 	String[] mTipiDecretoDaEscludere = { ICostantiDepositoDecreto.CITAZIONE,
-			ICostantiDepositoDecreto.IRREPERIBILITA };
+			ICostantiDepositoDecreto.IRREPERIBILITA,
+			// MEV_9: aggiunta casistica per nuova tipologia
+			ICostantiDepositoDecreto.DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA };
 	// Tipi di Ordinanza da escludere. Nessuna perchè sono tutte di tipo declaratorio.
-	// String[] mTipiOrdinanzaDaEscludere = new String[0];
 	// Il tipo di Ordinanza da escludere è RU ( Rinvio Udienza ) poichè non è di tipo definitorio.
 	String[] mTipiOrdinanzaDaEscludere = { ICostantiDepositoOrdinanzaPc.RINVIO_UDIENZA,
 			ICostantiDepositoOrdinanzaPc.RIMESSIONE_ATTI };
@@ -61,20 +63,22 @@ public class RicercaProvvedimentiUtil {
 
 	// Costruttore con inizializzazione ID Generale Procedimento
 	public RicercaProvvedimentiUtil(BigDecimal aIdGenProc) throws Exception {
+
 		mIdGenProc = aIdGenProc;
 	}
 
 	/**
 	 * La funzione controlla l'esistenza di un decreto, di un'ordinanza oppure di una Sentenza di tipo
 	 * Declaratorio.
-	 * 
+	 *
 	 * @param aIdGenProc
 	 * @return
 	 * @throws Exception
 	 */
 	public boolean verificaEsistenzaProv() throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(this.getClass().getName() + ".verificaEsistenzaProv(): inizio");
 
 		boolean retValue = false;
@@ -87,7 +91,8 @@ public class RicercaProvvedimentiUtil {
 
 		// Controllo Ordinanze
 		IDepositoOrdinanzaPc lDepOrdCtrl = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		if (lDepOrdCtrl.ExEsisteDepositoOrdinanzaByGenProcEccettoTipi(mIdGenProc, mTipiOrdinanzaDaEscludere)) {
+		if (lDepOrdCtrl.ExEsisteDepositoOrdinanzaByGenProcEccettoTipi(mIdGenProc,
+				mTipiOrdinanzaDaEscludere)) {
 			retValue = true;
 		}
 
@@ -98,10 +103,12 @@ public class RicercaProvvedimentiUtil {
 			retValue = true;
 		}
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ritorno->" + retValue);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(this.getClass().getName() + ".verificaEsistenzaProv(): fine");
 
 		return retValue;
@@ -109,14 +116,15 @@ public class RicercaProvvedimentiUtil {
 
 	/**
 	 * La funzione controlla l'esistenza di un'ordinanza di tipo Rimessione Atti.
-	 * 
+	 *
 	 * @param aIdGenProc
 	 * @return
 	 * @throws Exception
 	 */
 	public boolean verificaEsistenzaSospensione() throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(this.getClass().getName() + ".verificaEsistenzaSospensione(): inizio");
 
 		boolean retValue = false;
@@ -128,10 +136,12 @@ public class RicercaProvvedimentiUtil {
 						mTipiOrdinanzaDaEscludereSospesa))
 			retValue = true;
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ritorno->" + retValue);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(this.getClass().getName() + ".verificaEsistenzaSospensione(): fine");
 
 		return retValue;
@@ -139,16 +149,16 @@ public class RicercaProvvedimentiUtil {
 
 	/**
 	 * La funzione controlla l'esistenza di un'ordinanza di tipo Rimessione Atti.
-	 * 
+	 *
 	 * @param aIdGenProc
 	 * @return
 	 * @throws Exception
 	 */
 	public boolean verificaEsistenzaSospensioneSentenza() throws Exception {
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		siesLogger.debug(
-				this.getClass().getName() + ".verificaEsistenzaSospensioneSentenza(): inizio");
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(this.getClass().getName() + ".verificaEsistenzaSospensioneSentenza(): inizio");
 
 		boolean retValue = false;
 
@@ -160,10 +170,12 @@ public class RicercaProvvedimentiUtil {
 			retValue = true;
 		}
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("ritorno->" + retValue);
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug(this.getClass().getName() + ".verificaEsistenzaSospensioneSentenza(): fine");
 
 		return retValue;
