@@ -2177,7 +2177,12 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			// STUB 24-02-2006 La Misura Alternativa si iscrive se il Deposito non riguarda la
 			// Fissazione Udienza.
 					(lEveMod.getCodEsito().compareTo("0601") != 0
-							&& lEveMod.getCodEsito().compareTo("0602") != 0))
+							&& lEveMod.getCodEsito().compareTo("0602") != 0
+							// MEV_9: anche per il decreto di designazione del magistrato relatore non
+							// bisogna iscrivere la Misura Alternativa
+							// && lEveMod.getCodEsito().compareTo("0270") != 0
+							// && lEveMod.getCodEsito().compareTo("0271") != 0
+							&& lEveMod.getCodEsito().compareTo("0610") != 0))
 					&& !(lMADao.esisteMisuraAlternativaPerEvento(lEveMod.getIdEvento()))
 					&& lMASqlDao.eventoCoRiRe(lEveMod.getIdEvento())) {
 				MisuraAlternativaModel lMAModel = new MisuraAlternativaModel();
@@ -2193,8 +2198,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 				lMAModel.setCodMagistrato(lDecMod.getCodMagistrato());
 				lMAModel.setCodUfficioSorveglianza(lDecMod.getCodUfficioCompetente());
 				lMAModel.setDescrLuogoProva(lDecMod.getLuogoSvolgimentoProva());
-				lMAModel.setDataInizioMisura(null); // Da Gestire con la fase di sottoscrizione degli
-													// obblighi.
+				// Da Gestire con la fase di sottoscrizione degli obblighi
+				lMAModel.setDataInizioMisura(null);
 				lMAModel.setChiaveAnnoFascicoloSius(aFasGPMod.getFascicoloSiusModel().getChiaveAnno());
 				lMAModel.setChiaveUfficioFascicoloSius(aFasGPMod.getFascicoloSiusModel().getChiaveUfficio());
 				lMAModel.setChiaveProgrFascicoloSius(aFasGPMod.getFascicoloSiusModel().getChiaveProgr());
@@ -2212,7 +2217,6 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				siesLogger.debug("Inserita Misura Alternativa per evento -> " + lEveMod.getIdEvento());
-
 			}
 
 			// 25-11-2014 In caso di Deposito Decreto di Conversione P.P.:
@@ -2273,8 +2277,12 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			lFasSiusDao.setDAOFromModelForUpdate(aFasGPMod.getFascicoloSiusModel());
 			// STUB 02-02-2006 Lo stato del fascicolo cambia se il Deposito non riguarda la Fissazione
 			// Udienza.
-			if (lEveMod.getCodEsito().compareTo("0601") != 0
-					&& lEveMod.getCodEsito().compareTo("0602") != 0) {
+			if (lEveMod.getCodEsito().compareTo("0601") != 0 && lEveMod.getCodEsito().compareTo("0602") != 0
+			// MEV_9: anche per il decreto di designazione del magistrato relatore non bisogna passare lo
+			// stato ad "Emesso Provvedimento" (07)
+					// && lEveMod.getCodEsito().compareTo("0270") != 0
+					// && lEveMod.getCodEsito().compareTo("0271") != 0
+					&& lEveMod.getCodEsito().compareTo("0610") != 0) {
 				lFasSiusDao.setCodStatoFascicolo("07");
 				lFasSiusDao.update();
 				lFasSiusDao.stop();
@@ -3510,8 +3518,11 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	}
 
 	/*
-	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore Numero MEV : 9
-	 * Autore : Gioggi Data : 17 nov 2020 Branch : MEV_9
+	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore
+	 * Numero MEV : 9
+	 * Autore : Gioggi
+	 * Data : 17 nov 2020
+	 * Branch : MEV_9
 	 */
 	@Override
 	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
