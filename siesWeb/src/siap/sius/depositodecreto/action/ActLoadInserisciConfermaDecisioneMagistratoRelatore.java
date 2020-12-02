@@ -20,7 +20,6 @@ import siap.sius.fascicolo.action.ActRicercaFSPuntuale;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.magistratorelatore.controller.IMagistratoRelatore;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
-import siap.sius.provvedimento.util.RicercaProvvedimentiUtil;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
@@ -56,7 +55,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		// Richiesta di accesso al controller
 		IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
 
-		// Verifica esistenza di un deposito decreto per il fasciclo sius selezionato e tipo decreto
+		// Verifica esistenza di un deposito decreto per il fascicolo sius selezionato e tipo decreto
 		if (idd.ExVerificaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(idGP,
 				DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA)) {
 			// Se già esiste un decreto viene chiamato il dettaglio.
@@ -75,11 +74,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 			EventoModel em = ie.ExRicercaEventoByKey(ddm.getIdEventoGenerato());
 			String codEsito = !Utils.isNullObj(em.getCodEsito()) ? em.getCodEsito() : "";
 
-			// Viene effettuato il controllo sulla preesistenza di un Provvedimento declaratorio
-			// già emesso per il Fascicolo SIUS
-			// Se esiste almeno un provvedimento di questo tipo non può esserne emesso un altro
-			RicercaProvvedimentiUtil rpu = new RicercaProvvedimentiUtil(idGP);
-			if (rpu.verificaEsistenzaProv() && "0610".equals(codEsito))
+			if ("0610".equals(codEsito))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Per il procedimento indicato è già stato emesso un provvedimento. "
 								+ "Non è consentito emettere un nuovo provvedimento!");

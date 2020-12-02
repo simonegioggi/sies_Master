@@ -1,8 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_9: creata nuova pagina di caricamento dati --%>
 <%@ page import="f3b.util.DateUtils"%>
-<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="java.util.Iterator"%>
 
@@ -19,6 +20,7 @@
 <jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori"						scope="request" class="java.util.Vector"/>
 <jsp:useBean id="TornaQui"						scope="request" class="java.lang.String"/>
+<jsp:useBean id="magistratorelatore"   			scope="request" class="siap.sius.magistratorelatore.model.MagistratoRelatoreModel"/>
 
 <html>
 <head>
@@ -99,12 +101,24 @@ while (tenIter.hasNext()) {
   	</tr>
 <%
 }
+if (!Utils.isNullObj(magistratorelatore)
+		&& !Utils.isNullObj(magistratorelatore.getMagistrato())) {
+%>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr>
+		<td class="l">Magistrato Relatore Designato</td>
+    	<td class="l">
+    		<%=StringUtils.toStringJSP(magistratorelatore.getMagistrato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(magistratorelatore.getMagistrato().getNome())%>
+    	</td>
+	</tr>
+<%
+}
 if (!Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto())
 		&& !Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione())) {
 %>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
-		<td class="l"> Data Termine Emissione</td>
+		<td class="l">Data Termine Emissione</td>
     	<td class="l">
     		<font class="campo"><%=DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione(),"dd/MM/yyyy")%></font>
     	</td>
