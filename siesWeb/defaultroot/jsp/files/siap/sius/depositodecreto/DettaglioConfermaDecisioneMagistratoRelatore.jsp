@@ -16,9 +16,9 @@
 
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
-<jsp:useBean id="ddemm" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
-<jsp:useBean id="tenori"	scope="request" class="java.util.Vector"/>
-<jsp:useBean id="TornaQui"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
+<jsp:useBean id="tenori"						scope="request" class="java.util.Vector"/>
+<jsp:useBean id="TornaQui"						scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -47,22 +47,22 @@ function lookUpload() {
 			<font class="campo">Dettaglio Decreto Conferma Decisione Magistrato Relatore</font>
 		</td>
 <%
-if (ddemm != null && ddemm.getDepositoDecreto() != null
-		&& ddemm.getEvento() != null) {
-   if (ddemm.getEvento().getFlagDocumentoRegistrato() == null
-		   || ddemm.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0) {
+if (depositoDecretoMotivazioni != null && depositoDecretoMotivazioni.getDepositoDecreto() != null
+		&& depositoDecretoMotivazioni.getEvento() != null) {
+   if (depositoDecretoMotivazioni.getEvento().getFlagDocumentoRegistrato() == null
+		   || depositoDecretoMotivazioni.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0) {
 %>
 		<!-- BOTTONE DI STAMPA -->
 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIUS%>">
 			<jsp:param name="CampoIdEntita" value="<%=ICostantiEvento.CAMPO_ID_EVENTO%>"/>
-			<jsp:param name="ValoreIdEntita" value="<%=ddemm.getEvento().getIdEvento()%>"/>
+			<jsp:param name="ValoreIdEntita" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>"/>
 		</jsp:include>
 <%
-		if( ddemm.getDepositoDecreto().getDataDeposito() == null) {
+		if( depositoDecretoMotivazioni.getDepositoDecreto().getDataDeposito() == null) {
 %>
 		<!-- BOTTONE DI CANCELLAZIONE -->
 		<td class="LBG">
-			<a href="Javascript:conferma('siap.sius.depositodecreto.action.ActCancellaDepositoDecreto','<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>','<%=ddemm.getDepositoDecreto().getIdDepositoDecreto()%>','TornaQui','<%=TornaQui%>');">
+			<a href="Javascript:conferma('siap.sius.depositodecreto.action.ActCancellaDepositoDecreto','<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>','<%=depositoDecretoMotivazioni.getDepositoDecreto().getIdDepositoDecreto()%>','TornaQui','<%=TornaQui%>');">
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="CancellaDM" width="24" height="24" border="0">
 		  	</a>
 		</td>
@@ -86,7 +86,7 @@ if (ddemm != null && ddemm.getDepositoDecreto() != null
 <table cellspacing="4" cellpadding="4" width="95%">
 	<tr><jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/></tr>
   	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td class="Titolo" colspan="2"> Oggetti</td></tr>
+	<tr><td class="Titolo" colspan="2">Oggetti</td></tr>
 <%
 Iterator<?> tenIter = tenori.iterator();
 while (tenIter.hasNext()) {
@@ -99,14 +99,14 @@ while (tenIter.hasNext()) {
   	</tr>
 <%
 }
-if (!Utils.isNullObj(ddemm.getDepositoDecreto())
-		&& !Utils.isNullObj(ddemm.getDepositoDecreto().getDataTermineEmissione())) {
+if (!Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto())
+		&& !Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione())) {
 %>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
 		<td class="l"> Data Termine Emissione</td>
     	<td class="l">
-    		<font class="campo"><%=DateUtils.getDateToString(ddemm.getDepositoDecreto().getDataTermineEmissione(),"dd/MM/yyyy")%></font>
+    		<font class="campo"><%=DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione(),"dd/MM/yyyy")%></font>
     	</td>
 	</tr>
 <%
@@ -123,7 +123,7 @@ if (!Utils.isNullObj(ddemm.getDepositoDecreto())
        		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.evento.action.ActUploadDocument">
        		<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.sius.depositodecreto.action.ActLoadDettaglioConfermaDecisioneMagistratoRelatore">
        		<input type="HIDDEN" name="FlagAvvocatura" value="<%=ICostantiAvvisiAvvocato.EMISSIONE_DECRETO%>">
-       		<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=ddemm.getEvento().getIdEvento()%>">
+       		<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>">
       	</td>
 	</tr>
 </table>

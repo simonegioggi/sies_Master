@@ -46,7 +46,7 @@ public class ActLoadDettaglioConfermaDecisioneMagistratoRelatore extends ActionS
 
 		// Imposta gli oggetti nella request
 		setRequestAttribute("tenori", tenori);
-		setRequestAttribute("ddemm", ddemm);
+		setRequestAttribute("depositoDecretoMotivazioni", ddemm);
 
 		// Ricerca del Magistrato Relatore
 		IMagistratoRelatore imr = SIUSLookupRemote.getMagistratoRelatoreRemote();
