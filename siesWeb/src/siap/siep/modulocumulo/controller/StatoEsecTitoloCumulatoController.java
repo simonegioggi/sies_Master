@@ -2571,6 +2571,13 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					lComputiModel.setDataReclusioneA(lSospModel.getDataInizio());
 				}
 
+				// INIZIO: Ticket#202012020116 - Carico la data Inizio e efine misura con i dati
+				//         della data inizio e fine reclusione in quanto le form di inserimento/modifica/dettaglio 
+				//         utilizzano tali campi
+				lComputiModel.setDataInizioMisura (lComputiModel.getDataReclusioneDa());
+				lComputiModel.setDataFineMisura   (lComputiModel.getDataReclusioneA());
+				// FINE Ticket#202012020116
+				
 				lComputiModel.setNumAnniReclusione(lSospModel.getNumAnniPenaEspiata());
 				lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
 				lComputiModel.setNumGiorniReclusione(lSospModel.getNumGiorniPenaEspiata());
