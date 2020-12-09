@@ -3,7 +3,7 @@ RELEASE_12.4.6.0: 09/12/2020
 
 In data 20201209 eseguito merge col branch mac-otrs-202012020116 comprendente il ticket:
 
-	1)	Ticket#202012020116 - Provvedimento di cumulo revoca misura alternativa;
+	1)	Ticket#202012020116 - Provvedimento di cumulo revoca misura alternativa
 
 Modulo modificato:
 siap.siep.modulocumulo.util.StatoEsecTitoloCumulatoController
