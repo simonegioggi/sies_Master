@@ -366,8 +366,14 @@ public class ActInserisciRevocaMisuraAlternativaCumulo extends ActionModuloCumul
 			// ======= >>> ( se Data_Revoca è presente, PENA-ESPIATA = (DATA_REVOCA - DATA_INIZIO_MISURA) + GG
 			// passati in Istituto
 			lDateModel.setDataInizio(lDateIniMisura); // data_Inizio_Misura
-			lDateModel.setDataFine(lComputo.getDataInizioRevoca()); // data_Revoca
-
+			
+			// ticket#202012020116 [D.F.] collateralmente alla segnalazione ci si è accorti che il
+			// modulo cumulo non applica la regola di NON considerare validamente espiato il 
+			// giorno dell'interruzione. Si corregge anticipando per i calcolo dell'espiato il giorno di 
+			// revoca.
+			lDateModel.setDataFine(DateUtils.getDayBefore(lComputo.getDataInizioRevoca()));
+			//lDateModel.setDataFine(lComputo.getDataInizioRevoca()); // data_Revoca
+			// FINE ticket#202012020116 [D.F.]
 			lPenaEspiataModel = lCalUtil.CalcolaNumGiorniMesiAnni(lDateModel);
 		} else {
 			// ======== >>> PENA-ESPIATA = (DURATA_MISURA - RESIDUO_PEma_da_Espiare ) + GG passati in Istituto
