@@ -1,7 +1,13 @@
-RELEASE_12.4.5.0: 23/11/2020
-1)	nato dal branch "release_12.4.4.0"
+Branch creato dalla 12.4.5.0 per il ticket:
+20201204019 Calcolo errato revoca benefici applicati con sentenza di condanna
 
-In data 20201123 eseguito merge col branch mac-otrs-20201106019 comprendente i tickets:
+Il branch corregge solo una parte della segnalazione. In particolare il sistema andava 
+in negativo di pena (reclusione) nella prima fase dei calcolo (pena complessiva, benefici, presofferto)
+e provava subito a sottrarre la reclusione negativa dall'arresto portando in negativo anche l'arresto.
+Successivamente (STEP2) calcolava gli altri computi che riportavano in positivo la pena (reclusione)
+a seguito delle revoche benefici ma ormai aveva già portato in negativo l'arresto che restava negativo.
 
-1) Ticket#20201106019 - DUE PROCURE/PROCURE GENERALI - CON I RISPETTIVI SIEP;
-2) Ticket#202011180111 - SIUS tribunale Sorveglianza Fasc. aggancia al momento del deposito ordinanza un altro titolo legato ad un Siep di altra sede;
+
+Il test su reclusione negativa è stato lasciato solo al termine di tutti i computi.
+
+
