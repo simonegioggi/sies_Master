@@ -131,7 +131,6 @@
    %>
    
    <tr>
-    </td>
        	<td class="c"><font class="label">
       	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sige.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSige.CAMPO_ID_FASCICOLO_SIGE%>=<%=idFascicolo%><%=retParam%>">
       	<%=fascicoloSiep%>
