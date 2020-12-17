@@ -30,3 +30,14 @@ visualizzare.
 Corrette inoltre 2 jsp in cui mancava uno "spazio" nella visualizzazione dei quantum:
 	- DettaglioMARevocaAffProva.jsp (aggiunta spaziatura nella visualizzazione dei quantum);
 	- LoadInserisciRevocaMAAffProva.jsp (aggiunta spaziatura nella visualizzazione dei quantum).
+
+In data 20201217 eseguito merge col branch mac-otrs-20201204019 comprendente il ticket:
+
+	2)	Ticket#20201204019 - Calcolo errato revoca benefici applicati con sentenza di condanna
+
+Il branch corregge solo una parte della segnalazione. In particolare il sistema andava 
+in negativo di pena (reclusione) nella prima fase dei calcolo (pena complessiva, benefici, presofferto)
+e provava subito a sottrarre la reclusione negativa dall'arresto portando in negativo anche l'arresto.
+Successivamente (STEP2) calcolava gli altri computi che riportavano in positivo la pena (reclusione)
+a seguito delle revoche benefici ma ormai aveva già portato in negativo l'arresto che restava negativo.
+Il test su reclusione negativa è stato lasciato solo al termine di tutti i computi.
