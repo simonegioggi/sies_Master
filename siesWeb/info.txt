@@ -6,8 +6,7 @@ In data 20201209 eseguito merge col branch mac-otrs-202012020116 comprendente il
 	1)	Ticket#202012020116 - Provvedimento di cumulo revoca misura alternativa
 
 Modulo modificato:
-siap.siep.modulocumulo.util.StatoEsecTitoloCumulatoController
-Metodo caricaComputiMisuraAlternativaSORV
+	siap.siep.modulocumulo.util.StatoEsecTitoloCumulatoController (Metodo caricaComputiMisuraAlternativaSORV)
 Modificato il modulo di estrazione del cumulo. Caricava i dati di Inizio Pena e Fine Pena in campi differenti 
 da quelli gestiti dalla form (Data Inizio Misura e Data FIne Misura) ed era il motivo della mancata visualizzazione.
 
@@ -35,6 +34,8 @@ In data 20201217 eseguito merge col branch mac-otrs-20201204019 comprendente il 
 
 	2)	Ticket#20201204019 - Calcolo errato revoca benefici applicati con sentenza di condanna
 
+Modulo modificato:
+	siap.siep.modulocumulo.util.CalcoloPenaCumuloModel
 Il branch corregge solo una parte della segnalazione. In particolare il sistema andava 
 in negativo di pena (reclusione) nella prima fase dei calcolo (pena complessiva, benefici, presofferto)
 e provava subito a sottrarre la reclusione negativa dall'arresto portando in negativo anche l'arresto.
