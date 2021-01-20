@@ -3,14 +3,14 @@ package siap.sige.collegio.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
-import siap.dao.SIAPSqlDAO;
-import siap.sige.collegio.model.CollegioModel;
-import siap.sige.sezione.model.SezioneModel;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import siap.dao.SIAPSqlDAO;
+import siap.sige.collegio.model.CollegioModel;
+import siap.sige.sezione.model.SezioneModel;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class CollegioSqlDAO extends SIAPSqlDAO {
@@ -48,16 +48,16 @@ public class CollegioSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * METODO CHE CONTA IL NUMERO DI COLLEGI A PARTIRE DAI FILTRI SETTATI SU COLLEGIO MODEL
-	 * 
+	 *
 	 * introdotto per 11.2.1
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
 	public void getNumRicercaCollegio(CollegioModel aCollegio) throws DAOException {
 
 		String lSql = getSqlCollegioPagedQuery();
-		
+
 		if (aCollegio.getCollegioMagistrati() != null && aCollegio.getCollegioMagistrati().length > 0) {
 			lSql += " LEFT JOIN COLLEGIO_MAGISTRATO COLMAG ON COLMAG.COL_ID_COLLEGIO = COLL.ID_COLLEGIO ";
 		}
@@ -122,9 +122,9 @@ public class CollegioSqlDAO extends SIAPSqlDAO {
 	/**
 	 * query per ricercare il max cod_collegio per sezione ed ufficio di appartenenza indipendentemente dal
 	 * magistrato presidente
-	 * 
+	 *
 	 * // 20171122: [EC]
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -276,7 +276,7 @@ public class CollegioSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Metodo che imposta il filtro di condizione con l'id
 	 * <p>
-	 * 
+	 *
 	 * @param aKey
 	 *            BigDecimal id sezione.
 	 * @return String stringa di ritorno con la condizione.
@@ -302,11 +302,11 @@ public class CollegioSqlDAO extends SIAPSqlDAO {
 	public void ricercaCollegioPaged(CollegioModel aCollegio, int lPagina) throws DAOException {
 
 		String lSql = getSqlCollegioPagedQuery();
-		
+
 		if (aCollegio.getCollegioMagistrati() != null && aCollegio.getCollegioMagistrati().length > 0) {
 			lSql += " LEFT JOIN COLLEGIO_MAGISTRATO COLMAG ON COLMAG.COL_ID_COLLEGIO = COLL.ID_COLLEGIO ";
 		}
-		
+
 		String lPaginedStatement = new String("");
 		lSql += "  " + setCondizione(aCollegio);
 
@@ -326,29 +326,30 @@ public class CollegioSqlDAO extends SIAPSqlDAO {
 
 		String lStatement = new String("");
 
-		lStatement += "SELECT DISTINCT " + " COLL.ID_COLLEGIO, " + " COLL.COD_COLLEGIO, " + " COLL.SEZ_ID_SEZIONE,"
-				+ " SEZ.CODICE, " + " SEZ.DESCRIZIONE, " + " COLL.COD_UFFICIO_APPARTENENZA,"
-				+ " COLL.DATA_INIZIO_VALIDITA, " + " COLL.DATA_FINE_VALIDITA,"
-				+ " COLL.COD_OPERATORE_INSERIMENTO, " + " COLL.DATA_INSERIMENTO,"
-				+ " COLL.COD_UFFICIO_INSERIMENTO, " + " COLL.COD_OPERATORE_AGGIORNAMENTO,"
-				+ " COLL.DATA_AGGIORNAMENTO, " + " COLL.COD_UFFICIO_AGGIORNAMENTO, COLL.MAG_COD_MAGISTRATO"
+		lStatement += "SELECT DISTINCT " + " COLL.ID_COLLEGIO, " + " COLL.COD_COLLEGIO, "
+				+ " COLL.SEZ_ID_SEZIONE," + " SEZ.CODICE, " + " SEZ.DESCRIZIONE, "
+				+ " COLL.COD_UFFICIO_APPARTENENZA," + " COLL.DATA_INIZIO_VALIDITA, "
+				+ " COLL.DATA_FINE_VALIDITA," + " COLL.COD_OPERATORE_INSERIMENTO, "
+				+ " COLL.DATA_INSERIMENTO," + " COLL.COD_UFFICIO_INSERIMENTO, "
+				+ " COLL.COD_OPERATORE_AGGIORNAMENTO," + " COLL.DATA_AGGIORNAMENTO, "
+				+ " COLL.COD_UFFICIO_AGGIORNAMENTO, COLL.MAG_COD_MAGISTRATO"
 				// 20190507 [SG]: aggiunti campi in estrazione
 				+ ", U.DATA_UDIENZA" + " FROM COLLEGIO COLL "
-				+ " LEFT JOIN SEZIONE SEZ ON COLL.SEZ_ID_SEZIONE = SEZ.ID_SEZIONE" ;				
+				+ " LEFT JOIN SEZIONE SEZ ON COLL.SEZ_ID_SEZIONE = SEZ.ID_SEZIONE";
 		// 20190507 [SG]: aggiunta left join
 		lStatement += " LEFT JOIN UDIENZA_SIGE U ON U.COL_ID_COLLEGIO = COLL.ID_COLLEGIO";
 		return lStatement;
 	}
 
 	// 20190507 [SG]: aggiunto metodo privato
-	private boolean findColumn(String aValue) {
-
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
+	// private boolean findColumn(String aValue) {
+	//
+	// try {
+	// mRs.findColumn(aValue);
+	// } catch (Exception sqex) {
+	// return false;
+	// }
+	// return true;
+	// }
 
 }

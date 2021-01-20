@@ -956,7 +956,9 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			} else {
 				lFasDao.ricercaFascicoloByProgrAnnoDescrComune(aFascicoloSiep);
 			}
-			lFasDao.startPage1(aPageNum);
+			// lFasDao.startPage1(aPageNum);
+			// MEV_6: nuova gestione della paginazione
+			lFasDao.startNewPagination(aPageNum);
 
 			FascicoloSiepModel lFascicolo = null;
 			SoggettoModel lSoggMod = null;
@@ -1014,38 +1016,39 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 	 * @param FascicoloSiepModel
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
+	 * @deprecated MEV_6 non più utilizzato: la count viene eseguita nella query di paginazione
 	 */
-	public BigDecimal ExGetNumFascicoloSiepByProgrAnnoDescrComune(FascicoloSiepModel aFascicoloSiep,
-			String majorOffice) throws F3BException {
-
-		Connection lConn = null;
-		FascicoloSiepSqlDAO lFasDao = null;
-		BigDecimal lCont = new BigDecimal(0);
-
-		try {
-			lConn = getDBConnection();
-
-			lFasDao = new FascicoloSiepSqlDAO(lConn);
-			// MEV_57: aggiunto parametro di passaggio
-			if (StringUtils.checkValidValue(majorOffice)) {
-				lFasDao.ricercaFascicoloByProgrAnnoDescrComune(aFascicoloSiep, majorOffice);
-			} else {
-				lFasDao.ricercaFascicoloByProgrAnnoDescrComune(aFascicoloSiep);
-			}
-			lCont = lFasDao.getNumRowsSelected();
-		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-			// siesLogger al posto di mLog
-			siesLogger.error("DAOException: " + daoEx);
-			throw new SIEPException(F3BException.USER_MESSAGE,
-					"FascicoloSiepController.ExGetNumFascicoloSiepByProgrAnnoDescrComune: Non posso leggere : "
-							+ daoEx);
-		} finally {
-			cleanup(lFasDao);
-			cleanup(lConn);
-		}
-		return lCont;
-	}
+	// public BigDecimal ExGetNumFascicoloSiepByProgrAnnoDescrComune(FascicoloSiepModel aFascicoloSiep,
+	// String majorOffice) throws F3BException {
+	//
+	// Connection lConn = null;
+	// FascicoloSiepSqlDAO lFasDao = null;
+	// BigDecimal lCont = new BigDecimal(0);
+	//
+	// try {
+	// lConn = getDBConnection();
+	//
+	// lFasDao = new FascicoloSiepSqlDAO(lConn);
+	// // MEV_57: aggiunto parametro di passaggio
+	// if (StringUtils.checkValidValue(majorOffice)) {
+	// lFasDao.ricercaFascicoloByProgrAnnoDescrComune(aFascicoloSiep, majorOffice);
+	// } else {
+	// lFasDao.ricercaFascicoloByProgrAnnoDescrComune(aFascicoloSiep);
+	// }
+	// lCont = lFasDao.getNumRowsSelected();
+	// } catch (DAOException daoEx) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+	// // siesLogger al posto di mLog
+	// siesLogger.error("DAOException: " + daoEx);
+	// throw new SIEPException(F3BException.USER_MESSAGE,
+	// "FascicoloSiepController.ExGetNumFascicoloSiepByProgrAnnoDescrComune: Non posso leggere : "
+	// + daoEx);
+	// } finally {
+	// cleanup(lFasDao);
+	// cleanup(lConn);
+	// }
+	// return lCont;
+	// }
 
 	/**
 	 * Ricerca Fascicolo Siep per Soggetto, Anno e Ufficio
@@ -1079,8 +1082,9 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				lFasSoggDao.ricercaFascicoloSoggetto(aSogModel);
 			}
 
-			// lFasSoggDao.start();
-			lFasSoggDao.startPage1(aPageNum);
+			// lFasSoggDao.startPage1(aPageNum);
+			// MEV_6: nuova gestione della paginazione
+			lFasSoggDao.startNewPagination(aPageNum);
 			FascicoloSiepModel lFascicolo = null;
 
 			while (lFasSoggDao.next()) {
@@ -1132,7 +1136,9 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lFasSoggDao = new FascicoloSiepSoggettoSqlDAO(lConn);
 
 			lFasSoggDao.ricercaFascicoloRGNR(aSentenza, majorOffice);
-			lFasSoggDao.startPage1(aPageNum);
+			// lFasSoggDao.startPage1(aPageNum);
+			// MEV_6: nuova gestione della paginazione
+			lFasSoggDao.startNewPagination(aPageNum);
 			FascicoloSiepModel lFascicolo = null;
 
 			while (lFasSoggDao.next()) {
@@ -1210,8 +1216,9 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lStaDao = new StatoProcedimentoSqlDAO(lConn);
 
 			lFasSoggDao.ricercaFascicoloSuperSoggetto(aSogModel, "");
-			// lFasSoggDao.start();
-			lFasSoggDao.startPage1(aPageNum);
+			// lFasSoggDao.startPage1(aPageNum);
+			// MEV_6: nuova gestione della paginazione
+			lFasSoggDao.startNewPagination(aPageNum);
 			FascicoloSiepModel lFascicolo = null;
 
 			while (lFasSoggDao.next()) {
@@ -4152,8 +4159,9 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lStaDao = new StatoProcedimentoSqlDAO(lConn);
 
 			lFasSoggDao.ricercaFascicoloSuperSoggettoPerSige(aSogModel);
-			// lFasSoggDao.start();
-			lFasSoggDao.startPage1(aPageNum);
+			// lFasSoggDao.startPage1(aPageNum);
+			// MEV_6: nuova gestione della paginazione
+			lFasSoggDao.startNewPagination(aPageNum);
 			FascicoloSiepModel lFascicolo = null;
 
 			while (lFasSoggDao.next()) {
@@ -4205,8 +4213,9 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 				lFasSoggDao.ricercaFascicoloMajorSoggettoPerSige(aSogModel, majorOffice);
 			else
 				lFasSoggDao.ricercaFascicoloSoggettoPerSIGE(aSogModel);
-			// lFasSoggDao.start();
-			lFasSoggDao.startPage1(aPageNum);
+			// lFasSoggDao.startPage1(aPageNum);
+			// MEV_6: nuova gestione della paginazione
+			lFasSoggDao.startNewPagination(aPageNum);
 			FascicoloSiepModel lFascicolo = null;
 
 			while (lFasSoggDao.next()) {
@@ -4704,7 +4713,6 @@ public class FascicoloSiepController extends SiapController implements IFascicol
 			lFasSoggDao = new FascicoloSiepSoggettoSqlDAO(lConn);
 			lFasSoggDao.ricercaFascicoloSoggettoPerSIGE(aSogModel);
 			lCont = lFasSoggDao.getNumRowsSelected();
-
 		} catch (DAOException daoEx) {
 			throw new SIEPException(F3BException.USER_MESSAGE,
 					"FascicoloSiepController.ExGetNumFascicoloSiepBySoggettoSIGE: Non posso leggere : "

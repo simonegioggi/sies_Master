@@ -3,10 +3,10 @@ package siap.siep.fascicolo.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import f3b.model.GenericModel;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.modulocumulo.model.ProcedimentoCumulatoModel;
 import siap.siep.sentenza.model.SentenzaModel;
-import f3b.model.GenericModel;
 
 /**
  * <p>
@@ -21,13 +21,13 @@ import f3b.model.GenericModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class FascicoloSiepModel extends GenericModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2915788636371947065L;
 
@@ -116,6 +116,9 @@ public class FascicoloSiepModel extends GenericModel {
 	private String mgiaInIstruttoria;
 	private ProcedimentoCumulatoModel mProcedimentoCumulato;
 
+	// MEV_6: aggiunta nuova variabile e gestita in tutta la classe
+	private BigDecimal mCountRisultati;
+
 	// COSTRUTTORE DI DEFAULT
 	public FascicoloSiepModel() {
 
@@ -194,6 +197,7 @@ public class FascicoloSiepModel extends GenericModel {
 		this.mDescrMotivoRiapertura = "";
 		this.mgiaInIstruttoria = "";
 		this.mProcedimentoCumulato = null;
+		this.mCountRisultati = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -273,6 +277,8 @@ public class FascicoloSiepModel extends GenericModel {
 		this.mDescrMotivoRiapertura = aModel.mDescrMotivoRiapertura;
 		this.mgiaInIstruttoria = aModel.mgiaInIstruttoria;
 		this.mProcedimentoCumulato = aModel.mProcedimentoCumulato;
+
+		this.mCountRisultati = aModel.mCountRisultati;
 	}
 
 	// COSTRUTTORE MODEL
@@ -361,7 +367,6 @@ public class FascicoloSiepModel extends GenericModel {
 		this.mDataUltimaRiapertura = aDataUltimaRiapertura;
 		this.mCodMotivoRiapertura = aCodMotivoRiapertura;
 		this.mDescrMotivoRiapertura = aDescrMotivoRiapertura;
-
 	}
 
 	//
@@ -636,6 +641,10 @@ public class FascicoloSiepModel extends GenericModel {
 		return mProcedimentoCumulato;
 	}
 
+	public BigDecimal getCountRisultati() {
+		return mCountRisultati;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -907,10 +916,14 @@ public class FascicoloSiepModel extends GenericModel {
 		mProcedimentoCumulato = aValore;
 	}
 
+	public void setCountRisultati(BigDecimal aValore) {
+		mCountRisultati = aValore;
+	}
+
 	/**
 	 * Metodo di utiliti che restituisce la classe di appartenenza del fascicolo in base al progressivo
 	 * (mChiaveProgr) tenendo conto dell'eventuale stato di accorpamento
-	 * 
+	 *
 	 * @return la classe di appartenenza o 0 se non e' possibile determinarla
 	 */
 	public int getClasseProcedimento() {

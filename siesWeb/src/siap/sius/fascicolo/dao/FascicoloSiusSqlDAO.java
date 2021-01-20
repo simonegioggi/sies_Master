@@ -59,7 +59,7 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 	public void ricercaFascicoloXOrigine(BigDecimal aField) throws DAOException {
 		String lStatement = new String("");
 		lStatement = getSqlQuery();
-		lStatement += " WHERE ID_FASCICOLO_SIUS_ORIGINE = " + aField.toString();
+		lStatement += " WHERE ID_FASCICOLO_SIUS_ORIGINE = " + aField;
 		setStatement(lStatement);
 	}
 
@@ -161,11 +161,11 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 		if (aModel.getFasSiuIdFascicoloSius() != null) // Mi aspettavo di trovarli gia' ed ho passato un
 														// model!!! :-)
 		{
-			lCondizioni += " FASCICOLO_SIUS.FAS_SIU_ID_FASCICOLO_SIUS =" + aModel.getFasSiuIdFascicoloSius();
+			lCondizioni += " FASCICOLO_SIUS.FAS_SIU_ID_FASCICOLO_SIUS = " + aModel.getFasSiuIdFascicoloSius();
 		}
 
 		if (aModel.getFasSieIdFascicoloSiep() != null) {
-			lCondizioni += " FASCICOLO_SIUS.FAS_SIE_ID_FASCICOLO_SIEP =" + aModel.getFasSieIdFascicoloSiep();
+			lCondizioni += " FASCICOLO_SIUS.FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep();
 		}
 
 		// boolean lInserito = false;
@@ -230,9 +230,10 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 		String response = "";
 		String lStatement = "select FS.CHIAVE_ANNO , FS.CHIAVE_PROGR, FS.CHIAVE_UFFICIO ";
 		lStatement += " from FASCICOLO_SIUS FS";
-		lStatement += " where FS.CHIAVE_ANNO = '" + aChiaveAnno + "' ";
-		lStatement += " and FS.CHIAVE_PROGR =  '" + aChiaveProgr + "' ";
-		lStatement += " and FS.CHIAVE_UFFICIO =  '" + aChiaveUfficio + "' ";
+		// MEV_6: tolgo apici dal BigDecimal --> '" + aChiaveAnno + "'"; // & aChiaveProgr
+		lStatement += " where FS.CHIAVE_ANNO = " + aChiaveAnno;
+		lStatement += " and FS.CHIAVE_PROGR = " + aChiaveProgr;
+		lStatement += " and FS.CHIAVE_UFFICIO = '" + aChiaveUfficio + "' ";
 
 		setStatement(lStatement);
 
@@ -256,11 +257,13 @@ public class FascicoloSiusSqlDAO extends SIAPSqlDAO {
 	 * @return boolean
 	 */
 	public boolean ExistAltroFascicoloPerSoggetto(BigDecimal aIdSoggetto) throws DAOException {
+
 		boolean response;
-		String lStatement = "select ID_FASCICOLO_SIUS ID from fascicolo_SIUS where SOG_ID_SOGGETTO = '"
-				+ aIdSoggetto + "' ";
-		lStatement += " union (select ID_FASCICOLO_SIEP ID from fascicolo_SIEP where SOG_ID_SOGGETTO = '"
-				+ aIdSoggetto + "' )";
+		// MEV_6: tolgo apici dal BigDecimal --> '" + aIdSoggetto + "'";
+		String lStatement = "select ID_FASCICOLO_SIUS ID from fascicolo_SIUS where SOG_ID_SOGGETTO = "
+				+ aIdSoggetto;
+		lStatement += " union (select ID_FASCICOLO_SIEP ID from fascicolo_SIEP where SOG_ID_SOGGETTO = "
+				+ aIdSoggetto + ")";
 
 		setStatement(lStatement);
 

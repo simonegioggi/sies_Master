@@ -980,14 +980,14 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
+	// private boolean findColumn(String aValue) {
+	// try {
+	// mRs.findColumn(aValue);
+	// } catch (Exception sqex) {
+	// return false;
+	// }
+	// return true;
+	// }
 
 	protected String getQueryProvvFascicoloSiusTenoreSoggetto() {
 		String lStatement = new String();
@@ -1080,8 +1080,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND ESITO_TENORE.RV_ABBREVIATION in ('0061', '0190', '0191', '0210', '0380')";
 		lStatement += " and s.id_fascicolo_siep = fasc.fas_sie_id_fascicolo_siep";
 		lStatement += " and s.chiave_ufficio = '" + codUfficio + "'";
-		// MEV_39: and condition errata e non funzionante per uffici diversi nello stesso distretto (es: verbania non riceveva più da torino)
-		//lStatement += " and UFF_SIEP.COD_COMUNE = uff.cod_comune";
+		// MEV_39: and condition errata e non funzionante per uffici diversi nello stesso distretto (es:
+		// verbania non riceveva più da torino)
+		// lStatement += " and UFF_SIEP.COD_COMUNE = uff.cod_comune";
 		lStatement += " and UFF_SIEP.COD_UFFICIO = s.chiave_ufficio";
 		lStatement += " AND (DEPO.DATA_DEPOSITO is not null) ";
 		lStatement += " AND (DEPO.DATA_DEPOSITO >= TO_DATE('"
@@ -1140,7 +1141,8 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 				// '2554', '2555', '2610', '2611')"
 				// + " AND MOTIVO_PROVVEDIMENTO.rv_alt2_value in ('1148','1138','1139')" in alternativa
 				"   AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
-				+ "   AND EVE.COD_ESITO IN" + " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
+				+ "   AND EVE.COD_ESITO IN"
+				+ " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')"
 				+ "   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
 				+ "   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
 				+ "   AND UFF.COD_UFFICIO = UFD.COD_UFFICIO"
@@ -1203,9 +1205,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 				// '2554', '2555', '2610', '2611')"
 				// + " AND MOTIVO_PROVVEDIMENTO.rv_alt2_value in ('1148','1138','1139')" in alternativa
 				+ "   AND MOTIVO_PROVVEDIMENTO.rv_high_value in ('C036','U077','U082')"
-				+ "   AND EVE.COD_ESITO IN" +
-				 " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')" +
-				//" ('0035', '0119', '0145', '0360')" + 
+				+ "   AND EVE.COD_ESITO IN"
+				+ " ('0002', '0003', '0004', '0005', '0035', '0119', '0145', '0360')" +
+				// " ('0035', '0119', '0145', '0360')" +
 				"   AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO"
 				+ "   AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE"
 				+ "   AND UFF.COD_UFFICIO = UFD.COD_UFFICIO"

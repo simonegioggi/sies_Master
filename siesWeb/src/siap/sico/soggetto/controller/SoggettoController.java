@@ -1973,14 +1973,16 @@ public class SoggettoController extends SiapController implements ISoggetto {
 				// Caricamento dei fascicoli del SuperSoggetto
 				lFascicoli = new Vector();
 				lSogFasMod = new SoggettoFascicoliModel();
-				lSogFasMod.setSoggetto(aSoggetto); // aggiorno il DAO di risposta poiche' ho corretto l'id del
-													// soggetto
-				lSogMod.setIdSoggetto(new BigDecimal("0")); // imposto a 0 l'id soggetto per poter effettuare
-															// la ricerca supersoggetto
-															// altrimenti accederebbe per ID
+				// aggiorno il DAO di risposta poiche' ho corretto l'id del soggetto
+				lSogFasMod.setSoggetto(aSoggetto);
+				// imposto a 0 l'id soggetto per poter effettuare la ricerca supersoggetto altrimenti
+				// accederebbe per ID
+				lSogMod.setIdSoggetto(new BigDecimal("0"));
 
 				lFasSoggDao.ricercaFascicoloSuperSoggetto(lSogMod, majorOffice);
-				lFasSoggDao.startPage1(aPage);
+				// lFasSoggDao.startPage1(aPage);
+				// MEV_6: nuova gestione della paginazione
+				lFasSoggDao.startNewPagination(aPage);
 				while (lFasSoggDao.next()) {
 					// ciclo su tutti i fascicoli del supersoggetto
 					lFascicolo = (FascicoloSiepModel) lFasSoggDao.getModel();

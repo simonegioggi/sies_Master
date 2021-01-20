@@ -3,16 +3,15 @@ package siap.siep.fascicolo.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
+import f3b.util.DateUtils;
+import f3b.util.StringUtils;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.MinorMask;
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
-import f3b.util.DateUtils;
-import f3b.util.StringUtils;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -26,7 +25,7 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
@@ -48,10 +47,11 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		lStatement += " " + setCondizione(aModel);
 		lStatement += " " + setOrder();
 
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
-				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
-
+		// lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+		// + " ) INNER ) WHERE rn between " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+		// + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		// MEV_6: cambiata la paginazione
+		lPaginedStatement = convertStatementToNewPaginedStatement(aPage, lStatement);
 		setStatement(lPaginedStatement);
 	}
 
@@ -76,10 +76,11 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		}
 		lStatement += " " + setOrder();
 
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
-				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
-
+		// lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+		// + " ) INNER ) WHERE rn between " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+		// + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		// MEV_6: cambiata la paginazione
+		lPaginedStatement = convertStatementToNewPaginedStatement(aPage, lStatement);
 		setStatement(lPaginedStatement);
 	}
 
@@ -102,7 +103,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Esegue la ricerca dei fascicoli in base a "DESCR_TIPO_PROVVEDIMENTO", "DESCR_TIPO_AUTORITA_EMITTENTE" e
 	 * "STATO_PROCEDIMENTO"
-	 * 
+	 *
 	 * @param strCodiceDistrettoUtente
 	 */
 	protected String getFascicoloSqlQueryRicercaProcSog(String strCodiceDistrettoUtente, int aPage,
@@ -172,7 +173,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca dei fascicoli in base al super soggetto
-	 * 
+	 *
 	 * @param strCodiceDistrettoUtente
 	 */
 	protected String setCondizioneSuperSoggetto(SoggettoModel aModel, String strTipoRicerca, String major,
@@ -365,7 +366,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca di un fascicolo
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -379,7 +380,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca di un fascicolo
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 */
@@ -392,7 +393,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca dei fascicoli per soggetto
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @param strTipoRicerca
@@ -407,25 +408,23 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		lStatement += " " + setCondizioneSoggettoUffDistr(aModel, strTipoRicerca);
 		lStatement += " " + setOrder();
 
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
-				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
-
+		// lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+		// + " ) INNER ) WHERE rn between " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+		// + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		// MEV_6: cambiata la paginazione
+		lPaginedStatement = convertStatementToNewPaginedStatement(aPage, lStatement);
 		setStatement(lPaginedStatement);
 	}
 
 	/**
 	 * paolo super soggetto 22 luglio 2009 Esegue la ricerca dei fascicoli per Super soggetto
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @param strTipoRicerca
 	 * @param strCodiceDistrettoUtente
 	 * @throws DAOException
 	 */
-
-	// fine paolo
-
 	public void getCountFascicoliSoggetto(FascicoloSiepModel aModel) throws DAOException {
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM V_FASCICOLO_SIEP WHERE ";
 
@@ -454,12 +453,13 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		if (aPage == 0) {
 			setStatement(lStatement);
 		} else {
-			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
-					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+			// lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+			// + " ) INNER ) WHERE rn between " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+			// + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+			// MEV_6: cambiata la paginazione
+			lPaginedStatement = convertStatementToNewPaginedStatement(aPage, lStatement);
 			setStatement(lPaginedStatement);
 		}
-
 	}
 
 	public void getCountFascicoliSoggettoUfficio(FascicoloSiepModel aModel, String aCodUfficio)
@@ -522,7 +522,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Setta le condizioni per la Ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 */
@@ -584,12 +584,14 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		}
 		// Cerca i fascicoli fino ad una coppia Progressivo/Anno
 		if ((aModel.getChiaveAnnoFinale() != null) && (aModel.getChiaveAnnoFinale().intValue() >= 0)
-				&& (aModel.getChiaveProgrFinale() != null) && (aModel.getChiaveProgrFinale().intValue() >= 0)) {
+				&& (aModel.getChiaveProgrFinale() != null)
+				&& (aModel.getChiaveProgrFinale().intValue() >= 0)) {
 			// Nel caso non venga specificata la coppia di ricerca iniziale,
 			// vengono cercati i fascicoli
 			// a partire dal primo fascicolo dell'anno finale specificato
-			if ((aModel.getChiaveAnnoIniziale() == null) || (aModel.getChiaveAnnoIniziale().intValue() <= 0)
-					&& (aModel.getChiaveProgrIniziale() == null)
+			if ((aModel.getChiaveAnnoIniziale() == null)
+					|| (aModel.getChiaveAnnoIniziale().intValue() <= 0)
+							&& (aModel.getChiaveProgrIniziale() == null)
 					|| (aModel.getChiaveProgrIniziale().intValue() <= 0)) {
 				lCondizioni += " AND ( (CHIAVE_ANNO > " + aModel.getChiaveAnnoFinale() + ")";
 				lCondizioni += " OR (CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale()
@@ -675,7 +677,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Setta le condizioni per la Ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 */
@@ -739,12 +741,14 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		}
 		// Cerca i fascicoli fino ad una coppia Progressivo/Anno
 		if ((aModel.getChiaveAnnoFinale() != null) && (aModel.getChiaveAnnoFinale().intValue() >= 0)
-				&& (aModel.getChiaveProgrFinale() != null) && (aModel.getChiaveProgrFinale().intValue() >= 0)) {
+				&& (aModel.getChiaveProgrFinale() != null)
+				&& (aModel.getChiaveProgrFinale().intValue() >= 0)) {
 			// Nel caso non venga specificata la coppia di ricerca iniziale,
 			// vengono cercati i fascicoli
 			// a partire dal primo fascicolo dell'anno finale specificato
-			if ((aModel.getChiaveAnnoIniziale() == null) || (aModel.getChiaveAnnoIniziale().intValue() <= 0)
-					&& (aModel.getChiaveProgrIniziale() == null)
+			if ((aModel.getChiaveAnnoIniziale() == null)
+					|| (aModel.getChiaveAnnoIniziale().intValue() <= 0)
+							&& (aModel.getChiaveProgrIniziale() == null)
 					|| (aModel.getChiaveProgrIniziale().intValue() <= 0)) {
 				lCondizioni += " AND ( (CHIAVE_ANNO > " + aModel.getChiaveAnnoFinale() + ")";
 				lCondizioni += " OR (CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale()

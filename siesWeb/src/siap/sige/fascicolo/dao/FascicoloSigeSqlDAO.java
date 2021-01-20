@@ -1432,14 +1432,14 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		return lCondizioni;
 	}
 
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
+	// private boolean findColumn(String aValue) {
+	// try {
+	// mRs.findColumn(aValue);
+	// } catch (Exception sqex) {
+	// return false;
+	// }
+	// return true;
+	// }
 
 	private String setGroupByPerEstesa() {
 		String lGroup = new String();

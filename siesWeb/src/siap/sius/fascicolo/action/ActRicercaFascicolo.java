@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Vector;
 
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.ufficio.controller.IUfficio;
@@ -14,7 +15,6 @@ import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.sentenza.action.ICostantiSentenza;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActRicercaFascicolo extends ActionSiapMinor implements ICostantiFascicoloSiep {
@@ -61,9 +61,9 @@ public class ActRicercaFascicolo extends ActionSiapMinor implements ICostantiFas
 				&& (!getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).equals(""))) {
 			// Si Utilizza il campo setCodUfficioInserimento come veicolo per trasmettere il codice ufficio
 			// recuperato dal tipo ufficio e dalla descr ufficio
-			lFasMod.setCodUfficioInserimento(getCodUfficioByCodTipoUfficioDescrComune(
-					getRequestStringParameter(CAMPO_CHIAVE_UFFICIO),
-					getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)));
+			lFasMod.setCodUfficioInserimento(
+					getCodUfficioByCodTipoUfficioDescrComune(getRequestStringParameter(CAMPO_CHIAVE_UFFICIO),
+							getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)));
 		}
 
 		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ACCORPATO)) {
@@ -77,10 +77,10 @@ public class ActRicercaFascicolo extends ActionSiapMinor implements ICostantiFas
 
 		if (!getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).equals("")) {
 			IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
-			if (lUffCtrl.verifyUfficioByDescrComune((getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)
-					.toUpperCase())))
-				lFasMod.setDescrComuneUfficio((getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO)
-						.toUpperCase()));
+			if (lUffCtrl.verifyUfficioByDescrComune(
+					(getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).toUpperCase())))
+				lFasMod.setDescrComuneUfficio(
+						(getRequestStringParameter(CAMPO_DESCR_COMUNE_UFFICIO).toUpperCase()));
 		}
 
 		// STUB 10/06/2004 Nuovi parametri per il range di ANNO/PROGRESSIVO.
@@ -112,8 +112,8 @@ public class ActRicercaFascicolo extends ActionSiapMinor implements ICostantiFas
 
 		if (lVect.size() == 1) {
 			lReturnPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-					+ "=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&" + CAMPO_ID_FASCICOLO_SIEP
-					+ "=" + ((FascicoloSiepModel) lVect.get(0)).getIdFascicoloSiep().toString();
+					+ "=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&" + CAMPO_ID_FASCICOLO_SIEP + "="
+					+ ((FascicoloSiepModel) lVect.get(0)).getIdFascicoloSiep().toString();
 		} else {
 			// Collection di decodifica del COD_STATO
 			Collection lCol = DecodificheManager.getInstance().getStatoProcedimento();
@@ -123,7 +123,9 @@ public class ActRicercaFascicolo extends ActionSiapMinor implements ICostantiFas
 			BigDecimal CountRisultati;
 			if (isRequestParameterNullObj("CountRisultati")) {
 				// MEV_57: aggiunto parametro di passaggio
-				CountRisultati = lCtrl.ExGetNumFascicoloSiepByProgrAnnoDescrComune(lFasMod, checkMinori());
+				// CountRisultati = lCtrl.ExGetNumFascicoloSiepByProgrAnnoDescrComune(lFasMod, checkMinori());
+				// MEV_6: la count viene eseguita nella query di paginazione
+				CountRisultati = ((FascicoloSiepModel) lVect.get(0)).getCountRisultati();
 			} else
 				CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 

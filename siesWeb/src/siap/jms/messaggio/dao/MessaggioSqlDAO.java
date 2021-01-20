@@ -11,11 +11,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import siap.dao.SIAPSqlDAO;
-import siap.jms.ICostantiJMS;
-import siap.jms.messaggio.model.MessaggioModel;
-import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
-import siap.siepe.ricezioneatti.model.CruscottoModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
@@ -23,6 +18,11 @@ import f3b.util.DateUtils;
 import f3b.util.StringUtils;
 import f3b.util.xml.TreeModel;
 import f3b.web.IWebConstants;
+import siap.dao.SIAPSqlDAO;
+import siap.jms.ICostantiJMS;
+import siap.jms.messaggio.model.MessaggioModel;
+import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
+import siap.siepe.ricezioneatti.model.CruscottoModel;
 
 /**
  * <p>
@@ -37,16 +37,15 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 
 public class MessaggioSqlDAO extends SIAPSqlDAO {
 
-
 	// 28/05/2019 [EC] - Modifico la destinazione su log PER MEV PROBLEMA CODE INTRODOTTO IN SIES 11.3
 	private static Logger siesLogger = Logger.getLogger(LogF3B.JMS_LOG);
-		
+
 	public MessaggioSqlDAO(Connection con) {
 		super(con);
 	}
@@ -252,7 +251,8 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		setStatement(lSql);
 	}
 
-	public void ricercaMessaggioRichiestaSpediti(String aUfficio, String aTipoOperazione) throws DAOException {
+	public void ricercaMessaggioRichiestaSpediti(String aUfficio, String aTipoOperazione)
+			throws DAOException {
 		String lSql = getSqlQuery();
 
 		lSql += " AND COD_TIPO_MESSAGGIO = '01' AND COD_UFFICIO_MITTENTE = '" + aUfficio + "'";
@@ -288,74 +288,73 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		setStatement(lSql);
 	}
 
-  public void RicercaMessaggiRicevutiPaged(MessaggioModel aMessaggio, Vector <String> aListaTipoOperazione, Date dataRicercaInizio, Date dataRicercaFine, int aPage) throws DAOException
-  {
-	  //String lSql = getSqlQuery();
-	  String lSql = new String("");
-	  String lPaginedStatement=new String("");
-	  
-	  lSql = getPagedSqlQuery(aPage);
-	  lSql += " " + setCondizioneMessaggiRicevuti(aMessaggio, aListaTipoOperazione);
-	  lSql += " " + setCondizioneDataInvio(dataRicercaInizio, dataRicercaFine);
-	  lSql += setOrder();
-	  
-	  // Se apage = 0 , la Query serve per il totale
-	   if(aPage==0)
-	   {
-		   setStatement(lSql);
-	   }
-	   else
-	   {
-		   lPaginedStatement="SELECT * FROM (SELECT INNER.* , Rownum rn FROM ("+lSql+"  ) INNER ) WHERE rn between  "+((aPage-1)*IWebConstants.RESULT_PER_PAGE+1)+ " AND "+ (aPage)*IWebConstants.RESULT_PER_PAGE;
-		   setStatement(lPaginedStatement);
-	   }
+	public void RicercaMessaggiRicevutiPaged(MessaggioModel aMessaggio, Vector<String> aListaTipoOperazione,
+			Date dataRicercaInizio, Date dataRicercaFine, int aPage) throws DAOException {
+		// String lSql = getSqlQuery();
+		String lSql = new String("");
+		String lPaginedStatement = new String("");
 
-  }
-  
-  public String setCondizioneMessaggiRicevuti(MessaggioModel aModel, Vector <String> aListaTipoOperazione)
-  {
-	  String lCondizioni = new String();
-    
-	  if (aModel.getCodTipoMessaggio() != null && aModel.getCodTipoMessaggio().trim().length() > 0)
-		  lCondizioni += " AND COD_TIPO_MESSAGGIO = '" + aModel.getCodTipoMessaggio() + "' ";
-	  
-	  if (aModel.getFlagVisto() != null && aModel.getFlagVisto().trim().length() > 0)
-	       lCondizioni += " AND FLAG_VISTO = '" + aModel.getFlagVisto() + "' ";
-	  
-      if (aModel.getCodUfficioDestinatario() != null && aModel.getCodUfficioDestinatario().trim().length() > 0)
-        lCondizioni += " AND COD_UFFICIO_DESTINATARIO = '" + aModel.getCodUfficioDestinatario() + "' ";
-      
-      if (aModel.getCodUfficioMittente() != null && aModel.getCodUfficioMittente().trim().length() > 0)
-        lCondizioni += " AND COD_UFFICIO_MITTENTE = '" + aModel.getCodUfficioMittente() + "' ";
-      
-      if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante()!= null)
-      {
-        lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
-        lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
-      }
-      
-      if (aModel.getChiaveUfficioFasCumulante() != null && !"".equals(aModel.getChiaveUfficioFasCumulante()))
-    	  lCondizioni += " AND CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aModel.getChiaveUfficioFasCumulante()+"'";
-      
-      if (aListaTipoOperazione!=null && aListaTipoOperazione.size()>0)
-      {
-    	  lCondizioni += " AND COD_TIPO_OPERAZIONE in (";
-          for (int i=0;i<aListaTipoOperazione.size();i++) 
-          {
-        	  lCondizioni += " '"+aListaTipoOperazione.elementAt(i)+"'";
-        	  if (i<aListaTipoOperazione.size()-1)
-        		  lCondizioni += ",";
-          }
-          
-          lCondizioni += " ) ";      
-      }      
+		lSql = getPagedSqlQuery(aPage);
+		lSql += " " + setCondizioneMessaggiRicevuti(aMessaggio, aListaTipoOperazione);
+		lSql += " " + setCondizioneDataInvio(dataRicercaInizio, dataRicercaFine);
+		lSql += setOrder();
 
-      return lCondizioni;
-  }
+		// Se apage = 0 , la Query serve per il totale
+		if (aPage == 0) {
+			setStatement(lSql);
+		} else {
+			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
+					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+			setStatement(lPaginedStatement);
+		}
+
+	}
+
+	public String setCondizioneMessaggiRicevuti(MessaggioModel aModel, Vector<String> aListaTipoOperazione) {
+		String lCondizioni = new String();
+
+		if (aModel.getCodTipoMessaggio() != null && aModel.getCodTipoMessaggio().trim().length() > 0)
+			lCondizioni += " AND COD_TIPO_MESSAGGIO = '" + aModel.getCodTipoMessaggio() + "' ";
+
+		if (aModel.getFlagVisto() != null && aModel.getFlagVisto().trim().length() > 0)
+			lCondizioni += " AND FLAG_VISTO = '" + aModel.getFlagVisto() + "' ";
+
+		if (aModel.getCodUfficioDestinatario() != null
+				&& aModel.getCodUfficioDestinatario().trim().length() > 0)
+			lCondizioni += " AND COD_UFFICIO_DESTINATARIO = '" + aModel.getCodUfficioDestinatario() + "' ";
+
+		if (aModel.getCodUfficioMittente() != null && aModel.getCodUfficioMittente().trim().length() > 0)
+			lCondizioni += " AND COD_UFFICIO_MITTENTE = '" + aModel.getCodUfficioMittente() + "' ";
+
+		if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante() != null) {
+			lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
+			lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
+		}
+
+		if (aModel.getChiaveUfficioFasCumulante() != null
+				&& !"".equals(aModel.getChiaveUfficioFasCumulante()))
+			lCondizioni += " AND CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aModel.getChiaveUfficioFasCumulante()
+					+ "'";
+
+		if (aListaTipoOperazione != null && aListaTipoOperazione.size() > 0) {
+			lCondizioni += " AND COD_TIPO_OPERAZIONE in (";
+			for (int i = 0; i < aListaTipoOperazione.size(); i++) {
+				lCondizioni += " '" + aListaTipoOperazione.elementAt(i) + "'";
+				if (i < aListaTipoOperazione.size() - 1)
+					lCondizioni += ",";
+			}
+
+			lCondizioni += " ) ";
+		}
+
+		return lCondizioni;
+	}
+
 	/**
 	 * Ricerca i Messaggi di tipo '01 - Richiesta'. La ricerca viene effettuata utilizzando i criteri passati
 	 * in input.
-	 * 
+	 *
 	 * @param aCodTipoOper
 	 *            - TIPO_OPERAZIONE
 	 * @param aUfficio
@@ -373,8 +372,8 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	 *            - DATA_INVIO
 	 * @throws DAOException
 	 */
-	public void ricercaMessaggioConFiltri(String aCodTipoOper, String aUfficio, String aUtente,
-			String aEsito, String aCodUffDest, String aAnnoSiep, String aProgrSiep, Date dataRicercaInizio,
+	public void ricercaMessaggioConFiltri(String aCodTipoOper, String aUfficio, String aUtente, String aEsito,
+			String aCodUffDest, String aAnnoSiep, String aProgrSiep, Date dataRicercaInizio,
 			Date dataRicercaFine) throws DAOException {
 		String lSql = getSqlQuery();
 
@@ -406,7 +405,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Recupera il numero di record restituiti dalla ricerca. Necessario per la gestione della ricerca
 	 * paginata
-	 * 
+	 *
 	 * @param aDeliveryMode
 	 * @param aCodTipoMessaggio
 	 * @param aCodTipoOper
@@ -420,19 +419,14 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	 * @param aCodUffDest
 	 * @param aDataRicercaInizio
 	 * @param aDataRicercaFine
-	 * 
+	 *
 	 * @throws DAOException
 	 */
-	public void getCountRicercaMessaggioRicercaConFiltri(
-			String aDeliveryMode,
-			String aCodTipoMessaggio,
-			Vector<String> aListaTipoOperazione
-			, Vector<String> aListaEsiti, String sFlagVisto, BigDecimal aChiaveAnnoSiep,
-			BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep, String aCodUfficioMitt,
-			String aCodUtenteMitt, String aCodUffDest, Date aDataRicercaInizio, Date aDataRicercaFine
-      , String aCognome, String aNome      
-      )
-			throws DAOException {
+	public void getCountRicercaMessaggioRicercaConFiltri(String aDeliveryMode, String aCodTipoMessaggio,
+			Vector<String> aListaTipoOperazione, Vector<String> aListaEsiti, String sFlagVisto,
+			BigDecimal aChiaveAnnoSiep, BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep,
+			String aCodUfficioMitt, String aCodUtenteMitt, String aCodUffDest, Date aDataRicercaInizio,
+			Date aDataRicercaFine, String aCognome, String aNome) throws DAOException {
 
 		String lSql = "SELECT COUNT(*) HowManyRecords FROM MESSAGGIO WHERE 1=1 ";
 
@@ -483,87 +477,91 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		if (aDataRicercaFine != null)
 			lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '"
 					+ DateUtils.getDateToString(aDataRicercaFine, "yyyyMMdd") + "'";
-          
-    if (aCognome != null)   lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
-    if (aNome != null)      lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
+
+		if (aCognome != null)
+			lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
+		if (aNome != null)
+			lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
 
 		setStatement(lSql);
 	}
 
+	public void getCountRicercaMessaggioRicercaConFiltri(String aDeliveryMode,
+			Vector<String> aListaTipoMessaggio, Vector<String> aListaTipoOperazione,
+			Vector<String> aListaEsiti, String sFlagVisto, BigDecimal aChiaveAnnoSiep,
+			BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep, String aCodUfficioMitt,
+			String aCodUtenteMitt, String aCodUffDest, Date aDataRicercaInizio, Date aDataRicercaFine,
+			String aCognome, String aNome) throws DAOException {
 
- public void getCountRicercaMessaggioRicercaConFiltri( String aDeliveryMode
-          , Vector <String> aListaTipoMessaggio
-          , Vector <String> aListaTipoOperazione
-          , Vector <String> aListaEsiti
-          , String sFlagVisto
-          , BigDecimal aChiaveAnnoSiep
-          , BigDecimal aChiaveProgrSiep
-          , String aChiaveUfficioSiep
-          , String aCodUfficioMitt
-          , String aCodUtenteMitt
-          , String aCodUffDest
-          , Date aDataRicercaInizio
-          , Date aDataRicercaFine
-          , String aCognome
-          , String aNome ) throws DAOException
-  {
+		String lSql = "SELECT COUNT(*) HowManyRecords FROM MESSAGGIO WHERE 1=1 ";
 
-	    String lSql ="SELECT COUNT(*) HowManyRecords FROM MESSAGGIO WHERE 1=1 ";
-	    
-	    if (aDeliveryMode!=null)         lSql += " AND DELIVERY_MODE = '"+aDeliveryMode+"' ";    
+		if (aDeliveryMode != null)
+			lSql += " AND DELIVERY_MODE = '" + aDeliveryMode + "' ";
 
-	    if (aListaTipoMessaggio!=null && aListaTipoMessaggio.size()>0){
-	      lSql += " AND COD_TIPO_MESSAGGIO in (";
-	      for (int i=0;i<aListaTipoMessaggio.size();i++) {
-	        lSql += " '"+aListaTipoMessaggio.elementAt(i)+"'";
-	        if (i<aListaTipoMessaggio.size()-1)
-	          lSql += ",";
-	      }      
-	      lSql += " ) ";      
-	    }
+		if (aListaTipoMessaggio != null && aListaTipoMessaggio.size() > 0) {
+			lSql += " AND COD_TIPO_MESSAGGIO in (";
+			for (int i = 0; i < aListaTipoMessaggio.size(); i++) {
+				lSql += " '" + aListaTipoMessaggio.elementAt(i) + "'";
+				if (i < aListaTipoMessaggio.size() - 1)
+					lSql += ",";
+			}
+			lSql += " ) ";
+		}
 
-	    if (aListaTipoOperazione!=null && aListaTipoOperazione.size()>0){
-	      lSql += " AND COD_TIPO_OPERAZIONE in (";
-	      for (int i=0;i<aListaTipoOperazione.size();i++) {
-	        lSql += " '"+aListaTipoOperazione.elementAt(i)+"'";
-	        if (i<aListaTipoOperazione.size()-1)
-	          lSql += ",";
-	      }      
-	      lSql += " ) ";      
-	    }
-	    
-	    if (aListaEsiti!=null && aListaEsiti.size()>0){
-	      lSql += " AND COD_ESITO in (";
-	      for (int i=0;i<aListaEsiti.size();i++) {
-	        lSql += " '"+aListaEsiti.elementAt(i)+"'";
-	        if (i<aListaEsiti.size()-1)
-	          lSql += ",";
-	      }      
-	      lSql += " ) ";      
-	    }
-	    
-	    if (sFlagVisto != null)          lSql += " AND FLAG_VISTO = '" + sFlagVisto + "'";
-	    if (aChiaveAnnoSiep != null)     lSql += " AND MESSAGGIO.CHIAVE_ANNO_SIEP = '" + aChiaveAnnoSiep + "'";
-	    if (aChiaveProgrSiep != null)    lSql += " AND MESSAGGIO.CHIAVE_PROGR_SIEP = '" + aChiaveProgrSiep + "'";  
-	    if (aChiaveUfficioSiep != null)  lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_SIEP = '" + aChiaveUfficioSiep + "'";  
-	    
-	    if (aCodUfficioMitt != null)     lSql += " AND COD_UFFICIO_MITTENTE = '" + aCodUfficioMitt + "'";    
-	    if (aCodUffDest != null && aCodUffDest != "-")
-	                                     lSql += " AND COD_UFFICIO_DESTINATARIO = '" + aCodUffDest + "'";
-	    if (aCodUtenteMitt != null)      lSql += " AND CODICE_UTENTE_MITTENTE = '" + aCodUtenteMitt + "'";
-	    if (aDataRicercaInizio != null ) lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '" + DateUtils.getDateToString(aDataRicercaInizio, "yyyyMMdd" )+"'" ;
-	    if (aDataRicercaFine != null )   lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '" + DateUtils.getDateToString(aDataRicercaFine, "yyyyMMdd" )+"'" ;
+		if (aListaTipoOperazione != null && aListaTipoOperazione.size() > 0) {
+			lSql += " AND COD_TIPO_OPERAZIONE in (";
+			for (int i = 0; i < aListaTipoOperazione.size(); i++) {
+				lSql += " '" + aListaTipoOperazione.elementAt(i) + "'";
+				if (i < aListaTipoOperazione.size() - 1)
+					lSql += ",";
+			}
+			lSql += " ) ";
+		}
 
-	    if (aCognome != null)   lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
-	    if (aNome != null)      lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
+		if (aListaEsiti != null && aListaEsiti.size() > 0) {
+			lSql += " AND COD_ESITO in (";
+			for (int i = 0; i < aListaEsiti.size(); i++) {
+				lSql += " '" + aListaEsiti.elementAt(i) + "'";
+				if (i < aListaEsiti.size() - 1)
+					lSql += ",";
+			}
+			lSql += " ) ";
+		}
 
-	    setStatement(lSql);
-  }
+		if (sFlagVisto != null)
+			lSql += " AND FLAG_VISTO = '" + sFlagVisto + "'";
+		if (aChiaveAnnoSiep != null)
+			lSql += " AND MESSAGGIO.CHIAVE_ANNO_SIEP = '" + aChiaveAnnoSiep + "'";
+		if (aChiaveProgrSiep != null)
+			lSql += " AND MESSAGGIO.CHIAVE_PROGR_SIEP = '" + aChiaveProgrSiep + "'";
+		if (aChiaveUfficioSiep != null)
+			lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_SIEP = '" + aChiaveUfficioSiep + "'";
+
+		if (aCodUfficioMitt != null)
+			lSql += " AND COD_UFFICIO_MITTENTE = '" + aCodUfficioMitt + "'";
+		if (aCodUffDest != null && aCodUffDest != "-")
+			lSql += " AND COD_UFFICIO_DESTINATARIO = '" + aCodUffDest + "'";
+		if (aCodUtenteMitt != null)
+			lSql += " AND CODICE_UTENTE_MITTENTE = '" + aCodUtenteMitt + "'";
+		if (aDataRicercaInizio != null)
+			lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '"
+					+ DateUtils.getDateToString(aDataRicercaInizio, "yyyyMMdd") + "'";
+		if (aDataRicercaFine != null)
+			lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '"
+					+ DateUtils.getDateToString(aDataRicercaFine, "yyyyMMdd") + "'";
+
+		if (aCognome != null)
+			lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
+		if (aNome != null)
+			lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
+
+		setStatement(lSql);
+	}
 
 	/**
-	 * 
+	 *
 	 * Effettua la ricerca dei Messaggio di tipo Ricerca 01 applicando i filtri impostati in maschera.
-	 * 
+	 *
 	 * @param aDeliveryMode
 	 * @param aCodTipoMessaggio
 	 * @param aCodTipoOper
@@ -578,35 +576,21 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	 * @param aDataRicercaFine
 	 * @param aPage
 	 *            - se > 0 vengono recuperati solo i dati per la pagina indicata
-	 * 
+	 *
 	 * @throws DAOException
-	 * 
+	 *
 	 * @since NOV/2013
 	 */
-	public void ricercaMessaggioRicercaConFiltri (	String aDeliveryMode,
-													String aCodTipoMessaggio,
-													// , String aCodTipoOper
-													Vector<String> aListaTipoOperazione,
-													// , String aCodEsito
-													Vector<String> aListaEsiti, 
-													String sFlagVisto, 
-													BigDecimal aChiaveAnnoSiep,
-													BigDecimal aChiaveProgrSiep, 
-													String aChiaveUfficioSiep, 
-													String aCodUfficioMitt,
-													String aCodUtenteMitt, 
-													String aCodUffDest, 
-													Date aDataRicercaInizio, 
-													Date aDataRicercaFine,
-													String aCognome, 
-													String aNome,
-													BigDecimal aIdMessSollecitato, 
-													BigDecimal aChiaveAnnoFasCumulante,
-													BigDecimal aChiaveProgrFasCumulante,
-													String aChiaveUfficioFasCumulante,   
-      int aPage) 
-      throws DAOException 
-  {
+	public void ricercaMessaggioRicercaConFiltri(String aDeliveryMode, String aCodTipoMessaggio,
+			// , String aCodTipoOper
+			Vector<String> aListaTipoOperazione,
+			// , String aCodEsito
+			Vector<String> aListaEsiti, String sFlagVisto, BigDecimal aChiaveAnnoSiep,
+			BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep, String aCodUfficioMitt,
+			String aCodUtenteMitt, String aCodUffDest, Date aDataRicercaInizio, Date aDataRicercaFine,
+			String aCognome, String aNome, BigDecimal aIdMessSollecitato, BigDecimal aChiaveAnnoFasCumulante,
+			BigDecimal aChiaveProgrFasCumulante, String aChiaveUfficioFasCumulante, int aPage)
+			throws DAOException {
 		String lSql = getSqlQueryMS();
 
 		if (aDeliveryMode != null)
@@ -660,22 +644,21 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 			lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '"
 					+ DateUtils.getDateToString(aDataRicercaFine, "yyyyMMdd") + "'";
 
-    if (aCognome != null)
-      lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
-    if (aNome != null)
-      lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
+		if (aCognome != null)
+			lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
+		if (aNome != null)
+			lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
 
-          
 		if (aIdMessSollecitato != null)
 			lSql += " AND ID_MESSAGGIO_SOLLECITATO = '" + aIdMessSollecitato.toString() + "'";
 
-    if (aChiaveAnnoFasCumulante != null)
-    	lSql += " AND MESSAGGIO.CHIAVE_ANNO_FAS_CUMULANTE = '" + aChiaveAnnoFasCumulante + "'";
-    if (aChiaveProgrFasCumulante != null)
-    	lSql += " AND MESSAGGIO.CHIAVE_PROGR_FAS_CUMULANTE = '" + aChiaveProgrFasCumulante + "'";    
-    if (aChiaveUfficioFasCumulante != null)
-        lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aChiaveUfficioFasCumulante + "'";   
-    
+		if (aChiaveAnnoFasCumulante != null)
+			lSql += " AND MESSAGGIO.CHIAVE_ANNO_FAS_CUMULANTE = '" + aChiaveAnnoFasCumulante + "'";
+		if (aChiaveProgrFasCumulante != null)
+			lSql += " AND MESSAGGIO.CHIAVE_PROGR_FAS_CUMULANTE = '" + aChiaveProgrFasCumulante + "'";
+		if (aChiaveUfficioFasCumulante != null)
+			lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aChiaveUfficioFasCumulante + "'";
+
 		// lSql += " order by ID_MESSAGGIO, DATA_INVIO DESC " ; // dal piu' recente
 		lSql += " order by DATA_INVIO DESC "; // dal piu' recente
 		// lSql += setOrder();
@@ -687,138 +670,127 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 					+ " ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
 					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 		}
-    setStatement(lSql);
-  }		
-
-  /**
-   * 
-   * Effettua la ricerca dei Messaggi in base ai parametri Liste di Tipo Messaggio, Tipo Operazione ed Esiti, applicando i filtri 
-   * impostati in maschera. 
-   * 
-   * @param aDeliveryMode
-   * @param aListaTipoMessaggio
-   * @param aListaTipoOperazione
-   * @param aListaEsiti
-   * @param sFlagVisto
-   * @param aChiaveAnno
-   * @param aChiaveProgr
-   * @param aCodUfficioMitt
-   * @param aCodUtenteMitt
-   * @param aCodUffDest
-   * @param aDataRicercaInizio
-   * @param aDataRicercaFine
-   * @param aPage - se > 0 vengono recuperati solo i dati per la pagina indicata
-   * 
-   * @throws DAOException
-   * 
-   * @since JUL/2017
-   */
-  public void ricercaMessaggioRicercaConFiltri(String aDeliveryMode
-                                             , Vector <String> aListaTipoMessaggio
-                                             , Vector <String> aListaTipoOperazione
-                                             , Vector <String> aListaEsiti
-                                             , String sFlagVisto
-                                             , BigDecimal aChiaveAnnoSiep
-                                             , BigDecimal aChiaveProgrSiep
-                                             , String aChiaveUfficioSiep
-                                             , String aCodUfficioMitt
-                                             , String aCodUtenteMitt
-                                             , String aCodUffDest
-                                             , Date aDataRicercaInizio
-                                             , Date aDataRicercaFine
-                                             , String aCognome
-                                             , String aNome
-                                             , BigDecimal aIdMessSollecitato
-                                             , BigDecimal aChiaveAnnoFasCumulante
-                                             , BigDecimal aChiaveProgrFasCumulante
-                                             , String aChiaveUfficioFasCumulante
-                                             , int  aPage) throws DAOException
-  {
-    String lSql = getSqlQueryMS();
-    
-    if (aDeliveryMode!=null)
-      lSql += " AND DELIVERY_MODE = '"+aDeliveryMode+"' ";   
-
-    if (aListaTipoMessaggio!=null && aListaTipoMessaggio.size()>0){
-        lSql += " AND COD_TIPO_MESSAGGIO in (";
-        for (int i=0;i<aListaTipoMessaggio.size();i++) {
-          lSql += " '"+aListaTipoMessaggio.elementAt(i)+"'";
-          if (i<aListaTipoMessaggio.size()-1)
-            lSql += ",";
-        }      
-        lSql += " ) ";      
-      }   
-
-    if (aListaTipoOperazione!=null && aListaTipoOperazione.size()>0){
-      lSql += " AND COD_TIPO_OPERAZIONE in (";
-      for (int i=0;i<aListaTipoOperazione.size();i++) {
-        lSql += " '"+aListaTipoOperazione.elementAt(i)+"'";
-        if (i<aListaTipoOperazione.size()-1)
-          lSql += ",";
-      }      
-      lSql += " ) ";      
-    }   
-    
-    if (aListaEsiti!=null && aListaEsiti.size()>0){
-      lSql += " AND COD_ESITO in (";
-      for (int i=0;i<aListaEsiti.size();i++) {
-        lSql += " '"+aListaEsiti.elementAt(i)+"'";
-        if (i<aListaEsiti.size()-1)
-          lSql += ",";
-      }      
-      lSql += " ) ";      
-    }
-      
-    if (sFlagVisto != null)
-      lSql += " AND FLAG_VISTO = '" + sFlagVisto + "'";
-    if (aChiaveAnnoSiep != null)
-      lSql += " AND MESSAGGIO.CHIAVE_ANNO_SIEP = '" + aChiaveAnnoSiep + "'";
-    if (aChiaveProgrSiep != null)
-      lSql += " AND MESSAGGIO.CHIAVE_PROGR_SIEP = '" + aChiaveProgrSiep + "'";    
-    if (aCodUfficioMitt != null)
-      lSql += " AND COD_UFFICIO_MITTENTE = '" + aCodUfficioMitt + "'";   
-    if (aChiaveUfficioSiep != null)
-      lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_SIEP = '" + aChiaveUfficioSiep + "'"; 
-    if (aCodUffDest != null && aCodUffDest != "-")
-      lSql += " AND COD_UFFICIO_DESTINATARIO = '" + aCodUffDest + "'";
-    if (aCodUtenteMitt != null)
-      lSql += " AND CODICE_UTENTE_MITTENTE = '" + aCodUtenteMitt + "'";
-    if (aDataRicercaInizio != null )
-      lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '" + DateUtils.getDateToString(aDataRicercaInizio, "yyyyMMdd" )+"'" ;
-    if (aDataRicercaFine != null )
-      lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '" + DateUtils.getDateToString(aDataRicercaFine, "yyyyMMdd" )+"'" ;
-
-    if (aCognome != null)
-      lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
-    if (aNome != null)
-      lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
-    
-    
-    if (aIdMessSollecitato != null )
-      lSql += " AND ID_MESSAGGIO_SOLLECITATO = '" + aIdMessSollecitato.toString() +"'" ;
-    
-    
-    if (aChiaveAnnoFasCumulante != null)
-    	lSql += " AND MESSAGGIO.CHIAVE_ANNO_FAS_CUMULANTE = '" + aChiaveAnnoFasCumulante + "'";
-    if (aChiaveProgrFasCumulante != null)
-    	lSql += " AND MESSAGGIO.CHIAVE_PROGR_FAS_CUMULANTE = '" + aChiaveProgrFasCumulante + "'";    
-    if (aChiaveUfficioFasCumulante != null)
-        lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aChiaveUfficioFasCumulante + "'";   
-    
-    //lSql += " order by ID_MESSAGGIO, DATA_INVIO DESC " ; // dal più recente
-    lSql += " order by DATA_INVIO DESC " ; // dal più recente
-    //lSql += setOrder();
-    
-    // Se la ricerca è paginata estraggo solo i risultati da visualizzare sulla pagina indicata
-    if (aPage>0){
-      lSql = " SELECT * FROM (SELECT INNER.* , Rownum rn FROM ( "+lSql+" ) INNER ) WHERE rn between  "+((aPage-1)*IWebConstants.RESULT_PER_PAGE+1)+ " AND "+ (aPage)*IWebConstants.RESULT_PER_PAGE;
-    }
-    
-    setStatement(lSql);
-  }
+		setStatement(lSql);
+	}
 
 	/**
 	 * 
+	 * Effettua la ricerca dei Messaggi in base ai parametri Liste di Tipo Messaggio, Tipo Operazione ed
+	 * Esiti, applicando i filtri impostati in maschera.
+	 * 
+	 * @param aDeliveryMode
+	 * @param aListaTipoMessaggio
+	 * @param aListaTipoOperazione
+	 * @param aListaEsiti
+	 * @param sFlagVisto
+	 * @param aChiaveAnno
+	 * @param aChiaveProgr
+	 * @param aCodUfficioMitt
+	 * @param aCodUtenteMitt
+	 * @param aCodUffDest
+	 * @param aDataRicercaInizio
+	 * @param aDataRicercaFine
+	 * @param aPage
+	 *            - se > 0 vengono recuperati solo i dati per la pagina indicata
+	 * 
+	 * @throws DAOException
+	 * 
+	 * @since JUL/2017
+	 */
+	public void ricercaMessaggioRicercaConFiltri(String aDeliveryMode, Vector<String> aListaTipoMessaggio,
+			Vector<String> aListaTipoOperazione, Vector<String> aListaEsiti, String sFlagVisto,
+			BigDecimal aChiaveAnnoSiep, BigDecimal aChiaveProgrSiep, String aChiaveUfficioSiep,
+			String aCodUfficioMitt, String aCodUtenteMitt, String aCodUffDest, Date aDataRicercaInizio,
+			Date aDataRicercaFine, String aCognome, String aNome, BigDecimal aIdMessSollecitato,
+			BigDecimal aChiaveAnnoFasCumulante, BigDecimal aChiaveProgrFasCumulante,
+			String aChiaveUfficioFasCumulante, int aPage) throws DAOException {
+		String lSql = getSqlQueryMS();
+
+		if (aDeliveryMode != null)
+			lSql += " AND DELIVERY_MODE = '" + aDeliveryMode + "' ";
+
+		if (aListaTipoMessaggio != null && aListaTipoMessaggio.size() > 0) {
+			lSql += " AND COD_TIPO_MESSAGGIO in (";
+			for (int i = 0; i < aListaTipoMessaggio.size(); i++) {
+				lSql += " '" + aListaTipoMessaggio.elementAt(i) + "'";
+				if (i < aListaTipoMessaggio.size() - 1)
+					lSql += ",";
+			}
+			lSql += " ) ";
+		}
+
+		if (aListaTipoOperazione != null && aListaTipoOperazione.size() > 0) {
+			lSql += " AND COD_TIPO_OPERAZIONE in (";
+			for (int i = 0; i < aListaTipoOperazione.size(); i++) {
+				lSql += " '" + aListaTipoOperazione.elementAt(i) + "'";
+				if (i < aListaTipoOperazione.size() - 1)
+					lSql += ",";
+			}
+			lSql += " ) ";
+		}
+
+		if (aListaEsiti != null && aListaEsiti.size() > 0) {
+			lSql += " AND COD_ESITO in (";
+			for (int i = 0; i < aListaEsiti.size(); i++) {
+				lSql += " '" + aListaEsiti.elementAt(i) + "'";
+				if (i < aListaEsiti.size() - 1)
+					lSql += ",";
+			}
+			lSql += " ) ";
+		}
+
+		if (sFlagVisto != null)
+			lSql += " AND FLAG_VISTO = '" + sFlagVisto + "'";
+		if (aChiaveAnnoSiep != null)
+			lSql += " AND MESSAGGIO.CHIAVE_ANNO_SIEP = '" + aChiaveAnnoSiep + "'";
+		if (aChiaveProgrSiep != null)
+			lSql += " AND MESSAGGIO.CHIAVE_PROGR_SIEP = '" + aChiaveProgrSiep + "'";
+		if (aCodUfficioMitt != null)
+			lSql += " AND COD_UFFICIO_MITTENTE = '" + aCodUfficioMitt + "'";
+		if (aChiaveUfficioSiep != null)
+			lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_SIEP = '" + aChiaveUfficioSiep + "'";
+		if (aCodUffDest != null && aCodUffDest != "-")
+			lSql += " AND COD_UFFICIO_DESTINATARIO = '" + aCodUffDest + "'";
+		if (aCodUtenteMitt != null)
+			lSql += " AND CODICE_UTENTE_MITTENTE = '" + aCodUtenteMitt + "'";
+		if (aDataRicercaInizio != null)
+			lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '"
+					+ DateUtils.getDateToString(aDataRicercaInizio, "yyyyMMdd") + "'";
+		if (aDataRicercaFine != null)
+			lSql += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '"
+					+ DateUtils.getDateToString(aDataRicercaFine, "yyyyMMdd") + "'";
+
+		if (aCognome != null)
+			lSql += " AND UPPER(COGNOME_SOGGETTO) = '" + aCognome.toUpperCase() + "'";
+		if (aNome != null)
+			lSql += " AND UPPER(NOME_SOGGETTO) = '" + aNome.toUpperCase() + "'";
+
+		if (aIdMessSollecitato != null)
+			lSql += " AND ID_MESSAGGIO_SOLLECITATO = '" + aIdMessSollecitato.toString() + "'";
+
+		if (aChiaveAnnoFasCumulante != null)
+			lSql += " AND MESSAGGIO.CHIAVE_ANNO_FAS_CUMULANTE = '" + aChiaveAnnoFasCumulante + "'";
+		if (aChiaveProgrFasCumulante != null)
+			lSql += " AND MESSAGGIO.CHIAVE_PROGR_FAS_CUMULANTE = '" + aChiaveProgrFasCumulante + "'";
+		if (aChiaveUfficioFasCumulante != null)
+			lSql += " AND MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aChiaveUfficioFasCumulante + "'";
+
+		// lSql += " order by ID_MESSAGGIO, DATA_INVIO DESC " ; // dal più recente
+		lSql += " order by DATA_INVIO DESC "; // dal più recente
+		// lSql += setOrder();
+
+		// Se la ricerca è paginata estraggo solo i risultati da visualizzare sulla pagina indicata
+		if (aPage > 0) {
+			lSql = " SELECT * FROM (SELECT INNER.* , Rownum rn FROM ( " + lSql
+					+ " ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		}
+
+		setStatement(lSql);
+	}
+
+	/**
+	 *
 	 * @param aAnnoSiep
 	 * @param aProgrSiep
 	 * @param aUfficioSiep
@@ -944,11 +916,10 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 			lSql += "  AND FLAG_VISTO='N' ";
 
 		// Trasferimento ISTANZA, PROVVEDIMENTO, RIF_FAS_SIUS.
-		if (aTipoOperazione != null
-				&& (aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_ISTANZA) == 0
-						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO) == 0
-						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RIF_FAS_SIUS) == 0 || aTipoOperazione
-						.compareTo("SIEP") == 0)) {
+		if (aTipoOperazione != null && (aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_ISTANZA) == 0
+				|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO) == 0
+				|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RIF_FAS_SIUS) == 0
+				|| aTipoOperazione.compareTo("SIEP") == 0)) {
 			if (aAnnoFascicolo != null)
 				lSql += " AND CHIAVE_ANNO_SIEP = '" + aAnnoFascicolo + "'";
 			if (aProgrFascicolo != null)
@@ -959,8 +930,8 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 				&& (aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_DECRETO) == 0
 						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_ORDINANZA) == 0
 						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RICORSO) == 0
-						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_SENTENZA) == 0 || aTipoOperazione
-						.compareTo("SIUS") == 0)) {
+						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_SENTENZA) == 0
+						|| aTipoOperazione.compareTo("SIUS") == 0)) {
 			if (aAnnoFascicolo != null)
 				lSql += " AND CHIAVE_ANNO_SIUS = '" + aAnnoFascicolo + "'";
 			if (aProgrFascicolo != null)
@@ -972,8 +943,8 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 				&& (aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_ATTIVITA) == 0
 						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_UEPE) == 0
 						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RELAZIONE_UEPE) == 0
-						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_RELAZIONE) == 0 || aTipoOperazione
-						.compareTo("SIEPE") == 0)) {
+						|| aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_RELAZIONE) == 0
+						|| aTipoOperazione.compareTo("SIEPE") == 0)) {
 			if (aAnnoFascicolo != null)
 				lSql += " AND CHIAVE_ANNO_SIEPE = '" + aAnnoFascicolo + "'";
 			if (aProgrFascicolo != null)
@@ -989,29 +960,29 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	 * ricercaMessaggioRichiestaPerTipoOperazioneFascicolo( String aUfficioRicevente, String aUfficioMittente,
 	 * String aTipoOperazione, BigDecimal aAnnoFascicolo, BigDecimal aProgrFascicolo, String aIncludeInCarico
 	 * ) throws DAOException {
-	 * 
+	 *
 	 * ricercaMessaggioRichiestaPerTipoOperazioneFascicolo( aUfficioRicevente, aUfficioMittente,
 	 * aTipoOperazione, aAnnoFascicolo, aProgrFascicolo, aIncludeInCarico, null );
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * public void ricercaMessaggioRichiestaPerTipoOperazioneFascicolo( String aUfficioRicevente, String
 	 * aUfficioMittente, String aTipoOperazione, BigDecimal aAnnoFascicolo, BigDecimal aProgrFascicolo, String
 	 * aIncludeInCarico, String aFlagVisto ) throws DAOException {
-	 * 
+	 *
 	 * String lSql = getSqlQuery();
-	 * 
+	 *
 	 * lSql += " AND COD_TIPO_MESSAGGIO = '01' AND COD_UFFICIO_DESTINATARIO = '" + aUfficioRicevente + "'";
-	 * 
+	 *
 	 * if (!aUfficioMittente.equals("-")) // 26/06/2006 lSql += " AND COD_UFFICIO_MITTENTE = '" +
 	 * aUfficioMittente + "'"; if (aTipoOperazione != null && (aTipoOperazione.trim().length() == 5 ) ) lSql
 	 * += " AND COD_TIPO_OPERAZIONE = '" + aTipoOperazione + "'";
-	 * 
+	 *
 	 * // STUB 15/03/2005 Se si e' inclusi gli atti presi in carico, va esclusa la condizione sul FLAG_VISTO.
 	 * // 20070614 - Riadattato per impostare dati di flagVisto, per filtro su occorrenze if(aIncludeInCarico
 	 * != null && aIncludeInCarico.compareTo("S")!=0) lSql += " AND FLAG_VISTO='N' "; else if( aFlagVisto !=
 	 * null && aFlagVisto.compareTo("-")!=0 ) lSql += " AND FLAG_VISTO='" + aFlagVisto + "' ";
-	 * 
+	 *
 	 * // Trasferimento ISTANZA, PROVVEDIMENTO, RIF_FAS_SIUS. if (aTipoOperazione != null &&
 	 * (aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_ISTANZA)==0 ||
 	 * aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO)==0 ||
@@ -1025,7 +996,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	 * aTipoOperazione.compareTo("SIUS")==0 ) ) { if (aAnnoFascicolo != null) lSql +=
 	 * " AND CHIAVE_ANNO_SIUS = '" + aAnnoFascicolo + "'"; if (aProgrFascicolo != null) lSql +=
 	 * " AND CHIAVE_PROGR_SIUS = '" + aProgrFascicolo + "'"; }
-	 * 
+	 *
 	 * // Trasferimento ATTIVITA, RICHIESTA_UEPE, RELAZIONE_UEPE, RICHIESTA_RELAZIONE. else if
 	 * (aTipoOperazione != null && (aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_ATTIVITA)==0 ||
 	 * aTipoOperazione.compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_UEPE)==0 ||
@@ -1034,14 +1005,14 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	 * aTipoOperazione.compareTo("SIEPE")==0 ) ) { if (aAnnoFascicolo != null) lSql +=
 	 * " AND CHIAVE_ANNO_SIEPE = '" + aAnnoFascicolo + "'"; if (aProgrFascicolo != null) lSql +=
 	 * " AND CHIAVE_PROGR_SIEPE = '" + aProgrFascicolo + "'"; }
-	 * 
+	 *
 	 * lSql += setOrder(); setStatement(lSql); }
 	 */
 
 	/**
 	 * Esegue laricerca dei messaggi ricevuti, filtrati per il fascicolo etipo operazione e flag di stato.
 	 * <p>
-	 * 
+	 *
 	 * @param aMessaggio
 	 * @param aIncludeInCarico
 	 * @throws DAOException
@@ -1073,11 +1044,11 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		// Trasferimento ISTANZA, PROVVEDIMENTO, RIF_FAS_SIUS.
 		if (aMessaggio.getCodTipoOperazione() != null
 				&& (aMessaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_ISTANZA) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(
-								ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(
-								ICostantiJMS.TRASFERIMENTO_RIF_FAS_SIUS) == 0 || aMessaggio
-						.getCodTipoOperazione().compareTo("SIEP") == 0)) {
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_PROVVEDIMENTO) == 0
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_RIF_FAS_SIUS) == 0
+						|| aMessaggio.getCodTipoOperazione().compareTo("SIEP") == 0)) {
 
 			if (aMessaggio.getChiaveAnnoSiep() != null)
 				lSql += " AND CHIAVE_ANNO_SIEP = '" + aMessaggio.getChiaveAnnoSiep() + "'";
@@ -1088,10 +1059,13 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		// Trasferimento DECRETO, ORDINANZA, RICORSO.
 		else if (aMessaggio.getCodTipoOperazione() != null
 				&& (aMessaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_DECRETO) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_ORDINANZA) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_RICORSO) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_SENTENZA) == 0 || aMessaggio
-						.getCodTipoOperazione().compareTo("SIUS") == 0)) {
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_ORDINANZA) == 0
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_RICORSO) == 0
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_SENTENZA) == 0
+						|| aMessaggio.getCodTipoOperazione().compareTo("SIUS") == 0)) {
 			if (aMessaggio.getChiaveAnnoSius() != null)
 				lSql += " AND CHIAVE_ANNO_SIUS = '" + aMessaggio.getChiaveAnnoSius() + "'";
 
@@ -1101,13 +1075,13 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		// Trasferimento ATTIVITA, RICHIESTA_UEPE, RELAZIONE_UEPE, RICHIESTA_RELAZIONE.
 		else if (aMessaggio.getCodTipoOperazione() != null
 				&& (aMessaggio.getCodTipoOperazione().compareTo(ICostantiJMS.TRASFERIMENTO_ATTIVITA) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(
-								ICostantiJMS.TRASFERIMENTO_RICHIESTA_UEPE) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(
-								ICostantiJMS.TRASFERIMENTO_RELAZIONE_UEPE) == 0
-						|| aMessaggio.getCodTipoOperazione().compareTo(
-								ICostantiJMS.TRASFERIMENTO_RICHIESTA_RELAZIONE) == 0 || aMessaggio
-						.getCodTipoOperazione().compareTo("SIEPE") == 0)) {
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_UEPE) == 0
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_RELAZIONE_UEPE) == 0
+						|| aMessaggio.getCodTipoOperazione()
+								.compareTo(ICostantiJMS.TRASFERIMENTO_RICHIESTA_RELAZIONE) == 0
+						|| aMessaggio.getCodTipoOperazione().compareTo("SIEPE") == 0)) {
 			if (aMessaggio.getChiaveAnnoSiepe() != null)
 				lSql += " AND CHIAVE_ANNO_SIEPE = '" + aMessaggio.getChiaveAnnoSiepe() + "'";
 
@@ -1127,141 +1101,124 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		setStatement(lSql);
 	}
 
-  public void ricercaMessaggioByIdRichiesta( String aTipoMes, String aTipoOperazione, String aCodUffMittenete, BigDecimal aIdRichiesta) throws DAOException
-  {
-    String lSql = getSqlQuery();
+	public void ricercaMessaggioByIdRichiesta(String aTipoMes, String aTipoOperazione,
+			String aCodUffMittenete, BigDecimal aIdRichiesta) throws DAOException {
+		String lSql = getSqlQuery();
 
-    lSql += " AND COD_TIPO_MESSAGGIO = '" +aTipoMes+ "'";
-    lSql += " AND COD_TIPO_OPERAZIONE = '" +aTipoOperazione+ "'";
-  //  lSql += " AND DELIVERY_MODE = '" +adeliveryMod+ "'";
-    
-    lSql += " AND ID_RICHIESTA = "+aIdRichiesta;
-    
-    if (aCodUffMittenete != null)
-      lSql += " AND COD_UFFICIO_MITTENTE = '" + aCodUffMittenete + "'";
- 
-  //  lSql += " order by COD_UFFICIO_MITTENTE, DATA_INVIO DESC " ;
-    
-    
-    lSql += setOrder();
-    setStatement(lSql);
-  }
-  
-  public void RicercaSollecitiMessaggioRichiestaAtti( String aTipoMes, String aTipoOperazione, String aIdMesSollecitato) throws DAOException
-  {
-    String lSql = getSqlQuery();
+		lSql += " AND COD_TIPO_MESSAGGIO = '" + aTipoMes + "'";
+		lSql += " AND COD_TIPO_OPERAZIONE = '" + aTipoOperazione + "'";
+		// lSql += " AND DELIVERY_MODE = '" +adeliveryMod+ "'";
 
-    lSql += " AND COD_TIPO_MESSAGGIO = '" +aTipoMes+ "'";
-    lSql += " AND COD_TIPO_OPERAZIONE = '" +aTipoOperazione+ "'";
-  //  lSql += " AND DELIVERY_MODE = '" +adeliveryMod+ "'";
-    
-    lSql += " AND ID_MESSAGGIO_SOLLECITATO = '"+aIdMesSollecitato+"'";
- 
-  //  lSql += " order by COD_UFFICIO_MITTENTE, DATA_INVIO DESC " ;
-    
-    
-    lSql += setOrder();
-    setStatement(lSql);
-  }
-  
-  public void RicercaSolleciti( String aTipoOperazione, String aIdMesSollecitato) throws DAOException
-  {
-    String lSql = getSqlQuery();
+		lSql += " AND ID_RICHIESTA = " + aIdRichiesta;
 
-    lSql += " AND COD_TIPO_OPERAZIONE = '" +aTipoOperazione+ "'";
-    lSql += " AND ID_MESSAGGIO_SOLLECITATO = '"+aIdMesSollecitato+"'";
-    
-    lSql += setOrder();
-    setStatement(lSql);
-  }
-  
+		if (aCodUffMittenete != null)
+			lSql += " AND COD_UFFICIO_MITTENTE = '" + aCodUffMittenete + "'";
+
+		// lSql += " order by COD_UFFICIO_MITTENTE, DATA_INVIO DESC " ;
+
+		lSql += setOrder();
+		setStatement(lSql);
+	}
+
+	public void RicercaSollecitiMessaggioRichiestaAtti(String aTipoMes, String aTipoOperazione,
+			String aIdMesSollecitato) throws DAOException {
+		String lSql = getSqlQuery();
+
+		lSql += " AND COD_TIPO_MESSAGGIO = '" + aTipoMes + "'";
+		lSql += " AND COD_TIPO_OPERAZIONE = '" + aTipoOperazione + "'";
+		// lSql += " AND DELIVERY_MODE = '" +adeliveryMod+ "'";
+
+		lSql += " AND ID_MESSAGGIO_SOLLECITATO = '" + aIdMesSollecitato + "'";
+
+		// lSql += " order by COD_UFFICIO_MITTENTE, DATA_INVIO DESC " ;
+
+		lSql += setOrder();
+		setStatement(lSql);
+	}
+
+	public void RicercaSolleciti(String aTipoOperazione, String aIdMesSollecitato) throws DAOException {
+		String lSql = getSqlQuery();
+
+		lSql += " AND COD_TIPO_OPERAZIONE = '" + aTipoOperazione + "'";
+		lSql += " AND ID_MESSAGGIO_SOLLECITATO = '" + aIdMesSollecitato + "'";
+
+		lSql += setOrder();
+		setStatement(lSql);
+	}
+
 	protected String getSqlQuery(boolean aFlagBlob) {
 
 		String lStatement = new String("");
 
-		lStatement += " SELECT  "
-				+ " ID_MESSAGGIO,  "
+		lStatement += " SELECT  " + " ID_MESSAGGIO,  "
 				+ " COD_TIPO_MESSAGGIO, tipoMess.DESCRIZIONE DescrTipoMessaggio, "
 				+ " COD_TIPO_OPERAZIONE,  tipOperazione.DESCRIZIONE DescrTipoOperazione,"
-				+ " COD_UFFICIO_MITTENTE,  "
-				+ " COD_BDI_MITTENTE,  mit.DESCRIZIONE bdiMit,"
+				+ " COD_UFFICIO_MITTENTE,  " + " COD_BDI_MITTENTE,  mit.DESCRIZIONE bdiMit,"
 				+ " COD_UFFICIO_DESTINATARIO, comuffdest.DESCRIZIONE destSede,tipuffdest.RV_MEANING tipodest,"
 				+ " comuff.DESCRIZIONE sede, tipuff.RV_MEANING tipouff,"
 				+ " COD_BDI_DESTINATARIA,  dest.descrizione bdiDest," + " DATA_INVIO,  " + " DATA_ESITO,  "
 				+ " FLAG_VISTO,  " + " CODICE_UTENTE_MITTENTE,  "
 				+ " COD_ESITO, ESITO.DESCRIZIONE DESCR_ESITO ,"
-				+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, "
-				+ (aFlagBlob ? " BLOB_ESITO, " : "")
-				+ " CHIAVE_ANNO_SIEP, "
-				+ " CHIAVE_PROGR_SIEP, "
-				+
+				+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, " + (aFlagBlob ? " BLOB_ESITO, " : "")
+				+ " CHIAVE_ANNO_SIEP, " + " CHIAVE_PROGR_SIEP, " +
 				// =======================
 				// new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
-				" CHIAVE_UFFICIO_SIEP, "
-				+ " tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, "
-				+ " comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, "
-				+ " DELIVERY_MODE, "
+				" CHIAVE_UFFICIO_SIEP, " + " tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, "
+				+ " comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, " + " DELIVERY_MODE, "
 				+ " COD_UFFICIO_INOLTRO, tipUffInoltro.RV_MEANING descrUffInoltro, comUffInoltro.DESCRIZIONE descrSedeUfficioInoltro,"
 				+ " COD_BDI_INOLTRO, "
 				+ " COD_UFFICIO_REPLY_TO, tipuffReplyTo.RV_MEANING descrUffReplyTo, comuffReplyTo.DESCRIZIONE descrSedeUfficioReplyTo,"
-				+ " COD_BDI_REPLY_TO, "
-				+ " JMS_CORRELATION_REPLY_TO, "
-				+ " ID_MESSAGGIO_SOLLECITATO, "
-				+ " ID_RICHIESTA, " 
+				+ " COD_BDI_REPLY_TO, " + " JMS_CORRELATION_REPLY_TO, " + " ID_MESSAGGIO_SOLLECITATO, "
+				+ " ID_RICHIESTA, "
 				//
 				// ======================
-				+ " CHIAVE_ANNO_SIUS, "
-				+ " CHIAVE_PROGR_SIUS, "
-				+ " CHIAVE_ANNO_FAS_CUMULANTE, "
-				+ " CHIAVE_PROGR_FAS_CUMULANTE, "      
-        + " CHIAVE_UFFICIO_FAS_CUMULANTE, " 
-        + " tipo_ufficio_fasc_siep_cum.RV_MEANING descr_ufficio_siep_cum, "
-        + " comune_fasc_siep_cum.DESCRIZIONE sede_ufficio_siep_cum, "
-				+ " NOTE, "
+				+ " CHIAVE_ANNO_SIUS, " + " CHIAVE_PROGR_SIUS, " + " CHIAVE_ANNO_FAS_CUMULANTE, "
+				+ " CHIAVE_PROGR_FAS_CUMULANTE, " + " CHIAVE_UFFICIO_FAS_CUMULANTE, "
+				+ " tipo_ufficio_fasc_siep_cum.RV_MEANING descr_ufficio_siep_cum, "
+				+ " comune_fasc_siep_cum.DESCRIZIONE sede_ufficio_siep_cum, " + " NOTE, "
 				+ " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA "
 				+ " FROM MESSAGGIO,"
 				+ " JMS_CODE mit,JMS_CODE dest, JMS_CODE ESITO,ufficio uff, comune comuff,cg_ref_codes tipuff, "
 				+ " ufficio uffdest,comune comuffdest, cg_ref_codes tipuffdest, JMS_CODE tipoMess,JMS_CODE tipOperazione "
 				// Aggiunte join per recuperare i dati descrittivi dell'ufficio siep: CHIAVE_UFFICIO_SIEP
 				+ " , UFFICIO ufficio_fasc_siep, COMUNE comune_fasc_siep ,CG_REF_CODES tipo_ufficio_fasc_siep "
-        + " , UFFICIO ufficio_fasc_siep_cum, COMUNE comune_fasc_siep_cum ,CG_REF_CODES tipo_ufficio_fasc_siep_cum "
+				+ " , UFFICIO ufficio_fasc_siep_cum, COMUNE comune_fasc_siep_cum ,CG_REF_CODES tipo_ufficio_fasc_siep_cum "
 				+ " , UFFICIO uffInoltro, COMUNE comUffInoltro, CG_REF_CODES tipUffInoltro "
-				+ " , UFFICIO uffReplyTo, COMUNE comuffReplyTo, CG_REF_CODES tipuffReplyTo "
-				+ " WHERE "
+				+ " , UFFICIO uffReplyTo, COMUNE comuffReplyTo, CG_REF_CODES tipuffReplyTo " + " WHERE "
 				+ " COD_TIPO_MESSAGGIO = tipoMess.CODICE and tipoMess.dominio = 'TIPO_MESSAGGIO'  "
 				+ " and COD_TIPO_OPERAZIONE = tipOperazione.CODICE and tipOperazione.dominio = 'TIPO_OPERAZIONE'  "
 				+ " and COD_BDI_MITTENTE = mit.CODICE and mit.dominio = 'BDI'  "
 				+ " and COD_BDI_DESTINATARIA = dest.CODICE and dest.dominio = 'BDI'"
 				+ " and ESITO.CODICE = COD_ESITO AND ESITO.dominio = 'CODICE_ESITO'"
-				+ " and uff.COD_UFFICIO = COD_UFFICIO_MITTENTE"
-				+ " and comuff.COD_COMUNE = uff.COD_COMUNE"
-				+ " and uff.COD_TIPO_UFFICIO =tipuff.RV_LOW_VALUE"
-				+ " and tipuff.RV_DOMAIN ='TIPO_UFFICIO'"
+				+ " and uff.COD_UFFICIO = COD_UFFICIO_MITTENTE" + " and comuff.COD_COMUNE = uff.COD_COMUNE"
+				+ " and uff.COD_TIPO_UFFICIO =tipuff.RV_LOW_VALUE" + " and tipuff.RV_DOMAIN ='TIPO_UFFICIO'"
 				+ " and uffdest.COD_UFFICIO = COD_UFFICIO_DESTINATARIO"
 				+ " and comuffdest.COD_COMUNE = uffdest.COD_COMUNE"
 				+ " and uffdest.COD_TIPO_UFFICIO =tipuffdest.RV_LOW_VALUE"
-				+ " and tipuffdest.RV_DOMAIN ='TIPO_UFFICIO'"
-				+
+				+ " and tipuffdest.RV_DOMAIN ='TIPO_UFFICIO'" +
 				// Aggiunte join per recuperare i dati descrittivo dell'ufficio siep: CHIAVE_UFFICIO_SIEP
 				" AND ufficio_fasc_siep.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_SIEP, '-' ) "
 
 				+ // n.b. CHIAVE_UFFICIO_SIEP potrebbe essere null
 				" AND ufficio_fasc_siep.COD_COMUNE = comune_fasc_siep.COD_COMUNE "
 				+ " AND ufficio_fasc_siep.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep.RV_LOW_VALUE "
-				+ " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' "				
-        
-        //
-        + " AND ufficio_fasc_siep_cum.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE, '-' ) "  //n.b. CHIAVE_UFFICIO_FAS_CUMULANTE potrebbe essere null
-        + " AND ufficio_fasc_siep_cum.COD_COMUNE = comune_fasc_siep_cum.COD_COMUNE " 
-        + " AND ufficio_fasc_siep_cum.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep_cum.RV_LOW_VALUE " 
-        + " AND tipo_ufficio_fasc_siep_cum.RV_DOMAIN ='TIPO_UFFICIO' "         
-        
+				+ " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' "
+
+				//
+				+ " AND ufficio_fasc_siep_cum.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE, '-' ) " // n.b.
+																												// CHIAVE_UFFICIO_FAS_CUMULANTE
+																												// potrebbe
+																												// essere
+																												// null
+				+ " AND ufficio_fasc_siep_cum.COD_COMUNE = comune_fasc_siep_cum.COD_COMUNE "
+				+ " AND ufficio_fasc_siep_cum.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep_cum.RV_LOW_VALUE "
+				+ " AND tipo_ufficio_fasc_siep_cum.RV_DOMAIN ='TIPO_UFFICIO' "
+
 				// ============ UFFICIO/BDI INOLTRO =========================
 				+ " AND uffInoltro.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_INOLTRO, '-' ) "
 				+ " AND uffInoltro.COD_COMUNE = comUffInoltro.COD_COMUNE "
 				+ " AND uffInoltro.COD_TIPO_UFFICIO = tipUffInoltro.RV_LOW_VALUE "
-				+ " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' "
-				+
+				+ " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' " +
 				// ============ UFFICIO/BDI REPLY TO =========================
 				" AND uffReplyTo.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_REPLY_TO, '-' ) "
 				+ " AND uffReplyTo.COD_COMUNE = comuffReplyTo.COD_COMUNE "
@@ -1274,7 +1231,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Query join con a tabella FASC_MS_TO_FASC_SIEP per recuperare anche le
-	 * 
+	 *
 	 * @return
 	 */
 	protected String getSqlQueryMS() {
@@ -1283,65 +1240,53 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		lStatement = "SELECT  ID_MESSAGGIO, "
 				+ " COD_TIPO_MESSAGGIO, tipoMess.DESCRIZIONE DescrTipoMessaggio, "
 				+ " COD_TIPO_OPERAZIONE,  tipOperazione.DESCRIZIONE DescrTipoOperazione, "
-				+ " COD_UFFICIO_MITTENTE,  "
-				+ " COD_BDI_MITTENTE,  bdiMitt.DESCRIZIONE bdiMit, "
+				+ " COD_UFFICIO_MITTENTE,  " + " COD_BDI_MITTENTE,  bdiMitt.DESCRIZIONE bdiMit, "
 				+ " COD_UFFICIO_DESTINATARIO, comuffdest.DESCRIZIONE destSede, tipuffdest.RV_MEANING tipodest, "
 				+ " comuffMitt.DESCRIZIONE sede, tipuffMitt.RV_MEANING tipouff, "
-				+ " COD_BDI_DESTINATARIA, bdiDest.descrizione bdiDest, "
-				+ " DATA_INVIO, DATA_ESITO, "
-				+ " FLAG_VISTO, "
-				+ " CODICE_UTENTE_MITTENTE, "
+				+ " COD_BDI_DESTINATARIA, bdiDest.descrizione bdiDest, " + " DATA_INVIO, DATA_ESITO, "
+				+ " FLAG_VISTO, " + " CODICE_UTENTE_MITTENTE, "
 				+ " COD_ESITO, esito.DESCRIZIONE DESCR_ESITO , "
-				+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, "
-				+ " MESSAGGIO.CHIAVE_ANNO_SIEP, "
-				+ " MESSAGGIO.CHIAVE_PROGR_SIEP, "
-				+ " BLOB_ESITO, "
-				+
+				+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, " + " MESSAGGIO.CHIAVE_ANNO_SIEP, "
+				+ " MESSAGGIO.CHIAVE_PROGR_SIEP, " + " BLOB_ESITO, " +
 				// =======================
-				" MESSAGGIO.CHIAVE_UFFICIO_SIEP, "
-				+ // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
-				" tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, "
-				+ // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
-				" comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, "
-				+ // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
-				// ======================
-				" CHIAVE_ANNO_SIUS, "
-				+ " CHIAVE_PROGR_SIUS, "
-				+ " CHIAVE_ANNO_FAS_CUMULANTE, "
-				+ " CHIAVE_PROGR_FAS_CUMULANTE, "
-				+ " NOTE, "
-				+ " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, "
-				+ " COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA, "
-				+
+				" MESSAGGIO.CHIAVE_UFFICIO_SIEP, " + // new d.f. since NOV/2013 per gestire l'inoltro ad altro
+														// ufficio
+				" tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, " + // new d.f. since NOV/2013 per
+																			// gestire l'inoltro ad altro
+																			// ufficio
+				" comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, " + // new d.f. since NOV/2013 per gestire
+																		// l'inoltro ad altro ufficio
+																		// ======================
+				" CHIAVE_ANNO_SIUS, " + " CHIAVE_PROGR_SIUS, " + " CHIAVE_ANNO_FAS_CUMULANTE, "
+				+ " CHIAVE_PROGR_FAS_CUMULANTE, " + " NOTE, " + " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, "
+				+ " COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA, " +
 				// ==============================
 				" DELIVERY_MODE, "
 				+ " COD_UFFICIO_INOLTRO, tipUffInoltro.RV_MEANING descrUffInoltro, comUffInoltro.DESCRIZIONE descrSedeUfficioInoltro,"
 				+ " COD_BDI_INOLTRO, "
 				+ " COD_UFFICIO_REPLY_TO, tipuffReplyTo.RV_MEANING descrUffReplyTo, comuffReplyTo.DESCRIZIONE descrSedeUfficioReplyTo,"
-				+ " COD_BDI_REPLY_TO, "
-				+ " JMS_CORRELATION_REPLY_TO, "
-				+ " ID_MESSAGGIO_SOLLECITATO, "
-				+ " ID_RICHIESTA, " 
+				+ " COD_BDI_REPLY_TO, " + " JMS_CORRELATION_REPLY_TO, " + " ID_MESSAGGIO_SOLLECITATO, "
+				+ " ID_RICHIESTA, "
 				// " --==============================" +
 				+ " FASC_MS_TO_FASC_SIEP.ID_FASC_MS_TO_FASC_SIEP, "
 				+ " FASC_MS_TO_FASC_SIEP.COD_TIPO_RELAZIONE_MS, "
-				+	" FASC_MS_TO_FASC_SIEP.FAS_SIE_ID_FASCICOLO_SIEP as FAS_SIE_ID_FASCICOLO_SIEP_X, "
+				+ " FASC_MS_TO_FASC_SIEP.FAS_SIE_ID_FASCICOLO_SIEP as FAS_SIE_ID_FASCICOLO_SIEP_X, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP as CHIAVE_ANNO_SIEP_X, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP as CHIAVE_PROGR_SIEP_X, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP as CHIAVE_UFFICIO_SIEP_X, "
-				+	" FASC_MS_TO_FASC_SIEP.FAS_SIE_ID_FASCICOLO_COLLEGATO, "
+				+ " FASC_MS_TO_FASC_SIEP.FAS_SIE_ID_FASCICOLO_COLLEGATO, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP_COLLEGATO, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP_COLLEGATO, "
-				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP_COLLEGATO "
-				+
+				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP_COLLEGATO " +
 
 				" FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.ID_MESSAGGIO     = FASC_MS_TO_FASC_SIEP.MES_ID_MESSAGGIO) "
 				+
-				// " FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.CHIAVE_ANNO_SIEP     = FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP "
+				// " FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON ( MESSAGGIO.CHIAVE_ANNO_SIEP =
+				// FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP "
 				// +
-				// "  AND MESSAGGIO.CHIAVE_PROGR_SIEP    = FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP " +
-				// "  AND MESSAGGIO.CHIAVE_UFFICIO_SIEP  = FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP" +
-				// "  AND MESSAGGIO.COD_UFFICIO_DESTINATARIO = FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_CLASSE_IV) "
+				// " AND MESSAGGIO.CHIAVE_PROGR_SIEP = FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP " +
+				// " AND MESSAGGIO.CHIAVE_UFFICIO_SIEP = FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP" +
+				// " AND MESSAGGIO.COD_UFFICIO_DESTINATARIO = FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_CLASSE_IV) "
 				// +
 				" , JMS_CODE tipoMess, JMS_CODE tipOperazione, JMS_CODE ESITO "
 				+ " , JMS_CODE bdiMitt, UFFICIO uffMitt, COMUNE comuffMitt, CG_REF_CODES tipuffMitt "
@@ -1351,34 +1296,29 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 				+ " , UFFICIO ufficio_fasc_siep, COMUNE comune_fasc_siep ,CG_REF_CODES tipo_ufficio_fasc_siep "
 				+ " WHERE COD_TIPO_MESSAGGIO = tipoMess.CODICE and tipoMess.dominio = 'TIPO_MESSAGGIO'  "
 				+ " AND COD_TIPO_OPERAZIONE = tipOperazione.CODICE and tipOperazione.dominio = 'TIPO_OPERAZIONE'  "
-				+ " AND COD_ESITO = esito.CODICE AND esito.DOMINIO = 'CODICE_ESITO'"
-				+
+				+ " AND COD_ESITO = esito.CODICE AND esito.DOMINIO = 'CODICE_ESITO'" +
 				// ============ BDI/UFFICIO MITTENTE ==========================
 				" AND COD_BDI_MITTENTE = bdiMitt.CODICE and bdiMitt.dominio = 'BDI'  "
 				+ " AND COD_UFFICIO_MITTENTE = uffMitt.COD_UFFICIO"
 				+ " AND uffMitt.COD_COMUNE = comuffMitt.COD_COMUNE"
 				+ " AND uffMitt.COD_TIPO_UFFICIO = tipuffMitt.RV_LOW_VALUE"
-				+ " AND tipuffMitt.RV_DOMAIN ='TIPO_UFFICIO'"
-				+
+				+ " AND tipuffMitt.RV_DOMAIN ='TIPO_UFFICIO'" +
 				// ============ BDI/UFFICIO DESTINATARIO ======================
 				" AND COD_BDI_DESTINATARIA = bdiDest.CODICE and bdiDest.dominio = 'BDI'  "
 				+ " AND COD_UFFICIO_DESTINATARIO = uffdest.COD_UFFICIO "
 				+ " AND comuffdest.COD_COMUNE = uffdest.COD_COMUNE"
 				+ " AND uffdest.COD_TIPO_UFFICIO = tipuffdest.RV_LOW_VALUE "
-				+ " AND tipuffdest.RV_DOMAIN ='TIPO_UFFICIO' "
-				+
+				+ " AND tipuffdest.RV_DOMAIN ='TIPO_UFFICIO' " +
 				// ============ UFFICIO FASCIOLO SIEP =========================
 				" AND ufficio_fasc_siep.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_SIEP, '-' ) "
 				+ " AND ufficio_fasc_siep.COD_COMUNE = comune_fasc_siep.COD_COMUNE "
 				+ " AND ufficio_fasc_siep.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep.RV_LOW_VALUE "
-				+ " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' "
-				+
+				+ " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' " +
 				// ============ UFFICIO/BDI INOLTRO =========================
 				" AND uffInoltro.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_INOLTRO, '-' ) "
 				+ " AND uffInoltro.COD_COMUNE = comUffInoltro.COD_COMUNE "
 				+ " AND uffInoltro.COD_TIPO_UFFICIO = tipUffInoltro.RV_LOW_VALUE "
-				+ " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' "
-				+
+				+ " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' " +
 				// ============ UFFICIO/BDI REPLY TO =========================
 				" AND uffReplyTo.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_REPLY_TO, '-' ) "
 				+ " AND uffReplyTo.COD_COMUNE = comuffReplyTo.COD_COMUNE "
@@ -1392,7 +1332,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		return getSqlQuery(true);
 		/*
 		 * String lStatement = new String("");
-		 * 
+		 *
 		 * lStatement += " SELECT  " + " ID_MESSAGGIO,  " +
 		 * " COD_TIPO_MESSAGGIO, tipoMess.DESCRIZIONE DescrTipoMessaggio, " +
 		 * " COD_TIPO_OPERAZIONE,  tipOperazione.DESCRIZIONE DescrTipoOperazione," +
@@ -1419,7 +1359,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		 * " and comuffdest.COD_COMUNE = uffdest.COD_COMUNE" +
 		 * " and uffdest.COD_TIPO_UFFICIO =tipuffdest.RV_LOW_VALUE" +
 		 * " and tipuffdest.RV_DOMAIN ='TIPO_UFFICIO'";
-		 * 
+		 *
 		 * return lStatement;
 		 */
 	}
@@ -1488,37 +1428,53 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		// SIEP - Trasmissione per Competenza
 		aModel.setChiaveAnnoFasCumulante(getBigDecimal("CHIAVE_ANNO_FAS_CUMULANTE"));
 		aModel.setChiaveProgrFasCumulante(getBigDecimal("CHIAVE_PROGR_FAS_CUMULANTE"));
-    
-    if( findColumn("CHIAVE_UFFICIO_FAS_CUMULANTE") ) {
-      aModel.setChiaveUfficioFasCumulante (getString("CHIAVE_UFFICIO_FAS_CUMULANTE")); // new d.f. MEV26 Cumulo   
-      aModel.setDescrUfficioFasCumulante  (getString("descr_ufficio_siep_cum")); // new d.f. MEV26 Cumulo       
-      aModel.setDescrSedeUfficioFasCumulante (getString("sede_ufficio_siep_cum")); // new d.f. MEV26 Cumulo      
-    }
-    
+
+		if (findColumn("CHIAVE_UFFICIO_FAS_CUMULANTE")) {
+			aModel.setChiaveUfficioFasCumulante(getString("CHIAVE_UFFICIO_FAS_CUMULANTE")); // new d.f. MEV26
+																							// Cumulo
+			aModel.setDescrUfficioFasCumulante(getString("descr_ufficio_siep_cum")); // new d.f. MEV26 Cumulo
+			aModel.setDescrSedeUfficioFasCumulante(getString("sede_ufficio_siep_cum")); // new d.f. MEV26
+																						// Cumulo
+		}
+
 		aModel.setNote(getString("NOTE"));
-    
-    // MEV26 Cumulo   
-    if( findColumn("ID_RICHIESTA") )
-      aModel.setIdRichiesta(getBigDecimal("ID_RICHIESTA"));
-    //FINE MEV26
-    
-    //==========================================================================
-    aModel.setDeliveryMode            (getString("DELIVERY_MODE")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    
-    aModel.setCodUfficioInoltro       (getString("COD_UFFICIO_INOLTRO")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setDescrUfficioInoltro     (getString("descrUffInoltro")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setDescrSedeUfficioInoltro (getString("descrSedeUfficioInoltro")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setCodBdiInoltro           (getString("COD_BDI_INOLTRO")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
 
-    aModel.setCodUfficioReplyTo       (getString("COD_UFFICIO_REPLY_TO")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setDescrUfficioReplyTo     (getString("descrUffReplyTo")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setDescrSedeUfficioReplyTo (getString("descrSedeUfficioReplyTo")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setCodBdiReplyTo           (getString("COD_BDI_REPLY_TO")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
+		// MEV26 Cumulo
+		if (findColumn("ID_RICHIESTA"))
+			aModel.setIdRichiesta(getBigDecimal("ID_RICHIESTA"));
+		// FINE MEV26
 
-    aModel.setJmsCorrelationReplyTo   (getString("JMS_CORRELATION_REPLY_TO")); // new d.f. NOV/2013 per gestire l'inoltro ad altro ufficio    
-    aModel.setIdMessaggioSollecitato  (getString("ID_MESSAGGIO_SOLLECITATO")); // new d.f. NOV/2013 per gestire il sollecito   
+		// ==========================================================================
+		aModel.setDeliveryMode(getString("DELIVERY_MODE")); // new d.f. NOV/2013 per gestire l'inoltro ad
+															// altro ufficio
 
-    //==========================================================================
+		aModel.setCodUfficioInoltro(getString("COD_UFFICIO_INOLTRO")); // new d.f. NOV/2013 per gestire
+																		// l'inoltro ad altro ufficio
+		aModel.setDescrUfficioInoltro(getString("descrUffInoltro")); // new d.f. NOV/2013 per gestire
+																		// l'inoltro ad altro ufficio
+		aModel.setDescrSedeUfficioInoltro(getString("descrSedeUfficioInoltro")); // new d.f. NOV/2013 per
+																					// gestire l'inoltro ad
+																					// altro ufficio
+		aModel.setCodBdiInoltro(getString("COD_BDI_INOLTRO")); // new d.f. NOV/2013 per gestire l'inoltro ad
+																// altro ufficio
+
+		aModel.setCodUfficioReplyTo(getString("COD_UFFICIO_REPLY_TO")); // new d.f. NOV/2013 per gestire
+																		// l'inoltro ad altro ufficio
+		aModel.setDescrUfficioReplyTo(getString("descrUffReplyTo")); // new d.f. NOV/2013 per gestire
+																		// l'inoltro ad altro ufficio
+		aModel.setDescrSedeUfficioReplyTo(getString("descrSedeUfficioReplyTo")); // new d.f. NOV/2013 per
+																					// gestire l'inoltro ad
+																					// altro ufficio
+		aModel.setCodBdiReplyTo(getString("COD_BDI_REPLY_TO")); // new d.f. NOV/2013 per gestire l'inoltro ad
+																// altro ufficio
+
+		aModel.setJmsCorrelationReplyTo(getString("JMS_CORRELATION_REPLY_TO")); // new d.f. NOV/2013 per
+																				// gestire l'inoltro ad altro
+																				// ufficio
+		aModel.setIdMessaggioSollecitato(getString("ID_MESSAGGIO_SOLLECITATO")); // new d.f. NOV/2013 per
+																					// gestire il sollecito
+
+		// ==========================================================================
 
 		if (findColumn("ID_FASC_MS_TO_FASC_SIEP")) {
 			if (getBigDecimal("ID_FASC_MS_TO_FASC_SIEP") != null) {
@@ -1554,26 +1510,27 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 					TreeModel lTree = (TreeModel) ois.readObject();
 					ois.close();
 					aModel.setTreeModel(lTree);
-				// INIZIO INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U per versione sies 11.3 (introduco il catch per InvalidClassException)
+					// INIZIO INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U per versione sies
+					// 11.3 (introduco il catch per InvalidClassException)
 				} catch (InvalidClassException exC) {
 					aModel.setIsErroreParser(true);
-					
-					siesLogger.error(
-							"Eccezione MessaggioSqlDAO.getModel: InvalidClassException ");
+
+					siesLogger.error("Eccezione MessaggioSqlDAO.getModel: InvalidClassException ");
 					aModel.setCodEsito(ICostantiJMS.ERRORE_DEPLOY);
 					siesLogger.error("STAMPO ECCEZIONE: " + exC.getMessage(), exC);
 				}
 				// FINE
-			    catch (Exception ex) {
+				catch (Exception ex) {
 					aModel.setIsErroreParser(true);
-	
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					siesLogger.error(
-							"Eccezione MessaggioSqlDAO.getModel: Errore nella lettura del BLOB!");
+
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
+					siesLogger.error("Eccezione MessaggioSqlDAO.getModel: Errore nella lettura del BLOB!");
 					// NUOVA INFRASTRUTTURA: aggiunta stampa eccezione
-					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+					// LogF3B.getLogger()
 					siesLogger.error("STAMPO ECCEZIONE: " + ex.getMessage(), ex);
-			   }
+				}
 			}
 		}
 		return aModel;
@@ -1606,10 +1563,9 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND CHIAVE_ANNO_SIEP =" + aModel.getChiaveAnnoSiep();
 			lCondizioni += " AND CHIAVE_PROGR_SIEP =" + aModel.getChiaveProgrSiep();
 		}
-    if (aModel.getChiaveUfficioSiep() != null && !"".equals(aModel.getChiaveUfficioSiep()))
-    {
-      lCondizioni += " AND CHIAVE_UFFICIO_SIEP = '" + aModel.getChiaveUfficioSiep()+"'";
-    }    
+		if (aModel.getChiaveUfficioSiep() != null && !"".equals(aModel.getChiaveUfficioSiep())) {
+			lCondizioni += " AND CHIAVE_UFFICIO_SIEP = '" + aModel.getChiaveUfficioSiep() + "'";
+		}
 		if (aModel.getChiaveAnnoSius() != null && aModel.getChiaveProgrSius() != null) {
 			lCondizioni += " AND CHIAVE_ANNO_SIUS =" + aModel.getChiaveAnnoSius();
 			lCondizioni += " AND CHIAVE_PROGR_SIUS =" + aModel.getChiaveProgrSius();
@@ -1619,33 +1575,34 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		if (aModel.getDataInvio() != null)
 			lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') = '"
 					+ DateUtils.getDateToString(aModel.getDataInvio(), "yyyyMMdd") + "'";
-    
-    if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante()!= null)
-    {
-      lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
-      lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
-    }
-    if (aModel.getChiaveUfficioFasCumulante() != null && !"".equals(aModel.getChiaveUfficioFasCumulante()))
-    {
-      lCondizioni += " AND CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aModel.getChiaveUfficioFasCumulante()+"'";
-    }
-    
+
+		if (aModel.getChiaveAnnoFasCumulante() != null && aModel.getChiaveProgrFasCumulante() != null) {
+			lCondizioni += " AND CHIAVE_ANNO_FAS_CUMULANTE =" + aModel.getChiaveAnnoFasCumulante();
+			lCondizioni += " AND CHIAVE_PROGR_FAS_CUMULANTE =" + aModel.getChiaveProgrFasCumulante();
+		}
+		if (aModel.getChiaveUfficioFasCumulante() != null
+				&& !"".equals(aModel.getChiaveUfficioFasCumulante())) {
+			lCondizioni += " AND CHIAVE_UFFICIO_FAS_CUMULANTE = '" + aModel.getChiaveUfficioFasCumulante()
+					+ "'";
+		}
+
 		return lCondizioni;
 	}
 
 	public String setCondizioniByKey(BigDecimal aKey) {
 		return " AND ID_MESSAGGIO = " + aKey;
 	}
-  
-  public String setCondizioneDataInvio(Date aDaIni, Date aDaFine)
-  {
-	  String lCondizioni = new String();
-	  
-	  lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '" + DateUtils.getDateToString(aDaIni, "yyyyMMdd" )+"'" ;
-	  lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '" + DateUtils.getDateToString(aDaFine, "yyyyMMdd" )+"'" ;
-    
-	  return lCondizioni;
-  }
+
+	public String setCondizioneDataInvio(Date aDaIni, Date aDaFine) {
+		String lCondizioni = new String();
+
+		lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') >= '"
+				+ DateUtils.getDateToString(aDaIni, "yyyyMMdd") + "'";
+		lCondizioni += " AND TO_CHAR(DATA_INVIO,'YYYYMMDD') <= '"
+				+ DateUtils.getDateToString(aDaFine, "yyyyMMdd") + "'";
+
+		return lCondizioni;
+	}
 
 	private String setOrder() {
 		return " ORDER BY DATA_INVIO DESC";
@@ -1660,7 +1617,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aPage
 	 * @param lCond
 	 * @return
@@ -1668,50 +1625,31 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	protected String getSqlQueryPerRicerca(int aPage, String lCond) {
 		String lStatement = new String("");
 
-		lStatement += "SELECT * FROM ( "
-				+ " SELECT  "
-				+ " ID_MESSAGGIO,  "
-				+ " COD_TIPO_MESSAGGIO,DescrTipoMessaggio, "
-				+ " COD_TIPO_OPERAZIONE,  DescrTipoOperazione,"
-				+ " COD_UFFICIO_MITTENTE,  "
-				+ " COD_BDI_MITTENTE,  bdiMit,"
-				+ " COD_UFFICIO_DESTINATARIO, destSede,tipodest,"
-				+ "  sede,  tipouff,"
-				+ " COD_BDI_DESTINATARIA,   bdiDest,"
-				+ " DATA_INVIO,   DATA_ESITO,  FLAG_VISTO,  "
-				+ " CODICE_UTENTE_MITTENTE,  "
-				+ " COD_ESITO, DESCR_ESITO ,"
-				+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, "
-				+ " BLOB_ESITO, "
-				+ " CHIAVE_ANNO_SIEP, "
-				+ " CHIAVE_PROGR_SIEP, "
-				+
+		lStatement += "SELECT * FROM ( " + " SELECT  " + " ID_MESSAGGIO,  "
+				+ " COD_TIPO_MESSAGGIO,DescrTipoMessaggio, " + " COD_TIPO_OPERAZIONE,  DescrTipoOperazione,"
+				+ " COD_UFFICIO_MITTENTE,  " + " COD_BDI_MITTENTE,  bdiMit,"
+				+ " COD_UFFICIO_DESTINATARIO, destSede,tipodest," + "  sede,  tipouff,"
+				+ " COD_BDI_DESTINATARIA,   bdiDest," + " DATA_INVIO,   DATA_ESITO,  FLAG_VISTO,  "
+				+ " CODICE_UTENTE_MITTENTE,  " + " COD_ESITO, DESCR_ESITO ,"
+				+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, " + " BLOB_ESITO, " + " CHIAVE_ANNO_SIEP, "
+				+ " CHIAVE_PROGR_SIEP, " +
 				// =============================
 				// ADD Misure Sicurezza
-				" CHIAVE_UFFICIO_SIEP,  descr_ufficio_siep, sede_ufficio_siep, "
-				+ " DELIVERY_MODE, "
-				+ " COD_UFFICIO_INOLTRO,  descrUffInoltro,  descrSedeUfficioInoltro,"
-				+ " COD_BDI_INOLTRO, "
-				+ " COD_UFFICIO_REPLY_TO, descrUffReplyTo,  descrSedeUfficioReplyTo,"
-				+ " COD_BDI_REPLY_TO, "
-				+ " JMS_CORRELATION_REPLY_TO, "
-				+ " ID_MESSAGGIO_SOLLECITATO, "
-				+
+				" CHIAVE_UFFICIO_SIEP,  descr_ufficio_siep, sede_ufficio_siep, " + " DELIVERY_MODE, "
+				+ " COD_UFFICIO_INOLTRO,  descrUffInoltro,  descrSedeUfficioInoltro," + " COD_BDI_INOLTRO, "
+				+ " COD_UFFICIO_REPLY_TO, descrUffReplyTo,  descrSedeUfficioReplyTo," + " COD_BDI_REPLY_TO, "
+				+ " JMS_CORRELATION_REPLY_TO, " + " ID_MESSAGGIO_SOLLECITATO, " +
 				// ==============================
-				" CHIAVE_ANNO_SIUS, "
-				+ " CHIAVE_PROGR_SIUS, "
-				+ " CHIAVE_ANNO_FAS_CUMULANTE, "
+				" CHIAVE_ANNO_SIUS, " + " CHIAVE_PROGR_SIUS, " + " CHIAVE_ANNO_FAS_CUMULANTE, "
 				+ " CHIAVE_PROGR_FAS_CUMULANTE, "
-        + " CHIAVE_UFFICIO_FAS_CUMULANTE,  descr_ufficio_siep_cum, sede_ufficio_siep_cum, "        
+				+ " CHIAVE_UFFICIO_FAS_CUMULANTE,  descr_ufficio_siep_cum, sede_ufficio_siep_cum, "
 				+ " NOTE, "
 				+ " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA "
-				+ ", Rownum rn FROM ( " + getSqlQuery() + " "
-				+ lCond
-				+
+				+ ", Rownum rn FROM ( " + getSqlQuery() + " " + lCond +
 				// ", Rownum rn FROM ( " + getSqlQuery(false) + " " + lCond +
 				" ORDER BY DATA_INVIO DESC) inner ) WHERE rn BETWEEN "
-				+ ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND " + (aPage)
-				* IWebConstants.RESULT_PER_PAGE;
+				+ ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1) + " AND "
+				+ (aPage) * IWebConstants.RESULT_PER_PAGE;
 
 		return lStatement;
 	}
@@ -1820,7 +1758,7 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * RIcerca un messaggio uguale a quello che si cerca d'inserire.
-	 * 
+	 *
 	 * @param aMessage
 	 */
 	public void ricercaMessaggioUgualeNonSpedito(MessaggioModel aMessage) {
@@ -1889,23 +1827,23 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 	/**
 	 * findColumn
 	 * <p>
-	 * 
+	 *
 	 * @param aValue
 	 * @return
 	 */
-	private boolean findColumn(String aValue) {
-		try {
-			mRs.findColumn(aValue);
-		} catch (Exception sqex) {
-			return false;
-		}
-		return true;
-	}
+	// private boolean findColumn(String aValue) {
+	// try {
+	// mRs.findColumn(aValue);
+	// } catch (Exception sqex) {
+	// return false;
+	// }
+	// return true;
+	// }
 
 	/**
 	 * Imposta la query per la ricerca dei messaggi ricevuti (02 - Esito) da un certo ufficio in relazione al
 	 * messaggio inviato
-	 * 
+	 *
 	 * @param aUfficio
 	 *            - Ufficio che ha inviato la richiesta e destinatario delle risposte
 	 * @param aIdMessaggio
@@ -1916,8 +1854,8 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 			throws DAOException {
 		String lSql = getSqlQuery();
 
-		lSql += " AND JMS_CORRELATION_ID_MESSAGE = '" + aIdMessaggio + "'"
-				+ " AND COD_TIPO_MESSAGGIO = '02' " +
+		lSql += " AND JMS_CORRELATION_ID_MESSAGE = '" + aIdMessaggio + "'" + " AND COD_TIPO_MESSAGGIO = '02' "
+				+
 				// " AND COD_UFFICIO_DESTINATARIO = '" + aUfficio + "'" +
 				// " AND DELIVERY_MODE = '00002'"
 				" ORDER BY ID_MESSAGGIO ";
@@ -1925,129 +1863,111 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 		setStatement(lSql);
 	}
 
-   public void ricercaMessaggioNelPeriodoPaged(MessaggioModel aModel, Date aDataInizio, Date aDataFine, int aPage) throws DAOException
-   {
+	public void ricercaMessaggioNelPeriodoPaged(MessaggioModel aModel, Date aDataInizio, Date aDataFine,
+			int aPage) throws DAOException {
 
-	   String lSql = new String("");
-	   String lPaginedStatement=new String("");
+		String lSql = new String("");
+		String lPaginedStatement = new String("");
 
-	   lSql = getPagedSqlQuery(aPage);
-	   lSql += " " + setCondizione(aModel);
-	   lSql += " " + setCondizioneDataInvio(aDataInizio, aDataFine);
-	   lSql += setOrder();
-	   
-	   // Se apage = 0 , la Query serve per il totale
-	   if(aPage==0)
-	   {
-		   setStatement(lSql);
-	   }
-	   else
-	   {
-		   lPaginedStatement="SELECT * FROM (SELECT INNER.* , Rownum rn FROM ("+lSql+"  ) INNER ) WHERE rn between  "+((aPage-1)*IWebConstants.RESULT_PER_PAGE+1)+ " AND "+ (aPage)*IWebConstants.RESULT_PER_PAGE;
-		   setStatement(lPaginedStatement);
-	   }
-	   
-   }
-   
-   protected String getPagedSqlQuery(int aPage) 
-   {
-	    String lStatement = new String("");
+		lSql = getPagedSqlQuery(aPage);
+		lSql += " " + setCondizione(aModel);
+		lSql += " " + setCondizioneDataInvio(aDataInizio, aDataFine);
+		lSql += setOrder();
 
-	    if (aPage > 0) 
-	    {
-	      lStatement += " SELECT  " +
-	      " ID_MESSAGGIO,  " +
-	      " COD_TIPO_MESSAGGIO, tipoMess.DESCRIZIONE DescrTipoMessaggio, " +
-	      " COD_TIPO_OPERAZIONE,  tipOperazione.DESCRIZIONE DescrTipoOperazione," +
-	      " COD_UFFICIO_MITTENTE,  " +
-	      " COD_BDI_MITTENTE,  mit.DESCRIZIONE bdiMit," +
-	      " COD_UFFICIO_DESTINATARIO, comuffdest.DESCRIZIONE destSede,tipuffdest.RV_MEANING tipodest," +
-	      " comuff.DESCRIZIONE sede, tipuff.RV_MEANING tipouff," +
-	      " COD_BDI_DESTINATARIA,  dest.descrizione bdiDest," +
-	      " DATA_INVIO,  " +
-	      " DATA_ESITO,  " +
-	      " FLAG_VISTO,  " +
-	      " CODICE_UTENTE_MITTENTE,  " +
-	      " COD_ESITO, ESITO.DESCRIZIONE DESCR_ESITO ," +
-	      " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, " +    
-	      " BLOB_ESITO, "  +
-	      " CHIAVE_ANNO_SIEP, " +
-	      " CHIAVE_PROGR_SIEP, " +
-	      //=======================
-	      // new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
-	      " CHIAVE_UFFICIO_SIEP, " + 
-	      " tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, " + 
-	      " comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, " +    
-	      " DELIVERY_MODE, " +
-	      " COD_UFFICIO_INOLTRO, tipUffInoltro.RV_MEANING descrUffInoltro, comUffInoltro.DESCRIZIONE descrSedeUfficioInoltro," +
-	      " COD_BDI_INOLTRO, " +
-	      " COD_UFFICIO_REPLY_TO, tipuffReplyTo.RV_MEANING descrUffReplyTo, comuffReplyTo.DESCRIZIONE descrSedeUfficioReplyTo," +
-	      " COD_BDI_REPLY_TO, " +
-	      " JMS_CORRELATION_REPLY_TO, " +
-	      " ID_MESSAGGIO_SOLLECITATO, " +      
-	      //
-	      " ID_RICHIESTA, " +
-	      //======================
-	      " CHIAVE_ANNO_SIUS, " +
-	      " CHIAVE_PROGR_SIUS, " +
-	      " CHIAVE_ANNO_FAS_CUMULANTE, " +
-	      " CHIAVE_PROGR_FAS_CUMULANTE, " +
-	      " CHIAVE_UFFICIO_FAS_CUMULANTE, " +    
-	      " tipo_ufficio_fasc_siep_cum.RV_MEANING descr_ufficio_siep_cum, " + 
-	      " comune_fasc_siep_cum.DESCRIZIONE sede_ufficio_siep_cum, " +   
-	      " NOTE, " +
-	      " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA "; 
-	    }
-	    else
-	    {
-	    	lStatement += " Select count(*) HowManyRecords ";         
-	    }
-	    
-	    
-	    lStatement += " FROM MESSAGGIO," +
-	      " JMS_CODE mit,JMS_CODE dest, JMS_CODE ESITO,ufficio uff, comune comuff,cg_ref_codes tipuff, " +
-	      " ufficio uffdest,comune comuffdest, cg_ref_codes tipuffdest, JMS_CODE tipoMess,JMS_CODE tipOperazione " +
-	      // Aggiunte join per recuperare i dati descrittivi dell'ufficio siep: CHIAVE_UFFICIO_SIEP
-	      " , UFFICIO ufficio_fasc_siep, COMUNE comune_fasc_siep ,CG_REF_CODES tipo_ufficio_fasc_siep " +
-	      " , UFFICIO ufficio_fasc_siep_cum, COMUNE comune_fasc_siep_cum ,CG_REF_CODES tipo_ufficio_fasc_siep_cum " +      
-	      " , UFFICIO uffInoltro, COMUNE comUffInoltro, CG_REF_CODES tipUffInoltro " +
-	      " , UFFICIO uffReplyTo, COMUNE comuffReplyTo, CG_REF_CODES tipuffReplyTo " +
-	    " WHERE " +
-	      " COD_TIPO_MESSAGGIO = tipoMess.CODICE and tipoMess.dominio = 'TIPO_MESSAGGIO'  " +
-	      " and COD_TIPO_OPERAZIONE = tipOperazione.CODICE and tipOperazione.dominio = 'TIPO_OPERAZIONE'  " +
-	      " and COD_BDI_MITTENTE = mit.CODICE and mit.dominio = 'BDI'  " +
-	      " and COD_BDI_DESTINATARIA = dest.CODICE and dest.dominio = 'BDI'" +
-	      " and ESITO.CODICE = COD_ESITO AND ESITO.dominio = 'CODICE_ESITO'" +
-	      " and uff.COD_UFFICIO = COD_UFFICIO_MITTENTE" +
-	      " and comuff.COD_COMUNE = uff.COD_COMUNE" +
-	      " and uff.COD_TIPO_UFFICIO =tipuff.RV_LOW_VALUE" +
-	      " and tipuff.RV_DOMAIN ='TIPO_UFFICIO'" +
-	      " and uffdest.COD_UFFICIO = COD_UFFICIO_DESTINATARIO" +
-	      " and comuffdest.COD_COMUNE = uffdest.COD_COMUNE" +
-	      " and uffdest.COD_TIPO_UFFICIO =tipuffdest.RV_LOW_VALUE" +
-	      " and tipuffdest.RV_DOMAIN ='TIPO_UFFICIO'" +
-	      // Aggiunte join per recuperare i dati descrittivo dell'ufficio siep: CHIAVE_UFFICIO_SIEP
-	      " AND ufficio_fasc_siep.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_SIEP, '-' ) " + //n.b. CHIAVE_UFFICIO_SIEP potrebbe essere null
-	      " AND ufficio_fasc_siep.COD_COMUNE = comune_fasc_siep.COD_COMUNE " +
-	      " AND ufficio_fasc_siep.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep.RV_LOW_VALUE " +
-	      " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' "  +
-	      //
-	      " AND ufficio_fasc_siep_cum.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE, '-' ) " + //n.b. CHIAVE_UFFICIO_FAS_CUMULANTE potrebbe essere null
-	      " AND ufficio_fasc_siep_cum.COD_COMUNE = comune_fasc_siep_cum.COD_COMUNE " +
-	      " AND ufficio_fasc_siep_cum.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep_cum.RV_LOW_VALUE " +
-	      " AND tipo_ufficio_fasc_siep_cum.RV_DOMAIN ='TIPO_UFFICIO' "  +
-	      //============ UFFICIO/BDI INOLTRO =========================
-	      " AND uffInoltro.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_INOLTRO, '-' ) " + 
-	      " AND uffInoltro.COD_COMUNE = comUffInoltro.COD_COMUNE " + 
-	      " AND uffInoltro.COD_TIPO_UFFICIO = tipUffInoltro.RV_LOW_VALUE " +
-	      " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' " +
-	      //============ UFFICIO/BDI REPLY TO =========================
-	      " AND uffReplyTo.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_REPLY_TO, '-' ) " + 
-	      " AND uffReplyTo.COD_COMUNE = comuffReplyTo.COD_COMUNE " + 
-	      " AND uffReplyTo.COD_TIPO_UFFICIO = tipuffReplyTo.RV_LOW_VALUE " +
-	      " AND tipuffReplyTo.RV_DOMAIN ='TIPO_UFFICIO' " ; 
+		// Se apage = 0 , la Query serve per il totale
+		if (aPage == 0) {
+			setStatement(lSql);
+		} else {
+			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
+					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+			setStatement(lPaginedStatement);
+		}
 
-	    return lStatement;
+	}
 
-	  }
+	protected String getPagedSqlQuery(int aPage) {
+		String lStatement = new String("");
+
+		if (aPage > 0) {
+			lStatement += " SELECT  " + " ID_MESSAGGIO,  "
+					+ " COD_TIPO_MESSAGGIO, tipoMess.DESCRIZIONE DescrTipoMessaggio, "
+					+ " COD_TIPO_OPERAZIONE,  tipOperazione.DESCRIZIONE DescrTipoOperazione,"
+					+ " COD_UFFICIO_MITTENTE,  " + " COD_BDI_MITTENTE,  mit.DESCRIZIONE bdiMit,"
+					+ " COD_UFFICIO_DESTINATARIO, comuffdest.DESCRIZIONE destSede,tipuffdest.RV_MEANING tipodest,"
+					+ " comuff.DESCRIZIONE sede, tipuff.RV_MEANING tipouff,"
+					+ " COD_BDI_DESTINATARIA,  dest.descrizione bdiDest," + " DATA_INVIO,  "
+					+ " DATA_ESITO,  " + " FLAG_VISTO,  " + " CODICE_UTENTE_MITTENTE,  "
+					+ " COD_ESITO, ESITO.DESCRIZIONE DESCR_ESITO ,"
+					+ " JMS_ID_MESSAGE, JMS_CORRELATION_ID_MESSAGE, " + " BLOB_ESITO, "
+					+ " CHIAVE_ANNO_SIEP, " + " CHIAVE_PROGR_SIEP, " +
+					// =======================
+					// new d.f. since NOV/2013 per gestire l'inoltro ad altro ufficio
+					" CHIAVE_UFFICIO_SIEP, " + " tipo_ufficio_fasc_siep.RV_MEANING descr_ufficio_siep, "
+					+ " comune_fasc_siep.DESCRIZIONE sede_ufficio_siep, " + " DELIVERY_MODE, "
+					+ " COD_UFFICIO_INOLTRO, tipUffInoltro.RV_MEANING descrUffInoltro, comUffInoltro.DESCRIZIONE descrSedeUfficioInoltro,"
+					+ " COD_BDI_INOLTRO, "
+					+ " COD_UFFICIO_REPLY_TO, tipuffReplyTo.RV_MEANING descrUffReplyTo, comuffReplyTo.DESCRIZIONE descrSedeUfficioReplyTo,"
+					+ " COD_BDI_REPLY_TO, " + " JMS_CORRELATION_REPLY_TO, " + " ID_MESSAGGIO_SOLLECITATO, " +
+					//
+					" ID_RICHIESTA, " +
+					// ======================
+					" CHIAVE_ANNO_SIUS, " + " CHIAVE_PROGR_SIUS, " + " CHIAVE_ANNO_FAS_CUMULANTE, "
+					+ " CHIAVE_PROGR_FAS_CUMULANTE, " + " CHIAVE_UFFICIO_FAS_CUMULANTE, "
+					+ " tipo_ufficio_fasc_siep_cum.RV_MEANING descr_ufficio_siep_cum, "
+					+ " comune_fasc_siep_cum.DESCRIZIONE sede_ufficio_siep_cum, " + " NOTE, "
+					+ " CHIAVE_ANNO_SIEPE, CHIAVE_PROGR_SIEPE, COGNOME_SOGGETTO, NOME_SOGGETTO, DATA_NASCITA, COD_STATO_NASCITA, COD_COMUNE_NASCITA ";
+		} else {
+			lStatement += " Select count(*) HowManyRecords ";
+		}
+
+		lStatement += " FROM MESSAGGIO,"
+				+ " JMS_CODE mit,JMS_CODE dest, JMS_CODE ESITO,ufficio uff, comune comuff,cg_ref_codes tipuff, "
+				+ " ufficio uffdest,comune comuffdest, cg_ref_codes tipuffdest, JMS_CODE tipoMess,JMS_CODE tipOperazione "
+				+
+				// Aggiunte join per recuperare i dati descrittivi dell'ufficio siep: CHIAVE_UFFICIO_SIEP
+				" , UFFICIO ufficio_fasc_siep, COMUNE comune_fasc_siep ,CG_REF_CODES tipo_ufficio_fasc_siep "
+				+ " , UFFICIO ufficio_fasc_siep_cum, COMUNE comune_fasc_siep_cum ,CG_REF_CODES tipo_ufficio_fasc_siep_cum "
+				+ " , UFFICIO uffInoltro, COMUNE comUffInoltro, CG_REF_CODES tipUffInoltro "
+				+ " , UFFICIO uffReplyTo, COMUNE comuffReplyTo, CG_REF_CODES tipuffReplyTo " + " WHERE "
+				+ " COD_TIPO_MESSAGGIO = tipoMess.CODICE and tipoMess.dominio = 'TIPO_MESSAGGIO'  "
+				+ " and COD_TIPO_OPERAZIONE = tipOperazione.CODICE and tipOperazione.dominio = 'TIPO_OPERAZIONE'  "
+				+ " and COD_BDI_MITTENTE = mit.CODICE and mit.dominio = 'BDI'  "
+				+ " and COD_BDI_DESTINATARIA = dest.CODICE and dest.dominio = 'BDI'"
+				+ " and ESITO.CODICE = COD_ESITO AND ESITO.dominio = 'CODICE_ESITO'"
+				+ " and uff.COD_UFFICIO = COD_UFFICIO_MITTENTE" + " and comuff.COD_COMUNE = uff.COD_COMUNE"
+				+ " and uff.COD_TIPO_UFFICIO =tipuff.RV_LOW_VALUE" + " and tipuff.RV_DOMAIN ='TIPO_UFFICIO'"
+				+ " and uffdest.COD_UFFICIO = COD_UFFICIO_DESTINATARIO"
+				+ " and comuffdest.COD_COMUNE = uffdest.COD_COMUNE"
+				+ " and uffdest.COD_TIPO_UFFICIO =tipuffdest.RV_LOW_VALUE"
+				+ " and tipuffdest.RV_DOMAIN ='TIPO_UFFICIO'" +
+				// Aggiunte join per recuperare i dati descrittivo dell'ufficio siep: CHIAVE_UFFICIO_SIEP
+				" AND ufficio_fasc_siep.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_SIEP, '-' ) " + // n.b.
+																									// CHIAVE_UFFICIO_SIEP
+																									// potrebbe
+																									// essere
+																									// null
+				" AND ufficio_fasc_siep.COD_COMUNE = comune_fasc_siep.COD_COMUNE "
+				+ " AND ufficio_fasc_siep.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep.RV_LOW_VALUE "
+				+ " AND tipo_ufficio_fasc_siep.RV_DOMAIN ='TIPO_UFFICIO' " +
+				//
+				" AND ufficio_fasc_siep_cum.COD_UFFICIO = nvl(MESSAGGIO.CHIAVE_UFFICIO_FAS_CUMULANTE, '-' ) "
+				+ // n.b. CHIAVE_UFFICIO_FAS_CUMULANTE potrebbe essere null
+				" AND ufficio_fasc_siep_cum.COD_COMUNE = comune_fasc_siep_cum.COD_COMUNE "
+				+ " AND ufficio_fasc_siep_cum.COD_TIPO_UFFICIO = tipo_ufficio_fasc_siep_cum.RV_LOW_VALUE "
+				+ " AND tipo_ufficio_fasc_siep_cum.RV_DOMAIN ='TIPO_UFFICIO' " +
+				// ============ UFFICIO/BDI INOLTRO =========================
+				" AND uffInoltro.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_INOLTRO, '-' ) "
+				+ " AND uffInoltro.COD_COMUNE = comUffInoltro.COD_COMUNE "
+				+ " AND uffInoltro.COD_TIPO_UFFICIO = tipUffInoltro.RV_LOW_VALUE "
+				+ " AND tipUffInoltro.RV_DOMAIN ='TIPO_UFFICIO' " +
+				// ============ UFFICIO/BDI REPLY TO =========================
+				" AND uffReplyTo.COD_UFFICIO = nvl(MESSAGGIO.COD_UFFICIO_REPLY_TO, '-' ) "
+				+ " AND uffReplyTo.COD_COMUNE = comuffReplyTo.COD_COMUNE "
+				+ " AND uffReplyTo.COD_TIPO_UFFICIO = tipuffReplyTo.RV_LOW_VALUE "
+				+ " AND tipuffReplyTo.RV_DOMAIN ='TIPO_UFFICIO' ";
+
+		return lStatement;
+
+	}
 }

@@ -327,8 +327,11 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaFascicoloByProgrAnnoDescrComune(FascicoloSiepModel aModel, String majorOffice)
 			throws DAOException {
+
+		// MEV_6: la count viene eseguita nella query di paginazione
+		String lStatement = "select a.*, count(*) over() tot from (";
 		// MEV_57: aggiunto parametro di passaggio
-		String lStatement = getFascicoloSqlQuery(majorOffice);
+		/* String */ lStatement += getFascicoloSqlQuery(majorOffice);
 
 		if ((aModel.getChiaveProgr() != null) && (aModel.getChiaveProgr().longValue() > 0))
 			lStatement += " AND (CHIAVE_PROGR = " + aModel.getChiaveProgr() + ")";
@@ -372,6 +375,8 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 			lStatement += MinorMask.minorCondition("vse", "FASC", majorOffice);
 
 		lStatement += " AND FLAG_VALIDATO = 'S' " + setOrder();
+
+		lStatement += ") a";
 
 		setStatement(lStatement);
 	}
@@ -476,8 +481,10 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 	public void ricercaIDFascicoloByIDSoggettoIDSentenza(FascicoloSiepModel aModel) throws DAOException {
 		String lStatement = getIDFascicoloSqlQuery();
 
-		lStatement += " SOG_ID_SOGGETTO ='" + aModel.getSogIdSoggetto() + "' ";
-		lStatement += " AND SEN_ID_SENTENZA = '" + aModel.getSenIdSentenza() + "'";
+		// MEV_6: tolgo apici dal BigDecimal --> '" + aModel.getSogIdSoggetto() + "'"
+		lStatement += " SOG_ID_SOGGETTO = " + aModel.getSogIdSoggetto();
+		// '" + aModel.getSenIdSentenza() + "'"
+		lStatement += " AND SEN_ID_SENTENZA = " + aModel.getSenIdSentenza();
 		setStatement(lStatement);
 	}
 
@@ -487,6 +494,7 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getModel() throws DAOException {
+
 		FascicoloSiepModel lFascicolo = new FascicoloSiepModel();
 
 		lFascicolo.setIdFascicoloSiep(getBigDecimal("ID_FASCICOLO_SIEP"));
@@ -540,6 +548,9 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		lFascicolo.setFlagUfficioAccorpato(getString("FLAG_UFFICIO_ACCORPATO"));
 		lFascicolo.setVisibilitaMinorenne(getString("VISIBILITA_EX_MINORENNE"));
 
+		// MEV_6: aggiunta set di variabile; la count viene eseguita nella query di paginazione
+		if (findColumn("TOT"))
+			lFascicolo.setCountRisultati(getBigDecimal("TOT"));
 		// lFascicolo.caricaCertPenaleBlobOut(getBlob("CERTIFICATO_PENALE"));
 		// lFascicolo.setLengthCertPenaleBlob(getBigDecimal("LEN_BLOB_CERT_PENALE") );
 
@@ -748,7 +759,8 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		// Modifica Accorpamento Uffici
 		lStatement += " , UFFICIO UFFINSERIMENTO , CG_REF_CODES DESCR_TIPO_UFFINSERIMENTO, COMUNE DESCR_COM_UFFINSERIMENTO ";
 
-		lStatement += " WHERE FASC.ID_FASCICOLO_SIUS = '" + aIdFascicoloSius + "'";
+		// MEV_6: tolgo apici dal BigDecimal --> '" + aIdFascicoloSius + "'"
+		lStatement += " WHERE FASC.ID_FASCICOLO_SIUS = " + aIdFascicoloSius;
 
 		// Modifica Accorpamento Uffici
 		lStatement += " AND FSIEP.COD_UFFICIO_INSERIMENTO = UFFINSERIMENTO.COD_UFFICIO ";
@@ -789,21 +801,18 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 			lStatement += " FSIEP.DATA_ISCRIZIONE, FSIEP.DATA_UNIONE, FSIEP.FAS_SIE_ID_FASCICOLO_SIEP,";
 			lStatement += " FSIEP.FLAG_VALIDATO, FSIEP.ID_FASCICOLO_SIEP, FSIEP.LETTERA_FASCICOLO,";
 			lStatement += " FSIEP.NOTE NOTE_FASCICOLO, FSIEP.NUM_FASCICOLO_UNIONE, FSIEP.SEN_ID_SENTENZA, FSIEP.SOG_ID_SOGGETTO,";
-			lStatement += " FSIEP.FLAG_ALTRA_CAUSA, FSIEP.DATA_IRREVOCABILITA, ";
-			lStatement += " FSIEP.FLAG_CUMULANTE, ";
-			lStatement += " FSIEP.FLAG_CUMULATO, ";
+			lStatement += " FSIEP.FLAG_ALTRA_CAUSA, FSIEP.DATA_IRREVOCABILITA,";
+			lStatement += " FSIEP.FLAG_CUMULANTE,";
+			lStatement += " FSIEP.FLAG_CUMULATO,";
 			// Dario
-			lStatement += " FSIEP.COD_UFFICIO_UNIONE, DESCR_TIPO_UFFUNIONE.RV_MEANING DESCR_TIPO_UFFICIO_UNIONE, DESCR_COM_UFFUNIONE.DESCRIZIONE DESCR_COMUNE_UFFICIO_UNIONE, FSIEP.KEY_PROVV_NSC ";
-			lStatement += " ,FSIEP.DATA_ARRIVO_ATTO "; /*
-														 * modifica saltata a Marzo 2010 - riportata il 20
-														 * Agosto 2010
-														 */
-
+			lStatement += " FSIEP.COD_UFFICIO_UNIONE, DESCR_TIPO_UFFUNIONE.RV_MEANING DESCR_TIPO_UFFICIO_UNIONE, DESCR_COM_UFFUNIONE.DESCRIZIONE DESCR_COMUNE_UFFICIO_UNIONE, FSIEP.KEY_PROVV_NSC";
+			/* modifica saltata a Marzo 2010 - riportata il 20 Agosto 2010 */
+			lStatement += " ,FSIEP.DATA_ARRIVO_ATTO";
 			// Modifica Accorpamento Uffici
-			lStatement += " ,FSIEP.CHIAVE_PROGR_ORIG ";
-			lStatement += " ,UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS, DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS, DESCR_COM_UFFINSERIMENTO.DESCRIZIONE DESCR_COMUNE_UFFICIO_INS ";
+			lStatement += " ,FSIEP.CHIAVE_PROGR_ORIG";
+			lStatement += " ,UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS, DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS, DESCR_COM_UFFINSERIMENTO.DESCRIZIONE DESCR_COMUNE_UFFICIO_INS";
 			lStatement += " ,UFFINSERIMENTO.FLAG_ACCORP FLAG_UFFICIO_ACCORPATO";
-			lStatement += " ,FSIEP.VISIBILITA_EX_MINORENNE ";
+			lStatement += " ,FSIEP.VISIBILITA_EX_MINORENNE";
 
 			// Modifica MEV 12 (Richiesta Certificato Penale)
 			// lStatement += " , NULL CERTIFICATO_PENALE ";
@@ -818,7 +827,8 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 			// Modifica Accorpamento Uffici
 			lStatement += " , UFFICIO UFFINSERIMENTO , CG_REF_CODES DESCR_TIPO_UFFINSERIMENTO, COMUNE DESCR_COM_UFFINSERIMENTO ";
 
-			lStatement += " WHERE FASC.ID_FASCICOLO_SIUS = '" + aIdFascicoloSius + "'";
+			// MEV_6: tolgo apici dal BigDecimal --> '" + aIdFascicoloSius + "'";
+			lStatement += " WHERE FASC.ID_FASCICOLO_SIUS = " + aIdFascicoloSius;
 
 			// Modifica Accorpamento Uffici
 			lStatement += " AND FSIEP.COD_UFFICIO_INSERIMENTO = UFFINSERIMENTO.COD_UFFICIO ";
@@ -887,11 +897,8 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		lStatement += " FASC.FLAG_CUMULATO, ";
 		lStatement += " FASC.COD_UFFICIO_UNIONE, ";
 		lStatement += " null DESCR_TIPO_UFFICIO_UNIONE, null DESCR_COMUNE_UFFICIO_UNIONE, FASC.KEY_PROVV_NSC ";
-		lStatement += " ,FASC.DATA_ARRIVO_ATTO "; /*
-													 * modifica saltata a Marzo 2010 - riportata il 20 Agosto
-													 * 2010
-													 */
-
+		/* modifica saltata a Marzo 2010 - riportata il 20 Agosto 2010 */
+		lStatement += " ,FASC.DATA_ARRIVO_ATTO ";
 		// Modifica Accorpamento Uffici
 		lStatement += " ,FASC.CHIAVE_PROGR_ORIG ";
 		lStatement += " ,UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS, DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS, DESCR_COM_UFFINSERIMENTO.DESCRIZIONE DESCR_COMUNE_UFFICIO_INS ";
@@ -1109,11 +1116,8 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		lStatement += " FASC.FLAG_CUMULANTE, ";
 		lStatement += " FASC.FLAG_CUMULATO, ";
 		lStatement += " FASC.COD_UFFICIO_UNIONE, DESCR_TIPO_UFFUNIONE.RV_MEANING DESCR_TIPO_UFFICIO_UNIONE, DESCR_COM_UFFUNIONE.DESCRIZIONE DESCR_COMUNE_UFFICIO_UNIONE, FASC.KEY_PROVV_NSC ";
-		lStatement += " ,FASC.DATA_ARRIVO_ATTO "; /*
-													 * modifica saltata a Marzo 2010 - riportata il 20 Agosto
-													 * 2010
-													 */
-
+		/* modifica saltata a Marzo 2010 - riportata il 20 Agosto 2010 */
+		lStatement += " ,FASC.DATA_ARRIVO_ATTO ";
 		// Modifica Accorpamento Uffici
 		lStatement += " ,FASC.CHIAVE_PROGR_ORIG ";
 		lStatement += " ,UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS, DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS, DESCR_COM_UFFINSERIMENTO.DESCRIZIONE DESCR_COMUNE_UFFICIO_INS ";
@@ -1178,7 +1182,8 @@ public class FascicoloSiepSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND S.COD_TIPO_AUTORITA_EMITTENTE = DESCR_AUTORITA_EMIT.RV_LOW_VALUE";
 		lStatement += " AND DESCR_AUTORITA_EMIT.RV_DOMAIN = 'TIPO_UFFICIO'";
 		lStatement += " AND S.COD_LUOGO_EMITTENTE = DESCR_LUOGO_EMIT.COD_COMUNE";
-		lStatement += " AND S.ID_SENTENZA = '" + aIdSentenza + "'";
+		// MEV_6: tolgo apici dal BigDecimal --> '" + aIdSentenza + "'"
+		lStatement += " AND S.ID_SENTENZA = " + aIdSentenza;
 		setStatement(lStatement);
 
 	}
