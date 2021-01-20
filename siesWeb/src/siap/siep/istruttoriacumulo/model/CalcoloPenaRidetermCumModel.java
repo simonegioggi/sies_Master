@@ -1,13 +1,5 @@
 package siap.siep.istruttoriacumulo.model;
 
-/**
-* <p>Title: CalcoloPenaRidetermCumModel</p>
-* <p>Description: Classe Model che rappresenta il PenaRideterminataCumulo</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
@@ -20,11 +12,24 @@ import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
 import siap.siep.penacumulo.model.PenaCumuloModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 
+/**
+ * <p>
+ * Title: CalcoloPenaRidetermCumModel
+ * </p>
+ * <p>
+ * Description: Classe Model che rappresenta il PenaRideterminataCumulo
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2002
+ * </p>
+ * <p>
+ * Company: Bull
+ * </p>
+ * 
+ * @version 1.0
+ */
 public class CalcoloPenaRidetermCumModel extends GenericModel {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -5100599465341861796L;
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -137,7 +142,7 @@ public class CalcoloPenaRidetermCumModel extends GenericModel {
 	/*****************************************************************************
 	 * COSTRUTTORE DI COPIA che istanzia un nuovo model caricandolo con il contenuto del model passato in
 	 * input
-	 * 
+	 *
 	 * @param aModel
 	 ****************************************************************************/
 	public CalcoloPenaRidetermCumModel(CalcoloPenaRidetermCumModel aModel) {
@@ -180,7 +185,7 @@ public class CalcoloPenaRidetermCumModel extends GenericModel {
 	/*****************************************************************************
 	 * COSTRUTTORE DI COPIA che istanzia un nuovo model caricandolo con il contenuto del model ci tipo
 	 * 'PenaRideterminataCumuloModel'
-	 * 
+	 *
 	 * @param aModel
 	 ****************************************************************************/
 	public CalcoloPenaRidetermCumModel(PenaRideterminataCumuloModel aModel) {
@@ -692,7 +697,7 @@ public class CalcoloPenaRidetermCumModel extends GenericModel {
 
 	/**
 	 * Restituice un pena ResiduaModel prelevando i dati dalle pena rideterminate
-	 * 
+	 *
 	 * @return
 	 */
 	public PenaResiduaModel getPenaResidua() {
@@ -743,7 +748,7 @@ public class CalcoloPenaRidetermCumModel extends GenericModel {
 
 	/**
 	 * Metodo che rimappa i dati della PenaRideterminata nel model della PenaCumulo per le stampe
-	 * 
+	 *
 	 * @return
 	 */
 	public PenaCumuloModel getPenaCumuloModel() {
@@ -803,7 +808,7 @@ public class CalcoloPenaRidetermCumModel extends GenericModel {
 
 	/**
 	 * Metodo cre crea i record LA a pertire dei dati presenti su PenaRideterminataCumulo
-	 * 
+	 *
 	 * @return
 	 */
 	public Vector<LicenzaLibAnticipataModel> getLiberazioniAnticipate() {

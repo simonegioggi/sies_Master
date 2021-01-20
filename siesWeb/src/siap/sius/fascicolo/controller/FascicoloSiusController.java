@@ -31,7 +31,6 @@ import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.XModel;
 import siap.sico.residenza.dao.ResidenzaDAO;
-//import siap.sico.residenza.dao.ResidenzaSqlDAO;
 import siap.sico.residenza.dao.ResidenzaFascicoloSiusDAO;
 import siap.sico.residenza.dao.ResidenzaSqlDAO;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
@@ -50,11 +49,9 @@ import siap.sico.util.SICOLookupRemote;
 import siap.sico.util.report.ReportGenerator;
 import siap.siep.SIEPException;
 import siap.siep.altracausa.dao.AltraCausaSqlDAO;
-//import siap.siep.fascicolo.dao.FascicoloSiepSqlDAO;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneSqlDAO;
-//import siap.siep.SIEPException;
 import siap.siep.luogodetenzione.model.LuogoDetenzioneModel;
 import siap.siep.parametro.dao.ParametroSqlDAO;
 import siap.siep.parametro.model.ParametroModel;
@@ -88,18 +85,14 @@ import siap.sius.magistratorelatore.dao.MagistratoRelatoreSqlDAO;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
 import siap.sius.produzioneatti.dao.ParereSqlDAO;
 import siap.sius.produzioneatti.model.ParereModel;
-//import siap.sius.rifasius.model.RiferimentoFascicoloSiusModel;
 import siap.sius.rifasius.dao.RiferimentoFascicoloSiusDAO;
 import siap.sius.scadenzario.dao.ScadenzarioSiusDAO;
 import siap.sius.scadenzario.model.ScadenzarioSiusModel;
 import siap.sius.stampa.action.ICostantiStampaSius;
 import siap.sius.stampa.controller.IStampaSius;
-//import siap.sius.statistiche.controller.IStatisticheSius;
-//import siap.sius.statistiche.model.IspEstrazioneOggettiModel;
 import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.dao.TenoreSqlDAO;
 import siap.sius.tenore.model.TenoreModel;
-//import siap.sius.statistiche.model.EveFasGepSogProvModel;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -1856,6 +1849,31 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// Set del DAO e aggiornamento del FascicoloSius.
 			lFasDao.setDAOFromModelForUpdate(aFascicoloGPModel.getFascicoloSiusModel());
 			lFasDao.update();
+
+			/*
+			 * ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato come in inserimento
+			 * 				FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS
+			 * Numero MAC : 20200610014
+			 * Autore : Gioggi
+			 * Data : 11 giu 2020
+			 * Branch : MAC_20200610014
+			 */
+			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
+					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+							.equals("U019")
+					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+							.equals("U024")) {
+				// Caso di Inserimento ESECUZIONE_MISURA_ALTERNATIVA - U004
+				// Caso di Inserimento ESECUZIONE_SANZIONE_SOSTITUTIVA - U019
+				// Caso di Inserimento ESECUZIONE_MISURA_SICUREZZA - U024
+				// ATTENZIONE! Occorre Updatare il Generale Procedimento appena inserito nei campi ANNO_S1 &
+				// PROGR_S1 poichè in essi hanno "viaggiato" Anno e Numero Ordinanza!
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setAnnoS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveAnno());
+				aFascicoloGPModel.getGeneraleProcedimentoModel()
+						.setProgrS1(aFascicoloGPModel.getFascicoloSiusModel().getChiaveProgr());
+			}
+			// ***** FINE INTERVENTO MAC_20200610014 *****//
 
 			// Set del DAO e aggiornamento del GeneraleProcedimento.
 			// STUB 14/12/2004 Aggiornamento parziale del Generale Procedimento.
@@ -3945,8 +3963,11 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lMisAltModel.setCodUfficioInserimento(
 						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-				lMisAltModel
-						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				// ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato campo di audit
+				// lMisAltModel.setDataInserimento(
+				// aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lMisAltModel.setDataInserimento(DateUtils.getSysDate());
+
 				lMisAltModel.setGenPridGeneraleProcedimento(
 						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lMisAltModel.setDataOrdinanza(
@@ -4035,8 +4056,10 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lMisAltModel.setCodUfficioInserimento(
 							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-					lMisAltModel.setDataInserimento(
-							aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					// ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato campo di audit
+					// lMisAltModel.setDataInserimento(
+					// aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					lMisAltModel.setDataInserimento(DateUtils.getSysDate());
 					lMisAltModel.setGenPridGeneraleProcedimento(
 							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lMisAltModel.setDataOrdinanza(aEvento.getDataEmissione());
@@ -4206,8 +4229,10 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lSanzSostModel.setCodUfficioInserimento(
 						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-				lSanzSostModel
-						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				// ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato campo di audit
+				// lSanzSostModel.setDataInserimento(
+				// aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lSanzSostModel.setDataInserimento(DateUtils.getSysDate());
 				lSanzSostModel.setGenPridGeneraleProcedimento(
 						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lSanzSostModel.setDataOrdinanza(
@@ -4296,8 +4321,10 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lSanzSostModel.setCodUfficioInserimento(
 							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-					lSanzSostModel.setDataInserimento(
-							aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					// ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato campo di audit
+					// lSanzSostModel.setDataInserimento(
+					// aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					lSanzSostModel.setDataInserimento(DateUtils.getSysDate());
 					lSanzSostModel.setGenPridGeneraleProcedimento(
 							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lSanzSostModel.setDataOrdinanza(aEvento.getDataEmissione());
@@ -4460,8 +4487,10 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 						aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 				lMisSicModel.setCodUfficioInserimento(
 						aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-				lMisSicModel
-						.setDataInserimento(aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				// ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato campo di audit
+				// lMisSicModel.setDataInserimento(
+				// aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+				lMisSicModel.setDataInserimento(DateUtils.getSysDate());
 				lMisSicModel.setGenPridGeneraleProcedimento(
 						aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 				lMisSicModel.setDataOrdinanza(
@@ -4548,8 +4577,10 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 							aFascicoloGPModel.getFascicoloSiusModel().getCodOperatoreInserimento());
 					lMisSicModel.setCodUfficioInserimento(
 							aFascicoloGPModel.getFascicoloSiusModel().getCodUfficioInserimento());
-					lMisSicModel.setDataInserimento(
-							aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					// ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato campo di audit
+					// lMisSicModel.setDataInserimento(
+					// aFascicoloGPModel.getFascicoloSiusModel().getDataInserimento());
+					lMisSicModel.setDataInserimento(DateUtils.getSysDate());
 					lMisSicModel.setGenPridGeneraleProcedimento(
 							aFascicoloGPModel.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 					lMisSicModel.setDataOrdinanza(aEvento.getDataEmissione());

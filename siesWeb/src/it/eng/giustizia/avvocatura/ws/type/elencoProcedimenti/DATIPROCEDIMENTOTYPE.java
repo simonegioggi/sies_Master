@@ -2,14 +2,13 @@
 // Questo file è stato generato dall'architettura JavaTM per XML Binding (JAXB) Reference Implementation, v2.2.8-b130911.1802 
 // Vedere <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Qualsiasi modifica a questo file andrà persa durante la ricompilazione dello schema di origine. 
-// Generato il: 2016.09.02 alle 03:59:57 PM CEST 
+// Generato il: 2020.02.10 alle 12:41:34 PM CET 
 //
 
 
 package it.eng.giustizia.avvocatura.ws.type.elencoProcedimenti;
 
 import java.math.BigInteger;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -42,6 +41,9 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="codTipoAtto" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="descrTipoAtto" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="codTipoUfficio" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="descrTipoUfficio" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="codUfficioDistretto" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="descrUfficioDistretto" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -67,7 +69,10 @@ import javax.xml.bind.annotation.XmlType;
     "descrDefinizione",
     "codTipoAtto",
     "descrTipoAtto",
-    "codTipoUfficio"
+    "codTipoUfficio",
+    "descrTipoUfficio",
+    "codUfficioDistretto",
+    "descrUfficioDistretto"
 })
 public class DATIPROCEDIMENTOTYPE {
 
@@ -103,6 +108,12 @@ public class DATIPROCEDIMENTOTYPE {
     protected String descrTipoAtto;
     @XmlElement(required = true)
     protected String codTipoUfficio;
+    @XmlElement(required = true, nillable = true)
+    protected String descrTipoUfficio;
+    @XmlElement(required = true)
+    protected String codUfficioDistretto;
+    @XmlElement(required = true, nillable = true)
+    protected String descrUfficioDistretto;
 
     /**
      * Recupera il valore della proprietà idFascicoloSius.
@@ -486,6 +497,78 @@ public class DATIPROCEDIMENTOTYPE {
      */
     public void setCodTipoUfficio(String value) {
         this.codTipoUfficio = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà descrTipoUfficio.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDescrTipoUfficio() {
+        return descrTipoUfficio;
+    }
+
+    /**
+     * Imposta il valore della proprietà descrTipoUfficio.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDescrTipoUfficio(String value) {
+        this.descrTipoUfficio = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà codUfficioDistretto.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodUfficioDistretto() {
+        return codUfficioDistretto;
+    }
+
+    /**
+     * Imposta il valore della proprietà codUfficioDistretto.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodUfficioDistretto(String value) {
+        this.codUfficioDistretto = value;
+    }
+
+    /**
+     * Recupera il valore della proprietà descrUfficioDistretto.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDescrUfficioDistretto() {
+        return descrUfficioDistretto;
+    }
+
+    /**
+     * Imposta il valore della proprietà descrUfficioDistretto.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDescrUfficioDistretto(String value) {
+        this.descrUfficioDistretto = value;
     }
 
 }

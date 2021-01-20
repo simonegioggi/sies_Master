@@ -142,8 +142,8 @@ public class ActLoadRicercaTrasmissioniSolleciti extends ActionSiap implements I
 			if (lMess != null && lMess.getIdMessaggio() != null) {
 				if ("00067".equals(lMess.getCodTipoOperazione())) {
 					IMessaggio CtrlMess = JMSLookupRemote.getMessaggioRemote();
-					lVecSoll = new Vector<>(CtrlMess.ExRicercaMessaggioByIdMessaggioSollecitato(
-							"00068", "" + lMess.getIdMessaggio()));
+					lVecSoll = new Vector<>(CtrlMess.ExRicercaMessaggioByIdMessaggioSollecitato("00068",
+							"" + lMess.getIdMessaggio()));
 
 					// La Ricerca Solleciti è Ordinata in modo decrescente; Il Primo elemento è Il Sollecito
 					// con MAX Data_Invio

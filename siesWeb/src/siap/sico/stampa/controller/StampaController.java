@@ -139,7 +139,6 @@ import siap.util.SIESSwitch;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StampaController extends SIAPStampaController implements IStampa {
-
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -380,7 +379,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	public TreeModel prelevaDatiEventoSiepXCumulo(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
-
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -638,6 +636,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lSenDao);
 
 			cleanup(lConn);
+
 		}
 
 		return lTreeRoot;
@@ -651,7 +650,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 * @throws F3BException
 	 */
 	public TreeModel prelevaDatiEventoSiep(EventoNotificaModel aEveModel) throws F3BException {
-
 		return prelevaDatiEventoSiep(aEveModel, null);
 	}
 
@@ -1070,6 +1068,11 @@ public class StampaController extends SIAPStampaController implements IStampa {
 					if (enm != null) {
 						CampoNotaModel lCampoNota = new CampoNotaModel();
 						lCampoNota.setDescr(enm.getEvento().getCodMotivo());
+						// TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il
+						// provvedimento di Restituzione Ordine di Consegna
+						// apooggio questa informazione nell'oggetto CampoNota per poterla stampare sul
+						// template.
+						lCampoNota.setDataInserimento(enm.getEvento().getDataEmissione());
 						TreeModel mytree = new TreeModel(lCampoNota);
 						if (mytree != null)
 							lTreeEveMod.add(mytree);
@@ -1121,6 +1124,8 @@ public class StampaController extends SIAPStampaController implements IStampa {
 
 			// DL 92/2014 Rimedi Risarcitori/ Reclamo Rimedi Risarcitori
 			if ("5491".equals(aEveModel.getEvento().getCodMotivo())
+					// EC: gestione Ticket#20200508014 (aggiungo il codice mancante 9154)
+					|| "9154".equals(aEveModel.getEvento().getCodMotivo())
 					|| "5492".equals(aEveModel.getEvento().getCodMotivo())
 					|| "5493".equals(aEveModel.getEvento().getCodMotivo())
 					|| "5494".equals(aEveModel.getEvento().getCodMotivo())
@@ -1295,7 +1300,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	/*********************************************************************************/
 	public TreeModel prelevaDatiSospensioni(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
-
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -1491,6 +1495,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			lTreeRoot.add(lTreeSogMod);
 			lTreeRoot.add(this.getTreeSentenza(lFasModel, lConn));
 			// lTreeRoot.add(this.getTreeSentenza(lFasModel.getSenIdSentenza(), lConn));
+
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1510,7 +1515,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lDecSqlDao);
 			cleanup(lPenaResDao);
 			cleanup(lSospSql);
-
 			cleanup(lConn);
 		}
 
@@ -1526,7 +1530,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	public TreeModel prelevaDatiIstruttoria(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
-
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -1540,6 +1543,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		PenaComplessivaSqlDAO lPenaComplDAO = null;
 		SanzioneSostitutivaSqlDAO lSSostsqlDAO = null;
 		CircostanzaSqlDAO lCircDao = null;
+
 		PenaPrecedenteSqlDAO lPenPrecDao = null;
 		PosizioneGiuridicaSqlDAO lPosSqlDAO = null;
 
@@ -1967,6 +1971,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lReaDao);
 			cleanup(lNotRDao);
 			cleanup(lFasDao);
+
 			cleanup(lNotDao);
 			cleanup(lIstSqlDao);
 			cleanup(lSSSqlDAO);
@@ -1991,7 +1996,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 * @return
 	 */
 	private XModel createRootAvvocato(AvvocatoSiepModel aAvvSieModel, UtenteModel aUtenteModel) {
-
 		XModel lStampa = new XModel();
 
 		String descrTipoUff = "";
@@ -2034,7 +2038,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	public TreeModel prelevaDatiAvvocato(AvvocatoFascicoloSiepModel aAvvocatoSiep, UtenteModel aUtenteModel)
 			throws F3BException {
-
 		TreeModel lTreeRoot = null;
 		MagistratoModel lMag = null;
 
@@ -2146,6 +2149,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 					lTreeSogMod.add(new TreeModel(lResModel));
 				}
 			}
+
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -2156,6 +2160,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lSogDao);
 			cleanup(lFasDao);
 			cleanup(lResDao);
+
 			cleanup(lIstSql);
 
 			cleanup(lConn);
@@ -2169,7 +2174,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	private TreeModel prelevaDatiCampoNota(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
-
 		// CampoNote
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
 		Vector lCampiNote = null;
@@ -2201,11 +2205,11 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	private TreeModel prelevaDatiCompetenza(TreeModel aTree, BigDecimal aEventoKey, Connection aConn)
 			throws Exception {
-
 		CompetenzaSqlDAO lCompSqlDAO = null;
 		Vector lCompetenze = null;
 		CompetenzaModel lCompetenza = null;
 		TreeModel lTreeCompetenza = null;
+
 		UfficioSqlDAO lUffSqlDao = null;
 
 		try {
@@ -2257,7 +2261,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("Prelevo i dati dell'evento di annotazione ");
-
 		EventoSqlDAO lEveDao = null;
 		EventoModel lEveAnnMod;
 
@@ -2271,7 +2274,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		FungibilitaModel lFunModel = null;
 
 		TreeModel lEveAnnTree = null;
-
 		try {
 			// n.b. se di ufficio recupero l'evento di procura (Annotazione) altrimenti i
 			// dati dell'evento di Altro ufficio
@@ -2489,6 +2491,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				TreeModel lTreeFung = new TreeModel(lFunModel);
 				lEveAnnTree.add(lTreeFung);
 			}
+
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -2515,7 +2518,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	public TreeModel prelevaDatiDifferimento(EventoNotificaModel aEveNotModel, UtenteModel aUtenteModel)
 			throws F3BException {
-
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -2527,7 +2529,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		SanzioneSostitutivaSqlDAO lSanDao = null;
 		PenaResiduaSqlDAO lPenaResDao = null;
 		SospensioneSqlDAO lSospSql = null;
-
 		SospensioneModel lSosp = null;
 
 		BigDecimal lKeyFascicolo = aEveNotModel.getEvento().getFasSieIdFascicoloSiep();
@@ -2843,7 +2844,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 * @return
 	 */
 	private boolean isRidetPenaAltro(EventoModel aEveModel) {
-
 		boolean lIsRidetPenaAltro = false;
 		if (aEveModel != null && aEveModel.getEveIdEvento() != null && aEveModel.getCodMotivo() != null) {
 			int intCodiceMotivo = Integer.parseInt(aEveModel.getCodMotivo());
@@ -2894,7 +2894,6 @@ public class StampaController extends SIAPStampaController implements IStampa {
 	 */
 	public TreeModel prelevaDatiPenaSospesa(EventoNotificaModel aEveModel, UtenteModel aUtenteModel)
 			throws F3BException {
-
 		TreeModel lTreeRoot = new TreeModel();
 
 		Connection lConn = null;
@@ -3159,6 +3158,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// TreeModel lTreeSenMod = new TreeModel(lAnnMod);
 			// lTreeRoot.add(lTreeSenMod);
 			lTreeRoot.add(lTreeAnnManMod);
+
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);
@@ -3176,6 +3176,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		} finally {
 			cleanup(lReaDao);
 			cleanup(lFasDao);
+
 			cleanup(lNotDao);
 			cleanup(lPenaComplDAO);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati

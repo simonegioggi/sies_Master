@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.web.ActionSiap;
 import siap.siep.altracausa.controller.IAltraCausa;
 import siap.siep.altracausa.model.AltraCausaModel;
@@ -20,9 +23,6 @@ import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.util.CaricaHTML_Servlet;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
  * <p>
@@ -37,10 +37,12 @@ import f3b.web.RedirectTo;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMisuraCautelare {
+
+	// private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws Exception {
@@ -99,7 +101,9 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 
 				// se la differenza tra la data fine e la data inizio è maggiore
 				// di 1, significa che le 2 misure cautelari non sono continuative
+				// siesLogger.debug("giorni = "+giorni);
 				if (giorni > 1) {
+					// siesLogger.debug("giorni>1... ");
 					// misure cautelari non continuative
 					lMisCautModel.setMisCautContinuativa("N");
 
@@ -107,19 +111,30 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 					// MisCautContinuativa uguale ad 'N' solo se quest'ultimo è diverso
 					// da 'S'
 					MisuraCautelareModel lMisCaut = (MisuraCautelareModel) lMisureApp.get(inc - 1);
+
+					// Ticket#20200715018 -
 					if (lMisCaut.getMisCautContinuativa() == null
 							|| lMisCaut.getMisCautContinuativa().equals("")
-							|| !lMisCaut.getMisCautContinuativa().equals("S")) {
+							|| (!lMisCaut.getMisCautContinuativa().equals("S")
+									&& !lMisCaut.getMisCautContinuativa().equals("SU") // aggiunto codice SU
+							)) {
 						lMisCaut.setMisCautContinuativa("N");
 					}
+					// END - Ticket#20200715018
 
 					// se la differenza tra la data fine e la data inizio è
 					// uguale a 0 oppure uguale a 1 le misure cautelari
 					// sono continuative
 				} else if (giorni == 0 || giorni == 1) {
 					// misure cautelari continuative
-					lMisCautModel.setMisCautContinuativa("S");
 
+					// Ticket#20200715018 - la marco come ultima della serie SU. Verrà eventualmente setta a S
+					// se
+					// il successivo record è in continuazione con il corrente altrimenti resta SU
+					// lMisCautModel.setMisCautContinuativa("S");
+					lMisCautModel.setMisCautContinuativa("SU"); // S = in continuazione con il precedente, U =
+																// ultimo (per ora) del gruppo
+					// END - Ticket#20200715018
 					// Recupero la misura cautelare precedente e imposto il flag
 					// MisCautContinuativa uguale ad 'S'
 					MisuraCautelareModel lMisCaut = (MisuraCautelareModel) lMisureApp.get(inc - 1);
@@ -163,8 +178,8 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		int mNumTotAnniUltimaMisCauCom = 0;
 		int mNumTotMesiUltimaMisCauCom = 0;
 		int mNumTotGiorniUltimaMisCauCom = 0;
-//		boolean misCautContinuativa = false;
-//		BigDecimal idUltimaMisCautContinuativa = new BigDecimal(0);
+		// boolean misCautContinuativa = false;
+		// BigDecimal idUltimaMisCautContinuativa = new BigDecimal(0);
 
 		// inizio calcolo dei totali
 		// popolo una tabella di sei colonne e n righe quanti sono i periodi
@@ -177,13 +192,22 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		int numPeriodiContinuativi = 0;
 		boolean precedentePeriodoNonConsecutivo = false;
 
+		// Solo logs
+		// for (int j = 0; j < lMisureApp.size(); j++) {
+		// MisuraCautelareModel lMisCautAppModel = (MisuraCautelareModel) lMisureApp.get(j);
+		// siesLogger.debug("FlagCont = "+lMisCautAppModel.getMisCautContinuativa());
+		// }
+
 		for (int j = 0; j < lMisureApp.size(); j++) {
 			// MisuraCautelareModel lMisCautAppModel = new MisuraCautelareModel((MisuraCautelareModel)
 			// lItMisureApp.next());
 			MisuraCautelareModel lMisCautAppModel = new MisuraCautelareModel(
 					(MisuraCautelareModel) lMisureApp.get(j));
-			if (lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("S")
-					&& lMisCautAppModel.getFlagComputabile().equalsIgnoreCase("S")) {
+			if ((lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("S")
+					|| lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("SU") // Ticket#20200715018
+																						// - Anche SU è in
+																						// continuazione
+			) && lMisCautAppModel.getFlagComputabile().equalsIgnoreCase("S")) {
 				// misCautContinuativa=true;
 
 				// matricePeriodiConsecutivi[nRigPC][0] = DateUtils.getDateToString(DItempdata,"dd/MM/yyyy" );
@@ -208,8 +232,15 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 				matricePeriodi[nRigheMatriceMisContinuativi][4] = "S";
 				// numPeriodiContinuativiRaggruppato = numPeriodiContinuativiRaggruppato +1;
 				nRigheMatriceMisContinuativi = nRigheMatriceMisContinuativi + 1;
-				precedentePeriodoNonConsecutivo = false;
+
+				// Ticket#20200715018 - Informo il record successivo che questo non è in continuazione con lui
+				if (lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("SU"))
+					precedentePeriodoNonConsecutivo = true; //
+				else if (lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("S"))
+					precedentePeriodoNonConsecutivo = false;
+				// END Ticket#20200715018 - Ripristino il flag MisCautContinuativa a S
 			}
+
 			if (lMisCautAppModel.getMisCautContinuativa().equalsIgnoreCase("N")) {
 				Date datainizio = lMisCautAppModel.getDataInizio();
 				Date datafine = lMisCautAppModel.getDataFine();
@@ -233,6 +264,18 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 				nRigheMatriceMisContinuativi = nRigheMatriceMisContinuativi + 1;
 			}
 		}
+
+		// DEBUG d.f 16/07/2020
+		// siesLogger.debug("Contenuto matrice periodi:");
+		// for (int i = 0; i < nRigheMatriceMisContinuativi; i++) {
+		// siesLogger.debug(i+") "+matricePeriodi[i][0]+" - "
+		// +matricePeriodi[i][1]+" - "
+		// +matricePeriodi[i][2]+" - "
+		// +matricePeriodi[i][3]+" - "
+		// +matricePeriodi[i][4]
+		// );
+		//
+		// }
 
 		// popolo una tabella di tre colonne e n righe quanti sono i periodi
 		// nomi colonne: Data-inizio | Data-finale |id Misura Cautelare
@@ -290,11 +333,28 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 			// }
 		}
 
+		// DEBUG d.f 16/07/2020
+		// siesLogger.debug("Contenuto matrice rielaborati:");
+		// for (int i = 0; i < matricePeriodiRaggruppamento.length; i++) {
+		// siesLogger.debug (i+") "+matricePeriodiRaggruppamento[i][0]+" - "
+		// +matricePeriodiRaggruppamento[i][1]+" - "
+		// +matricePeriodiRaggruppamento[i][2]
+		// );
+		// }
+
+		// siesLogger.debug("Entro nel ciclo di calcolo e aggiornamento quantum ultimo record dei periodi in
+		// continuazione...");
 		BigDecimal idMisuraCautelareRaggruppata = new BigDecimal(0);
 		for (int i = 0; i < rigaMatRag; i++) {
 			Date datainizio = DateUtils.getDate(matricePeriodiRaggruppamento[i][0], "dd/MM/yyyy");
 			Date datafine = DateUtils.getDate(matricePeriodiRaggruppamento[i][1], "dd/MM/yyyy");
 			idMisuraCautelareRaggruppata = new BigDecimal(matricePeriodiRaggruppamento[i][2]);
+
+			// siesLogger.debug(i+") "+DateUtils.getDateToString(datainizio, "dd/MM/yyyy")+" - "
+			// +DateUtils.getDateToString(datafine, "dd/MM/yyyy")+" - "
+			// +idMisuraCautelareRaggruppata
+			// );
+
 			String ggInizio = DateUtils.getDayToString(datainizio);
 			String mmInizio = DateUtils.getMonthToString(datainizio);
 			String aaInizio = DateUtils.getYearToString(datainizio);
@@ -308,12 +368,16 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			// siesLogger.debug("calcoloGioniMesiAnni = "+calcoloGioniMesiAnni);
+
 			String sep = "~#";
 			String[] aPairs = new String[3];
 			aPairs = calcoloGioniMesiAnni.split(sep);
 			mNumTotAnniUltimaMisCauCom = Integer.parseInt(aPairs[0]);
 			mNumTotMesiUltimaMisCauCom = Integer.parseInt(aPairs[1]);
 			mNumTotGiorniUltimaMisCauCom = Integer.parseInt(aPairs[2]);
+
+			// siesLogger.debug("Cerco la MC per aggiornare i quantum...");
 			for (int k = 0; k < lMisureApp.size(); k++) {
 				// MisuraCautelareModel lMisCautM = new MisuraCautelareModel((MisuraCautelareModel)
 				// lItMisureAppModificata.next());
@@ -321,6 +385,7 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 				MisuraCautelareModel lMisCautM = new MisuraCautelareModel(
 						(MisuraCautelareModel) lMisureApp.get(k));
 				if (lMisCautM.getIdMisuraCautelare().compareTo(idMisuraCautelareRaggruppata) == 0) {
+					// siesLogger.debug("Cerco la MC per aggiornare i quantum...");
 					lMisCautM.setNumTotAnniUltimaMisCauCom(new BigDecimal(mNumTotAnniUltimaMisCauCom));
 					lMisCautM.setNumTotMesiUltimaMisCauCom(new BigDecimal(mNumTotMesiUltimaMisCauCom));
 					lMisCautM.setNumTotGiorniUltimaMisCauCom(new BigDecimal(mNumTotGiorniUltimaMisCauCom));
@@ -336,6 +401,28 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		// aggiorno il vettore delle misure cautelari
 		lVect = new Vector(lMisureApp);
 		// fine MEV_10_S3
+
+		// siesLogger.debug ("Vettore delle MC parssato alla JSP con i periodi continuativi ricalcolati");
+		// Ticket#20200715018 - Ripristino il flag MisCautContinuativa a S
+		for (int i = 0; i < lVect.size(); i++) {
+			MisuraCautelareModel lMisCautXX = (MisuraCautelareModel) lVect.elementAt(i);
+			// siesLogger.debug (i+") "+lMisCautXX.getIdMisuraCautelare() +" - "
+			// + DateUtils.getDateToString(lMisCautXX.getDataInizio(), "dd/MM/yyyy")+" - "
+			// + DateUtils.getDateToString(lMisCautXX.getDataFine(), "dd/MM/yyyy")+" - "
+			// + " Anni "+ lMisCautXX.getNumAnni()
+			// + " Mesi "+ lMisCautXX.getNumMesi()
+			// + " Giorni "+ lMisCautXX.getNumGiorni() + " - "
+			// + " Anni "+ lMisCautXX.getNumTotAnniUltimaMisCauCom()
+			// + " Mesi "+ lMisCautXX.getNumTotMesiUltimaMisCauCom()
+			// + " Giorni "+ lMisCautXX.getNumTotGiorniUltimaMisCauCom() + " - "
+			// + lMisCautXX.getFlagUltimaMisCauCommutabile()
+			// );
+
+			// RIPRISTINO il FLAG a S per non creare problemi alla JSP
+			if ("SU".equals(lMisCautXX.getMisCautContinuativa()))
+				lMisCautXX.setMisCautContinuativa("S");
+		}
+		// END Ticket#20200715018 - Ripristino il flag MisCautContinuativa a S
 
 		if (lVect.isEmpty() && lVectSiDateNull.isEmpty()) {
 			// throw new F3BException(F3BException.USER_MESSAGE, "Nessuna Misura Cautelare trovata");
@@ -376,8 +463,8 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		} else if (lPos != null && lPos.getIdPosizioneGiuridica() != null
 				&& lPos.getCodPosizioneGiuridica().equalsIgnoreCase("07")
 				&& lPos.getAltCauIdAltraCausa() == null) {
-			AltraCausaModel altraCausa = lAcCtrl.ExRicercaAltraCausaIstitutoByFascicolo(lPos
-					.getFasSieIdFascicoloSiep());
+			AltraCausaModel altraCausa = lAcCtrl
+					.ExRicercaAltraCausaIstitutoByFascicolo(lPos.getFasSieIdFascicoloSiep());
 			if (altraCausa != null && lPos.getCodMaschera() == null) {
 				// vecchia gestione
 				lPos.setDescrPosizioneGiuridica(altraCausa.getDescrTipoPosGiuridica());
@@ -388,8 +475,8 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 				&& lPos.getCodPosizioneGiuridica().equalsIgnoreCase("07")
 				&& lPos.getAltCauIdAltraCausa() != null) {
 			// Ricerca Altra Causa
-			AltraCausaModel altraCausa = lAcCtrl.ExRicercaAltraCausaIstitutoByKey(lPos
-					.getAltCauIdAltraCausa());
+			AltraCausaModel altraCausa = lAcCtrl
+					.ExRicercaAltraCausaIstitutoByKey(lPos.getAltCauIdAltraCausa());
 			lPos.setDescrPosizioneGiuridica(altraCausa.getDescrTipoPosGiuridica());
 		}
 		// fine gestione desc posizione giuridica
@@ -411,22 +498,23 @@ public class ActRicercaMisuraCautelare extends ActionSiap implements ICostantiMi
 		// fine a9/rr/075
 
 		// MERGE v10: ??? commentato codice sottostante ??? non ha senso!!!
-//		String espiazionePenaIstitutoDetenzione = "";
-//		if (!this
-//				.isRequestParameterNullObj(ICostantiMisuraCautelare.ESPIAZIONE_PENA_ISTITUTO_DETENZIONE_ALTRO_LUOGO)
-//				&& !"".equalsIgnoreCase(ICostantiMisuraCautelare.ESPIAZIONE_PENA_ISTITUTO_DETENZIONE_ALTRO_LUOGO)) {
-//			espiazionePenaIstitutoDetenzione = this
-//					.getRequestStringParameter(ICostantiMisuraCautelare.ESPIAZIONE_PENA_ISTITUTO_DETENZIONE_ALTRO_LUOGO);
-//		}
+		// String espiazionePenaIstitutoDetenzione = "";
+		// if (!this
+		// .isRequestParameterNullObj(ICostantiMisuraCautelare.ESPIAZIONE_PENA_ISTITUTO_DETENZIONE_ALTRO_LUOGO)
+		// && !"".equalsIgnoreCase(ICostantiMisuraCautelare.ESPIAZIONE_PENA_ISTITUTO_DETENZIONE_ALTRO_LUOGO))
+		// {
+		// espiazionePenaIstitutoDetenzione = this
+		// .getRequestStringParameter(ICostantiMisuraCautelare.ESPIAZIONE_PENA_ISTITUTO_DETENZIONE_ALTRO_LUOGO);
+		// }
 
-//		String descEspiazionePenaIstitutoDetenzione = "";
-//		if (espiazionePenaIstitutoDetenzione.equals("0")) {
-//			espiazionePenaIstitutoDetenzione = "1";
-//			descEspiazionePenaIstitutoDetenzione = "Istituto";
-//		} else if (espiazionePenaIstitutoDetenzione.equals("1")) {
-//			espiazionePenaIstitutoDetenzione = "1";
-//			descEspiazionePenaIstitutoDetenzione = "no Istituto";
-//		}
+		// String descEspiazionePenaIstitutoDetenzione = "";
+		// if (espiazionePenaIstitutoDetenzione.equals("0")) {
+		// espiazionePenaIstitutoDetenzione = "1";
+		// descEspiazionePenaIstitutoDetenzione = "Istituto";
+		// } else if (espiazionePenaIstitutoDetenzione.equals("1")) {
+		// espiazionePenaIstitutoDetenzione = "1";
+		// descEspiazionePenaIstitutoDetenzione = "no Istituto";
+		// }
 
 		return PG_RICERCAMISURACAUTELARE;
 	}

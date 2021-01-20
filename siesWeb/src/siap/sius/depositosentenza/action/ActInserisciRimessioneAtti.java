@@ -263,16 +263,16 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo lCodContenuto = " + lCodContenuto);
-		// lettura tipo di sentenza Sempre automatica 13-9-04
 
 		// Generazione automatica in base al contenuto
 		Collection lOggetti = DecodificheManager.getInstance().getOggettoProcedimento();
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("lOggetti = " + lOggetti.toString());
-		// String lCodTipoDec = null;
+		// lettura tipo di sentenza Sempre automatica 13-9-04
+		String lCodTipoDec = null;
 		// lCodTipoDec = DecodificheUtils.getCodAltebyCode(lOggetti, lCodContenuto);
-		String lCodTipoDec = ICostantiDepositoSentenza.RIMESSIONE_ATTI;
+		lCodTipoDec = ICostantiDepositoSentenza.RIMESSIONE_ATTI;
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("cod Tipo Sentenza = " + lCodTipoDec);
@@ -284,6 +284,7 @@ public class ActInserisciRimessioneAtti extends ActionSius implements ICostantiD
 		 * FascicoloGPModel((FascicoloGPModel)getSessionAttribute("fascicoloSiusGP")); BigDecimal
 		 * lIdFascicoloSiusOrigine = lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine(); }
 		 */
+
 		// if (lCodTipoDec == null)
 		// throw new SIUSException(SIUSException.USER_MESSAGE, "Tipo sentenza automatico non definito");
 

@@ -1,5 +1,6 @@
 package siap.siep.ordineesecuzione.action;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -14,6 +15,7 @@ import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
@@ -79,9 +81,26 @@ public class ActLoadCancellaProvvedimento extends ActionSiap implements ICostant
 		lEveRic.setCodTipoEvento("01");
 		lEveRic.setCodTipoProvvedimento("12");
 		lEveRic.setCodMotivo("0670");
+		
+		
+		/* 
+		 * ISSUE MAC : recupero l'id fascicolo e lo setto nell'evento 
+		 * Numero MAC : 20200331014
+		 * Autore    : monica
+		 * Data      : 02/apr/2020
+		 * Branch    : mac-otrs-20200331014
+		 */
+		BigDecimal idFascicoloSiep = null;
+		if (!this.isSessionAttributeNullObj("fascicolo")) {
+			idFascicoloSiep = ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep();
+			lEveRic.setFasSieIdFascicoloSiep(idFascicoloSiep); 
+		}		
+		//***** FINE INTERVENTO mac-otrs-20200331014 *****//
+
 
 		lEveRic.setEveIdEvento(this.getRequestBigDecimalParameter("IdEvento"));
-		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
+	
+		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote(); 
 		EventoModel lEve = new EventoModel();
 		// EventoNotificaModel lEveNot = new EventoNotificaModel();
 

@@ -62,7 +62,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 9162839566239500385L;
+	private static final long serialVersionUID = 2235215459577019797L;
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -228,15 +228,33 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	public PenaRideterminataCumuloModel getPenaPrincipaleTotLorda() {
 		PenaRideterminataCumuloModel lPenaTotaleLorda = new PenaRideterminataCumuloModel();
 		lPenaTotaleLorda.setFlagPenaResiduaCumulo("N");
+		siesLogger.debug("--YY-- 20200220018 getPenaPrincipaleTotLorda  mListaPeneComplessive.size() )= "+mListaPeneComplessive.size() );
 
 		CalendarUtil lCalUtil = new CalendarUtil();
 
 		CalendarModel lCalReclusioneTotMod = new CalendarModel();
 		CalendarModel lCalArrestiTotMod = new CalendarModel();
 
+		// 16/04/2020 Ticket#20200220018 - Occorre individuare prima il TipoPenaDetentiva di riferimento per tutti le CalcoloPenaRidetermCumModel
+		String lCodTipoPenaDetentiva = "-";
+		BigDecimal lNumAnniIsolamentoDiurno=null; BigDecimal lNumMesiIsolamentoDiurno=null; BigDecimal lNumGiorniIsolamentoDiurno=null;
+		for (int i = 0; i < mListaPeneComplessive.size(); i++) {
+			PenaComplessivaCumuloModel lPenaCompl = mListaPeneComplessive.elementAt(i);
+			siesLogger.debug("---YYY---1 CodTipoPenaDetentiva di lPenaCompl  = " + lPenaCompl.getCodTipoPenaDetentiva());
+			if (lPenaCompl.getCodTipoPenaDetentiva() != null	&&
+					lPenaCompl.getCodTipoPenaDetentiva().compareTo(lCodTipoPenaDetentiva)>0)
+					lCodTipoPenaDetentiva = lPenaCompl.getCodTipoPenaDetentiva();
+					if ("04".equals(lCodTipoPenaDetentiva)) {
+						lNumAnniIsolamentoDiurno = lPenaCompl.getNumAnniIsolamentoDiurno();
+						lNumMesiIsolamentoDiurno = lPenaCompl.getNumMesiIsolamentoDiurno();
+						lNumGiorniIsolamentoDiurno = lPenaCompl.getNumGiorniIsolamentoDiurno();
+					}
+		}
+		
 		for (int i = 0; i < mListaPeneComplessive.size(); i++) {
 			PenaComplessivaCumuloModel lPenaCompl = mListaPeneComplessive.elementAt(i);
 			siesLogger.debug("lPenaCompl = " + lPenaCompl.getIdPenaComplessivaCum());
+			siesLogger.debug("---YYY---1 CodTipoPenaDetentiva di lPenaCompl  = " + lPenaCompl.getCodTipoPenaDetentiva());
 
 			// se la PC è sostituita non la calcolo
 			boolean isSostituita = false;
@@ -289,6 +307,19 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 			lCalReclusioneTotMod = lCalUtil.sommaGiornieValute(lCalReclusioneTotMod, lReclusioneMulta);
 			lCalArrestiTotMod = lCalUtil.sommaGiornieValute(lCalArrestiTotMod, lArrestoAmmenda);
 
+			// Ticket 20200220018 24/02/2020  Si deve considerare anche il caso di CodTipoPenaDetentiva = "03" / "04" (Ergastolo)
+			siesLogger.debug(" --YYY-- CodTipoPenaDetentiva = " + lPenaCompl.getCodTipoPenaDetentiva());
+			siesLogger.debug(" --YY-- FlagPenaResiduaCumulo = " + lPenaTotaleLorda.getFlagPenaResiduaCumulo());
+			lPenaTotaleLorda.setCodTipoPenaDetentiva(lPenaCompl.getCodTipoPenaDetentiva());
+			lPenaTotaleLorda.setNumAnniIsolamentoDiurno(lPenaCompl.getNumAnniIsolamentoDiurno());
+			lPenaTotaleLorda.setNumMesiIsolamentoDiurno(lPenaCompl.getNumMesiIsolamentoDiurno());
+			lPenaTotaleLorda.setNumGiorniIsolamentoDiurno(lPenaCompl.getNumGiorniIsolamentoDiurno());
+
+			// Ticket#20200220018 17/04/2020  Valorizzazione dei quantum nel caso di CodTipoPenaDetentiva = "03" / "04" (Ergastolo)
+			lPenaTotaleLorda.setCodTipoPenaDetentiva(lCodTipoPenaDetentiva);
+			lPenaTotaleLorda.setNumAnniIsolamentoDiurno(lNumAnniIsolamentoDiurno);
+			lPenaTotaleLorda.setNumMesiIsolamentoDiurno(lNumMesiIsolamentoDiurno);
+			lPenaTotaleLorda.setNumGiorniIsolamentoDiurno(lNumGiorniIsolamentoDiurno);
 		}
 
 		//
@@ -623,6 +654,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 	public PenaRideterminataCumuloModel getPenaPrincipaleTotNetta() {
 		PenaRideterminataCumuloModel lPenaTotaleNetta = new PenaRideterminataCumuloModel();
 		lPenaTotaleNetta.setFlagPenaResiduaCumulo("S");
+		siesLogger.debug("--YY-- 20200220018 getPenaPrincipaleTotNetta  mListaPeneComplessive.size() )= "+mListaPeneComplessive.size() );
 
 		CalendarUtil lCalUtil = new CalendarUtil();
 
@@ -632,7 +664,9 @@ public class CalcoloPenaCumuloModel extends GenericModel {
     siesLogger.debug("=======================================================");
 		siesLogger.debug("Recupero la Pena Complessiva Lorda");
     siesLogger.debug("=======================================================");
+    	siesLogger.debug("--YY-- 20200220018 getPenaPrincipaleTotNetta  prima di getPenaPrincipaleTotLorda() ) " );
 		PenaRideterminataCumuloModel lPenaTotaleLorda = getPenaPrincipaleTotLorda();
+    	siesLogger.debug("--YY-- 20200220018 getPenaPrincipaleTotNetta  dopo     getPenaPrincipaleTotLorda() ) " );
 
 		CalendarModel lCalReclusioneTotMod = new CalendarModel();
 		CalendarModel lCalArrestiTotMod = new CalendarModel();
@@ -683,7 +717,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 		// Sottraggo alla pena totale le MC, prima dalla Reclusione e quindi dagli Arresti
 		// ==========================================================================
     siesLogger.debug("=======================================================");
-		siesLogger.debug("Sottraggo le Misure Cautelari dalla reclusione");
+		siesLogger.debug(" Sottraggo le Misure Cautelari dalla reclusione");
     siesLogger.debug("=======================================================");
 		CalendarModel lMCTotali = this.getMisureCautelariTotali().getQuantumMisura();
 		siesLogger.debug("lMCTotali = "+lMCTotali);
@@ -693,6 +727,10 @@ public class CalcoloPenaCumuloModel extends GenericModel {
     siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
     siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
     
+	/* INIZIO ticket#20201204019 in caso di Reclusione negativa, la sposto sull'arresto SOLO al termine 
+	 * del computo di tutte le quantità in quanto potrebbe ritornare positivo a seguito di revoche di benefici.
+	 * Se spostato ora sull'arresto non può più tornare indietro.
+	 * 
 		if (!lCalUtil.isPositiveTime(lCalReclusioneTotMod)) {
 			siesLogger.debug("Attenzione Quantum di Reclusione Negativi: " + lCalReclusioneTotMod);
 
@@ -711,8 +749,12 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 			lCalReclusioneTotMod.setNumAnni(0);
 			lCalReclusioneTotMod.setNumMesi(0);
 			lCalReclusioneTotMod.setNumGiorni(0);
+			
 		}
-		siesLogger.debug("Totali Parziali Aggiornati ==================");
+		FINE ticket#20201204019
+		*/
+
+    siesLogger.debug("Totali Parziali Aggiornati ==================");
     siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
     siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
 
@@ -731,8 +773,8 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 		lCalArrestiTotMod = lCalUtil.sottraiGiorniValuteNew(lCalArrestiTotMod, lRichTotArresti);
 		
 		siesLogger.debug("Totali Parziali Aggiornati ==================");
-    siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
-    siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
+		siesLogger.debug("lCalReclusioneTotMod = "+lCalReclusioneTotMod);
+		siesLogger.debug("lCalArrestiTotMod = "+lCalArrestiTotMod);
 		
 		/*
 		 * if (lCalUtil.isPositiveTime (lRichTotReclusione)) lCalReclusioneTotMod =
@@ -756,7 +798,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 		lTotPagamentiPPMulta.setImportoAmmenda(0);
 		CalendarModel lTotPagamentiPPAmmenda = new CalendarModel(lTotPagamentiPP);
 		lTotPagamentiPPAmmenda.setImportoMulta(0);
-
+		
 		lCalReclusioneTotMod = lCalUtil.sottraiGiorniValuteNew(lCalReclusioneTotMod, lTotPagamentiPPMulta);
 		lCalArrestiTotMod = lCalUtil.sottraiGiorniValuteNew(lCalArrestiTotMod, lTotPagamentiPPAmmenda);
     siesLogger.debug("Totali Parziali Aggiornati ==================");
@@ -816,7 +858,7 @@ public class CalcoloPenaCumuloModel extends GenericModel {
 
 		// ===============================================
 		// Restituisco il totale come PenaResiduaModel
-		// ===============================================
+		// ===============================================    
     if (!lCalUtil.isPositiveTime(lCalReclusioneTotMod)) {
       siesLogger.debug("Attenzione Quantum di Reclusione Negativi: " + lCalReclusioneTotMod);
 
@@ -836,7 +878,16 @@ public class CalcoloPenaCumuloModel extends GenericModel {
       lCalReclusioneTotMod.setNumMesi(0);
       lCalReclusioneTotMod.setNumGiorni(0);
     }
-    
+
+		// Ticket 20200220018 24/02/2020  Si deve considerare anche il caso di CodTipoPenaDetentiva = "03" / "04" (Ergastolo)
+		siesLogger.debug(" --YY-- Sono in getPenaPrincipaleTotNetta - è stato impostato FlagPenaResiduaCumulo  = S " );
+		siesLogger.debug(" --YY-- TipoPenaDetentiva = " + lPenaTotaleLorda.getCodTipoPenaDetentiva());
+		siesLogger.debug(" --YY-- FlagPenaResiduaCumulo = " + lPenaTotaleLorda.getFlagPenaResiduaCumulo());
+		lPenaTotaleNetta.setCodTipoPenaDetentiva(lPenaTotaleLorda.getCodTipoPenaDetentiva());
+		lPenaTotaleNetta.setNumAnniIsolamentoDiurno(lPenaTotaleLorda.getNumAnniIsolamentoDiurno());
+		lPenaTotaleNetta.setNumMesiIsolamentoDiurno(lPenaTotaleLorda.getNumMesiIsolamentoDiurno());
+		lPenaTotaleNetta.setNumGiorniIsolamentoDiurno(lPenaTotaleLorda.getNumGiorniIsolamentoDiurno());
+
 		lPenaTotaleNetta.setNumGiorniReclusione(new BigDecimal(lCalReclusioneTotMod.getNumGiorni()));
 		lPenaTotaleNetta.setNumMesiReclusione(new BigDecimal(lCalReclusioneTotMod.getNumMesi()));
 		lPenaTotaleNetta.setNumAnniReclusione(new BigDecimal(lCalReclusioneTotMod.getNumAnni()));

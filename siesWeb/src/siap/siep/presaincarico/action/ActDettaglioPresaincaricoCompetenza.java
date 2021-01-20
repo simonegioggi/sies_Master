@@ -3,6 +3,8 @@ package siap.siep.presaincarico.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import f3b.log.LogF3B;
 import siap.jms.JMSLookupRemote;
 import siap.jms.messaggio.action.ICostantiMessaggio;
@@ -23,8 +25,6 @@ import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
-
-import org.apache.log4j.Logger;
 
 /**
  * <p>
@@ -61,9 +61,9 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 		IstruttoriaCumuloModel lIstruttoriaCumuloModel = null;
 		IIstruttoriaCumulo lIstrCumCtrl = SIEPLookupRemote.getIstruttoriaCumuloRemote();
 		if (!isRequestParameterNullObj(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO)) {
-			lIdIstruttoria = getRequestBigDecimalParameter(ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO);
-			lIstruttoriaCumuloModel = (IstruttoriaCumuloModel) lIstrCumCtrl
-					.ExRicercaIstruttoriaCumuloById(lIdIstruttoria);
+			lIdIstruttoria = getRequestBigDecimalParameter(
+					ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO);
+			lIstruttoriaCumuloModel = lIstrCumCtrl.ExRicercaIstruttoriaCumuloById(lIdIstruttoria);
 			setRequestAttribute("IstruttoriaCumulo", lIstruttoriaCumuloModel);
 		}
 
@@ -97,8 +97,8 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 						+ " come competente all'esecuzione, non è presente nel sistema!";
 			} else {
 				IPenaResidua lCrtlP = SIEPLookupRemote.getPenaResiduaRemote();
-				PenaResiduaModel mPena = lCrtlP.ExRicercaPenaResiduaCorrenteByFascicoloSiep(mFas
-						.getFasSieIdFascicoloSiep());
+				PenaResiduaModel mPena = lCrtlP
+						.ExRicercaPenaResiduaCorrenteByFascicoloSiep(mFas.getFasSieIdFascicoloSiep());
 				setRequestAttribute("penaresiduaCumulante", mPena);
 			}
 
@@ -111,7 +111,7 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 				// In qusto caso, provengo da Elenco Atti Ricevuti o dal CRUSCOTTO ELENCO ATTI
 				// quindi mi devo cercare ISTRUTTORIA e passarla alla request
 				if (mFas != null && mFas.getIdFascicoloSiep() != null) {
-					IstruttoriaCumuloReq = (IstruttoriaCumuloModel) lIstrCumCtrl
+					IstruttoriaCumuloReq = lIstrCumCtrl
 							.ExRicercaIstruttoriaCumuloApertaByIdFasSiep(mFas.getIdFascicoloSiep());
 					setRequestAttribute("IstruttoriaCumulo", IstruttoriaCumuloReq);
 				}
@@ -122,9 +122,13 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 			setSessionAttribute("soggetto", null);
 			setSessionAttribute("sentenza", null);
 			// metto in Sessione il Fascicolo Cumulante
-			setSessionAttribute("fascicolo", mFas);
-			setSessionAttribute("soggetto", mFas.getSoggetto());
-			setSessionAttribute("sentenza", mFas.getSentenza());
+			// Ticket#20200730015 - Se il cumulante on viene trovato a sistema andava in nullPointer
+			// mFas.getSoggetto()
+			if (mFas != null) {
+				setSessionAttribute("fascicolo", mFas);
+				setSessionAttribute("soggetto", mFas.getSoggetto());
+				setSessionAttribute("sentenza", mFas.getSentenza());
+			}
 
 			setRequestAttribute("fascicoloCumulante", mFas);
 		}
@@ -139,8 +143,8 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 		// dalla BDI
 		UfficioModel lUfficioFascicoloRicevuto = getUfficioByCodUfficio(lMess.getChiaveUfficioSiep());
 		if (lUfficioFascicoloRicevuto.getCodDistretto().equals(getCodDistrettoUtenteConnesso())) {
-			siesLogger
-					.debug("Fascicolo da Cumulare della stessa BDI, recupero i dati direttamete dalla Base DATI");
+			siesLogger.debug(
+					"Fascicolo da Cumulare della stessa BDI, recupero i dati direttamete dalla Base DATI");
 
 			IFascicoloSiep lCtrlFasc = SIEPLookupRemote.getFascicoloSiepRemote();
 			lFasModel.setChiaveAnno(lMess.getChiaveAnnoSiep());
@@ -156,8 +160,8 @@ public class ActDettaglioPresaincaricoCompetenza extends ActionSiap implements I
 					.ExRicercaCompetenzaByIdFascicoloSiep(lFasModel.getIdFascicoloSiep());
 			lUltimaCompetenza = lListaCompetenze.lastElement();
 		} else {
-			siesLogger
-					.debug(" --XX-- Fascicolo da Cumulare proveniente da fuori Distretto, leggo il BLOB del MESSAGGIO");
+			siesLogger.debug(
+					" --XX-- Fascicolo da Cumulare proveniente da fuori Distretto, leggo il BLOB del MESSAGGIO");
 
 			ParserMessage lParser = null;
 			if (lMess != null) {

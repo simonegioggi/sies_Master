@@ -43,6 +43,8 @@ import siap.sius.util.SIUSLookupRemote;
  */
 public class ActModificaFascicolo extends ActionSiap implements ICostantiFascicoloSius {
 
+	// private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
@@ -112,14 +114,10 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 		}
 
 		// Caricamento Fascicolo SIUS (solo dati modificati)
-		lFasGPMod.getFascicoloSiusModel().setCodOperatoreAggiornamento(getCodUtenteConnesso()); // Codice
-																								// dell'operatore
-																								// che
-																								// inserisce
-		lFasGPMod.getFascicoloSiusModel().setCodUfficioAggiornamento(getCodUfficioUtenteConnesso()); // Codice
-																										// dell'operatore
-																										// che
-																										// inserisce
+		// Codice dell'operatore che inserisce
+		lFasGPMod.getFascicoloSiusModel().setCodOperatoreAggiornamento(getCodUtenteConnesso());
+		// Codice dell'Ufficio che inserisce
+		lFasGPMod.getFascicoloSiusModel().setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		lFasGPMod.getFascicoloSiusModel().setDataAggiornamento(DateUtils.getSysDate());
 
 		ComuneModel lComMod = new ComuneModel(
@@ -244,8 +242,12 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 				lFasGPMod.getGeneraleProcedimentoModel()
 						.setProgrS1(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR_S22));
 			}
-		} else
-			lFasGPMod.getGeneraleProcedimentoModel().setAnnoS1(new BigDecimal(DateUtils.getSysDate("yyyy")));
+		} /* else { */
+		// Ticket#20201106019 e Ticket#202011180111.
+		// Commentata la riga che modificava erroneamente l'anno del GP
+		// lFasGPMod.getGeneraleProcedimentoModel().setAnnoS1(new
+		// BigDecimal(DateUtils.getSysDate("yyyy")));
+		/* } */
 		// FINE MEV_66
 
 		IFascicoloSius lCtrl = SIUSLookupRemote.getFascicoloSiusRemote();
@@ -266,11 +268,6 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 				lEMAModel.setDataOrdinanza(getRequestDateParameter(CAMPO_ANNO_DATA_ATTO, CAMPO_MESE_DATA_ATTO,
 						CAMPO_GIORNO_DATA_ATTO));
 				// Valorizzazione del codice Ufficio
-				// Collection lMittenti = DecodificheManager.getInstance().getMittenteAtto();
-				// String lDescrMittente = DecodificheUtils.getDescbyCode(lMittenti,
-				// getRequestStringParameter(CAMPO_COD_MITTENTE_ATTO));
-				// Collection lUffici = DecodificheManager.getInstance().getTipoUfficio();
-
 				if (lCodTipoUfficioMittente.compareTo("-") == 0)
 					throw new SIUSException(SIUSException.USER_MESSAGE,
 							"Ufficio Mittente non valido per la Misura Alternativa");
@@ -385,7 +382,7 @@ public class ActModificaFascicolo extends ActionSiap implements ICostantiFascico
 
 	/**
 	 * MEV10-s3: aggiunto metodo per gestire passaggio alla maggiore età del soggetto
-	 * 
+	 *
 	 * @param lFasGPMod
 	 * @param lUtenteMod
 	 * @throws Exception

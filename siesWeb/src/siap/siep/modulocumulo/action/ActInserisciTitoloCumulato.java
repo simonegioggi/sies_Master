@@ -157,6 +157,19 @@ public class ActInserisciTitoloCumulato extends ActionModuloCumulo implements IC
     aTitoloModel.setCodTipoProvvedimentoRif     ( getRequestStringParameter     ( CAMPO_COD_TIPO_PROVVEDIMENTO_RIF) );
     if (!isRequestParameterNullObj(CAMPO_COD_TIPO_PROVV_RIF))
       aTitoloModel.setCodTipoProvvRif             ( getRequestStringParameter     ( CAMPO_COD_TIPO_PROVV_RIF) );
+
+    // 04/03/2020 - Ticket 20200304018 - Corretta valorizzazione tiposentenza di altro grado di giudizio
+    String lCodTipo = getRequestStringParameter(CAMPO_COD_TIPO_AUTORITA_EMITTENTE);
+	if (getRequestStringParameter(CAMPO_COD_TIPO_AUTORITA_PROVV_RIF).compareTo("-") != 0)
+	{
+		if (lCodTipo.equals("CAP") || lCodTipo.equals("CAPSM") || lCodTipo.equals("CASAP") || lCodTipo.equals("PGCAP") || lCodTipo.equals("PGMI") || lCodTipo.equals("PGMID"))
+		{
+			if ( getRequestStringParameter( CAMPO_COD_TIPO_PROVV_RIF).equals("01"))
+				aTitoloModel.setCodTipoProvvRif("03");
+			else
+				aTitoloModel.setCodTipoProvvRif("04");
+		}
+	}		
     
     aTitoloModel.setDataProvvRif                ( getRequestDateParameter       ( CAMPO_ANNO_DATA_PROVV_RIF,CAMPO_MESE_DATA_PROVV_RIF,CAMPO_GIORNO_DATA_PROVV_RIF) );
     aTitoloModel.setAnnoProvvRif                ( getRequestBigDecimalParameter ( CAMPO_ANNO_PROVV_RIF) );

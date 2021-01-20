@@ -929,9 +929,18 @@ public class StatoEsecuzioneController extends SiapController {
 							// posto di LogF3B.getLogger()
 							siesLogger.debug("lDatFinCumulo = " + lDatFinCumulo);
 
-							if ("03".equals(lDatFinCumulo.getTipoUfficioEmissione())) {
+							/*
+							 * ISSUE MAC : aggiunto il controllo su data finali cumulo != null 
+							 * Numero MAC : 20200224011
+							 * Autore : monica 
+							 * Data : 25/feb/2020 
+							 * Branch : 12.1
+							 */
+							if (lDatFinCumulo != null
+									&& "03".equals(lDatFinCumulo.getTipoUfficioEmissione())) {
 								// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger
 								// al posto di LogF3B.getLogger()
+								// ***** FINE INTERVENTO MAC_numero_MAC *****//
 								siesLogger.debug("Provo a recuperare i dati dell'ufficio del GE");
 								IUfficio lUffCtrl = SICOLookupRemote.getUfficioRemote();
 
@@ -1137,6 +1146,7 @@ public class StatoEsecuzioneController extends SiapController {
 			lDepDecSql.stop();
 			lTenSql.stop();
 			lScaSanSql.stop();
+
 		} catch (DAOException daoEx) {
 			daoEx.printStackTrace();
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -1173,7 +1183,6 @@ public class StatoEsecuzioneController extends SiapController {
 		Connection lConn = null;
 		SospensioneSqlDAO lSospSql = null;
 		Date lReturnDate = null;
-
 		try {
 			lConn = getDBConnection();
 			lSospSql = new SospensioneSqlDAO(lConn);
@@ -1183,6 +1192,7 @@ public class StatoEsecuzioneController extends SiapController {
 			SospensioneModel lSospMod = (SospensioneModel) lSospSql.getModelByKey();
 			if (lSospMod != null)
 				lReturnDate = lSospMod.getDataInizio();
+
 			// fine lettura sospensione
 		} catch (Exception sqe) {
 			sqe.printStackTrace();
@@ -1209,7 +1219,6 @@ public class StatoEsecuzioneController extends SiapController {
 		siesLogger.debug("--XX-- getAnnoNumeroSius - di StatoEsecuzioneController");
 		Connection lConn = null;
 		StatoEsecuzioneSqlDAO lStatEsec = null;
-
 		try {
 			lConn = getDBConnection();
 			lStatEsec = new StatoEsecuzioneSqlDAO(lConn);

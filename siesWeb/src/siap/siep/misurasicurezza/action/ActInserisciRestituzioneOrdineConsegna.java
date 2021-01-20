@@ -49,8 +49,9 @@ public class ActInserisciRestituzioneOrdineConsegna extends ActionSiap implement
 
 		String codiceOperatore = getCodUtenteConnesso();
 		String codiceUfficio = getCodUfficioUtenteConnesso();
-		Date dataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
+		// TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il provvedimento di Restituzione Ordine di Consegna
+//		Date dataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+//				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
 		Date dataTrasmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI,
 				ICostantiEvento.CAMPO_MESE_DATA_TRASMISSIONE_ATTI,
 				ICostantiEvento.CAMPO_GIORNO_DATA_TRASMISSIONE_ATTI);
@@ -64,7 +65,8 @@ public class ActInserisciRestituzioneOrdineConsegna extends ActionSiap implement
 		enm.getEvento().setFlagVideoSiep("S");
 		enm.getEvento().setFlagStampaSiep("S");
 		enm.getEvento().setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
-		enm.getEvento().setDataEmissione(dataEmissione);
+		// TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il provvedimento di Restituzione Ordine di Consegna
+		enm.getEvento().setDataEmissione(DateUtils.getSysDate());
 		enm.getEvento().setCodOperatoreInserimento(codiceOperatore);
 		enm.getEvento().setDataInserimento(DateUtils.getSysDate());
 		enm.getEvento().setCodUfficioInserimento(codiceUfficio);

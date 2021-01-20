@@ -1358,6 +1358,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 			lFascDao.setFlagCumulante("S");
 
+			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
+			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
+			// settato a 03
+			if (lFasModel != null && "01".equals(lFasModel.getCodStatoFascicolo()))
+				lFascDao.setCodStatoFascicolo("03");
+
 			lFascDao.setCodUfficioAggiornamento(lEveModel.getCodUfficioAggiornamento());
 			lFascDao.setCodOperatoreAggiornamento(lEveModel.getCodOperatoreAggiornamento());
 			lFascDao.setDataAggiornamento(lEveModel.getDataAggiornamento());
@@ -4728,8 +4734,11 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	// }
 
 	/*
-	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
-	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
+	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo
+	 * Numero MAC : 20191128013 
+	 * Autore : monica 
+	 * Data : 19/dic/2019 
+	 * Branch : 11.2.4
 	 */
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
@@ -4780,6 +4789,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lConn);
 		}
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
-		// ***** FINE INTERVENTO 20191128013 *****//
+	// ***** FINE INTERVENTO 20191128013 *****//
 
 }

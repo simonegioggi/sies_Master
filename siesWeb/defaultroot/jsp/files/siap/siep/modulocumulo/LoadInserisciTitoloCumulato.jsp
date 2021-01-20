@@ -55,6 +55,15 @@ else if( modalita.equals("M") ) {
             ) {
     lTitoloCumulatoSorv = titolocumulato;
   }    
+
+  // 04/03/2020 - Ticket 20200304018 - Corretta valorizzazione tipo sentenza di altro grado di giudizio
+  String lCodTipoSentenza = titolocumulato.getCodTipoProvvRif();
+  if ("03".equals(lCodTipoSentenza)) {
+	  lTitoloCumulato.setCodTipoProvvRif("01");
+  } else if ("04".equals(lCodTipoSentenza)) {
+	  lTitoloCumulato.setCodTipoProvvRif("02");
+  }
+  
 }
         
 

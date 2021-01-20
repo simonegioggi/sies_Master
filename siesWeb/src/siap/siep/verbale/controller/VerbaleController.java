@@ -32,8 +32,6 @@ import siap.siep.altracausa.dao.AltraCausaDAO;
 import siap.siep.altracausa.dao.AltraCausaSqlDAO;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.fascicolo.dao.FascicoloSiepDAO;
-//import siap.siep.fascicolo.model.FascicoloSiepModel;
-//import siap.siep.istruttoria.action.ICostantiIstruttoria;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneDAO;
 import siap.siep.luogodetenzione.dao.LuogoDetenzioneSqlDAO;
 import siap.siep.luogodetenzione.model.LuogoDetenzioneModel;
@@ -56,7 +54,6 @@ import siap.siep.statoprocedimento.controller.IStatoProcedimento;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 import siap.siep.util.SIEPLookupRemote;
-//import siap.siep.verbale.action.ICostantiVerbale;
 import siap.siep.verbale.dao.EventoVerbaleSqlDAO;
 import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.dao.VerbaleSqlDAO;
@@ -104,9 +101,12 @@ public class VerbaleController extends SiapController implements IVerbale {
 		LuogoDetenzioneDAO lLuoDetDao = null;
 		StatoProcedimentoDAO lStaProDao = null;
 		ScadenzarioDAO lScaDao = null;
+
 		PenaResiduaDAO lPenDao = null;
 		PenaResiduaSqlDAO lPenResDao = null;
+
 		LicenzaLibanticipataSqlDAO lLicSqlDao = null;
+
 		EventoDAO lEveDao = null;
 
 		VerbaleModel lVerMod = null;
@@ -433,7 +433,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	}
 
 	public void ExRegistraPenaVerbaleArresto(PenaResiduaModel aPenaResidua) throws F3BException {
-
 		Connection lConn = null;
 
 		PenaResiduaDAO lPenDao = null;
@@ -473,7 +472,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 
 	public VerbaleModel ExInserisciVerbaleSottoscrizione(BigDecimal aKeyFasc, VerbaleModel aVerbale)
 			throws F3BException {
-
 		Connection lConn = null;
 
 		VerbaleDAO lVerDao = null;
@@ -788,7 +786,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	public VerbaleModel ExInserisciVerbaleVaneRicerche(BigDecimal aKeyFasc, VerbaleModel aVerbale,
 			NotificaModel aNotMod, ScadenzarioModel aScaMod, EventoNotificaModel aEveNot)
 			throws F3BException {
-
 		Connection lConn = null;
 
 		VerbaleDAO lVerDao = null;
@@ -957,6 +954,15 @@ public class VerbaleController extends SiapController implements IVerbale {
 			String lFlagOE = "N";
 			String lFlagRS = "N";
 			String lFlagCUM = "N";
+			/*
+			 * ISSUE MAC : aggiunta variabile
+			 * Numero MAC : 20200220016
+			 * Autore : monica
+			 * Data : 02/mar/2020
+			 * Branch : 12.1
+			 */
+			String lFlagCUMNEW = "N";
+			// ***** FINE INTERVENTO 20200220016 *****//
 			Date lDataPrelevata = null;
 			lEveVerSql = new EventoVerbaleSqlDAO(lConn);
 			lEveVerSql.ricercaEventoOELSRSCUM(aKeyFasc);
@@ -973,13 +979,25 @@ public class VerbaleController extends SiapController implements IVerbale {
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0079")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0080")) {
 					lFlagRS = "S";
-				} else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0222"))
+				}
+				/*
+				 * ISSUE MAC : gestito il motivo 0630 - Ordine di esecuzione per la carcerazione ex Art 656
+				 * 				comma 1 cpp
+				 * Numero MAC : 20200220016 
+				 * Autore : monica 
+				 * Data : 02/mar/2020 
+				 * Branch : 12.1
+				 */
+				else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0630"))) {
+					lFlagCUMNEW = "S";
+				}
+				// ***** FINE INTERVENTO 20200220016 *****//
+				else if (lEveModOELSRSCUM != null && (lEveModOELSRSCUM.getCodMotivo().equals("0222"))
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0223")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0224")
 						|| lEveModOELSRSCUM.getCodMotivo().equals("0277")
-						|| lEveModOELSRSCUM.getCodMotivo().equals("0225"))// 0225 per gestire un'eventuale
-																			// pregresso
-				{
+						|| lEveModOELSRSCUM.getCodMotivo().equals("0225")) { // 0225 per gestire un'eventuale
+																			 // pregresso
 					lFlagCUM = "S";
 				}
 				lDataPrelevata = lEveModOELSRSCUM.getDataEmissione();
@@ -996,12 +1014,24 @@ public class VerbaleController extends SiapController implements IVerbale {
 				if (ins == 1) {
 
 					if (lFlagOE.equals("S"))
-						lStaProMod.setCodStatoProcedimento("0057");// o.e
+						lStaProMod.setCodStatoProcedimento("0057"); // o.e
 					else if (lFlagRS.equals("S"))
 						lStaProMod.setCodStatoProcedimento("0120"); // r.s.
 					else if (lFlagCUM.equals("S"))
 						lStaProMod.setCodStatoProcedimento("0057"); // cumulo -- stesso stato di ordine
 																	// esecuzione
+					/*
+					 * ISSUE MAC : gestito lo stato "Emesso Ordine di Esecuzione con Arresto Il" del cumulo new
+					 * Numero MAC : 20200220016
+					 * Autore : monica
+					 * Data : 02/mar/2020
+					 * Branch : 12.1
+					 */
+					else if (lFlagCUMNEW.equals("S"))
+						lStaProMod.setCodStatoProcedimento("0001"); // Emesso Ordine di Esecuzione con Arresto
+																	// Il
+					// ***** FINE INTERVENTO 20200220016 *****//
+
 					else
 						lStaProMod.setCodStatoProcedimento("0011"); // o.e.s.
 
@@ -1043,8 +1073,11 @@ public class VerbaleController extends SiapController implements IVerbale {
 			}
 		} catch (Exception es) {
 			rollback(lConn);
+
 			es.printStackTrace();
+
 			siesLogger.debug("SQLException: " + es);
+
 			throw new F3BException("VerbaleController.ExInserisciVerbale: " + es);
 		} finally {
 			cleanup(lVerDao);
@@ -1060,7 +1093,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	}
 
 	public Vector ExRicercaVerbale(VerbaleModel aVerbale) throws F3BException {
-
 		Connection lConn = null;
 		Vector lVerbali = new Vector();
 		VerbaleSqlDAO lVerDao = null;
@@ -1084,7 +1116,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	}
 
 	public VerbaleModel ExRicercaVerbaleByKey(BigDecimal aKey) throws F3BException {
-
 		Connection lConn = null;
 		VerbaleSqlDAO lVerDao = null;
 		VerbaleModel lVerMod;
@@ -1105,7 +1136,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	}
 
 	public VerbaleModel ExRicercaVerbaleObblighiByIdEvento(BigDecimal aKey) throws F3BException {
-
 		Connection lConn = null;
 		VerbaleSqlDAO lVerDao = null;
 		VerbaleModel lVerMod;
@@ -1126,7 +1156,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	}
 
 	public VerbaleModel ExModificaVerbale(VerbaleModel aVerbale) throws F3BException {
-
 		Connection lConn = null;
 		VerbaleDAO lVerDao = null;
 		VerbaleModel lVerMod = new VerbaleModel(aVerbale);
@@ -1157,7 +1186,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	 *
 	 */
 	public PenaResiduaModel ExAggiornaPenaVerbale(PenaResiduaModel aPenaResidua) throws F3BException {
-
 		Connection lConn = null;
 
 		PenaResiduaDAO lPenDao = null;
@@ -1223,7 +1251,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 
 	public EventoNotificaModel ExRicercaEventoVerbale(BigDecimal aKeyFasc, String userMsg)
 			throws F3BException {
-
 		Connection lConn = null;
 
 		NotificaSqlDAO lNotDao = null;
@@ -1271,6 +1298,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 			}
 		} catch (DAOException ex) {
 			rollback(lConn);
+
 			siesLogger.debug("DAOException: " + ex);
 			throw new F3BException("VerbaleController.ExRicercaEventoVerbale : " + ex);
 		} finally {
@@ -1333,6 +1361,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 			lEveNotMod.setEvento(lEveMod);
 		} catch (DAOException ex) {
 			rollback(lConn);
+
 			siesLogger.debug("DAOException: " + ex);
 			throw new F3BException("VerbaleController.ExRicercaEventoVerbale : " + ex);
 		} finally {
@@ -1344,6 +1373,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 
 		return lEveNotMod;
 	}
+
 	// END AMBROSINO 07-02-2011
 
 	/**
@@ -1354,11 +1384,9 @@ public class VerbaleController extends SiapController implements IVerbale {
 	 * @throws F3BException
 	 */
 	public VerbaleModel ExRicercaVerbaleByIdEvento(BigDecimal aIdEvento) throws F3BException {
-
 		Connection lConn = null;
 		VerbaleModel lVerbMod = null;
 		VerbaleSqlDAO lVerDao = null;
-
 		try {
 			lConn = getDBConnection();
 			lVerDao = new VerbaleSqlDAO(lConn);
@@ -1380,7 +1408,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	// ricerca ExRicercaVerbale ByIdEvento per codtipo
 	public VerbaleModel ExRicercaVerbaleByCodTipoIdEvento(BigDecimal aKey, String aCodTipo)
 			throws F3BException {
-
 		Connection lConn = null;
 
 		VerbaleSqlDAO lVerDao = null;
@@ -1411,7 +1438,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 
 	// ricerca ExRicercaVerbale IdFascicolo per cod tipo = 03
 	public VerbaleModel ExRicercaVerbaleByIdFascicolo(BigDecimal aKey) throws F3BException {
-
 		Connection lConn = null;
 		VerbaleModel lVerbMod = null;
 		VerbaleSqlDAO lVerDao = null;
@@ -1424,6 +1450,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 				lVerDao.ricercaVerbaleByIdFascicolo(aKey);
 				lVerbMod = (VerbaleModel) lVerDao.getModelByKey();
 			}
+
 		} catch (DAOException daoEx) {
 			siesLogger.debug("DAOException: " + daoEx);
 			throw new F3BException(
@@ -1490,6 +1517,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 		} finally {
 			cleanup(lScaDao);
 			cleanup(lFasDao); // sca
+
 			cleanup(lEseDao);
 			cleanup(lConn);
 		}
@@ -1499,7 +1527,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	// Inserisce i dati per la misura alternativa
 	public VerbaleModel ExInserisciDataInizioMisuraAlternativa(BigDecimal aKeyFasc, VerbaleModel aVerbale)
 			throws F3BException {
-
 		Connection lConn = null;
 		VerbaleDAO lVerDao = null;
 		VerbaleModel lVerMod = new VerbaleModel(aVerbale);
@@ -1554,8 +1581,10 @@ public class VerbaleController extends SiapController implements IVerbale {
 				lScaDao.setCondizioniByIdFascicoloTipo(aKeyFasc, "70");
 				lScaDao.update();
 				lScaDao.stop();
+
 			}
 			commit(lConn);
+
 		} catch (DAOException ex) {
 			rollback(lConn);
 			siesLogger.debug("DAOException: " + ex);
@@ -1575,7 +1604,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	// Inserisce i dati per la misura alternativa
 	public VerbaleModel ExInserisciDataInizioMisuraAlternativaUDS(BigDecimal aKeyFasc, VerbaleModel aVerbale)
 			throws F3BException {
-
 		Connection lConn = null;
 		VerbaleDAO lVerDao = null;
 		VerbaleModel lVerMod = new VerbaleModel(aVerbale);
@@ -1622,6 +1650,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 			lScaDao.stop();
 
 			commit(lConn);
+
 		} catch (DAOException ex) {
 			rollback(lConn);
 			siesLogger.debug("DAOException: " + ex);
@@ -1648,7 +1677,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	 */
 	public VerbaleModel ExInserisciRipristinoDetCarc(BigDecimal aKeyFasc, VerbaleModel aVerbale,
 			PosizioneGiuridicaModel aPosMod, LuogoDetenzioneModel aLuoDetMod) throws F3BException {
-
 		Connection lConn = null;
 
 		VerbaleDAO lVerDao = null;
@@ -1663,7 +1691,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 		EventoDAO lEveDao = null;
 		MisuraAlternativaSqlDAO lMisDao = null;
 		MisuraAlternativaDAO lMisDAO = null;
-
 		VerbaleModel lVerMod = null;
 
 		try {
@@ -1902,17 +1929,19 @@ public class VerbaleController extends SiapController implements IVerbale {
 	 */
 	public VerbaleModel ExInserisciNotificaCarcere(BigDecimal aKeyFasc, VerbaleModel aVerbale,
 			PenaResiduaModel aPenaResidua) throws F3BException {
-
 		Connection lConn = null;
 
 		VerbaleDAO lVerDao = null;
+
 		PenaResiduaDAO lPenDao = null;
 		PenaResiduaSqlDAO lPenResDao = null;
+
 		EventoDAO lEveDao = null;
 		AltraCausaSqlDAO lAltraCausaSqlDao = null;
 		AltraCausaDAO lAltraCausaDao = null;
 
 		VerbaleModel lVerMod = null;
+
 		EventoNotificaModel lEveNot = null;
 
 		try {
@@ -2051,6 +2080,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 			cleanup(lPenDao);
 			cleanup(lPenResDao);
 			cleanup(lEveDao);
+
 			cleanup(lAltraCausaSqlDao);
 			cleanup(lAltraCausaDao);
 
@@ -2061,11 +2091,9 @@ public class VerbaleController extends SiapController implements IVerbale {
 	}
 
 	public VerbaleDataInizioModel ExRicercaVerbaleByIdFascicoloSiep(BigDecimal aKey) throws F3BException {
-
 		Connection lConn = null;
 		VerbaleDataInizioModel lVerbMod = null;
 		VerbaleSqlDAO lVerDao = null;
-
 		try {
 			lConn = getDBConnection();
 			lVerDao = new VerbaleSqlDAO(lConn);
@@ -2094,7 +2122,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	// Ambrosino 30/07/2010
 	public EventoModel ExInserisciVariazioneVerbaleSottoscrizione(BigDecimal aKeyFasc, VerbaleModel aVerbale)
 			throws F3BException {
-
 		Connection lConn = null;
 
 		VerbaleDAO lVerDao = null;
@@ -2105,6 +2132,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 		EventoModel lEveMod = null;
 		EventoDAO lEventoDao = null;
 		UfficioSqlDAO lUffSqlDao = null;
+
 		CampoNotaDAO lCampoNotaDao = null;
 		EventoModel lEveModRet = new EventoModel();
 
@@ -2313,7 +2341,6 @@ public class VerbaleController extends SiapController implements IVerbale {
 	 */
 	public BigDecimal ExInserisciEventoVerbale(EventoModel aEvento, VerbaleModel aVerbale)
 			throws F3BException {
-
 		BigDecimal lIdEvento = null;
 		Connection lConn = null;
 		VerbaleDAO lVerDao = null;

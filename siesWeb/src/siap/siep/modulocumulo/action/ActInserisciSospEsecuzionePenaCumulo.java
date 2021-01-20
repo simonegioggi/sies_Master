@@ -29,6 +29,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActInserisciSospEsecuzionePenaCumulo extends ActionModuloCumulo
 		implements ICostantiStatoEsecTitoloCumulato, ICostantiComputiCumulo {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 

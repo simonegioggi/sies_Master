@@ -152,7 +152,6 @@ public class SiesDAO {
 	 * Caricamento dell'utente collegato ad uno specifico idEvento
 	 */
 	public Utente loadUtente(String idUtente) {
-
 		// Apertura connessione
 		SqlSession session = getSession();
 		try {
@@ -716,7 +715,6 @@ public class SiesDAO {
 	 * MEV 23010 Caricamento del dettaglio relativo al singolo codice univoco
 	 */
 	public DescrizioneProvvedimento loadDescrizioneProvvedimento(String codiceUnivoco) {
-
 		String codiceOggetto = codiceUnivoco.substring(0, 4);
 		String codiceMotivo = codiceUnivoco.substring(4, 8);
 		String codiceEsito = codiceUnivoco.substring(8, 12);
@@ -784,7 +782,6 @@ public class SiesDAO {
 	 * cancellarlo
 	 */
 	public boolean verificaPresenza(String idEvento) {
-
 		boolean presente = false;
 
 		// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati

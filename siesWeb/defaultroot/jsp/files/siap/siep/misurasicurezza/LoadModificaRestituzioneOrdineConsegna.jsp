@@ -288,9 +288,13 @@ if (Utils.isPresent(msNotificate)) {
 			<tr>
 				<td class="l" width="20%">Data Emissione <font class="ob">(*)</font></td>
 				<td class="L">
-					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" readonly="readonly"> - 
+				<!-- TICKET 20200525015: DATA EMISSIONE deve essere la data in cui sto emettondo il provvedimento di Restituzione Ordine di Consegna -->
+					<%-- <input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" readonly="readonly"> - 
 					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" readonly="readonly"> - 
-					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" readonly="readonly"> &nbsp;
+					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" readonly="readonly"> &nbsp; --%>
+					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraNotificata.getDataEmissione(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" readonly="readonly"> - 
+					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraNotificata.getDataEmissione(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" readonly="readonly"> - 
+					<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraNotificata.getDataEmissione(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" readonly="readonly"> &nbsp;
 				</td>
 				<td class="l">Data Trasmissione <font class="ob">(*)</font></td>
 				<td class="L">

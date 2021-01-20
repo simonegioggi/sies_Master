@@ -688,6 +688,7 @@ if (modalita.equals("IE") || modalita.equals("IM")) {
 	    	<td class="label">
 	      		<div id=S22_b style="visibility='hidden';">
 	        		<input Title="Anno" type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_ANNO_S22%>" maxlength="4" size="4"
+	        		onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)"
 <%
 if (modalita.equals("IE") || modalita.equals("IM")) {
 %>
@@ -697,6 +698,7 @@ if (modalita.equals("IE") || modalita.equals("IM")) {
 %>
 	        		>/
 	        		<input Title="Numero" type="text" name="<%=ICostantiFascicoloSius.CAMPO_CHIAVE_PROGR_S22%>" maxlength="6" size="6"
+	        		onkeypress="return TicTabNumField(this,event)"
 <%
 if (modalita.equals("IE") || modalita.equals("IM")) {
 %>
