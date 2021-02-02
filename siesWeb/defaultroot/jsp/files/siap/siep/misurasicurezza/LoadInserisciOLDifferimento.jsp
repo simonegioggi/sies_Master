@@ -590,7 +590,7 @@ if (ordinanza != null && Utils.isNullObj(ordinanza.getEvento())) {
 	</script>
 </head>
 <body class="corpo">
-	<table style="width: 95%;">
+	<table>
     	<tr>
     		<td class="LBG">
     			<a href="Javascript:window.print();">
@@ -1402,7 +1402,8 @@ while (lItxAvv.hasNext()) {
 					<tr>
 						<td class="l">Sede <font class=ob>(*)</font></td>
 						<td class="L">
-							<input title="Sede Autorita Esterna" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+						  <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+							<input title="Sede Autorita Esterna" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
 <%
 	if (avvocati.size() > 1) {
 %>

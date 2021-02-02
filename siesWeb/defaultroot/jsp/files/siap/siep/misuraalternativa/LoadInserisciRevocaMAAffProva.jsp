@@ -1691,14 +1691,14 @@ if(   lPosizione!= null
       <td class="l">Reclusione</td>
       <td class="l">
         Anni &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumAnniReclusione())%>
-        </font>Mesi &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumMesiReclusione())%>
-        </font>Giorni &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumGiorniReclusione())%></font>
+        </font>&nbsp;Mesi &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumMesiReclusione())%>
+        </font>&nbsp;Giorni &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumGiorniReclusione())%></font>
       </td>
       <td class="l" colspan="2">Arresto</td>
       <td class="l" colspan="3">
         Anni &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumAnniArresto())%>
-        </font>Mesi &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumMesiArresto())%>
-        </font>Giorni &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumGiorniArresto())%></font>
+        </font>&nbsp;Mesi &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumMesiArresto())%>
+        </font>&nbsp;Giorni &nbsp;<font class="campo"><%=StringUtils.toStringJSP(nuovapenaresidua.getNumGiorniArresto())%></font>
       </td>
   </tr>
   <tr>
@@ -1871,7 +1871,8 @@ if(   lPosizione!= null
           </tr>
           <tr>
             <td class="l">Sede </td><td class="L">
-              <input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+              <%-- MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() --%>
+              <input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescComuneSedeForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
               <a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
                 <img src="/images/filefolder.gif" border="0">
               </a>
