@@ -141,6 +141,7 @@ public class AvvocatoDAO extends SIAPTableDAO
          getCognome() ,
          getNome() ,
          getForo() ,
+         "",   // MEV_21 (avvocati) descrizione SedeForo()
          getIndirizzo() ,
          getTelefono() ,
          getFax() ,

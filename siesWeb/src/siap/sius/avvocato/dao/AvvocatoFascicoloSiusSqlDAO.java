@@ -55,6 +55,9 @@ public class AvvocatoFascicoloSiusSqlDAO	extends SIAPSqlDAO
       "COGNOME, " +
       "NOME, " +
       "FORO, " +
+	  //INIZIO: MEV_21 (avvocati)
+	  " COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " +
+	  //FINE: MEV_21      
       "INDIRIZZO, " +
       "TELEFONO, " +
       "FAX, " +
@@ -107,8 +110,10 @@ public class AvvocatoFascicoloSiusSqlDAO	extends SIAPSqlDAO
       "COMSEDEDIF.DESCRIZIONE COMUNE_TIPO_AUTORITA_DIF, "+
       "AVVOCATO_FASCICOLO_SIUS.SEDE_TIPO_AUTORITA_DIF ";
 
-    lStatement += " FROM AVVOCATO, AVVOCATO_FASCICOLO_SIUS, CG_REF_CODES AVVTIPODESC, CG_REF_CODES AVVTIPODESCMOTIVO, CG_REF_CODES AVVTIPODESCAUTORITA, CG_REF_CODES AVVTIPODESCAUTORITADIF, COMUNE COMNA, COMUNE COMRES, COMUNE COMSEDE, COMUNE COMSEDEDIF";
-
+    lStatement += " FROM AVVOCATO, AVVOCATO_FASCICOLO_SIUS, CG_REF_CODES AVVTIPODESC, CG_REF_CODES AVVTIPODESCMOTIVO, CG_REF_CODES AVVTIPODESCAUTORITA, CG_REF_CODES AVVTIPODESCAUTORITADIF, COMUNE COMNA, COMUNE COMRES, COMUNE COMSEDE, COMUNE COMSEDEDIF ";
+	//INIZIO: MEV_21 (avvocati)
+	lStatement += " , CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO ";
+	//FINE: MEV_21
     lStatement += " WHERE ";
    // lStatement += " DATA_FINE_VALIDITA IS NULL AND ";
     lStatement += " AVVOCATO.ID_AVVOCATO=AVVOCATO_FASCICOLO_SIUS.AVV_ID_AVVOCATO AND ";
@@ -124,6 +129,12 @@ public class AvvocatoFascicoloSiusSqlDAO	extends SIAPSqlDAO
     lStatement += " AVVOCATO.COD_COMUNE_RESIDENZA = COMRES.COD_COMUNE AND ";
     lStatement += " AVVOCATO_FASCICOLO_SIUS.SEDE_TIPO_AUTORITA = COMSEDE.COD_COMUNE AND ";
     lStatement += " AVVOCATO_FASCICOLO_SIUS.SEDE_TIPO_AUTORITA_DIF = COMSEDEDIF.COD_COMUNE ";
+	//INIZIO: MEV_21 (avvocati)
+	lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING ";
+	lStatement += " AND AVVFORO.RV_DOMAIN = 'FORO_AVVOCATI' ";
+	lStatement += " AND COMSEDEFORO.COD_COMUNE = AVVFORO.RV_ALT2_VALUE ";
+	//FINE: MEV_21    
+    
 
     return lStatement;
 
@@ -142,6 +153,9 @@ public class AvvocatoFascicoloSiusSqlDAO	extends SIAPSqlDAO
     aModel.getAvvocato().setCognome(getString("COGNOME"));
     aModel.getAvvocato().setNome(getString("NOME"));
     aModel.getAvvocato().setForo(getString("FORO"));
+	//INIZIO: MEV_21 (avvocati)
+	aModel.getAvvocato().setDescComuneSedeForo(getString("DescComuneSedeForo"));
+	//FINE: MEV_21    
     aModel.getAvvocato().setIndirizzo(getString("INDIRIZZO"));
     aModel.getAvvocato().setTelefono(getString("TELEFONO"));
     aModel.getAvvocato().setFax(getString("FAX"));

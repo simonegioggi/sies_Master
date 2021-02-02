@@ -50,6 +50,10 @@ public class AvvocatoModel extends GenericModel {
 	private String mCap;
 	private BigDecimal mFlagVisualizza;
 	private BigDecimal mIdAvvocatoStandard;
+	
+	//INIZIO: MEV_21 (avvocati)
+	private String mDescComuneSedeForo;
+	//FINE: MEV_21
 
 	// COSTRUTTORE DI DEFAULT
 	public AvvocatoModel() {
@@ -58,6 +62,9 @@ public class AvvocatoModel extends GenericModel {
 		this.mNome = "";
 		this.mDescrTipo = "";
 		this.mForo = "";
+		//INIZIO: MEV_21 (avvocati)
+		this.mDescComuneSedeForo = "";
+		//FINE: MEV_21		
 		this.mIndirizzo = "";
 		this.mTelefono = "";
 		this.mFax = "";
@@ -93,6 +100,9 @@ public class AvvocatoModel extends GenericModel {
 		this.mCognome = aModel.mCognome;
 		this.mNome = aModel.mNome;
 		this.mForo = aModel.mForo;
+		//INIZIO: MEV_21 (avvocati)
+		this.mDescComuneSedeForo = aModel.mDescComuneSedeForo;
+		//FINE: MEV_21		
 		this.mIndirizzo = aModel.mIndirizzo;
 		this.mTelefono = aModel.mTelefono;
 		this.mFax = aModel.mFax;
@@ -124,7 +134,7 @@ public class AvvocatoModel extends GenericModel {
 	}
 
 	// COSTRUTTORE MODEL
-	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo,
+	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo, String aDescComuneSedeForo, 
 			String aIndirizzo, String aTelefono, String aFax, String aEMail, String aCodLuogoNascita,
 			String aCodComuneResidenza, String aDescCodLuogoNascita, String aDescCodComuneResidenza,
 			Date aDataNascita, String aCodOperatoreInserimento, Date aDataInserimento,
@@ -139,6 +149,9 @@ public class AvvocatoModel extends GenericModel {
 		this.mCognome = aCognome;
 		this.mNome = aNome;
 		this.mForo = aForo;
+		//INIZIO: MEV_21 (avvocati)
+		this.mDescComuneSedeForo = aDescComuneSedeForo;
+		//FINE: MEV_21			
 		this.mIndirizzo = aIndirizzo;
 		this.mTelefono = aTelefono;
 		this.mFax = aFax;
@@ -187,6 +200,12 @@ public class AvvocatoModel extends GenericModel {
 	public String getForo() {
 		return mForo;
 	}
+	
+	//INIZIO: MEV_21 (avvocati)
+	public String getDescComuneSedeForo () {
+		return mDescComuneSedeForo;
+	}
+	//FINE: MEV_21
 
 	public String getIndirizzo() {
 		return mIndirizzo;
@@ -319,6 +338,12 @@ public class AvvocatoModel extends GenericModel {
 	public void setForo(String aValore) {
 		mForo = aValore;
 	}
+	
+	//INIZIO: MEV_21 (avvocati)
+	public void setDescComuneSedeForo (String aValore) {
+		mDescComuneSedeForo = aValore;
+	}
+	//FINE: MEV_21
 
 	public void setIndirizzo(String aValore) {
 		mIndirizzo = aValore;
