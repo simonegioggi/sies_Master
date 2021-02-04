@@ -5,6 +5,12 @@ In data 20210204 eseguito merge coi branches:
 
 	1)	Ticket#20210127015 — SIUS - decreto irreperibilità già esistente;
 		siap.sius.depositodecreto.action.ActLoadInserisciDecretoIrreperibilità
+		Corretto sia il codice ricercato (era 0002 Rigetto, modificato in 0003 Inammissibile) 
+		che il mesaggio rilanciato all'utente da:
+		Inserimento impossibile : Esiste un Decreto di irreperibilità
+		ad:
+		Inserimento impossibile : Esiste un Decreto di Inammissibilita'
+
 	2)	Ticket#202101270113 — SIEP 136/2019 PG BARI
 		siap.siep.ordineesecuzione.action.ActRicercaProvvedimenti
 		siap.sico.evento.controller.IEventoSimeone
