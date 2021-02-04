@@ -1,7 +1,7 @@
 RELEASE_12.4.7.0: 02/02/2021
 	-	nato dal branch "release_12.4.6.0"
 
-In data 202102dd eseguito merge coi branches:
+In data 20210204 eseguito merge coi branches:
 
 	1)	Ticket#20210127015 — SIUS - decreto irreperibilità già esistente;
 		siap.sius.depositodecreto.action.ActLoadInserisciDecretoIrreperibilità
@@ -10,4 +10,3 @@ In data 202102dd eseguito merge coi branches:
 		siap.sico.evento.controller.IEventoSimeone
 		siap.sico.evento.controller. EventoSimeoneController
 		siap.sico.evento.dao.EventoSqlDAO
-	3)	
