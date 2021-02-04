@@ -1,44 +1,16 @@
-RELEASE_12.4.6.0: 09/12/2020
-	-	nato dal branch "release_12.4.5.0"
+Branch creato dalla "release_12.4.6.0" per il ticket Ticket#20210113013
 
-In data 20201209 eseguito merge col branch mac-otrs-202012020116 comprendente il ticket:
+Corretti diversi moduli. Nella estrazione dei provvedimenti del PM la query che eseguiva la
+count era leggermente differente da quella che estraeva l'elenco degli eventi. E' stata adeguata
+per imporre la condizione aggiuntiva sull'ufficio inserimento (+accorpati) e sul FLAG_DOCUMENTO_REGISTRATO
+es:
+AND (COD_UFFICIO_INSERIMENTO  IN ('00127202101','00119102109') OR FLAG_DOCUMENTO_REGISTRATO = 'S')  
+Il numero totale indicato nella form differiva in alcuni casi dal numero degli eventi effettivamente visualizzati
+(vedi segnalazione utente)
 
-	1)	Ticket#202012020116 - Provvedimento di cumulo revoca misura alternativa
+Inoltre sono stati esclusi dai provvedimento del PM anche quelli con TIPO_PROVVEDIMENTO 50 Rinvio udienza da verbale
+iscritti esclusivamente dalla Sorveglianza che uscivano nelle query e non facevano comparire il tasto di cancellazione
 
-Modulo modificato:
-	siap.siep.modulocumulo.util.StatoEsecTitoloCumulatoController (Metodo caricaComputiMisuraAlternativaSORV)
-Modificato il modulo di estrazione del cumulo. Caricava i dati di Inizio Pena e Fine Pena in campi differenti 
-da quelli gestiti dalla form (Data Inizio Misura e Data FIne Misura) ed era il motivo della mancata visualizzazione.
+Il provvedimento 50 sono stati poi esclusi anche dalla query che estrae gli ultimi 2 eventi da visualizzare sul dettaglio
+del provvedimento SIEP. Infatti l'utente SIUS che lo aveva inserito riusciva a vederlo come ultimo evento SIEP in stato non validato
 
-Collateralmente effettuate anche le seguenti correzioni:
-
-siap.siep.modulocumulo.action.ActInserisciRevocaMisuraAlternativaCumulo
-Metodo getDatiComputo
-Computava nell'espiato anche il giorno della revoca. Il giorno non va considerato come espiato ed il modulo SIEP in effetti lo esclude.
-
-siap.sico.misuraalternativa.controller.MisuraAlternativaController
-metodo InserimentoAggiornamentoPenResMisuraAlternativa
-Per un errore indotto, duplicava la pena residua anche quando non necessario.
-
-siap.siep.modulocumulo.util.StatoEsecuzioneCumuloUtils
-Metodo getActionDettaglio
-Si verificava un errore in fase di visualizzazione del Dettaglio dell'evento di revoca siep. Avendo lo stesso
-codice dell'ordinanza veniva scambiato per evento SIUS ed agganciava il relativo dettaglio ma mancavano i dati da
-visualizzare.
-
-Corrette inoltre 2 jsp in cui mancava uno "spazio" nella visualizzazione dei quantum:
-	- DettaglioMARevocaAffProva.jsp (aggiunta spaziatura nella visualizzazione dei quantum);
-	- LoadInserisciRevocaMAAffProva.jsp (aggiunta spaziatura nella visualizzazione dei quantum).
-
-In data 20201217 eseguito merge col branch mac-otrs-20201204019 comprendente il ticket:
-
-	2)	Ticket#20201204019 - Calcolo errato revoca benefici applicati con sentenza di condanna
-
-Modulo modificato:
-	siap.siep.modulocumulo.util.CalcoloPenaCumuloModel
-Il branch corregge solo una parte della segnalazione. In particolare il sistema andava 
-in negativo di pena (reclusione) nella prima fase dei calcolo (pena complessiva, benefici, presofferto)
-e provava subito a sottrarre la reclusione negativa dall'arresto portando in negativo anche l'arresto.
-Successivamente (STEP2) calcolava gli altri computi che riportavano in positivo la pena (reclusione)
-a seguito delle revoche benefici ma ormai aveva già portato in negativo l'arresto che restava negativo.
-Il test su reclusione negativa è stato lasciato solo al termine di tutti i computi.
