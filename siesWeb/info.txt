@@ -16,3 +16,13 @@ In data 20210204 eseguito merge coi branches:
 		siap.sico.evento.controller.IEventoSimeone
 		siap.sico.evento.controller. EventoSimeoneController
 		siap.sico.evento.dao.EventoSqlDAO
+		Corretti diversi moduli. Nella estrazione dei provvedimenti del PM la query che eseguiva la
+		count era leggermente differente da quella che estraeva l'elenco degli eventi. E' stata adeguata
+		per imporre la condizione aggiuntiva sull'ufficio inserimento (+accorpati) e sul FLAG_DOCUMENTO_REGISTRATO
+		es:
+		AND (COD_UFFICIO_INSERIMENTO  IN ('00127202101','00119102109') OR FLAG_DOCUMENTO_REGISTRATO = 'S')  
+		Il numero totale indicato nella form differiva in alcuni casi dal numero degli eventi effettivamente visualizzati
+		(vedi segnalazione utente). Inoltre sono stati esclusi dai provvedimento del PM anche quelli con TIPO_PROVVEDIMENTO 50 Rinvio udienza da verbale
+		iscritti esclusivamente dalla Sorveglianza che uscivano nelle query e non facevano comparire il tasto di cancellazione.
+		Il provvedimento 50 sono stati poi esclusi anche dalla query che estrae gli ultimi 2 eventi da visualizzare sul dettaglio
+		del provvedimento SIEP. Infatti l'utente SIUS che lo aveva inserito riusciva a vederlo come ultimo evento SIEP in stato non validato.
