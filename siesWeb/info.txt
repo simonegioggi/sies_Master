@@ -1,7 +1,7 @@
 RELEASE_12.4.7.0: 02/02/2021
 	-	nato dal branch "release_12.4.6.0"
 
-In data 20210204 eseguito merge coi branches:
+In data 202102.. eseguito merge coi branches:
 
 	1)	Ticket#20210127015 - SIUS - decreto irreperibilità già esistente;
 		siap.sius.depositodecreto.action.ActLoadInserisciDecretoIrreperibilità
@@ -34,3 +34,15 @@ In data 20210204 eseguito merge coi branches:
 		Costruttore di copia: aggiunta la mappatura del GUP e CAPSM.
 	5)	Ticket#20210212019 - versione 12.4.6.0 Risultato negativo test in pre-esercizio
 		siap.siep.modulocumulo.controller.StatoEsecTitoloCumulatoController + 4 templates
+		Per le revoche di tipo 
+		- Detenzione Domiciliare
+		- Semiliberta'
+		- Arresti Domiciliare art 656 comma 10
+		Il SIEP riporta la data revoca nel campo MISURE_ALTERNATIVE.DATA_INIZIO_MISURA 
+		invece che in MISURA_ALTERNATIVA.DATA_INIZIO_REVOCA come per le altre revoche.
+		In fase di ribaltamento dei dati nel modulo cumulo tale data veniva quindi scritta nel campo 
+		COMPUTI_CUMULO.DATA_INIZIO_MISURA e non veniva visualizzata sul dettaglio/modifica in quanto il 
+		cumulo la cerca in COMPUTI_CUMULO.DATA_INIZIO_REVOCA.
+		Metodo "caricaComputiMisuraAlternativaSORV":
+		aggiunto test sui codici delle revoche di cui sopra per ribaltare il campo 
+		MISURA_ALTERNATIVA.DATA_INIZIO_MISURA su COMPUTI_CUMULO.DATA_INIZIO_REVOCA
