@@ -450,6 +450,7 @@ if(!lTipoFunzione.equals("") && !lTipoFunzione.equals("ritornodettaglio")) {
 							while (itx.hasNext()) {
 								JmsCodeModel lCodBDI = (JmsCodeModel) itx.next();
 						%>
+						<%-- Ticket#20210208018 - Ricerca soggetto altre bdi: aggiunta descrizione --%>
 						<option value="<%=lCodBDI.getCodice()%>"><%=lCodBDI.getDescrizione()%></option>
 						<%
 							}
