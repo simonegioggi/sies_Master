@@ -450,7 +450,7 @@ if(!lTipoFunzione.equals("") && !lTipoFunzione.equals("ritornodettaglio")) {
 							while (itx.hasNext()) {
 								JmsCodeModel lCodBDI = (JmsCodeModel) itx.next();
 						%>
-						<option value="<%=lCodBDI.getCodice()%>"></option>
+						<option value="<%=lCodBDI.getCodice()%>"><%=lCodBDI.getDescrizione()%></option>
 						<%
 							}
 						%>

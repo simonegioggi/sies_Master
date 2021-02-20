@@ -3,7 +3,7 @@ RELEASE_12.4.7.0: 02/02/2021
 
 In data 20210204 eseguito merge coi branches:
 
-	1)	Ticket#20210127015 — SIUS - decreto irreperibilità già esistente;
+	1)	Ticket#20210127015 - SIUS - decreto irreperibilità già esistente;
 		siap.sius.depositodecreto.action.ActLoadInserisciDecretoIrreperibilità
 		Corretto sia il codice ricercato (era 0002 Rigetto, modificato in 0003 Inammissibile) 
 		che il mesaggio rilanciato all'utente da:
@@ -11,7 +11,7 @@ In data 20210204 eseguito merge coi branches:
 		ad:
 		Inserimento impossibile : Esiste un Decreto di Inammissibilita'
 
-	2)	Ticket#202101270113 — SIEP 136/2019 PG BARI
+	2)	Ticket#202101270113 - SIEP 136/2019 PG BARI
 		siap.siep.ordineesecuzione.action.ActRicercaProvvedimenti
 		siap.sico.evento.controller.IEventoSimeone
 		siap.sico.evento.controller. EventoSimeoneController
@@ -26,3 +26,6 @@ In data 20210204 eseguito merge coi branches:
 		iscritti esclusivamente dalla Sorveglianza che uscivano nelle query e non facevano comparire il tasto di cancellazione.
 		Il provvedimento 50 sono stati poi esclusi anche dalla query che estrae gli ultimi 2 eventi da visualizzare sul dettaglio
 		del provvedimento SIEP. Infatti l'utente SIUS che lo aveva inserito riusciva a vederlo come ultimo evento SIEP in stato non validato.
+	3)	Ticket#20210208018 - Ricerca soggetto altre bdi
+		/jsp/files/siap/sico/soggetto/DettaglioSoggetto.jsp
+		La jsp non caricava la desrizione nella combo delle BDI. Aggiunta la descrizione nella jsp.
