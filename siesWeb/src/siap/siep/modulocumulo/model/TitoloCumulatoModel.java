@@ -403,8 +403,18 @@ public class TitoloCumulatoModel extends GenericModel {
 			mAnnoRegGen = aSentenzaModel.getAnnoRegeGip();
 			mNumeroRegGen = aSentenzaModel.getNumeroRegeGip();
 			mTipoRegGen = "GIP";
+		// Inizio [Ticket#20210212012] Elenco Provvedimenti Esecutivi Coinvolti
+		} else if (aSentenzaModel.getAnnoRegeGup() != null) {
+			mAnnoRegGen = aSentenzaModel.getAnnoRegeGup();
+			mNumeroRegGen = aSentenzaModel.getNumeroRegeGup();
+			mTipoRegGen = "GUP";
+		} else if (aSentenzaModel.getAnnoRegeCapsm() != null) {
+			mAnnoRegGen = aSentenzaModel.getAnnoRegeCapsm();
+			mNumeroRegGen = aSentenzaModel.getNumeroRegeCapsm();
+			mTipoRegGen = "CAPSM";
 		}
-
+		// Fine Ticket#20210212012
+		
 		// Sentenza da eseguire
 		mDataProvvedimento = aSentenzaModel.getDataProvvedimento();
 		mAnnoSentenza = aSentenzaModel.getAnnoSentenza();
