@@ -1,7 +1,8 @@
 Branch creato dalla 12.4.6.0 per il ticket mac-otrs-20210212012
 
 Modulo corretto:
-siap.siep.modulocumulo.action.ActLoadInserisciTitoloCumulato
+siap.siep.modulocumulo.model.TitoloCumulatoModel
+public TitoloCumulatoModel(SentenzaModel aSentenzaModel) 
 
 costruttore di copia: Aggiunta la mappatura del GUP e CAPSM
 
