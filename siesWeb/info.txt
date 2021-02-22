@@ -31,6 +31,7 @@ In data 202102.. eseguito merge coi branches:
 		La jsp non caricava la desrizione nella combo delle BDI. Aggiunta la descrizione nella jsp.
 	4)	Ticket#20210212012 - Elenco Provvedimenti Esecutivi Coinvolti
 		siap.siep.modulocumulo.model.TitoloCumulatoModel
+		public TitoloCumulatoModel(SentenzaModel aSentenzaModel)
 		Costruttore di copia: aggiunta la mappatura del GUP e CAPSM.
 	5)	Ticket#20210212019 - versione 12.4.6.0 Risultato negativo test in pre-esercizio
 		siap.siep.modulocumulo.controller.StatoEsecTitoloCumulatoController + 4 templates
