@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.IDecodifiche;
 import siap.sico.decodifiche.model.DecodificheModel;
@@ -34,7 +37,8 @@ import siap.siep.util.SIEPLookupRemote;
  * @version 1.0
  */
 public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdineEsecuzione {
-
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
@@ -75,7 +79,10 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 		// Modifica del 12/04/2016
 		// Dall'elenco vengono scartate le Ordinanze (cod 03),
 		// i Decreti (cod 02), e le Sentenze (cod 01).
-		String[] lTipoProv = { "03", "02", "01" };
+		// Ticket#202101270113 - aggiunto il codice 50 tra i TipoProvv da escludere tra gli eventi del PM. 
+		//                       E' un codice prettamente SIUS
+		String[] lTipoProv = { "03", "02", "01", "50"};
+		// FINE - Ticket#202101270113
 		// 26/03/2019 MEV70 - Esclusione degli Eventi con CodMotivo = "0670".
 		String[] lCodMotivo = { "0670", "esclude" };
 		Vector lVect = lCtrl.ExRicercaEventoByFascicoloSiepTipEventoNOTTipProvPaged(
@@ -92,13 +99,19 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 		if (lEveMod == null || lEveMod.getIdEvento() == null) {
 			lEveMod = new EventoModel();
 		}
+		siesLogger.debug("eventocancellareannullare = "+lEveMod);
 		setRequestAttribute("eventocancellareannullare", lEveMod);
 
 		BigDecimal CountRisultati;
 		if (isRequestParameterNullObj("CountRisultati")) {
 			// 26/03/2019 MEV70 - Esclusione degli Eventi con CodMotivo = "0670".
-			CountRisultati = lCtrl.ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(
-					lFascicoloModel.getIdFascicoloSiep(), getCodUfficioUtenteConnesso(), lTipoEvento,
+			// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
+			//                       impostando il filtro sull'ufficio + accorpati
+		 	CountRisultati = lCtrl.ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(
+					lFascicoloModel.getIdFascicoloSiep()
+					//, getCodUfficioUtenteConnesso()
+					, getUfficioUtenteConnesso()
+					, lTipoEvento,
 					lTipoProv, lCodMotivo);
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
