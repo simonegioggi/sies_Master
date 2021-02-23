@@ -706,8 +706,12 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	}
 
 	// 26/03/2019 MEV70 - Esclusione dei CodMotivo nella lista.
+	// Ticket#202101270113 - si adeguano le condizioni della count alle condizioni della select
+	//                       impostando il filtro sull'ufficio + accorpati
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
-			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
+			// String aCodUfficioUtenteConnesso
+			UfficioModel aUfficioUtenteConnesso
+			, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
 			throws DAOException
 
 	{
@@ -718,9 +722,15 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		// NON VALIDATI
 		if (aFascKey != null) {
 			lStatement += " WHERE FAS_SIE_ID_FASCICOLO_SIEP = " + aFascKey;
+			// Ticket#202101270113 - Si agiunge la condizione utilizzata nella select eventi
+			lStatement += " AND (COD_UFFICIO_INSERIMENTO "
+					+ condizioneUfficiCompetenti(aUfficioUtenteConnesso) + "";
+			lStatement += " OR FLAG_DOCUMENTO_REGISTRATO = 'S')";
+			// Fine Ticket#202101270113
 		} else {
 			lStatement += ", FASCICOLO_SIEP fasc";
-			lStatement += " WHERE CHIAVE_UFFICIO ='" + aCodUfficioUtenteConnesso + "'";
+			//lStatement += " WHERE CHIAVE_UFFICIO ='" + aCodUfficioUtenteConnesso + "'";
+			lStatement += " WHERE CHIAVE_UFFICIO ='" + aUfficioUtenteConnesso.getCodUfficio() + "'";
 			lStatement += " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = fasc.ID_FASCICOLO_SIEP";
 			lStatement += " AND (FLAG_DOCUMENTO_REGISTRATO = 'N' OR FLAG_DOCUMENTO_REGISTRATO IS NULL) ";
 		}

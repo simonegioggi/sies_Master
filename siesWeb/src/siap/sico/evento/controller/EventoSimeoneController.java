@@ -1150,8 +1150,12 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 	 * @return
 	 * @throws F3BException
 	 */
+	// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
+	//                       impostando il filtro sull'ufficio + accorpati
 	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
-			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
+			// String aCodUfficioUtenteConnesso
+			UfficioModel aUfficioUtenteConnesso
+			, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
 			throws F3BException {
 
 		BigDecimal lCount = new BigDecimal(0);
@@ -1164,7 +1168,7 @@ public class EventoSimeoneController extends SiapController implements IEventoSi
 			lConn = getDBConnection();
 
 			lSqlDao = new EventoSqlDAO(lConn);
-			lSqlDao.getCountEventoByFascicoloSiepTipEventoNOTTipProv(aFascKey, aCodUfficioUtenteConnesso,
+			lSqlDao.getCountEventoByFascicoloSiepTipEventoNOTTipProv (aFascKey, aUfficioUtenteConnesso, // aCodUfficioUtenteConnesso,
 					aTipoEvento, aTipoProv, aCodMotivo);
 			lSqlDao.start();
 			lSqlDao.next();

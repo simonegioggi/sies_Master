@@ -2489,12 +2489,36 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lComputiModel.setNumMesiMisura(lMisAlt.getNumMesiMisura());
 			lComputiModel.setNumGiorniMisura(lMisAlt.getNumGiorniMisura());
 
-			lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
+			// [Ticket#20210212019] - vedi oltre per la valorizzazione del campo
+			//lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
+			// Fine [Ticket#20210212019]
 			lComputiModel.setDataFineMisura(lMisAlt.getDataFineMisura());
 			lComputiModel.setNote(lMisAlt.getNote());
 			lComputiModel.setCodOggettoDecisione(lMisAlt.getCodTipoMisura());
 
 			lComputiModel.setDataInizioRevoca(lMisAlt.getDataInizioRevoca());
+			// [Ticket#20210212019] - versione 12.4.6.0 Risultato negativo test in pre-esercizio
+			// In riapertura del ticket 202012020116
+			// Nel caso di revoca di alcune MA che NON rideterminano la pena (es: Detenzione Domiciliare 
+			// - Semilibertà - Arresti Domiciliari 656 c 10) la data Inizio Provvedimento di Revoca viene caricato nel campo 
+			// MISURA_ALTERNATIVA.DATA_DECISIONE ed è la EVENTO.DATA_EMISSIONE del provvedimento SIEP
+			// Il modulo cumulo legge il campo dal COMPUTI_CUMULO.DATA_INIZIO_REVOCA.
+			ArrayList <String> codiciRevocaDetDom       = new ArrayList <String> (Arrays.asList("0016","0087","0088","0089","2270"));
+			ArrayList <String> codiciRevocaSemiliberta  = new ArrayList <String> (Arrays.asList("0091"));
+			ArrayList <String> codiciRevocaArrDom656c10 = new ArrayList <String> (Arrays.asList("0232","2744","2757","2746","2747"));
+			ArrayList <String> codiciRevocaMA = new ArrayList <String> ();
+			codiciRevocaMA.addAll (codiciRevocaDetDom);
+			codiciRevocaMA.addAll (codiciRevocaSemiliberta);
+			codiciRevocaMA.addAll (codiciRevocaArrDom656c10);
+			if (codiciRevocaMA.contains(lMisAlt.getCodTipoMisura())) {
+				lComputiModel.setDataInizioRevoca (lMisAlt.getDataInizioMisura());
+			}
+			else {
+				// La data inizio misura la valorizzo solo se non ribaltata già su lComputiModel.setDataInizioRevoca
+				lComputiModel.setDataInizioMisura (lMisAlt.getDataInizioMisura());
+			}
+			// Fine [Ticket#20210212019]
+			
 			lComputiModel.setNumAnniRevocaReclusione(lMisAlt.getNumAnniRevocaReclusione());
 			lComputiModel.setNumMesiRevocaReclusione(lMisAlt.getNumMesiRevocaReclusione());
 			lComputiModel.setNumGiorniRevocaReclusione(lMisAlt.getNumGiorniRevocaReclusione());
