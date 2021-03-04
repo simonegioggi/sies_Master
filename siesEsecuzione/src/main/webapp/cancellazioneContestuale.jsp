@@ -21,6 +21,8 @@
                 var idUtente = $.getUrlVar('idUtente');
                 //MEV_06
                 var tipoOperazione = $.getUrlVar('tipoOperazione');
+            	// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+                var userAdn = $.getUrlVar('userAdn');
 
               	// MEV 16: aggiunte variabili e passate come parametro nella url
                 var tipoWS 			= $.getUrlVar('tipoWS');
@@ -39,7 +41,7 @@
  					$.ajax({
 					    url: "cancellazioneContestuale?idEvento="+idEvento+"&action=DELETE&idUtente="+idUtente+"&tipoOperazione="+tipoOperazione+
 					    		// MEV 16
-					    		"&tipoWS="+tipoWS+"&idSoggetto="+idSoggetto+"&idSentenza="+idSentenza+"&idFascicoloSiep="+idFascicoloSiep,
+					    		"&tipoWS="+tipoWS+"&idSoggetto="+idSoggetto+"&idSentenza="+idSentenza+"&idFascicoloSiep="+idFascicoloSiep+"&userAdn="+userAdn,
 					    cache: false,
 					    dataType: "html",
 					    success: function(data) {

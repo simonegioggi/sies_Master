@@ -61,15 +61,17 @@
   </SCRIPT>
 
 <% 
-  BigDecimal idEvento = (BigDecimal)request.getAttribute(ICostantiEvento.CAMPO_ID_EVENTO);
-  String idUtente=UtenteConnesso.getUserId();
+BigDecimal idEvento = (BigDecimal) request.getAttribute(ICostantiEvento.CAMPO_ID_EVENTO);
+String idUtente = UtenteConnesso.getUserId();
+// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+String userAdn = UtenteConnesso.getUserAdn();
 %>
 
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
     <title>Messaggio</title>
   </head>
 
-  <BODY class="corpo" onload="openPopup('/siesEsecuzione/cancellazioneContestuale.jsp?idEvento=<%=idEvento%>&idUtente=<%=idUtente%>&tipoOperazione=ANNULLA');return(false);">
+  <BODY class="corpo" onload="openPopup('/siesEsecuzione/cancellazioneContestuale.jsp?idEvento=<%=idEvento%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>&tipoOperazione=ANNULLA');return(false);">
   
 <%
       String message = (String)request.getAttribute(IWebConstants.MESSAGE_TEXT);

@@ -77,6 +77,8 @@ public class Mapper {
 		utente.setIpServer(utenteSies.getIpServer());
 		utente.setUsername(utenteSies.getUsername());
 		utente.setUfficio(ufficio);
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di proprietà
+		utente.setUserAdn(utenteSies.getUserAdn());
 		return utente;
 	}
 
@@ -809,6 +811,8 @@ public class Mapper {
 		utente.setIpServer(utenteSies.getIpServer());
 		utente.setUsername(utenteSies.getUsername());
 		utente.setUfficio(ufficio);
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di proprietà
+		utente.setUserAdn(utenteSies.getUserAdn());
 		return utente;
 	}
 

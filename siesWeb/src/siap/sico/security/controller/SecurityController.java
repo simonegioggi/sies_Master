@@ -64,12 +64,12 @@ public class SecurityController extends SiapController implements ISecurity {
 			throw new SecurityException(SecurityException.USER_MESSAGE, "Password errata");
 
 		// carica il profilo dell'utente
-		ProfileModel lProfiloUtente = getProfiloByCodiceUtente(lUtente.getUserId());
-		lUtente.setUserProfile(lProfiloUtente);
+		ProfileModel pm = getProfiloByCodiceUtente(lUtente.getUserId());
+		lUtente.setUserProfile(pm);
 
 		// carica l'ufficio di appartenenza dell'utente
-		UfficioModel lUfficioUtente = getUfficioUtente(lUtente);
-		lUtente.setUfficioUtente(lUfficioUtente);
+		UfficioModel ufficioUtente = getUfficioUtente(lUtente);
+		lUtente.setUfficioUtente(ufficioUtente);
 
 		// Update Utente :set Time di ultimo Login
 		Utente_setOraLogin(lUtente.getUserId(), aUtente.getIP());
@@ -107,12 +107,12 @@ public class SecurityController extends SiapController implements ISecurity {
 			throw new SecurityException(SecurityException.USER_MESSAGE, "Password errata");
 
 		// carica il profilo dell'utente
-		ProfileModel lProfiloUtente = getProfiloByCodiceUtente(lUtente.getUserId());
-		lUtente.setUserProfile(lProfiloUtente);
+		ProfileModel pm = getProfiloByCodiceUtente(lUtente.getUserId());
+		lUtente.setUserProfile(pm);
 
 		// carica l'ufficio di appartenenza dell'utente
-		UfficioModel lUfficioUtente = getUfficioUtente(lUtente);
-		lUtente.setUfficioUtente(lUfficioUtente);
+		UfficioModel ufficioUtente = getUfficioUtente(lUtente);
+		lUtente.setUfficioUtente(ufficioUtente);
 
 		// Update Utente :set Time di ultimo Login
 		Utente_setOraLogin(lUtente.getUserId(), aUtente.getIP());
@@ -434,7 +434,7 @@ public class SecurityController extends SiapController implements ISecurity {
 
 		Connection lConn = null;
 		SecuritySqlDAO lDao = null;
-		UfficioModel lUfficioUtente = null;
+		UfficioModel ufficioUtente = null;
 
 		UfficioSqlDAO lUffSqlDao = null;
 
@@ -444,7 +444,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			lDao.ricercaUfficioByCodiceUtente(aUtente.getUserId());
 			lDao.start();
 			if (lDao.next())
-				lUfficioUtente = lDao.getUfficioModel();
+				ufficioUtente = lDao.getUfficioModel();
 			else
 				throw new SecurityException(SecurityException.USER_MESSAGE,
 						"L'utente non appartiene a nessun ufficio");
@@ -458,7 +458,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			List lUfficiAccorpati = new ArrayList();
 
 			lUffSqlDao = new UfficioSqlDAO(lConn);
-			lUffSqlDao.listaUfficiAccorpati(null, lUfficioUtente.getCodUfficio());
+			lUffSqlDao.listaUfficiAccorpati(null, ufficioUtente.getCodUfficio());
 			lUffSqlDao.start();
 
 			while (lUffSqlDao.next()) {
@@ -469,7 +469,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			}
 			lUffSqlDao.stop();
 
-			lUfficioUtente.setUfficiAccorpati(lUfficiAccorpati);
+			ufficioUtente.setUfficiAccorpati(lUfficiAccorpati);
 
 		} catch (DAOException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -480,7 +480,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			cleanup(lUffSqlDao);
 			cleanup(lConn);
 		}
-		return lUfficioUtente;
+		return ufficioUtente;
 	}
 
 	/**
@@ -547,6 +547,41 @@ public class SecurityController extends SiapController implements ISecurity {
 		}
 
 		return lUtente;
+	}
+
+	@Override
+	public UtenteModel preLogin(UtenteModel um, boolean test) throws F3BException {
+
+		// info per il log
+		siesLogger.debug("SecurityController.preLogin: INIZIO");
+
+		// verifica che l'utente sia valido (definito per l'ufficio richiesto e in corso di validità)
+		UtenteModel utente = getUtenteValido(um);
+		if (test) {
+			// Verifica la password [** Controllare che la password non sia scaduta **]
+			String lPwdCrpt = Utils.cryptPassword(um.getPwd());
+			String lPswDB = utente.getPwd();
+			if (lPswDB == null)
+				lPswDB = Utils.cryptPassword("");
+
+			boolean lCmp = (lPswDB).equals(lPwdCrpt);
+			if (!lCmp)
+				throw new SecurityException(SecurityException.USER_MESSAGE, "Password errata");
+		}
+
+		// carica il profilo dell'utente
+		ProfileModel pm = getProfiloByCodiceUtente(utente.getUserId());
+		utente.setUserProfile(pm);
+
+		// carica l'ufficio di appartenenza dell'utente
+		UfficioModel ufficioUtente = getUfficioUtente(utente);
+		utente.setUfficioUtente(ufficioUtente);
+
+		// info per il log
+		siesLogger.debug("SecurityController.preLogin FINE");
+
+		// ritorna il dettaglio dell'utente da mettere in sessione
+		return utente;
 	}
 
 }

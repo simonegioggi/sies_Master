@@ -223,18 +223,18 @@
    													onclick="abilitaInvioFC(this);"/>
 											</td>
 										</c:if>
-										<!-- IMMAGINE -->
+										<!-- MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn (x4) -->
 							   	 		<c:if test="${cup == 'CUMULO'}">
 							   	 			<td>
 							   	 				<c:choose>
 								    				<c:when test="${action == 'INSERT'}">
-									   	 				<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSinonimo=<c:out value="${sinonimo.idSinonimo}"/>');return(false);">
+									   	 				<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&userAdn=<c:out value="${userAdn}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSinonimo=<c:out value="${sinonimo.idSinonimo}"/>');return(false);">
 															<img id="trasmissioneFC_${sinonimo.idSinonimo}" border="0" width="24" height="24" align="middle"
 																src="images/insertWS.png" alt="Trasmissione Foglio Complementare al SIC" style="display: none;"/>
 														</a>
 													</c:when>
 													<c:otherwise>
-														<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSinonimo=<c:out value="${sinonimo.idSinonimo}"/>');return(false);">
+														<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&userAdn=<c:out value="${userAdn}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSinonimo=<c:out value="${sinonimo.idSinonimo}"/>');return(false);">
 															<img id="trasmissioneFC_${sinonimo.idSinonimo}" border="0" width="24" height="24" align="middle"
 																src="/images/updateWS.png" alt="Modifica Foglio Complementare sul SIC" style="display: none;"/>
 														</a>
@@ -418,12 +418,12 @@
 								CONFERMA INVIO FC >>>&nbsp;
 								<c:choose>
 				    				<c:when test="${action == 'INSERT'}">
-										<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSoggettoNSC=<c:out value="${response.soggetto.chiaveNSC}"/>&azioneTrasfCumulo=<c:out value="${response.descEsitoCumulo}"/>');return(false);">	
+										<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&userAdn=<c:out value="${userAdn}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSoggettoNSC=<c:out value="${response.soggetto.chiaveNSC}"/>&azioneTrasfCumulo=<c:out value="${response.descEsitoCumulo}"/>');return(false);">	
 											<img id="trasmissioneFC" border="0" width="24" height="24" align="middle" src="images/insertWS.png" alt="Trasmissione Foglio Complementare al SIC"/>
 										</a>
 									</c:when>
 									<c:otherwise>
-										<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSoggettoNSC=<c:out value="${response.soggetto.chiaveNSC}"/>&azioneTrasfCumulo=<c:out value="${response.descEsitoCumulo}"/>');return(false);">
+										<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<c:out value="${idEvento}"/>&idUtente=<c:out value="${idUtente}"/>&userAdn=<c:out value="${userAdn}"/>&tipoWS=siepToNsc&idSoggetto=<c:out value="${response.soggetto.chiaveSies}"/>&idSentenza=<c:out value="${idSentenza}"/>&idFascicoloSiep=<c:out value="${idFascicoloSiep}"/>&idSoggettoNSC=<c:out value="${response.soggetto.chiaveNSC}"/>&azioneTrasfCumulo=<c:out value="${response.descEsitoCumulo}"/>');return(false);">
 											<img id="trasmissioneFC" border="0" width="24" height="24" align="middle" src="/images/updateWS.png" alt="Modifica Foglio Complementare sul SIC"/>
 										</a>
 									</c:otherwise>
