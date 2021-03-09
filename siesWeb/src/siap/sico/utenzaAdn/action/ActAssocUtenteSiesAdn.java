@@ -35,7 +35,7 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		String password = getRequestStringParameter(CAMPO_PASSWORD);
 		UtenteModel um = new UtenteModel(userId, password);
 		um.setIP(getRequest().getRemoteAddr());
-		siesLogger.debug(um.getIP());
+		siesLogger.debug("USERID = " + userId + " # REMOTE IP ADDRESS = " + um.getIP());
 		try {
 			um = UtenzaAdnUtils.preLogin(um, true);
 		} catch (Exception e) {
@@ -96,7 +96,12 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 			setRequestAttribute("msg", "Hai effettuato con successo l'associazione dell'utenza: " + ausam.getUteCodUtente());
 		}
 
+		String username = StringUtils.capitalize(usernameDB.substring(0, usernameDB.indexOf("."))) + " "
+				+ StringUtils.capitalize(usernameDB.substring(usernameDB.indexOf(".") + 1));
+		setRequestAttribute("username", username);
+		siesLogger.debug("NOME UTENTE = " + username);
 		setRequestAttribute("usernameDB", usernameDB);
+		siesLogger.debug("NOME UTENTE DB = " + usernameDB);
 		return PG_LOGIN_SIES;
 	}
 
