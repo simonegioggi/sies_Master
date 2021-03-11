@@ -6,3 +6,5 @@ Obiettivi:
 	Prevedere un'attivita' di associazione degli utenti ADN con le utenze SIES.
 	Garantire una continuita' di funzionamento delle interazioni e delle interconnessioni che oggi il SIES ha con altri sistemi (SIC),
 	a valle della dismissione del sistema IGI nel SIC.
+
+In data 20210311 eseguito merge col branch: release_12.4.7.0

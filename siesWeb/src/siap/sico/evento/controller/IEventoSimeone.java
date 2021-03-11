@@ -68,12 +68,17 @@ public interface IEventoSimeone {
 
 	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
 			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws F3BException;
-  public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey, 
-          																	String aCodUfficioUtenteConnesso,
+  
+	// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
+	//                       impostando il filtro sull'ufficio + accorpati
+	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey, 
+          																	//String aCodUfficioUtenteConnesso,
+			                                                                UfficioModel aUfficioUtenteConnesso,
           																	String[] aTipoEvento, 
           																	String[] aTipoProv,
-          																	String[] aCodMotivo)
+          																	String[] aCodMotivo)	
     throws F3BException;
+	// FINE Ticket#202101270113
 
   public Vector ExRicercaEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
           																UfficioModel aUfficioUtenteConnesso,
