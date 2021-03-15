@@ -39,6 +39,7 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		try {
 			um = UtenzaAdnUtils.preLogin(um, true);
 		} catch (Exception e) {
+			siesLogger.error("ERRORE in ActAssocUtenteSiesAdn.processRequest: " + e.getMessage());
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage());
 			return IWebConstants.PG_MESSAGE_ADN;
 		}
@@ -75,7 +76,7 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		Iterator<AssocUtenteSiesAdnModel> i = listaUtenzeAdn.iterator();
 		while (i.hasNext()) {
 			AssocUtenteSiesAdnModel ausam = i.next();
-			if (usernameDB.equals(ausam.getUteCodUtente())) {
+			if (userId.equals(ausam.getUteCodUtente())) {
 				giaAssociata = true;
 				break;
 			}
@@ -95,10 +96,8 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 					bd = uam.getId();
 				ausam = UtenzaAdnUtils.inserisciAssociazioneSiesAdn(userId, bd);
 			} catch (Exception e) {
-				if (e.getMessage().contains("00001"))
-					setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Account già configurato.");
-				else
-					setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage());
+				siesLogger.error("ERRORE in ActAssocUtenteSiesAdn.processRequest: " + e.getMessage());
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage());
 				return IWebConstants.PG_MESSAGE_ADN;
 			}
 			if (Utils.isPresent(ausam)) {
@@ -106,6 +105,10 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 				setRequestAttribute("msg",
 						"Hai effettuato con successo l'associazione dell'utenza: " + ausam.getUteCodUtente());
 			}
+		} else if (giaAssociata) {
+			siesLogger.info(userId + ": Account già configurato!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Account già configurato.");
+			return IWebConstants.PG_MESSAGE_ADN;
 		}
 
 		String username = StringUtils.capitalize(usernameDB.substring(0, usernameDB.indexOf("."))) + " "
