@@ -85,6 +85,7 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 	public void ricercaSuperSoggettoFascicoliBySoggetto(SoggettoModel aModel,
 			String strCodUfficioUtenteConnesso, int aPage, String strCodDistrettoUtenteConnesso,
 			String strTipoRicerca, String majorOffice, boolean fromDetail, String tipoUfficio) {
+
 		String strQuery = "";
 		String lPaginedStatement = new String("");
 
@@ -94,7 +95,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 					strCodUfficioUtenteConnesso, aPage, majorOffice);
 			strQuery += setCondizioneSS(aModel);
 			strQuery += setGroupSoggettoSS();
-			strQuery += setOrderCognome();
+			// MEV_6: aggiunto controllo se è una count allora l'order by è piuttosto inutile
+			if (aPage > 0)
+				strQuery += setOrderCognome();
 		}
 		// Costruzione della query parametrizzata per distretto.
 		else if (strTipoRicerca != null && strTipoRicerca.equals("distretto")) {
@@ -102,7 +105,9 @@ public class SoggettoFascicoloSqlDAO extends SIAPSqlDAO {
 					strCodUfficioUtenteConnesso, aPage, majorOffice, fromDetail, tipoUfficio);
 			strQuery += setCondizioneSS(aModel);
 			strQuery += setGroupSoggettoSSDistre1();
-			strQuery += setOrderCognome();
+			// MEV_6: aggiunto controllo se è una count allora l'order by è piuttosto inutile
+			if (aPage > 0)
+				strQuery += setOrderCognome();
 		}
 		// 03-11-2014 - Ricerca Soggetto per Iscrizione Procedimento Misura Sicurezza PROVVISORIA
 		// Costruzione della query su tutta la BaseDati.
