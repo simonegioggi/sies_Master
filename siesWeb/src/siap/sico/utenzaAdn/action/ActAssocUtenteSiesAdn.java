@@ -85,15 +85,27 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 			// 2)
 			BigDecimal bd = null;
 			UtenzaAdnModel uam = UtenzaAdnUtils.verificaEsistenzaUtenzaAdn(usernameDB);
-			if (Utils.isNullObj(uam) || Utils.isNullObj(uam.getId())) {
-				// inserisco in UTENZA_ADN
-				bd = UtenzaAdnUtils.inserisciUtenzaAdn(usernameDB);
-				siesLogger.info("Inserita Utenza ADN: " + "" + bd);
-			} else
-				bd = uam.getId();
-			AssocUtenteSiesAdnModel ausam = UtenzaAdnUtils.inserisciAssociazioneSiesAdn(userId, bd);
-			siesLogger.info("Inserita Associazione Utenza SIES-ADN: " + "" + ausam.getUteCodUtente());
-			setRequestAttribute("msg", "Hai effettuato con successo l'associazione dell'utenza: " + ausam.getUteCodUtente());
+			AssocUtenteSiesAdnModel ausam = null;
+			try {
+				if (Utils.isNullObj(uam) || Utils.isNullObj(uam.getId())) {
+					// inserisco in UTENZA_ADN
+					bd = UtenzaAdnUtils.inserisciUtenzaAdn(usernameDB);
+					siesLogger.info("Inserita Utenza ADN: " + "" + bd);
+				} else
+					bd = uam.getId();
+				ausam = UtenzaAdnUtils.inserisciAssociazioneSiesAdn(userId, bd);
+			} catch (Exception e) {
+				if (e.getMessage().contains("00001"))
+					setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Account già configurato.");
+				else
+					setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage());
+				return IWebConstants.PG_MESSAGE_ADN;
+			}
+			if (Utils.isPresent(ausam)) {
+				siesLogger.info("Inserita Associazione Utenza SIES-ADN: " + "" + ausam.getUteCodUtente());
+				setRequestAttribute("msg",
+						"Hai effettuato con successo l'associazione dell'utenza: " + ausam.getUteCodUtente());
+			}
 		}
 
 		String username = StringUtils.capitalize(usernameDB.substring(0, usernameDB.indexOf("."))) + " "

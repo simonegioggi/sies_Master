@@ -66,9 +66,8 @@ public class AssocUtenteSiesAdnSqlDAO extends SqlDAO {
 
 		String s = new String("");
 
-		s += "SELECT " + "ID, " + "UTE_COD_UTENTE, " + "ID_UTENTE_ADN, "
-				+ "COD_OPERATORE_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, "
-				+ "DATA_AGGIORNAMENTO ";
+		s += "SELECT " + "ID, " + "UTE_COD_UTENTE, " + "ID_UTENTE_ADN, " + "COD_OPERATORE_INSERIMENTO, "
+				+ "DATA_INSERIMENTO, " + "COD_OPERATORE_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO ";
 		s += "FROM ASSOC_UTENTE_SIES_ADN";
 
 		return s;
@@ -98,8 +97,10 @@ public class AssocUtenteSiesAdnSqlDAO extends SqlDAO {
 
 	public void verificaAssociazioneSiesAdn(String userId) {
 
-		String sql = "select * from ASSOC_UTENTE_SIES_ADN a where a.id_utente_adn in"
-				+ " (select t.id from UTENZA_ADN t where t.samaccountname = '" + userId + "')";
+		String sql = "select a.* from ASSOC_UTENTE_SIES_ADN a, utente u where a.id_utente_adn in"
+				+ " (select t.id from UTENZA_ADN t where t.samaccountname = '" + userId + "')"
+				+ " and u.cod_utente = a.ute_cod_utente"
+				+ " and (u.data_fine_validita is null or u.data_fine_validita > sysdate) order by 2";
 
 		setStatement(sql);
 	}

@@ -41,7 +41,7 @@ public class UtenzaAdnUtils {
 		return l;
 	}
 
-	public static BigDecimal inserisciUtenzaAdn(String userId) {
+	public static BigDecimal inserisciUtenzaAdn(String userId) throws F3BException {
 
 		BigDecimal bd = null;
 		IUtenzaAdn iua = null;
@@ -50,8 +50,8 @@ public class UtenzaAdnUtils {
 			bd = iua.inserisciUtenzaAdn(userId);
 		} catch (Exception ex) {
 			siesLogger.error(ex.getMessage());
-			siesLogger.error("Errore in inserimento Utenza ADN: ritorno null!");
-			return null;
+			siesLogger.error("Errore in inserimento Utenza ADN: ritorno l'eccezione!");
+			throw ex;
 		}
 		return bd;
 	}
@@ -71,7 +71,8 @@ public class UtenzaAdnUtils {
 		return uam;
 	}
 
-	public static AssocUtenteSiesAdnModel inserisciAssociazioneSiesAdn(String userId, BigDecimal id) {
+	public static AssocUtenteSiesAdnModel inserisciAssociazioneSiesAdn(String userId, BigDecimal id)
+			throws F3BException {
 
 		AssocUtenteSiesAdnModel ausam = null;
 		IAssocUtenteSiesAdn iausa = null;
@@ -80,8 +81,8 @@ public class UtenzaAdnUtils {
 			ausam = iausa.inserisciAssociazioneSiesAdn(userId, id);
 		} catch (Exception ex) {
 			siesLogger.error(ex.getMessage());
-			siesLogger.error("Errore in inserimento Associazione Utenza SIES-ADN: ritorno null!");
-			return null;
+			siesLogger.error("Errore in inserimento Associazione Utenza SIES-ADN: ritorno l'eccezione!");
+			throw ex;
 		}
 		return ausam;
 	}
@@ -94,7 +95,7 @@ public class UtenzaAdnUtils {
 			um = is.preLogin(um, test);
 		} catch (F3BException ex) {
 			siesLogger.error(ex.getMessage());
-			siesLogger.error("Errore nella pre Login: ritorno null!");
+			siesLogger.error("Errore nella pre Login: ritorno l'eccezione!");
 			throw ex;
 		}
 		return um;
