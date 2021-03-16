@@ -12,6 +12,14 @@ Risolve il Ticket:
 
 	3)	Ticket#20210310014 — SIES - rif ticket 202103020113 — ricerca per soggetto SIEP
 		-	LoadInserisciSoggetto.jsp
+			In riapertura del ticket 202103020113 relativo all'errore in fase di ricerca soggetto 
+			legato al valore 0 inserito nel campo SOGGETTO.ANNO_NASCITA.
+			Il valore non è valido per costruire una data.
+			Aggiunti i controlli sulle jsp/Action che ne consentivano l'inserimento
+			Modificata solo la jsp /jsp/files/siap/sico/soggetto/LoadInserisciSoggetto.jsp
+			Tutte le altre jsp che trattavano l'anno di nascita avevano già il controllo 
+			sul validator che fosse > 1900 in quanto non prevedono i campi età presunta alternativi 
+			alla data di nasscita.
 
 	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
 		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
