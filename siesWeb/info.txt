@@ -1,6 +1,18 @@
 RELEASE_12.4.8.0: 12/03/2021
-	-	nato dal branch "release_12.4.7.0"
+	-->	nato dal branch "release_12.4.7.0"
 
 Risolve il Ticket:
-	Ticket#202103110112 - versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017)
-		FascicoloSiusSoggettoSqlDAO.java
+
+	1)	Ticket#202102230121 - Archiviazione pene pecuniarie (solo TEMPLATE)
+		-	EsecuzioneMisuraSicurezza.rtf
+		-	SIEP_OS_01.rtf
+
+	2)	Ticket#20210224017 — Template da correggere (solo TEMPLATE)
+		-	SIEP_MA_ARDOM_REVO_DIRETTA.rtf
+
+	3)	Ticket#20210310014 — SIES - rif ticket 202103020113 — ricerca per soggetto SIEP
+		-	LoadInserisciSoggetto.jsp
+
+	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
+		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
+		-	ProcedimentoPerSoggettoXmlUtil.java	(AVVOCATURA)
