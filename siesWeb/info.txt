@@ -24,3 +24,6 @@ Risolve il Ticket:
 	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
 		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
 		-	ProcedimentoPerSoggettoXmlUtil.java	(AVVOCATURA)
+
+	5)	Ticket#202103160116 — Errore SIUS su emissione provvedimento (solo DB)
+		-	202103160116.sql
