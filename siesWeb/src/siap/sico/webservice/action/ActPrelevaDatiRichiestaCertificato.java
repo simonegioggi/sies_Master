@@ -181,6 +181,9 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		datiUtente.setCOGNOMEUTENTE(lUtenteMod.getCognome());
 		// NOME_UTENTE
 		datiUtente.setNOMEUTENTE(lUtenteMod.getNome());
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione per variabile UserAdn
+		// modificata la libreria "sippi.jar"
+		datiUtente.setUSERNAMEADN(lUtenteMod.getUserAdn());
 
 		/*******************************************************************************/
 		/* Element DATI_ANAGRAFICI */
