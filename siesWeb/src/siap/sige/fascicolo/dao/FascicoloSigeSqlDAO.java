@@ -1728,7 +1728,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				//                      falliva la join con la CG_REF_CODES
 				+ "and NVL (i.cod_tenore_decisione,'-') = tdrs.rv_low_value "
 				// + "and tdrs.rv_low_value = i.cod_tenore_decisione "
-				// Ticket#20210324015 - FINE
+				// Ticket#20210324015 - FINA
 				+ "and tps.rv_domain = 'TIPO_PROVVEDIMENTO_SIGE' "
 				+ "and tps.rv_low_value = p.cod_tipo_provvedimento_sige "
 				+ "and tp.rv_domain = 'TIPO_PROVVEDIMENTO' "
