@@ -26,9 +26,12 @@ public class ActRicercaFSPUnificazioneSige extends ActRicercaFSigePuntuale imple
       FascicoloSigeEstesoModel fascicoloSelezionato=super.getFascicoloSigeEstesoInSessione();
     
       IDecretoUnificazioneSige lCtrl = SIGELookupRemote.getDecretoUnificazioneSigeRemote();
+      // Ticket#2021032201 - Modificato il RUOLO nella chiamata è lunificante e non da unificare
+//      FascicoloSigeEstesoModel lFasDaUnificare = lCtrl.ExVerificaFascicoloSigePerUnificazione(String.valueOf(fascicoloSelezionato.getFascicoloSige().getChiaveAnno()), String.valueOf(fascicoloSelezionato.getFascicoloSige().getChiaveProgr()), 
+//			                                   super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
       FascicoloSigeEstesoModel lFasDaUnificare = lCtrl.ExVerificaFascicoloSigePerUnificazione(String.valueOf(fascicoloSelezionato.getFascicoloSige().getChiaveAnno()), String.valueOf(fascicoloSelezionato.getFascicoloSige().getChiaveProgr()), 
-			                                   super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
-    
+              super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_UNIFICANTE );
+      // Ticket#2021032201 - FINE
       TenoreSigeModel lTenModUnificato=new TenoreSigeModel();
       lTenModUnificato.setFasIdFascicoloSige(lFasDaUnificare.getFascicoloSige().getIdFascicoloSige());
       ITenoreSige lCtrlTS = SIGELookupRemote.getTenoreSigeRemote();
