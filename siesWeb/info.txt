@@ -1,29 +1,8 @@
-RELEASE_12.4.8.0: 12/03/2021
-	-->	nato dal branch "release_12.4.7.0"
+Ticket#20210324015 - statistiche ricorso_opposizione
 
-Risolve il Ticket:
+Nalla query "generale" (tutti) falliva la join con la CG_REF_CODES per i record che 
+non avevano il campo COD_TENORE_DECISIONE a null.
+Nella query "Ricorsi senza esito" falliva la codizione nella wuere condition per codice
 
-	1)	Ticket#202102230121 - Archiviazione pene pecuniarie (solo TEMPLATE)
-		-	EsecuzioneMisuraSicurezza.rtf
-		-	SIEP_OS_01.rtf
-
-	2)	Ticket#20210224017 — Template da correggere (solo TEMPLATE)
-		-	SIEP_MA_ARDOM_REVO_DIRETTA.rtf
-
-	3)	Ticket#20210310014 — SIES - rif ticket 202103020113 — ricerca per soggetto SIEP
-		-	LoadInserisciSoggetto.jsp
-			In riapertura del ticket 202103020113 relativo all'errore in fase di ricerca soggetto 
-			legato al valore 0 inserito nel campo SOGGETTO.ANNO_NASCITA.
-			Il valore non è valido per costruire una data.
-			Aggiunti i controlli sulle jsp/Action che ne consentivano l'inserimento
-			Modificata solo la jsp /jsp/files/siap/sico/soggetto/LoadInserisciSoggetto.jsp
-			Tutte le altre jsp che trattavano l'anno di nascita avevano già il controllo 
-			sul validator che fosse > 1900 in quanto non prevedono i campi età presunta alternativi 
-			alla data di nasscita.
-
-	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
-		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
-		-	ProcedimentoPerSoggettoXmlUtil.java	(AVVOCATURA)
-
-	5)	Ticket#202103160116 — Errore SIUS su emissione provvedimento (solo DB)
-		-	202103160116.sql
+Modulo Modificato
+siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.ricercaProcedimentiSigeConRicorsoOpposizione
