@@ -15,20 +15,20 @@ import f3b.model.GenericModel;
 
 public class AvvocatoModel extends GenericModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3473586574513573356L;
 
 	private BigDecimal mIdAvvocato;
 	private String mCognome;
 	private String mNome;
 	private String mForo;
-	
-	//INIZIO: MEV_21 (avvocati)
+
+	// INIZIO: MEV_21 (avvocati)
 	private String mDescComuneSedeForo;
-	//FINE: MEV_21
-	
+	private String mPec;
+	private String mFlagRegInde;
+	private String mDescrComuneStudio;
+	// FINE: MEV_21
+
 	private String mIndirizzo;
 	private String mTelefono;
 	private String mFax;
@@ -73,9 +73,12 @@ public class AvvocatoModel extends GenericModel {
 		this.mDescCodComuneResidenza = "";
 		this.mDescrNonAttivita = "";
 		this.mForo = "";
-		//INIZIO: MEV_21 (avvocati)
+		// INIZIO: MEV_21 (avvocati)
 		this.mDescComuneSedeForo = "";
-		//FINE: MEV_21
+		this.mPec = "";
+		this.mFlagRegInde = "";
+		this.mDescrComuneStudio = "";
+		// FINE: MEV_21
 		this.mIndirizzo = "";
 		this.mTelefono = "";
 		this.mFax = "";
@@ -110,9 +113,12 @@ public class AvvocatoModel extends GenericModel {
 		this.mCognome = aModel.mCognome;
 		this.mNome = aModel.mNome;
 		this.mForo = aModel.mForo;
-		//INIZIO: MEV_21 (avvocati)
+		// INIZIO: MEV_21 (avvocati)
 		this.mDescComuneSedeForo = aModel.mDescComuneSedeForo;
-		//FINE: MEV_21
+		this.mPec = aModel.mPec;
+		this.mFlagRegInde = aModel.mFlagRegInde;
+		this.mDescrComuneStudio = aModel.mDescrComuneStudio;
+		// FINE: MEV_21
 		this.mIndirizzo = aModel.mIndirizzo;
 		this.mTelefono = aModel.mTelefono;
 		this.mFax = aModel.mFax;
@@ -148,27 +154,28 @@ public class AvvocatoModel extends GenericModel {
 	}
 
 	// COSTRUTTORE MODEL
-	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo, 
-			//INIZIO: MEV_21 (avvocati)
-			String aDescComuneSedeForo,
-			//FINE: MEV_21
+	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo,
+			// INIZIO: MEV_21 (avvocati)
+			String aDescComuneSedeForo, String aPec, String aFlagRegInde, String aDescrComuneStudio,
+			// FINE: MEV_21
 			String aIndirizzo, String aTelefono, String aFax, String aEMail, String aCodiceFiscale,
-			String aProvincia, String aCap, BigDecimal aFlagVisualizza,
-
-			String aCodOperatoreInserimento, String aCodUfficioInserimento, Date aDataInserimento,
-			String aCodOperatoreAggiornamento, Date aDataAggiornamento, String aCodUfficioAggiornamento,
-
-			String aDescrTipo, String aDescCodLuogoNascita, String aDescCodComuneResidenza,
-			String aDescrNonAttivita, String aCodLuogoNascita, String aCodComuneResidenza, Date aDataNascita,
-			Date aDataSospensione, Date aDataRadiazione, String aCodNonAttivita, String aCodUffAppartenenza,
-			String aNote, String aFlagCancellato, BigDecimal aIdAvvocatoStandard) {
+			String aProvincia, String aCap, BigDecimal aFlagVisualizza, String aCodOperatoreInserimento,
+			String aCodUfficioInserimento, Date aDataInserimento, String aCodOperatoreAggiornamento,
+			Date aDataAggiornamento, String aCodUfficioAggiornamento, String aDescrTipo,
+			String aDescCodLuogoNascita, String aDescCodComuneResidenza, String aDescrNonAttivita,
+			String aCodLuogoNascita, String aCodComuneResidenza, Date aDataNascita, Date aDataSospensione,
+			Date aDataRadiazione, String aCodNonAttivita, String aCodUffAppartenenza, String aNote,
+			String aFlagCancellato, BigDecimal aIdAvvocatoStandard) {
 		this.mIdAvvocato = aIdAvvocato;
 		this.mCognome = aCognome;
 		this.mNome = aNome;
 		this.mForo = aForo;
-		//INIZIO: MEV_21 (avvocati)
-		this.mDescComuneSedeForo=aDescComuneSedeForo;
-		//FINE: MEV_21
+		// INIZIO: MEV_21 (avvocati)
+		this.mDescComuneSedeForo = aDescComuneSedeForo;
+		this.mPec = aPec;
+		this.mFlagRegInde = aFlagRegInde;
+		this.mDescrComuneStudio = aDescrComuneStudio;
+		// FINE: MEV_21
 		this.mIndirizzo = aIndirizzo;
 		this.mTelefono = aTelefono;
 		this.mFax = aFax;
@@ -222,12 +229,24 @@ public class AvvocatoModel extends GenericModel {
 	public String getForo() {
 		return mForo;
 	}
-	
-	//INIZIO: MEV_21 (avvocati)
+
+	// INIZIO: MEV_21 (avvocati)
 	public String getDescComuneSedeForo() {
 		return mDescComuneSedeForo;
 	}
-	//FINE: MEV_21
+
+	public String getPec() {
+		return mPec;
+	}
+
+	public String getFlagRegInde() {
+		return mFlagRegInde;
+	}
+
+	public String getDescrComuneStudio() {
+		return mDescrComuneStudio;
+	}
+	// FINE: MEV_21
 
 	public String getIndirizzo() {
 		return mIndirizzo;
@@ -364,12 +383,24 @@ public class AvvocatoModel extends GenericModel {
 	public void setForo(String aValore) {
 		mForo = aValore;
 	}
-	
-	//INIZIO: MEV_21 (avvocati)
+
+	// INIZIO: MEV_21 (avvocati)
 	public void setDescComuneSedeForo(String aValore) {
 		mDescComuneSedeForo = aValore;
 	}
-	//FINE: MEV_21
+
+	public void setPec(String aValore) {
+		mPec = aValore;
+	}
+
+	public void setFlagRegInde(String aValore) {
+		mFlagRegInde = aValore;
+	}
+
+	public void setDescrComuneStudio(String aValore) {
+		mDescrComuneStudio = aValore;
+	}
+	// FINE: MEV_21
 
 	public void setIndirizzo(String aValore) {
 		mIndirizzo = aValore;
@@ -495,24 +526,37 @@ public class AvvocatoModel extends GenericModel {
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/
 	public String toString() {
+
 		String lStr = new String();
 
-		lStr = "AvvocatoModel:\n" + "[ mIdAvvocato                = " + mIdAvvocato + " ]\n"
-				+ "[ mCognome                   = " + mCognome + " ]\n" + "[ mNome                      = "
-				+ mNome + " ]\n" + "[ mForo                      = " + mForo + " ]\n"
-				+ "[ mIndirizzo                 = " + mIndirizzo + " ]\n" + "[ mTelefono                  = "
-				+ mTelefono + " ]\n" + "[ mFax                       = " + mFax + " ]\n"
-				+ "[ mEMail                     = " + mEMail + " ]\n" + "[ mCodiceFiscale             = "
-				+ mCodiceFiscale + " ]\n" + "[ mProvincia                 = " + mProvincia + " ]\n"
-				+ "[ mCap                       = " + mCap + " ]\n" + "[ mFlagVisualizza            = "
-				+ mFlagVisualizza + " ]\n" + "[ mCodComuneResidenza        = " + mCodComuneResidenza + " ]\n"
+		lStr = "AvvocatoModel:\n"
+				+ "[ mIdAvvocato                = " + mIdAvvocato + " ]\n"
+				+ "[ mCognome                   = " + mCognome + " ]\n"
+				+ "[ mNome                      = "	+ mNome + " ]\n"
+				+ "[ mForo                      = " + mForo + " ]\n"
+				// INIZIO: MEV_21 (avvocati)
+				+ "[ mDescComuneSedeForo        = " + mDescComuneSedeForo + " ]\n"
+				+ "[ mPec                       = " + mPec + " ]\n"
+				+ "[ mFlagRegInde               = " + mFlagRegInde + " ]\n"
+				+ "[ mDescrComuneStudio         = " + mDescrComuneStudio + " ]\n"
+				// FINE: MEV_21
+				+ "[ mIndirizzo                 = " + mIndirizzo + " ]\n"
+				+ "[ mTelefono                  = "	+ mTelefono + " ]\n"
+				+ "[ mFax                       = " + mFax + " ]\n"
+				+ "[ mEMail                     = " + mEMail + " ]\n"
+				+ "[ mCodiceFiscale             = " + mCodiceFiscale + " ]\n"
+				+ "[ mProvincia                 = " + mProvincia + " ]\n"
+				+ "[ mCap                       = " + mCap + " ]\n"
+				+ "[ mFlagVisualizza            = "	+ mFlagVisualizza + " ]\n"
+				+ "[ mCodComuneResidenza        = " + mCodComuneResidenza + " ]\n"
 				+ "[ mCodLuogoNascita           = " + mCodLuogoNascita + " ]\n"
 				+ "[ mDataNascita               = " + mDataNascita + " ]\n"
 				+ "[ mDataSospensione           = " + mDataSospensione + " ]\n"
 				+ "[ mDataRadiazione            = " + mDataRadiazione + " ]\n"
 				+ "[ mCodNonAttivita            = " + mCodNonAttivita + " ]\n"
-				+ "[ mNote                      = " + mNote + " ]\n" + "[ mFlagCancellato            = "
-				+ mFlagCancellato + " ]\n" + "[ mCodUffAppartenenza        = " + mCodUffAppartenenza + " ]\n"
+				+ "[ mNote                      = " + mNote + " ]\n"
+				+ "[ mFlagCancellato            = "	+ mFlagCancellato + " ]\n"
+				+ "[ mCodUffAppartenenza        = " + mCodUffAppartenenza + " ]\n"
 				+ "[ mCodOperatoreInserimento   = " + mCodOperatoreInserimento + " ]\n"
 				+ "[ mDataInserimento           = " + mDataInserimento + " ]\n"
 				+ "[ mCodUfficioInserimento     = " + mCodUfficioInserimento + " ]\n"
@@ -521,8 +565,8 @@ public class AvvocatoModel extends GenericModel {
 				+ "[ mCodUfficioAggiornamento   = " + mCodUfficioAggiornamento + " ]\n"
 				+ "[ mDataInizioValidita        = " + mDataInizioValidita + " ]\n"
 				+ "[ mDataFineoValidita         = " + mDataFineValidita + " ]\n"
-				+ "[ mDescrTipo                 = " + mDescrTipo + " ]\n" + "[ mIdAvvocatoStandard        = "
-				+ mIdAvvocatoStandard + " ]\n";
+				+ "[ mDescrTipo                 = " + mDescrTipo + " ]\n"
+				+ "[ mIdAvvocatoStandard        = "	+ mIdAvvocatoStandard + " ]\n";
 
 		return lStr;
 	}
