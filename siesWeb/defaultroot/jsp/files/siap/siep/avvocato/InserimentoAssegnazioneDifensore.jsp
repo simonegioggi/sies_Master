@@ -175,7 +175,7 @@ if (!"".equals(lTipoFunzione)) {
 
 <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 function ListaAvvocatiRegInde(a_formname) {
-	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=800,height=600");
+	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
 }
 </script>
 </head>

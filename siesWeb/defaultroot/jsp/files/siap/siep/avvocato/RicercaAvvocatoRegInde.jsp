@@ -150,6 +150,8 @@ if (avvocato.size() > 0) {
 			}
 		}
 		Date dn = (Utils.isPresent(si.getDataNascita())) ? si.getDataNascita().getTime() : null;
+		if ("-".equals(foro))
+			break;
 %>
   	<tr>
   		<!-- Cognome e Nome -->
