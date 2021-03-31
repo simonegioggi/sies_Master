@@ -13,6 +13,8 @@ import it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Soggetto;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitException;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.WsServiziInterrogazioneInterni_PortType;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.WsServiziInterrogazioneInterni_ServiceLocator;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.model.AvvocatoModel;
 
@@ -33,6 +35,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 		if (!isRequestParameterNullObj(CAMPO_CODICE_FISCALE))
 			am.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
 		am.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
+		String foro = null;
 
 		try {
 			siesLogger.debug("Ricerca su RegInde per:");
@@ -40,6 +43,12 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			siesLogger.debug("Nome: " + am.getNome());
 			siesLogger.debug("Foro: " + am.getForo());
 			siesLogger.debug("Tutti i Fori: " + (isRequestChecked(CAMPO_FLAG_TUTTI_FORI) ? "SI" : "NO"));
+			if (!isRequestChecked(CAMPO_FLAG_TUTTI_FORI)) {
+				foro = DecodificheUtils.getCodAlt2byCode(DecodificheManager.getInstance().getForoAll(),
+						am.getForo());
+				foro = "COA" + foro;
+				siesLogger.debug("COA + Foro: " + foro);
+			}
 			// inizio chiamata al servizio REGINDE
 			WsServiziInterrogazioneInterni_ServiceLocator service = new WsServiziInterrogazioneInterni_ServiceLocator();
 			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(
@@ -55,7 +64,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 					"Chiamo ricercaSoggettoComplete(cognome, nome, codiceFiscale, indirizzo, codiceEnte, orderBy, asc)");
 			listaSoggetti = port.ricercaSoggettoComplete(am.getCognome() != null ? am.getCognome() : "",
 					am.getNome() != null ? am.getNome() : "",
-					am.getCodiceFiscale() != null ? am.getCodiceFiscale() : "", null, null, null, null);
+					am.getCodiceFiscale() != null ? am.getCodiceFiscale() : "", null, foro, null, null);
 			siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
 				v = new ArrayList(Arrays.asList(listaSoggetti));
@@ -67,8 +76,9 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			setRequestAttribute("msg",
 					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca");
 		} catch (Exception e) {
-			siesLogger.error(e.getMessage());
-			setRequestAttribute("msg", "Errore nella ricerca Avvocato su RegInde: " + e.toString());
+			siesLogger.error(e.toString());
+			e.printStackTrace();
+			// setRequestAttribute("msg", "Errore nella ricerca Avvocato su RegInde: " + e.toString());
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
