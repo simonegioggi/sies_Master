@@ -68,8 +68,10 @@ function altreInfo(idRecord) {
 	var riga = document.getElementById(idRecord);
 	if (riga.style.display =="none") {
 	  	riga.style.display = "block";
+	  	document.images["image"].src = "<%=IWebConstants.IMAGES_DIR%>collapse.gif";
 	} else {
 	  	riga.style.display = "none";
+	  	document.images["image"].src = "<%=IWebConstants.IMAGES_DIR%>expand.gif";
 	}
 }
 </script>
@@ -153,25 +155,9 @@ if (avvocato.size() > 0) {
   		<!-- Cognome e Nome -->
     	<td class=l><%=StringUtils.toStringJSP(si.getCognome()) + " " +  StringUtils.toStringJSP(si.getNome())%>
     		<a href="javascript:altreInfo('rec_<%=id_record%>')">
-    			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>expand.gif" alt="Espandi" border="0">
+    			<img name="image" style="vertical-align: middle;" align="middle" src="<%=IWebConstants.IMAGES_DIR%>expand.gif" alt="Espandi" border="0">
     		</a>
     	</td>
-    	<div id="rec_<%=id_record%>" style="display:none;">
-    		<tr>
-    			<td class=l>
-    				
-    			</td>
-    			<td class=l>
-    				
-    			</td>
-    			<td class=l>
-    				
-    			</td>
-    			<td class=l>
-    				
-    			</td>
-    		</tr>
-    	</div>
     	<!-- Codice Fiscale -->
     	<td class=l><%=StringUtils.toStringJSP(si.getCodFisc())%></td>
     	<!-- Foro -->
@@ -208,6 +194,15 @@ if (avvocato.size() > 0) {
 				'<%=StringUtils.cStrForJS(indirizzo)%>','<%=stato%>');">
 				<img align="middle" src="/images/fileselected.gif" border=0>
 			</a>
+		</td>
+	</tr>
+
+	<tr id="rec_<%=id_record%>" style="display:none;">
+		<td class=l colspan="7">
+			pec:&nbsp;<%=StringUtils.toStringJSP(si.getPec())%>&nbsp;&nbsp;&nbsp;
+			Tel:&nbsp;<%=telefono%>&nbsp;&nbsp;&nbsp;
+			Fax:&nbsp;<%=fax%>&nbsp;&nbsp;&nbsp;
+			e-mail:&nbsp;<%=email%>
 		</td>
 	</tr>
 <%
