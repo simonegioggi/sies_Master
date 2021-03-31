@@ -1,49 +1,29 @@
-RELEASE_12.4.7.0: 02/02/2021
-	-	nato dal branch "release_12.4.6.0"
+RELEASE_12.4.8.0: 12/03/2021
+	-->	nato dal branch "release_12.4.7.0"
 
-In data 202102.. eseguito merge coi branches:
+Risolve il Ticket:
 
-	1)	Ticket#20210127015 - SIUS - decreto irreperibilità già esistente;
-		siap.sius.depositodecreto.action.ActLoadInserisciDecretoIrreperibilità
-		Corretto sia il codice ricercato (era 0002 Rigetto, modificato in 0003 Inammissibile) 
-		che il mesaggio rilanciato all'utente da:
-		Inserimento impossibile : Esiste un Decreto di irreperibilità
-		ad:
-		Inserimento impossibile : Esiste un Decreto di Inammissibilita'
+	1)	Ticket#202102230121 - Archiviazione pene pecuniarie (solo TEMPLATE)
+		-	EsecuzioneMisuraSicurezza.rtf
+		-	SIEP_OS_01.rtf
 
-	2)	Ticket#202101270113 - SIEP 136/2019 PG BARI
-		siap.siep.ordineesecuzione.action.ActRicercaProvvedimenti
-		siap.sico.evento.controller.IEventoSimeone
-		siap.sico.evento.controller. EventoSimeoneController
-		siap.sico.evento.dao.EventoSqlDAO
-		Corretti diversi moduli. Nella estrazione dei provvedimenti del PM la query che eseguiva la
-		count era leggermente differente da quella che estraeva l'elenco degli eventi. E' stata adeguata
-		per imporre la condizione aggiuntiva sull'ufficio inserimento (+accorpati) e sul FLAG_DOCUMENTO_REGISTRATO
-		es:
-		AND (COD_UFFICIO_INSERIMENTO  IN ('00127202101','00119102109') OR FLAG_DOCUMENTO_REGISTRATO = 'S')  
-		Il numero totale indicato nella form differiva in alcuni casi dal numero degli eventi effettivamente visualizzati
-		(vedi segnalazione utente). Inoltre sono stati esclusi dai provvedimento del PM anche quelli con TIPO_PROVVEDIMENTO 50 Rinvio udienza da verbale
-		iscritti esclusivamente dalla Sorveglianza che uscivano nelle query e non facevano comparire il tasto di cancellazione.
-		Il provvedimento 50 sono stati poi esclusi anche dalla query che estrae gli ultimi 2 eventi da visualizzare sul dettaglio
-		del provvedimento SIEP. Infatti l'utente SIUS che lo aveva inserito riusciva a vederlo come ultimo evento SIEP in stato non validato.
-	3)	Ticket#20210208018 - Ricerca soggetto altre bdi
-		/jsp/files/siap/sico/soggetto/DettaglioSoggetto.jsp
-		La jsp non caricava la desrizione nella combo delle BDI. Aggiunta la descrizione nella jsp.
-	4)	Ticket#20210212012 - Elenco Provvedimenti Esecutivi Coinvolti
-		siap.siep.modulocumulo.model.TitoloCumulatoModel
-		public TitoloCumulatoModel(SentenzaModel aSentenzaModel)
-		Costruttore di copia: aggiunta la mappatura del GUP e CAPSM.
-	5)	Ticket#20210212019 - versione 12.4.6.0 Risultato negativo test in pre-esercizio
-		siap.siep.modulocumulo.controller.StatoEsecTitoloCumulatoController + 4 templates
-		Per le revoche di tipo 
-		- Detenzione Domiciliare
-		- Semiliberta'
-		- Arresti Domiciliare art 656 comma 10
-		Il SIEP riporta la data revoca nel campo MISURE_ALTERNATIVE.DATA_INIZIO_MISURA 
-		invece che in MISURA_ALTERNATIVA.DATA_INIZIO_REVOCA come per le altre revoche.
-		In fase di ribaltamento dei dati nel modulo cumulo tale data veniva quindi scritta nel campo 
-		COMPUTI_CUMULO.DATA_INIZIO_MISURA e non veniva visualizzata sul dettaglio/modifica in quanto il 
-		cumulo la cerca in COMPUTI_CUMULO.DATA_INIZIO_REVOCA.
-		Metodo "caricaComputiMisuraAlternativaSORV":
-		aggiunto test sui codici delle revoche di cui sopra per ribaltare il campo 
-		MISURA_ALTERNATIVA.DATA_INIZIO_MISURA su COMPUTI_CUMULO.DATA_INIZIO_REVOCA
+	2)	Ticket#20210224017 — Template da correggere (solo TEMPLATE)
+		-	SIEP_MA_ARDOM_REVO_DIRETTA.rtf
+
+	3)	Ticket#20210310014 — SIES - rif ticket 202103020113 — ricerca per soggetto SIEP
+		-	LoadInserisciSoggetto.jsp
+			In riapertura del ticket 202103020113 relativo all'errore in fase di ricerca soggetto 
+			legato al valore 0 inserito nel campo SOGGETTO.ANNO_NASCITA.
+			Il valore non è valido per costruire una data.
+			Aggiunti i controlli sulle jsp/Action che ne consentivano l'inserimento
+			Modificata solo la jsp /jsp/files/siap/sico/soggetto/LoadInserisciSoggetto.jsp
+			Tutte le altre jsp che trattavano l'anno di nascita avevano già il controllo 
+			sul validator che fosse > 1900 in quanto non prevedono i campi età presunta alternativi 
+			alla data di nasscita.
+
+	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
+		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
+		-	ProcedimentoPerSoggettoXmlUtil.java	(AVVOCATURA)
+
+	5)	Ticket#202103160116 — Errore SIUS su emissione provvedimento (solo DB)
+		-	202103160116.sql
