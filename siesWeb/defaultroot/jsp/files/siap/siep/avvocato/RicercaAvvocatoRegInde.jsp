@@ -63,6 +63,15 @@ function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefi
 
    	window.parent.close();
 }
+
+function altreInfo(idRecord) {
+	var riga = document.getElementById(idRecord);
+	if (riga.style.display =="none") {
+	  	riga.style.display = "block";
+	} else {
+	  	riga.style.display = "none";
+	}
+}
 </script>
 </head>
 
@@ -93,15 +102,17 @@ if (avvocato.size() > 0) {
     	<td class="int">Seleziona</td>
   	</tr>
 <%
+	int id_record = 0;
 	Iterator iter = avvocato.iterator();
     while (iter.hasNext()) {
+    	id_record += 1;
 		Soggetto so = (Soggetto) iter.next();
 		// sottoinsiemi di Soggetto
 		Soggetti si = so.getSoggetto();
 		Indirizzo[] i = so.getIndirizzi();
 		Ruoloente[] r = so.getRuoliente();
 		String foro = "-";
-		String stato = "";
+		String stato = "-"; // attivo, radiato, sospeso, cessato
 		String codice = "";
 		String comune = "";
 		String indirizzo = "";
@@ -129,8 +140,7 @@ if (avvocato.size() > 0) {
 				stato = StringUtils.toStringJSP(r[cnt1].getStato());
 				if (Utils.isPresent(r[cnt1].getCodice())
 						&& r[cnt1].getCodice().contains("COA")) {
-					int beginIndex = r[cnt1].getCodice().indexOf("COA");
-					String codComune = r[cnt1].getCodice().substring(beginIndex + 1);
+					String codComune = r[cnt1].getCodice().substring(3);
 					foro = DecodificheUtils.getCodebyCodAlt2(DecodificheManager.getInstance().getForoAll(), codComune);
 				}
 				if ("attivo".equalsIgnoreCase(stato))
@@ -141,7 +151,27 @@ if (avvocato.size() > 0) {
 %>
   	<tr>
   		<!-- Cognome e Nome -->
-    	<td class=l><%=StringUtils.toStringJSP(si.getCognome()) + " " +  StringUtils.toStringJSP(si.getNome())%></td>
+    	<td class=l><%=StringUtils.toStringJSP(si.getCognome()) + " " +  StringUtils.toStringJSP(si.getNome())%>
+    		<a href="javascript:altreInfo('rec_<%=id_record%>')">
+    			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>expand.gif" alt="Espandi" border="0">
+    		</a>
+    	</td>
+    	<div id="rec_<%=id_record%>" style="display:none;">
+    		<tr>
+    			<td class=l>
+    				
+    			</td>
+    			<td class=l>
+    				
+    			</td>
+    			<td class=l>
+    				
+    			</td>
+    			<td class=l>
+    				
+    			</td>
+    		</tr>
+    	</div>
     	<!-- Codice Fiscale -->
     	<td class=l><%=StringUtils.toStringJSP(si.getCodFisc())%></td>
     	<!-- Foro -->
