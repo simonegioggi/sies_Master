@@ -2,7 +2,6 @@ package siap.siep.avvocato.action;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,9 +9,6 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.util.F3BProperties;
-import it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Indirizzo;
-import it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Ruoloente;
-import it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Soggetti;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Soggetto;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitException;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.WsServiziInterrogazioneInterni_PortType;
@@ -74,66 +70,6 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			siesLogger.error(e.getMessage());
 			setRequestAttribute("msg", "Errore nella ricerca Avvocato su RegInde: " + e.toString());
 		}
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-		Soggetto so = new Soggetto();
-		Soggetti si = new Soggetti();
-		si.setCodFisc("GGGSMN72D23H501K");
-		si.setCognome("GIOGGI");
-		si.setDataNascita(new GregorianCalendar(1972, 4-1, 23));
-		si.setLuogoNascita("Roma");
-		si.setNome("SIMONE");
-		si.setPec("simone.gioggi@peclibero.it");
-		si.setProvNascita("RM");
-		so.setSoggetto(si);
-		Indirizzo i1 = new Indirizzo();
-		i1.setCap("11111");
-		i1.setComune("CUNEO");
-		i1.setEmail("111@yyy.it");
-		i1.setFax("1111111111");
-		i1.setIndirizzo("CORSO FRANCIA 111 D");
-		i1.setProv("CN");
-		i1.setTelefono("1111111111");
-		i1.setTp_indirizzo("D");
-		Indirizzo i2 = new Indirizzo();
-		i2.setCap("22222");
-		i2.setComune("TORINO");
-		i2.setEmail("222@eee.it");
-		i2.setFax("2222222222");
-		i2.setIndirizzo("CORSO FRANCIA 222 E");
-		i2.setProv("TO");
-		i2.setTelefono("2222222222");
-		i2.setTp_indirizzo("X");
-		Indirizzo[] ii = new Indirizzo[2];
-		ii[0] = i1;
-		ii[1] = i2;
-		so.setIndirizzi(ii);
-		Ruoloente re1 = new Ruoloente();
-		re1.setCodice("COA001272");
-		re1.setCodiceFiscale("XXXXXXXXXXXXXXXX");
-		re1.setDescrizione("ENTE FITTIZIO");
-		re1.setPartitaIVA("1111111111");
-		re1.setPec("111@pec.it");
-		re1.setPubblicaAmministrazione(true);
-		re1.setRuolo("avvocato");
-		re1.setStato("attivo");
-		re1.setTipologia("Tipologia1");
-		Ruoloente re2 = new Ruoloente();
-		re2.setCodice("COA002158");
-		re2.setCodiceFiscale("8040920058344444cc");
-		re2.setDescrizione("CNF - CONSIGLIO NAZIONALE FORENSE");
-		re2.setPartitaIVA("2222222222");
-		re2.setPec("222@pec.it");
-		re2.setPubblicaAmministrazione(false);
-		re2.setRuolo("cassazionista");
-		re2.setStato("radiato");
-		re2.setTipologia("Tipologia2");
-		Ruoloente[] ri = new Ruoloente[2];
-		ri[0] = re1;
-		ri[1] = re2;
-		so.setRuoliente(ri);
-		v = new ArrayList(Arrays.asList(so));
-		///////////////////////////////////////////////////////////////////////////////////////////
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
 		setRequestAttribute("avvocato", v);
