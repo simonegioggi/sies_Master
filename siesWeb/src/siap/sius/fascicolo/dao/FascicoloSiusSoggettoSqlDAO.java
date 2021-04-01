@@ -31,7 +31,7 @@ import siap.sius.fascicolo.model.FascicoloSiusModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
@@ -179,7 +179,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aFascModel
 	 * @param sTipoAtto
 	 * @param aCancAssFascSius
@@ -220,7 +220,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione sul Soggetto MERGE CON AVVOCATURA: aggiunto alias --> SOGG.
-	 * 
+	 *
 	 * @param aSm
 	 * @return lCondizioni
 	 */
@@ -265,7 +265,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Esegue la ricerca dei fascicoli in base al super soggetto
-	 * 
+	 *
 	 * @param strCodiceDistrettoUtente
 	 */
 	protected String setCondizioneSuperSoggetto(SoggettoModel aModel) {
@@ -385,7 +385,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione su Estremi Atto
-	 * 
+	 *
 	 * @param aSm
 	 *            ;
 	 * @param sTipoAtto
@@ -447,32 +447,32 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 					// 16/10/2013 Vincenzo: il sistema non estrae i fascicoli definiti con data >
 					// data_fine_pendenza
 					// 16/10/2013 lCondizioni += " AND ( ( COD_STATO_FASCICOLO not in ('01','05','07') ";
-					// 16/10/2013 lCondizioni += "  AND TO_CHAR(fasc.data_inserimento,'YYYYMMDD') <= '" +
+					// 16/10/2013 lCondizioni += " AND TO_CHAR(fasc.data_inserimento,'YYYYMMDD') <= '" +
 					// DateUtils.getDateToString( aSm.getDataFinePendenza(),"yyyyMMdd" ) + "' ) " ;
 					if (flagEvento == "SI") {
 						// lCondizioni += " AND ( ( COD_STATO_FASCICOLO not in ('07') )"; // 16/10/2013
-						// lCondizioni += "  OR (COD_STATO_FASCICOLO = '07' ";
+						// lCondizioni += " OR (COD_STATO_FASCICOLO = '07' ";
 						// lCondizioni += " AND ( (FASC.ID_FASCICOLO_SIUS ) = ";
-						// lCondizioni += "     (select FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV ";
+						// lCondizioni += " (select FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV ";
 						// lCondizioni +=
 						// " left outer join DOCUMENTO_ALLEGATO da ON da.eve_id_evento = ev.id_evento AND
 						// da.cod_tipo_documento in ('02','03') ";
 						// // 11/12/2013
-						// lCondizioni += "	where EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
+						// lCondizioni += " where EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 						// lCondizioni +=
-						// "    AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
-						// lCondizioni += "    AND EV.DATA_INSERIMENTO = ";
-						// lCondizioni += "    (select max (DATA_INSERIMENTO) from EVENTO EV2 ";
+						// " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+						// lCondizioni += " AND EV.DATA_INSERIMENTO = ";
+						// lCondizioni += " (select max (DATA_INSERIMENTO) from EVENTO EV2 ";
 						// lCondizioni +=
-						// "     	where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS 	" ;
+						// " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS " ;
 						// lCondizioni +=
-						// "   		and (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
+						// " and (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
 						// // 16/10/2013 lCondizioni +=
-						// "    AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') > '" +
+						// " AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') > '" +
 						// DateUtils.getDateToString( aSm.getDataFinePendenza(),"yyyyMMdd" ) + "' " ;
-						// lCondizioni += "    AND TO_CHAR (da.data_emissione, 'YYYYMMDD') > '" +
+						// lCondizioni += " AND TO_CHAR (da.data_emissione, 'YYYYMMDD') > '" +
 						// DateUtils.getDateToString( aSm.getDataFinePendenza(),"yyyyMMdd" ) + "' " ;
-						// lCondizioni += "    ) ) ) ) ) ";
+						// lCondizioni += " ) ) ) ) ) ";
 
 						// 17/02/2014 D.F. mod a seguito indicazioni di Umberto per recuperare la
 						// DATA_DEFINIZIONE
@@ -515,43 +515,43 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 					if (flagEvento == "SI") {
 						// lCondizioni += " AND (COD_STATO_FASCICOLO = '07' ";
 						// lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO ) = ";
-						// lCondizioni += "     (select FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO from EVENTO EV ";
+						// lCondizioni += " (select FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO from EVENTO EV ";
 						// lCondizioni += " where EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 						// lCondizioni +=
-						// "   AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
-						// lCondizioni += "   AND EV.DATA_INSERIMENTO = ";
-						// lCondizioni += "    (select max (DATA_INSERIMENTO) from EVENTO EV2 ";
+						// " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+						// lCondizioni += " AND EV.DATA_INSERIMENTO = ";
+						// lCondizioni += " (select max (DATA_INSERIMENTO) from EVENTO EV2 ";
 						// lCondizioni +=
-						// "    	where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
+						// " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 						// lCondizioni +=
-						// "   		and (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
-						// lCondizioni += "   		AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') >= '" +
-						// DateUtils.getDateToString( aSm.getDataDefinizioneIniziale(),"yyyyMMdd" ) + "'  ";
-						// lCondizioni += "   		AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') <= '" +
+						// " and (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03')";
+						// lCondizioni += " AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') >= '" +
+						// DateUtils.getDateToString( aSm.getDataDefinizioneIniziale(),"yyyyMMdd" ) + "' ";
+						// lCondizioni += " AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') <= '" +
 						// DateUtils.getDateToString( aSm.getDataDefinizioneFinale(),"yyyyMMdd" ) + "' ) ) )";
 
-						// lCondizioni += " AND (    COD_STATO_FASCICOLO = '07' ";
+						// lCondizioni += " AND ( COD_STATO_FASCICOLO = '07' ";
 						// lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO ) = ";
 						// lCondizioni +=
-						// "                         (SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO " +
+						// " (SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO " +
 						// " FROM EVENTO EV ";
 						// lCondizioni += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 						// lCondizioni +=
-						// "                             AND (    EV.COD_TIPO_PROVVEDIMENTO in ('02','03') ";
+						// " AND ( EV.COD_TIPO_PROVVEDIMENTO in ('02','03') ";
 						// lCondizioni += " AND EV.COD_ESITO not in ('0601','0602','0603','0604','0605') ";
 						// lCondizioni += " AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S' " ;
 						// lCondizioni += " ) ";
 						// lCondizioni +=
-						// "   AND EV.DATA_INSERIMENTO = (SELECT max (DATA_INSERIMENTO) FROM EVENTO EV2 ";
+						// " AND EV.DATA_INSERIMENTO = (SELECT max (DATA_INSERIMENTO) FROM EVENTO EV2 ";
 						// lCondizioni += " WHERE EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-						// lCondizioni += " AND (    EV2.COD_TIPO_PROVVEDIMENTO in ('02','03') ";
+						// lCondizioni += " AND ( EV2.COD_TIPO_PROVVEDIMENTO in ('02','03') ";
 						// lCondizioni += " AND EV2.COD_ESITO not in ('0601','0602','0603','0604','0605') ";
 						// lCondizioni += " AND EV2.FLAG_DOCUMENTO_REGISTRATO = 'S' " ;
 						// lCondizioni += " ) ";
 						// lCondizioni += " AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') >= '" +
-						// DateUtils.getDateToString( aSm.getDataDefinizioneIniziale(),"yyyyMMdd" ) + "'  ";
+						// DateUtils.getDateToString( aSm.getDataDefinizioneIniziale(),"yyyyMMdd" ) + "' ";
 						// lCondizioni += " AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') <= '" +
-						// DateUtils.getDateToString( aSm.getDataDefinizioneFinale(),"yyyyMMdd" ) + "'  ";
+						// DateUtils.getDateToString( aSm.getDataDefinizioneFinale(),"yyyyMMdd" ) + "' ";
 						// lCondizioni += " ) ";
 						// lCondizioni += " ) ";
 						// lCondizioni += " AND DA.eve_id_evento = ev.id_evento ";
@@ -634,20 +634,20 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				if (flagEvento == "SI") {
 					// lCondizioni += " AND ( (COD_STATO_FASCICOLO = '07' ";
 					// lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO ) = ";
-					// lCondizioni += "     (select FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO from EVENTO EV ";
+					// lCondizioni += " (select FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO from EVENTO EV ";
 					// lCondizioni += " where EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 					// lCondizioni +=
-					// "   AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
-					// lCondizioni += "   AND EV.DATA_INSERIMENTO = ";
-					// lCondizioni += "    (select max (DATA_INSERIMENTO) from EVENTO EV2 ";
-					// lCondizioni += "    	where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
+					// " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+					// lCondizioni += " AND EV.DATA_INSERIMENTO = ";
+					// lCondizioni += " (select max (DATA_INSERIMENTO) from EVENTO EV2 ";
+					// lCondizioni += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 					// lCondizioni +=
-					// "   			and (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ) ) ) ";
+					// " and (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ) ) ) ";
 					// lCondizioni += " OR ( COD_STATO_FASCICOLO in ('01','05') ) ) ";
 
 					// 28/05/2014 aggiunta LEFT OUTER JOIN tra EVENTO e DOCUMENTO_ALLEGATO
 					// per evitare prodotto cartesiano generato dalla condizione:
-					// " OR COD_STATO_FASCICOLO in ('01','05')  ";
+					// " OR COD_STATO_FASCICOLO in ('01','05') ";
 					// che non imponendo where sulla DOCUMENTO_ALLEGATO genera il prodotto cartesiano
 					lCondizioni += " AND ev.id_evento = DA.eve_id_evento(+) ";
 
@@ -710,7 +710,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione sul NumeroSius
-	 * 
+	 *
 	 * @param aSm
 	 *            ;
 	 * @return lCondizioni
@@ -897,13 +897,13 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += "   AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND   EV2.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
 		lStatement += "	where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
 		// lStatement +=
-		// "	AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
+		// " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
 		lStatement += "	AND   EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ) ) ";
 		lStatement += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		lStatement += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
@@ -914,7 +914,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND DESCR_COD_PROCEDIMENTO.RV_DOMAIN ='OGGETTO_PROCEDIMENTO'";
 		lStatement += " AND GP.COD_OGGETTO_PROCEDIMENTO = DESCR_COD_PROCEDIMENTO.RV_LOW_VALUE";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
+		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND   EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lStatement += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
@@ -982,14 +982,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2   ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND   EV2.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
 		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS  ";
 		// lStatement +=
-		// " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
+		// " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
 		lStatement += "	AND   EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ) ) ";
-		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
+		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND   EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ";
 		lStatement += setCondizione(aModel);
@@ -1027,7 +1027,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Nuova query specifica per l'estrazione dei procedimenti "pendenti"
-	 * 
+	 *
 	 * @return
 	 * @since 17/02/2014
 	 */
@@ -1078,7 +1078,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		 * ; lStatement += " AND ev.cod_tipo_provvedimento IN ('02', '03') "; lStatement +=
 		 * " AND ev.cod_esito NOT IN ('0601', '0602', '0603', '0604', '0605') "; lStatement +=
 		 * " AND ev.flag_documento_registrato = 'S' ";
-		 * 
+		 *
 		 * lStatement += " LEFT OUTER JOIN documento_allegato da ON da.eve_id_evento = ev.id_evento " +
 		 * " AND da.cod_tipo_documento IN ('02','03' ) ";
 		 */
@@ -1629,7 +1629,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	/*
 	 * STUB 11/03/2005 public GenericModel getFascicoloSiusGPModel() throws DAOException { FascicoloGPModel
 	 * lFascicolo = new FascicoloGPModel();
-	 * 
+	 *
 	 * lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS") );
 	 * lFascicolo.getFascicoloSiusModel().setChiaveAnno(getBigDecimal("CHIAVE_ANNO") );
 	 * lFascicolo.getFascicoloSiusModel().setChiaveUfficio(getString("CHIAVE_UFFICIO") );
@@ -1648,14 +1648,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * //lFascicolo.getFascicoloSiusModel().setSogIdSoggetto(getBigDecimal("SOG_ID_SOGGETTO") );
 	 * lFascicolo.getFascicoloSiusModel().setFasSieIdFascicoloSiep(getBigDecimal("FAS_SIE_ID_FASCICOLO_SIEP")
 	 * );
-	 * 
+	 *
 	 * SoggettoModel lSoggetto = new SoggettoModel();
-	 * 
+	 *
 	 * lSoggetto.setIdSoggetto(getBigDecimal("ID_SOGGETTO") );
 	 * //lSoggetto.setCodFiscale(getString("COD_FISCALE") ); //lSoggetto.setCodCs(getString("COD_CS") );
 	 * //lSoggetto.setCodAfis(getString("COD_AFIS") ); lSoggetto.setCognome(getString("COGNOME") );
 	 * lSoggetto.setNome(getString("NOME") );
-	 * 
+	 *
 	 * //lSoggetto.setAnnoNascita(getBigDecimal("ANNO_NASCITA") );
 	 * lSoggetto.setDataNascita(getDate("DATA_NASCITA") );
 	 * //lSoggetto.setDataNascitaPresunta(getString("DATA_NASCITA_PRESUNTA") );
@@ -1680,9 +1680,9 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * //lSoggetto.setCodOperatoreAggiornamento(getString("COD_OPERATORE_AGGIORNAMENTO") );
 	 * //lSoggetto.setDataAggiornamento(getDate("DATA_AGGIORNAMENTO") );
 	 * //lSoggetto.setCodUfficioAggiornamento(getString("COD_UFFICIO_AGGIORNAMENTO") );
-	 * 
+	 *
 	 * lFascicolo.getFascicoloSiusModel().setSoggetto( lSoggetto );
-	 * 
+	 *
 	 * //Generale procedimento.
 	 * lFascicolo.getGeneraleProcedimentoModel().setIdGeneraleProcedimento(getBigDecimal
 	 * ("ID_GENERALE_PROCEDIMENTO"));
@@ -1692,16 +1692,16 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * ("DESCR_TIPO_PROCEDIMENTO")); //Utilizzo impropriamente DescrPosGiuridica per trasportare le
 	 * informazioni relative a DESCR_COD_PROCEDIMENTO
 	 * lFascicolo.getGeneraleProcedimentoModel().setDescrPosGiuridica(getString("DESCR_COD_PROCEDIMENTO"));
-	 * 
+	 *
 	 * // Utilizzo DescrTipoAtto momentaneamente per ospitare DESCR_PROVVEDIMENTO // e DescrDefinizione per
 	 * ospitare DESCR_DEFINIZIONE
 	 * lFascicolo.getGeneraleProcedimentoModel().setDescrTipoAtto(getString("DESCR_PROVVEDIMENTO"));
 	 * lFascicolo.getGeneraleProcedimentoModel().setDescrDefinizione(getString("DESCR_DEFINIZIONE"));
-	 * 
+	 *
 	 * // utilizzo "DATA_RICHIESTA " per riportare la DATA_EMISSIONE dell'evento
 	 * lFascicolo.getGeneraleProcedimentoModel().setDataRichiesta(getDate("DATA_RICHIESTA"));
 	 * lFascicolo.getGeneraleProcedimentoModel().setDataCameraConsiglio(getDate("DATA_CAMERA_CONSIGLIO"));
-	 * 
+	 *
 	 * return lFascicolo; }
 	 */
 
@@ -2385,7 +2385,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Settaggio della condizione per Data Fine Pena.
-	 * 
+	 *
 	 * @param lUfficioUtenteConnesso
 	 *            ;
 	 * @param dataDalIscrizione
@@ -2579,14 +2579,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += "     AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO, FAS_SIU_ID_FASCICOLO_SIUS ";
 		lStatement += "                from EVENTO EV2 where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += "   AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND   EV2.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += "                AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) ";
 		lStatement += "                        from EVENTO EV3 ";
 		lStatement += "                        where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
 		// lStatement +=
-		// "                        AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
+		// " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
 		lStatement += "                          AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ) ) ";
 		// lStatement += "AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
@@ -2623,15 +2623,15 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2 ";
 		lStatement += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02'  OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
+		// lStatement += " AND (EV2.COD_TIPO_PROVVEDIMENTO = '02' OR EV2.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND   EV2.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3 ";
 		lStatement += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS  ";
 		// Patch 24/10/2008 per contemplare le unificazioni da Verbale (TIPO_PROVVEDIMENTO = 14)
 		// lStatement +=
-		// " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02'  OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
+		// " AND (EV3.COD_TIPO_PROVVEDIMENTO = '02' OR EV3.COD_TIPO_PROVVEDIMENTO = '03') ) ) ";
 		lStatement += " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ) ) ";
-		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02'  OR EV.COD_TIPO_PROVVEDIMENTO = '03')  ";
+		// lStatement += " AND (EV.COD_TIPO_PROVVEDIMENTO = '02' OR EV.COD_TIPO_PROVVEDIMENTO = '03') ";
 		lStatement += "	AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14') ";
 		lStatement += " AND (EV.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV.FLAG_DOCUMENTO_REGISTRATO IS NULL )";
 		lStatement += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS ";
@@ -2689,7 +2689,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += "	where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 04/08/2008 e successiva 24/10/2008 per contemplare le unificazioni da Verbale
 		// (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += "	AND   EV3.COD_TIPO_PROVVEDIMENTO = '03' ) ) ";
+		// lStatement += " AND EV3.COD_TIPO_PROVVEDIMENTO = '03' ) ) ";
 		lStatement += "	AND   EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')  ) ) ";
 		lStatement += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		lStatement += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
@@ -2766,7 +2766,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lStatement += "	where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
 		// Patch 04/08/2008 e successiva 24/10/2008 per contemplare le unificazioni da Verbale
 		// (TIPO_PROVVEDIMENTO = 14)
-		// lStatement += "	AND   EV3.COD_TIPO_PROVVEDIMENTO = '02' ) ) ";
+		// lStatement += " AND EV3.COD_TIPO_PROVVEDIMENTO = '02' ) ) ";
 		lStatement += "	AND   EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')  ) ) ";
 		lStatement += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		lStatement += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
@@ -2821,7 +2821,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * Seleziona la DATA_EMISSIONE dell'eventuale documento allegato per il fascicolo SIUS indicato. Tale data
 	 * viene utilizzata come data definizione procedimento in caso di ricerche per estremi atto PEDENTI e
 	 * FASC.DATA_DEFINIZIONE null
-	 * 
+	 *
 	 * @param aIdFascicoloSius
 	 * @throws DAOException
 	 * @since 30/07/2014 spezzata la query del metodo ricercaFascicoloSiusProcedimentoPerEstremi troppo lenta
@@ -2849,7 +2849,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * AVVOCATURA: aggiunto metodo di ricerca
-	 * 
+	 *
 	 * @param sm
 	 * @param codDistretto
 	 * @param codFiscaleAvvocato
@@ -2918,7 +2918,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * AVVOCATURA: aggiunto metodo di ricerca
-	 * 
+	 *
 	 * @param idSoggetto
 	 * @param codDistretto
 	 * @param codTipoUfficio
@@ -2940,14 +2940,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " DESCR_COM_NASCITA.DESCRIZIONE DESCR_COMUNE_NASCITA, DESCR_COM_NASCITA.COD_PROVINCIA COD_PROVINCIA_NASCITA,";
 		query += " GP.COD_OGGETTO_PROCEDIMENTO COD_OGGETTO_PROCEDIMENTO, GP.DATA_CAMERA_CONSIGLIO DATA_CAMERA_CONSIGLIO, NVL(GP.COD_AUTORITA_DELEGATA, '-') COD_AUTORITA_DELEGATA, NVL(GP.DESCR_MITTENTE, '-') DESCR_MITTENTE,";
 		query += " EV.COD_ESITO COD_STATO_FASCICOLO, EV.DATA_EMISSIONE DATA_RICHIESTA, EV.ID_EVENTO ID_EVENTO, GP.ID_GENERALE_PROCEDIMENTO ID_GENERALE_PROCEDIMENTO,";
-		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione
-		// 2.3.0 - rif. ticket 20210205017)
+		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
+		// 20210205017)
 		query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING||'#'||d.FLAG_DOCUMENTO_REGISTRATO DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
 		query += " DESCR_COD_PROCEDIMENTO.RV_MEANING DESCR_COD_PROCEDIMENTO, DEOR.DATA_DEPOSITO";
 		query += " FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_TIPO_PROCEDIMENTO, DEPOSITO_ORDINANZA_PC DEOR,";
 		query += " UFFICIO UFF, COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, EVENTO EV,CG_REF_CODES DESCR_ESITO_PROVVEDIMENTO,";
-		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione
-		// 2.3.0 - rif. ticket 20210205017)
+		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
+		// 20210205017)
 		query += " CG_REF_CODES DESCR_MOTIVO_PROVVEDIMENTO, CG_REF_CODES DESCR_COD_PROCEDIMENTO, AVVOCATO AVV, AVVOCATO_FASCICOLO_SIUS AFS, DOCUMENTO_ALLEGATO D,";
 		query += " (SELECT A.COGNOME,";
 		query += " A.NOME,";
@@ -3001,10 +3001,13 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND NVL(sogg.DATA_NASCITA_presunta,to_date('01/01/1900','dd/mm/yyyy')) = x.DATA_NASCITA_presunta";
 		query += " AND NVL(SOGG.ANNO_NASCITA, '0') = x.ANNO_NASCITA";
 		query += " AND NVL(SOGG.MESE_NASCITA, '0') = x.MESE_NASCITA";
-		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione
-		// 2.3.0 - rif. ticket 20210205017)
+		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
+		// 20210205017)
 		query += " and ev.id_evento = d.EVE_ID_EVENTO(+)";
-		query += " and (d.flag_documento_registrato is not null and d.flag_documento_registrato <> 'A')";
+		// Ticket#202103310113 — vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket
+		// 20210205017)
+		query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A')";
+		query += " and d.cod_tipo_documento(+) in ('01','02', '03')"; // Deposito Sentenza, Ordinanza, Decreto
 		// inserisco la ricerca x soggetto
 		// query += setCondizioneSuperSoggetto(idSoggetto);
 		query += " UNION ";
