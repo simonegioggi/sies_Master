@@ -27,3 +27,7 @@ Risolve il Ticket:
 
 	5)	Ticket#202103160116 — Errore SIUS su emissione provvedimento (solo DB)
 		-	202103160116.sql
+
+	SECONDA CONSEGNA:
+	6)	Ticket#202103310113 — vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket 20210205017)
+		-	FascicoloSiusSoggettoSqlDAO.java
