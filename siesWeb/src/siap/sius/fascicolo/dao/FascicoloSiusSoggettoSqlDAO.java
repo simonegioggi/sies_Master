@@ -2944,11 +2944,18 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		// 20210205017)
 		query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING||'#'||d.FLAG_DOCUMENTO_REGISTRATO DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
 		query += " DESCR_COD_PROCEDIMENTO.RV_MEANING DESCR_COD_PROCEDIMENTO, DEOR.DATA_DEPOSITO";
-		query += " FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_TIPO_PROCEDIMENTO, DEPOSITO_ORDINANZA_PC DEOR,";
-		query += " UFFICIO UFF, COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA, EVENTO EV,CG_REF_CODES DESCR_ESITO_PROVVEDIMENTO,";
-		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
-		// 20210205017)
-		query += " CG_REF_CODES DESCR_MOTIVO_PROVVEDIMENTO, CG_REF_CODES DESCR_COD_PROCEDIMENTO, AVVOCATO AVV, AVVOCATO_FASCICOLO_SIUS AFS, DOCUMENTO_ALLEGATO D,";
+		query += " FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_TIPO_PROCEDIMENTO,";
+		// Ticket#202104060113 — Ticket#202103310113 non corretto — vers. 2.5.0.0 - rif #202103110112
+		// (derivato da #202103040111 e da ticket 20210205017)
+		// ORA-01719: l'operatore di join esterno (+) non consentito nell'operando di OR o IN ???
+		// allora cambio outer join su EVENTO per queste due tabelle:
+		// DEPOSITO_ORDINANZA_PC DEOR, DOCUMENTO_ALLEGATO D,
+		query += " UFFICIO UFF, COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA,";
+		query += " EVENTO EV left outer join DOCUMENTO_ALLEGATO D on ev.id_evento = d.EVE_ID_EVENTO";
+		query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A') and d.cod_tipo_documento in ('01', '02', '03')";
+		query += " left outer join DEPOSITO_ORDINANZA_PC DEOR on EV.ID_EVENTO = DEOR.ID_EVENTO_GENERATO,";
+		query += " CG_REF_CODES DESCR_ESITO_PROVVEDIMENTO,";
+		query += " CG_REF_CODES DESCR_MOTIVO_PROVVEDIMENTO, CG_REF_CODES DESCR_COD_PROCEDIMENTO, AVVOCATO AVV, AVVOCATO_FASCICOLO_SIUS AFS,";
 		query += " (SELECT A.COGNOME,";
 		query += " A.NOME,";
 		query += " NVL(A.DATA_NASCITA,to_date('01/01/1900','dd/mm/yyyy')) DATA_NASCITA,";
@@ -2981,7 +2988,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		query += " AND SOGG.COD_COMUNE_NASCITA = DESCR_COM_NASCITA.COD_COMUNE";
 		query += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		query += " AND EV.ID_EVENTO = DEOR.ID_EVENTO_GENERATO(+)";
+		// query += " AND EV.ID_EVENTO = DEOR.ID_EVENTO_GENERATO(+)";
 		if (codDistretto.length() > 1)
 			query += " AND FASC.CHIAVE_UFFICIO in (select uff.cod_ufficio from ufficio where uff.COD_DISTRETTO='"
 					+ codDistretto + "')";
@@ -2991,7 +2998,6 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND AFS.AVV_ID_AVVOCATO = AVV.ID_AVVOCATO";
 		query += " AND AFS.DATA_FINE_VALIDITA IS NULL";
 		query += " AND AVV.COD_FISCALE = '" + codFiscaleAvvocato + "'";
-		// query += " AND SOGG.ID_SOGGETTO = '" + idSoggetto + "'";
 		query += " AND SOGG.COD_COMUNE_NASCITA = x.COD_COMUNE_NASCITA";
 		query += " and nvl(SOGG.desc_comune_nascita_estero, '0') = x.desc_comune_nascita_estero";
 		query += " AND SOGG.COD_STATO_NASCITA = x.COD_STATO_NASCITA";
@@ -3003,13 +3009,11 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND NVL(SOGG.MESE_NASCITA, '0') = x.MESE_NASCITA";
 		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
 		// 20210205017)
-		query += " and ev.id_evento = d.EVE_ID_EVENTO(+)";
+		// query += " and ev.id_evento = d.EVE_ID_EVENTO(+)";
 		// Ticket#202103310113 — vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket
 		// 20210205017)
-		query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A')";
-		query += " and d.cod_tipo_documento(+) in ('01','02', '03')"; // Deposito Sentenza, Ordinanza, Decreto
-		// inserisco la ricerca x soggetto
-		// query += setCondizioneSuperSoggetto(idSoggetto);
+		// query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A')";
+		// query += " and d.cod_tipo_documento(+) in ('01','02', '03')"; // Deposito Sentenza, Ordinanza, Decreto
 		query += " UNION ";
 		// scrivo seconda query
 		query += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.COD_STATO_FASCICOLO VERO_COD_STATO,FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -3066,7 +3070,6 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND AFS.AVV_ID_AVVOCATO = AVV.ID_AVVOCATO";
 		query += " AND AFS.DATA_FINE_VALIDITA IS NULL";
 		query += " AND AVV.COD_FISCALE = '" + codFiscaleAvvocato + "'";
-		// query += " AND SOGG.ID_SOGGETTO = '" + idSoggetto + "'";
 		query += " AND SOGG.COD_COMUNE_NASCITA = x.COD_COMUNE_NASCITA";
 		query += " and nvl(SOGG.desc_comune_nascita_estero, '0') = x.desc_comune_nascita_estero";
 		query += " AND SOGG.COD_STATO_NASCITA = x.COD_STATO_NASCITA";
@@ -3076,8 +3079,6 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND NVL(sogg.DATA_NASCITA_presunta,to_date('01/01/1900','dd/mm/yyyy')) = x.DATA_NASCITA_presunta";
 		query += " AND NVL(SOGG.ANNO_NASCITA, '0') = x.ANNO_NASCITA";
 		query += " AND NVL(SOGG.MESE_NASCITA, '0') = x.MESE_NASCITA";
-		// inserisco la ricerca x soggetto
-		// query += setCondizioneSuperSoggetto(idSoggetto);
 		query += " UNION ";
 		// scrivo terza query
 		query += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS,FASC.COD_STATO_FASCICOLO VERO_COD_STATO, FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -3130,7 +3131,6 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND AFS.AVV_ID_AVVOCATO = AVV.ID_AVVOCATO";
 		query += " AND AFS.DATA_FINE_VALIDITA IS NULL";
 		query += " AND AVV.COD_FISCALE = '" + codFiscaleAvvocato + "'";
-		// query += " AND SOGG.ID_SOGGETTO = '" + idSoggetto + "'";
 		query += " AND SOGG.COD_COMUNE_NASCITA = x.COD_COMUNE_NASCITA";
 		query += " and nvl(SOGG.desc_comune_nascita_estero, '0') = x.desc_comune_nascita_estero";
 		query += " AND SOGG.COD_STATO_NASCITA = x.COD_STATO_NASCITA";
@@ -3140,8 +3140,6 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND NVL(sogg.DATA_NASCITA_presunta,to_date('01/01/1900','dd/mm/yyyy')) = x.DATA_NASCITA_presunta";
 		query += " AND NVL(SOGG.ANNO_NASCITA, '0') = x.ANNO_NASCITA";
 		query += " AND NVL(SOGG.MESE_NASCITA, '0') = x.MESE_NASCITA";
-		// inserisco la ricerca x soggetto
-		// query += setCondizioneSuperSoggetto(idSoggetto);
 		query += " ORDER BY CHIAVE_UFFICIO, CHIAVE_ANNO, CHIAVE_PROGR";
 		setStatement(query);
 		// info per il log
