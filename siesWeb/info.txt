@@ -7,10 +7,10 @@ Risolve il Ticket:
 		-	EsecuzioneMisuraSicurezza.rtf
 		-	SIEP_OS_01.rtf
 
-	2)	Ticket#20210224017 — Template da correggere (solo TEMPLATE)
+	2)	Ticket#20210224017 - Template da correggere (solo TEMPLATE)
 		-	SIEP_MA_ARDOM_REVO_DIRETTA.rtf
 
-	3)	Ticket#20210310014 — SIES - rif ticket 202103020113 — ricerca per soggetto SIEP
+	3)	Ticket#20210310014 - SIES - rif ticket 202103020113 - ricerca per soggetto SIEP
 		-	LoadInserisciSoggetto.jsp
 			In riapertura del ticket 202103020113 relativo all'errore in fase di ricerca soggetto 
 			legato al valore 0 inserito nel campo SOGGETTO.ANNO_NASCITA.
@@ -21,13 +21,16 @@ Risolve il Ticket:
 			sul validator che fosse > 1900 in quanto non prevedono i campi età presunta alternativi 
 			alla data di nasscita.
 
-	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
+	4)	Ticket#202103110112 - versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
 		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
 		-	ProcedimentoPerSoggettoXmlUtil.java	(AVVOCATURA)
 
-	5)	Ticket#202103160116 — Errore SIUS su emissione provvedimento (solo DB)
+	5)	Ticket#202103160116 - Errore SIUS su emissione provvedimento (solo DB)
 		-	202103160116.sql
 
 	SECONDA CONSEGNA:
-	6)	Ticket#202103310113 — vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket 20210205017)
+	6)	Ticket#202103310113 - vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket 20210205017)
 		-	FascicoloSiusSoggettoSqlDAO.java
+
+	TERZA CONSEGNA:
+	7)	Ticket#202104060113 - Ticket#202103310113 non corretto - vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket 20210205017) 
