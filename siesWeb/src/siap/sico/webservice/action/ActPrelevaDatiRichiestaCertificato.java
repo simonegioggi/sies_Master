@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
-import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import it.mig.sippi.service.client.SippiHelper;
@@ -41,9 +40,9 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusCertBlobModel;
 
 /**
- * 
+ *
  * @author Engineering
- * 
+ *
  */
 @SuppressWarnings("rawtypes")
 public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICostantiSecurity {
@@ -77,7 +76,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 
 		if (!isRequestParameterNullObj("idEvento")) {
 			idEvento = getRequestBigDecimalParameter("idEvento");
-
 			IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
 			evento = lCtrlEve.ExRicercaEventoByKey(idEvento);
 		}
@@ -86,7 +84,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		// utente SIEP oppure SIUS
 		if (!isRequestParameterNullObj("tipoFascicolo")) {
 			tipoFascicolo = getRequestStringParameter("tipoFascicolo");
-
 			if (tipoFascicolo != null && !tipoFascicolo.equals("")) {
 				if (tipoFascicolo.equals("SIEP")) {
 					if (!this.isSessionAttributeNullObj("fascicolo")) {
@@ -109,9 +106,8 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		// Questo variabile verrà valorizzata solo in caso di 'OMONIMIA'.
 		// Per valore = -1 viene richiesto certificato nullo
 		BigInteger progAnagraficaNSC = null;
-		if (!isRequestParameterNullObj("progAnagraficaNSC")) {
+		if (!isRequestParameterNullObj("progAnagraficaNSC"))
 			progAnagraficaNSC = getRequestBigDecimalParameter("progAnagraficaNSC").toBigInteger();
-		}
 
 		if (fascicoloSiep != null) {
 			lSoggetto = fascicoloSiep.getSoggetto();
@@ -161,7 +157,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 			lCodiciSiesNscModel = new CodiciSiesNscModel();
 			lCodiciSiesNscModel.setCoDomain("COMUNE");
 			lCodiciSiesNscModel.setCoSies(lUfficioMod.getCodComune());
-
 			CodiciSiesNscModel aCodiciSIESNSCModel = DecodificaCodiceSies(lCodiciSiesNscModel);
 			lCodCentralizzato = aCodiciSIESNSCModel.getCoCodcentr();
 			datiUfficio.setCODICESEDEUFFICIO(lCodCentralizzato);
@@ -181,9 +176,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		datiUtente.setCOGNOMEUTENTE(lUtenteMod.getCognome());
 		// NOME_UTENTE
 		datiUtente.setNOMEUTENTE(lUtenteMod.getNome());
-		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione per variabile UserAdn
-		// modificata la libreria "sippi.jar"
-		datiUtente.setUSERNAMEADN(lUtenteMod.getUserAdn());
 
 		/*******************************************************************************/
 		/* Element DATI_ANAGRAFICI */
@@ -194,7 +186,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		// i DATI_ANAGRAFICI non sono più quelli del soggetto recuperato dal fascicolo
 		// ma li devo sovrascrivere con il soggetto selezionato dalla lista (omonimi/sinonimi)
 		if (progAnagraficaNSC != null && !progAnagraficaNSC.equals(new BigInteger("-1"))) {
-
 			// PERS_COGNOME
 			String cognome = getRequestStringParameter("cognome_" + progAnagraficaNSC);
 			if (!cognome.equals("")) {
@@ -271,9 +262,7 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 			if (nomeMadre != null && !nomeMadre.equals("")) {
 				datiAnagrafici.setPERSNOMEMADRE(lSoggetto.getNomeMadre());
 			}
-
 		} else {
-
 			// PROG_ANAGRAFICA
 			datiAnagrafici.setPROGANAGRAFICA(lSoggetto.getIdSoggetto().toBigInteger());
 
@@ -373,7 +362,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		/*******************************************************************************/
 		ANAGRAFICA anagrafica = new ANAGRAFICA();
 		anagrafica.setDATIANAGRAFICI(datiAnagrafici);
-
 		anagrafica.setDATICERTIFICATO(datiCertificato);
 
 		/*******************************************************************************/
@@ -381,13 +369,11 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		/*******************************************************************************/
 		DATIRICHIESTACERTIFICATO datiRichiesta = new DATIRICHIESTACERTIFICATO();
 		datiRichiesta.setDATIUTENTE(datiUtente);
-
 		datiRichiesta.setANAGRAFICA(anagrafica);
 
 		// Richiesta Certificato in caso di Omonimia/Sinonimia
-		if (progAnagraficaNSC != null) {
+		if (progAnagraficaNSC != null)
 			datiRichiesta.setPROGANAGRAFICANSC(progAnagraficaNSC);
-		}
 
 		/*******************************************************************************/
 		/* Element SERVIZIO_CERTIFICATIVO */
@@ -396,8 +382,10 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		servizioCertificato.setDATIRICHIESTACERTIFICATO(datiRichiesta);
 
 		DATIAUTENTICAZIONE datiAutenticazione = new DATIAUTENTICAZIONE();
-		datiAutenticazione.setPassword(Utils.pwdNSCDecode(lUtenteMod.getPwdNSC()));
-		datiAutenticazione.setUsername(lUtenteMod.getUseridNSC());
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione per variabile UserAdn
+		// al posto dello "UseridNSC" che non serve più
+		datiAutenticazione.setPassword(null);
+		datiAutenticazione.setUsername(lUtenteMod.getUserAdn());
 
 		DATIRISPOSTACERTIFICATO risposta = SippiHelper.richiestaCertificato(datiRichiesta,
 				datiAutenticazione);
@@ -406,18 +394,16 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 
 		FascicoloSiusCertBlobModel fascicoloSiusCertBlob = new FascicoloSiusCertBlobModel();
 		FascicoloSiepCertBlobModel fascicoloSiepCertBlob = new FascicoloSiepCertBlobModel();
-		if (fascicoloSiep != null) {
+		if (fascicoloSiep != null)
 			fascicoloSiepCertBlob.setFascicoloSiep(fascicoloSiep);
-		} else {
+		else
 			fascicoloSiusCertBlob.setFascicoloSius(fascicoloSius.getFascicoloSiusModel());
-		}
 
 		Vector lListaOmonimi = null;
-		if (fascicoloSiep != null) {
+		if (fascicoloSiep != null)
 			lListaOmonimi = objRispostaNsc.processRequest(risposta, fascicoloSiepCertBlob, null, lUtenteMod);
-		} else {
+		else
 			lListaOmonimi = objRispostaNsc.processRequest(risposta, null, fascicoloSiusCertBlob, lUtenteMod);
-		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -434,7 +420,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 
 		// Non ci sono OMONIMI/SINONIMI
 		if (lListaOmonimi.size() == 0) {
-
 			// Si preleva il codice dell'esito
 			String codEsitoRichiesta = "";
 			String descEsitoRichiesta = "";
@@ -456,7 +441,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 				return IWebConstants.PG_VISUALIZZA_CERTIFICATO_PENALE;
 			} else {
 				// Presenza errori o warning
-
 				// Se l'esito della richiesta è il seguente: "ERRORE: PASSWORD NON VALIDA"
 				// Bisogna cancellare i campi USERID_NSC e PWD_NSC presenti sulla
 				// tabella UTENTE, così da consentire all'utente di inserire le credenziali
@@ -478,7 +462,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 				return IWebConstants.PG_MESSAGE;
 			}
-
 		} else {
 			// PRESENZA DI OMONIMI/SINONIMI - Passo il Vector alla JSP Risultato Richiesta Certificato
 			setRequestAttribute("listaOmonimi", lListaOmonimi);
