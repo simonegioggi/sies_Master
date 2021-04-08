@@ -68,10 +68,12 @@ function altreInfo(idRecord) {
 	var riga = document.getElementById(idRecord);
 	if (riga.style.display =="none") {
 	  	riga.style.display = "block";
-	  	document.images["image"].src = "<%=IWebConstants.IMAGES_DIR%>collapse.gif";
+	  	document.images["image_"+idRecord].src = "<%=IWebConstants.IMAGES_DIR%>collapse.gif";
+	  	document.images["image_"+idRecord].alt = "Collassa";
 	} else {
 	  	riga.style.display = "none";
-	  	document.images["image"].src = "<%=IWebConstants.IMAGES_DIR%>expand.gif";
+	  	document.images["image_"+idRecord].src = "<%=IWebConstants.IMAGES_DIR%>expand.gif";
+	  	document.images["image_"+idRecord].alt = "Espandi";
 	}
 }
 </script>
@@ -106,6 +108,7 @@ if (avvocato.size() > 0) {
 <%
 	int id_record = 0;
 	Iterator iter = avvocato.iterator();
+	boolean testAvvocatiValidi = false;
     while (iter.hasNext()) {
     	id_record += 1;
 		Soggetto so = (Soggetto) iter.next();
@@ -122,6 +125,7 @@ if (avvocato.size() > 0) {
 		String email = "";
 		String telefono = "";
 		String indirizzoStudio = "-";
+		boolean testStato = false;
 
 		if (Utils.isPresent(i)) {
 			for (int cnt0 = 0; cnt0 < i.length; cnt0++) {
@@ -140,30 +144,32 @@ if (avvocato.size() > 0) {
 			for (int cnt1 = 0; cnt1 < r.length; cnt1++) {
 				codice = StringUtils.toStringJSP(r[cnt1].getCodice());
 				stato = StringUtils.toStringJSP(r[cnt1].getStato());
-				if (Utils.isPresent(r[cnt1].getCodice())
-						&& r[cnt1].getCodice().contains("COA")) {
+				if (Utils.isPresent(codice) && codice.contains("COA")) {
 					String codComune = r[cnt1].getCodice().substring(3);
 					foro = DecodificheUtils.getCodebyCodAlt2(DecodificheManager.getInstance().getForoAll(), codComune);
 				}
 				if ("attivo".equalsIgnoreCase(stato))
 					break;
+				else // radiato, sospeso, cessato
+					testStato = true;
 			}
 		}
 		Date dn = (Utils.isPresent(si.getDataNascita())) ? si.getDataNascita().getTime() : null;
 		if ("-".equals(foro))
-			break;
+			continue;
 %>
   	<tr>
   		<!-- Cognome e Nome -->
     	<td class=l><%=StringUtils.toStringJSP(si.getCognome()) + " " +  StringUtils.toStringJSP(si.getNome())%>
     		<a href="javascript:altreInfo('rec_<%=id_record%>')">
-    			<img name="image" style="vertical-align: middle;" align="middle" src="<%=IWebConstants.IMAGES_DIR%>expand.gif" alt="Espandi" border="0">
+    			<img name="image_rec_<%=id_record%>" style="vertical-align: middle;" align="middle" src="<%=IWebConstants.IMAGES_DIR%>expand.gif" alt="Espandi" border="0">
     		</a>
     	</td>
     	<!-- Codice Fiscale -->
     	<td class=l><%=StringUtils.toStringJSP(si.getCodFisc())%></td>
     	<!-- Foro -->
 <%
+		testAvvocatiValidi = true;
     	Collection listaFori = DecodificheManager.getInstance().getForoAll();
     	String statoForo = DecodificheUtils.getCodAltebyCode(listaFori, foro);
 		if ("SOPPRESSO".equals(statoForo)) {
@@ -181,8 +187,21 @@ if (avvocato.size() > 0) {
 		<!-- Indirizzo Studio -->
     	<td class=l><%=StringUtils.toStringJSP(indirizzoStudio)%></td>
     	<!-- Stato -->
-		<td class=l><%=stato%></td>
+<%
+		if (testStato) {
+%>
+		<td class=l><font class="cRosso"><%=stato%></font></td>
+<%
+		} else {
+%>
+    	<td class=l><%=stato%></td>
+<%
+		}
+%>
 		<td class=c>
+<%
+		if (!testStato) {
+%>
 			<a href="Javascript:insertIT(
 				'<%=codice%>','<%=StringUtils.cStrForJS(si.getCognome())%>',
 				'<%=StringUtils.cStrForJS(si.getNome())%>','<%=StringUtils.cStrForJS(foro)%>',
@@ -193,9 +212,16 @@ if (avvocato.size() > 0) {
 				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"dd"))%>',
 				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"MM"))%>',
 				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"yyyy"))%>',
-				'<%=StringUtils.cStrForJS(indirizzo)%>','<%=stato%>');">
-				<img align="middle" src="/images/fileselected.gif" border=0>
+				'<%=StringUtils.cStrForJS(comune)%>');">
+				<img align="middle" src="/images/fileselected.gif" border="0" style="vertical-align: super;" alt="Inserisci">
 			</a>
+<%
+		} else {
+%>
+			&nbsp;
+<%
+		}
+%>
 		</td>
 	</tr>
 
@@ -212,6 +238,13 @@ if (avvocato.size() > 0) {
 %>
 </table>
 <%
+	if (!testAvvocatiValidi) {
+%>
+<script>
+alert("Attenzione! Nessun Difensore trovato.");
+</script>
+<%
+    }
 }
 %>
 </form>
