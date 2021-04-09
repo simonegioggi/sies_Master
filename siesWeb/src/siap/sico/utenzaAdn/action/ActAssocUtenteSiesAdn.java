@@ -36,6 +36,7 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		UtenteModel um = new UtenteModel(userId, password);
 		um.setIP(getRequest().getRemoteAddr());
 		siesLogger.debug("USERID = " + userId + " # REMOTE IP ADDRESS = " + um.getIP());
+		String usernameDB = getRequestStringParameter("usernameDB");
 		try {
 			um = UtenzaAdnUtils.preLogin(um, true);
 		} catch (Exception e) {
@@ -47,6 +48,8 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		if (Utils.cryptPassword(um.getUserId()).equals(um.getPwd()) || um.getPwd() == null) {
 			// Se si...chiamo la maschera di cambio password obbligatoria
 			setRequestAttribute("msg", "Devi obbligatoriamente cambiare la password");
+			setSessionAttribute(SESSION_UTENTE_CONNESSO, um);
+			setRequestAttribute("usernameDB", usernameDB);
 			siesLogger.info("Obbligo cambio password");
 			return PG_CHANGE_PASSWORD;
 		}
@@ -70,7 +73,6 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		// 4- In ogni caso l'utente può procedere con la configurazione di eventuale ogni altro account di
 		// cui dispone per l'accesso al SIES;
 		// 1)
-		String usernameDB = getRequestStringParameter("usernameDB");
 		List<AssocUtenteSiesAdnModel> listaUtenzeAdn = UtenzaAdnUtils.verificaAssociazioneSiesAdn(usernameDB);
 		boolean giaAssociata = false;
 		Iterator<AssocUtenteSiesAdnModel> i = listaUtenzeAdn.iterator();
