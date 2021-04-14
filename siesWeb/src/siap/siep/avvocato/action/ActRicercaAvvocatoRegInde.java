@@ -70,15 +70,16 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 				v = new ArrayList(Arrays.asList(listaSoggetti));
 				siesLogger.debug("Elementi trovati: " + v.size());
 			} else
-				siesLogger.debug("Nessun Elemento trovato");
+				siesLogger.debug("Nessun Avvocato trovato!");
 		} catch (SearchLimitException sle) {
 			siesLogger.error(sle.getMessage());
 			setRequestAttribute("msg",
-					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca");
+					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca!");
 		} catch (Exception e) {
 			siesLogger.error(e.toString());
-			e.printStackTrace();
-			// setRequestAttribute("msg", "Errore nella ricerca Avvocato su RegInde: " + e.toString());
+			if (e.getMessage().contains("Unrecognized"))
+				setRequestAttribute("msg",
+						"Attenzione: collegamento con RegIndE assente!\\nE' possibile effettuare la ricerca del Difensore su SIES!");
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));

@@ -25,19 +25,34 @@
 
 <html>
 <head>
-<title>[S.I.E.S.] - Lista Avvocati RegInde</title>
+<title>[S.I.E.S.] - Lista Avvocati ReGIndE</title>
 <link rel="STYLESHEET" type="text/css" href="/css/style.css">
   
 <script language="JavaScript">
 function avvocati() {
-	if ('<%=msg%>' != "") {
-		alert('<%=msg%>');
+	var theFrame = window.parent.document.getElementsByTagName("frame")[1];
+	var theFrameDocument = theFrame.contentDocument || theFrame.contentWindow.document;
+	var button = theFrameDocument.getElementById("go");
+	button.disabled = false;
+	var buttonSies = theFrameDocument.getElementById("sies");
+	var msg = "<%=msg%>";
+	if (msg != "") {
+		alert(msg);
+		if (msg.indexOf("occorrenze") !== -1) {
+			var cf = theFrameDocument.getElementById("cf");
+	    	cf.style.display = "block";
+		} else {
+			buttonSies.style.visibility = "visible";
+			buttonSies.disabled = false;
+		}
 		return;
 	}
-	if ("<%=avvocato.size()%>" == 0)
-  		alert('Attenzione! Nessun Difensore trovato.');
-	if ("<%=avvocato.size()%>" == 200)
-    	alert('Attenzione! Visualizzati solo i primi 200 Difensori individuati. Perfezionare la ricerca!');
+	if ("<%=avvocato.size()%>" == 0) {
+  		alert("Attenzione! Nessun Difensore trovato in ReGIndE.\nE' possibile effettuare la ricerca del Difensore su SIES!");
+  		buttonSies.style.visibility = "visible";
+		buttonSies.disabled = false;
+		return;
+	}
 }
 
 function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefiscale,luogoNascita,giornoNascita,meseNascita,annoNascita,residenza) {
@@ -87,7 +102,7 @@ function altreInfo(idRecord) {
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
 			</a>
 		</td>
-      	<td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo">Elenco Avvocati RegInde</font></td>
+      	<td class="LBG"><font class=label>Funzione :</font>&nbsp;<font class="campo">Elenco Avvocati ReGIndE</font></td>
 	</tr>
 </table>
   
@@ -241,7 +256,9 @@ if (avvocato.size() > 0) {
 	if (!testAvvocatiValidi) {
 %>
 <script>
-alert("Attenzione! Nessun Difensore trovato.");
+alert("Attenzione! Nessun Difensore trovato in ReGIndE.\nE' possibile effettuare la ricerca del Difensore su SIES!");
+buttonSies.style.visibility = "visible";
+buttonSies.disabled = false;
 </script>
 <%
     }

@@ -40,14 +40,14 @@ function Verify() {
     	<td class=LBG colspan="2"><font class="campo">Filtra la lista per:</font></td>
    	</tr>
 	<tr>
-    	<td class="l">Cognome: </td>
+    	<td class="l" width="20%">Cognome: </td>
    		<td class="l"><input type="text" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>" value="" onFocus="javascript:document.f.go.disabled=false;" size="25"></td>
  	</tr>
 	<tr>
     	<td class="l">Nome: </td>
    		<td class="l"><input type="text" name="<%=ICostantiAvvocato.CAMPO_NOME%>" value="" onFocus="javascript:document.f.go.disabled=false;" size="25"></td>
  	</tr>
-	<tr>
+	<tr id="cf" style="display: none;">
     	<td class="l">Codice Fiscale: </td>
    		<td class="l"><input type="text" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>" value="" onFocus="javascript:document.f.go.disabled=false;" size="25"></td>
  	</tr>
@@ -61,7 +61,11 @@ function Verify() {
   		</td>
   	</tr>
   	<tr>
-		<td><input type="submit" name="go" value="Cerca su RegInde" onclick="Javascript:return Verify();" class="bottone"></td>
+		<td colspan="2">
+			<input type="submit" id="go" name="go" value="Cerca su RegInde" onclick="Javascript:return Verify();" class="bottone">
+			&nbsp;&nbsp;&nbsp;
+			<input style="visibility: hidden;" type="submit" id="sies" name="sies" value="Cerca su Sies" onclick="Javascript:return Verify();" class="bottone">
+		</td>
 	</tr>
 </table>
 </form>
