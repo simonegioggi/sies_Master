@@ -1,11 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%-- MEV_21: aggiunta pagina per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%-- MEV_21: aggiunta pagina per chiamata a WS per individuare lista avvocato in ReGIndE --%>
 
 <%@ page language="java" import="f3b.web.IWebConstants"%>
 
 <html>
 <head>
-<title> [S.I.E.S.] - Ricerca Difensore su RegInde </title>
+<title> [S.I.E.S.] - Ricerca Difensore su ReGIndE </title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
 <script language="JavaScript">

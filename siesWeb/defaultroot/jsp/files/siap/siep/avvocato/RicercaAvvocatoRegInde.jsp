@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%-- MEV_21: aggiunta pagina per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%-- MEV_21: aggiunta pagina per chiamata a WS per individuare lista avvocato in ReGIndE --%>
 
 <%@ page import="it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Ruoloente"%>
 <%@ page import="it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Indirizzo"%>
@@ -44,6 +44,7 @@ function avvocati() {
 		} else {
 			buttonSies.style.visibility = "visible";
 			buttonSies.disabled = false;
+			button.disabled = true;
 		}
 		return;
 	}
@@ -259,6 +260,7 @@ if (avvocato.size() > 0) {
 alert("Attenzione! Nessun Difensore trovato in ReGIndE.\nE' possibile effettuare la ricerca del Difensore su SIES!");
 buttonSies.style.visibility = "visible";
 buttonSies.disabled = false;
+button.disabled = true;
 </script>
 <%
     }
