@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.util.F3BProperties;
+import f3b.util.Utils;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Soggetto;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitException;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.WsServiziInterrogazioneInterni_PortType;
@@ -72,14 +73,17 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");
 		} catch (SearchLimitException sle) {
-			siesLogger.error(sle.getMessage());
+			siesLogger.error("Errore in " + getClass().getName() + ": " + sle.getMessage());
 			setRequestAttribute("msg",
 					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca!");
 		} catch (Exception e) {
-			siesLogger.error(e.toString());
-			if (e.getMessage().contains("Unrecognized"))
+			siesLogger.error("Errore in " + getClass().getName() + ": " + e.toString());
+			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())
+					&& e.getMessage().contains("Unrecognized")) {
+				siesLogger.error("Errore in " + getClass().getName() + ": " + e.getMessage());
 				setRequestAttribute("msg",
 						"Attenzione: collegamento con RegIndE assente!\\nE' possibile effettuare la ricerca del Difensore su SIES!");
+			}
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
