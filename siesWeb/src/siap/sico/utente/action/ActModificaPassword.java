@@ -37,7 +37,6 @@ public class ActModificaPassword extends ActionSiap implements ICostantiUtente {
 			if (!((UtenteModel) getSessionAttribute("UtenteConnesso")).getPwd()
 					.equals(Utils.cryptPassword(getRequestStringParameter("oldPwd")))) {
 				setRequestAttribute("msg", "<font color=red><b>Vecchia Password Errata</b></font>");
-
 				return ICostantiSecurity.PG_CHANGE_PASSWORD;
 			}
 		}
@@ -52,7 +51,8 @@ public class ActModificaPassword extends ActionSiap implements ICostantiUtente {
 		// Verifico che la password sia diversa dalla username ...
 		if (userId.equals(getRequestStringParameter("Pwd"))) {
 			// Se si...chiamo la maschera di cambio password obbligatoria
-			setRequestAttribute("msg", "Attenzione: non si può inserire una Password uguale all'Utente!");
+			setRequestAttribute("msg",
+					"<font color=red><b>Attenzione: Nuova Password uguale all'Utente!</b></font>");
 			return ICostantiSecurity.PG_CHANGE_PASSWORD;
 		}
 
