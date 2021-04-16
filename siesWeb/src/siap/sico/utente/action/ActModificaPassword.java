@@ -48,8 +48,15 @@ public class ActModificaPassword extends ActionSiap implements ICostantiUtente {
 		um.setUserId(userId);
 		um.setPwd(getRequestStringParameter("Pwd"));
 
-		IUtente iu = SICOLookupRemote.getUtenteRemote();
+		// MEV INTEGRAZIONE SIES ADN: aggiunto controllo
+		// Verifico che la password sia diversa dalla username ...
+		if (userId.equals(getRequestStringParameter("Pwd"))) {
+			// Se si...chiamo la maschera di cambio password obbligatoria
+			setRequestAttribute("msg", "Attenzione: non si può inserire una Password uguale all'Utente!");
+			return ICostantiSecurity.PG_CHANGE_PASSWORD;
+		}
 
+		IUtente iu = SICOLookupRemote.getUtenteRemote();
 		iu.ExModificaPassword(um);
 
 		// MEV INTEGRAZIONE SIES ADN: modificata gestione ritorno a seconda della provenienza
