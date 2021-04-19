@@ -11,6 +11,18 @@ Risolve i Ticket:
 		-	siap.sige.decretounificazione.action.ActRicercaFSPUnificazioneSige.java
 		-	siap.sige.decretounificazione.controller.DecretoUnificazioneSigeController.java
 		-	siap.sige.unificazione.action.ActLoadConfermaInserisciVerbaleUnificazioneSige.java
+		
+	Intervento per la soluzione del problema in fase di cancellazione del Verbale di Unificazione.
+	Corretta anche la cancellazione del Decreto di Unificazione (aveva lo stesso problema del Verbale)
+	Corretta la procedura di unificazione. Invertiva Unificato e Unificante. L'utente non si era sbagliato ma 
+	era la procedura che aveva invertito i 2 fascicoli.
+	Moduli Modificati:
+	- Per la cancellazione
+    	siap.sige.decretounificazione.controller.DecretoUnificazioneSigeController
+	- Per la procedura di unificazione
+    	siap.sige.decretounificazione.action.ActLoadConfermaInserisciDecretoUnificazioneSige
+    	siap.sige.unificazione.action.ActLoadConfermaInserisciVerbaleUnificazioneSige
+    	siap.sige.decretounificazione.action.ActRicercaFSPUnificazioneSige
 
 3)	Ticket#20210324012 - Corpo e carattere del foglio complementare ex L. 165/98 (solo TEMPLATE)
 		-	template\siep\ls\SIEP_LS_OLQNI.rtf 
