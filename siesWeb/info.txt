@@ -33,7 +33,7 @@ Risolve i Ticket:
 	non avevano il campo COD_TENORE_DECISIONE a null.
 	Nella query "Ricorsi senza esito" falliva la codizione nella wuere condition per codice.
 	Modulo Modificato:
-		siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.ricercaProcedimentiSigeConRicorsoOpposizione
+		siap.sige.fascicolo.dao.FascicoloSigeSqlDAO
 
 5)	Ticket#20210329018 - Integrazione template con periodi di custodia cautelare mancanti (solo TEMPLATE)
 		-	template\siep\arc\SIEP_ARC_FOGLIO_COMP_ESP.rtf
@@ -48,6 +48,7 @@ Risolve i Ticket:
 
 8)	Ticket#202104010118 - Problematiche monitoraggio ricorsi SIES - SIGE (solo JAVA)
 		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+	[vedasi rif. 4)]
 
 9)	Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116 (solo JAVA)
 		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java

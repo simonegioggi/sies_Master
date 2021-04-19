@@ -1726,6 +1726,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ "and tdrs.rv_domain = 'TENORE_DECISIONE_RICORSO_SIGE' "
 				// Ticket#20210324015 - Per i fascicoli con impugnazione_sige.cod_tenore_decisione = null
 				//                      falliva la join con la CG_REF_CODES
+				// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
 				+ "and NVL (i.cod_tenore_decisione,'-') = tdrs.rv_low_value "
 				// + "and tdrs.rv_low_value = i.cod_tenore_decisione "
 				// Ticket#20210324015 - FINA
@@ -1826,6 +1827,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			break;
 		case 2:
 			// Ticket#20210324015 - statistiche ricorso/opposizione: il codice tenore può essere null
+			// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
 			s = " and i.cod_tipo_impugnazione = '01' and (i.cod_tenore_decisione = '-' or i.cod_tenore_decisione is null) ";
 			break;
 		case 3:
@@ -1836,6 +1838,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			break;
 		case 5:
 			// Ticket#20210324015 - statistiche ricorso/opposizione: il codice tenore può essere null
+			// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
 			s = " and i.cod_tipo_impugnazione = '04' and (i.cod_tenore_decisione = '-' or i.cod_tenore_decisione is null)";
 			break;
 		case 6:
