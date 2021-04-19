@@ -29,6 +29,11 @@ Risolve i Ticket:
 
 4)	Ticket#20210324015 - statistiche ricorso/opposizione (solo JAVA)
 		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+	Nella query "generale" (tutti) falliva la join con la CG_REF_CODES per i record che 
+	non avevano il campo COD_TENORE_DECISIONE a null.
+	Nella query "Ricorsi senza esito" falliva la codizione nella wuere condition per codice.
+	Modulo Modificato:
+		siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.ricercaProcedimentiSigeConRicorsoOpposizione
 
 5)	Ticket#20210329018 - Integrazione template con periodi di custodia cautelare mancanti (solo TEMPLATE)
 		-	template\siep\arc\SIEP_ARC_FOGLIO_COMP_ESP.rtf
