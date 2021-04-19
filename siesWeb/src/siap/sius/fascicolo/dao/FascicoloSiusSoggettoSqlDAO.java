@@ -2942,18 +2942,20 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " EV.COD_ESITO COD_STATO_FASCICOLO, EV.DATA_EMISSIONE DATA_RICHIESTA, EV.ID_EVENTO ID_EVENTO, GP.ID_GENERALE_PROCEDIMENTO ID_GENERALE_PROCEDIMENTO,";
 		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
 		// 20210205017)
-		query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING||'#'||d.FLAG_DOCUMENTO_REGISTRATO DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
+		// query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING||'#'||d.FLAG_DOCUMENTO_REGISTRATO DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
+		query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
 		query += " DESCR_COD_PROCEDIMENTO.RV_MEANING DESCR_COD_PROCEDIMENTO, DEOR.DATA_DEPOSITO";
 		query += " FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_TIPO_PROCEDIMENTO,";
 		// Ticket#202104060113 — Ticket#202103310113 non corretto — vers. 2.5.0.0 - rif #202103110112
 		// (derivato da #202103040111 e da ticket 20210205017)
 		// ORA-01719: l'operatore di join esterno (+) non consentito nell'operando di OR o IN ???
 		// allora cambio outer join su EVENTO per queste due tabelle:
-		// DEPOSITO_ORDINANZA_PC DEOR, DOCUMENTO_ALLEGATO D,
+		// DEPOSITO_ORDINANZA_PC DEOR, DOCUMENTO_ALLEGATO D (poi commentato),
 		query += " UFFICIO UFF, COMUNE DESCR_COM_UFF, COMUNE DESCR_COM_NASCITA,";
-		query += " EVENTO EV left outer join DOCUMENTO_ALLEGATO D on ev.id_evento = d.EVE_ID_EVENTO";
-		query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A') and d.cod_tipo_documento in ('01', '02', '03')";
-		query += " left outer join DEPOSITO_ORDINANZA_PC DEOR on EV.ID_EVENTO = DEOR.ID_EVENTO_GENERATO,";
+		// query += " EVENTO EV left outer join DOCUMENTO_ALLEGATO D on ev.id_evento = d.EVE_ID_EVENTO";
+		// query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A') and
+		// d.cod_tipo_documento in ('01', '02', '03')";
+		query += " EVENTO EV left outer join DEPOSITO_ORDINANZA_PC DEOR on EV.ID_EVENTO = DEOR.ID_EVENTO_GENERATO,";
 		query += " CG_REF_CODES DESCR_ESITO_PROVVEDIMENTO,";
 		query += " CG_REF_CODES DESCR_MOTIVO_PROVVEDIMENTO, CG_REF_CODES DESCR_COD_PROCEDIMENTO, AVVOCATO AVV, AVVOCATO_FASCICOLO_SIUS AFS,";
 		query += " (SELECT A.COGNOME,";
@@ -2971,9 +2973,13 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
 		query += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
 		query += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		query += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
-		query += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		query += " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')))";
+		// Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116
+		query += " AND EV2.DATA_INSERIMENTO = (select max(EV3.DATA_INSERIMENTO)"
+				+ " from EVENTO EV3, DOCUMENTO_ALLEGATO D2"
+				+ " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
+				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
+				+ " and (ev3.id_evento = d2.EVE_ID_EVENTO and" + " d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
+				+ " and d2.cod_tipo_documento in ('01', '02', '03'))))";
 		query += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
 		query += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
@@ -3013,7 +3019,8 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		// Ticket#202103310113 — vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket
 		// 20210205017)
 		// query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A')";
-		// query += " and d.cod_tipo_documento(+) in ('01','02', '03')"; // Deposito Sentenza, Ordinanza, Decreto
+		// query += " and d.cod_tipo_documento(+) in ('01','02', '03')"; // Deposito Sentenza, Ordinanza,
+		// Decreto
 		query += " UNION ";
 		// scrivo seconda query
 		query += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.COD_STATO_FASCICOLO VERO_COD_STATO,FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -3043,9 +3050,13 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND FASC.ID_FASCICOLO_SIUS = GP.FAS_SIU_ID_FASCICOLO_SIUS";
 		query += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
 		query += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		query += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
-		query += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		query += " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')))";
+		// Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116
+		query += " AND EV2.DATA_INSERIMENTO = (select max(EV3.DATA_INSERIMENTO)"
+				+ " from EVENTO EV3, DOCUMENTO_ALLEGATO D2"
+				+ " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
+				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
+				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and" + " d2.FLAG_DOCUMENTO_REGISTRATO = 'S' and"
+				+ " d2.cod_tipo_documento in ('01', '02', '03')) or" + " ev3.cod_esito = '0601')))";
 		query += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
 		query += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
@@ -3115,9 +3126,13 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND (EV.DATA_INSERIMENTO,ID_FASCICOLO_SIUS) = (select EV2.DATA_INSERIMENTO,FAS_SIU_ID_FASCICOLO_SIUS from EVENTO EV2";
 		query += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
 		query += " AND   EV2.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')";
-		query += " AND EV2.DATA_INSERIMENTO = (select max (EV3.DATA_INSERIMENTO) from EVENTO EV3";
-		query += " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
-		query += " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')))";
+		// Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116
+		query += " AND EV2.DATA_INSERIMENTO = (select max(EV3.DATA_INSERIMENTO)"
+				+ " from EVENTO EV3, DOCUMENTO_ALLEGATO D2"
+				+ " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
+				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
+				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and" + " d2.FLAG_DOCUMENTO_REGISTRATO = 'S' and"
+				+ " d2.cod_tipo_documento in ('01', '02', '03')) or" + " ev3.cod_esito = '0601')))";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')";
 		query += " AND (EV.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV.FLAG_DOCUMENTO_REGISTRATO IS NULL)";
 		query += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
