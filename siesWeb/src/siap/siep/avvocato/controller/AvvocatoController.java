@@ -47,22 +47,6 @@ import siap.siep.storicoavvocato.dao.StoricoAvvocatoSqlDAO;
 import siap.siep.storicoavvocato.model.StoricoAvvocatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
-/**
- * <p>
- * Title: AvvocatoController
- * </p>
- * <p>
- * Description: Classe Controller per Avvocato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- *
- * @version 1.0
- */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AvvocatoController extends SiapController implements IAvvocato {
 
@@ -71,7 +55,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 		Connection lConn = null;
 
-		AvvocatoDAO lAvvDao = null;
+		// AvvocatoDAO lAvvDao = null;
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -144,7 +128,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			ex.printStackTrace();
 			throw new F3BException(this.getClass().getName() + ".ExInserisciAvvocato: " + ex);
 		} finally {
-			cleanup(lAvvDao);
+			// cleanup(lAvvDao);
 			cleanup(lAvvFascDao);
 			cleanup(lEveSqlDao);
 			cleanup(lNotEveDao);
@@ -160,7 +144,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 		Connection lConn = null;
 
-		AvvocatoDAO lAvvDao = null;
+		// AvvocatoDAO lAvvDao = null;
 		AvvocatoFascicoloSiepDAO lAvvFascDao = null;
 		EventoSqlDAO lEveSqlDao = null;
 		NotificaEventoSqlDAO lNotEveDao = null;
@@ -237,7 +221,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			ex.printStackTrace();
 			throw new F3BException(this.getClass().getName() + ".ExInserisciAvvocato: " + ex);
 		} finally {
-			cleanup(lAvvDao);
+			// cleanup(lAvvDao);
 			cleanup(lAvvFascDao);
 			cleanup(lEveSqlDao);
 			cleanup(lNotEveDao);
