@@ -1,0 +1,85 @@
+package siap.sico.util;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import f3b.util.F3BException;
+import siap.sico.decodifiche.controller.IComune;
+import siap.sico.decodifiche.model.ComuneModel;
+
+/**
+ * MEV_21_ aggiunta classe di utility per calcolare il luogo di nascita avvocati reginde
+ *
+ * @author sgioggi
+ */
+public class CodiceFiscaleInverso {
+
+	public static ComuneModel calcolaComuneNascita(String cf) throws F3BException {
+
+		// Codice Comune Catastale
+		String ccc = cf.substring(11, 15).toUpperCase();
+
+		// sostituire gli ultimi 3 caratteri del codice catastale con
+		// 0 = L | 1 = M | 2 = N | 3 = P | 4 = Q | 5 = R | 6 = S | 7 = T | 8 = U | 9 = V
+		// H501 --> H50M; H501 --> H5LM; H501 --> HRLM;
+		Pattern p = Pattern.compile("\\d");
+		for (int i = 3; i > 0; i--) {
+			char ch = ccc.charAt(i);
+			if (Character.isDigit(ch))
+				break;
+			String s = Character.toString(ch);
+			Matcher m = p.matcher(s);
+			if (!m.matches())
+				ccc = ccc.replace(ch, sostituisciCarattere(ch));
+		}
+
+		// ricavo il comune dal COD_CATASTALE_COMUNE
+		IComune ic = SICOLookupRemote.getComuneRemote();
+		ComuneModel cm = new ComuneModel(ic.ExRicercaComuneByCodCatastale(ccc));
+
+		// valore di ritorno
+		return cm;
+	}
+
+	private static char sostituisciCarattere(char ch) {
+
+		char ret;
+
+		switch (ch) {
+		case 'L':
+			ret = '0';
+			break;
+		case 'M':
+			ret = '1';
+			break;
+		case 'N':
+			ret = '2';
+			break;
+		case 'P':
+			ret = '3';
+			break;
+		case 'Q':
+			ret = '4';
+			break;
+		case 'R':
+			ret = '5';
+			break;
+		case 'S':
+			ret = '6';
+			break;
+		case 'T':
+			ret = '7';
+			break;
+		case 'U':
+			ret = '8';
+			break;
+		default: // 'V'
+			ret = '9';
+			break;
+		}
+
+		// valore di ritorno
+		return ret;
+	}
+
+}

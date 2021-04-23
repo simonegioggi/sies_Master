@@ -301,4 +301,32 @@ public class ComuneController extends SiapController implements IComune {
 		return lComMod;
 	}
 
+	// MEV_21: ricerco il comune dato il codice catastale
+	@Override
+	public ComuneModel ExRicercaComuneByCodCatastale(String ccc) throws F3BException {
+
+		Connection c = null;
+		ComuneSqlDAO csdao = null;
+		ComuneModel cm = null;
+
+		try {
+			c = getDBConnection();
+			csdao = new ComuneSqlDAO(c);
+			csdao.ricercaComuneByCodCatastale(ccc);
+			csdao.start();
+			if (csdao.next())
+				cm = (ComuneModel) csdao.getModelComuneTds();
+			csdao.stop();
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("Exception: " + e);
+			throw new F3BException(
+					"ComuneController.ExRicercaComuneByCodCatastale: Non posso leggere  : " + e);
+		} finally {
+			cleanup(csdao);
+			cleanup(c);
+		}
+		return cm;
+	}
+
 }

@@ -3,11 +3,11 @@ package siap.sico.decodifiche.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import f3b.dao.DAOException;
+import f3b.model.GenericModel;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.ComuneProvinciaModel;
-import f3b.dao.DAOException;
-import f3b.model.GenericModel;
 
 public class ComuneSqlDAO extends SIAPSqlDAO {
 
@@ -88,7 +88,7 @@ public class ComuneSqlDAO extends SIAPSqlDAO {
 	 * sedi UNEP. Sono possibili sedi UNEP quei Comuni del Distretto che risultino anche sede di uno dei
 	 * seguenti uffici: CAP : Corte d'Appello; DIB : Tribunale Ordinario; TRIBSD : Sezione distaccata di
 	 * Tribunale.
-	 * 
+	 *
 	 * @param aCodDis
 	 *            : codice Distretto
 	 * @throws DAOException
@@ -126,6 +126,17 @@ public class ComuneSqlDAO extends SIAPSqlDAO {
 		}
 
 		return retNum;
+	}
+
+	// MEV_21: ricerco il comune dato il codice catastale
+	public void ricercaComuneByCodCatastale(String ccc) {
+
+		String lStatement = new String();
+		lStatement += " SELECT COD_COMUNE, DESCRIZIONE";
+		lStatement += " FROM COMUNE";
+		lStatement += " WHERE COD_CATASTALE_COMUNE = '" + ccc + "'";
+
+		setStatement(lStatement);
 	}
 
 }
