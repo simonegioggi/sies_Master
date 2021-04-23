@@ -1,29 +1,54 @@
-RELEASE_12.4.8.0: 12/03/2021
-	-->	nato dal branch "release_12.4.7.0"
+RELEASE_12.4.9.0: 18/04/2021
+	-->	nato dal branch "release_12.4.8.0"
 
-Risolve il Ticket:
+Risolve i Ticket:
 
-	1)	Ticket#202102230121 - Archiviazione pene pecuniarie (solo TEMPLATE)
-		-	EsecuzioneMisuraSicurezza.rtf
-		-	SIEP_OS_01.rtf
+1)	Ticket#202103180118 - Problemi cumulo SIEP - Presa in carico SIEP altra BDI (solo DB)
+		-	PULISCI_ALTRE_BDI.PULISCI_EVENTO
 
-	2)	Ticket#20210224017 — Template da correggere (solo TEMPLATE)
-		-	SIEP_MA_ARDOM_REVO_DIRETTA.rtf
+2)	Ticket#20210322016 - Problemi riunione (solo JAVA)
+		-	siap.sige.decretounificazione.action.ActLoadConfermaInserisciDecretoUnificazioneSige.java
+		-	siap.sige.decretounificazione.action.ActRicercaFSPUnificazioneSige.java
+		-	siap.sige.decretounificazione.controller.DecretoUnificazioneSigeController.java
+		-	siap.sige.unificazione.action.ActLoadConfermaInserisciVerbaleUnificazioneSige.java
+		
+	Intervento per la soluzione del problema in fase di cancellazione del Verbale di Unificazione.
+	Corretta anche la cancellazione del Decreto di Unificazione (aveva lo stesso problema del Verbale)
+	Corretta la procedura di unificazione. Invertiva Unificato e Unificante. L'utente non si era sbagliato ma 
+	era la procedura che aveva invertito i 2 fascicoli.
+	Moduli Modificati:
+	- Per la cancellazione
+    	siap.sige.decretounificazione.controller.DecretoUnificazioneSigeController
+	- Per la procedura di unificazione
+    	siap.sige.decretounificazione.action.ActLoadConfermaInserisciDecretoUnificazioneSige
+    	siap.sige.unificazione.action.ActLoadConfermaInserisciVerbaleUnificazioneSige
+    	siap.sige.decretounificazione.action.ActRicercaFSPUnificazioneSige
 
-	3)	Ticket#20210310014 — SIES - rif ticket 202103020113 — ricerca per soggetto SIEP
-		-	LoadInserisciSoggetto.jsp
-			In riapertura del ticket 202103020113 relativo all'errore in fase di ricerca soggetto 
-			legato al valore 0 inserito nel campo SOGGETTO.ANNO_NASCITA.
-			Il valore non è valido per costruire una data.
-			Aggiunti i controlli sulle jsp/Action che ne consentivano l'inserimento
-			Modificata solo la jsp /jsp/files/siap/sico/soggetto/LoadInserisciSoggetto.jsp
-			Tutte le altre jsp che trattavano l'anno di nascita avevano già il controllo 
-			sul validator che fosse > 1900 in quanto non prevedono i campi età presunta alternativi 
-			alla data di nasscita.
+3)	Ticket#20210324012 - Corpo e carattere del foglio complementare ex L. 165/98 (solo TEMPLATE)
+		-	template\siep\ls\SIEP_LS_OLQNI.rtf 
 
-	4)	Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket 20210205017) (solo AVVOCATURA)
-		-	FascicoloSiusSoggettoSqlDAO.java	(SIES)
-		-	ProcedimentoPerSoggettoXmlUtil.java	(AVVOCATURA)
+4)	Ticket#20210324015 - statistiche ricorso/opposizione (solo JAVA)
+		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+	Nella query "generale" (tutti) falliva la join con la CG_REF_CODES per i record che 
+	non avevano il campo COD_TENORE_DECISIONE a null.
+	Nella query "Ricorsi senza esito" falliva la codizione nella wuere condition per codice.
+	Modulo Modificato:
+		siap.sige.fascicolo.dao.FascicoloSigeSqlDAO
 
-	5)	Ticket#202103160116 — Errore SIUS su emissione provvedimento (solo DB)
-		-	202103160116.sql
+5)	Ticket#20210329018 - Integrazione template con periodi di custodia cautelare mancanti (solo TEMPLATE)
+		-	template\siep\arc\SIEP_ARC_FOGLIO_COMP_ESP.rtf
+
+6)	Ticket#20210408012 - invio FC da SIEP al Casellario (solo DB)
+		-	script_disabilita_funzione_FC_20210408012.sql
+
+7)	Ticket#202104080110 - correzione SIGI_PNL_ML_2019 07 02_1_Modello_DATI_SIES (DOC + DB)
+		-	SIGI_PNL_ML_2019 07 02_1_Modello_DATI_SIES.docx
+		-	Aggiorna Dominio TIPO_FUNZIONE.sql
+		-	Aggiorna Dominio TIPO_VISUALIZZAZIONE.sql
+
+8)	Ticket#202104010118 - Problematiche monitoraggio ricorsi SIES - SIGE (solo JAVA)
+		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+	[vedasi rif. 4)]
+
+9)	Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116 (solo JAVA)
+		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java

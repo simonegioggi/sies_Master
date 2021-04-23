@@ -1724,7 +1724,12 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		s += " where i.provv_id_provvedimento_sige = p.id_provvedimento_sige "
 				+ "and p.fas_id_fascicolo_sige = f.id_fascicolo_sige "
 				+ "and tdrs.rv_domain = 'TENORE_DECISIONE_RICORSO_SIGE' "
-				+ "and tdrs.rv_low_value = i.cod_tenore_decisione "
+				// Ticket#20210324015 - Per i fascicoli con impugnazione_sige.cod_tenore_decisione = null
+				//                      falliva la join con la CG_REF_CODES
+				// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
+				+ "and NVL (i.cod_tenore_decisione,'-') = tdrs.rv_low_value "
+				// + "and tdrs.rv_low_value = i.cod_tenore_decisione "
+				// Ticket#20210324015 - FINA
 				+ "and tps.rv_domain = 'TIPO_PROVVEDIMENTO_SIGE' "
 				+ "and tps.rv_low_value = p.cod_tipo_provvedimento_sige "
 				+ "and tp.rv_domain = 'TIPO_PROVVEDIMENTO' "
@@ -1821,7 +1826,9 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			s = " and i.cod_tipo_impugnazione = '01'";
 			break;
 		case 2:
-			s = " and i.cod_tipo_impugnazione = '01' and i.cod_tenore_decisione = '-'";
+			// Ticket#20210324015 - statistiche ricorso/opposizione: il codice tenore può essere null
+			// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
+			s = " and i.cod_tipo_impugnazione = '01' and (i.cod_tenore_decisione = '-' or i.cod_tenore_decisione is null) ";
 			break;
 		case 3:
 			s = " and i.cod_tipo_impugnazione = '01' and i.cod_tenore_decisione != '-'";
@@ -1830,7 +1837,9 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			s = " and i.cod_tipo_impugnazione = '04'";
 			break;
 		case 5:
-			s = " and i.cod_tipo_impugnazione = '04' and i.cod_tenore_decisione = '-'";
+			// Ticket#20210324015 - statistiche ricorso/opposizione: il codice tenore può essere null
+			// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
+			s = " and i.cod_tipo_impugnazione = '04' and (i.cod_tenore_decisione = '-' or i.cod_tenore_decisione is null)";
 			break;
 		case 6:
 			s = " and i.cod_tipo_impugnazione = '04' and i.cod_tenore_decisione != '-'";
