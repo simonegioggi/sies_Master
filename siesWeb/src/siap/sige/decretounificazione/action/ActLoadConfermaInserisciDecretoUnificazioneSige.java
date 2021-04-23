@@ -26,9 +26,20 @@ public class ActLoadConfermaInserisciDecretoUnificazioneSige extends ActionSige 
 	  super.removeSessionAttribute("StackDiRitorno");
 	  // 16/01/2018 SC *** fine ****
 	  IDecretoUnificazioneSige lCtrl = SIGELookupRemote.getDecretoUnificazioneSigeRemote();
-      FascicoloSigeEstesoModel lFasDaUnificare = super.getFascicoloSigeEstesoInSessione();
-      FascicoloSigeEstesoModel lFasUnificante  = lCtrl.ExVerificaFascicoloSigePerUnificazione(getRequestStringParameter( ICostantiDecretoUnificazioneSige.CAMPO_ANNO_DA_UNIF), getRequestStringParameter( ICostantiDecretoUnificazioneSige.CAMPO_NUMERO_DA_UNIF), 
-			                                                                                super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
+	  
+	  // Ticket#2021032201 - Unificato e unificante sono invertiti. Quello in sessione 
+	  // è l'unificante, quello che arriva ala questa Action è l'unificato
+      //FascicoloSigeEstesoModel lFasDaUnificare = super.getFascicoloSigeEstesoInSessione();
+      //FascicoloSigeEstesoModel lFasUnificante  = lCtrl.ExVerificaFascicoloSigePerUnificazione(getRequestStringParameter( ICostantiDecretoUnificazioneSige.CAMPO_ANNO_DA_UNIF), getRequestStringParameter( ICostantiDecretoUnificazioneSige.CAMPO_NUMERO_DA_UNIF), 
+      //			                                                                                super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
+      
+      FascicoloSigeEstesoModel lFasUnificante = super.getFascicoloSigeEstesoInSessione();
+      FascicoloSigeEstesoModel lFasDaUnificare = lCtrl.ExVerificaFascicoloSigePerUnificazione(getRequestStringParameter( ICostantiDecretoUnificazioneSige.CAMPO_ANNO_DA_UNIF)
+    		                                                                                 , getRequestStringParameter( ICostantiDecretoUnificazioneSige.CAMPO_NUMERO_DA_UNIF)
+			                                                                                 , super.getCodUfficioUtenteConnesso()
+			                                                                                 , RUOLO_FASCICOLO_DA_UNIFICARE );
+      // Ticket#2021032201 - FINE
+      
       // Verifica la presenza di Oggetti nel fascicolo da Unificare
       TenoreSigeModel lTenModUnificato = new TenoreSigeModel();
       lTenModUnificato.setFasIdFascicoloSige(lFasDaUnificare.getFascicoloSige().getIdFascicoloSige());
