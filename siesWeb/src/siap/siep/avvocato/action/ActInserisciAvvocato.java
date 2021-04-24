@@ -44,8 +44,56 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug(" INSERISCI AVVOCATO PAOLO");
+		siesLogger.debug(getClass().getName());
 		IAvvocato lCtrl = SIEPLookupRemote.getAvvocatoRemote();
+
+		// MEV_21: controllo se la ricerca proviene da reginde o da sies
+		BigDecimal idAvvocato = null;
+		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
+			// se provengo da reginde allora ricerco l'avvocato su tabella AVVOCATO
+			// se esiste lo prelevo, altrimenti inserisco nuovo avvocato da reginde su sies!
+			Date dataNascita = null;
+			String codLuogoNascita = null;
+			ComuneModel comuneNascita = null;
+			String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
+					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
+					: null;
+			if (Utils.isPresent(descCodLuogoNascita)) {
+				try {
+					comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
+				} catch (Exception e) {
+					siesLogger.info(e.getMessage());
+					// algortimo di omocodia
+					comuneNascita = CodiceFiscaleInverso
+							.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+				}
+				if (!Utils.isNullObj(comuneNascita)) {
+					codLuogoNascita = comuneNascita.getCodComune();
+					descCodLuogoNascita = comuneNascita.getDescrizione();
+				}
+			}
+			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
+					&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
+							&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+				dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
+						ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
+						ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+			AvvocatoModel am = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
+					getRequestStringParameter(CAMPO_NOME),
+					getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, null, null, null, null, null,
+					null, null, getRequestStringParameter(CAMPO_CODICE_FISCALE), null, null, null, null, null,
+					null, null, null, null, null, descCodLuogoNascita, null, null, codLuogoNascita, null,
+					dataNascita, null, null, null, getCodUfficioUtenteConnesso(), null, null, null);
+			Vector avvocato = lCtrl.ExRicercaAvvocato(am);
+			if (!avvocato.isEmpty())
+				idAvvocato = ((AvvocatoModel) avvocato.get(0)).getIdAvvocato();
+			else {
+				// se non lo trovo lo inserisco ex novo
+				AvvocatoModel amIns = lCtrl.ExInserisciAvvocato(am);
+				idAvvocato = amIns.getIdAvvocato();
+			}
+		} else
+			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 
 		AvvocatoModel lAvvMod = new AvvocatoModel();
 		Vector lVectRic = new Vector();
@@ -78,52 +126,11 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 						"I difensori possono essere due solo se entrambi di Fiducia o entrambi della Fase di Giudizio!");
 			}
 
-			if (lAvvModPrec.getIdAvvocato().compareTo(getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO)) == 0)
+			if (lAvvModPrec.getIdAvvocato()
+					.compareTo(/* getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) */idAvvocato) == 0)
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Attenzione: il difensore risulta già inserito!");
 		}
-
-		// MEV_21: controllo se la ricerca proviene da reginde o da sies
-		BigDecimal idAvvocato = null;
-		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
-			// se provengo da reginde allora ricerco l'avvocato su tabella AVVOCATO
-			// se esiste lo prelevo, altrimenti inserisco nuovo avvocato da reginde su sies!
-			Date dataNascita = null;
-			String codLuogoNascita = null;
-			ComuneModel comuneNascita = null;
-			String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
-					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-					: null;
-			if (Utils.isPresent(descCodLuogoNascita)) {
-				try {
-					comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
-				} catch (Exception e) {
-					siesLogger.info(e.getMessage());
-					// algortimo di omocodia
-					comuneNascita = CodiceFiscaleInverso.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-				}
-				if (!Utils.isNullObj(comuneNascita)) {
-					codLuogoNascita = comuneNascita.getCodComune();
-					descCodLuogoNascita = comuneNascita.getDescrizione();
-				}
-			}
-			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
-					&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
-							&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
-				dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
-						ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
-						ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
-			AvvocatoModel am = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
-					getRequestStringParameter(CAMPO_NOME),
-					getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, null, null, null, null, null,
-					null, null, getRequestStringParameter(CAMPO_CODICE_FISCALE), null, null, null, null, null,
-					null, null, null, null, null, descCodLuogoNascita, null, null, codLuogoNascita, null,
-					dataNascita, null, null, null, getCodUfficioUtenteConnesso(), null, null, null);
-			Vector avvocato = lCtrl.ExRicercaAvvocato(am);
-			if (!avvocato.isEmpty())
-				idAvvocato = ((AvvocatoModel) avvocato.get(0)).getIdAvvocato();
-		} else
-			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 
 		AvvocatoFascicoloSiepModel lAvvFascMod = new AvvocatoFascicoloSiepModel();
 		lAvvMod.setIdAvvocato(idAvvocato);
@@ -213,7 +220,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		lAvvFascMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		lAvvFascMod.setFasSieIdFascicoloSiep(
 				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
-		lAvvFascMod.setAvvIdAvvocato(getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO));
+		lAvvFascMod.setAvvIdAvvocato(/* getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) */idAvvocato);
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
 			lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
 
