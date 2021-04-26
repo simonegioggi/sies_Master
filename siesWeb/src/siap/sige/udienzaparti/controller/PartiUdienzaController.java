@@ -230,9 +230,13 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 			// la ricercaParteUdienzaByKey tornava 0 records
 			lPartiDao.start();
 			while (lPartiDao.next()) {
+				// Ticket#202104210111 - Corretto getModelByKey. va usato getModel essendo nel ciclo next()
+				//lAnagParteMod = new AnagraficaPartiUdienzaModel(
+			    //			(AnagraficaPartiUdienzaModel) lPartiDao.getModelByKey());
 				lAnagParteMod = new AnagraficaPartiUdienzaModel(
-						(AnagraficaPartiUdienzaModel) lPartiDao.getModelByKey());
-
+						(AnagraficaPartiUdienzaModel) lPartiDao.getModel());
+				// Ticket#202104210111 - 
+				
 				// Difensori (max 2)
 				lDifensDao = new PartiUdienzaDifensoreSqlDAO(lConn);
 				lDifensDao.ricercaDifensoreByIdSoggetto(lAnagParteMod.getIdSoggetto());

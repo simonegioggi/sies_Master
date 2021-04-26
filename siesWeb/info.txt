@@ -1,54 +1,7 @@
-RELEASE_12.4.9.0: 18/04/2021
-	-->	nato dal branch "release_12.4.8.0"
+Ticket#202104210111 - INSERIMENTO PARTI CIVILI DECRETO FISSAZIONE UDIENZA
 
-Risolve i Ticket:
+Scommentato il codice che non inseriva la Action nella coda di navicgazione
+- siap.sige.udienzaparti.action.ActLoadModificaDifensore 
 
-1)	Ticket#202103180118 - Problemi cumulo SIEP - Presa in carico SIEP altra BDI (solo DB)
-		-	PULISCI_ALTRE_BDI.PULISCI_EVENTO
-
-2)	Ticket#20210322016 - Problemi riunione (solo JAVA)
-		-	siap.sige.decretounificazione.action.ActLoadConfermaInserisciDecretoUnificazioneSige.java
-		-	siap.sige.decretounificazione.action.ActRicercaFSPUnificazioneSige.java
-		-	siap.sige.decretounificazione.controller.DecretoUnificazioneSigeController.java
-		-	siap.sige.unificazione.action.ActLoadConfermaInserisciVerbaleUnificazioneSige.java
-		
-	Intervento per la soluzione del problema in fase di cancellazione del Verbale di Unificazione.
-	Corretta anche la cancellazione del Decreto di Unificazione (aveva lo stesso problema del Verbale)
-	Corretta la procedura di unificazione. Invertiva Unificato e Unificante. L'utente non si era sbagliato ma 
-	era la procedura che aveva invertito i 2 fascicoli.
-	Moduli Modificati:
-	- Per la cancellazione
-    	siap.sige.decretounificazione.controller.DecretoUnificazioneSigeController
-	- Per la procedura di unificazione
-    	siap.sige.decretounificazione.action.ActLoadConfermaInserisciDecretoUnificazioneSige
-    	siap.sige.unificazione.action.ActLoadConfermaInserisciVerbaleUnificazioneSige
-    	siap.sige.decretounificazione.action.ActRicercaFSPUnificazioneSige
-
-3)	Ticket#20210324012 - Corpo e carattere del foglio complementare ex L. 165/98 (solo TEMPLATE)
-		-	template\siep\ls\SIEP_LS_OLQNI.rtf 
-
-4)	Ticket#20210324015 - statistiche ricorso/opposizione (solo JAVA)
-		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
-	Nella query "generale" (tutti) falliva la join con la CG_REF_CODES per i record che 
-	non avevano il campo COD_TENORE_DECISIONE a null.
-	Nella query "Ricorsi senza esito" falliva la codizione nella wuere condition per codice.
-	Modulo Modificato:
-		siap.sige.fascicolo.dao.FascicoloSigeSqlDAO
-
-5)	Ticket#20210329018 - Integrazione template con periodi di custodia cautelare mancanti (solo TEMPLATE)
-		-	template\siep\arc\SIEP_ARC_FOGLIO_COMP_ESP.rtf
-
-6)	Ticket#20210408012 - invio FC da SIEP al Casellario (solo DB)
-		-	script_disabilita_funzione_FC_20210408012.sql
-
-7)	Ticket#202104080110 - correzione SIGI_PNL_ML_2019 07 02_1_Modello_DATI_SIES (DOC + DB)
-		-	SIGI_PNL_ML_2019 07 02_1_Modello_DATI_SIES.docx
-		-	Aggiorna Dominio TIPO_FUNZIONE.sql
-		-	Aggiorna Dominio TIPO_VISUALIZZAZIONE.sql
-
-8)	Ticket#202104010118 - Problematiche monitoraggio ricorsi SIES - SIGE (solo JAVA)
-		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
-	[vedasi rif. 4)]
-
-9)	Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116 (solo JAVA)
-		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java
+Corretto il controller che recupera i dati dopo la cancellazione Parti Udienza
+- siap.sige.udienzaparti.controller.PartiUdienzaController
