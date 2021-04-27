@@ -48,7 +48,8 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		String userId = StringUtils.convertSqlString(getRequestStringParameter(CAMPO_USER_ID));
 		String password = getRequestStringParameter(CAMPO_PASSWORD);
 		UtenteModel um = new UtenteModel(userId, password);
-		um.setIP(getRequest().getRemoteAddr());
+		String ip = getRequest().getRemoteAddr();
+		um.setIP(ip);
 		um = UtenzaAdnUtils.preLogin(um, false);
 		FunctionModel fm = new FunctionModel(ICostantiFunzioni.RADICE);
 		FunctionModel fmMenu = is.ExLoadFunzioniMenu(um.getUserProfile(), fm);
@@ -72,6 +73,9 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		setSessionAttribute(FUN_RADICE_MENU_ORZ, new FunctionModel());
 		setSessionAttribute(FUN_RADICE_MENU_SR, funzioniMenuSceltaRapida);
 		setSessionAttribute(FUN_ANTENATE, new LinkedList());
+
+		// Update Utente :set Time di ultimo Login
+		is.Utente_setOraLogin(um.getUserId(), ip);
 
 		siesLogger.info("ENTRO IN SIES!");
 		// return IWebConstants.PG_FRAMESET;

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import f3b.dao.DAOException;
 import f3b.dao.SqlDAO;
 import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
 import siap.sico.utenzaAdn.model.AssocUtenteSiesAdnModel;
@@ -97,10 +98,12 @@ public class AssocUtenteSiesAdnSqlDAO extends SqlDAO {
 
 	public void verificaAssociazioneSiesAdn(String userId) {
 
+		String sysdate = DateUtils.getSysDate("dd/MM/yyyy");
 		String sql = "select a.* from ASSOC_UTENTE_SIES_ADN a, utente u where a.id_utente_adn in"
 				+ " (select t.id from UTENZA_ADN t where t.samaccountname = '" + userId + "')"
 				+ " and u.cod_utente = a.ute_cod_utente"
-				+ " and (u.data_fine_validita is null or u.data_fine_validita > sysdate) order by 2";
+				+ " and (u.DATA_FINE_VALIDITA is null OR u.DATA_FINE_VALIDITA >= TO_DATE('" + sysdate
+				+ "','DD/MM/YYYY')) order by 2";
 
 		setStatement(sql);
 	}
