@@ -52,3 +52,7 @@ Risolve i Ticket:
 
 9)	Ticket#20210416017 - problema visibilità emerso nella risoluzione del ticket n. 202104120116 (solo JAVA)
 		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java
+
+10)	Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto (solo JAVA)
+		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java
+		-	it.eng.giustizia.avvocatura.util.ProcedimentiDelSoggettoMapper.java
