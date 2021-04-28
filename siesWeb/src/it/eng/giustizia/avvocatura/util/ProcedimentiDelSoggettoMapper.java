@@ -58,11 +58,16 @@ public class ProcedimentiDelSoggettoMapper {
 						fgpm.getGeneraleProcedimentoModel().getDataRichiesta()));
 				dpt.setDescrDefinizione(fgpm.getGeneraleProcedimentoModel().getDescrDefinizione());
 				if ("01".compareToIgnoreCase(fgpm.getFascicoloSiusModel().getDescrStatoFascicolo()) == 0
-						|| fgpm.getGeneraleProcedimentoModel().getDataRichiesta() == null)
-					dpt.setDescrOggettoProcedimento(DecodificheUtils.getDescbyCode(
-							DecodificheManager.getInstance().getStatoFascicolo(),
-							fgpm.getFascicoloSiusModel().getDescrStatoFascicolo()));
-				else
+						|| fgpm.getGeneraleProcedimentoModel().getDataRichiesta() == null) {
+					// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
+					// in questo caso nel campo provvedimento scrive lo stato del procedimento
+					// tipo "Iscritto", "Emesso Provvedimento"
+					dpt.setDescrOggettoProcedimento("-");
+					if (!"-".equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+						dpt.setDescrOggettoProcedimento(DecodificheUtils.getDescbyCode(
+								DecodificheManager.getInstance().getStatoFascicolo(),
+								fgpm.getFascicoloSiusModel().getDescrStatoFascicolo()));
+				} else
 					dpt.setDescrOggettoProcedimento(
 							fgpm.getGeneraleProcedimentoModel().getDescrOggettoProcedimento());
 				dpt.setDescrPosGiuridica(fgpm.getGeneraleProcedimentoModel().getDescrPosGiuridica());
