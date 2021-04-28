@@ -2940,13 +2940,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " DESCR_COM_NASCITA.DESCRIZIONE DESCR_COMUNE_NASCITA, DESCR_COM_NASCITA.COD_PROVINCIA COD_PROVINCIA_NASCITA,";
 		query += " GP.COD_OGGETTO_PROCEDIMENTO COD_OGGETTO_PROCEDIMENTO, GP.DATA_CAMERA_CONSIGLIO DATA_CAMERA_CONSIGLIO, NVL(GP.COD_AUTORITA_DELEGATA, '-') COD_AUTORITA_DELEGATA, NVL(GP.DESCR_MITTENTE, '-') DESCR_MITTENTE,";
 		query += " EV.COD_ESITO COD_STATO_FASCICOLO, EV.DATA_EMISSIONE DATA_RICHIESTA, EV.ID_EVENTO ID_EVENTO, GP.ID_GENERALE_PROCEDIMENTO ID_GENERALE_PROCEDIMENTO,";
-		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
+		// Ticket#202103110112 - versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
 		// 20210205017)
-		// query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING||'#'||d.FLAG_DOCUMENTO_REGISTRATO DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
+		// query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING||'#'||d.FLAG_DOCUMENTO_REGISTRATO
+		// DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
 		query += " DESCR_ESITO_PROVVEDIMENTO.RV_MEANING DESCR_PROVVEDIMENTO, DESCR_MOTIVO_PROVVEDIMENTO.RV_MEANING DESCR_DEFINIZIONE,";
 		query += " DESCR_COD_PROCEDIMENTO.RV_MEANING DESCR_COD_PROCEDIMENTO, DEOR.DATA_DEPOSITO";
 		query += " FROM FASCICOLO_SIUS FASC, SOGGETTO SOGG, GENERALE_PROCEDIMENTO GP, CG_REF_CODES DESCR_TIPO_PROCEDIMENTO,";
-		// Ticket#202104060113 — Ticket#202103310113 non corretto — vers. 2.5.0.0 - rif #202103110112
+		// Ticket#202104060113 - Ticket#202103310113 non corretto - vers. 2.5.0.0 - rif #202103110112
 		// (derivato da #202103040111 e da ticket 20210205017)
 		// ORA-01719: l'operatore di join esterno (+) non consentito nell'operando di OR o IN ???
 		// allora cambio outer join su EVENTO per queste due tabelle:
@@ -2978,8 +2979,11 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " from EVENTO EV3, DOCUMENTO_ALLEGATO D2"
 				+ " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
-				+ " and (ev3.id_evento = d2.EVE_ID_EVENTO and" + " d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
-				+ " and d2.cod_tipo_documento in ('01', '02', '03'))))";
+				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
+				// (casistica se scrivo ordinanza e poi la annullo)!
+				+ " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
+				+ " and d2.cod_tipo_documento in ('01', '02', '03')) or ev3.cod_esito = '0601')))";
 		query += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
 		query += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
@@ -3013,10 +3017,10 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		query += " AND NVL(sogg.DATA_NASCITA_presunta,to_date('01/01/1900','dd/mm/yyyy')) = x.DATA_NASCITA_presunta";
 		query += " AND NVL(SOGG.ANNO_NASCITA, '0') = x.ANNO_NASCITA";
 		query += " AND NVL(SOGG.MESE_NASCITA, '0') = x.MESE_NASCITA";
-		// Ticket#202103110112 — versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
+		// Ticket#202103110112 - versione 2.4.0 - rif Ticket#202103040111 (da Versione 2.3.0 - rif. ticket
 		// 20210205017)
 		// query += " and ev.id_evento = d.EVE_ID_EVENTO(+)";
-		// Ticket#202103310113 — vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket
+		// Ticket#202103310113 - vers. 2.5.0.0 - rif #202103110112 (derivato da #202103040111 e da ticket
 		// 20210205017)
 		// query += " and (d.flag_documento_registrato is null or d.flag_documento_registrato <> 'A')";
 		// query += " and d.cod_tipo_documento(+) in ('01','02', '03')"; // Deposito Sentenza, Ordinanza,
@@ -3055,8 +3059,11 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " from EVENTO EV3, DOCUMENTO_ALLEGATO D2"
 				+ " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
-				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and" + " d2.FLAG_DOCUMENTO_REGISTRATO = 'S' and"
-				+ " d2.cod_tipo_documento in ('01', '02', '03')) or" + " ev3.cod_esito = '0601')))";
+				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
+				// (casistica se scrivo ordinanza e poi la annullo)!
+				+ " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
+				+ " and d2.cod_tipo_documento in ('01', '02', '03')) or ev3.cod_esito = '0601')))";
 		query += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO = DESCR_TIPO_PROCEDIMENTO.RV_LOW_VALUE";
 		query += " AND DESCR_ESITO_PROVVEDIMENTO.RV_DOMAIN ='ESITO_PROVVEDIMENTO'";
@@ -3131,8 +3138,11 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " from EVENTO EV3, DOCUMENTO_ALLEGATO D2"
 				+ " where EV3.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS"
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
-				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and" + " d2.FLAG_DOCUMENTO_REGISTRATO = 'S' and"
-				+ " d2.cod_tipo_documento in ('01', '02', '03')) or" + " ev3.cod_esito = '0601')))";
+				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
+				// (casistica se scrivo ordinanza e poi la annullo)!
+				+ " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
+				+ " and d2.cod_tipo_documento in ('01', '02', '03')) or ev3.cod_esito = '0601')))";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')";
 		query += " AND (EV.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV.FLAG_DOCUMENTO_REGISTRATO IS NULL)";
 		query += " AND EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC2.ID_FASCICOLO_SIUS";
