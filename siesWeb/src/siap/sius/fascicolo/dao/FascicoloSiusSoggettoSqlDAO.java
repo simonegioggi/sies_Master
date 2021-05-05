@@ -2981,7 +2981,9 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
 				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
 				// (casistica se scrivo ordinanza e poi la annullo)!
-				+ " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				// Ticket#202105030111 - SIUS-avvocati fissazione dell’udienza
+				// + " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				+ " AND EV3.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and d2.cod_tipo_documento in ('01', '02', '03')) or ev3.cod_esito = '0601')))";
 		query += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
@@ -3061,7 +3063,9 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
 				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
 				// (casistica se scrivo ordinanza e poi la annullo)!
-				+ " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				// Ticket#202105030111 - SIUS-avvocati fissazione dell’udienza
+				// + " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				+ " AND EV3.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and d2.cod_tipo_documento in ('01', '02', '03')) or ev3.cod_esito = '0601')))";
 		query += " AND DESCR_TIPO_PROCEDIMENTO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'";
@@ -3140,7 +3144,9 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
 				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
 				// (casistica se scrivo ordinanza e poi la annullo)!
-				+ " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				// Ticket#202105030111 - SIUS-avvocati fissazione dell’udienza
+				// + " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
+				+ " AND EV3.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and d2.cod_tipo_documento in ('01', '02', '03')) or ev3.cod_esito = '0601')))";
 		query += " AND EV.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')";
