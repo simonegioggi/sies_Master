@@ -2981,7 +2981,8 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
 				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
 				// (casistica se scrivo ordinanza e poi la annullo)!
-				// Ticket#202105030111 - SIUS-avvocati fissazione dell’udienza
+				// Ticket#202105030111 - SIUS-avvocati fissazione dell'udienza
+				// il provvedimento deve essere VALIDATO!!!
 				// + " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
 				+ " AND EV3.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
@@ -3063,7 +3064,8 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
 				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
 				// (casistica se scrivo ordinanza e poi la annullo)!
-				// Ticket#202105030111 - SIUS-avvocati fissazione dell’udienza
+				// Ticket#202105030111 - SIUS-avvocati fissazione dell'udienza
+				// il provvedimento deve essere VALIDATO!!!
 				// + " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
 				+ " AND EV3.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
@@ -3144,7 +3146,8 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 				+ " AND EV3.COD_TIPO_PROVVEDIMENTO in ('02', '03', '14')"
 				// Ticket#202104270113 - sius-avvocati 2.6.0.0 Visualizzazione decreto
 				// (casistica se scrivo ordinanza e poi la annullo)!
-				// Ticket#202105030111 - SIUS-avvocati fissazione dell’udienza
+				// Ticket#202105030111 - SIUS-avvocati fissazione dell'udienza
+				// il provvedimento deve essere VALIDATO!!!
 				// + " AND (EV3.FLAG_DOCUMENTO_REGISTRATO <> 'A' OR EV3.FLAG_DOCUMENTO_REGISTRATO IS NULL)"
 				+ " AND EV3.FLAG_DOCUMENTO_REGISTRATO = 'S'"
 				+ " and ((ev3.id_evento = d2.EVE_ID_EVENTO and d2.FLAG_DOCUMENTO_REGISTRATO = 'S'"
