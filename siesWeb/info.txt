@@ -18,7 +18,17 @@ RELEASE_12.4.10.0	-->	nato dal branch "release_12.4.9.0" in data 12/05/2021
 
 3)	Ticket#20210430011 - SIES - Errore in liberazione anticipata (SOLO JAVA)
 		-	siap.siep.modulocumulo.action.ActInserisciPosGiuridicaCumulo.java
+		-	siap.siep.modulocumulo.action.ActValidaProvvedimentoCumulo.java
 		-	siap.siep.modulocumulo.controller.DatiFinaliCumuloController.java
+	Corretta getione del flag altra causa sul fascicolo SIEP; il flag veniva impostato nella:
+		siap.siep.modulocumulo.action.ActInserisciPosGiuridicaCumulo
+	Spostato in fase di validazione del Cumulo:
+		siap.siep.modulocumulo.controller.DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo
+	Inoltre non inseriva il record ALTRA_CAUSA che mandava in errore la funzione segnalata. Aggiunta insert.
+	Modifcato anche il modulo 
+	siap.siep.modulocumulo.action.ActValidaProvvedimentoCumulo
+	per ricaricare il fascicolo in sessione in quanto i flag_cumulante e flag_altra_causa se modificati non 
+	venivano ricaricati.
 
 4)	Ticket#202105030111 - SIUS-avvocati fissazione dell'udienza (DB + JAVA)
 		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java
