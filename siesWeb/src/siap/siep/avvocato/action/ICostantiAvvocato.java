@@ -118,5 +118,9 @@ public interface ICostantiAvvocato {
 			+ "files/siap/siep/avvocato/RicercaAvvocatoRegInde.jsp";
 	public static final String PG_FILTRA_AVV_REGINDE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/avvocato/FiltraAvvRegInde.jsp";
+	public static final String CAMPO_DESC_COMUNE_NASCITA_REGINDE = "DescComuneNascitaEstero";
+	public static final String CAMPO_DESC_COMUNE_STUDIO = "DescComuneStudio";
+	public static final String CAMPO_DESC_STATO_NASCITA = "DescStatoNascita";
+	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascita";
 
 }

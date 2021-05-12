@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.web.IWebConstants"%>
@@ -221,14 +222,14 @@ if (siap.util.SIESSwitch.isRegeSiesOn()) {
 <!--         		Seleziona dalla lista <img src="/images/filefolder.gif" border=0> -->
 <!--       		</a> -->
 			<a href="Javascript:ListaAvvocatiRegInde('LoadModificaAvvocato');">
-         		Seleziona da RegInde <img src="/images/filefolder.gif" border=0>
+         		Seleziona da RegInde <img src="/images/filefolder.gif" border="0">
        		</a>
     	</td>
   	</tr>
 </table>
 <table>
   	<tr>
-    	<td class="l" >Cognome </td>
+    	<td class="l" >Cognome</td>
     	<td class="l">
     		<input type="hidden" value="<%=lAvv.getIdAvvocato()%>" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">
     		<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=StringUtils.toStringJSP(lAvv.getCognome())%>" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>">
@@ -240,12 +241,35 @@ if (siap.util.SIESSwitch.isRegeSiesOn()) {
     		<input size=35 maxlength=35 title="Campo Nome" type="text" readonly value="<%=StringUtils.toStringJSP(lAvv.getNome())%>" name="<%=ICostantiAvvocato.CAMPO_NOME%>">
     	</td>
 	</tr>
+<%-- MEV_21: aggiunti campi per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%
+String comuneNascita = "", comuneNascitaEstero = "";
+if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
+	if ("ITALIA".equalsIgnoreCase(lAvv.getDescrStatoNascita()))
+		comuneNascita = lAvv.getDescLuogoNascita();
+	else
+		comuneNascitaEstero = lAvv.getDescLuogoNascitaReginde();
+}
+%>
   	<tr>
-	    <td class="l">Luogo di  Nascita </td>
+	    <td class="l">Comune di Nascita</td>
 	    <td class="L">
-      		<input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(lAvv.getDescLuogoNascita()) %>"  type="text" name="<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>"  maxlength="35" size="35">
+      		<input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(comuneNascita)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>" maxlength="35" size="35">
     	</td>
   	</tr>
+  	<tr>
+        <td class="l">Stato di Nascita</td>
+        <td class="L">
+        	<input type="hidden" value="<%=lAvv.getCodStatoNascita()%>" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">
+        	<input title="Stato di Nascita" readonly value="<%=StringUtils.toStringJSP(lAvv.getDescrStatoNascita())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_STATO_NASCITA%>" maxlength="35" size="35">
+		</td>
+	</tr>
+  	<tr>
+        <td class="l">Comune di Nascita Estero</td>
+        <td class="l">
+			<input title="Comune di Nascita Estero" readonly value="<%=StringUtils.toStringJSP(comuneNascitaEstero)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>" maxlength="35" size="35">
+		</td>
+	</tr>
   	<tr>
     	<td class="l">Data di nascita </td>
         <td class="L">
@@ -282,10 +306,12 @@ if (lAvv.getDataNascita() == null) {
       		<input size=80 maxlength=200 title="Indirizzo" value="<%=StringUtils.toStringJSP(lAvv.getIndirizzo())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>">
       	</td>
   	</tr>
+  	<%-- MEV_21: modificato campo per chiamata a WS per individuare lista avvocato in RegInde --%>
   	<tr>
         <td class="l">Con Studio in </td>
         <td class="L">
-          	<input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>"  maxlength="35" size="35">
+<%--           	<input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35"> --%>
+			<input title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
         </td>
     </tr>
 	<tr>
@@ -302,12 +328,12 @@ if (lAvv.getDataNascita() == null) {
     </tr>
     <tr>
 		<td class="l">e-mail</td>
-		<td class="l"><input size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getEMail()) %>" title="e-mail" type="text" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
+		<td class="l"><input size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getEMail())%>" title="e-mail" type="text" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
 	</tr>
 	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>
     <tr>
 		<td class="l">pec</td>
-		<td class="l"><input size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getPec()) %>" title="pec" type="text" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
+		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getPec())%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
 	</tr>
 	<tr>
 		<td class="l">Codice Fiscale</td>

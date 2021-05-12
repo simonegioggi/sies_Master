@@ -6,13 +6,14 @@ import java.util.regex.Pattern;
 import f3b.util.F3BException;
 import siap.sico.decodifiche.controller.IComune;
 import siap.sico.decodifiche.model.ComuneModel;
+import siap.siep.avvocato.model.AvvocatoModel;
 
 /**
  * MEV_21_ aggiunta classe di utility per calcolare il luogo di nascita avvocati reginde
  *
  * @author sgioggi
  */
-public class CodiceFiscaleInverso {
+public class AvvocatoUtil {
 
 	public static ComuneModel calcolaComuneNascita(String cf) throws F3BException {
 
@@ -80,6 +81,20 @@ public class CodiceFiscaleInverso {
 
 		// valore di ritorno
 		return ret;
+	}
+
+	public static void valorizzaDatiReginde(AvvocatoModel am, String pec, String codStatoNascita,
+			String descLuogoNascitaReginde, String descrComuneStudio) {
+
+		// per il luogo residenza sarà aggiunta una nuova colonna che conterrà la descrizione del Comune
+		// sede dello studio come presente in ReGIndE, abbandonando la valorizzazione della colonna
+		// "COD_COMUNE_RESIDENZA", che resterà per i dati pregressi
+		am.setCodComuneResidenza(null);
+		am.setPec(pec);
+		am.setFlagRegInde("S");
+		am.setDescrComuneStudio(descrComuneStudio);
+		am.setDescLuogoNascitaReginde(descLuogoNascitaReginde);
+		am.setCodStatoNascita(codStatoNascita);
 	}
 
 }

@@ -13,7 +13,7 @@ import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.model.EventoNotificaModel;
-import siap.sico.util.CodiceFiscaleInverso;
+import siap.sico.util.AvvocatoUtil;
 import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.avvocato.model.AvvocatoFascicoloSiepModel;
@@ -49,7 +49,9 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 
 		// MEV_21: controllo se la ricerca proviene da reginde o da sies
 		BigDecimal idAvvocato = null;
+		boolean flagReginde = false;
 		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
+			flagReginde = true;
 			// se provengo da reginde allora ricerco l'avvocato su tabella AVVOCATO
 			// se esiste lo prelevo, altrimenti inserisco nuovo avvocato da reginde su sies!
 			Date dataNascita = null;
@@ -64,7 +66,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 				} catch (Exception e) {
 					siesLogger.info(e.getMessage());
 					// algortimo di omocodia
-					comuneNascita = CodiceFiscaleInverso
+					comuneNascita = AvvocatoUtil
 							.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
 				}
 				if (!Utils.isNullObj(comuneNascita)) {
@@ -80,10 +82,12 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 						ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
 			AvvocatoModel am = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
 					getRequestStringParameter(CAMPO_NOME),
-					getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, null, null, null, null, null,
-					null, null, getRequestStringParameter(CAMPO_CODICE_FISCALE), null, null, null, null, null,
-					null, null, null, null, null, descCodLuogoNascita, null, null, codLuogoNascita, null,
-					dataNascita, null, null, null, getCodUfficioUtenteConnesso(), null, null, null);
+					getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, null, null, null,
+					getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
+					getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, null, null, null, null,
+					getRequestStringParameter(CAMPO_CODICE_FISCALE), null, null, null, null, null, null, null,
+					null, null, null, descCodLuogoNascita, null, null, codLuogoNascita, null, dataNascita,
+					null, null, null, getCodUfficioUtenteConnesso(), null, null, null);
 			Vector avvocato = lCtrl.ExRicercaAvvocato(am);
 			if (!avvocato.isEmpty())
 				idAvvocato = ((AvvocatoModel) avvocato.get(0)).getIdAvvocato();
@@ -233,16 +237,22 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 			lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
 			lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
-
 			lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
-
-			ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-			lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
-
 			lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 			lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
 			lAvvModRic.setDataInserimento(DateUtils.getSysDate());
+			// MEV_21: valorizzo nuovi campi da REGINDE ed annullo "setCodComuneResidenza"
+			// per il luogo residenza sarà aggiunta una nuova colonna che conterrà la descrizione del Comune
+			// sede dello studio come presente in ReGIndE, abbandonando la valorizzazione della colonna
+			// "COD_COMUNE_RESIDENZA", che resterà per i dati pregressi
+			// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
+			// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+			// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+			if (flagReginde)
+				AvvocatoUtil.valorizzaDatiReginde(lAvvModRic, getRequestStringParameter(CAMPO_PEC),
+						getRequestStringParameter(CAMPO_COD_STATO_NASCITA),
+						getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
+						getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO));
 
 			lAvvMod = lCtrl.ExInserisciAvvocato(lAvvModRic);
 		} else {
@@ -268,20 +278,27 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			lStoricoModel.setCodNonAttivita(lAvvModRic.getCodNonAttivita());
 			lStoricoModel.setCodUfficioAppartenenza(lAvvModRic.getCodUffAppartenenza());
 			lStoricoModel.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
-
 			lStoricoModel.setCodUfficioInserimento(lAvvModRic.getCodUfficioAggiornamento());
 			lStoricoModel.setCodOperatoreInserimento(lAvvModRic.getCodOperatoreAggiornamento());
 			lStoricoModel.setDataInserimento(lAvvModRic.getDataAggiornamento());
-
 			// MEV 29 - 07/2015 - FIX non aggiornava il foro
 			lAvvModRic.setForo(getRequestStringParameter(CAMPO_FORO).toUpperCase());
 			lAvvModRic.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase());
 			lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 			lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
 			lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
-			ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-			lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+			// MEV_21: valorizzo nuovi campi da REGINDE ed annullo "setCodComuneResidenza"
+			// per il luogo residenza sarà aggiunta una nuova colonna che conterrà la descrizione del Comune
+			// sede dello studio come presente in ReGIndE, abbandonando la valorizzazione della colonna
+			// "COD_COMUNE_RESIDENZA", che resterà per i dati pregressi
+			// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
+			// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+			// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+			if (flagReginde)
+				AvvocatoUtil.valorizzaDatiReginde(lAvvModRic, getRequestStringParameter(CAMPO_PEC),
+						getRequestStringParameter(CAMPO_COD_STATO_NASCITA),
+						getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
+						getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO));
 
 			lAvvMod = lCtrl.ExModificaStoricizzaAvvocato(lAvvModRic, lStoricoModel);
 		}

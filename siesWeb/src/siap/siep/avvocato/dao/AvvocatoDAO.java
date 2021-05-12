@@ -58,10 +58,12 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setField("DATA_AGGIORNAMENTO", DATE);
 		setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
 
-		// MEV_21 (avvocati): aggiunti tre campi in tabella
+		// MEV_21 (avvocati): aggiunti 5 campi in tabella
 		setField("PEC", STRING);
 		setField("FLAG_REGINDE", STRING);
 		setField("DESCR_COMUNE_STUDIO", STRING);
+		setField("COD_STATO_NASCITA_AVV", STRING);
+		setField("DESC_LUOGO_NAS_REGINDE", STRING);
 	}
 
 	//
@@ -180,7 +182,7 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		return getString("COD_UFFICIO_AGGIORNAMENTO");
 	}
 
-	// MEV_21 (avvocati): aggiunti tre campi in tabella
+	// MEV_21 (avvocati): aggiunti 5 campi in tabella
 	public String getPec() throws DAOException {
 		return getString("PEC");
 	}
@@ -193,12 +195,20 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		return getString("DESCR_COMUNE_STUDIO");
 	}
 
+	public String getCodStatoNascitaAvv() throws DAOException {
+		return getString("COD_STATO_NASCITA_AVV");
+	}
+
+	public String getDescLuogoNasReginde() throws DAOException {
+		return getString("DESC_LUOGO_NAS_REGINDE");
+	}
+
 	//
 	// METODI SET(...)
 	//
 
 	/**
-	 * 
+	 *
 	 * @param aValore
 	 */
 	public void setIdAvvocato(BigDecimal aValore) {
@@ -313,10 +323,10 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setString("COD_UFFICIO_AGGIORNAMENTO", aValore);
 	}
 
-	// MEV_21 (avvocati): aggiunti tre campi in tabella
-	public void getDescComuneSedeForo(String aValore) {
-		setString("DESCR_COMUNE_STUDIO", aValore);
-	}
+	// MEV_21 (avvocati): aggiunti 5 campi in tabella
+	// public void setDescComuneSedeForo(String aValore) {
+	// setString("DESCR_COMUNE_STUDIO", aValore);
+	// }
 
 	public void setPec(String aValore) {
 		setString("PEC", aValore);
@@ -330,18 +340,26 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setString("DESCR_COMUNE_STUDIO", aValore);
 	}
 
+	public void setCodStatoNascitaAvv(String aValore) {
+		setString("COD_STATO_NASCITA_AVV", aValore);
+	}
+
+	public void setDescLuogoNasReginde(String aValore) {
+		setString("DESC_LUOGO_NAS_REGINDE", aValore);
+	}
+
 	public GenericModel getModel() throws DAOException {
 
 		return new AvvocatoModel(getIdAvvocato(), getCognome(), getNome(), getForo(),
-				// MEV_21 (avvocati) descrizione SedeForo() + 3 nuovi campi db
-				"", getPec(), getFlagReginde(), getDescrComuneStudio(),
-				getIndirizzo(), getTelefono(), getFax(), getEMail(), getCodiceFiscale(), getProvincia(),
-				getCap(), getFlagVisualizza(), getCodOperatoreInserimento(), getCodUfficioInserimento(),
-				getDataInserimento(), getCodOperatoreAggiornamento(), getDataAggiornamento(),
-				getCodUfficioAggiornamento(), "", "", "", "", this.getCodLuogoNascita(),
-				this.getCodComuneResidenza(), this.getDataNascita(), this.getDataSospensione(),
-				this.getDataRadiazione(), this.getCodNonAttivita(), this.getCodUffAppartenenza(), getNote(),
-				getFlagCancellato(), getIdAvvocatoStandard());
+				// MEV_21 (avvocati) descrizione SedeForo() + 5 nuovi campi db
+				"", getPec(), getFlagReginde(), getDescrComuneStudio(), getDescLuogoNasReginde(),
+				getCodStatoNascitaAvv(), "", getIndirizzo(), getTelefono(), getFax(), getEMail(),
+				getCodiceFiscale(), getProvincia(), getCap(), getFlagVisualizza(),
+				getCodOperatoreInserimento(), getCodUfficioInserimento(), getDataInserimento(),
+				getCodOperatoreAggiornamento(), getDataAggiornamento(), getCodUfficioAggiornamento(), "", "",
+				"", "", this.getCodLuogoNascita(), this.getCodComuneResidenza(), this.getDataNascita(),
+				this.getDataSospensione(), this.getDataRadiazione(), this.getCodNonAttivita(),
+				this.getCodUffAppartenenza(), getNote(), getFlagCancellato(), getIdAvvocatoStandard());
 	}
 
 	public void setDAOFromModel(AvvocatoModel aModel) throws DAOException {
