@@ -33,6 +33,8 @@ RELEASE_12.4.10.0	-->	nato dal branch "release_12.4.9.0" in data 12/05/2021
 4)	Ticket#202105030111 - SIUS-avvocati fissazione dell'udienza (DB + JAVA)
 		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java
 		-	AVVOCATURA_SIUS.sql
+		Nella classe DAO all'interno della query di elenco procedimenti per soggetto,
+		aggiunta la condizione che il provvedimento deve essere VALIDATO!
 
 5)	Ticket#202105030112 — SIUS-avvocati (SOLO DB)
 		-	AVVOCATURA_SIUS.sql
