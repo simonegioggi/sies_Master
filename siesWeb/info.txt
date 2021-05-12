@@ -47,3 +47,7 @@ RELEASE_12.4.10.0	-->	nato dal branch "release_12.4.9.0" in data 12/05/2021
 
 8)	Ticket#20210507017 - SIEP Ricerche del soggetto sempre in attesa di risposta (SOLO JAVA)
 		-	siap.sico.test.controller.TestController.java
+	Nel metodo prelevaDati, gli veniva passato il contenuto del Singleton che mappa i codici BDI e sovrascriveva il codice con 
+	la connection string al fine di generare la stampa.
+	Dal momento del lancio del test il contenuto del singleton risultava errato e falliva la ricerca altre BDI
+	in fase di inserimento sulla tabella MESSAGGIO.COD_BDI_DESTINATARIA.
