@@ -549,7 +549,7 @@ public class SecurityController extends SiapController implements ISecurity {
 		return lUtente;
 	}
 
-	@Override
+	// MEV INTEGRAZIONE SIES ADN: aggiunto metodo che esegue i controlli preliminari all'accesso al sistema
 	public UtenteModel preLogin(UtenteModel um, boolean test) throws F3BException {
 
 		// info per il log
