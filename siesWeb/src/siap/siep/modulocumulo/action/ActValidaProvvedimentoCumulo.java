@@ -6,20 +6,21 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.SIEPException;
+import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
 import siap.siep.modulocumulo.controller.IDatiFinaliCumulo;
 import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.Utils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 public class ActValidaProvvedimentoCumulo extends ActionModuloCumulo implements ICostantiModuloCumulo {
 
@@ -101,6 +102,15 @@ public class ActValidaProvvedimentoCumulo extends ActionModuloCumulo implements 
 			lEveModel.setFlagDocumentoRegistrato("S");
 			IDatiFinaliCumulo lCtrlDatFin = SIEPLookupRemote.getDatiFinaliCumuloRemote();
 			lCtrlDatFin.ExUpdateValidaProvvedimentoCumulo(lEveModel, ListaTitoli);
+			
+			// Ticket [Ticket#20210430011] 
+			// Devo ricaricare in sessione il fascicolo siep in quanto alcuni dati possono essere stati  
+			// modificati in fase di validazione: FLAG_CUMULANTE FLAG_ALTRA_CAUSA
+			IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
+			FascicoloSiepModel lFasRet = lCtrl.ExRicercaFascicoloSiepByProgrAnnoCodUfficio(lFascMod);
+			
+			setSessionAttribute("fascicolo",lFasRet);			
+			// FINE [Ticket#20210430011] 
 		} else {
 			lEveModel.setFlagDocumentoRegistrato("N");
 			IEvento lCtrl = SICOLookupRemote.getEventoRemote();
