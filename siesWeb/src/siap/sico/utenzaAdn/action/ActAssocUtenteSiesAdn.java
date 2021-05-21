@@ -72,24 +72,49 @@ public class ActAssocUtenteSiesAdn extends ActionSiap implements ICostantiSecuri
 		// per l'ufficio scelto;
 		// 4- In ogni caso l'utente può procedere con la configurazione di eventuale ogni altro account di
 		// cui dispone per l'accesso al SIES;
-		// 1)
-		List<AssocUtenteSiesAdnModel> listaUtenzeAdn = UtenzaAdnUtils.verificaAssociazioneSiesAdn(usernameDB);
-		boolean giaAssociata = false;
-		Iterator<AssocUtenteSiesAdnModel> i = listaUtenzeAdn.iterator();
-		while (i.hasNext()) {
-			AssocUtenteSiesAdnModel ausam = i.next();
-			if (userId.equals(ausam.getUteCodUtente())) {
-				giaAssociata = true;
-				break;
+
+		// 0)
+		// verifico che un utenza SIES non sia gia' associata ad una utenza ADN
+		try {
+			AssocUtenteSiesAdnModel unicita = UtenzaAdnUtils.verificaUnicitaAssociazioneSiesAdn(userId);
+			if (!Utils.isNullObj(unicita)) {
+				String text = "Attenzione! L'Utenza SIES [" + unicita.getUteCodUtente()
+						+ "] risulta gia' essere associata ad altra Utenza ADN.";
+				siesLogger.info(text);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT, text);
+				return IWebConstants.PG_MESSAGE_ADN;
 			}
+		} catch (Exception e) {
+			siesLogger.error("ERRORE in ActAssocUtenteSiesAdn.processRequest: " + e.getMessage());
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage());
+			return IWebConstants.PG_MESSAGE_ADN;
+		}
+
+		// 1)
+		boolean giaAssociata = false;
+		List<AssocUtenteSiesAdnModel> listaUtenzeAdn = null;
+		try {
+			listaUtenzeAdn = UtenzaAdnUtils.verificaAssociazioneSiesAdn(usernameDB);
+			Iterator<AssocUtenteSiesAdnModel> i = listaUtenzeAdn.iterator();
+			while (i.hasNext()) {
+				AssocUtenteSiesAdnModel ausam = i.next();
+				if (userId.equals(ausam.getUteCodUtente())) {
+					giaAssociata = true;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			siesLogger.error("ERRORE in ActAssocUtenteSiesAdn.processRequest: " + e.getMessage());
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, e.getMessage());
+			return IWebConstants.PG_MESSAGE_ADN;
 		}
 
 		if (listaUtenzeAdn.isEmpty() || !giaAssociata) {
 			// 2)
 			BigDecimal bd = null;
-			UtenzaAdnModel uam = UtenzaAdnUtils.verificaEsistenzaUtenzaAdn(usernameDB);
 			AssocUtenteSiesAdnModel ausam = null;
 			try {
+				UtenzaAdnModel uam = UtenzaAdnUtils.verificaEsistenzaUtenzaAdn(usernameDB);
 				if (Utils.isNullObj(uam) || Utils.isNullObj(uam.getId())) {
 					// inserisco in UTENZA_ADN
 					bd = UtenzaAdnUtils.inserisciUtenzaAdn(usernameDB);

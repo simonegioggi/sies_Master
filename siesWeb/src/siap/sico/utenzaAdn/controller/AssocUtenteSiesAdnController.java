@@ -84,4 +84,31 @@ public class AssocUtenteSiesAdnController extends SiapController implements IAss
 		return ausam;
 	}
 
+	@Override
+	public AssocUtenteSiesAdnModel verificaUnicitaAssociazioneSiesAdn(String userId) throws F3BException {
+
+		Connection c = null;
+		AssocUtenteSiesAdnModel ausam = null;
+		AssocUtenteSiesAdnSqlDAO ausasDAO = null;
+
+		try {
+			c = getDBConnection();
+			ausasDAO = new AssocUtenteSiesAdnSqlDAO(c);
+			AssocUtenteSiesAdnModel appo = new AssocUtenteSiesAdnModel();
+			appo.setUteCodUtente(userId);
+			ausasDAO.ricercaAssocUtenteSiesAdn(appo);
+			ausasDAO.start();
+			if (ausasDAO.next())
+				ausam = (AssocUtenteSiesAdnModel) ausasDAO.getModel();
+			ausasDAO.stop();
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"UtenzaAdnController.verificaUnicitaAssociazioneSiesAdn --> Non posso leggere: " + daoEx);
+		} finally {
+			cleanup(ausasDAO);
+			cleanup(c);
+		}
+		return ausam;
+	}
+
 }

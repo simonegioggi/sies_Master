@@ -18,4 +18,6 @@ public interface IAssocUtenteSiesAdn {
 
 	AssocUtenteSiesAdnModel inserisciAssociazioneSiesAdn(String userId, BigDecimal id) throws F3BException;
 
+	AssocUtenteSiesAdnModel verificaUnicitaAssociazioneSiesAdn(String userId) throws F3BException;
+
 }

@@ -26,7 +26,8 @@ public class UtenzaAdnUtils {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	public static List<AssocUtenteSiesAdnModel> verificaAssociazioneSiesAdn(String userId) {
+	public static List<AssocUtenteSiesAdnModel> verificaAssociazioneSiesAdn(String userId)
+			throws F3BException {
 
 		List<AssocUtenteSiesAdnModel> l = new ArrayList<>();
 		IAssocUtenteSiesAdn iausa = null;
@@ -36,7 +37,7 @@ public class UtenzaAdnUtils {
 		} catch (Exception ex) {
 			siesLogger.error(ex.getMessage());
 			siesLogger.error("Nessuna associazione SIES-ADN trovata: ritorno lista vuota!");
-			l = new ArrayList<>();
+			throw ex;
 		}
 		return l;
 	}
@@ -56,7 +57,7 @@ public class UtenzaAdnUtils {
 		return bd;
 	}
 
-	public static UtenzaAdnModel verificaEsistenzaUtenzaAdn(String userId) {
+	public static UtenzaAdnModel verificaEsistenzaUtenzaAdn(String userId) throws F3BException {
 
 		UtenzaAdnModel uam = null;
 		IUtenzaAdn iua = null;
@@ -65,8 +66,8 @@ public class UtenzaAdnUtils {
 			uam = iua.verificaEsistenzaUtenzaAdn(userId);
 		} catch (Exception ex) {
 			siesLogger.error(ex.getMessage());
-			siesLogger.error("Errore in verifica esistenza Utenza ADN: ritorno null!");
-			return null;
+			siesLogger.error("Errore in verifica esistenza Utenza ADN: ritorno eccezione!");
+			throw ex;
 		}
 		return uam;
 	}
@@ -99,6 +100,22 @@ public class UtenzaAdnUtils {
 			throw ex;
 		}
 		return um;
+	}
+
+	public static AssocUtenteSiesAdnModel verificaUnicitaAssociazioneSiesAdn(String userId)
+			throws F3BException {
+
+		AssocUtenteSiesAdnModel ausam = null;
+		IAssocUtenteSiesAdn iausa = null;
+		try {
+			iausa = ADNLookupRemote.getAssocUtenteSiesAdnRemote();
+			ausam = iausa.verificaUnicitaAssociazioneSiesAdn(userId);
+		} catch (Exception ex) {
+			siesLogger.error(ex.getMessage());
+			siesLogger.error("Errore in verifica associazione Utenza SIES - ADN: ritorno eccezione!");
+			throw ex;
+		}
+		return ausam;
 	}
 
 }

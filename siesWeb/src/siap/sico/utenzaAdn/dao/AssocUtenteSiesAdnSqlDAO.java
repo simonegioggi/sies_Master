@@ -37,12 +37,17 @@ public class AssocUtenteSiesAdnSqlDAO extends SqlDAO {
 	private String setCondizione(AssocUtenteSiesAdnModel aModel) {
 
 		String condizioni = new String();
-		if (aModel.getId().doubleValue() == 0) {
-			if (!("".equals(aModel.getUteCodUtente())))
-				condizioni += " AND UTE_COD_UTENTE = '"
-						+ StringUtils.convertSqlString(aModel.getUteCodUtente()) + "'";
-			if (!(Utils.isNullObj(aModel.getIdUtenteAdn())))
-				condizioni += " AND ID_UTENTE_ADN = " + aModel.getIdUtenteAdn();
+		condizioni += " WHERE";
+		if ((!Utils.isNullObj(aModel) && Utils.isNullObj(aModel.getId()))
+				|| aModel.getId().doubleValue() == 0) {
+			if (Utils.isPresent(aModel.getUteCodUtente()))
+				condizioni += " UTE_COD_UTENTE = '" + StringUtils.convertSqlString(aModel.getUteCodUtente())
+						+ "'";
+			if (!(Utils.isNullObj(aModel.getIdUtenteAdn()))) {
+				if (Utils.isPresent(aModel.getUteCodUtente()))
+					condizioni += " AND";
+				condizioni += " ID_UTENTE_ADN = " + aModel.getIdUtenteAdn();
+			}
 		}
 
 		// valore di ritorno
@@ -96,7 +101,7 @@ public class AssocUtenteSiesAdnSqlDAO extends SqlDAO {
 		return " WHERE ID = " + aKey;
 	}
 
-	public void verificaAssociazioneSiesAdn(String userId) {
+	public void verificaAssociazioneSiesAdn(String userId) throws DAOException {
 
 		String sysdate = DateUtils.getSysDate("dd/MM/yyyy");
 		String sql = "select a.* from ASSOC_UTENTE_SIES_ADN a, utente u where a.id_utente_adn in"
