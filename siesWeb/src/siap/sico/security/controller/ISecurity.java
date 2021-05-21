@@ -52,4 +52,6 @@ public interface ISecurity {
 
 	public void Utente_setOraLogin(String userId, String ip) throws F3BException;
 
+	public boolean getUtenteAssociato(String userId, String userAdn) throws F3BException;
+
 }

@@ -3,6 +3,7 @@ package siap.sico.security.controller;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,6 +23,8 @@ import siap.sico.ufficio.model.UfficioAccorpatoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.dao.UtenteSqlDAO;
 import siap.sico.utente.model.UtenteModel;
+import siap.sico.utenzaAdn.controller.AssocUtenteSiesAdnController;
+import siap.sico.utenzaAdn.model.AssocUtenteSiesAdnModel;
 
 /**
  * <p>
@@ -583,5 +586,20 @@ public class SecurityController extends SiapController implements ISecurity {
 		// ritorna il dettaglio dell'utente da mettere in sessione
 		return utente;
 	}
+
+	// aggiunto metodo che esegue i controlli di consistenza utenza sies - adn
+	public boolean getUtenteAssociato(String codUtente, String userId) throws F3BException {
+
+		AssocUtenteSiesAdnController ausac = new AssocUtenteSiesAdnController();
+		List<AssocUtenteSiesAdnModel> l = ausac.verificaAssociazioneSiesAdn(userId);
+		Iterator<AssocUtenteSiesAdnModel> i = l.iterator();
+		while (i.hasNext()) {
+			AssocUtenteSiesAdnModel ausam = i.next();
+			if (ausam.getUteCodUtente().equals(codUtente))
+				return true;
+		}
+		return false;
+	}
+	// FINE MEV INTEGRAZIONE SIES ADN
 
 }

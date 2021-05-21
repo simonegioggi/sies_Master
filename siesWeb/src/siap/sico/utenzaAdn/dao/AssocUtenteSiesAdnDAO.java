@@ -116,4 +116,8 @@ public class AssocUtenteSiesAdnDAO extends SIAPTableDAO {
 		setDataAggiornamento(aModel.getDataAggiornamento());
 	}
 
+	public void setCondizioneByUteCodUtente(String uteCodUtente) {
+		setCondition(" UTE_COD_UTENTE = '" + uteCodUtente + "'");
+	}
+
 }

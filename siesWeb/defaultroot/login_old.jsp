@@ -24,7 +24,7 @@ JMSProperties.getInstance().getChekProgressivo();
 <html>
   <head>
     <title>Login S.I.E.S.</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script language=Javascript>
 	function ExLogin() {
         document.forms[0].submit();

@@ -31,7 +31,8 @@ JMSProperties.getInstance().getChekProgressivo();
 <html>
 <head>
 <title>Login S.I.E.S.</title>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+
 <script language=Javascript>
 function exLogin() {
 	document.FormLogin.submit();
@@ -65,9 +66,9 @@ function espandi() {
 		node1.style.visibility = 'hidden';
 	var node2 = document.getElementById('modo');
 	if (node1.style.visibility == 'hidden')
-		node2.style.background = "url('/images/expand.gif') no-repeat left center #EEEEEE";
+		node2.style.background = "url('/images/expand.gif') no-repeat left top #EEEEEE";
 	else
-		node2.style.background = "url('/images/collapse.gif') no-repeat left center #EEEEEE";
+		node2.style.background = "url('/images/collapse.gif') no-repeat left top #EEEEEE";
 }
 
 function esci() {
@@ -108,7 +109,7 @@ String s = thisServerProtocol + "://" + thisServer + ":" + thisServerPort + "/";
             						<td class="LBG">
 							          	<a href="javascript:esci();">
 							            	<img align="middle" src="/images/logout.gif" width="32" height="32" alt="Torna alla Pagina Iniziale" border="0">
-						            		<font color="#FFFFFF" size="2">Logout</font>
+						            		<font color="#0000FF" size="2" style="font-weight: bold;">Logout</font>
 							          	</a>
 							        </td>
             					</tr>
@@ -149,8 +150,9 @@ if (!utenti.isEmpty()) {
             							<%=utente.getUserId()%>&nbsp;-&nbsp;<%=utente.getUfficioUtente().getDescrTipoUfficio()%>
             							&nbsp;di&nbsp;<%=utente.getUfficioUtente().getDescrComune()%>
             						</font>&nbsp;
-            						<img style="cursor: hand;" onclick="Javascript:setUserIdPwd('<%=utente.getUserId()%>', '<%=utente.getPwd()%>'); exLoginSies();"
-            							src="<%=IWebConstants.IMAGES_DIR%>tastoentra.gif" width="42" height="25" alt="" border="0">
+<%--             					<img style="cursor: hand;" onclick="" --%>
+<%--             						src="<%=IWebConstants.IMAGES_DIR%>tastoentra.gif" width="42" height="25" alt="" border="0"> --%>
+									<button class="siesbutton" onclick="Javascript:setUserIdPwd('<%=utente.getUserId()%>', '<%=utente.getPwd()%>'); exLoginSies();">ENTRA</button>
             					</strong></center>
 <%
 	}
@@ -162,8 +164,8 @@ if (!utenti.isEmpty()) {
 	            			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.utenzaAdn.action.ActAssocUtenteSiesAdn">
 	            			<input type="HIDDEN" name="usernameDB" value="<%=usernameDB%>">
 	            			<center>
-            				<input type="button" id="modo" name="modo" style="background-image:url('<%=IWebConstants.IMAGES_DIR%>expand.gif'); background-repeat: no-repeat; background-position: left center;"
-            						value="Seleziona/Configura un Account" onclick="javascript:espandi();">
+            				<input type="button" id="modo" name="modo" value="Seleziona/Configura un Account" onclick="javascript:espandi();"
+            					style="background-image:url('<%=IWebConstants.IMAGES_DIR%>expand.gif'); background-repeat: no-repeat; background-position: left top; border-radius: 10px;">
 	            			<div id="login" style="visibility: hidden; width:100%;">
 	            				<br>
 	            				<table cellpadding="0" cellspacing="0" width="250" align="center">
@@ -190,7 +192,8 @@ if (!utenti.isEmpty()) {
             						<tr>
             							<td>&nbsp;</td>
             							<td align="center">
-            								<img style="cursor: hand;" onclick="Javascript:exLogin();" src="<%=IWebConstants.IMAGES_DIR%>tastologin.gif" width="80" height="30" alt="" border="0">
+<%--             							<img style="cursor: hand;" align="middle" onclick="Javascript:exLogin();" src="<%=IWebConstants.IMAGES_DIR%>tastologin.gif" width="80" height="30" alt="" border="0"> --%>
+											<button class="siesbutton" onclick="Javascript:exLogin();">LOGIN</button>
             							</td>
             						</tr>
             					</table>

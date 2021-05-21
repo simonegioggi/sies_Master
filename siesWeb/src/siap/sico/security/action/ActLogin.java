@@ -9,6 +9,7 @@ import f3b.security.model.FunctionModel;
 import f3b.util.F3BException;
 import f3b.util.StringUtils;
 import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.security.ICostantiFunzioni;
 //import siap.sico.security.controller.SecurityController;
 import siap.sico.security.controller.ISecurity;
@@ -51,6 +52,7 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		String ip = getRequest().getRemoteAddr();
 		um.setIP(ip);
 		um = UtenzaAdnUtils.preLogin(um, false);
+
 		FunctionModel fm = new FunctionModel(ICostantiFunzioni.RADICE);
 		FunctionModel fmMenu = is.ExLoadFunzioniMenu(um.getUserProfile(), fm);
 
@@ -66,6 +68,20 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		// metto in sessione anche la userAdn
 		String usernameADN = getRequestStringParameter("usernameDB");
 		um.setUserAdn(usernameADN);
+		boolean isUtenteAssociato = is.getUtenteAssociato(um.getUserId(), um.getUserAdn());
+		if (!isUtenteAssociato) {
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			String thisServer = getRequest().getServerName();
+			int thisServerPort = getRequest().getServerPort();
+			String thisServerProtocol = getRequest().getScheme();
+			String s = thisServerProtocol + "://" + thisServer + ":" + thisServerPort + "/";
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Utenza SIES " + um.getUserId() + " non più associata all'utenza ADN " + um.getUserAdn());
+			rt.setAction(s);
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+			return IWebConstants.PG_MESSAGE;
+		}
 
 		// Disponibile per tutta la durata della sessione utente
 		setSessionAttribute(SESSION_UTENTE_CONNESSO, um);

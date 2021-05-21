@@ -19,7 +19,7 @@ JMSProperties.getInstance().getChekProgressivo();
 <html>
 <head>
 <title>Login S.I.E.S. - ADN</title>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
 <script language=Javascript>
 function exLogin() {
 	if (document.FormLogin.<%=ICostantiSecurity.CAMPO_USER_ID%>.value == "") {
