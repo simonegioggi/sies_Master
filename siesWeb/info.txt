@@ -1,53 +1,9 @@
-RELEASE_12.4.10.0	-->	nato dal branch "release_12.4.9.0" in data 12/05/2021
+Ticket - 20210514015 - Ricerca procedimento Sige per titolo esecutivo
 
-1)	Ticket#202104210111 - INSERIMENTO PARTI CIVILI DECRETO FISSAZIONE UDIENZA (SOLO JAVA)
-		Scommentato il codice che non inseriva la Action nella coda di navicgazione
-		-	siap.sige.udienzaparti.controller.PartiUdienzaController.java
-		Corretto il controller che recupera i dati dopo la cancellazione Parti Udienza
-		-	siap.sige.udienzaparti.action.ActLoadModificaDifensore.java
+Andava in nullpointer la jsp in asenza del numero GUP e/o CAPSM
+Aggiunta gestione
 
-2)	Ticket#202104230110 - Ordinanza concessione affidamento (SOLO JAVA)
-		-	siap.siep.modulocumulo.controller.StatoEsecTitoloCumulatoController.java
-		Metodo
-		- private void caricaComputiMisuraAlternativaSORV (BigDecimal aIdEvento,
-					StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn)
-	Il modulo dava per scontato la presenza dell'evento SIEP di esecuzione da cui cercava
-	di recuperare la pena residua e l'eventuale sospensione (per le sospensioni/revoche della sorv).
-	In assenza del Provvedimento SIEP andava in nullpointer (non loggato) nella fase di recupero della PR.
-	Aggiuntto test e loggature dell'Exception (loggava solo il DaoException).
+Modulo corretto
+\jsp\files\siap\sige\sentenza\RicercaSentenzaPerSige.jsp
 
-3)	Ticket#20210430011 - SIES - Errore in liberazione anticipata (SOLO JAVA)
-		-	siap.siep.modulocumulo.action.ActInserisciPosGiuridicaCumulo.java
-		-	siap.siep.modulocumulo.action.ActValidaProvvedimentoCumulo.java
-		-	siap.siep.modulocumulo.controller.DatiFinaliCumuloController.java
-	Corretta getione del flag altra causa sul fascicolo SIEP; il flag veniva impostato nella:
-		siap.siep.modulocumulo.action.ActInserisciPosGiuridicaCumulo
-	Spostato in fase di validazione del Cumulo:
-		siap.siep.modulocumulo.controller.DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo
-	Inoltre non inseriva il record ALTRA_CAUSA che mandava in errore la funzione segnalata. Aggiunta insert.
-	Modifcato anche il modulo 
-	siap.siep.modulocumulo.action.ActValidaProvvedimentoCumulo
-	per ricaricare il fascicolo in sessione in quanto i flag_cumulante e flag_altra_causa se modificati non 
-	venivano ricaricati.
 
-4)	Ticket#202105030111 - SIUS-avvocati fissazione dell'udienza (DB + JAVA)
-		-	siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO.java
-		-	AVVOCATURA_SIUS.sql
-		Nella classe DAO all'interno della query di elenco procedimenti per soggetto,
-		aggiunta la condizione che il provvedimento deve essere VALIDATO!
-
-5)	Ticket#202105030112 — SIUS-avvocati (SOLO DB)
-		-	AVVOCATURA_SIUS.sql
-
-6)	Ticket#20210504014 - manuale SIGI_PNL_ML_20210423_1.6_Modello dei Dati_SIES (DB + DOC)
-		-	20210504014.sql
-
-7)	Ticket#20210506013 - SIEP - Errata pendenza in caso di ergastolo e archiviazione per assorbimento cumulo (SOLO DB)
-		-	ISPETTORATO.sql
-
-8)	Ticket#20210507017 - SIEP Ricerche del soggetto sempre in attesa di risposta (SOLO JAVA)
-		-	siap.sico.test.controller.TestController.java
-	Nel metodo prelevaDati, gli veniva passato il contenuto del Singleton che mappa i codici BDI e sovrascriveva il codice con 
-	la connection string al fine di generare la stampa.
-	Dal momento del lancio del test il contenuto del singleton risultava errato e falliva la ricerca altre BDI
-	in fase di inserimento sulla tabella MESSAGGIO.COD_BDI_DESTINATARIA.
