@@ -99,19 +99,18 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		String sql="SELECT D.ID_FASCICOLO_SIGE PRG, " +
                    "D.chiave_anno||'/'||D.chiave_progr num_fasc_SIGE, " +
                    "A.data_emissione data_emissione_provv, " +
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
                    // "E.RV_MEANING motivo, " +
-                   // ==============================
-                   //" , ET.RV_MEANING motivo " +
                    " TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
-                   // ==============================                   
+                   // Ticket#20210514016 - FINE
                    "to_char(B.DATA_EMISSIONE,'DD-MM-YYYY') DATA_EMISSIONE_FOGLIO, " +
                    "decode(b.data_ins_man,null,'Trasmesso','Iscritto Manualmente') esito " +
              " FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, " +
                    "FASCICOLO_SIGE D, CG_REF_CODES E " +
-                   // ==============================
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
                    " , CG_REF_CODES ET, TENORE_SIGE T " +
                    " , CG_REF_CODES TipoP " +
-                   // ==============================
+                   // Ticket#20210514016 - FINE
              " WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND " +
                    "C.COD_MOTIVO = E.RV_LOW_VALUE AND E.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND " +
                    "A.ID_EVENTO_GENERATO = C.ID_EVENTO AND " +
@@ -121,13 +120,13 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
                    "B.EVE_ID_EVENTO = C.ID_EVENTO AND " +
                    "B.COD_TIPO_DOCUMENTO = '06' AND " +
                    "B.DATA_ANNULLAMENTO IS NULL AND " +
-                   // ==============================
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
                	   " T.PROV_ID_PROVVEDIMENTO_SIGE = A.ID_PROVVEDIMENTO_SIGE AND "+
             	   " ET.RV_DOMAIN = 'OGGETTO_SIGE' AND "+
             	   " T.COD_OGGETTO_SIGE = ET.RV_LOW_VALUE AND "+
             	   " TIPOP.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND "+ 
             	   " TIPOP.RV_LOW_VALUE = C.COD_TIPO_PROVVEDIMENTO AND " +
-                   // ==============================
+                   // Ticket#20210514016 - FINE
                    " D.COD_UFFICIO_INSERIMENTO='"+filtroModel.getCodUfficioInserimento()+"'";
 
 		if (filtroModel.getAnnoIniziale() != null) {
@@ -152,16 +151,18 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		String sql="SELECT D.ID_FASCICOLO_SIGE prg, " +
                 "D.chiave_anno||'/'||D.chiave_progr num_fasc_sige, " +
                 "A.data_emissione data_emissione_provv, " +
+                // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
                 //"E.RV_MEANING motivo, " +
                 " TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
+ 	     	    // Ticket#20210514016 - FINE                   
                 "to_char (B.DATA_EMISSIONE,'dd-MM-yyy') as DATA_EMISSIONE_FOGLIO, " +
                 "'Iscritto Manualmente' esito " +
            "FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, " +
                 "FASCICOLO_SIGE D, CG_REF_CODES E " +
-		           // ==============================
+                // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 		           " , CG_REF_CODES ET, TENORE_SIGE T " +
 		           " , CG_REF_CODES TipoP " +
-		           // ==============================  
+		     	   // Ticket#20210514016 - FINE                   
           "WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND " +
                 "D.COD_UFFICIO_INSERIMENTO='"+filtroModel.getUfficioConnesso().getCodUfficio()+"' AND " +
                 "C.COD_MOTIVO = E.RV_LOW_VALUE AND E.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND " +
@@ -171,13 +172,13 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
                 "A.COD_TIPO_PROVVEDIMENTO IN ('02','03') AND " +
                 "B.EVE_ID_EVENTO = C.ID_EVENTO AND " +
                 "B.COD_TIPO_DOCUMENTO = '06' AND " +
-	            // ==============================
+                // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 	           " T.PROV_ID_PROVVEDIMENTO_SIGE = A.ID_PROVVEDIMENTO_SIGE AND "+
 	     	   " ET.RV_DOMAIN = 'OGGETTO_SIGE' AND "+
 	     	   " T.COD_OGGETTO_SIGE = ET.RV_LOW_VALUE AND "+
 	     	   " TIPOP.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND "+ 
 	     	   " TIPOP.RV_LOW_VALUE = C.COD_TIPO_PROVVEDIMENTO AND " +
-	            // ==============================                   
+	     	   // Ticket#20210514016 - FINE                   
                 "B.DATA_ANNULLAMENTO IS NULL AND B.DATA_INS_MAN is not NULL ";
 		
 		if (filtroModel.getAnnoIniziale() != null) {
@@ -202,23 +203,25 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
     	String sql="SELECT DISTINCT(D.ID_FASCICOLO_SIGE) prg , " +
     	           "D.chiave_anno||'/'||D.chiave_progr num_fasc_SIGE, " +
     	           "A.data_emissione data_emissione_provv, " +
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
     	           //"E.RV_MEANING motivo, " +
     	           " TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
+		     	   // Ticket#20210514016 - FINE                   
     	           "'-' DATA_EMISSIONE_FOGLIO, " +
     	           "'Privo di Foglio Complementare' esito " +
     	     "FROM PROVVEDIMENTO_SIGE A, EVENTO C, FASCICOLO_SIGE D, CG_REF_CODES E " +
-		           // ==============================
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 		           " , CG_REF_CODES ET, TENORE_SIGE T " +
 		           " , CG_REF_CODES TipoP " +
-		           // ==============================    	           
+		     	   // Ticket#20210514016 - FINE                   
     	    "WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND " +
-		            // ==============================
+    	    		// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 		           " T.PROV_ID_PROVVEDIMENTO_SIGE = A.ID_PROVVEDIMENTO_SIGE AND "+
 		     	   " ET.RV_DOMAIN = 'OGGETTO_SIGE' AND "+
 		     	   " T.COD_OGGETTO_SIGE = ET.RV_LOW_VALUE AND "+
 		     	   " TIPOP.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND "+ 
 		     	   " TIPOP.RV_LOW_VALUE = C.COD_TIPO_PROVVEDIMENTO AND " +
-		            // ==============================             
+		     	   // Ticket#20210514016 - FINE                   
     	           "D.COD_UFFICIO_INSERIMENTO='"+filtroModel.getCodUfficioInserimento()+"' and " +
     	           "c.cod_motivo = e.RV_LOW_VALUE AND e.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' " +
     	           "AND A.ID_EVENTO_GENERATO = C.ID_EVENTO AND " +
@@ -251,16 +254,18 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
     	String sql="SELECT D.ID_FASCICOLO_SIGE prg, " +
                    "D.chiave_anno||'/'||D.chiave_progr num_fasc_sige, " +
                    "A.data_emissione data_emissione_provv, " +
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
                    //"E.RV_MEANING motivo, " +
                    " TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
+		     	   // Ticket#20210514016 - FINE                   
                    "to_char (B.DATA_EMISSIONE,'dd-MM-yyyy') as DATA_EMISSIONE_FOGLIO, " +
                    "'Annullato' esito " +
               "FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, " +
                    "FASCICOLO_SIGE D, CG_REF_CODES E " +
-		           // ==============================
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 		           " , CG_REF_CODES ET, TENORE_SIGE T " +
 		           " , CG_REF_CODES TipoP " +
-		           // ==============================                 
+		     	   // Ticket#20210514016 - FINE                   
              "WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND " +
                    "D.COD_UFFICIO_INSERIMENTO='"+filtroModel.getUfficioConnesso().getCodUfficio()+"' AND " +
                    "C.COD_MOTIVO = E.RV_LOW_VALUE AND E.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND " +
@@ -270,13 +275,13 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
                    "A.COD_TIPO_PROVVEDIMENTO IN ('02','03') AND " +
                    "B.EVE_ID_EVENTO = C.ID_EVENTO AND " +
                    "B.COD_TIPO_DOCUMENTO = '06' AND " +
-		            // ==============================
+                   // Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 		           " T.PROV_ID_PROVVEDIMENTO_SIGE = A.ID_PROVVEDIMENTO_SIGE AND "+
 		     	   " ET.RV_DOMAIN = 'OGGETTO_SIGE' AND "+
 		     	   " T.COD_OGGETTO_SIGE = ET.RV_LOW_VALUE AND "+
 		     	   " TIPOP.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND "+ 
 		     	   " TIPOP.RV_LOW_VALUE = C.COD_TIPO_PROVVEDIMENTO AND " +
-		            // ==============================                    
+		     	   // Ticket#20210514016 - FINE                   
                    "B.DATA_ANNULLAMENTO IS NOT NULL ";
    
     	if (filtroModel.getAnnoIniziale() != null) {

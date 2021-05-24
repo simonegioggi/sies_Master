@@ -131,6 +131,7 @@
     	String descrProvvedimento=model.getDescrProvvedimento();
     	String esito=model.getDescrEsito();
     	
+    	// Ticket#20210514016 - gestione righe multiple
     	if (lastIdFascSIGE!=null && model.getIdFascicolo().compareTo(lastIdFascSIGE)==0) {
     		idFascicolo = null;
     		dataProvvedimento = "";
@@ -140,6 +141,7 @@
     	else {
     		lastIdFascSIGE = model.getIdFascicolo();
     	}
+    	// Ticket#20210514016 - Fine
    %>
    
    <tr>
