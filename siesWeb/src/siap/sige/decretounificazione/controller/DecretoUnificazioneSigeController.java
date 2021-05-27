@@ -501,6 +501,80 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 			lFasDao.update();
 			lFasDao.stop();
 
+			//=====================================================================
+			// Ticket#20210322016 - la eliminazione / aggiornamento dei tenori veniva 
+			// effettuata confrontando il getCodOggettoSige indipendentemente se i tenori fosse o meno 
+			// collegati al provvedimento di unificazione che si sta cancellando. 
+			// Se presenti più tenori con lo stesso oggetto sull'unificato veniva sganciata dall'unificante
+			// solo la prima occorrenza. Inoltre non è detto che fosse quella legata al provvedimento di 
+			// unificazione
+			//if (lVectTenoriUnificante != null) {
+		    if (!lVectTenoriUnificante.isEmpty()) {
+				Iterator itxUnificante = lVectTenoriUnificante.iterator();
+				while (itxUnificante.hasNext()) {
+					TenoreSigeModel lTenoreDiUnificante = (TenoreSigeModel) itxUnificante.next();
+					if (lTenoreDiUnificante.getProvIdProvvedimentoSige()!=null
+						&& lTenoreDiUnificante.getProvIdProvvedimentoSige().compareTo(aKeyProvvedimento)==0	
+					   )
+					{ 
+						// Il tenore dell'unificante punta il provvedimento di unificazione dell'unificato, quindi è 
+						// l'originale duplicato e lo elimina
+						// Prima del Tenore occorre cancellare il TenoreSentenzaReato
+						lTenSenReaDao.selCondizioneDelete(lTenoreDiUnificante.getIdTenoreSige());
+						lTenSenReaDao.delete();
+
+						// Setto il DAO dal Model e cancello il Tenore.
+						lTenDao.selCondizioneDelete(lTenoreDiUnificante.getIdTenoreSige());
+						lTenDao.delete();						
+					}
+				}
+				
+				//
+				Iterator itxUnificato = lVectTenoriUnificato.iterator();
+				while (itxUnificato.hasNext()) {
+					TenoreSigeModel lTenoreDiUnificato = (TenoreSigeModel) itxUnificato.next();
+					if (   lTenoreDiUnificato.getProvIdProvvedimentoSige()!=null
+						&& lTenoreDiUnificato.getProvIdProvvedimentoSige().compareTo(aKeyProvvedimento)==0	
+					   )
+					{
+						// Il tenore dell'unificato punta il provvedimento di unificazione. Devo sganciarlo
+						// Il tenore del fascicolo dis-unificato deve cambiare stato
+						lTenoreDiUnificato.setCodEsitoSige (null);           // azzero: vale 0501 = Unificato
+						lTenoreDiUnificato.setProvIdProvvedimentoSige(null); // Sgancio dal provvedimento che devo cancellare
+						lTenoreDiUnificato.setRicSigIdRichiestaSige (null);  // Sgancio dalla richiesta dell'unificante
+						
+						if (lTenoreDiUnificato.getNote() != null && "UNIFICATO".compareTo(lTenoreDiUnificato.getNote()) == 0)
+							lTenoreDiUnificato.setNote(null);
+						
+						lTenoreDiUnificato.setCodOperatoreAggiornamento (aUtenteConnesso);
+						lTenoreDiUnificato.setDataAggiornamento (DateUtils.getSysDate());
+						
+						lTenDao.setDAOFromModel (lTenoreDiUnificato);
+						lTenDao.selCondizioneDelete (lTenoreDiUnificato.getIdTenoreSige());
+
+						lTenDao.update();					
+					}
+				}				
+			} else {
+				// MERGE v10: cancellazione preventiva
+				// Caricamento dei Tenori del Procedimento Unificante
+				lTenSqlDao.ricercaTenoriByProvvedimento(aKeyProvvedimento);
+				Vector listaTenori = new Vector(lTenSqlDao.getModels());
+				lTenSqlDao.stop();
+				Iterator iterator = listaTenori.iterator();
+				while (iterator.hasNext()) {
+					TenoreSigeModel temoreSigeModel = (TenoreSigeModel) iterator.next();
+					// Prima del Tenore occorre cancellare il TenoreSentenzaReato
+					lTenSenReaDao.selCondizioneDelete(temoreSigeModel.getIdTenoreSige());
+					lTenSenReaDao.delete();
+					// Setto il DAO dal Model e cancello il Tenore.
+					lTenDao.selCondizioneDelete(temoreSigeModel.getIdTenoreSige());
+					lTenDao.delete();
+				}
+			}			
+		    // Ticket#20210322016 - fine nuovo codice
+		    
+			/* Ticket#20210322016 vecchio codice commentato
 			// Scodamento dei TENORI da Fascicolo Unificante e riaccodamento a Fascicolo Unificato.
 			if (!lVectTenoriUnificante.isEmpty()) {
 				Iterator itxUnificante = lVectTenoriUnificante.iterator();
@@ -558,7 +632,8 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 					lTenDao.delete();
 				}
 			}
-
+			Ticket#20210322016 - FINE codice commentato
+*/
 			// cancellazione Provvedimento (ed Evento) collegato.
 			// lProvvDao.selCondizioneUpdate(aKeyProvvedimento);
 			lProvvDao.selCondizioneByKey(aKeyProvvedimento);
@@ -902,6 +977,62 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 			lFasDao.update();
 			lFasDao.stop();
 
+			//=====================================================================
+			// Ticket#20210322016 - la eliminazione / aggiornamento dei tenori veniva 
+			// effettuata confrontando il getCodOggettoSige indipendentemente se i tenori fosse o meno 
+			// collegati al provvedimento di unificazione che si sta cancellando. 
+			// Se presenti più tenori con lo stesso oggetto sull'unificato veniva sganciata dall'unificante
+			// solo la prima occorrenza. Inoltre non è detto che fosse quella legata al provvedimento di 
+			// unificazione
+			if (lVectTenoriUnificante != null) {
+				Iterator itxUnificante = lVectTenoriUnificante.iterator();
+				while (itxUnificante.hasNext()) {
+					TenoreSigeModel lTenoreDiUnificante = (TenoreSigeModel) itxUnificante.next();
+					if (lTenoreDiUnificante.getProvIdProvvedimentoSige()!=null
+						&& lTenoreDiUnificante.getProvIdProvvedimentoSige().compareTo(aKeyProvvedimento)==0	
+					   )
+					{ 
+						// Il tenore dell'unificante punta il provvedimento di unificazione dell'unificato, quindi è 
+						// l'originale duplicato e lo elimina
+						// Prima del Tenore occorre cancellare il TenoreSentenzaReato
+						lTenSenReaDao.selCondizioneDelete(lTenoreDiUnificante.getIdTenoreSige());
+						lTenSenReaDao.delete();
+
+						// Setto il DAO dal Model e cancello il Tenore.
+						lTenDao.selCondizioneDelete(lTenoreDiUnificante.getIdTenoreSige());
+						lTenDao.delete();						
+					}
+				}
+			}
+			
+			//
+			Iterator itxUnificato = lVectTenoriUnificato.iterator();
+			while (itxUnificato.hasNext()) {
+				TenoreSigeModel lTenoreDiUnificato = (TenoreSigeModel) itxUnificato.next();
+				if (   lTenoreDiUnificato.getProvIdProvvedimentoSige()!=null
+					&& lTenoreDiUnificato.getProvIdProvvedimentoSige().compareTo(aKeyProvvedimento)==0	
+				   )
+				{
+					// Il tenore dell'unificato punta il provvedimento di unificazione. Devo sganciarlo
+					// Il tenore del fascicolo dis-unificato deve cambiare stato
+					lTenoreDiUnificato.setCodEsitoSige (null);           // azzero: vale 0501 = Unificato
+					lTenoreDiUnificato.setProvIdProvvedimentoSige(null); // Sgancio dal provvedimento che devo cancellare
+					lTenoreDiUnificato.setRicSigIdRichiestaSige (null);  // Sgancio dalla richiesta dell'unificante
+					
+					if (lTenoreDiUnificato.getNote() != null && "UNIFICATO".compareTo(lTenoreDiUnificato.getNote()) == 0)
+						lTenoreDiUnificato.setNote(null);
+					
+					lTenoreDiUnificato.setCodOperatoreAggiornamento (aUtenteConnesso);
+					lTenoreDiUnificato.setDataAggiornamento (DateUtils.getSysDate());
+					
+					lTenDao.setDAOFromModel (lTenoreDiUnificato);
+					lTenDao.selCondizioneDelete (lTenoreDiUnificato.getIdTenoreSige());
+
+					lTenDao.update();					
+				}
+			}
+			
+			/* Ticket#20210322016 vecchio codice commentato
 			// Scodamento dei TENORI da Fascicolo Unificante e riaccodamento a Fascicolo Unificato.
 			if (lVectTenoriUnificante != null) {
 				Iterator itxUnificante = lVectTenoriUnificante.iterator();
@@ -927,11 +1058,13 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 							// Il tenore del fascicolo dis-unificato deve cambiare stato
 							lTenoreDiUnificato.setCodEsitoSige(null);
 							lTenoreDiUnificato.setProvIdProvvedimentoSige(null);
+							
 							if (lTenoreDiUnificato.getNote() != null
 									&& "UNIFICATO".compareTo(lTenoreDiUnificato.getNote()) == 0)
 								lTenoreDiUnificato.setNote(null);
 							lTenoreDiUnificato.setCodOperatoreAggiornamento(aUtenteConnesso);
 							lTenoreDiUnificato.setDataAggiornamento(DateUtils.getSysDate());
+							
 							// lTenDao.setDAOFromModelForUpdateEsito(lTenoreDiUnificato);
 							lTenDao.setDAOFromModel(lTenoreDiUnificato);
 							lTenDao.selCondizioneDelete(lTenoreDiUnificato.getIdTenoreSige());
@@ -943,7 +1076,8 @@ public class DecretoUnificazioneSigeController extends SiapController implements
 					}
 				}
 			}
-
+			*/ //Ticket#20210322016 fine vecchio codice commentato
+			
 			// cancellazione Provvedimento (ed Evento) collegato.
 			// lProvvDao.selCondizioneUpdate(aKeyProvvedimento);
 			lProvvDao.selCondizioneByKey(aKeyProvvedimento);
