@@ -41,7 +41,7 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 			
 			sql+=this.getQueryProvvedimentiFcAnnullati(filtroModel);
 		}
-		sql+=" order by data_emissione_provv, ID_FASCICOLO_SIGE ";
+		sql+=" order by data_emissione_provv, PRG ";
 		super.setStatement(sql);
 	}
 	
