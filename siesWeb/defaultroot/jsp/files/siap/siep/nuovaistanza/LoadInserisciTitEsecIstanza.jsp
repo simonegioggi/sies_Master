@@ -11,29 +11,34 @@
 
 <!---------------------------------Soggetto------------------------------------------------->
 
-<%@ page import="f3b.security.model.ProfileModel" %>
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
+<%@ page import="f3b.security.model.ProfileModel"%>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="siap.sico.utente.model.UtenteModel"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 
-<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+<jsp:useBean id="UtenteConnesso" scope="session"
+	class="siap.sico.utente.model.UtenteModel" />
 
 <!---------------------------------Fine Soggetto------------------------------------------------->
-<jsp:useBean id="tipoinserimento" scope="request" class="java.lang.String" />
+<jsp:useBean id="tipoinserimento" scope="request"
+	class="java.lang.String" />
 <jsp:useBean id="idfascicolo" scope="request" class="java.lang.String" />
 <jsp:useBean id="idsentenza" scope="request" class="java.lang.String" />
 
 <html>
 <head>
-  <title> Gestione Nuova Istanza </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
-  <script language="JavaScript" src="<%=ICostantiFasSigeSentenza.JS_SENTENZA%>"></script>
-  <script language="JavaScript" >
+<title>Gestione Nuova Istanza</title>
+<link rel="STYLESHEET" type="text/css"
+	href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript"
+	src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
+<script language="JavaScript"
+	src="<%=ICostantiFasSigeSentenza.JS_SENTENZA%>"></script>
+<script language="JavaScript">
 
 
   function comandainserimento()
@@ -99,6 +104,12 @@
 	var desktop;
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
   }
+
+  <!-- 20210524	MEV Scheda-21 -->
+  function ListaComuniNascita(a_formname,a_fieldname)
+  {
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+  }      
   
   function ListaAvvocati(a_formname,a_filtro)
   {
@@ -891,32 +902,27 @@
 </head>
 
 <body class="corpo" onLoad="Javascript:comandainserimento();">
-  <table>
-    <tr>
-      <td class="LBG">
-        <a href="Javascript:window.print();">
-          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
-        </a>
-      </td>
-      <td class="LBG">
-        <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <%
+	<table>
+		<tr>
+			<td class="LBG"><a href="Javascript:window.print();"> <img
+					align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
+					alt="Stampa questa videata" border="0">
+			</a></td>
+			<td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
+				<%
         NuovaIstanzaModel lNuovaIstanza = new NuovaIstanzaModel(); 
         String lAzione = new String();
   
           lAzione = "siap.siep.nuovaistanza.action.ActInserisciNuovaIstanza"; 
-         %>
-           <font class="campo">Iscrizione Istanza per Titolo Esecutivo</font>
-       
-     
+         %> <font class="campo">Iscrizione Istanza per Titolo
+					Esecutivo</font></td>
+		</tr>
+	</table>
 
-      </td>
-    </tr>
-  </table>
-
-<FORM method="POST" action="Main.jsp" name="LoadInserisciSentenza">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
-<!-- 
+	<FORM method="POST" action="Main.jsp" name="LoadInserisciSentenza">
+		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>"
+			value="<%=lAzione%>">
+		<!-- 
     INIZIO dell'include! 
 
      All'interno dell'include si trova il sorgente della pagina visualizzata,
@@ -925,60 +931,67 @@
      ---ATTENZIONE QUANDO SI MODIFICA!! --- 
      
      Dario  -- 25/06/2009
--->   
+-->
 
 
-  <input type="HIDDEN" name="tipoinserimento" value="<%=tipoinserimento%>">
-  <input type="HIDDEN" name="<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>" value="<%=idsentenza%>">
-  <input type="HIDDEN" name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idfascicolo%>">
-<%
+		<input type="HIDDEN" name="tipoinserimento"
+			value="<%=tipoinserimento%>"> <input type="HIDDEN"
+			name="<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>"
+			value="<%=idsentenza%>"> <input type="HIDDEN"
+			name="<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>"
+			value="<%=idfascicolo%>">
+		<%
 	  if("fascicolo".equals(tipoinserimento)) 
 	  {
 %>
- 		 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
-	  <br>  	
+		<jsp:include
+			page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp" />
+		<br>
 
-<%
+		<%
 	  }else if("sentenza".equals(tipoinserimento))
 	  {
-%>  
+%>
 
-        <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSentenzaCompleto.jsp"/>
-	  <br>  	
+		<jsp:include
+			page="/jsp/files/siap/siep/fascicolo/DettaglioSentenzaCompleto.jsp" />
+		<br>
 
-<%
+		<%
 	  }
-%>	
+%>
 
-  	
-  	<div id="divsoggetto" style="display:none; position:relative; ">  
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanzaSoggetto.jsp"/>	
-  	</div>
-  	
-  	<div id="divsentenza" style="display:none; position:relative; ">  	
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeProvvedimento.jsp"/>	
-  	</div>
-  	
-  	<div id="divistanza" style="display:none; position:relative; ">  
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanza.jsp"/>   	  	
-    </div> 
-    
-    
-<!-- 
+
+		<div id="divsoggetto" style="display: none; position: relative;">
+			<jsp:include
+				page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanzaSoggetto.jsp" />
+		</div>
+
+		<div id="divsentenza" style="display: none; position: relative;">
+			<jsp:include
+				page="/jsp/files/siap/siep/nuovaistanza/IncludeProvvedimento.jsp" />
+		</div>
+
+		<div id="divistanza" style="display: none; position: relative;">
+			<jsp:include
+				page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanza.jsp" />
+		</div>
+
+
+		<!-- 
      FINE dell'include! 
      
      ---ATTENZIONE QUANDO SI MODIFICA!! --- 
      
      Dario  -- 25/06/2009
--->    
-<table>
-    <tr>
-      <td class="l">
-        <input class="bottone" type="submit" name="conferma" value="Conferma">
-      </td>
-    </tr>
-</table>
-</form>
+-->
+		<table>
+			<tr>
+				<td class="l"><input class="bottone" type="submit"
+					name="conferma" value="Conferma"></td>
+			</tr>
+		</table>
+	</form>
 </body>
 </html>
 <script language="JavaScript" type="text/javascript">

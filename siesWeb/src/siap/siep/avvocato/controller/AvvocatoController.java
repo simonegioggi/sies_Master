@@ -330,6 +330,34 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		return lAvvocato;
 	}
 
+	// 20210614 MEV_21 
+	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws F3BException {
+
+		Connection lConn = null;
+		AvvocatoSqlDAO lAvvDao = null;
+		AvvocatoModel lAvvocato = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvDao = new AvvocatoSqlDAO(lConn);
+			lAvvDao.ricercaAvvocatoCertRegInde(lAvvMod);
+
+			lAvvDao.start();
+			if (lAvvDao.next()) {
+				lAvvocato = (AvvocatoModel) lAvvDao.getModel();
+			}
+
+			lAvvDao.stop();
+
+		} catch (Exception ex) {
+			//throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
+		} finally {
+			cleanup(lAvvDao);
+			cleanup(lConn);
+		}
+		return lAvvocato;
+	}
+	
 	/*****************************************************************************
 	 * Ricerca gli avvocati ATTUALMENTE assegnati al fascicolo in input la condizione è per id avvocato o nome
 	 */

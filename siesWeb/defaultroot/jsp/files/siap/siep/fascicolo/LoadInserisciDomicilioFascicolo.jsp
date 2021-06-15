@@ -3,6 +3,7 @@
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
+<%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 <%@ page import="siap.sico.residenza.model.ResidenzaModel"%>
 <%@ page import="siap.sico.residenza.action.ICostantiResidenza" %>
 <%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
@@ -153,6 +154,7 @@
     <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
   <br>
 <form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciDomicilioFascicolo">
+  <input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
   <table cellspacing=2 cellpadding=2>
 		<tr>
       <td class="l">Indirizzo</td>

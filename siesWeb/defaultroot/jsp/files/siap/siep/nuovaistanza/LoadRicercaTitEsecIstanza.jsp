@@ -1,19 +1,22 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants" %>
-<%@ page import="siap.siep.sentenza.action.ICostantiSentenza" %>
-<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
-<%@ page import="siap.siep.jms.action.ICostantiSiepJMS" %>
+<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="siap.siep.sentenza.action.ICostantiSentenza"%>
+<%@ page import="siap.sico.security.action.ICostantiSecurity"%>
+<%@ page import="siap.siep.jms.action.ICostantiSiepJMS"%>
 
-<jsp:useBean id="autoritaemittente" scope="request" class="java.lang.String"/>
-<jsp:useBean id="TornaQui" 		scope="request" class="java.lang.String" />
+<jsp:useBean id="autoritaemittente" scope="request"
+	class="java.lang.String" />
+<jsp:useBean id="TornaQui" scope="request" class="java.lang.String" />
 
 <html>
 <head>
-  <title> [S.I.E.S.] - Iscrizione Istanza - Ricerca Titolo Esecutivo - </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-  <script language="JavaScript">
+<title>[S.I.E.S.] - Iscrizione Istanza - Ricerca Titolo
+	Esecutivo -</title>
+<link rel="STYLESHEET" type="text/css"
+	href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript">
   function Verify()
   {
 		if (document.f.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>.value.length==1)
@@ -67,96 +70,110 @@
 </head>
 
 <body class="corpo">
-  <FORM method="POST" name="f" action="<%= IWebConstants.PG_MAIN%>">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.nuovaistanza.action.ActRicercaTitEsecIstanza">
-  <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>" >
+	<FORM method="POST" name="f" action="<%= IWebConstants.PG_MAIN%>">
+		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>"
+			value="siap.siep.nuovaistanza.action.ActRicercaTitEsecIstanza">
+		<input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>"
+			value="<%=TornaQui%>">
 
-  <table>
-    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-      <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Iscrizione Istanza - Ricerca Titolo Esecutivo</font>
-      </td>
-    </tr>
-  </table>
-<br>
+		<table>
+			<tr>
+				<td class="LBG"><a href="Javascript:window.print();"><img
+						align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
+						alt="Stampa questa videata" border=0></a></td>
+				<td class="LBG"><font class="label">Funzione :</font>&nbsp;<font
+					class="campo">Iscrizione Istanza - Ricerca Titolo Esecutivo</font>
+				</td>
+			</tr>
+		</table>
+		<br> <br>
+		<table width="100%">
+			<tr>
+				<td class="Titolo" colspan=4>Dati Del Titolo Esecutivo</td>
+			</tr>
 
-<br>
-<table width="100%">
-    <tr><td class="Titolo" colspan=4>Dati Del Titolo Esecutivo</td></tr>
+			<tr>
+				<td class="L" width="25%">Anno/Numero Titolo Esecutivo</td>
+				<td class="L"><input type="text" title="Anno Titolo Esecutivo"
+					name="<%=ICostantiSentenza.CAMPO_ANNO_SENTENZA%>" maxlength="4"
+					size="4"> / <input type="text"
+					title="Numero Titolo Esecutivo"
+					name="<%=ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>" maxlength="6"
+					size="6"></td>
+			</tr>
+			<tr>
+				<td class="L">Anno/Numero R.G.N.R.</td>
+				<td class="L"><input type="text" title="Anno R.G.N.R."
+					name="<%=ICostantiSentenza.CAMPO_ANNO_REGE_PM%>" maxlength="4"
+					size="4"> / <input type="text" title="Numero R.G.N.R."
+					name="<%=ICostantiSentenza.CAMPO_NUMERO_REGE_PM%>" maxlength="6"
+					size="6"></td>
+			</tr>
+			<tr>
+				<td class="L">Anno/Numero Reg.Gen.</td>
+				<td class="L"><input type="text" title="Anno Reg. Gen."
+					name="<%=ICostantiSentenza.CAMPO_ANNO_REGISTRO_GENERALE%>"
+					maxlength="4" size="4"> / <input type="text"
+					title="Numero Reg. Gen."
+					name="<%=ICostantiSentenza.CAMPO_NUMERO_REGISTRO_GENERALE%>"
+					maxlength="6" size="6"> <select Title="tipo" name="valore">
+						<option value="gip">GIP</option>
+						<option value="dib">DIB</option>
+						<option value="cas">CAS</option>
+						<option value="cap">CAP</option>
+						<option value="casap">CASAP</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td class="L">Data Emissione</td>
+				<td class="L"><input type="text"
+					title="Giorno Data Titolo Esecutivo"
+					name="<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					type="text" title="Mese Data Titolo Esecutivo"
+					name="<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVVEDIMENTO%>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					type="text" title="Anno Data Titolo Esecutivo"
+					name="<%=ICostantiSentenza.CAMPO_ANNO_DATA_PROVVEDIMENTO%>"
+					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"></td>
+			</tr>
 
-    <tr>
-      <td class="L" width="25%"> Anno/Numero Titolo Esecutivo</td>
-      <td class="L">
-        <input type="text" title="Anno Titolo Esecutivo" name="<%=ICostantiSentenza.CAMPO_ANNO_SENTENZA%>" maxlength="4" size="4">
-        /
-        <input type="text" title="Numero Titolo Esecutivo" name="<%=ICostantiSentenza.CAMPO_NUMERO_SENTENZA%>" maxlength="6" size="6">
-      </td>
- </tr>
-<tr>
-<td class="L"> Anno/Numero R.G.N.R.</td>
-      <td class="L">
-        <input type="text" title="Anno R.G.N.R." name="<%=ICostantiSentenza.CAMPO_ANNO_REGE_PM%>" maxlength="4" size="4">
-        /
-        <input type="text" title="Numero R.G.N.R." name="<%=ICostantiSentenza.CAMPO_NUMERO_REGE_PM%>" maxlength="6" size="6">
-      </td>
-</tr>
-<tr>
-<td class="L"> Anno/Numero Reg.Gen.</td>
-      <td class="L">
-        <input type="text" title="Anno Reg. Gen." name="<%=ICostantiSentenza.CAMPO_ANNO_REGISTRO_GENERALE%>" maxlength="4" size="4">
-        /
-        <input type="text" title="Numero Reg. Gen." name="<%=ICostantiSentenza.CAMPO_NUMERO_REGISTRO_GENERALE%>" maxlength="6" size="6">
+			<tr>
+				<td class="L">Autorità Emittente</td>
+				<td class="L"><select Title="Autorita Esterna"
+					name="<%=ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>">
+						<%=autoritaemittente%>
+				</select></td>
+			</tr>
 
-         <select  Title="tipo" name="valore">
-             <option value="gip">GIP</option>
-             <option value="dib">DIB</option>
-             <option value="cas">CAS</option>
-             <option value="cap">CAP</option>
-            <option value="casap">CASAP</option>
-        </select>
-     </td>
-    </tr>
-    <tr>
-      <td class="L" > Data Emissione </td>
-      <td class="L" >
-        <input type="text" title="Giorno Data Titolo Esecutivo" name="<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-        -
-        <input type="text" title="Mese Data Titolo Esecutivo" name="<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVVEDIMENTO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-        -
-        <input type="text" title="Anno Data Titolo Esecutivo" name="<%=ICostantiSentenza.CAMPO_ANNO_DATA_PROVVEDIMENTO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-      </td>
-   </tr>
+			<tr>
+			<tr>
+				<td class="l">Luogo Emittente</td>
+				<td class="L"><input title="Sede Autorita Esterna" type="text"
+					name="<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE %>"
+					maxlength="35" size="35"> <a
+					href="Javascript:ListaComuni('f','<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE %>');">
+						<img src="/images/filefolder.gif" border=0>
+				</a></td>
+			</tr>
 
-    <tr>
-         <td class="L">Autorità Emittente </td>
-          <td class="L">
-             <select Title="Autorita Esterna" name="<%=ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>" >
-               <%=autoritaemittente%>
-             </select>
-             </td>
-      </tr>
-      
-      <tr>
-       <tr>
-       <td class="l">Luogo Emittente</td>
-       <td class="L">
-       <input title="Sede Autorita Esterna"  type="text" name="<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE %>"  maxlength="35" size="35">
-       <a href="Javascript:ListaComuni('f','<%= ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE %>');">
-       <img src="/images/filefolder.gif" border=0></a>
-       </td>
-   </tr>
-   
-   <tr>
-      <td> &nbsp;&nbsp; </td>
-   </tr>
-     <tr>
-      <td>
-        <input class="bottone" type="submit" name="RICERCA" value="Avanti >>>">
-      </td>
-    </tr>
-  </table>
+			<tr>
+				<td>&nbsp;&nbsp;</td>
+			</tr>
+			<tr>
+				<td><input class="bottone" type="submit" name="RICERCA"
+					value="Avanti >>>"></td>
+			</tr>
+		</table>
 
-</form>
-<script language="JavaScript" type="text/javascript">
+	</form>
+	<script language="JavaScript" type="text/javascript">
 
  var frmvalidator  = new Validator("f");
 

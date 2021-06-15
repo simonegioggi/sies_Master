@@ -140,6 +140,35 @@ public class ComuneController extends SiapController implements IComune {
 		return lCollComuni;
 	}
 
+	// 20210517	MEV21
+	public Vector ExGetListaComuniNascita(ComuneModel lModel) throws F3BException {
+
+		Connection lConn = null;
+		ComuneDAO lDao = null;
+
+		Vector lCollComuni = new Vector();
+
+		try {
+			lConn = getDBConnection();
+
+			lDao = new ComuneDAO(lConn);
+			lDao.selCondizioniNascita(lModel);
+			lDao.start();
+
+			while (lDao.next()) {
+				lCollComuni.add(lDao.getModel());
+			}
+
+			lDao.stop();
+		} catch (DAOException daoex) {
+			throw new SICOException("ComuneController.ExGetListaComuni: " + daoex);
+		} finally {
+			cleanup(lDao);
+			cleanup(lConn);
+		}
+		return lCollComuni;
+	}
+	
 	public Vector ExGetListaComuniTds() throws F3BException {
 
 		Connection lConn = null;

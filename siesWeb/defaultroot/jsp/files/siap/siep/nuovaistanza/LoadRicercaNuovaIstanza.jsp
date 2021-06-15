@@ -25,6 +25,11 @@
   {
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
   }
+  <!-- 20210524	MEV Scheda-21 -->
+  function ListaComuniNascita(a_formname,a_fieldname)
+  {
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+  }
 
     //============================================================================
     // Aggiungere qui eventuali funzioni javascript da richiamare nella finestra 
@@ -74,9 +79,8 @@
       } 
       */
       function cancellaCodComuneReale() {
-          
-        	document.LoadRicercaNuovaIstanza.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
-        }	 
+       	document.LoadRicercaNuovaIstanza.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
+      }	 
     } 
   </script>
 </head>
@@ -93,6 +97,7 @@
 
 <FORM method="POST" action="Main.jsp" name="LoadRicercaNuovaIstanza">
   <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.nuovaistanza.action.ActRicercaNuovaIstanza">
+  <input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
   <%
     //==================================================
     // Aggiungere qui eventuali altri campi hidden      
@@ -159,7 +164,7 @@
         <td class="l">Comune di nascita</td>
         <td class="l">
           <input title="Comune di Nascita" value="" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" maxlength="30" size="30" onChange="cancellaCodComuneReale();">
-          <a href="Javascript:ListaComuni('LoadRicercaNuovaIstanza','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
+          <a href="Javascript:ListaComuniNascita('LoadRicercaNuovaIstanza','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
           <img src="/images/filefolder.gif" border=0>
           </a>
         </td>

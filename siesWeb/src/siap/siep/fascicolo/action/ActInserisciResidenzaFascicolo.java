@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import siap.sico.decodifiche.action.ICostantiComune;
 //import siap.sico.decodifiche.controller.ComuneController;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.residenza.action.ICostantiResidenza;
@@ -57,14 +58,32 @@ public class ActInserisciResidenzaFascicolo extends ActionSiap implements ICosta
 
 		// String lDescrComune = getRequestStringParameter(CAMPO_DESCR_COMUNE);
 
+		/* 20210531	MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità.
 		if (getRequestStringParameter(CAMPO_DESCR_COMUNE).length() > 1) {
 			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+					// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+					//getCodComuneByDescrFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 			lResMod.setCodComune(lComMod.getCodComune());
 			lResMod.setCodProvincia(lComMod.getCodProvincia());
 		} else {
 			lResMod.setCodProvincia("-");
 			lResMod.setCodComune("-");
+		} */
+
+		// 20210531	MEV_Scheda-21 Correzione Comune Residenza per omonimie dei Comuni con flag validità.
+		// Recupero dati del Comune di residenza
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+					getRequestStringParameter(CAMPO_DESCR_COMUNE)));
+		} else {
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(
+					getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_DESCR_COMUNE)));
 		}
 
 		lResMod.setCap(getRequestStringParameter(CAMPO_CAP));

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import siap.jms.SIAPSender;
 import siap.jms.jmscode.action.ICostantiJmsCode;
 import siap.jms.messaggio.model.MessaggioModel;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.jms.controller.RicercaSICOJMSController;
@@ -64,14 +65,38 @@ public class ActRicercaSoggettoAltreBDI extends ActionSiap implements ICostantiS
 
 		} else {
 
+			/* 20210601	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
 			String lComune = getRequestStringParameters(CAMPO_COD_COMUNE_NASCITA)[1];
 
 			// parse della request
 			if (lComune != null && lComune.length() > 1) {
+				
 				ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lComune));
 				lSogMod.setCodComuneNascita(lComMod.getCodComune());
 				lSogMod.setDescrComuneNascita(lComMod.getDescrizione());
+			} */
+			String lComune = getRequestStringParameters(CAMPO_COD_COMUNE_NASCITA)[1];
+
+			// parse della request
+			if (lComune != null && lComune.length() > 1) {
+				// Recupero dati del Comune di nascita
+				ComuneModel lComMod;
+
+				if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+						&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+					// se presente dal codice comune (e descrizione)
+					lComMod = new ComuneModel(getDatiComuneByCodDescr(
+							getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							lComune));
+				} else {
+					// altrimenti dalla sola descrizione (rischio omonimi)
+					lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
+							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+				}
+				lSogMod.setCodComuneNascita(lComMod.getCodComune());
+				lSogMod.setDescrComuneNascita(lComMod.getDescrizione());
 			}
+			
 
 			// String lComuneEstero = getRequestStringParameters( CAMPO_DESC_COMUNE_NASCITA_ESTERO )[1];
 			// if (lComuneEstero!=null) lSogMod.setDescComuneNascitaEstero(getRequestStringParameter(lComuneEstero));

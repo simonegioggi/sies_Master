@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.security.action.ICostantiSecurity;
@@ -71,12 +72,26 @@ public class ActRicercaSoggettoFascicoloSiep extends ActionSiapMinor implements 
 			codFunzione = getRequestStringParameter(ICostantiFascicoloSius.COD_FUNZIONE_90020012);
 		}
 
-		// parse della request
+		/* 20210524	MEV_Scheda-21 Correzione per la gestione delle Omonimie dei Comuni.
 		if (getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
 			ComuneModel lComMod = new ComuneModel(
 					getCodComuneByDescrFlagVal(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 			lSogMod.setCodComuneNascita(lComMod.getCodComune());
+		} */
+		// Recupero dati del Comune di nascita
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(getDatiComuneByCodDescr(
+					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+		} else {
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
+					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 		}
+		lSogMod.setCodComuneNascita(lComMod.getCodComune());
 
 		// riempie il model
 		lSogMod.setCognome(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME).toUpperCase());

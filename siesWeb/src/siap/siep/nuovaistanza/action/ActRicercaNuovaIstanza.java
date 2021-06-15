@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.IComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.soggetto.action.ICostantiSoggetto;
@@ -121,6 +122,7 @@ public class ActRicercaNuovaIstanza extends ActionSiap implements ICostantiNuova
 									ICostantiSoggetto.CAMPO_MESE_DATA_NASCITA,
 									ICostantiSoggetto.CAMPO_GIORNO_DATA_NASCITA));
 				}
+				/* 20210601	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
 				if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)) {
 					// soggIstanzaModel.setCodComuneNascita(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA));
 					ComuneModel comuneMod = new ComuneModel();
@@ -130,7 +132,28 @@ public class ActRicercaNuovaIstanza extends ActionSiap implements ICostantiNuova
 					IComune lCtrlCom = SICOLookupRemote.getComuneRemote();
 					soggIstanzaModel.setCodComuneNascita(
 							(lCtrlCom.ExGetCodiceComuneValidita(comuneMod)).getCodComune());
+				} */
+				if (!this.isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
+						&& getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
+					// Recupero dati del Comune di nascita
+					ComuneModel lComMod;
+
+					if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+							&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+						// se presente dal codice comune (e descrizione)
+						lComMod = new ComuneModel(getDatiComuneByCodDescr(
+								getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+								getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+					} else {
+						// altrimenti dalla sola descrizione (rischio omonimi)
+						lComMod = new ComuneModel(getDatiComuneByDescrOmonimia(
+								getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+					}
+
+					soggIstanzaModel.setCodComuneNascita(lComMod.getCodComune());
 				}
+				
+				
 				tipoRicerca = ICostantiNuovaIstanza.TIPO_RICERCA_SOGGETTO_ISTANZA;
 			}
 		}
