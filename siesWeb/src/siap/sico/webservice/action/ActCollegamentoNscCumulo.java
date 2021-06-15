@@ -17,9 +17,11 @@ import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Title: ActCollegamentoNscCumulo Description: Classe Action per l'accesso al Casellario (Nsc) dove poter
- * ricercare i Titoli Esecutivi, legati al Soggetto associato al procedimento SIEP Cumulante, coinvolti nella
- * gestione del cumulo Company: Engeneering S.p.A.
+ * Title: ActCollegamentoNscCumulo 
+ * Description: Classe Action per l'accesso al Casellario (Nsc) dove poter
+ * 				ricercare i Titoli Esecutivi, legati al Soggetto associato al procedimento SIEP Cumulante,
+ * 			 	coinvolti nella gestione del cumulo 
+ * Company: Engeneering S.p.A.
  *
  * @version 1.0
  */
@@ -85,6 +87,9 @@ public class ActCollegamentoNscCumulo extends ActWsBase implements ICostantiNsc 
 		lNomeUtente = lUteMod.getNome();
 		lDistretto = lUteMod.getUfficioUtente().getCodDistretto().substring(0, 6);
 		lSistema = "SIEP";
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di proprietà userAdn
+		// ed aggiunto nel SamlModel
+		String lUserAdn = lUteMod.getUserAdn();
 
 		// DECODIFICA CODICE COMUNE NASCITA SOGGETTO
 		if (luogoNascita != null) {
@@ -110,15 +115,6 @@ public class ActCollegamentoNscCumulo extends ActWsBase implements ICostantiNsc 
 		// per effettuare la prenotazione dei dati Nsc
 		// ============================================================
 		setRequestAttribute("IndirizzoNsc", mProperties.getProperty("NscServer"));
-		// setRequestAttribute("CodiceSedeUfficio", lCodiceCentrSedeUfficio);
-		// setRequestAttribute("CodiceTipoUfficio", lCodiceCentrTipoUfficio);
-		// setRequestAttribute("Utente", lUtenteConnesso);
-		// setRequestAttribute("HostAddress", lHostAddress);
-		// setRequestAttribute("CognomeUtente", lCognomeUtente);
-		// setRequestAttribute("NomeUtente", lNomeUtente);
-		// setRequestAttribute("Distretto", lDistretto);
-		// setRequestAttribute("Sistema", lSistema);
-
 		// **************
 		setRequestAttribute("ProgrFascSiep", progrFascSiep);
 		setRequestAttribute("AnnoFascSiep", annoFascSiep);
@@ -141,7 +137,8 @@ public class ActCollegamentoNscCumulo extends ActWsBase implements ICostantiNsc 
 
 		if ("SI".equals(lUseSAML)) {
 			SamlModel lModel = new SamlModel(lCodiceCentrSedeUfficio, lCodiceCentrTipoUfficio,
-					lUtenteConnesso, lHostAddress, lCognomeUtente, lNomeUtente, lDistretto, lSistema);
+					lUtenteConnesso, lHostAddress, lCognomeUtente, lNomeUtente, lDistretto, lSistema,
+					lUserAdn);
 			SamlMaker lmaker = new SamlMaker();
 			lSamkCriptata = lmaker.createSamlAssertion(lModel);
 		}

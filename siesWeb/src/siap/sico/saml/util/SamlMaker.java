@@ -42,20 +42,19 @@ import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.util.XMLHelper;
 import org.w3c.dom.Element;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.sico.saml.model.SamlModel;
 import siap.sico.webservice.config.NscProperties;
 import siap.util.SIAPPathProperties;
 import sun.misc.BASE64Encoder;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 /**
  * Classe che crea l'assertion Saml con i dati impostati nel SAML Model. * L'assertion viene firmata e
  * criptata. *
- * 
+ *
  * @author Giselda De Vita
  */
-@SuppressWarnings("static-access")
 public class SamlMaker {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -132,6 +131,10 @@ public class SamlMaker {
 			String expectedSPNameQualifier = lSamlData.getNomeUtente();
 			String expectedUfficio = lSamlData.getCodTipoUfficio() + "#" + lSamlData.getCodSedeUfficio();
 			String expectedAddress = lSamlData.getHostAddress();
+			// MEV INTEGRAZIONE SIES ADN: aggiunta sezione per variabile UserAdn
+			String expectedUserAdn = lSamlData.getUserAdn();
+			nameID.setSPProvidedID(expectedUserAdn);
+			// FINE MEV INTEGRAZIONE SIES ADN
 
 			nameID.setValue(expectedName);
 			nameID.setNameQualifier(expectedNameQualifier);
@@ -139,7 +142,7 @@ public class SamlMaker {
 			// nameID.setFormat(expectedFormat);
 			// nameID.setSPProvidedID(expectedSPID);
 			/****************************************************/
-			/******* Fine Settaggio Dati all'interno dell Assertion ****/
+			/******* Fine Settaggio Dati all'interno dell'Assertion ****/
 			/****************************************************/
 			QName subjectQName = new QName(SAMLConstants.SAML20_NS, Subject.DEFAULT_ELEMENT_LOCAL_NAME,
 					SAMLConstants.SAML20_PREFIX);
@@ -163,18 +166,13 @@ public class SamlMaker {
 
 			AttributeStatement attributeStatement = setAttribute(lSamlData);
 			assertion.getAttributeStatements().add(attributeStatement);
-
 			// signAssertion(assertion);
-
 			storeAssertionToFile(assertion);
-
 			cryptedAssertion = encrypt(assertion);
-
 			// storeAssertionToFile(cryptedAssertion);
 
 			BASE64Encoder encoder = new BASE64Encoder();
 			lReturncryptedAssertion = encoder.encode(cryptedAssertion.getBytes());
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -189,6 +187,7 @@ public class SamlMaker {
 	 * @return AttributeStatement
 	 */
 	private AttributeStatement setAttribute(SamlModel lSamlData) {
+
 		QName attributeStatementQName = new QName(SAMLConstants.SAML20_NS,
 				AttributeStatement.DEFAULT_ELEMENT_LOCAL_NAME, SAMLConstants.SAML20_PREFIX);
 		AttributeStatement attributeStatement = (AttributeStatement) mSamlUtil
@@ -199,8 +198,8 @@ public class SamlMaker {
 
 		Attribute attribute = (Attribute) mSamlUtil.buildXMLObject(attributeQName);
 		attribute.setName(SamlModel.COD_SEDE_UFFICIO);
-		XSStringBuilder stringBuilder = (XSStringBuilder) Configuration.getBuilderFactory().getBuilder(
-				XSString.TYPE_NAME);
+		XSStringBuilder stringBuilder = (XSStringBuilder) Configuration.getBuilderFactory()
+				.getBuilder(XSString.TYPE_NAME);
 		XSString stringValue = stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME,
 				XSString.TYPE_NAME);
 		stringValue.setValue(lSamlData.getCodSedeUfficio());
@@ -262,6 +261,15 @@ public class SamlMaker {
 		stringValue.setValue(lSamlData.getSistema());
 		attributeSistema.getAttributeValues().add(stringValue);
 		attributeStatement.getAttributes().add(attributeSistema);
+
+		// MEV INTEGRAZIONE SIES ADN: aggiunta sezione per variabile UserAdn
+		Attribute attributeUserAdn = (Attribute) mSamlUtil.buildXMLObject(attributeQName);
+		attributeUserAdn.setName(SamlModel.USER_ADN);
+		stringBuilder = (XSStringBuilder) Configuration.getBuilderFactory().getBuilder(XSString.TYPE_NAME);
+		stringValue = stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME, XSString.TYPE_NAME);
+		stringValue.setValue(lSamlData.getUserAdn());
+		attributeUserAdn.getAttributeValues().add(stringValue);
+		attributeStatement.getAttributes().add(attributeUserAdn);
 
 		return attributeStatement;
 
@@ -340,8 +348,8 @@ public class SamlMaker {
 	 * @throws java.io.FileNotFoundException
 	 * @throws java.io.IOException
 	 */
-	private void storeAssertionToFile(Assertion assertion) throws MarshallingException, XMLParserException,
-			FileNotFoundException, IOException {
+	private void storeAssertionToFile(Assertion assertion)
+			throws MarshallingException, XMLParserException, FileNotFoundException, IOException {
 
 		// NUOVA INFRASTRUTTURA: aggiunta info per il log
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -351,7 +359,7 @@ public class SamlMaker {
 		Marshaller marshaller = mSamlUtil.getMarshallerFactory().getMarshaller(assertion);
 		marshaller.marshall(assertion);
 
-		Element generatedDOM = marshaller.marshall(assertion, mSamlUtil.getParser().newDocument());
+		Element generatedDOM = marshaller.marshall(assertion, SamlUtil.getParser().newDocument());
 		String lString = XMLHelper.nodeToString(generatedDOM);
 
 		try {
@@ -576,8 +584,8 @@ public class SamlMaker {
 	public String encrypt(Assertion ass) throws NoSuchAlgorithmException, F3BException, CertificateException,
 			KeyException, EncryptionException, MarshallingException, XMLParserException {
 
-		Credential symmetricCredential = SecurityHelper.getSimpleCredential(SecurityHelper
-				.generateSymmetricKey(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128));
+		Credential symmetricCredential = SecurityHelper.getSimpleCredential(
+				SecurityHelper.generateSymmetricKey(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128));
 
 		EncryptionParameters encParams = new EncryptionParameters();
 		encParams.setAlgorithm(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128);
@@ -588,15 +596,15 @@ public class SamlMaker {
 		String nomeFileCertificatoX509 = lPathProp + System.getProperty("file.separator")
 				+ mProperties.getProperty("CERTIFICATO_X509");
 
-		java.security.cert.X509Certificate lCert = SecurityTestHelper.buildJavaX509Cert(mSamlUtil
-				.convertFileToString(nomeFileCertificatoX509));
+		java.security.cert.X509Certificate lCert = SecurityTestHelper
+				.buildJavaX509Cert(mSamlUtil.convertFileToString(nomeFileCertificatoX509));
 		Credential credentialNSC = SecurityHelper.getSimpleCredential(lCert, null);
 
 		kek.setEncryptionCredential(credentialNSC);
 		kek.setAlgorithm(EncryptionConstants.ALGO_ID_KEYTRANSPORT_RSAOAEP);
 
 		/************************************************************/
-		/*Key encryptionKey = */SecurityHelper.extractEncryptionKey(encParams.getEncryptionCredential());
+		/* Key encryptionKey = */SecurityHelper.extractEncryptionKey(encParams.getEncryptionCredential());
 
 		BasicCredential encryptCredential = new BasicCredential();
 		encryptCredential.setPublicKey(credentialNSC.getPublicKey()); // Partner
@@ -610,14 +618,12 @@ public class SamlMaker {
 		encrypter.setKeyPlacement(KeyPlacement.INLINE);
 
 		EncryptedAssertion encObject = encrypter.encrypt(ass);
-		EncryptedAssertion encTarget = (EncryptedAssertion) encObject;
+		EncryptedAssertion encTarget = encObject;
 
 		Marshaller marshaller = mSamlUtil.getMarshallerFactory().getMarshaller(encTarget);
-		Element generatedDOM = marshaller.marshall(encTarget, mSamlUtil.getParser().newDocument());
+		Element generatedDOM = marshaller.marshall(encTarget, SamlUtil.getParser().newDocument());
 
 		String lStringCriptata = XMLHelper.nodeToString(generatedDOM);
-
-		// EncryptedAssertion encrypted = encrypter.encrypt(response.getAssertions().get(0));
 
 		return lStringCriptata;
 	}

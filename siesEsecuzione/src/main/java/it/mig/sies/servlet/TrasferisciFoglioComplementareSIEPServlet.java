@@ -1,13 +1,5 @@
 package it.mig.sies.servlet;
 
-import it.mig.sies.business.CommunicationTrasferisciFCService;
-import it.mig.sies.business.LoadTrasferisciFCService;
-import it.mig.sies.business.ResultTrasferisciFCService;
-import it.mig.sies.exception.SiesWsException;
-import it.mig.sies.model.ResponseData;
-import it.mig.sies.type.foglicomplementari.RequestData;
-import it.mig.sies.util.PropertyUtil;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +12,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
+import it.mig.sies.business.CommunicationTrasferisciFCService;
+import it.mig.sies.business.LoadTrasferisciFCService;
+import it.mig.sies.business.ResultTrasferisciFCService;
+import it.mig.sies.exception.SiesWsException;
+import it.mig.sies.model.ResponseData;
+import it.mig.sies.type.foglicomplementari.RequestData;
+import it.mig.sies.util.PropertyUtil;
+
 /**
  * MEV 16 - Servlet entry point che gestisce l'invio del foglio complementare ad nsc
- * 
+ *
  * @author SIMONE GIOGGI
  */
 public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1437043850893865575L;
 
 	private static final Logger logger = Logger.getLogger(TrasferisciFoglioComplementareSIEPServlet.class);
@@ -37,7 +34,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 	/**
 	 * Gestisce la richiesta di elaborazione ed effettua il forward verso la pagina che visualizza il
 	 * risultato
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @throws ServletException
@@ -61,6 +58,8 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 		String idSentenza = "";
 		String idFascicoloSiep = "";
 		String action = "";
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+		String userAdn = "";
 
 		try {
 			// Recupero delle informazioni nella request HTTP
@@ -91,18 +90,20 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 			else if (PropertyUtil.isPresent(idSinonimo))
 				idSinonimo += "#TFCCUM#" + azioneTrasfCumulo;
 
+			userAdn = request.getParameter("userAdn");
+
 			logger.info("Richiesta di trasferimento: idEvento[" + idEvento + "] action[" + action
 					+ "] idUtente[" + idUtente + "] tipoOperazione[" + tipoOperazione + "] initParam["
 					+ initParam + "] idSoggetto[" + idSoggetto + "] idSentenza[" + idSentenza
 					+ "] idFascicoloSiep[" + idFascicoloSiep + "]" + "] idSinonimo[" + idSinonimo + "]"
 					+ "] idSoggettoNSC[" + idSoggettoNSC + "]" + "] azioneTrasfCumulo[" + azioneTrasfCumulo
-					+ "]");
+					+ "] userAdn[" + userAdn + "]");
 
 			/**
 			 * Caricamento dei dati partendo dall'idEvento legato al foglio complementare
 			 */
 			LoadTrasferisciFCService loadService = new LoadTrasferisciFCService(idEvento, action, idUtente,
-					idSoggetto, idSentenza, idFascicoloSiep, idSinonimo);
+					idSoggetto, idSentenza, idFascicoloSiep, idSinonimo, userAdn);
 			requestDataList = loadService.execute();
 
 			// ciclo sul risultato ottenuto
@@ -188,6 +189,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 		request.setAttribute("cup", cup);
 		request.setAttribute("isTrasferibile", isTrasferibile);
 		request.setAttribute("action", action);
+		request.setAttribute("userAdn", userAdn);
 
 		// gestione della risposta definitiva
 		responseData = gestisciResponseDataList(responseDataList);
@@ -205,7 +207,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 
 	/**
 	 * Metodo che gestisce la risposta del servizio
-	 * 
+	 *
 	 * @param responseDataList
 	 * @return ResponseData
 	 */
@@ -359,7 +361,7 @@ public class TrasferisciFoglioComplementareSIEPServlet extends HttpServlet {
 
 	/**
 	 * Gestisce la chiamata HTTP GET
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @throws IOException

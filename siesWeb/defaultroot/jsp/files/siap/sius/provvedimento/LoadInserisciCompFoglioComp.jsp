@@ -221,6 +221,8 @@
 					idEventoInterconnessione = depositoDecreto.getIdEventoGenerato();
 
 				String idUtente = UtenteConnesso.getUserId();
+				// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
+				String userAdn = UtenteConnesso.getUserAdn();
 			%>
 
 			<%-- MEV10-s3: l'invio del FC al sic non è possibile per le sentenze dei minori --%>
@@ -228,26 +230,26 @@
 			String codTipoUfficio = UtenteConnesso.getUfficioUtente().getCodTipoUfficio();
 			if (!("TDSM".equalsIgnoreCase(codTipoUfficio) || "UDSM".equalsIgnoreCase(codTipoUfficio))) { %>
 				<td class="LBG"><a href="#"
-					onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
+					onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 						<img id="TrasmissioneFC" align="middle"
 						src="/images/insertWS.png"
 						alt="Trasmissione Foglio Complementare al SIC" width="24"
 						height="24" border="0">
 				</a></td>
 				<td class="LBG"><a href="#"
-					onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
+					onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 						<img id="ModificaFC" align="middle" src="/images/updateWS.png"
 						alt="Modifica Foglio Complementare sul SIC" width="24" height="24"
 						border="0">
 				</a></td>
 				<td class="LBG"><a href="#"
-					onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
+					onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
 						<img id="Storico" align="middle" src="/images/certificatoWS.png"
 						alt="Storico invio trasmissioni al SIC" width="24" height="24"
 						border="0">
 				</a></td>
 				<td class="LBG"><a href="#"
-					onClick="openPopupAnnulla('/siesEsecuzione/index.jsp?action=DELETE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoOperazione=ANNULLA');return(false);">
+					onClick="openPopupAnnulla('/siesEsecuzione/index.jsp?action=DELETE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>&tipoOperazione=ANNULLA');return(false);">
 						<img id="Annulla" align="middle" src="/images/delete24.gif"
 						alt="Annulla" width="24" height="24" border="0">
 				</a></td>
