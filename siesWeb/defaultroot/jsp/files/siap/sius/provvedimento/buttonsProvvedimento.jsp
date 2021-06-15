@@ -11,7 +11,7 @@
 
 <jsp:useBean id="TornaQui"     scope="request" class="java.lang.String"/>
 <jsp:useBean id="isModificabile"     scope="request" class="java.lang.String"/>
-<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+<%-- <jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" /> --%>
 
 <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
 
@@ -30,10 +30,6 @@
 boolean abilitaModifica = true;
     if( request.getParameter("Modifica") != null && ! request.getParameter("Modifica").equalsIgnoreCase("SI"))
     	abilitaModifica = false;
-    	
-    	
-
-
   // presenza del Link per il bottone di ritorno
   boolean retFlag = false;
   retFlag = ((TornaQui != null) && TornaQui.trim().length() > 1);
@@ -153,7 +149,7 @@ boolean abilitaModifica = true;
           // ANNULLAMENTO
 	  if(lFun.getFunctionType().equals(ICostantiFunzioni.TIPO_CANCELLA) && (isModificabile.equals("SI")) && request.getParameter(ICostantiSecurity.CAMPO_ID_ENTITA_PROVV) != null &&  request.getParameter(ICostantiSecurity.VALORE_ID_ENTITA_PROVV) != null && request.getParameter("Depositato") != null  && request.getParameter("Depositato").equalsIgnoreCase("SI"))
 	  {
-	  String idUtente=UtenteConnesso.getUserId();
+// 	  String idUtente=UtenteConnesso.getUserId();
   %>
 	    <td>
 	      <a href="Javascript:conferma('<%=lFun.getNameAction()%>','<%=request.getParameter(ICostantiSecurity.CAMPO_ID_ENTITA)%>','<%=request.getParameter(ICostantiSecurity.VALORE_ID_ENTITA)%>','<%=request.getParameter(ICostantiSecurity.CAMPO_ID_ENTITA_PROVV)%>','<%=request.getParameter(ICostantiSecurity.VALORE_ID_ENTITA_PROVV)%>');">

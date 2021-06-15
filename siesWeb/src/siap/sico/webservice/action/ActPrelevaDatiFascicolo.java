@@ -3,7 +3,6 @@ package siap.sico.webservice.action;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-//import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -64,14 +63,11 @@ import it.mig.sies.type.SECONDOGRADODocument;
 import it.mig.sies.type.SOSTITUZIONEPENADocument;
 import it.mig.sies.type.TITOLOESECUTIVODocument;
 import it.mig.sies.type.TRASFERIMENTODocument;
-//import it.mig.sies.type.impl.ArrayCircostanzeSpecialiDocumentImpl;
-//import siap.sico.codici_sies_nsc.controller.ICodiciSiesNsc;
 import siap.sico.codici_sies_nsc.model.CodiciSiesNscModel;
 import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
-//import siap.sico.web.ActionSiap;
 import siap.sico.webservice.config.NscProperties;
 import siap.sico.webservice.controller.IWebServices;
 import siap.siep.SIEPException;
@@ -85,7 +81,6 @@ import siap.siep.fascicolo.model.DettaglioFascicoloModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
-//import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.reato.controller.IReato;
 import siap.siep.reato.model.ReatoCircostanzaModel;
@@ -277,6 +272,8 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 		DatiUtente.setCOGNOMEUTENTE(lUteMod.getCognome());
 		DatiUtente.setNOMEUTENTE(lUteMod.getNome());
 		DatiUtente.setIPADDRESSSERVER(getRequest().getServerName() + ":" + getRequest().getServerPort());
+		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione per variabile UserAdn
+		DatiUtente.setUSERNAMEADN(lUteMod.getUserAdn());
 
 		/*******************************************************************************/
 		/* Element DATI_CHIAMATA_TRASFERIMENTO - DATI FASCICOLO */
@@ -536,8 +533,7 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 				|| lSentenza.getCodTipoAutoritaEmittente().equals("CASAP")
 				|| lSentenza.getCodTipoAutoritaEmittente().equals("CAPSM")
 				|| lSentenza.getCodTipoAutoritaEmittente().equals("CAPMI")) {
-			if (lSentenza.getDataProvvRif() != null) // Controlliamo se è stata emessa una sentenza di 2°
-			{
+			if (lSentenza.getDataProvvRif() != null) { // Controlliamo se è stata emessa una sentenza di 2°
 				ArrayPrimoGrado = Procedimento.addNewArrayPrimoGrado();
 				PRIMOGRADODocument.PRIMOGRADO PrimoGrado = ArrayPrimoGrado.addNewPRIMOGRADO();
 				IMPUGNAZIONEDocument.IMPUGNAZIONE DatiImpugnazionePrimoGrado = PrimoGrado
@@ -547,8 +543,7 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 		} else {
 			// Se l'autorità emittente del Titolo Esecutivo è di 1° allora scriviamo in Altro Grado di
 			// Giudizio il 2°
-			if (lSentenza.getDataProvvRif() != null) // Controlliamo se è stata emessa una sentenza di 2°
-			{
+			if (lSentenza.getDataProvvRif() != null) { // Controlliamo se è stata emessa una sentenza di 2°
 				ArraySecondoGrado = Procedimento.addNewArraySecondoGrado();
 				SECONDOGRADODocument.SECONDOGRADO SecondoGrado = ArraySecondoGrado.addNewSECONDOGRADO();
 				IMPUGNAZIONEDocument.IMPUGNAZIONE DatiImpugnazioneSecondoGrado = SecondoGrado
@@ -1922,11 +1917,9 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 
 		BeneficioModel lBeneficioModel;
 		for (int j = 0; j <= lBenefici.size() - 1; j++) {
-
 			lBeneficioModel = (BeneficioModel) lBenefici.get(j);
 
-			if (lBeneficioModel.getCodNaturaBeneficio().equals("C")) // Concesso
-			{
+			if (lBeneficioModel.getCodNaturaBeneficio().equals("C")) { // Concesso
 				// ----> DECODIFICA COD_TIPO_BENEFICIO
 				if (lBeneficioModel.getCodTipoBeneficio() != null
 						&& !lBeneficioModel.getCodTipoBeneficio().equals("-")) {
@@ -1957,15 +1950,12 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 				 * PENA_COMPLESSIVA
 				 */
 				if (lBeneficioModel.getCodTipoBeneficio() != null
-						&& lBeneficioModel.getCodTipoBeneficio().equals("01")) // Sospensione Condizionale
-				{
+						&& lBeneficioModel.getCodTipoBeneficio().equals("01")) { // Sospensione Condizionale
 					Dispositivo.setCODIPENASOSPESA(lCodCentralizzato);
 					// Solo se c'è una Sospensione Condizionale Subordinata preleviamo il codice Sospensione
 					// Subordinata
 					if (lBeneficioModel.getCodSottotipoBeneficio() != null
-							&& lBeneficioModel.getCodSottotipoBeneficio().equals("03")) // Subordinata
-					{
-
+							&& lBeneficioModel.getCodSottotipoBeneficio().equals("03")) { // Subordinata
 						lCodiciSiesNscModel = new CodiciSiesNscModel();
 						lCodiciSiesNscModel.setCoDomain("TIPO_SOSP_SUBORDINATA");
 						lCodiciSiesNscModel.setCoSies(lBeneficioModel.getCodTipoSospSubordinata());
@@ -1973,8 +1963,7 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 						lCodCentralizzato = aCodiciSIESNSCModel.getCoCodcentr();
 						Dispositivo.setCODITIPOSOSPSUB(lCodCentralizzato);
 					}
-				} else if (lBeneficioModel.getCodTipoBeneficio().equals("02")) // NON MENZIONE
-				{
+				} else if (lBeneficioModel.getCodTipoBeneficio().equals("02")) { // NON MENZIONE
 					/*
 					 * Se il Tipo Beneficio è "NON MENZIONE" NON scriviamo il TAG Benefico ma scriviamo il
 					 * Codice Non Menzione nell'elemento CODICE_NON_MENZIONE del DISPOSITIVO della
@@ -2591,23 +2580,18 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 		char[] sequenza = s.toCharArray();
 
 		for (int i = 0; i < sequenza.length; i++) {
-
 			try {
-
 				Integer.parseInt(Character.toString(sequenza[i]));
-
 			} catch (Exception e) {
-
 				numerico = false;
-
 			}
-
 		}
 
 		return numerico;
 	}
 
 	private Vector CercaReatiInContinuazione(long aFascicoloSIEP) throws Exception {
+
 		IWebServices lCtrlReati = SICOLookupRemote.getWebServicesRemote();
 		Vector lReatiVector = new Vector();
 		try {
@@ -2618,7 +2602,7 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 		return lReatiVector;
 	}
 
-	// public static void main(String[] args) throws Exception{
+	// public static void main(String[] args) throws Exception {
 	//
 	// // Security.setProperty("jdk.tls.disabledAlgorithms", "DH keySize < 768");
 	// // System.setProperty("javax.net.ssl.keyStoreType", "pkcs12");
@@ -2675,10 +2659,7 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 	// }catch(Exception e){
 	// throw e;
 	// }
-	// }
-
-	// public static void main(String[] arstring) {
-	//
+	// //
 	// try {
 	// SSLContext sc = getSSLContext();
 	//

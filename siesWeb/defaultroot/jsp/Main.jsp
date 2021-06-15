@@ -1,48 +1,50 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.*"%>
 
-<%@ page import="f3b.util.F3BException" %>
-<%@ page import="f3b.web.Action" %>
-<%@ page import="f3b.web.util.*" %>
-<%@ page import="f3b.web.IWebConstants" %>
-<%@ page import="f3b.util.DateUtils" %>
+<%@ page import="f3b.util.F3BException"%>
+<%@ page import="f3b.web.Action"%>
+<%@ page import="f3b.web.util.*"%>
+<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.DateUtils"%>
+<%@ page import="f3b.log.LogF3B"%>
 
-<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
-<%@ page import="siap.sico.lock.model.LockModel" %>
-<%@ page import="org.apache.log4j.MDC" %>
-<%@ page import="org.apache.log4j.NDC" %>
-<%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
-<%@ page import="siap.sico.ufficio.model.UfficioModel" %>
+<%@ page import="siap.sico.security.action.ICostantiSecurity"%>
+<%@ page import="siap.sico.lock.model.LockModel"%>
+<%@ page import="siap.sico.utente.model.UtenteModel"%>
+<%@ page import="siap.sico.ufficio.model.UfficioModel"%>
 
-<%@ page import="f3b.log.LogF3B" %>
+<%@ page import="org.apache.log4j.MDC"%>
+<%@ page import="org.apache.log4j.NDC"%>
+<%@ page import="org.apache.log4j.Logger"%>
 
-<%@ page language="java" session="true" errorPage="ErrorPage.jsp" %>
+<%@ page language="java" session="true" errorPage="ErrorPage.jsp"%>
 
-<%@page import="org.apache.log4j.Logger"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
-<% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
-<jsp:useBean id="action" class="f3b.web.Action" scope="session" >
+<%
+final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+%>
+
+<jsp:useBean id="action" class="f3b.web.Action" scope="session">
 <%
 action.setServletContext(application);
 %>
 </jsp:useBean>
 <jsp:useBean id="lockTable" class="java.util.Hashtable" scope="application"/>
 <%
-  	/**
-   	 * Controllo sull'attivazione dei Cookies.
-   	 * Il controllo viene fatto solo dala seconda volta in poi.
-   	 * Per il momento da commentare !!!!!
-   	 */
+/**
+* Controllo sull'attivazione dei Cookies.
+* Il controllo viene fatto solo dala seconda volta in poi.
+* Per il momento da commentare !!!!!
+*/
 
-  	//============================================================================
-  	// n.b. in alcuni casi, quando viene chiusa la finestra di IE con il doc di 
-  	//      stampa aperto 'inline', il browser invia delle request HTTP con metodo 
-  	//      OPTIONS alla main.jsp e alla login.jsp (il motivo è ignoto)
-  	//      In questi casi mancando il parametro Action, viene loggata una eccezione
-  	//      'Parametro action mancante'. Su alcuni distretti (A8RR211 vicenza)
- 	 //      viene anche aperta una finestra di errore prima della stampa.
-  	//============================================================================
+//============================================================================
+// n.b. in alcuni casi, quando viene chiusa la finestra di IE con il doc di 
+//      stampa aperto 'inline', il browser invia delle request HTTP con metodo 
+//      OPTIONS alla main.jsp e alla login.jsp (il motivo è ignoto)
+//      In questi casi mancando il parametro Action, viene loggata una eccezione
+//      'Parametro action mancante'. Su alcuni distretti (A8RR211 vicenza)
+//      viene anche aperta una finestra di errore prima della stampa.
+//============================================================================
 if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
 %>
     <jsp:forward page="/html/blank.htm"/>
@@ -73,7 +75,7 @@ if (MultipartContent.isMultipartContent(request)) {
    		lStrAction = (String)request.getParameter(IWebConstants.ACTION_FIELD);
 }
 if (lStrAction == null)
-	throw new Exception( "Parametro Action mancante ! " );
+	throw new Exception("Parametro Action mancante!");
 
 /** Implementazione tabella di lock per le modifiche delle entità
  * 	1) Entrando nella main , unlock per default tutti i lock dell'utente
@@ -90,11 +92,14 @@ if (!lStrAction.equals("siap.sico.sessionstate.action.ActVediSessioneSIEP")) {
 
 String lPage = null;
 // Controllo sull'avvenuto accesso attraverso il login
-if ((session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null)
-		&& !lStrAction.equals("siap.sico.security.action.ActLogin")) {
+if (session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
+		&& (!lStrAction.equals("siap.sico.security.action.ActLogin"))
+		// MEV INTEGRAZIONE SIES ADN: nuove pagine di login
+		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActUtenzaAdn"))
+		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActAssocUtenteSiesAdn"))) {
     session.invalidate();
-    request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
-    request.setAttribute("Messagge",	"Sessione utente terminata, effettuare di nuovo il login...");
+   	request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
+    request.setAttribute("Messagge", "Sessione utente terminata, effettuare di nuovo il login...");
 %>
 	<script language=Javascript>
 		top.document.location.href="<%=IWebConstants.PAGE_LOGOUT%>?Messagge=<%=response.encodeURL("Sessione utente terminata, effettuare di nuovo il login...")%>";
@@ -105,7 +110,7 @@ if ((session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null)
     //============================================================================
     // Codice per TEST MCD e NDC
     //============================================================================
-    UtenteModel lUteMod=(UtenteModel)session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+    UtenteModel lUteMod = (UtenteModel) session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
     UfficioModel lUffMod = null;
     String CodUff = "";
     String CodUte = "";
@@ -117,7 +122,7 @@ if ((session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null)
     MDC.put("utente", CodUte);
     MDC.put("ufficio", CodUff);
     NDC.remove();
-    NDC.push(session.getId());
+   	NDC.push(session.getId());
     Action actionObj = action.get(lStrAction);
     actionObj.setReqSes(request, session);
     actionObj.init(); // 2010-12-26 per eventuali inizializzazioni.
@@ -133,6 +138,9 @@ if ((session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null)
     // sul profilo dell'utente perchè
     // sono operazioni abilitate per qualsiasi utente
     if ((!lStrAction.equals("siap.sico.security.action.ActLogin")) // ogni utente puo effettuare il login
+    		// MEV INTEGRAZIONE SIES ADN: nuove pagine di login
+    		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActUtenzaAdn"))
+    		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActAssocUtenteSiesAdn"))
 			&& (!lStrAction.equals("siap.sico.security.action.ActLoadOrizontalMenu")) // supposto che il menu abbia almeno due livelli
 			&& (!lStrAction.equals("siap.siep.richiesta.action.ActLoadContaAttiCompetenzaRicevuti"))) { // cruscotto atti ricevuti: call automatica temporizzata
 		actionObj.setFunctionsAvailableToRequest(lStrAction);
