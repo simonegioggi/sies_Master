@@ -7,14 +7,15 @@
 <%@ page import="siap.siep.sentenza.action.ICostantiSentenza"%>
 <%@ page import="siap.sige.sentenza.action.ICostantiFasSigeSentenza"%>
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
-<%@ page import="siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza"%>
+<%@ page
+	import="siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza"%>
 
-<%@ page import="f3b.security.model.ProfileModel" %>
+<%@ page import="f3b.security.model.ProfileModel"%>
 <%@ page import="siap.sico.decodifiche.model.DecodificheModel"%>
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="siap.sico.utente.model.UtenteModel"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 <%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 
@@ -22,21 +23,28 @@
 <%@page import="f3b.log.LogF3B"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
 <% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
-<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+<jsp:useBean id="UtenteConnesso" scope="session"
+	class="siap.sico.utente.model.UtenteModel" />
 
-<jsp:useBean id="tipoinserimento" scope="request" class="java.lang.String" />
-<jsp:useBean id="idsoggetto"  scope="request" class="java.lang.String" />
-<jsp:useBean id="tipoProvvedimenti" scope="request" class="java.lang.String" />
-<jsp:useBean id="autoritaEmi"   scope="request" class="java.lang.String" />
-<jsp:useBean id="tipoRito1"   scope="request" class="java.lang.String" />
-<jsp:useBean id="modalita"    scope="request" class="java.lang.String" />
-<jsp:useBean id="naturaMisuraSicurezza" scope="request" class="java.lang.String"/>
-<jsp:useBean id="tipoMisuraSicurezza"   scope="request" class="java.util.Vector"/>
+<jsp:useBean id="tipoinserimento" scope="request"
+	class="java.lang.String" />
+<jsp:useBean id="idsoggetto" scope="request" class="java.lang.String" />
+<jsp:useBean id="tipoProvvedimenti" scope="request"
+	class="java.lang.String" />
+<jsp:useBean id="autoritaEmi" scope="request" class="java.lang.String" />
+<jsp:useBean id="tipoRito1" scope="request" class="java.lang.String" />
+<jsp:useBean id="modalita" scope="request" class="java.lang.String" />
+<jsp:useBean id="naturaMisuraSicurezza" scope="request"
+	class="java.lang.String" />
+<jsp:useBean id="tipoMisuraSicurezza" scope="request"
+	class="java.util.Vector" />
 <%	// S/N indica se si sta operando una iscizione con Numerazione Manuale %>
-<jsp:useBean id="NumerazioneManualeMisureProvvFS"    scope="request" class="java.lang.String"/>
+<jsp:useBean id="NumerazioneManualeMisureProvvFS" scope="request"
+	class="java.lang.String" />
 <% // S/N indica l'esistenza di almeno un procedimento di classe IV per l'anno corrente %>
-<jsp:useBean id="EsisteFascicoloClasseIVAnnoCorrente" scope="request" class="java.lang.String"/>
-<jsp:useBean id="AnnoCorrente" scope="request" class="java.lang.String"/>
+<jsp:useBean id="EsisteFascicoloClasseIVAnnoCorrente" scope="request"
+	class="java.lang.String" />
+<jsp:useBean id="AnnoCorrente" scope="request" class="java.lang.String" />
 
 <!--    LoadIscrizioneProcApplicazioneMisuraProvvisoria    -->
 
@@ -76,13 +84,16 @@
 %>
 <html>
 <head>
-  <title> Gestione Applicazione Misure Sicurezza - Iscrizione Procedimento Misura Provvisoria  </title>
-  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-  <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
-  <script language="JavaScript" src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
-  
-  <script language="JavaScript" >
+<title>Gestione Applicazione Misure Sicurezza - Iscrizione
+	Procedimento Misura Provvisoria</title>
+<link rel="STYLESHEET" type="text/css"
+	href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript"
+	src="<%=IWebConstants.JS_DIR%>/controlli.js"></script>
+
+<script language="JavaScript">
   
    // Gestione Misure Sicurezza
   var strOggetto = "<%=strOggetto%>";
@@ -149,6 +160,12 @@
   var desktop;
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
   }
+  
+  <!-- 20210524	MEV Scheda-21 -->
+  function ListaComuniNascita(a_formname,a_fieldname)
+  {
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+  }      
   
     //============================================================================
     // Aggiungere qui eventuali funzioni javascript da richiamare nella finestra 
@@ -449,29 +466,31 @@
   </script>
 </head>
 
-<body class="corpo" >
-  <table>
-    <tr>
-      <td class="LBG">
-        <a href="Javascript:window.print();">
-          <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
-        </a>
-      </td>
-      <td class="LBG">
-        <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <font class="campo">Iscrizione Procedimento Esecuzione Misura Sicurezza Applicazione Provvisoria  </font>
-     </td>
-    </tr>
-  </table>
+<body class="corpo">
+	<table>
+		<tr>
+			<td class="LBG"><a href="Javascript:window.print();"> <img
+					align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif"
+					alt="Stampa questa videata" border="0">
+			</a></td>
+			<td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
+				<font class="campo">Iscrizione Procedimento Esecuzione Misura
+					Sicurezza Applicazione Provvisoria </font></td>
+		</tr>
+	</table>
 
-<FORM method="POST" action="Main.jsp" name="LoadInserisciSentenza">
-  	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
-  	<input type="HIDDEN" name="tipoinserimento" value="<%=tipoinserimento%>">
-  	<input type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>" value="<%=idsoggetto%>">
-  	<input type="hidden" name="<%=ICostantiMisuraSicurezza.CAMPO_TIPO_ISCRIZIONE_MISURA %>" value="<%=TipoIscrMisura%>" >
-  	<input type="HIDDEN" name="<%=ICostantiMisuraSicurezza.CAMPO_NUMERAZIONE_MANUALE_MISURE_PROVV_FS%>" value="<%=NumerazioneManualeMisureProvvFS %>" >
-	
-<%--
+	<FORM method="POST" action="Main.jsp" name="LoadInserisciSentenza">
+		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>"
+			value="<%=lAzione%>"> <input type="HIDDEN"
+			name="tipoinserimento" value="<%=tipoinserimento%>"> <input
+			type="HIDDEN" name="<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>"
+			value="<%=idsoggetto%>"> <input type="hidden"
+			name="<%=ICostantiMisuraSicurezza.CAMPO_TIPO_ISCRIZIONE_MISURA %>"
+			value="<%=TipoIscrMisura%>"> <input type="HIDDEN"
+			name="<%=ICostantiMisuraSicurezza.CAMPO_NUMERAZIONE_MANUALE_MISURE_PROVV_FS%>"
+			value="<%=NumerazioneManualeMisureProvvFS %>">
+
+		<%--
 /* 
  * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato
  * Numero MEV : SIES v10
@@ -485,261 +504,314 @@
 //***** FINE INTERVENTO MEV_SIES v10 *****//
 --%>
 
-<%
+		<%
     if("soggetto".equals(tipoinserimento))
     { // link per dettglio soggetto Precaricato
- %>  
-        <jsp:include page="/jsp/files/siap/sico/soggetto/SintesiSoggetto.jsp"/>
-    <br>    
-<%    } %>
+ %>
+		<jsp:include page="/jsp/files/siap/sico/soggetto/SintesiSoggetto.jsp" />
+		<br>
+		<%    } %>
 
-<%	if ("S".equals(NumerazioneManualeMisureProvvFS) && 
+		<%	if ("S".equals(NumerazioneManualeMisureProvvFS) && 
 		!"N".equals(EsisteFascicoloClasseIVAnnoCorrente) )
 	{
 		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 		//siesLogger.debug(" --XX-- LoadIscrizione - NumerazioneManualeMisureProvvFS = "+NumerazioneManualeMisureProvvFS);	
 	%>
 		<table>
-		 <tr>
-    	   <td class="Titolo" colspan=2>Estremi Procedimento SIEP da Iscrivere</td>
-  		 </tr>
-		 <tr>
-		   <td class="l">Anno e Numero Procedimento <font class="ob">(*)</font></td>
-		   <td>	
-        	<input type="text" title="Anno Procedimento" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>" maxlength="4" size="4" 
-               onkeypress="return TicTabNumField(this,event)" onFocus="javascript:textboxSelect(this)"  onBlur="javascript:value=FillYear(value)">
-        	/
-        	<input type="text" title="Numero Procedimento" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>" maxlength="13" size="15" 
-               onkeypress="return TicTabNumField(this,event)">
-      	   </td>
-      	 </tr> 
+			<tr>
+				<td class="Titolo" colspan=2>Estremi Procedimento SIEP da
+					Iscrivere</td>
+			</tr>
+			<tr>
+				<td class="l">Anno e Numero Procedimento <font class="ob">(*)</font></td>
+				<td><input type="text" title="Anno Procedimento"
+					name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>" maxlength="4"
+					size="4" onkeypress="return TicTabNumField(this,event)"
+					onFocus="javascript:textboxSelect(this)"
+					onBlur="javascript:value=FillYear(value)"> / <input
+					type="text" title="Numero Procedimento"
+					name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>"
+					maxlength="13" size="15"
+					onkeypress="return TicTabNumField(this,event)"></td>
+			</tr>
 		</table>
 		<br>
-<%	} %>  
+		<%	} %>
 
-<!--      DATI SOGGETTO      -->
-      <jsp:include page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanzaSoggetto.jsp"/>  
- 
-<!--      DATI SENTENZA      --> 
- 
-<table cellspacing=2 cellpadding=2 width="90%">
-  <tr><td class="Titolo" colspan=4>Provvedimento del Giudice della Cognizione</td></tr>
-  <tr>
-    <td class="l">Anno/Numero R.G.N.R.<font class=ob>(*)</font></td>
-    <td class="L">
-      <input Title="Anno R.G.N.R." value="" type="text" name="<%= ICostantiSentenza.CAMPO_ANNO_REGE_PM %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> /
-      <input Title="Numero R.G.N.R." value="" type="text" name="<%= ICostantiSentenza.CAMPO_NUMERO_REGE_PM %>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-    </td>
-    
-    <td class="l">Anno/Numero Reg.Gen. <font class=ob>(*)</font></td>
-    <td class="L">
-      <input Title="Anno Reg.Gen." value="" type="text" name="ARG" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> /
-      <input Title="Numero Reg.Gen." value="" type="text" name="NRG" maxlength="6" size="6"> &nbsp; 
-      <select name="TipoRG">
-        <option value="-">-</option> 
-        <option value="gip">GIP</option>
-        <option value="dib">DIB</option>
-        <option value="cas">CAS</option>
-        <option value="cap">CAP</option>
-        <option value="casap">CASAP</option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Sede PM </td>   
-<%
+		<!--      DATI SOGGETTO      -->
+		<jsp:include
+			page="/jsp/files/siap/siep/nuovaistanza/IncludeIstanzaSoggetto.jsp" />
+
+		<!--      DATI SENTENZA      -->
+
+		<table cellspacing=2 cellpadding=2 width="90%">
+			<tr>
+				<td class="Titolo" colspan=4>Provvedimento del Giudice della
+					Cognizione</td>
+			</tr>
+			<tr>
+				<td class="l">Anno/Numero R.G.N.R.<font class=ob>(*)</font></td>
+				<td class="L"><input Title="Anno R.G.N.R." value="" type="text"
+					name="<%= ICostantiSentenza.CAMPO_ANNO_REGE_PM %>" maxlength="4"
+					size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"> / <input
+					Title="Numero R.G.N.R." value="" type="text"
+					name="<%= ICostantiSentenza.CAMPO_NUMERO_REGE_PM %>" maxlength="6"
+					size="6" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"></td>
+
+				<td class="l">Anno/Numero Reg.Gen. <font class=ob>(*)</font></td>
+				<td class="L"><input Title="Anno Reg.Gen." value="" type="text"
+					name="ARG" maxlength="4" size="4"
+					onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"> / <input
+					Title="Numero Reg.Gen." value="" type="text" name="NRG"
+					maxlength="6" size="6"> &nbsp; <select name="TipoRG">
+						<option value="-">-</option>
+						<option value="gip">GIP</option>
+						<option value="dib">DIB</option>
+						<option value="cas">CAS</option>
+						<option value="cap">CAP</option>
+						<option value="casap">CASAP</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td class="l">Sede PM</td>
+				<%
     //  String sedePM =( modalita.equals("M")? lSentenza.getDescrSedeNotiziaReato() : UtenteConnesso.getUfficioUtente().getDescrComune());
       String sedePM = UtenteConnesso.getUfficioUtente().getDescrComune();
 %>
-    <td class="L">
-      <input Title="Sede PM" name="<%=ICostantiSentenza.CAMPO_SEDE_NOTIZIA_REATO%>" value="<%=sedePM%>" type="text" maxlength="35" size="35">
-        <a href="Javascript:ListaUfficiPerTipo('LoadInserisciSentenza','<%=ICostantiSentenza.CAMPO_SEDE_NOTIZIA_REATO%>','PM');">
-          <img src="/images/filefolder.gif" border=0>
-        </a>
-    </td>
-  </tr>
-  
-  <!--        DATI del PROVVEDIMENTO DA ESEGUIRE           -->
-  
-  <tr>
-    <td class="Titolo" colspan=4>Provvedimento da Eseguire</td>
-  </tr>
-  <tr>
-    <td class="l">Data Provvedimento <font class="ob">(*)</font></td>
-    <td class="L">
-      <input Title="Data Provv" type="text" value="" name="<%= ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO %>"
-          maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> - 
-      <input Title="Data Provv" type="text" value="" name="<%= ICostantiSentenza.CAMPO_MESE_DATA_PROVVEDIMENTO %>" 
-          maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> - 
-      <input Title="Data Provv" type="text" value="" name="<%= ICostantiSentenza.CAMPO_ANNO_DATA_PROVVEDIMENTO %>"
-          maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-    </td>
-    <td class="l">Anno/Numero Provvedimento</td>
-    <td class="L">
-      <input Title="Anno Provv" value="" type="text" name="<%= ICostantiSentenza.CAMPO_ANNO_SENTENZA %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> /
-      <input Title="Numero Provv" value="" type="text" name="<%= ICostantiSentenza.CAMPO_NUMERO_SENTENZA %>" maxlength="6" size="6">
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Tipo Provvedimento <font class=ob>(*)</font></td>
-    <td class="L">
-      <select Title="Tipo Provvedimento Riferimento" name="<%= ICostantiSentenza.CAMPO_COD_TIPO_PROVV_RIF %>">
-        <%=tipoProvvedimenti%>
-      </select>
-    </td>
-  </tr>
-  
-  <tr>
-    <td class="l">Autorità Emittente<font class=ob>(*)</font></td>
-    <td class="L">
-      <select Title="Autorità Emittente" onChange="ctrl_autorita('<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>', 'D1', '<%= ICostantiSentenza.CAMPO_COD_TIPO_RITO %>');" 
-              name="<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>">
-        <%=autoritaEmi%>
-      </select></td>
-    <td colspan=2>
-    <%
+				<td class="L"><input Title="Sede PM"
+					name="<%=ICostantiSentenza.CAMPO_SEDE_NOTIZIA_REATO%>"
+					value="<%=sedePM%>" type="text" maxlength="35" size="35"> <a
+					href="Javascript:ListaUfficiPerTipo('LoadInserisciSentenza','<%=ICostantiSentenza.CAMPO_SEDE_NOTIZIA_REATO%>','PM');">
+						<img src="/images/filefolder.gif" border=0>
+				</a></td>
+			</tr>
+
+			<!--        DATI del PROVVEDIMENTO DA ESEGUIRE           -->
+
+			<tr>
+				<td class="Titolo" colspan=4>Provvedimento da Eseguire</td>
+			</tr>
+			<tr>
+				<td class="l">Data Provvedimento <font class="ob">(*)</font></td>
+				<td class="L"><input Title="Data Provv" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					Title="Data Provv" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_MESE_DATA_PROVVEDIMENTO %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					Title="Data Provv" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_ANNO_DATA_PROVVEDIMENTO %>"
+					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"></td>
+				<td class="l">Anno/Numero Provvedimento</td>
+				<td class="L"><input Title="Anno Provv" value="" type="text"
+					name="<%= ICostantiSentenza.CAMPO_ANNO_SENTENZA %>" maxlength="4"
+					size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"> / <input
+					Title="Numero Provv" value="" type="text"
+					name="<%= ICostantiSentenza.CAMPO_NUMERO_SENTENZA %>" maxlength="6"
+					size="6"></td>
+			</tr>
+			<tr>
+				<td class="l">Tipo Provvedimento <font class=ob>(*)</font></td>
+				<td class="L"><select Title="Tipo Provvedimento Riferimento"
+					name="<%= ICostantiSentenza.CAMPO_COD_TIPO_PROVV_RIF %>">
+						<%=tipoProvvedimenti%>
+				</select></td>
+			</tr>
+
+			<tr>
+				<td class="l">Autorità Emittente<font class=ob>(*)</font></td>
+				<td class="L"><select Title="Autorità Emittente"
+					onChange="ctrl_autorita('<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>', 'D1', '<%= ICostantiSentenza.CAMPO_COD_TIPO_RITO %>');"
+					name="<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>">
+						<%=autoritaEmi%>
+				</select></td>
+				<td colspan=2>
+					<%
     String visib1 = new String("hidden");
     %>
-    <div id=D1 STYLE="visibility: <%=visib1%>">
-    <table width=100%>
-      <tr>
-        <td class="l">Tipo Rito</td>
-        <td class="L">
-          <select Title="Tipo Rito" name="<%= ICostantiSentenza.CAMPO_COD_TIPO_RITO %>">
-            <%=tipoRito1%>
-          </select>
-        </td>
-      </tr>
-    </table>
-    </div>
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Luogo Emittente <font class=ob>(*)</font></td>
-    <td class="L">
-      <input Title="Luogo Emittente" name="<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>" value="" type="text" maxlength="35" size="35"> 
-        <a href="Javascript:ListaUfficiPerTipo('LoadInserisciSentenza','<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>',document.LoadInserisciSentenza.<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>[document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>.selectedIndex].value);">
-          <img src="/images/filefolder.gif" border=0> 
-        </a>
-    </td>
-    <td class="L">Sezione Autorità Emittente</td>
-    <td class="L">
-      <input Title="Sezione Autorità Emittente" value="" type="text" name="<%= ICostantiSentenza.CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE %>" maxlength="35" size="35">
-    </td>
-  </tr> 
-</table>
+					<div id=D1 STYLE="visibility: <%=visib1%>">
+						<table width=100%>
+							<tr>
+								<td class="l">Tipo Rito</td>
+								<td class="L"><select Title="Tipo Rito"
+									name="<%= ICostantiSentenza.CAMPO_COD_TIPO_RITO %>">
+										<%=tipoRito1%>
+								</select></td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="l">Luogo Emittente <font class=ob>(*)</font></td>
+				<td class="L"><input Title="Luogo Emittente"
+					name="<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>" value=""
+					type="text" maxlength="35" size="35"> <a
+					href="Javascript:ListaUfficiPerTipo('LoadInserisciSentenza','<%=ICostantiSentenza.CAMPO_COD_LUOGO_EMITTENTE%>',document.LoadInserisciSentenza.<%= ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>[document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>.selectedIndex].value);">
+						<img src="/images/filefolder.gif" border=0>
+				</a></td>
+				<td class="L">Sezione Autorità Emittente</td>
+				<td class="L"><input Title="Sezione Autorità Emittente"
+					value="" type="text"
+					name="<%= ICostantiSentenza.CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE %>"
+					maxlength="35" size="35"></td>
+			</tr>
+		</table>
 
-<!--        MISURA di SICUREZZA da Inserire        -->
-<table cellspacing=2 cellpadding=2 width="90%">
-  <tr><td class="Titolo" colspan=4>Misura Sicurezza</td></tr>
-   <tr>
-        <td class="l">Natura Misura<font class=ob>(*)</font></td>
-        <td class="l">
-          <select title="Natura Misura" name="<%= ICostantiMisuraSicurezza.CAMPO_COD_NATURA %>" onChange="javascript:caricaCombo(strOggetto,';','#',document.LoadInserisciSentenza.<%= ICostantiMisuraSicurezza.CAMPO_COD_NATURA %>.value, document.LoadInserisciSentenza.<%= ICostantiMisuraSicurezza.CAMPO_COD_TIPO %>);">
-            <%=naturaMisuraSicurezza%>
-          </select>
-        </td>
-    </tr>
-    <tr>
-        <td class="l">Tipo Misura  <font class="ob">(*)</font></td>
-        <td class="l">
-          <select title="Tipo Misura" name="<%= ICostantiMisuraSicurezza.CAMPO_COD_TIPO %>">
-              <!-- %=tipoMisuraSicurezza%-->
-          </select>
-        </td>
-    </tr>
-    <tr>
-        <td class="l">Durata Misura<font class=ob>(*)</font></td>
+		<!--        MISURA di SICUREZZA da Inserire        -->
+		<table cellspacing=2 cellpadding=2 width="90%">
+			<tr>
+				<td class="Titolo" colspan=4>Misura Sicurezza</td>
+			</tr>
+			<tr>
+				<td class="l">Natura Misura<font class=ob>(*)</font></td>
+				<td class="l"><select title="Natura Misura"
+					name="<%= ICostantiMisuraSicurezza.CAMPO_COD_NATURA %>"
+					onChange="javascript:caricaCombo(strOggetto,';','#',document.LoadInserisciSentenza.<%= ICostantiMisuraSicurezza.CAMPO_COD_NATURA %>.value, document.LoadInserisciSentenza.<%= ICostantiMisuraSicurezza.CAMPO_COD_TIPO %>);">
+						<%=naturaMisuraSicurezza%>
+				</select></td>
+			</tr>
+			<tr>
+				<td class="l">Tipo Misura <font class="ob">(*)</font></td>
+				<td class="l"><select title="Tipo Misura"
+					name="<%= ICostantiMisuraSicurezza.CAMPO_COD_TIPO %>">
+						<!-- %=tipoMisuraSicurezza%-->
+				</select></td>
+			</tr>
+			<tr>
+				<td class="l">Durata Misura<font class=ob>(*)</font></td>
 
-        <td class="l">Anni
-          <input title="Anni" size=2 maxlength=2 value="" type="text" name="<%= ICostantiMisuraSicurezza.CAMPO_NUM_ANNI %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-          Mesi
-          <input title="Mesi" size=2 maxlength=2 value="" type="text" name="<%= ICostantiMisuraSicurezza.CAMPO_NUM_MESI%>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-          Giorni
-          <input title="Giorni" size=2 maxlength=2 value="" type="text" name="<%= ICostantiMisuraSicurezza.CAMPO_NUM_GIORNI %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-        </td>
-    </tr>
-    <tr>
-     <td class="l">Luogo Esecuzione Misura</td>
-     <td class="L">
-      <textarea name="<%=ICostantiMisuraSicurezza.CAMPO_LUOGO_ESECUZIONE_MISURA %>" rows="2" cols="80"></textarea>
-	 </td>
-	</tr>     	 
-    
-</table> 
+				<td class="l">Anni <input title="Anni" size=2 maxlength=2
+					value="" type="text"
+					name="<%= ICostantiMisuraSicurezza.CAMPO_NUM_ANNI %>"
+					onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"> Mesi <input
+					title="Mesi" size=2 maxlength=2 value="" type="text"
+					name="<%= ICostantiMisuraSicurezza.CAMPO_NUM_MESI%>"
+					onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"> Giorni <input
+					title="Giorni" size=2 maxlength=2 value="" type="text"
+					name="<%= ICostantiMisuraSicurezza.CAMPO_NUM_GIORNI %>"
+					onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)">
+				</td>
+			</tr>
+			<tr>
+				<td class="l">Luogo Esecuzione Misura</td>
+				<td class="L"><textarea
+						name="<%=ICostantiMisuraSicurezza.CAMPO_LUOGO_ESECUZIONE_MISURA %>"
+						rows="2" cols="80"></textarea></td>
+			</tr>
 
-<!--        Dati sul Nuovo Procedimento Da Eseguire      -->
-<table cellspacing=2 cellpadding=2 width="90%">
-  <tr><td class="Titolo" colspan=4>Provvedimento da Eseguire</td></tr>  
-  <% if ("N".equals(EsisteFascicoloClasseIVAnnoCorrente) ){ %>
-  <tr>
-    <td class="l" colspan="2" >
-      <font color="red">Attenzione! Si sta procedendo all'iscrizione del primo procedimento di Classe IV per l'anno corrente. 
-       <br>Il progressivo indicato in questa fase sarà il valore dal quale partirà la numerazione automatica per i successivi procedimenti di classe IV.
-       <br>Una volta indicato il progressivo iniziale, sarà possibile acquisire il pregresso per l'anno corrente (assegnare numerazione manuale) solo per procedimenti con numerazione inferiore a quella indicata i questa fase.
-       <br>Come prima iscrizione è necessario quindi registrare o un nuovo procedimento assegnandogli opportuno progressivo secondo quanto prevede l'attuale registro Misure di Sicurezza,
-       oppure registrare l'ultimo procedimento presente sul registro Misure di Sicurezza.
-      </font> 
-    </td>
-  </tr>
-  <% } %>
-  
-  <tr>
-    <td class="l">Data Iscrizione <font class="ob">(*)</font></td>
-    <td class="L">
-      <input Title="Data ggIscr" type="text" value="" name="<%= ICostantiSentenza.CAMPO_GIORNO_DATA_ISCRIZIONE %>"
-          maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> - 
-      <input Title="Data mmIscr" type="text" value="" name="<%= ICostantiSentenza.CAMPO_MESE_DATA_ISCRIZIONE %>" 
-          maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> - 
-      <input Title="Data aaIscr" type="text" value="" name="<%= ICostantiSentenza.CAMPO_ANNO_DATA_ISCRIZIONE %>"
-          maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-    </td>
-  </tr>
-  <tr>
-    <td class="l">Data Arrivo Atto <font class="ob">(*)</font></td>
-    <td class="L">
-      <input Title="Data ggAAtto" type="text" value="" name="<%= ICostantiSentenza.CAMPO_GIORNO_DATA_ARRIVO_ATTO %>"
-          maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> - 
-      <input Title="Data mmAAtto" type="text" value="" name="<%= ICostantiSentenza.CAMPO_MESE_DATA_ARRIVO_ATTO %>" 
-          maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> - 
-      <input Title="Data aaAAtto" type="text" value="" name="<%= ICostantiSentenza.CAMPO_ANNO_DATA_ARRIVO_ATTO %>"
-          maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-    </td>
-  </tr> 
-  
-  <% if ("N".equals(EsisteFascicoloClasseIVAnnoCorrente) ){ %>
-  <tr>
-      <td class="l">Anno e Numero Procedimento <font class="ob">(*)</font></td>
-      <td class="l">
-        <input type="text" title="Anno Procedimento" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>" maxlength="4" size="4" 
-               value="<%=StringUtils.toStringJSP(AnnoCorrente,"")%>"
-               readonly
-               onkeypress="return TicTabNumField(this,event)" 
-               onFocus="javascript:textboxSelect(this)"  onBlur="javascript:value=FillYear(value)">
-        /
-        <input type="text" title="Numero Procedimento" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>" maxlength="13" size="15" 
-               onkeypress="return TicTabNumField(this,event)">
-      </td>
-  </tr>
-  <% } %>
-  
-  
-  
-    <tr>
-      <td class="l">Note</td>
-      <td class="l" colspan="3"> 
-        <TEXTAREA cols="80" rows="3" name="<%= ICostantiSentenza.CAMPO_NOTE %>"></textarea><%-- maxlength="2000" --%>
-      </td>
-    </tr>
+		</table>
 
-    <tr>
-      <td class="l">
-        <input class="bottone" type="submit" name="conferma" value="Conferma">
-      </td>
-    </tr>
-</table>
-</form>
-<script language="JavaScript" type="text/javascript">
+		<!--        Dati sul Nuovo Procedimento Da Eseguire      -->
+		<table cellspacing=2 cellpadding=2 width="90%">
+			<tr>
+				<td class="Titolo" colspan=4>Provvedimento da Eseguire</td>
+			</tr>
+			<% if ("N".equals(EsisteFascicoloClasseIVAnnoCorrente) ){ %>
+			<tr>
+				<td class="l" colspan="2"><font color="red">Attenzione!
+						Si sta procedendo all'iscrizione del primo procedimento di Classe
+						IV per l'anno corrente. <br>Il progressivo indicato in questa
+						fase sarà il valore dal quale partirà la numerazione automatica
+						per i successivi procedimenti di classe IV. <br>Una volta
+						indicato il progressivo iniziale, sarà possibile acquisire il
+						pregresso per l'anno corrente (assegnare numerazione manuale) solo
+						per procedimenti con numerazione inferiore a quella indicata i
+						questa fase. <br>Come prima iscrizione è necessario quindi
+						registrare o un nuovo procedimento assegnandogli opportuno
+						progressivo secondo quanto prevede l'attuale registro Misure di
+						Sicurezza, oppure registrare l'ultimo procedimento presente sul
+						registro Misure di Sicurezza.
+				</font></td>
+			</tr>
+			<% } %>
+
+			<tr>
+				<td class="l">Data Iscrizione <font class="ob">(*)</font></td>
+				<td class="L"><input Title="Data ggIscr" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_GIORNO_DATA_ISCRIZIONE %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					Title="Data mmIscr" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_MESE_DATA_ISCRIZIONE %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					Title="Data aaIscr" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_ANNO_DATA_ISCRIZIONE %>"
+					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"></td>
+			</tr>
+			<tr>
+				<td class="l">Data Arrivo Atto <font class="ob">(*)</font></td>
+				<td class="L"><input Title="Data ggAAtto" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_GIORNO_DATA_ARRIVO_ATTO %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					Title="Data mmAAtto" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_MESE_DATA_ARRIVO_ATTO %>"
+					maxlength="2" size="2" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillDM(value)"> - <input
+					Title="Data aaAAtto" type="text" value=""
+					name="<%= ICostantiSentenza.CAMPO_ANNO_DATA_ARRIVO_ATTO %>"
+					maxlength="4" size="4" onFocus="javascript:textboxSelect(this)"
+					onkeypress="return TicTabNumField(this,event)"
+					onBlur="javascript:value=FillYear(value)"></td>
+			</tr>
+
+			<% if ("N".equals(EsisteFascicoloClasseIVAnnoCorrente) ){ %>
+			<tr>
+				<td class="l">Anno e Numero Procedimento <font class="ob">(*)</font></td>
+				<td class="l"><input type="text" title="Anno Procedimento"
+					name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>" maxlength="4"
+					size="4" value="<%=StringUtils.toStringJSP(AnnoCorrente,"")%>"
+					readonly onkeypress="return TicTabNumField(this,event)"
+					onFocus="javascript:textboxSelect(this)"
+					onBlur="javascript:value=FillYear(value)"> / <input
+					type="text" title="Numero Procedimento"
+					name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>"
+					maxlength="13" size="15"
+					onkeypress="return TicTabNumField(this,event)"></td>
+			</tr>
+			<% } %>
+
+
+
+			<tr>
+				<td class="l">Note</td>
+				<td class="l" colspan="3"><TEXTAREA cols="80" rows="3"
+						name="<%= ICostantiSentenza.CAMPO_NOTE %>"></textarea>
+					<%-- maxlength="2000" --%></td>
+			</tr>
+
+			<tr>
+				<td class="l"><input class="bottone" type="submit"
+					name="conferma" value="Conferma"></td>
+			</tr>
+		</table>
+	</form>
+	<script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("LoadInserisciSentenza");
 
 

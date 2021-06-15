@@ -37,7 +37,7 @@ public class ActInserisciResidenzaFascicoloSige extends ActionSige implements IC
     String lCodStato = getRequestStringParameter( CAMPO_COD_STATO);
     lResMod.setCodStato( lCodStato );
 
-    // Recupero dati del Comune di Residenza con Controllo omonimia.
+    // Recupero dati del Comune di Residenza con Controllo omonimia e FLAG_VALIDITA' = true.
     ComuneModel lComMod;
     if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE) &&
     	getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 1) {

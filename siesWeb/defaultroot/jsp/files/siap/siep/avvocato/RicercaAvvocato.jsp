@@ -53,7 +53,8 @@
       alert('Attenzione! Visualizzati solo i primi 200 Difensori individuati. Perfezionare la ricerca!');
   }
 
-  function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,codicefiscale,luogoNascita,giornoNascita,meseNascita,annoNascita,residenza,stato)
+  //function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,codicefiscale,luogoNascita,giornoNascita,meseNascita,annoNascita,residenza,stato)
+  function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,codicefiscale,luogoNascita,giornoNascita,meseNascita,annoNascita,descComuneStudio,stato)
   {
     var flag=controlla(stato);
 
@@ -82,9 +83,10 @@
       window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value=giornoNascita;
       window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value=meseNascita;
       window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value=annoNascita;
-      window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value=residenza;
-
-
+      <%-- 20210610 	MEV_21 sostituzione di CAMPO_COD_COMUNE_RESIDENZA con CAMPO_DESC_COMUNE_STUDIO  --%>
+      <%-- 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value = residenza; --%>
+      window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>.value = descComuneStudio;
+      window.parent.opener.document.<%=request.getParameter("formname")%>.lTipoAvv.value = "SIES";
 
       window.parent.close();
     }
@@ -146,7 +148,7 @@
     <td class=l><%=StringUtils.toStringJSP(lAvv.getForo())%></td>
     <% } %>
     
-    <td class=l><%=StringUtils.toStringJSP(lAvv.getIndirizzo()) + " - " + StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%></td>
+    <td class=l><%=StringUtils.toStringJSP(lAvv.getIndirizzo()) + " - " + StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%></td>
 <%
 String stato=null;
 if(lAvv.getDataSospensione()!= null)
@@ -169,7 +171,7 @@ if(lAvv.getDataSospensione()!= null)
 %>
         <% if (! modalita.equals("NoPop"))
         { %>
-        <td class=c><a href="Javascript:insertIT('<%=lAvv.getIdAvvocato()%>','<%=StringUtils.cStrForJS(lAvv.getCognome())%>','<%=StringUtils.cStrForJS(lAvv.getNome())%>','<%=StringUtils.cStrForJS(lAvv.getForo())%>','<%=StringUtils.cStrForJS(lAvv.getIndirizzo())%>','<%=StringUtils.cStrForJS(lAvv.getTelefono())%>','<%=StringUtils.cStrForJS(lAvv.getFax())%>','<%=StringUtils.cStrForJS(lAvv.getEMail())%>','<%=StringUtils.cStrForJS(lAvv.getCodiceFiscale())%>','<%=StringUtils.cStrForJS(lAvv.getDescLuogoNascita())%>','<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"dd"))%>','<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"MM"))%>','<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"yyyy"))%>','<%=StringUtils.cStrForJS(lAvv.getDescComuneResidenza())%>','<%=stato%>');"><img align="middle" src="/images/fileselected.gif" border=0></a></td>
+        <td class=c><a href="Javascript:insertIT('<%=lAvv.getIdAvvocato()%>','<%=StringUtils.cStrForJS(lAvv.getCognome())%>','<%=StringUtils.cStrForJS(lAvv.getNome())%>','<%=StringUtils.cStrForJS(lAvv.getForo())%>','<%=StringUtils.cStrForJS(lAvv.getIndirizzo())%>','<%=StringUtils.cStrForJS(lAvv.getTelefono())%>','<%=StringUtils.cStrForJS(lAvv.getFax())%>','<%=StringUtils.cStrForJS(lAvv.getEMail())%>','<%=StringUtils.cStrForJS(lAvv.getCodiceFiscale())%>','<%=StringUtils.cStrForJS(lAvv.getDescLuogoNascita())%>','<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"dd"))%>','<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"MM"))%>','<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"yyyy"))%>','<%=StringUtils.cStrForJS(lAvv.getDescrComuneStudio() )%>','<%=stato%>');"><img align="middle" src="/images/fileselected.gif" border=0></a></td>
         <% } %>
         </tr>
   <%

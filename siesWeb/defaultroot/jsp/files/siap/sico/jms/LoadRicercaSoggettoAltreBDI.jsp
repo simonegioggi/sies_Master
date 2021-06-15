@@ -21,6 +21,15 @@
       {
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }
+	  <!-- 20210524	MEV Scheda-21 -->
+      function ListaComuniNascita(a_formname,a_fieldname)
+      {
+        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+      }
+      function cancellaCodComuneReale() {
+		document.LoadRicercaSoggetto.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
+	  }	
+      
   </script>
   <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
   <script language="JavaScript" src="/html/ControllaData.js"></script>
@@ -45,6 +54,7 @@
   <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadRicercaSoggetto">
 
     <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.jms.action.ActRicercaSoggettoAltreBDI">
+    <input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
 
     <table>
       <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
@@ -68,8 +78,8 @@
        <tr>
         <td class="l">Comune di nascita <font class=ob>(*)</font></td>
         <td class="l">
-          <input title="Comune di Nascita" value="" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" maxlength="30" size="30">
-          <a href="Javascript:ListaComuni('LoadRicercaSoggetto','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
+          <input title="Comune di Nascita" value="" type="text" name="<%=ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA%>" maxlength="30" size="30" onChange="cancellaCodComuneReale();">
+          <a href="Javascript:ListaComuniNascita('LoadRicercaSoggetto','<%= ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA %>');">
           <img src="/images/filefolder.gif" border=0>
           </a>
         </td>

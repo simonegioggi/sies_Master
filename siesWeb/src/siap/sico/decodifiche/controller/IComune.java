@@ -20,6 +20,8 @@ public interface IComune {
 
 	public Vector ExGetListaComuni(ComuneModel lModel) throws F3BException;
 
+	public Vector ExGetListaComuniNascita(ComuneModel lModel) throws F3BException;	// 2021/05/17	MEV_21
+
 	public Vector ExGetListaComuniTds() throws F3BException;
 
 	public Vector ExGetListaComuniTdsm() throws F3BException;

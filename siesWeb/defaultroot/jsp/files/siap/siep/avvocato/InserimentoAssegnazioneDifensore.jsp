@@ -22,6 +22,8 @@
 <jsp:useBean id="autoritaEsternaDif" scope="request" class="java.lang.String"/>
 <jsp:useBean id="NoteAvvocati"       scope="request" class="java.lang.String"/>
 <jsp:useBean id="avvocato"           scope="request" class="siap.siep.avvocato.model.AvvocatoModel"/>
+<jsp:useBean id="lTipoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210620 MEV_21 -->
+<jsp:useBean id="nazioni"            scope="request" class="java.lang.String"/>		<!--   20210620 MEV_21 -->
 
 <%
 AvvocatoModel lAvv = avvocato;
@@ -232,6 +234,7 @@ if (siap.util.SIESSwitch.isRegeSiesOn()) {
     	<td class="l" >Cognome</td>
     	<td class="l">
     		<input type="hidden" value="<%=lAvv.getIdAvvocato()%>" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">
+    		<input type="hidden" value="<%=lAvv.getCodNonAttivita()%>" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>">
     		<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=StringUtils.toStringJSP(lAvv.getCognome())%>" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>">
     	</td>
 	</tr>
@@ -263,11 +266,16 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
         	<input type="hidden" value="<%=lAvv.getCodStatoNascita()%>" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">
         	<input title="Stato di Nascita" readonly value="<%=StringUtils.toStringJSP(lAvv.getDescrStatoNascita())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_STATO_NASCITA%>" maxlength="35" size="35">
 		</td>
+		<%--td class="L">
+			<select title="Stato di Nascita" readonly name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">
+					<%= nazioni %>
+			</select>
+		</td --%>>
 	</tr>
   	<tr>
-        <td class="l">Comune di Nascita Estero</td>
+        <td class="l">Luogo di Nascita Estero</td>
         <td class="l">
-			<input title="Comune di Nascita Estero" readonly value="<%=StringUtils.toStringJSP(comuneNascitaEstero)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>" maxlength="35" size="35">
+			<input title="Luogo di Nascita Estero" readonly value="<%=StringUtils.toStringJSP(comuneNascitaEstero)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>" maxlength="35" size="35">
 		</td>
 	</tr>
   	<tr>
@@ -480,7 +488,9 @@ if (!"".equals(lTipoFunzione)) {
         	<input type="button" class="bottone" name="CI" value="Prosegui" onClick="Javascript:return Imputazione();">
       	</td>
 <%
-} else {
+//20210611 MEV_21 
+//} else {
+} else if ("NO_SIES".equals(lTipoAvv)) {
 %>
     	<td colspan=2>
       		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
@@ -493,6 +503,7 @@ if (!"".equals(lTipoFunzione)) {
 </div>
 <input type="HIDDEN" name="<%=ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE%>" value=<%=AzioneChiamante%>>
 <input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
+<input type="HIDDEN" name="lTipoAvv" value="<%=lTipoAvv%>">	<!-- //20210611 MEV_21 -->
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="">
 </form>
 

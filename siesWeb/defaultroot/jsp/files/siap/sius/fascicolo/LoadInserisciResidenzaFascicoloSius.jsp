@@ -98,8 +98,8 @@
     }
      else if (!modificato )
     {
-      alert('La residenza corrente  non è stata modificata!');
-      return false;
+      //alert('La residenza corrente  non è stata modificata!');
+      //return false;
     }
     if (document.LoadInserisciResidenzaFascicoloSius.<%=ICostantiResidenza.CAMPO_COD_STATO%>.value!='039')
     {
