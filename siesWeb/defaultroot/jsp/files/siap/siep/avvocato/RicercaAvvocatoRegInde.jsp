@@ -22,6 +22,7 @@
 
 <jsp:useBean id="avvocato" 	scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="msg"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="lTipoAvv"  scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -75,8 +76,11 @@ function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefi
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value = giornoNascita;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value = meseNascita;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value = annoNascita;
+	<%-- 20210607	MEV Scheda-21  --%>
 <%-- 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value = residenza; --%>
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>.value = descComuneStudio;
+
+	window.parent.opener.document.<%=request.getParameter("formname")%>.lTipoAvv.value = "REGINDE";
 
    	window.parent.close();
 }
@@ -235,6 +239,7 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 <%
 		} else {
 %>
+			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=lTipoAvv%>.value = "NO_REGINDE";
 			&nbsp;
 <%
 		}
@@ -267,6 +272,7 @@ button.disabled = true;
     }
 }
 %>
+<input type="HIDDEN" name="lTipoAvv" value="<%=lTipoAvv%>">
 </form>
 </body>
 </html>
