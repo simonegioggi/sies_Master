@@ -42,6 +42,8 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			siesLogger.debug("Ricerca su RegInde per:");
 			siesLogger.debug("Cognome: " + am.getCognome());
 			siesLogger.debug("Nome: " + am.getNome());
+			siesLogger.debug("Codice Fiscale: "
+					+ (Utils.isPresent(am.getCodiceFiscale()) ? am.getCodiceFiscale() : ""));
 			siesLogger.debug("Foro: " + am.getForo());
 			siesLogger.debug("Tutti i Fori: " + (isRequestChecked(CAMPO_FLAG_TUTTI_FORI) ? "SI" : "NO"));
 			if (!isRequestChecked(CAMPO_FLAG_TUTTI_FORI)) {
@@ -63,13 +65,20 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			Soggetto[] listaSoggetti = null;
 			siesLogger.debug(
 					"Chiamo ricercaSoggettoComplete(cognome, nome, codiceFiscale, indirizzo, codiceEnte, orderBy, asc)");
-			listaSoggetti = port.ricercaSoggettoComplete(am.getCognome() != null ? am.getCognome() : "",
-					am.getNome() != null ? am.getNome() : "",
-					am.getCodiceFiscale() != null ? am.getCodiceFiscale() : "", null, foro, null, null);
+			// Gestione CF: il sistema ricercherà tutti gli avvocati con il codice fiscale indicato in tutti i
+			// fori, non considerando il contenuto degli altri campi!!!
+			if (Utils.isPresent(am.getCodiceFiscale()))
+				listaSoggetti = port.ricercaSoggettoComplete(null, null, am.getCodiceFiscale(), null, null,
+						null, null);
+			else
+				listaSoggetti = port.ricercaSoggettoComplete(am.getCognome() != null ? am.getCognome() : "",
+						am.getNome() != null ? am.getNome() : "", null, null, foro, null, null);
 			siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
 				v = new ArrayList(Arrays.asList(listaSoggetti));
 				siesLogger.debug("Elementi trovati: " + v.size());
+				if (v.size() > 20) // max 200 avvocati
+					throw new SearchLimitException();
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");
 		} catch (SearchLimitException sle) {
