@@ -161,8 +161,11 @@
     <tr>
       <td class="l">Con Studio in </td>
       <td class="L">
-        <input title="Comune di Residenza"  value="" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>"  maxlength="35" size="35">
-        <a href="Javascript:ListaComuni('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>');">
+		<%-- 20210610 MEV_21 --%>
+<%--    <input title="Comune di Residenza"  value="" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>"  maxlength="35" size="35">
+        <a href="Javascript:ListaComuni('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>');">  --%> 
+		<input title="Comune Sede dello Studio" value="" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
+        <a href="Javascript:ListaComuni('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO %>');">
           <img src="/images/filefolder.gif" border=0>
         </a>
       </td>

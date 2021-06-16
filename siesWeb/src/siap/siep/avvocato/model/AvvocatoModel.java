@@ -30,6 +30,7 @@ public class AvvocatoModel extends GenericModel {
 	private String mDescLuogoNascitaReginde;
 	private String mCodStatoNascita;
 	private String mDescrStatoNascita;
+	private BigDecimal mIdAvvocatoBonificato;
 	// FINE: MEV_21
 
 	private String mIndirizzo;
@@ -84,6 +85,7 @@ public class AvvocatoModel extends GenericModel {
 		this.mDescLuogoNascitaReginde = "";
 		this.mCodStatoNascita = "";
 		this.mDescrStatoNascita = "";
+		this.mIdAvvocatoBonificato = null;
 		// FINE: MEV_21
 		this.mIndirizzo = "";
 		this.mTelefono = "";
@@ -127,6 +129,7 @@ public class AvvocatoModel extends GenericModel {
 		this.mDescLuogoNascitaReginde = aModel.mDescLuogoNascitaReginde;
 		this.mCodStatoNascita = aModel.mCodStatoNascita;
 		this.mDescrStatoNascita = aModel.mDescrStatoNascita;
+		this.mIdAvvocatoBonificato = aModel.mIdAvvocatoBonificato;
 		// FINE: MEV_21
 		this.mIndirizzo = aModel.mIndirizzo;
 		this.mTelefono = aModel.mTelefono;
@@ -167,7 +170,7 @@ public class AvvocatoModel extends GenericModel {
 			// INIZIO: MEV_21 (avvocati)
 			String aDescComuneSedeForo, String aPec, String aFlagRegInde, String aDescrComuneStudio,
 			String aDescLuogoNascitaReginde, String aCodStatoNascita, String aDescrStatoNascita,
-			// FINE: MEV_21
+			BigDecimal aIdAvvocatoBonificato, // FINE: MEV_21
 			String aIndirizzo, String aTelefono, String aFax, String aEMail, String aCodiceFiscale,
 			String aProvincia, String aCap, BigDecimal aFlagVisualizza, String aCodOperatoreInserimento,
 			String aCodUfficioInserimento, Date aDataInserimento, String aCodOperatoreAggiornamento,
@@ -188,6 +191,7 @@ public class AvvocatoModel extends GenericModel {
 		this.mDescLuogoNascitaReginde = aDescLuogoNascitaReginde;
 		this.mCodStatoNascita = aCodStatoNascita;
 		this.mDescrStatoNascita = aDescrStatoNascita;
+		this.mIdAvvocatoBonificato = aIdAvvocatoBonificato;
 		// FINE: MEV_21
 		this.mIndirizzo = aIndirizzo;
 		this.mTelefono = aTelefono;
@@ -247,19 +251,15 @@ public class AvvocatoModel extends GenericModel {
 	public String getDescComuneSedeForo() {
 		return mDescComuneSedeForo;
 	}
-
 	public String getPec() {
 		return mPec;
 	}
-
 	public String getFlagRegInde() {
 		return mFlagRegInde;
 	}
-
 	public String getDescrComuneStudio() {
 		return mDescrComuneStudio;
 	}
-
 	public String getDescLuogoNascitaReginde() {
 		return mDescLuogoNascitaReginde;
 	}
@@ -267,9 +267,11 @@ public class AvvocatoModel extends GenericModel {
 	public String getCodStatoNascita() {
 		return mCodStatoNascita;
 	}
-
 	public String getDescrStatoNascita() {
 		return mDescrStatoNascita;
+	}
+	public BigDecimal getIdAvvocatoBonificato() {
+		return mIdAvvocatoBonificato;
 	}
 	// FINE: MEV_21
 
@@ -413,29 +415,26 @@ public class AvvocatoModel extends GenericModel {
 	public void setDescComuneSedeForo(String aValore) {
 		mDescComuneSedeForo = aValore;
 	}
-
 	public void setPec(String aValore) {
 		mPec = aValore;
 	}
-
 	public void setFlagRegInde(String aValore) {
 		mFlagRegInde = aValore;
 	}
-
 	public void setDescrComuneStudio(String aValore) {
 		mDescrComuneStudio = aValore;
 	}
-
 	public void setDescLuogoNascitaReginde(String aValore) {
 		mDescLuogoNascitaReginde = aValore;
 	}
-
 	public void setCodStatoNascita(String aValore) {
 		mCodStatoNascita = aValore;
 	}
-
 	public void setDescrStatoNascita(String aValore) {
 		mDescrStatoNascita = aValore;
+	}
+	public void setIdAvvocatoBonificato(BigDecimal aValore) {
+		mIdAvvocatoBonificato = aValore;
 	}
 	// FINE: MEV_21
 
@@ -573,7 +572,7 @@ public class AvvocatoModel extends GenericModel {
 				+ "[ mFlagRegInde = " + mFlagRegInde + " ]\n" + "[ mDescrComuneStudio = " + mDescrComuneStudio
 				+ " ]\n" + "[ mDescLuogoNascitaReginde = " + mDescLuogoNascitaReginde + " ]\n"
 				+ "[ mCodStatoNascita = " + mCodStatoNascita + " ]\n" + "[ mDescrStatoNascita = "
-				+ mDescrStatoNascita + " ]\n"
+				+ mDescrStatoNascita + " ]\n" + "[ mIdAvvocato = " + mIdAvvocatoBonificato + " ]\n"
 				// FINE: MEV_21
 				+ "[ mIndirizzo = " + mIndirizzo + " ]\n" + "[ mTelefono = " + mTelefono + " ]\n"
 				+ "[ mFax = " + mFax + " ]\n" + "[ mEMail = " + mEMail + " ]\n" + "[ mCodiceFiscale = "

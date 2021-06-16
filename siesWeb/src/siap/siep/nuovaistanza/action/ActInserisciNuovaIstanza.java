@@ -12,6 +12,8 @@ package siap.siep.nuovaistanza.action;
 
 import java.math.BigDecimal;
 
+import siap.sico.decodifiche.action.ICostantiComune;
+import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
@@ -73,7 +75,21 @@ public class ActInserisciNuovaIstanza extends ActionNuovaIstanza implements ICos
 	SoggettoModel lSogMod = null;
 	if(!this.isRequestParameterNullObj(CAMPO_COGNOME))
 	{
-	  lSogMod = getSoggetto();
+		// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+		ComuneModel lComMod;
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			// se presente dal codice comune (e descrizione)
+			lComMod = new ComuneModel(getDatiComuneByCodDescr(
+					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+					getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+		} else {
+			// altrimenti dalla sola descrizione (rischio omonimi)
+			lComMod = new ComuneModel(
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+		}
+
+		lSogMod = getSoggetto();
 	}
 	
 	//preparo il model del fascicolo

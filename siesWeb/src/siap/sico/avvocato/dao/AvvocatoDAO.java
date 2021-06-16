@@ -55,7 +55,13 @@ public class AvvocatoDAO extends SIAPTableDAO
     setField("CAP", STRING);
     setField("FLAG_VISUALIZZA", BIG_DECIMAL);
     setField("ID_AVVOCATO_STANDARD", BIG_DECIMAL);
-    
+	// 20210603	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+    setField("PEC", STRING);
+    setField("FLAG_REGINDE", STRING);
+    setField("DESCR_COMUNE_STUDIO", STRING);
+    setField("COD_STATO_NASCITA_AVV", STRING);
+    setField("DESC_LUOGO_NAS_REGINDE", STRING);
+    setField("ID_AVVOCATO_BONIFICATO", BIG_DECIMAL);
 
    }
 
@@ -92,6 +98,14 @@ public class AvvocatoDAO extends SIAPTableDAO
   public BigDecimal  getFlagVisualizza()        throws DAOException  { return getBigDecimal("FLAG_VISUALIZZA"); }
   public BigDecimal  getIdAvvocatoStandard()      throws DAOException  { return getBigDecimal("ID_AVVOCATO_STANDARD"); }
 
+  // 20210603	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+  public String      getPec()             			throws DAOException  { return getString("PEC"); }
+  public String      getFlagRegInde()               throws DAOException  { return getString("FLAG_REGINDE"); }
+  public String      getDescrComuneStudio()         throws DAOException  { return getString("DESCR_COMUNE_STUDIO"); }
+  public String      getCodStatoNascita()	        throws DAOException  { return getString("COD_STATO_NASCITA_AVV"); }
+  public String      getDescLuogoNasRegInde()       throws DAOException  { return getString("DESC_LUOGO_NAS_REGINDE"); }
+  public BigDecimal  getIdAvvocatoBonificato()      throws DAOException  { return getBigDecimal("ID_AVVOCATO_BONIFICATO"); }
+
   //
   // METODI SET()
   //
@@ -124,6 +138,13 @@ public class AvvocatoDAO extends SIAPTableDAO
   public void setFlagVisualizza(BigDecimal aValore)     {setBigDecimal("FLAG_VISUALIZZA", aValore);}
   public void setIdAvvocatoStandard(BigDecimal aValore)   {setBigDecimal("ID_AVVOCATO_STANDARD", aValore);}
 
+  // 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+  public void setPec(String aValore)            			{setString("PEC", aValore);}
+  public void setFlagRegInde(String aValore)            	{setString("FLAG_REGINDE", aValore);}
+  public void setDescrComuneStudio(String aValore)          {setString("DESCR_COMUNE_STUDIO", aValore);}
+  public void setCodStatoNascita(String aValore)	        {setString("COD_STATO_NASCITA_AVV", aValore);}
+  public void setDescLuogoNasRegInde(String aValore)        {setString("DESC_LUOGO_NAS_REGINDE", aValore);}
+  public void setIdAvvocatoBonificato(BigDecimal aValore)   {setBigDecimal("ID_AVVOCATO_BONIFICATO", aValore);}
 
   public GenericModel getModel() throws DAOException
   {
@@ -132,6 +153,7 @@ public class AvvocatoDAO extends SIAPTableDAO
         getCognome(), 
         getNome(),
         getForo(),
+        "",
         getIndirizzo(),
         getTelefono(),
         getFax(),
@@ -158,7 +180,14 @@ public class AvvocatoDAO extends SIAPTableDAO
         this.getProvincia(),
         this.getCap(),
         this.getFlagVisualizza(),
-        this.getIdAvvocatoStandard()
+        this.getIdAvvocatoStandard(),
+        this.getPec(),
+        this.getFlagRegInde(),
+        this.getDescrComuneStudio(),
+        this.getCodStatoNascita(),
+        "",
+        this.getDescLuogoNasRegInde(),
+        this.getIdAvvocatoBonificato()
         );
   }
 
@@ -194,6 +223,13 @@ public class AvvocatoDAO extends SIAPTableDAO
      setFlagVisualizza(aModel.getFlagVisualizza());
      setIdAvvocatoStandard(aModel.getIdAvvocatoStandard());  
      
+     // 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+     setPec(aModel.getPec());
+     setFlagRegInde(aModel.getFlagRegInde());
+     setDescrComuneStudio(aModel.getDescrComuneStudio());
+     setCodStatoNascita(aModel.getCodStatoNascita());
+     setDescLuogoNasRegInde(aModel.getDescLuogoNasRegInde());
+     setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());  
      
   }
 
@@ -224,6 +260,14 @@ public class AvvocatoDAO extends SIAPTableDAO
 
     setFlagVisualizza( aModel.getFlagVisualizza() );          
 
+	// 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+    // Abilitare se necessario.
+    setPec(aModel.getPec());
+    setFlagRegInde(aModel.getFlagRegInde());
+    setDescrComuneStudio(aModel.getDescrComuneStudio());
+    setCodStatoNascita(aModel.getCodStatoNascita());
+    setDescLuogoNasRegInde(aModel.getDescLuogoNasRegInde());
+    setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());  
     
     setCodUfficioAggiornamento   ( aModel.getCodUfficioAggiornamento() );
     setCodOperatoreAggiornamento ( aModel.getCodOperatoreAggiornamento() );

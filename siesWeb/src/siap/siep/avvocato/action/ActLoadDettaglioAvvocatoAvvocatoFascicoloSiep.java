@@ -82,7 +82,12 @@ public class ActLoadDettaglioAvvocatoAvvocatoFascicoloSiep extends ActionSiap im
 	
 	    IIstitutoDetenzione lCtrlIstituto = SIEPLookupRemote.getIstitutoDetenzioneRemote();
 	    IstitutoDetenzioneModel lIstMod = new IstitutoDetenzioneModel();
-	    lIstMod=lCtrlIstituto.ExRicercaIstitutoDetenzioneByKey(lAvv.getAvvocatoFascicoloSiepModel().getIstDetIdIstitutoDetenzione());
+
+	    // 20210610 MEV_21 Risoluzione errore dopo inserimento Avv. da RegInde
+	    if (lAvv.getAvvocatoFascicoloSiepModel() != null	&&
+	    	lAvv.getAvvocatoFascicoloSiepModel().getIstDetIdIstitutoDetenzione() != null)
+	    	lIstMod=lCtrlIstituto.ExRicercaIstitutoDetenzioneByKey(lAvv.getAvvocatoFascicoloSiepModel().getIstDetIdIstitutoDetenzione());
+	    
 	    setRequestAttribute("avvocato", lAvv);
 	    setRequestAttribute("lIstMod", lIstMod);
 	    setRequestAttribute("modalita", "D");

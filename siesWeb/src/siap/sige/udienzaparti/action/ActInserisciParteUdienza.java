@@ -6,11 +6,13 @@ import java.util.List;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.residenza.model.ResidenzaModel;
+import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sige.SIGEException;
 import siap.sige.fascicolo.action.ICostantiFascicoloSige;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
@@ -150,7 +152,9 @@ public class ActInserisciParteUdienza extends ActionSige implements ICostantiPar
 		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA)
 				&& getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			lComMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA));
+			// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni senza flag validità.
+			//lComMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA));
+			lComMod = getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA));
 			// Comune Nascita
 			lAnagraficaParteModel.setCodComuneNascita(lComMod.getCodComune());
 			lAnagraficaParteModel.setCodProvinciaNascita(lComMod.getCodProvincia());

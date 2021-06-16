@@ -38,7 +38,8 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 	 */
 	public String processRequest() throws F3BException {
 
-		// paramentro passato solo nel caso di iscrizione guidata
+		// paramentro passato solo nel caso di iscrizione guidata 
+		// 20210608 e successivamente anche per la MEV Scheda-21
 		if (!isRequestParameterNullObj("lTipoFunzione"))
 			setRequestAttribute("lTipoFunzione", getRequestStringParameter("lTipoFunzione"));
 
@@ -54,45 +55,53 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			flagReginde = true;
 			// se provengo da reginde allora ricerco l'avvocato su tabella AVVOCATO
 			// se esiste lo prelevo, altrimenti inserisco nuovo avvocato da reginde su sies!
-			Date dataNascita = null;
-			String codLuogoNascita = null;
-			ComuneModel comuneNascita = null;
-			String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
-					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-					: null;
-			if (Utils.isPresent(descCodLuogoNascita)) {
-				try {
-					comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
-				} catch (Exception e) {
-					siesLogger.info(e.getMessage());
-					// algortimo di omocodia
-					comuneNascita = AvvocatoUtil
-							.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+			
+			// 20210614 MEV_21 Si esegue la ricerca puntuale dell'Avvocato certificato RegInde in SIES. 
+			AvvocatoModel lAvvMod = new AvvocatoModel();
+			lAvvMod.setNome(getRequestStringParameter(CAMPO_NOME));
+			lAvvMod.setCognome(getRequestStringParameter(CAMPO_COGNOME));
+			lAvvMod.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+			lAvvMod.setFlagRegInde("SI");
+			lAvvMod = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvMod);
+			
+			// 20210614 MEV_21 Se l'avvocato certificato RegInde non è presente in SIES 
+			// recupero tutte le informazioni dalla Form.
+			if (lAvvMod == null) {
+				Date dataNascita = null;
+				String codLuogoNascita = null;
+				ComuneModel comuneNascita = null;
+				String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
+						? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
+						: null;
+				if (Utils.isPresent(descCodLuogoNascita)) {
+					try {
+						comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
+					} catch (Exception e) {
+						siesLogger.info(e.getMessage());
+						// algortimo di omocodia
+						comuneNascita = AvvocatoUtil
+								.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+					}
+					if (!Utils.isNullObj(comuneNascita)) {
+						codLuogoNascita = comuneNascita.getCodComune();
+						descCodLuogoNascita = comuneNascita.getDescrizione();
+					}
 				}
-				if (!Utils.isNullObj(comuneNascita)) {
-					codLuogoNascita = comuneNascita.getCodComune();
-					descCodLuogoNascita = comuneNascita.getDescrizione();
-				}
-			}
-			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
-					&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
-							&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
-				dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
-						ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
-						ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
-			AvvocatoModel am = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
-					getRequestStringParameter(CAMPO_NOME),
-					getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, null, null, null,
-					getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
-					getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, null, null, null, null,
-					getRequestStringParameter(CAMPO_CODICE_FISCALE), null, null, null, null, null, null, null,
-					null, null, null, descCodLuogoNascita, null, null, codLuogoNascita, null, dataNascita,
-					null, null, null, getCodUfficioUtenteConnesso(), null, null, null);
-			Vector avvocato = lCtrl.ExRicercaAvvocato(am);
-			if (!avvocato.isEmpty())
-				idAvvocato = ((AvvocatoModel) avvocato.get(0)).getIdAvvocato();
-			else {
-				// se non lo trovo lo inserisco ex novo
+				if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
+						&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
+						&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+						dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
+															  ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
+															  ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+				AvvocatoModel am = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
+													 getRequestStringParameter(CAMPO_NOME),
+													 getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, null, "SI", null,
+													 getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
+													 getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, null, null, null, null, null,	// 20210610
+													 getRequestStringParameter(CAMPO_CODICE_FISCALE), null, null, null, null, null, null, null,
+													 null, null, null, descCodLuogoNascita, null, null, codLuogoNascita, null, dataNascita,
+													 null, null, null, getCodUfficioUtenteConnesso(), null, null, null);
+
 				AvvocatoModel amIns = lCtrl.ExInserisciAvvocato(am);
 				idAvvocato = amIns.getIdAvvocato();
 			}

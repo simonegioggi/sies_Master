@@ -58,12 +58,13 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setField("DATA_AGGIORNAMENTO", DATE);
 		setField("COD_UFFICIO_AGGIORNAMENTO", STRING);
 
-		// MEV_21 (avvocati): aggiunti 5 campi in tabella
+		// MEV_21 (avvocati): aggiunti 6 campi in tabella
 		setField("PEC", STRING);
 		setField("FLAG_REGINDE", STRING);
 		setField("DESCR_COMUNE_STUDIO", STRING);
 		setField("COD_STATO_NASCITA_AVV", STRING);
 		setField("DESC_LUOGO_NAS_REGINDE", STRING);
+		setField("ID_AVVOCATO_BONIFICATO", BIG_DECIMAL);
 	}
 
 	//
@@ -182,12 +183,12 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		return getString("COD_UFFICIO_AGGIORNAMENTO");
 	}
 
-	// MEV_21 (avvocati): aggiunti 5 campi in tabella
+	// MEV_21 (avvocati): aggiunti 6 campi in tabella
 	public String getPec() throws DAOException {
 		return getString("PEC");
 	}
 
-	public String getFlagReginde() throws DAOException {
+	public String getFlagRegInde() throws DAOException {
 		return getString("FLAG_REGINDE");
 	}
 
@@ -195,12 +196,15 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		return getString("DESCR_COMUNE_STUDIO");
 	}
 
-	public String getCodStatoNascitaAvv() throws DAOException {
+	public String getCodStatoNascita() throws DAOException {
 		return getString("COD_STATO_NASCITA_AVV");
 	}
 
-	public String getDescLuogoNasReginde() throws DAOException {
+	public String getDescLuogoNasRegInde() throws DAOException {
 		return getString("DESC_LUOGO_NAS_REGINDE");
+	}
+	public BigDecimal getIdAvvocatoBonificato() throws DAOException {
+		return getBigDecimal("ID_AVVOCATO_BONIFICATO");
 	}
 
 	//
@@ -323,7 +327,7 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setString("COD_UFFICIO_AGGIORNAMENTO", aValore);
 	}
 
-	// MEV_21 (avvocati): aggiunti 5 campi in tabella
+	// MEV_21 (avvocati): aggiunti 6 campi in tabella
 	// public void setDescComuneSedeForo(String aValore) {
 	// setString("DESCR_COMUNE_STUDIO", aValore);
 	// }
@@ -332,7 +336,7 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setString("PEC", aValore);
 	}
 
-	public void setFlagReginde(String aValore) {
+	public void setFlagRegInde(String aValore) {
 		setString("FLAG_REGINDE", aValore);
 	}
 
@@ -340,20 +344,23 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setString("DESCR_COMUNE_STUDIO", aValore);
 	}
 
-	public void setCodStatoNascitaAvv(String aValore) {
+	public void setCodStatoNascita(String aValore) {
 		setString("COD_STATO_NASCITA_AVV", aValore);
 	}
 
-	public void setDescLuogoNasReginde(String aValore) {
+	public void setDescLuogoNasRegInde(String aValore) {
 		setString("DESC_LUOGO_NAS_REGINDE", aValore);
+	}
+	public void setIdAvvocatoBonificato(BigDecimal aValore) {
+		setBigDecimal("ID_AVVOCATO_BONIFICATO", aValore);
 	}
 
 	public GenericModel getModel() throws DAOException {
 
 		return new AvvocatoModel(getIdAvvocato(), getCognome(), getNome(), getForo(),
-				// MEV_21 (avvocati) descrizione SedeForo() + 5 nuovi campi db
-				"", getPec(), getFlagReginde(), getDescrComuneStudio(), getDescLuogoNasReginde(),
-				getCodStatoNascitaAvv(), "", getIndirizzo(), getTelefono(), getFax(), getEMail(),
+				// MEV_21 (avvocati) descrizione SedeForo() + 6 nuovi campi db
+				"", getPec(), getFlagRegInde(), getDescrComuneStudio(), getDescLuogoNasRegInde(),
+				getCodStatoNascita(), "", getIdAvvocatoBonificato(), getIndirizzo(), getTelefono(), getFax(), getEMail(),
 				getCodiceFiscale(), getProvincia(), getCap(), getFlagVisualizza(),
 				getCodOperatoreInserimento(), getCodUfficioInserimento(), getDataInserimento(),
 				getCodOperatoreAggiornamento(), getDataAggiornamento(), getCodUfficioAggiornamento(), "", "",
@@ -376,10 +383,13 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setProvincia(aModel.getProvincia());
 		setCap(aModel.getCap());
 		setFlagVisualizza(aModel.getFlagVisualizza());
-		// MEV_21 (avvocati) aggiunti 3 nuovi campi db
+		// MEV_21 (avvocati) aggiunti 6 nuovi campi db
 		setPec(aModel.getPec());
-		setFlagReginde(aModel.getFlagRegInde());
+		setFlagRegInde(aModel.getFlagRegInde());
 		setDescrComuneStudio(aModel.getDescrComuneStudio());
+		setCodStatoNascita(aModel.getCodStatoNascita());
+		setDescLuogoNasRegInde(aModel.getDescLuogoNascitaReginde());
+		setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());
 
 		setCodLuogoNascita(aModel.getCodLuogoNascita());
 		setCodComuneResidenza(aModel.getCodComuneResidenza());
@@ -414,10 +424,13 @@ public class AvvocatoDAO extends SIAPTableDAO {
 		setProvincia(aModel.getProvincia());
 		setCap(aModel.getCap());
 		setFlagVisualizza(aModel.getFlagVisualizza());
-		// MEV_21 (avvocati) aggiunti 3 nuovi campi db
+		// MEV_21 (avvocati) aggiunti 6 nuovi campi db
 		setPec(aModel.getPec());
-		setFlagReginde(aModel.getFlagRegInde());
+		setFlagRegInde(aModel.getFlagRegInde());
 		setDescrComuneStudio(aModel.getDescrComuneStudio());
+		setCodStatoNascita(aModel.getCodStatoNascita());
+		setDescLuogoNasRegInde(aModel.getDescLuogoNascitaReginde());
+		setIdAvvocatoBonificato(aModel.getIdAvvocatoBonificato());
 
 		setCodLuogoNascita(aModel.getCodLuogoNascita());
 		setCodComuneResidenza(aModel.getCodComuneResidenza());

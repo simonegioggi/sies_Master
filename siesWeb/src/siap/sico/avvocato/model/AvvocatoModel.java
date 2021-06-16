@@ -25,6 +25,7 @@ public class AvvocatoModel extends GenericModel {
 	private String mNome;
 	private String mDescrTipo;
 	private String mForo;
+	private String mDescComuneSedeForo; // 20210608	MEV_Scheda-21
 	private String mIndirizzo;
 	private String mTelefono;
 	private String mFax;
@@ -52,6 +53,14 @@ public class AvvocatoModel extends GenericModel {
 	private String mCap;
 	private BigDecimal mFlagVisualizza;
 	private BigDecimal mIdAvvocatoStandard;
+	// 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+	private String mPec;
+	private String mFlagRegInde;
+	private String mDescrComuneStudio;
+	private String mCodStatoNascita;
+	private String mDescStatoNascita;
+	private String mDescLuogoNasRegInde;
+	private BigDecimal mIdAvvocatoBonificato;
 
 	// COSTRUTTORE DI DEFAULT
 	public AvvocatoModel() {
@@ -60,6 +69,7 @@ public class AvvocatoModel extends GenericModel {
 		this.mNome = "";
 		this.mDescrTipo = "";
 		this.mForo = "";
+		this.mDescComuneSedeForo = "";  // 20210608	MEV_Scheda-21
 		this.mIndirizzo = "";
 		this.mTelefono = "";
 		this.mFax = "";
@@ -87,6 +97,13 @@ public class AvvocatoModel extends GenericModel {
 		this.mCap = "";
 		this.mFlagVisualizza = null;
 		this.mIdAvvocatoStandard = null;
+		this.mPec = "";
+		this.mFlagRegInde = "";
+		this.mDescrComuneStudio = "";
+		this.mCodStatoNascita = "";
+		this.mDescStatoNascita = "";
+		this.mDescLuogoNasRegInde = "";
+		this.mIdAvvocatoBonificato = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -95,6 +112,7 @@ public class AvvocatoModel extends GenericModel {
 		this.mCognome = aModel.mCognome;
 		this.mNome = aModel.mNome;
 		this.mForo = aModel.mForo;
+		this.mDescComuneSedeForo = aModel.mDescComuneSedeForo;   // 20210608	MEV_Scheda-21
 		this.mIndirizzo = aModel.mIndirizzo;
 		this.mTelefono = aModel.mTelefono;
 		this.mFax = aModel.mFax;
@@ -123,10 +141,18 @@ public class AvvocatoModel extends GenericModel {
 		this.mCap = aModel.mCap;
 		this.mFlagVisualizza = aModel.mFlagVisualizza;
 		this.mIdAvvocatoStandard = aModel.mIdAvvocatoStandard;
+		this.mPec = aModel.mPec;
+		this.mFlagRegInde = aModel.mFlagRegInde;
+		this.mDescrComuneStudio = aModel.mDescrComuneStudio;
+		this.mCodStatoNascita = aModel.mCodStatoNascita;
+		this.mDescStatoNascita = aModel.mDescStatoNascita;
+		this.mDescLuogoNasRegInde = aModel.mDescLuogoNasRegInde;
+		this.mIdAvvocatoBonificato = aModel.mIdAvvocatoBonificato;
 	}
 
 	// COSTRUTTORE MODEL
 	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo,
+			String aDescComuneSedeForo, // 20210608	MEV_Scheda-21
 			String aIndirizzo, String aTelefono, String aFax, String aEMail, String aCodLuogoNascita,
 			String aCodComuneResidenza, String aDescCodLuogoNascita, String aDescCodComuneResidenza,
 			Date aDataNascita, String aCodOperatoreInserimento, Date aDataInserimento,
@@ -134,13 +160,17 @@ public class AvvocatoModel extends GenericModel {
 			String aCodUfficioInserimento, String aCodUfficioAggiornamento, Date aDataSospensione,
 			Date aDataRadiazione, String aCodNonAttivita, String aCodUffAppartenenza, String aNote,
 			String aFlagCancellato, String aDescrNonAttivita, String aCodiceFiscale, String aProvincia,
-			String aCap, BigDecimal aFlagVisualizza, BigDecimal aIdAvvocatoStandard)
+			String aCap, BigDecimal aFlagVisualizza, BigDecimal aIdAvvocatoStandard, 
+			// 20210603	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+			String aPec, String aFlagRegInde, String aDescrComuneStudio, String aCodStatoNascita, 
+			String aDescStatoNascita, String aDescLuogoNasRegInde, BigDecimal aIdAvvocatoBonificato)
 
 	{
 		this.mIdAvvocato = aIdAvvocato;
 		this.mCognome = aCognome;
 		this.mNome = aNome;
 		this.mForo = aForo;
+		this.mDescComuneSedeForo = aDescComuneSedeForo;  // 20210608	MEV_Scheda-21
 		this.mIndirizzo = aIndirizzo;
 		this.mTelefono = aTelefono;
 		this.mFax = aFax;
@@ -169,6 +199,14 @@ public class AvvocatoModel extends GenericModel {
 		this.mCap = aCap;
 		this.mFlagVisualizza = aFlagVisualizza;
 		this.mIdAvvocatoStandard = aIdAvvocatoStandard;
+		// 20210603	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+		this.mPec = aPec;
+		this.mFlagRegInde = aFlagRegInde;
+		this.mDescrComuneStudio = aDescrComuneStudio;
+		this.mCodStatoNascita = aCodStatoNascita;
+		this.mDescStatoNascita = aDescStatoNascita;
+		this.mDescLuogoNasRegInde = aDescLuogoNasRegInde;
+		this.mIdAvvocatoBonificato = aIdAvvocatoBonificato;
 	}
 
 	//
@@ -190,6 +228,10 @@ public class AvvocatoModel extends GenericModel {
 		return mForo;
 	}
 
+	// 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+	public String getDescComuneSedeForo() {
+		return mDescComuneSedeForo;
+	}
 	public String getIndirizzo() {
 		return mIndirizzo;
 	}
@@ -274,6 +316,14 @@ public class AvvocatoModel extends GenericModel {
 		return mNote;
 	}
 
+/*	public Date getDataInizioValidita() {
+		return mDataInizioValidita;
+	}
+
+	public Date getDataFineValidita() {
+		return mDataFineValidita;
+	} */
+
 	public String getFlagCancellato() {
 		return mFlagCancellato;
 	}
@@ -302,6 +352,29 @@ public class AvvocatoModel extends GenericModel {
 		return mIdAvvocatoStandard;
 	}
 
+	
+	public String getPec() {
+		return mPec;
+	}
+	public String getFlagRegInde() {
+		return mFlagRegInde;
+	}
+	public String getDescrComuneStudio() {
+		return mDescrComuneStudio;
+	}
+	public String getCodStatoNascita() {
+		return mCodStatoNascita;
+	}
+	public String getDescStatoNascita() {
+		return mDescStatoNascita;
+	}
+	public String getDescLuogoNasRegInde() {
+		return mDescLuogoNasRegInde;
+	}
+	public BigDecimal getIdAvvocatoBonificato() {
+		return mIdAvvocatoBonificato;
+	}
+	
 	//
 	// METODI SET()
 	//
@@ -322,6 +395,10 @@ public class AvvocatoModel extends GenericModel {
 		mForo = aValore;
 	}
 
+	// 20210608	MEV_Scheda-21
+	public void setDescComuneSedeForo(String aValore) {
+		mDescComuneSedeForo = aValore;
+	}
 	public void setIndirizzo(String aValore) {
 		mIndirizzo = aValore;
 	}
@@ -434,4 +511,63 @@ public class AvvocatoModel extends GenericModel {
 		mIdAvvocatoStandard = aValore;
 	}
 
+	// 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+	public void setPec(String aValore) {
+		mPec = aValore;
+	}
+	public void setFlagRegInde(String aValore) {
+		mFlagRegInde = aValore;
+	}
+	public void setDescrComuneStudio(String aValore) {
+		mDescrComuneStudio = aValore;
+	}
+	public void setCodStatoNascita(String aValore) {
+		mCodStatoNascita = aValore;
+	}
+	public void setDescStatoNascita(String aValore) {
+		mDescStatoNascita = aValore;
+	}
+	public void setDescLuogoNasRegInde(String aValore) {
+		mDescLuogoNasRegInde = aValore;
+	}
+	public void setIdAvvocatoBonificato(BigDecimal aValore) {
+		mIdAvvocatoBonificato = aValore;
+	}
+
+	/*****************************************************************************
+	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
+	 ****************************************************************************/
+	public String toString() {
+
+		String lStr = new String();
+
+		lStr = "AvvocatoModel:\n" + "[ mIdAvvocato = " + mIdAvvocato + " ]\n" + "[ mCognome = " + mCognome
+				+ " ]\n" + "[ mNome = " + mNome + " ]\n" + "[ mForo = " + mForo + " ]\n"
+				+ "[ mIndirizzo = " + mIndirizzo + " ]\n" + "[ mTelefono = " + mTelefono + " ]\n"
+				+ "[ mFax = " + mFax + " ]\n" + "[ mEMail = " + mEMail + " ]\n" + "[ mCodiceFiscale = "
+				+ mCodiceFiscale + " ]\n" + "[ mProvincia = " + mProvincia + " ]\n" + "[ mCap = " + mCap
+				+ " ]\n" + "[ mFlagVisualizza = " + mFlagVisualizza + " ]\n" + "[ mCodComuneResidenza = "
+				+ mCodComuneResidenza + " ]\n" + "[ mCodLuogoNascita = " + mCodLuogoNascita + " ]\n"
+				+ "[ mDataNascita = " + mDataNascita + " ]\n" + "[ mDataSospensione = " + mDataSospensione
+				+ " ]\n" + "[ mDataRadiazione = " + mDataRadiazione + " ]\n" + "[ mCodNonAttivita = "
+				+ mCodNonAttivita + " ]\n" + "[ mNote = " + mNote + " ]\n" + "[ mFlagCancellato = "
+				+ mFlagCancellato + " ]\n" + "[ mCodUffAppartenenza = " + mCodUffAppartenenza + " ]\n"
+				+ "[ mCodOperatoreInserimento = " + mCodOperatoreInserimento + " ]\n"
+				+ "[ mDataInserimento = " + mDataInserimento + " ]\n" + "[ mCodUfficioInserimento = "
+				+ mCodUfficioInserimento + " ]\n" + "[ mCodOperatoreAggiornamento = "
+				+ mCodOperatoreAggiornamento + " ]\n" + "[ mDataAggiornamento = " + mDataAggiornamento
+				+ " ]\n" + "[ mCodUfficioAggiornamento = " + mCodUfficioAggiornamento + " ]\n"
+				//+ "[ mDataInizioValidita = " + mDataInizioValidita + " ]\n" 
+				//+ "[ mDataFineoValidita = " + mDataFineValidita + " ]\n" 
+				+ "[ mDescrTipo = " + mDescrTipo + " ]\n"
+				+ "[ mIdAvvocatoStandard = " + mIdAvvocatoStandard + " ]\n"
+				// 20210608	MEV_Scheda-21 Aggiunta nuove colonne AVVOCATO per bonifica REGINDE.
+				+ "[ mDescComuneSedeForo = " + mDescComuneSedeForo + " ]\n" + "[ mPec = " + mPec + " ]\n"
+				+ "[ mFlagRegInde = " + mFlagRegInde + " ]\n" + "[ mDescrComuneStudio = " + mDescrComuneStudio
+				+ " ]\n" + "[ mDescLuogoNascitaRegInde = " + mDescLuogoNasRegInde + " ]\n"
+				+ "[ mCodStatoNascita = " + mCodStatoNascita + " ]\n" + "[ mDescStatoNascita = "+ mDescStatoNascita + " ]\n" + "[ mIdAvvocatoBonificato = " + mIdAvvocatoBonificato + " ]\n";
+
+		return lStr;
+	}
+	
 }
