@@ -147,4 +147,15 @@ public class StatisticheMSModel extends GenericModel {
 		this.codAttivita = codAttivita;
 	}
 
+	
+	public String toString () {
+		String s = "";
+		s+="StatisticheMSModel = \n"
+				+ "[ tipoMS          = " + tipoMS + " ]\n"
+				+ "[ anno;           = " + anno+ " ]\n"
+				+ "[ totFasc         = " + totFasc + " ]\n"
+				+ "[ progFasc <vect> = " + progFasc + " ]";
+		
+		return s;
+	}
 }
