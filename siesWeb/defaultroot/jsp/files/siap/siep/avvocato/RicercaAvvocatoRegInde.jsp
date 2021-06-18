@@ -1,14 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_21: aggiunta pagina per chiamata a WS per individuare lista avvocato in ReGIndE --%>
 
-<%@ page import="it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Ruoloente"%>
-<%@ page import="it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Indirizzo"%>
-<%@ page import="it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Soggetti"%>
-<%@ page import="it.giustizia.www.serviziTelematici.reginde.interrogazioniExt.Soggetto"%>
+<%@ page import="it.giustizia.serviziTelematici.reginde.interrogazioniExt.Ruoloente"%>
+<%@ page import="it.giustizia.serviziTelematici.reginde.interrogazioniExt.Indirizzo"%>
+<%@ page import="it.giustizia.serviziTelematici.reginde.interrogazioniExt.Soggetti"%>
+<%@ page import="it.giustizia.serviziTelematici.reginde.interrogazioniExt.Soggetto"%>
 
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.Iterator"%>
+<%@ page import="java.util.List"%>
 
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -114,7 +115,7 @@ function altreInfo(idRecord) {
   
 <form name="f">
 <%
-if (avvocato.size() > 0 && avvocato.size() < 201) {
+if (avvocato.size() > 0 && avvocato.size() < 21) { // max 200 avvocati
 %>
 <table width="100%">
   	<tr>
@@ -135,8 +136,8 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 		Soggetto so = (Soggetto) iter.next();
 		// sottoinsiemi di Soggetto
 		Soggetti si = so.getSoggetto();
-		Indirizzo[] i = so.getIndirizzi();
-		Ruoloente[] r = so.getRuoliente();
+		List<Indirizzo> iList = so.getIndirizzi();
+		List<Ruoloente> rList = so.getRuoliente();
 		String foro = "-";
 		String stato = "-"; // attivo, radiato, sospeso, cessato
 		String codice = "";
@@ -148,25 +149,29 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 		String indirizzoStudio = "-";
 		boolean testStato = false;
 
-		if (Utils.isPresent(i)) {
-			for (int cnt0 = 0; cnt0 < i.length; cnt0++) {
-				if ("D".equalsIgnoreCase(i[cnt0].getTp_indirizzo())) {
-					comune = StringUtils.toStringJSP(i[cnt0].getComune());
-					indirizzo = StringUtils.toStringJSP(i[cnt0].getIndirizzo());
-					fax = StringUtils.toStringJSP(i[cnt0].getFax());
-					email = StringUtils.toStringJSP(i[cnt0].getEmail());
-					telefono = StringUtils.toStringJSP(i[cnt0].getTelefono());
+		if (Utils.isPresent(iList)) {
+			Iterator iIter = iList.iterator();
+			while (iIter.hasNext()) {
+				Indirizzo i = (Indirizzo) iIter.next();
+				if ("D".equalsIgnoreCase(i.getTpIndirizzo())) {
+					comune = StringUtils.toStringJSP(i.getComune());
+					indirizzo = StringUtils.toStringJSP(i.getIndirizzo());
+					fax = StringUtils.toStringJSP(i.getFax());
+					email = StringUtils.toStringJSP(i.getEmail());
+					telefono = StringUtils.toStringJSP(i.getTelefono());
 					indirizzoStudio = indirizzo + " - " + comune;
 					break;
 				}
 			}
 		}
-		if (Utils.isPresent(r)) {
-			for (int cnt1 = 0; cnt1 < r.length; cnt1++) {
-				codice = StringUtils.toStringJSP(r[cnt1].getCodice());
-				stato = StringUtils.toStringJSP(r[cnt1].getStato());
+		if (Utils.isPresent(rList)) {
+			Iterator rIter = rList.iterator();
+			while (rIter.hasNext()) {
+				Ruoloente r = (Ruoloente) rIter.next();
+				codice = StringUtils.toStringJSP(r.getCodice());
+				stato = StringUtils.toStringJSP(r.getStato());
 				if (Utils.isPresent(codice) && codice.contains("COA")) {
-					String codComune = r[cnt1].getCodice().substring(3);
+					String codComune = r.getCodice().substring(3);
 					foro = DecodificheUtils.getCodebyCodAlt2(DecodificheManager.getInstance().getForoAll(), codComune);
 				}
 				if ("attivo".equalsIgnoreCase(stato))
@@ -175,7 +180,7 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 					testStato = true;
 			}
 		}
-		Date dn = (Utils.isPresent(si.getDataNascita())) ? si.getDataNascita().getTime() : null;
+		Date dn = (Utils.isPresent(si.getDataNascita())) ? si.getDataNascita().toGregorianCalendar().getTime() : null;
 		if ("-".equals(foro))
 			continue;
 %>
@@ -230,9 +235,9 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 				'<%=StringUtils.cStrForJS(fax)%>','<%=StringUtils.cStrForJS(email)%>',
 				'<%=StringUtils.cStrForJS(si.getPec())%>','<%=StringUtils.cStrForJS(si.getCodFisc())%>',
 				'<%=StringUtils.cStrForJS(si.getLuogoNascita())%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"dd"))%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"MM"))%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"yyyy"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().toGregorianCalendar().getTime(),"dd"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().toGregorianCalendar().getTime(),"MM"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().toGregorianCalendar().getTime(),"yyyy"))%>',
 				'<%=StringUtils.cStrForJS(comune)%>');">
 				<img align="middle" src="/images/fileselected.gif" border="0" style="vertical-align: super;" alt="Inserisci">
 			</a>
