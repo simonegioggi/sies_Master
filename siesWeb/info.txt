@@ -18,3 +18,18 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 3)	Ticket#20210514018 - Iscrizione soggetto sige
 		Modificata la jsp DettaglioSoggetto.jsp
 		Splittato nome e cognome Madre sul Dettaglio
+
+4)	Ticket#20210521012 - Ticket Creato SIES - Variazione data trasmissione provvedimento
+		La funzione di inserimento e dettaglio dei provvedimenti di OS LA da detenuto e in Misura
+		inserivano il campo Data Trasmissione della form nel campo "sbagliato" ovvero su 
+		EVENTO.DATA_TRASMISSIONE_ATTI invece di NOTIFICA.DATA_INVO come gli altri provvedimenti.
+		La funzione di Modifica Magistrato legge e scrive la data trasmissione da
+		NOTIFICA_DATA_INVIO per cui falliva l'aggiornemanto.
+		Per l'OS in MA inoltre il sistema ignorava compeltamente il campo Data Tramissione 
+		della form.
+		Moduli Modificati:
+		Per OS da Detenuto
+		siap.siep.ordinescarcerazione.action.ActInserisciOSLiberazioneAnticipata
+		/jsp/files/siap/siep/ordinescarcerazione/DettaglioOSLiberazioneAnticipata.jsp
+		Per OS in Misura
+		siap.siep.ordinescarcerazione.action.ActInserisciOSLiberazioneAnticipataMA
