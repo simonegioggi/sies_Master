@@ -70,3 +70,10 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 			Corretta jsp
 			DettaglioPresaincaricoCompetenzaRicevuta.jsp
 			Non gestiva il caso in cui un eventuale titolo già in istruttoria era privo di provvedimento (iscrizione manuale).
+
+8)		Ticket#20210618011 - Richiesta evolutiva SIUS
+			Nella funzione di Ricerca Udienza SIUS, nella tabella dei risultati, veniva visualizzato 
+			un solo Giudice relatore anche se ne erano presenti 2.
+			Aggiunta visualizzazione secondo Giudice Relatore.
+			Modulo modificato:
+			/jsp/files/siap/sius/udienza/RicercaUdienza.jsp
