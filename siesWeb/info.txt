@@ -1,9 +1,7 @@
-Ticket - 20210514015 - Ricerca procedimento Sige per titolo esecutivo
+RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 
-Andava in nullpointer la jsp in asenza del numero GUP e/o CAPSM
-Aggiunta gestione
-
-Modulo corretto
-\jsp\files\siap\sige\sentenza\RicercaSentenzaPerSige.jsp
-
-
+1)	Ticket#20210514015 - Ricerca procedimento Sige per titolo esecutivo
+		Andava in nullpointer la jsp in asenza del numero GUP e/o CAPSM
+		Aggiunta gestione
+		Modulo corretto
+		\jsp\files\siap\sige\sentenza\RicercaSentenzaPerSige.jsp
