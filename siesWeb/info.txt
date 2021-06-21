@@ -33,3 +33,13 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 		/jsp/files/siap/siep/ordinescarcerazione/DettaglioOSLiberazioneAnticipata.jsp
 		Per OS in Misura
 		siap.siep.ordinescarcerazione.action.ActInserisciOSLiberazioneAnticipataMA
+
+5)	Ticket#202105240111 - SIUS - Presa in carico altre BDI
+		Impossibile inserire Record Sospensione
+		Modificato il metodo che recupera i record SOSPENSIONE da trasferire. Recuperava
+		tutte le SOSPENSIONI collegate al fascicolo indipendentemente se colleate a pene residue
+		ed eventi validati.
+		Aggiunta join con PENA_RESIDUA ed EVENTO e test sui flag "VALIDATO".
+		Moduli modificati:
+		siap.siep.sospensione.dao.SospensioneSqlDAO
+		siap.siep.sospensione.controller.SospensioneController

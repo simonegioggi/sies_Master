@@ -70,7 +70,34 @@ public class SospensioneSqlDAO extends SqlDAO {
 		lSql += " " + setCondizioniByIdFascicolo(aIdFascicolo);
 		setStatement(lSql);
 	}
+	
+	// Ticket#202105240111 - aggiunto metodo per recuperare SOLO irecord SOSPENSIONE collegate
+	// a PR ed EVENTI validati. Per il trasferimento viaggiano solo i dati validati
+	public void ricercaSospensioneByFascicoloXTrasferimento(BigDecimal aIdFascicolo) throws DAOException {
+		String lStatement = new String("");
 
+		lStatement += " SELECT " + "ID_SOSPENSIONE, " + "SOSPENSIONE.DATA_INIZIO, " + "SOSPENSIONE.DATA_FINE, " + "NUM_ANNI_RINVIO, "
+				+ "NUM_MESI_RINVIO, " + "NUM_GIORNI_RINVIO, " + "SOSPENSIONE.COD_OPERATORE_INSERIMENTO, "
+				+ "SOSPENSIONE.DATA_INSERIMENTO, " + "SOSPENSIONE.COD_UFFICIO_INSERIMENTO, " + "SOSPENSIONE.COD_OPERATORE_AGGIORNAMENTO, "
+				+ "SOSPENSIONE.DATA_AGGIORNAMENTO, " + "SOSPENSIONE.COD_UFFICIO_AGGIORNAMENTO, " + "PEN_RES_ID_PENA_RESIDUA, "
+				+ "NUM_ANNI_PENA_ESPIATA, " + "NUM_MESI_PENA_ESPIATA, " + "NUM_GIORNI_PENA_ESPIATA, "
+				+ "NUM_ANNI_PENA_RESIDUA_RECLUS, " + "NUM_MESI_PENA_RESIDUA_RECLUS, "
+				+ "NUM_GIORNI_PENA_RESIDUA_RECLUS, " + "NUM_ANNI_PENA_RESIDUA_ARRES, "
+				+ "NUM_MESI_PENA_RESIDUA_ARRES, " + "NUM_GIORNI_PENA_RESIDUA_ARRES, "
+				+ "NUM_ANNI_INTERRUZIONE, " + "NUM_MESI_INTERRUZIONE, " + "NUM_GIORNI_INTERRUZIONE, "
+				+ "MULTA_ESPIATA, " + "AMMENDA_ESPIATA, " + "MULTA_RESIDUA, " + "AMMENDA_RESIDUA, "
+				+ "SOSPENSIONE.FAS_SIE_ID_FASCICOLO_SIEP, " + "FLAG_INTERRUZIONE, " + "NUM_GIORNI_LIBANTICIPATA ";
+		lStatement += " FROM SOSPENSIONE, PENA_RESIDUA, EVENTO ";
+		lStatement += " WHERE SOSPENSIONE.FAS_SIE_ID_FASCICOLO_SIEP = "+aIdFascicolo;
+		lStatement += " AND SOSPENSIONE.PEN_RES_ID_PENA_RESIDUA = PENA_RESIDUA.ID_PENA_RESIDUA "
+				    + " AND PENA_RESIDUA.FLAG_VALIDATO = 'S' "
+				    + " AND PENA_RESIDUA.EVE_ID_EVENTO = EVENTO.ID_EVENTO "
+				    + " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+		
+		setStatement(lStatement);
+	}
+	// Ticket#202105240111 - FINE
+	
 	/**
 	 * Ricerca tutte le sospensioni legate a una certa pena residua
 	 * 
