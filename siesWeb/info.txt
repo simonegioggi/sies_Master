@@ -14,3 +14,7 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 		StatisticheFogliComplementariSqlDAO.ricercaStatisticheFogliComplementari
 		Modificata la visualizzazione dei risultati della ricerca
 		"/jsp/files/siap/sige/statistiche/StatisticheFogliComplementari.jsp"
+
+3)	Ticket#20210514018 - Iscrizione soggetto sige
+		Modificata la jsp DettaglioSoggetto.jsp
+		Splittato nome e cognome Madre sul Dettaglio
