@@ -43,3 +43,25 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 		Moduli modificati:
 		siap.siep.sospensione.dao.SospensioneSqlDAO
 		siap.siep.sospensione.controller.SospensioneController
+
+6)	Ticket#20210531014 - Ticket Creato SIES - Erroe Statistiche SIEP
+		Le statistiche SIEP per i fascicoli di classe IV
+		- Riepilogo Iscrizioni e Tipologia Misura
+		- Procedimenti Pendenti nel Periodo
+		Facevano uso dell'istruzione LISTAGG per aggregare il numero di fascicolo estratti dalle query.
+		Tale funzione ha un limite di 4000 caratteri ed andava in overflow.
+		Corrette le 2 funzioni di ricerca per estrarre la lista non aggregata dei fascicoli.
+		L'aggregazione è stata implementata da codice nel controller.
+		Classi modificate:
+		StatisticheMSController.java
+		Metodi Modificati
+		public Vector<StatisticheMSModel> ricercaDettaglioProcedimentiMSTipologiaIscrizione
+		public Vector<StatisticheMSModel> ricercaDettaglioProcedimentiPendentiPeriodo
+		StatisticheMSSqlDAO.java
+		Metodi Modificati
+		private String creaQueryRDPMSTI
+		Metodi aggiunti (in duplicazione di quelli esisteti)
+		public GenericModel getModelDettaglio2()
+		public void ricercaDettaglioProcedimentiPendentiPeriodo2()
+		StatisticheMSModel.java
+		Aggiunto solo toString per debug

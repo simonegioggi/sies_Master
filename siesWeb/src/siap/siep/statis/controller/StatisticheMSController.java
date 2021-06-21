@@ -1,5 +1,6 @@
 package siap.siep.statis.controller;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -436,6 +437,8 @@ public class StatisticheMSController extends GenericController {
 	public Vector<StatisticheMSModel> ricercaDettaglioProcedimentiMSTipologiaIscrizione(String dataIniziale,
 			String dataFinale, String numeroTrimestreSemestre, String ufficioConnesso) throws Exception {
 
+		siesLogger.debug("CTRL.ricercaDettaglioProcedimentiMSTipologiaIscrizione... ");
+		
 		Connection c = null;
 		Vector<StatisticheMSModel> v = new Vector<>();
 		StatisticheMSSqlDAO smsd = null;
@@ -448,8 +451,52 @@ public class StatisticheMSController extends GenericController {
 			smsd.ricercaDettaglioProcedimentiMSTipologiaIscrizione(dataIniziale, dataFinale,
 					numeroTrimestreSemestre, ufficioConnesso, range);
 			smsd.start();
+
+			// Ticket#20210531014 - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+			// i dati sono aggregati dal controller
+//			while (smsd.next())
+//				v.add((StatisticheMSModel) smsd.getModelDettaglio());
+			
+			Vector<StatisticheMSModel> vettoreAppoggio = new Vector<StatisticheMSModel> ();
 			while (smsd.next())
-				v.add((StatisticheMSModel) smsd.getModelDettaglio());
+				vettoreAppoggio.add((StatisticheMSModel) smsd.getModelDettaglio2());
+			
+			siesLogger.debug("CTRL record trovati: "+vettoreAppoggio.size());
+			siesLogger.debug("CTRL procedo all'elaborazione...");
+			
+			StatisticheMSModel modelAggregato = null;
+			String lastNomeStat = "";
+			BigDecimal lastAnno = new BigDecimal (0);
+			// Il vettore contiene n record quanti i fascicoli estratti, ordinati per Nome_Stat, anno, numero fascicolo
+			// Vanno riaggregati per Nome_Stat, anno
+			for (int i=0; i< vettoreAppoggio.size(); i++) {
+				StatisticheMSModel model = vettoreAppoggio.elementAt (i);
+
+				String nomeStat = model.getTipoMS();
+				BigDecimal anno = model.getAnno();
+				siesLogger.debug("TipoMS = "+nomeStat);
+				siesLogger.debug("Anno = "+anno);
+				if (!nomeStat.equals(lastNomeStat) || anno.compareTo(lastAnno)!=0) {
+					siesLogger.debug("CTRL nuovo vettore da allocare");
+					modelAggregato = new StatisticheMSModel();
+					modelAggregato.setTipoMS(nomeStat);
+					modelAggregato.setAnno(anno);
+					modelAggregato.setProgFasc(model.getProgFasc()); // il primo elemento
+					modelAggregato.setTotFasc (new BigDecimal(1));
+					v.add (modelAggregato);
+				}
+				else {
+					siesLogger.debug("CTRL stesso model: incremento il contatore");
+					modelAggregato.getProgFasc().add(model.getProgFasc().elementAt(0));
+					modelAggregato.setTotFasc (modelAggregato.getTotFasc().add(new BigDecimal(1)));
+				}
+				lastNomeStat = nomeStat;
+				lastAnno = anno; 
+			}
+			
+			// Ticket#20210531014] - FINE			
+			
+			
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// mLog
@@ -692,6 +739,8 @@ public class StatisticheMSController extends GenericController {
 	public Vector<StatisticheMSModel> ricercaDettaglioProcedimentiPendentiPeriodo(String dataIniziale,
 			String dataFinale, String ufficioConnesso, String codMagistrato, String var) throws Exception {
 
+		siesLogger.debug("CTRL.ricercaDettaglioProcedimentiPendentiPeriodo... ");
+		
 		Connection c = null;
 		Vector<StatisticheMSModel> v = new Vector<>();
 		StatisticheMSSqlDAO smsd = null;
@@ -701,15 +750,67 @@ public class StatisticheMSController extends GenericController {
 		try {
 			c = getDBConnection();
 			smsd = new StatisticheMSSqlDAO(c);
-			smsd.ricercaDettaglioProcedimentiPendentiPeriodo(dataIniziale, dataFinale, ufficioConnesso, range,
+			// Ticket#20210531014 si richiama il nuovo metodo con 2 finale
+			smsd.ricercaDettaglioProcedimentiPendentiPeriodo2(dataIniziale, dataFinale, ufficioConnesso, range,
 					codMagistrato, var);
 			smsd.start();
+			// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+			// i dati vengono aggregati dal controller
+//			while (smsd.next())
+//				v.add((StatisticheMSModel) smsd.getModelDettaglio());
+			
+			
+			Vector<StatisticheMSModel> vettoreAppoggio = new Vector<StatisticheMSModel> ();
 			while (smsd.next())
-				v.add((StatisticheMSModel) smsd.getModelDettaglio());
+				vettoreAppoggio.add((StatisticheMSModel) smsd.getModelDettaglio2());
+			
+			siesLogger.debug("CTRL record trovati: "+vettoreAppoggio.size());
+			siesLogger.debug("CTRL procedo all'elaborazione...");
+			
+			StatisticheMSModel modelAggregato = null;
+			String lastNomeStat = "";
+			BigDecimal lastAnno = new BigDecimal (0);
+			// Il vettore contiene n record quanti i fascicoli estratti, ordinati per Nome_Stat, anno
+			// Vanno riaggregati per Nome_Stat, anno
+			for (int i=0; i< vettoreAppoggio.size(); i++) {
+				StatisticheMSModel model = vettoreAppoggio.elementAt (i);
+
+				String nomeStat = model.getTipoMS();
+				BigDecimal anno = model.getAnno();
+				siesLogger.debug("TipoMS = "+nomeStat);
+				siesLogger.debug("Anno = "+anno);
+				if (!nomeStat.equals(lastNomeStat) || anno.compareTo(lastAnno)!=0) {
+					siesLogger.debug("CTRL nuovo vettore da allocare");
+					modelAggregato = new StatisticheMSModel();
+					modelAggregato.setTipoMS(nomeStat);
+					modelAggregato.setAnno(anno);
+					modelAggregato.setProgFasc(model.getProgFasc()); // il primo elemento
+					modelAggregato.setTotFasc (new BigDecimal(1));
+					v.add (modelAggregato);
+				}
+				else {
+					siesLogger.debug("CTRL stesso model: incremento il contatore");
+					modelAggregato.getProgFasc().add(model.getProgFasc().elementAt(0));
+					modelAggregato.setTotFasc (modelAggregato.getTotFasc().add(new BigDecimal(1)));
+				}
+				lastNomeStat = nomeStat;
+				lastAnno = anno; 
+			}
+			
+			// Ticket#20210531014] - FINE
+			
+			siesLogger.debug("Risultato...");
+			for (int i = 0; i< v.size(); i++) {
+				StatisticheMSModel stat = v.elementAt(i);
+				
+				siesLogger.debug("stat ["+i+"] \n"+stat);
+				
+			}
+			
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// mLog
-			siesLogger.error("DAOException: " + daoEx);
+			siesLogger.error("DAOException: " , daoEx);
 			throw new DAOException(
 					"StatisticheMSController.ricercaDettaglioProcedimentiPendentiPeriodo: Non posso leggere : "
 							+ daoEx);
