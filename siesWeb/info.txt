@@ -65,3 +65,8 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 		public void ricercaDettaglioProcedimentiPendentiPeriodo2()
 		StatisticheMSModel.java
 		Aggiunto solo toString per debug
+
+7)		Ticket#20210615018 - Ticket Creato SIES - Provvedimento di Cumulo - presa in carico atti pervenuti
+			Corretta jsp
+			DettaglioPresaincaricoCompetenzaRicevuta.jsp
+			Non gestiva il caso in cui un eventuale titolo già in istruttoria era privo di provvedimento (iscrizione manuale).
