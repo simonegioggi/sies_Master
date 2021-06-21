@@ -5,3 +5,12 @@ RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
 		Aggiunta gestione
 		Modulo corretto
 		\jsp\files\siap\sige\sentenza\RicercaSentenzaPerSige.jsp
+
+2)	Ticket#20210514016 - Fogli complementari Sige - visibilità oggetti
+		La query recuperava la descrizione dell'oggetto dall'evento dove il cod_motivo era quasi sempre non valorizzato
+		Modificata query per recuperarlo dal tenore.
+		Moduli modificati
+		Modificate le query
+		StatisticheFogliComplementariSqlDAO.ricercaStatisticheFogliComplementari
+		Modificata la visualizzazione dei risultati della ricerca
+		"/jsp/files/siap/sige/statistiche/StatisticheFogliComplementari.jsp"
