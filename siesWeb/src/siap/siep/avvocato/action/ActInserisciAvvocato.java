@@ -122,7 +122,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 					}
 				}
 				
-				// 20210620 Recupero dataNascita, stato Attività Avvocato.
+				// 20210622 Recupero dataNascita, stato Attività Avvocato.
 				if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
 						&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
 						&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
@@ -149,10 +149,11 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			} else {	// Avvocato da RegInde già presente in SIES
 				idAvvocato = lAvvModCr.getIdAvvocato();
 			}
+			
 		} else		// Avvocato non presente in RegInde, si esegue la procedura preesistente.
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 
-		// 20210620 Ricerca Avvocati già assegnati al Fascicolo.
+		// 20210622 Ricerca Avvocati già assegnati al Fascicolo.
 		AvvocatoModel lAvvMod = new AvvocatoModel();
 		Vector lVectRic = new Vector();
 		Vector lVectPrec = null;
