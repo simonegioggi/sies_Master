@@ -20,9 +20,27 @@ function trim(string) {
 function Verify(id) {
 	var ritorno = true;
 	if ((trim(document.f.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value).length < 2
+			|| trim(document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.value).length == 1
 			|| trim(document.f.<%=ICostantiAvvocato.CAMPO_FORO%>.value).length < 2)
 			&& trim(document.f.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value).length != 16) {
-    	alert("Occorre inserire il FORO ed almeno 2 caratteri iniziali del COGNOME!");
+		if (trim(document.f.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value).length < 2) {
+    		alert("Attenzione! Occorre inserire il FORO ed almeno 2 caratteri iniziali del COGNOME!");
+    		document.f.<%=ICostantiAvvocato.CAMPO_COGNOME%>.focus();
+		} else if (trim(document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.value).length == 1) {
+			alert("Attenzione! Occorre inserire almeno 2 caratteri iniziali del NOME!");
+			document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.focus();
+		}
+    	ritorno = false;
+  	}
+	if ((trim(document.f.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value).search("%") >= 0
+			|| trim(document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.value).search("%") >= 0)
+			&& trim(document.f.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value).length != 16) {
+    	alert("Attenzione! La ricerca per 'like' (%) NON è consentita.");
+    	if (trim(document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.value).search("%") >= 0) {
+    		document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.focus();
+    	} else {
+   			document.f.<%=ICostantiAvvocato.CAMPO_COGNOME%>.focus();
+    	}
     	ritorno = false;
   	}
 	if (id.id == "sies") {
@@ -52,7 +70,7 @@ function gestisciBottoniRicerca() {
     	<td class=LBG colspan="2"><font class="campo">Filtra la lista per:</font></td>
    	</tr>
 	<tr>
-    	<td class="l" width="20%">Cognome: </td>
+    	<td class="l" width="20%">Cognome: <font class=ob>(*)</font></td>
    		<td class="l"><input type="text" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>" value="" onFocus="javascript:gestisciBottoniRicerca();" size="25"></td>
  	</tr>
 	<tr>
@@ -64,7 +82,7 @@ function gestisciBottoniRicerca() {
    		<td class="l"><input type="text" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>" value="" onFocus="javascript:gestisciBottoniRicerca();" size="25"></td>
  	</tr>
 	<tr>
-		<td class="l">Foro:</td>
+		<td class="l">Foro: <font class=ob>(*)</font></td>
 		<td class="l">
 			<select name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1" onFocus="javascript:gestisciBottoniRicerca();">
 				<%=foro%>

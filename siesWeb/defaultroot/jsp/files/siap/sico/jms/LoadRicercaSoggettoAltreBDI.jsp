@@ -1,7 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <%@ page import="f3b.web.IWebConstants" %>
 <%@ page import="f3b.util.StringUtils" %>
 
+<%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 <%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
 <%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
 <%@ page import="siap.siep.jms.action.ICostantiSiepJMS" %>

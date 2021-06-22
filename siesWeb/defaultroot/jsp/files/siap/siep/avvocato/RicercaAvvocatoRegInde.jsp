@@ -114,7 +114,7 @@ function altreInfo(idRecord) {
   
 <form name="f">
 <%
-if (avvocato.size() > 0) {
+if (avvocato.size() > 0 && avvocato.size() < 201) {
 %>
 <table width="100%">
   	<tr>

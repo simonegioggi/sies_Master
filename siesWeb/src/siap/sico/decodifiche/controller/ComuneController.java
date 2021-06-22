@@ -341,6 +341,7 @@ public class ComuneController extends SiapController implements IComune {
 		try {
 			c = getDBConnection();
 			csdao = new ComuneSqlDAO(c);
+<<<<<<< HEAD
 				
 			// 20210616 MEV_21 In caso di soggetto nato all'estero il ccc inizia con 'Z'.
 			// In tal caso anziché leggere dalla tabella COMUNE occorre leggere da CG_REF_CODES.
@@ -359,6 +360,15 @@ public class ComuneController extends SiapController implements IComune {
 			}
 			
 		} catch (Exception e) {
+=======
+			csdao.ricercaComuneByCodCatastale(ccc);
+			csdao.start();
+			if (csdao.next())
+				cm = (ComuneModel) csdao.getModelComuneTds();
+			csdao.stop();
+		} catch (Exception e) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+>>>>>>> 4105b5017a19972ad6840c25416777d0682603ba
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(
 					"ComuneController.ExRicercaComuneByCodCatastale: Non posso leggere  : " + e);
@@ -368,5 +378,9 @@ public class ComuneController extends SiapController implements IComune {
 		}
 		return cm;
 	}
+<<<<<<< HEAD
 			
+=======
+
+>>>>>>> 4105b5017a19972ad6840c25416777d0682603ba
 }
