@@ -22,12 +22,8 @@
 <jsp:useBean id="autoritaEsternaDif" scope="request" class="java.lang.String"/>
 <jsp:useBean id="NoteAvvocati"       scope="request" class="java.lang.String"/>
 <jsp:useBean id="avvocato"           scope="request" class="siap.siep.avvocato.model.AvvocatoModel"/>
-<<<<<<< HEAD
 <jsp:useBean id="lTipoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210620 MEV_21 -->
 <jsp:useBean id="nazioni"            scope="request" class="java.lang.String"/>		<!--   20210620 MEV_21 -->
-=======
-<jsp:useBean id="lTipoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210611 MEV_21 -->
->>>>>>> 4105b5017a19972ad6840c25416777d0682603ba
 
 <%
 AvvocatoModel lAvv = avvocato;
