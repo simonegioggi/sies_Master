@@ -178,6 +178,8 @@ if (!"".equals(lTipoFunzione)) {
 
 <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 function ListaAvvocatiRegInde(a_formname) {
+	var inserimento = document.getElementById('inserimento');
+	inserimento.style.visibility = 'hidden';
 	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
 }
 </script>
@@ -270,7 +272,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 			<select title="Stato di Nascita" readonly name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">
 					<%= nazioni %>
 			</select>
-		</td --%>>
+		</td --%>
 	</tr>
   	<tr>
         <td class="l">Luogo di Nascita Estero</td>
@@ -475,7 +477,7 @@ if (lAvv.getDataNascita() == null) {
 </table>
 </div>
 
-<div id="conferma"  style="visibility:hidden; position:relative; top:-110px ">
+<div id="conferma" style="visibility:hidden; position:relative; top:-110px ">
 <table cellspacing=2 cellpadding=2>
 	<tr>
       	<td colspan=2>
@@ -488,16 +490,12 @@ if (!"".equals(lTipoFunzione)) {
         	<input type="button" class="bottone" name="CI" value="Prosegui" onClick="Javascript:return Imputazione();">
       	</td>
 <%
-//20210611 MEV_21 
-//} else {
-} else if ("NO_SIES".equals(lTipoAvv)) {
-%>
-    	<td colspan=2>
-      		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
-    	</td>
-<%
 }
 %>
+		<!-- 20210611 MEV_21 -->
+    	<td colspan=2 id="inserimento" style="visibility:hidden;">
+      		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
+    	</td>
 	</tr>
 </table>
 </div>

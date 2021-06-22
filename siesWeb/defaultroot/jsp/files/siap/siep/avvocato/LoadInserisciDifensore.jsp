@@ -242,65 +242,69 @@
   </table>
 </form>
 <script language="JavaScript" type="text/javascript">
- var frmvalidator  = new Validator("LoadInserisciAvvocato");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COGNOME %>","req","Il campo Cognome Avvocato è obbligatorio");
- // frmvalidator.addValidation("<-%= ICostantiAvvocato.CAMPO_COGNOME %->","alpha");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","req","Il campo Nome Avvocato è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","alpha");
+var frmvalidator  = new Validator("LoadInserisciAvvocato");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COGNOME %>","req","Il campo Cognome Avvocato è obbligatorio");
+// frmvalidator.addValidation("<-%= ICostantiAvvocato.CAMPO_COGNOME %->","alpha");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","req","Il campo Nome Avvocato è obbligatorio");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_NOME %>","alpha");
 
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","req","Il campo Foro  è obbligatorio");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","req","Il campo Foro  è obbligatorio");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO %>","alpha");
 
 
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","numeric");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","maxlen=4","La lunghezza massima per l'anno di nascita è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","minlen=4","La lunghezza minima per l'anno di nascita è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","gt=1900");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>","lt=3000");
 
-  /*frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","maxlen=4","La lunghezza massima per l'anno di sospensione è di 4 caratteri");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","minlen=4","La lunghezza minima per l'anno di sospensione è di 4 caratteri");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","numeric");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","lt=3000");
+<%--
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","maxlen=4","La lunghezza massima per l'anno di sospensione è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","minlen=4","La lunghezza minima per l'anno di sospensione è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","gt=1900");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_SOSPENSIONE%>","lt=3000");
 
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","maxlen=4","La lunghezza massima per l'anno di radiazione è di 4 caratteri");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","minlen=4","La lunghezza minima per l'anno di radiazione è di 4 caratteri");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","numeric");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","lt=3000");
-*/
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>","gt=1");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>","lt=31");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","maxlen=4","La lunghezza massima per l'anno di radiazione è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","minlen=4","La lunghezza minima per l'anno di radiazione è di 4 caratteri");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","gt=1900");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_ANNO_DATA_RADIAZIONE%>","lt=3000");
+--%>
 
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","gt=1");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","lt=12");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>","gt=1");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>","lt=31");
 
-   /* frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_SOSPENSIONE%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_SOSPENSIONE%>","gt=1");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_SOSPENSIONE%>","lt=31");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","gt=1");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>","lt=12");
 
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_SOSPENSIONE%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_SOSPENSIONE%>","gt=1");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_SOSPENSIONE%>","lt=12");
+<%--
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_SOSPENSIONE%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_SOSPENSIONE%>","gt=1");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_SOSPENSIONE%>","lt=31");
 
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_RADIAZIONE%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_RADIAZIONE%>","gt=1");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_RADIAZIONE%>","lt=31");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_SOSPENSIONE%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_SOSPENSIONE%>","gt=1");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_SOSPENSIONE%>","lt=12");
 
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","numeric");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","gt=1");
-    frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","lt=12");
-*/
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_RADIAZIONE%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_RADIAZIONE%>","gt=1");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_GIORNO_DATA_RADIAZIONE%>","lt=31");
 
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic");
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","numeric");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","gt=1");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_MESE_DATA_RADIAZIONE%>","lt=12");
+--%>
 
-  frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>","alphabetic");
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_FORO%>","alphabetic");
+<%-- 20210610 MEV_21 --%>
+<%-- frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>","alphabetic"); --%>
+frmvalidator.addValidation("<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>","alphabetic");
 
-  frmvalidator.setAddnlValidationFunction("Verify");
+frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>
 </html>
