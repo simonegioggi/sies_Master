@@ -52,8 +52,8 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			}
 			// inizio chiamata al servizio REGINDE
 			WsServiziInterrogazioneInterni_Service service = new WsServiziInterrogazioneInterni_Service();
-			WsServiziInterrogazioneInterni ws = service.getServiziInterrogazioneInterniBeanPort();
 			siesLogger.debug("service = " + service.toString());
+			WsServiziInterrogazioneInterni ws = service.getServiziInterrogazioneInterniBeanPort();
 			siesLogger.debug("ws = " + ws.toString());
 			BindingProvider bindingProvider = (BindingProvider) ws;
 			bindingProvider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
@@ -76,10 +76,12 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");
 		} catch (SearchLimitException_Exception sle) {
+			sle.printStackTrace();
 			siesLogger.error("Errore in " + getClass().getName() + ": " + sle.getMessage());
 			setRequestAttribute("msg",
 					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca!");
 		} catch (Exception e) {
+			e.printStackTrace();
 			siesLogger.error("Errore in " + getClass().getName() + ": " + e.toString());
 			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())
 					&& e.getMessage().contains("Unrecognized")) {
