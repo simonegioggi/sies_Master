@@ -140,7 +140,7 @@ public class ComuneController extends SiapController implements IComune {
 		return lCollComuni;
 	}
 
-	// 20210517	MEV21
+	// 20210517 MEV21
 	public Vector ExGetListaComuniNascita(ComuneModel lModel) throws F3BException {
 
 		Connection lConn = null;
@@ -168,7 +168,7 @@ public class ComuneController extends SiapController implements IComune {
 		}
 		return lCollComuni;
 	}
-	
+
 	public Vector ExGetListaComuniTds() throws F3BException {
 
 		Connection lConn = null;
@@ -341,13 +341,22 @@ public class ComuneController extends SiapController implements IComune {
 		try {
 			c = getDBConnection();
 			csdao = new ComuneSqlDAO(c);
-			csdao.ricercaComuneByCodCatastale(ccc);
-			csdao.start();
-			if (csdao.next())
-				cm = (ComuneModel) csdao.getModelComuneTds();
-			csdao.stop();
+			// 20210616 MEV_21 In caso di soggetto nato all'estero il ccc inizia con 'Z'.
+			// In tal caso anziché leggere dalla tabella COMUNE occorre leggere da CG_REF_CODES.
+			if (ccc.startsWith("Z")) {
+				csdao.ricercaNazionePerCcc(ccc);
+				csdao.start();
+				if (csdao.next())
+					cm = (ComuneModel) csdao.getModelComuneCcc();
+				csdao.stop();
+			} else {
+				csdao.ricercaComuneByCodCatastale(ccc);
+				csdao.start();
+				if (csdao.next())
+					cm = (ComuneModel) csdao.getModelComuneCcc();
+				csdao.stop();
+			}
 		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("Exception: " + e);
 			throw new F3BException(
 					"ComuneController.ExRicercaComuneByCodCatastale: Non posso leggere  : " + e);

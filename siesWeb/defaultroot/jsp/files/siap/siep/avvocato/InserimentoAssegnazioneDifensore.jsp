@@ -22,7 +22,8 @@
 <jsp:useBean id="autoritaEsternaDif" scope="request" class="java.lang.String"/>
 <jsp:useBean id="NoteAvvocati"       scope="request" class="java.lang.String"/>
 <jsp:useBean id="avvocato"           scope="request" class="siap.siep.avvocato.model.AvvocatoModel"/>
-<jsp:useBean id="lTipoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210611 MEV_21 -->
+<jsp:useBean id="lTipoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210620 MEV_21 -->
+<jsp:useBean id="nazioni"            scope="request" class="java.lang.String"/>		<!--   20210620 MEV_21 -->
 
 <%
 AvvocatoModel lAvv = avvocato;
@@ -177,6 +178,8 @@ if (!"".equals(lTipoFunzione)) {
 
 <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 function ListaAvvocatiRegInde(a_formname) {
+	var inserimento = document.getElementById('inserimento');
+	inserimento.style.visibility = 'hidden';
 	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
 }
 </script>
@@ -233,6 +236,7 @@ if (siap.util.SIESSwitch.isRegeSiesOn()) {
     	<td class="l" >Cognome</td>
     	<td class="l">
     		<input type="hidden" value="<%=lAvv.getIdAvvocato()%>" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">
+    		<input type="hidden" value="<%=lAvv.getCodNonAttivita()%>" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>">
     		<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=StringUtils.toStringJSP(lAvv.getCognome())%>" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>">
     	</td>
 	</tr>
@@ -264,6 +268,11 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
         	<input type="hidden" value="<%=lAvv.getCodStatoNascita()%>" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">
         	<input title="Stato di Nascita" readonly value="<%=StringUtils.toStringJSP(lAvv.getDescrStatoNascita())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_STATO_NASCITA%>" maxlength="35" size="35">
 		</td>
+		<%--td class="L">
+			<select title="Stato di Nascita" readonly name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">
+					<%= nazioni %>
+			</select>
+		</td --%>
 	</tr>
   	<tr>
         <td class="l">Luogo di Nascita Estero</td>
@@ -468,7 +477,7 @@ if (lAvv.getDataNascita() == null) {
 </table>
 </div>
 
-<div id="conferma"  style="visibility:hidden; position:relative; top:-110px ">
+<div id="conferma" style="visibility:hidden; position:relative; top:-110px ">
 <table cellspacing=2 cellpadding=2>
 	<tr>
       	<td colspan=2>
@@ -481,16 +490,12 @@ if (!"".equals(lTipoFunzione)) {
         	<input type="button" class="bottone" name="CI" value="Prosegui" onClick="Javascript:return Imputazione();">
       	</td>
 <%
-//20210611 MEV_21 
-//} else {
-} else if ("NO_SIES".equals(lTipoAvv)) {
-%>
-    	<td colspan=2>
-      		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
-    	</td>
-<%
 }
 %>
+		<!-- 20210611 MEV_21 -->
+    	<td colspan=2 id="inserimento" style="visibility:hidden;">
+      		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
+    	</td>
 	</tr>
 </table>
 </div>

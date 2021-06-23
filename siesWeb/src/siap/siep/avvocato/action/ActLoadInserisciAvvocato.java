@@ -14,6 +14,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.controller.IAvvocato;
@@ -115,6 +116,10 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvv
 					lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
 			setRequestAttribute("foro", "" + lOption);
 
+		    // 20210620 MEV_21 Nuova gestione Combo per Stato di Nascita
+		  	lOption = new Option( DecodificheUtils.getDecodesWithoutCode(DecodificheManager.getInstance().getNazioni(),"039"), "-");
+		  	setRequestAttribute("nazioni", "" + lOption );      
+		    
 			return PG_ASSEGNA_INSERISCI_DIFENSORE; // restituisce la jsp di VIEW
 		}
 	}
