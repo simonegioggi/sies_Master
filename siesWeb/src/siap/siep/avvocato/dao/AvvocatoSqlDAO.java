@@ -249,7 +249,7 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		// MEV_21: aggiungo condizione
 		// lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and
 		// FLAG_CANCELLATO ='N'";
-		lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and FLAG_CANCELLATO ='N' and FLAG_REGINDE = 'S'";
+		lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and FLAG_CANCELLATO ='N' and FLAG_REGINDE = 'SI'";
 		lStatement += " and cod_ufficio_appartenenza = '"
 				+ StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase());
 		lStatement += "') and " + lSql2;
