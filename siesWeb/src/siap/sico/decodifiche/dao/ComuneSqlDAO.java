@@ -144,7 +144,7 @@ public class ComuneSqlDAO extends SIAPSqlDAO {
 	public void ricercaComuneByCodCatastale(String ccc) {
 
 		String lStatement = new String();
-		lStatement += " SELECT COD_COMUNE, COD_PROVINCIA, DESCRIZIONE, CAP, ";
+		lStatement += " SELECT COD_COMUNE, COD_PROVINCIA, DESCRIZIONE, CAP ";
 		lStatement += " FROM COMUNE";
 		lStatement += " WHERE COD_CATASTALE_COMUNE = '" + ccc + "'";
 
