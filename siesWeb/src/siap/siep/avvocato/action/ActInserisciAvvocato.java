@@ -73,7 +73,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 				String codProvincia = null;
 				String codCap = null;
 				String codStatoNascita = null;
-				String statoNonAttivita = "A";
+				String codNonAttivita = "-";
 				ComuneModel comuneNascita = null;
 				String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
 						? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
@@ -129,8 +129,8 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 						dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
 															  ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
 															  ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
-				if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA) )
-						statoNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
+				//if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA) )
+				//		statoNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
 				
 				AvvocatoModel amReginde = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
 						 getRequestStringParameter(CAMPO_NOME),
@@ -142,11 +142,11 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 						 new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null,
 						 null, null, null, descCodLuogoNascita, descLuogoResidenza, 
 						 null, codLuogoNascita, codLuogoResidenza, dataNascita,
-						 null, null, statoNonAttivita, "00000", null, "N", null);
+						 null, null, codNonAttivita, "00000", null, "N", null);
 
 				AvvocatoModel amRegIns = lCtrl.ExInserisciAvvocato(amReginde);
 				idAvvocato = amRegIns.getIdAvvocato();
-			} else {	// Avvocato da RegInde già presente in SIES
+			} else {	// Avvocato da RegInde già presente in SIES - Effettuare l'aggiornamento
 				idAvvocato = lAvvModCr.getIdAvvocato();
 			}
 			

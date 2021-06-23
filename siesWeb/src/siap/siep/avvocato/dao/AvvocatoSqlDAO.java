@@ -607,7 +607,7 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		// MEV_21: duplica gia' presente in "getSqlQuery"
 		// lCondizioni += " AND FLAG_VISUALIZZA = 1";
 		// aggiungo condizione
-		lCondizioni += " AND FLAG_REGINDE = 'S'";
+		lCondizioni += " AND FLAG_REGINDE = 'SI'";
 
 		return lCondizioni;
 	}
