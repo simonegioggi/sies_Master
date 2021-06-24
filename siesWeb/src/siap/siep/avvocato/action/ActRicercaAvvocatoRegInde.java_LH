@@ -53,11 +53,6 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			// inizio chiamata al servizio REGINDE
 			WsServiziInterrogazioneInterni_Service service = new WsServiziInterrogazioneInterni_Service();
 			siesLogger.debug("service = " + service.toString());
-			System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
-			System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
-			System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
-			System.setProperty("https.proxyHost", F3BProperties.getProperty("https.proxyHost"));
-			System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));
 			WsServiziInterrogazioneInterni ws = service.getServiziInterrogazioneInterniBeanPort();
 			siesLogger.debug("ws = " + ws.toString());
 			BindingProvider bindingProvider = (BindingProvider) ws;
