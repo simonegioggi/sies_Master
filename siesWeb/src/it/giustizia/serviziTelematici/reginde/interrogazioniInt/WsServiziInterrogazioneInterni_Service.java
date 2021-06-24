@@ -14,7 +14,7 @@ import javax.xml.ws.WebServiceFeature;
  * version: 2.7.14.redhat-1
  *
  */
-@WebServiceClient(name = "WsServiziInterrogazioneInterni", wsdlLocation = "file:/siesWeb/defaultroot/wsdl/ServiziInterrogazioneInterni.wsdl", targetNamespace = "http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt")
+@WebServiceClient(name = "WsServiziInterrogazioneInterni", wsdlLocation = "ServiziInterrogazioneInterni.wsdl", targetNamespace = "http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt")
 public class WsServiziInterrogazioneInterni_Service extends Service {
 
 	public final static URL WSDL_LOCATION;
@@ -34,7 +34,7 @@ public class WsServiziInterrogazioneInterni_Service extends Service {
 		} catch (MalformedURLException e) {
 			java.util.logging.Logger.getLogger(WsServiziInterrogazioneInterni_Service.class.getName()).log(
 					java.util.logging.Level.INFO, "Can not initialize the default wsdl from {0}",
-					"file:/siesWeb/defaultroot/wsdl/ServiziInterrogazioneInterni.wsdl");
+					"ServiziInterrogazioneInterni.wsdl");
 		}
 		WSDL_LOCATION = url;
 	}
