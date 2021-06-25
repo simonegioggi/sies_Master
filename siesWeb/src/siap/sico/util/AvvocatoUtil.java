@@ -91,7 +91,7 @@ public class AvvocatoUtil {
 		// "COD_COMUNE_RESIDENZA", che resterà per i dati pregressi
 		am.setCodComuneResidenza(null);
 		am.setPec(pec);
-		am.setFlagRegInde("S");
+		am.setFlagRegInde("SI");
 		am.setDescrComuneStudio(descrComuneStudio);
 		am.setDescLuogoNascitaReginde(descLuogoNascitaReginde);
 		am.setCodStatoNascita(codStatoNascita);

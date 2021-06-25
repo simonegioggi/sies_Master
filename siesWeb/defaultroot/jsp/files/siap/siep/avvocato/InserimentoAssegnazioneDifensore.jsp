@@ -254,6 +254,8 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 		comuneNascita = lAvv.getDescLuogoNascita();
 	else
 		comuneNascitaEstero = lAvv.getDescLuogoNascitaReginde();
+} else if (Utils.isPresent(lAvv.getDescLuogoNascita())) {
+	comuneNascita = lAvv.getDescLuogoNascita();
 }
 %>
   	<tr>

@@ -1,18 +1,15 @@
 package siap.siep.avvocato.action;
 
-/**
-* <p>Title: ActInserisciAvvocato</p>
-* <p>Description: Classe Action per l'inserimento di Avvocato</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.security.model.ProfileModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.SIAPException;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.utente.model.UtenteModel;
@@ -25,11 +22,6 @@ import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
 import siap.sige.util.SIGELookupRemote;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.log.LogF3B;
-import f3b.security.model.ProfileModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 @SuppressWarnings("rawtypes")
 public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvocato {
@@ -39,20 +31,18 @@ public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvoca
 
 	/**
 	 * Azione di Inserimento del Avvocato
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
-	 *         <p>
 	 * @throws F3BException
 	 */
 	public String processRequest() throws F3BException {
 
 		UtenteModel lUte = (UtenteModel) getSessionAttribute("UtenteConnesso");
-		ProfileModel lProfilo = (ProfileModel) lUte.getUserProfile();
+		ProfileModel lProfilo = lUte.getUserProfile();
 		boolean ricercaFascicoloSige = false;
 
 		// 11/09/2008 Prevista associazione a Fascicoli SIGE.
-		if (!this.isRequestParameterNullObj("associa")
-				&& this.getRequestStringParameter("associa").equals("Associa")) {
+		if (!isRequestParameterNullObj("associa") && getRequestStringParameter("associa").equals("Associa")) {
 			Vector lVect = null;
 			try {
 				if (lProfilo.isSiep()) {
@@ -73,13 +63,10 @@ public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvoca
 						lVect = lCtrl.ExRicercaAvvocatiByFascicolo(id_fascicolo);
 					} else {
 						ricercaFascicoloSige = true;
-						// throw new F3BException( F3BException.USER_MESSAGE, "Fascicolo SIGE non presente in
-						// sessione " );
 					}
 				} else {
 					throw new F3BException(F3BException.USER_MESSAGE,
 							"Attenzione: Profilo Utente non abilitato!");
-
 				}
 			} catch (SIAPException e) {
 				if (e.getErrorCode() != SIAPException.USER_MESSAGE) {
@@ -102,7 +89,7 @@ public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvoca
 		lAvvModRic.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase());
 		lAvvModRic.setForo(getRequestStringParameter(CAMPO_FORO).toUpperCase());
 		// STUB 09/10/2008 Nella riverca Avvocato si discrimina anche per Ufficio di appartenenza.
-		lAvvModRic.setCodUffAppartenenza(this.getCodUfficioUtenteConnesso());
+		lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
 
 		lAvvMod.setCognome(getRequestStringParameter(CAMPO_COGNOME).toUpperCase());
 		lAvvMod.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase());
@@ -110,46 +97,54 @@ public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvoca
 		lAvvMod.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase());
 		lAvvMod.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 		lAvvMod.setFax(getRequestStringParameter(CAMPO_FAX));
+		// MEV_21: aggiungo impostazione di variabili
+		lAvvMod.setPec(getRequestStringParameter(CAMPO_PEC).toUpperCase());
+		lAvvMod.setDescrComuneStudio(getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO).toUpperCase());
 		lAvvMod.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
 		lAvvMod.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE).toUpperCase());
 		// da qui sul secondo model
-		if (this.isRequestParameterNullObj("warning")) {
-
-			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA)));
+		if (isRequestParameterNullObj("warning")) {
+			ComuneModel lComMod = new ComuneModel(
+					getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
 			lAvvMod.setCodLuogoNascita(lComMod.getCodComune());
-			ComuneModel lComModRes = new ComuneModel(this.getCodComuneByDescr(
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-			lAvvMod.setCodComuneResidenza(lComModRes.getCodComune());
-
+			// MEV_21: aggiungo controllo di consistenza
+			if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA)) {
+				ComuneModel lComModRes = new ComuneModel(
+						getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA)));
+				lAvvMod.setCodComuneResidenza(lComModRes.getCodComune());
+			} else {
+				ComuneModel lComModRes = new ComuneModel(
+						getCodComuneByDescr(getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)));
+				lAvvMod.setCodComuneResidenza(lComModRes.getCodComune());
+			}
 		} else {
-			lAvvMod.setCodLuogoNascita(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA));
-			lAvvMod.setCodComuneResidenza(
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA));
+			lAvvMod.setCodLuogoNascita(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA));
+			if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA))
+				lAvvMod.setCodComuneResidenza(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA));
 		}
 
-		lAvvMod.setDataNascita(getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
-				ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA));
+		lAvvMod.setDataNascita(getRequestDateParameter(CAMPO_ANNO_DATA_NASCITA, CAMPO_MESE_DATA_NASCITA,
+				CAMPO_GIORNO_DATA_NASCITA));
 		// lAvvMod.setDataSospensione(getRequestDateParameter(CAMPO_ANNO_DATA_SOSPENSIONE,CAMPO_MESE_DATA_SOSPENSIONE,CAMPO_GIORNO_DATA_SOSPENSIONE)
 		// );
 		// lAvvMod.setDataRadiazione(getRequestDateParameter(CAMPO_ANNO_DATA_RADIAZIONE,CAMPO_MESE_DATA_RADIAZIONE,CAMPO_GIORNO_DATA_RADIAZIONE)
 		// );
-		// lAvvMod.setCodNonAttivita(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA ));
+		// lAvvMod.setCodNonAttivita(getRequestStringParameter(CAMPO_COD_NON_ATTIVITA));
 		lAvvMod.setCodNonAttivita("-");
-		lAvvMod.setCodUffAppartenenza(this.getCodUfficioUtenteConnesso());
-		lAvvMod.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
+		lAvvMod.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
+		lAvvMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		lAvvMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lAvvMod.setDataInserimento(DateUtils.getSysDate());
 		lAvvMod.setFlagCancellato("N");
 		// AvvocatoController lCtrl = new AvvocatoController();
 
-		if (this.isRequestParameterNullObj("warning")) {
+		if (isRequestParameterNullObj("warning")) {
 			try {
 				lVect = lCtrl.ExRicercaAvvocatoPerInserimento(lAvvModRic);
 			} catch (Exception e) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
-				siesLogger.debug(" nessun avvocato trovato");
+				siesLogger.debug("Nessun avvocato trovato!");
 			}
 
 			if (lVect != null && lVect.size() > 0) {
@@ -159,19 +154,15 @@ public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvoca
 						"L'avvocato risulta già registrato.Continuare con l'inserimento?");
 
 				return "/jsp/files/siap/siep/avvocato/warningAvvocato.jsp";
-
 			}
 		}
-		// throw new F3BException(F3BException.USER_MESSAGE,"L'avvocato risulta già registrato");
 
-		lAvvMod = lCtrl.ExInserisciAvvocato(lAvvMod); // setta la risposta nella request
-														// setRequestAttribute("avvocato",lVect);
+		lAvvMod = lCtrl.ExInserisciAvvocato(lAvvMod);
 
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug(this.getRequestStringParameter("associa"));
-		if (!this.isRequestParameterNullObj("associa")
-				&& this.getRequestStringParameter("associa").equals("Associa")) {
+		// siesLogger.debug(getRequestStringParameter("associa"));
+		if (!isRequestParameterNullObj("associa") && getRequestStringParameter("associa").equals("Associa")) {
 			if (lProfilo.isSiep()) {
 				return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 						+ "=siap.siep.avvocato.action.ActLoadInserisciAssegnaAvvocato&" + CAMPO_ID_AVVOCATO
@@ -195,13 +186,11 @@ public class ActInserisciDifensore extends ActionSiap implements ICostantiAvvoca
 							+ CAMPO_ID_AVVOCATO + "=" + lAvvMod.getIdAvvocato().toString();
 				}
 			}
-
 		}
 
 		return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.avvocato.action.ActDettaglioAvvocato&" + CAMPO_ID_AVVOCATO + "="
 				+ lAvvMod.getIdAvvocato().toString();
-
 	}
 
 }
