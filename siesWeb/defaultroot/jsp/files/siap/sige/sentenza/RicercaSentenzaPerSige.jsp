@@ -174,7 +174,8 @@ if (senMod.getAnnoRegeGup() != null) {
 	</tr>
 <%
 }
-if (senMod.getNumeroRegeGup().length() > 1) {
+// Ticket#20210514015: aggiunto test != null perchè andava in nullpointer
+if (senMod.getNumeroRegeGup()!=null && senMod.getNumeroRegeGup().length() > 1) {
 %>
 	<tr>
 		<td class="lVerdeNB">Numero Reg.Gen.: <%=senMod.getNumeroRegeGup().toString()%></td>
@@ -189,7 +190,8 @@ if (senMod.getAnnoRegeCapsm() != null) {
 	</tr>
 <%
 }
-if (senMod.getNumeroRegeCapsm().length() > 1) {
+//Ticket#20210514015: aggiunto test != null perchè andava in nullpointer
+if (senMod.getNumeroRegeCapsm()!=null && senMod.getNumeroRegeCapsm().length() > 1) {
 %>
 	<tr>
 		<td class="lVerdeNB">Numero Reg.Gen.: <%=senMod.getNumeroRegeCapsm().toString()%></td>

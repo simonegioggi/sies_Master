@@ -169,7 +169,18 @@
     <tr>
       <td class=c><%=DateUtils.getDateToString(udienza.getDataUdienza(),"dd-MM-yyyy")%></td>
       <td class=c><%=udienza.getDescrPresidente()%></td>
-      <td class=c><%=udienza.getDescrGiudice1()%></td>
+      <%--Ticket#20210618011 - Aggiunta visualizzazione secondo giudice Relatore --%>
+      <td class=c>
+      	<table>
+      		<tr>
+      			<td class=c><%=udienza.getDescrGiudice1()%></td>
+      		</tr>
+      		<tr>
+      			<td class=c><%=udienza.getDescrGiudice2()%></td>
+      		</tr>
+      	</table>      
+      </td>
+      <%-- Ticket#20210618011 - FINE --%>
       <td class=c>
       	<table>
       		<tr>

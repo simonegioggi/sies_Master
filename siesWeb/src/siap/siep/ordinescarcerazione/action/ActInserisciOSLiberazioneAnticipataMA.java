@@ -97,6 +97,11 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 		// ==========================================================================
 		// Recupero le Notifiche
 		// ==========================================================================
+		//Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+		Date dataInvio = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
+				ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
+		//Ticket#20210521012 -FINE		
+		
 		lEveMod = new EventoNotificaModel();
 		ArrayList lNotifiche = new ArrayList();
 		// SETTO CSSA
@@ -115,7 +120,10 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 			lNotModCSSA.setCodUfficioInserimento(lCodiceUfficio);
 
 			lNotModCSSA.setCodTipoNotifica("N");
-			lNotModCSSA.setDataInvio(DateUtils.getSysDate());
+			//Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModCSSA.setDataInvio(DateUtils.getSysDate());
+			lNotModCSSA.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
 			lNotModCSSA.setCssIdCssa(lCssa);
 			lNotifiche.add(lNotModCSSA);
 
@@ -144,7 +152,10 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 			lNotModUDS.setDataInserimento(DateUtils.getSysDate());
 			lNotModUDS.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModUDS.setCodTipoNotifica("N");
-			lNotModUDS.setDataInvio(DateUtils.getSysDate());
+			//Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModUDS.setDataInvio(DateUtils.getSysDate());
+			lNotModUDS.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
 			lNotModUDS.setUffCodUfficio(lUDS);
 			lNotifiche.add(lNotModUDS);
 		}
@@ -171,7 +182,12 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 			lNotModTDS.setDataInserimento(DateUtils.getSysDate());
 			lNotModTDS.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModTDS.setCodTipoNotifica("E");
-			lNotModTDS.setDataInvio(DateUtils.getSysDate());
+			//Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModTDS.setDataInvio(DateUtils.getSysDate());
+			lNotModTDS.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
+			
+			
 			String lCodiceUff = getCodUfficioByCodTipoUfficioDescrComune(
 					getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_TRIBUNALE),
 					getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_SEDE_TDS));
@@ -200,7 +216,10 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 			lNotModIst.setDataInserimento(DateUtils.getSysDate());
 			lNotModIst.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModIst.setCodTipoNotifica("N");
-			lNotModIst.setDataInvio(DateUtils.getSysDate());
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModIst.setDataInvio(DateUtils.getSysDate());
+			lNotModIst.setDataInvio (dataInvio);
+			// Ticket#20210521012 - FINE
 			lNotModIst.setIstDetIdIstitutoDetenzione(lIstituto);
 			lNotifiche.add(lNotModIst);
 		}
@@ -224,8 +243,10 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 			lNotModPolE.setDataInserimento(DateUtils.getSysDate());
 			lNotModPolE.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModPolE.setCodTipoNotifica("N");
-			lNotModPolE.setDataInvio(DateUtils.getSysDate());
-
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModPolE.setDataInvio(DateUtils.getSysDate());
+			lNotModPolE.setDataInvio (dataInvio);
+			// Ticket#20210521012 - FINE
 			AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 			lAut.setCodTipoAutorita(lTipoAutoritaEsternaE);
 
@@ -245,6 +266,8 @@ public class ActInserisciOSLiberazioneAnticipataMA extends ActOrdineScarcerazion
 				.setDataEmissione(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
 						ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE,
 						ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+
+		// Ticket#20210521012 - ??? Verificare
 		lEveMod.getEvento()
 				.setDataTrasmissioneAtti(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
 						ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE,
