@@ -77,7 +77,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
 				v = new ArrayList(Arrays.asList(listaSoggetti));
 				siesLogger.debug("Elementi trovati: " + v.size());
-				if (v.size() > 20) // max 200 avvocati
+				if (v.size() > 200) // max 200 avvocati
 					throw new SearchLimitException();
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");
