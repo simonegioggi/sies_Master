@@ -63,7 +63,8 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 		if (lAvvModRic.getDataRadiazione() != null && !"-".equals(lAvvModRic.getDataRadiazione().toString()))
 			throw new F3BException(F3BException.USER_MESSAGE, "Attenzione: il difensore risulta radiato!");
 
-		if (lAvvModRic.getCodNonAttivita() != null && !lAvvModRic.getCodNonAttivita().equals("-"))
+		if (lAvvModRic.getCodNonAttivita() != null && !lAvvModRic.getCodNonAttivita().equals("-")
+												   && !lAvvModRic.getCodNonAttivita().equals("A"))	// 20210627	MEV_21
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Attenzione: il difensore risulta non in attività per   "
 							+ lAvvModRic.getDescrNonAttivita() + "");

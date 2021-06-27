@@ -88,8 +88,11 @@ public class ActLoadInserisciAssegnaAvvocato
   	setRequestAttribute("foro", ""+ lOption);
   	
     // 20210620 MEV_21 Nuova gestione Combo per Stato di Nascita
-  	lOption = new Option( DecodificheUtils.getDecodesWithoutCode(DecodificheManager.getInstance().getNazioni(),"039"), "-");
-  	setRequestAttribute("nazioni", "" + lOption );      
+  	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+  	setRequestAttribute("nazione", "" + lOption );      
+    // 20210626 MEV_21 Nuova gestione Combo per Stato Difensore
+  	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+  	setRequestAttribute("statoAvv", "" + lOption );      
     
     return PG_ASSEGNA_INSERISCI_DIFENSORE; //restituisce la jsp di VIEW
 

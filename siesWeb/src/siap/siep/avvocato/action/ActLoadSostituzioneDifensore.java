@@ -85,8 +85,15 @@ public class ActLoadSostituzioneDifensore extends ActionSiap
     } else {
       lOption = new Option(DecodificheManager.getInstance().getForo(), avvocato.getAvvocato().getForo(),Option.NO_BLANK_ITEM);
     }
-    
     setRequestAttribute("foro", ""+ lOption);
+
+    // 20210627 MEV_21 Nuova gestione Combo per Stato di Nascita
+  	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+  	setRequestAttribute("nazione", "" + lOption );      
+
+  	// 20210627 MEV_21 Nuova gestione Combo per Stato Difensore
+  	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+  	setRequestAttribute("statoAvv", "" + lOption );      
     
     return PG_SOSTITUZIONE_AVVOCATO;
   }
