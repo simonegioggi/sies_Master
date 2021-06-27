@@ -708,6 +708,30 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		return aAvvocato;
 	}
 
+	// 20210623 MEV_21 Aggiornamento Avvocato caricato da Reginde.
+	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel aAvvocato) throws F3BException {
+
+		Connection lConn = null;
+		AvvocatoDAO lAvvDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvDao = new AvvocatoDAO(lConn);
+			lAvvDao.setDAOFromModelForUpdate(aAvvocato);
+			lAvvDao.update();
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException(
+					this.getClass().getName() + ".ExModificaAvvocato: Non posso inserire: " + ex);
+		} finally {
+			cleanup(lAvvDao);
+			cleanup(lConn);
+		}
+
+		return aAvvocato;
+	}
+	
 	/*****************************************************************************
 	*
 	************************************************************************** */

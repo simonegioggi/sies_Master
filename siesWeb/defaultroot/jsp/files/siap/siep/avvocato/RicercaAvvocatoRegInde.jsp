@@ -9,6 +9,7 @@
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.Iterator"%>
+<%@ page import="java.util.List"%>
 
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -16,13 +17,13 @@
 <%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sico.decodifiche.controller.DecodificheManager"%>
+<%@ page import="siap.sico.decodifiche.model.DecodificheModel"%>
 <%@ page import="siap.sico.decodifiche.util.DecodificheUtils"%>
 <%@ page import="siap.siep.avvocato.action.ICostantiAvvocato"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
 
 <jsp:useBean id="avvocato" 	scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="msg"		scope="request" class="java.lang.String"/>
-<jsp:useBean id="lTipoAvv"  scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -57,7 +58,7 @@ function avvocati() {
 	}
 }
 
-function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefiscale,luogoNascita,giornoNascita,meseNascita,annoNascita,descComuneStudio) {
+function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefiscale,luogoNascita,nazione,giornoNascita,meseNascita,annoNascita,descComuneStudio,stato) {
    	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value = id;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value = cognome;
 	if (nome == "-") {
@@ -72,15 +73,21 @@ function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefi
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_E_MAIL%>.value = email;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_PEC%>.value = pec;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value = codicefiscale;
-	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value = luogoNascita;
+	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.value = nazione;
+	if (nazione == "039") {
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value = luogoNascita;
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>.value = "";
+	} else {
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value = "";
+		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>.value = luogoNascita;
+	}
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value = giornoNascita;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value = meseNascita;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value = annoNascita;
 	<%-- 20210607	MEV Scheda-21  --%>
 	<%-- 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value = residenza; --%>
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>.value = descComuneStudio;
-
-	window.parent.opener.document.<%=request.getParameter("formname")%>.lTipoAvv.value = "REGINDE";
+	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.value = stato;
 
    	window.parent.close();
 }
@@ -146,6 +153,7 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 		String email = "";
 		String telefono = "";
 		String indirizzoStudio = "-";
+		String nazione = "-";	// 20210614	MEV_21 Recupero codStatoNascita.
 		boolean testStato = false;
 
 		if (Utils.isPresent(i)) {
@@ -188,6 +196,17 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
     	</td>
     	<!-- Codice Fiscale -->
     	<td class=l><%=StringUtils.toStringJSP(si.getCodFisc())%></td>
+<%
+		// 20210624	MEV_21 - Recupero Stato di Nascita dal Codice Comune Catastale.
+		if ("Z".equals(si.getCodFisc().substring(11,12)) ) {
+			nazione = DecodificheUtils.getCodebyCodAlt2(DecodificheManager.getInstance().getNazioni(), si.getCodFisc().substring(11,15) );
+			
+		} else {
+			nazione = "039";
+		}
+		// 20210626	MEV_21 - Recupero Codice Stato di Servizio dell'Avvocato.
+    	String statoAvv = DecodificheUtils.getCodebyDescUpCase(DecodificheManager.getInstance().getListaAttivitaAvvocato(), stato.toUpperCase());
+%>    	
     	<!-- Foro -->
 <%
 		testAvvocatiValidi = true;
@@ -229,17 +248,16 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
 				'<%=StringUtils.cStrForJS(indirizzo)%>','<%=StringUtils.cStrForJS(telefono)%>',
 				'<%=StringUtils.cStrForJS(fax)%>','<%=StringUtils.cStrForJS(email)%>',
 				'<%=StringUtils.cStrForJS(si.getPec())%>','<%=StringUtils.cStrForJS(si.getCodFisc())%>',
-				'<%=StringUtils.cStrForJS(si.getLuogoNascita())%>',
+				'<%=StringUtils.cStrForJS(si.getLuogoNascita())%>','<%=StringUtils.cStrForJS(nazione)%>',
 				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"dd"))%>',
 				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"MM"))%>',
 				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(si.getDataNascita().getTime(),"yyyy"))%>',
-				'<%=StringUtils.cStrForJS(comune)%>');">
+				'<%=StringUtils.cStrForJS(comune)%>','<%=StringUtils.cStrForJS(statoAvv)%>');">
 				<img align="middle" src="/images/fileselected.gif" border="0" style="vertical-align: super;" alt="Inserisci">
 			</a>
 <%
 		} else {
 %>
-			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=lTipoAvv%>.value = "NO_REGINDE";
 			&nbsp;
 <%
 		}
@@ -272,7 +290,6 @@ button.disabled = true;
     }
 }
 %>
-<input type="HIDDEN" name="lTipoAvv" value="<%=lTipoAvv%>">
 </form>
 </body>
 </html>

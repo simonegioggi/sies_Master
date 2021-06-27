@@ -57,98 +57,96 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			// se esiste lo prelevo, altrimenti inserisco nuovo avvocato da reginde su sies!
 			
 			// 20210614 MEV_21 Si esegue la ricerca puntuale dell'Avvocato certificato RegInde in SIES. 
-			AvvocatoModel lAvvModCr = new AvvocatoModel();
-			lAvvModCr.setNome(getRequestStringParameter(CAMPO_NOME));
-			lAvvModCr.setCognome(getRequestStringParameter(CAMPO_COGNOME));
-			lAvvModCr.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-			lAvvModCr.setFlagRegInde("SI");
-			lAvvModCr = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvModCr);
+			AvvocatoModel lAvvCertRegSies = new AvvocatoModel();
+			lAvvCertRegSies.setNome(getRequestStringParameter(CAMPO_NOME));
+			lAvvCertRegSies.setCognome(getRequestStringParameter(CAMPO_COGNOME));
+			lAvvCertRegSies.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+			lAvvCertRegSies.setFlagRegInde("SI");
+			lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
 			
-			// 20210614 MEV_21 Se l'avvocato certificato RegInde non è presente in SIES 
-			// recupero tutte le informazioni dalla Form.
-			if (lAvvModCr == null) {
-				// Recupero Codice e descrizione comune di nascita.
-				Date dataNascita = null;
-				String codLuogoNascita = null;
-				String codProvincia = null;
-				String codCap = null;
-				String codStatoNascita = null;
-				String codNonAttivita = "-";
-				ComuneModel comuneNascita = null;
-				String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
-						? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-						: null;
-				if (Utils.isPresent(descCodLuogoNascita)) {
-					try {
-						comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
-					} catch (Exception e) {
-						siesLogger.info(e.getMessage());
-						// algortimo di omocodia
-						comuneNascita = AvvocatoUtil
-								.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-					}
-					if (!Utils.isNullObj(comuneNascita)) {
-						if ("Z".equals(getRequestStringParameter(CAMPO_CODICE_FISCALE).substring(11, 12).toUpperCase())) {
-							codLuogoNascita = "-";
-							//codProvincia = comuneNascita.getCodProvincia();
-							//codCap = comuneNascita.getCap();
-							descCodLuogoNascita = comuneNascita.getDescrizione();
-							codStatoNascita = comuneNascita.getCodProvincia();
-						} else {
-							codLuogoNascita = comuneNascita.getCodComune();
-							codProvincia = comuneNascita.getCodProvincia();
-							codCap = comuneNascita.getCap();
-							descCodLuogoNascita = comuneNascita.getDescrizione();
-							codStatoNascita = "ITA";
-						}
+			// 20210623 MEV_21 Si recuperano tutte le informazioni dalla Form.
+			// Recupero Codice e descrizione comune di nascita.
+			AvvocatoModel amReginde = null;
+			Date dataNascita = null;
+			String codLuogoNascita = "-";
+			String codProvincia = "-";
+			String codCap = null;
+			String codNonAttivita = "-";
+			ComuneModel comuneNascita = null;
+			String descCodLuogoNascita = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
+					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
+					: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+			if (Utils.isPresent(descCodLuogoNascita)) {
+				try {
+					comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
+				} catch (Exception e) {
+					siesLogger.info(e.getMessage());
+					// algortimo di omocodia
+					comuneNascita = AvvocatoUtil
+							.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+				}
+				if (!Utils.isNullObj(comuneNascita)) {
+					if ("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)) ) {
+						codLuogoNascita = comuneNascita.getCodComune();
+						codProvincia = comuneNascita.getCodProvincia();
+						codCap = comuneNascita.getCap();
+						descCodLuogoNascita = comuneNascita.getDescrizione();
 					}
 				}
-
-				// Recupero Codice e descrizione comune di residenza.
-				String codLuogoResidenza = null;
-				ComuneModel comuneResidenza = null;
-				String descLuogoResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)
-						? getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)
-						: null;
-				if (Utils.isPresent(descLuogoResidenza)) {
-					try {
-						comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
-					} catch (Exception e) {
-						siesLogger.info(e.getMessage());
-					}
-					if (!Utils.isNullObj(comuneResidenza)) {
-						codLuogoResidenza = comuneResidenza.getCodComune();
-						descLuogoResidenza = comuneResidenza.getDescrizione();
-					}
-				}
-				
-				// 20210622 Recupero dataNascita, stato Attività Avvocato.
-				if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
-						&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
-						&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
-						dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
-															  ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
-															  ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
-				//if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA) )
-				//		statoNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
-				
-				AvvocatoModel amReginde = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
-						 getRequestStringParameter(CAMPO_NOME),
-						 getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, CAMPO_PEC, "SI", descLuogoResidenza,
-						 getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
-						 codStatoNascita, null, null, 
-						 getRequestStringParameter(CAMPO_INDIRIZZO), getRequestStringParameter(CAMPO_TELEFONO), getRequestStringParameter(CAMPO_FAX), getRequestStringParameter(CAMPO_E_MAIL),
-						 getRequestStringParameter(CAMPO_CODICE_FISCALE), codProvincia, codCap, 
-						 new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null,
-						 null, null, null, descCodLuogoNascita, descLuogoResidenza, 
-						 null, codLuogoNascita, codLuogoResidenza, dataNascita,
-						 null, null, codNonAttivita, "00000", null, "N", null);
-
-				AvvocatoModel amRegIns = lCtrl.ExInserisciAvvocato(amReginde);
-				idAvvocato = amRegIns.getIdAvvocato();
-			} else {	// Avvocato da RegInde già presente in SIES - Effettuare l'aggiornamento
-				idAvvocato = lAvvModCr.getIdAvvocato();
 			}
+
+			// Recupero Codice e descrizione comune di residenza.
+			String codLuogoResidenza = "-";
+			ComuneModel comuneResidenza = null;
+			String descLuogoResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)
+					? getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)
+					: null;
+			if (Utils.isPresent(descLuogoResidenza)) {
+				try {
+					comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
+				} catch (Exception e) {
+					siesLogger.info(e.getMessage());
+				}
+				if (!Utils.isNullObj(comuneResidenza)) {
+					codLuogoResidenza = comuneResidenza.getCodComune();
+					descLuogoResidenza = comuneResidenza.getDescrizione();
+				}
+			}
+			
+			// 20210622 Recupero dataNascita, stato Attività Avvocato.
+			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
+					&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
+					&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+					dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
+														  ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
+														  ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+			if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA) )
+					codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
+				
+			amReginde = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
+					 getRequestStringParameter(CAMPO_NOME),
+					 getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, CAMPO_PEC, "SI", descLuogoResidenza,
+					 getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
+					 getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, null, 
+					 getRequestStringParameter(CAMPO_INDIRIZZO), getRequestStringParameter(CAMPO_TELEFONO), getRequestStringParameter(CAMPO_FAX), 
+					 getRequestStringParameter(CAMPO_E_MAIL), getRequestStringParameter(CAMPO_CODICE_FISCALE), codProvincia, codCap, 
+					 new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null,
+					 null, null, null, descCodLuogoNascita, descLuogoResidenza, 
+					 null, codLuogoNascita, codLuogoResidenza, dataNascita,
+					 null, null, codNonAttivita, "00000", null, "N", null);
+
+			/*  20210623 MEV_21 Se l'avvocato certificato RegInde non è presente in SIES si inserisce 
+				Se è già presente in SIES si effettua l'aggiornamento con i dati da Reginde. */
+			if (lAvvCertRegSies == null) {
+				amReginde = lCtrl.ExInserisciAvvocato(amReginde);
+			} else {
+				amReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
+				amReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+				amReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+				amReginde.setDataAggiornamento(DateUtils.getSysDate());
+				amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+			}
+			idAvvocato = amReginde.getIdAvvocato();
 			
 		} else		// Avvocato non presente in RegInde, si esegue la procedura preesistente.
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
@@ -206,7 +204,8 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		if (lAvvModRic.getDataRadiazione() != null && !"-".equals(lAvvModRic.getDataRadiazione().toString()))
 			throw new F3BException(F3BException.USER_MESSAGE, "Attenzione: il difensore risulta radiato!");
 
-		if (lAvvModRic.getCodNonAttivita() != null && !lAvvModRic.getCodNonAttivita().equals("-"))
+		if (lAvvModRic.getCodNonAttivita() != null && !lAvvModRic.getCodNonAttivita().equals("-")
+												   && !lAvvModRic.getCodNonAttivita().equals("A"))	// 20210627	MEV_21
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Attenzione: il difensore risulta non in attività per  "
 							+ lAvvModRic.getDescrNonAttivita() + "");
