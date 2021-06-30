@@ -70,14 +70,14 @@ public class RinnovoSqlDAO extends SqlDAO {
 	}
 
 	/**
-	 * Ticket#202106220110 - per la stampa mi interessa solo un rinnovo validato con
+	 * Ticket#202106220110 - per la stampa mi interessa solo un rinnovo con
 	 * DATA_RINNOVO valorizzata
 	 * Metodo aggiunto in sostituzione del metodo ricercaRinnovoByKeyEvento precedentemente 
 	 * utilizzato.
 	 * @param aKeyNot
 	 * @throws DAOException
 	 */
-	public void ricercaUltimoRinnovoValidatoByKeyEvento(BigDecimal aKeyNot) throws DAOException {
+	public void ricercaUltimoRinnovoByKeyEvento(BigDecimal aKeyNot) throws DAOException {
 		String lSql = getSqlQueryxEvento();
 		lSql += " AND ID_EVENTO = " + aKeyNot;
 
