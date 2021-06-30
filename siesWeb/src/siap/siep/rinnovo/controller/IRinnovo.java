@@ -40,7 +40,10 @@ public interface IRinnovo {
 	public RinnovoModel ExRicercaRinnovoByKey(BigDecimal aKey) throws F3BException;
 
 	public RinnovoModel ExRicercaRinnovoByKeyEvento(BigDecimal aKey) throws F3BException;
-
+	
+	// Ticket#202106220110
+	public RinnovoModel ExRicercaUltimoRinnovoByKeyEvento (BigDecimal aKey) throws F3BException;
+	
 	public RinnovoModel ExModificaRinnovo(RinnovoModel aRinnovo) throws F3BException;
 
 	public void ExCancellaRinnovo(RinnovoModel aRinnovo) throws F3BException;

@@ -69,6 +69,30 @@ public class RinnovoSqlDAO extends SqlDAO {
 		setStatement(lSql);
 	}
 
+	/**
+	 * Ticket#202106220110 - per la stampa mi interessa solo un rinnovo validato con
+	 * DATA_RINNOVO valorizzata
+	 * Metodo aggiunto in sostituzione del metodo ricercaRinnovoByKeyEvento precedentemente 
+	 * utilizzato.
+	 * @param aKeyNot
+	 * @throws DAOException
+	 */
+	public void ricercaUltimoRinnovoValidatoByKeyEvento(BigDecimal aKeyNot) throws DAOException {
+		String lSql = getSqlQueryxEvento();
+		lSql += " AND ID_EVENTO = " + aKeyNot;
+
+		lSql += " AND ID_EVENTO=NOTIFICA.EVE_ID_EVENTO ";
+		lSql += " AND NOTIFICA.ID_NOTIFICA=RINNOVO.NOT_ID_NOTIFICA ";
+		
+		// Ticket#202106220110 - Recupero solo la RINNOVAZIONI con DATA_RINNOVO valorizzata
+		lSql += " AND DATA_RINNOVO IS NOT NULL ";
+		//lSql += " AND RINNOVO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";  // e validati
+		// Ticket#202106220110 - FINE
+		lSql += " ORDER BY DATA_RINNOVO DESC, ID_RINNOVO DESC";
+
+		setStatement(lSql);
+	}
+	
 	public void ricercaRinnovoIdNotificaCodTipoRinnovo(BigDecimal aKeyNot, String[] aCodTipoRinnovo)
 			throws DAOException {
 		String lSql = getSqlQuery();

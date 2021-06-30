@@ -273,6 +273,37 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		}
 		return lRinMod;
 	}
+	
+	/**
+	 * Ticket#202106220110 - per la stampa mi interessa solo un rinnovo validato con
+	 * DATA_RINNOVO valorizzata
+	 * Metodo aggiunto in sostituzione del metodo ExRicercaRinnovoByKeyEvento precedentemente 
+	 * utilizzato.
+	 * @param aKey
+	 * @return
+	 * @throws F3BException
+	 */
+	public RinnovoModel ExRicercaUltimoRinnovoByKeyEvento(BigDecimal aKey) throws F3BException {
+
+		Connection lConn = null;
+		RinnovoSqlDAO lRinDao = null;
+		RinnovoModel lRinMod;
+
+		try {
+			lConn = getDBConnection();
+			lRinDao = new RinnovoSqlDAO(lConn);
+			lRinDao.ricercaUltimoRinnovoByKeyEvento(aKey);
+			lRinMod = (RinnovoModel) lRinDao.getModelByKey();
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"RinnovoController.ExRicercaUltimoRinnovoByKeyEvento: Non posso leggere : " + daoEx);
+		} finally {
+			cleanup(lRinDao);
+			cleanup(lConn);
+		}
+		return lRinMod;
+	}	
+	
 
 	public RinnovoModel ExModificaRinnovo(RinnovoModel aRinnovo) throws F3BException {
 

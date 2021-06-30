@@ -1001,7 +1001,10 @@ public class StatoEsecuzioneController extends SiapController {
 						// altrimenti no. Il template e' fatto in modo che se trova il rinnovo prende sempre
 						// il rinnovo altrimenti l'ultimo VVR
 						IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
-						RinnovoModel lRinMod = lCtrl.ExRicercaRinnovoByKeyEvento(lEveNot.getIdEvento());
+						// Ticket#202106220110 - Si recupera l'ultimo 
+						// RinnovoModel lRinMod = lCtrl.ExRicercaRinnovoByKeyEvento(lEveNot.getIdEvento());
+						RinnovoModel lRinMod = lCtrl.ExRicercaUltimoRinnovoByKeyEvento(lEveNot.getIdEvento());
+						// Ticket#202106220110 - FINE
 						if (lRinMod != null) {
 							String[] lCodTipoProvv = { "17" };
 							String[] lCodMotivi = { "0313" }; // VVR
