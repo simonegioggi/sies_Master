@@ -1,1 +1,3 @@
 MEV_6: nasce dalla RELEASE_12.4.4.0
+
+Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
