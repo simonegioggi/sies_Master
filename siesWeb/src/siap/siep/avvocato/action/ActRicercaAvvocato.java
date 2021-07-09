@@ -1,11 +1,21 @@
 package siap.siep.avvocato.action;
 
+/**
+ * <p>Title: ActRicercaAvvocato</p>
+ * <p>Description: Classe Action per la ricerca di Avvocato</p>
+ * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Company: Bull</p>
+ * @version 1.0
+ */
+
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
 //import siap.siep.avvocato.controller.AvvocatoController;
 import siap.siep.avvocato.controller.IAvvocato;
@@ -24,16 +34,20 @@ public class ActRicercaAvvocato extends ActionSiap implements ICostantiAvvocato 
 		Vector lVect = null;
 		// AvvocatoFascicoloSiepModel lAvvFascMod = new AvvocatoFascicoloSiepModel();
 		lAvvMod.setCognome(getRequestStringParameter(CAMPO_COGNOME));
-		// MEV_21: aggiungo controllo se dalla pagina la ricerca è su TUTTI I FORI!!!
-		if (!isRequestChecked(CAMPO_FLAG_TUTTI_FORI))
+
+		// 20210630 Distinzione tra singolo o tutti i fori
+		if (isRequestChecked(CAMPO_FLAG_TUTTI_FORI))
+			lAvvMod.setForo(null);
+		else
 			lAvvMod.setForo(getRequestStringParameter(CAMPO_FORO));
 
-		lAvvMod.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
+		lAvvMod.setCodUffAppartenenza(this.getCodUfficioUtenteConnesso());
 
 		IAvvocato lCtrl = SIEPLookupRemote.getAvvocatoRemote();
 
 		try {
 			lVect = lCtrl.ExRicercaAvvocatoPerUffApparteneza(lAvvMod);
+
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
