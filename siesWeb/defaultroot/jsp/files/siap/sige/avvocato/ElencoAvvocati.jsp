@@ -44,6 +44,9 @@ String strAlertAvvocato = "";
 int contaSoppressi = 0;
 Collection listaFori = DecodificheManager.getInstance().getForoAll();
 
+boolean isAvvocatoForoRegInde = false;
+String strAlertAvvocatoReginde = "";
+int contaRegInde = 0;
 
     Iterator itx = avvocato.iterator();
     while ( itx.hasNext())
@@ -55,6 +58,9 @@ Collection listaFori = DecodificheManager.getInstance().getForoAll();
       
       String attributeForo = "";
       String lSoppresso = "";
+      
+      String lCertRegInde = "";
+      String attributeForoReginde = "";
       if ("SI".equals(Modificabile)) 
       {
         String lStatoForo = DecodificheUtils.getCodAltebyCode(listaFori, lAvvocato.getAvvocato().getForo()); 
@@ -72,10 +78,24 @@ Collection listaFori = DecodificheManager.getInstance().getForoAll();
                              +StringUtils.toStringJSP(lAvvocato.getAvvocato().getForo())
                              +" soppresso a seguito dell'accorpamento degli uffici giudiziari. ";
         }
+        
+        // INIZIO: MEV_21 (avvocati)
+        if ("NO".equals(lAvvocato.getAvvocato().getFlagRegInde())) {
+           isAvvocatoForoRegInde = true;
+           attributeForoReginde = "foroRegInde='S'";
+           lCertRegInde = " <font class='cRosso'>(non certificato su RegInde)</font> ";
+           contaRegInde++;
+           strAlertAvvocatoReginde+= " L'anagrafica dell'Avvocato "+StringUtils.toStringJSP(lAvvocato.getAvvocato().getCognome())+" "
+                             +StringUtils.toStringJSP(lAvvocato.getAvvocato().getNome())
+                             +" non risulta certificata su RegInde. "
+                             +"  ";
+         
+        }
+        // FINE: MEV_21        
       }
       
 %>
-       <tr <%=attributeForo%>>
+       <tr <%=attributeForo%> <%=attributeForoReginde%>>
          <td class="c" colspan=1 width=40% style="text-align:left !important;">
           	<font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getAvvocato().getCognome()) +" "+ StringUtils.toStringJSP(lAvvocato.getAvvocato().getNome()) %></font>
          </td>
@@ -101,10 +121,20 @@ Collection listaFori = DecodificheManager.getInstance().getForoAll();
     else
       strAlertAvvocato += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati degli Avvocati utilizzando le opportune funzioni.";
   }
+  
+  // INIZIO: MEV_21 (avvocati)
+  if (isAvvocatoForoRegInde){
+    if (contaRegInde==1)
+      strAlertAvvocatoReginde += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati dell'Avvocato utilizzando le opportune funzioni.";
+    else
+      strAlertAvvocatoReginde += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati degli Avvocati utilizzando le opportune funzioni.";
+  }
+  // FINE: MEV_21    
+  
 %>
 
   <script language="JavaScript">
-<% if (isAvvocatoForoSoppresso){%>
+<% if (isAvvocatoForoSoppresso || isAvvocatoForoRegInde ){%>
 
   function blinkAvvocato() {
   
@@ -112,7 +142,7 @@ Collection listaFori = DecodificheManager.getInstance().getForoAll();
     
     for (var i = blinks.length - 1; i >= 0; i--) {
       var s = blinks[i];
-      if (s.getAttribute("foroSoppresso")=="S")
+      if (s.getAttribute("foroSoppresso")=="S" || s.getAttribute("foroRegInde")=="S")
         s.style.backgroundColor  = (s.style.backgroundColor == '') ? '#FFFF00' : '';
     }
     window.setTimeout(blinkAvvocato, 1000);  
@@ -123,7 +153,13 @@ Collection listaFori = DecodificheManager.getInstance().getForoAll();
   else if (window.attachEvent) window.attachEvent("onload", blinkAvvocato);
   else window.onload = blinkAvvocato;
 
+  <% if (isAvvocatoForoSoppresso){%>
   alert("Attenzione!! <%=strAlertAvvocato%>");
+  <%}%>
+  
+  <% if (isAvvocatoForoRegInde){ //INIZIO: MEV_21 (avvocati) %>
+  alert("Attenzione!! <%=strAlertAvvocatoReginde%>");
+  <%} // FINE: MEV_21 %> 
 <% } %>
 </script>
   

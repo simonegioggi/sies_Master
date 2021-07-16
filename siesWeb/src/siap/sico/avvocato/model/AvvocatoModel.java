@@ -25,7 +25,7 @@ public class AvvocatoModel extends GenericModel {
 	private String mNome;
 	private String mDescrTipo;
 	private String mForo;
-	private String mDescComuneSedeForo; // 20210608	MEV_Scheda-21
+	private String mDescComuneSedeForo; // 20210608	MEV_Scheda-21	
 	private String mIndirizzo;
 	private String mTelefono;
 	private String mFax;

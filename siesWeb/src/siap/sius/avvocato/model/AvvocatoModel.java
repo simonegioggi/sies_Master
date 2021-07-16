@@ -23,6 +23,20 @@ public class AvvocatoModel extends GenericModel {
 	private String mNome;
 	private String mDescrTipo;
 	private String mForo;
+	
+	// INIZIO: MEV_21 (avvocati)
+	private String mDescComuneSedeForo;
+	private String mPec;
+	private String mFlagRegInde;
+	private String mDescrComuneStudio;
+	private String mDescLuogoNascitaReginde;
+	private String mCodStatoNascita;
+	private String mDescrStatoNascita;
+	private BigDecimal mIdAvvocatoBonificato;
+	// FINE: MEV_21	
+	
+	
+	
 	private String mIndirizzo;
 	private String mTelefono;
 	private String mFax;
@@ -51,9 +65,6 @@ public class AvvocatoModel extends GenericModel {
 	private BigDecimal mFlagVisualizza;
 	private BigDecimal mIdAvvocatoStandard;
 	
-	//INIZIO: MEV_21 (avvocati)
-	private String mDescComuneSedeForo;
-	//FINE: MEV_21
 
 	// COSTRUTTORE DI DEFAULT
 	public AvvocatoModel() {
@@ -62,9 +73,16 @@ public class AvvocatoModel extends GenericModel {
 		this.mNome = "";
 		this.mDescrTipo = "";
 		this.mForo = "";
-		//INIZIO: MEV_21 (avvocati)
+		// INIZIO: MEV_21 (avvocati)
 		this.mDescComuneSedeForo = "";
-		//FINE: MEV_21		
+		this.mPec = "";
+		this.mFlagRegInde = "";
+		this.mDescrComuneStudio = "";
+		this.mDescLuogoNascitaReginde = "";
+		this.mCodStatoNascita = "";
+		this.mDescrStatoNascita = "";
+		this.mIdAvvocatoBonificato = null;
+		// FINE: MEV_21	
 		this.mIndirizzo = "";
 		this.mTelefono = "";
 		this.mFax = "";
@@ -100,9 +118,16 @@ public class AvvocatoModel extends GenericModel {
 		this.mCognome = aModel.mCognome;
 		this.mNome = aModel.mNome;
 		this.mForo = aModel.mForo;
-		//INIZIO: MEV_21 (avvocati)
+		// INIZIO: MEV_21 (avvocati)
 		this.mDescComuneSedeForo = aModel.mDescComuneSedeForo;
-		//FINE: MEV_21		
+		this.mPec = aModel.mPec;
+		this.mFlagRegInde = aModel.mFlagRegInde;
+		this.mDescrComuneStudio = aModel.mDescrComuneStudio;
+		this.mDescLuogoNascitaReginde = aModel.mDescLuogoNascitaReginde;
+		this.mCodStatoNascita = aModel.mCodStatoNascita;
+		this.mDescrStatoNascita = aModel.mDescrStatoNascita;
+		this.mIdAvvocatoBonificato = aModel.mIdAvvocatoBonificato;
+		// FINE: MEV_21		
 		this.mIndirizzo = aModel.mIndirizzo;
 		this.mTelefono = aModel.mTelefono;
 		this.mFax = aModel.mFax;
@@ -134,7 +159,11 @@ public class AvvocatoModel extends GenericModel {
 	}
 
 	// COSTRUTTORE MODEL
-	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo, String aDescComuneSedeForo, 
+	public AvvocatoModel(BigDecimal aIdAvvocato, String aCognome, String aNome, String aForo, 
+			// INIZIO: MEV_21 (avvocati)
+			String aDescComuneSedeForo, String aPec, String aFlagRegInde, String aDescrComuneStudio,
+			String aDescLuogoNascitaReginde, String aCodStatoNascita, String aDescrStatoNascita,
+			BigDecimal aIdAvvocatoBonificato, // FINE: MEV_21
 			String aIndirizzo, String aTelefono, String aFax, String aEMail, String aCodLuogoNascita,
 			String aCodComuneResidenza, String aDescCodLuogoNascita, String aDescCodComuneResidenza,
 			Date aDataNascita, String aCodOperatoreInserimento, Date aDataInserimento,
@@ -149,9 +178,16 @@ public class AvvocatoModel extends GenericModel {
 		this.mCognome = aCognome;
 		this.mNome = aNome;
 		this.mForo = aForo;
-		//INIZIO: MEV_21 (avvocati)
+		// INIZIO: MEV_21 (avvocati)
 		this.mDescComuneSedeForo = aDescComuneSedeForo;
-		//FINE: MEV_21			
+		this.mPec = aPec;
+		this.mFlagRegInde = aFlagRegInde;
+		this.mDescrComuneStudio = aDescrComuneStudio;
+		this.mDescLuogoNascitaReginde = aDescLuogoNascitaReginde;
+		this.mCodStatoNascita = aCodStatoNascita;
+		this.mDescrStatoNascita = aDescrStatoNascita;
+		this.mIdAvvocatoBonificato = aIdAvvocatoBonificato;
+		// FINE: MEV_21		
 		this.mIndirizzo = aIndirizzo;
 		this.mTelefono = aTelefono;
 		this.mFax = aFax;
@@ -201,11 +237,33 @@ public class AvvocatoModel extends GenericModel {
 		return mForo;
 	}
 	
-	//INIZIO: MEV_21 (avvocati)
-	public String getDescComuneSedeForo () {
+	// INIZIO: MEV_21 (avvocati)
+	public String getDescComuneSedeForo() {
 		return mDescComuneSedeForo;
 	}
-	//FINE: MEV_21
+	public String getPec() {
+		return mPec;
+	}
+	public String getFlagRegInde() {
+		return mFlagRegInde;
+	}
+	public String getDescrComuneStudio() {
+		return mDescrComuneStudio;
+	}
+	public String getDescLuogoNascitaReginde() {
+		return mDescLuogoNascitaReginde;
+	}
+
+	public String getCodStatoNascita() {
+		return mCodStatoNascita;
+	}
+	public String getDescrStatoNascita() {
+		return mDescrStatoNascita;
+	}
+	public BigDecimal getIdAvvocatoBonificato() {
+		return mIdAvvocatoBonificato;
+	}
+	// FINE: MEV_21
 
 	public String getIndirizzo() {
 		return mIndirizzo;
@@ -339,11 +397,32 @@ public class AvvocatoModel extends GenericModel {
 		mForo = aValore;
 	}
 	
-	//INIZIO: MEV_21 (avvocati)
-	public void setDescComuneSedeForo (String aValore) {
+	// INIZIO: MEV_21 (avvocati)
+	public void setDescComuneSedeForo(String aValore) {
 		mDescComuneSedeForo = aValore;
 	}
-	//FINE: MEV_21
+	public void setPec(String aValore) {
+		mPec = aValore;
+	}
+	public void setFlagRegInde(String aValore) {
+		mFlagRegInde = aValore;
+	}
+	public void setDescrComuneStudio(String aValore) {
+		mDescrComuneStudio = aValore;
+	}
+	public void setDescLuogoNascitaReginde(String aValore) {
+		mDescLuogoNascitaReginde = aValore;
+	}
+	public void setCodStatoNascita(String aValore) {
+		mCodStatoNascita = aValore;
+	}
+	public void setDescrStatoNascita(String aValore) {
+		mDescrStatoNascita = aValore;
+	}
+	public void setIdAvvocatoBonificato(BigDecimal aValore) {
+		mIdAvvocatoBonificato = aValore;
+	}
+	// FINE: MEV_21
 
 	public void setIndirizzo(String aValore) {
 		mIndirizzo = aValore;
