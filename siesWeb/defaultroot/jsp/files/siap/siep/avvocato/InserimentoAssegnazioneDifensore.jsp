@@ -40,6 +40,7 @@ AvvocatoModel lAvv = avvocato;
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DIR%>jsrsClient.js"></script>
 <script language="JavaScript">
 var desktop;
 
@@ -123,7 +124,8 @@ function caricamento() {
 	fiducia.style.visibility = 'hidden';
 
 	if (valore == '01') { // D'Ufficio
-		document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value = document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
+      caricaDescComuneForo(document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
+		  //document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value = document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
 	    fiducia.style.visibility = 'hidden';
 	    ufficio.style.visibility = 'visible';
 	    ufficioSotto.style.visibility = 'visible';
@@ -171,6 +173,18 @@ function caricamento() {
 			confermaBtn.style.visibility= 'visible'
   	}
 }
+
+function caricaDescComuneForo (foro) {
+  var myParams = new Array(foro);
+
+  // Chiamata:
+  jsrsExecute("/CaricaHTML_Servlet", loadDescComuneForo, "getDescComuneForo",myParams);      
+}
+
+function loadDescComuneForo(descComuneForo) {
+  document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value = descComuneForo;
+}
+
 
 <%  
 if (!"".equals(lTipoFunzione)) {

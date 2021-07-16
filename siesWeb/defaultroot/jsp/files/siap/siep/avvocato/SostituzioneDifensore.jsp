@@ -29,6 +29,7 @@
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DIR%>jsrsClient.js"></script>
 <script language="JavaScript">
 var desktop;
 
@@ -97,8 +98,11 @@ function caricamento() {
 	ufficioSotto.style.top='-135px';
 
 	if ( valore == '01') {
-  		document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
-  	}
+    <%-- MEV_21 --%>
+     caricaDescComuneForo(document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
+  	 //document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
+  	 <%-- MEV_21 --%>
+    }
 
 	conferma.style.visibility='visible';
 	fiducia.style.visibility='hidden';
@@ -143,6 +147,19 @@ function ListaAvvocatiRegInde(a_formname) {
 	inserimento.style.visibility = 'hidden';
 	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=550,height=600");
 }
+
+function caricaDescComuneForo (foro) {
+  var myParams = new Array(foro);
+
+  jsrsExecute("/CaricaHTML_Servlet", loadDescComuneForo, "getDescComuneForo",myParams);      
+}
+
+function loadDescComuneForo(descComuneForo) {
+  document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value = descComuneForo;
+}
+
+ <%-- MEV_21 --%>
+
 </script>
 </head>
 
