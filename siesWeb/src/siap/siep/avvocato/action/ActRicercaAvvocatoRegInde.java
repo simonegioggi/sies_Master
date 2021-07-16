@@ -58,11 +58,11 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			WsServiziInterrogazioneInterni_ServiceLocator service = new WsServiziInterrogazioneInterni_ServiceLocator();
 			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(
 					F3BProperties.getProperty("EndpointAddress"));
-			/*System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
+			System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
 			System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
 			System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
 			System.setProperty("https.proxyHost", F3BProperties.getProperty("https.proxyHost"));
-			System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));  */
+			System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));
 			WsServiziInterrogazioneInterni_PortType port = service.getServiziInterrogazioneInterniBeanPort();
 			Soggetto[] listaSoggetti = null;
 			siesLogger.debug(
@@ -97,77 +97,9 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			}
 		}
 
-		// v = this.aggiornaDatiNascita(v);	// 20210624 MEV_21
-		
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
 		setRequestAttribute("avvocato", v);
 
 		return PG_RICERCA_AVVOCATO_REGINDE;
 	}
-/*
-	// 20210624 MEV_21 Impostazione dello stato e luogo di nascita in base al Codice Comune Catastale estrapolato dal C.F.
-	private List aggiornaDatiNascita(List listAvv) {
-		String codLuogoNascita = null;
-		String codProvincia = null;
-		String codCap = null;
-		String codStatoNascita = null;
-		String codNonAttivita = "-";
-		ComuneModel comuneNascita = null;
-
-		List avv = listAvv;
-		for (int i = 0; i < avv.size(); i++) {
-			AvvocatoModel lAvvReg = (AvvocatoModel)avv.get(i);
-			codLuogoNascita = lAvvReg.getCodLuogoNascita();
-			codStatoNascita = lAvvReg.getCodStatoNascita();
-			String descCodLuogoNascita = !isNullO RequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
-					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-					: null;
-			try {
-				comuneNascita = new ComuneModel(getCodComuneByDescr(lAvvReg.getDescLuogoNascita()));
-			} catch (Exception e) {
-				siesLogger.info(e.getMessage());
-				// algortimo di omocodia
-				comuneNascita = AvvocatoUtil.calcolaComuneNascita(lAvvReg.getCodiceFiscale());
-			}
-			
-			
-			String lCccAvvReg = lAvvReg.getCodiceFiscale().substring(11, endIndex);
-
-			
-			String descCodLuogoNascita = !isRequestParameterNullObj(CAMPO_COD_LUOGO_NASCITA)
-					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-					: null;
-			if (Utils.isPresent(descCodLuogoNascita)) {
-				try {
-					comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
-				} catch (Exception e) {
-					siesLogger.info(e.getMessage());
-					// algortimo di omocodia
-					comuneNascita = AvvocatoUtil
-							.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-				}
-				if (!Utils.isNullObj(comuneNascita)) {
-					if ("Z".equals(getRequestStringParameter(CAMPO_CODICE_FISCALE).substring(11, 12).toUpperCase())) {
-						codLuogoNascita = "-";
-						//codProvincia = comuneNascita.getCodProvincia();
-						//codCap = comuneNascita.getCap();
-						descCodLuogoNascita = comuneNascita.getDescrizione();
-						codStatoNascita = comuneNascita.getCodProvincia();
-					} else {
-						codLuogoNascita = comuneNascita.getCodComune();
-						codProvincia = comuneNascita.getCodProvincia();
-						codCap = comuneNascita.getCap();
-						descCodLuogoNascita = comuneNascita.getDescrizione();
-						codStatoNascita = "ITA";
-					}
-				}
-			}
-			
-			
-			
-			
-		}
-		
-		
-	} */
 }

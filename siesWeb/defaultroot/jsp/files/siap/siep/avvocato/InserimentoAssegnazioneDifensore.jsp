@@ -42,9 +42,17 @@ AvvocatoModel lAvv = avvocato;
 <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
 <script language="JavaScript">
 var desktop;
-  
+
+// Enable ComboBox
+function EnableCombo() {
+	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.disabled = false;
+	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.disabled = false;
+	document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.disabled = false;
+}
+
 function Inserisci() {
-	document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore";
+	<%-- document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore"; --%>
+	document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActInserisciAvvocato";
 	document.LoadModificaAvvocato.submit();
 }
 
@@ -130,7 +138,11 @@ function caricamento() {
 	    ufficioSotto.style.visibility = 'hidden';
 	    motivoDes.style.visibility = 'hidden';
 	    conferma.style.visibility = 'visible';
-	    conferma.style.top = '-400px';
+	    conferma.style.top = '-400px'
+		if(inserimento.style.visibility= 'visible')
+			confermaBtn.style.visibility= 'hidden'
+		else
+			confermaBtn.style.visibility= 'visible'
   	}
 
   	if (valore == '-') {
@@ -140,6 +152,10 @@ function caricamento() {
 	    motivoDes.style.visibility = 'hidden';
 	    conferma.style.visibility = 'visible';
 	    conferma.style.top = '-400px';
+		if(inserimento.style.visibility= 'visible')
+			confermaBtn.style.visibility= 'hidden'
+		else
+			confermaBtn.style.visibility= 'visible'
   	}
 
   	if (valore == '03') { // Della Fase di Giudizio
@@ -149,6 +165,10 @@ function caricamento() {
 	    motivoDes.style.visibility = 'hidden';
 	    conferma.style.visibility = 'visible';
 	    conferma.style.top = '-400px';
+		if(inserimento.style.visibility= 'visible')
+			confermaBtn.style.visibility= 'hidden'
+		else
+			confermaBtn.style.visibility= 'visible'
   	}
 }
 
@@ -220,7 +240,7 @@ if (siap.util.SIESSwitch.isRegeSiesOn()) {
 %>
 <table>
   	<tr>
-    	<td class="l">
+    	<td class="l" id="ricReginde"  style="visibility:visible;">
     		<%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 <!--       		<a href="Javascript:ListaAvvocati('LoadModificaAvvocato');"> -->
 <!--         		Seleziona dalla lista <img src="/images/filefolder.gif" border=0> -->
@@ -270,7 +290,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
         	<input title="Stato di Nascita" readonly value="<%=StringUtils.toStringJSP(lAvv.getDescrStatoNascita())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_STATO_NASCITA%>" maxlength="35" size="35">
 		</td --%>
 		<td class="L">
-          	<select name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
         </td>
 		</td>
 	</tr>
@@ -307,13 +327,13 @@ if (lAvv.getDataNascita() == null) {
     <tr>
         <td class="l">Foro <font class=ob>(*)</font></td>
         <td class="l">
-          	<select name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1"><%=foro%></select>
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1"><%=foro%></select>
         </td>
     </tr>
     <tr>
       	<td class="l">Indirizzo</td>
       	<td class="l">
-      		<input size=80 maxlength=200 title="Indirizzo" value="<%=StringUtils.toStringJSP(lAvv.getIndirizzo())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>">
+      		<input type="text" readonly size=80 maxlength=200 title="Indirizzo" value="<%=StringUtils.toStringJSP(lAvv.getIndirizzo())%>" name="<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>">
       	</td>
   	</tr>
   	<%-- MEV_21: modificato campo per chiamata a WS per individuare lista avvocato in RegInde --%>
@@ -321,40 +341,44 @@ if (lAvv.getDataNascita() == null) {
         <td class="l">Con Studio in </td>
         <td class="L">
 <%--           	<input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35"> --%>
-			<input title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
+			<input type="text" readonly title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
         </td>
     </tr>
 	<tr>
 		<td class="l">Telefono</td>
 		<td class="l">
-			<input size=12 maxlength=12 title="Telefono" value="<%=StringUtils.toStringJSP(lAvv.getTelefono())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_TELEFONO%>">
+<%			String lTel = lAvv.getTelefono().length()>3 ? lAvv.getTelefono() : ""; %>		
+			<input type="text" readonly size=12 maxlength=12 title="Telefono" value="<%=StringUtils.toStringJSP(lTel)%>" name="<%=ICostantiAvvocato.CAMPO_TELEFONO%>">
 		</td>
     </tr>
     <tr>
 		<td class="l">Fax</td>
 		<td class="l">
-			<input size=12 maxlength=12 title="Fax" value="<%=StringUtils.toStringJSP(lAvv.getFax())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_FAX%>">
+<%			String lFax = lAvv.getFax().length()>3 ? lAvv.getFax() : ""; %>		
+			<input type="text" readonly size=12 maxlength=12 title="Fax" value="<%=StringUtils.toStringJSP(lFax)%>" name="<%=ICostantiAvvocato.CAMPO_FAX%>">
 		</td>
     </tr>
     <tr>
 		<td class="l">e-mail</td>
-		<td class="l"><input size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getEMail())%>" title="e-mail" type="text" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
+<%			String lEMail = lAvv.getEMail().length()>3 ? lAvv.getEMail() : ""; %>		
+		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lEMail)%>" title="e-mail" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
 	</tr>
 	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>
     <tr>
 		<td class="l">pec</td>
-		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getPec())%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
+<%			String lPec = lAvv.getPec().length()>3 ? lAvv.getPec() : ""; %>		
+		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lPec)%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
 	</tr>
 	<tr>
 		<td class="l">Codice Fiscale</td>
 		<td class="l">
-			<input size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="Codice Fiscale" type="text" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>">
+			<input type="text" readonly size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="Codice Fiscale" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>">
 		</td>
 	</tr>
 	<tr>
 		<td class="l" >Stato Difensore</font></td>
 		<td class="L">
-           	<select title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
+           	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
 		</td>
 	</tr>
 	<tr>
@@ -487,7 +511,7 @@ if (lAvv.getDataNascita() == null) {
 <table cellspacing=2 cellpadding=2>
 	<tr>
       	<td colspan=2>
-        	<input class="bottone" type="submit" value="Conferma" name="IA">
+        	<input class="bottone" id="confermaBtn" type="submit" value="Conferma" name="IA" onClick="Javascript:return EnableCombo();">
       	</td>
 <%
 if (!"".equals(lTipoFunzione)) {

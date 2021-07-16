@@ -47,7 +47,6 @@
       if ("<%=avvocato.size()%>" == 0) 
       {		// 20210610 MEV_21 in caso di chiusura infruttuosa della ricerca Avv. su SIES, si chiude la popup di ricerca.
         alert('Attenzione! Nessun Difensore trovato.');
-    	window.parent.opener.document.<%=request.getParameter("formname")%>.lTipoAvv.value = "NO_SIES";
         window.parent.close();
       }
       if ("<%=avvocato.size()%>" == 200)

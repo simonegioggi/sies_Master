@@ -115,7 +115,7 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		setStatement(lStatement);
 	}
 
-	// 20210614  MEV_21 Ricerca Avvocato certificato RegInDE.
+	// 20210614 MEV_21 Ricerca Avvocato certificato RegInDE.
 	public void ricercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws DAOException {
 
 		String lStatement = new String("");
@@ -150,11 +150,11 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		lStatement += " AND COGNOME = '" + StringUtils.convertSqlString(lAvvMod.getCognome().toUpperCase())
 				+ "'";
 		lStatement += " AND COD_FISCALE = '"
-						+ StringUtils.convertSqlString(lAvvMod.getCodiceFiscale().toUpperCase())+ "'";
+				+ StringUtils.convertSqlString(lAvvMod.getCodiceFiscale().toUpperCase()) + "'";
 
 		setStatement(lStatement);
 	}
-	
+
 	public void ricercaAvvocatoAttualeFascicolo(AvvocatoModel aModel, AvvocatoFascicoloSiepModel aFModel)
 			throws DAOException {
 
@@ -241,18 +241,23 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		lStatement += " " + getSqlQuery();
 
 		lStatement += " " + setCondizionePerUffAppartenenza(aModel);
-		int lPos = lStatement.indexOf("WHERE");
-		String lSql1 = lStatement.substring(0, lPos);
-		String lSql2 = lStatement.substring(lPos + 5, lStatement.length());
-		lStatement += " MINUS " + lSql1;
-		lStatement += " where cod_ufficio_appartenenza='00000' and id_avvocato_standard in";
-		// MEV_21: aggiungo condizione
+		// MEV_21: tolgo la parte del MINUS
+		// int lPos = lStatement.indexOf("WHERE");
+		// String lSql1 = lStatement.substring(0, lPos);
+		// String lSql2 = lStatement.substring(lPos + 5, lStatement.length());
+		// lStatement += " MINUS " + lSql1;
+		// MEV_21: modifico la query, per avvocato reginde "id_avvocato_standard" non ha senso più
+		// lStatement += " where cod_ufficio_appartenenza='00000' and id_avvocato_standard in";
+		// lStatement += " where cod_ufficio_appartenenza='00000'";
+		// MEV_21: aggiungo condizione sul campo "FLAG_REGINDE"
 		// lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and
 		// FLAG_CANCELLATO ='N'";
-		lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and FLAG_CANCELLATO ='N' and FLAG_REGINDE = 'SI'";
-		lStatement += " and cod_ufficio_appartenenza = '"
-				+ StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase());
-		lStatement += "') and " + lSql2;
+		// lStatement += " (select id_avvocato_standard from avvocato where flag_visualizza = 1 and
+		// FLAG_CANCELLATO ='N' and FLAG_REGINDE = 'SI'";
+		// lStatement += " and cod_ufficio_appartenenza = '"
+		// + StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase());
+		// lStatement += "') and " + lSql2;
+		// lStatement += " and " + lSql2;
 		lStatement += " ORDER BY COGNOME,NOME ASC";
 
 		setStatement(lStatement);
@@ -432,7 +437,7 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		String lStatement = new String();
 		lStatement += " SELECT " + "ID_AVVOCATO, " + "COGNOME, " + "NOME, " + "FORO, " + "INDIRIZZO, "
 				+ "TELEFONO, " + "FAX, " + "E_MAIL, " + "COD_FISCALE, " + "PROVINCIA, " + "AVVOCATO.CAP, "
-				+ "FLAG_VISUALIZZA, " // 20210610  MEV_21 (avvocati): aggiunti tre+tre campi in tabella
+				+ "FLAG_VISUALIZZA, " // 20210610 MEV_21 (avvocati): aggiunti tre+tre campi in tabella
 				+ "PEC, " + "FLAG_REGINDE, " + "DESCR_COMUNE_STUDIO, " + "COD_STATO_NASCITA_AVV, "
 				+ "DESC_LUOGO_NAS_REGINDE, " + "ID_AVVOCATO_BONIFICATO, " + "AVVOCATO.NOTE NOTEAVV, "
 				+ "AVVOCATO.COD_OPERATORE_INSERIMENTO, " + "AVVOCATO.DATA_INSERIMENTO, "
@@ -600,13 +605,15 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND FORO LIKE '" + StringUtils.convertSqlString(aModel.getForo().toUpperCase())
 					+ "%'";
 
-		lCondizioni += " AND (COD_UFFICIO_APPARTENENZA ='"
-				+ StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase())
-				+ "' OR COD_UFFICIO_APPARTENENZA ='00000')";
+		// MEV_21: modifico condizione
+		// lCondizioni += " AND (COD_UFFICIO_APPARTENENZA ='"
+		// + StringUtils.convertSqlString(aModel.getCodUffAppartenenza().toUpperCase())
+		// + "' OR COD_UFFICIO_APPARTENENZA ='00000')";
+		lCondizioni += " AND COD_UFFICIO_APPARTENENZA ='00000'";
 		lCondizioni += " AND FLAG_CANCELLATO ='N'";
 		// MEV_21: duplica gia' presente in "getSqlQuery"
 		// lCondizioni += " AND FLAG_VISUALIZZA = 1";
-		// aggiungo condizione
+		// MEV_21: aggiungo condizione
 		lCondizioni += " AND FLAG_REGINDE = 'SI'";
 
 		return lCondizioni;
@@ -618,7 +625,6 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		lStatement += "select distinct(FORO) from AVVOCATO where FLAG_VISUALIZZA = 1";
 		lStatement += " order by FORO asc";
 		setStatement(lStatement);
-
 	}
 
 	public void ricercaForiDisponibili() throws DAOException {

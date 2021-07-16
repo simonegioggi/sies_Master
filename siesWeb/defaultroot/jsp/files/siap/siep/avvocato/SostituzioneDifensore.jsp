@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.web.IWebConstants"%>
@@ -19,6 +20,8 @@
 <jsp:useBean id="autoritaEsterna"     scope="request" class="java.lang.String"/>
 <jsp:useBean id="motivoDesignazione"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="autoritaEsternaDif"  scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazione"			  scope="request" class="java.lang.String"/>		<!--   20210627 MEV_21 -->
+<jsp:useBean id="statoAvv"			  scope="request" class="java.lang.String"/>		<!--   20210627 MEV_21 -->
 
 <html>
 <head>
@@ -136,6 +139,8 @@ function caricamento() {
 
 <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 function ListaAvvocatiRegInde(a_formname) {
+	var inserimento = document.getElementById('inserimento');
+	inserimento.style.visibility = 'hidden';
 	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=550,height=600");
 }
 </script>
@@ -190,12 +195,39 @@ function ListaAvvocatiRegInde(a_formname) {
       	<td class="l">Nome </td>
       	<td class="l"><input size=35 maxlength=35 readonly title="Campo Nome" type="text"  value="<%=avvocato.getAvvocato().getNome()%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"  ></td>
     </tr>
+	<%-- MEV_21: aggiunti campi per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%
+	String comuneNascita = "", comuneNascitaEstero = "";
+	if (Utils.isPresent(avvocato.getAvvocato().getDescrStatoNascita())) {
+		if ("ITALIA".equalsIgnoreCase(avvocato.getAvvocato().getDescrStatoNascita()))
+		comuneNascita = avvocato.getAvvocato().getDescLuogoNascita();
+	else
+		comuneNascitaEstero = avvocato.getAvvocato().getDescLuogoNascitaReginde();
+} else if (Utils.isPresent(avvocato.getAvvocato().getDescLuogoNascita())) {
+	comuneNascita = avvocato.getAvvocato().getDescLuogoNascita();
+}
+%>
     <tr>
-      	<td class="l">Luogo di  Nascita </td>
+      	<td class="l">Comune di Nascita </td>
       	<td class="L">
         	<input title="Comune di Nascita"  readonly value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getDescLuogoNascita())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>"  maxlength="35" size="35">
       	</td>
     </tr>
+    
+  	<tr>
+        <td class="l">Stato di Nascita</td>
+		<td class="L">
+          	<select name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
+        </td>
+		</td>
+	</tr>
+  	<tr>
+        <td class="l">Luogo di Nascita Estero</td>
+        <td class="l">
+			<input title="Luogo di Nascita Estero" readonly value="<%=StringUtils.toStringJSP(comuneNascitaEstero)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>" maxlength="35" size="35">
+		</td>
+	</tr>
+    
     <tr>
       	<td class="l">Data di nascita </td>
       	<td class="L">
@@ -235,7 +267,8 @@ if (avvocato.getAvvocato().getDataNascita() != null) {
     <tr>
         <td class="l">Con Studio in </td>
         <td class="L">
-          	<input title="Comune di Residenza"   value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getDescComuneResidenza())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>"  maxlength="35" size="35">
+<%--          	<input title="Comune di Residenza"   value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getDescComuneResidenza())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>"  maxlength="35" size="35"> --%>
+			<input title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getDescrComuneStudio())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
         </td>
     </tr>
     <tr>
@@ -259,6 +292,12 @@ if (avvocato.getAvvocato().getDataNascita() != null) {
 		<td class="l">Codice Fiscale</td>
 		<td class="l"><input size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getCodiceFiscale()) %>" title="Codice Fiscale" type="text" name="<%= ICostantiAvvocato.CAMPO_CODICE_FISCALE %>"  ></td>
     </tr>
+	<tr>
+		<td class="l" >Stato Difensore</font></td>
+		<td class="L">
+           	<select title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
+		</td>
+	</tr>
     <tr>
 		<td class="l">Tipo Difensore <font class=ob>(*)</font></td>
 		<td class="L">
@@ -400,7 +439,10 @@ Div da Visualizzare nel caso dei avvocato d'ufficio contenente la data della nom
 	<tr>
 		<td colspan=2>
         	<input class=bottone  type="submit" value="Conferma" onclick="return Verify();">
-        	<input class="bottone"  type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
+			<!-- 20210627 MEV_21 -->
+    		<td colspan=2 id="inserimento" style="visibility:hidden;">
+	        	<input class="bottone"  type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
+	        </td>
         </td>
 	</tr>
 </table>

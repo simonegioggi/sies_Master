@@ -122,8 +122,20 @@ if (lTipoFunzione == null || lTipoFunzione.equals("")) {
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getAvvocato().getNome()) %>&nbsp;</font></td>
 	</tr>
   	<tr>
-		<td class="l"><font class="label">Luogo di Nascita</font></td>
+		<td class="l"><font class="label">Comune di Nascita</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getAvvocato().getDescLuogoNascita()) %>&nbsp;</font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getAvvocato().getDescrStatoNascita())%></font></td>
+	</tr>
+	<tr>
+<%		String descLuogoNascitaEstero = "039".equals(lAvvocato.getAvvocato().getCodStatoNascita()) 
+										? ""
+										: lAvvocato.getAvvocato().getDescLuogoNascitaReginde();
+%>
+		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero)%>&nbsp;</font></td>
 	</tr>
   	<tr>
 		<td class="l"><font class="label">Data di Nascita</font></td>
@@ -161,6 +173,10 @@ if (lTipoFunzione == null || lTipoFunzione.equals("")) {
 	<tr>
 		<td class="l"><font class="label">Codice Fiscale</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getAvvocato().getCodiceFiscale()) %>&nbsp;</font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato Attività Difensore</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getAvvocato().getDescrNonAttivita())%></font>&nbsp;</td>
 	</tr>
   	<tr>
 		<td class="l"><font class="label">Tipo</font></td>

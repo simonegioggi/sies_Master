@@ -48,13 +48,14 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		siesLogger.debug(getClass().getName());
 		IAvvocato lCtrl = SIEPLookupRemote.getAvvocatoRemote();
 
-		// MEV_21: controllo se la ricerca proviene da reginde o da sies
+		// MEV_21: controllo se la ricerca proviene da Reginde, da SIES o si fa un nuovo inserimento.
 		BigDecimal idAvvocato = null;
 		boolean flagReginde = false;
+		//siesLogger.info("----AAAA---- getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) = "+getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO));
 		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
 			flagReginde = true;
-			// se provengo da reginde allora ricerco l'avvocato su tabella AVVOCATO
-			// se esiste lo prelevo, altrimenti inserisco nuovo avvocato da reginde su sies!
+			// Provengo da Reginde: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
+			// se esiste lo aggiorno, altrimenti inserisco nuovo avvocato da Reginde su SIES!
 			
 			// 20210614 MEV_21 Si esegue la ricerca puntuale dell'Avvocato certificato RegInde in SIES. 
 			AvvocatoModel lAvvCertRegSies = new AvvocatoModel();
@@ -125,9 +126,8 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 				
 			amReginde = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
 					 getRequestStringParameter(CAMPO_NOME),
-					 getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, CAMPO_PEC, "SI", descLuogoResidenza,
-					 getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
-					 getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, null, 
+					 getRequestStringParameter(CAMPO_FORO).toUpperCase(), null, getRequestStringParameter(CAMPO_PEC), "SI", descLuogoResidenza,
+					 descCodLuogoNascita,getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, null, 
 					 getRequestStringParameter(CAMPO_INDIRIZZO), getRequestStringParameter(CAMPO_TELEFONO), getRequestStringParameter(CAMPO_FAX), 
 					 getRequestStringParameter(CAMPO_E_MAIL), getRequestStringParameter(CAMPO_CODICE_FISCALE), codProvincia, codCap, 
 					 new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null,
@@ -148,7 +148,8 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			}
 			idAvvocato = amReginde.getIdAvvocato();
 			
-		} else		// Avvocato non presente in RegInde, si esegue la procedura preesistente.
+		} else 
+			// Avvocato non presente in RegInde, Ne in SIES (si esegue procedura preesistente).
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 
 		// 20210622 Ricerca Avvocati già assegnati al Fascicolo.
@@ -183,8 +184,8 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 						"I difensori possono essere due solo se entrambi di Fiducia o entrambi della Fase di Giudizio!");
 			}
 
-			if (lAvvModPrec.getIdAvvocato()
-					.compareTo(/* getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) */idAvvocato) == 0)
+			if (idAvvocato!=null	&&
+				lAvvModPrec.getIdAvvocato().compareTo(/* getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) */idAvvocato) == 0)
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Attenzione: il difensore risulta già inserito!");
 		}
@@ -192,24 +193,28 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		// 20210620 Costruzione AvvocatoFascicoloSiep 
 		// puntando all'Avvocato appena inserito/individuato con ID = idAvvocato.
 		AvvocatoFascicoloSiepModel lAvvFascMod = new AvvocatoFascicoloSiepModel();
-		lAvvMod.setIdAvvocato(idAvvocato);
+
+		// 20210705 In caso di inserimento Avvocato non certificato (idAvvocato=null) non si effettua la ricerca.
+		if (idAvvocato!=null)	{
+			lAvvMod.setIdAvvocato(idAvvocato);
 		
-		lVectRic = lCtrl.ExRicercaAvvocatoPerInserimento(lAvvMod);
-		lAvvModRic = (AvvocatoModel) lVectRic.get(0);
+			lVectRic = lCtrl.ExRicercaAvvocatoPerInserimento(lAvvMod);
+			lAvvModRic = (AvvocatoModel) lVectRic.get(0);
 
-		if (lAvvModRic.getDataSospensione() != null
-				&& !"-".equals(lAvvModRic.getDataSospensione().toString()))
-			throw new F3BException(F3BException.USER_MESSAGE, "Attenzione: il difensore risulta sospeso!");
+			if (lAvvModRic.getDataSospensione() != null
+					&& !"-".equals(lAvvModRic.getDataSospensione().toString()))
+				throw new F3BException(F3BException.USER_MESSAGE, "Attenzione: il difensore risulta sospeso!");
 
-		if (lAvvModRic.getDataRadiazione() != null && !"-".equals(lAvvModRic.getDataRadiazione().toString()))
-			throw new F3BException(F3BException.USER_MESSAGE, "Attenzione: il difensore risulta radiato!");
+			if (lAvvModRic.getDataRadiazione() != null && !"-".equals(lAvvModRic.getDataRadiazione().toString()))
+				throw new F3BException(F3BException.USER_MESSAGE, "Attenzione: il difensore risulta radiato!");
 
-		if (lAvvModRic.getCodNonAttivita() != null && !lAvvModRic.getCodNonAttivita().equals("-")
-												   && !lAvvModRic.getCodNonAttivita().equals("A"))	// 20210627	MEV_21
-			throw new F3BException(F3BException.USER_MESSAGE,
-					"Attenzione: il difensore risulta non in attività per  "
-							+ lAvvModRic.getDescrNonAttivita() + "");
-
+			if (lAvvModRic.getCodNonAttivita() != null && !lAvvModRic.getCodNonAttivita().equals("-")
+												   	   && !lAvvModRic.getCodNonAttivita().equals("A"))	// 20210627	MEV_21
+				throw new F3BException(F3BException.USER_MESSAGE,
+						"Attenzione: il difensore risulta non in attività per  "
+								+ lAvvModRic.getDescrNonAttivita() + "");
+		}
+		
 		lAvvFascMod.setCodTipoAvvocato(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_TIPO));
 		if (lAvvFascMod.getCodTipoAvvocato().equals("01")) {
 			lAvvFascMod.setDataInizioValidita(
@@ -284,35 +289,96 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
 			lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
 
-		// 20210620 Inserimento di un nuovo avvocato per diverso Ufficio appartenenza 
+		// 20210629 Inserimento di un nuovo avvocato per diverso Ufficio appartenenza 
 		// solo se l'avvocato non è cert. Reginde.
-		if (!flagReginde) {
+		if (!flagReginde && !("SI".equals(lAvvModRic.getFlagRegInde().trim())) ) {
 			if (!lAvvModRic.getCodUffAppartenenza().equals(getCodUfficioUtenteConnesso())) {
 				// Selezionato Avvocato Standard: inserisco un nuovo Avvocato in copia
 				// associandolo all'uffcio
 				// MEV29 07/2015: Aggiunto aggiornamento foro
+				lAvvModRic.setCognome(getRequestStringParameter(CAMPO_COGNOME).toUpperCase());
+				lAvvModRic.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase());
 				lAvvModRic.setForo(getRequestStringParameter(CAMPO_FORO).toUpperCase());
 				lAvvModRic.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase());
 				lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 				lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
-				lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
+				lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL));
+				lAvvModRic.setPec(getRequestStringParameter(CAMPO_PEC));
+				lAvvModRic.setFlagCancellato("N");
+				lAvvModRic.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+
+				// Recupero Codice e descrizione comune di nascita.
+				Date dataNascita = null;
+				String codLuogoNascita = "-";
+				String codProvincia = "-";
+				String codCap = null;
+				String codNonAttivita = "-";
+				ComuneModel comuneNascita = null;
+				String descCodLuogoNascita = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
+						? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
+						: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+				if (Utils.isPresent(descCodLuogoNascita)) {
+					try {
+						comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
+					} catch (Exception e) {
+						siesLogger.info(e.getMessage());
+						// algortimo di omocodia
+						comuneNascita = AvvocatoUtil
+								.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+					}
+					if (!Utils.isNullObj(comuneNascita)) {
+						if ("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)) ) {
+							codLuogoNascita = comuneNascita.getCodComune();
+							codProvincia = comuneNascita.getCodProvincia();
+							codCap = comuneNascita.getCap();
+							descCodLuogoNascita = comuneNascita.getDescrizione();
+						}
+					}
+				}
+				lAvvModRic.setCodLuogoNascita(codLuogoNascita);
+				lAvvModRic.setDescLuogoNascita(descCodLuogoNascita);
+				lAvvModRic.setProvincia(codProvincia);
+				lAvvModRic.setCap(codCap);
+				
+				// Recupero Codice e descrizione comune di residenza.
+				String codLuogoResidenza = "-";
+				ComuneModel comuneResidenza = null;
+				String descLuogoResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)
+						? getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)
+						: null;
+				if (Utils.isPresent(descLuogoResidenza)) {
+					try {
+						comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
+					} catch (Exception e) {
+						siesLogger.info(e.getMessage());
+					}
+					if (!Utils.isNullObj(comuneResidenza)) {
+						codLuogoResidenza = comuneResidenza.getCodComune();
+						descLuogoResidenza = comuneResidenza.getDescrizione();
+					}
+				}
+				lAvvModRic.setCodComuneResidenza(codLuogoResidenza);
+				lAvvModRic.setDescrComuneStudio(descLuogoResidenza);
+				
 				lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
 				lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 				lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
 				lAvvModRic.setDataInserimento(DateUtils.getSysDate());
-				// MEV_21: valorizzo nuovi campi da REGINDE ed annullo "setCodComuneResidenza"
-				// per il luogo residenza sarà aggiunta una nuova colonna che conterrà la descrizione del Comune
-				// sede dello studio come presente in ReGIndE, abbandonando la valorizzazione della colonna
-				// "COD_COMUNE_RESIDENZA", che resterà per i dati pregressi
-				// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
-				// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-				// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
-				if (flagReginde)
-					AvvocatoUtil.valorizzaDatiReginde(lAvvModRic, getRequestStringParameter(CAMPO_PEC),
-							getRequestStringParameter(CAMPO_COD_STATO_NASCITA),
-							getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE),
-							getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO));
+				lAvvModRic.setFlagRegInde("NO");
+				// Recupero dataNascita, Stato Attività Avvocato.
+				if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
+						&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
+						&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+						dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
+															  ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
+															  ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+				if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA) )
+						codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
 	
+				lAvvModRic.setDataNascita(dataNascita);
+				lAvvModRic.setCodNonAttivita(codNonAttivita);
+				lAvvModRic.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
+				
 				lAvvMod = lCtrl.ExInserisciAvvocato(lAvvModRic);
 			} else {
 				// L'avvocato selezionato è quello dell'ufficio: storicizzo e aggiorno
@@ -345,7 +411,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 				lAvvModRic.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase());
 				lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 				lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
-				lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
+				lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL));
 				// MEV_21: valorizzo nuovi campi da REGINDE ed annullo "setCodComuneResidenza"
 				// per il luogo residenza sarà aggiunta una nuova colonna che conterrà la descrizione del Comune
 				// sede dello studio come presente in ReGIndE, abbandonando la valorizzazione della colonna

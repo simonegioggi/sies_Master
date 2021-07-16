@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
 //import siap.siep.avvocato.controller.AvvocatoController;
 import siap.siep.avvocato.controller.IAvvocato;
@@ -32,7 +34,13 @@ public class ActRicercaAvvocato extends ActionSiap implements ICostantiAvvocato 
 		Vector lVect = null;
 		// AvvocatoFascicoloSiepModel lAvvFascMod = new AvvocatoFascicoloSiepModel();
 		lAvvMod.setCognome(getRequestStringParameter(CAMPO_COGNOME));
-		lAvvMod.setForo(getRequestStringParameter(CAMPO_FORO));
+
+		// 20210630 Distinzione tra singolo o tutti i fori
+		if (isRequestChecked(CAMPO_FLAG_TUTTI_FORI))
+			lAvvMod.setForo(null);
+		else
+			lAvvMod.setForo(getRequestStringParameter(CAMPO_FORO));
+
 		lAvvMod.setCodUffAppartenenza(this.getCodUfficioUtenteConnesso());
 
 		IAvvocato lCtrl = SIEPLookupRemote.getAvvocatoRemote();

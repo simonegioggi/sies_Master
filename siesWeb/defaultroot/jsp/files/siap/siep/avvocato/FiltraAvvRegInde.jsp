@@ -55,6 +55,11 @@ function gestisciBottoniRicerca() {
 	document.f.go.disabled = false;
 	document.f.sies.style.visibility = "hidden";
 }
+function gestisciBottoniRicercaSies() {
+	document.f.go.disabled = false;
+	//document.f.sies.style.visibility = "hidden";
+}
+
 </script>
 
 <title>[S.I.E.S.] - Lista Difensori su ReGIndE</title>
@@ -87,7 +92,7 @@ function gestisciBottoniRicerca() {
 			<select name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1" onFocus="javascript:gestisciBottoniRicerca();">
 				<%=foro%>
      		</select>
-     		&nbsp;&nbsp;oppure Tutti i Fori&nbsp;&nbsp;<input type="checkbox" name="<%=ICostantiAvvocato.CAMPO_FLAG_TUTTI_FORI%>" onfocus="javascript:gestisciBottoniRicerca();">
+     		&nbsp;&nbsp;oppure Tutti i Fori&nbsp;&nbsp;<input type="checkbox" name="<%=ICostantiAvvocato.CAMPO_FLAG_TUTTI_FORI%>" onfocus="javascript:gestisciBottoniRicercaSies();">
   		</td>
   	</tr>
   	<tr>

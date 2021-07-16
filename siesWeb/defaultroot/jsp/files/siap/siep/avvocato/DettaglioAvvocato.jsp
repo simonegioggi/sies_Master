@@ -55,8 +55,20 @@ AvvocatoModel lAvvocato = new AvvocatoModel(avvocato);
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNome())%>&nbsp;</font></td>
 	</tr>
 	<tr>
-		<td class="l"><font class="label">Luogo Nascita</font></td>
+		<td class="l"><font class="label">Comune di Nascita</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita())%>&nbsp;</font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrStatoNascita())%></font></td>
+	</tr>
+	<tr>
+<%		String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) 
+										? ""
+										: lAvvocato.getDescLuogoNascitaReginde();
+%>
+		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero)%>&nbsp;</font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Data Nascita</font></td>
@@ -96,6 +108,10 @@ AvvocatoModel lAvvocato = new AvvocatoModel(avvocato);
 		<td class="l"><font class="label">Codice Fiscale</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale())%></font>&nbsp;</td>
 	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato Attività Difensore</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrNonAttivita())%></font>&nbsp;</td>
+	</tr>
 <%
 if (flagModifica.equals("S")) {
 %>
@@ -108,7 +124,7 @@ if (flagModifica.equals("S")) {
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataRadiazione(), "dd-MM-yyyy"))%></font>&nbsp;</td>
 	</tr>
 	<tr>
-		<td class="l"><font class="label">Non in attività per </font></td>
+		<td class="l"><font class="label">Stato Attività Difensore</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrNonAttivita())%></font>&nbsp;</td>
 	</tr>
 	<tr>
