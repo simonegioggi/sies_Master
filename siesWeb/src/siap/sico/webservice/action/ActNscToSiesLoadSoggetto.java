@@ -7,6 +7,7 @@ import it.mig.sies.type.DATIUTENTEDocument;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +19,7 @@ import siap.sico.webservice.controller.IWebServices;
 import siap.siep.SIEPException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.StringUtils;
 
 public class ActNscToSiesLoadSoggetto extends ActWsBase
 {
@@ -130,12 +132,81 @@ public class ActNscToSiesLoadSoggetto extends ActWsBase
           lSoggettoModel.setMeseNascita(lMeseNascita);
           
           // DECODIFICA CODICE LUOGO NASCITA
+          // INIZIO: MEV_21 (avvocati)
+          /*
           if (adatiAnagrafica.getDATIANAGRAFICI().getCODILUOGONASCITA() != null)
           {
               CodiciSiesNscModel lCodiciSIESNSCModel = Decodifica("COMUNE", adatiAnagrafica.getDATIANAGRAFICI().getCODILUOGONASCITA());
               lCodComuneNascita = lCodiciSIESNSCModel.getCoSies().trim();
           }
           lSoggettoModel.setCodComuneNascita(lCodComuneNascita);
+          */
+          siesLogger.debug("Procede a decodificare il comune di nascita");
+          if (adatiAnagrafica.getDATIANAGRAFICI().getCODILUOGONASCITA() != null)
+          { 
+        	  siesLogger.debug("Codice da NSC = "+adatiAnagrafica.getDATIANAGRAFICI().getCODILUOGONASCITA());
+        	  Vector <CodiciSiesNscModel> listaComuni = DecodificaComune("COMUNE", adatiAnagrafica.getDATIANAGRAFICI().getCODILUOGONASCITA());
+        	  if (listaComuni.size()==1) {
+        		  lCodComuneNascita = listaComuni.elementAt(0).getCoSies().trim();
+        		  siesLogger.debug("Trovato un solo comune decodificato con codice SIES = "+lCodComuneNascita);
+        	  } else {
+        		  // Trovati più comuni 
+        		  siesLogger.debug("Trovati più comuni ("+listaComuni.size()+") testo la data di nascita per decidere quale comune usare...");
+        		  Date dataNascita = lSoggettoModel.getDataNascita();
+        		  siesLogger.debug("dataNascita da NSC: "+dataNascita);
+        		  if (dataNascita==null && lSoggettoModel.getAnnoNascita()!=null)
+        		  {
+        			  siesLogger.debug("dataNascita null provo a ricostruirla con anno e mese");
+        			  dataNascita = DateUtils.getDate(lSoggettoModel.getAnnoNascita().toString()
+        					  , lSoggettoModel.getMeseNascita()!=null ? lSoggettoModel.getMeseNascita().toString() : "01"
+        					  , "01"); 
+        			  siesLogger.debug("dataNascita calcolata: "+dataNascita);
+        		  }
+        			  
+        		  if (dataNascita!=null) {
+        			  siesLogger.debug("dataNascita disponibile ("+dataNascita+") ciclo sui comuni trovati...");
+        			  // Ho una data di nascita, vera o calcolata la uso mCoVal3
+        			  Date minDataFineValidita = DateUtils.getDate("31/12/9999","dd/MM/yyyy");
+        			  for (int kk = 0; kk<listaComuni.size(); kk++) {
+        				  CodiciSiesNscModel comuneNascita = listaComuni.elementAt(kk);
+        				  siesLogger.debug("comune ("+comuneNascita.getCoSies().trim()+","+comuneNascita.getCoVal3()+" )");
+        				  Date dataFineValidita = DateUtils.getDate(comuneNascita.getCoVal3(), "yyyy-mm-dd");
+        				  if (dataFineValidita!=null) 
+        				  {
+        					  if (   DateUtils.isLower(dataNascita, dataFineValidita) 
+        						  && DateUtils.isLower(dataFineValidita, minDataFineValidita) 
+        						 ) 
+        					  {        						
+        					    minDataFineValidita = dataFineValidita;        					  
+        					    lCodComuneNascita=comuneNascita.getCoSies().trim();
+        					    siesLogger.debug("comune trovato (cod, mindatafine)=("+lCodComuneNascita+","+minDataFineValidita+")");
+        					  }
+        				  }
+        				  else {
+        					  // mi trovo sul comune valido. Potrebbe comunque essere quello buono se non è stato 
+        					  // ancora assegnato un comune non valido
+        					  if ("-".equals(lCodComuneNascita)) {
+        					    lCodComuneNascita=comuneNascita.getCoSies().trim();
+        					    // minDataFineValidita = è ancora 31/12/9999
+        					  }
+        				  }
+        			  }        			  
+        		  }
+        		  else {
+        			  // non ho modo di determinare la data di nascita. 
+        			  // Prendo il comune con data fine validita non valorizzata
+        			  for (int kk = 0; kk<listaComuni.size(); kk++) {
+        			    CodiciSiesNscModel comuneNascita = listaComuni.elementAt(kk);
+        			    if (comuneNascita.getCoVal3()==null || "".equals(comuneNascita.getCoVal3())) {
+        			    	lCodComuneNascita=comuneNascita.getCoSies().trim();
+        			    }
+        			  }
+        		  }
+        	  }        	  
+          }
+          
+          
+          //FINE: MEV_21
           
           
           if (lSoggettoModel.getCodComuneNascita().equals("-"))
