@@ -205,7 +205,7 @@ public class ActNscToSiesLoadSoggetto extends ActWsBase
         	  }        	  
           }
           
-          
+          lSoggettoModel.setCodComuneNascita(lCodComuneNascita);
           //FINE: MEV_21
           
           
