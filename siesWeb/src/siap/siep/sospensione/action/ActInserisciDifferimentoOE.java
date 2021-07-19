@@ -359,8 +359,12 @@ public class ActInserisciDifferimentoOE extends ActionSiap implements ICostantiS
 					lAut = new AutoritaEsternaModel();
 					lAut.setCodTipoAutorita(lTipoAutoritaEsternaAvvocato[lIndex]);
 
+					//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+//					ComuneModel lComMod = new ComuneModel(
+//							getCodComuneByDescr(lSedeAutoritaEsternaAvvocato[lIndex]));
 					ComuneModel lComMod = new ComuneModel(
-							getCodComuneByDescr(lSedeAutoritaEsternaAvvocato[lIndex]));
+							getCodComuneByDescrFlagVal(lSedeAutoritaEsternaAvvocato[lIndex]));
+					//FINE: MEV_21
 					lAut.setCodSede(lComMod.getCodComune());
 
 					lAut.setCodOperatoreInserimento(lCodiceOperatore);

@@ -261,8 +261,13 @@ public class ActInserisciArchiviazionePerProvvAltroUfficio extends ActionSiap im
 							// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 							// siesLogger.debug("Notifiche all'UNEP");
 							lAut.setCodTipoAutorita(lDestinatario_avv[lIndNotifiche]);
+							
+							//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+//							ComuneModel lComMod = new ComuneModel(
+//									getCodComuneByDescr(lSedeDestinatario_avv[lIndNotifiche]));
 							ComuneModel lComMod = new ComuneModel(
-									getCodComuneByDescr(lSedeDestinatario_avv[lIndNotifiche]));
+									getCodComuneByDescrFlagVal(lSedeDestinatario_avv[lIndNotifiche]));							
+							//FINE: MEV_21
 							lAut.setCodSede(lComMod.getCodComune());
 							lAut.setDescrizione(lComMod.getDescrizione());
 						}
