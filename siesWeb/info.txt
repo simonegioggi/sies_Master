@@ -31,3 +31,14 @@ MERGED TICKETS:
 		Aggiunto meteodo ExRicercaUltimoRinnovoByKeyEvento
 		-	siap.siep.rinnovo.controller.IRinnovoController.java
 		Aggiunto metodo ExRicercaUltimoRinnovoByKeyEvento
+
+3)	Ticket#20210624014 - Errore in Emissione Misura Sicurezza, già ticket Ticket# 202103160116
+		Corretto errore in fase di recupero del RIFERIMENTO_FASCICOLO_SIEP
+		Decodificava il flag_ms_SN sempre ad N
+		-	siap.sius.rifasiep.dao.RiferimentoFascicoloSiepSqlDAO.java
+		Corretta anche la jsp:
+		-	siap/sius/misurasicurezza/DettaglioSiusMisuraSicurezza.jsp
+		poichè se si inseriva un riferimento ad una misura di sicurezza indicave che era una pena pecuniaria
+		Corretta annche la jsp:
+		-	siap/sius/rifasiep/LoadInserisciRifFascicoloSiep.jsp
+		poichè era presente un errore js per due variabili con nome errato e veniva fatto un controllo non pertinente sull'anagrafica anche se non selezionata.

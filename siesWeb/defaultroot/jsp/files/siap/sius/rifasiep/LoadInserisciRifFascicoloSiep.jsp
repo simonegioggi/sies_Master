@@ -391,7 +391,12 @@ if (soggetto != null )
 	        //alert('Data provvedimento ='+data_provvedimento );
 	        //alert('Data irrevocabilità ='+data_definizione );
 	        // Controllo della data provvedimento <= data di irrevocabilità
-	        if (! CompareDate(data_provvedimento, data_definizione))
+	        <%-- Ticket#20210624014 - ERrore JS referenziava la variabile "data_definizione" con nome errato
+	         anche data_provvedimento deve essere data_provvedim
+	        --%>
+	        //if (! CompareDate(data_provvedimento, data_definizione))
+	        if (! CompareDate(data_provvedim, data_irrevocabilita))	
+	        <%-- Ticket#20210624014 - FINE --%>
 	        {
 	          alert('Data provvedimento > della data irrevocabilità');
 	          return false;
@@ -427,6 +432,11 @@ if (soggetto != null )
 
         // STUB 17-01/2005 Controllo soggetti.
 	//if (<%=fascicolo.getIdFascicoloSiep()%> != null  )
+	<%-- Ticket#20210624014 - Il controllo sull'anagrafica va fatto solo nel caso si provenga dalla ricerca
+	     altrimenti l'anagrafica del fascicolo SIPE non esiste
+	--%>
+	if(document.LoadInserisciRifFascicoloSiep.titolo[0].checked)
+	<%-- Ticket#20210624014 - FINE --%>
 	{
 	  var soggettoOri = "<%=aCognome%>"+"<%=aNome%>"+"<%=aComuneNas%>"+"<%=aDataNas%>";
 	  var soggettoRif = "<%=aCognomeRif%>"+"<%=aNomeRif%>"+"<%=aComuneNasRif%>"+"<%=aDataNasRif%>";
