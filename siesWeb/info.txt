@@ -1,1 +1,19 @@
 RELEASE_12.4.12.0	-->	nato dal branch "release_12.4.11.0" in data 19/07/2021	
+
+MERGED TICKETS:
+
+1)	Ticket 20210622011 - Annotazione ordinanza giudice dell’esecuzione
+		Nelle form delle Decisioni del GE (Amnistia/Indulto, Depenalizzazione, Incostituzionalità) 
+		erano state commentate le righe che precaricavano i dati delle richieste.
+		Quando si selezionava la richiesta del GE e il radio "In conformità" il javascript non trovando 
+		i dati caricava in campi con "undefined" o "NaN".
+		Su indicazione di Michele Testa sono stati ripristinati i campi.
+		Form corrette:
+		-	\jsp\files\siap\siep\calcolopena\LoadAnnotazioniManualiBenefici.jsp
+		-	\jsp\files\siap\siep\calcolopena\LoadGEDepen.jsp
+		-	\jsp\files\siap\siep\calcolopena\LoadGEIncost.jsp
+		Corretta anche la popup delle richieste, andava in errore js nel caso di Amnistia/Indulto.
+		Referenziava campi della form della depenalizzazione.
+		-	\jsp\files\siap\siep\richiesta\ListaRichiesteAlGE.jsp
+		Aggiunto GUP nella combo autorità
+		-	siap.siep.calcolopena.action.ActLoadInserisciAnnotazioniManuali.java
