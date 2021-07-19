@@ -17,3 +17,17 @@ MERGED TICKETS:
 		-	\jsp\files\siap\siep\richiesta\ListaRichiesteAlGE.jsp
 		Aggiunto GUP nella combo autorità
 		-	siap.siep.calcolopena.action.ActLoadInserisciAnnotazioniManuali.java
+
+2)	Ticket - 202106220110 - Errore in stampa decreto irreperibilità
+		Corretta la funzione di rinnovazione (jsp) che consentiva l'inserimento senza controllo dei dati.
+		Resa obbligatoria Data e Destinatario.
+		-	siap/siep/notifica/LoadRinnovazioneNotifica.jsp
+		Modificato il modulo di stampa che prelevava il record RINNOVAZIONE senza controllare la presenza della DATA (unico dato di interesse)
+		-	siap.siep.statoesecuzione.controller.StatoEsecuzioneController.java
+		Modificato metodo appendStatoEsecuzione
+		-	siap.siep.rinnovo.dao.RinnovoSqlDAO.java
+		Aggiunto un metodo per recuperare solo i RINNOVI con DATA_RINNOVO valorizzata (per gestire il progresso)
+		-	siap.siep.rinnovo.controller.IRinnovo.java
+		Aggiunto meteodo ExRicercaUltimoRinnovoByKeyEvento
+		-	siap.siep.rinnovo.controller.IRinnovoController.java
+		Aggiunto metodo ExRicercaUltimoRinnovoByKeyEvento
