@@ -42,3 +42,8 @@ MERGED TICKETS:
 		Corretta annche la jsp:
 		-	siap/sius/rifasiep/LoadInserisciRifFascicoloSiep.jsp
 		poichè era presente un errore js per due variabili con nome errato e veniva fatto un controllo non pertinente sull'anagrafica anche se non selezionata.
+
+4)	Ticket#20210709019 - Tribunale dei Minorenni di Roma - impossibile definizioni del procedimento
+		Correto modulo
+		-	siap\sico\security\toolbar_header.jsp
+		Gestiva UDS e TDS ma non TDSM e UDSM per cui non visualizzava alcuni bottoni.
