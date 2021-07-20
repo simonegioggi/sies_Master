@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
 
+import javax.persistence.criteria.CriteriaBuilder.Trimspec;
+
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
@@ -140,11 +142,23 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			if (lAvvCertRegSies == null) {
 				amReginde = lCtrl.ExInserisciAvvocato(amReginde);
 			} else {
-				amReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
-				amReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-				amReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-				amReginde.setDataAggiornamento(DateUtils.getSysDate());
-				amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+				//  20210720 MEV_21 Se l'avvocato certificato ha cambiato Foro, si storicizza 
+				// l'avvocato legato al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
+				// Se rimane nel foro si aggiornano solo i dati da REGINDE.
+				if (lAvvCertRegSies.getForo().trim() == amReginde.getForo().trim()) {
+					amReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
+					amReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+					amReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+					amReginde.setDataAggiornamento(DateUtils.getSysDate());
+					amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+				} else {
+					lAvvCertRegSies.setFlagRegInde("NO");
+					lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+					lAvvCertRegSies.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+					lAvvCertRegSies.setDataAggiornamento(DateUtils.getSysDate());
+					lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
+					amReginde = lCtrl.ExInserisciAvvocato(amReginde);					
+				}
 			}
 			idAvvocato = amReginde.getIdAvvocato();
 			
