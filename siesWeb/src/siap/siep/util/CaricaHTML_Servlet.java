@@ -1,16 +1,22 @@
 package siap.siep.util;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.RemoteScriptingServlet;
-
 import siap.sico.calendar.model.CalendarModel;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.controller.IComune;
+import siap.sico.decodifiche.model.ComuneModel;
+import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.util.CalendarUtil;
+import siap.sico.util.SICOLookupRemote;
 import siap.siep.calcolopena.action.ICostantiCalcoloPena;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
 import siap.siep.modulocumulo.model.MisuraCautelareCumuloModel;
@@ -341,7 +347,27 @@ public class CaricaHTML_Servlet extends RemoteScriptingServlet {
     return lStringaRitorno;
   }
   
-  
-  
-
+  /**
+   * Ricerca la descrizione del comune se de del foro
+   * @param aForo - Descrizione del foro
+   * @return
+   * @throws Exception
+   */
+  public static String getDescComuneForo (String aForo) throws Exception {	  
+	Collection <DecodificheModel> listaFori = DecodificheManager.getInstance().getForoAll();
+	Iterator <DecodificheModel> iterFori = listaFori.iterator();
+	while (iterFori.hasNext()) {
+		DecodificheModel foro =  iterFori.next();
+		if (foro.getCode().equals(aForo)) {
+			IComune lComCtrl = SICOLookupRemote.getComuneRemote();
+			ComuneModel lComModRitorno = lComCtrl.ExRicercaComuneByKey (foro.getCodiceAlt2());
+			if (lComModRitorno!=null)
+				return lComModRitorno.getDescrizione();
+			else 
+				return ""; 
+		}
+	}
+	  
+    return "";
+  }
 }

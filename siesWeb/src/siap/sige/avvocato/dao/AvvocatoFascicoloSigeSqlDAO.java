@@ -55,6 +55,11 @@ public class AvvocatoFascicoloSigeSqlDAO	extends SIAPSqlDAO
       "COGNOME, " +
       "NOME, " +
       "FORO, " +
+      // INIZIO: MEV_21 (avvocati)
+      // +  " COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " 
+	  " PEC,  FLAG_REGINDE, DESCR_COMUNE_STUDIO, COD_STATO_NASCITA_AVV, " +
+	  " DESC_LUOGO_NAS_REGINDE, ID_AVVOCATO_BONIFICATO, " +
+	  // FINE: MEV_21       
       "INDIRIZZO, " +
       "TELEFONO, " +
       "FAX, " +
@@ -142,6 +147,18 @@ public class AvvocatoFascicoloSigeSqlDAO	extends SIAPSqlDAO
     aModel.getAvvocato().setCognome(getString("COGNOME"));
     aModel.getAvvocato().setNome(getString("NOME"));
     aModel.getAvvocato().setForo(getString("FORO"));
+    
+    //INIZIO: MEV_21 (avvocati)
+	//aModel.getAvvocato().setDescComuneSedeForo      (getString("DescComuneSedeForo"));	
+	aModel.getAvvocato().setPec                     (getString("PEC"));
+	aModel.getAvvocato().setFlagRegInde             (getString("FLAG_REGINDE"));
+	aModel.getAvvocato().setDescrComuneStudio       (getString("DESCR_COMUNE_STUDIO"));
+	aModel.getAvvocato().setDescLuogoNascita        (getString("DESC_LUOGO_NAS_REGINDE"));
+	aModel.getAvvocato().setCodStatoNascita         (getString("COD_STATO_NASCITA_AVV"));
+	//aModel.getAvvocato().setDescrStatoNascita       (getString(""));
+	aModel.getAvvocato().setIdAvvocatoBonificato    (getBigDecimal("ID_AVVOCATO_BONIFICATO"));
+	//FINE: MEV_21       
+    
     aModel.getAvvocato().setIndirizzo(getString("INDIRIZZO"));
     aModel.getAvvocato().setTelefono(getString("TELEFONO"));
     aModel.getAvvocato().setFax(getString("FAX"));

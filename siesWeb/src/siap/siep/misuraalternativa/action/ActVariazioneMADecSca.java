@@ -278,7 +278,11 @@ public class ActVariazioneMADecSca extends ActMisuraAlternativa implements ICost
 					AutoritaEsternaModel lAut = new AutoritaEsternaModel();
 					lAut.setCodTipoAutorita(lPolizia);
 
-					ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lSedePolizia));
+					//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+					// ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lSedePolizia));
+					ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(lSedePolizia));
+					//FINE: MEV_21
+					
 					lAut.setCodSede(lComMod.getCodComune());
 					lAut.setCodOperatoreInserimento(getCodUtenteConnesso());
 					lAut.setCodUfficioInserimento(lUff.getCodUfficio());

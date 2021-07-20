@@ -1000,8 +1000,12 @@ if(dettagliofascicolo.getPosizioneGiuridica() != null)
 List lListaAvvocati = new Vector();
 lListaAvvocati=dettagliofascicolo.getAvvocati();
 boolean isAvvocatoForoSoppresso = false;
+boolean isAvvocatoForoRegInde = false;
 String strAlertAvvocato = "";
+String strAlertAvvocatoReginde = "";
 int contaSoppressi = 0;
+int contaRegInde = 0;
+
 if(lListaAvvocati.size()>0)
 {
   Collection listaFori = DecodificheManager.getInstance().getForoAll();
@@ -1009,6 +1013,7 @@ if(lListaAvvocati.size()>0)
   {
     AvvocatoModel lAvvocatoModel=(AvvocatoModel)lListaAvvocati.get(i);
     String attributeForo = "";
+    String attributeForoReginde = "";
     String lSoppresso = "";
     if (   !"01".equals(fascicolo.getCodStatoFascicolo())
         && ( UtenteConnesso.getUfficioUtente().getCodUfficio().equals(fascicolo.getChiaveUfficio()))
@@ -1028,15 +1033,28 @@ if(lListaAvvocati.size()>0)
                            +StringUtils.toStringJSP(lAvvocatoModel.getForo())
                            +" soppresso a seguito dell'accorpamento degli uffici giudiziari. ";
       }
+      
+      // INIZIO: MEV_21 (avvocati)
+      if ("NO".equals(lAvvocatoModel.getFlagRegInde())) {
+         isAvvocatoForoRegInde = true;
+         attributeForoReginde = "foroRegInde='S'";
+         contaRegInde++;
+         strAlertAvvocatoReginde+= " L'anagrafica dell'Avvocato "+StringUtils.toStringJSP(lAvvocatoModel.getCognome())+" "
+                           +StringUtils.toStringJSP(lAvvocatoModel.getNome())
+                           +" non risulta certificata su RegInde. "
+                           +"  ";
+       
+      }
+      // FINE: MEV_21
     }
 %>
  <tr>
       <td class="L">
         <font class="label">Avvocato :</font>
-        <font class="campo"><%=StringUtils.toStringJSP(lAvvocatoModel.getCognome())%></font>&nbsp;
-        <font class="campo"><%=StringUtils.toStringJSP(lAvvocatoModel.getNome())%></font>
+        <font class="campo" <%=attributeForoReginde%>><%=StringUtils.toStringJSP(lAvvocatoModel.getCognome())%></font>&nbsp;
+        <font class="campo" <%=attributeForoReginde%>><%=StringUtils.toStringJSP(lAvvocatoModel.getNome())%></font>
      <%-- 20170913: [SG] aggiunto spazio tra nome e cognome --%>
-<font class="label" <%=attributeForo%> >Foro : </font><font class="campo" <%=attributeForo%> ><%=StringUtils.toStringJSP(lAvvocatoModel.getForo())%>&nbsp;<%=lSoppresso%></font>&nbsp;
+<font class="label" <%=attributeForo%> <%=attributeForoReginde%> >Foro : </font><font class="campo" <%=attributeForo%> <%=attributeForoReginde%> ><%=StringUtils.toStringJSP(lAvvocatoModel.getForo())%>&nbsp;<%=lSoppresso%></font>&nbsp;
         <font class="label">Indirizzo :</font>
         <font class="campo"><%=StringUtils.toStringJSP(lAvvocatoModel.getIndirizzo())%></font>&nbsp;
         <font class="label">Luogo Studio :</font>
@@ -1054,14 +1072,23 @@ if(lListaAvvocati.size()>0)
     else
       strAlertAvvocato += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati degli Avvocati utilizzando le opportune funzioni.";
   }
+  
+  // INIZIO: MEV_21 (avvocati)
+  if (isAvvocatoForoRegInde){
+    if (contaRegInde==1)
+      strAlertAvvocatoReginde += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati dell'Avvocato utilizzando le opportune funzioni.";
+    else
+      strAlertAvvocatoReginde += "Prima di procedere con l'emissione di nuovi provvedimenti è necessario provvedere ad aggiornare i dati degli Avvocati utilizzando le opportune funzioni.";
+  }
+  // FINE: MEV_21
 %>
 <script language="JavaScript">
-<% if (isAvvocatoForoSoppresso){%>
+<% if (isAvvocatoForoSoppresso || isAvvocatoForoRegInde){%>
   function blinkForo() {
     var blinks = document.getElementsByTagName('font');
     for (var i = blinks.length - 1; i >= 0; i--) {
       var s = blinks[i];
-      if (s.getAttribute("foroSoppresso")=="S")
+      if (s.getAttribute("foroSoppresso")=="S" || s.getAttribute("foroRegInde")=="S")
         s.style.backgroundColor  = (s.style.backgroundColor == '') ? '#FFFF00' : '';
     }
     window.setTimeout(blinkForo, 1000);  
@@ -1070,7 +1097,14 @@ if(lListaAvvocati.size()>0)
   else if (window.addEventListener) window.addEventListener("load", blinkForo, false);
   else if (window.attachEvent) window.attachEvent("onload", blinkForo);
   else window.onload = blinkForo;
+  
+  <% if (isAvvocatoForoSoppresso){%>
   alert("Attenzione!! <%=strAlertAvvocato%>");
+  <%}%>
+  
+  <% if (isAvvocatoForoRegInde){ //INIZIO: MEV_21 (avvocati) %>
+  alert("Attenzione!! <%=strAlertAvvocatoReginde%>");
+  <%} // FINE: MEV_21 %>
 <% } %>
 </script>
 

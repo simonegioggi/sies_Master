@@ -416,8 +416,11 @@ public class ActInserisciDataDepositoProvvedimento extends ActionSige implements
 				// LogF3B.getLogger()
 				siesLogger.debug("+++ Cod. Avvocato: " + lAvvocato[x]);
 
-				String lCodComuneSede = getCodComuneByDescr(lSedi[x]).getCodComune();
-
+				//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+				// String lCodComuneSede = getCodComuneByDescr(lSedi[x]).getCodComune();
+				String lCodComuneSede = getCodComuneByDescrFlagVal(lSedi[x]).getCodComune();
+				//FINE: MEV_21
+				
 				NotificaModel lNotifica = new NotificaModel();
 
 				lNotifica.setDataInvio(mDataTrasmissione);

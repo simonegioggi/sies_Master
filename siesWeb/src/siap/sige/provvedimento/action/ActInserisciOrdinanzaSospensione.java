@@ -315,7 +315,10 @@ public class ActInserisciOrdinanzaSospensione extends ActInserisciEmissioneOrdin
 		int lSize = lDestinatari.length;
 		for (int x = 0; x < lSize; x++) {
 			if (!lDestinatari[x].equals("-") && !lSedi[x].equals("")) {
-				String lCodComuneSede = getCodComuneByDescr(lSedi[x]).getCodComune();
+				//INIZIO: MEV_21 (avvocati) - si inibisce la selezione di comuni non validi (tipo NAPOLI NORD)
+				//String lCodComuneSede = getCodComuneByDescr(lSedi[x]).getCodComune();
+				String lCodComuneSede = getCodComuneByDescrFlagVal(lSedi[x]).getCodComune();
+				//FINE: MEV_21
 
 				NotificaModel lNotifica = new NotificaModel();
 				lNotifica.setCodTipoNotifica(lTipoNotifica);
