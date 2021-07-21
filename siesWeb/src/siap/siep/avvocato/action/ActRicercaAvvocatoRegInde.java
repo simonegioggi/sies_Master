@@ -58,11 +58,11 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			WsServiziInterrogazioneInterni_ServiceLocator service = new WsServiziInterrogazioneInterni_ServiceLocator();
 			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(
 					F3BProperties.getProperty("EndpointAddress"));
-			/* System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
+			System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
 			System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
 			System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
 			System.setProperty("https.proxyHost", F3BProperties.getProperty("https.proxyHost"));
-			System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort")); */
+			System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));
 			WsServiziInterrogazioneInterni_PortType port = service.getServiziInterrogazioneInterniBeanPort();
 			Soggetto[] listaSoggetti = null;
 			siesLogger.debug(
@@ -79,7 +79,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
 				v = new ArrayList(Arrays.asList(listaSoggetti));
 				siesLogger.debug("Elementi trovati: " + v.size());
-				if (v.size() > 200) // max 200 avvocati
+				if (v.size() > 20) // max 20/200 avvocati
 					throw new SearchLimitException();
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");

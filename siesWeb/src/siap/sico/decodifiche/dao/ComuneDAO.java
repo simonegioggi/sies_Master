@@ -228,6 +228,9 @@ public class ComuneDAO extends SIAPTableDAO {
 		else if (aModel.getCodProvincia() != null)
 			lCondizioni += " COD_PROVINCIA = '" + aModel.getCodProvincia() + "'";
 
+		// 20210721	Condizione di esclusione NAPOLI NORD
+		lCondizioni += " AND NOT (DATA_FINE_VALIDITA_COMUNE is NULL AND FLAG_VALIDITA = 'N' ) ";
+
 		lCondizioni += " ORDER BY DESCRIZIONE ASC, DATA_FINE_VALIDITA_COMUNE DESC";
 		setCondition(lCondizioni);
 	}

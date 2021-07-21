@@ -66,7 +66,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			lAvvCertRegSies.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
 			lAvvCertRegSies.setFlagRegInde("SI");
 			lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
-			
+
 			// 20210623 MEV_21 Si recuperano tutte le informazioni dalla Form.
 			// Recupero Codice e descrizione comune di nascita.
 			AvvocatoModel amReginde = null;
@@ -162,10 +162,23 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			}
 			idAvvocato = amReginde.getIdAvvocato();
 			
-		} else 
-			// Avvocato non presente in RegInde, Ne in SIES (si esegue procedura preesistente).
+		} else { 
+			// 20210720 MEV_21 Avvocato non presente sia in RegInde che in SIES.
+			// Controlli Comuni di Nascita e Residenza
+			try {
+				if (!"".equals(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA).trim()) ) {
+					getCodComuneByDescr(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA));
+				}
+				if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO) ) {
+					getCodComuneByDescr(getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO));
+				}
+			} catch (Exception ex) {
+				throw new F3BException(ex);
+			}
+			
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
-
+		}
+		
 		// 20210622 Ricerca Avvocati già assegnati al Fascicolo.
 		AvvocatoModel lAvvMod = new AvvocatoModel();
 		Vector lVectRic = new Vector();
