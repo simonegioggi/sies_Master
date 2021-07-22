@@ -141,6 +141,7 @@ public class ActNscToSiesLoadSoggetto extends ActWsBase
           }
           lSoggettoModel.setCodComuneNascita(lCodComuneNascita);
           */
+          try {
           siesLogger.debug("Procede a decodificare il comune di nascita");
           if (adatiAnagrafica.getDATIANAGRAFICI().getCODILUOGONASCITA() != null)
           { 
@@ -170,7 +171,10 @@ public class ActNscToSiesLoadSoggetto extends ActWsBase
         			  for (int kk = 0; kk<listaComuni.size(); kk++) {
         				  CodiciSiesNscModel comuneNascita = listaComuni.elementAt(kk);
         				  siesLogger.debug("comune ("+comuneNascita.getCoSies().trim()+","+comuneNascita.getCoVal3()+" )");
-        				  Date dataFineValidita = DateUtils.getDate(comuneNascita.getCoVal3(), "yyyy-mm-dd");
+        				  Date dataFineValidita = null;
+        				  if (comuneNascita.getCoVal3()!=null)
+        				    dataFineValidita = DateUtils.getDate(comuneNascita.getCoVal3(), "yyyy-mm-dd");
+        				  
         				  if (dataFineValidita!=null) 
         				  {
         					  if (   DateUtils.isLower(dataNascita, dataFineValidita) 
@@ -185,8 +189,11 @@ public class ActNscToSiesLoadSoggetto extends ActWsBase
         				  else {
         					  // mi trovo sul comune valido. Potrebbe comunque essere quello buono se non è stato 
         					  // ancora assegnato un comune non valido
+        					  siesLogger.debug("mi trovo sul comune valido verifico se utilizzabile...");
         					  if ("-".equals(lCodComuneNascita)) {
-        					    lCodComuneNascita=comuneNascita.getCoSies().trim();
+        						siesLogger.debug("lCodComuneNascita ancora a '-' ");
+           					    siesLogger.debug("comune trovato (cod, mindatafine)=("+lCodComuneNascita+","+minDataFineValidita+")");
+           					    lCodComuneNascita=comuneNascita.getCoSies().trim();
         					    // minDataFineValidita = è ancora 31/12/9999
         					  }
         				  }
@@ -205,7 +212,12 @@ public class ActNscToSiesLoadSoggetto extends ActWsBase
         	  }        	  
           }
           
+          siesLogger.debug("Imposto il codice comune trovato sul soggetto: "+lCodComuneNascita);
           lSoggettoModel.setCodComuneNascita(lCodComuneNascita);
+          } catch (Exception e) {
+        	  siesLogger.error("Errore selezione comune",e);
+        	  throw e;
+          }
           //FINE: MEV_21
           
           
