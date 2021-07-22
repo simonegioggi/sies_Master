@@ -47,6 +47,7 @@ function avvocati() {
 		// manuale dell'avvocato.
 		var msgConfirm = "Attenzione! Nessun Difensore trovato.\nSi vuole procedere con l'inserimento di un difensore\nnon certificato ReGIndE ? "; 
 		if (window.confirm(msgConfirm)) {
+			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('lTipoInserimento').value = "manuale";
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('inserimento').style.visibility = 'visible';
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('confermaBtn').style.visibility = 'hidden';
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'hidden';
@@ -68,8 +69,10 @@ function avvocati() {
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;
 		} else {
+			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('lTipoInserimento').value = "reginde";
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('inserimento').style.visibility = 'hidden';
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('confermaBtn').style.visibility = 'visible';
+			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'visible';
 		}
    		window.parent.close();
 
