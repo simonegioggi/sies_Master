@@ -73,6 +73,13 @@ function Inserisci() {
 		cancellaCodComuneReale();
 	}
 
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value.length > 0 	&&
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value.length > 0 ) {
+			alert('Il Comune di Nascita e il luogo di Nascita Estero sono alternativi');
+			document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+			return false;
+	}
+		
 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value.length==1)
 		document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value;
 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
@@ -83,16 +90,18 @@ function Inserisci() {
 		alert('Data di nascita non valida');
 		return false;
 	}
-	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value.length<11 ) {
-		alert('Il Codice Fiscale è obbligatorio');
-		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_NOME %>.focus;
-		return false;
-	}
-	
+
+<%-- 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value.length<11 ) { --%>
+// 		alert('Il Codice Fiscale è obbligatorio');
+<%-- 		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_CODICE_FISCALE %>.focus; --%>
+// 		return false;
+// 	}
+
 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.value == "-") {
 		alert('Il tipo difensore è obbligatorio');
 		return false;
 	}
+	
 	
 	<%-- document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore"; --%>
 	document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActInserisciAvvocato";
@@ -447,7 +456,7 @@ if (lAvv.getDataNascita() == null) {
         <td class="l">Con Studio in </td>
         <td class="L">
 <%--           	<input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35"> --%>
-			<input type="text" readonly title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="20">
+			<input type="text" readonly title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
       		<a href="Javascript:ListaComuni('LoadModificaAvvocato','<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO %>');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
