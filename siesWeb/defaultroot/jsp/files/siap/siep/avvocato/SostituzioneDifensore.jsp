@@ -100,7 +100,7 @@ function caricamento() {
 	if ( valore == '01') {
     <%-- MEV_21 --%>
      caricaDescComuneForo(document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
-  	 //document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
+<%--   	 document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value; --%>
   	 <%-- MEV_21 --%>
     }
 
@@ -236,7 +236,6 @@ function loadDescComuneForo(descComuneForo) {
 		<td class="L">
           	<select name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
         </td>
-		</td>
 	</tr>
   	<tr>
         <td class="l">Luogo di Nascita Estero</td>
@@ -310,7 +309,7 @@ if (avvocato.getAvvocato().getDataNascita() != null) {
 		<td class="l"><input size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getCodiceFiscale()) %>" title="Codice Fiscale" type="text" name="<%= ICostantiAvvocato.CAMPO_CODICE_FISCALE %>"  ></td>
     </tr>
 	<tr>
-		<td class="l" >Stato Difensore</font></td>
+		<td class="l">Stato Difensore</td>
 		<td class="L">
            	<select title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
 		</td>
@@ -456,10 +455,10 @@ Div da Visualizzare nel caso dei avvocato d'ufficio contenente la data della nom
 	<tr>
 		<td colspan=2>
         	<input class=bottone  type="submit" value="Conferma" onclick="return Verify();">
-			<!-- 20210627 MEV_21 -->
-    		<td colspan=2 id="inserimento" style="visibility:hidden;">
-	        	<input class="bottone"  type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
-	        </td>
+        </td>
+		<!-- 20210627 MEV_21 -->
+   		<td colspan=2 id="inserimento" style="visibility:hidden;">
+        	<input class="bottone"  type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
         </td>
 	</tr>
 </table>

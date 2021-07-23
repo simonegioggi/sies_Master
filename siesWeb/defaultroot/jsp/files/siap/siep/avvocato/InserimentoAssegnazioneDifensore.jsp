@@ -28,10 +28,6 @@
 
 <%
 AvvocatoModel lAvv = avvocato;
-//   if ( lAvv == null )
-//   {
-//     lAvv = new AvvocatoModel();
-//   }
 %>
 
 <html>
@@ -97,7 +93,6 @@ function Inserisci() {
 		alert('Il tipo difensore è obbligatorio');
 		return false;
 	}
-
 	
 	<%-- document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore"; --%>
 	document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActInserisciAvvocato";
@@ -105,15 +100,14 @@ function Inserisci() {
 }
 
 function ListaComuni(a_formname,a_fieldname) {
-  if (document.LoadModificaAvvocato.lTipoInserimento.value != "reginde")
-	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
+	if (document.LoadModificaAvvocato.lTipoInserimento.value != "reginde")
+		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
 }
 
 <!-- 20210524	MEV Scheda-21 -->
-function ListaComuniNascita(a_formname,a_fieldname)
-{
-  if (document.LoadModificaAvvocato.lTipoInserimento.value != "reginde")
-  	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+function ListaComuniNascita(a_formname,a_fieldname) {
+	if (document.LoadModificaAvvocato.lTipoInserimento.value != "reginde")
+  		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
 }      
 
 function ListaAvvocati(a_formname) {
@@ -268,7 +262,6 @@ function caricamento() {
 		document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
 		document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;
 	}
-  	
 }
 
 function caricaDescComuneForo (foro) {
@@ -406,7 +399,6 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 		<td class="L">
           	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
         </td>
-		</td>
 	</tr>
   	<tr>
         <td class="l">Luogo di Nascita Estero</td>
@@ -493,7 +485,7 @@ if (lAvv.getDataNascita() == null) {
 		</td>
 	</tr>
 	<tr>
-		<td class="l" >Stato Difensore</font></td>
+		<td class="l" >Stato Difensore</td>
 		<td class="L">
            	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
 		</td>

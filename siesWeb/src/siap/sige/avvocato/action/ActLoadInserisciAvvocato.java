@@ -1,13 +1,5 @@
 package siap.sige.avvocato.action;
 
-/**
-* <p>Title: ActLoadInserisciAvvocato</p>
-* <p>Description: Classe Action per la load inserisci di Avvocato</p>
-* <p>Copyright: Copyright (c) 2008</p>
-* <p>Company: Eutelia S.p.A.</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Vector;
 
@@ -28,20 +20,22 @@ import siap.sige.util.SIGELookupRemote;
 import siap.web.ISIAPCostantiWeb;
 
 public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvvocato {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		if (isSessionAttributeNullObj("FascicoloSigeEsteso"))
 			throw new SIGEException(SIGEException.USER_MESSAGE, "Selezionare il procedimento.");
 
 		// Gestione bottone di ritorno
-		this.gestioneRitorno();
+		gestioneRitorno();
 
-		if (!this.isRequestParameterNullObj(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE)) {
+		if (!isRequestParameterNullObj(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE)) {
 			setRequestAttribute(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE,
-					this.getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
+					getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
 		}
 
 		IAvvocato lCtrl = SIGELookupRemote.getAvvocatoRemote();
@@ -52,8 +46,6 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvv
 		lAvvFascMod.setFasSigeIdFascicoloSige(
 				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
 						.getIdFascicoloSige());
-
-		// setRequestAttribute("fascicoloSigeEsteso", lAvvFascMod.getFasSigeIdFascicoloSige());
 		setRequestAttribute("avvocatoFascicoloSigeModel", lAvvFascMod);
 
 		// Ricerca Sentenze assegnate al Fascicolo (Ulteriori Titoli Esecutivi)
@@ -92,21 +84,24 @@ public class ActLoadInserisciAvvocato extends ActionSiap implements ICostantiAvv
 
 			setRequestAttribute("modalita", "I");
 
-			// 19/03/2010 Nuova gestione Combo per Foro avvocato.
-			// Vector lVect1 = lCtrl.ExRicercaForo();
-			// this.setRequestAttribute("foro", lVect1);
-
-			UfficioModel lUffUte = this.getUfficioUtenteConnesso();
+			UfficioModel lUffUte = getUfficioUtenteConnesso();
 			String lDescrComune = lUffUte.getDescrComune();
-			this.setRequestAttribute("comune", lDescrComune);
+			setRequestAttribute("comune", lDescrComune);
 
 			// 19/03/2010 Nuova gestione Combo per Foro avvocato.
 			lOption = new Option(DecodificheManager.getInstance().getForo(),
 					lDescrComune.toUpperCase().trim(), Option.NO_BLANK_ITEM);
 			setRequestAttribute("foro", "" + lOption);
 
-			return PG_LOAD_INSERISCIAVVOCATO; // restituisce la jsp di VIEW
+			// MEV_21 Nuova gestione Combo per Stato di Nascita
+			lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+			setRequestAttribute("nazione", "" + lOption);
 
+			// MEV_21 Nuova gestione Combo per Stato Difensore
+			lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+			setRequestAttribute("statoAvv", "" + lOption);
+
+			return PG_LOAD_INSERISCIAVVOCATO; // restituisce la jsp di VIEW
 		}
 	}
 

@@ -1,26 +1,27 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
+<%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
 <%@ page import="siap.sico.avvocato.model.AvvocatoModel"%>
 <%@ page import="siap.sige.avvocato.model.AvvocatoFascicoloSigeModel"%>
 <%@ page import="siap.sige.avvocato.model.AvvocatoSigeModel"%>
 <%@ page import="siap.sige.avvocato.action.ICostantiAvvocato"%>
-<%@ page import="java.util.Vector"%>
-<%@ page import="f3b.util.StringUtils"%>
 <%@ page import="siap.sige.fascicolo.action.ICostantiFascicoloSige"%>
+
+<%@ page import="java.util.Vector"%>
 
 <html>
 <head>
 <title>[S.I.E.S.] - Dettaglio Avvocato</title>
-<link rel="STYLESHEET" type="text/css"
-	href="<%=IWebConstants.PG_STYLE%>">
+<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="/html/conferma.js"></script>
 </head>
 
-<jsp:useBean id="modalita" scope="request" class="java.lang.String" />
-<jsp:useBean id="avvocatoFascSige" scope="request" class="siap.sige.avvocato.model.AvvocatoSigeModel" />
+<jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
+<jsp:useBean id="avvocatoFascSige" scope="request" class="siap.sige.avvocato.model.AvvocatoSigeModel"/>
 <%
-	AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSige.getAvvocato());
+AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSige.getAvvocato());
 %>
 
 <body class="corpo">
@@ -31,7 +32,7 @@
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
 			</a>
 		</td>
-		<td class=LBG><font class="label">Funzione :</font>&nbsp;&nbsp;
+		<td class=LBG><font class="label">Funzione:</font>&nbsp;&nbsp;
 			<font class="campo">Dettaglio Avvocato</font>
 		</td>
 		<td class="LBG">
@@ -43,25 +44,39 @@
 	</tr>
 </table>
 <br>
-<jsp:include
-	page="<%=ICostantiFascicoloSige.PG_LOAD_SINTESIPROCEDIMENTOSIGE%>" />
+<jsp:include page="<%=ICostantiFascicoloSige.PG_LOAD_SINTESIPROCEDIMENTOSIGE%>" />
 <br>
-
-
-
 <%--br>
 <jsp:include page="/jsp/files/siap/sige/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br--%>
 <table cellspacing=2 cellpadding=2>
-
 	<tr>
 		<td class="l"><font class="label">Cognome</font></td>
 		<td class="l"><font class="campo"><%=lAvvocato.getCognome()%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Nome</font></td>
-		<td class="l"><font class="campo"><%=lAvvocato.getNome()%>
-		&nbsp;</font></td>
+		<td class="l"><font class="campo"><%=lAvvocato.getNome()%></font></td>
+	</tr>
+	<%-- MEV_21: aggiunti campi luogo e data di nascita e comune di residenza e pec --%>
+  	<tr>
+		<td class="l"><font class="label">Comune di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita())%></font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescStatoNascita())%></font></td>
+	</tr>
+	<tr>
+<%
+String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) ? ""	: lAvvocato.getDescLuogoNasRegInde();
+%>
+		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero)%></font></td>
+	</tr>
+  	<tr>
+		<td class="l"><font class="label">Data di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataNascita(),"dd-MM-yyyy"))%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Foro</font></td>
@@ -70,6 +85,10 @@
 	<tr>
 		<td class="l"><font class="label">Indirizzo</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo(), "-")%></font></td>
+	</tr>
+  	<tr>
+		<td class="l"><font class="label">Con Studio in</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescComuneResidenza()) %></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Telefono</font></td>
@@ -83,12 +102,19 @@
 		<td class="l"><font class="label">EMail</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail(), "-")%></font></td>
 	</tr>
+	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>
+	<tr>
+		<td class="l"><font class="label">Pec</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getPec())%></font></td>
+	</tr>
 	<tr>
 		<td class="l"><font class="label">Codice Fiscale</font></td>
-		<td class="l"><font class="campo"><%=StringUtils
-							.toStringJSP(lAvvocato.getCodiceFiscale(), "-")%></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale(), "-")%></font></td>
 	</tr>
-
+	<tr>
+		<td class="l"><font class="label">Stato Attività Difensore</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrNonAttivita())%></font></td>
+	</tr>
 	<tr>
 		<td class="l"><font class="label">Tipo</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrTipo(), "-")%></font></td>

@@ -5,6 +5,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.avvocato.model.AvvocatoModel;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.web.ActionSiap;
@@ -16,10 +20,6 @@ import siap.sige.avvocato.model.AvvocatoSigeModel;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
 import siap.sige.util.SIGELookupRemote;
 import siap.sius.luogodetenzione.action.ICostantiLuogoDetenzione;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvvocato {
 
@@ -28,9 +28,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 	/**
 	 * Azione di Sostituzione dell' Avvocato assegnato al Fascicolo SIGE
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
-	 *         <p>
 	 * @throws F3BException
 	 */
 	@SuppressWarnings("rawtypes")
@@ -58,9 +57,9 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		AvvocatoModel lAvvModPrec = new AvvocatoModel();
 		AvvocatoSigeModel lAvvSigeMod = new AvvocatoSigeModel();
 		AvvocatoFascicoloSigeModel lAvvFascModPrec = new AvvocatoFascicoloSigeModel();
-		lAvvFascModPrec
-				.setFasSigeIdFascicoloSige(((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso"))
-						.getFascicoloSige().getIdFascicoloSige());
+		lAvvFascModPrec.setFasSigeIdFascicoloSige(
+				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
+						.getIdFascicoloSige());
 
 		BigDecimal idVecchio = getRequestBigDecimalParameter("idAvvVecchio");
 
@@ -84,60 +83,63 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 		lAvvFascMod.setCodTipoAvvocato(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_TIPO));
 		if (lAvvFascMod.getCodTipoAvvocato().equals("01")) {
-			lAvvFascMod.setDataInizioValidita(getRequestDateParameter(
-					ICostantiAvvocatoFascicoloSige.CAMPO_ANNO_DATA_DESIGNAZIONE,
-					ICostantiAvvocatoFascicoloSige.CAMPO_MESE_DATA_DESIGNAZIONE,
-					ICostantiAvvocatoFascicoloSige.CAMPO_GIORNO_DATA_DESIGNAZIONE));
+			lAvvFascMod.setDataInizioValidita(
+					getRequestDateParameter(ICostantiAvvocatoFascicoloSige.CAMPO_ANNO_DATA_DESIGNAZIONE,
+							ICostantiAvvocatoFascicoloSige.CAMPO_MESE_DATA_DESIGNAZIONE,
+							ICostantiAvvocatoFascicoloSige.CAMPO_GIORNO_DATA_DESIGNAZIONE));
 		}
 		if (lAvvFascMod.getCodTipoAvvocato().equals("02")) {
-			lAvvFascMod.setDataInizioValidita(getRequestDateParameter(
-					ICostantiAvvocatoFascicoloSige.CAMPO_ANNO_DATA_NOMINA,
-					ICostantiAvvocatoFascicoloSige.CAMPO_MESE_DATA_NOMINA,
-					ICostantiAvvocatoFascicoloSige.CAMPO_GIORNO_DATA_NOMINA));
+			lAvvFascMod.setDataInizioValidita(
+					getRequestDateParameter(ICostantiAvvocatoFascicoloSige.CAMPO_ANNO_DATA_NOMINA,
+							ICostantiAvvocatoFascicoloSige.CAMPO_MESE_DATA_NOMINA,
+							ICostantiAvvocatoFascicoloSige.CAMPO_GIORNO_DATA_NOMINA));
 		}
 		if (lAvvFascMod.getCodTipoAvvocato().equals("03")) {
 			lAvvFascMod.setDataInizioValidita(DateUtils.getSysDate());
 		}
 		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_MOTIVO_DESIGNAZIONE)) {
-			lAvvFascMod
-					.setCodMotivoDesignazione(getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_MOTIVO_DESIGNAZIONE));
+			lAvvFascMod.setCodMotivoDesignazione(
+					getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_MOTIVO_DESIGNAZIONE));
 		} else {
 			lAvvFascMod.setCodMotivoDesignazione("-");
 		}
 		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA))
-			lAvvFascMod
-					.setCodTipoAutorita(getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA));
+			lAvvFascMod.setCodTipoAutorita(
+					getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA));
 		else
 			lAvvFascMod.setCodTipoAutorita("-");
 
 		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA)
-				&& (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA) && !getRequestStringParameter(
-						ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA).equals("-"))) {
-			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescr(getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA)));
+				&& (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA)
+						&& !getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA)
+								.equals("-"))) {
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(
+					getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA)));
 			lAvvFascMod.setSedeAutorita(lComMod.getCodComune());
 		} else {
 			lAvvFascMod.setSedeAutorita("-");
 		}
 
 		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_INDIRIZZO_TIPO_AUTORITA))
-			lAvvFascMod
-					.setIndirizzoTipoAutorita(getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_INDIRIZZO_TIPO_AUTORITA));
+			lAvvFascMod.setIndirizzoTipoAutorita(
+					getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_INDIRIZZO_TIPO_AUTORITA));
 		if (!this.isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
-			lAvvFascMod
-					.setIstDetIdIstitutoDetenzione(getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE));
+			lAvvFascMod.setIstDetIdIstitutoDetenzione(
+					getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE));
 
 		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF))
-			lAvvFascMod
-					.setCodTipoAutoritaDif(getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF));
+			lAvvFascMod.setCodTipoAutoritaDif(
+					getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF));
 		else
 			lAvvFascMod.setCodTipoAutoritaDif("-");
 
 		if (!this.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF)
 				&& (!this
-						.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF) && !getRequestStringParameter(
-						ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF).equals("-"))) {
-			String lComneAutoritaDif = getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF);
+						.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF)
+						&& !getRequestStringParameter(
+								ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF).equals("-"))) {
+			String lComneAutoritaDif = getRequestStringParameter(
+					ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF);
 			ComuneModel lComModDif = new ComuneModel(getCodComuneByDescr(lComneAutoritaDif));
 
 			lAvvFascMod.setSedeAutoritaDif(lComModDif.getCodComune());
@@ -159,8 +161,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 			lAvvModRic.setCodUffAppartenenza(this.getCodUfficioUtenteConnesso());
 
-			ComuneModel lComModRes = new ComuneModel(
-					this.getCodComuneByDescr(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+			ComuneModel lComModRes = new ComuneModel(this.getCodComuneByDescr(
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
 			lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
 
 			lAvvModRic.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
@@ -210,8 +212,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
 			lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
 			lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
-			ComuneModel lComModRes = new ComuneModel(
-					this.getCodComuneByDescr(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+			ComuneModel lComModRes = new ComuneModel(this.getCodComuneByDescr(
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
 			lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
 
 			lAvvModRic.setCodUfficioAggiornamento(this.getCodUfficioUtenteConnesso());
@@ -225,17 +227,17 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		lAvvFascMod.setDataInserimento(DateUtils.getSysDate());
 		lAvvFascMod.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
 
-		lAvvFascMod
-				.setFasSigeIdFascicoloSige(((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso"))
-						.getFascicoloSige().getIdFascicoloSige());
+		lAvvFascMod.setFasSigeIdFascicoloSige(
+				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
+						.getIdFascicoloSige());
 		lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
 
 		// update
 		AvvocatoFascicoloSigeModel lAvvFascUp = new AvvocatoFascicoloSigeModel();
 		lAvvFascUp.setAvvIdAvvocato(idVecchio);
-		lAvvFascUp
-				.setFasSigeIdFascicoloSige(((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso"))
-						.getFascicoloSige().getIdFascicoloSige());
+		lAvvFascUp.setFasSigeIdFascicoloSige(
+				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
+						.getIdFascicoloSige());
 		lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
 
 		lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
