@@ -27,7 +27,8 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += "SELECT " + "ID_AVVOCATO, " + "COGNOME, " + "NOME, " + "FORO, " + "INDIRIZZO, "
 				+ "TELEFONO, " + "FAX, " + "E_MAIL, " + "COD_FISCALE, " + "PROVINCIA, " + "AVVOCATO.CAP, "
 				+ "FLAG_VISUALIZZA, " + "ID_AVVOCATO_STANDARD, " + "AVVOCATO.NOTE NOTEAVV, "
-				// MEV_21: aggiunti sei campi in tabella
+				// MEV_21: aggiunti sei campi in tabella + 2 descrittivi
+				+ "COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " + "SN.RV_MEANING DESCR_STATO_NASCITA, "
 				+ "PEC, " + "FLAG_REGINDE, " + "DESCR_COMUNE_STUDIO, " + "COD_STATO_NASCITA_AVV, "
 				+ "DESC_LUOGO_NAS_REGINDE, " + "ID_AVVOCATO_BONIFICATO, "
 				+ "AVVOCATO.COD_OPERATORE_INSERIMENTO, " + "AVVOCATO.DATA_INSERIMENTO, "
@@ -40,11 +41,10 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "AVVOCATO.DATA_NASCITA, " + "CG.RV_MEANING DESCR_NON_ATTIVITA, "
 				+ "AVVOCATO_FASCICOLO_SIGE.DATA_INIZIO_VALIDITA, "
 				+ "AVVOCATO_FASCICOLO_SIGE.ID_AVVOCATO_FASCICOLO_SIGE ";
-		lStatement += " FROM AVVOCATO,AVVOCATO_FASCICOLO_SIGE,CG_REF_CODES AVVTIPODESC,CG_REF_CODES CG, COMUNE DESNASCITA,COMUNE DESCR";
+		lStatement += " FROM AVVOCATO, AVVOCATO_FASCICOLO_SIGE, CG_REF_CODES AVVTIPODESC, CG_REF_CODES CG, COMUNE DESNASCITA, COMUNE DESCR";
 		// INIZIO: MEV_21 (avvocati)
-		lStatement += " , CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO ";
-		lStatement += " , CG_REF_CODES CG ";
-		lStatement += " , CG_REF_CODES SN ";
+		lStatement += ", CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO";
+		lStatement += ", CG_REF_CODES SN";
 		// FINE: MEV_21
 		lStatement += " WHERE";
 		lStatement += " DATA_FINE_VALIDITA IS NULL AND";
@@ -53,12 +53,12 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += " AND AVVTIPODESC.RV_DOMAIN='TIPO_AVVOCATO'";
 		lStatement += " AND DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA";
 		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA";
+		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA";
+		lStatement += " AND CG.RV_DOMAIN = 'NON_ATTIVITA'";
 		// INIZIO: MEV_21 (avvocati)
 		lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING";
 		lStatement += " AND AVVFORO.RV_DOMAIN = 'FORO_AVVOCATI'";
 		lStatement += " AND COMSEDEFORO.COD_COMUNE = AVVFORO.RV_ALT2_VALUE";
-		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA";
-		lStatement += " AND CG.RV_DOMAIN = 'NON_ATTIVITA'";
 		lStatement += " AND SN.RV_LOW_VALUE = COD_STATO_NASCITA_AVV";
 		lStatement += " AND SN.RV_DOMAIN  = 'NAZIONE'";
 		// FINE: MEV_21
@@ -153,19 +153,22 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		aModel.getAvvocato().setFlagVisualizza(getBigDecimal("FLAG_VISUALIZZA"));
 		aModel.getAvvocato().setIdAvvocatoStandard(getBigDecimal("ID_AVVOCATO_STANDARD"));
 		// MEV_21 (avvocati): aggiunti sei campi in tabella + 1 descrittivo
-		aModel.getAvvocato().setDescComuneSedeForo(getString("DescComuneSedeForo"));
+		if (findColumn("DescComuneSedeForo"))
+			aModel.getAvvocato().setDescComuneSedeForo(getString("DescComuneSedeForo"));
 		aModel.getAvvocato().setPec(getString("PEC"));
 		aModel.getAvvocato().setFlagRegInde(getString("FLAG_REGINDE"));
 		aModel.getAvvocato().setDescrComuneStudio(getString("DESCR_COMUNE_STUDIO"));
 		aModel.getAvvocato().setCodStatoNascita(getString("COD_STATO_NASCITA_AVV"));
 		aModel.getAvvocato().setDescLuogoNasRegInde(getString("DESC_LUOGO_NAS_REGINDE"));
 		aModel.getAvvocato().setIdAvvocatoBonificato(getBigDecimal("ID_AVVOCATO_BONIFICATO"));
+		if (findColumn("DESCR_STATO_NASCITA"))
+			aModel.getAvvocato().setDescStatoNascita(getString("DESCR_STATO_NASCITA"));
 		return aModel;
 	}
 
 	public AvvocatoSigeModel getModelAvvSige() throws DAOException {
 
-		AvvocatoSigeModel aModel = (AvvocatoSigeModel) this.getModel();
+		AvvocatoSigeModel aModel = (AvvocatoSigeModel) getModel();
 		aModel.getAvvocatoFascicoloSigeModel().setDataInizioValidita(getDate("DATA_INIZIO_VALIDITA"));
 		aModel.getAvvocatoFascicoloSigeModel()
 				.setIdAvvocatoFascicoloSige(getBigDecimal("ID_AVVOCATO_FASCICOLO_SIGE"));
@@ -273,7 +276,8 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += "SELECT " + "ID_AVVOCATO, " + "COGNOME, " + "NOME, " + "FORO, " + "INDIRIZZO, "
 				+ "TELEFONO, " + "FAX, " + "E_MAIL, " + "COD_FISCALE, " + "PROVINCIA, " + "AVVOCATO.CAP, "
 				+ "FLAG_VISUALIZZA, " + "ID_AVVOCATO_STANDARD, " + "AVVOCATO.NOTE NOTEAVV, "
-				// MEV_21: aggiunti sei campi in tabella
+				// MEV_21: aggiunti sei campi in tabella + 2 descrittivi
+				+ "COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " + "SN.RV_MEANING DESCR_STATO_NASCITA, "
 				+ "AVVOCATO.PEC, " + "AVVOCATO.FLAG_REGINDE, " + "AVVOCATO.DESCR_COMUNE_STUDIO, "
 				+ "AVVOCATO.COD_STATO_NASCITA_AVV, " + "AVVOCATO.DESC_LUOGO_NAS_REGINDE, "
 				+ "AVVOCATO.ID_AVVOCATO_BONIFICATO, " + "AVVOCATO.COD_OPERATORE_INSERIMENTO, "
@@ -288,6 +292,10 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "PARTI_UDIENZA_DIFENSORE.DATA_INIZIO_VALIDITA, "
 				+ "PARTI_UDIENZA_DIFENSORE.ID_AVVOCATO_PARTE_UDIENZA";
 		lStatement += " FROM AVVOCATO, PARTI_UDIENZA_DIFENSORE, CG_REF_CODES AVVTIPODESC, CG_REF_CODES CG, COMUNE DESNASCITA, COMUNE DESCR";
+		// INIZIO: MEV_21 (avvocati)
+		lStatement += ", CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO";
+		lStatement += ", CG_REF_CODES SN";
+		// FINE: MEV_21
 		lStatement += " WHERE";
 		lStatement += " DATA_FINE_VALIDITA IS NULL";
 		lStatement += " AND AVVOCATO.ID_AVVOCATO = PARTI_UDIENZA_DIFENSORE.AVV_ID_AVVOCATO";
@@ -297,6 +305,13 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA";
 		lStatement += " AND CG.RV_DOMAIN = 'NON_ATTIVITA'";
 		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA";
+		// INIZIO: MEV_21 (avvocati)
+		lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING";
+		lStatement += " AND AVVFORO.RV_DOMAIN = 'FORO_AVVOCATI'";
+		lStatement += " AND COMSEDEFORO.COD_COMUNE = AVVFORO.RV_ALT2_VALUE";
+		lStatement += " AND SN.RV_LOW_VALUE = COD_STATO_NASCITA_AVV";
+		lStatement += " AND SN.RV_DOMAIN  = 'NAZIONE'";
+		// FINE: MEV_21
 
 		lStatement += " " + setCondizioneParteUdienza(aAvvocatoMod, aPartiUdienzaDifMod);
 
@@ -331,7 +346,7 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 
 	public AvvocatoParteModel getModelAvvParteUdienza() throws DAOException {
 
-		AvvocatoParteModel aModel = (AvvocatoParteModel) this.getModelParte();
+		AvvocatoParteModel aModel = (AvvocatoParteModel) getModelParte();
 		aModel.getAvvocatoParteUdienzaModel().setDataInizioValidita(getDate("DATA_INIZIO_VALIDITA"));
 		aModel.getAvvocatoParteUdienzaModel()
 				.setIdAvvocatoParteUdienza(getBigDecimal("ID_AVVOCATO_PARTE_UDIENZA"));
@@ -382,6 +397,10 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		aModel.getAvvocato().setCodStatoNascita(getString("COD_STATO_NASCITA_AVV"));
 		aModel.getAvvocato().setDescLuogoNasRegInde(getString("DESC_LUOGO_NAS_REGINDE"));
 		aModel.getAvvocato().setIdAvvocatoBonificato(getBigDecimal("ID_AVVOCATO_BONIFICATO"));
+		if (findColumn("DescComuneSedeForo"))
+			aModel.getAvvocato().setDescComuneSedeForo(getString("DescComuneSedeForo"));
+		if (findColumn("DESCR_STATO_NASCITA"))
+			aModel.getAvvocato().setDescStatoNascita(getString("DESCR_STATO_NASCITA"));
 
 		return aModel;
 	}
@@ -395,7 +414,8 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "AVVOCATO.FORO, " + "AVVOCATO.INDIRIZZO, " + "AVVOCATO.TELEFONO, " + "AVVOCATO.FAX, "
 				+ "AVVOCATO.E_MAIL, " + "AVVOCATO.COD_FISCALE, " + "AVVOCATO.PROVINCIA, " + "AVVOCATO.CAP, "
 				+ "AVVOCATO.FLAG_VISUALIZZA, " + "AVVOCATO.ID_AVVOCATO_STANDARD, " + "AVVOCATO.NOTE NOTEAVV, "
-				// MEV_21: aggiunti sei campi in tabella
+				// MEV_21: aggiunti sei campi in tabella + 2 descrittiv1
+				+ "COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " + "SN.RV_MEANING DESCR_STATO_NASCITA, "
 				+ "AVVOCATO.PEC, " + "AVVOCATO.FLAG_REGINDE, " + "AVVOCATO.DESCR_COMUNE_STUDIO, "
 				+ "AVVOCATO.COD_STATO_NASCITA_AVV, " + "AVVOCATO.DESC_LUOGO_NAS_REGINDE, "
 				+ "AVVOCATO.ID_AVVOCATO_BONIFICATO, " + "AVVOCATO.COD_OPERATORE_INSERIMENTO, "
@@ -408,7 +428,11 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "DESNASCITA.DESCRIZIONE DESCR_LUOGO_NASCITA, " + "AVVOCATO.COD_UFFICIO_APPARTENENZA, "
 				+ "AVVOCATO.DATA_NASCITA, " + "CG.RV_MEANING DESCR_NON_ATTIVITA, "
 				+ "AVVOCATO.DATA_INSERIMENTO DATA_INIZIO_VALIDITA";
-		lStatement += " FROM AVVOCATO,CG_REF_CODES CG, COMUNE DESNASCITA,COMUNE DESCR,AVVOCATO_FASCICOLO_SIEP AF, CG_REF_CODES AVVTIPODESC";
+		lStatement += " FROM AVVOCATO, CG_REF_CODES CG, COMUNE DESNASCITA, COMUNE DESCR, AVVOCATO_FASCICOLO_SIEP AF, CG_REF_CODES AVVTIPODESC";
+		// INIZIO: MEV_21 (avvocati)
+		lStatement += ", CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO";
+		lStatement += ", CG_REF_CODES SN";
+		// FINE: MEV_21
 		lStatement += " WHERE";
 		lStatement += " AVVOCATO.ID_AVVOCATO=AF.AVV_ID_AVVOCATO AND";
 		lStatement += " AVVTIPODESC.RV_LOW_VALUE=AF.COD_TIPO_AVVOCATO AND";
@@ -419,6 +443,13 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += "	CG.RV_LOW_VALUE = COD_NON_ATTIVITA AND";
 		lStatement += "	FAS_SIE_ID_FASCICOLO_SIEP=" + sentenza.getFasSieIdFascicoloSiep().toString() + " AND";
 		lStatement += "	FLAG_CANCELLATO ='N' and data_fine_validita is NULL";
+		// INIZIO: MEV_21 (avvocati)
+		lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING";
+		lStatement += " AND AVVFORO.RV_DOMAIN = 'FORO_AVVOCATI'";
+		lStatement += " AND COMSEDEFORO.COD_COMUNE = AVVFORO.RV_ALT2_VALUE";
+		lStatement += " AND SN.RV_LOW_VALUE = COD_STATO_NASCITA_AVV";
+		lStatement += " AND SN.RV_DOMAIN  = 'NAZIONE'";
+		// FINE: MEV_21
 
 		lStatement += " " + setCondizioneAssDifDallaListaSIEP(aModel, sentenza);
 		// MEV_21: tolgo la parte del MINUS
@@ -436,6 +467,15 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += " ORDER BY COGNOME, NOME ASC";
 
 		setStatement(lStatement);
+	}
+
+	private boolean findColumn(String aValue) {
+		try {
+			mRs.findColumn(aValue);
+		} catch (Exception sqex) {
+			return false;
+		}
+		return true;
 	}
 
 }

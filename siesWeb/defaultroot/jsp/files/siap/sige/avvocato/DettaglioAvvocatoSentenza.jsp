@@ -69,10 +69,10 @@ AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSige.getAvvocato());
 	</tr>
 	<tr>
 <%
-String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) ? ""	: lAvvocato.getDescLuogoNasRegInde();
+String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) ? "-" : lAvvocato.getDescLuogoNasRegInde();
 %>
 		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero)%></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero, "-")%></font></td>
 	</tr>
   	<tr>
 		<td class="l"><font class="label">Data di Nascita</font></td>

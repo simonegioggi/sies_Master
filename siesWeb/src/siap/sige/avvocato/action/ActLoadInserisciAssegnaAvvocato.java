@@ -1,13 +1,5 @@
 package siap.sige.avvocato.action;
 
-/**
-* <p>Title: ActLoadInserisciAssegnaAvvocato</p>
-* <p>Description: Classe Action per la load inserisci di Avvocato</p>
-* <p>Copyright: Copyright (c) 2002</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -41,8 +33,8 @@ public class ActLoadInserisciAssegnaAvvocato extends ActionSiap
 	public String processRequest() throws Exception {
 
 		IAvvocato lCtrl = SIGELookupRemote.getAvvocatoRemote();
-		if (!this.isRequestParameterNullObj("numeroDifensori")
-				&& this.getRequestStringParameter("numeroDifensori").equals("2"))
+		if (!isRequestParameterNullObj("numeroDifensori")
+				&& getRequestStringParameter("numeroDifensori").equals("2"))
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Attenzione: Sono già assegnati due difensori!");
 
@@ -50,11 +42,11 @@ public class ActLoadInserisciAssegnaAvvocato extends ActionSiap
 		// LogF3B.getLogger()
 		siesLogger.debug(" tipoDifensore ");
 
-		if (!this.isRequestParameterNullObj(CAMPO_ID_AVVOCATO)) {
-			String lAvvId = this.getRequestStringParameter(CAMPO_ID_AVVOCATO);
+		if (!isRequestParameterNullObj(CAMPO_ID_AVVOCATO)) {
+			String lAvvId = getRequestStringParameter(CAMPO_ID_AVVOCATO);
 
 			AvvocatoModel lAvv = lCtrl.ExRicercaAvvocatoByKey(new BigDecimal(lAvvId));
-			this.setRequestAttribute("avvocato", lAvv);
+			setRequestAttribute("avvocato", lAvv);
 
 			if (isSessionAttributeNullObj("FascicoloSigeEsteso")) {
 				FascicoloSigeEstesoModel fascicoloModel = ricercaFascicolo();
@@ -69,10 +61,9 @@ public class ActLoadInserisciAssegnaAvvocato extends ActionSiap
 			}
 		}
 
-		if (!this.isRequestParameterNullObj("tipoDifensore")
-				&& (this.getRequestStringParameter("tipoDifensore").equalsIgnoreCase("D'UFFICIO")
-						|| this.getRequestStringParameter("tipoDifensore")
-								.equalsIgnoreCase("DELLA FASE DI GIUDIZIO")))
+		if (!isRequestParameterNullObj("tipoDifensore") && (getRequestStringParameter("tipoDifensore")
+				.equalsIgnoreCase("D'UFFICIO")
+				|| getRequestStringParameter("tipoDifensore").equalsIgnoreCase("DELLA FASE DI GIUDIZIO")))
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"I difensori possono essere due solo se entrambi sono di fiducia!");
 
@@ -96,21 +87,29 @@ public class ActLoadInserisciAssegnaAvvocato extends ActionSiap
 			setRequestAttribute(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE,
 					getRequestStringParameter(ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE));
 
-		this.gestioneRitorno();
+		gestioneRitorno();
 
 		// 19/03/2010 Nuova gestione Combo per Foro avvocato.
 		//// IAvvocato lCtrl = SIGELookupRemote.getAvvocatoRemote();
 		// Vector lVect = lCtrl.ExRicercaForo();
-		// this.setRequestAttribute("foro", lVect);
+		// setRequestAttribute("foro", lVect);
 
-		UfficioModel lUffUte = this.getUfficioUtenteConnesso();
+		UfficioModel lUffUte = getUfficioUtenteConnesso();
 		String lDescrComune = lUffUte.getDescrComune();
-		this.setRequestAttribute("comune", lDescrComune);
+		setRequestAttribute("comune", lDescrComune);
 
 		// 19/03/2010 Nuova gestione Combo per Foro avvocato.
 		lOption = new Option(DecodificheManager.getInstance().getForo(), lDescrComune.toUpperCase().trim(),
 				Option.NO_BLANK_ITEM);
 		setRequestAttribute("foro", "" + lOption);
+
+		// MEV_21 Nuova gestione Combo per Stato di Nascita
+		lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+		setRequestAttribute("nazione", "" + lOption);
+
+		// MEV_21 Nuova gestione Combo per Stato Difensore
+		lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
+		setRequestAttribute("statoAvv", "" + lOption);
 
 		// Ricerca Sentenze assegnate al Fascicolo (Ulteriori Titoli Esecutivi)
 		AvvocatoFascicoloSigeModel lAvvFascMod = new AvvocatoFascicoloSigeModel();
@@ -126,6 +125,7 @@ public class ActLoadInserisciAssegnaAvvocato extends ActionSiap
 	}
 
 	private FascicoloSigeEstesoModel ricercaFascicolo() throws F3BException {
+
 		FascicoloSigeModel lFascicolo = new FascicoloSigeModel();
 		lFascicolo.setChiaveAnno(getRequestBigDecimalParameter(CAMPO_CHIAVE_ANNO));
 		lFascicolo.setChiaveProgr(getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR));
@@ -142,6 +142,7 @@ public class ActLoadInserisciAssegnaAvvocato extends ActionSiap
 	}
 
 	private int countAvvocatiAssegnati(BigDecimal idFascicolo) throws F3BException {
+
 		IAvvocato lCtrlAvv = SIGELookupRemote.getAvvocatoRemote();
 		ArrayList<AvvocatoModel> lVect = lCtrlAvv.ExRicercaAvvocatiByFascicoloNoError(idFascicolo);
 		return lVect.size();
