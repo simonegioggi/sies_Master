@@ -535,7 +535,8 @@ public class ActLoadInserisciAnnotazioniManuali extends ActionSiap {
 		// Tutti e soli gli uffici che possono emettere la declaratoria
 		// ==========================================================================
 		// MEV_66: aggiunti 5 uffici che possono emettere la declaratoria
-		String[] aFiltroUffici = { "CAP", "CAS", "CASAP", "GIP", "DIB", "TRIBSD", "GUPM", "CAPSM", "DIBM", "GIPM", "GP" };
+		// Ticket#20210622011 - Aggiunto GUP
+		String[] aFiltroUffici = { "GUP", "CAP", "CAS", "CASAP", "GIP", "DIB", "TRIBSD", "GUPM", "CAPSM", "DIBM", "GIPM", "GP" };
 
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoUfficio(), true);
 		lOption.setValueBlankItem("-");

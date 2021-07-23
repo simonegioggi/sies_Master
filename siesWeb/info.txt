@@ -1,91 +1,49 @@
-RELEASE_12.4.11.0	-->	nato dal branch "release_12.4.10.0" in data 21/06/2021
+RELEASE_12.4.12.0	-->	nato dal branch "release_12.4.11.0" in data 19/07/2021	
 
-1)	Ticket#20210514015 - Ricerca procedimento Sige per titolo esecutivo
-		Andava in nullpointer la jsp in asenza del numero GUP e/o CAPSM
-		Aggiunta gestione
-		Modulo corretto
-		\jsp\files\siap\sige\sentenza\RicercaSentenzaPerSige.jsp
+MERGED TICKETS:
 
-2)	Ticket#20210514016 - Fogli complementari Sige - visibilità oggetti
-		La query recuperava la descrizione dell'oggetto dall'evento dove il cod_motivo era quasi sempre non valorizzato
-		Modificata query per recuperarlo dal tenore.
-		Moduli modificati
-		Modificate le query
-		StatisticheFogliComplementariSqlDAO.ricercaStatisticheFogliComplementari
-		Modificata la visualizzazione dei risultati della ricerca
-		"/jsp/files/siap/sige/statistiche/StatisticheFogliComplementari.jsp"
+1)	Ticket 20210622011 - Annotazione ordinanza giudice dell’esecuzione
+		Nelle form delle Decisioni del GE (Amnistia/Indulto, Depenalizzazione, Incostituzionalità) 
+		erano state commentate le righe che precaricavano i dati delle richieste.
+		Quando si selezionava la richiesta del GE e il radio "In conformità" il javascript non trovando 
+		i dati caricava in campi con "undefined" o "NaN".
+		Su indicazione di Michele Testa sono stati ripristinati i campi.
+		Form corrette:
+		-	\jsp\files\siap\siep\calcolopena\LoadAnnotazioniManualiBenefici.jsp
+		-	\jsp\files\siap\siep\calcolopena\LoadGEDepen.jsp
+		-	\jsp\files\siap\siep\calcolopena\LoadGEIncost.jsp
+		Corretta anche la popup delle richieste, andava in errore js nel caso di Amnistia/Indulto.
+		Referenziava campi della form della depenalizzazione.
+		-	\jsp\files\siap\siep\richiesta\ListaRichiesteAlGE.jsp
+		Aggiunto GUP nella combo autorità
+		-	siap.siep.calcolopena.action.ActLoadInserisciAnnotazioniManuali.java
 
-3)	Ticket#20210514018 - Iscrizione soggetto sige
-		Modificata la jsp DettaglioSoggetto.jsp
-		Splittato nome e cognome Madre sul Dettaglio
+2)	Ticket - 202106220110 - Errore in stampa decreto irreperibilità
+		Corretta la funzione di rinnovazione (jsp) che consentiva l'inserimento senza controllo dei dati.
+		Resa obbligatoria Data e Destinatario.
+		-	siap/siep/notifica/LoadRinnovazioneNotifica.jsp
+		Modificato il modulo di stampa che prelevava il record RINNOVAZIONE senza controllare la presenza della DATA (unico dato di interesse)
+		-	siap.siep.statoesecuzione.controller.StatoEsecuzioneController.java
+		Modificato metodo appendStatoEsecuzione
+		-	siap.siep.rinnovo.dao.RinnovoSqlDAO.java
+		Aggiunto un metodo per recuperare solo i RINNOVI con DATA_RINNOVO valorizzata (per gestire il progresso)
+		-	siap.siep.rinnovo.controller.IRinnovo.java
+		Aggiunto meteodo ExRicercaUltimoRinnovoByKeyEvento
+		-	siap.siep.rinnovo.controller.IRinnovoController.java
+		Aggiunto metodo ExRicercaUltimoRinnovoByKeyEvento
 
-4)	Ticket#20210521012 - Ticket Creato SIES - Variazione data trasmissione provvedimento
-		La funzione di inserimento e dettaglio dei provvedimenti di OS LA da detenuto e in Misura
-		inserivano il campo Data Trasmissione della form nel campo "sbagliato" ovvero su 
-		EVENTO.DATA_TRASMISSIONE_ATTI invece di NOTIFICA.DATA_INVO come gli altri provvedimenti.
-		La funzione di Modifica Magistrato legge e scrive la data trasmissione da
-		NOTIFICA_DATA_INVIO per cui falliva l'aggiornemanto.
-		Per l'OS in MA inoltre il sistema ignorava compeltamente il campo Data Tramissione 
-		della form.
-		Moduli Modificati:
-		Per OS da Detenuto
-		siap.siep.ordinescarcerazione.action.ActInserisciOSLiberazioneAnticipata
-		/jsp/files/siap/siep/ordinescarcerazione/DettaglioOSLiberazioneAnticipata.jsp
-		Per OS in Misura
-		siap.siep.ordinescarcerazione.action.ActInserisciOSLiberazioneAnticipataMA
+3)	Ticket#20210624014 - Errore in Emissione Misura Sicurezza, già ticket Ticket# 202103160116
+		Corretto errore in fase di recupero del RIFERIMENTO_FASCICOLO_SIEP
+		Decodificava il flag_ms_SN sempre ad N
+		-	siap.sius.rifasiep.dao.RiferimentoFascicoloSiepSqlDAO.java
+		Corretta anche la jsp:
+		-	siap/sius/misurasicurezza/DettaglioSiusMisuraSicurezza.jsp
+		poichè se si inseriva un riferimento ad una misura di sicurezza indicave che era una pena pecuniaria
+		Corretta annche la jsp:
+		-	siap/sius/rifasiep/LoadInserisciRifFascicoloSiep.jsp
+		poichè era presente un errore js per due variabili con nome errato e veniva fatto un controllo non pertinente sull'anagrafica anche se non selezionata.
 
-5)	Ticket#202105240111 - SIUS - Presa in carico altre BDI
-		Impossibile inserire Record Sospensione
-		Modificato il metodo che recupera i record SOSPENSIONE da trasferire. Recuperava
-		tutte le SOSPENSIONI collegate al fascicolo indipendentemente se colleate a pene residue
-		ed eventi validati.
-		Aggiunta join con PENA_RESIDUA ed EVENTO e test sui flag "VALIDATO".
-		Moduli modificati:
-		siap.siep.sospensione.dao.SospensioneSqlDAO
-		siap.siep.sospensione.controller.SospensioneController
-
-6)	Ticket#20210531014 - Ticket Creato SIES - Erroe Statistiche SIEP
-		Le statistiche SIEP per i fascicoli di classe IV
-		- Riepilogo Iscrizioni e Tipologia Misura
-		- Procedimenti Pendenti nel Periodo
-		Facevano uso dell'istruzione LISTAGG per aggregare il numero di fascicolo estratti dalle query.
-		Tale funzione ha un limite di 4000 caratteri ed andava in overflow.
-		Corrette le 2 funzioni di ricerca per estrarre la lista non aggregata dei fascicoli.
-		L'aggregazione è stata implementata da codice nel controller.
-		Classi modificate:
-		StatisticheMSController.java
-		Metodi Modificati
-		public Vector<StatisticheMSModel> ricercaDettaglioProcedimentiMSTipologiaIscrizione
-		public Vector<StatisticheMSModel> ricercaDettaglioProcedimentiPendentiPeriodo
-		StatisticheMSSqlDAO.java
-		Metodi Modificati
-		private String creaQueryRDPMSTI
-		Metodi aggiunti (in duplicazione di quelli esisteti)
-		public GenericModel getModelDettaglio2()
-		public void ricercaDettaglioProcedimentiPendentiPeriodo2()
-		StatisticheMSModel.java
-		Aggiunto solo toString per debug
-
-7)	Ticket#20210615018 - Ticket Creato SIES - Provvedimento di Cumulo - presa in carico atti pervenuti
-		Corretta jsp
-		DettaglioPresaincaricoCompetenzaRicevuta.jsp
-		Non gestiva il caso in cui un eventuale titolo già in istruttoria era privo di provvedimento (iscrizione manuale).
-
-8)	Ticket#20210618011 - Richiesta evolutiva SIUS
-		Nella funzione di Ricerca Udienza SIUS, nella tabella dei risultati, veniva visualizzato 
-		un solo Giudice relatore anche se ne erano presenti 2.
-		Aggiunta visualizzazione secondo Giudice Relatore.
-		Modulo modificato:
-		/jsp/files/siap/sius/udienza/RicercaUdienza.jsp
-
-9)	Ticket#202105200113 - SIUS - Presa in carico altre BDI - Funzione Stato Esecuzione (SOLO DB)
-		-	202105200113.sql
-
-10)	Ticket#20210526011 - Anomalia SIES - Foglio Complementare (SOLO TEMPLATE)
-		-	template\siep\arc\SIEP_ARC_FOGLIO_COMP_ESP.rtf
-
-11)	Ticket#202106080116 — Motivazione revoca sospensione condizionale (SOLO TEMPLATE)
-		-	template\import\RichiestePmInCumuloRevocaBenefici.rtf
-
-12)	Ticket#20210610017 — CORREZIONE TEMPLATE - SIGE_OR_CONFLCOMPETENZA.rtf (SOLO TEMPLATE)
-		-	template\sige\or\SIGE_OR_CONFLCOMPETENZA.rtf
+4)	Ticket#20210709019 - Tribunale dei Minorenni di Roma - impossibile definizioni del procedimento
+		Correto modulo
+		-	siap\sico\security\toolbar_header.jsp
+		Gestiva UDS e TDS ma non TDSM e UDSM per cui non visualizzava alcuni bottoni.
