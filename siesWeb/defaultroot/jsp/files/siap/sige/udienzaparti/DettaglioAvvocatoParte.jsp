@@ -21,25 +21,26 @@
 <jsp:useBean id="idEventoUdienza"  	   scope="request" class="java.lang.String"/>
 
 <%
-	AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoParteUdienza.getAvvocato());
+AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoParteUdienza.getAvvocato());
 %>
 
 <body class="corpo">
 <table>
 	<tr>
 		<td class="LBG"><a href="Javascript:window.print();">
-			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-		<td class=LBG><font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Dettaglio Avvocato</font></td>
-			<!-- BOTTONE DI RITORNO --> 
-			<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>" />
+			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a>
+		</td>
+		<td class=LBG><font class="label">Funzione:</font>&nbsp;&nbsp;
+			<font class="campo">Dettaglio Avvocato</font>
+		</td>
+		<!-- BOTTONE DI RITORNO --> 
+		<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>" />
 	</tr>
 </table>
 
 <br><jsp:include page="<%=ICostantiPartiUdienza.PG_LOAD_SINTESIPARTEUDIENZA%>" /><br>
 
 <table cellspacing=2 cellpadding=2>
-
 	<tr>
 		<td class="l"><font class="label">Cognome</font></td>
 		<td class="l"><font class="campo"><%=lAvvocato.getCognome()%></font></td>
@@ -48,6 +49,26 @@
 		<td class="l"><font class="label">Nome</font></td>
 		<td class="l"><font class="campo"><%=lAvvocato.getNome()%>&nbsp;</font></td>
 	</tr>
+	<%-- MEV_21: aggiunti campi luogo e data di nascita e studio e pec e Stato Attività Difensore --%>
+  	<tr>
+		<td class="l"><font class="label">Comune di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita())%></font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescStatoNascita())%></font></td>
+	</tr>
+	<tr>
+<%
+String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) ? "-" : lAvvocato.getDescLuogoNasRegInde();
+%>
+		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero, "-")%></font></td>
+	</tr>
+  	<tr>
+		<td class="l"><font class="label">Data di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataNascita(),"dd-MM-yyyy"))%></font></td>
+	</tr>
 	<tr>
 		<td class="l"><font class="label">Foro</font></td>
 		<td class="l"><font class="campo"><%=lAvvocato.getForo()%></font></td>
@@ -55,6 +76,10 @@
 	<tr>
 		<td class="l"><font class="label">Indirizzo</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo(), "-")%></font></td>
+	</tr>
+  	<tr>
+		<td class="l"><font class="label">Con Studio in</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrComuneStudio()) %></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Telefono</font></td>
@@ -69,8 +94,16 @@
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail(), "-")%></font></td>
 	</tr>
 	<tr>
+		<td class="l"><font class="label">Pec</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getPec())%></font></td>
+	</tr>
+	<tr>
 		<td class="l"><font class="label">Codice Fiscale</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale(), "-")%></font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato Attività Difensore</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrNonAttivita())%></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Tipo</font></td>
@@ -79,7 +112,7 @@
 </table>
 
 <form>
-	<input type="hidden" name="<%=ICostantiPartiUdienza.CAMPO_ID_EVENTO_UDIENZA%>" value="<%=idEventoUdienza%>">  
+	<input type="hidden" name="<%=ICostantiPartiUdienza.CAMPO_ID_EVENTO_UDIENZA%>" value="<%=idEventoUdienza%>">
 </FORM>
 
 </body>

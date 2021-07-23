@@ -87,6 +87,7 @@ function Verify() {
 <%-- 		document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_NOME %>.focus; --%>
 // 		return false;
 // 	}
+	<%-- MEV_21: aggiunta or condition --%>
 	if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value == ""
 			|| document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value == "null") {
 		alert('Selezionare un difensore dalla lista');
@@ -230,9 +231,8 @@ if (visualizzaAvvocatiSiep) {
 </table>
 <table>
 	<tr>
-		<td class="l" >Cognome</td>
+		<td class="l">Cognome</td>
     	<td class="l">
-    		<%-- MEV_21: modificati nome e cognome ed aggiunti campi nascosti --%>
     		<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="<%=lAvv.getIdAvvocato()%>">
     		<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=lAvv.getCognome()%>" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>">
     	</td>
@@ -338,6 +338,7 @@ if (lAvv.getDataNascita() == null) {
 		<td class="l">Codice Fiscale</td>
 		<td class="l"><input type="text" readonly size=20 maxlength=16 value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="codice fiscale" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>"></td>
 	</tr>
+	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>
 	<tr>
 		<td class="l">Stato Difensore</td>
 		<td class="L">
@@ -489,7 +490,7 @@ if (lAvv.getDataNascita() == null) {
 			<%-- MEV_21: aggiunto evento onclick --%>
         	<input class="bottone" type="submit" value="Conferma" name="IA" onClick="Javascript:return EnableCombo();">
         	<%-- MEV_21: eliminato pulsante di INSERIMENTO manuale --%>
-<!--         <input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();"> -->
+<!--        <input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();"> -->
       	</td>
 	</tr>
 </table>

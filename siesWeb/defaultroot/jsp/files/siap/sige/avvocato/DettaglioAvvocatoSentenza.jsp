@@ -58,7 +58,7 @@ AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSige.getAvvocato());
 		<td class="l"><font class="label">Nome</font></td>
 		<td class="l"><font class="campo"><%=lAvvocato.getNome()%></font></td>
 	</tr>
-	<%-- MEV_21: aggiunti campi luogo e data di nascita e comune di residenza e pec --%>
+	<%-- MEV_21: aggiunti campi luogo e data di nascita e studio e pec e Stato Attività Difensore --%>
   	<tr>
 		<td class="l"><font class="label">Comune di Nascita</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita())%></font></td>
@@ -88,7 +88,7 @@ String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) ? "
 	</tr>
   	<tr>
 		<td class="l"><font class="label">Con Studio in</font></td>
-		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescComuneResidenza()) %></font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrComuneStudio()) %></font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Telefono</font></td>
@@ -102,7 +102,6 @@ String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) ? "
 		<td class="l"><font class="label">EMail</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail(), "-")%></font></td>
 	</tr>
-	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>
 	<tr>
 		<td class="l"><font class="label">Pec</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getPec())%></font></td>

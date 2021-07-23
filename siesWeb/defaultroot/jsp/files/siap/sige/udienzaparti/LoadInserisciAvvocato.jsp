@@ -1,14 +1,17 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
+<%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
 <%@ page import="siap.sico.avvocato.model.AvvocatoModel"%>
 <%@ page import="siap.sige.avvocato.action.ICostantiAvvocato"%>
 <%@ page import="siap.sige.avvocato.action.ICostantiAvvocatoFascicoloSige"%>
+<%@ page import="siap.sige.udienzaparti.action.ICostantiPartiUdienza"%>
 <%@ page import="siap.sius.luogodetenzione.action.ICostantiLuogoDetenzione"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
-<%@ page import="f3b.util.StringUtils"%>
+
 <%@ page import="java.util.Iterator"%>
-<%@ page import="siap.sige.udienzaparti.action.ICostantiPartiUdienza"%>
 
 <jsp:useBean id="modalita"               scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoAvvocato"           scope="request" class="java.lang.String"/>
@@ -19,8 +22,10 @@
 <jsp:useBean id="foro"                   scope="request" class="java.lang.String"/>
 <jsp:useBean id="comune"                 scope="request" class="java.lang.String"/>
 <jsp:useBean id="avvocato"               scope="request" class="siap.sico.avvocato.model.AvvocatoModel"/>
-<jsp:useBean id="anagraficaParteUdienza" scope="request" class="siap.sige.udienzaparti.model.AnagraficaPartiUdienzaModel" />
+<jsp:useBean id="anagraficaParteUdienza" scope="request" class="siap.sige.udienzaparti.model.AnagraficaPartiUdienzaModel"/>
 <jsp:useBean id="idEventoUdienza"  		 scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazione"           	 scope="request" class="java.lang.String"/> <!-- 20210620 MEV_21 -->
+<jsp:useBean id="statoAvv"			 	 scope="request" class="java.lang.String"/> <!-- 20210620 MEV_21 -->
 
 <%
 AvvocatoModel lAvv = avvocato;
@@ -35,10 +40,11 @@ AvvocatoModel lAvv = avvocato;
 <script language="JavaScript">
 var desktop;
 
-function Inserisci() {
-	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.udienzaparti.action.ActLoadInserisciDifensore";
-	document.LoadInserisciAvvocato.submit();
-}
+<%-- MEV_21: eliminato pulsante di INSERIMENTO manuale --%>
+// function Inserisci() {
+<%-- 	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.udienzaparti.action.ActLoadInserisciDifensore"; --%>
+// 	document.LoadInserisciAvvocato.submit();
+// }
 
 function ListaComuni(a_formname,a_fieldname) {
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
@@ -57,7 +63,9 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
-	if (document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value == "") {
+	<%-- MEV_21: aggiunta or condition --%>
+	if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value == ""
+			|| document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value == "null") {
 	    alert('Selezionare un difensore dalla lista');
 	    return false;
 	}
@@ -134,6 +142,18 @@ function Avvocato() {
 	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.udienzaparti.action.ActInserisciAvvocato";
 	document.LoadInserisciAvvocato.IA.disabled = true;
 }
+
+<%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
+function ListaAvvocatiRegInde(a_formname) {
+	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
+}
+
+//MEV_21: aggiunta funzione
+function EnableCombo() {
+	document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.disabled = false;
+	document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.disabled = false;
+	document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.disabled = false;
+}
 </script>
 </head>
 
@@ -155,8 +175,13 @@ function Avvocato() {
 <table>
 	<tr>
  		<td class="label">
-      		<a href="Javascript:ListaAvvocati('LoadInserisciAvvocato');">
-        	Seleziona dalla lista <img src="/images/filefolder.gif" border=0></a>
+ 			<%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
+<!--       		<a href="Javascript:ListaAvvocati('LoadInserisciAvvocato');"> -->
+<!--         		Seleziona dalla lista <img src="/images/filefolder.gif" border=0> -->
+<!--         	</a> -->
+			<a href="Javascript:ListaAvvocatiRegInde('LoadInserisciAvvocato');">
+         		Seleziona da RegInde <img src="/images/filefolder.gif" border="0">
+       		</a>
     	</td>
     	<td>&nbsp;&nbsp;&nbsp;</td>
   	</tr>
@@ -166,18 +191,43 @@ function Avvocato() {
 	<tr>
 	    <td class="l">Cognome</td>
 	    <td class="l">
-	    <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="<%=lAvv.getIdAvvocato()%>">
-		<input  size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=lAvv.getCognome()%>" name="<%= ICostantiAvvocato.CAMPO_COGNOME %>"></td>
+	    	<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="<%=lAvv.getIdAvvocato()%>">
+			<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=lAvv.getCognome()%>" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>">
+		</td>
 	</tr>
 	<tr>
 	    <td class="l">Nome</td>
-	    <td class="l"><input size=35 maxlength=35 title="Campo Nome" type="text" readonly value="<%=lAvv.getNome()%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"></td>
+	    <td class="l"><input size=35 maxlength=35 title="Campo Nome" type="text" readonly value="<%=lAvv.getNome()%>" name="<%=ICostantiAvvocato.CAMPO_NOME%>"></td>
 	</tr>
+<%-- MEV_21: aggiunti campi per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%
+String comuneNascita = "", comuneNascitaEstero = "";
+if (Utils.isPresent(lAvv.getDescStatoNascita())) {
+	if ("ITALIA".equalsIgnoreCase(lAvv.getDescStatoNascita()))
+		comuneNascita = lAvv.getDescLuogoNascita();
+	else
+		comuneNascitaEstero = lAvv.getDescLuogoNasRegInde();
+} else if (Utils.isPresent(lAvv.getDescLuogoNascita())) {
+	comuneNascita = lAvv.getDescLuogoNascita();
+}
+%>
 	<tr>
-	    <td class="l">Luogo di  Nascita</td>
+	    <td class="l">Comune di Nascita</td>
 	    <td class="L">
-	        <input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(lAvv.getDescLuogoNascita())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>" maxlength="35" size="35">
+	        <input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(comuneNascita)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>" maxlength="35" size="35">
 	    </td>
+	</tr>
+  	<tr>
+        <td class="l">Stato di Nascita</td>
+		<td class="L">
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
+        </td>
+	</tr>
+  	<tr>
+        <td class="l">Luogo di Nascita Estero</td>
+        <td class="l">
+			<input title="Luogo di Nascita Estero" readonly value="<%=StringUtils.toStringJSP(comuneNascitaEstero)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>" maxlength="35" size="35">
+		</td>
 	</tr>
 	<tr>
       	<td class="l">Data di nascita</td>
@@ -187,55 +237,69 @@ if (lAvv.getDataNascita() == null) {
 %>
 			<input type="text" readonly value ="" title="Giorno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>" value="" maxlength="2" size="2">
             -
-            <input type="text"readonly value ="" title="Mese Data di nascita" name="<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA %>" value="" maxlength="2" size="2">
+            <input type="text"readonly value ="" title="Mese Data di nascita" name="<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>" value="" maxlength="2" size="2">
             -
-            <input type="text" readonly value ="" title="Anno Data di nascita" name="<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA %>" value="" maxlength="4" size="4">
+            <input type="text" readonly value ="" title="Anno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>" value="" maxlength="4" size="4">
 <%
 } else {
 %>         
             <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getDayToString(lAvv.getDataNascita()))%>"  title="Giorno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
             -
-            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(lAvv.getDataNascita()))%>" title="Mese Data di nascita" name="<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(lAvv.getDataNascita()))%>" title="Mese Data di nascita" name="<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
             -
-            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getYearToString(lAvv.getDataNascita()))%>" title="Anno Data di nascita" name="<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA %>" value="" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getYearToString(lAvv.getDataNascita()))%>" title="Anno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>" value="" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 <%
 }
 %> 
 		</td>
   	</tr>
 	<tr>
-	 	<td class="l">Foro:</td>
+		<td class="l">Foro:</td>
 	 	<td class="l">
-			<select name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1"> 
+			<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1"> 
 				<%=foro%>
 	      	</select>
 	     </td>	
 	</tr>
 	<tr>
-	     <td class="l">Indirizzo</td>
-	     <td class="l"><input size=80 maxlength=200 title="Indirizzo" value="<%=StringUtils.toStringJSP(lAvv.getIndirizzo())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_INDIRIZZO %>"></td>
+		<td class="l">Indirizzo</td>
+		<td class="l"><input readonly size=80 maxlength=200 title="Indirizzo" value="<%=StringUtils.toStringJSP(lAvv.getIndirizzo())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>"></td>
 	</tr>
 	<tr>
-	     <td class="l">Comune di residenza</td>
-	     <td class="L">
-	        <input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA %>" maxlength="35" size="35">
-	     </td>
+		<td class="l">Con Studio in</td>
+		<td class="L">
+	     	 <%-- MEV_21: modificato campo per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%-- 		<input readonly title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35"> --%>
+			<input type="text" readonly title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
+		</td>
 	</tr>
 	<tr>
 	     <td class="l">Telefono</td>
-	     <td class="l"><input size=12 maxlength=12   title="Telefono" value="<%=StringUtils.toStringJSP(lAvv.getTelefono())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_TELEFONO %>"></td>
+	     <td class="l"><input size=12 maxlength=12 readonly title="Telefono" value="<%=StringUtils.toStringJSP(lAvv.getTelefono())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_TELEFONO%>"></td>
 	</tr>
 	<tr>
 	     <td class="l">Fax</td>
-	     <td class="l"><input size=12 maxlength=12  title="Fax" value="<%=StringUtils.toStringJSP(lAvv.getFax())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_FAX %>"></td>
+	     <td class="l"><input size=12 maxlength=12 readonly title="Fax" value="<%=StringUtils.toStringJSP(lAvv.getFax())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_FAX%>"></td>
 	</tr>
 	<tr>
 	     <td class="l">e-mail</td>
-	     <td class="l"><input size=50 maxlength=50  value="<%=StringUtils.toStringJSP(lAvv.getEMail())%>" title="e-mail" type="text" name="<%= ICostantiAvvocato.CAMPO_E_MAIL %>"></td>
+	     <td class="l"><input size=50 maxlength=50 readonly value="<%=StringUtils.toStringJSP(lAvv.getEMail())%>" title="e-mail" type="text" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
+	</tr>
+	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>	
+    <tr>
+		<td class="l">pec</td>
+		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lAvv.getPec())%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
 	</tr>
 	<tr>
 	     <td class="l">Codice Fiscale</td>
-	     <td class="l"><input size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="codice fiscale" type="text" name="<%= ICostantiAvvocato.CAMPO_CODICE_FISCALE %>"  ></td>
+	     <td class="l"><input size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="codice fiscale" type="text" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>"  ></td>
+	</tr>
+	<%-- MEV_21: aggiunto campo per chiamata a WS per individuare lista avvocato in RegInde --%>
+	<tr>
+		<td class="l">Stato Difensore</td>
+		<td class="L">
+           	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
+		</td>
 	</tr>
 	<tr>
 	     <td class="l" >Tipo Difensore (*)</td>
@@ -271,7 +335,7 @@ if (lAvv.getDataNascita() == null) {
 <div id="ufficio" style="visibility:hidden; position:relative; top:-73px; left:320px;">
 <table cellspacing=2 cellpadding=2>
 	<tr>
-		<td class="label"> Designato in Data   </td>
+		<td class="label">Designato in Data</td>
        	<td>
 			<input type="text" title="Giorno Data di Designazione" name="<%=ICostantiAvvocatoFascicoloSige.CAMPO_GIORNO_DATA_DESIGNAZIONE%>" value="<%=DateUtils.getSysDate("dd")%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
             -
@@ -345,7 +409,7 @@ if (lAvv.getDataNascita() == null) {
 	    <td class="l" width=30%>Istituto di Detenzione </td>
 	    <td class="l">
 	       	<input readonly Title="Istituto" name="Comune" value="" size=50>
-	       	<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>"size=50>
+	       	<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>"size=50>
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciAvvocato','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
@@ -378,8 +442,10 @@ if (lAvv.getDataNascita() == null) {
 <table cellspacing=2 cellpadding=2>
 	<tr>
 		<td colspan=2>
-			<input class="bottone" type="submit" value="Conferma" name="IA">  
-			<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
+			<%-- MEV_21: aggiunto evento onclick --%>
+			<input class="bottone" type="submit" value="Conferma" name="IA" onClick="Javascript:return EnableCombo();">
+			<%-- MEV_21: eliminato pulsante di INSERIMENTO manuale --%>
+<!-- 		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();"> -->
 		 </td>
 	</tr>
 </table>
