@@ -83,7 +83,11 @@
     AvvocatoModel lAvv = (AvvocatoModel)itx.next();
     %>
       <tr>
+        <% if ("NO".equals(lAvv.getFlagRegInde())) { %>
+        <td class=l><font class="cRosso"><%=StringUtils.toStringJSP(lAvv.getCognome(),"-") + " " + StringUtils.toStringJSP(lAvv.getNome(),"-")%><br>(non certificato RegInde)</font></td>
+        <% } else { %>
         <td class=l><%=StringUtils.toStringJSP(lAvv.getCognome(),"-") + " " + StringUtils.toStringJSP(lAvv.getNome(),"-")%></td>
+        <% } %>
         
         <%
         Collection listaFori = DecodificheManager.getInstance().getForoAll();  

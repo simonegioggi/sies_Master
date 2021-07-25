@@ -117,7 +117,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvv = new AvvocatoModel(aAvvocato);
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
-			siesLogger.debug(" CHIAVE SOGGETTO POSTO INSERIMENTO = " + lSequence);
+			siesLogger.debug("Inserito nuovo avvocato con id = " + lSequence);
 
 			lAvv.setIdAvvocato(lSequence);
 		} catch (DAOException ex) {
@@ -778,4 +778,58 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		return aAvvocato;
 	}
 
+	/**
+	 * MEV_21 
+	 */
+	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws F3BException {
+
+		Connection lConn = null;
+		AvvocatoSqlDAO lAvvSqlDao = null;
+		AvvocatoModel lAvvocato = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvSqlDao = new AvvocatoSqlDAO(lConn);
+			lAvvSqlDao.ricercaAvvocatoCertRegInde(lAvvMod);
+
+			lAvvSqlDao.start();
+			if (lAvvSqlDao.next()) {
+				lAvvocato = (AvvocatoModel) lAvvSqlDao.getModel();
+			}
+
+			lAvvSqlDao.stop();
+
+		} catch (Exception ex) {
+			siesLogger.error("Errore in fase di ricerca avvocato:ExRicercaAvvocatoCertRegInde ",ex);
+			throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
+		} finally {
+			cleanup(lAvvSqlDao);
+			cleanup(lConn);
+		}
+		return lAvvocato;
+	}
+	
+	// 20210623 MEV_21 Aggiornamento Avvocato caricato da Reginde.
+	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel aAvvocato) throws F3BException {
+
+		Connection lConn = null;
+		AvvocatoDAO lAvvDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvDao = new AvvocatoDAO(lConn);
+			lAvvDao.setDAOFromModelForUpdate(aAvvocato);
+			lAvvDao.update();
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException(
+					this.getClass().getName() + ".ExAggiornaAvvocatoDaReginde: Non posso inserire: " + ex);
+		} finally {
+			cleanup(lAvvDao);
+			cleanup(lConn);
+		}
+
+		return aAvvocato;
+	}
 }

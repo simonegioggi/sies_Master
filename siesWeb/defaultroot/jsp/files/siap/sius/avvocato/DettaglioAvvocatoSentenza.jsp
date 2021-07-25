@@ -23,9 +23,6 @@
 <%
 			AvvocatoModel lAvvocato = new AvvocatoModel(avvocatoFascSius
 			.getAvvocato());
-
-	System.out
-			.println(" mi trovo nella JSP Dettaglio Avvocato sentenza ");
 %>
 
 <body class="corpo">
@@ -68,6 +65,18 @@
 		<td class="l"><font class="campo"><%=lAvvocato.getNome()%>
 		&nbsp;</font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">Luogo di nascita</font></td>
+		<td class="l"><font class="campo"><%=lAvvocato.getDescLuogoNascitaReginde()%></font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Data di Nascita</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataNascita(),"dd-MM-YYYY"))%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
+
 	<tr>
 		<td class="l"><font class="label">Foro</font></td>
 		<td class="l"><font class="campo"><%=lAvvocato.getForo()%></font></td>
@@ -76,6 +85,14 @@
 		<td class="l"><font class="label">Indirizzo</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo(), "-")%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">Comune di Residenza</font></td>
+		<td class="l"><font class="campo"><%=lAvvocato.getDescrComuneStudio()%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
+
 	<tr>
 		<td class="l"><font class="label">Telefono</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getTelefono(), "-")%></font></td>
@@ -88,6 +105,14 @@
 		<td class="l"><font class="label">EMail</font></td>
 		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail(), "-")%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">pec</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getPec(), "-")%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
+
 	<tr>
 		<td class="l"><font class="label">Codice Fiscale</font></td>
 		<td class="l"><font class="campo"><%=StringUtils

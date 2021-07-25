@@ -460,4 +460,50 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		setStatement(query);
 	}
 
+	/**
+	 * MEV_21 si ricerca l'avvocato REGINDA
+	 * @param lAvvMod
+	 * @throws DAOException
+	 */
+	public void ricercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws DAOException {
+
+		String lStatement = new String("");
+
+		lStatement += " SELECT ID_AVVOCATO, COGNOME, NOME, FORO, INDIRIZZO, "
+				+ "TELEFONO, FAX, E_MAIL, COD_FISCALE, PROVINCIA, AVVOCATO.CAP, "
+				+ "FLAG_VISUALIZZA, PEC, FLAG_REGINDE, DESCR_COMUNE_STUDIO, "
+				+ "COD_STATO_NASCITA_AVV, DESC_LUOGO_NAS_REGINDE, ID_AVVOCATO_BONIFICATO, "
+				+ "AVVOCATO.NOTE NOTEAVV, AVVOCATO.COD_OPERATORE_INSERIMENTO, "
+				+ "AVVOCATO.DATA_INSERIMENTO, AVVOCATO.COD_OPERATORE_AGGIORNAMENTO, "
+				+ "AVVOCATO.COD_UFFICIO_INSERIMENTO, AVVOCATO.DATA_AGGIORNAMENTO, "
+				+ "null as DESCRTIPO, AVVOCATO.DATA_SOSPESO_FINO_AL, "
+				+ "AVVOCATO.DATA_RADIATO_DAL, AVVOCATO.COD_NON_ATTIVITA, "
+				+ "AVVOCATO.COD_LUOGO_NASCITA, AVVOCATO.COD_COMUNE_RESIDENZA, "
+				+ "AVVOCATO.FLAG_CANCELLATO, DESCR.DESCRIZIONE DESCR_COMUNE_RESIDENZA, "
+				+ "DESNASCITA.DESCRIZIONE DESCR_LUOGO_NASCITA, AVVOCATO.DATA_NASCITA, "
+				+ "AVVOCATO.COD_UFFICIO_APPARTENENZA, CG.RV_MEANING DESCR_NON_ATTIVITA, "
+				+ "ID_AVVOCATO_STANDARD"
+				+ ", null as DATA_INIZIO_VALIDITA ";
+
+		lStatement += " FROM AVVOCATO"
+		//		+ ", AVVOCATO_FASCICOLO_SIEP, CG_REF_CODES AVVTIPODESC"
+				+ ",CG_REF_CODES CG, COMUNE DESNASCITA, COMUNE DESCR ";
+		lStatement += " WHERE";
+		lStatement += " FLAG_REGINDE='SI' ";
+		lStatement += " AND DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA";
+		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA";
+		//lStatement += " AND AVVTIPODESC.RV_LOW_VALUE=AVVOCATO_FASCICOLO_SIEP.COD_TIPO_AVVOCATO";
+		//lStatement += " AND AVVTIPODESC.RV_DOMAIN='TIPO_AVVOCATO'";
+		lStatement += " AND DESCR.COD_COMUNE = COD_COMUNE_RESIDENZA";
+		lStatement += " AND DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA";
+		lStatement += " AND CG.RV_DOMAIN  = 'NON_ATTIVITA'";
+		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA";
+		lStatement += " AND NOME = '" + StringUtils.convertSqlString(lAvvMod.getNome().toUpperCase()) + "'";
+		lStatement += " AND COGNOME = '" + StringUtils.convertSqlString(lAvvMod.getCognome().toUpperCase())
+				+ "'";
+		lStatement += " AND COD_FISCALE = '"
+				+ StringUtils.convertSqlString(lAvvMod.getCodiceFiscale().toUpperCase()) + "'";
+
+		setStatement(lStatement);
+	}
 }
