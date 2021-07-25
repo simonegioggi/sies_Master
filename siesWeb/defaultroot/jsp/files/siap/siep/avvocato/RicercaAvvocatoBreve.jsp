@@ -1,8 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="siap.siep.avvocato.action.ICostantiAvvocato" %>
 <%@ page import="siap.siep.avvocato.model.AvvocatoModel" %>
+
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.Collection" %>
+
+<%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils" %>
 <%@ page import="f3b.web.IWebConstants"%>
 
@@ -123,9 +126,9 @@
 				'<%=StringUtils.cStrForJS(lAvv.getFax())%>','<%=StringUtils.cStrForJS(lAvv.getEMail())%>',
 				'<%=StringUtils.cStrForJS(lAvv.getPec())%>','<%=StringUtils.cStrForJS(lAvv.getCodiceFiscale())%>',
 				'<%=StringUtils.cStrForJS(lAvv.getDescLuogoNascita())%>','<%=StringUtils.cStrForJS(lAvv.getDescrStatoNascita())%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita().getTime(),"dd"))%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita().getTime(),"MM"))%>',
-				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita().getTime(),"yyyy"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"dd"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"MM"))%>',
+				'<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"yyyy"))%>',
 				'<%=StringUtils.cStrForJS(lAvv.getDescrComuneStudio())%>','<%=StringUtils.cStrForJS(lAvv.getDescrNonAttivita())%>');">
 				<img align="middle" src="/images/fileselected.gif" border="0" style="vertical-align: super;" alt="Inserisci">
 			</a>

@@ -28,22 +28,6 @@ import siap.sige.udienzaparti.dao.PartiUdienzaDifensoreSqlDAO;
 import siap.sige.udienzaparti.model.AvvocatoParteModel;
 import siap.sige.udienzaparti.model.PartiUdienzaDifensoreModel;
 
-/**
- * <p>
- * Title: AvvocatoController
- * </p>
- * <p>
- * Description: Classe Controller per Avvocato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia S.p.A.
- * </p>
- *
- * @version 1.0
- */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AvvocatoController extends SiapController implements IAvvocato {
 
@@ -1028,6 +1012,57 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		}
 
 		return aAvvocatoIns;
+	}
+
+	// MEV_21: aggiunto metodo di ricerca avvocato certificato reginde
+	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel amParam) throws F3BException {
+
+		Connection c = null;
+		AvvocatoSqlDAO asdao = null;
+		AvvocatoModel am = null;
+
+		try {
+			c = getDBConnection();
+			asdao = new AvvocatoSqlDAO(c);
+			asdao.ricercaAvvocatoCertRegInde(amParam);
+			asdao.start();
+			if (asdao.next()) {
+				am = (AvvocatoModel) asdao.getModel();
+			}
+			asdao.stop();
+		} catch (Exception ex) {
+			siesLogger.error(getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
+			// throw new F3BException(getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
+		} finally {
+			cleanup(asdao);
+			cleanup(c);
+		}
+		// valore di ritorno
+		return am;
+	}
+
+	// MEV_21: aggiunto metodo di aggiornamento avvocato da reginde
+	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel am) throws F3BException {
+
+		Connection c = null;
+		AvvocatoDAO adao = null;
+
+		try {
+			c = getDBConnection();
+			adao = new AvvocatoDAO(c);
+			adao.setDAOFromModelForUpdate(am);
+			adao.update();
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException(
+					this.getClass().getName() + ".ExAggiornaAvvocatoDaReginde - Non posso inserire: " + ex);
+		} finally {
+			cleanup(adao);
+			cleanup(c);
+		}
+
+		return am;
 	}
 
 }

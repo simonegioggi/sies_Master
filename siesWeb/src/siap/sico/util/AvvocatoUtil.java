@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import f3b.util.F3BException;
+import siap.sico.SICOException;
 import siap.sico.decodifiche.controller.IComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.siep.avvocato.model.AvvocatoModel;
@@ -17,6 +18,10 @@ public class AvvocatoUtil {
 
 	public static ComuneModel calcolaComuneNascita(String cf) throws F3BException {
 
+		if (cf.length()<16) {
+			throw new SICOException(SICOException.USER_MESSAGE,
+					"Codice Fiscale "+cf+" non valido");
+		}
 		// Codice Comune Catastale
 		String ccc = cf.substring(11, 15).toUpperCase();
 
@@ -34,12 +39,17 @@ public class AvvocatoUtil {
 				ccc = ccc.replace(ch, sostituisciCarattere(ch));
 		}
 
-		// ricavo il comune dal COD_CATASTALE_COMUNE
-		IComune ic = SICOLookupRemote.getComuneRemote();
-		ComuneModel cm = new ComuneModel(ic.ExRicercaComuneByCodCatastale(ccc));
-
-		// valore di ritorno
-		return cm;
+		try {
+			// ricavo il comune dal COD_CATASTALE_COMUNE
+			IComune ic = SICOLookupRemote.getComuneRemote();
+			ComuneModel cm = new ComuneModel(ic.ExRicercaComuneByCodCatastale(ccc));
+	
+			// valore di ritorno
+			return cm;
+		} catch (Exception ex) {
+			throw new F3BException(ex);
+		}
+			
 	}
 
 	private static char sostituisciCarattere(char ch) {

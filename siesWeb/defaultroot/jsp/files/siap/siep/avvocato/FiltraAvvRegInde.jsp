@@ -17,7 +17,7 @@ function trim(string) {
 	return string.replace(/(^\s*)|(\s*$)/g,'');
 }
 
-function Verify(id) {
+function Verify(obj) {
 	var ritorno = true;
 	if ((trim(document.f.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value).length < 2
 			|| trim(document.f.<%=ICostantiAvvocato.CAMPO_NOME%>.value).length == 1
@@ -43,7 +43,7 @@ function Verify(id) {
     	}
     	ritorno = false;
   	}
-	if (id.id == "sies") {
+	if (obj.id == "sies") {
 		document.f.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.avvocato.action.ActRicercaAvvocato";
 	} else {
 		document.f.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.avvocato.action.ActRicercaAvvocatoRegInde";

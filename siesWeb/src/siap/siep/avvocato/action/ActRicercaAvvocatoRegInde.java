@@ -15,9 +15,7 @@ import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitE
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.WsServiziInterrogazioneInterni_PortType;
 import it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.WsServiziInterrogazioneInterni_ServiceLocator;
 import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
-import siap.sico.util.AvvocatoUtil;
 import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.model.AvvocatoModel;
 
@@ -31,7 +29,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 	public String processRequest() throws F3BException {
 
 		AvvocatoModel am = new AvvocatoModel();
-		List v = null;
+		List listaAvvocati = null;
 		am.setCognome(getRequestStringParameter(CAMPO_COGNOME));
 		am.setNome(getRequestStringParameter(CAMPO_NOME));
 		am.setForo(getRequestStringParameter(CAMPO_FORO));
@@ -55,9 +53,9 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 				siesLogger.debug("COA + Foro: " + foro);
 			}
 			// inizio chiamata al servizio REGINDE
+			String endpointAddress = F3BProperties.getProperty("EndpointAddress");
 			WsServiziInterrogazioneInterni_ServiceLocator service = new WsServiziInterrogazioneInterni_ServiceLocator();
-			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(
-					F3BProperties.getProperty("EndpointAddress"));
+			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(endpointAddress);
 			System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
 			System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
 			System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
@@ -66,7 +64,8 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			WsServiziInterrogazioneInterni_PortType port = service.getServiziInterrogazioneInterniBeanPort();
 			Soggetto[] listaSoggetti = null;
 			siesLogger.debug(
-					"Chiamo ricercaSoggettoComplete(cognome, nome, codiceFiscale, indirizzo, codiceEnte, orderBy, asc)");
+					"Chiamo ricercaSoggettoComplete(cognome, nome, codiceFiscale, indirizzo, codiceEnte, orderBy, asc) su "
+							+ endpointAddress);
 			// Gestione CF: il sistema ricercherà tutti gli avvocati con il codice fiscale indicato in tutti i
 			// fori, non considerando il contenuto degli altri campi!!!
 			if (Utils.isPresent(am.getCodiceFiscale()))
@@ -77,9 +76,9 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 						am.getNome() != null ? am.getNome() : "", null, null, foro, null, null);
 			siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
-				v = new ArrayList(Arrays.asList(listaSoggetti));
-				siesLogger.debug("Elementi trovati: " + v.size());
-				if (v.size() > 200) // max 200 avvocati
+				listaAvvocati = new ArrayList(Arrays.asList(listaSoggetti));
+				siesLogger.debug("Elementi trovati: " + listaAvvocati.size());
+				if (listaAvvocati.size() > 200) // max 200 avvocati
 					throw new SearchLimitException();
 			} else
 				siesLogger.debug("Nessun Avvocato trovato!");
@@ -88,18 +87,18 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			setRequestAttribute("msg",
 					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca!");
 		} catch (Exception e) {
-			siesLogger.error("Errore in " + getClass().getName() + ": " + e.toString());
-			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())
-					&& e.getMessage().contains("Unrecognized")) {
+			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())) {
 				siesLogger.error("Errore in " + getClass().getName() + ": " + e.getMessage());
 				setRequestAttribute("msg",
 						"Attenzione: collegamento con RegIndE assente!\\nE' possibile effettuare la ricerca del Difensore su SIES!");
-			}
+			} else
+				siesLogger.debug("Nessun Avvocato trovato!");
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
-		setRequestAttribute("avvocato", v);
+		setRequestAttribute("listaAvvocati", listaAvvocati);
 
 		return PG_RICERCA_AVVOCATO_REGINDE;
 	}
+
 }

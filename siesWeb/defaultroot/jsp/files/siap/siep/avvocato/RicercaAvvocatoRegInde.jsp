@@ -22,8 +22,8 @@
 <%@ page import="siap.siep.avvocato.action.ICostantiAvvocato"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
 
-<jsp:useBean id="avvocato" 	scope="request" class="java.util.ArrayList"/>
-<jsp:useBean id="msg"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="listaAvvocati" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="msg"			scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -50,7 +50,7 @@ function avvocati() {
 		}
 		return;
 	}
-	if ("<%=avvocato.size()%>" == 0) {
+	if ("<%=listaAvvocati.size()%>" == 0) {
   		alert("Attenzione! Nessun Difensore trovato in ReGIndE.\nE' possibile effettuare la ricerca del Difensore su SIES!");
   		buttonSies.style.visibility = "visible";
 		buttonSies.disabled = false;
@@ -59,7 +59,7 @@ function avvocati() {
 }
 
 function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefiscale,luogoNascita,nazione,giornoNascita,meseNascita,annoNascita,descComuneStudio,stato) {
-   	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value = id;
+	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value = id;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value = cognome;
 	if (nome == "-") {
  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_NOME%>.value = "";
@@ -85,7 +85,7 @@ function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefi
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value = meseNascita;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value = annoNascita;
 	<%-- 20210607	MEV Scheda-21  --%>
-	<%-- 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value = residenza; --%>
+	<%-- window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value = residenza; --%>
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>.value = descComuneStudio;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.value = stato;
 
@@ -121,7 +121,7 @@ function altreInfo(idRecord) {
   
 <form name="f">
 <%
-if (avvocato.size() > 0 && avvocato.size() < 201) {
+if (listaAvvocati.size() > 0 && listaAvvocati.size() < 201) {
 %>
 <table width="100%">
   	<tr>
@@ -135,7 +135,7 @@ if (avvocato.size() > 0 && avvocato.size() < 201) {
   	</tr>
 <%
 	int id_record = 0;
-	Iterator iter = avvocato.iterator();
+	Iterator iter = listaAvvocati.iterator();
 	boolean testAvvocatiValidi = false;
     while (iter.hasNext()) {
     	id_record += 1;

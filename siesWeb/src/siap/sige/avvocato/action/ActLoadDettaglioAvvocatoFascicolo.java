@@ -1,13 +1,5 @@
 package siap.sige.avvocato.action;
 
-/**
-* <p>Title: ActLoadDettaglioAvvocatoFascicolo</p>
-* <p>Description: Classe Action per la load dettaglio di Avvocato - Sentenza</p>
-* <p>Copyright: Copyright (c) 2008</p>
-* <p>Company: Eutelia</p>
-* @version 1.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Vector;
 
@@ -36,11 +28,6 @@ public class ActLoadDettaglioAvvocatoFascicolo extends ActionSiap implements ICo
 		lAvvFascMod.setFasSigeIdFascicoloSige(
 				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
 						.getIdFascicoloSige());
-		// STUB 24/2/2003 (gianluca)
-		// Ho lasciato il doppio model, eventualmente per affinare ricerche sull'avvocato
-		// dato che in questa fase le esigenze non sono chiarissime
-		// In questa fase è ovviamente ridondante.
-		// To do : verificare effettiva necessità, e qualora serva, eliminare AvvocatoModel
 
 		// chiama il controller
 		// AvvocatoController lCtrl = new AvvocatoController();

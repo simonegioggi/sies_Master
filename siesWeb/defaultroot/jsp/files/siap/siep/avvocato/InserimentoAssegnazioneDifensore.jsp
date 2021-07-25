@@ -4,6 +4,7 @@
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
+<%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 <%@ page import="siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
 <%@ page import="siap.siep.avvocato.action.ICostantiAvvocato"%>
@@ -27,10 +28,6 @@
 
 <%
 AvvocatoModel lAvv = avvocato;
-//   if ( lAvv == null )
-//   {
-//     lAvv = new AvvocatoModel();
-//   }
 %>
 
 <html>
@@ -52,14 +49,75 @@ function EnableCombo() {
 }
 
 function Inserisci() {
+  	// MEV_21 - Aggiunti controlli per inserimento avvocato non certificato.
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
+		alert('Il Cognome è obbligatorio');
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COGNOME %>.focus;
+		return false;
+	}
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_NOME%>.value.length==0 ) {
+		alert('Il Nome è obbligatorio');
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_NOME %>.focus;
+		return false;
+	}
+  	
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value=='039') {
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value="";
+		if (document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.value.length==0) {
+			alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
+			document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+			return false;
+		}
+	} else 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value!='-') {
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.value='';
+		cancellaCodComuneReale();
+	}
+
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value.length > 0 	&&
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value.length > 0 ) {
+			alert('Il Comune di Nascita e il luogo di Nascita Estero sono alternativi');
+			document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+			return false;
+	}
+		
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value.length==1)
+		document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value;
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
+		document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value;
+
+	var data_to_verify=document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value;
+	if (! ControllaData(data_to_verify)) {
+		alert('Data di nascita non valida');
+		return false;
+	}
+
+<%-- 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value.length<11 ) { --%>
+// 		alert('Il Codice Fiscale è obbligatorio');
+<%-- 		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_CODICE_FISCALE %>.focus; --%>
+// 		return false;
+// 	}
+
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.value == "-") {
+		alert('Il tipo difensore è obbligatorio');
+		return false;
+	}
+	
+	
 	<%-- document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore"; --%>
 	document.LoadModificaAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActInserisciAvvocato";
 	document.LoadModificaAvvocato.submit();
 }
 
 function ListaComuni(a_formname,a_fieldname) {
-	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
+	if (document.LoadModificaAvvocato.lTipoInserimento.value != "reginde")
+		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
 }
+
+<!-- 20210524	MEV Scheda-21 -->
+function ListaComuniNascita(a_formname,a_fieldname) {
+	if (document.LoadModificaAvvocato.lTipoInserimento.value != "reginde")
+  		desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
+}      
 
 function ListaAvvocati(a_formname) {
 	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocato&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=550,height=500");
@@ -69,12 +127,22 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 	desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.istitutodetenzione.action.ActLoadListaIstitutoDetenzione&formname="+a_formname+"&fieldname="+a_fieldname+"&field2="+a_field2, "Ricerca_Istituto_Detenzione","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=500,height=500");
 }
 
+function cancellaCodComuneReale() {
+	document.LoadModificaAvvocato.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
+}
+
 function Verify() {
 	if (document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value == "") {
   		alert('Selezionare un difensore dalla lista');
   		return false;
 	}
 
+	// MEV_21 - 20210720
+	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
+		alert('Il Cognome è obbligatorio');
+		document.LoadModificaAvvocato.<%= ICostantiAvvocato.CAMPO_COGNOME %>.focus;
+		return false;
+	}
 	// MEV 29 - 07/2015 Aggiunto controllo su presenza Foro
 	if (document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value == "") {
   		alert('Selezionare il Foro');
@@ -92,6 +160,7 @@ function Verify() {
     	alert('Il motivo della designazione è obbligatorio');
       	return false;
   	}
+  	
 	Avvocato();
 }
 
@@ -120,6 +189,8 @@ function caricamento() {
 	var motivoDes = document.getElementById('motivoDes');
 	ufficioSotto.style.top = '-135px';
 	var conferma = document.getElementById('conferma');
+	var confermaBtn = document.getElementById('confermaBtn');
+	var inserimento = document.getElementById('inserimento');
 	conferma.style.visibility = 'visible';
 	fiducia.style.visibility = 'hidden';
 
@@ -131,6 +202,10 @@ function caricamento() {
 	    ufficioSotto.style.visibility = 'visible';
 	    motivoDes.style.visibility = 'visible';
 	    conferma.style.visibility = 'visible';
+		if(inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
+		else
+			confermaBtn.style.visibility = 'visible';
 	    conferma.style.top = '-130px';
  	}
 
@@ -141,10 +216,10 @@ function caricamento() {
 	    motivoDes.style.visibility = 'hidden';
 	    conferma.style.visibility = 'visible';
 	    conferma.style.top = '-400px'
-		if(inserimento.style.visibility= 'visible')
-			confermaBtn.style.visibility= 'hidden'
+		if(inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
 		else
-			confermaBtn.style.visibility= 'visible'
+			confermaBtn.style.visibility = 'visible';
   	}
 
   	if (valore == '-') {
@@ -154,10 +229,10 @@ function caricamento() {
 	    motivoDes.style.visibility = 'hidden';
 	    conferma.style.visibility = 'visible';
 	    conferma.style.top = '-400px';
-		if(inserimento.style.visibility= 'visible')
-			confermaBtn.style.visibility= 'hidden'
+		if(inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
 		else
-			confermaBtn.style.visibility= 'visible'
+			confermaBtn.style.visibility = 'visible';
   	}
 
   	if (valore == '03') { // Della Fase di Giudizio
@@ -167,11 +242,35 @@ function caricamento() {
 	    motivoDes.style.visibility = 'hidden';
 	    conferma.style.visibility = 'visible';
 	    conferma.style.top = '-400px';
-		if(inserimento.style.visibility= 'visible')
-			confermaBtn.style.visibility= 'hidden'
+		if(inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
 		else
-			confermaBtn.style.visibility= 'visible'
+			confermaBtn.style.visibility = 'visible';
   	}
+  	// 20210721 Controllo tipo inserimento non Reginde
+	var lTipoIns = document.LoadModificaAvvocato.lTipoInserimento.value;
+	if (lTipoIns != 'reginde' ) {
+		document.getElementById('inserimento').style.visibility = 'visible';
+		document.getElementById('confermaBtn').style.visibility = 'hidden';
+		document.getElementById('ricReginde').style.visibility = 'hidden';
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>').disabled = false;
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_FORO%>').disabled = false;
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_TELEFONO%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_FAX%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_E_MAIL%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
+		document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;
+	}
 }
 
 function caricaDescComuneForo (foro) {
@@ -294,7 +393,10 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
   	<tr>
 	    <td class="l">Comune di Nascita</td>
 	    <td class="L">
-      		<input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(comuneNascita)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>" maxlength="35" size="35">
+      		<input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(comuneNascita)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>" maxlength="35" size="35" onChange="cancellaCodComuneReale();">
+      		<a href="Javascript:ListaComuniNascita('LoadModificaAvvocato','<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>');" >
+				<img src="/images/filefolder.gif" border=0>
+			</a>
     	</td>
   	</tr>
   	<tr>
@@ -306,7 +408,6 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 		<td class="L">
           	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
         </td>
-		</td>
 	</tr>
   	<tr>
         <td class="l">Luogo di Nascita Estero</td>
@@ -356,6 +457,9 @@ if (lAvv.getDataNascita() == null) {
         <td class="L">
 <%--           	<input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35"> --%>
 			<input type="text" readonly title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="35" size="35">
+      		<a href="Javascript:ListaComuni('LoadModificaAvvocato','<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO %>');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
         </td>
     </tr>
 	<tr>
@@ -390,7 +494,7 @@ if (lAvv.getDataNascita() == null) {
 		</td>
 	</tr>
 	<tr>
-		<td class="l" >Stato Difensore</font></td>
+		<td class="l" >Stato Difensore</td>
 		<td class="L">
            	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
 		</td>
@@ -546,6 +650,8 @@ if (!"".equals(lTipoFunzione)) {
 <input type="HIDDEN" name="<%=ISIAPCostantiWeb.CAMPO_AZIONE_CHIAMANTE%>" value=<%=AzioneChiamante%>>
 <input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="">
+<input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
+<input type="HIDDEN" name="lTipoInserimento" value="reginde">
 </form>
 
 <script language="JavaScript" type="text/javascript">

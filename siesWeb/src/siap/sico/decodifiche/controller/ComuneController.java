@@ -353,15 +353,18 @@ public class ComuneController extends SiapController implements IComune {
 			} else {
 				csdao.ricercaComuneByCodCatastale(ccc);
 				csdao.start();
-				if (csdao.next())
+				if (csdao.next()) {
 					cm = (ComuneModel) csdao.getModelComuneCcc();
+				} else {
+					throw new SICOException(SICOException.USER_MESSAGE,
+						"Non esiste in SIES alcun comune con il codice catastale "+ccc+" estratto dal Codice Fiscale dell'Avvocato.\b Inviare segnalazione all'Help Desk!");
+				}
 				csdao.stop();
 			}
-			
-		} catch (Exception e) {
-			siesLogger.error("Exception: " + e);
-			throw new F3BException(
-					"ComuneController.ExRicercaComuneByCodCatastale: Non posso leggere  : " + e);
+
+		} catch (DAOException daoex) {
+			siesLogger.error("Exception: " + daoex);
+			throw new SICOException("ComuneController.ExRicercaComuneByCodCatastale: " + daoex);
 		} finally {
 			cleanup(csdao);
 			cleanup(c);
