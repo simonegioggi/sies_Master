@@ -12,6 +12,7 @@ import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.avvocato.model.AvvocatoModel;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.util.AvvocatoUtil;
 import siap.sico.web.ActionSiap;
@@ -72,8 +73,80 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		// MEV_21: controllo se la ricerca proviene da Reginde, da SIES o si fa un nuovo inserimento.
 		BigDecimal idAvvocato = null;
 		boolean flagReginde = false;
-		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
-			flagReginde = true;
+
+		// 20210722 MEV_21 Si recuperano tutte le informazioni dalla Form.
+		// Recupero Codice e descrizione comune di nascita.
+		AvvocatoModel amReginde = null;
+		Date dataNascita = null;
+		String codLuogoNascita = "-";
+		String codProvincia = "-";
+		String codCap = null;
+		String codNonAttivita = "-";
+		String descCodLuogoNascita = "";
+		String descLuogoNascitaReginde = "";
+		ComuneModel comuneNascita = null;
+		// 20210722 MEV_21 Controllo e valorizzazione comuneNascita.
+		// Se presente, dal codice comune (e dalla descrizione).
+		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+			comuneNascita = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+			codLuogoNascita = comuneNascita.getCodComune();
+			codProvincia = comuneNascita.getCodProvincia();
+			codCap = comuneNascita.getCap();
+			descCodLuogoNascita = comuneNascita.getDescrizione();
+
+			// altrimenti dalla sola descrizione (rischio omonimi).
+		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+			comuneNascita = new ComuneModel(
+					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+			descCodLuogoNascita = comuneNascita.getDescrizione();
+			codLuogoNascita = comuneNascita.getCodComune();
+			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
+		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
+				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
+			comuneNascita = AvvocatoUtil
+					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+		}
+
+		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
+			descLuogoNascitaReginde = getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+
+		// Recupero Codice e descrizione comune di residenza.
+		String codLuogoResidenza = "-";
+		ComuneModel comuneResidenza = null;
+		String descLuogoResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)
+				? getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)
+				: null;
+		if (Utils.isPresent(descLuogoResidenza)) {
+			try {
+				comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
+			} catch (Exception e) {
+				siesLogger.info(e.getMessage());
+				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+			}
+			if (!Utils.isNullObj(comuneResidenza)) {
+				codLuogoResidenza = comuneResidenza.getCodComune();
+				descLuogoResidenza = comuneResidenza.getDescrizione();
+			}
+		}
+
+		// Recupero dataNascita, stato Attività Avvocato.
+		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
+				&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
+						&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+			dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
+					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+		if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
+			codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
+
+		// 20210726 Avvocato Recuperato da RegInde o da SIES
+		if (getRequestStringParameter(CAMPO_ID_AVVOCATO) != null) {
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
+				flagReginde = true;
 			// Provengo da Reginde: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
 			// se esiste lo aggiorno, altrimenti inserisco nuovo avvocato da Reginde su SIES!
 
@@ -85,65 +158,6 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			lAvvCertRegSies.setFlagRegInde("SI");
 			lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
 
-			// 20210623 MEV_21 Si recuperano tutte le informazioni dalla Form.
-			// Recupero Codice e descrizione comune di nascita.
-			AvvocatoModel amReginde = null;
-			Date dataNascita = null;
-			String codLuogoNascita = "-";
-			String codProvincia = "-";
-			String codCap = null;
-			String codNonAttivita = "-";
-			ComuneModel comuneNascita = null;
-			String descCodLuogoNascita = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
-					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-					: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
-			if (Utils.isPresent(descCodLuogoNascita)) {
-				try {
-					comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
-				} catch (Exception e) {
-					siesLogger.info(e.getMessage());
-					// algortimo di omocodia
-					comuneNascita = AvvocatoUtil
-							.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-				}
-				if (!Utils.isNullObj(comuneNascita)) {
-					if ("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))) {
-						codLuogoNascita = comuneNascita.getCodComune();
-						codProvincia = comuneNascita.getCodProvincia();
-						codCap = comuneNascita.getCap();
-						descCodLuogoNascita = comuneNascita.getDescrizione();
-					}
-				}
-			}
-
-			// Recupero Codice e descrizione comune di residenza.
-			String codLuogoResidenza = "-";
-			ComuneModel comuneResidenza = null;
-			String descLuogoResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)
-					? getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)
-					: null;
-			if (Utils.isPresent(descLuogoResidenza)) {
-				try {
-					comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
-				} catch (Exception e) {
-					siesLogger.info(e.getMessage());
-				}
-				if (!Utils.isNullObj(comuneResidenza)) {
-					codLuogoResidenza = comuneResidenza.getCodComune();
-					descLuogoResidenza = comuneResidenza.getDescrizione();
-				}
-			}
-
-			// 20210622 Recupero dataNascita, stato Attività Avvocato.
-			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
-					&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
-							&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
-				dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
-						ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
-						ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
-			if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
-				codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
-
 			amReginde = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
 					getRequestStringParameter(CAMPO_NOME),
 					getRequestStringParameter(CAMPO_FORO).toUpperCase(), null,
@@ -154,7 +168,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 					getCodUfficioUtenteConnesso(), null, null, null, codNonAttivita, "00000", null, "N", null,
 					getRequestStringParameter(CAMPO_CODICE_FISCALE), codProvincia, codCap, new BigDecimal(1),
 					null, getRequestStringParameter(CAMPO_PEC), "SI", descLuogoResidenza,
-					getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, descCodLuogoNascita, null);
+					getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null, descLuogoNascitaReginde, null);
 
 			/*
 			 * 20210623 MEV_21 Se l'avvocato certificato RegInde non è presente in SIES si inserisce Se è già
@@ -184,19 +198,6 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			idAvvocato = amReginde.getIdAvvocato();
 		} else {
 			// 20210720 MEV_21 Avvocato non presente sia in RegInde che in SIES.
-			// Controlli Comuni di Nascita e Residenza
-			try {
-				if (!"".equals(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA).trim())) {
-					getCodComuneByDescr(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA));
-				}
-				if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)) {
-					getCodComuneByDescr(
-							getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO));
-				}
-			} catch (Exception ex) {
-				throw new F3BException(ex);
-			}
-
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 		}
 
@@ -337,57 +338,13 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 				lAvvModRic.setPec(getRequestStringParameter(CAMPO_PEC));
 				lAvvModRic.setFlagCancellato("N");
 				lAvvModRic.setCodiceFiscale(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-
-				// Recupero Codice e descrizione comune di nascita.
-				Date dataNascita = null;
-				String codLuogoNascita = "-";
-				String codProvincia = "-";
-				String codCap = null;
-				String codNonAttivita = "-";
-				ComuneModel comuneNascita = null;
-				String descCodLuogoNascita = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
-						? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
-						: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
-				if (Utils.isPresent(descCodLuogoNascita)) {
-					try {
-						comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
-					} catch (Exception e) {
-						siesLogger.info(e.getMessage());
-						// algortimo di omocodia
-						comuneNascita = AvvocatoUtil
-								.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-					}
-					if (!Utils.isNullObj(comuneNascita)) {
-						if ("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))) {
-							codLuogoNascita = comuneNascita.getCodComune();
-							codProvincia = comuneNascita.getCodProvincia();
-							codCap = comuneNascita.getCap();
-							descCodLuogoNascita = comuneNascita.getDescrizione();
-						}
-					}
-				}
+				lAvvModRic
+						.setDescLuogoNasRegInde(getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE));
 				lAvvModRic.setCodLuogoNascita(codLuogoNascita);
 				lAvvModRic.setDescLuogoNascita(descCodLuogoNascita);
 				lAvvModRic.setProvincia(codProvincia);
 				lAvvModRic.setCap(codCap);
 
-				// Recupero Codice e descrizione comune di residenza.
-				String codLuogoResidenza = "-";
-				ComuneModel comuneResidenza = null;
-				String descLuogoResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_STUDIO)
-						? getRequestStringParameter(CAMPO_DESC_COMUNE_STUDIO)
-						: null;
-				if (Utils.isPresent(descLuogoResidenza)) {
-					try {
-						comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
-					} catch (Exception e) {
-						siesLogger.info(e.getMessage());
-					}
-					if (!Utils.isNullObj(comuneResidenza)) {
-						codLuogoResidenza = comuneResidenza.getCodComune();
-						descLuogoResidenza = comuneResidenza.getDescrizione();
-					}
-				}
 				lAvvModRic.setCodComuneResidenza(codLuogoResidenza);
 				lAvvModRic.setDescrComuneStudio(descLuogoResidenza);
 
