@@ -121,12 +121,11 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 		if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
 
-		// 20210722 Avvocato Recuperato da RegInde
-		// siesLogger.info("getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) =
-		// "+getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO));
-		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
-			flagReginde = true;
-			// Provengo da Reginde: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
+		// 20210726 Avvocato Recuperato da RegInde o da SIES
+		if (getRequestStringParameter(CAMPO_ID_AVVOCATO) != null) {
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
+				flagReginde = true;
+			// Provengo da Reginde o da SIES: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
 			// se esiste lo aggiorno, altrimenti inserisco nuovo avvocato da Reginde su SIES!
 
 			// 20210614 MEV_21 Si esegue la ricerca puntuale dell'Avvocato certificato RegInde in SIES.
@@ -158,13 +157,17 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 			} else {
 				// 20210720 MEV_21 Se l'avvocato certificato ha cambiato Foro, si storicizza
 				// l'avvocato legato al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
-				// Se rimane nel foro si aggiornano solo i dati da REGINDE.
+				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
+				// interviene(Avv. presente solo in SIES).
 				if (lAvvCertRegSies.getForo().equals(amReginde.getForo())) {
 					amReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
 					amReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					amReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					amReginde.setDataAggiornamento(DateUtils.getSysDate());
-					amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+					if (flagReginde)
+						amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+					else
+						amReginde = lAvvCertRegSies;
 				} else {
 					lAvvCertRegSies.setFlagRegInde("NO");
 					lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -326,8 +329,8 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 			lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
 
 		// 20210629 Inserimento di un nuovo avvocato per diverso Ufficio appartenenza
-		// solo se l'avvocato non è cert. Reginde.
-		if (!flagReginde && !("SI".equals(lAvvModRic.getFlagRegInde().trim()))) {
+		// solo se l'avvocato non è cert. Reginde e se si tratta di un nuovo inserimento.
+		if (!flagReginde && !("SI".equals(lAvvModRic.getFlagRegInde().trim())) && idAvvocato == null) {
 			if (!lAvvModRic.getCodUffAppartenenza().equals(getCodUfficioUtenteConnesso())) {
 				// Selezionato Avvocato Standard: inserisco un nuovo Avvocato in copia
 				// associandolo all'uffcio
@@ -422,12 +425,12 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 
 				lAvvModRic = lCtrl.ExModificaStoricizzaAvvocato(lAvvModRic, lStoricoModel);
 			}
+			idAvvocato = lAvvModRic.getIdAvvocato(); // Valorizzazione idAvvocato precedentemente a null
 		}
-		// Devo utilizzare IdAvvocato per referenziare l'avvocato prelevato da RegInde
-		if (flagReginde)
-			lAvvFascMod.setAvvIdAvvocato(idAvvocato);
-		else
-			lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
+		// Devo utilizzare IdAvvocato per referenziare l'avvocato prelevato da RegInde, da SIES, o appena
+		// inserito.
+		lAvvFascMod.setAvvIdAvvocato(idAvvocato);
+
 		AvvocatoFascicoloSiepModel lAvvMod = new AvvocatoFascicoloSiepModel();
 		lAvvFascMod.setAvvIdAvvocatoFascicoloSost(lAvvFascUp.getIdAvvocatoFascicoloSiep());
 

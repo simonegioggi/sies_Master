@@ -122,12 +122,11 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
 
-		// 20210722 Avvocato Recuperato da RegInde
-		// siesLogger.info("getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) =
-		// "+getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO));
-		if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
-			flagReginde = true;
-			// Provengo da Reginde: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
+		// 20210726 Avvocato Recuperato da RegInde o da SIES
+		if (getRequestStringParameter(CAMPO_ID_AVVOCATO) != null) {
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
+				flagReginde = true;
+			// Provengo da Reginde o da SIES: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
 			// se esiste lo aggiorno, altrimenti inserisco nuovo avvocato da Reginde su SIES!
 
 			// 20210614 MEV_21 Si esegue la ricerca puntuale dell'Avvocato certificato RegInde in SIES.
@@ -159,13 +158,17 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 			} else {
 				// 20210720 MEV_21 Se l'avvocato certificato ha cambiato Foro, si storicizza
 				// l'avvocato legato al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
-				// Se rimane nel foro si aggiornano solo i dati da REGINDE.
-				if (lAvvCertRegSies.getForo().trim() == amReginde.getForo().trim()) {
+				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
+				// interviene(Avv. presente solo in SIES).
+				if (lAvvCertRegSies.getForo().equals(amReginde.getForo())) {
 					amReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
 					amReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					amReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					amReginde.setDataAggiornamento(DateUtils.getSysDate());
-					amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+					if (flagReginde)
+						amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+					else
+						amReginde = lAvvCertRegSies;
 				} else {
 					lAvvCertRegSies.setFlagRegInde("NO");
 					lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
