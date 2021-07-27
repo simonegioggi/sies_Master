@@ -371,17 +371,16 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		}
 
 		AvvocatoParteModel avvParteMod = new AvvocatoParteModel();
-		BigDecimal idAvv = null;
 		BigDecimal idAvvParteUdienza = null;
+		lAvvMod.setIdAvvocato(idAvvocato);
 		avvParteMod = lCtrl.ExInserisciAvvocato(lAvvMod, lAvvParteMod);
 
-		idAvv = avvParteMod.getAvvocato().getIdAvvocato();
 		// chiave tabella PARTI_UDIENZA_DIFENSORE
 		idAvvParteUdienza = avvParteMod.getAvvocatoParteUdienzaModel().getIdAvvocatoParteUdienza();
 
 		String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.sige.udienzaparti.action.ActLoadDettaglioAvvocatoParte&" + CAMPO_ID_AVVOCATO + "="
-				+ idAvv + "&" + ICostantiPartiUdienza.CAMPO_ID_AVVOCATO_PARTE_UDIENZA + "="
+				+ idAvvocato + "&" + ICostantiPartiUdienza.CAMPO_ID_AVVOCATO_PARTE_UDIENZA + "="
 				+ idAvvParteUdienza + "&" + ICostantiPartiUdienza.CAMPO_ID_SOGGETTO + "=" + idSoggetto + "&"
 				+ ICostantiPartiUdienza.CAMPO_ID_EVENTO_UDIENZA + "=" + idEventoUdienza;
 

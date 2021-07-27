@@ -75,21 +75,18 @@ function avvocati() {
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'visible';
 		}
    		window.parent.close();
-
-
-   	    function Verify() { 
-   	      var msgConfirm = "Si vuole procedere con la cancellazione dei dati?"; 
-   	      if (window.confirm(msgConfirm)) 
-   	        return true; 
-   	      else 
-   	        return false; 
-   	    } 
-
-   		
 	}
     if ("<%=avvocato.size()%>" == 200)
-      alert('Attenzione! Visualizzati solo i primi 200 Difensori individuati. Perfezionare la ricerca!');
-  }
+		alert('Attenzione! Visualizzati solo i primi 200 Difensori individuati. Perfezionare la ricerca!');
+}
+
+function Verify() {
+	var msgConfirm = "Si vuole procedere con la cancellazione dei dati?"; 
+    if (window.confirm(msgConfirm)) 
+      	return true; 
+    else 
+      	return false; 
+}
 
 function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefiscale,luogoNascita,nazione,giornoNascita,meseNascita,annoNascita,descComuneStudio,stato) {
     var flag=controlla(stato);

@@ -195,8 +195,8 @@ function caricamento() {
 	fiducia.style.visibility = 'hidden';
 
 	if (valore == '01') { // D'Ufficio
-      caricaDescComuneForo(document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
-		  //document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value = document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
+		caricaDescComuneForo(document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
+<%-- 		document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_COD_SEDE_AUTORITA_DIF%>.value = document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value; --%>
 	    fiducia.style.visibility = 'hidden';
 	    ufficio.style.visibility = 'visible';
 	    ufficioSotto.style.visibility = 'visible';

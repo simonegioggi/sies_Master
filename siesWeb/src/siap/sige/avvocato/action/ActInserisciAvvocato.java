@@ -364,14 +364,12 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			idAvvocato = lAvvMod.getIdAvvocato(); // Valorizzazione idAvvocato inserito
 		}
 
-		AvvocatoSigeModel asm = new AvvocatoSigeModel();
-		BigDecimal idAvv = null;
-		asm = lCtrl.ExInserisciAvvocato(lAvvMod, lAvvFascMod);
-		idAvv = asm.getAvvocato().getIdAvvocato();
+		lAvvMod.setIdAvvocato(idAvvocato);
+		lCtrl.ExInserisciAvvocato(lAvvMod, lAvvFascMod);
 
 		String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.sige.avvocato.action.ActLoadDettaglioAvvocatoFascicolo&" + CAMPO_ID_AVVOCATO + "="
-				+ idAvv;
+				+ idAvvocato;
 
 		return lPage;
 	}
