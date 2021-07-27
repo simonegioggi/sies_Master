@@ -40,6 +40,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 		IAvvocato lCtrl = SIGELookupRemote.getAvvocatoRemote();
 		Vector lVectPrec = null;
+		Vector lVectRic = null;
 
 		// Recupero i dati del Nuovo avvocato se selezionato, altrimenti l'id coincide
 		// con il vecchio avvocato
@@ -176,16 +177,29 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 				}
 			}
 			idAvvocato = amReginde.getIdAvvocato();
+
 		} else {
 			// 20210722 MEV_21 Avvocato non presente sia in RegInde che in SIES.
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 		}
 
 		AvvocatoModel lAvvModRic = new AvvocatoModel();
-		// lAvvModRic.setIdAvvocato(id);
-		// lVectRic = lCtrl.ExRicercaAvvocato(lAvvModRic);
-		// lAvvModRic = (AvvocatoModel) lVectRic.get(0);
+		lAvvModRic.setIdAvvocato(idAvvocato);
+		lVectRic = lCtrl.ExRicercaAvvocato(lAvvModRic);
+		lAvvModRic = (AvvocatoModel) lVectRic.get(0);
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("idAvvocato = " + idAvvocato);
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("lAvvModRic = " + lAvvModRic);
+
+		// ==========================================================================
+		// Recupero l'elenco degli avvocati attualmente associati al fascicolo
+		// per controllare che nella sostituzione non vengano inseriti più avvocati
+		// se non di fiducia
+		// ==========================================================================
 		AvvocatoModel lAvvModPrec = new AvvocatoModel();
 		AvvocatoSigeModel lAvvSigeMod = new AvvocatoSigeModel();
 		AvvocatoFascicoloSigeModel lAvvFascModPrec = new AvvocatoFascicoloSigeModel();
@@ -193,7 +207,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
 						.getIdFascicoloSige());
 
-		BigDecimal id_avv_old = getRequestBigDecimalParameter("idAvvVecchio");
+		BigDecimal idVecchio = getRequestBigDecimalParameter("idAvvVecchio");
 
 		try {
 			lVectPrec = new Vector();
@@ -214,8 +228,6 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		}
 
 		AvvocatoFascicoloSigeModel lAvvFascMod = new AvvocatoFascicoloSigeModel();
-
-		lAvvFascMod.setAvvIdAvvocato(idAvvocato);
 
 		lAvvFascMod.setCodTipoAvvocato(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_TIPO));
 		if (lAvvFascMod.getCodTipoAvvocato().equals("01")) {
@@ -295,18 +307,19 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		// Queste operazioni vengono effettuate contestualmente per motivi di
 		// transazione
 		// ==========================================================================
-		AvvocatoSigeModel avv_sige_old = lCtrl.ExRicercaAvvocatoByKeyAvvocatoFasSige(id_avv_old);
-		AvvocatoFascicoloSigeModel lAvvFascUp = avv_sige_old.getAvvocatoFascicoloSigeModel();
+		// update
+		AvvocatoFascicoloSigeModel lAvvFascUp = new AvvocatoFascicoloSigeModel();
+		lAvvFascUp.setAvvIdAvvocato(idVecchio);
+		lAvvFascUp.setFasSigeIdFascicoloSige(
+				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
+						.getIdFascicoloSige());
 		lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
 
 		lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		lAvvFascUp.setDataAggiornamento(DateUtils.getSysDate());
+		lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 
-		// lAvvFascMod.setAvvIdAvvocato(/* getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) */idAvvocato);
-		// if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
-		// lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
-
+		// if (!lAvvModRic.getCodUffAppartenenza().equals(getCodUfficioUtenteConnesso())) {
 		// 20210726 Inserimento di un nuovo avvocato solo se l'avvocato non è cert. Reginde
 		// e se non è presente in SIES.
 		if (!flagReginde && idAvvocato == null) {
@@ -329,6 +342,10 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 			lAvvModRic.setCodComuneResidenza(codLuogoResidenza);
 			lAvvModRic.setDescrComuneStudio(descLuogoResidenza);
+
+			// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
+			// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+			// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
 
 			lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
 			lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
@@ -354,27 +371,66 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 
 			idAvvocato = lAvvModRic.getIdAvvocato(); // Valorizzazione idAvvocato (precedentemente = null)
 		}
+		// } else {
+		// // Ho selezionato un avvocato dell'ufficio e ne sto modificando eventualmente
+		// // i dati.
+		// // Storicizzando i dati, quindi vado in update.
+		// StoricoAvvocatoModel lStoricoModel = new StoricoAvvocatoModel();
+		//
+		// lStoricoModel.setCognome(lAvvModRic.getCognome());
+		// lStoricoModel.setNome(lAvvModRic.getNome());
+		// lStoricoModel.setForo(lAvvModRic.getForo());
+		// lStoricoModel.setIndirizzo(lAvvModRic.getIndirizzo());
+		// lStoricoModel.setTelefono(lAvvModRic.getTelefono());
+		// lStoricoModel.setFax(lAvvModRic.getFax());
+		// lStoricoModel.setEMail(lAvvModRic.getEMail());
+		// lStoricoModel.setCodComuneResidenza(lAvvModRic.getCodComuneResidenza());
+		// lStoricoModel.setCodLuogoNascita(lAvvModRic.getCodLuogoNascita());
+		// lStoricoModel.setDataNascita(lAvvModRic.getDataNascita());
+		// lStoricoModel.setDataSospesoFinoAl(lAvvModRic.getDataSospensione());
+		// lStoricoModel.setDataRadiatoDal(lAvvModRic.getDataRadiazione());
+		// lStoricoModel.setCodNonAttivita(lAvvModRic.getCodNonAttivita());
+		// // mancano le note
+		// lStoricoModel.setCodUfficioAppartenenza(lAvvModRic.getCodUffAppartenenza());
+		//
+		// lStoricoModel.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
+		//
+		// // manca flag cancellato
+		// lStoricoModel.setCodiceFiscale(lAvvModRic.getCodiceFiscale());
+		// lStoricoModel.setProvincia(lAvvModRic.getProvincia());
+		// lStoricoModel.setCap(lAvvModRic.getCap());
+		//
+		// // manca id_avvocato_Standard
+		// lStoricoModel.setIdAvvocatoStandard(lAvvModRic.getIdAvvocatoStandard());
+		//
+		// lStoricoModel.setCodUfficioInserimento(lAvvModRic.getCodUfficioAggiornamento());
+		// lStoricoModel.setCodOperatoreInserimento(lAvvModRic.getCodOperatoreAggiornamento());
+		// lStoricoModel.setDataInserimento(lAvvModRic.getDataAggiornamento());
+		//
+		// // Aggiorno i dati con quanto prelevabile/modificabile della form
+		// lAvvModRic.setForo(getRequestStringParameter(CAMPO_FORO).toUpperCase());
+		// lAvvModRic.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase());
+		// lAvvModRic.setTelefono(getRequestStringParameter(CAMPO_TELEFONO));
+		// lAvvModRic.setFax(getRequestStringParameter(CAMPO_FAX));
+		// lAvvModRic.setEMail(getRequestStringParameter(CAMPO_E_MAIL).toUpperCase());
+		// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
+		// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+		// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+		//
+		// lAvvModRic.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+		// lAvvModRic.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+		// lAvvModRic.setDataAggiornamento(DateUtils.getSysDate());
+		//
+		// lAvvModRic = lCtrl.ExModificaStoricizzaAvvocato(lAvvModRic, lStoricoModel);
+		// }
 
 		// Devo utilizzare IdAvvocato per referenziare l'avvocato prelevato da RegInde, da SIES, o appena
 		// inserito.
 		lAvvFascMod.setAvvIdAvvocato(idAvvocato);
-
 		lAvvFascMod.setFasSigeIdFascicoloSige(
 				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
 						.getIdFascicoloSige());
 		// lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
-
-		// update
-		// AvvocatoFascicoloSigeModel lAvvFascUp = new AvvocatoFascicoloSigeModel();
-		lAvvFascUp.setAvvIdAvvocato(id_avv_old);
-		lAvvFascUp.setFasSigeIdFascicoloSige(
-				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
-						.getIdFascicoloSige());
-		lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
-
-		lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		lAvvFascUp.setDataAggiornamento(DateUtils.getSysDate());
-		lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 
 		AvvocatoFascicoloSigeModel lAvvMod = new AvvocatoFascicoloSigeModel();
 		lAvvMod = lCtrl.ExSostituzioneAvvocato(lAvvFascUp, lAvvFascMod);

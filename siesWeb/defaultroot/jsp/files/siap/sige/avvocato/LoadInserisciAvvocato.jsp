@@ -52,7 +52,6 @@ for (SentenzaSigeModel sentenza : sentenze) {
 var desktop;
 
 function Inserisci() {
-
 	// MEV_21 - Aggiunti controlli per inserimento avvocato non certificato.
 	if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
 		alert('Il Cognome è obbligatorio');
@@ -181,10 +180,12 @@ function caricamento() {
 	ufficioSotto.style.top = '-100px';
 	note.style.visibility = 'hidden';
 	var conferma = document.getElementById('conferma');
+	var confermaBtn = document.getElementById('confermaBtn');
+	var inserimento = document.getElementById('inserimento');
 	conferma.style.visibility = 'visible';
 	fiducia.style.visibility = 'hidden';
     if (valore == '01') {
-		caricaDescComuneForo(document.LoadModificaAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
+		caricaDescComuneForo(document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value);
 <%-- 		document.LoadInserisciAvvocato.<%=ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value; --%>
         fiducia.style.visibility = 'hidden';
         ufficio.style.visibility = 'visible';
@@ -192,6 +193,10 @@ function caricamento() {
         motivoDes.style.visibility = 'visible';
         conferma.style.visibility = 'visible';
         conferma.style.top = '-55px';
+        if (inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
+		else
+			confermaBtn.style.visibility = 'visible';
 	}
 	if (valore == '02') {
 		fiducia.style.visibility = 'visible';
@@ -200,6 +205,10 @@ function caricamento() {
         motivoDes.style.visibility = 'hidden';
         conferma.style.visibility = 'visible';
         conferma.style.top = '-325px';
+        if (inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
+		else
+			confermaBtn.style.visibility = 'visible';
 	}
 	if (valore == '-') {
         fiducia.style.visibility = 'hidden';
@@ -208,6 +217,10 @@ function caricamento() {
         motivoDes.style.visibility = 'hidden';
         conferma.style.visibility = 'visible';
         conferma.style.top = '-325px';
+        if (inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
+		else
+			confermaBtn.style.visibility = 'visible';
 	}
     if (valore == '03') {
         fiducia.style.visibility = 'hidden';
@@ -216,6 +229,10 @@ function caricamento() {
         motivoDes.style.visibility = 'hidden';
         conferma.style.visibility = 'visible';
         conferma.style.top = '-325px';
+        if (inserimento.style.visibility == 'visible')
+			confermaBtn.style.visibility = 'hidden';
+		else
+			confermaBtn.style.visibility = 'visible';
 	}
     
  // 20210721 Controllo tipo inserimento non Reginde
@@ -262,6 +279,8 @@ function loadDescComuneForo(descComuneForo) {
 
 <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 function ListaAvvocatiRegInde(a_formname) {
+	var inserimento = document.getElementById('inserimento');
+	inserimento.style.visibility = 'hidden';
 	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
 }
 
@@ -297,7 +316,7 @@ function EnableCombo() {
 
 <table>
 	<tr>
- 		<td class="label">
+ 		<td class="label" id="ricReginde"  style="visibility:visible;">
  			<%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 <!--       		<a href="Javascript:ListaAvvocati('LoadInserisciAvvocato');"> -->
 <!--         		Seleziona dalla lista <img src="/images/filefolder.gif" border="0"> -->
@@ -585,7 +604,10 @@ if (lAvv.getDataNascita() == null) {
 	<tr>
 		<td colspan=2>
 			<%-- MEV_21: aggiunto evento onclick --%>
-        	<input class="bottone" type="submit" value="Conferma" name="IA" onClick="Javascript:return EnableCombo();">
+        	<input class="bottone" id="confermaBtn" type="submit" value="Conferma" name="IA" onClick="Javascript:return EnableCombo();">
+        </td>
+        <!-- 20210611 MEV_21 -->
+    	<td colspan=2 id="inserimento" style="visibility:hidden;">
        		<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
       	</td>
 	</tr>

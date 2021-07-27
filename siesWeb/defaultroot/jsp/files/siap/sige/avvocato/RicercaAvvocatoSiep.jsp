@@ -22,20 +22,20 @@ if (! modalita.equals("NoPop")) {
 %>
 <script language="JavaScript">
 function controlla(id) {
-	if (id=="S") {
+	if (id == "S") {
 		alert("Il difensore risulta sospeso");
 		return false;
 	}
-	if (id=="R") {
+	if (id == "R") {
 		alert("Il difensore risulta radiato");
 		return false;
 	}
-	if (id=="A"	&& id != "-") {
+	if (id != "A" && id != "-") {
 		alert("Il difensore risulta non in attività");
 		return false;
 	}
 	// MEV_21: elimino questa casistica
-	// 	if (id=="B") {
+	// 	if (id == "B") {
 	return true;
 	// 	}
 }

@@ -297,9 +297,8 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 			lAvvFascMod.setSedeAutoritaDif("-");
 		}
 
-		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE)) {
+		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
 			lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
-		}
 
 		lAvvFascMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lAvvFascMod.setDataInserimento(DateUtils.getSysDate());
@@ -323,10 +322,11 @@ public class ActSostituzioneDifensore extends ActProvvedimentoDifensore implemen
 
 		lAvvFascUp.setMotivo("Sostituzione");
 
-		lAvvFascMod.setFasSieIdFascicoloSiep(
-				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
-		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
-			lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
+		// N.B. : già impostati sopra
+		// lAvvFascMod.setFasSieIdFascicoloSiep(
+		// ((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
+		// if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
+		// lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
 
 		// 20210726 Inserimento di un nuovo avvocato solo se l'avvocato non è cert. Reginde
 		// e se non è presente in SIES.

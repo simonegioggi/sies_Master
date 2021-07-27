@@ -20,8 +20,6 @@ import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.action.ICostantiAvvocato;
 import siap.sige.avvocato.action.ICostantiAvvocatoFascicoloSige;
 import siap.sige.avvocato.controller.IAvvocato;
-import siap.sige.avvocato.model.AvvocatoFascicoloSigeModel;
-import siap.sige.avvocato.model.AvvocatoSigeModel;
 import siap.sige.udienzaparti.model.AvvocatoParteModel;
 import siap.sige.udienzaparti.model.PartiUdienzaDifensoreModel;
 import siap.sige.util.SIGELookupRemote;
@@ -52,20 +50,19 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 	public String processRequest() throws F3BException {
 
 		String idSoggetto = "";
-		if (!isRequestParameterNullObj(ICostantiPartiUdienza.CAMPO_ID_SOGGETTO)) {
-			idSoggetto = getRequestStringParameter(ICostantiPartiUdienza.CAMPO_ID_SOGGETTO);
-		}
+		if (!isRequestParameterNullObj(CAMPO_ID_SOGGETTO))
+			idSoggetto = getRequestStringParameter(CAMPO_ID_SOGGETTO);
 
 		// Identificativo evento udienza
 		String lIdEventoUdienza = getRequestStringParameter(ICostantiSecurity.CAMPO_ID_ENTITA_PROVV);
 
 		IAvvocato lCtrl = SIGELookupRemote.getAvvocatoRemote();
 		Vector lVectPrec = null;
-		// Vector lVectRic = null;
-		// BigDecimal id = getRequestBigDecimalParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+		Vector lVectRic = null;
+
 		// Recupero i dati del Nuovo avvocato se selezionato, altrimenti l'id coincide
 		// con il vecchio avvocato
-		// BigDecimal id = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
+		// BigDecimal id = getRequestBigDecimalParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
 		// MEV_21: controllo se la ricerca proviene da Reginde, da SIES o si fa un nuovo inserimento.
 		BigDecimal idAvvocato = null;
 		boolean flagReginde = false;
@@ -139,6 +136,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA);
+
 		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
 		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
 
@@ -202,20 +200,35 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 				}
 			}
 			idAvvocato = amReginde.getIdAvvocato();
+
 		} else {
 			// 20210722 MEV_21 Avvocato non presente sia in RegInde che in SIES.
 			idAvvocato = getRequestBigDecimalParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
 		}
 
 		AvvocatoModel lAvvModRic = new AvvocatoModel();
-		// lAvvModRic.setIdAvvocato(id);
-		BigDecimal id_avv_old = getRequestBigDecimalParameter("idAvvVecchio");
-		// lVectRic = lCtrl.ExRierccaAvvocato(lAvvModRic);
-		// lAvvModRic = (AvvocatoModel) lVectRic.get(0);
+		lAvvModRic.setIdAvvocato(idAvvocato);
+		lVectRic = lCtrl.ExRicercaAvvocato(lAvvModRic);
+		lAvvModRic = (AvvocatoModel) lVectRic.get(0);
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("idAvvocato = " + idAvvocato);
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("lAvvModRic = " + lAvvModRic);
+
+		// ==========================================================================
+		// Recupero l'elenco degli avvocati attualmente associati al fascicolo
+		// per controllare che nella sostituzione non vengano inseriti più avvocati
+		// se non di fiducia
+		// ==========================================================================
 		AvvocatoModel lAvvModPrec = new AvvocatoModel();
 		AvvocatoParteModel lAvvParteMod = new AvvocatoParteModel();
 		PartiUdienzaDifensoreModel lAvvParteModPrec = new PartiUdienzaDifensoreModel();
 		lAvvParteModPrec.setSoggIdSoggetto(new BigDecimal(idSoggetto));
+
+		BigDecimal idVecchio = getRequestBigDecimalParameter("idAvvVecchio");
 
 		try {
 			lVectPrec = new Vector();
@@ -238,7 +251,6 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		}
 
 		PartiUdienzaDifensoreModel lDifParteMod = new PartiUdienzaDifensoreModel();
-		lDifParteMod.setAvvIdAvvocato(idAvvocato);
 
 		lDifParteMod.setCodTipoAvvocato(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_TIPO));
 		if (lDifParteMod.getCodTipoAvvocato().equals("01")) {
@@ -292,10 +304,10 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		else
 			lDifParteMod.setCodTipoAutoritaDif("-");
 
-		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF)
-				&& (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF)
-						&& !getRequestStringParameter(
-								ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF).equals("-"))) {
+		if (!isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF) && (!this
+				.isRequestParameterNullObj(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF)
+				&& !getRequestStringParameter(ICostantiAvvocatoFascicoloSige.CAMPO_COD_TIPO_AUTORITA_DIF)
+						.equals("-"))) {
 			String lComneAutoritaDif = getRequestStringParameter(
 					ICostantiAvvocatoFascicoloSige.CAMPO_COD_SEDE_AUTORITA_DIF);
 			ComuneModel lComModDif = new ComuneModel(getCodComuneByDescr(lComneAutoritaDif));
@@ -311,6 +323,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		lDifParteMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		lDifParteMod.setDataInserimento(DateUtils.getSysDate());
 		lDifParteMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+		lDifParteMod.setSoggIdSoggetto(new BigDecimal(idSoggetto));
 
 		// ==========================================================================
 		// Effettuo la sostituzione che consiste nel valorizzare la data fine
@@ -318,14 +331,17 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		// Queste operazioni vengono effettuate contestualmente per motivi di
 		// transazione
 		// ==========================================================================
-		AvvocatoSigeModel avv_sige_old = lCtrl.ExRicercaAvvocatoByKeyAvvocatoFasSige(id_avv_old);
-		AvvocatoFascicoloSigeModel lAvvFascUp = avv_sige_old.getAvvocatoFascicoloSigeModel();
-		lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
+		// update
+		PartiUdienzaDifensoreModel lParteUdienzaUp = new PartiUdienzaDifensoreModel();
+		lParteUdienzaUp.setAvvIdAvvocato(idVecchio);
+		lParteUdienzaUp.setSoggIdSoggetto(new BigDecimal(idSoggetto));
+		lParteUdienzaUp.setDataFineValidita(DateUtils.getSysDate());
 
-		lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-		lAvvFascUp.setDataAggiornamento(DateUtils.getSysDate());
+		lParteUdienzaUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+		lParteUdienzaUp.setDataAggiornamento(DateUtils.getSysDate());
+		lParteUdienzaUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 
+		// if (!lAvvModRic.getCodUffAppartenenza().equals(getCodUfficioUtenteConnesso())) {
 		// 20210726 Inserimento di un nuovo avvocato solo se l'avvocato non è cert. Reginde
 		// e se non è presente in SIES.
 		if (!flagReginde && idAvvocato == null) {
@@ -351,10 +367,11 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 			lAvvModRic.setCodComuneResidenza(codLuogoResidenza);
 			lAvvModRic.setDescrComuneStudio(descLuogoResidenza);
 
-			lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
 			// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
 			// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
 			// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+
+			lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
 			lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 			lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
 			lAvvModRic.setDataInserimento(DateUtils.getSysDate());
@@ -378,30 +395,58 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 
 			idAvvocato = lAvvModRic.getIdAvvocato(); // Valorizzazione idAvvocato (precedentemente = null)
 		}
+		// } else {
+		// StoricoAvvocatoModel lStoricoModel = new StoricoAvvocatoModel();
+		//
+		// lStoricoModel.setCognome(lAvvModRic.getCognome());
+		// lStoricoModel.setNome(lAvvModRic.getNome());
+		// lStoricoModel.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
+		// lStoricoModel.setCodLuogoNascita(lAvvModRic.getCodLuogoNascita());
+		// lStoricoModel.setDataNascita(lAvvModRic.getDataNascita());
+		// lStoricoModel.setForo(lAvvModRic.getForo());
+		// lStoricoModel.setIndirizzo(lAvvModRic.getIndirizzo());
+		// lStoricoModel.setCodComuneResidenza(lAvvModRic.getCodComuneResidenza());
+		// lStoricoModel.setTelefono(lAvvModRic.getTelefono());
+		// lStoricoModel.setFax(lAvvModRic.getFax());
+		// lStoricoModel.setEMail(lAvvModRic.getEMail());
+		// lStoricoModel.setCodiceFiscale(lAvvModRic.getCodiceFiscale());
+		// lStoricoModel.setProvincia(lAvvModRic.getProvincia());
+		// lStoricoModel.setCap(lAvvModRic.getCap());
+		// lStoricoModel.setDataSospesoFinoAl(lAvvModRic.getDataSospensione());
+		// lStoricoModel.setDataRadiatoDal(lAvvModRic.getDataRadiazione());
+		// lStoricoModel.setCodNonAttivita(lAvvModRic.getCodNonAttivita());
+		// lStoricoModel.setCodUfficioAppartenenza(lAvvModRic.getCodUffAppartenenza());
+		// lStoricoModel.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
+		// lStoricoModel.setCodUfficioInserimento(lAvvModRic.getCodUfficioAggiornamento());
+		// lStoricoModel.setCodOperatoreInserimento(lAvvModRic.getCodOperatoreAggiornamento());
+		// lStoricoModel.setDataInserimento(lAvvModRic.getDataAggiornamento());
+		// lAvvModRic.setForo(getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase());
+		// lAvvModRic
+		// .setIndirizzo(getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO).toUpperCase());
+		// lAvvModRic.setTelefono(getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO));
+		// lAvvModRic.setFax(getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX));
+		// lAvvModRic.setEMail(getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL).toUpperCase());
+		// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
+		// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+		// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+		// lAvvModRic = lCtrl.ExModificaStoricizzaAvvocato(lAvvModRic, lStoricoModel);
+		// }
 
 		// Devo utilizzare IdAvvocato per referenziare l'avvocato prelevato da RegInde, da SIES, o appena
 		// inserito.
-		lDifParteMod.setAvvIdAvvocato(idAvvocato);
-		// lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
+		lDifParteMod.setAvvIdAvvocato(/* lAvvModRic.getIdAvvocato() */idAvvocato);
 
-		// update
-		PartiUdienzaDifensoreModel lParteUdienzaUp = new PartiUdienzaDifensoreModel();
-		lParteUdienzaUp.setAvvIdAvvocato(id_avv_old);
-		lParteUdienzaUp.setSoggIdSoggetto(new BigDecimal(idSoggetto));
-		lParteUdienzaUp.setDataFineValidita(DateUtils.getSysDate());
-		lParteUdienzaUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		lParteUdienzaUp.setDataAggiornamento(DateUtils.getSysDate());
 		PartiUdienzaDifensoreModel lAvvMod = new PartiUdienzaDifensoreModel();
 		lAvvMod = lCtrl.ExSostituzioneAvvocato(lParteUdienzaUp, lDifParteMod);
 
 		String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.sige.udienzaparti.action.ActLoadDettaglioAvvocatoParte&"
 				+ ICostantiAvvocato.CAMPO_ID_AVVOCATO + "=" + lAvvMod.getAvvIdAvvocato() + "&"
-				+ ICostantiPartiUdienza.CAMPO_ID_AVVOCATO_PARTE_UDIENZA + "="
+				+ CAMPO_ID_AVVOCATO_PARTE_UDIENZA + "="
 				+ lAvvParteMod.getAvvocatoParteUdienzaModel().getIdAvvocatoParteUdienza() + "&"
-				+ ICostantiPartiUdienza.CAMPO_ID_SOGGETTO + "=" + idSoggetto + "&"
+				+ CAMPO_ID_SOGGETTO + "=" + idSoggetto + "&"
 				// MERGE v10 COLLAUDO: aggiunto parametro di passaggio in query string
-				+ ICostantiPartiUdienza.CAMPO_ID_EVENTO_UDIENZA + "=" + lIdEventoUdienza;
+				+ CAMPO_ID_EVENTO_UDIENZA + "=" + lIdEventoUdienza;
 
 		return lPage;
 	}
