@@ -2,6 +2,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.Utils"%>
+<%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
 <%@ page import="siap.sius.avvocato.model.AvvocatoModel"%>
 <%@ page import="siap.sius.avvocato.action.ICostantiAvvocato" %>
 <%@ page import="siap.sius.avvocato.action.ICostantiAvvocatoFascicoloSius" %>
@@ -55,28 +56,92 @@
     if (document.LoadInserisciAvvocato.lTipoInserimento.value != "reginde")
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComuneNascita&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=400,height=500");
   }  
+  function cancellaCodComuneReale() {
+    document.LoadInserisciAvvocato.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
+  }
 
   function Inserisci()
   {
-   	//document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore";
-    document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.sius.avvocato.action.ActInserisciAvvocato";   
-    document.LoadInserisciAvvocato.submit();
+  	// MEV_21 - Aggiunti controlli per inserimento avvocato non certificato.
+    if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
+      alert('Il Cognome è obbligatorio');
+      document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COGNOME %>.focus;
+      return false;
+    }
+    
+    if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_NOME%>.value.length==0 ) {
+      alert('Il Nome è obbligatorio');
+      document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_NOME %>.focus;
+      return false;
+    }
+    
+    /*
+    if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value=='-') 
+    {
+      alert('Indicare lo stato di nascita');
+      document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COD_STATO_NASCITA %>.focus;
+      return false;
+    }
+    */
+    
+    if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value=='039') 
+    {
+      document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value="";
+      if (document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.value.length==0) 
+      {
+        alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
+        document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+        return false;
+      }
+    } else 	if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value!='-') {
+      document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.value='';
+      cancellaCodComuneReale();
+    }
+
+    if (   document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>.value.length > 0 	
+        && document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE %>.value.length > 0 
+       ) 
+    {
+      alert('Il Comune di Nascita e il luogo di Nascita Estero sono alternativi');
+      document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>.focus;
+      return false;
+    }
+
+    if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value.length==1)
+      document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value;
+    
+    if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value.length==1)
+      document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value;
+
+    var data_to_verify=document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>.value+'/'+document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>.value+'/'+document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>.value;
+    if (! ControllaData(data_to_verify)) {
+      alert('Data di nascita non valida');
+      return false;
+    }   
+ 
+    if (Verify()) {
+      document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.sius.avvocato.action.ActInserisciAvvocato";   
+      document.LoadInserisciAvvocato.submit();
+    }
   }
   
- function ListaComuni(a_formname,a_fieldname)
-      {
-        desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
-      }
+  function ListaComuni(a_formname,a_fieldname)
+  {
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
+  }
 
- function ListaAvvocati(a_formname)
+<%-- MEV_21: Sostituita da ricerca avvocati reginde
+  function ListaAvvocati(a_formname)
   {
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadRicercaAvvocato&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=450,height=500");
   }
+--%>
 
-  function ListaAvvocati2(a_formname)
+  function ListaAvvocatiSiep(a_formname)
   {
     desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadRicercaAvvocatoSiep&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=450,height=500");
   }
+  
   function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2)
   {
     desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.istitutodetenzione.action.ActLoadListaIstitutoDetenzione&formname="+a_formname+"&fieldname="+a_fieldname+"&field2="+a_field2, "Ricerca_Istituto_Detenzione","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=500,height=500");
@@ -84,6 +149,8 @@
   
   function Verify()
   {
+    //alert("Verify");
+    
     if(document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value=="")
     {
       alert('Selezionare un difensore dalla lista');
@@ -96,10 +163,11 @@
     }
 
     Avvocato();
+    return true;
   }
 
   function cambiaMotivo()
-{
+  {
          var note =document.getElementById('note');
          var idxSelMotivo = document.LoadInserisciAvvocato.<%=ICostantiAvvocatoFascicoloSius.CAMPO_COD_MOTIVO_DESIGNAZIONE%>.selectedIndex;
 
@@ -117,69 +185,95 @@
           conferma.style.top='-25px';
 
          }
+  }
 
-
-}
-   function caricamento()
+  function caricamento()
   {
-         var idxSel = document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.selectedIndex;
+    var tipoInserimento = document.getElementById('lTipoInserimento').value;
+    //alert("caricamento: "+tipoInserimento);
+    
+    if (tipoInserimento=="manuale"){
+        // torna indietro devo riabilitare i campi
+        //alert("Abilito i campi: ");
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>').disabled = false;
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_FORO%>').disabled = false;
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_TELEFONO%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_FAX%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_E_MAIL%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;      
+    }
+    
+    
+    var idxSel = document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.selectedIndex;
 
-         var valore=document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>[idxSel].value;
-         var fiducia =document.getElementById('fiducia');
-         var ufficio =document.getElementById('ufficio');
-         var ufficioSotto =document.getElementById('ufficioSotto');
-         var motivoDes =document.getElementById('motivoDes');
-         ufficioSotto.style.top='-100px';
-		 note.style.visibility='hidden';
-         var conferma =document.getElementById('conferma');
+    var valore=document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>[idxSel].value;
+    var fiducia =document.getElementById('fiducia');
+    var ufficio =document.getElementById('ufficio');
+    var ufficioSotto =document.getElementById('ufficioSotto');
+    var motivoDes =document.getElementById('motivoDes');
+    ufficioSotto.style.top='-100px';
+    note.style.visibility='hidden';
+    var conferma =document.getElementById('conferma');
 
+    conferma.style.visibility='visible';
+    fiducia.style.visibility='hidden';
 
+    if( valore == '01')
+    {
+       document.LoadInserisciAvvocato.<%=ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
+    }
 
-        conferma.style.visibility='visible';
-        fiducia.style.visibility='hidden';
+    if(valore == '01')
+    {
+      fiducia.style.visibility='hidden';
+      ufficio.style.visibility='visible';
+      ufficioSotto.style.visibility='visible';
+      motivoDes.style.visibility='visible';
+      conferma.style.visibility='visible';
+      conferma.style.top='-55px';
+    }
+        
+    if(valore == '02')
+    {
+      fiducia.style.visibility='visible';
+      ufficio.style.visibility='hidden';
+      ufficioSotto.style.visibility='hidden';
+      motivoDes.style.visibility='hidden';
 
-       if( valore == '01')
-       {
-           document.LoadInserisciAvvocato.<%=ICostantiAvvocatoFascicoloSius.CAMPO_COD_SEDE_AUTORITA_DIF%>.value=document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_FORO%>.value;
-
-       }
-        if(valore == '01')
-        {
-          fiducia.style.visibility='hidden';
-          ufficio.style.visibility='visible';
-          ufficioSotto.style.visibility='visible';
-          motivoDes.style.visibility='visible';
-          conferma.style.visibility='visible';
-          conferma.style.top='-55px';
-        }
-         if(valore == '02')
-        {
-          fiducia.style.visibility='visible';
-          ufficio.style.visibility='hidden';
-          ufficioSotto.style.visibility='hidden';
-          motivoDes.style.visibility='hidden';
-
-          conferma.style.visibility='visible';
-          conferma.style.top='-325px';
-        }
-        if(valore == '-')
-        {
-          fiducia.style.visibility='hidden';
-          ufficio.style.visibility='hidden';
-          ufficioSotto.style.visibility='hidden';
-          motivoDes.style.visibility='hidden';
-          conferma.style.visibility='visible';
-          conferma.style.top='-325px';
-        }
-      if(valore == '03')
-        {
-          fiducia.style.visibility='hidden';
-          ufficio.style.visibility='hidden';
-          ufficioSotto.style.visibility='hidden';
-          motivoDes.style.visibility='hidden';
-          conferma.style.visibility='visible';
-          conferma.style.top='-325px';
-        }
+      conferma.style.visibility='visible';
+      conferma.style.top='-325px';
+    }
+        
+    if(valore == '-')
+    {
+      fiducia.style.visibility='hidden';
+      ufficio.style.visibility='hidden';
+      ufficioSotto.style.visibility='hidden';
+      motivoDes.style.visibility='hidden';
+      conferma.style.visibility='visible';
+      conferma.style.top='-325px';
+    }
+        
+    if(valore == '03')
+    {
+      fiducia.style.visibility='hidden';
+      ufficio.style.visibility='hidden';
+      ufficioSotto.style.visibility='hidden';
+      motivoDes.style.visibility='hidden';
+      conferma.style.visibility='visible';
+      conferma.style.top='-325px';
+    }
   }
 
 </script>
@@ -190,6 +284,7 @@
 
         document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sius.avvocato.action.ActInserisciAvvocato";
         document.LoadInserisciAvvocato.IA.disabled=true;
+        document.LoadInserisciAvvocato.IN.disabled=true;
 
     }
 
@@ -227,22 +322,24 @@
     	
     	<td>&nbsp;&nbsp;&nbsp;</td>
     	<td class="label">
-      		<a href="Javascript:ListaAvvocati2('LoadInserisciAvvocato');">
+      		<a href="Javascript:ListaAvvocatiSiep('LoadInserisciAvvocato');">
         	Seleziona dalla lista  Siep   <img src="/images/filefolder.gif" border=0></a>
     	</td>
   	</tr>
 </table>
 
 <table>
-<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="<%=lAvv.getIdAvvocato()%>">
-<tr>
-     <td class="l" >Cognome </td>
-    <td class="l"  ><input  size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=lAvv.getCognome()%>" name="<%= ICostantiAvvocato.CAMPO_COGNOME %>"  ></td>
-  </tr>
-  <tr>
-    <td class="l">Nome</td>
-    <td class="l"><input size=35 maxlength=35  title="Campo Nome" type="text" readonly value="<%=lAvv.getNome()%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"  ></td>
-  </tr>
+	<tr>
+		<td class="l" >Cognome </td>
+    	<td class="l">
+    		<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="<%=lAvv.getIdAvvocato()%>">
+    		<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=lAvv.getCognome()%>" name="<%= ICostantiAvvocato.CAMPO_COGNOME %>">
+    	</td>
+  	</tr>
+  	<tr>
+		<td class="l">Nome</td>
+		<td class="l"><input size=35 maxlength=35  title="Campo Nome" type="text" readonly value="<%=lAvv.getNome()%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"  ></td>
+	</tr>
   
 <%-- MEV_21: aggiunti campi per chiamata a WS per individuare lista avvocato in RegInde --%>
 <%
@@ -365,7 +462,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
       
       <%-- MEV_21: Aggiunto "stato" --%>
       <tr>
-        <td class="l" >Stato Difensore</font></td>
+        <td class="l" >Stato Difensore</td>
         <td class="L">
           <select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
         </td>
@@ -519,6 +616,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 
   <%-- MEV_21: --%>
   <input type="HIDDEN" name="lTipoInserimento" id="lTipoInserimento" value="reginde">
+  <input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
 </form>
 <script language="JavaScript" type="text/javascript">
  var frmvalidator  = new Validator("LoadInserisciAvvocato");

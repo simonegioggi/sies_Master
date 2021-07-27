@@ -75,5 +75,5 @@ public interface IAvvocato {
 	// MEV_21
 	public AvvocatoModel ExRicercaAvvocatoCertRegInde (AvvocatoModel lAvvMod) throws F3BException;	
 	public AvvocatoModel ExAggiornaAvvocatoDaReginde (AvvocatoModel aAvvocato) throws F3BException;	
-
+	public void ExInvalidaAvvocatoReginde (AvvocatoModel aAvvocato) throws F3BException;	
 }

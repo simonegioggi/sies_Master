@@ -68,8 +68,20 @@
 
   <%-- MEV_21: Aggiunti ulteriori campi  --%>
 	<tr>
-		<td class="l"><font class="label">Luogo di nascita</font></td>
-		<td class="l"><font class="campo"><%=lAvvocato.getDescLuogoNascitaReginde()%></font></td>
+		<td class="l"><font class="label">Comune di nascita</font></td>
+		<td class="l"><font class="campo"><%=lAvvocato.getDescLuogoNascita()%></font></td>
+	</tr>
+	<tr>
+		<td class="l"><font class="label">Stato di Nascita</font></td>
+		<td class="l"><font class="campo"><%=lAvvocato.getDescrStatoNascita()%>&nbsp;</font></td>
+	</tr>
+	<tr>
+<%		String descLuogoNascitaEstero = "039".equals(lAvvocato.getCodStatoNascita()) 
+										? ""
+										: lAvvocato.getDescLuogoNascitaReginde();
+%>
+		<td class="l"><font class="label">Luogo di Nascita Estero</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(descLuogoNascitaEstero)%>&nbsp;</font></td>
 	</tr>
 	<tr>
 		<td class="l"><font class="label">Data di Nascita</font></td>
@@ -88,8 +100,8 @@
 
   <%-- MEV_21: Aggiunti ulteriori campi  --%>
 	<tr>
-		<td class="l"><font class="label">Comune di Residenza</font></td>
-		<td class="l"><font class="campo"><%=lAvvocato.getDescrComuneStudio()%></font></td>
+		<td class="l"><font class="label">Con Studio in</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrComuneStudio(), "-")%>&nbsp;</font></td>
 	</tr>
   <%-- MEV_21: FINE --%>
 
@@ -118,6 +130,13 @@
 		<td class="l"><font class="campo"><%=StringUtils
 							.toStringJSP(lAvvocato.getCodiceFiscale(), "-")%></font></td>
 	</tr>
+
+  <%-- MEV_21: Aggiunti ulteriori campi  --%>
+	<tr>
+		<td class="l"><font class="label">Stato Attivita' Difensore</font></td>
+		<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrNonAttivita(), "-")%></font></td>
+	</tr>
+  <%-- MEV_21: FINE --%>
 
 	<tr>
 		<td class="l"><font class="label">Tipo</font></td>

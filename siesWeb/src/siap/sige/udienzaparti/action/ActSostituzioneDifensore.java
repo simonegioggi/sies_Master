@@ -18,7 +18,6 @@ import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.util.AvvocatoUtil;
 import siap.sico.web.ActionSiap;
 import siap.siep.avvocato.action.ICostantiAvvocato;
-import siap.siep.storicoavvocato.model.StoricoAvvocatoModel;
 import siap.sige.avvocato.action.ICostantiAvvocatoFascicoloSige;
 import siap.sige.avvocato.controller.IAvvocato;
 import siap.sige.avvocato.model.AvvocatoFascicoloSigeModel;
@@ -140,9 +139,10 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA);
+		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
+		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
 
-		// 20210726 Avvocato Recuperato da RegInde o da SIES
-		if (getRequestStringParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO) != null) {
+		if (!"manuale".equals(tipoInserimento)) {
 			if (getRequestStringParameter(ICostantiAvvocato.CAMPO_ID_AVVOCATO).contains("COA"))
 				flagReginde = true;
 			// Provengo da Reginde o da SIES: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
@@ -326,124 +326,63 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		lAvvFascUp.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		lAvvFascUp.setDataAggiornamento(DateUtils.getSysDate());
 
-		// 20210629 Inserimento di un nuovo avvocato per diverso Ufficio appartenenza
-		// solo se l'avvocato non è cert. Reginde e se si tratta di un nuovo inserimento.
-		if (!flagReginde && !("SI".equals(lAvvModRic.getFlagRegInde().trim())) && idAvvocato == null) {
-			if (!lAvvModRic.getCodUffAppartenenza().equals(getCodUfficioUtenteConnesso())) {
-				lAvvModRic.setCognome(getRequestStringParameter(CAMPO_COGNOME).toUpperCase());
-				lAvvModRic.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase());
-				lAvvModRic.setForo(getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase());
-				lAvvModRic.setIndirizzo(
-						getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO).toUpperCase());
-				lAvvModRic.setTelefono(getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO));
-				lAvvModRic.setFax(getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX));
-				lAvvModRic.setEMail(getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL).toUpperCase());
-				lAvvModRic.setPec(getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC));
-				lAvvModRic.setFlagCancellato("N");
-				lAvvModRic
-						.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
-				lAvvModRic.setDescLuogoNasRegInde(
-						getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE));
+		// 20210726 Inserimento di un nuovo avvocato solo se l'avvocato non è cert. Reginde
+		// e se non è presente in SIES.
+		if (!flagReginde && idAvvocato == null) {
+			lAvvModRic.setCognome(getRequestStringParameter(CAMPO_COGNOME).toUpperCase());
+			lAvvModRic.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase());
+			lAvvModRic.setForo(getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase());
+			lAvvModRic
+					.setIndirizzo(getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO).toUpperCase());
+			lAvvModRic.setTelefono(getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO));
+			lAvvModRic.setFax(getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX));
+			lAvvModRic.setEMail(getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL));
+			lAvvModRic.setPec(getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC));
+			lAvvModRic.setFlagCancellato("N");
+			lAvvModRic.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
+			lAvvModRic.setDescLuogoNasRegInde(
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE));
 
-				lAvvModRic.setCodLuogoNascita(codLuogoNascita);
-				lAvvModRic.setDescLuogoNascita(descCodLuogoNascita);
-				lAvvModRic.setProvincia(codProvincia);
-				lAvvModRic.setCap(codCap);
+			lAvvModRic.setCodLuogoNascita(codLuogoNascita);
+			lAvvModRic.setDescLuogoNascita(descCodLuogoNascita);
+			lAvvModRic.setProvincia(codProvincia);
+			lAvvModRic.setCap(codCap);
 
-				lAvvModRic.setCodComuneResidenza(codLuogoResidenza);
-				lAvvModRic.setDescrComuneStudio(descLuogoResidenza);
+			lAvvModRic.setCodComuneResidenza(codLuogoResidenza);
+			lAvvModRic.setDescrComuneStudio(descLuogoResidenza);
 
-				lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
-				// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
-				// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-				// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
-				lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-				lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
-				lAvvModRic.setDataInserimento(DateUtils.getSysDate());
-				lAvvModRic.setFlagRegInde("NO");
+			lAvvModRic.setCodUffAppartenenza(getCodUfficioUtenteConnesso());
+			// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
+			// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
+			// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
+			lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+			lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
+			lAvvModRic.setDataInserimento(DateUtils.getSysDate());
+			lAvvModRic.setFlagRegInde("NO");
 
-				// Recupero dataNascita, Stato Attività Avvocato.
-				if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
-						&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
-								&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
-					dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
-							ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
-							ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
-				if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA))
-					codNonAttivita = getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA);
+			// Recupero dataNascita, Stato Attività Avvocato.
+			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
+					&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
+							&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+				dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
+						ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA,
+						ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+			if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA))
+				codNonAttivita = getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA);
 
-				lAvvModRic.setDataNascita(dataNascita);
-				lAvvModRic.setCodNonAttivita(codNonAttivita);
-				lAvvModRic.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
+			lAvvModRic.setDataNascita(dataNascita);
+			lAvvModRic.setCodNonAttivita(codNonAttivita);
+			lAvvModRic.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
 
-				lAvvModRic = lCtrl.ExInserisciAvvocato(lAvvModRic);
-			} else {
-				StoricoAvvocatoModel lStoricoModel = new StoricoAvvocatoModel();
+			lAvvModRic = lCtrl.ExInserisciAvvocato(lAvvModRic);
 
-				lStoricoModel.setCognome(lAvvModRic.getCognome());
-				lStoricoModel.setNome(lAvvModRic.getNome());
-				lStoricoModel.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
-				lStoricoModel.setCodLuogoNascita(lAvvModRic.getCodLuogoNascita());
-				lStoricoModel.setDataNascita(lAvvModRic.getDataNascita());
-				lStoricoModel.setForo(lAvvModRic.getForo());
-				lStoricoModel.setIndirizzo(lAvvModRic.getIndirizzo());
-				lStoricoModel.setCodComuneResidenza(lAvvModRic.getCodComuneResidenza());
-				lStoricoModel.setTelefono(lAvvModRic.getTelefono());
-				lStoricoModel.setFax(lAvvModRic.getFax());
-				lStoricoModel.setEMail(lAvvModRic.getEMail());
-				lStoricoModel.setCodiceFiscale(lAvvModRic.getCodiceFiscale());
-				lStoricoModel.setProvincia(lAvvModRic.getProvincia());
-				lStoricoModel.setCap(lAvvModRic.getCap());
-				lStoricoModel.setDataSospesoFinoAl(lAvvModRic.getDataSospensione());
-				lStoricoModel.setDataRadiatoDal(lAvvModRic.getDataRadiazione());
-				lStoricoModel.setCodNonAttivita(lAvvModRic.getCodNonAttivita());
-				lStoricoModel.setCodUfficioAppartenenza(lAvvModRic.getCodUffAppartenenza());
-				lStoricoModel.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
-				lStoricoModel.setCodUfficioInserimento(lAvvModRic.getCodUfficioAggiornamento());
-				lStoricoModel.setCodOperatoreInserimento(lAvvModRic.getCodOperatoreAggiornamento());
-				lStoricoModel.setDataInserimento(lAvvModRic.getDataAggiornamento());
-				lAvvModRic.setForo(getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase());
-				lAvvModRic.setIndirizzo(
-						getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO).toUpperCase());
-				lAvvModRic.setTelefono(getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO));
-				lAvvModRic.setFax(getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX));
-				lAvvModRic.setEMail(getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL).toUpperCase());
-				// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
-				// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-				// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
-				// MEV_21: valorizzo nuovi campi da REGINDE ed annullo "setCodComuneResidenza"
-				// per il luogo residenza sarà aggiunta una nuova colonna che conterrà la descrizione del
-				// Comune
-				// sede dello studio come presente in ReGIndE, abbandonando la valorizzazione della colonna
-				// "COD_COMUNE_RESIDENZA", che resterà per i dati pregressi
-				// ComuneModel lComModRes = new ComuneModel(getCodComuneByDescr(
-				// getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA)));
-				// lAvvModRic.setCodComuneResidenza(lComModRes.getCodComune());
-				if (flagReginde) {
-					lAvvModRic.setCodComuneResidenza(null);
-					lAvvModRic.setPec(getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC));
-					lAvvModRic.setFlagRegInde("SI");
-					lAvvModRic.setDescrComuneStudio(
-							getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO));
-					lAvvModRic.setDescLuogoNasRegInde(
-							getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE));
-					lAvvModRic.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
-				}
-
-				lAvvModRic.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-				lAvvModRic.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-				lAvvModRic.setDataAggiornamento(DateUtils.getSysDate());
-
-				lAvvModRic = lCtrl.ExModificaStoricizzaAvvocato(lAvvModRic, lStoricoModel);
-			}
-			idAvvocato = lAvvModRic.getIdAvvocato(); // Valorizzazione idAvvocato precedentemente a null
+			idAvvocato = lAvvModRic.getIdAvvocato(); // Valorizzazione idAvvocato (precedentemente = null)
 		}
 
-		lDifParteMod.setCodOperatoreInserimento(getCodUtenteConnesso());
-		lDifParteMod.setDataInserimento(DateUtils.getSysDate());
-		lDifParteMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-		lDifParteMod.setSoggIdSoggetto(new BigDecimal(idSoggetto));
-		lDifParteMod.setAvvIdAvvocato(/* lAvvModRic.getIdAvvocato() */idAvvocato);
+		// Devo utilizzare IdAvvocato per referenziare l'avvocato prelevato da RegInde, da SIES, o appena
+		// inserito.
+		lDifParteMod.setAvvIdAvvocato(idAvvocato);
+		// lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
 
 		// update
 		PartiUdienzaDifensoreModel lParteUdienzaUp = new PartiUdienzaDifensoreModel();

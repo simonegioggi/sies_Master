@@ -12,6 +12,7 @@ import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.util.AvvocatoUtil;
 import siap.sico.web.ActionSiap;
@@ -65,6 +66,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		//===========================================================
 		// Inserisco l'avvocato: 
 		// se selezioneto Reginde si va in Insert o Update
+		//    - se cambia foro va fatta insert e Update FLAG_REGINDE = NO per il precedente
 		// se selezionato SIEP non si fa nulla
 		// se iscritto manualmente si va in INSERT (non certificato)
 	  //===========================================================
@@ -78,37 +80,31 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 
 		siesLogger.debug("Verifico se Avvocato Già Presente sul fascicolo");
 		Vector <AvvocatoSiusModel> lVectPrec = null;
-		//try {  // Perchè in try catch????
-			// recupero gli avvocati associati al fascicolo
-			AvvocatoFascicoloSiusModel lAvvFascModPrec = new AvvocatoFascicoloSiusModel();
-			lAvvFascModPrec.setFasSiuIdFascicoloSius (idFascicoloSius);			
-			lVectPrec = lCtrl.ExRicercaDifensoreAttualiFascicolo (null, lAvvFascModPrec);
-			
-			if (lVectPrec.size() > 0) {
-				Iterator iter = lVectPrec.iterator();
-				while (iter.hasNext()) {
-					AvvocatoModel lAvvModPrec = ((AvvocatoSiusModel) iter.next()).getAvvocato();
 
-					String lDescrTipo = lAvvModPrec.getDescrTipo();
-					
-					if (lDescrTipo.equalsIgnoreCase("DI FIDUCIA")
-							&& !getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_TIPO).equals("02")) 
-					{
-						throw new F3BException(F3BException.USER_MESSAGE,
-								"I difensori possono essere due solo se entrambi sono di fiducia!");
-					}		
-					
-				  if (lAvvModPrec.getIdAvvocato().compareTo(idAvvocato) == 0)
-						throw new F3BException(F3BException.USER_MESSAGE,"Attenzione: il difensore risulta già inserito!");
-				}
-			}		
-//		} catch (Exception e) {
-//			siesLogger.error("Errore in fase di verifica degli avvocati attuali collegati al fascicolo SIUS",e);
-//		} 				
+		// recupero gli avvocati associati al fascicolo
+		AvvocatoFascicoloSiusModel lAvvFascModPrec = new AvvocatoFascicoloSiusModel();
+		lAvvFascModPrec.setFasSiuIdFascicoloSius (idFascicoloSius);			
+		lVectPrec = lCtrl.ExRicercaDifensoreAttualiFascicolo (null, lAvvFascModPrec);
 		
-		// Recupero i dati dell'avvocato 
-		//AvvocatoModel lAvvocatoInserito = lCtrl.ExRicercaAvvocatoByKey (idAvvocato);
+		if (lVectPrec.size() > 0) {
+			Iterator iter = lVectPrec.iterator();
+			while (iter.hasNext()) {
+				AvvocatoModel lAvvModPrec = ((AvvocatoSiusModel) iter.next()).getAvvocato();
 
+				String lDescrTipo = lAvvModPrec.getDescrTipo();
+				
+				if (lDescrTipo.equalsIgnoreCase("DI FIDUCIA")
+						&& !getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_TIPO).equals("02")) 
+				{
+					throw new F3BException(F3BException.USER_MESSAGE,
+							"I difensori possono essere due solo se entrambi sono di fiducia!");
+				}		
+				
+			  if (lAvvModPrec.getIdAvvocato().compareTo(idAvvocato) == 0)
+					throw new F3BException(F3BException.USER_MESSAGE,"Attenzione: il difensore risulta già inserito!");
+			}
+		}		
+			
 		
 		// Creao il collegamento con il fascicolo SIUS
 		AvvocatoFascicoloSiusModel lAvvFascMod = new AvvocatoFascicoloSiusModel();
@@ -477,15 +473,18 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		
 		BigDecimal idAvvocato = null;
 		
-
-		
 		// Sono possibili 3 casi:
 		// 1) Avvocato selezionato da REGINDE
 		// 2) Avvocato selezionato da SIES ma certificato REGINDE REGINDE non disponibile)
 		// 3) Avvocato inserito manualmente		
 		AvvocatoModel amReginde = new AvvocatoModel();
+		
+    idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
+    
+    if (idAvvocato==null) 
 		{
-      // Si recuperano tutte le informazioni dalla Form.      
+      // Si recuperano tutte le informazioni dalla Form solo se avvocato selezionato reginde o inserito 
+    	// manualmente. Se selezionao SIEP i dati NON servono
       Date dataNascita = null;
       String codLuogoNascita = "-";
       String codProvincia = "-";
@@ -498,17 +497,54 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
           
       // Decodifico il luogo di nascita
       siesLogger.debug("Decodifico il luogo di nascita: "+descCodLuogoNascita);
+      //**********************************************************************
+  		// 20210722 MEV_21 Controllo e valorizzazione comuneNascita.
+  		// Se presente, dal codice comune (e dalla descrizione).
+  		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+  				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+  			comuneNascita = new ComuneModel(
+  					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+  							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+  			codLuogoNascita = comuneNascita.getCodComune();
+  			codProvincia = comuneNascita.getCodProvincia();
+  			codCap = comuneNascita.getCap();
+  			descCodLuogoNascita = comuneNascita.getDescrizione();
+
+  			// altrimenti dalla sola descrizione (rischio omonimi).
+  		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+  			comuneNascita = new ComuneModel(
+  					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+  			descCodLuogoNascita = comuneNascita.getDescrizione();
+  			codLuogoNascita = comuneNascita.getCodComune();
+  			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
+  		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+  				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
+  				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
+  			comuneNascita = AvvocatoUtil
+  					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+  			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+  		}      
+      //**********************************************************************
+/*      
       if (Utils.isPresent(descCodLuogoNascita)) 
       {
         try {
           comuneNascita = new ComuneModel(getCodComuneByDescr(descCodLuogoNascita));
         } catch (Exception e) {
           siesLogger.warn("Comune di nascita ["+descCodLuogoNascita+"] non trovato "+e.getMessage());
-          siesLogger.debug("Provo a decodificare il comune dal Codice Fiscale");
-          // algortimo di omocodia:
-          comuneNascita = AvvocatoUtil
-              .calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-          siesLogger.debug("comuneNascita da CF = "+comuneNascita);
+          
+					if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {    
+						// Se reginde provo a decodificare dal CF
+					          siesLogger.debug("AVVOCATO REGINDE: Provo a decodificare il comune dal Codice Fiscale");
+					          // algortimo di omocodia:
+					          comuneNascita = AvvocatoUtil
+					              .calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+					          siesLogger.debug("comuneNascita da CF = "+comuneNascita);
+					} else {
+						// inserimento manuale: comune inesistente
+						throw e;
+					}         
+          
         }
         
         if (!Utils.isNullObj(comuneNascita)) {
@@ -520,7 +556,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
           }
         }
       }
-
+*/
       // Recupero Codice e descrizione comune di residenza/studio
       String codLuogoResidenza = "-";
       ComuneModel comuneResidenza = null;
@@ -555,7 +591,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
       
       // Imposto i dati dell'avvocato prelevandoli dalla maschera
       amReginde.setIdAvvocato  (null);
-      amReginde.setFlagRegInde ("SI");
+      
       
       // Anagrafica
       amReginde.setCognome       (getRequestStringParameter(CAMPO_COGNOME));
@@ -615,7 +651,8 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		
     if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
     	  siesLogger.debug("checkRegingde. Avvocato COA ");
-
+    	  amReginde.setFlagRegInde ("SI");
+    	  
         // Provengo da Reginde: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
         // se esiste lo aggiorno, altrimenti inserisco nuovo avvocato da Reginde su SIES!
         
@@ -626,7 +663,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
         lAvvCertRegSies.setCodiceFiscale (getRequestStringParameter(CAMPO_CODICE_FISCALE));
         lAvvCertRegSies.setFlagRegInde   ("SI");
         
-        // Perchè non ricerco per FORO????        
+        //    
         siesLogger.debug("checkRegingde. Ricerco l'avvocato RegInde su SIES.AVVOCATO");
         lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
         siesLogger.debug("checkRegingde. lAvvCertRegSies trovato = "+lAvvCertRegSies);
@@ -640,28 +677,44 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
         	siesLogger.debug("Avvocato Certificato Reginde assente, lo inserisco a sistema");
           amReginde = lCtrl.ExInserisciAvvocato (amReginde); 
         } else {
-        	siesLogger.debug("Avvocato Certificato Reginde già presente in SIES (con id:"+lAvvCertRegSies.getIdAvvocato()+") e certificato, lo aggiorno");
-          amReginde.setIdAvvocato                (lAvvCertRegSies.getIdAvvocato());
+        	siesLogger.debug("Avvocato Certificato Reginde già presente in SIES (con id:"+lAvvCertRegSies.getIdAvvocato()+") e certificato sul foro "+lAvvCertRegSies.getForo()+", lo aggiorno");
           
-          amReginde.setCodOperatoreAggiornamento (getCodUtenteConnesso());
-          amReginde.setCodUfficioAggiornamento   (getCodUfficioUtenteConnesso());
-          amReginde.setDataAggiornamento         (DateUtils.getSysDate());
-          
-          // n.b. aggiorno comunque l'avvocato devo testare comuqne che non sia già legato al fascicolo
-          amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
+        	// Testo il foro, se non è cambiato vado in update altrimenti
+        	if (lAvvCertRegSies.getForo().equals(amReginde.getForo())) {
+        		siesLogger.debug("L'avvocato NON ha cambiato foro, aggiorno solo alcuni dati");
+          	amReginde.setIdAvvocato                (lAvvCertRegSies.getIdAvvocato());
+            
+            amReginde.setCodOperatoreAggiornamento (getCodUtenteConnesso());
+            amReginde.setCodUfficioAggiornamento   (getCodUfficioUtenteConnesso());
+            amReginde.setDataAggiornamento         (DateUtils.getSysDate());
+            
+            // n.b. aggiorno comunque l'avvocato devo testare comuqne che non sia già legato al fascicolo
+            amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);        		
+        	} else {
+        		siesLogger.debug("L'avvocato HA cambiato foro");
+        		siesLogger.debug("Invalido il vecchio avvocato: id = "+lAvvCertRegSies.getIdAvvocato());
+        		lAvvCertRegSies.setCodOperatoreAggiornamento (getCodUtenteConnesso());
+        		lAvvCertRegSies.setCodUfficioAggiornamento   (getCodUfficioUtenteConnesso());
+        		lAvvCertRegSies.setDataAggiornamento         (DateUtils.getSysDate());  
+        		
+        		lCtrl.ExInvalidaAvvocatoReginde (lAvvCertRegSies); 
+        		
+        		siesLogger.debug("Inserisco il nuovo avvocato");
+        		amReginde = lCtrl.ExInserisciAvvocato (amReginde); 
+        	}        
         }
-        idAvvocato = amReginde.getIdAvvocato();
-        
+        idAvvocato = amReginde.getIdAvvocato();        
       } else  {
         // Avvocato non presente in RegInde, si esegue procedura preesistente
         idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
         
         if (idAvvocato!=null) {
-        	siesLogger.debug("Avvocato FORM non selezionato da reginde ma da SIEP con ID "+idAvvocato);
+        	siesLogger.debug("Avvocato FORM non selezionato da reginde ma da SIEP con ID "+idAvvocato+", aggancio l'avvocato al fascicolo");
         	// In questo caso non devo inserire nulla ne aggiornare nulla
         }
         else {
         	siesLogger.debug("INSERIMENTO MANUALE");
+        	amReginde.setFlagRegInde ("NO");
         	amReginde = lCtrl.ExInserisciAvvocato (amReginde); 
         	idAvvocato = amReginde.getIdAvvocato();
         }

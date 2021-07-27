@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.storicoavvocato.dao.StoricoAvvocatoDAO;
@@ -809,7 +810,11 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		return lAvvocato;
 	}
 	
-	// 20210623 MEV_21 Aggiornamento Avvocato caricato da Reginde.
+
+
+	/**
+	 * MEV_21
+	 */
 	public AvvocatoModel ExAggiornaAvvocatoDaReginde(AvvocatoModel aAvvocato) throws F3BException {
 
 		Connection lConn = null;
@@ -831,5 +836,36 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		}
 
 		return aAvvocato;
+	}
+	
+	/**
+	 * MEV_21: funzion che consente di invalidare l'avvocato certificato REGINDE
+	 * es  in caso di cambio del foro
+	 */
+	public void ExInvalidaAvvocatoReginde (AvvocatoModel aAvvocato) throws F3BException {
+		Connection lConn = null;
+		AvvocatoDAO lAvvDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lAvvDao = new AvvocatoDAO(lConn);
+			
+			lAvvDao.setFlagRegInde("NO");
+			lAvvDao.setCodOperatoreAggiornamento (aAvvocato.getCodOperatoreAggiornamento());
+			lAvvDao.setCodUfficioAggiornamento   (aAvvocato.getCodUfficioAggiornamento());
+			lAvvDao.setDataAggiornamento         (aAvvocato.getDataAggiornamento());
+			
+			lAvvDao.setCondizioneUpdate (aAvvocato.getIdAvvocato());
+
+			lAvvDao.update();
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException(
+					this.getClass().getName() + ".ExInvalidaAvvocatoReginde: Errore in fase di aggiornamento: " + ex);
+		} finally {
+			cleanup(lAvvDao);
+			cleanup(lConn);
+		}	
 	}
 }
