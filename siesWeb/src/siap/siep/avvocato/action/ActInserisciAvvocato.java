@@ -63,31 +63,42 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		String descCodLuogoNascita = "";
 		String descLuogoNascitaReginde = "";
 		ComuneModel comuneNascita = null;
+		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
+		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
+
 		// 20210722 MEV_21 Controllo e valorizzazione comuneNascita.
 		// Se presente, dal codice comune (e dalla descrizione).
-		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
-				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
-			comuneNascita = new ComuneModel(
-					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-			codLuogoNascita = comuneNascita.getCodComune();
-			codProvincia = comuneNascita.getCodProvincia();
-			codCap = comuneNascita.getCap();
-			descCodLuogoNascita = comuneNascita.getDescrizione();
+		// 20210727 Eccezione non propagata causa Venaria - Comune inesistente
+		try {
+			if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+					&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+				comuneNascita = new ComuneModel(getDatiComuneByCodDescr(
+						getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+						getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+				codLuogoNascita = comuneNascita.getCodComune();
+				codProvincia = comuneNascita.getCodProvincia();
+				codCap = comuneNascita.getCap();
+				descCodLuogoNascita = comuneNascita.getDescrizione();
 
-			// altrimenti dalla sola descrizione (rischio omonimi).
-		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
-			comuneNascita = new ComuneModel(
-					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-			descCodLuogoNascita = comuneNascita.getDescrizione();
-			codLuogoNascita = comuneNascita.getCodComune();
-			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
-		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
-				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
-				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
-			comuneNascita = AvvocatoUtil
-					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+				// altrimenti dalla sola descrizione (rischio omonimi).
+			} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+				comuneNascita = new ComuneModel(
+						getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+				descCodLuogoNascita = comuneNascita.getDescrizione();
+				codLuogoNascita = comuneNascita.getCodComune();
+				// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
+			} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+					&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
+					&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
+				comuneNascita = AvvocatoUtil
+						.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+				// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+			}
+		} catch (Exception e) {
+			siesLogger.info(e.getMessage());
+			// 20210727 Si Propaga l'eccezione solo in caso di inserimento manuale.
+			if ("manuale".equals(tipoInserimento))
+				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 		}
 
 		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
@@ -104,7 +115,9 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 				comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
 			} catch (Exception e) {
 				siesLogger.info(e.getMessage());
-				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+				// 20210727 Si Propaga l'eccezione solo in caso di inserimento manuale.
+				if ("manuale".equals(tipoInserimento))
+					throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 			}
 			if (!Utils.isNullObj(comuneResidenza)) {
 				codLuogoResidenza = comuneResidenza.getCodComune();
@@ -120,9 +133,6 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
 		if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
-
-		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
-		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
 
 		if (!"manuale".equals(tipoInserimento)) {
 			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
@@ -322,7 +332,7 @@ public class ActInserisciAvvocato extends ActProvvedimentoDifensore implements I
 		lAvvFascMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		lAvvFascMod.setFasSieIdFascicoloSiep(
 				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
-		lAvvFascMod.setAvvIdAvvocato(/* getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO) */idAvvocato);
+		lAvvFascMod.setAvvIdAvvocato(idAvvocato);
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_NOTE))
 			lAvvFascMod.setNote(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOTE));
 

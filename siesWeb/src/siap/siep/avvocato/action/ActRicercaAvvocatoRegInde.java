@@ -96,7 +96,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 		}
 
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
-		setRequestAttribute("listaAvvocati", listaAvvocati);
+		setRequestAttribute("avvocato", listaAvvocati);
 
 		return PG_RICERCA_AVVOCATO_REGINDE;
 	}

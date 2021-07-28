@@ -22,7 +22,7 @@
 <%@ page import="siap.siep.avvocato.action.ICostantiAvvocato"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
 
-<jsp:useBean id="listaAvvocati" scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="avvocato" 	scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="msg"			scope="request" class="java.lang.String"/>
 
 <html>
@@ -50,7 +50,7 @@ function avvocati() {
 		}
 		return;
 	}
-	if ("<%=listaAvvocati.size()%>" == 0) {
+	if ("<%=avvocato.size()%>" == 0) {
   		alert("Attenzione! Nessun Difensore trovato in ReGIndE.\nE' possibile effettuare la ricerca del Difensore su SIES!");
   		buttonSies.style.visibility = "visible";
 		buttonSies.disabled = false;
@@ -121,7 +121,7 @@ function altreInfo(idRecord) {
   
 <form name="f">
 <%
-if (listaAvvocati.size() > 0 && listaAvvocati.size() < 201) {
+if (avvocato.size() > 0 && avvocato.size() < 201) {
 %>
 <table width="100%">
   	<tr>
@@ -135,7 +135,7 @@ if (listaAvvocati.size() > 0 && listaAvvocati.size() < 201) {
   	</tr>
 <%
 	int id_record = 0;
-	Iterator iter = listaAvvocati.iterator();
+	Iterator iter = avvocato.iterator();
 	boolean testAvvocatiValidi = false;
     while (iter.hasNext()) {
     	id_record += 1;
