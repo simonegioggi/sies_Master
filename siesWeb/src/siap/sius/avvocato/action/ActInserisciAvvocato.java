@@ -458,14 +458,11 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 	/**
 	 * Metodo che effettua inserimento o aggiornamento dell'avvocato e restituisce l'id per 
 	 * collegarlo al fascicolo.
-	 * Se avvocato selezionato da Reginde il sistema lo cerac e se trovato lo aggiorna 
+	 * Se avvocato selezionato da Reginde il sistema lo ceraca e se trovato lo aggiorna 
 	 * altrimenti lo inserisce.
 	 * Se avvocato selezionato da SIES (non trovato su reginde) non fa nullea (già presente) e
 	 * restituisce solo l'id
-	 * @TODO
-	 * Se inserimento manuale nuovo avvocato (non trovato reginde, eventualmente non disponibile, e 
-	 * non trovato SIES) lo inserisce come avvocato NON certificato. 
-	 * 
+	 * Se inserimento manuale lo inserisce non certificato
 	 */
 	private BigDecimal inserisciAggiornaAvvocato() throws F3BException 
 	{		
@@ -479,12 +476,14 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		// 3) Avvocato inserito manualmente		
 		AvvocatoModel amReginde = new AvvocatoModel();
 		
-    idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
-    
-    if (idAvvocato==null) 
+
+		if (   getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA") //Reginde
+				|| getRequestStringParameter(CAMPO_ID_AVVOCATO).equals("") //Iscrizione manuale
+			 )
 		{
       // Si recuperano tutte le informazioni dalla Form solo se avvocato selezionato reginde o inserito 
     	// manualmente. Se selezionao SIEP i dati NON servono
+			siesLogger.debug("Iscrizione manuale o Reginde: CAMPO_ID_AVVOCATO = "+getRequestStringParameter(CAMPO_ID_AVVOCATO));
       Date dataNascita = null;
       String codLuogoNascita = "-";
       String codProvincia = "-";
@@ -594,9 +593,9 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
       
       
       // Anagrafica
-      amReginde.setCognome       (getRequestStringParameter(CAMPO_COGNOME));
-      amReginde.setNome          (getRequestStringParameter(CAMPO_NOME));
-      amReginde.setCodiceFiscale (getRequestStringParameter(CAMPO_CODICE_FISCALE) );
+      amReginde.setCognome       (getRequestStringParameter(CAMPO_COGNOME).toUpperCase());
+      amReginde.setNome          (getRequestStringParameter(CAMPO_NOME).toUpperCase());
+      amReginde.setCodiceFiscale (getRequestStringParameter(CAMPO_CODICE_FISCALE).toUpperCase());
       amReginde.setDataNascita   (dataNascita);
 
       // Nascita

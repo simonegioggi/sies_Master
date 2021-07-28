@@ -54,8 +54,11 @@ public class ActLoadSostituzioneDifensore extends ActionSiap implements ICostant
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"I difensori possono essere due solo se entrambi sono di fiducia!");
 		}
-		setRequestAttribute("avvocato", avvocato);
-
+		
+		// MEV_21: si passa l'avvocato con nome differente per evitare il caricamento in form 
+		//setRequestAttribute("avvocato", avvocato);
+		setRequestAttribute("avvocatoVecchio", avvocato);
+		
 		Option lOption = new Option(DecodificheManager.getInstance().getTipoAvvocato());
 		setRequestAttribute("tipoAvvocato", "" + lOption);
 
@@ -92,6 +95,18 @@ public class ActLoadSostituzioneDifensore extends ActionSiap implements ICostant
 		}
 		setRequestAttribute("foro", "" + lOption);
 
+    // MEV_21 Nuova gestione Combo per Stato di Nascita
+  	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
+//  	if (avvocato.getAvvocato().getCodStatoNascita()!=null)
+//  		lOption.setSelected(avvocato.getAvvocato().getCodStatoNascita());
+  	setRequestAttribute("nazione", "" + lOption );      
+
+  	// MEV_21 Nuova gestione Combo per Stato Difensore
+  	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");  	
+//  	if (avvocato.getAvvocato().getCodNonAttivita()!=null)
+//  		lOption.setSelected(avvocato.getAvvocato().getCodNonAttivita());
+  	setRequestAttribute("statoAvv", "" + lOption );  
+  	
 		return PG_SOSTITUZIONE_AVVOCATO;
 	}
 

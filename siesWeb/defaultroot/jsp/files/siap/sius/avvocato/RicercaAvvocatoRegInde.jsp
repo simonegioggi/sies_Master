@@ -89,7 +89,7 @@ function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefi
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>.value = descComuneStudio;
 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.value = stato;
 
-   	window.parent.close();
+  window.parent.close();
 }
 
 function altreInfo(idRecord) {

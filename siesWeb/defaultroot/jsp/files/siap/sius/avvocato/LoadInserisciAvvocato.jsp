@@ -62,7 +62,7 @@
 
   function Inserisci()
   {
-  	// MEV_21 - Aggiunti controlli per inserimento avvocato non certificato.
+  	<%-- MEV_21 - Aggiunti controlli per inserimento avvocato non certificato. --%>
     if (document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COGNOME%>.value.length==0 ) {
       alert('Il Cognome è obbligatorio');
       document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_COGNOME %>.focus;
@@ -151,7 +151,9 @@
   {
     //alert("Verify");
     
-    if(document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value=="")
+    if(   document.LoadInserisciAvvocato.<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>.value==""
+       && !document.getElementById('lTipoInserimento').value=="manuale"
+      )
     {
       alert('Selezionare un difensore dalla lista');
       return false;
@@ -189,12 +191,16 @@
 
   function caricamento()
   {
+    <%-- MEV_21: Gestione riabilitazione dei campi sul tasto indietro dopo segnalazione di errore --%>
     var tipoInserimento = document.getElementById('lTipoInserimento').value;
-    //alert("caricamento: "+tipoInserimento);
     
     if (tipoInserimento=="manuale"){
         // torna indietro devo riabilitare i campi
         //alert("Abilito i campi: ");
+        document.getElementById('inserimento').style.visibility = 'visible';
+        document.getElementById('confermaBtn').style.visibility = 'hidden';
+        document.getElementById('ricReginde').style.visibility = 'hidden';
+
         document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
         document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME%>').readOnly = false; 
         document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>').readOnly = false; 
@@ -211,9 +217,12 @@
         document.getElementById('<%=ICostantiAvvocato.CAMPO_E_MAIL%>').readOnly = false; 
         document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC%>').readOnly = false; 
         document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
-        document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;      
+        document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false; 
+
+        document.getElementById('IconComuneNascita').style.visibility = 'visible';
+        document.getElementById('IconComuneStudio').style.visibility = 'visible';     
     }
-    
+    <%-- MEV_21: FINE --%>
     
     var idxSel = document.LoadInserisciAvvocato.<%=ICostantiAvvocato.CAMPO_COD_TIPO%>.selectedIndex;
 
@@ -332,7 +341,7 @@
 	<tr>
 		<td class="l" >Cognome </td>
     	<td class="l">
-    		<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="<%=lAvv.getIdAvvocato()%>">
+    		<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="">
     		<input size=35 maxlength=35 title="Campo Cognome" type="text" readonly value="<%=lAvv.getCognome()%>" name="<%= ICostantiAvvocato.CAMPO_COGNOME %>">
     	</td>
   	</tr>
@@ -341,7 +350,7 @@
 		<td class="l"><input size=35 maxlength=35  title="Campo Nome" type="text" readonly value="<%=lAvv.getNome()%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"  ></td>
 	</tr>
   
-<%-- MEV_21: aggiunti campi per chiamata a WS per individuare lista avvocato in RegInde --%>
+<%-- MEV_21:  --%>
 <%
 String comuneNascita = "", comuneNascitaEstero = "";
 if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
@@ -361,7 +370,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
               type="text" maxlength="35" size="35"
              name="<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>"  >
       		
-      <a href="Javascript:ListaComuniNascita('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>');" >
+      <a href="Javascript:ListaComuniNascita('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>');" id="IconComuneNascita" style="visibility:hidden;" >
 				<img src="/images/filefolder.gif" border=0>
 			</a>
     </td>
@@ -432,7 +441,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
           <input type="text" title="Comune Sede dello Studio" maxlength="35" size="35" readonly
                  value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" 
                  name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" >
-          <a href="Javascript:ListaComuni('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO %>');">
+          <a id="IconComuneStudio" href="Javascript:ListaComuni('LoadInserisciAvvocato','<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO %>');" style="visibility:hidden;">
             <img src="/images/filefolder.gif" border=0>
           </a>
         </td>

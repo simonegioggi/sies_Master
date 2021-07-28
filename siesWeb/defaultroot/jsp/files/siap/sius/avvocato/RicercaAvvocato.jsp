@@ -153,6 +153,9 @@ window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostanti
         window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC%>').readOnly = false; 
         window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
         window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;
+        
+        window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('IconComuneNascita').style.visibility = 'visible';
+        window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('IconComuneStudio').style.visibility = 'visible';
       } else {
         window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('lTipoInserimento').value = "reginde";
         window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('inserimento').style.visibility = 'hidden';
