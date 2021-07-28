@@ -43,7 +43,7 @@ function Verify(obj) {
     	}
     	ritorno = false;
   	}
-	if (obj && obj.id == "sies") {
+	if (obj.id == "sies") {
 		document.f.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.avvocato.action.ActRicercaAvvocato";
 	} else {
 		document.f.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.avvocato.action.ActRicercaAvvocatoRegInde";
