@@ -98,8 +98,9 @@ function Inserisci() {
 		alert('Il tipo difensore è obbligatorio');
 		return false;
 	}
-	
- 	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore";
+
+<%--  	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value="siap.siep.avvocato.action.ActLoadInserisciDifensore"; --%>
+	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.avvocato.action.ActInserisciAvvocato";
 	document.LoadInserisciAvvocato.submit();
 }
  

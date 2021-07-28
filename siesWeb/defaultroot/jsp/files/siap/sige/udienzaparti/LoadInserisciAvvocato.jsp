@@ -89,9 +89,10 @@ function Inserisci() {
 		alert('Il tipo difensore è obbligatorio');
 		return false;
 	}
-	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.udienzaparti.action.ActLoadInserisciDifensore";
+<%-- 	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.udienzaparti.action.ActLoadInserisciDifensore"; --%>
+	document.LoadInserisciAvvocato.<%=IWebConstants.ACTION_FIELD%>.value = "siap.sige.udienzaparti.action.ActInserisciAvvocato";
  	document.LoadInserisciAvvocato.submit();
- }
+}
 
 function ListaComuni(a_formname,a_fieldname) {
 	if (document.LoadInserisciAvvocato.lTipoInserimento.value != "reginde")
