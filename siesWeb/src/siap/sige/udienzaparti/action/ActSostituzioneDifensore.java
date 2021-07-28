@@ -17,7 +17,7 @@ import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.util.AvvocatoUtil;
 import siap.sico.web.ActionSiap;
-import siap.siep.avvocato.action.ICostantiAvvocato;
+import siap.sige.avvocato.action.ICostantiAvvocato;
 import siap.sige.avvocato.action.ICostantiAvvocatoFascicoloSige;
 import siap.sige.avvocato.controller.IAvvocato;
 import siap.sige.udienzaparti.model.AvvocatoParteModel;
@@ -148,15 +148,15 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 
 			// 20210614 MEV_21 Si esegue la ricerca puntuale dell'Avvocato certificato RegInde in SIES.
 			AvvocatoModel lAvvCertRegSies = new AvvocatoModel();
-			lAvvCertRegSies.setNome(getRequestStringParameter(CAMPO_NOME));
-			lAvvCertRegSies.setCognome(getRequestStringParameter(CAMPO_COGNOME));
+			lAvvCertRegSies.setNome(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME));
+			lAvvCertRegSies.setCognome(getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME));
 			lAvvCertRegSies
 					.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
 			lAvvCertRegSies.setFlagRegInde("SI");
 			lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
 
-			amReginde = new AvvocatoModel(null, getRequestStringParameter(CAMPO_COGNOME),
-					getRequestStringParameter(CAMPO_NOME),
+			amReginde = new AvvocatoModel(null, getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase(), null,
 					getRequestStringParameter(CAMPO_INDIRIZZO),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO),
@@ -345,8 +345,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		// 20210726 Inserimento di un nuovo avvocato solo se l'avvocato non è cert. Reginde
 		// e se non è presente in SIES.
 		if (!flagReginde && idAvvocato == null) {
-			lAvvModRic.setCognome(getRequestStringParameter(CAMPO_COGNOME).toUpperCase());
-			lAvvModRic.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase());
+			lAvvModRic.setCognome(getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).toUpperCase());
+			lAvvModRic.setNome(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME).toUpperCase());
 			lAvvModRic.setForo(getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase());
 			lAvvModRic
 					.setIndirizzo(getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO).toUpperCase());
