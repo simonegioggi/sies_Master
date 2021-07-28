@@ -242,6 +242,7 @@ function caricamento() {
 		document.getElementById('inserimento').style.visibility = 'visible';
 		document.getElementById('confermaBtn').style.visibility = 'hidden';
 		document.getElementById('ricReginde').style.visibility = 'hidden';
+		document.getElementById('ricSiep').style.visibility = 'hidden';
 		document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
 		document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME%>').readOnly = false; 
 		document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>').readOnly = false; 
@@ -317,7 +318,7 @@ function EnableCombo() {
 
 <table>
 	<tr>
- 		<td class="label" id="ricReginde"  style="visibility:visible;">
+ 		<td class="label" id="ricReginde" style="visibility:visible;">
  			<%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 <!--       		<a href="Javascript:ListaAvvocati('LoadInserisciAvvocato');"> -->
 <!--         		Seleziona dalla lista <img src="/images/filefolder.gif" border="0"> -->
@@ -330,7 +331,7 @@ function EnableCombo() {
 <%
 if (visualizzaAvvocatiSiep) {
 %>	
-		<td class="label">
+		<td class="label" id="ricSiep" style="visibility:visible;">
       		<a href="Javascript:ListaAvvocatiSiep('LoadInserisciAvvocato');">
         		Seleziona dalla lista Siep <img src="/images/filefolder.gif" border="0">
         	</a>

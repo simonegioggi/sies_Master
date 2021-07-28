@@ -355,7 +355,7 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			lAvvModRic.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 			lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
 			lAvvModRic.setDataInserimento(DateUtils.getSysDate());
-			lAvvModRic.setFlagRegInde("NO");
+			lAvvModRic.setFlagVisualizza(new BigDecimal(1));
 			lAvvModRic.setDataNascita(dataNascita);
 			lAvvModRic.setCodNonAttivita(codNonAttivita);
 			lAvvModRic.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
