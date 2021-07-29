@@ -576,8 +576,8 @@ if (lAvv.getDataNascita() == null) {
         </td>
         <!-- 20210611 MEV_21 -->
     	<td colspan=2 id="inserimento" style="visibility:hidden;">
-<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
-		 </td>
+			<input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();">
+		</td>
 	</tr>
 </table>
 </div>
