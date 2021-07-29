@@ -779,7 +779,11 @@ public class SospensioneController extends SiapController implements ISospension
 			lConn = getDBConnection();
 
 			lSosDao = new SospensioneSqlDAO(lConn);
-			lSosDao.ricercaSospensioneByFascicolo(aKeyFascicolo);
+			// Ticket#202105240111 - Modificato metodo chiamato per recuperare solo le 
+			// sospenzioni legate ed eventi e PR trasferibili (validati)
+			//lSosDao.ricercaSospensioneByFascicolo(aKeyFascicolo);
+			lSosDao.ricercaSospensioneByFascicoloXTrasferimento (aKeyFascicolo);
+			// Ticket#202105240111 - FINE
 			lSospensioni = new Vector<SospensioneModel>(lSosDao.getModels());
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: " + daoEx);

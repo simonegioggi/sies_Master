@@ -113,6 +113,9 @@ public class ActInserisciPosGiuridicaCumulo extends ActionModuloCumulo
 		// ==========================================================================
 		// Recupero il fascicolo da aggiornare
 		// ==========================================================================
+		// [Ticket#20210430011] - l'aggiornamente non va fatto qui ma solo in fase di validazione
+		// SI commenta l'aggiornamento del fascicolo
+		/*
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		String sFlagAltraCausa = this.getFlagAltraCausa(lPosizioneGiuridica.getCodPosizioneGiuridica());
@@ -121,8 +124,9 @@ public class ActInserisciPosGiuridicaCumulo extends ActionModuloCumulo
 		lFascMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		lFascMod.setDataAggiornamento(DateUtils.getSysDate());
 		lCtrlDatiFinali.ExUpdateFlagAltraCausaFascicolo(lFascMod, sFlagAltraCausa);
+		*/
 		// ***** FINE INTERVENTO 20191128013 *****//
-
+		// FINE [Ticket#20210430011]
 		// =============================
 		// Invoco la Action di dettaglio
 		// =============================
