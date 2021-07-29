@@ -93,48 +93,48 @@ AvvocatoFascicoloSigeModel lAvvFascSige = new AvvocatoFascicoloSigeModel(avvocat
 		</tr>
 		<tr>
 				<td class="l"><font class="label">Nome</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNome()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getNome()) %></font></td>
 		</tr>
 <tr>
 				<td class="l"><font class="label">Luogo di Nascita</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescLuogoNascita()) %></font></td>
 		</tr>
 <tr>
 				<td class="l"><font class="label">Data di Nascita</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataNascita(),"dd-MM-yyyy")) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvocato.getDataNascita(),"dd-MM-yyyy")) %></font></td>
 		</tr>
 		<tr>
 				<td class="l"><font class="label">Foro</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getForo()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getForo()) %></font></td>
 		</tr>
 		<tr>
 				<td class="l"><font class="label">Indirizzo</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getIndirizzo()) %></font></td>
 		</tr>
 <tr>
 				<td class="l"><font class="label">Comune di Residenza</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescComuneResidenza()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescComuneResidenza()) %></font></td>
 		</tr>
 
 		<tr>
 				<td class="l"><font class="label">Telefono</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getTelefono()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getTelefono()) %></font></td>
 		</tr>
 		<tr>
 				<td class="l"><font class="label">Fax</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getFax()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getFax()) %></font></td>
 		</tr>
 		<tr>
 				<td class="l"><font class="label">EMail</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getEMail()) %></font></td>
 		</tr>
 		<tr>
 				<td class="l"><font class="label">Codice Fiscale</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getCodiceFiscale()) %></font></td>
 		</tr>
     <tr>
 				<td class="l"><font class="label">Tipo</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrTipo()) %>&nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvocato.getDescrTipo()) %></font></td>
 		</tr>
 <%if(lAvvocato.getDescrTipo().equalsIgnoreCase("DI FIDUCIA") || lAvvocato.getDescrTipo().equalsIgnoreCase("D'UFFICIO")){%>
 <tr>
@@ -146,7 +146,7 @@ AvvocatoFascicoloSigeModel lAvvFascSige = new AvvocatoFascicoloSigeModel(avvocat
 
        <td class="l"><font class="label">Data Designazione</font></td>
 <%}%>
-       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvFascSige.getDataInizioValidita(),"dd-MM-yyyy")) %>&nbsp;</font></td>
+       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lAvvFascSige.getDataInizioValidita(),"dd-MM-yyyy")) %></font></td>
   </tr>
 <%}%>
 <%if( lAvvocato.getDescrTipo().equalsIgnoreCase("D'UFFICIO")){%>
@@ -154,7 +154,7 @@ AvvocatoFascicoloSigeModel lAvvFascSige = new AvvocatoFascicoloSigeModel(avvocat
 
  <tr>
        <td class="l"><font class="label">Motivo Designazione</font></td>
-       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvFascSige.getDescrMotivoDesignazione()) %>&nbsp;</font></td>
+       <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvFascSige.getDescrMotivoDesignazione()) %></font></td>
   </tr>
 <%}%>
 
@@ -162,7 +162,7 @@ AvvocatoFascicoloSigeModel lAvvFascSige = new AvvocatoFascicoloSigeModel(avvocat
 
  <tr>
       <td class="l"><font class="label">Note</font></td>
-      <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvFascSige.getNote()) %>&nbsp;</font></td>
+      <td class="l"><font class="campo"><%=StringUtils.toStringJSP(lAvvFascSige.getNote()) %></font></td>
   </tr>
 <%}%>
 
@@ -178,7 +178,7 @@ AvvocatoFascicoloSigeModel lAvvFascSige = new AvvocatoFascicoloSigeModel(avvocat
 
 <tr>
 				<td class="l"><font class="label">Istituto Detenzione</font></td>
-				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lIstMod.getDescrTipoIstituto()) %> di <%=StringUtils.toStringJSP(lIstMod.getDescrComune()) %> &nbsp;</font></td>
+				<td class="l"><font class="campo"><%=StringUtils.toStringJSP(lIstMod.getDescrTipoIstituto()) %> di <%=StringUtils.toStringJSP(lIstMod.getDescrComune()) %> </font></td>
 		</tr>
 <%}%>
 <%if(!lAvvFascSige.getDescrTipoAutoritaDif().equals("-")){%>
@@ -191,5 +191,5 @@ AvvocatoFascicoloSigeModel lAvvFascSige = new AvvocatoFascicoloSigeModel(avvocat
 <%}%>
 <%}%>
 </table>
-	</body>
+</body>
 </html>

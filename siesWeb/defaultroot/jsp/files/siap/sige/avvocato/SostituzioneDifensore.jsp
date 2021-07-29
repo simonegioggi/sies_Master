@@ -286,7 +286,7 @@ function ListaComuniNascita(a_formname,a_fieldname) {
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sige.avvocato.action.ActSostituzioneDifensore">
 <table>
 	<tr>
-    	<td class="l">
+    	<td class="l" id="ricReginde"  style="visibility:visible;">
     		<%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
 <!--       		<a href="Javascript:ListaAvvocati('LoadModificaAvvocato');"> -->
 <!--       			Seleziona dalla lista <img src="/images/filefolder.gif" border=0> -->
