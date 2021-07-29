@@ -155,6 +155,7 @@ public class AvvocatoSqlDAO extends SIAPSqlDAO {
 		//MEV_21: aggiunto recupero della descrizione non attività
 		lStatement += " CG.RV_DOMAIN  = 'NON_ATTIVITA' AND ";
 		lStatement += " CG.RV_LOW_VALUE = COD_NON_ATTIVITA AND ";
+		lStatement += " FLAG_REGINDE = 'SI' AND "; // Solo quelli certificati
 	  //MEV_21: FINE
 		lStatement += " DESNASCITA.COD_COMUNE = COD_LUOGO_NASCITA ";
 

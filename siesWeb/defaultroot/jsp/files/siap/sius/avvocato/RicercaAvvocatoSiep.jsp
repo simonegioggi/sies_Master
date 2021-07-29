@@ -173,7 +173,9 @@
         <td class=l><%=StringUtils.toStringJSP(lAvv.getDescrNonAttivita(),"-")%>&nbsp;</td>
 
         <% if (! modalita.equals("NoPop")) { %>
-        <td class=c><a href="Javascript:insertIT('
+        <td class=c>
+          <% if ("SI".equals(lAvv.getFlagRegInde())) { %>
+          <a href="Javascript:insertIT('
                  <%=lAvv.getIdAvvocato()%>',
                 '<%=StringUtils.cStrForJS(lAvv.getCognome())%>',
                 '<%=StringUtils.cStrForJS(lAvv.getNome())%>',
@@ -194,6 +196,7 @@
                 '<%=stato%>' <%-- MEV_21: aggiunto--%>
               );">
           <img align="middle" src="/images/fileselected.gif" border=0></a>
+          <% } %>&nbsp;
         </td>  
         <% } %>
         </tr>
