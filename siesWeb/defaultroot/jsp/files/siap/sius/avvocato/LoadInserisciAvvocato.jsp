@@ -139,7 +139,7 @@
 
   function ListaAvvocatiSiep(a_formname)
   {
-    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadRicercaAvvocatoSiep&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=450,height=500");
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadRicercaAvvocatoSiep&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=500");
   }
   
   function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2)

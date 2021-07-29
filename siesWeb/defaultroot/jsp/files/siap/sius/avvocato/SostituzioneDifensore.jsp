@@ -140,7 +140,7 @@ AvvocatoSiusModel avvocato = new AvvocatoSiusModel();
   
   function ListaAvvocatiSiep(a_formname)
   {
-    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadRicercaAvvocatoSiep&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=450,height=500");
+    desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sius.avvocato.action.ActLoadRicercaAvvocatoSiep&formname="+a_formname, "Ricerca_Avvocato","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=500");
   }
 
   function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2)
@@ -339,28 +339,26 @@ MEV_21: --%>
 </table>
 
 <table >
-<input type="hidden" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="">
-
 <%-- MEV_21: aggiunti dati del difensore da sostituire non più caricati in form --%>
-<tr>
-  <td class="l" colspan=2>
-    <input type="hidden" name="idAvvVecchio" value="<%=avvocatoVecchio.getAvvocato().getIdAvvocato()%>">
-    <font class="label">Difensore da sostituire :  </font>&nbsp; 
-    <font class="campo"> <%=StringUtils.toStringJSP(avvocatoVecchio.getAvvocato().getCognome())%> &nbsp; <%=StringUtils.toStringJSP(avvocatoVecchio.getAvvocato().getNome())%></font> &nbsp;&nbsp;
-    <font class="label">  foro di  </font> &nbsp;
-    <font class="campo"> <%=StringUtils.toStringJSP(avvocatoVecchio.getAvvocato().getForo())%></font>
-  </td>
-</tr>
+	<tr>
+  		<td class="l" colspan=2>
+  			<input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>" value="">
+			<input type="hidden" name="idAvvVecchio" value="<%=avvocatoVecchio.getAvvocato().getIdAvvocato()%>">
+			<font class="label">Difensore da sostituire :  </font>&nbsp; 
+			<font class="campo"> <%=StringUtils.toStringJSP(avvocatoVecchio.getAvvocato().getCognome())%> &nbsp; <%=StringUtils.toStringJSP(avvocatoVecchio.getAvvocato().getNome())%></font> &nbsp;&nbsp;
+			<font class="label">  foro di  </font> &nbsp;
+			<font class="campo"> <%=StringUtils.toStringJSP(avvocatoVecchio.getAvvocato().getForo())%></font>
+  	</td>
+	</tr>
 <%-- MEV_21: FINE --%>
-<tr>
-     <td class="l" >Cognome</td>
-    <td class="l"  ><input  size=35 maxlength=35 readonly title="Campo Cognome" type="text"  value="<%=avvocato.getAvvocato().getCognome()%>" name="<%= ICostantiAvvocato.CAMPO_COGNOME %>" ></td>
-  </tr>
-  <tr>
-    <td class="l">Nome </td>
-    <td class="l"><input size=35 maxlength=35 readonly title="Campo Nome" type="text"  value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getNome())%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"  ></td>
-  </tr>
-  
+	<tr>
+		<td class="l">Cognome</td>
+    	<td class="l"><input  size=35 maxlength=35 readonly title="Campo Cognome" type="text"  value="<%=avvocato.getAvvocato().getCognome()%>" name="<%= ICostantiAvvocato.CAMPO_COGNOME %>" ></td>
+  	</tr>
+  	<tr>
+	    <td class="l">Nome </td>
+	    <td class="l"><input size=35 maxlength=35 readonly title="Campo Nome" type="text"  value="<%=StringUtils.toStringJSP(avvocato.getAvvocato().getNome())%>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"  ></td>
+  	</tr>
 <%-- MEV_21:  --%>
 <%
 String comuneNascita = "", comuneNascitaEstero = "";

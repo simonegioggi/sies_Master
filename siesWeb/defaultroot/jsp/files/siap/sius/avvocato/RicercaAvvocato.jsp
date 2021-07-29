@@ -59,7 +59,7 @@
                     codStatoNascita, <%-- MEV_21: nuovo dato --%>
                     giornoNascita,meseNascita,annoNascita,
                     descComuneStudio, <%-- MEV_21: redidenza diventa descComuneStudio  --%>
-                    stato)
+                    stato) <%-- MEV_21: nuovo dato --%>
   {
     var flag=controlla(stato);
 
@@ -79,7 +79,8 @@
           window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_TELEFONO%>.value=telefono;
           window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_FAX%>.value=fax;
           window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_E_MAIL%>.value=email;
-window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_PEC%>.value = pec;
+          <%-- MEV_21: aggiunte PEC --%>
+          window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_PEC%>.value = pec;
           window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>.value=codicefiscale;
   
           <%-- MEV_21: aggiunte visualizzazioneUlteriori informazioni --%>
@@ -270,7 +271,8 @@ window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostanti
           '<%=StringUtils.cStrForJS(DateUtils.getDateToString(lAvv.getDataNascita(),"yyyy"))%>',
            <%-- MEV_21: sostituito '<%=StringUtils.cStrForJS(lAvv.getDescComuneResidenza())%>',  --%>
           '<%=StringUtils.cStrForJS(lAvv.getDescrComuneStudio())%>', <%-- MEV_21: aggiunto--%>
-          '<%=stato%>');">
+          '<%=stato%>' <%-- MEV_21: aggiunto--%>
+        );">
         <img align="middle" src="/images/fileselected.gif" border=0></a>
       </td>
     <% } %>
