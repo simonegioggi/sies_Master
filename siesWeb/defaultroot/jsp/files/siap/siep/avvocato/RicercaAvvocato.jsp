@@ -50,7 +50,8 @@ function avvocati() {
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('lTipoInserimento').value = "manuale";
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('inserimento').style.visibility = 'visible';
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('confermaBtn').style.visibility = 'hidden';
-			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'hidden';
+			if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde'))
+				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'hidden';
 			if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep'))
 				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep').style.visibility = 'hidden';
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
@@ -74,7 +75,8 @@ function avvocati() {
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('lTipoInserimento').value = "reginde";
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('inserimento').style.visibility = 'hidden';
 			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('confermaBtn').style.visibility = 'visible';
-			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'visible';
+			if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde'))
+				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'visible';
 			if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep'))
 				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep').style.visibility = 'visible';
 		}

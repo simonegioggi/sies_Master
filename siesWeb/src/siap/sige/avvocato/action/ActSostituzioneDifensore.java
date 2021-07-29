@@ -39,8 +39,8 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 	public String processRequest() throws F3BException {
 
 		IAvvocato lCtrl = SIGELookupRemote.getAvvocatoRemote();
-		Vector lVectPrec = null;
-		Vector lVectRic = null;
+		BigDecimal id_fasc_sige = ((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso"))
+				.getFascicoloSige().getIdFascicoloSige();
 
 		// Recupero i dati del Nuovo avvocato se selezionato, altrimenti l'id coincide
 		// con il vecchio avvocato
@@ -60,31 +60,41 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		String descCodLuogoNascita = "";
 		String descLuogoNascitaReginde = "";
 		ComuneModel comuneNascita = null;
+		// 20210727 Recupero tipoInserimento (reginde, sies, manuale)
+		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
+
 		// 20210722 MEV_21 Controllo e valorizzazione comuneNascita.
 		// Se presente, dal codice comune (e dalla descrizione).
-		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
-				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
-			comuneNascita = new ComuneModel(
-					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-			codLuogoNascita = comuneNascita.getCodComune();
-			codProvincia = comuneNascita.getCodProvincia();
-			codCap = comuneNascita.getCap();
-			descCodLuogoNascita = comuneNascita.getDescrizione();
+		// 20210727 Si Propaga l'eccezione solo in caso di inserimento manuale.
+		try {
+			if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+					&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+				comuneNascita = new ComuneModel(getDatiComuneByCodDescr(
+						getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+						getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+				codLuogoNascita = comuneNascita.getCodComune();
+				codProvincia = comuneNascita.getCodProvincia();
+				codCap = comuneNascita.getCap();
+				descCodLuogoNascita = comuneNascita.getDescrizione();
 
-			// altrimenti dalla sola descrizione (rischio omonimi).
-		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
-			comuneNascita = new ComuneModel(
-					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-			descCodLuogoNascita = comuneNascita.getDescrizione();
-			codLuogoNascita = comuneNascita.getCodComune();
-			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
-		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
-				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
-				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
-			comuneNascita = AvvocatoUtil
-					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+				// altrimenti dalla sola descrizione (rischio omonimi).
+			} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+				comuneNascita = new ComuneModel(
+						getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+				descCodLuogoNascita = comuneNascita.getDescrizione();
+				codLuogoNascita = comuneNascita.getCodComune();
+				// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
+			} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+					&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
+					&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
+				comuneNascita = AvvocatoUtil
+						.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+				// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+			}
+		} catch (Exception e) {
+			siesLogger.info(e.getMessage());
+			if ("manuale".equals(tipoInserimento))
+				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 		}
 
 		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
@@ -117,9 +127,6 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
 		if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
-
-		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
-		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
 
 		if (!"manuale".equals(tipoInserimento)) {
 			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
@@ -177,23 +184,13 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 				}
 			}
 			idAvvocato = amReginde.getIdAvvocato();
-
 		} else {
 			// 20210722 MEV_21 Avvocato non presente sia in RegInde che in SIES.
 			idAvvocato = getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO);
 		}
 
 		AvvocatoModel lAvvModRic = new AvvocatoModel();
-		lAvvModRic.setIdAvvocato(idAvvocato);
-		lVectRic = lCtrl.ExRicercaAvvocato(lAvvModRic);
-		lAvvModRic = (AvvocatoModel) lVectRic.get(0);
-
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("idAvvocato = " + idAvvocato);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("lAvvModRic = " + lAvvModRic);
+		BigDecimal idVecchio = getRequestBigDecimalParameter("idAvvVecchio");
 
 		// ==========================================================================
 		// Recupero l'elenco degli avvocati attualmente associati al fascicolo
@@ -203,12 +200,9 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		AvvocatoModel lAvvModPrec = new AvvocatoModel();
 		AvvocatoSigeModel lAvvSigeMod = new AvvocatoSigeModel();
 		AvvocatoFascicoloSigeModel lAvvFascModPrec = new AvvocatoFascicoloSigeModel();
-		lAvvFascModPrec.setFasSigeIdFascicoloSige(
-				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
-						.getIdFascicoloSige());
+		lAvvFascModPrec.setFasSigeIdFascicoloSige(id_fasc_sige);
 
-		BigDecimal idVecchio = getRequestBigDecimalParameter("idAvvVecchio");
-
+		Vector lVectPrec = null;
 		try {
 			lVectPrec = new Vector();
 			lVectPrec = lCtrl.ExRicercaDifensoreAttualiFascicolo(lAvvModPrec, lAvvFascModPrec);
@@ -307,12 +301,10 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		// Queste operazioni vengono effettuate contestualmente per motivi di
 		// transazione
 		// ==========================================================================
-		// update
+
 		AvvocatoFascicoloSigeModel lAvvFascUp = new AvvocatoFascicoloSigeModel();
 		lAvvFascUp.setAvvIdAvvocato(idVecchio);
-		lAvvFascUp.setFasSigeIdFascicoloSige(
-				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
-						.getIdFascicoloSige());
+		lAvvFascUp.setFasSigeIdFascicoloSige(id_fasc_sige);
 		lAvvFascUp.setDataFineValidita(DateUtils.getSysDate());
 
 		lAvvFascUp.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -352,6 +344,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			lAvvModRic.setCodOperatoreInserimento(getCodUtenteConnesso());
 			lAvvModRic.setDataInserimento(DateUtils.getSysDate());
 			lAvvModRic.setFlagRegInde("NO");
+			lAvvModRic.setFlagVisualizza(new BigDecimal(1));
 
 			// Recupero dataNascita, Stato Attività Avvocato.
 			if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
@@ -427,9 +420,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 		// Devo utilizzare IdAvvocato per referenziare l'avvocato prelevato da RegInde, da SIES, o appena
 		// inserito.
 		lAvvFascMod.setAvvIdAvvocato(idAvvocato);
-		lAvvFascMod.setFasSigeIdFascicoloSige(
-				((FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso")).getFascicoloSige()
-						.getIdFascicoloSige());
+		lAvvFascMod.setFasSigeIdFascicoloSige(id_fasc_sige);
 		// lAvvFascMod.setAvvIdAvvocato(lAvvModRic.getIdAvvocato());
 
 		AvvocatoFascicoloSigeModel lAvvMod = new AvvocatoFascicoloSigeModel();
