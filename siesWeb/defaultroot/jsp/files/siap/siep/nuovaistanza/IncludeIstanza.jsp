@@ -55,8 +55,6 @@ if(lIst.getDataNotificaAvvocato() != null)
 {
 	lDataNomina = lIst.getDataNotificaAvvocato();
 }
-
-
 %>
 
   <input type="HIDDEN" name="<%=ICostantiNuovaIstanza.CAMPO_ID_NUOVA_ISTANZA%>" value="<%=lIst.getIdNuovaIstanza()%>">
@@ -350,15 +348,11 @@ if (lAvv.getDataNascita() == null) {
 		<td class="l">
 			<input type="text" readonly size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="Codice Fiscale" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>">
 		</td>
-		<td class="l" >Stato Difensore</font></td>
+		<td class="l" >Stato Difensore</td>
 		<td class="L">
            	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
 		</td>
 	</tr>
-
-
-
-    
     <tr>
       <td class="titolo" colspan="4">Eventuale nomina del difensore di fiducia</td>                        
     </tr>       
@@ -398,7 +392,6 @@ if (lAvv.getDataNascita() == null) {
         </select>         
       </td> 
     </tr>
-
     <tr>
       <td class="l">Note</td>
       <td class="l" colspan="3"> 
