@@ -231,6 +231,7 @@ if(lIst.getDataNotificaAvvocato() != null)
      	<%-- <input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();"> --%>
    	</td>
    	<td id="confermaBtn" style="visibility:hidden;"> </td>
+    
   </tr>  
   <%if (nuovaistanza.getAvvocato()== null) {%>
    <input type="hidden" value="" name="<%= ICostantiNuovaIstanza.CAMPO_AVV_ID_AVVOCATO%>">
@@ -240,12 +241,12 @@ if(lIst.getDataNotificaAvvocato() != null)
      <tr>
       <td class="l">Cognome</td>
       <td class="l" > 
-        <input type="text" maxlength="38" size="40" ONKEYPRESS="return TicTabNumField(this,event)" 
+        <input type="text" readonly maxlength="38" size="40" 
                value="<%=StringUtils.toStringJSP(lAvv.getNome()) %>" name="<%=ICostantiAvvocato.CAMPO_COGNOME %>"> 
       </td> 
       <td class="l">Nome</td>
       <td class="l" > 
-        <input type="text" maxlength="38" size="40" ONKEYPRESS="return TicTabNumField(this,event)" 
+        <input type="text" readonly maxlength="38" size="40"  
                value="<%=StringUtils.toStringJSP(lAvv.getCognome()) %>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"> 
       </td>       
     </tr> 
@@ -349,7 +350,7 @@ if (lAvv.getDataNascita() == null) {
 		<td class="l">
 			<input type="text" readonly size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="Codice Fiscale" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>">
 		</td>
-		<td class="l">Stato Difensore</td>
+		<td class="l" >Stato Difensore</font></td>
 		<td class="L">
            	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
 		</td>
