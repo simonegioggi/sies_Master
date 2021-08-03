@@ -2433,13 +2433,14 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 	}
 
 	/**
-	 *
-	 * @param aIdEvento
-	 * @param aIdStatoEsec
+	 * Evento che carica il record COMPUTO_CUUMULO da associare al record
+	 * StatoEsecTitoloCumulatoModel recuperando i dati da dall'eveto con id = aIdEvento
+	 * @param aIdEvento - id evento della sorveglianza (02-03)
+	 * @param aStatoEsecModel - 
 	 * @param aConn
 	 * @throws F3BException
 	 */
-	private void caricaComputiMisuraAlternativaSORV(BigDecimal aIdEvento,
+	private void caricaComputiMisuraAlternativaSORV (BigDecimal aIdEvento,
 			StatoEsecTitoloCumulatoModel aStatoEsecModel, Connection aConn) throws F3BException {
 
 		MisuraAlternativaSqlDAO lMisAltSqlDao = null;
@@ -2457,11 +2458,14 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lEveSqlDao.ricercaEventoByKey(aIdEvento);
 			lEvento = (EventoModel) lEveSqlDao.getModelByKey();
 
-			// Lettura dell'Evento di Revoca
-			EventoModel lEveRevoca = new EventoModel();
+			// Lettura dell'eventuale Evento di Revoca 
+			// (n.b più essere un qualunque provvedimento SIEP di esecuzione del decreto/ordinanza
+			//      non necessariamente un provevdimento di revoca
+			//      Se inoltre il provv. della SORV non è stato eseguito da SIEP, l'eveto collegato non esiste)
+			EventoModel lEveSIEP = new EventoModel();
 			lEveSqlDao = new EventoSqlDAO(aConn);
 			lEveSqlDao.ricercaEventoByEveIdEvento(aIdEvento);
-			lEveRevoca = (EventoModel) lEveSqlDao.getModelByKey();
+			lEveSIEP = (EventoModel) lEveSqlDao.getModelByKey();
 
 			// Lettura della Misura Alternativa.
 			lMisAltSqlDao = new MisuraAlternativaSqlDAO(aConn);
@@ -2489,12 +2493,36 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			lComputiModel.setNumMesiMisura(lMisAlt.getNumMesiMisura());
 			lComputiModel.setNumGiorniMisura(lMisAlt.getNumGiorniMisura());
 
-			lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
+			// [Ticket#20210212019] - vedi oltre per la valorizzazione del campo
+			//lComputiModel.setDataInizioMisura(lMisAlt.getDataInizioMisura());
+			// Fine [Ticket#20210212019]
 			lComputiModel.setDataFineMisura(lMisAlt.getDataFineMisura());
 			lComputiModel.setNote(lMisAlt.getNote());
 			lComputiModel.setCodOggettoDecisione(lMisAlt.getCodTipoMisura());
 
 			lComputiModel.setDataInizioRevoca(lMisAlt.getDataInizioRevoca());
+			// [Ticket#20210212019] - versione 12.4.6.0 Risultato negativo test in pre-esercizio
+			// In riapertura del ticket 202012020116
+			// Nel caso di revoca di alcune MA che NON rideterminano la pena (es: Detenzione Domiciliare 
+			// - Semilibertà - Arresti Domiciliari 656 c 10) la data Inizio Provvedimento di Revoca viene caricato nel campo 
+			// MISURA_ALTERNATIVA.DATA_DECISIONE ed è la EVENTO.DATA_EMISSIONE del provvedimento SIEP
+			// Il modulo cumulo legge il campo dal COMPUTI_CUMULO.DATA_INIZIO_REVOCA.
+			ArrayList <String> codiciRevocaDetDom       = new ArrayList <String> (Arrays.asList("0016","0087","0088","0089","2270"));
+			ArrayList <String> codiciRevocaSemiliberta  = new ArrayList <String> (Arrays.asList("0091"));
+			ArrayList <String> codiciRevocaArrDom656c10 = new ArrayList <String> (Arrays.asList("0232","2744","2757","2746","2747"));
+			ArrayList <String> codiciRevocaMA = new ArrayList <String> ();
+			codiciRevocaMA.addAll (codiciRevocaDetDom);
+			codiciRevocaMA.addAll (codiciRevocaSemiliberta);
+			codiciRevocaMA.addAll (codiciRevocaArrDom656c10);
+			if (codiciRevocaMA.contains(lMisAlt.getCodTipoMisura())) {
+				lComputiModel.setDataInizioRevoca (lMisAlt.getDataInizioMisura());
+			}
+			else {
+				// La data inizio misura la valorizzo solo se non ribaltata già su lComputiModel.setDataInizioRevoca
+				lComputiModel.setDataInizioMisura (lMisAlt.getDataInizioMisura());
+			}
+			// Fine [Ticket#20210212019]
+			
 			lComputiModel.setNumAnniRevocaReclusione(lMisAlt.getNumAnniRevocaReclusione());
 			lComputiModel.setNumMesiRevocaReclusione(lMisAlt.getNumMesiRevocaReclusione());
 			lComputiModel.setNumGiorniRevocaReclusione(lMisAlt.getNumGiorniRevocaReclusione());
@@ -2514,8 +2542,10 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 			lPenaResSqlDao = new PenaResiduaSqlDAO(aConn);
 
-			siesLogger.debug("Recupero la PR");
-			lPenaResSqlDao.ricercaPenaResiduaByKeyEvento(lEveRevoca.getIdEvento());
+		// ticket 202104230110 - non è detto che esiste l'evento di revoca collegato
+		if (lEveSIEP!=null) {
+			siesLogger.debug("Recupero la PR collegata all'evento di revoca");
+			lPenaResSqlDao.ricercaPenaResiduaByKeyEvento (lEveSIEP.getIdEvento());			
 			lPenResMod = (PenaResiduaModel) lPenaResSqlDao.getModelByKey();
 
 			if (lPenResMod != null) {
@@ -2571,12 +2601,12 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 					lComputiModel.setDataReclusioneA(lSospModel.getDataInizio());
 				}
 
-				// INIZIO: Ticket#202012020116 - Carico la data Inizio e efine misura con i dati
-				//         della data inizio e fine reclusione in quanto le form di inserimento/modifica/dettaglio 
-				//         utilizzano tali campi
-				lComputiModel.setDataInizioMisura (lComputiModel.getDataReclusioneDa());
-				lComputiModel.setDataFineMisura   (lComputiModel.getDataReclusioneA());
-				// FINE Ticket#202012020116
+// INIZIO: Ticket#202012020116 - Carico la data Inizio e fine misura con i dati
+//         della data inizio e fine reclusione in quanto le form di inserimento/modifica/dettaglio 
+//         utilizzano tali campi
+lComputiModel.setDataInizioMisura (lComputiModel.getDataReclusioneDa());
+lComputiModel.setDataFineMisura   (lComputiModel.getDataReclusioneA());
+// FINE Ticket#202012020116
 				
 				lComputiModel.setNumAnniReclusione(lSospModel.getNumAnniPenaEspiata());
 				lComputiModel.setNumMesiReclusione(lSospModel.getNumMesiPenaEspiata());
@@ -2614,7 +2644,14 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 				lComputiModel.setNumGiorniRevocaReclusione(lSospModel.getNumGiorniPenaResiduaReclus());
 				lComputiModel.setNumMesiRevocaReclusione(lSospModel.getNumMesiPenaResiduaReclus());
 				lComputiModel.setNumAnniRevocaReclusione(lSospModel.getNumAnniPenaResiduaReclus());
-
+			  } // end if (lSospModel != null) {			
+			}
+			else {
+				siesLogger.debug("lEveRevoca Assente...");
+			}			
+			// Fine id lEveRevoca!=null aggiunto per il ticket 202104230110
+			//===============================================================
+			
 				// Lettura del DecretoOrdinanzaSIEP.
 				siesLogger.debug("Cerco Decreto Ordinanza Collegato...");
 				lDecOrdSqlDao = new DecretoOrdinanzaSiepSqlDAO(aConn);
@@ -2637,7 +2674,7 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 
 					lComputiModel.setNote(lDecOrdModel.getMotivazioni());
 				}
-			}
+
 
 			lComputiModel.setFlagStato("E");
 			lComputiModel.setMotivoModifica(null);
@@ -2659,6 +2696,11 @@ public class StatoEsecTitoloCumulatoController extends SiapController implements
 			throw new F3BException(
 					"StatoEsecTitoloCumulatoController.caricaComputiMisuraAlternativaSORV: Non posso leggere : "
 							+ daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("ex: ", ex);
+			throw new F3BException(
+					"StatoEsecTitoloCumulatoController.caricaComputiMisuraAlternativaSORV: Non posso leggere : "
+							+ ex);					
 		} finally {
 			cleanup(lMisAltSqlDao);
 			cleanup(lComputiDao);

@@ -43,6 +43,8 @@
     		  alert('Selezionare almeno una tipologia di Foglio Complementare.');
               return false;
     	  }
+    	  
+    	  return true;
       }
 
       function checkTutti() {

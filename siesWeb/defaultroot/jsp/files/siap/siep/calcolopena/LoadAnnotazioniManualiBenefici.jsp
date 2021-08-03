@@ -478,14 +478,12 @@ BigDecimal LADaConcedere = (BigDecimal) request.getAttribute("LADaConcedere");
     ggArr = 0;
     ammenda = 0.00;
     
-
     for(i = 0; i < righe_tabella.length; i++){
       if (righe_tabella(i).tagName=='TR'){
         if (   righe_tabella(i).style.display=='block'
             && righe_tabella(i).id!='titolo_richieste'
            )
         {
-          //alert(righe_tabella(i).tagName);
           if (righe_tabella(i).segno=='+')
           { //alert("revocati");
             aaRec   = aaRec   + parseInt(righe_tabella(i).aaRec);
@@ -719,16 +717,18 @@ if (RichiesteAlGE.size()!=0)
     }
 %>
   <tr style="display:none;" id="record_<%=id_record%>"
-<%--   	  tipoRich="<%=tipoRichiesta%>" --%>
-<%--       segno="<%=StringUtils.toStringJSP(lAnnMod.getFlagPiuMeno(),"")%>" --%>
-<%--       aaRec="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniReclusione(),"0")%>" --%>
-<%--       mmRec="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiReclusione(),"0")%>" --%>
-<%--       ggRec="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniReclusione(),"0")%>" --%>
-<%--       multa ="<%=StringUtils.toStringJSP(lAnnMod.getImportoMulta(),"0.00")%>"  --%>
-<%--       aaArr="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniArresto(),"0")%>" --%>
-<%--       mmArr="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiArresto(),"0")%>" --%>
-<%--       ggArr="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniArresto(),"0")%>" --%>
-<%--       ammenda ="<%=StringUtils.toStringJSP(lAnnMod.getImportoAmmenda(),"0.00")%>"  --%>
+  <%-- Ticket#20210622011 - Ripristino del caricamento dati --%>
+   	   tipoRich="<%=tipoRichiesta%>" 
+       segno="<%=StringUtils.toStringJSP(lAnnMod.getFlagPiuMeno(),"")%>" 
+       aaRec="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniReclusione(),"0")%>" 
+       mmRec="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiReclusione(),"0")%>" 
+       ggRec="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniReclusione(),"0")%>" 
+       multa ="<%=StringUtils.toStringJSP(lAnnMod.getImportoMulta(),"0.00")%>"  
+       aaArr="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniArresto(),"0")%>" 
+       mmArr="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiArresto(),"0")%>" 
+       ggArr="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniArresto(),"0")%>" 
+       ammenda ="<%=StringUtils.toStringJSP(lAnnMod.getImportoAmmenda(),"0.00")%>"  
+  <%-- Ticket#20210622011 --%>
       >
       
     <td class="l" style="text-align:center">

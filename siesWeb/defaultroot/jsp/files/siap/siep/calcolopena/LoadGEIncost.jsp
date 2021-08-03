@@ -715,21 +715,28 @@ if (RichiesteAlGE.size()!=0)
     }
 %>
   <tr style="display:none;" id="record_<%=id_record%>"
-<%--   	  tipoRich="<%=tipoRichiesta%>" --%>
-<%--       segno="<%=StringUtils.toStringJSP(lAnnMod.getFlagPiuMeno(),"")%>" --%>
-<%--       aaRec="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniReclusione(),"0")%>" --%>
-<%--       mmRec="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiReclusione(),"0")%>" --%>
-<%--       ggRec="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniReclusione(),"0")%>" --%>
-<%--       multa ="<%=StringUtils.toStringJSP(lAnnMod.getImportoMulta(),"0.00")%>"  --%>
-<%--       aaArr="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniArresto(),"0")%>" --%>
-<%--       mmArr="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiArresto(),"0")%>" --%>
-<%--       ggArr="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniArresto(),"0")%>" --%>
-<%--       ammenda ="<%=StringUtils.toStringJSP(lAnnMod.getImportoAmmenda(),"0.00")%>"  --%>
-<%--       annoCC ="<%=StringUtils.toStringJSP (lAnnMod.getAnnoCc() ,"")%>" --%>
-<%--       numeroCC ="<%=StringUtils.toStringJSP(lAnnMod.getNumeroCc(),"")%>" --%>
-<%--       giornoScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataRichiesta(),"dd"))%>" --%>
-<%--       meseScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataRichiesta(),"MM"))%>" --%>
-<%--       annoScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataRichiesta(),"yyyy"))%>" --%>
+     <%-- Ticket#20210622011 - Ripristino del caricamento dati --%>
+   	  tipoRich="<%=tipoRichiesta%>" 
+       segno="<%=StringUtils.toStringJSP(lAnnMod.getFlagPiuMeno(),"")%>" 
+       aaRec="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniReclusione(),"0")%>" 
+       mmRec="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiReclusione(),"0")%>" 
+       ggRec="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniReclusione(),"0")%>" 
+       multa ="<%=StringUtils.toStringJSP(lAnnMod.getImportoMulta(),"0.00")%>"  
+       aaArr="<%=StringUtils.toStringJSP (lAnnMod.getNumAnniArresto(),"0")%>" 
+       mmArr="<%=StringUtils.toStringJSP (lAnnMod.getNumMesiArresto(),"0")%>" 
+       ggArr="<%=StringUtils.toStringJSP (lAnnMod.getNumGiorniArresto(),"0")%>" 
+       ammenda ="<%=StringUtils.toStringJSP(lAnnMod.getImportoAmmenda(),"0.00")%>"  
+       annoCC ="<%=StringUtils.toStringJSP (lAnnMod.getAnnoCc() ,"")%>" 
+       numeroCC ="<%=StringUtils.toStringJSP(lAnnMod.getNumeroCc(),"")%>" 
+       <%-- Ticket#20210622011 - caricava la data errata --%>
+       <%-- giornoScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataRichiesta(),"dd"))%>" --%> 
+       <%-- meseScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataRichiesta(),"MM"))%>"  --%>
+       <%-- annoScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataRichiesta(),"yyyy"))%>"  --%>
+       giornoScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataCC(),"dd"))%>" 
+       meseScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataCC(),"MM"))%>"  
+       annoScc ="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lAnnMod.getDataCC(),"yyyy"))%>" 
+       
+    <%-- Ticket#20210622011 - FINE --%>
       >
       
     <td class="l" style="text-align:center">

@@ -66,6 +66,10 @@
   	
   	if (!(	lUtenteMod.getUfficioUtente().getCodTipoUfficio().equals("UDS")||
     				lUtenteMod.getUfficioUtente().getCodTipoUfficio().equals("TDS")||
+    				// Ticket#20210709019 - Aggiunta gestione TDSM e UDSM 
+    				lUtenteMod.getUfficioUtente().getCodTipoUfficio().equals("UDSM")||
+    				lUtenteMod.getUfficioUtente().getCodTipoUfficio().equals("TDSM")||
+    				// Ticket#20210709019 - FINE
          		lUtenteMod.getUfficioUtente().getCodTipoUfficio().equals("UEPE") ||
          		lUtenteMod.getUfficioUtente().getCodTipoUfficio().equals("UEPESS") ))
    {

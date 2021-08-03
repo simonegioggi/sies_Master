@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+
 import f3b.dao.DAOException;
 import f3b.dao.SqlDAO;
 import f3b.log.LogF3B;
@@ -135,6 +136,29 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		return smsm;
 	}
 
+	// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+	// i dati verranno aggregati dal controller
+	public GenericModel getModelDettaglio2() throws DAOException {
+		
+		StatisticheMSModel smsm = new StatisticheMSModel();
+		smsm.setTipoMS(getString("Nome_Stat"));
+		// String[] s = getString("Prog_Fasc").split("#");
+		String Prog_Fasc = getString("Prog_Fasc");
+		Vector<BigDecimal> pf = new Vector<>();
+//		for (int i = 0; i < s.length; i++) {
+//			pf.add(new BigDecimal(s[i]));
+//		}
+		pf.add(new BigDecimal(Prog_Fasc));
+		
+		smsm.setProgFasc(pf);
+		smsm.setTotFasc(getBigDecimal("Tot_Fasc"));
+		smsm.setAnno(getBigDecimal("Anno"));
+
+		return smsm;
+	}
+	// Ticket#20210531014] - FINE
+	
+	
 	public void ricercaRiepilogoIscrizioniTipologiaMisura(String dataIniziale, String dataFinale,
 			String numeroTrimestreSemestre, String ufficioConnesso, String range) throws DAOException {
 
@@ -221,16 +245,32 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 					dataFinaleTemp, array[i]);
 		}
 
-		s += ") order by 3, 4";
+		//s += ") order by 3, 4";
+		s += ") order by 3, 4, 1"; // Ticket#20210531014 aggiunto order by per Numero Fascicolo
 		setStatement(s);
 	}
 
 	private String creaQueryRDPMSTI(String nomeVista, String ufficioConnesso, String numeroTrimestreSemestre,
 			String dataIniziale, String dataFinale, String anno) {
 
+		siesLogger.debug("SQLDAO.creaQueryRDPMSTI...");
+		
+		// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+		// i dati verranno aggregati dal controller
 		String s = new String();
-		s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
-				+ "COUNT(DISTINCT V.NUMERO_FASC) Tot_Fasc, "
+//		s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
+//				+ "COUNT(DISTINCT V.NUMERO_FASC) Tot_Fasc, "
+//				+ "v.Nome_Stat || ' - ' || v.DESC_MS Nome_Stat, '" + anno + "' Anno FROM " + nomeVista + " V "
+//				+ "WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' and V.ANNO_ISC = " + anno + " ";
+//		if (!"".equals(numeroTrimestreSemestre))
+//			s += "AND V.trimestre IN (" + numeroTrimestreSemestre + ") ";
+//		else if (!"".equals(dataIniziale) && !"".equals(dataFinale))
+//			s += "and v.Data_Iscr between TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') AND TO_DATE('"
+//					+ dataFinale + "', 'dd/MM/yyyy') ";
+//		s += " GROUP BY v.Nome_Stat || ' - ' || v.DESC_MS";
+ 
+		s += "SELECT NUMERO_FASC Prog_Fasc, "
+				+ "1 Tot_Fasc, "
 				+ "v.Nome_Stat || ' - ' || v.DESC_MS Nome_Stat, '" + anno + "' Anno FROM " + nomeVista + " V "
 				+ "WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' and V.ANNO_ISC = " + anno + " ";
 		if (!"".equals(numeroTrimestreSemestre))
@@ -238,13 +278,17 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		else if (!"".equals(dataIniziale) && !"".equals(dataFinale))
 			s += "and v.Data_Iscr between TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') AND TO_DATE('"
 					+ dataFinale + "', 'dd/MM/yyyy') ";
-		s += " GROUP BY v.Nome_Stat || ' - ' || v.DESC_MS";
+		//s += " GROUP BY v.Nome_Stat || ' - ' || v.DESC_MS";		
+
+		// Ticket#20210531014] - FINE
 		return s;
 	}
 
 	public void ricercaRiepilogoProcedimentiPendentiPeriodo(String dataIniziale, String dataFinale,
 			String ufficioConnesso, String range, String codMagistrato) throws DAOException {
 
+		siesLogger.debug("ricercaRiepilogoProcedimentiPendentiPeriodo...");
+		
 		String s = new String("");
 		String[] anni = range.split(",");
 		Date di = DateUtils.getDate(dataIniziale, "dd/MM/yyyy");
@@ -603,9 +647,21 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		return smsm;
 	}
 
+	/**
+	 * 
+	 * @param dataIniziale
+	 * @param dataFinale
+	 * @param ufficioConnesso
+	 * @param range
+	 * @param codMagistrato
+	 * @param var
+	 * @throws DAOException
+	 * @deprecated Ticket#20210531014 sostituito dal metodo ricercaDettaglioProcedimentiPendentiPeriodo2. LISTAGG va in overflow se si superano i 4000 caratteri
+	 */
 	public void ricercaDettaglioProcedimentiPendentiPeriodo(String dataIniziale, String dataFinale,
 			String ufficioConnesso, String range, String codMagistrato, String var) throws DAOException {
-
+		siesLogger.debug("SQLDAO.ricercaDettaglioProcedimentiPendentiPeriodo...var = "+var);
+		
 		String s = new String("");
 		s += "SELECT * FROM (";
 
@@ -636,8 +692,8 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.debug("ricercaDettaglioProcedimentiPendentiPeriodo - dataIniziale = " + dataIniziale);
-		siesLogger.debug("ricercaDettaglioProcedimentiPendentiPeriodo - dataFinale = " + dataFinale);
+		//siesLogger.debug("ricercaDettaglioProcedimentiPendentiPeriodo - dataIniziale = " + dataIniziale);
+		//siesLogger.debug("ricercaDettaglioProcedimentiPendentiPeriodo - dataFinale = " + dataFinale);
 
 		for (int i = 0; i < array.length; i++) {
 			if (array.length == 1) {
@@ -690,6 +746,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') < TO_DATE('"
 						+ dataInizialePendenti + "', 'dd/MM/yyyy') ";
+			
 				// + "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('"
 				// + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinalePendenti
 				// + "', 'dd/MM/yyyy') ";
@@ -704,6 +761,8 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('"
 						+ dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinalePendenti
 						+ "', 'dd/MM/yyyy') ";
+
+				
 				if (!"".equals(magCondition))
 					s += magCondition;
 				s += "GROUP BY 'Sopravvenuti' || ' - ' || v.DESC_MS";
@@ -722,6 +781,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						// dataFinalePendenti
 						// + "', 'dd/MM/yyyy')"
 						+ " ";
+				
 				if (!"".equals(magCondition))
 					s += magCondition;
 				s += "GROUP BY 'Esauriti' || ' - ' || v.DESC_MS";
@@ -733,22 +793,24 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "and v.Data_Arch is not null and v.cod_stato_fascicolo <> '01' "
 						+ "AND v.Data_Arch between TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and "
 						+ "TO_DATE('" + dataFinalePendenti + "', 'dd/MM/yyyy') ";
+				
 				if (!"".equals(magCondition))
 					s += magCondition;
 				s += "GROUP BY 'Riaperti' || ' - ' || v.DESC_MS";
-			} else {
+			} else {	
 				s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
 						+ "COUNT(V.NUMERO_FASC) Tot_Fasc, "
 						+ "'Pendenti Fine' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
 						+ "FROM " + from1 + " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso
 						+ "' and (v.Data_Arch is null "
 						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
-
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') <= TO_DATE('"
 						+ dataFinalePendenti + "', 'dd/MM/yyyy') ";
 				// + "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
 				// + "TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinaleTemp + "',
 				// 'dd/MM/yyyy') ";
+		
+				
 				if (!"".equals(magCondition))
 					s += magCondition;
 				s += "GROUP BY 'Pendenti Fine' || ' - ' || v.DESC_MS";
@@ -760,6 +822,229 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		s += ") order by 3, 4";
 		setStatement(s);
 	}
+	
+	/**
+	 * // Ticket#20210531014 metodo dulicato rispetto al 
+	 * public void ricercaDettaglioProcedimentiPendentiPeriodo
+	 * Per comodità si duplica il metodo lasciando il vecchio 
+	 * @param dataIniziale
+	 * @param dataFinale
+	 * @param ufficioConnesso
+	 * @param range
+	 * @param codMagistrato
+	 * @param var
+	 * @throws DAOException
+	 */
+	public void ricercaDettaglioProcedimentiPendentiPeriodo2(String dataIniziale, String dataFinale,
+			String ufficioConnesso, String range, String codMagistrato, String var) throws DAOException {
+		siesLogger.debug("SQLDAO.ricercaDettaglioProcedimentiPendentiPeriodo...var = "+var);
+		
+		String s = new String("");
+		s += "SELECT * FROM (";
+
+		String[] array = range.split(",");
+		String dataFinaleTemp = "";
+		String dataInizialePiuUno = "";
+
+		String dataInizialePendenti = "";
+		String dataFinalePendenti = "";
+
+		String from1 = "", from2 = "", from3 = "", from4 = "";
+		String magCondition = "";
+		if ("".equals(codMagistrato)) {
+			from1 = "VW_MS_PROC_INIZIO_FINE_PERIODO";
+			from2 = "VW_MS_PROCEDIMENTI";
+			from3 = "VW_MS_PROC_ESAURITI";
+			from4 = "VW_MS_PROC_RIAPERTI";
+		} else {
+			from1 = "VW_MS_PROC_PERIODO_MAG";
+			from2 = "VW_MS_PROCEDIMENTI_MAG";
+			from3 = "VW_MS_PROC_ESAURITI_MAG";
+			from4 = "VW_MS_PROC_RIAPERTI_MAG";
+			if (!"0".equals(codMagistrato))
+				magCondition = "AND V.COD_MAGISTRATO = '" + codMagistrato + "' ";
+			else
+				magCondition = "AND V.COD_MAGISTRATO IS NOT NULL AND V.COD_MAGISTRATO != '-'";
+		}
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		//siesLogger.debug("ricercaDettaglioProcedimentiPendentiPeriodo - dataIniziale = " + dataIniziale);
+		//siesLogger.debug("ricercaDettaglioProcedimentiPendentiPeriodo - dataFinale = " + dataFinale);
+
+		for (int i = 0; i < array.length; i++) {
+			if (array.length == 1) {
+				dataFinaleTemp = dataFinale;
+				dataInizialePendenti = dataIniziale;
+				dataFinalePendenti = dataFinale;
+			} else {
+				if (i != 0) {
+					s += " UNION ";
+				}
+				// if (i != array.length - 1){
+				// dataInizialePendenti = "01/01/" + array[i];
+				// dataFinaleTemp = "31/12/" + array[i];
+				// dataFinalePendenti = "31/12/" + array[i];
+				// }
+				// else{
+				// dataInizialePendenti = dataIniziale;
+				// dataFinaleTemp = dataFinale;
+				// dataFinalePendenti= dataFinale;
+				// }
+				if (i == 0) {
+					dataInizialePendenti = dataIniziale;
+					dataFinaleTemp = "31/12/" + array[i];
+					dataFinalePendenti = "31/12/" + array[i];
+				} else if (i != array.length - 1) {
+					dataInizialePendenti = "01/01/" + array[i];
+					dataFinaleTemp = "31/12/" + array[i];
+					dataFinalePendenti = "31/12/" + array[i];
+				} else {
+					dataInizialePendenti = "01/01/" + array[i];
+					dataFinaleTemp = dataFinale;
+					dataFinalePendenti = dataFinale;
+				}
+			}
+			if (i == 0) {
+				Date di = DateUtils.getDate(dataIniziale, "dd/MM/yyyy");
+				dataInizialePiuUno = DateUtils.getDateToString(DateUtils.getDayAfter(di), "dd/MM/yyyy");
+			} else
+				dataInizialePiuUno = dataIniziale;
+
+			if ("A".equals(var)) {
+				// 20191125 [25]: tolgo distinct poichè i fascicoli possono avere più MS dello stesso tipo al
+				// loro
+				// interno: COUNT(DISTINCT V.NUMERO_FASC) x 5 occorrenze
+				// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+				// i dati verranno aggregati dal controller
+//				s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
+//						+ "COUNT(V.NUMERO_FASC) Tot_Fasc, "
+//						+ "'Pendenti Inizio' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
+//						+ "FROM " + from1 + " V where V.Cod_Uff_Ins = '" + ufficioConnesso
+//						+ "' and (v.Data_Arch is null "
+//						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
+//						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') < TO_DATE('"
+//						+ dataInizialePendenti + "', 'dd/MM/yyyy') ";
+				s += "SELECT V.NUMERO_FASC Prog_Fasc, "
+						+ "1 Tot_Fasc, "
+						+ "'Pendenti Inizio' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
+						+ "FROM " + from1 + " V where V.Cod_Uff_Ins = '" + ufficioConnesso
+						+ "' and (v.Data_Arch is null "
+						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
+						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') < TO_DATE('"
+						+ dataInizialePendenti + "', 'dd/MM/yyyy') ";				
+				// + "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('"
+				// + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinalePendenti
+				// + "', 'dd/MM/yyyy') ";
+				if (!"".equals(magCondition))
+					s += magCondition;
+//				s += "GROUP BY 'Pendenti Inizio' || ' - ' || v.DESC_MS";
+			} else if ("B".equals(var)) {
+				// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+				// i dati verranno aggregati dal controller
+//				s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
+//						+ "COUNT(V.NUMERO_FASC) Tot_Fasc, "
+//						+ "'Sopravvenuti' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno " + "from "
+//						+ from2 + " V " + " WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' "
+//						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('"
+//						+ dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinalePendenti
+//						+ "', 'dd/MM/yyyy') ";
+				s += "SELECT V.NUMERO_FASC Prog_Fasc, "
+						+ "1 Tot_Fasc, "
+						+ "'Sopravvenuti' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno " + "from "
+						+ from2 + " V " + " WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' "
+						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('"
+						+ dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinalePendenti
+						+ "', 'dd/MM/yyyy') ";				
+				
+				if (!"".equals(magCondition))
+					s += magCondition;
+//				s += "GROUP BY 'Sopravvenuti' || ' - ' || v.DESC_MS";
+			} else if ("C".equals(var)) {
+				// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+				// i dati verranno aggregati dal controller
+//				s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
+//						+ "COUNT(V.NUMERO_FASC) Tot_Fasc, 'Esauriti' || ' - ' || v.DESC_MS Nome_Stat, '"
+//						+ array[i] + "' Anno " + "from " + from3 + " V WHERE V.Cod_Uff_Ins = '"
+//						+ ufficioConnesso + "' "
+//						+ "and v.Data_Arch is not null and v.mot_archiviazione is not null "
+//						+ "and v.cod_stato_fascicolo = '01' "
+//						+ "AND TO_DATE(TO_CHAR(v.Data_Arch, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
+//						+ "TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('"
+//						+ dataFinalePendenti + "', 'dd/MM/yyyy') "
+//						// + "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
+//						// + "TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('" +
+//						// dataFinalePendenti
+//						// + "', 'dd/MM/yyyy')"
+//						+ " ";
+				s += "SELECT V.NUMERO_FASC Prog_Fasc, "
+						+ "1 Tot_Fasc, 'Esauriti' || ' - ' || v.DESC_MS Nome_Stat, '"
+						+ array[i] + "' Anno " + "from " + from3 + " V WHERE V.Cod_Uff_Ins = '"
+						+ ufficioConnesso + "' "
+						+ "and v.Data_Arch is not null and v.mot_archiviazione is not null "
+						+ "and v.cod_stato_fascicolo = '01' "
+						+ "AND TO_DATE(TO_CHAR(v.Data_Arch, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
+						+ "TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('"
+						+ dataFinalePendenti + "', 'dd/MM/yyyy') "
+						+ " ";
+				
+				if (!"".equals(magCondition))
+					s += magCondition;
+//				s += "GROUP BY 'Esauriti' || ' - ' || v.DESC_MS";
+			} else if ("D".equals(var)) {
+				// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+				// i dati verranno aggregati dal controller
+//				s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
+//						+ "COUNT(V.NUMERO_FASC) Tot_Fasc, " + "'Riaperti' || ' - ' || v.DESC_MS Nome_Stat, '"
+//						+ array[i] + "' Anno " + "FROM " + from4 + " V WHERE V.Cod_Uff_Ins = '"
+//						+ ufficioConnesso + "' "
+//						+ "and v.Data_Arch is not null and v.cod_stato_fascicolo <> '01' "
+//						+ "AND v.Data_Arch between TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and "
+//						+ "TO_DATE('" + dataFinalePendenti + "', 'dd/MM/yyyy') ";
+				s += "SELECT V.NUMERO_FASC Prog_Fasc, "
+						+ "1 Tot_Fasc, " + "'Riaperti' || ' - ' || v.DESC_MS Nome_Stat, '"
+						+ array[i] + "' Anno " + "FROM " + from4 + " V WHERE V.Cod_Uff_Ins = '"
+						+ ufficioConnesso + "' "
+						+ "and v.Data_Arch is not null and v.cod_stato_fascicolo <> '01' "
+						+ "AND v.Data_Arch between TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and "
+						+ "TO_DATE('" + dataFinalePendenti + "', 'dd/MM/yyyy') ";				
+				if (!"".equals(magCondition))
+					s += magCondition;
+//				s += "GROUP BY 'Riaperti' || ' - ' || v.DESC_MS";
+			} else {
+				// Ticket#20210531014] - eliminata la LISTAGG per limite dei 4000 caratteri (varchar2)
+				// i dati verranno aggregati dal controller				
+//				s += "SELECT LISTAGG(V.NUMERO_FASC, '#') WITHIN GROUP(ORDER BY ANNO_ISC) Prog_Fasc, "
+//						+ "COUNT(V.NUMERO_FASC) Tot_Fasc, "
+//						+ "'Pendenti Fine' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
+//						+ "FROM " + from1 + " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso
+//						+ "' and (v.Data_Arch is null "
+//						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
+//						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') <= TO_DATE('"
+//						+ dataFinalePendenti + "', 'dd/MM/yyyy') ";
+				// + "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
+				// + "TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinaleTemp + "',
+				// 'dd/MM/yyyy') ";
+				s += "SELECT V.NUMERO_FASC Prog_Fasc, "
+						+ "1 Tot_Fasc, "
+						+ "'Pendenti Fine' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
+						+ "FROM " + from1 + " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso
+						+ "' and (v.Data_Arch is null "
+						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
+						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') <= TO_DATE('"
+						+ dataFinalePendenti + "', 'dd/MM/yyyy') ";				
+				
+				if (!"".equals(magCondition))
+					s += magCondition;
+//				s += "GROUP BY 'Pendenti Fine' || ' - ' || v.DESC_MS";
+			}
+		}
+		siesLogger.info("Data Finale temporanea: " + dataFinaleTemp);
+		siesLogger.info("Giorno dopo Data Iniziale: " + dataInizialePiuUno);
+
+		s += ") order by 3, 4, 1";
+		setStatement(s);
+	}	
 
 	public void ricercaAttivitaMagistratiRiepilogo(int anno, String dataIniziale, String dataFinale)
 			throws DAOException {
