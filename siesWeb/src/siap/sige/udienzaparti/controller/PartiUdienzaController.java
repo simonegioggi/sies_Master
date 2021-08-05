@@ -225,18 +225,30 @@ public class PartiUdienzaController extends SiapController implements IPartiUdie
 
 			lPartiDao = new PartiUdienzaSqlDAO(lConn);
 			lPartiDao.ricercaParteUdienzaByKey(aIdSoggetto);
-			lAnagParteMod = new AnagraficaPartiUdienzaModel(
-					(AnagraficaPartiUdienzaModel) lPartiDao.getModelByKey());
+			// INIZIO 20200624 [SG]: corretto nullpointerException poichè se dopo la conferma, cancellavi la
+			// parte udienza
+			// la ricercaParteUdienzaByKey tornava 0 records
+			lPartiDao.start();
+			while (lPartiDao.next()) {
+				// Ticket#202104210111 - Corretto getModelByKey. va usato getModel essendo nel ciclo next()
+				//lAnagParteMod = new AnagraficaPartiUdienzaModel(
+			    //			(AnagraficaPartiUdienzaModel) lPartiDao.getModelByKey());
+				lAnagParteMod = new AnagraficaPartiUdienzaModel(
+						(AnagraficaPartiUdienzaModel) lPartiDao.getModel());
+				// Ticket#202104210111 - 
+				
+				// Difensori (max 2)
+				lDifensDao = new PartiUdienzaDifensoreSqlDAO(lConn);
+				lDifensDao.ricercaDifensoreByIdSoggetto(lAnagParteMod.getIdSoggetto());
+				lAnagParteMod.setDifensori(new ArrayList(lDifensDao.getModels()));
 
-			// Difensori (max 2)
-			lDifensDao = new PartiUdienzaDifensoreSqlDAO(lConn);
-			lDifensDao.ricercaDifensoreByIdSoggetto(lAnagParteMod.getIdSoggetto());
-			lAnagParteMod.setDifensori(new ArrayList(lDifensDao.getModels()));
-
-			// Residenza/Domicilio
-			lResidenzaDao = new ResidenzaSqlDAO(lConn);
-			lResidenzaDao.ricercaDomicilioCorrenteByIdParteUdienza(lAnagParteMod.getIdSoggetto());
-			lAnagParteMod.setResidenza((ResidenzaModel) lResidenzaDao.getModelByKey());
+				// Residenza/Domicilio
+				lResidenzaDao = new ResidenzaSqlDAO(lConn);
+				lResidenzaDao.ricercaDomicilioCorrenteByIdParteUdienza(lAnagParteMod.getIdSoggetto());
+				lAnagParteMod.setResidenza((ResidenzaModel) lResidenzaDao.getModelByKey());
+			}
+			lPartiDao.stop();
+			// FINE 20200624
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 			siesLogger.error("DAOException: " + daoEx);

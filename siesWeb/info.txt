@@ -1,3 +1,5 @@
 MEV_21 (Interazione col Registro Generale degli Indirizzi Elettronici - ReGIndE)
 
 1)	nato il 13/11/2020 dal branch RELEASE_12.4.4.0
+
+2)	in data 29/07/2021 eseguito merge con versione 12.4.12.0

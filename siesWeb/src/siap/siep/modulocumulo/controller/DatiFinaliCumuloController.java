@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -21,6 +22,7 @@ import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.ICostantiJMS;
 import siap.sico.calendar.model.CalendarModel;
+import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.dao.ComuneDAO;
 import siap.sico.decodifiche.dao.DecodificheDAO;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -52,6 +54,9 @@ import siap.sico.util.SICOLookupRemote;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepDAO;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepSqlDAO;
 import siap.siep.agdgfascicolosiep.model.AgdgFascicoloSiepModel;
+import siap.siep.altracausa.dao.AltraCausaDAO;
+import siap.siep.altracausa.dao.AltraCausaSqlDAO;
+import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.altrigradigiudizio.model.AltriGradiGiudizioModel;
 import siap.siep.annotazioneesitotrasmissione.dao.AnnotazioneEsitoTrasmissioneDAO;
 import siap.siep.archiviazione.controller.IArchiviazione;
@@ -1086,6 +1091,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		AnnotazioneEsitoTrasmissioneDAO lAnnotaEsitoDao = null;
 		PenaAccessoriaCumuloSqlDAO lPenAccCumSqlDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
+		
+		AltraCausaDAO lAltraCausaDao = null;
+		AltraCausaSqlDAO lAltraCausaSqlDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -1342,6 +1350,44 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lPosDao.insert();
 			lPosDao.stop();
 
+			// [Ticket#20210430011] - se la PG è detenuto altra causa, aggiporno il flga altra causa
+			// si FASCICOLO_SIEPe aggiungo il record ALTRA_CAUSA
+			siesLogger.debug("Verifico se detenutao Altra Causa...");
+		    String flagAltraCausa = "N";
+		    Collection <DecodificheModel> lCollPosGiuAltra = DecodificheManager.getInstance()
+		        .getPosizioneGiuridicaAltraCausa();
+		    Iterator iteCollPosGiuAltra = lCollPosGiuAltra.iterator();
+
+		    while (iteCollPosGiuAltra.hasNext()) {
+		      DecodificheModel dMPosGiuAltra = (DecodificheModel) iteCollPosGiuAltra.next();
+		      String code = dMPosGiuAltra.getCode();
+		      if (code.equals(lNewPosGiuModel.getCodPosizioneGiuridica())) {
+		        flagAltraCausa = "S";
+		        break;
+		      }
+		    }
+			
+		    if ("S".equals(flagAltraCausa)) {
+		    	siesLogger.debug("Detenuto Altra Causa inserisco il record AC");
+		    	AltraCausaModel altraCausaModel = new AltraCausaModel();
+		    	altraCausaModel.setFasSieIdFascicoloSiep (lFasModel.getIdFascicoloSiep());
+		    	altraCausaModel.setCodTipoPosGiuridica   (lNewPosGiuModel.getCodPosizioneGiuridica());
+		    	altraCausaModel.setDataDecorrenza        (lNewPosGiuModel.getDataInizio());
+		    	altraCausaModel.setCodAutorita("-");
+		    	altraCausaModel.setCodLuogo("-");
+		    	
+		    	altraCausaModel.setIstDetIdIstitutoDetenzione (lPosGiuCumModel.getIstDetIdIstitutoDetenzione());
+		    	
+		    	altraCausaModel.setCodOperatoreInserimento (lEveModel.getCodOperatoreAggiornamento());
+		    	altraCausaModel.setDataInserimento         (lEveModel.getDataAggiornamento());
+		    	altraCausaModel.setCodUfficioInserimento   (lEveModel.getCodUfficioAggiornamento());
+
+		    	lAltraCausaDao = new AltraCausaDAO (lConn);
+		    	lAltraCausaDao.setDAOFromModel(altraCausaModel);
+		    	lAltraCausaDao.insert();
+		    }
+			// FINE [Ticket#20210430011]
+			
 			// ========================================================================
 			// Aggiorna flag cumulante e flag cumulato sul Fascicolo_model
 			// ========================================================================
@@ -1355,9 +1401,15 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lFascDao = new FascicoloSiepDAO(lConn);
 
 			lFascDao.selCondizioneUpdate(lEveModel.getFasSieIdFascicoloSiep());
-
+			
 			lFascDao.setFlagCumulante("S");
 
+			// [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
+			if ("S".equals(flagAltraCausa)) {
+			  lFascDao.setFlagAltraCausa(flagAltraCausa);
+			}
+			// FINE [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
+			
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
 			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
 			// settato a 03

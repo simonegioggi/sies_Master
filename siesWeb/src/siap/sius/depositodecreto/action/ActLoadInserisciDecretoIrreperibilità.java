@@ -3,6 +3,9 @@ package siap.sius.depositodecreto.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
@@ -38,7 +41,8 @@ import siap.sius.util.SIUSLookupRemote;
  */
 public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 		implements ICostantiDepositoDecreto {
-
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
@@ -67,7 +71,9 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 		IDepositoDecreto lDepDecrCtrl = SIUSLookupRemote.getDepositoDecretoRemote();
 
 		if (lDepDecrCtrl.ExVerificaEsistenzaDepositoDecretoByIdGenProcCodTipoDec(lIdGenProc,
-				IRREPERIBILITA)) {
+				IRREPERIBILITA)) 
+		{
+			siesLogger.debug("Inserimento decreto irreperibilità: Esiste già il decreto vado sul dettaglio se depositato");
 			// Se già esiste un decreto viene lanciato il dettaglio.
 			DepositoDecretoModel lDepDec = lDepDecrCtrl.ExRicercaDepositoDecretoByGenProc(lIdGenProc,
 					IRREPERIBILITA);
@@ -87,11 +93,18 @@ public class ActLoadInserisciDecretoIrreperibilità extends ActRicercaFSPuntuale
 			lRetPage = lPage.toString();
 		} else {
 			// Se esiste un decreto di inammissibilità si impedisce l'inserimento
-			if (lDepDecrCtrl.ExEsisteDepositoDecretoByGenProcCodEsito(lIdGenProc, "0002")) {
+			if (lDepDecrCtrl.ExEsisteDepositoDecretoByGenProcCodEsito(lIdGenProc, "0003")) {
 				// setta la risposta nella request
+				// Ticket#20210127015 - Il messaggio rilanciato è errato. Indica la presenza di 
+				//                      un Decreto di Irreperibilità ma cerca un rigetto
+				//                      Corretto anche il codice da 0002 Rigetto a 0003 inammissibile
+				//setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+				//		"Inserimento impossibile : Esiste un Decreto di irreperibilità");
+				siesLogger.warn("Inserimento impossibile : Esiste un Decreto di Inammissibilita'");
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-						"Inserimento impossibile : Esiste un Decreto di irreperibilità");
-
+						"Inserimento impossibile : Esiste un Decreto di Inammissibilita'");
+				// FINE Ticket#20210127015
+				
 				// Prepara la "pagina" di destinAction
 				RedirectTo lRedirigi = new RedirectTo();
 				lRedirigi.setPage(IWebConstants.PG_MAIN);

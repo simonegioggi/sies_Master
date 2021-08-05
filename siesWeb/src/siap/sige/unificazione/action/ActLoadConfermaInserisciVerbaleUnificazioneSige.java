@@ -22,9 +22,20 @@ public class ActLoadConfermaInserisciVerbaleUnificazioneSige extends ActionSige 
       //super.setLinkRitorno();
 	  super.removeSessionAttribute("StackDiRitorno");
       IDecretoUnificazioneSige lCtrl = SIGELookupRemote.getDecretoUnificazioneSigeRemote();
-      FascicoloSigeEstesoModel lFasDaUnificare = super.getFascicoloSigeEstesoInSessione();
-      FascicoloSigeEstesoModel lFasUnificante  = lCtrl.ExVerificaFascicoloSigePerUnificazione(getRequestStringParameter( ICostantiVerbaleUnificazioneSige.CAMPO_ANNO_DA_UNIF), getRequestStringParameter( ICostantiVerbaleUnificazioneSige.CAMPO_NUMERO_DA_UNIF), 
-			                                                                                super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
+	  // Ticket#2021032201 - Unificato e unificante sono invertiti. Quello in sessione 
+	  // è l'unificante, quello che arriva ala questa Action è l'unificato      
+//      FascicoloSigeEstesoModel lFasDaUnificare = super.getFascicoloSigeEstesoInSessione();
+//      FascicoloSigeEstesoModel lFasUnificante  = lCtrl.ExVerificaFascicoloSigePerUnificazione(getRequestStringParameter( ICostantiVerbaleUnificazioneSige.CAMPO_ANNO_DA_UNIF), getRequestStringParameter( ICostantiVerbaleUnificazioneSige.CAMPO_NUMERO_DA_UNIF), 
+//			                                                                                super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
+      
+      FascicoloSigeEstesoModel lFasUnificante = super.getFascicoloSigeEstesoInSessione();
+      FascicoloSigeEstesoModel lFasDaUnificare  = lCtrl.ExVerificaFascicoloSigePerUnificazione(
+					    		    getRequestStringParameter( ICostantiVerbaleUnificazioneSige.CAMPO_ANNO_DA_UNIF)
+					    		  , getRequestStringParameter( ICostantiVerbaleUnificazioneSige.CAMPO_NUMERO_DA_UNIF)
+					    		  , super.getCodUfficioUtenteConnesso(), RUOLO_FASCICOLO_DA_UNIFICARE );
+      // Ticket#2021032201 - FINE
+      
+      
       // Verifica la presenza di Oggetti nel fascicolo da Unificare
       TenoreSigeModel lTenModUnificato = new TenoreSigeModel();
       lTenModUnificato.setFasIdFascicoloSige(lFasDaUnificare.getFascicoloSige().getIdFascicoloSige());

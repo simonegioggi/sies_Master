@@ -445,7 +445,6 @@ function controllaEtaSoggetto() {
 }
 
 function Verify() {
-
 	var ritorno = true;
 	
 	if (document.LoadInserisciSoggetto.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciSoggetto.<%=ICostantiSoggetto.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value=='039') {
@@ -557,8 +556,9 @@ function Verify() {
 						return false;
 					}
 				}
-			} else if (eta_data_nascita_anni==""){							
-					 	alert("Inserire almeno il campo anni della data di nascita se non è stato impostato il campo Età presunta");
+			} else if (eta_data_nascita_anni=="" || parseInt(eta_data_nascita_anni,10)==0){	
+<%-- Ticket 20210310014: Aggiunto controllo che anno della data nascita se valorizzato sia diverso da 0 --%>      
+					 	alert("Inserire almeno il campo anni della data di nascita se non è stato impostato il campo Età presunta. Valore 0 non consentito.");
 						return false;
 					}        			
 		}   

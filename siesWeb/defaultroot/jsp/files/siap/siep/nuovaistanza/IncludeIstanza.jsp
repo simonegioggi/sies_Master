@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="java.util.Date"%>
@@ -16,6 +17,11 @@
 <jsp:useBean id="tipoAvvocato" scope="request" class="java.lang.String"/>
 <jsp:useBean id="contenuto" scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoinserimento" scope="request" class="java.lang.String" />
+<jsp:useBean id="foro"               scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazione"            scope="request" class="java.lang.String"/>		<!--   20210729 MEV_21 -->
+<jsp:useBean id="statoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210729 MEV_21 -->
+
+<%-- 20210729 MEV_21: Modificata la sezione Avvocato per chiamata a WS per individuare lista avvocato in RegInde --%>
 
 <%
 NuovaIstanzaModel lIst = nuovaistanza;
@@ -49,8 +55,6 @@ if(lIst.getDataNotificaAvvocato() != null)
 {
 	lDataNomina = lIst.getDataNotificaAvvocato();
 }
-
-
 %>
 
   <input type="HIDDEN" name="<%=ICostantiNuovaIstanza.CAMPO_ID_NUOVA_ISTANZA%>" value="<%=lIst.getIdNuovaIstanza()%>">
@@ -173,6 +177,11 @@ if(lIst.getDataNotificaAvvocato() != null)
       <a href="Javascript:ListaAvvocati('LoadInserisciSentenza','parziale');">
         Seleziona dalla lista <img src="/images/filefolder.gif" border="0">
       </a>
+	  <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
+	  <a href="Javascript:ListaAvvocatiRegInde('LoadInserisciSentenza');">
+		 Seleziona da RegInde <img src="/images/filefolder.gif" border="0">
+	  </a>
+      
   <%if (nuovaistanza.getAvvocatoPresentante()== null) {%>
    <input type="hidden" value="" name="<%= ICostantiNuovaIstanza.CAMPO_AVV_ID_AVVOCATO_PRESENTANTE%>">      
   <%} else { %>
@@ -189,10 +198,38 @@ if(lIst.getDataNotificaAvvocato() != null)
     </tr> 
   <tr>
     <td class="l" colspan="4">
-      <a href="Javascript:ListaAvvocati('LoadInserisciSentenza','completo');">
+      <%--<a href="Javascript:ListaAvvocati('LoadInserisciSentenza','completo');">
         Seleziona dalla lista <img src="/images/filefolder.gif" border="0">
-      </a>
+      </a> --%>
+	  <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
+	  <a id="ricReginde" style="visibility:visible;" href="Javascript:ListaAvvocatiRegInde('LoadInserisciSentenza');">
+		 Seleziona da RegInde <img src="/images/filefolder.gif" border="0">
+	  </a>
+	  <input type="hidden" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">      
+	  <input type="hidden" name="lTipoInserimento">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_COGNOME%>"> --%>      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_NOME%>"> --%>      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>">      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_FORO%>"> --%>     
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>"> --%>       
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>"> --%>      
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_TELEFONO%>"> --%>
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_FAX%>"> --%>
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"> --%>    
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_PEC%>"> --%>
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>"> --%>
+	  <%-- <input type="hidden" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"> --%>
     </td>
+   	<td id="inserimento" style="visibility:hidden;">
+     	<%-- <input class="bottone" type="button" value="Inserimento" name="IN" onClick="Javascript:Inserisci();"> --%>
+   	</td>
+   	<td id="confermaBtn" style="visibility:hidden;"> </td>
+    
   </tr>  
   <%if (nuovaistanza.getAvvocato()== null) {%>
    <input type="hidden" value="" name="<%= ICostantiNuovaIstanza.CAMPO_AVV_ID_AVVOCATO%>">
@@ -202,22 +239,120 @@ if(lIst.getDataNotificaAvvocato() != null)
      <tr>
       <td class="l">Cognome</td>
       <td class="l" > 
-        <input type="text" maxlength="38" size="40" ONKEYPRESS="return TicTabNumField(this,event)" 
+        <input type="text" readonly maxlength="38" size="40" 
                value="<%=StringUtils.toStringJSP(lAvv.getNome()) %>" name="<%=ICostantiAvvocato.CAMPO_COGNOME %>"> 
       </td> 
       <td class="l">Nome</td>
       <td class="l" > 
-        <input type="text" maxlength="38" size="40" ONKEYPRESS="return TicTabNumField(this,event)" 
+        <input type="text" readonly maxlength="38" size="40"  
                value="<%=StringUtils.toStringJSP(lAvv.getCognome()) %>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"> 
       </td>       
     </tr> 
     <tr>
-      <td class="l">Foro di competenza</td>
+      <%-- <td class="l">Foro di competenza</td>
       <td class="l" colspan="3"> 
         <input type="text" maxlength="38" size="40" ONKEYPRESS="return TicTabNumField(this,event)" 
                value="<%=StringUtils.toStringJSP(lAvv.getForo()) %>" name="<%= ICostantiAvvocato.CAMPO_FORO %>"> 
-      </td>       
-    </tr> 
+      </td> --%>
+<%
+String comuneNascita = "", comuneNascitaEstero = "";
+if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
+	if ("ITALIA".equalsIgnoreCase(lAvv.getDescrStatoNascita()))
+		comuneNascita = lAvv.getDescLuogoNascita();
+	else
+		comuneNascitaEstero = lAvv.getDescLuogoNascitaReginde();
+} else if (Utils.isPresent(lAvv.getDescLuogoNascita())) {
+	comuneNascita = lAvv.getDescLuogoNascita();
+}
+%>
+	    <td class="l">Comune di Nascita</td>
+	    <td class="l">
+      		<input title="Comune di Nascita" readonly value="<%=StringUtils.toStringJSP(comuneNascita)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>" maxlength="35" size="35" onChange="cancellaCodComuneReale();">
+      		<a href="Javascript:ListaComuniNascita('LoadInserisciSentenza','<%= ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA %>');" >
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+    	</td>
+
+        <td class="l">Stato di Nascita</td>
+		<td class="l">
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
+        </td>
+	</tr>
+
+  	<tr>
+        <td class="l">Luogo di Nascita Estero</td>
+        <td class="l">
+			<input title="Luogo di Nascita Estero" readonly value="<%=StringUtils.toStringJSP(comuneNascitaEstero)%>" type="text" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>" maxlength="35" size="35">
+		</td>
+    	<td class="l">Data di nascita </td>
+        <td class="L">
+<%
+if (lAvv.getDataNascita() == null) {
+%>
+			<input type="text" readonly value ="" title="Giorno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            -
+            <input type="text" readonly value ="" title="Mese Data di nascita" name="<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            -
+            <input type="text" readonly value ="" title="Anno Data di nascita" name="<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+<%
+} else {
+%>         
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getDayToString(lAvv.getDataNascita()))%>"  title="Giorno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            -
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(lAvv.getDataNascita()))%>" title="Mese Data di nascita" name="<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            -
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getYearToString(lAvv.getDataNascita()))%>" title="Anno Data di nascita" name="<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA %>" value="" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+<%}%> 
+		</td>
+	</tr>
+
+    <tr>
+        <td class="l">Foro <font class=ob>(*)</font></td>
+        <td class="l">
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_FORO%>" size="1"><%=foro%></select>
+        </td>
+      	<td class="l">Indirizzo</td>
+      	<td class="l">
+      		<input type="text" readonly size=80 maxlength=200 title="Indirizzo" value="<%=StringUtils.toStringJSP(lAvv.getIndirizzo())%>" name="<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>">
+      	</td>
+  	</tr>
+
+  	<tr>
+        <td class="l">Con Studio in </td>
+        <td class="L">
+<%--           	<input title="Comune di Residenza" value="<%=StringUtils.toStringJSP(lAvv.getDescComuneResidenza())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35"> --%>
+			<input type="text" readonly title="Comune Sede dello Studio" value="<%=StringUtils.toStringJSP(lAvv.getDescrComuneStudio())%>" name="<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>" maxlength="30" size="20">
+      		<a href="Javascript:ListaComuni('LoadInserisciSentenza','<%= ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO %>');">
+				<img src="/images/filefolder.gif" border=0>
+			</a>
+        </td>
+		<td class="l">Telefono</td>
+		<td class="l">
+<%			String lTel = lAvv.getTelefono().length()>3 ? lAvv.getTelefono() : ""; %>		
+			<input type="text" readonly size=12 maxlength=12 title="Telefono" value="<%=StringUtils.toStringJSP(lTel)%>" name="<%=ICostantiAvvocato.CAMPO_TELEFONO%>">&nbsp;&nbsp;
+			<font class="l">Fax</font>
+<%			String lFax = lAvv.getFax().length()>3 ? lAvv.getFax() : ""; %>		
+			<input type="text" readonly size=12 maxlength=12 title="Fax" value="<%=StringUtils.toStringJSP(lFax)%>" name="<%=ICostantiAvvocato.CAMPO_FAX%>">
+		</td>
+    </tr>
+    <tr>
+		<td class="l">e-mail</td>
+<%			String lEMail = lAvv.getEMail().length()>3 ? lAvv.getEMail() : ""; %>		
+		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lEMail)%>" title="e-mail" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
+		<td class="l">pec</td>
+<%			String lPec = lAvv.getPec().length()>3 ? lAvv.getPec() : ""; %>		
+		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lPec)%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
+	</tr>
+	<tr>
+		<td class="l">Codice Fiscale</td>
+		<td class="l">
+			<input type="text" readonly size=20 maxlength=16 readonly value="<%=StringUtils.toStringJSP(lAvv.getCodiceFiscale())%>" title="Codice Fiscale" name="<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>">
+		</td>
+		<td class="l" >Stato Difensore</td>
+		<td class="L">
+           	<select disabled="disabled" title="Stato Difensore" name="<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>"><%=statoAvv%></select>
+		</td>
+	</tr>
     <tr>
       <td class="titolo" colspan="4">Eventuale nomina del difensore di fiducia</td>                        
     </tr>       
@@ -257,7 +392,6 @@ if(lIst.getDataNotificaAvvocato() != null)
         </select>         
       </td> 
     </tr>
-
     <tr>
       <td class="l">Note</td>
       <td class="l" colspan="3"> 

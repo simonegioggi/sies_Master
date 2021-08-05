@@ -67,7 +67,8 @@ if(Messaggio!=null && Messaggio.getIdMessaggio()!=null && Messaggio.getCodTipoOp
 
 // 26/04/2019 MEV70 Controllo presenza titolo in Istruttoria.
 String stessoTitolo = ""; 
-String titoloCorrente = dettaglioFasSIEP.getFascicoloSiep().getChiaveAnno()+"/"+dettaglioFasSIEP.getFascicoloSiep().getChiaveProgr(); 
+String procedimentoStessoTitolo = ""; 
+String procedimentoCorrente = dettaglioFasSIEP.getFascicoloSiep().getChiaveAnno()+"/"+dettaglioFasSIEP.getFascicoloSiep().getChiaveProgr(); 
 Vector<TitoloCumulatoModel> VecTitCum = new Vector(ListaTitoliInIstruttoria);
 
 %>
@@ -137,8 +138,15 @@ Vector<TitoloCumulatoModel> VecTitCum = new Vector(ListaTitoliInIstruttoria);
 			TitoloCumulatoModel lTitoloCumModel = (TitoloCumulatoModel) VecTitCum.elementAt(i);
 	        	if (sentenzaRicevuta != null &&
 	        		lTitoloCumModel.isStessoTitolo(sentenzaRicevuta) ) {
-	             	stessoTitolo = lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato()+"/"+lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato();
-	    			break;
+	        		//Ticket#20210615018 - gestione di presa incarico titolo già in istruttoria ma senza procedimento associato
+	        		if (lTitoloCumModel.getProcedimentoCumulato()!=null) {
+	        			procedimentoStessoTitolo = lTitoloCumModel.getProcedimentoCumulato().getChiaveAnnoFasCumulato()+"/"+lTitoloCumModel.getProcedimentoCumulato().getChiaveProgrFasCumulato();
+	        			stessoTitolo = lTitoloCumModel.getAnnoSentenza() + "/"+ lTitoloCumModel.getNumeroSentenza();
+	        		}
+	        	    else 
+	        			stessoTitolo = lTitoloCumModel.getAnnoSentenza() + "/"+ lTitoloCumModel.getNumeroSentenza();
+	        		// Ticket#20210615018 - Fine
+	        		break;
 	        	}
 		}
 	}
@@ -1072,17 +1080,30 @@ if(lMisureCautelari != null && lMisureCautelari.size() != 0)
 	<script language="JavaScript">
 	    function Verifica(){
 	    	var aStessoTitolo = '<%=stessoTitolo%>';
-	    	var aTitoloCorrente = '<%=titoloCorrente%>';
-		    if (aStessoTitolo.length > 0	&&
-		    	aStessoTitolo!=aTitoloCorrente) { 
-				var msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n uguali a quelli del procedimento che si sta per prendere in carico.\n Si vuole procedere all'iscrizione in Istruttoria del Titolo selezionato?";
-			    if (window.confirm(msgConfirm))
-			    	return true;
-			    else
-			    	return false;
+	    	//Ticket#20210615018 - gestione di presa incarico titolo già in istruttoria ma senza procedimento associato
+	    	var aProcedimentoStessoTitolo = '<%=procedimentoStessoTitolo%>';
+	    	var aProcedimentoCorrente = '<%=procedimentoCorrente%>';
+		    if (aStessoTitolo.length > 0 ) {
+		    	// Titolo già presente in istruttoria
+		        if (aProcedimentoStessoTitolo.length>0 && aProcedimentoStessoTitolo!=aProcedimentoCorrente) { 
+					var msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Procedimento "+aProcedimentoStessoTitolo+" con estremi del Titolo Esecutivo\n uguali a quelli del procedimento che si sta per prendere in carico.\n Si vuole procedere all'iscrizione in Istruttoria del Titolo selezionato?";
+				    if (window.confirm(msgConfirm))
+				    	return true;
+				    else
+				    	return false;
+		        }
+		    	else if (aProcedimentoStessoTitolo.length==0) { 
+					var msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Titolo "+aStessoTitolo+" privo di procedimento associato (iscrizione manuale).\n Si vuole procedere all'iscrizione in Istruttoria del Titolo selezionato?";
+				    if (window.confirm(msgConfirm))
+				    	return true;
+				    else
+				    	return false;
+		    	}
+		    	else
+		    		return true; 
 		    } else
-		    	return true;
-	    }
+		    	return true; 
+	    } //Ticket#20210615018 - FINE
 	</script>
 
   

@@ -774,6 +774,31 @@
 
   		  
   	    }
+ 	  	// 20210730 Controllo tipo inserimento non Reginde
+ 		var lTipoIns = document.LoadInserisciSentenza.lTipoInserimento.value;
+ 		if (lTipoIns == 'manuale' ) {
+ 			document.getElementById('inserimento').style.visibility = 'visible';
+ 			document.getElementById('confermaBtn').style.visibility = 'hidden';
+ 			document.getElementById('ricReginde').style.visibility = 'hidden';
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_COGNOME%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_NOME%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>').disabled = false;
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_FORO%>').disabled = false;
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_INDIRIZZO%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_TELEFONO%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_FAX%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_E_MAIL%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_PEC%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_CODICE_FISCALE%>').readOnly = false; 
+ 			document.getElementById('<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>').disabled = false;
+ 		}
+ 	    
     } 
 
     function ctrl_autorita(idcmb1, idcmb2, idDiv, idTipoRito) {
@@ -896,7 +921,10 @@
     		}
     	}
     	
-
+        <%-- MEV_21: aggiunta chiamata a WS per individuare lista avvocato in RegInde --%>
+        function ListaAvvocatiRegInde(a_formname) {
+        	desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.siep.avvocato.action.ActLoadRicercaAvvocatoRegInde&formname="+a_formname,"Ricerca_Avvocato_RegInde","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=1000,height=600");
+        }
     	
   </script>
 </head>
@@ -992,8 +1020,6 @@
 			</tr>
 		</table>
 	</form>
-</body>
-</html>
 <script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("LoadInserisciSentenza");
 
@@ -1089,5 +1115,6 @@
 	/**************************FINE Sentenza ****************************************/	
  
     frmvalidator.setAddnlValidationFunction("Verify"); 
-
 </script>
+</body>
+</html>

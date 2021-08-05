@@ -49,10 +49,11 @@ if (formname.trim().length() == 0)
       function insertIT(id_record, selbeneficio, codTipoAnnotazione)
       {
 
-    	richiestaScelta = window.parent.opener.document.getElementById(id_record);
-    	  
-  		if (window.parent.opener.document.getElementById('titolo_richieste').style.display=='none')
-        window.parent.opener.document.getElementById('titolo_richieste').style.display='block';
+      richiestaScelta = window.parent.opener.document.getElementById(id_record);
+        
+      if (window.parent.opener.document.getElementById('titolo_richieste').style.display=='none')
+        window.parent.opener.document.getElementById('titolo_richieste').style.display='block';  
+        
         window.parent.opener.document.getElementById(id_record).style.display='block';
         window.parent.opener.document.getElementById('cb_'+id_record).checked=true;
         
@@ -77,6 +78,7 @@ if (formname.trim().length() == 0)
        	    window.parent.opener.document.<%=formname%>.<%=ICostantiReato.CAMPO_LETTERA%>.value = richiestaScelta.lettera;
        	    window.parent.opener.document.<%=formname%>.<%=ICostantiReato.CAMPO_NUMERO%>.value = richiestaScelta.numero;
         }
+        
         if (selbeneficio == 'INCOST') {
             // Aggiornamento istantaneo dei campi specifici della Incostituzionalità
         	window.parent.opener.document.<%=formname%>.<%="annoSCC"%>.value = richiestaScelta.annoCC;
@@ -89,10 +91,14 @@ if (formname.trim().length() == 0)
         //alert('codTipoAnnotazione = '+codTipoAnnotazione);
         window.parent.opener.document.<%=formname%>.<%=ICostantiAnnotazioneManuale.CAMPO_COD_TIPO_ANNOTAZIONE%>.value = codTipoAnnotazione;
         
-        var nodeRadio = window.parent.opener.document.getElementById('divRadio');
-        window.parent.opener.document.<%=formname%>.Radio_Depe_Ammi[0].checked = false;
-        window.parent.opener.document.<%=formname%>.Radio_Depe_Ammi[1].checked = false;
-   	  	nodeRadio.style.display = 'none';
+        <%-- Ticket#20210622011 Aggiunto controllo, solo per DEPENALIZZAZIONE sono presenti i campi Radio_Depe_Ammi. Andava in errore js --%>
+        if (selbeneficio == 'DEPEN') {
+          var nodeRadio = window.parent.opener.document.getElementById('divRadio');
+          window.parent.opener.document.<%=formname%>.Radio_Depe_Ammi[0].checked = false;
+          window.parent.opener.document.<%=formname%>.Radio_Depe_Ammi[1].checked = false;
+          nodeRadio.style.display = 'none';
+        }
+        <%-- Ticket#20210622011 - FINE  --%>
    	  	
         window.parent.close();        
       }
