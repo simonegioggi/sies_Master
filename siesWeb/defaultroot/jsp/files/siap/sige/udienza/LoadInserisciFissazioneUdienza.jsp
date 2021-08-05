@@ -863,8 +863,10 @@ function effettoTree(){
 
 							<%
 								String checkSNT = "";
-
-							String descSede =lAvv.getAvvocato().getForo(); 
+              //MEV_21 (avvocati) Sostituzione di getAvvocato().getForo() con getAvvocato().getDescComuneSedeForo() 
+							//String descSede =lAvv.getAvvocato().getForo(); 
+              String descSede =lAvv.getAvvocato().getDescComuneSedeForo(); 
+              // MEV_21: FIE
 							NotificaModel modNotAvv = null;
 							Iterator itxNotAvv = vectNotAvv.iterator();
 							while ( itxNotAvv.hasNext()) {
