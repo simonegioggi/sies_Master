@@ -56,14 +56,13 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			WsServiziInterrogazioneInterni_ServiceLocator service = new WsServiziInterrogazioneInterni_ServiceLocator();
 			service.setServiziInterrogazioneInterniBeanPortEndpointAddress(
 					F3BProperties.getProperty("EndpointAddress"));
-			
-			
-			/* Commentare le System.setProperty per i test locali		*/
-			System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));	
-			System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
-			System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
-			System.setProperty("https.proxyHost", F3BProperties.getProperty("https.proxyHost"));
-			System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));
+
+			/* Commentare le System.setProperty per i test locali e per il rilascio in esercizio */
+			// System.setProperty("javax.net.debug", F3BProperties.getProperty("javax.net.debug"));
+			// System.setProperty("http.proxyHost", F3BProperties.getProperty("http.proxyHost"));
+			// System.setProperty("http.proxyPort", F3BProperties.getProperty("http.proxyPort"));
+			// System.setProperty("https.proxyHost", F3BProperties.getProperty("https.proxyHost"));
+			// System.setProperty("https.proxyPort", F3BProperties.getProperty("https.proxyPort"));
 
 			WsServiziInterrogazioneInterni_PortType port = service.getServiziInterrogazioneInterniBeanPort();
 			Soggetto[] listaSoggetti = null;
@@ -77,12 +76,12 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 			else
 				listaSoggetti = port.ricercaSoggettoComplete(am.getCognome() != null ? am.getCognome() : "",
 						am.getNome() != null ? am.getNome() : "", null, null, foro, null, null);
-			
-			if (listaSoggetti==null)
+
+			if (listaSoggetti == null)
 				siesLogger.debug("Totale Soggetti (avvocati) trovati: null");
-			else 
-				siesLogger.debug("Totale Soggetti (avvocati) trovati: " +listaSoggetti.length);
-			
+			else
+				siesLogger.debug("Totale Soggetti (avvocati) trovati: " + listaSoggetti.length);
+
 			if (listaSoggetti != null && listaSoggetti.length > 0) {
 				v = new ArrayList(Arrays.asList(listaSoggetti));
 				siesLogger.debug("Elementi trovati: " + v.size());
@@ -96,7 +95,7 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 					"Attenzione: con i parametri inseriti la ricerca ritrova troppe occorrenze, restringere i criteri di ricerca!");
 		} catch (Exception e) {
 			siesLogger.error("Errore in " + getClass().getName() + ": " + e.toString());
-			siesLogger.error("Errore in " + getClass().getName() + ": ",e);
+			siesLogger.error("Errore in " + getClass().getName() + ": ", e);
 			if (!Utils.isNullObj(e) && !Utils.isNullObj(e.getMessage())
 					&& e.getMessage().contains("Unrecognized")) {
 				siesLogger.error("Errore in " + getClass().getName() + ": " + e.getMessage());
@@ -110,4 +109,5 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 
 		return PG_RICERCA_AVVOCATO_REGINDE;
 	}
+
 }
