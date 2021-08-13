@@ -59,6 +59,12 @@ public class ActRicercaAvvocato extends ActionSiap implements ICostantiAvvocato 
 
 		String lPage = PG_RICERCAAVVOCATO;
 
+		//202110811 MEV_21 Controllo parametro per la diversificazione della destinazione della ricerca (Avvocato presentante Istanza).
+		if (!isRequestParameterNullObj("formFiltra")		&&
+		   ("FiltraInsAvvReginde".equals(getRequestStringParameter("formFiltra"))) )
+			//setRequestAttribute("formFiltra", "filtraAvvPre");
+			lPage = PG_RICERCA_INS_AVVOCATO;
+
 		if (getRequestStringParameter("modalita").compareTo("BREVE") == 0)
 			lPage = PG_RICERCAAVVOCATOBREVE;
 

@@ -98,7 +98,12 @@ public class ActRicercaAvvocatoRegInde extends ActionSiap implements ICostantiAv
 		setRequestAttribute("formname", getRequestStringParameter("formname"));
 		setRequestAttribute("avvocato", listaAvvocati);
 
-		return PG_RICERCA_AVVOCATO_REGINDE;
+		//202110810 Controllo parametro per la diversificazione della destinazione della ricerca (Avvocato presentante Istanza).
+		if (!isRequestParameterNullObj("formFiltra")		&&
+		   ("FiltraInsAvvReginde".equals(getRequestStringParameter("formFiltra"))) )
+			return PG_RICERCA_INSAVV_REGINDE;
+		else
+			return PG_RICERCA_AVVOCATO_REGINDE;
 	}
 
 }

@@ -122,5 +122,33 @@ public interface ICostantiAvvocato {
 	public static final String CAMPO_DESC_COMUNE_STUDIO = "DescComuneStudio";
 	public static final String CAMPO_DESC_STATO_NASCITA = "DescStatoNascita";
 	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascita";
+	// 20210809 MEV_21
+	public static final String PG_LOAD_RICERCA_INSAVV_REGINDE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/avvocato/LoadRicercaInsAvvRegInde.jsp";
+	public static final String PG_RICERCA_INSAVV_REGINDE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/avvocato/RicercaInsAvvRegInde.jsp";
+	public static final String PG_FILTRA_INS_AVV_REGINDE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/avvocato/FiltraInsAvvRegInde.jsp";
+	public static final String CAMPO_ID_AVVOCATO_P = "IdAvvocatoP";
+	public static final String CAMPO_COGNOME_P = "CognomeAvvocatoP";
+	public static final String CAMPO_NOME_P = "NomeAvvocatoP";
+	public static final String CAMPO_COD_LUOGO_NASCITA_P = "CodLuogoNascitaP";
+	public static final String CAMPO_GIORNO_DATA_NASCITA_P = "GiornoDataNascitaP";
+	public static final String CAMPO_MESE_DATA_NASCITA_P = "MeseDataNascitaP";
+	public static final String CAMPO_ANNO_DATA_NASCITA_P = "AnnoDataNascitaP";
+	public static final String CAMPO_COD_STATO_NASCITA_P = "CodStatoNascitaP";
+	public static final String CAMPO_DESC_COMUNE_NASCITA_REGINDE_P = "DescComuneNascitaEsteroP";
+	public static final String CAMPO_FORO_P = "ForoP";
+	public static final String CAMPO_INDIRIZZO_P = "IndirizzoP";
+	public static final String CAMPO_DESC_COMUNE_STUDIO_P = "DescComuneStudioP";
+	public static final String CAMPO_TELEFONO_P = "TelefonoP";
+	public static final String CAMPO_FAX_P = "FaxP";
+	public static final String CAMPO_E_MAIL_P = "EMailP";
+	public static final String CAMPO_PEC_P = "PecP";
+	public static final String CAMPO_NOTE_P = "NoteP";
+	public static final String CAMPO_CODICE_FISCALE_P = "CodiceFiscaleP";
+	public static final String CAMPO_COD_NON_ATTIVITA_P = "CodNonAttivitaP";
+	public static final String PG_RICERCA_INS_AVVOCATO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/avvocato/RicercaInsAvvocato.jsp";
 
 }

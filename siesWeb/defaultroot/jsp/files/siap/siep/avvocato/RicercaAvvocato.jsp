@@ -78,7 +78,7 @@ function avvocati() {
 			if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde'))
 				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'visible';
 			if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep'))
-				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep').style.visibility = 'visible';
+				window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep').style.visibility = 'hidden';
 		}
    		window.parent.close();
 	}
@@ -129,6 +129,11 @@ function insertIT(id,cognome,nome,foro,indirizzo,telefono,fax,email,pec,codicefi
 		<%-- window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_COMUNE_RESIDENZA%>.value = residenza; --%>
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_DESC_COMUNE_STUDIO%>.value = descComuneStudio;
 		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA%>.value = stato;
+		<%-- 20210811 MEV_21 Distinzione tipo di Ricerca avvocato per Inserimento Istanza --%>
+		if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde'))
+			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricReginde').style.visibility = 'hidden';
+		if (window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep'))
+			window.parent.opener.document.<%=request.getParameter("formname")%>.document.getElementById('ricSiep').style.visibility = 'visible';
 
 		window.parent.close();
 	}

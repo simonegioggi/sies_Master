@@ -48,6 +48,12 @@ public class ActInserisciNuovaIstanza extends ActionNuovaIstanza implements ICos
 	//preparo il model dell'ISTANZA
 	NuovaIstanzaModel lNuoMod = getNuovaIstanza(lIdFascicolo);
 	
+	//20210812 MEV_21 Valorizzazione AVV_ID_AVVOCATO Inserito/modificato/confermato
+	lNuoMod.setAvvIdAvvocato(getIdAvvocatoInserito());
+
+	//20210812 MEV_21 Valorizzazione AVV_ID_AVVOCATO_PRESENTANTE Inserito/modificato/confermato
+	lNuoMod.setAvvIdAvvocatoPresentante(getIdAvvocatoPresInserito());
+	
 	//preparo il model della sentenza
 	SentenzaModel lSenMod = null;
 	
