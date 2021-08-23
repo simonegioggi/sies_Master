@@ -404,7 +404,13 @@
       <td class="l">Note</td>
       <td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(lEve.getNotifiche()[count].getNote())%></font>&nbsp;</td>
      </tr>
-  <%count++;}}}%>
+   <%
+   //count++;
+  }
+   // Ticket#20210721013 - la count stava orroneamente nelle if della note 
+   count++;
+   }
+         }%>
 
 
  <% if (fogliocomplementare.equals("0"))
