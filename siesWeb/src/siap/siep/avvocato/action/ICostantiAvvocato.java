@@ -22,7 +22,7 @@ public interface ICostantiAvvocato {
 	public static final String CAMPO_FAX = "Fax";
 	public static final String CAMPO_E_MAIL = "EMail";
 	public static final String CAMPO_NOTE = "Note";
-	public static final String CAMPO_CODICE_FISCALE = "CodiceFiscale";
+	public static final String CAMPO_CODICE_FISCALE = "CodiceFiscaleAvv";	// 20210813 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
 	public static final String CAMPO_COD_OPERATORE_INSERIMENTO = "CodOperatoreInserimento";
 	public static final String CAMPO_GIORNO_DATA_INSERIMENTO = "GiornoDataInserimento";
 	public static final String CAMPO_MESE_DATA_INSERIMENTO = "MeseDataInserimento";
@@ -31,11 +31,11 @@ public interface ICostantiAvvocato {
 	public static final String CAMPO_GIORNO_DATA_AGGIORNAMENTO = "GiornoDataAggiornamento";
 	public static final String CAMPO_MESE_DATA_AGGIORNAMENTO = "MeseDataAggiornamento";
 	public static final String CAMPO_ANNO_DATA_AGGIORNAMENTO = "AnnoDataAggiornamento";
-	public static final String CAMPO_COD_COMUNE_RESIDENZA = "CodComuneResidenza";
-	public static final String CAMPO_COD_LUOGO_NASCITA = "CodLuogoNascita";
-	public static final String CAMPO_GIORNO_DATA_NASCITA = "GiornoDataNascita";
-	public static final String CAMPO_MESE_DATA_NASCITA = "MeseDataNascita";
-	public static final String CAMPO_ANNO_DATA_NASCITA = "AnnoDataNascita";
+	public static final String CAMPO_COD_COMUNE_RESIDENZA = "CodComuneResidenzaAvv";	// 20210813 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_COD_LUOGO_NASCITA = "CodLuogoNascitaAvv"; 			// 20210813 MEV_21 
+	public static final String CAMPO_GIORNO_DATA_NASCITA = "GiornoDataNascitaAvv"; 		// 20210813 MEV_21 
+	public static final String CAMPO_MESE_DATA_NASCITA = "MeseDataNascitaAvv"; 			// 20210813 MEV_21 
+	public static final String CAMPO_ANNO_DATA_NASCITA = "AnnoDataNascitaAvv"; 			// 20210813 MEV_21 
 	public static final String CAMPO_GIORNO_DATA_SOSPENSIONE = "GiornoDataSospensione";
 	public static final String CAMPO_MESE_DATA_SOSPENSIONE = "MeseDataSospensione";
 	public static final String CAMPO_ANNO_DATA_SOSPENSIONE = "AnnoDataSospensione";
@@ -120,8 +120,8 @@ public interface ICostantiAvvocato {
 			+ "files/siap/siep/avvocato/FiltraAvvRegInde.jsp";
 	public static final String CAMPO_DESC_COMUNE_NASCITA_REGINDE = "DescComuneNascitaEstero";
 	public static final String CAMPO_DESC_COMUNE_STUDIO = "DescComuneStudio";
-	public static final String CAMPO_DESC_STATO_NASCITA = "DescStatoNascita";
-	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascita";
+	public static final String CAMPO_DESC_STATO_NASCITA = "DescStatoNascitaAvv"; 	// 20210813 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascitaAvv"; 	// 20210813 MEV_21
 	// 20210809 MEV_21
 	public static final String PG_LOAD_RICERCA_INSAVV_REGINDE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/avvocato/LoadRicercaInsAvvRegInde.jsp";

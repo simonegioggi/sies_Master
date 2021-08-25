@@ -20,6 +20,9 @@
 <jsp:useBean id="foro"               scope="request" class="java.lang.String"/>
 <jsp:useBean id="nazione"            scope="request" class="java.lang.String"/>		<!--   20210729 MEV_21 -->
 <jsp:useBean id="statoAvv"			 scope="request" class="java.lang.String"/>		<!--   20210729 MEV_21 -->
+<jsp:useBean id="foroP"              scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazioneP"           scope="request" class="java.lang.String"/>		<!--   20210823 MEV_21 -->
+<jsp:useBean id="statoAvvP"			 scope="request" class="java.lang.String"/>		<!--   20210823 MEV_21 -->
 
 <%-- 20210729 MEV_21: Modificata la sezione Avvocato per chiamata a WS per individuare lista avvocato in RegInde --%>
 
@@ -237,7 +240,7 @@ if(lIst.getDataNotificaAvvocato() != null)
 
         <td class="l">Stato di Nascita</td>
 		<td class="l">
-          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>" size="1"><%=nazione%></select>
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P%>" size="1"><%=nazioneP%></select>
         </td>
 	</tr>
 
@@ -271,7 +274,7 @@ if (lAvvPre.getDataNascita() == null) {
     <tr>
         <td class="l">Foro <font class=ob>(*)</font></td>
         <td class="l">
-          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_FORO_P%>" size="1"><%=foro%></select>
+          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_FORO_P%>" size="1"><%=foroP%></select>
         </td>
       	<td class="l">Indirizzo</td>
       	<td class="l">
@@ -289,19 +292,19 @@ if (lAvvPre.getDataNascita() == null) {
         </td>
 		<td class="l">Telefono</td>
 		<td class="l">
-<%			String lTelP = lAvvPre.getTelefono().length()>3 ? lAvvPre.getTelefono() : ""; %>		
+<%			String lTelP = lAvvPre.getTelefono()!=null ? lAvvPre.getTelefono() : ""; %>		
 			<input type="text" readonly size=12 maxlength=12 title="Telefono" value="<%=StringUtils.toStringJSP(lTelP)%>" name="<%=ICostantiAvvocato.CAMPO_TELEFONO_P%>">&nbsp;&nbsp;
 			<font class="l">Fax</font>
-<%			String lFaxP = lAvvPre.getFax().length()>3 ? lAvvPre.getFax() : ""; %>		
+<%			String lFaxP = lAvvPre.getFax()!=null ? lAvvPre.getFax() : ""; %>		
 			<input type="text" readonly size=12 maxlength=12 title="Fax" value="<%=StringUtils.toStringJSP(lFaxP)%>" name="<%=ICostantiAvvocato.CAMPO_FAX_P%>">
 		</td>
     </tr>
     <tr>
 		<td class="l">e-mail</td>
-<%			String lEMailP = lAvvPre.getEMail().length()>3 ? lAvvPre.getEMail() : ""; %>		
+<%			String lEMailP = lAvvPre.getEMail()!=null ? lAvvPre.getEMail() : ""; %>		
 		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lEMailP)%>" title="e-mail" name="<%=ICostantiAvvocato.CAMPO_E_MAIL_P%>"></td>
 		<td class="l">pec</td>
-<%			String lPecP = lAvvPre.getPec().length()>3 ? lAvvPre.getPec() : ""; %>		
+<%			String lPecP = lAvvPre.getPec()!=null ? lAvvPre.getPec() : ""; %>		
 		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lPecP)%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC_P%>"></td>
 	</tr>
 	<tr>
@@ -347,12 +350,12 @@ if (lAvvPre.getDataNascita() == null) {
       <td class="l">Cognome</td>
       <td class="l" > 
         <input type="text" readonly maxlength="38" size="40" 
-               value="<%=StringUtils.toStringJSP(lAvv.getNome()) %>" name="<%=ICostantiAvvocato.CAMPO_COGNOME %>"> 
+               value="<%=StringUtils.toStringJSP(lAvv.getCognome()) %>" name="<%=ICostantiAvvocato.CAMPO_COGNOME %>"> 
       </td> 
       <td class="l">Nome</td>
       <td class="l" > 
         <input type="text" readonly maxlength="38" size="40"  
-               value="<%=StringUtils.toStringJSP(lAvv.getCognome()) %>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"> 
+               value="<%=StringUtils.toStringJSP(lAvv.getNome()) %>" name="<%= ICostantiAvvocato.CAMPO_NOME %>"> 
       </td>       
     </tr> 
     <tr>
@@ -382,7 +385,7 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 
         <td class="l">Stato di Nascita</td>
 		<td class="l">
-          	<select disabled="disabled" name="<%=ICostantiAvvocato.CAMPO_COD_STATO_NASCITA%>" size="1"><%=nazione%></select>
+          	<select disabled="disabled" name="CodStatoNascitaAvv" size="1"><%=nazione%></select>
         </td>
 	</tr>
 
@@ -396,19 +399,19 @@ if (Utils.isPresent(lAvv.getDescrStatoNascita())) {
 <%
 if (lAvv.getDataNascita() == null) {
 %>
-			<input type="text" readonly value ="" title="Giorno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			<input type="text" readonly value ="" title="Giorno Data di nascita" name="GiornoDataNascitaAvv" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
             -
-            <input type="text" readonly value ="" title="Mese Data di nascita" name="<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            <input type="text" readonly value ="" title="Mese Data di nascita" name="MeseDataNascitaAvv" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
             -
-            <input type="text" readonly value ="" title="Anno Data di nascita" name="<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+            <input type="text" readonly value ="" title="Anno Data di nascita" name="AnnoDataNascitaAvv" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 <%
 } else {
 %>         
-            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getDayToString(lAvv.getDataNascita()))%>"  title="Giorno Data di nascita" name="<%=ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getDayToString(lAvv.getDataNascita()))%>"  title="Giorno Data di nascita" name="GiornoDataNascitaAvv" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
             -
-            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(lAvv.getDataNascita()))%>" title="Mese Data di nascita" name="<%= ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(lAvv.getDataNascita()))%>" title="Mese Data di nascita" name="MeseDataNascitaAvv" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
             -
-            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getYearToString(lAvv.getDataNascita()))%>" title="Anno Data di nascita" name="<%= ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA %>" value="" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+            <input type="text" readonly value ="<%=StringUtils.toStringJSP(DateUtils.getYearToString(lAvv.getDataNascita()))%>" title="Anno Data di nascita" name="AnnoDataNascitaAvv" value="" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 <%}%> 
 		</td>
 	</tr>
@@ -435,19 +438,19 @@ if (lAvv.getDataNascita() == null) {
         </td>
 		<td class="l">Telefono</td>
 		<td class="l">
-<%			String lTel = lAvv.getTelefono().length()>3 ? lAvv.getTelefono() : ""; %>		
+<%			String lTel = lAvv.getTelefono()!=null ? lAvv.getTelefono() : ""; %>		
 			<input type="text" readonly size=12 maxlength=12 title="Telefono" value="<%=StringUtils.toStringJSP(lTel)%>" name="<%=ICostantiAvvocato.CAMPO_TELEFONO%>">&nbsp;&nbsp;
 			<font class="l">Fax</font>
-<%			String lFax = lAvv.getFax().length()>3 ? lAvv.getFax() : ""; %>		
+<%			String lFax = lAvv.getFax()!=null ? lAvv.getFax() : ""; %>		
 			<input type="text" readonly size=12 maxlength=12 title="Fax" value="<%=StringUtils.toStringJSP(lFax)%>" name="<%=ICostantiAvvocato.CAMPO_FAX%>">
 		</td>
     </tr>
     <tr>
 		<td class="l">e-mail</td>
-<%			String lEMail = lAvv.getEMail().length()>3 ? lAvv.getEMail() : ""; %>		
+<%			String lEMail = lAvv.getEMail()!=null ? lAvv.getEMail() : ""; %>		
 		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lEMail)%>" title="e-mail" name="<%=ICostantiAvvocato.CAMPO_E_MAIL%>"></td>
 		<td class="l">pec</td>
-<%			String lPec = lAvv.getPec().length()>3 ? lAvv.getPec() : ""; %>		
+<%			String lPec = lAvv.getPec()!=null ? lAvv.getPec() : ""; %>		
 		<td class="l"><input type="text" readonly size=50 maxlength=50 value="<%=StringUtils.toStringJSP(lPec)%>" title="pec" name="<%=ICostantiAvvocato.CAMPO_PEC%>"></td>
 	</tr>
 	<tr>

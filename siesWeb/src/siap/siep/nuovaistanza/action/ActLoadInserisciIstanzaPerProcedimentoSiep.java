@@ -80,14 +80,17 @@ public class ActLoadInserisciIstanzaPerProcedimentoSiep extends ActionSiap imple
 		// avvocato.getAvvocato().getForo(),Option.NO_BLANK_ITEM);
 		// }
 		setRequestAttribute("foro", "" + lOption);
+		setRequestAttribute("foroP", "" + lOption);
 
 		// 20210729 MEV_21 Nuova gestione Combo per Stato di Nascita
 		lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
 		setRequestAttribute("nazione", "" + lOption);
+		setRequestAttribute("nazioneP", "" + lOption);
 
 		// 20210729 MEV_21 Nuova gestione Combo per Stato Difensore
 		lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
 		setRequestAttribute("statoAvv", "" + lOption);
+		setRequestAttribute("statoAvvP", "" + lOption);
 
 		return PG_LOAD_INSERISCI_PROCEDIMENTO_ISTANZA;
 	}

@@ -16,8 +16,10 @@ import siap.sico.decodifiche.action.ICostantiComune;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.soggetto.model.SoggettoModel;
+import siap.siep.avvocato.action.ICostantiAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa;
 import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 import siap.siep.sentenza.action.ICostantiSentenza;
@@ -49,10 +51,12 @@ public class ActInserisciNuovaIstanza extends ActionNuovaIstanza implements ICos
 	NuovaIstanzaModel lNuoMod = getNuovaIstanza(lIdFascicolo);
 	
 	//20210812 MEV_21 Valorizzazione AVV_ID_AVVOCATO Inserito/modificato/confermato
-	lNuoMod.setAvvIdAvvocato(getIdAvvocatoInserito());
+	if (this.getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).length()>1) 
+		lNuoMod.setAvvIdAvvocato(getIdAvvocatoInserito());
 
-	//20210812 MEV_21 Valorizzazione AVV_ID_AVVOCATO_PRESENTANTE Inserito/modificato/confermato
-	lNuoMod.setAvvIdAvvocatoPresentante(getIdAvvocatoPresInserito());
+	//20210819 MEV_21 Valorizzazione AVV_ID_AVVOCATO_PRESENTANTE Inserito/modificato/confermato
+	if ("D".equals(this.getRequestStringParameter(ICostantiNuovaIstanza.CAMPO_FLAG_PRESDEP)) )
+		lNuoMod.setAvvIdAvvocatoPresentante(getIdAvvocatoPresInserito());
 	
 	//preparo il model della sentenza
 	SentenzaModel lSenMod = null;

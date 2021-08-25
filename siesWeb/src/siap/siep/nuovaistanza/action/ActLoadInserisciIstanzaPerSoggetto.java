@@ -153,14 +153,17 @@ public class ActLoadInserisciIstanzaPerSoggetto extends ActionSiap implements IC
     //  lOption = new Option(DecodificheManager.getInstance().getForo(), avvocato.getAvvocato().getForo(),Option.NO_BLANK_ITEM);
     //}
     setRequestAttribute("foro", ""+ lOption);
+    setRequestAttribute("foroP", ""+ lOption);
 
     // 20210730 MEV_21 Nuova gestione Combo per Stato di Nascita
 	lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
 	setRequestAttribute("nazione", "" + lOption );      
+	setRequestAttribute("nazioneP", "" + lOption );      
 	
 	// 20210730 MEV_21 Nuova gestione Combo per Stato Difensore
 	lOption = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), "-");
 	setRequestAttribute("statoAvv", "" + lOption );      
+	setRequestAttribute("statoAvvP", "" + lOption );      
     
     // Imposta la Modalità a Inserimento.
     setRequestAttribute("modalita", "I");
