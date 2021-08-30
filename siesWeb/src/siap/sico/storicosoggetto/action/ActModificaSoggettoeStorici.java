@@ -81,9 +81,13 @@ public class ActModificaSoggettoeStorici extends ActionSiap implements ICostanti
 			lSogMod.setDataReatoSius(getRequestDateParameter(CAMPO_ANNO_DATA_COMMESSO_REATO,
 					CAMPO_MESE_DATA_COMMESSO_REATO, CAMPO_GIORNO_DATA_COMMESSO_REATO));
 
-		// Recupero Codice di nascita...
-		ComuneModel lComMod = new ComuneModel(
-				getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+		// 20210830 MEV_21 Recupero Codice Comune di Nascita
+		ComuneModel lComMod = null;
+		if (!this.isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA) ) {
+			lComMod = new ComuneModel(getDatiComuneByCodDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA), 
+									  						  getRequestStringParameter("DescrComuneNascita")) ) ;
+		} else 
+			lComMod = new ComuneModel(getCodComuneByDescr(getRequestStringParameter("DescrComuneNascita")));
 		lSogMod.setCodComuneNascita(lComMod.getCodComune());
 		lSogMod.setCodProvinciaNascita(lComMod.getCodProvincia());
 		lSogMod.setCodComuneCasellario(lComMod.getCodSedeGiudiziaria());
