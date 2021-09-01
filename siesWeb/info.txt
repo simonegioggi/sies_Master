@@ -1,49 +1,18 @@
-RELEASE_12.4.12.0	-->	nato dal branch "release_12.4.11.0" in data 19/07/2021	
+Ticket#20210824013] Ticket Creato SIES - Emissione Cumulo
 
-MERGED TICKETS:
+Errore di nullpointer in caso stamoa di una richiesta di revoca beneficio in 
+cumulo su un provvedimento di concessione beneficio 
+in cui non viene indicato anno e numero del provvedimento SIGE di concessione.
+Il dato è attualmente obbligatorio me non sui vecchi dati.
 
-1)	Ticket 20210622011 - Annotazione ordinanza giudice dell’esecuzione
-		Nelle form delle Decisioni del GE (Amnistia/Indulto, Depenalizzazione, Incostituzionalità) 
-		erano state commentate le righe che precaricavano i dati delle richieste.
-		Quando si selezionava la richiesta del GE e il radio "In conformità" il javascript non trovando 
-		i dati caricava in campi con "undefined" o "NaN".
-		Su indicazione di Michele Testa sono stati ripristinati i campi.
-		Form corrette:
-		-	\jsp\files\siap\siep\calcolopena\LoadAnnotazioniManualiBenefici.jsp
-		-	\jsp\files\siap\siep\calcolopena\LoadGEDepen.jsp
-		-	\jsp\files\siap\siep\calcolopena\LoadGEIncost.jsp
-		Corretta anche la popup delle richieste, andava in errore js nel caso di Amnistia/Indulto.
-		Referenziava campi della form della depenalizzazione.
-		-	\jsp\files\siap\siep\richiesta\ListaRichiesteAlGE.jsp
-		Aggiunto GUP nella combo autorità
-		-	siap.siep.calcolopena.action.ActLoadInserisciAnnotazioniManuali.java
+Modulo Modificato
+siap.siep.istruttoriacumulo.controller.StampaCumuloController
+- prelevaDatiIstruttoriaCumulo
+- prelevaDatiIstruttoriaPerPropostaCumulo
+- prelevaDatiRichiestaInviataCumulo
 
-2)	Ticket - 202106220110 - Errore in stampa decreto irreperibilità
-		Corretta la funzione di rinnovazione (jsp) che consentiva l'inserimento senza controllo dei dati.
-		Resa obbligatoria Data e Destinatario.
-		-	siap/siep/notifica/LoadRinnovazioneNotifica.jsp
-		Modificato il modulo di stampa che prelevava il record RINNOVAZIONE senza controllare la presenza della DATA (unico dato di interesse)
-		-	siap.siep.statoesecuzione.controller.StatoEsecuzioneController.java
-		Modificato metodo appendStatoEsecuzione
-		-	siap.siep.rinnovo.dao.RinnovoSqlDAO.java
-		Aggiunto un metodo per recuperare solo i RINNOVI con DATA_RINNOVO valorizzata (per gestire il progresso)
-		-	siap.siep.rinnovo.controller.IRinnovo.java
-		Aggiunto meteodo ExRicercaUltimoRinnovoByKeyEvento
-		-	siap.siep.rinnovo.controller.IRinnovoController.java
-		Aggiunto metodo ExRicercaUltimoRinnovoByKeyEvento
 
-3)	Ticket#20210624014 - Errore in Emissione Misura Sicurezza, già ticket Ticket# 202103160116
-		Corretto errore in fase di recupero del RIFERIMENTO_FASCICOLO_SIEP
-		Decodificava il flag_ms_SN sempre ad N
-		-	siap.sius.rifasiep.dao.RiferimentoFascicoloSiepSqlDAO.java
-		Corretta anche la jsp:
-		-	siap/sius/misurasicurezza/DettaglioSiusMisuraSicurezza.jsp
-		poichè se si inseriva un riferimento ad una misura di sicurezza indicave che era una pena pecuniaria
-		Corretta annche la jsp:
-		-	siap/sius/rifasiep/LoadInserisciRifFascicoloSiep.jsp
-		poichè era presente un errore js per due variabili con nome errato e veniva fatto un controllo non pertinente sull'anagrafica anche se non selezionata.
 
-4)	Ticket#20210709019 - Tribunale dei Minorenni di Roma - impossibile definizioni del procedimento
-		Correto modulo
-		-	siap\sico\security\toolbar_header.jsp
-		Gestiva UDS e TDS ma non TDSM e UDSM per cui non visualizzava alcuni bottoni.
+
+
+

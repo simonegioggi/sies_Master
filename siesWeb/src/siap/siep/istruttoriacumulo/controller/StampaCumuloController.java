@@ -652,7 +652,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getCodTipoProvvedimento(),
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
-													lCompMod.getProgrProvv().toString(),
+													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
+													//lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+													// Ticket#20210824013 - FINE
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
@@ -839,7 +842,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getCodTipoProvvedimento(),
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
-													lCompMod.getProgrProvv().toString(),
+													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
+													//lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+													// Ticket#20210824013 - FINE													
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
@@ -1974,7 +1980,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 												lStatoEseMod.getCodTipoProvvedimento(),
 												lStatoEseMod.getDescrTipoProvvedimento(),
 												lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
-												lCompMod.getProgrProvv().toString(),
+												// Ticket#20210824013 - il ProgrProvv potrebbe essere null
+												//lCompMod.getProgrProvv().toString(),
+												lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+												// Ticket#20210824013 - FINE												
 												lStatoEseMod.getCodUfficioEmittente(),
 												lStatoEseMod.getDescrUfficioEmittente(),
 												lStatoEseMod.getCodLuogoEmittente(),
@@ -2155,7 +2164,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 												lStatoEseMod.getCodTipoProvvedimento(),
 												lStatoEseMod.getDescrTipoProvvedimento(),
 												lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
-												lCompMod.getProgrProvv().toString(),
+												// Ticket#20210824013 - il ProgrProvv potrebbe essere null
+												//lCompMod.getProgrProvv().toString(),
+												lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+												// Ticket#20210824013 - FINE												
 												lStatoEseMod.getCodUfficioEmittente(),
 												lStatoEseMod.getDescrUfficioEmittente(),
 												lStatoEseMod.getCodLuogoEmittente(),
@@ -2858,7 +2870,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getCodTipoProvvedimento(),
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
-													lCompMod.getProgrProvv().toString(),
+													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
+													//lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+													// Ticket#20210824013 - FINE													
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
@@ -3042,7 +3057,10 @@ public class StampaCumuloController extends SiapController implements IStampaCum
 													lStatoEseMod.getCodTipoProvvedimento(),
 													lStatoEseMod.getDescrTipoProvvedimento(),
 													lStatoEseMod.getDataEmissione(), lCompMod.getAnnoProvv(),
-													lCompMod.getProgrProvv().toString(),
+													// Ticket#20210824013 - il ProgrProvv potrebbe essere null
+													//lCompMod.getProgrProvv().toString(),
+													lCompMod.getProgrProvv()!=null ? lCompMod.getProgrProvv().toString() : null,
+													// Ticket#20210824013 - FINE													
 													lStatoEseMod.getCodUfficioEmittente(),
 													lStatoEseMod.getDescrUfficioEmittente(),
 													lStatoEseMod.getCodLuogoEmittente(),
