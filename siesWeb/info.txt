@@ -29,6 +29,24 @@ MERGED TICKETS (ONLY JAVA):
 			-	\jsp\files\siap\siep\beneficio\ListaProcAssociati.jsp 
 			-	\jsp\files\siap\siep\beneficio\ListaProcAssociatiIndu.jsp
 
-4)	
+4)	Ticket#20210824013 - Emissione Cumulo
+		Errore di nullpointer in caso stamoa di una richiesta di revoca beneficio in cumulo su un provvedimento
+		di concessione beneficio in cui non viene indicato anno e numero del provvedimento SIGE di concessione.
+		Il dato è attualmente obbligatorio me non sui vecchi dati.
+		Modulo Modificato:
+			-	siap.siep.istruttoriacumulo.controller.StampaCumuloController.java
+			Metodi:
+				-	prelevaDatiIstruttoriaCumulo
+				-	prelevaDatiIstruttoriaPerPropostaCumulo
+				-	prelevaDatiRichiestaInviataCumulo
 
 5)	
+=======
+
+
+
+
+
+
+
+>>>>>>> origin/mac-otrs-20210824013
