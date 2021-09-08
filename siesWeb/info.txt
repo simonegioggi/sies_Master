@@ -16,7 +16,18 @@ MERGED TICKETS (ONLY JAVA):
 			-	siap.siep.richiesta.actionActLoadTrasferisciRichiestaAttiExArt51Bis.java,
 			-	siap\siep\richiesta\LoadTrasmissioneAttiExArt51Bis.jsp
 
-3)	
+3)	Ticket#20210728014 - anomalia inserimento collegio sige - Cap
+		Errore in fase di cast dell'idCollegio. Veniva utilizzato il cast in intValue che andava in overflow.
+		Jsp Modifcate:
+		JSP SEGNALATA
+			-	\jsp\files\siap\sige\udienzacollegiale\LoadInserisciUdienzaCollegialeFix.jsp
+		Controllo esteso a tutte le jsp. Il cast è presente anche in altre 4 jsp ma 
+		non da problemi in quanto presente in condizione di == su due cast in int.
+		(anche se poco corretto)
+			-	\jsp\files\siap\sige\fogliocomplementare\ElencoProvvedimentiCFCTastoFunzione.jsp
+			-	\jsp\files\siap\sige\fogliocomplementare\ElencoProvvedimentiCFC.jsp
+			-	\jsp\files\siap\siep\beneficio\ListaProcAssociati.jsp 
+			-	\jsp\files\siap\siep\beneficio\ListaProcAssociatiIndu.jsp
 
 4)	
 
