@@ -40,13 +40,9 @@ MERGED TICKETS (ONLY JAVA):
 				-	prelevaDatiIstruttoriaPerPropostaCumulo
 				-	prelevaDatiRichiestaInviataCumulo
 
-5)	
-=======
-
-
-
-
-
-
-
->>>>>>> origin/mac-otrs-20210824013
+5)	Ticket#20210825016 — foglio completare Iscrizione nel casellario giudiziale locale - ex art. 3 DPR 14 novembre 2002 n. 313 - 
+		(nato dal branch "release_12.4.12.0" in data 30/08/2021)
+		(In combinazione con NSC)
+		Modulo Modificato:
+			-	siap.sico.webservice.action.ActPrelevaDatiFascicolo.java;	--> LATO SIES
+			-	UPDATE TAB DC_TAB7a_RIFERIMENTI								-->	LATO NSC
