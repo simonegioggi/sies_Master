@@ -46,7 +46,10 @@ String Rich = eventonotifica.getEvento().getDescrMotivo();
 <form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadTrasferisciAtti" onsubmit="document.forms[0].go.disabled=true">
 <table cellspacing=2 cellpadding=2>
 	<tr>
-
+<%--
+// Ticket#202107210117 - Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
+// Tolti riferimenti fissi a mds e tds ed Aggiunti controlli per uffici minorili
+--%>
 <%
 if (ufficiouds != null && ufficiouds.getDescrComune() != null && !ufficiouds.getDescrComune().equals("")) {
 %>

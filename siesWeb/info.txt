@@ -10,7 +10,11 @@ MERGED TICKETS (ONLY JAVA):
 		Modulo modificato:
 			-	RicercaJMSController.ExRicercaFascicoloSiepPerTrasferimento
 
-2)	
+2)	Ticket#202107210117 — Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
+		Aggiunta gestione per uffici minorili.
+		Modulo modificati:
+			-	siap.siep.richiesta.actionActLoadTrasferisciRichiestaAttiExArt51Bis.java,
+			-	siap\siep\richiesta\LoadTrasmissioneAttiExArt51Bis.jsp
 
 3)	
 
