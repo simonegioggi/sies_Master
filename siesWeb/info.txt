@@ -2,7 +2,13 @@ RELEASE_12.4.13.0	-->	nato dal branch "release_12.4.12.0" in data 08/09/2021
 
 MERGED TICKETS (ONLY JAVA):
 
-1)	
+1)	Ticket#20210702015:
+		in fase di ricerca fascicolo, la funzione di trasferimento non inviava tutti i dati,
+		in particolare mancavano i dati delle nuove istruttorie cumulo inviate invece in caso
+		di trasmissione/richietsa atti x cumulo.
+		Aggiunta la sezione per l'invio dei dati delle nuove istruttorie.
+		Modulo modificato:
+			-	RicercaJMSController.ExRicercaFascicoloSiepPerTrasferimento
 
 2)	
 
