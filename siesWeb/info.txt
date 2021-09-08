@@ -8,7 +8,7 @@ MERGED TICKETS (ONLY JAVA):
 		di trasmissione/richietsa atti x cumulo.
 		Aggiunta la sezione per l'invio dei dati delle nuove istruttorie.
 		Modulo modificato:
-			-	RicercaJMSController.ExRicercaFascicoloSiepPerTrasferimento.java
+			-	siap.siep.jms.controller.RicercaJMSController.java (metodo ExRicercaFascicoloSiepPerTrasferimento)
 
 2)	Ticket#202107210117 — Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
 		Aggiunta gestione per uffici minorili.
