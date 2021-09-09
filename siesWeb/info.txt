@@ -10,13 +10,22 @@ MERGED TICKETS (ONLY JAVA):
 		Modulo modificato:
 			-	siap.siep.jms.controller.RicercaJMSController.java (metodo ExRicercaFascicoloSiepPerTrasferimento)
 
-2)	Ticket#202107210117 — Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
+2)	Ticket#20210721013 - Correzione Template SIEP_LS_OLQSI
+		Oltre alla correzione dei Template, presente un errore segnalato nella visualizzazione
+		del dettaglio del Provvedimento:
+			a) in presenza di 2 avvocati con autorità preposte alla notifica differenti, nel dettaglio 
+   				visualizzava la stessa autorità su entrambi gli avvocati;
+			b) non visualizzava la notifica al TDS nel dettaglio anche se inserita.
+		Corretta jsp:
+			-	siap\siep\ordineesecuzione\DettaglioLSLiberoIstanzaProdotta.jsp
+
+3)	Ticket#202107210117 — Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
 		Aggiunta gestione per uffici minorili.
 		Modulo modificati:
 			-	siap.siep.richiesta.actionActLoadTrasferisciRichiestaAttiExArt51Bis.java,
 			-	siap\siep\richiesta\LoadTrasmissioneAttiExArt51Bis.jsp
 
-3)	Ticket#20210728014 - anomalia inserimento collegio sige - Cap
+4)	Ticket#20210728014 - anomalia inserimento collegio sige - Cap
 		Errore in fase di cast dell'idCollegio. Veniva utilizzato il cast in intValue che andava in overflow.
 		Jsp Modifcate:
 		JSP SEGNALATA
@@ -29,7 +38,7 @@ MERGED TICKETS (ONLY JAVA):
 			-	\jsp\files\siap\siep\beneficio\ListaProcAssociati.jsp 
 			-	\jsp\files\siap\siep\beneficio\ListaProcAssociatiIndu.jsp
 
-4)	Ticket#20210824013 - Emissione Cumulo
+5)	Ticket#20210824013 - Emissione Cumulo
 		Errore di nullpointer in caso stamoa di una richiesta di revoca beneficio in cumulo su un provvedimento
 		di concessione beneficio in cui non viene indicato anno e numero del provvedimento SIGE di concessione.
 		Il dato è attualmente obbligatorio me non sui vecchi dati.
@@ -40,7 +49,7 @@ MERGED TICKETS (ONLY JAVA):
 				-	prelevaDatiIstruttoriaPerPropostaCumulo
 				-	prelevaDatiRichiestaInviataCumulo
 
-5)	Ticket#20210825016 — foglio completare Iscrizione nel casellario giudiziale locale - ex art. 3 DPR 14 novembre 2002 n. 313 - 
+6)	Ticket#20210825016 — foglio completare Iscrizione nel casellario giudiziale locale - ex art. 3 DPR 14 novembre 2002 n. 313 - 
 		(nato dal branch "release_12.4.12.0" in data 30/08/2021)
 		(In combinazione con NSC)
 		Modulo Modificato:
