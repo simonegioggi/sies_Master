@@ -332,6 +332,10 @@ public class ActionNuovaIstanza extends ActionSiap
 			lNuoMod.setTipoAvvocato("-");
 		}
 
+		// 20210831	MEV_21 Valorizzazione tipo Avvocato
+		if (!isRequestParameterNullObj(CAMPO_TIPO_AVVOCATO))
+			lNuoMod.setTipoAvvocato(getRequestStringParameter(ICostantiNuovaIstanza.CAMPO_TIPO_AVVOCATO) );
+		
 		return lNuoMod;
 	}
 
