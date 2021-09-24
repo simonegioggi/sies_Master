@@ -2467,13 +2467,21 @@ public class ActPrelevaDatiFascicolo extends ActWsBase {
 				aDatiImpugnazione.setCODITIPORIFERIMENTO("5"); // Era 01 "Conferma"
 			else
 				aDatiImpugnazione.setCODITIPORIFERIMENTO("6"); // Era 02 "In Riforma"
-		} else
+		} else {
 			// Ticket#20190725016 — Anomalia fascicoli SIEP: 20190725 [SG]
 			// Se si mette una impugnazione nella sentenza di tipo ordinanza di inammissibilita'
 			// aSentenza.getCodTipoProvvRif() risulta "-"
 			// (mentre aSentenza.getCodTipoProvvedimentoRif() = "53"
 			// nell'xml il CODITIPORIFERIMENTO e' obbligatorio e quindi imposto "0"
-			aDatiImpugnazione.setCODITIPORIFERIMENTO("0");
+			// aDatiImpugnazione.setCODITIPORIFERIMENTO("0");
+			// FINE Ticket#20190725016
+			// Ticket#20210825016 — foglio completare Iscrizione nel casellario giudiziale locale - ex art. 3
+			// DPR 14 novembre 2002 n. 313
+			// come concordato con VB, EC ed SDA aggiungiamo nuovo c.u. sul db di NSC in corrispondenza del
+			// codice 022 nella tabella dc_tab7a_riferimenti
+			aDatiImpugnazione.setCODITIPORIFERIMENTO("17");
+			// FINE Ticket#20210825016
+		}
 
 		DATA lData = DATA.Factory.newInstance();
 		lData.setGIORNO(DateUtils.getDateToString(aSentenza.getDataProvvRif(), "dd"));
