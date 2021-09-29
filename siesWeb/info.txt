@@ -1,57 +1,31 @@
-RELEASE_12.4.13.0	-->	nato dal branch "release_12.4.12.0" in data 08/09/2021	
+Ticket#20210924018 - Pagine di Errore - SIEP PROCURA GENERALE DI BARI
 
-MERGED TICKETS (ONLY JAVA):
+Aggiunto controllo in fase di cancellazione di una Pena Accessoria lato SIEP.
+Viene verificato se agganciata da uno o più fascicoli SIGE (PENA_ACCESSORIA_SENTENZA_SIGE).
+In caso affermativo viene mostrato un messaggio utente x avvertire che 
+la PA non è cancellabile. Precedentemente andava in errore sql x violazione FK.
 
-1)	Ticket#20210702015:
-		in fase di ricerca fascicolo, la funzione di trasferimento non inviava tutti i dati,
-		in particolare mancavano i dati delle nuove istruttorie cumulo inviate invece in caso
-		di trasmissione/richietsa atti x cumulo.
-		Aggiunta la sezione per l'invio dei dati delle nuove istruttorie.
-		Modulo modificato:
-			-	siap.siep.jms.controller.RicercaJMSController.java (metodo ExRicercaFascicoloSiepPerTrasferimento)
+Moduli modificati
+  siap.sige.fascicolo.dao.FascicoloSigeSqlDAO
+  aggiunto metodo 
+  public String ricercaFascicoliPerPenaAccessoria(BigDecimal idPenaAccessoria)
+  per la ricerca dei fascicoli SIGE collegati alla PA
 
-2)	Ticket#20210721013 - Correzione Template SIEP_LS_OLQSI
-		Oltre alla correzione dei Template, presente un errore segnalato nella visualizzazione
-		del dettaglio del Provvedimento:
-			a) in presenza di 2 avvocati con autorità preposte alla notifica differenti, nel dettaglio 
-   				visualizzava la stessa autorità su entrambi gli avvocati;
-			b) non visualizzava la notifica al TDS nel dettaglio anche se inserita.
-		Corretta jsp:
-			-	siap\siep\ordineesecuzione\DettaglioLSLiberoIstanzaProdotta.jsp
+  siap.siep.penaaccessoria.controller.PenaAccessoriaController
+  metodo modificato
+  ExCancellaPenaAccessoria
+  
+Dopo la cancellazione di una PA il sistema carica la pagina dell'elenco PA tramite ricerca.
+Se è stata cancellata l'ultima PA restituiva il messaggio 'Nessun elemento trovato' ma sul conferma
+andava in history -1 ricaricando la pagina del dettaglio della PA appena cancellata o la lista con 
+la PA appena cancellata. Ovviamente qualsiasi operazioe sulla PA cancellata andava in errore 
+nullPointer. 
 
-3)	Ticket#202107210117 — Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
-		Aggiunta gestione per uffici minorili.
-		Modulo modificati:
-			-	siap.siep.richiesta.actionActLoadTrasferisciRichiestaAttiExArt51Bis.java,
-			-	siap\siep\richiesta\LoadTrasmissioneAttiExArt51Bis.jsp
+Fatto in modo che la pagina di ritorno sia il dettaglio del fascicolo e non la history -1
+Aggiunta la pagina di ritorno al dettaglio del fascicolo sul modulo
+siap.siep.penaaccessoria.action.ActCancellaPenaAccessoria
 
-4)	Ticket#20210728014 - anomalia inserimento collegio sige - Cap
-		Errore in fase di cast dell'idCollegio. Veniva utilizzato il cast in intValue che andava in overflow.
-		Jsp Modifcate:
-		JSP SEGNALATA
-			-	\jsp\files\siap\sige\udienzacollegiale\LoadInserisciUdienzaCollegialeFix.jsp
-		Controllo esteso a tutte le jsp. Il cast è presente anche in altre 4 jsp ma 
-		non da problemi in quanto presente in condizione di == su due cast in int.
-		(anche se poco corretto)
-			-	\jsp\files\siap\sige\fogliocomplementare\ElencoProvvedimentiCFCTastoFunzione.jsp
-			-	\jsp\files\siap\sige\fogliocomplementare\ElencoProvvedimentiCFC.jsp
-			-	\jsp\files\siap\siep\beneficio\ListaProcAssociati.jsp 
-			-	\jsp\files\siap\siep\beneficio\ListaProcAssociatiIndu.jsp
+  
+  
+  
 
-5)	Ticket#20210824013 - Emissione Cumulo
-		Errore di nullpointer in caso stamoa di una richiesta di revoca beneficio in cumulo su un provvedimento
-		di concessione beneficio in cui non viene indicato anno e numero del provvedimento SIGE di concessione.
-		Il dato è attualmente obbligatorio me non sui vecchi dati.
-		Modulo Modificato:
-			-	siap.siep.istruttoriacumulo.controller.StampaCumuloController.java
-			Metodi:
-				-	prelevaDatiIstruttoriaCumulo
-				-	prelevaDatiIstruttoriaPerPropostaCumulo
-				-	prelevaDatiRichiestaInviataCumulo
-
-6)	Ticket#20210825016 — foglio completare Iscrizione nel casellario giudiziale locale - ex art. 3 DPR 14 novembre 2002 n. 313 - 
-		(nato dal branch "release_12.4.12.0" in data 30/08/2021)
-		(In combinazione con NSC)
-		Modulo Modificato:
-			-	siap.sico.webservice.action.ActPrelevaDatiFascicolo.java;	--> LATO SIES
-			-	UPDATE TAB DC_TAB7a_RIFERIMENTI								-->	LATO NSC
