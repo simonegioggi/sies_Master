@@ -352,8 +352,14 @@ if (aulaUdienza!=null){
 	<FORM method="POST" action="Main.jsp" name="LoadInserisciUdienzaCollegiale">
   	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>" />
   	<input type="HIDDEN" name="<%=ICostantiCollegio.FORM_DEF_COLLEGIO%>" value="yes" />
+    <%-- Ticket#20210728014: errore di overflow su idCollegio.intValue(): è un BigDecimal 
   	<input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_ID_COLLEGIO%>" value="<%=(idCollegio==null?"":String.valueOf(idCollegio.intValue()))%>" />
-  	<input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_COD_COLLEGIO%>" value="<%=codCollegio%>" />
+    --%>  	
+    <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_ID_COLLEGIO%>" value="<%=(idCollegio==null ? "" : idCollegio)%>" />
+  	<%-- Ticket#20210728014: FINE --%>
+
+
+    <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_COD_COLLEGIO%>" value="<%=codCollegio%>" />
     <input type="HIDDEN" name="<%=ICostantiUdienzaSige.CAMPO_ID_UDIENZA_SIGE%>" value="<%=idUdiSige%>" />
     <input type="HIDDEN" name="PopUp" value="<%=PopUp%>" />
 	
@@ -393,7 +399,11 @@ if (aulaUdienza!=null){
         <select title="sezione" name="<%=ICostantiCollegio.CAMPO_SEZ_ID_SEZIONE%>_CBX"  onChange="svuotaAula();"  <%=readonly%> >
         	<%=elencoSezioni%>
         </select>
+<%-- Ticket#20210728014: errore di overflow su idCollegio.intValue(): è un BigDecimal 
         <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_SEZ_ID_SEZIONE%>" value="<%=(idSezione == null ? "" : String.valueOf(idSezione.intValue()))%>">
+--%>
+        <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_SEZ_ID_SEZIONE%>" value="<%=(idSezione == null ? "" : idSezione)%>">
+<%-- Ticket#20210728014: FINE --%>
       </td>
     </tr>
     

@@ -3,3 +3,5 @@ MEV_6: nasce dalla RELEASE_12.4.4.0
 Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 
 In data 03/08/2021 eseguito merge con RELEASE_12.4.12.0
+
+In data 01/10/2021 eseguito merge con RELEASE_12.4.13.0
