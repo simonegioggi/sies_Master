@@ -68,7 +68,14 @@ public class ActCreaStatisticaRiepilogoMovimentoProcedimenti extends ActionSiap 
 		// ciclo per controllare la presenza di Riepilogo e Archiviazioni
 		// e per calcolare la lunghezza dell'array dei dettagli
 		// n.b. lung. array dettagli = num elementi selezionati - (Riepilogo, Archiviazioni, Altre Posizioni)
-		for (int i = 0; i < lunghezzaArray; i++) {
+		
+		// Ticket#202109290111 - Utilizzava erroneamente la variabile lunghezzaArray per 
+		// scorrere il ciclo, ma poiche decrementava la variabile stessa nel ciclo, la lista dei codici
+		// selezionati non veniva gestita interamente e veniva escluso il foglio Altre Posizioni
+		//for (int i = 0; i < lunghezzaArray; i++) {
+		//siesLogger.debug("listaStati.length = "+listaStati.length);
+		for (int i = 0; i < listaStati.length; i++) {
+		// Ticket#202109290111 - FINE	
 			// 0 = RIEPILOGO GENERALE
 			if (listaStati[i].equals("0")) {
 				bRiepilogo = true;
@@ -212,7 +219,10 @@ public class ActCreaStatisticaRiepilogoMovimentoProcedimenti extends ActionSiap 
 
 			String[] lCodStatiArchConTitolo = new String[2];
 			lCodStatiArchConTitolo[0] = codStatiAltre[0];
-			lCodStatiArchConTitolo[1] = ICostantiStatis.COD_TITOLO1_ALTRE_POSIZIONI;
+			// Ticket#202109290111 - Utilizzava la costante sbagliata 
+			// lCodStatiArchConTitolo[1] = ICostantiStatis.COD_TITOLO1_ALTRE_POSIZIONI;
+			lCodStatiArchConTitolo[1] = ICostantiStatis.COD_TITOLO1_ALTRE_POSIZIONI_MS;
+			// Ticket#202109290111 - FINE
 			try {
 				dettagli = smsc.ricercaDettaglioProcedimenti(lCodStatiArchConTitolo);
 				// dettagli = smsc.ExRicercaDettaglioProcedimenti(codStatiAltre);
