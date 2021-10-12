@@ -42,4 +42,9 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
 			Modificato formato delle celle allargandole per consentire la visulizzazione del 
 			contenuto. Mandato a capo il testo (Misura Provvisoria).
 
-5)	
+5)	Ticket#20211006019 SIEP 471_2021 impossibiule modificare i dati del tito…
+		Mancata visualizzazione in elenco provvedimenti del GE/SORV dovuto al fallimento della join con il domino 'OGGETTO_PROCEDIMENTO'.
+		E' stata aggiornata la CG_REF_CODES ma è stato necessario modificare il caricameto della combo Oggetto procedimento 
+		che deve filtrare RB_HIGH_VALUE X001 e non più U001.
+		Classe modificata:
+		-	siap.sico.decodifiche.dao.DecodificheSqlDAO.java
