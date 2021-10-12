@@ -3,7 +3,7 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
 1)	Ticket#20210922015 - inserimento autorità minorile
 		Nella funzione: Decisioni della Sorveglianza - Espulsione - Avvenuta Espulsione
 		Aggiunti nella combo "Ufficio Recupero Crediti presso" le voci: 
-  		"Sezione di Corte di Appello per i minorenni" 
+  		"Sezione di Corte di Appello per i minorenni";
   		"Tribunale per i Minorenni".
 		Modulo modificato:
 		-	siap.siep.sospensione.action.ActCalcolaAvvenutaEspulsione.java
@@ -17,7 +17,7 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
   		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
   				aggiunto metodo:
   				public String ricercaFascicoliPerPenaAccessoria(BigDecimal idPenaAccessoria)
-  				per la ricerca dei fascicoli SIGE collegati alla PA
+  				per la ricerca dei fascicoli SIGE collegati alla PA.
 		-	siap.siep.penaaccessoria.controller.PenaAccessoriaController.java
 				metodo modificato:
   				ExCancellaPenaAccessoria
@@ -26,21 +26,21 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
 				andava in history -1 ricaricando la pagina del dettaglio della PA appena cancellata o la lista con 
 				la PA appena cancellata. Ovviamente qualsiasi operazioe sulla PA cancellata andava in errore 
 				nullPointer. Fatto in modo che la pagina di ritorno sia il dettaglio del fascicolo e non la history -1
-				Aggiunta la pagina di ritorno al dettaglio del fascicolo sul modulo
+				Aggiunta la pagina di ritorno al dettaglio del fascicolo sul modulo.
 		-	siap.siep.penaaccessoria.action.ActCancellaPenaAccessoria.java
 
-3)	Ticket#20210928015 - Sige - errore estrazionedati
+3)	Ticket#20210928015 - Sige - errore estrazione dati
 		?????
 
 4)	Ticket#202109290111 - ESTRAZIONE DATI RELATIVI A MISURE DI SICUREZZA
-		Non veniva visualizzata la scheda Altre Posizioni. 
+		Non veniva visualizzata la scheda Altre Posizioni.
 		Moduli Modificati:
 		-	siap.siep.statis.action.ActCreaStatisticaRiepilogoMovimentoProcedimenti.java
 			Corretto ciclo for che non faceva caricare la Foglio.
 			Corretta costante errata che visualizzava una descrizione errata nel foglio.
 		-	siap.siep.statis.controller.StatisticheMSController.java
-			Modificato formato delle celle allargandole per consentire la visulizzazione del 
-			contenuto. Mandato a capo il testo (Misura Provvisoria).
+			Modificato formato delle celle allargandole per consentire la visulizzazione del contenuto.
+			Mandato a capo il testo (Misura Provvisoria).
 
 5)	Ticket#20211006019 SIEP 471_2021 impossibiule modificare i dati del tito…
 		Mancata visualizzazione in elenco provvedimenti del GE/SORV dovuto al fallimento della join con il domino 'OGGETTO_PROCEDIMENTO'.
