@@ -2,4 +2,12 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
 
 MERGED TICKETS (ONLY JAVA):
 
-1)	
+1)	Ticket#20210922015 - inserimento autorità minorile
+		Nella funzione: Decisioni della Sorveglianza - Espulsione - Avvenuta Espulsione
+		Aggiunti nella combo "Ufficio Recupero Crediti presso" le voci: 
+  		"Sezione di Corte di Appello per i minorenni" 
+  		"Tribunale per i Minorenni".
+		Modulo modificato:
+		-	siap.siep.sospensione.action.ActCalcolaAvvenutaEspulsione.java
+
+2)	
