@@ -1,7 +1,5 @@
 RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021	
 
-MERGED TICKETS (ONLY JAVA):
-
 1)	Ticket#20210922015 - inserimento autorità minorile
 		Nella funzione: Decisioni della Sorveglianza - Espulsione - Avvenuta Espulsione
 		Aggiunti nella combo "Ufficio Recupero Crediti presso" le voci: 
@@ -10,4 +8,25 @@ MERGED TICKETS (ONLY JAVA):
 		Modulo modificato:
 		-	siap.siep.sospensione.action.ActCalcolaAvvenutaEspulsione.java
 
-2)	
+2)	Ticket#20210924018 - Pagine di Errore - SIEP PROCURA GENERALE DI BARI
+		Aggiunto controllo in fase di cancellazione di una Pena Accessoria lato SIEP.
+		Viene verificato se agganciata da uno o più fascicoli SIGE (PENA_ACCESSORIA_SENTENZA_SIGE).
+		In caso affermativo viene mostrato un messaggio utente x avvertire che 
+		la PA non è cancellabile. Precedentemente andava in errore sql x violazione FK.
+		Moduli modificati:
+  		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+  				aggiunto metodo:
+  				public String ricercaFascicoliPerPenaAccessoria(BigDecimal idPenaAccessoria)
+  				per la ricerca dei fascicoli SIGE collegati alla PA
+		-	siap.siep.penaaccessoria.controller.PenaAccessoriaController.java
+				metodo modificato:
+  				ExCancellaPenaAccessoria
+				Dopo la cancellazione di una PA il sistema carica la pagina dell'elenco PA tramite ricerca.
+				Se è stata cancellata l'ultima PA restituiva il messaggio 'Nessun elemento trovato' ma sul conferma
+				andava in history -1 ricaricando la pagina del dettaglio della PA appena cancellata o la lista con 
+				la PA appena cancellata. Ovviamente qualsiasi operazioe sulla PA cancellata andava in errore 
+				nullPointer. Fatto in modo che la pagina di ritorno sia il dettaglio del fascicolo e non la history -1
+				Aggiunta la pagina di ritorno al dettaglio del fascicolo sul modulo
+		-	siap.siep.penaaccessoria.action.ActCancellaPenaAccessoria.java
+
+3)	
