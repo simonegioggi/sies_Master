@@ -106,7 +106,7 @@ public interface IOrdineEsecuzione {
 	public EventoModel ExAggiornaEventoInserisciCampoNota(EventoModel aEvento, CampoNotaModel aCampoNota)
 			throws F3BException;
 
-	public EventoModel ExCancellaEventoConStorePocedure(EventoModel aEvento) throws F3BException;
+	public EventoModel ExCancellaEventoConStoreProcedure(EventoModel aEvento) throws F3BException;
 
 	public CampoNotaModel ExRicercaEventoCampoNotaByIdEvento(BigDecimal aKey) throws F3BException;
 

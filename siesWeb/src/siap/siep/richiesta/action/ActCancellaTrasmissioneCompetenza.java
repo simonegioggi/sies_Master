@@ -55,7 +55,7 @@ public class ActCancellaTrasmissioneCompetenza extends ActionSiap implements ICo
 	        
 	        
 	        IOrdineEsecuzione lCtrlOE = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-	        lCtrlOE.ExCancellaEventoConStorePocedure(lEveMod.getEvento());
+	        lCtrlOE.ExCancellaEventoConStoreProcedure(lEveMod.getEvento());
 	        
 
 	    String lPage="";

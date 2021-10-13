@@ -1966,7 +1966,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @return
 	 * @throws F3BException
 	 */
-	public EventoModel ExCancellaEventoConStorePocedure(EventoModel aEvento) throws F3BException {
+	public EventoModel ExCancellaEventoConStoreProcedure(EventoModel aEvento) throws F3BException {
 
 		Connection lConn = null;
 
@@ -2073,11 +2073,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStorePocedure: " + daoEx);
+			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStoreProcedure: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			rollback(lConn);
-			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStorePocedure: " + ex);
+			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStoreProcedure: " + ex);
 		} finally {
 			cleanup(lEventoProc);
 			cleanup(lMisDao);
