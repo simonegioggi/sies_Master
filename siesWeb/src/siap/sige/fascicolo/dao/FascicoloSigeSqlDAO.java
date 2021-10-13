@@ -200,8 +200,15 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ " THEN COALESCE(TIPO_D.RV_MEANING,STATO_DEF.RV_MEANING) END  MOTIVO_DEFINIZIONE, ";
 
 		// @emma 13052019 INTEVENTO PER 11.2.1
-		lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10))  WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)  as OGGETTI ";
-
+		// Ticket#20210928015 - LISTAGG duplicava la descrizione del TENORE_SIGE in caso di 
+		// presenza di più record UDIENZA_PROCEDIMENTO_SIGE che puntano il fascicolo
+		// Eliminata la LISTAGG. In qesto modo vengono restituiti più record per lo 
+		// stesso fascicolo che verranno aggregati lato controller
+		// aggiunto TSC.RV_MEANING nella group by
+		// lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10))  WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)  as OGGETTI ";
+		lStatement += " TSC.RV_MEANING as OGGETTI ";
+		// Ticket#20210928015 - FINE
+		
 		// @emma 13072018 post COLLAUDO 11.2 (aggiungo lo spazio prima di FROM )
 		lStatement += " FROM FASCICOLO_SIGE F,  RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, ";
 		lStatement += "COMUNE C, magistrato_assegnatario d, MAGISTRATO E, ";
@@ -710,7 +717,11 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		queryFascicoloSige += "DATA_ISCRIZIONE, F.CHIAVE_ANNO, F.CHIAVE_PROGR, DATA_DEFINIZIONE,"
 				+ " F.ID_FASCICOLO_SIGE_ORIGINE, ID_EVENTO_PROVV_CUMULO, DATA_ARRIVO_CANCELLERIA , "
 				+ " TG.RV_MEANING, TIPO_D.RV_MEANING, f.cod_stato_fascicolo,  STATO_DEF.RV_MEANING  ";
-
+		// Ticket#20210928015 - Aggiunto campo TSC.RV_MEANING nella group by per gestire la modifica alla select  
+		// nel metodo getSqlQueryPerEstremiStatistica 
+		queryFascicoloSige += " , TSC.RV_MEANING ";
+		// Ticket#20210928015 - FINE 
+		
 		queryFascicoloSige += setOrderAnnoProgrAsc();
 		// Settaggio della stringa SQL appena costruita prima della query
 		setStatement(queryFascicoloSige);
