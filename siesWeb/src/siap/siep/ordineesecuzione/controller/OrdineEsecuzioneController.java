@@ -1985,7 +1985,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lEventoProc.setIdEvento(lEveRet.getIdEvento());
 			lEventoProc.execute();
 
-			//
 			// ========================================================================
 			// Se l'evento e' l'annotazione di Rideterminazione pena Altro e ha
 			// collegato un provvedimento altra autorita', devo annullare anche tale
@@ -2061,12 +2060,18 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 				lEveSqlDAO.ricercaEventoByKey(lEveRet.getEveIdEvento());
 				EventoModel em = (EventoModel) lEveSqlDAO.getModelByKey();
 				lEveSqlDAO.stop();
-				if (("02".equals(em.getCodTipoProvvedimento()) || "03".equals(em.getCodTipoProvvedimento()))
-						&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
-						&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
-						&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
-					lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
-					lEventoProc.execute();
+				// 20211013 [SG]: a seguito di correzione della SP "PULISCI.Pulisci_Evento"
+				// il SIUS ("lEveRet.getEveIdEvento()") viene cancellato già, per scrupolo lasciamo questo
+				// controllo; da Rideterminazione della Pena - Altro
+				if (!Utils.isNullObj(em)) {
+					if (("02".equals(em.getCodTipoProvvedimento())
+							|| "03".equals(em.getCodTipoProvvedimento()))
+							&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
+							&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
+							&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
+						lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
+						lEventoProc.execute();
+					}
 				}
 			}
 
