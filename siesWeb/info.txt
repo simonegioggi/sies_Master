@@ -30,7 +30,13 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
 		-	siap.siep.penaaccessoria.action.ActCancellaPenaAccessoria.java
 
 3)	Ticket#20210928015 - Sige - errore estrazione dati
-		?????
+		La query di estrazione duplicava i tenori in presenza di più udienze.
+		Probblama legato alla funzione LISTAGG che non poteva essere utilizzate.
+		Modificata la query e effettuata l'aggregazione dei tenori stesso fascicolo 
+		sul controller.
+		Moduli corretti:
+		-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+		-	siap.sige.fascicolo.controller.FascicoloSigeController.java
 
 4)	Ticket#202109290111 - ESTRAZIONE DATI RELATIVI A MISURE DI SICUREZZA
 		Non veniva visualizzata la scheda Altre Posizioni.
