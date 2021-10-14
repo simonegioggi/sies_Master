@@ -54,3 +54,14 @@ RELEASE_12.4.14.0	-->	nato dal branch "release_12.4.13.0" in data 29/09/2021
 		che deve filtrare RB_HIGH_VALUE X001 e non più U001.
 		Classe modificata:
 		-	siap.sico.decodifiche.dao.DecodificheSqlDAO.java
+
+6)	Ticket#20211011015 ERRORE BLOCCANTE
+		In alcuni casi resta il flagAltraCausa sul fascicolo anche se la posizione giuridica diventa
+		in esecuzione questa causa.
+		Andava in errore la funzione di variazione decorrenza e scadenza Pena in quanto la Action 
+		selezionava la jsp presdisposta per Altra causa e tale jsp cercava il record AltraCausa 
+		associato alla posizione giuridica non trovandolo.
+		Aggiunto ulteriore controllo sulla Action per verificare se al record Posizione Giuridica
+		è effettivamente associato il record altra causa. Oltre al test sul fasicolo.
+		Classe modificata:
+		-	siap.siep.ordineesecuzione.action.ActLoadVariazioneDecorrenzaScadenza
