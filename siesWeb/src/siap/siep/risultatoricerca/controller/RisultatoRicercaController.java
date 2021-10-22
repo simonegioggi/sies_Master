@@ -53,7 +53,7 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	// ricerca con store procedure
-	public BigDecimal ExRicercaConStorePocedure(String aCodUtente, String aCodUfficio, BigDecimal aAnnoInzio,
+	public BigDecimal ExRicercaConStoreProcedure(String aCodUtente, String aCodUfficio, BigDecimal aAnnoInzio,
 			BigDecimal aNumeroInzio, BigDecimal aAnnoFine, BigDecimal aNumeroFine, String aDataReato,
 			BigDecimal aAnniRes, BigDecimal aMesiRes, BigDecimal aGiorniRes, String aDataPr,
 			BigDecimal aPosAggregata, String aCodPosGiuridica, BigDecimal aAnniSen, BigDecimal aMesiSen,
@@ -99,11 +99,11 @@ public class RisultatoRicercaController extends SiapController implements IRisul
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("RisultatoRicercaController.ExRicercaConStorePocedure: " + daoEx);
+			throw new F3BException("RisultatoRicercaController.ExRicercaConStoreProcedure: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			rollback(lConn);
-			throw new F3BException("RisultatoRicercaController.ExRicercaConStorePocedure: " + ex);
+			throw new F3BException("RisultatoRicercaController.ExRicercaConStoreProcedure: " + ex);
 		} finally {
 			cleanup(lProc);
 			cleanup(lConn);

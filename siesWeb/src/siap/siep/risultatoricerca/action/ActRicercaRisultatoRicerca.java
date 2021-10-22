@@ -179,7 +179,7 @@ public class ActRicercaRisultatoRicerca extends ActionSiap implements ICostantiR
 
 		if (isRequestParameterNullObj(ICostantiRisultatoRicerca.CAMPO_ID_RICERCA)
 				&& isRequestParameterNullObj(IWebConstants.NUM_PAGE)) {
-			lIdRisultatoRicerca = lCtrl.ExRicercaConStorePocedure(lCodUtente, lCodUfficio, lAnnoInzio,
+			lIdRisultatoRicerca = lCtrl.ExRicercaConStoreProcedure(lCodUtente, lCodUfficio, lAnnoInzio,
 					lNumeroInzio, lAnnoFine, lNumeroFine, lDataReato, lAnniRes, lMesiRes, lGiorniRes, lDataPr,
 					lPosAggregata, lCodPosGiuridica, lAnniSen, lMesiSen, lGiorniSen, lNazione);
 

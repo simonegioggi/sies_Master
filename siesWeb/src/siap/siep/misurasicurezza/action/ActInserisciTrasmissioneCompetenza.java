@@ -230,7 +230,7 @@ public class ActInserisciTrasmissioneCompetenza extends ActionSiap implements IC
 				lEveModel = lCtrlEvento.ExRicercaEventoByKey(lIdEvento);
 
 				IOrdineEsecuzione lOECtrl = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-				lOECtrl.ExCancellaEventoConStorePocedure(lEveModel);
+				lOECtrl.ExCancellaEventoConStoreProcedure(lEveModel);
 			}
 		}
 

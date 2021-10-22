@@ -469,8 +469,11 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		// "
 		// +
 		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
-
+		// Ticket#20211006019 - Sostituito il dominio U001 in X001 a seguito dell'aggiornamento della CG_REF_CODES
+		// E' cambiato l'oggetto per le sospensioni
+		//lStatement += " AND (RV_HIGH_VALUE = 'U001' OR RV_HIGH_VALUE = 'U071')";
+		lStatement += " AND (RV_HIGH_VALUE = 'X001' OR RV_HIGH_VALUE = 'U071')";
+		// Ticket#20211006019 - FINE
 		setStatement(lStatement);
 	}
 
