@@ -30,7 +30,7 @@ public class ActCancellaAnnotaEsitoTrasmissione extends ActionSiap
     lEveModel = lCtrlEvento.ExRicercaEventoByKey(lIdEvento);
     
     IOrdineEsecuzione lOECtrl = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-    lOECtrl.ExCancellaEventoConStorePocedure(lEveModel);
+    lOECtrl.ExCancellaEventoConStoreProcedure(lEveModel);
     
     String lPage = ritornoDopoCancellazione("Provvedimento Cancellato!", null);
 //    lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD +

@@ -44,7 +44,7 @@ public class ActCancellaRichiesteIstruttorie extends ActionSiap implements ICost
 		  if(lEveModRic.getFlagDocumentoRegistrato() == null || (lEveModRic.getFlagDocumentoRegistrato().equals("") || lEveModRic.getFlagDocumentoRegistrato().equals("N"))) 
 	      {
 			// provvedimenti non validati cancellazione fisica
-			  lCtrl.ExCancellaEventoConStorePocedure(lEveModRic);
+			  lCtrl.ExCancellaEventoConStoreProcedure(lEveModRic);
 	      }
 	      else // provvedimenti validati, in questo caso c'e' una cancellazione logica
 	      {

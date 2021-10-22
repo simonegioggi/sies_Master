@@ -184,7 +184,12 @@ public class ActLoadVariazioneDecorrenzaScadenza extends ActionSiap implements I
     setRequestAttribute("StrdataInizioPena", DateUtils.getDateToString(lDataInizioPena, "dd-MM-yyyy"));
     setRequestAttribute("penaresidua", lPenaResMod);
 
-    if (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S"))
+    if (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S")
+        // Ticket#20211011015 - Il flagAltra causa sul fascicolo non sempre viene rimosso
+        // si testa che sia coerente con la PG
+        && lPos.getAltraCausa()!=null
+        // Ticket#20211011015 - FINE
+       )
     {
       return PG_LOAD_VARIAZIONE_DECORRENZA_SCADENZA; //restituisce la jsp di VIEW
     }

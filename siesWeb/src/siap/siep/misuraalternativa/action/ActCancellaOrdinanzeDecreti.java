@@ -2,6 +2,9 @@ package siap.siep.misuraalternativa.action;
 
 import java.math.BigDecimal;
 
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -18,9 +21,6 @@ import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.util.SIUSLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ import f3b.web.IWebConstants;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActCancellaOrdinanzeDecreti extends ActionSiap implements ICostantiMisuraAlternativa {
@@ -75,14 +75,11 @@ public class ActCancellaOrdinanzeDecreti extends ActionSiap implements ICostanti
 		if (lEveModRic != null) {
 			if (lEveModRic.getFlagDocumentoRegistrato() == null
 					|| (lEveModRic.getFlagDocumentoRegistrato().equals("")
-							|| lEveModRic.getFlagDocumentoRegistrato().equals("N"))) // provvedimenti non
-																						// validati
-																						// cancellazione
-																						// fisica
-			{
-				lCtrl.ExCancellaEventoConStorePocedure(lEveModRic);
-			} else // provvedimenti validati cancellazione logica
-			{
+							// provvedimenti non validati cancellazione fisica
+							|| lEveModRic.getFlagDocumentoRegistrato().equals("N"))) {
+				lCtrl.ExCancellaEventoConStoreProcedure(lEveModRic);
+			} // provvedimenti validati cancellazione logica
+			else {
 				motivazioni = this.getRequestStringParameter("motivazioni");
 
 				lEveMod.setIdEvento(lId);

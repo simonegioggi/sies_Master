@@ -200,8 +200,15 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ " THEN COALESCE(TIPO_D.RV_MEANING,STATO_DEF.RV_MEANING) END  MOTIVO_DEFINIZIONE, ";
 
 		// @emma 13052019 INTEVENTO PER 11.2.1
-		lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10))  WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)  as OGGETTI ";
-
+		// Ticket#20210928015 - LISTAGG duplicava la descrizione del TENORE_SIGE in caso di 
+		// presenza di più record UDIENZA_PROCEDIMENTO_SIGE che puntano il fascicolo
+		// Eliminata la LISTAGG. In qesto modo vengono restituiti più record per lo 
+		// stesso fascicolo che verranno aggregati lato controller
+		// aggiunto TSC.RV_MEANING nella group by
+		// lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10))  WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)  as OGGETTI ";
+		lStatement += " TSC.RV_MEANING as OGGETTI ";
+		// Ticket#20210928015 - FINE
+		
 		// @emma 13072018 post COLLAUDO 11.2 (aggiungo lo spazio prima di FROM )
 		lStatement += " FROM FASCICOLO_SIGE F,  RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, ";
 		lStatement += "COMUNE C, magistrato_assegnatario d, MAGISTRATO E, ";
@@ -710,7 +717,11 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		queryFascicoloSige += "DATA_ISCRIZIONE, F.CHIAVE_ANNO, F.CHIAVE_PROGR, DATA_DEFINIZIONE,"
 				+ " F.ID_FASCICOLO_SIGE_ORIGINE, ID_EVENTO_PROVV_CUMULO, DATA_ARRIVO_CANCELLERIA , "
 				+ " TG.RV_MEANING, TIPO_D.RV_MEANING, f.cod_stato_fascicolo,  STATO_DEF.RV_MEANING  ";
-
+		// Ticket#20210928015 - Aggiunto campo TSC.RV_MEANING nella group by per gestire la modifica alla select  
+		// nel metodo getSqlQueryPerEstremiStatistica 
+		queryFascicoloSige += " , TSC.RV_MEANING ";
+		// Ticket#20210928015 - FINE 
+		
 		queryFascicoloSige += setOrderAnnoProgrAsc();
 		// Settaggio della stringa SQL appena costruita prima della query
 		setStatement(queryFascicoloSige);
@@ -1978,4 +1989,47 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		return fsem;
 	}
 
+	/**
+	 * Ticket 20210924018
+	 * Metodo aggiunto per effettuare la ricerca dei fascicoli SIGE che puntao una
+	 * certa pena accessoria SIEP impededono la cancellazione (lato SIEP)
+	 * @param idPenaAccessoria
+	 * @return
+	 */
+	public void ricercaFascicoliPerPenaAccessoria(BigDecimal idPenaAccessoria) {
+		String lStatement = new String("");
+
+		lStatement += " SELECT " + "ID_FASCICOLO_SIGE, " + "SOG_ID_SOGGETTO, " + "CHIAVE_ANNO, "
+				+ "CHIAVE_UFFICIO, " + "'' DESCR_TIPO_UFFICIO, " + "'' DESCR_COMUNE_UFFICIO, "
+				+ "null DATA_NASCITA, " + "'' NOME, " + "'' COGNOME, " + "CHIAVE_PROGR, " + "SEZ_ID_SEZIONE, "
+				+ "COD_STATO_FASCICOLO, " + "COD_TIPO_GIUDIZIO, " + "DATA_ISCRIZIONE, " + "DATA_DEFINIZIONE, "
+				+ "RIC_ID_RICHIESTA_SIGE, " 
+				+ "FASCICOLO_SIGE.COD_OPERATORE_INSERIMENTO, FASCICOLO_SIGE.COD_UFFICIO_INSERIMENTO, "
+				+ "FASCICOLO_SIGE.DATA_INSERIMENTO, FASCICOLO_SIGE.COD_OPERATORE_AGGIORNAMENTO, " 
+				+ "FASCICOLO_SIGE.COD_UFFICIO_AGGIORNAMENTO, FASCICOLO_SIGE.DATA_AGGIORNAMENTO, " 
+				+ "NOTE, " + "COD_POSIZIONE_GIURIDICA, " + "DATA_FINE_PENA, "
+				+ "COD_TIPO_DEFINIZIONE, " + "DESCR_DEFINIZIONE, " + "FAS_SIG_ID_FASCICOLO_SIGE, "
+				+ "NUMERO_FASCICOLI_UNIFICATI, " + "PG.RV_MEANING POSIZIONE_GIURIDICA, " +
+				// Modifica Accorpamento Uffici
+				"CHIAVE_PROGR_ORIG, " + "UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS, "
+				+ "DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS, "
+				+ "DESCR_COM_UFFINSERIMENTO.DESCRIZIONE DESCR_COMUNE_UFFICIO_INS, "
+				+ "UFFINSERIMENTO.FLAG_ACCORP FLAG_UFFICIO_ACCORPATO, " + "ID_FASCICOLO_SIGE_ORIGINE, "
+				+ "SEN_ID_SENTENZA_CUMULO, " + "ID_EVENTO_PROVV_CUMULO";
+		lStatement += " FROM FASCICOLO_SIGE LEFT OUTER JOIN CG_REF_CODES PG ON (COD_POSIZIONE_GIURIDICA = PG.RV_LOW_VALUE AND PG.RV_DOMAIN = 'POSIZIONE_GIURIDICA')";
+		// Modifica Accorpamento Uffici
+		lStatement += " LEFT OUTER JOIN UFFICIO UFFINSERIMENTO ON (COD_UFFICIO_INSERIMENTO = UFFINSERIMENTO.COD_UFFICIO)";
+		lStatement += " LEFT OUTER JOIN CG_REF_CODES DESCR_TIPO_UFFINSERIMENTO ON (UFFINSERIMENTO.COD_TIPO_UFFICIO = DESCR_TIPO_UFFINSERIMENTO.RV_LOW_VALUE";
+		lStatement += " AND DESCR_TIPO_UFFINSERIMENTO.RV_DOMAIN = 'TIPO_UFFICIO')";
+		lStatement += " LEFT OUTER JOIN COMUNE DESCR_COM_UFFINSERIMENTO ON (UFFINSERIMENTO.COD_COMUNE = DESCR_COM_UFFINSERIMENTO.COD_COMUNE)";
+
+		lStatement += " , FAS_SIGE_SENTENZA, PENA_ACCESSORIA_SENTENZA_SIGE ";
+		lStatement += " WHERE FASCICOLO_SIGE.ID_FASCICOLO_SIGE = FAS_SIGE_SENTENZA.FAS_ID_FASCICOLO_SIGE ";
+		lStatement += " AND PENA_ACCESSORIA_SENTENZA_SIGE.FAS_SIGE_SEN_ID = FAS_SIGE_SENTENZA.ID_FAS_SIGE_SENTENZA ";
+		
+		lStatement += " AND PENA_ACCESSORIA_SENTENZA_SIGE.PNA_ID_PENA_ACCESSORIA = "+idPenaAccessoria;
+				
+		setStatement(lStatement);
+	}
+	
 }

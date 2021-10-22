@@ -118,7 +118,7 @@ public class ActCancellaProvvedimento extends ActionSiap implements ICostantiOrd
 					|| (lEveModRic.getFlagDocumentoRegistrato().equals("")
 							|| lEveModRic.getFlagDocumentoRegistrato().equals("N"))) {
 				// provvedimenti non validati, cancellazione fisica
-				lCtrl.ExCancellaEventoConStorePocedure(lEveModRic);
+				lCtrl.ExCancellaEventoConStoreProcedure(lEveModRic);
 			} else {
 				// provvedimenti validati, in questo caso c'e' una cancellazione logica
 				motivazioni = getRequestStringParameter("motivazioni");

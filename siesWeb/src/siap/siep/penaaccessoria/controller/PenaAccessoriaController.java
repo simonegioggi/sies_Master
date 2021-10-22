@@ -15,6 +15,8 @@ import siap.controller.SiapController;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaDAO;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
+import siap.sige.fascicolo.dao.FascicoloSigeSqlDAO;
+import siap.sige.fascicolo.model.FascicoloSigeModel;
 import siap.sige.penaaccessoria.dao.PenaAccSenSigeDAO;
 import siap.sige.penaaccessoria.model.PenaAccSigeModel;
 
@@ -277,6 +279,31 @@ public class PenaAccessoriaController extends SiapController implements IPenaAcc
 					lPenaAccSigeDAO.delete();
 					lPenaAccSigeDAO.stop();
 					cleanup(lPenaAccSigeDAO);
+				} else {
+					// Ticket#20210924018 - Se PA SIEP verifico la presenza di un collegamento con SIGE e restituisco
+					// in messaggio invece di un errore sql per violazione FK
+					FascicoloSigeSqlDAO fascicoloSigeSqlDao = new FascicoloSigeSqlDAO(lConn);
+					fascicoloSigeSqlDao.ricercaFascicoliPerPenaAccessoria (aPenaAccessoria.getIdPenaAccessoria());
+					Vector <FascicoloSigeModel> elencoFascicoli = new Vector (fascicoloSigeSqlDao.getModels());
+					if (elencoFascicoli!=null && elencoFascicoli.size()>0) {
+						String msgErrore = "Pena Accessoria non cancellabile in quanto risulta collegata";
+						if (elencoFascicoli.size()==1) {
+							FascicoloSigeModel lFasc = elencoFascicoli.elementAt(0);
+							msgErrore += " al fascicolo SIGE "+lFasc.getChiaveProgr()+"/"+lFasc.getChiaveAnno()
+							+" di "+lFasc.getDescrTipoUfficioInserimento()+" di "+lFasc.getDescrComuneUfficioInserimento();
+						} else {
+							msgErrore += " ai seguenti fascicoli SIGE: ";
+							for (int i=0;i<elencoFascicoli.size(); i++) {
+								FascicoloSigeModel lFasc = elencoFascicoli.elementAt(i);
+								if (i>0) msgErrore += ", ";
+								msgErrore += lFasc.getChiaveProgr()+"/"+lFasc.getChiaveAnno()
+								+" di "+lFasc.getDescrTipoUfficioInserimento()+" di "+lFasc.getDescrComuneUfficioInserimento();
+							}
+						}
+						
+						throw new F3BException(F3BException.USER_MESSAGE,msgErrore);
+					}
+					// Ticket#20210924018 - FINE
 				}
 
 				lPenSqlDao.ricercaPenaAccessoriaByKey(aPenaAccessoria.getIdPenaAccessoria());
