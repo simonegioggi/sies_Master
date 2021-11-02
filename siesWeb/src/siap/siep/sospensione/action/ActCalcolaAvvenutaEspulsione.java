@@ -327,7 +327,6 @@ public class ActCalcolaAvvenutaEspulsione extends ActionSiap implements ICostant
 		// Ufficio recupero crediti
 		Option lOptionUffRecCrediti = new Option(DecodificheManager.getInstance().getTipoUfficio());
 		// Ticket#20210922015 - Si aggiunge DIBM
-		// lOptionUffRecCrediti.setFilter(new String[] { "-", "DIB", "CAP" });
 		lOptionUffRecCrediti.setFilter(new String[] { "-", "DIB", "CAP", "DIBM" });
 		// Ticket#20210922015 - FINE
 		setRequestAttribute("uffrecrediti", "" + lOptionUffRecCrediti);
