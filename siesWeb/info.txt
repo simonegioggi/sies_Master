@@ -4,16 +4,16 @@ RELEASE_12.4.15.0	-->	nato dal branch "release_12.4.14.0" in data 02/11/2021
 		Nel caso di presenza di puù titoli sullo stesso OGGETTO, in fase di stampa dell'ordinanza riportava solo la
 		prima sentenza nella sezione della decisione
 		Modulo corretto 
-			siap.sige.stampa.controller.StampaSigeController
-			private TreeModel buildTreeTenoriEstesiConDatiProvvedimento
-		In presenza di più sentenze sono state riportate nella struttura 
-		<X>
-			<FascicoloSige>
-				<ProvvedimentoSige>
-					<TenoreSige>
-						<Sentenza>
-						<Sentenza>
-						<Sentenza>
-						...
+			siap.sige.stampa.controller.StampaSigeController.java
+			Metodo:	private TreeModel buildTreeTenoriEstesiConDatiProvvedimento
+			In presenza di più sentenze sono state riportate nella struttura 
+			<X>
+				<FascicoloSige>
+					<ProvvedimentoSige>
+						<TenoreSige>
+							<Sentenza>
+							<Sentenza>
+							<Sentenza>
+							...
 
 2)	
