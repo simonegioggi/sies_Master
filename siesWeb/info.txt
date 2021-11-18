@@ -3,18 +3,18 @@ RELEASE_12.4.15.0	-->	nato dal branch "release_12.4.14.0" in data 02/11/2021
 1)	Ticket#20211014013 - SIGE EMISSIONE ORDINANZA CON PIù SENTENZE _ DECRETI COME ALTRI TITOLI ESECUT
 		Nel caso di presenza di puù titoli sullo stesso OGGETTO, in fase di stampa dell'ordinanza riportava solo la
 		prima sentenza nella sezione della decisione
-		Modulo corretto 
+		Modulo corretto:
 			siap.sige.stampa.controller.StampaSigeController.java
-			Metodo:	private TreeModel buildTreeTenoriEstesiConDatiProvvedimento
-			In presenza di più sentenze sono state riportate nella struttura 
-			<X>
-				<FascicoloSige>
-					<ProvvedimentoSige>
-						<TenoreSige>
-							<Sentenza>
-							<Sentenza>
-							<Sentenza>
-							...
+				Metodo:	private TreeModel buildTreeTenoriEstesiConDatiProvvedimento
+				In presenza di più sentenze sono state riportate nella struttura 
+				<X>
+					<FascicoloSige>
+						<ProvvedimentoSige>
+							<TenoreSige>
+								<Sentenza>
+								<Sentenza>
+								<Sentenza>
+								...
 
 2)	Ticket#20211019014 - Misure sicurezza – errore trasferimento procedimento
 		Problema legato più genericamente alla fase di caricamento di un fascicolo SIEP se presente FLAG_ALTRA_CAUSA = N
@@ -25,12 +25,12 @@ RELEASE_12.4.15.0	-->	nato dal branch "release_12.4.14.0" in data 02/11/2021
 		prima dell'inserimento se non è stato ricevuto il record ALTRA_CAUSA.
 		POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA
 		FASCICOLO_SIEP.FLAG_ALTRA_CAUSA
-		Modulo modificato:
+		Modulo corretto:
 			siap.siep.jms.controller.PresaInCaricoJMSController.java
 
 3)	Ticket#20211116019 - Funzione RICERCA PROCEDIMENTO SIGE PER ESTREMI ATTO
 		Corretto il passaggio di parametri da java a sql (varchar trattati come number)
 		Corretto nullpointer se la ricerca non tornava nulla!
-		Modulo modificato:
+		Moduli corretti:
 			src.siap.sige.fascicolo.controller.FascicoloSigeController.java
 			src.siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
