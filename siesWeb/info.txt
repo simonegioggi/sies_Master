@@ -28,4 +28,9 @@ RELEASE_12.4.15.0	-->	nato dal branch "release_12.4.14.0" in data 02/11/2021
 		Modulo modificato:
 			siap.siep.jms.controller.PresaInCaricoJMSController.java
 
-3)	
+3)	Ticket#20211116019 - Funzione RICERCA PROCEDIMENTO SIGE PER ESTREMI ATTO
+		Corretto il passaggio di parametri da java a sql (varchar trattati come number)
+		Corretto nullpointer se la ricerca non tornava nulla!
+		Modulo modificato:
+			src.siap.sige.fascicolo.controller.FascicoloSigeController.java
+			src.siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
