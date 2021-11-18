@@ -16,4 +16,16 @@ RELEASE_12.4.15.0	-->	nato dal branch "release_12.4.14.0" in data 02/11/2021
 							<Sentenza>
 							...
 
-2)	
+2)	Ticket#20211019014 - Misure sicurezza – errore trasferimento procedimento
+		Problema legato più genericamente alla fase di caricamento di un fascicolo SIEP se presente FLAG_ALTRA_CAUSA = N
+		sul fascicolo ma la posizione giuridica trasferita contiene un puntamento a ALT_CAU_ID_ALTRA_CAUSA
+		Chi invia aggiunge il record ALTRA_CAUSA solo se FASCICOLO_SIEP.FLAG_ALTRA_CAUSA = S, chi riceve invece si ritrova
+		con il record PG da inserire che punta un record ALTRA_CAUSA non ricevuto e quindi va in errore.
+		Corretto il modulo di acquisizione per ripulire il campo POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA
+		prima dell'inserimento se non è stato ricevuto il record ALTRA_CAUSA.
+		POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA
+		FASCICOLO_SIEP.FLAG_ALTRA_CAUSA
+		Modulo modificato:
+			siap.siep.jms.controller.PresaInCaricoJMSController.java
+
+3)	
