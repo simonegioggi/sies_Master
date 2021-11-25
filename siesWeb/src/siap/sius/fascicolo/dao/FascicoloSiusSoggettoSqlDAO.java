@@ -19,21 +19,6 @@ import siap.sius.cancassfascsius.model.CancAssFascSiusModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
 
-/**
- * <p>
- * Title: FascicoloSiusSoggettoSqlDAO
- * </p>
- * <p>
- * Description: Realizza Sql DAO del Fascicolo Sius
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- *
- * @version 1.0
- */
 public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 	// AVVOCATURA: aggiunto logger
@@ -44,6 +29,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaFascicoloSiusSoggetto(SoggettoModel aModel) {
+
 		String soggettoFascicoloSius = "";
 
 		// soggettoFascicoloSius += getFascicoloSiusSqlSoggettoQuery();
@@ -57,6 +43,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaFascicoloSiusSoggettoForStorico(SoggettoModel aModel) {
+
 		String soggettoFascicoloSius = "";
 
 		// soggettoFascicoloSius += getFascicoloSiusSqlSoggettoQuery();
@@ -68,6 +55,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaFascicoloSiusSoggettoTenoreEvento(SoggettoModel aModel) {
+
 		String soggettoFascicoloTenoreEvento = "";
 		// soggettoFascicoloSius += getFascicoloSiusSqlSoggettoQuery();
 		// Costruisco la query relativa soltanto all model fascicolo SIUS
@@ -79,6 +67,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaEsisteEventoNullo(SoggettoModel aModel) {
+
 		String soggettoFascicoloEsisteEvento = "";
 
 		soggettoFascicoloEsisteEvento += getFascicoloEsisteEvento(aModel);
@@ -87,6 +76,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloEsisteEvento(SoggettoModel aModel) {
+
 		String lStatement = new String();
 
 		// Query che conta, per un soggetto, il numero di eventi legati al fascicolo al fascicolo SIUS
@@ -98,6 +88,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaFascicoloSiusPerNumeroSius(FascicoloGPModel aModel) {
+
 		String FascicoloSiusPerNumeroSius = "";
 
 		// soggettoFascicoloSius += getFascicoloSiusSqlSoggettoQuery();
@@ -119,6 +110,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaFascicoloSiusPerNumeroSius(FascicoloGPModel aModel, String majorOffice) {
+
 		String FascicoloSiusPerNumeroSius = "";
 
 		// soggettoFascicoloSius += getFascicoloSiusSqlSoggettoQuery();
@@ -146,6 +138,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	public void ricercaFascicoliBySoggetto(SoggettoModel aModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeArchiviati, String lCodContenuto,
 			Date dataDalInCanc, Date dataAlInCanc, String majorOffice) {
+
 		String strQuery = "";
 
 		// Costruzione della query parametrizzata.
@@ -161,6 +154,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	public void ricercaFascicoliPerDataFinePena(String lUfficioUtenteConnesso, Date dataDalIscrizione,
 			Date dataAlIscrizione, Date dataDalFinePena, Date dataAlFinePena, String lIncludeArchiviati,
 			String lCodPosGiuridica, String lCodContenuto) {
+
 		String strQuery = "";
 
 		// Costruzione della query parametrizzata.
@@ -191,6 +185,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaFascicoloSiusProcedimentoPerEstremi(FascicoloSiusModel aFascModel, String sTipoAtto,
 			CancAssFascSiusModel aCancAssFascSius, String aFiltroCollaboratore, boolean aIsJoinPendenti) {
+
 		String soggettoFascicoloSius = "";
 
 		// Costruita la query relativa soltanto all model fascicolo SIUS
@@ -225,6 +220,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @return lCondizioni
 	 */
 	private String setCondizione(SoggettoModel aSm) {
+
 		String lCondizioni = new String();
 		if (aSm.getIdSoggetto().doubleValue() == 0) {
 			if (!(aSm.getCognome().equals("")))
@@ -269,6 +265,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @param strCodiceDistrettoUtente
 	 */
 	protected String setCondizioneSuperSoggetto(SoggettoModel aModel) {
+
 		String lCondizioni = new String();
 		// 27/10/2010 Utilizzo di UPPER e toUpperCase per normalizzare il controllo di uguaglianza x
 		// (PATERNITA, COGNOME_MADRE, ATTO_NASCITA, COD_AFIS)
@@ -394,6 +391,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 */
 	private String setCondizionePerEstremi(FascicoloSiusModel aSm, String sTipoAtto,
 			CancAssFascSiusModel aCancAssFascSius, String aFiltroCollaboratore, String flagEvento) {
+
 		String lCondizioni = new String();
 		// Cerca i fascicoli dell'Oggetto Procedimento selezionato
 		if (!(sTipoAtto.equalsIgnoreCase("-")))
@@ -476,36 +474,35 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 
 						// 17/02/2014 D.F. mod a seguito indicazioni di Umberto per recuperare la
 						// DATA_DEFINIZIONE
-						lCondizioni += " AND (   ( COD_STATO_FASCICOLO not in ('07') )"; // 16/10/2013
-						lCondizioni += "      OR (COD_STATO_FASCICOLO = '07' ";
-						lCondizioni += "          AND ( (FASC.ID_FASCICOLO_SIUS ) = ";
-						lCondizioni += "                    (SELECT FAS_SIU_ID_FASCICOLO_SIUS "
-								+ " FROM EVENTO EV ";
-						lCondizioni += " left outer join DOCUMENTO_ALLEGATO da ON da.eve_id_evento = ev.id_evento "
-								+ " AND da.cod_tipo_documento in ('01','02','03') "; // 11/12/2013
-						lCondizioni += "  WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-						lCondizioni += " AND (    EV.COD_TIPO_PROVVEDIMENTO in ('01','02','03') ";
-						lCondizioni += " AND EV.cod_esito not in ('0601','0602','0603','0604','0605') "; // new
-						lCondizioni += " AND EV.flag_documento_registrato = 'S' "; // new
-						lCondizioni += " ) ";
-						lCondizioni += " AND EV.DATA_INSERIMENTO = (SELECT max (DATA_INSERIMENTO) "
-								+ " FROM EVENTO EV2 ";
-						lCondizioni += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS  ";
-						lCondizioni += "      and (    EV2.COD_TIPO_PROVVEDIMENTO in ('01','02','03') ";
-						lCondizioni += "           AND EV2.cod_esito not in ('0601','0602','0603','0604','0605') "; // new
-						lCondizioni += "           AND EV2.flag_documento_registrato = 'S' "; // new
-						lCondizioni += "          ) ";
-						lCondizioni += "    AND TO_CHAR (da.data_emissione, 'YYYYMMDD') > '"
-								+ DateUtils.getDateToString(aSm.getDataFinePendenza(), "yyyyMMdd") + "' ";
-						lCondizioni += "    ) ) ) ) ) ";
-
+						lCondizioni += " AND ((COD_STATO_FASCICOLO not in ('07'))"; // 16/10/2013
+						lCondizioni += " OR (COD_STATO_FASCICOLO = '07'";
+						lCondizioni += " AND ((FASC.ID_FASCICOLO_SIUS) =";
+						// Ticket#20191219013 - ricerca pendenti a una certa data SIUS
+						// aggiungo la distinct per estrarre unico fascicolo
+						lCondizioni += " (SELECT distinct FAS_SIU_ID_FASCICOLO_SIUS FROM EVENTO EV";
+						lCondizioni += " left outer join DOCUMENTO_ALLEGATO da ON da.eve_id_evento = ev.id_evento"
+								+ " AND da.cod_tipo_documento in ('01','02','03')"; // 11/12/2013
+						lCondizioni += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+						lCondizioni += " AND (EV.COD_TIPO_PROVVEDIMENTO in ('01','02','03')";
+						lCondizioni += " AND EV.cod_esito not in ('0601','0602','0603','0604','0605')"; // new
+						lCondizioni += " AND EV.flag_documento_registrato = 'S'"; // new
+						lCondizioni += ")";
+						lCondizioni += " AND EV.DATA_INSERIMENTO = (SELECT max (DATA_INSERIMENTO) FROM EVENTO EV2";
+						lCondizioni += " where EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+						lCondizioni += " AND (EV2.COD_TIPO_PROVVEDIMENTO in ('01','02','03')";
+						lCondizioni += " AND EV2.cod_esito not in ('0601','0602','0603','0604','0605')"; // new
+						lCondizioni += " AND EV2.flag_documento_registrato = 'S'"; // new
+						lCondizioni += ")";
+						lCondizioni += " AND TO_CHAR (da.data_emissione, 'YYYYMMDD') > '"
+								+ DateUtils.getDateToString(aSm.getDataFinePendenza(), "yyyyMMdd") + "'";
+						lCondizioni += ")))))";
 					} else {
-						lCondizioni += " AND ( ( COD_STATO_FASCICOLO not in ('01','05') "; // 16/10/2013
+						lCondizioni += " AND ((COD_STATO_FASCICOLO not in ('01','05')"; // 16/10/2013
 						lCondizioni += " AND TO_CHAR(fasc.data_inserimento,'YYYYMMDD') <= '"
-								+ DateUtils.getDateToString(aSm.getDataFinePendenza(), "yyyyMMdd") + "' ) "; // 16/10/2013
-						lCondizioni += "  OR (COD_STATO_FASCICOLO in ('01','05') ";
+								+ DateUtils.getDateToString(aSm.getDataFinePendenza(), "yyyyMMdd") + "')"; // 16/10/2013
+						lCondizioni += " OR (COD_STATO_FASCICOLO in ('01','05')";
 						lCondizioni += " AND TO_CHAR(fasc.data_definizione,'YYYYMMDD') > '"
-								+ DateUtils.getDateToString(aSm.getDataFinePendenza(), "yyyyMMdd") + "' ) ) ";
+								+ DateUtils.getDateToString(aSm.getDataFinePendenza(), "yyyyMMdd") + "'))";
 					}
 				}
 			}
@@ -529,7 +526,6 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 						// DateUtils.getDateToString( aSm.getDataDefinizioneIniziale(),"yyyyMMdd" ) + "' ";
 						// lCondizioni += " AND TO_CHAR (EV2.data_trasmissione_atti, 'YYYYMMDD') <= '" +
 						// DateUtils.getDateToString( aSm.getDataDefinizioneFinale(),"yyyyMMdd" ) + "' ) ) )";
-
 						// lCondizioni += " AND ( COD_STATO_FASCICOLO = '07' ";
 						// lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO ) = ";
 						// lCondizioni +=
@@ -564,25 +560,21 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 						// Sulla tabella DA possono essere presenti più record per lo stesso
 						// evento ma solo uno di tipo 01, 02 o 03
 						// ==================================================================
-
-						lCondizioni += " AND (    COD_STATO_FASCICOLO = '07' ";
-						lCondizioni += " AND DA.eve_id_evento = ev.id_evento ";
-						lCondizioni += " AND DA.cod_tipo_documento IN ('02', '03') "; // add 29/05/2014
+						lCondizioni += " AND (COD_STATO_FASCICOLO = '07'";
+						lCondizioni += " AND DA.eve_id_evento = ev.id_evento";
+						lCondizioni += " AND DA.cod_tipo_documento IN ('02', '03')"; // add 29/05/2014
 						// Condizione che seleziona un evento che ha collegato un DA di tipo 02-03 con
 						// data_emissione massima
-						lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO ) = ";
-						lCondizioni += " (SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO "
-								+ " FROM EVENTO EV, DOCUMENTO_ALLEGATO DA ";
-						lCondizioni += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-						lCondizioni += " AND (    EV.COD_TIPO_PROVVEDIMENTO in ('01','02','03') ";
-						lCondizioni += " AND EV.COD_ESITO not in ('0601','0602','0603','0604','0605') ";
-						lCondizioni += " AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-						lCondizioni += " ) ";
-						lCondizioni += " AND DA.eve_id_evento = ev.id_evento ";
-						lCondizioni += " AND DA.cod_tipo_documento IN ('01','02', '03') "; // 08/04/2014 add
-																							// d.f. siu
-																							// indicazione
-																							// U.M.
+						lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO) =";
+						lCondizioni += " (SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO FROM EVENTO EV, DOCUMENTO_ALLEGATO DA";
+						lCondizioni += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+						lCondizioni += " AND (EV.COD_TIPO_PROVVEDIMENTO in ('01','02','03')";
+						lCondizioni += " AND EV.COD_ESITO not in ('0601','0602','0603','0604','0605')";
+						lCondizioni += " AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S'";
+						lCondizioni += ")";
+						lCondizioni += " AND DA.eve_id_evento = ev.id_evento";
+						// 08/04/2014 add d.f. su indicazione di U.M.
+						lCondizioni += " AND DA.cod_tipo_documento IN ('01','02', '03')";
 						// La query per max(DATA_EMISSIONE) su alcuni DB sporchi restituisce più di un
 						// risultato mandando in errore il sql.
 						// 2 soluzioni: 1) si entra per max (ID_DOCUMENTO_ALLEGATO) ma potrebbe avere la
@@ -592,40 +584,38 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 						// tutti i record restituiti hanno la DATA_EMISSIONE uguale che è il parametro a cui
 						// siamo interessati
 						// sostituito con ID_DOCUMENTO_ALLEGATO
-						lCondizioni += " AND DA.DATA_EMISSIONE = (SELECT max (DA2.DATA_EMISSIONE) ";
+						lCondizioni += " AND DA.DATA_EMISSIONE = (SELECT max (DA2.DATA_EMISSIONE)";
 						// lCondizioni +=
-						// " AND DA.ID_DOCUMENTO_ALLEGATO = (SELECT max (DA2.ID_DOCUMENTO_ALLEGATO) " ;
-						lCondizioni += " FROM EVENTO EV2, DOCUMENTO_ALLEGATO DA2 ";
-						lCondizioni += " WHERE EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-						lCondizioni += " AND (    EV2.COD_TIPO_PROVVEDIMENTO in ('01','02','03') ";
-						lCondizioni += " AND EV2.COD_ESITO not in ('0601','0602','0603','0604','0605') ";
-						lCondizioni += " AND EV2.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-						lCondizioni += " ) ";
-						lCondizioni += " AND DA2.eve_id_evento = EV2.id_evento "; // add 29/05/2014
-						lCondizioni += " AND DA2.cod_tipo_documento IN ('01','02', '03')  ";
+						// " AND DA.ID_DOCUMENTO_ALLEGATO = (SELECT max (DA2.ID_DOCUMENTO_ALLEGATO)";
+						lCondizioni += " FROM EVENTO EV2, DOCUMENTO_ALLEGATO DA2";
+						lCondizioni += " WHERE EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+						lCondizioni += " AND (EV2.COD_TIPO_PROVVEDIMENTO in ('01','02','03')";
+						lCondizioni += " AND EV2.COD_ESITO not in ('0601','0602','0603','0604','0605')";
+						lCondizioni += " AND EV2.FLAG_DOCUMENTO_REGISTRATO = 'S'";
+						lCondizioni += ")";
+						lCondizioni += " AND DA2.eve_id_evento = EV2.id_evento"; // add 29/05/2014
+						lCondizioni += " AND DA2.cod_tipo_documento IN ('01','02', '03')";
 						lCondizioni += " AND TO_CHAR (DA2.DATA_EMISSIONE, 'YYYYMMDD') >= '"
 								+ DateUtils.getDateToString(aSm.getDataDefinizioneIniziale(), "yyyyMMdd")
-								+ "'  ";
+								+ "'";
 						lCondizioni += " AND TO_CHAR (DA2.DATA_EMISSIONE, 'YYYYMMDD') <= '"
-								+ DateUtils.getDateToString(aSm.getDataDefinizioneFinale(), "yyyyMMdd")
-								+ "'  ";
-						lCondizioni += " ) ";
+								+ DateUtils.getDateToString(aSm.getDataDefinizioneFinale(), "yyyyMMdd") + "'";
+						lCondizioni += ")";
 						// la condizione AND ROWNUM = 1 serve per fare in modo che la query restituisca 1 solo
-						// risultato anche
-						// quando sono presenti due DA con stessa DATA_EMISSIONE = MAX o legati allo stesso
-						// evento o ad eventi distinti
-						lCondizioni += " AND ROWNUM = 1 ";
-						lCondizioni += " ) ";
-						lCondizioni += " ) ";
+						// risultato anche quando sono presenti due DA con stessa DATA_EMISSIONE = MAX o
+						// legati
+						// allo stesso evento o ad eventi distinti
+						lCondizioni += " AND ROWNUM = 1";
+						lCondizioni += ")";
+						lCondizioni += ")";
 					} else {
-						lCondizioni += " AND (     COD_STATO_FASCICOLO in ('01','05') ";
+						lCondizioni += " AND (COD_STATO_FASCICOLO in ('01','05')";
 						lCondizioni += " AND TO_CHAR(fasc.data_definizione,'YYYYMMDD') >= '"
 								+ DateUtils.getDateToString(aSm.getDataDefinizioneIniziale(), "yyyyMMdd")
-								+ "' ";
+								+ "'";
 						lCondizioni += " AND TO_CHAR(fasc.data_definizione,'YYYYMMDD') <= '"
-								+ DateUtils.getDateToString(aSm.getDataDefinizioneFinale(), "yyyyMMdd")
-								+ "' ";
-						lCondizioni += " ) ";
+								+ DateUtils.getDateToString(aSm.getDataDefinizioneFinale(), "yyyyMMdd") + "'";
+						lCondizioni += ")";
 					}
 				}
 			}
@@ -650,34 +640,33 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 					// " OR COD_STATO_FASCICOLO in ('01','05') ";
 					// che non imponendo where sulla DOCUMENTO_ALLEGATO genera il prodotto cartesiano
 					lCondizioni += " AND ev.id_evento = DA.eve_id_evento(+) ";
-
-					lCondizioni += " AND (   (     COD_STATO_FASCICOLO = '07' ";
+					lCondizioni += " AND ((COD_STATO_FASCICOLO = '07'";
 					// lCondizioni += " AND DA.eve_id_evento = ev.id_evento ";
 					// 28/05/2014 agiunta condizione 02-03 per evitare righe doppie gli eventi che avevano 2
 					// doc allegati (ovvero il foglio complementare)
-					lCondizioni += " AND (DA.eve_id_evento = ev.id_evento AND DA.cod_tipo_documento in ('01','02','03')) ";
-					lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO ) = ";
-					lCondizioni += " (SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO ";
-					lCondizioni += " FROM  EVENTO EV ";
-					lCondizioni += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-					lCondizioni += " AND (     EV.COD_TIPO_PROVVEDIMENTO in ('01','02','03') ";
-					lCondizioni += " AND EV.COD_ESITO not in ('0601','0602','0603','0604','0605') ";
-					lCondizioni += " AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-					lCondizioni += " ) ";
-					lCondizioni += " AND EV.DATA_INSERIMENTO =  (SELECT max (DATA_INSERIMENTO) ";
-					lCondizioni += " FROM EVENTO EV2 ";
-					lCondizioni += " WHERE EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS ";
-					lCondizioni += " AND (    EV2.COD_TIPO_PROVVEDIMENTO in ('01','02','03') ";
-					lCondizioni += " AND EV2.cod_esito not in ('0601','0602','0603','0604','0605') ";
-					lCondizioni += " AND EV2.flag_documento_registrato = 'S' ";
-					lCondizioni += " ) ";
-					lCondizioni += " ) "; // chiude select max
-					lCondizioni += " ) "; // chiude la SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO
-					lCondizioni += " ) "; //
-					lCondizioni += " OR COD_STATO_FASCICOLO in ('01','05')  ";
-					lCondizioni += " ) "; //
+					lCondizioni += " AND (DA.eve_id_evento = ev.id_evento AND DA.cod_tipo_documento in ('01','02','03'))";
+					lCondizioni += " AND (FASC.ID_FASCICOLO_SIUS, EV.ID_EVENTO) =";
+					lCondizioni += " (SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO";
+					lCondizioni += " FROM EVENTO EV";
+					lCondizioni += " WHERE EV.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+					lCondizioni += " AND (EV.COD_TIPO_PROVVEDIMENTO in ('01','02','03')";
+					lCondizioni += " AND EV.COD_ESITO not in ('0601','0602','0603','0604','0605')";
+					lCondizioni += " AND EV.FLAG_DOCUMENTO_REGISTRATO = 'S'";
+					lCondizioni += ")";
+					lCondizioni += " AND EV.DATA_INSERIMENTO = (SELECT max (DATA_INSERIMENTO)";
+					lCondizioni += " FROM EVENTO EV2";
+					lCondizioni += " WHERE EV2.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS";
+					lCondizioni += " AND (EV2.COD_TIPO_PROVVEDIMENTO in ('01','02','03')";
+					lCondizioni += " AND EV2.cod_esito not in ('0601','0602','0603','0604','0605')";
+					lCondizioni += " AND EV2.flag_documento_registrato = 'S'";
+					lCondizioni += ")";
+					lCondizioni += ")"; // chiude select max
+					lCondizioni += ")"; // chiude la SELECT FAS_SIU_ID_FASCICOLO_SIUS, ID_EVENTO
+					lCondizioni += ")"; //
+					lCondizioni += " OR COD_STATO_FASCICOLO in ('01','05')";
+					lCondizioni += ")"; //
 				} else {
-					lCondizioni += " AND ( COD_STATO_FASCICOLO not in ('01','05','07') ) ";
+					lCondizioni += " AND (COD_STATO_FASCICOLO not in ('01','05','07'))";
 				}
 			}
 		}
@@ -685,12 +674,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		// Ricerca per Cancelleria Assegnataria
 		if (aCancAssFascSius != null) {
 			if (aCancAssFascSius.getCodCancelleriaAssegnataria().compareTo("nocanc") != 0) {
-				lCondizioni += " AND ID_FASCICOLO_SIUS IN (SELECT FAS_SIUS_ID_FASCICOLO_SIUS FROM CANC_ASS_FASC_SIUS WHERE COD_CANCELLERIA_ASSEGNATARIA = ";
+				lCondizioni += " AND ID_FASCICOLO_SIUS IN (SELECT FAS_SIUS_ID_FASCICOLO_SIUS FROM"
+						+ " CANC_ASS_FASC_SIUS WHERE COD_CANCELLERIA_ASSEGNATARIA = ";
 				lCondizioni += "'" + aCancAssFascSius.getCodCancelleriaAssegnataria() + "'";
 				lCondizioni += " AND COD_UFFICIO = '" + aCancAssFascSius.getCodUfficio() + "'";
 				lCondizioni += " AND DATA_FINE IS NULL) ";
 			} else {
-				lCondizioni += " AND ID_FASCICOLO_SIUS NOT IN (SELECT FAS_SIUS_ID_FASCICOLO_SIUS FROM CANC_ASS_FASC_SIUS WHERE ";
+				lCondizioni += " AND ID_FASCICOLO_SIUS NOT IN (SELECT FAS_SIUS_ID_FASCICOLO_SIUS FROM"
+						+ " CANC_ASS_FASC_SIUS WHERE";
 				lCondizioni += " COD_UFFICIO = '" + aCancAssFascSius.getCodUfficio() + "'";
 				lCondizioni += " AND DATA_FINE IS NULL) ";
 			}
@@ -700,9 +691,9 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		// Filtro sul Collaboratore di Giustizia
 		if (aFiltroCollaboratore != null) {
 			if (aFiltroCollaboratore.trim().equalsIgnoreCase("SI"))
-				lCondizioni += " AND COLLA.COLL.isCollab(COD_UFFICIO, ID_FASCICOLO_SIUS) > 0 ";
+				lCondizioni += " AND COLLA.COLL.isCollab(COD_UFFICIO, ID_FASCICOLO_SIUS) > 0";
 			else if (aFiltroCollaboratore.trim().equalsIgnoreCase("NO"))
-				lCondizioni += " AND  COLLA.COLL.isCollab(COD_UFFICIO, ID_FASCICOLO_SIUS) = 0 ";
+				lCondizioni += " AND COLLA.COLL.isCollab(COD_UFFICIO, ID_FASCICOLO_SIUS) = 0";
 		}
 
 		return lCondizioni;
@@ -716,6 +707,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @return lCondizioni
 	 */
 	private String setCondizionePerNumero(FascicoloGPModel aSm) {
+
 		String lCondizioni = new String();
 		if (aSm.getFascicoloSiusModel().getChiaveProgr() != null)
 			lCondizioni += " AND CHIAVE_PROGR  = " + aSm.getFascicoloSiusModel().getChiaveProgr();
@@ -791,6 +783,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlSoggettoQuery() {
+
 		String lStatement = new String();
 		lStatement += " SELECT FASC.ID_FASCICOLO_SIEP ID_FASCICOLO_SIEP, SOGG.COGNOME COGNOME, SOGG.NOME NOME, SOGG.DATA_NASCITA,";
 		lStatement += " SENT.DATA_PROVVEDIMENTO DATA_PROVVEDIMENTO,SENT.COD_TIPO_PROVVEDIMENTO COD_TIPO_PROVVEDIMENTO, TIPO_PROVVEDIMENTO.RV_MEANING DESCR_TIPO_PROVVEDIMENTO,";
@@ -818,6 +811,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQuery() {
+
 		String lStatement = new String();
 
 		// Query relativa soltanto al fascicolo SIUS
@@ -847,6 +841,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQueryForStorico() {
+
 		String lStatement = new String();
 
 		// Query relativa soltanto al fascicolo SIUS
@@ -874,6 +869,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQueryTenore() {
+
 		String lStatement = new String();
 
 		// Query relativa soltanto al fascicolo SIUS
@@ -925,6 +921,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQueryTenoreEvento() {
+
 		String lStatement = new String();
 		// Query relativa soltanto al fascicolo senza l'evento.
 		lStatement += "  SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO, ";
@@ -952,6 +949,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQueryTenoreNotInEvento(SoggettoModel aModel) {
+
 		String lStatement = new String();
 
 		// Query relativa soltanto al fascicolo senza l'evento.
@@ -999,6 +997,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQueryPerEstremiSenzaEvento() {
+
 		String lStatement = new String();
 		// Query relativa soltanto al fascicolo SIUS
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -1033,6 +1032,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 */
 	protected String getFascicoloSiusSqlQueryPerEstremiPendenti(FascicoloSiusModel aFascModel,
 			boolean aIsJoinPendenti) {
+
 		String lStatement = new String();
 		// Query relativa soltanto al fascicolo SIUS
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -1141,6 +1141,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusSqlQueryPerEstremiConEvento() {
+
 		String lStatement = new String();
 		// Query relativa soltanto al fascicolo SIUS
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -1173,6 +1174,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusUnicoSqlQuery() {
+
 		String lStatement = new String();
 
 		// Query relativa soltanto al fascicolo SIUS
@@ -1193,10 +1195,12 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoloSiusPerNumeroSqlQuery() {
+
 		return getFascicoloSiusPerNumeroSqlQuery("");
 	}
 
 	protected String getFascicoloSiusPerNumeroSqlQuery(String majorOffice) {
+
 		String lStatement = new String();
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.CHIAVE_ANNO CHIAVE_ANNO, FASC.DATA_INSERIMENTO DATA_INSERIMENTO, FASC.DATA_ISCRIZIONE DATA_ISCRIZIONE,";
 		lStatement += " FASC.CHIAVE_PROGR CHIAVE_PROGR, FASC.CHIAVE_UFFICIO CHIAVE_UFFICIO , UFF.COD_TIPO_UFFICIO DESCR_TIPO_UFFICIO,";
@@ -1233,6 +1237,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String setGroupSoggetto() {
+
 		String lGroupBy = new String();
 		lGroupBy = " group by SOGG.Cognome, SOGG.nome, SOGG.DATA_NASCITA,SOGG.COD_COMUNE_NASCITA, ";
 
@@ -1272,12 +1277,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	// }
 
 	private String setOrderAnnoProgr() {
+
 		String lOrder = new String();
 		lOrder = " ORDER BY FASC.CHIAVE_ANNO DESC ,FASC.CHIAVE_PROGR DESC";
 		return lOrder;
 	}
 
 	private String setOrderAnnoProgrAsc() {
+
 		String lOrder = new String();
 		lOrder = " ORDER BY FASC.CHIAVE_ANNO ASC ,FASC.CHIAVE_PROGR ASC";
 		return lOrder;
@@ -1290,6 +1297,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	// }
 
 	private String setOrderUfficioAnnoProgrEvento() {
+
 		String lOrder = new String();
 		// STUB 08/04/2004 lOrder = " ORDER BY 5, 2, 4";
 		lOrder = " ORDER BY CHIAVE_UFFICIO, CHIAVE_ANNO, CHIAVE_PROGR";
@@ -1297,12 +1305,14 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String setOrderCognome() {
+
 		String lOrder = new String();
 		lOrder = " ORDER BY COGNOME, NOME ";
 		return lOrder;
 	}
 
 	private String setOrderPerEstremi() {
+
 		String lOrder = new String();
 		lOrder = " ORDER BY CHIAVE_ANNO,CHIAVE_PROGR,COGNOME, NOME ";
 		return lOrder;
@@ -1315,6 +1325,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String setOrderDataIscrizione() {
+
 		String lOrder = new String();
 		lOrder = " ORDER BY FASC.DATA_ISCRIZIONE DESC ";
 		return lOrder;
@@ -1326,6 +1337,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getModel() throws DAOException {
+
 		FascicoloSiusModel lFascicolo = new FascicoloSiusModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -1385,6 +1397,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public GenericModel getFascicoloSiusGPModelForStorico() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -1465,6 +1478,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusPerNumeroSius() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -1544,6 +1558,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusEsecuzioneMisureAlternative() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -1710,6 +1725,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusGPModelForProvv() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
@@ -1811,6 +1827,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusPerNumeroSIEP() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
@@ -1898,11 +1915,8 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 		lFascicolo.getGeneraleProcedimentoModel().setDataCameraConsiglio(getDate("DATA_CAMERA_CONSIGLIO"));
 		// Utilizzo setDataRichiesta per trasportare EV.DATA_EMISSIONE
 		lFascicolo.getGeneraleProcedimentoModel().setDataRichiesta(getDate("DATA_RICHIESTA"));
-		lFascicolo.getGeneraleProcedimentoModel().setSezione(getString("SEZIONE")); // 06/06/2008 Caricamento
-																					// di
-																					// FLAG_DOCUMENTO_REGISTRATO
-																					// di EVENTO in appoggio
-																					// su GP.SEZIONE.
+		// 06/06/2008 Caricamento di FLAG_DOCUMENTO_REGISTRATO di EVENTO in appoggio su GP.SEZIONE
+		lFascicolo.getGeneraleProcedimentoModel().setSezione(getString("SEZIONE"));
 		return lFascicolo;
 	}
 
@@ -1912,6 +1926,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getDettaglioFascicoloSiusEsecuzioneMisureAlternative() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -2016,6 +2031,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getDettaglioFascicoloSiusGPModel() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
@@ -2107,6 +2123,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusGPModelPerEstremi() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -2191,6 +2208,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusGPModelUnico() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		// Inserire le opportune set delle descrizioni!
@@ -2265,6 +2283,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	public GenericModel getFascicoloSiusGPModelPerDataFinePena() throws DAOException {
+
 		FascicoloGPModel lFascicolo = new FascicoloGPModel();
 
 		lFascicolo.getFascicoloSiusModel().setIdFascicoloSius(getBigDecimal("ID_FASCICOLO_SIUS"));
@@ -2304,6 +2323,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	protected String getFascicoliBySoggettoSqlQuery(SoggettoModel aModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeArchiviati, String lCodContenuto,
 			Date dataDalInCanc, Date dataAlInCanc, String majorOffice) {
+
 		String lStatement = new String();
 
 		lStatement += " SELECT  count(*) NUM_FASCICOLI, SOGG.COGNOME COGNOME, SOGG.NOME NOME, SOGG.DATA_NASCITA DATA_NASCITA, SOGG.DESC_COMUNE_NASCITA_ESTERO DESC_COMUNE_NASCITA_ESTERO,";
@@ -2387,26 +2407,20 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 * Settaggio della condizione per Data Fine Pena.
 	 *
 	 * @param lUfficioUtenteConnesso
-	 *            ;
 	 * @param dataDalIscrizione
-	 *            ;
 	 * @param dataAlIscrizione
-	 *            ;
 	 * @param dataDalFinePena
-	 *            ;
 	 * @param dataAlFinePena
-	 *            ;
 	 * @param lIncludeArchiviati
-	 *            ;
 	 * @param lCodPosGiuridica
-	 *            ;
 	 * @param lCodContenuto
-	 *            ;
+	 *
 	 * @return lCondizioni
 	 */
 	private String setCondizionePerDataFinePena(String lUfficioUtenteConnesso, Date dataDalIscrizione,
 			Date dataAlIscrizione, Date dataDalFinePena, Date dataAlFinePena, String lIncludeArchiviati,
 			String lCodPosGiuridica, String lCodContenuto) {
+
 		String lCondizioni = new String();
 		lCondizioni += " AND FASC.CHIAVE_UFFICIO ='" + lUfficioUtenteConnesso + "'";
 
@@ -2455,6 +2469,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	public void ricercaFascicoliDelSoggetto(SoggettoModel aModel, String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeArchiviati, String lCodContenuto,
 			Date dataDalInCanc, Date dataAlInCanc) {
+
 		String lStatement = "";
 
 		// Si costruisce la query relativa ai Fascicoli SIUS Con Ordinanze.
@@ -2497,6 +2512,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaFascicoliPerNumeroSIEP(BigDecimal lId_FascicoloSiep) {
+
 		String lStatement = "";
 
 		// Si costruisce la query relativa ai Fascicoli SIUS Con Provvedimenti.
@@ -2510,6 +2526,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	}
 
 	protected String getFascicoliConProvvedimentiPerNumeroSIEP(BigDecimal lId_FascicoloSiep) {
+
 		String lStatement = new String();
 
 		// STUB 09/11/2006 - Migliorata la query.
@@ -2598,6 +2615,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	protected String getFascicoliSenzaProvvedimentiDelSoggetto(SoggettoModel aModel,
 			String strCodUfficioUtenteConnesso, String strCodUffOTrib, String lCodDistretto,
 			String lIncludeArchiviati, String lCodContenuto, Date dataDalInCanc, Date dataAlInCanc) {
+
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS,FASC.COD_STATO_FASCICOLO VERO_COD_STATO, FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO, ";
@@ -2666,6 +2684,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	protected String getFascicoliConOrdinanzeDelSoggetto(String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeArchiviati, String lCodContenuto,
 			Date dataDalInCanc, Date dataAlInCanc) {
+
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.COD_STATO_FASCICOLO VERO_COD_STATO,FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -2743,6 +2762,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	protected String getFascicoliConDecretiDelSoggetto(String strCodUfficioUtenteConnesso,
 			String strCodUffOTrib, String lCodDistretto, String lIncludeArchiviati, String lCodContenuto,
 			Date dataDalInCanc, Date dataAlInCanc) {
+
 		String lStatement = new String();
 
 		lStatement += "SELECT FASC.ID_FASCICOLO_SIUS ID_FASCICOLO_SIUS, FASC.COD_STATO_FASCICOLO VERO_COD_STATO,FASC.FAS_SIE_ID_FASCICOLO_SIEP FAS_SIE_ID_FASCICOLO_SIEP, FASC.CHIAVE_ANNO CHIAVE_ANNO,SOGG.ID_SOGGETTO ID_SOGGETTO,";
@@ -2828,6 +2848,7 @@ public class FascicoloSiusSoggettoSqlDAO extends SIAPSqlDAO {
 	 *        se aIsJoinPendenti = true
 	 */
 	public void ricercaDataDefinizioneFinaleByIdFasc(BigDecimal aIdFascicoloSius) throws DAOException {
+
 		String lStatement = new String();
 
 		lStatement += " SELECT ev.id_evento, ev.fas_siu_id_fascicolo_sius ";

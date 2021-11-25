@@ -3463,7 +3463,9 @@ public class StatisControllerCPP extends GenericController {
 		row = sheet.createRow(nRow);
 		// Create a cell and put a value in it.
 
-		value = ("Tel. " + uffUteConnesso.getTelefono() + " - Fax " + uffUteConnesso.getFax());
+		// [SG] 11/11/2021 se è null scrivo ""
+		value = ("Tel. " + StringUtils.toStringJSP(uffUteConnesso.getTelefono()) + " - Fax "
+				+ StringUtils.toStringJSP(uffUteConnesso.getFax()));
 		setCell(row, 0, value, csNull);
 
 		return nRow;

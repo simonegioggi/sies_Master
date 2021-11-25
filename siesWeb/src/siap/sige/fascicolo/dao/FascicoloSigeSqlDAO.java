@@ -24,18 +24,7 @@ import siap.sige.richiesta.model.RichiestaSigeModel;
 import siap.sige.udienzaprocedimento.model.UdienzaProcedimentoSigeModel;
 
 /**
- * <p>
- * Title: FascicoloSigeSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella FascicoloSige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company:
- * </p>
+ * Title: FascicoloSigeSqlDAO Description: Classe SqlDAO che rappresenta la tabella FascicoloSige
  *
  * @version 1.0
  */
@@ -200,15 +189,16 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ " THEN COALESCE(TIPO_D.RV_MEANING,STATO_DEF.RV_MEANING) END  MOTIVO_DEFINIZIONE, ";
 
 		// @emma 13052019 INTEVENTO PER 11.2.1
-		// Ticket#20210928015 - LISTAGG duplicava la descrizione del TENORE_SIGE in caso di 
+		// Ticket#20210928015 - LISTAGG duplicava la descrizione del TENORE_SIGE in caso di
 		// presenza di più record UDIENZA_PROCEDIMENTO_SIGE che puntano il fascicolo
-		// Eliminata la LISTAGG. In qesto modo vengono restituiti più record per lo 
+		// Eliminata la LISTAGG. In qesto modo vengono restituiti più record per lo
 		// stesso fascicolo che verranno aggregati lato controller
 		// aggiunto TSC.RV_MEANING nella group by
-		// lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10))  WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)  as OGGETTI ";
+		// lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10)) WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)
+		// as OGGETTI ";
 		lStatement += " TSC.RV_MEANING as OGGETTI ";
 		// Ticket#20210928015 - FINE
-		
+
 		// @emma 13072018 post COLLAUDO 11.2 (aggiungo lo spazio prima di FROM )
 		lStatement += " FROM FASCICOLO_SIGE F,  RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, ";
 		lStatement += "COMUNE C, magistrato_assegnatario d, MAGISTRATO E, ";
@@ -717,11 +707,11 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		queryFascicoloSige += "DATA_ISCRIZIONE, F.CHIAVE_ANNO, F.CHIAVE_PROGR, DATA_DEFINIZIONE,"
 				+ " F.ID_FASCICOLO_SIGE_ORIGINE, ID_EVENTO_PROVV_CUMULO, DATA_ARRIVO_CANCELLERIA , "
 				+ " TG.RV_MEANING, TIPO_D.RV_MEANING, f.cod_stato_fascicolo,  STATO_DEF.RV_MEANING  ";
-		// Ticket#20210928015 - Aggiunto campo TSC.RV_MEANING nella group by per gestire la modifica alla select  
-		// nel metodo getSqlQueryPerEstremiStatistica 
+		// Ticket#20210928015 - Aggiunto campo TSC.RV_MEANING nella group by per gestire la modifica alla
+		// select nel metodo getSqlQueryPerEstremiStatistica
 		queryFascicoloSige += " , TSC.RV_MEANING ";
-		// Ticket#20210928015 - FINE 
-		
+		// Ticket#20210928015 - FINE
+
 		queryFascicoloSige += setOrderAnnoProgrAsc();
 		// Settaggio della stringa SQL appena costruita prima della query
 		setStatement(queryFascicoloSige);
@@ -768,9 +758,10 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		if ((aRFSM.getChiaveUfficio().trim().length() > 0)) {
 			if (aRFSM.getChiaveUfficioInserimento() != null
 					&& !aRFSM.getChiaveUfficioInserimento().equals("")) {
-				lCondizioni += " AND F.COD_UFFICIO_INSERIMENTO = " + aRFSM.getChiaveUfficioInserimento();
+				lCondizioni += " AND F.COD_UFFICIO_INSERIMENTO = '" + aRFSM.getChiaveUfficioInserimento()
+						+ "'";
 			} else {
-				lCondizioni += " AND CHIAVE_UFFICIO = " + aRFSM.getChiaveUfficio();
+				lCondizioni += " AND CHIAVE_UFFICIO = '" + aRFSM.getChiaveUfficio() + "'";
 			}
 		}
 
@@ -825,7 +816,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 
 		// Cerca i fascicoli per l'ufficio selezionato.
 		if ((aRFSM.getChiaveUfficio().trim().length() > 0))
-			lCondizioni += " AND CHIAVE_UFFICIO = " + aRFSM.getChiaveUfficio();
+			lCondizioni += " AND CHIAVE_UFFICIO = '" + aRFSM.getChiaveUfficio() + "'";
 
 		// Cerca i fascicoli a partire da una data iscrizione.
 		if ((aRFSM.getDataIscrizioneIniziale() != null))
@@ -879,7 +870,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 
 		// Cerca i fascicoli per Tipo Oggetto.
 		if ((aRFSM.getCodOggettoSige() != null) && aRFSM.getCodOggettoSige().length() > 0)
-			lCondizioni += " AND COD_OGGETTO_SIGE = " + aRFSM.getCodOggettoSige();
+			lCondizioni += " AND COD_OGGETTO_SIGE = '" + aRFSM.getCodOggettoSige() + "'";
 
 		// Cerca i fascicoli per Magistrato.
 		if ((aRFSM.getCodMagistrato() != null)) {
@@ -929,11 +920,14 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String setCondizionePerEstremiStatistica(RicercaFascicoloSigeModel aRFSM) {
+
 		String lCondizioni = new String();
 
 		// Cerca i fascicoli per l'ufficio selezionato.
 		if ((aRFSM.getChiaveUfficio().trim().length() > 0))
-			lCondizioni += " AND CHIAVE_UFFICIO = " + aRFSM.getChiaveUfficio();
+			// Ticket#20211116019 - Funzione RICERCA PROCEDIMENTO SIGE PER ESTREMI ATTO
+			// aggiunti perchè trattasi di varchar
+			lCondizioni += " AND CHIAVE_UFFICIO = '" + aRFSM.getChiaveUfficio() + "'";
 
 		// Cerca i fascicoli a partire da una data iscrizione.
 		if ((aRFSM.getDataIscrizioneIniziale() != null))
@@ -966,14 +960,16 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 
 		// Cerca i fascicoli per Tipo Oggetto.
 		if ((aRFSM.getCodOggettoSige() != null) && aRFSM.getCodOggettoSige().length() > 0)
-			lCondizioni += " AND COD_OGGETTO_SIGE = " + aRFSM.getCodOggettoSige();
+			lCondizioni += " AND COD_OGGETTO_SIGE = '" + aRFSM.getCodOggettoSige() + "'";
 
 		// Cerca i fascicoli per Magistrato.
 		if ((aRFSM.getCodMagistrato() != null)) {
 			if (aRFSM.getCodMagistrato().compareTo("9") == 0)
 				lCondizioni += " AND MAG_COD_MAGISTRATO is not null ";
 			else if (aRFSM.getCodMagistrato().compareTo("0") != 0)
-				lCondizioni += " AND MAG_COD_MAGISTRATO = " + aRFSM.getCodMagistrato();
+				// Ticket#20211116019 - Funzione RICERCA PROCEDIMENTO SIGE PER ESTREMI ATTO
+				// aggiunti perchè trattasi di varchar
+				lCondizioni += " AND MAG_COD_MAGISTRATO = '" + aRFSM.getCodMagistrato() + "'";
 		}
 
 		// Cerca i fascicoli per Sezione.
@@ -1736,7 +1732,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ "and p.fas_id_fascicolo_sige = f.id_fascicolo_sige "
 				+ "and tdrs.rv_domain = 'TENORE_DECISIONE_RICORSO_SIGE' "
 				// Ticket#20210324015 - Per i fascicoli con impugnazione_sige.cod_tenore_decisione = null
-				//                      falliva la join con la CG_REF_CODES
+				// falliva la join con la CG_REF_CODES
 				// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
 				+ "and NVL (i.cod_tenore_decisione,'-') = tdrs.rv_low_value "
 				// + "and tdrs.rv_low_value = i.cod_tenore_decisione "
@@ -1990,9 +1986,9 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * Ticket 20210924018
-	 * Metodo aggiunto per effettuare la ricerca dei fascicoli SIGE che puntao una
-	 * certa pena accessoria SIEP impededono la cancellazione (lato SIEP)
+	 * Ticket 20210924018 Metodo aggiunto per effettuare la ricerca dei fascicoli SIGE che puntao una certa
+	 * pena accessoria SIEP impededono la cancellazione (lato SIEP)
+	 *
 	 * @param idPenaAccessoria
 	 * @return
 	 */
@@ -2003,13 +1999,13 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ "CHIAVE_UFFICIO, " + "'' DESCR_TIPO_UFFICIO, " + "'' DESCR_COMUNE_UFFICIO, "
 				+ "null DATA_NASCITA, " + "'' NOME, " + "'' COGNOME, " + "CHIAVE_PROGR, " + "SEZ_ID_SEZIONE, "
 				+ "COD_STATO_FASCICOLO, " + "COD_TIPO_GIUDIZIO, " + "DATA_ISCRIZIONE, " + "DATA_DEFINIZIONE, "
-				+ "RIC_ID_RICHIESTA_SIGE, " 
+				+ "RIC_ID_RICHIESTA_SIGE, "
 				+ "FASCICOLO_SIGE.COD_OPERATORE_INSERIMENTO, FASCICOLO_SIGE.COD_UFFICIO_INSERIMENTO, "
-				+ "FASCICOLO_SIGE.DATA_INSERIMENTO, FASCICOLO_SIGE.COD_OPERATORE_AGGIORNAMENTO, " 
-				+ "FASCICOLO_SIGE.COD_UFFICIO_AGGIORNAMENTO, FASCICOLO_SIGE.DATA_AGGIORNAMENTO, " 
-				+ "NOTE, " + "COD_POSIZIONE_GIURIDICA, " + "DATA_FINE_PENA, "
-				+ "COD_TIPO_DEFINIZIONE, " + "DESCR_DEFINIZIONE, " + "FAS_SIG_ID_FASCICOLO_SIGE, "
-				+ "NUMERO_FASCICOLI_UNIFICATI, " + "PG.RV_MEANING POSIZIONE_GIURIDICA, " +
+				+ "FASCICOLO_SIGE.DATA_INSERIMENTO, FASCICOLO_SIGE.COD_OPERATORE_AGGIORNAMENTO, "
+				+ "FASCICOLO_SIGE.COD_UFFICIO_AGGIORNAMENTO, FASCICOLO_SIGE.DATA_AGGIORNAMENTO, " + "NOTE, "
+				+ "COD_POSIZIONE_GIURIDICA, " + "DATA_FINE_PENA, " + "COD_TIPO_DEFINIZIONE, "
+				+ "DESCR_DEFINIZIONE, " + "FAS_SIG_ID_FASCICOLO_SIGE, " + "NUMERO_FASCICOLI_UNIFICATI, "
+				+ "PG.RV_MEANING POSIZIONE_GIURIDICA, " +
 				// Modifica Accorpamento Uffici
 				"CHIAVE_PROGR_ORIG, " + "UFFINSERIMENTO.COD_TIPO_UFFICIO COD_TIPO_UFFICIO_INS, "
 				+ "DESCR_TIPO_UFFINSERIMENTO.RV_MEANING DESCR_TIPO_UFFICIO_INS, "
@@ -2026,10 +2022,10 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		lStatement += " , FAS_SIGE_SENTENZA, PENA_ACCESSORIA_SENTENZA_SIGE ";
 		lStatement += " WHERE FASCICOLO_SIGE.ID_FASCICOLO_SIGE = FAS_SIGE_SENTENZA.FAS_ID_FASCICOLO_SIGE ";
 		lStatement += " AND PENA_ACCESSORIA_SENTENZA_SIGE.FAS_SIGE_SEN_ID = FAS_SIGE_SENTENZA.ID_FAS_SIGE_SENTENZA ";
-		
-		lStatement += " AND PENA_ACCESSORIA_SENTENZA_SIGE.PNA_ID_PENA_ACCESSORIA = "+idPenaAccessoria;
-				
+
+		lStatement += " AND PENA_ACCESSORIA_SENTENZA_SIGE.PNA_ID_PENA_ACCESSORIA = " + idPenaAccessoria;
+
 		setStatement(lStatement);
 	}
-	
+
 }
