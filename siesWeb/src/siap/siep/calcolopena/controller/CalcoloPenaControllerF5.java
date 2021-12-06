@@ -447,7 +447,6 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 					lPenaCumSqlDao.ricercaPenaCumuloByIdEvento(lEventoIniziale.getIdEvento(),
 							lEventoIniziale.getFasSieIdFascicoloSiep());
 					lPenaCumuloMod = (PenaCumuloModel) lPenaCumSqlDao.getModelByKey();
-					;
 					lPenaCumSqlDao.stop();
 					// Scarico i quantum di pena cumulo su un model pena residua per avere
 					// i dati omogenei
