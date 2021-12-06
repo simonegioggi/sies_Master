@@ -448,11 +448,10 @@ public class CalcoloPenaControllerF5 extends SiapController implements ICalcoloP
 							lEventoIniziale.getFasSieIdFascicoloSiep());
 					lPenaCumuloMod = (PenaCumuloModel) lPenaCumSqlDao.getModelByKey();
 					lPenaCumSqlDao.stop();
-					// Scarico i quantum di pena cumulo su un model pena residua per avere
-					// i dati omogenei
+					// Scarico i quantum di pena cumulo su un model pena residua per avere i dati omogenei
 					lPenaInizialeMod = new PenaResiduaModel();
-					lPenaInizialeMod.setIdPenaResidua(new BigDecimal(0)); // devo impostarlo per evitare
-																			// l'errore
+					// devo impostarlo per evitare l'errore
+					lPenaInizialeMod.setIdPenaResidua(new BigDecimal(0));
 					lPenaInizialeMod.setNumGiorniReclusione(lPenaCumuloMod.getNumGiorniReclusione());
 					lPenaInizialeMod.setNumMesiReclusione(lPenaCumuloMod.getNumMesiReclusione());
 					lPenaInizialeMod.setNumAnniReclusione(lPenaCumuloMod.getNumAnniReclusione());
