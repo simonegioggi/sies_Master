@@ -3,6 +3,8 @@ package siap.siep.modulocumulo.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import siap.jms.ICostantiJMS;
 import siap.jms.SIAPReceiver;
 import siap.jms.SIAPSender;
@@ -23,6 +25,7 @@ import siap.siep.modulocumulo.model.TitoloCumulatoModel;
 import siap.siep.notifica.controller.INotifica;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.util.SIEPLookupRemote;
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -36,7 +39,8 @@ import f3b.web.RedirectTo;
  */
 public class ActTrasferisciComunicazioniProcure extends ActionSiap implements ICostantiJMS
 {
-
+  private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
   public String processRequest() throws Exception
   {
     
@@ -90,6 +94,12 @@ public class ActTrasferisciComunicazioniProcure extends ActionSiap implements IC
     INotifica lCtrlNot = SIEPLookupRemote.getNotificaRemote();
     Vector<NotificaModel> lNotifiche = lCtrlNot.ExRicercaEstesaNotificaByKeyEvento(lIdEvento);
 
+
+    // Ticket#20211202015 - Gli atti vengono trasmessi solo alla Procure. In assenza di procure tra i destinatari 
+    // , es solo TDS o UDS, il sistema restituiva comunque il messaggio "Gli Atti sono stati trasmessi agli Uffici indicati"
+    int contaTrasmissioni = 0;
+    // Ticket#20211202015 - FINE
+    
     // Preparazione e invio dei messaggi (1 per destinatario).
     for (int j=0; j<lNotifiche.size(); j++) {
     	
@@ -170,17 +180,29 @@ public class ActTrasferisciComunicazioniProcure extends ActionSiap implements IC
             // Invio del Messaggio
             //=======================
             SIAPSender lSender = new SIAPSender();
-            System.out.println(">>>>>>>>>>>>> DataEmissioneCumulo in Partenza >>>>>>>>>>>>>" + lMessage.getDataEmissioneCumulo());                	
-
+            siesLogger.debug(">>>>>>>>>>>>> DataEmissioneCumulo in Partenza >>>>>>>>>>>>>" + lMessage.getDataEmissioneCumulo());                	
+            // Ticket#20211202015 - Conto gli invii effettuati
+            contaTrasmissioni++;
+            // Ticket#20211202015 -
             lSender.send(lMessage);
           }
         }
       }
     }
     
+
+
     //==========================================================================    
     // setta la risposta nella request
-    setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Gli Atti sono stati trasmessi agli Uffici indicati!");
+    // Ticket#20211202015 - Conto gli invii effettuati
+    //setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Gli Atti sono stati trasmessi agli Uffici indicati!");
+    if (contaTrasmissioni>0) {
+        setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Gli Atti sono stati trasmessi agli Uffici di Esecuzione indicati!");
+    }
+    else {
+        setRequestAttribute(IWebConstants.MESSAGE_TEXT, "La trasmissione telematica è prevista solo verso gli Uffici di Esecuzione. Nessun Ufficio di Esecuzione è stato selezionato. Trasmissione non effettuata.");
+    }
+    // Ticket#20211202015 - FINE
 
     //Prepara la "pagina" di destinAction
     RedirectTo lRedirigi = new RedirectTo();

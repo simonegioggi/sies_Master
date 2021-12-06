@@ -7,8 +7,18 @@ RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021
 	 	Ricorso convertito in opposizione = 16
 	 	Decreto Fissazione Udienza = 20
 	 	Ricorso convertito in opposizione (Fissa Udienza) = 21
-		Modulo corretto:
+		Classi modificate:
 		-	src/siap/sige/udienzaprocedimento/action/ActLoadInserisciRinvioUdienza.java
 		-	src/siap/sige/web/ActionSige.java
 
-2)	
+2)	Ticket 20211202015 - CUMULO - COMUNICAZIONI ALLE PROCURE E UFFICI DI SORVEGLIANZA
+		In fase di invio delle comunicazioni a Uffici di esecuzione e Sorveglianza il sistema, pur non effettuando l'invio alla sorveglianza in quanto non previsto,
+		restituiva un messaggio forviante indicando che la trasmissione era stata effettuata. 
+		Modificato il messaggio originale:
+			"Gli Atti sono stati trasmessi agli Uffici indicati!"
+		Aggiungendo il controllo sul numero effettivo di invii:
+			"Gli Atti sono stati trasmessi agli Uffici di Esecuzione indicati!"
+			oppure
+			"La trasmissione telematica è prevista solo verso gli Uffici di Esecuzione. Nessun Ufficio di Esecuzione è stato selezionato. Trasmissione non effettuata."
+		Classe modificata:
+		-	siap.siep.modulocumulo.action.ActTrasferisciComunicazioniProcure.java
