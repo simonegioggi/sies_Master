@@ -22,3 +22,11 @@ RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021
 			"La trasmissione telematica è prevista solo verso gli Uffici di Esecuzione. Nessun Ufficio di Esecuzione è stato selezionato. Trasmissione non effettuata."
 		Classe modificata:
 		-	siap.siep.modulocumulo.action.ActTrasferisciComunicazioniProcure.java
+
+3)	Ticket#20211216018 - cumulo - Provvedimenti di Comunicazione Emessi
+		Il sistema consentiva di inviare comunicazioni a procure e uffici di sorveglianza dal dettaglio 
+		del provvedimento di cumulo di un fascicolo di altro Ufficio.
+		Mancava il controllo sulla competenza.
+		Classi modificate:
+		-	siap.siep.modulocumulo.action.ActLoadComunicazioniEsecSorv.java
+		-	/jsp/files/siap/siep/modulocumulo/GrigliaComunicazioniProcure.jsp
