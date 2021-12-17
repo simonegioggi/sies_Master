@@ -9,5 +9,7 @@ siap.siep.modulocumulo.action.ActLoadComunicazioniEsecSorv
 e
 /jsp/files/siap/siep/modulocumulo/GrigliaComunicazioniProcure.jsp
 
-
+Bloccato anche l'accesso alle funzioni di stampa delle comunicazioni a Cancellerie e Altro
+siap.siep.modulocumulo.action.ActLoadComunicazioniCancellerie
+siap.siep.modulocumulo.action.ActLoadComunicazioniAltro
 
