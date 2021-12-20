@@ -30,3 +30,6 @@ RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021
 		Classi modificate:
 		-	siap.siep.modulocumulo.action.ActLoadComunicazioniEsecSorv.java
 		-	/jsp/files/siap/siep/modulocumulo/GrigliaComunicazioniProcure.jsp
+		Bloccato anche l'accesso alle funzioni di stampa delle comunicazioni a Cancellerie e Altro
+		-	siap.siep.modulocumulo.action.ActLoadComunicazioniCancellerie.java
+		-	siap.siep.modulocumulo.action.ActLoadComunicazioniAltro.java
