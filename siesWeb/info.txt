@@ -10,5 +10,13 @@ siap.siep.penapecuniaria.action.ActInserisciAnnotazioneProvvedimento
 metodo 
 private RichiestaConversioneModel recuperaRichiestaConversione() throws F3BException
 
+Ulteriori correzioni non segnalate:
+form di inserimento 
+inseriti controlli sui cammpi Anno (prendeva qualsiasi valore) e 
+sulla Data Prima Rata che deve essere > data emissione provvedimento 
+/jsp/files/siap/siep/penapecuniaria/LoadInserisciAnnotazioneProvvedimento.jsp
 
-
+form di dettaglio
+Formattato il campo "Oppure entro   __   giorni dalla data di Notifica "
+in assenza di giorni
+"/jsp/files/siap/siep/penapecuniaria/DettaglioInserisciAnnotazioneProvvedimento.jsp"
