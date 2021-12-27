@@ -435,10 +435,17 @@ public class ActInserisciAnnotazioneProvvedimento extends ActionSiap implements 
 				// Data Pagamento Prima Rata
 				// Inizio 01/02/2016
 				if (getRequestStringParameter(ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_INIZIO_PAGA).length() > 0) {
+					//Ticket#202112240110 - Caricava la data prima rata dal campo sbagliato ovvero dalla data emissione
+//					lRicConvModel.setDataInizioPagamento(getRequestDateParameter(
+//							ICostantiScambioSanzione.CAMPO_ANNO_DATA_EMISSIONE,
+//							ICostantiScambioSanzione.CAMPO_MESE_DATA_EMISSIONE,
+//							ICostantiScambioSanzione.CAMPO_GIORNO_DATA_EMISSIONE));
 					lRicConvModel.setDataInizioPagamento(getRequestDateParameter(
-							ICostantiScambioSanzione.CAMPO_ANNO_DATA_EMISSIONE,
-							ICostantiScambioSanzione.CAMPO_MESE_DATA_EMISSIONE,
-							ICostantiScambioSanzione.CAMPO_GIORNO_DATA_EMISSIONE));
+							ICostantiPenaPecuniaria.CAMPO_ANNO_DATA_INIZIO_PAGA,
+							ICostantiPenaPecuniaria.CAMPO_MESE_DATA_INIZIO_PAGA,
+							ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_INIZIO_PAGA));					
+					//Ticket#202112240110 - Caricava la data prima rata dal campo sbagliato
+					
 				}
 				// fine 01/02/2016
 
