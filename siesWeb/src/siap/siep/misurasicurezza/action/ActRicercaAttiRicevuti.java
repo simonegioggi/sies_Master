@@ -1,6 +1,7 @@
 package siap.siep.misurasicurezza.action;
 
 import java.math.BigDecimal;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -16,7 +17,6 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 
-import siap.siep.modulocumulo.action.ICostantiModuloCumulo;
 
 /**
  * Action per la ricerca degli atti ricevuti per competenza Misure di Sicurezza 
@@ -39,8 +39,13 @@ if (isRequestParameterNullObj("vai")) {
 	// Pagina di attesa (rotellina)
 	setRequestAttribute("titolo", " RICERCA ATTI RICEVUTI PER COMPETENZA ");
 	setRequestAttribute("next_action", getClass().getName());
+	
+	if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
+		setRequestAttribute(IWebConstants.NUM_PAGE, getRequestStringParameter(IWebConstants.NUM_PAGE));
+	if (!isRequestParameterNullObj("CountRisultati"))
+		setRequestAttribute("CountRisultati", getRequestStringParameter("CountRisultati"));
 	siesLogger.debug("Pagina di attesa :" + getClass().getName());
-	return ICostantiModuloCumulo.PG_ATTESA_CUMULO;
+	return ICostantiMisuraSicurezza.PG_ATTESA_RICERCA;
 } else {    
     try {
       if (   JMSProperties.getInstance().getProperty("LISTENER_NUOVA_GESTIONE")!=null
@@ -63,6 +68,19 @@ if (isRequestParameterNullObj("vai")) {
     
     this.setLinkRitorno();    
     setRequestAttribute(IWebConstants.LINK_RITORNO, "10");
+    
+    // Ticket#20220111018 - rimuovo dal link torna indietro il parametro "&vai=pippo" altrimenti
+    // non parte la pagina di wait quando si torna del dettaglio
+    Stack lRetStack = (Stack) getSessionAttribute("StackDiRitorno");
+    String retURL = lRetStack.peek().toString();
+    if (retURL.contains("&vai=pippo")) {
+	    retURL = retURL.replace("&vai=pippo","");
+	    lRetStack.pop(); // Rimuovo il vecchio valore
+	    lRetStack.push(retURL); // lo sostituisco con il nuovo
+	    // Rimetto in sessione lo Stack
+		this.setSessionAttribute("StackDiRitorno", lRetStack);	    
+    }   
+    // Ticket#20220111018
 //    
 //    MessaggioModel lMessaggio = new MessaggioModel();
 //    
@@ -101,10 +119,10 @@ if (isRequestParameterNullObj("vai")) {
                                                            , getCodUfficioUtenteConnesso() // ufficio dest
                                                            , null //lDataTrasmissioneDal
                                                            , null //lDataTrasmissioneAl 
-                                                           // INIZIO - Test x paginazione
+                                                           // //Ticket#20220111018 x paginazione
                                                            , Integer.parseInt(lPagina));
                                                            //, 0);  
-    													   // FINE - Test x paginazione
+    													   // //Ticket#20220111018 x paginazione
     
     //=======================================================
     // Per ogni messaggio verifico se presente un sollecito
@@ -172,7 +190,12 @@ if (isRequestParameterNullObj("vai")) {
 	
 	setRequestAttribute("CountRisultati", lCountRisultati);
 	setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
-	setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());	
+	// Rimuovo il parametro "&vai=pippo" aggiunto dalla pagina di wait altrimenti non ripassarà
+	// più per la wait quando seleziono una pagina differente
+	String requestUrl = getCompleteRequestURL();
+	requestUrl = requestUrl.replace("&vai=pippo","");
+	setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, requestUrl);		
+	//setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());	
 	// Ticket#20220111018 - Gestione Paginazione FINE
     
     

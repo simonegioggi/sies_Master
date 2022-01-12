@@ -55,5 +55,9 @@ RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021
 			Aggiunto nella query il recupero del numero di solleciti legati al messaggio
 			protected String getSqlQueryMS()
 			public GenericModel getModel()
-		-	\jsp\files\siap\siep\modulocumulo\Attesa_Cumulo.jsp
-			Eliminato refuso
+		-	Eliminato refuso
+			\jsp\files\siap\siep\modulocumulo\Attesa_Cumulo.jsp
+		-	Creata nuova pagina di wait per le MS
+			\jsp\files\siap\siep\misurasicurezza\AttesaRicerca.jsp
+		-	Aggiunta la pagina nelle costanti
+			siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza.java
