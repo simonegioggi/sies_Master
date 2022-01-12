@@ -33,3 +33,27 @@ RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021
 		Bloccato anche l'accesso alle funzioni di stampa delle comunicazioni a Cancellerie e Altro
 		-	siap.siep.modulocumulo.action.ActLoadComunicazioniCancellerie.java
 		-	siap.siep.modulocumulo.action.ActLoadComunicazioniAltro.java
+
+4)	Ticket#20220111018 - Sies - Cancellazione atti ricevuti per competenza
+		Lamentata lentezza della funzione di ricerca atti ricevuti per competenze dei classe IV.
+		La funzione non è paginata ne prevede filtri di ricerca per cui recupera tutti i messaggi ricevuti 
+		ed inoltre per ogni messaggio effettua unaulteriore query per recuperare eventuali solleciti ed
+		effettua il parsing del BLOG.
+		Interventi effettuati:
+		a) paginazione della ricerca;
+		b) recupero direttamente nella prima query dell'informazione dell'eventuale presenza di un sollecito in modo
+			da ricercare i solleciti solo se effettivamente presenti;
+		c) creato indice sulla tabella MESSAGGIO.
+		Classi modificate:
+		-	\jsp\files\siap\siep\misurasicurezza\ListaAttiRicevutiDaPrendereInCarico.jsp
+			Aggiunta sezione per la paginazione
+		-	siap.siep.misurasicurezza.action.ActRicercaAttiRicevuti
+			Aggiunta gestione Paginazione, pagina di transizione e recupero solleciti
+		-	siap.jms.messaggio.model.MessaggioModel
+			Aggiunto campo per il contatore dei solleciti restituito dalla query
+		-	siap.jms.messaggio.dao.MessaggioSqlDAO
+			Aggiunto nella query il recupero del numero di solleciti legati al messaggio
+			protected String getSqlQueryMS()
+			public GenericModel getModel()
+		-	\jsp\files\siap\siep\modulocumulo\Attesa_Cumulo.jsp
+			Eliminato refuso
