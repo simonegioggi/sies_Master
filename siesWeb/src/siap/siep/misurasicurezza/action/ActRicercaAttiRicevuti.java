@@ -16,6 +16,8 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 
+import siap.siep.modulocumulo.action.ICostantiModuloCumulo;
+
 /**
  * Action per la ricerca degli atti ricevuti per competenza Misure di Sicurezza 
  * non ancora elaborati: FLAG_VISTO = 'N'.
@@ -32,8 +34,14 @@ public class ActRicercaAttiRicevuti extends ActionSiap implements ICostantiMisur
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
   public String processRequest() throws F3BException, Exception
   {
-    
-    //
+	  //Ticket#20220111018 - Aggiunta pagina di transizione di wait solo sulla prima pagina
+if (isRequestParameterNullObj("vai")) {
+	// Pagina di attesa (rotellina)
+	setRequestAttribute("titolo", " RICERCA ATTI RICEVUTI PER COMPETENZA ");
+	setRequestAttribute("next_action", getClass().getName());
+	siesLogger.debug("Pagina di attesa :" + getClass().getName());
+	return ICostantiModuloCumulo.PG_ATTESA_CUMULO;
+} else {    
     try {
       if (   JMSProperties.getInstance().getProperty("LISTENER_NUOVA_GESTIONE")!=null
           && JMSProperties.getInstance().getProperty("LISTENER_NUOVA_GESTIONE").trim().equalsIgnoreCase("true")
@@ -74,6 +82,12 @@ public class ActRicercaAttiRicevuti extends ActionSiap implements ICostantiMisur
     lListaTipoOperazione.add (ICostantiJMS.TRASFERIMENTO_ESECUZIONE_MS);
     
     
+    // Ticket#20220111018 - Aggiunta sezione per la paginazione
+	String lPagina = "1";
+	if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
+		lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);
+	// Ticket#20220111018 - FINE
+    
     IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
     Vector <MessaggioModel> lVect = lCtrl.ExRicercaMessaggi (ICostantiJMS.DELIVERY_MODE_RICEVUTO
                                                            , ICostantiJMS.RICHIESTA
@@ -87,7 +101,10 @@ public class ActRicercaAttiRicevuti extends ActionSiap implements ICostantiMisur
                                                            , getCodUfficioUtenteConnesso() // ufficio dest
                                                            , null //lDataTrasmissioneDal
                                                            , null //lDataTrasmissioneAl 
-                                                           , 0);  
+                                                           // INIZIO - Test x paginazione
+                                                           , Integer.parseInt(lPagina));
+                                                           //, 0);  
+    													   // FINE - Test x paginazione
     
     //=======================================================
     // Per ogni messaggio verifico se presente un sollecito
@@ -98,37 +115,68 @@ public class ActRicercaAttiRicevuti extends ActionSiap implements ICostantiMisur
         
         // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
         siesLogger.debug("Id Richiesta = "+lMessaggioRichiesta.getIdMessaggio());
+        siesLogger.debug("getContaSolleciti() = "+lMessaggioRichiesta.getContaSolleciti());
         
-        BigDecimal idMessaggioSollecitato = null;
-        if (lMessaggioRichiesta.getJmsCorrelationReplyTo()!=null)
-          idMessaggioSollecitato = new BigDecimal(lMessaggioRichiesta.getJmsCorrelationReplyTo());
-        else 
-          idMessaggioSollecitato = new BigDecimal(lMessaggioRichiesta.getJmsCorrelationIdMessage());
-          
-        Vector <MessaggioModel> lVectSoll = lCtrl.ExRicercaSollecitiByIdRich (ICostantiJMS.DELIVERY_MODE_RICEVUTO
-                                                                            , ICostantiJMS.RICHIESTA
-                                                                            , ICostantiJMS.SOLLECITO_TRASFERIMENTO_COMPETENZA_MS
-                                                                            , idMessaggioSollecitato
-                                                                            , null //"N" // Flag_visto.
-                                                                            , getCodUfficioUtenteConnesso() // ufficio dest
-                                                                            ); 
-        if (lVectSoll!=null)
-          // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-          siesLogger.debug("Solleciti trovati = "+lVectSoll.size());
-        else
-          // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-          siesLogger.debug("Solleciti trovati = 0");
-
-        lMessaggioRichiesta.setMessaggiCorrelati(lVectSoll);
+        // Ticket#20220111018 - Gestione recupero dei solleciti solo se presenti
+        if (lMessaggioRichiesta.getContaSolleciti()!=null && lMessaggioRichiesta.getContaSolleciti().intValue()>0)
+        {
+        // Ticket#20220111018 - FINE
+	        BigDecimal idMessaggioSollecitato = null;
+	        if (lMessaggioRichiesta.getJmsCorrelationReplyTo()!=null)
+	          idMessaggioSollecitato = new BigDecimal(lMessaggioRichiesta.getJmsCorrelationReplyTo());
+	        else 
+	          idMessaggioSollecitato = new BigDecimal(lMessaggioRichiesta.getJmsCorrelationIdMessage());
+	          
+	        Vector <MessaggioModel> lVectSoll = lCtrl.ExRicercaSollecitiByIdRich (ICostantiJMS.DELIVERY_MODE_RICEVUTO
+	                                                                            , ICostantiJMS.RICHIESTA
+	                                                                            , ICostantiJMS.SOLLECITO_TRASFERIMENTO_COMPETENZA_MS
+	                                                                            , idMessaggioSollecitato
+	                                                                            , null //"N" // Flag_visto.
+	                                                                            , getCodUfficioUtenteConnesso() // ufficio dest
+	                                                                            ); 
+	        if (lVectSoll!=null)
+	          // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+	          siesLogger.debug("Solleciti trovati = "+lVectSoll.size());
+	        else
+	          // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+	          siesLogger.debug("Solleciti trovati = 0");
+	
+	        lMessaggioRichiesta.setMessaggiCorrelati(lVectSoll);
+        }
       }
     }
     
     
     setRequestAttribute("Messaggi", lVect);
 
+    // Ticket#20220111018 - Gestione Paginazione
+	// Recupero il numero totale di record
+	BigDecimal lCountRisultati;
+	if (isRequestParameterNullObj("CountRisultati")) {
+		lCountRisultati = lCtrl.ExCountRicercaMessaggi(ICostantiJMS.DELIVERY_MODE_RICEVUTO
+                , ICostantiJMS.RICHIESTA
+                , lListaTipoOperazione
+                , null // lCodEsito
+                , "N" // Flag_visto.
+                , null // aChiaveAnnoSiep
+                , null // aChiaveProgrSiep
+                , null // aChiaveUfficioSiep
+                , null   // aCodUfficioMitt
+                , getCodUfficioUtenteConnesso() // ufficio dest
+                , null //lDataTrasmissioneDal
+                , null //lDataTrasmissioneAl 
+                );
+	} else {
+		lCountRisultati = getRequestBigDecimalParameter("CountRisultati");
+	}    
+	
+	setRequestAttribute("CountRisultati", lCountRisultati);
+	setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
+	setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());	
+	// Ticket#20220111018 - Gestione Paginazione FINE
     
     
     return ICostantiMisuraSicurezza.PG_LISTA_ATTI_RICEVUTI_TRASMISSIONE_COMPETENZA_MS;
-    
+} // end if rotella    
   }
 }

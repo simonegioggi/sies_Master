@@ -1,36 +1,37 @@
-RELEASE_12.4.15.0	-->	nato dal branch "release_12.4.14.0" in data 02/11/2021	
+Ticket#20220111018 - Sies - Cancellazione atti ricevuti per competenza
 
-1)	Ticket#20211014013 - SIGE EMISSIONE ORDINANZA CON PIù SENTENZE _ DECRETI COME ALTRI TITOLI ESECUT
-		Nel caso di presenza di puù titoli sullo stesso OGGETTO, in fase di stampa dell'ordinanza riportava solo la
-		prima sentenza nella sezione della decisione
-		Modulo corretto:
-			siap.sige.stampa.controller.StampaSigeController.java
-				Metodo:	private TreeModel buildTreeTenoriEstesiConDatiProvvedimento
-				In presenza di più sentenze sono state riportate nella struttura 
-				<X>
-					<FascicoloSige>
-						<ProvvedimentoSige>
-							<TenoreSige>
-								<Sentenza>
-								<Sentenza>
-								<Sentenza>
-								...
+Lamentata lentezza della funzione di ricerca atti ricevuti per competenze dei classe IV.
 
-2)	Ticket#20211019014 - Misure sicurezza – errore trasferimento procedimento
-		Problema legato più genericamente alla fase di caricamento di un fascicolo SIEP se presente FLAG_ALTRA_CAUSA = N
-		sul fascicolo ma la posizione giuridica trasferita contiene un puntamento a ALT_CAU_ID_ALTRA_CAUSA
-		Chi invia aggiunge il record ALTRA_CAUSA solo se FASCICOLO_SIEP.FLAG_ALTRA_CAUSA = S, chi riceve invece si ritrova
-		con il record PG da inserire che punta un record ALTRA_CAUSA non ricevuto e quindi va in errore.
-		Corretto il modulo di acquisizione per ripulire il campo POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA
-		prima dell'inserimento se non è stato ricevuto il record ALTRA_CAUSA.
-		POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA
-		FASCICOLO_SIEP.FLAG_ALTRA_CAUSA
-		Modulo corretto:
-			siap.siep.jms.controller.PresaInCaricoJMSController.java
+La funzione non è paginata ne prevede filtri di ricerca per cui recupera tutti i messaggi ricevuti 
+ed inoltre per ogni messaggio effettua unaulteriore query per recuperare eventuali solleciti ed
+effettua il parsing del BLOG.
 
-3)	Ticket#20211116019 - Funzione RICERCA PROCEDIMENTO SIGE PER ESTREMI ATTO
-		Corretto il passaggio di parametri da java a sql (varchar trattati come number)
-		Corretto nullpointer se la ricerca non tornava nulla!
-		Moduli corretti:
-			src.siap.sige.fascicolo.controller.FascicoloSigeController.java
-			src.siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+Interventi effettuati:
+1) paginazione della ricerca
+2) recupero direttamente nella prima query dell'informazione dell'eventuale presenza di un sollecito in modo
+da ricercare i solleciti solo se effettivamente presenti
+3) creato indice sulla tabella MESSAGGIO 
+
+Classi modificate:
+\jsp\files\siap\siep\misurasicurezza\ListaAttiRicevutiDaPrendereInCarico.jsp
+Aggiunta sezione per la paginazione
+
+siap.siep.misurasicurezza.action.ActRicercaAttiRicevuti
+Aggiunta gestione Paginazione, pagina di transizione e recupero solleciti 
+
+
+siap.jms.messaggio.model.MessaggioModel
+Aggiunto campo per il contatore dei solleciti restituito dalla query
+
+
+siap.jms.messaggio.dao.MessaggioSqlDAO
+Aggiunto nella query il recupero del numero di solleciti legati al messaggio
+protected String getSqlQueryMS()
+public GenericModel getModel()
+ 
+Eliminato refuso
+\jsp\files\siap\siep\modulocumulo\Attesa_Cumulo.jsp
+
+
+
+

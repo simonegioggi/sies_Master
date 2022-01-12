@@ -67,6 +67,11 @@
 <% } else { %>
 
   <div align="center">
+  <%-- Ticket#20220111018: aggiunta sezione della paginazione --%>
+  <br>  
+  <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
+  <br>
+  <%-- Ticket#20220111018: FINE paginazione --%>
   <table cellspacing=2 cellpadding=2>
     <tr>
       <td class="int">Anno/Numero <br>SIEP</td>

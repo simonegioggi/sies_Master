@@ -19,7 +19,7 @@
 
   <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="c">
   	<input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>" value="<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>">
-  <br>
+  <!-- br-->
 	<table>
       <tr>
         <td class="LBG">
