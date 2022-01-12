@@ -33,5 +33,10 @@ Eliminato refuso
 \jsp\files\siap\siep\modulocumulo\Attesa_Cumulo.jsp
 
 
+Creata nuova pagina di wait per le MS
+\jsp\files\siap\siep\misurasicurezza\AttesaRicerca.jsp
+
+Aggiunta la pagina nelle costanti
+siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza
 
 
