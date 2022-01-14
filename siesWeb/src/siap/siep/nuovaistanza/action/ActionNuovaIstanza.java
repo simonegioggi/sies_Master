@@ -157,16 +157,16 @@ public class ActionNuovaIstanza extends ActionSiap
 		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
-			//lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
-			lComMod = new ComuneModel(getDatiComuneByCodDescr(
-					getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-					getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+			// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+			// lComMod = new ComuneModel(getDatiComuneByCodDescrFlagVal(
+			lComMod = new ComuneModel(
+					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+							getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		} else {
 			// altrimenti dalla sola descrizione (rischio omonimi)
 			lComMod = new ComuneModel(
-					// 20210524	MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
-					//getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
+					// 20210524 MEV_Scheda-21 Correzione Comune Nascita per omonimie dei Comuni.
+					// getDatiComuneByDescrOmonimiaFlagVal(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA)));
 		}
 
@@ -331,6 +331,10 @@ public class ActionNuovaIstanza extends ActionSiap
 		} else {
 			lNuoMod.setTipoAvvocato("-");
 		}
+
+		// 20210831 MEV_21 Valorizzazione tipo Avvocato
+		if (!isRequestParameterNullObj(CAMPO_TIPO_AVVOCATO))
+			lNuoMod.setTipoAvvocato(getRequestStringParameter(ICostantiNuovaIstanza.CAMPO_TIPO_AVVOCATO));
 
 		return lNuoMod;
 	}
@@ -757,8 +761,8 @@ public class ActionNuovaIstanza extends ActionSiap
 
 				// altrimenti dalla sola descrizione (rischio omonimi).
 			} else if (getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA).length() > 2) {
-				comuneNascita = new ComuneModel(
-						getDatiComuneByDescrOmonimia(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA)));
+				comuneNascita = new ComuneModel(getDatiComuneByDescrOmonimia(
+						getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA)));
 				descCodLuogoNascita = comuneNascita.getDescrizione();
 				codLuogoNascita = comuneNascita.getCodComune();
 				codProvincia = comuneNascita.getCodProvincia();
@@ -767,19 +771,20 @@ public class ActionNuovaIstanza extends ActionSiap
 			} else if (getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA).length() == 3
 					&& !("039".equals(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA)))
 					&& getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE).length() == 16) {
-				comuneNascita = AvvocatoUtil
-						.calcolaComuneNascita(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
+				comuneNascita = AvvocatoUtil.calcolaComuneNascita(
+						getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
 				// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
 			}
 		} catch (Exception e) {
-			//siesLogger.info(e.getMessage());
+			// siesLogger.info(e.getMessage());
 			// Si Propaga l'eccezione solo in caso di inserimento manuale.
 			if ("manuale".equals(tipoInserimento))
 				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 		}
 
 		if (getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
-			descLuogoNascitaReginde = getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+			descLuogoNascitaReginde = getRequestStringParameter(
+					ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE);
 
 		// Recupero Codice e descrizione comune di residenza.
 		String codLuogoResidenza = "-";
@@ -791,7 +796,7 @@ public class ActionNuovaIstanza extends ActionSiap
 			try {
 				comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
 			} catch (Exception e) {
-				//siesLogger.info(e.getMessage());
+				// siesLogger.info(e.getMessage());
 				// Si Propaga l'eccezione solo in caso di inserimento manuale.
 				if ("manuale".equals(tipoInserimento))
 					throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
@@ -821,25 +826,31 @@ public class ActionNuovaIstanza extends ActionSiap
 			AvvocatoModel lAvvCertRegSies = new AvvocatoModel();
 			lAvvCertRegSies.setNome(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME));
 			lAvvCertRegSies.setCognome(getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME));
-			lAvvCertRegSies.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
+			lAvvCertRegSies
+					.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE));
 			lAvvCertRegSies.setFlagRegInde("SI");
 			lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
 
-			avvReginde = new AvvocatoModel(null, getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).toUpperCase(),
+			avvReginde = new AvvocatoModel(null,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase(), null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC), "SI", descLuogoResidenza, descLuogoNascitaReginde,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC), "SI", descLuogoResidenza,
+					descLuogoNascitaReginde,
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA), null, null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO), getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX), getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE), codProvincia, codCap, new BigDecimal(1),
-					getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null, null,
-					null, null, descCodLuogoNascita, descLuogoResidenza, null, codLuogoNascita,
-					codLuogoResidenza, dataNascita, null, null, codNonAttivita, "00000", null, "N", null);
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE), codProvincia, codCap,
+					new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(),
+					DateUtils.getSysDate(), null, null, null, null, descCodLuogoNascita, descLuogoResidenza,
+					null, codLuogoNascita, codLuogoResidenza, dataNascita, null, null, codNonAttivita,
+					"00000", null, "N", null);
 
 			/*
-			 * Se l'avvocato certificato RegInde non è presente in SIES si inserisce. 
-			 * Se è già presente in SIES si effettua l'aggiornamento con i dati da Reginde.
+			 * Se l'avvocato certificato RegInde non è presente in SIES si inserisce. Se è già presente in
+			 * SIES si effettua l'aggiornamento con i dati da Reginde.
 			 */
 			if (flagReginde && lAvvCertRegSies == null) {
 				avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
@@ -870,18 +881,23 @@ public class ActionNuovaIstanza extends ActionSiap
 
 		} else {
 			// Inserimento manuale (Avvocato non presente in RegInde né in SIES.
-			lAvvMod = new AvvocatoModel(null, getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).toUpperCase(),
+			lAvvMod = new AvvocatoModel(null,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO).toUpperCase(), null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC), "NO", descLuogoResidenza, descLuogoNascitaReginde,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC), "NO", descLuogoResidenza,
+					descLuogoNascitaReginde,
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA), null, null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO), getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX), getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE), codProvincia, codCap, new BigDecimal(1),
-					getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null, null,
-					null, null, descCodLuogoNascita, descLuogoResidenza, null, codLuogoNascita,
-					codLuogoResidenza, dataNascita, null, null, codNonAttivita, "00000", null, "N", null);
-			
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE), codProvincia, codCap,
+					new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(),
+					DateUtils.getSysDate(), null, null, null, null, descCodLuogoNascita, descLuogoResidenza,
+					null, codLuogoNascita, codLuogoResidenza, dataNascita, null, null, codNonAttivita,
+					"00000", null, "N", null);
+
 			lAvvMod = lCtrl.ExInserisciAvvocato(lAvvMod);
 			idAvvocato = lAvvMod.getIdAvvocato();
 		}
@@ -930,8 +946,8 @@ public class ActionNuovaIstanza extends ActionSiap
 
 				// altrimenti dalla sola descrizione (rischio omonimi).
 			} else if (getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P).length() > 2) {
-				comuneNascita = new ComuneModel(
-						getDatiComuneByDescrOmonimia(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P)));
+				comuneNascita = new ComuneModel(getDatiComuneByDescrOmonimia(
+						getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_LUOGO_NASCITA_P)));
 				descCodLuogoNascita = comuneNascita.getDescrizione();
 				codLuogoNascita = comuneNascita.getCodComune();
 				codProvincia = comuneNascita.getCodProvincia();
@@ -940,19 +956,20 @@ public class ActionNuovaIstanza extends ActionSiap
 			} else if (getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P).length() == 3
 					&& !("039".equals(getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P)))
 					&& getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P).length() == 16) {
-				comuneNascita = AvvocatoUtil
-						.calcolaComuneNascita(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P));
+				comuneNascita = AvvocatoUtil.calcolaComuneNascita(
+						getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P));
 				// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
 			}
 		} catch (Exception e) {
-			//siesLogger.info(e.getMessage());
+			// siesLogger.info(e.getMessage());
 			// Si Propaga l'eccezione solo in caso di inserimento manuale.
 			if ("manuale".equals(tipoInserimento))
 				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 		}
 
 		if (getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE_P).length() > 0)
-			descLuogoNascitaReginde = getRequestStringParameter(ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE_P);
+			descLuogoNascitaReginde = getRequestStringParameter(
+					ICostantiAvvocato.CAMPO_DESC_COMUNE_NASCITA_REGINDE_P);
 
 		// Recupero Codice e descrizione comune di residenza.
 		String codLuogoResidenza = "-";
@@ -964,7 +981,7 @@ public class ActionNuovaIstanza extends ActionSiap
 			try {
 				comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
 			} catch (Exception e) {
-				//siesLogger.info(e.getMessage());
+				// siesLogger.info(e.getMessage());
 				// Si Propaga l'eccezione solo in caso di inserimento manuale.
 				if ("manuale".equals(tipoInserimento))
 					throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
@@ -980,7 +997,8 @@ public class ActionNuovaIstanza extends ActionSiap
 				&& (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P)
 						&& (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P))))
 			dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA_P,
-					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P);
+					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA_P,
+					ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA_P);
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA_P))
 			codNonAttivita = getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA_P);
 
@@ -994,25 +1012,31 @@ public class ActionNuovaIstanza extends ActionSiap
 			AvvocatoModel lAvvCertRegSies = new AvvocatoModel();
 			lAvvCertRegSies.setNome(getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME_P));
 			lAvvCertRegSies.setCognome(getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME_P));
-			lAvvCertRegSies.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P));
+			lAvvCertRegSies
+					.setCodiceFiscale(getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P));
 			lAvvCertRegSies.setFlagRegInde("SI");
 			lAvvCertRegSies = lCtrl.ExRicercaAvvocatoCertRegInde(lAvvCertRegSies);
 
-			avvReginde = new AvvocatoModel(null, getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME_P).toUpperCase(),
+			avvReginde = new AvvocatoModel(null,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME_P).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME_P).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO_P).toUpperCase(), null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC_P), "SI", descLuogoResidenza, descLuogoNascitaReginde,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC_P), "SI", descLuogoResidenza,
+					descLuogoNascitaReginde,
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P), null, null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO_P), getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO_P),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX_P), getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL_P),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P), codProvincia, codCap, new BigDecimal(1),
-					getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null, null,
-					null, null, descCodLuogoNascita, descLuogoResidenza, null, codLuogoNascita,
-					codLuogoResidenza, dataNascita, null, null, codNonAttivita, "00000", null, "N", null);
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P), codProvincia, codCap,
+					new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(),
+					DateUtils.getSysDate(), null, null, null, null, descCodLuogoNascita, descLuogoResidenza,
+					null, codLuogoNascita, codLuogoResidenza, dataNascita, null, null, codNonAttivita,
+					"00000", null, "N", null);
 
 			/*
-			 * Se l'avvocato certificato RegInde non è presente in SIES si inserisce. 
-			 * Se è già presente in SIES si effettua l'aggiornamento con i dati da Reginde.
+			 * Se l'avvocato certificato RegInde non è presente in SIES si inserisce. Se è già presente in
+			 * SIES si effettua l'aggiornamento con i dati da Reginde.
 			 */
 			if (flagReginde && lAvvCertRegSies == null) {
 				avvReginde = lCtrl.ExInserisciAvvocato(avvReginde);
@@ -1043,23 +1067,28 @@ public class ActionNuovaIstanza extends ActionSiap
 
 		} else {
 			// Inserimento manuale (Avvocato non presente in RegInde né in SIES.
-			lAvvMod = new AvvocatoModel(null, getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME_P).toUpperCase(),
+			lAvvMod = new AvvocatoModel(null,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_COGNOME_P).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_NOME_P).toUpperCase(),
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_FORO_P).toUpperCase(), null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC_P), "NO", descLuogoResidenza, descLuogoNascitaReginde,
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC_P), "NO", descLuogoResidenza,
+					descLuogoNascitaReginde,
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA_P), null, null,
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO_P), getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO_P),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX_P), getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL_P),
-					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P), codProvincia, codCap, new BigDecimal(1),
-					getCodUtenteConnesso(), getCodUfficioUtenteConnesso(), DateUtils.getSysDate(), null, null,
-					null, null, descCodLuogoNascita, descLuogoResidenza, null, codLuogoNascita,
-					codLuogoResidenza, dataNascita, null, null, codNonAttivita, "00000", null, "N", null);
-			
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_INDIRIZZO_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_TELEFONO_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_FAX_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_E_MAIL_P),
+					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE_P), codProvincia, codCap,
+					new BigDecimal(1), getCodUtenteConnesso(), getCodUfficioUtenteConnesso(),
+					DateUtils.getSysDate(), null, null, null, null, descCodLuogoNascita, descLuogoResidenza,
+					null, codLuogoNascita, codLuogoResidenza, dataNascita, null, null, codNonAttivita,
+					"00000", null, "N", null);
+
 			lAvvMod = lCtrl.ExInserisciAvvocato(lAvvMod);
 			idAvvocato = lAvvMod.getIdAvvocato();
 		}
 
 		return idAvvocato;
 	}
-	
+
 }

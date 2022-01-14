@@ -28,7 +28,7 @@ public class ActLoadModificaNuovaIstanza extends ActionSiap implements ICostanti
 	/*****************************************************************************
 	 * Azione di caricamento della pagina di Modifica dei dati. Si occupa anche di precaricare tutti i dati da
 	 * visualizzare i tale pagina (es: combo)
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare
 	 * @throws F3BException
 	 *****************************************************************************/
@@ -82,7 +82,7 @@ public class ActLoadModificaNuovaIstanza extends ActionSiap implements ICostanti
 		lOption = new Option(DecodificheManager.getInstance().getForo(), Option.BLANK_ITEM);
 		setRequestAttribute("foro", "" + lOption);
 		setRequestAttribute("foroP", "" + lOption);
-		
+
 		// 20210823 MEV_21 Nuova gestione Combo per Stato di Nascita
 		lOption = new Option(DecodificheManager.getInstance().getNazioni(), "-");
 		setRequestAttribute("nazione", "" + lOption);
@@ -93,29 +93,37 @@ public class ActLoadModificaNuovaIstanza extends ActionSiap implements ICostanti
 		setRequestAttribute("statoAvv", "" + lOption);
 		setRequestAttribute("statoAvvP", "" + lOption);
 
-		if (lNuoMod.getAvvIdAvvocato()!= null)  {
-			Option lOptionF = new Option(DecodificheManager.getInstance().getForo(), 
+		if (lNuoMod.getAvvIdAvvocato() != null) {
+			Option lOptionF = new Option(DecodificheManager.getInstance().getForo(),
 					lNuoMod.getAvvocato().getForo());
 			setRequestAttribute("foro", "" + lOptionF);
-			Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(), 
-					lNuoMod.getAvvocato().getCodStatoNascita());
-			setRequestAttribute("nazione", "" + lOptionNI);
-			Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), 
-					lNuoMod.getAvvocato().getCodNonAttivita());
-			setRequestAttribute("statoAvv", "" + lOptionSA);
+			if (lNuoMod.getAvvocato().getCodStatoNascita() != null) {
+				Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(),
+						lNuoMod.getAvvocato().getCodStatoNascita());
+				setRequestAttribute("nazione", "" + lOptionNI);
+			}
+			if (lNuoMod.getAvvocato().getCodNonAttivita() != null) {
+				Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(),
+						lNuoMod.getAvvocato().getCodNonAttivita());
+				setRequestAttribute("statoAvv", "" + lOptionSA);
+			}
 		}
-		if (lNuoMod.getAvvIdAvvocatoPresentante()!= null)	{
-			Option lOptionF = new Option(DecodificheManager.getInstance().getForo(), 
+		if (lNuoMod.getAvvIdAvvocatoPresentante() != null) {
+			Option lOptionF = new Option(DecodificheManager.getInstance().getForo(),
 					lNuoMod.getAvvocatoPresentante().getForo());
 			setRequestAttribute("foroP", "" + lOptionF);
-			Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(), 
-					lNuoMod.getAvvocatoPresentante().getCodStatoNascita());
-			setRequestAttribute("nazioneP", "" + lOptionNI);
-			Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), 
-					lNuoMod.getAvvocatoPresentante().getCodNonAttivita());
-			setRequestAttribute("statoAvvP", "" + lOptionSA);
+			if (lNuoMod.getAvvocatoPresentante().getCodStatoNascita() != null) {
+				Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(),
+						lNuoMod.getAvvocatoPresentante().getCodStatoNascita());
+				setRequestAttribute("nazioneP", "" + lOptionNI);
+			}
+			if (lNuoMod.getAvvocatoPresentante().getCodNonAttivita() != null) {
+				Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(),
+						lNuoMod.getAvvocatoPresentante().getCodNonAttivita());
+				setRequestAttribute("statoAvvP", "" + lOptionSA);
+			}
 		}
-		
+
 		// Imposta Modalità.
 		setRequestAttribute("modalita", "M");
 
