@@ -97,31 +97,23 @@ public class ActLoadModificaNuovaIstanza extends ActionSiap implements ICostanti
 			Option lOptionF = new Option(DecodificheManager.getInstance().getForo(), 
 					lNuoMod.getAvvocato().getForo());
 			setRequestAttribute("foro", "" + lOptionF);
-			if (lNuoMod.getAvvocato().getCodStatoNascita()!=null) {
-				Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(), 
-						lNuoMod.getAvvocato().getCodStatoNascita());
-				setRequestAttribute("nazione", "" + lOptionNI);
-			}
-			if (lNuoMod.getAvvocato().getCodNonAttivita()!=null) {
-				Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), 
-						lNuoMod.getAvvocato().getCodNonAttivita());
-				setRequestAttribute("statoAvv", "" + lOptionSA);
-			}
+			Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(), 
+					lNuoMod.getAvvocato().getCodStatoNascita());
+			setRequestAttribute("nazione", "" + lOptionNI);
+			Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), 
+					lNuoMod.getAvvocato().getCodNonAttivita());
+			setRequestAttribute("statoAvv", "" + lOptionSA);
 		}
 		if (lNuoMod.getAvvIdAvvocatoPresentante()!= null)	{
 			Option lOptionF = new Option(DecodificheManager.getInstance().getForo(), 
 					lNuoMod.getAvvocatoPresentante().getForo());
 			setRequestAttribute("foroP", "" + lOptionF);
-			if (lNuoMod.getAvvocatoPresentante().getCodStatoNascita()!=null) {
-				Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(), 
-						lNuoMod.getAvvocatoPresentante().getCodStatoNascita());
-				setRequestAttribute("nazioneP", "" + lOptionNI);
-			}
-			if (lNuoMod.getAvvocatoPresentante().getCodNonAttivita()!=null) {
-				Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), 
-						lNuoMod.getAvvocatoPresentante().getCodNonAttivita());
-				setRequestAttribute("statoAvvP", "" + lOptionSA);
-			}
+			Option lOptionNI = new Option(DecodificheManager.getInstance().getNazioni(), 
+					lNuoMod.getAvvocatoPresentante().getCodStatoNascita());
+			setRequestAttribute("nazioneP", "" + lOptionNI);
+			Option lOptionSA = new Option(DecodificheManager.getInstance().getListaAttivitaAvvocato(), 
+					lNuoMod.getAvvocatoPresentante().getCodNonAttivita());
+			setRequestAttribute("statoAvvP", "" + lOptionSA);
 		}
 		
 		// Imposta Modalità.
