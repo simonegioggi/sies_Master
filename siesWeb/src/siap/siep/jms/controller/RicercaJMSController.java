@@ -544,6 +544,67 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 				lTreeRoot = new TreeModel(createRoot(2));
 				TreeModel lTreeFasMod = new TreeModel(lDettFascicolo);
 				lTreeRoot.add(lTreeFasMod);
+
+				// Ticket#20210702015 - In qeuesta rierca non venivano aricati i dati del CUMULO
+				// aggiunto come nel metodo:
+				// public MessaggioModel ExRicercaFascicoloSiepPerTrasferimento(FascicoloSiepModel aModel)
+				// MEV 26 CUMULO Step2 (già MEV 42)
+				// -------------------------------------------------------------------------------------------------
+				DatiCumuloPerTrasferimentoModel StrutturaCumuloPerTrasferimento = new DatiCumuloPerTrasferimentoModel();
+				IstruttoriaCumuloModel IstruttoriaCumulo = null;
+				Vector<IstruttoriaCumuloModel> lVecIstru = new Vector();
+
+				TreeModel lTreeStrutturaCumulo = new TreeModel(StrutturaCumuloPerTrasferimento);
+
+				// --------------------------------------------------------------------------------
+				// lVec = Insieme dei Codici Motivo_Provvedimento che riguardano il Cumulo NEW
+				IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
+				DecodificheModel lModel = new DecodificheModel();
+				lModel.setContesto("MOTIVO_PROVVEDIMENTO");
+				lModel.setCodiceAlternativo("CUMULO_NEW");
+				Vector lVec = new Vector(lDecodifiche.ExRicercaDecodifiche(lModel));
+				// -------------------------------------------------------------------------------
+
+				Boolean Trovato = false;
+				if (lEventi != null && lEventi.size() > 0) {
+					Iterator lEveItx1 = lEventi.iterator();
+					siesLogger.info(
+							"INIZIO CICLO WHILE per Eventi_Provvedimento_Cumulo; Numero Eventi Totali = "
+									+ lEventi.size());
+					while (lEveItx1.hasNext()) {
+						Trovato = false;
+						EventoModel lEveXCum = (EventoModel) lEveItx1.next();
+						Trovato = CercaCodice(lEveXCum, lVec);
+						// Per Ogni Evento valido cerco la relativa ISTRUTTORIA_CUMULO
+						if (Trovato) {
+							siesLogger.info("Evento_Provvedimento_Cumulo Valido - IdEvento = "
+									+ lEveXCum.getIdEvento());
+							IIstruttoriaCumulo lCtristr = SIEPLookupRemote.getIstruttoriaCumuloRemote();
+							IstruttoriaCumulo = lCtristr.ExCercaIsruttoriaPerAltriDatiCumulo(
+									lFascModel.getIdFascicoloSiep(), lEveXCum.getIdEvento(), lConn);
+
+							if (IstruttoriaCumulo != null
+									&& IstruttoriaCumulo.getIdIstruttoriaCumulo() != null)
+								lVecIstru.add(IstruttoriaCumulo);
+
+						}
+
+					}
+
+					// Tutte le Istruttorie legate al Fascicolo sono dentro 'StrutturaCumuloPerTrasferimento'
+					if (lVecIstru.size() > 0)
+						StrutturaCumuloPerTrasferimento.setListIstruttoriaCumulo(lVecIstru);
+
+				}
+
+				// Viene Aggiunto un SECONDO NODO al TreeRoot per la scrittura del BLOB del MESSAGGIO
+				if (StrutturaCumuloPerTrasferimento.getListIstruttoriaCumulo() != null
+						&& StrutturaCumuloPerTrasferimento.getListIstruttoriaCumulo().size() > 0) {
+					lTreeRoot.add(lTreeStrutturaCumulo);
+				}
+				// Ticket#20210702015 - FINE
+				// --------------------------------------------------------------------------------------------------------------------------
+
 				lMessage.setCodEsito("10000");
 			} else {
 				lTreeRoot = new TreeModel(createRoot(0));
@@ -1114,7 +1175,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 	private Boolean CercaCodice(EventoModel aEve, Vector lVec) throws F3BException {
 
-		Boolean trovato = false;
+		boolean trovato = false;
 
 		DecodificheModel lModelVec = null;
 		Iterator Ite1 = lVec.iterator();

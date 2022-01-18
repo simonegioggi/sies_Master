@@ -17,25 +17,27 @@
 <html>
 <head>
   <title>[S.I.E.S.] - Trasmissione Atti Richieste Cessazione/prosecuzione Mis Alt - Ex art 51 Bis </title>
-
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-
   <script language="JavaScript" src=<%=IWebConstants.JS_VALIDATOR%>></script>
   <script language="JavaScript" src=<%=IWebConstants.JS_DATE_CONTROL%>></script>
-
 </head>
   <body class="corpo">
   <table>
-    <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+  	<tr>
+  		<td class="LBG">
+  			<a href="Javascript:window.print();">
+  				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
+  			</a>
+  		</td>
       <td class="LBG"><font class="label">Funzione :</font>&nbsp;&nbsp;
 <%
-        String lAction = new String();
-       // lAction = "siap.siep.richiesta.action.ActLoadConfermaTrasferisciAttiExArt51Bis";
-       lAction = "siap.siep.richiesta.action.ActConfermaTrasmissioneAttiExArt51Bis";
-        
-        String Rich = eventonotifica.getEvento().getDescrMotivo();
+String lAction = new String();
+// lAction = "siap.siep.richiesta.action.ActLoadConfermaTrasferisciAttiExArt51Bis";
+lAction = "siap.siep.richiesta.action.ActConfermaTrasmissioneAttiExArt51Bis";
+String Rich = eventonotifica.getEvento().getDescrMotivo();
 %>
-        <font class="campo">Trasferimento Atti - <%=Rich%> </font>
+        	<font class="campo">Trasferimento Atti - <%=Rich%> </font>
+		</td>
     </tr>
   </table>
   <br>
@@ -45,24 +47,25 @@
     <table cellspacing=2 cellpadding=2>
       <tr>
 
-<%		if(ufficiouds != null && ufficiouds.getDescrComune() != null
-    		  && !ufficiouds.getDescrComune().equals(""))
-       	{ %>
-       		<td class="l">Destinatario: MAGISTRATO di SORVEGLIANZA di </td >
+<%
+if (ufficiouds != null && ufficiouds.getDescrComune() != null && !ufficiouds.getDescrComune().equals("")) {
+%>
+<!-- 		MAGISTRATO di SORVEGLIANZA -->
+		<td class="l">Destinatario: <%=UfficioDestinatario.getDescrTipoUfficio()%> di</td >
         	<td class="L"> 
 			<input readonly type="text" title="Tipo Sede Destinatario" name="<%=ICostantiNotifica.CAMPO_SEDE_MDS %>" value=<%=StringUtils.toStringJSP(ufficiouds.getDescrComune())%> maxlength="35" size="25">
 			</td>
-<%	   	}
-		else
-		if(ufficiotds != null && ufficiotds.getDescrComune() != null
-			 && !ufficiotds.getDescrComune().equals(""))
-		{		%>
-			<td class="l">Destinatario: TRIBUNALE di SORVEGLIANZA di </td>
+<%
+} else if(ufficiotds != null && ufficiotds.getDescrComune() != null && !ufficiotds.getDescrComune().equals("")) {
+%>
+<!-- 		TRIBUNALE di SORVEGLIANZA -->
+		<td class="l">Destinatario: <%=UfficioDestinatario.getDescrTipoUfficio()%> di</td>
         	<td class="L"> 		
 			<input readonly type="text" title="Tipo Sede Destinatario" name="<%=ICostantiNotifica.CAMPO_SEDE_TDS %>" value=<%=StringUtils.toStringJSP(ufficiotds.getDescrComune())%> maxlength="35" size="25">
 			</td>
-<%		} %>		        
-
+<%
+}
+%>		        
       </tr>
 	  <tr><td>&nbsp;</td></tr>	
       <tr>
@@ -70,12 +73,11 @@
           <input name=go class=bottone  type="submit" value="Conferma Trasmissione">
         </td>
       </tr>
-      	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>">
-      	<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento() %>">
-    	<input type="HIDDEN" name="CodTipoUfficioDestinatario" value="<%=UfficioDestinatario.getCodTipoUfficio()%>">
-		<input type="HIDDEN" name="CodLuogoDestinatario" value="<%=UfficioDestinatario.getDescrComune()%>">			    
-    </table>
-  </form>
-
+</table>
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>">
+<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento() %>">
+<input type="HIDDEN" name="CodTipoUfficioDestinatario" value="<%=UfficioDestinatario.getCodTipoUfficio()%>">
+<input type="HIDDEN" name="CodLuogoDestinatario" value="<%=UfficioDestinatario.getDescrComune()%>">			    
+</form>
 </body>
 </html>

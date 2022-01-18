@@ -352,7 +352,13 @@ if (aulaUdienza!=null){
 	<FORM method="POST" action="Main.jsp" name="LoadInserisciUdienzaCollegiale">
   	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>" />
   	<input type="HIDDEN" name="<%=ICostantiCollegio.FORM_DEF_COLLEGIO%>" value="yes" />
+    <%-- Ticket#20210728014: errore di overflow su idCollegio.intValue(): è un BigDecimal 
   	<input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_ID_COLLEGIO%>" value="<%=(idCollegio==null?"":String.valueOf(idCollegio.intValue()))%>" />
+    --%>  	
+    <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_ID_COLLEGIO%>" value="<%=(idCollegio==null ? "" : idCollegio)%>" />
+  	<%-- Ticket#20210728014: FINE --%>
+
+
   	<input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_COD_COLLEGIO%>" value="<%=codCollegio%>" />
     <input type="HIDDEN" name="<%=ICostantiUdienzaSige.CAMPO_ID_UDIENZA_SIGE%>" value="<%=idUdiSige%>" />
     <input type="HIDDEN" name="PopUp" value="<%=PopUp%>" />
@@ -393,7 +399,11 @@ if (aulaUdienza!=null){
         <select title="sezione" name="<%=ICostantiCollegio.CAMPO_SEZ_ID_SEZIONE%>_CBX"  onChange="svuotaAula();"  <%=readonly%> >
         	<%=elencoSezioni%>
         </select>
+<%-- Ticket#20210728014: errore di overflow su idCollegio.intValue(): è un BigDecimal 
         <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_SEZ_ID_SEZIONE%>" value="<%=(idSezione == null ? "" : String.valueOf(idSezione.intValue()))%>">
+--%>
+        <input type="HIDDEN" name="<%=ICostantiCollegio.CAMPO_SEZ_ID_SEZIONE%>" value="<%=(idSezione == null ? "" : idSezione)%>">
+<%-- Ticket#20210728014: FINE --%>
       </td>
     </tr>
     
@@ -615,36 +625,34 @@ if ("yes".equals(giudiciPopolari)) {
 							 onkeypress="return TicTabNumField(this,event)" 
 							  onBlur="javascript:value=FillDM(value)">
     </tr>
-    
     <tr>
-      <td>
-        <input class="bottone" type="submit" name="conferma" value="Conferma" onClick="javascript:return VerifyConferma();">
-      </td>
-    </tr>
-
-  </table>
+      	<td>
+        	<input class="bottone" type="submit" name="conferma" value="Conferma" onClick="javascript:return VerifyConferma();">
+		</td>
+	</tr>
+</table>
 </form>
+<script language="JavaScript" type="text/javascript">
+var frmvalidator  = new Validator("LoadInserisciUdienzaCollegiale");
+
+//================================================================
+// Aggiungere le opportune chiamate al genvalidator 
+//================================================================
+//frmvalidator.addValidation("","req","Il campo XXXX è obbligatorio");
+//frmvalidator.addValidation("","numeric","Il XXXX è un campo numerico");
+//frmvalidator.addValidation("","maxlen=4","La lunghezza massima per XXXX è di 4 caratteri");
+//frmvalidator.addValidation("","minlen=4","La lunghezza minima per XXXX è di 4 caratteri");
+//frmvalidator.addValidation("","gt=1900");
+//frmvalidator.addValidation("","lt=3000");
+//frmvalidator.addValidation("","alphanumeric");
+//frmvalidator.addValidation("","numeric");
+//frmvalidator.addValidation("","alpha");
+//frmvalidator.addValidation("","alnumhyphen");
+//frmvalidator.addValidation("","email");
+//frmvalidator.addValidation("","regexp");
+//frmvalidator.addValidation("","dontselect");
+
+frmvalidator.setAddnlValidationFunction("Verify"); 
+</script>
 </body>
 </html>
-<script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("LoadInserisciUdienzaCollegiale");
-
-  //================================================================
-  // Aggiungere le opportune chiamate al genvalidator 
-  //================================================================
-  //frmvalidator.addValidation("","req","Il campo XXXX è obbligatorio");
-  //frmvalidator.addValidation("","numeric","Il XXXX è un campo numerico");
-  //frmvalidator.addValidation("","maxlen=4","La lunghezza massima per XXXX è di 4 caratteri");
-  //frmvalidator.addValidation("","minlen=4","La lunghezza minima per XXXX è di 4 caratteri");
-  //frmvalidator.addValidation("","gt=1900");
-  //frmvalidator.addValidation("","lt=3000");
-  //frmvalidator.addValidation("","alphanumeric");
-  //frmvalidator.addValidation("","numeric");
-  //frmvalidator.addValidation("","alpha");
-  //frmvalidator.addValidation("","alnumhyphen");
-  //frmvalidator.addValidation("","email");
-  //frmvalidator.addValidation("","regexp");
-  //frmvalidator.addValidation("","dontselect");
-
-  frmvalidator.setAddnlValidationFunction("Verify"); 
-</script>
