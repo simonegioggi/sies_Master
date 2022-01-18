@@ -1,5 +1,6 @@
 package siap.siep.jms.controller;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -548,7 +549,14 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 			}
 
 			// inizioMEV_67 (SALVO L'INFORMAZIONE DI ALTRA_CAUSA)
+			// Ticket#20211019014 - in alcuni casi arrivano fascicoli con Posizione giuridica che punta (FK ALT_CAU_ID_ALTRA_CAUSA) 
+			// ALTRA_CAUSA ma il record ALTRA_CAUSA non viene trasferito perchè non recuprato dal metodo che carica il dettaglio fascicolo SIEP
+			// Quindi si testa se è stato trasferito il record AC e se l'id della PG coincide. In caso negativo si 
+			// ripulisce il puntamento da PG
+			// Recupero idAltraCauso
+			BigDecimal idAltraCausa = null; // Ticket#20211019014
 			if (lPars.getDettaglioFascicoloSiep().getAltraCausa() != null) {
+				idAltraCausa = lPars.getDettaglioFascicoloSiep().getAltraCausa().getIdAltraCausa(); // Ticket#20211019014
 				IAltraCausa altrCausCntrl = SIEPLookupRemote.getAltraCausa();
 				lCodEsito = altrCausCntrl.ExInserisciAltraCausaWithoutSequence(
 						lPars.getDettaglioFascicoloSiep().getAltraCausa(), lConn);
@@ -558,6 +566,12 @@ public class PresaInCaricoJMSController extends SiapPresaInCaricoJMSController i
 			// fine MEV_67
 
 			if (lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica() != null) {
+				// Ticket#20211019014 -
+				BigDecimal idAltraCausaPG = lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica().getAltCauIdAltraCausa();
+				if (idAltraCausaPG!=null && (idAltraCausa==null || idAltraCausaPG.compareTo(idAltraCausa)!=0)) {
+					lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica().setAltCauIdAltraCausa(null);
+				}
+				// Ticket#20211019014 - FINE
 				IPosizioneGiuridica lPosGiuCntrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 				lCodEsito = lPosGiuCntrl.ExInserisciPosizioneGiuridicaWithoutSequence(
 						lPars.getDettaglioFascicoloSiep().getPosizioneGiuridica(), lConn);

@@ -997,7 +997,7 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 				TenoreSigeModel aTenore = new TenoreSigeModel();
 				aTenore.setFasIdFascicoloSige(aIdFasSige);
 				Vector lTenoriEstesi = lCtrl.ExRicercaTenoriEstesiAttivi(aTenore);
-
+				siesLogger.debug("##### lTenoriEstesi.size() = "+lTenoriEstesi.size());
 				/*
 				 * 01/12/2009 correzione caricamento tenori. // Si itera sull'elenco dei Tenori per caricare
 				 * il TreeModel con Tenore, Sentenza e Reato. Iterator itx = lTenoriEstesi.iterator();
@@ -2856,12 +2856,30 @@ public class StampaSigeController extends SIAPStampaController implements IStamp
 							lTreeTenoreEsteso = getDatiProvvedimentoSige(lTreeTenoreEsteso,
 									lTenEstesoPrec.getTenoreSige().getIdTenoreSige(), lConn);
 						}
+						//================
+						// Ticket#20211014013 - Nel caso di esito differenziato x sentenza, dopo la fissazione udienza,
+						// si ritrovano tanti record TENORE_SIGE, tutti con lo stesso oggetto, quante sono le sentenze TENORE_SENTENZA_REATO.
+						// Si devono aggiungere tutti al tree altrimenti risulta stampata solo la prima sentenza.
+						//================
 						// @emma 23072018 intervento post COLLAUDO 11.2 (aggiungo all'albero solo se il codice
 						// oggetto è diverso)
+//						if (!lTenEsteso.getTenoreSige().getCodOggettoSige()
+//								.equals(lTenEstesoPrec.getTenoreSige().getCodOggettoSige())) {
+//							lTreeProvvedimento.add(lTreeTenoreEsteso);
+//						}
+						
+						// Se OGGETTO differente aggiungo tutto il TENORE esteso (come precedente versione)
 						if (!lTenEsteso.getTenoreSige().getCodOggettoSige()
 								.equals(lTenEstesoPrec.getTenoreSige().getCodOggettoSige())) {
 							lTreeProvvedimento.add(lTreeTenoreEsteso);
 						}
+						else {
+							// Se stesso OggettoSige aggiungo solo la sentenza sotto il tenore in modo di avere tutte le sentenze
+							// sul provvedimento
+							lTreeTenoreEsteso.add (new TreeModel(lTenEsteso.getSentenza()));
+						}				
+						// Ticket#20211014013 - FINE						
+						
 						lTreeTenoreEsteso = null;
 						lTreeSentenzaReati = null;
 					}

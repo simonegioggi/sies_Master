@@ -41,7 +41,7 @@ public class ActCancellaProvvedimentoCumulo extends ActionSiap
       //// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
       //siesLogger.debug("Evento trovato "+lEveModRic);
       IOrdineEsecuzione lCtrl = SIEPLookupRemote.getOrdineEsecuzioneRemote();
-      lCtrl.ExCancellaEventoConStorePocedure(lEveModRic);
+      lCtrl.ExCancellaEventoConStoreProcedure(lEveModRic);
     }
     
     
