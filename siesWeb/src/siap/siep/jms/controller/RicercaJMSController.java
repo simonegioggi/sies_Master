@@ -1175,7 +1175,7 @@ public class RicercaJMSController extends SiapController implements IRicercaJMS 
 
 	private Boolean CercaCodice(EventoModel aEve, Vector lVec) throws F3BException {
 
-		boolean trovato = false;
+		Boolean trovato = false;
 
 		DecodificheModel lModelVec = null;
 		Iterator Ite1 = lVec.iterator();

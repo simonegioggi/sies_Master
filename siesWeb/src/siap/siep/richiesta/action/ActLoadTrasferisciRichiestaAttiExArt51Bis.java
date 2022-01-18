@@ -48,6 +48,8 @@ public class ActLoadTrasferisciRichiestaAttiExArt51Bis extends ActionSiap implem
 			NotificaModel lNotMod = new NotificaModel();
 			lNotMod = lEveMod.getNotifiche()[i];
 
+			// Ticket#202107210117 - Impossibilità traferimento richiesta al Magistrato di Sorv. Min.
+			// Aggiunti controlli per uffici minorili
 			if (lNotMod != null && lNotMod.getUfficio() != null
 					&& lNotMod.getUfficio().getCodTipoUfficio() != null) {
 				if (lNotMod.getUfficio().getCodTipoUfficio().equals("TDS")
