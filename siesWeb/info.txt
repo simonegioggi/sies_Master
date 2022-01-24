@@ -61,3 +61,10 @@ RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021
 			\jsp\files\siap\siep\misurasicurezza\AttesaRicerca.jsp
 		-	Aggiunta la pagina nelle costanti
 			siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza.java
+
+5)	Ticket#20220124013 - Nel provvedimento di cumulo - nota accompagnamento autorità destinatarie mancanti.
+		Aggiunto filtro nel controller per marcare come flagVisualizza = N ne note di trasmissione all'ufficio del cumulante.
+		Classe modificata:
+		-	DatiFinaliCumuloController.java [metodo ExStampaProvvedimentoCumulo()]
+		Ripristinato il template:
+		-	/var/SIES/template/siep/cumulo/NoteDiTrasmissione.rtf
