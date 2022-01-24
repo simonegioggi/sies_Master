@@ -2272,6 +2272,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						UfficioModel lUffModel = (UfficioModel) lUffSqlDao.getModelByKey();
 						lUffSqlDao.stop();
 
+//						siesLogger.debug(lProcCumModel.getChiaveAnnoFasCumulato()+"/"+lProcCumModel.getChiaveProgrFasCumulato()+" di "+lUffModel.getCodTipoUfficio()+" di "+lUffModel.getDescrComune());
 						lListaUffEsecuzione.add(lUffModel);
 						lCod = lUffModel.getCodUfficio();
 
@@ -2289,12 +2290,24 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							}
 						}
 
+//						siesLogger.debug("lVisibile = "+lVisibile);
 						if (lVisibile > 1)
 							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("N");
 						else
 							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("S");
 						//
-
+//						siesLogger.debug("Flag Visualizza = "+lNoteTrasmEsecXTitolo.getFlagVisualizzaUfficio());
+						// Ticket#20220124013: si esclude il PM del cumulante dalle note di trasmissione per 
+						// l'esecuzione
+						//aFascicoloModel
+						if (   lProcCumModel.getChiaveAnnoFasCumulato().compareTo(aFascicoloModel.getChiaveAnno())==0
+							&& lProcCumModel.getChiaveProgrFasCumulato().compareTo(aFascicoloModel.getChiaveProgr())==0
+							&& lProcCumModel.getCodUfficioFasCumulato().equals(aFascicoloModel.getChiaveUfficio())
+							)
+						{
+							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("N");
+						}
+						// Ticket#20220124013 - FINE 
 						lListaNoteTrasmissione.add(lNoteTrasmEsecXTitolo);
 						// siesLogger.debug("NotaDiTrasmissioneModel per Ufficio ESECUZIONE scritta =
 						// "+lNoteTrasmEsecXTitolo);
