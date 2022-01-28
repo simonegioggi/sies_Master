@@ -3,12 +3,11 @@
 <%@ page import="f3b.web.IWebConstants" %>
 <%@ page import="f3b.util.StringUtils" %>
 
-<%@ page import="siap.siep.modulocumulo.action.ICostantiModuloCumulo" %>
-<%@ page import="siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo"%>
 
 <jsp:useBean id="next_action" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="titolo" 				scope="request" class="java.lang.String"/>
-<jsp:useBean id="IstruttoriaCumulo"    	scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel"/>
+<jsp:useBean id="pag" 				    scope="request" class="java.lang.String"/>
+<jsp:useBean id="CountRisultati"        scope="request" class="java.lang.String"/>
 
 <html>
   <head>
@@ -18,16 +17,19 @@
   <BODY class="corpo" onload="document.c.submit();">
 
   <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="c">
-  	<input type="hidden" name="<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>" value="<%=IstruttoriaCumulo.getIdIstruttoriaCumulo()%>">
-  <!-- br-->
 	<table>
       <tr>
         <td class="LBG">
           <font  class="label">Funzione :&nbsp;</font><font class="campo"><%=titolo%></font>
         </td>
      	<td> <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=next_action%>"></td>
-    	<td> <input type="HIDDEN" name="vai" value="pippo"></td>
-    
+     	<td> <input type="HIDDEN" name="vai" value="pippo"></td>  
+     	<% if (!"".equals(pag)) { %>  
+     	<td> <input type="HIDDEN" name="pag" value="<%=pag%>"></td>   
+     	<% } %>
+     	<% if (!"".equals(CountRisultati)) { %> 
+    	<td> <input type="HIDDEN" name="CountRisultati" value="<%=CountRisultati%>"></td>   
+    	<% } %> 
       </tr>
     </table>
    <br>

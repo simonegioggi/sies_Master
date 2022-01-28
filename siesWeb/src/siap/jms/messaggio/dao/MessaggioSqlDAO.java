@@ -1333,9 +1333,26 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP_COLLEGATO, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_PROGR_SIEP_COLLEGATO, "
 				+ " FASC_MS_TO_FASC_SIEP.CHIAVE_UFFICIO_SIEP_COLLEGATO "
-				+
-
-				" FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.ID_MESSAGGIO     = FASC_MS_TO_FASC_SIEP.MES_ID_MESSAGGIO) "
+				// Ticket#20220111018 - ottimizzazione recupero solleciti: si cerca subito se presenti solleciti
+				// sul messaggio (count). Le funzioni di ricerca ciclano sul risultato della ricerca (vettore)
+				// per recuperare eventuali solleciti. In questo modo già sanno se presenti ed si evitano 
+				// query inutili.
+				// Si ricercano tra i messaggi ricevuti (DELIVERY_MODE = '00002'), di tipo richiesta (COD_TIPO_MESSAGGIO = '01')
+				// di qualsiazi tipo (COD_TIPO_OPERAZIONE). Non si entra nello specifico del tipo di sollecito
+				// ne dell'ufficio. Sarà la successiva query a mettere dei filtri più stringenti.
+                + " , (select COUNT(*) "
+                + "      from MESSAGGIO solleciti "
+                + "     where 1=1 "
+				+ "       AND solleciti.DELIVERY_MODE = '00002' "
+				+ "       AND solleciti.COD_TIPO_MESSAGGIO = '01'  "
+				+ "       AND solleciti.COD_TIPO_OPERAZIONE in ( '00073', '00076','00068')  "
+					//+ " AND solleciti.COD_UFFICIO_DESTINATARIO = '00127202101'    "  // in questo metodo non lo conosco s cui ometto il filtro
+				+ "       AND (   solleciti.ID_MESSAGGIO_SOLLECITATO = MESSAGGIO.JMS_CORRELATION_ID_MESSAGE "
+				+ "            OR solleciti.ID_MESSAGGIO_SOLLECITATO = MESSAGGIO.JMS_CORRELATION_REPLY_TO "
+				+ "           ) "
+				+ "   ) contaSolleciti "
+			    // Ticket#20220111018 - ottimizzazione				
+				+ " FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.ID_MESSAGGIO     = FASC_MS_TO_FASC_SIEP.MES_ID_MESSAGGIO) "
 				+
 				// " FROM MESSAGGIO LEFT OUTER JOIN FASC_MS_TO_FASC_SIEP ON (    MESSAGGIO.CHIAVE_ANNO_SIEP     = FASC_MS_TO_FASC_SIEP.CHIAVE_ANNO_SIEP "
 				// +
@@ -1540,6 +1557,11 @@ public class MessaggioSqlDAO extends SIAPSqlDAO {
 			}
 		}
 
+		// Ticket#20220111018 - Aggiunta conteggio solleciti
+		if (findColumn("contaSolleciti"))
+			aModel.setContaSolleciti(getBigDecimal("contaSolleciti"));
+		// Ticket#20220111018 - FINE
+		
 		// Settaggio del TreeModel
 		ByteArrayOutputStream lStr = new ByteArrayOutputStream();
 		lStr = aModel.getBlobOut();

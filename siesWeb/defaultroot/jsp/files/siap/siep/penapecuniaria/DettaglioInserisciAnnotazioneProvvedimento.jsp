@@ -350,7 +350,7 @@
             <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(RichiCon.getDataInizioPagamento(), "dd-MM-yyyy"))%></font>
           <td class="l" colspan=3>  
             <font class="label">Oppure entro&nbsp;</font>
-            <font class="campo"><%=StringUtils.toStringJSP(RichiCon.getNumeroGiorniInizioPagamento())%></font>
+            <font class="campo"><%=StringUtils.toStringJSP(RichiCon.getNumeroGiorniInizioPagamento(),"&nbsp;__&nbsp;")%></font>
             <font class="label">&nbsp;giorni dalla data di Notifica</font>          
           </td>                         
         </tr>         

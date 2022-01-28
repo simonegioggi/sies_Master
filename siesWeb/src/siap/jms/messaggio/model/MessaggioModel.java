@@ -128,6 +128,10 @@ public class MessaggioModel extends GenericModel implements ICostantiJMS {
 
 	// private Blob mBlobEsito;
 
+	// Ticket#20220111018 - Aggiunta canta Solleciti 
+	private BigDecimal mContaSolleciti;
+	
+	
 	// COSTRUTTORE DI DEFAULT
 	public MessaggioModel() {
 		this.mIdMessaggio = null;
@@ -1110,6 +1114,17 @@ public class MessaggioModel extends GenericModel implements ICostantiJMS {
 	}
 	// mev 39
 
+	// Ticket#20220111018 - Aggiunta canta Solleciti 
+	public BigDecimal getContaSolleciti() {
+		return mContaSolleciti;
+	}
+
+	public void setContaSolleciti(BigDecimal aContaSolleciti) {
+		this.mContaSolleciti = aContaSolleciti;
+	}
+	// Ticket#20220111018 - Aggiunta canta Solleciti - FINE
+
+	
 	public String toString() {
 		String lStr = new String();
 
@@ -1237,4 +1252,7 @@ public class MessaggioModel extends GenericModel implements ICostantiJMS {
 
 	}
 
+	
+	
+	
 }
