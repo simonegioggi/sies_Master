@@ -97,8 +97,22 @@ public class ActModificaTitoloEsecutivo extends ActionSiap implements ICostantiT
 		// E' necessario duplicare il soggetto del nuovo titolo esecutivo
 		// Chiama il controller
 		ISoggetto lSogCtrl = SICOLookupRemote.getSoggettoRemote();
+		
+		// Ticket#20211227014 - Come in fase di inserimento fascicolo SIUS, i dati del soggetto in fase di duplicazione vanno 
+		//                      associati all'ufficio SIUS altrimenti non risulteranno modificabili
+		SoggettoModel lNewSogg = new SoggettoModel (lFasSiepMod.getSoggetto());
+		lNewSogg.setCodOperatoreInserimento(getCodUtenteConnesso());
+		lNewSogg.setDataInserimento(DateUtils.getSysDate());
+		lNewSogg.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+		
+		lNewSogg.setCodOperatoreAggiornamento(null);
+		lNewSogg.setDataAggiornamento(null);
+		lNewSogg.setCodUfficioAggiornamento(null);
+		
 		SoggettoModel lSoggDuplModel = new SoggettoModel();
-		lSoggDuplModel = lSogCtrl.ExInserisciSoggetto(lFasSiepMod.getSoggetto());
+		//lSoggDuplModel = lSogCtrl.ExInserisciSoggetto(lFasSiepMod.getSoggetto());
+		lSoggDuplModel = lSogCtrl.ExInserisciSoggetto(lNewSogg);
+		// Ticket#20211227014 - FINE
 		lFasGPMod.getFascicoloSiusModel().setSogIdSoggetto(lSoggDuplModel.getIdSoggetto());
 
 		// Inserimento Titolo Esecutivo.

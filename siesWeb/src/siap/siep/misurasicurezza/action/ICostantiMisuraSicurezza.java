@@ -297,5 +297,8 @@ public interface ICostantiMisuraSicurezza {
 			+ "/files/siap/siep/misurasicurezza/DettaglioOLDifferimentoDecreto.jsp";
 	public static final String PG_MODIFICA_OE_DIFFERIMENTO_DEC = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/misurasicurezza/LoadModificaOLDifferimentoDecreto.jsp";
-
+	
+	// Ticket#20220111018 - Aggiunta pagina di wait specifica per le MS
+	public static final String PG_ATTESA_RICERCA = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/misurasicurezza/AttesaRicerca.jsp";
 }

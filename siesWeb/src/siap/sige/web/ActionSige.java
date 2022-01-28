@@ -6,6 +6,12 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.Action;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
@@ -21,25 +27,12 @@ import siap.sige.provvedimento.controller.IProvvedimentoSige;
 import siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel;
 import siap.sige.sentenza.action.ICostantiFasSigeSentenza;
 import siap.sige.util.SIGELookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.Action;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.html.Option;
 
 /**
- * <p>
  * Title: ActionSige
- * </p>
- * <p>
  * Description: Azione estensione della ActionSiap. Questa classe mette a disposizione nuove funzioni
  * specifiche dell'utente SIGE.
- * </p>
- * <p>
- * Copyright: Eutelia 2008
- * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActionSige extends ActionSiap {
@@ -56,7 +49,7 @@ public class ActionSige extends ActionSiap {
 
 	/**
 	 * Costruttore con copia
-	 * 
+	 *
 	 * @param aAct
 	 */
 	public ActionSige(Action aAct) {
@@ -64,11 +57,10 @@ public class ActionSige extends ActionSiap {
 	}
 
 	/**
-	 * <p>
 	 * Restituisce la possibilità di modificare i dati del Fascicolo SIGE. STUB: per il momento si è definito
 	 * modificabile solo il Fascicolo in stato "02" ovvero Iscritto, che non abbia nessun provvedimento.
 	 * Definitorio. Eventualmente da modificare !!
-	 * 
+	 *
 	 * @return lRet Condizione di modificabilità del fascicolo.
 	 * @throws F3BException
 	 *             Propagazione errori di eccezione.
@@ -101,14 +93,14 @@ public class ActionSige extends ActionSiap {
 	 * ProvvedimentoSigeModel lProvvedimento =
 	 * lCtrlProv.ExRicercaProvDefinitorioByFasc(aFascicolo.getIdFascicoloSige()); if (lProvvedimento == null )
 	 * lRet = true; }
-	 * 
+	 *
 	 * return lRet; }
 	 */
 
 	/**
 	 * Testa se il Fascicolo in sessione è in stato Iscritto e se appartiene allo stesso ufficio
 	 * dell'operatore.
-	 * 
+	 *
 	 * @return boolean
 	 * @throws F3BException
 	 */
@@ -119,7 +111,7 @@ public class ActionSige extends ActionSiap {
 
 	/**
 	 * Testa se il Fascicolo in sessione è in stato Definito.
-	 * 
+	 *
 	 * @return boolean
 	 * @throws F3BException
 	 */
@@ -137,7 +129,7 @@ public class ActionSige extends ActionSiap {
 				|| aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("15")
 				|| aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("16")
 				|| aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("20")
-				////@emma 10072018 intervento post COLLAUDO 11.2
+				//// @emma 10072018 intervento post COLLAUDO 11.2
 				|| aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("21"))
 				&& getCodUfficioUtenteConnesso().equalsIgnoreCase(aFascicolo.getChiaveUfficio()))
 			lRet = true;
@@ -156,15 +148,17 @@ public class ActionSige extends ActionSiap {
 
 	/**
 	 * Risale al FascicoloSigeEstesoModel in sessione.
-	 * 
+	 *
 	 * @return FascicoloSigeEstesoModel
 	 * @throws F3BException
 	 */
 	protected FascicoloSigeEstesoModel getFascicoloSigeEstesoInSessione() throws F3BException {
 		if (isSessionAttributeNullObj("FascicoloSigeEsteso"))
-			throw new F3BException(F3BException.USER_MESSAGE, "Dati del Procedimento SIGE non in sessione !!");
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Dati del Procedimento SIGE non in sessione !!");
 
-		FascicoloSigeEstesoModel lFascicoloEsteso = (FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso");
+		FascicoloSigeEstesoModel lFascicoloEsteso = (FascicoloSigeEstesoModel) getSessionAttribute(
+				"FascicoloSigeEsteso");
 
 		if (lFascicoloEsteso == null || lFascicoloEsteso.getFascicoloSige() == null
 				|| lFascicoloEsteso.getFascicoloSige().getIdFascicoloSige() == null)
@@ -176,7 +170,7 @@ public class ActionSige extends ActionSiap {
 
 	/**
 	 * Rimuove se presente il dato FascicoloSigeEsteso dalla Session.
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected void rimuoviFascicoloSigeEstesoDallaSessione() throws F3BException {
@@ -188,7 +182,7 @@ public class ActionSige extends ActionSiap {
 
 	/**
 	 * Risale al FascicoloSigeModel in sessione.
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -225,7 +219,7 @@ public class ActionSige extends ActionSiap {
 	 * non esistono Provvedimenti di tipo Definitorio legati a quel fascicolo. E' cancellabile se modificabile
 	 * ed inoltre non si tratta del Fascicolo SIEP "generatore" ovvero quello legato alla Richiesta. Il
 	 * Fascicolo di riferimento è quello in sessione.
-	 * 
+	 *
 	 */
 	protected void setModificaCancellaTitolo(BigDecimal aIdFasSiep) throws F3BException {
 		String lModificabile = "NO";
@@ -234,9 +228,9 @@ public class ActionSige extends ActionSiap {
 		if (IsFascicoloSigeModificabile()) {
 			lModificabile = "SI";
 			// Non è possibile cancellare il Fascicolo SIEP legato alla Richiesta
-			if (aIdFasSiep != null
-					&& getFascicoloSigeEstesoInSessione().getRichiestaSige() != null
-					&& getFascicoloSigeEstesoInSessione().getRichiestaSige().getFasSieIdFascicoloSiep() != null
+			if (aIdFasSiep != null && getFascicoloSigeEstesoInSessione().getRichiestaSige() != null
+					&& getFascicoloSigeEstesoInSessione().getRichiestaSige()
+							.getFasSieIdFascicoloSiep() != null
 					&& aIdFasSiep.compareTo(getFascicoloSigeEstesoInSessione().getRichiestaSige()
 							.getFasSieIdFascicoloSiep()) == 0)
 				lCancellabile = "NO";
@@ -252,7 +246,7 @@ public class ActionSige extends ActionSiap {
 	/**
 	 * Risale al ID_FAS_SIGE_SENTENZA in sessione. Il dato restituito costituisci l'identificativo univoco
 	 * della relazione FascicoloSige-Sentenza memorizzata nella tabella FAS_SIGE_SENTENZA.
-	 * 
+	 *
 	 * @return lIdFasSigeSentenza : BigDecimal
 	 * @throws F3BException
 	 */
@@ -260,7 +254,8 @@ public class ActionSige extends ActionSiap {
 		if (isSessionAttributeNullObj(ICostantiFasSigeSentenza.CAMPO_ID_FAS_SIGE_SENTENZA))
 			throw new F3BException(F3BException.USER_MESSAGE, "Dati del Titolo Esecutivo non in sessione !!");
 
-		BigDecimal lIdFasSigeSentenza = (BigDecimal) getSessionAttribute(ICostantiFasSigeSentenza.CAMPO_ID_FAS_SIGE_SENTENZA);
+		BigDecimal lIdFasSigeSentenza = (BigDecimal) getSessionAttribute(
+				ICostantiFasSigeSentenza.CAMPO_ID_FAS_SIGE_SENTENZA);
 
 		if (lIdFasSigeSentenza == null)
 			throw new F3BException(F3BException.USER_MESSAGE,
@@ -276,7 +271,7 @@ public class ActionSige extends ActionSiap {
 	 * dello stesso procedimento SIGE. Il nome della entità da lockare viene passato come argomento mentre
 	 * l'ID utilizzato è quello del Fascicolo SIGE in sessione, questo per lockare l'entità a livello
 	 * dell'intero Procedimento. Se il Fascicolo SIGE non è in sessione viene lanciata un'eccezione.
-	 * 
+	 *
 	 * @param aNomeEntita
 	 * @throws F3BException
 	 */
@@ -285,8 +280,8 @@ public class ActionSige extends ActionSiap {
 		FascicoloSigeModel lFascicoloSige = getFascicoloSigeInSessione();
 
 		// Lock per evitare accesso contemporaneo alla funzione chiamante che operi sullo stesso fascicolo
-		LockModel lck = LockController.lockIfNotLocked(getServletContext(), aNomeEntita, lFascicoloSige
-				.getIdFascicoloSige().toString(), getCodUtenteConnesso(), getSession().getId());
+		LockModel lck = LockController.lockIfNotLocked(getServletContext(), aNomeEntita,
+				lFascicoloSige.getIdFascicoloSige().toString(), getCodUtenteConnesso(), getSession().getId());
 		if (lck != null)
 			throw new SIGEException(F3BException.USER_MESSAGE, "La gestione della  " + lck.getEntity()
 					+ " per il Procedimento è in gestione ad un altro utente!");
@@ -300,7 +295,7 @@ public class ActionSige extends ActionSiap {
 	/**
 	 * La funzione effettua un lock sul Fascicolo in sessione. Può essere richiamato per bloccare modifiche
 	 * concorrenti a dati legati al Fascicolo che stiano agendo sullo stesso Fascicolo Sige.
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected void lockApplicativoFascicoloSige() throws F3BException {
@@ -308,8 +303,8 @@ public class ActionSige extends ActionSiap {
 		FascicoloSigeModel lFascicoloSige = getFascicoloSigeInSessione();
 
 		// Lock per evitare accesso contemporaneo a funzioni che operino sullo stesso fascicolo
-		LockModel lck = LockController.lockIfNotLocked(getServletContext(), "FASCICOLO_SIGE", lFascicoloSige
-				.getIdFascicoloSige().toString(), getCodUtenteConnesso(), getSession().getId());
+		LockModel lck = LockController.lockIfNotLocked(getServletContext(), "FASCICOLO_SIGE",
+				lFascicoloSige.getIdFascicoloSige().toString(), getCodUtenteConnesso(), getSession().getId());
 		if (lck != null)
 			throw new SIGEException(F3BException.USER_MESSAGE,
 					"La modifica dei dati del Procedimento SIGE è in gestione ad un altro utente!");
@@ -327,8 +322,8 @@ public class ActionSige extends ActionSiap {
 			throw new SIGEException(F3BException.USER_MESSAGE, "Mancano i dati del reato in sessione !");
 
 		// Lock per evitare accesso contemporaneo alla funzione chiamante che operi sullo stesso reato
-		LockModel lck = LockController.lockIfNotLocked(getServletContext(), "reato", lReatoInSessione
-				.getIdReato().toString(), getCodUtenteConnesso(), getSession().getId());
+		LockModel lck = LockController.lockIfNotLocked(getServletContext(), "reato",
+				lReatoInSessione.getIdReato().toString(), getCodUtenteConnesso(), getSession().getId());
 		if (lck != null)
 			throw new SIGEException(F3BException.USER_MESSAGE, "La gestione della  " + lck.getEntity()
 					+ " per il Procedimento è in gestione ad un altro utente!");
@@ -342,7 +337,7 @@ public class ActionSige extends ActionSiap {
 	 * Funzione di utilità per ottenere la pagina di destinazione cui redirigere una Action. La funzione
 	 * consente di passare un parametro alla Action da chiamare ed inoltre gestisce i parametri del bottone di
 	 * ritorno.
-	 * 
+	 *
 	 * @param aAction
 	 *            : nome della Action cui redirigere;
 	 * @param aNomeParametro
@@ -379,7 +374,7 @@ public class ActionSige extends ActionSiap {
 	/**
 	 * Effettua un controllo sui Provvedimenti legati al Fascicolo Sige in sessione. Controlla se esiste un
 	 * provvedimento di tipo Definitorio.
-	 * 
+	 *
 	 * @return lRet Condizione di modificabilità del fascicolo.
 	 * @throws F3BException
 	 *             Propagazione errori di eccezione.
@@ -391,8 +386,8 @@ public class ActionSige extends ActionSiap {
 		// provvedimento. Luigi 16-2-2009
 		IProvvedimentoSige lCtrlProv = SIGELookupRemote.getProvvedimentoRemote();
 		ProvvedimentoSigeEventoModel lProvvEventoSige = lCtrlProv
-				.ExRicercaProvvedimentoDefinitorioByIdFascicolo(getFascicoloSigeInSessione()
-						.getIdFascicoloSige());
+				.ExRicercaProvvedimentoDefinitorioByIdFascicolo(
+						getFascicoloSigeInSessione().getIdFascicoloSige());
 
 		// ProvvedimentoSigeModel lProvvedimento =
 		// lCtrlProv.ExRicercaProvDefinitorioByFasc(getFascicoloSigeInSessione().getIdFascicoloSige());
@@ -410,7 +405,7 @@ public class ActionSige extends ActionSiap {
 	 * La funzione passa nella request la combo per la modifica del Tipo Giudizio del Fascicolo in sessione e
 	 * il tipo ufficio dell'utente connesso. La funzione ritorna il codice del tipo giudizio attualmente
 	 * definito.
-	 * 
+	 *
 	 * @return: String lCodTipoGiudizio
 	 * @throws Exception
 	 */
@@ -419,7 +414,7 @@ public class ActionSige extends ActionSiap {
 	 * String lCodTipoUfficio = getUfficioUtenteConnesso().getCodTipoUfficio(); // // [FT] - 03/08/2016 -
 	 * MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger() //
 	 * siesLogger.debug("tipo ufficio : " + lCodTipoUfficio);
-	 * 
+	 *
 	 * String lCodTipoGiudizio = (getFascicoloSigeInSessione().getCodTipoGiudizio()==null ? "-" :
 	 * getFascicoloSigeInSessione().getCodTipoGiudizio().trim() ); Option lOptionGiudizio = new Option(
 	 * DecodificheManager.getInstance().getTipoGiudizioSige(), lCodTipoGiudizio, Option.BLANK_ITEM); if
@@ -427,16 +422,16 @@ public class ActionSige extends ActionSiap {
 	 * ("CASAP_CAS_CAP".indexOf(lCodTipoUfficio)>=0) lOptionGiudizio.setFilter("C");
 	 * lOptionGiudizio.setValueBlankItem("-"); setRequestAttribute("tipoGiudizio", lOptionGiudizio.toString()
 	 * ); setRequestAttribute("tipoUfficioUtente", lCodTipoUfficio );
-	 * 
+	 *
 	 * // // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 	 * LogF3B.getLogger() // siesLogger.debug("setComboTipoGiudizio : " + lOptionGiudizio);
-	 * 
+	 *
 	 * return lCodTipoGiudizio; }
 	 */
 
-	protected static Set<String> filterColl = new HashSet<String>();
-	protected static Set<String> filterMono = new HashSet<String>();
-	protected static Set<String> filterAll = new HashSet<String>();
+	protected static Set<String> filterColl = new HashSet<>();
+	protected static Set<String> filterMono = new HashSet<>();
+	protected static Set<String> filterAll = new HashSet<>();
 
 	static {
 		filterColl.add("CAS"); // CAS = Corte Assise
@@ -532,10 +527,7 @@ public class ActionSige extends ActionSiap {
 		String codImpugnazione = impugnazione.getCodTenoreDecisione();
 
 		String codTipoImpugnazione = impugnazione.getCodTipoImpugnazione();
-		if (codTipoImpugnazione.equals("04"))
-			return show;
-
-		if (codImpugnazione == null || codImpugnazione.equals("-"))
+		if (codTipoImpugnazione.equals("04") || codImpugnazione == null || codImpugnazione.equals("-"))
 			return show;
 
 		switch (Short.parseShort(codImpugnazione)) {
@@ -558,10 +550,7 @@ public class ActionSige extends ActionSiap {
 		boolean show = false;
 		String codImpugnazione = impugnazione.getCodTenoreDecisione();
 		String codTipoImpugnazione = impugnazione.getCodTipoImpugnazione();
-		if (codTipoImpugnazione.equals("01"))
-			return show;
-
-		if (codImpugnazione == null || codImpugnazione.equals("-"))
+		if (codTipoImpugnazione.equals("01") || codImpugnazione == null || codImpugnazione.equals("-"))
 			return show;
 
 		switch (Short.parseShort(codImpugnazione)) {
@@ -576,13 +565,10 @@ public class ActionSige extends ActionSiap {
 	}
 
 	/*
-	 * ISSUE MEV 	: aggiunti metodi per controllo età soggetto
-	 * Numero MEV 	: 57
-	 * Autore 		: Gioggi
-	 * Data 		: 15/gen/2018
-	 * Branch 		: MEV_57
+	 * ISSUE MEV : aggiunti metodi per controllo età soggetto Numero MEV : 57 Autore : Gioggi Data :
+	 * 15/gen/2018 Branch : MEV_57
 	 */
-	private static Set<String> ufficiMinori = new HashSet<String>();
+	private static Set<String> ufficiMinori = new HashSet<>();
 	static {
 		ufficiMinori.add("PMM");
 		ufficiMinori.add("DIBM");
@@ -605,50 +591,88 @@ public class ActionSige extends ActionSiap {
 		return ret;
 	}
 	// ***** FINE INTERVENTO MEV_57 *****//
-	
+
 	protected boolean IsFascicoloUnificato() throws F3BException {
-		FascicoloSigeModel aFascicolo= getFascicoloSigeInSessione();
-		
+		FascicoloSigeModel aFascicolo = getFascicoloSigeInSessione();
+
 		boolean lRet = false;
 
-		if ( aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("05")	
+		if (aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("05")
 				&& getCodUfficioUtenteConnesso().equalsIgnoreCase(aFascicolo.getChiaveUfficio()))
 			lRet = true;
 
 		return lRet;
 	}
-	
+
 	protected boolean IsFascicoloDefinito() throws F3BException {
-		FascicoloSigeModel aFascicolo= getFascicoloSigeInSessione();
-		
+		FascicoloSigeModel aFascicolo = getFascicoloSigeInSessione();
+
 		boolean lRet = false;
 
-		if (( aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("01")	|| aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("06")	 )
+		if ((aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("01")
+				|| aFascicolo.getCodStatoFascicolo().equalsIgnoreCase("06"))
 				&& getCodUfficioUtenteConnesso().equalsIgnoreCase(aFascicolo.getChiaveUfficio()))
 			lRet = true;
 
 		return lRet;
 	}
-	
+
 	/**
 	 * metodo che rimuove dalla sessione ogni attributo il cui nome è definito in array
-	 * 
+	 *
 	 */
-	protected void pulisciSessione(){		
-		
-		 String lNomi [] = { "fascicolo","soggetto","sentenza",
-			        "FascicoloSigeEsteso","IdEventoInviato",  "IDepositoDecreto","magistratorelatore","eventoNotTA","avvocatoSius" };		
-		
-	     int lNumNomi = lNomi.length;
-	     for (int i = 0; i < lNumNomi; i++)
-	     {
-	       if( ! this.isSessionAttributeNullObj(lNomi[i]))
-	       {
-	         this.removeSessionAttribute(lNomi[i]);
-	         // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	         siesLogger.debug( "Rimosso dalla sessione : " +lNomi[i]);
-	       }
-	     }
+	protected void pulisciSessione() {
+
+		String lNomi[] = { "fascicolo", "soggetto", "sentenza", "FascicoloSigeEsteso", "IdEventoInviato",
+				"IDepositoDecreto", "magistratorelatore", "eventoNotTA", "avvocatoSius" };
+
+		int lNumNomi = lNomi.length;
+		for (int i = 0; i < lNumNomi; i++) {
+			if (!this.isSessionAttributeNullObj(lNomi[i])) {
+				this.removeSessionAttribute(lNomi[i]);
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Rimosso dalla sessione : " + lNomi[i]);
+			}
+		}
+	}
+
+	/**
+	 * Ticket#20211129018 - Rinvio udienza Sige
+	 * In caso di esistenza di Provvedimento Definitorio, si può
+	 * emettere un altro provvedimento se lo stato del fascicolo è:
+	 * Opposizione - Accoglie (fissa l'udienza) = 14
+	 * Ricorso convertito in opposizione = 16
+	 * Decreto Fissazione Udienza = 20
+	 * Ricorso convertito in opposizione (Fissa Udienza) = 21
+	 *
+	 * @return true or false
+	 * @throws F3BException
+	 */
+	public boolean contolloStatoFascicoloConProvvedimentoDefinitorio() throws F3BException {
+
+		// Fascicolo Sige Esteso in sessione.
+		FascicoloSigeEstesoModel fsem = getFascicoloSigeEstesoInSessione();
+		BigDecimal idFascicoloSige = fsem.getFascicoloSige().getIdFascicoloSige();
+		IProvvedimentoSige ips = SIGELookupRemote.getProvvedimentoRemote();
+		ProvvedimentoSigeEventoModel psem = ips
+				.ExRicercaProvvedimentoDefinitorioByIdFascicolo(idFascicoloSige);
+		if (psem != null && psem.getEventoNotifica() != null && psem.getEventoNotifica().getEvento() != null
+				&& (psem.getEventoNotifica().getEvento().getFlagDocumentoRegistrato() == null
+						|| (psem.getEventoNotifica().getEvento().getFlagDocumentoRegistrato() != null
+								&& psem.getEventoNotifica().getEvento().getFlagDocumentoRegistrato() != "A"))
+				&& (fsem.getFascicoloSige().getCodStatoFascicolo() != null
+						&& !fsem.getFascicoloSige().getCodStatoFascicolo()
+								.equals(ICostantiFascicoloSige.COD_ACCOGLIE_FISSA_UDIENZA)
+						&& !fsem.getFascicoloSige().getCodStatoFascicolo()
+								.equals(ICostantiFascicoloSige.COD_DECRETO_FISSAZIONE_UDIENZA)
+						&& !fsem.getFascicoloSige().getCodStatoFascicolo()
+								.equals(ICostantiFascicoloSige.COD_RICORSO_CONVERTITO_OPPOSIZIONE_UDI)
+						&& !fsem.getFascicoloSige().getCodStatoFascicolo()
+								.equals(ICostantiFascicoloSige.COD_RICORSO_CONVERTITO_OPPOSIZIONE))) {
+			return true;
+		}
+		return false;
 	}
 
 }

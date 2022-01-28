@@ -55,7 +55,6 @@ import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepDAO;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepSqlDAO;
 import siap.siep.agdgfascicolosiep.model.AgdgFascicoloSiepModel;
 import siap.siep.altracausa.dao.AltraCausaDAO;
-import siap.siep.altracausa.dao.AltraCausaSqlDAO;
 import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.altrigradigiudizio.model.AltriGradiGiudizioModel;
 import siap.siep.annotazioneesitotrasmissione.dao.AnnotazioneEsitoTrasmissioneDAO;
@@ -1091,9 +1090,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		AnnotazioneEsitoTrasmissioneDAO lAnnotaEsitoDao = null;
 		PenaAccessoriaCumuloSqlDAO lPenAccCumSqlDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
-		
+
 		AltraCausaDAO lAltraCausaDao = null;
-		AltraCausaSqlDAO lAltraCausaSqlDao = null;
 
 		try {
 			lConn = getDBTransaction();
@@ -1353,41 +1351,42 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			// [Ticket#20210430011] - se la PG è detenuto altra causa, aggiporno il flga altra causa
 			// si FASCICOLO_SIEPe aggiungo il record ALTRA_CAUSA
 			siesLogger.debug("Verifico se detenutao Altra Causa...");
-		    String flagAltraCausa = "N";
-		    Collection <DecodificheModel> lCollPosGiuAltra = DecodificheManager.getInstance()
-		        .getPosizioneGiuridicaAltraCausa();
-		    Iterator iteCollPosGiuAltra = lCollPosGiuAltra.iterator();
+			String flagAltraCausa = "N";
+			Collection<DecodificheModel> lCollPosGiuAltra = DecodificheManager.getInstance()
+					.getPosizioneGiuridicaAltraCausa();
+			Iterator iteCollPosGiuAltra = lCollPosGiuAltra.iterator();
 
-		    while (iteCollPosGiuAltra.hasNext()) {
-		      DecodificheModel dMPosGiuAltra = (DecodificheModel) iteCollPosGiuAltra.next();
-		      String code = dMPosGiuAltra.getCode();
-		      if (code.equals(lNewPosGiuModel.getCodPosizioneGiuridica())) {
-		        flagAltraCausa = "S";
-		        break;
-		      }
-		    }
-			
-		    if ("S".equals(flagAltraCausa)) {
-		    	siesLogger.debug("Detenuto Altra Causa inserisco il record AC");
-		    	AltraCausaModel altraCausaModel = new AltraCausaModel();
-		    	altraCausaModel.setFasSieIdFascicoloSiep (lFasModel.getIdFascicoloSiep());
-		    	altraCausaModel.setCodTipoPosGiuridica   (lNewPosGiuModel.getCodPosizioneGiuridica());
-		    	altraCausaModel.setDataDecorrenza        (lNewPosGiuModel.getDataInizio());
-		    	altraCausaModel.setCodAutorita("-");
-		    	altraCausaModel.setCodLuogo("-");
-		    	
-		    	altraCausaModel.setIstDetIdIstitutoDetenzione (lPosGiuCumModel.getIstDetIdIstitutoDetenzione());
-		    	
-		    	altraCausaModel.setCodOperatoreInserimento (lEveModel.getCodOperatoreAggiornamento());
-		    	altraCausaModel.setDataInserimento         (lEveModel.getDataAggiornamento());
-		    	altraCausaModel.setCodUfficioInserimento   (lEveModel.getCodUfficioAggiornamento());
+			while (iteCollPosGiuAltra.hasNext()) {
+				DecodificheModel dMPosGiuAltra = (DecodificheModel) iteCollPosGiuAltra.next();
+				String code = dMPosGiuAltra.getCode();
+				if (code.equals(lNewPosGiuModel.getCodPosizioneGiuridica())) {
+					flagAltraCausa = "S";
+					break;
+				}
+			}
 
-		    	lAltraCausaDao = new AltraCausaDAO (lConn);
-		    	lAltraCausaDao.setDAOFromModel(altraCausaModel);
-		    	lAltraCausaDao.insert();
-		    }
+			if ("S".equals(flagAltraCausa)) {
+				siesLogger.debug("Detenuto Altra Causa inserisco il record AC");
+				AltraCausaModel altraCausaModel = new AltraCausaModel();
+				altraCausaModel.setFasSieIdFascicoloSiep(lFasModel.getIdFascicoloSiep());
+				altraCausaModel.setCodTipoPosGiuridica(lNewPosGiuModel.getCodPosizioneGiuridica());
+				altraCausaModel.setDataDecorrenza(lNewPosGiuModel.getDataInizio());
+				altraCausaModel.setCodAutorita("-");
+				altraCausaModel.setCodLuogo("-");
+
+				altraCausaModel
+						.setIstDetIdIstitutoDetenzione(lPosGiuCumModel.getIstDetIdIstitutoDetenzione());
+
+				altraCausaModel.setCodOperatoreInserimento(lEveModel.getCodOperatoreAggiornamento());
+				altraCausaModel.setDataInserimento(lEveModel.getDataAggiornamento());
+				altraCausaModel.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
+
+				lAltraCausaDao = new AltraCausaDAO(lConn);
+				lAltraCausaDao.setDAOFromModel(altraCausaModel);
+				lAltraCausaDao.insert();
+			}
 			// FINE [Ticket#20210430011]
-			
+
 			// ========================================================================
 			// Aggiorna flag cumulante e flag cumulato sul Fascicolo_model
 			// ========================================================================
@@ -1401,15 +1400,15 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lFascDao = new FascicoloSiepDAO(lConn);
 
 			lFascDao.selCondizioneUpdate(lEveModel.getFasSieIdFascicoloSiep());
-			
+
 			lFascDao.setFlagCumulante("S");
 
 			// [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
 			if ("S".equals(flagAltraCausa)) {
-			  lFascDao.setFlagAltraCausa(flagAltraCausa);
+				lFascDao.setFlagAltraCausa(flagAltraCausa);
 			}
 			// FINE [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
-			
+
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
 			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
 			// settato a 03
@@ -2272,6 +2271,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						UfficioModel lUffModel = (UfficioModel) lUffSqlDao.getModelByKey();
 						lUffSqlDao.stop();
 
+						// siesLogger.debug(lProcCumModel.getChiaveAnnoFasCumulato()+"/"+lProcCumModel.getChiaveProgrFasCumulato()+"
+						// di "+lUffModel.getCodTipoUfficio()+" di "+lUffModel.getDescrComune());
 						lListaUffEsecuzione.add(lUffModel);
 						lCod = lUffModel.getCodUfficio();
 
@@ -2289,12 +2290,26 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							}
 						}
 
+						// siesLogger.debug("lVisibile = "+lVisibile);
 						if (lVisibile > 1)
 							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("N");
 						else
 							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("S");
 						//
-
+						// siesLogger.debug("Flag Visualizza =
+						// "+lNoteTrasmEsecXTitolo.getFlagVisualizzaUfficio());
+						// Ticket#20220124013: si esclude il PM del cumulante dalle note di trasmissione per
+						// l'esecuzione
+						// aFascicoloModel
+						if (lProcCumModel.getChiaveAnnoFasCumulato()
+								.compareTo(aFascicoloModel.getChiaveAnno()) == 0
+								&& lProcCumModel.getChiaveProgrFasCumulato()
+										.compareTo(aFascicoloModel.getChiaveProgr()) == 0
+								&& lProcCumModel.getCodUfficioFasCumulato()
+										.equals(aFascicoloModel.getChiaveUfficio())) {
+							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("N");
+						}
+						// Ticket#20220124013 - FINE
 						lListaNoteTrasmissione.add(lNoteTrasmEsecXTitolo);
 						// siesLogger.debug("NotaDiTrasmissioneModel per Ufficio ESECUZIONE scritta =
 						// "+lNoteTrasmEsecXTitolo);
@@ -4786,11 +4801,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	// }
 
 	/*
-	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo
-	 * Numero MAC : 20191128013 
-	 * Autore : monica 
-	 * Data : 19/dic/2019 
-	 * Branch : 11.2.4
+	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
+	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
 	 */
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
@@ -4841,6 +4853,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lConn);
 		}
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
-	// ***** FINE INTERVENTO 20191128013 *****//
+		// ***** FINE INTERVENTO 20191128013 *****//
 
 }
