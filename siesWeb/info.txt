@@ -1,7 +1,11 @@
-Ticket#20220127012 - SIEP - Impossibilità aggiungere fascicoli a cumulo
+RELEASE_12.4.17.0	-->	nato dal branch "release_12.4.16.0" in data 31/01/2022	
 
-Corretti javascript della jsp 
-/jsp/files/siap/siep/istruttoriacumulo/RicercaProcedimentiUfficio.jsp
+Comprende i seguenti Ticket MAC:
 
-Problema dovuto al disallineamento dei contatori dei record della lista e dei checkbox visualizzati/selezionabili
+1)	Ticket#20220127012 - SIEP - Impossibilità aggiungere fascicoli a cumulo
+		Problema dovuto al disallineamento dei contatori dei record della lista e dei checkbox visualizzati/selezionabili
+		Classe modificata:
+		-	/jsp/files/siap/siep/istruttoriacumulo/RicercaProcedimentiUfficio.jsp
 
+2)	
+	-
