@@ -1,9 +1,12 @@
-RELEASE_12.4.17.0	-->	nato dal branch "release_12.4.16.0" in data 31/01/2022	
+Ticket#20220209011 — SIEP - Fascicoli archiviati per cumulo ancora pendenti nel riepilogo ispettivo.
 
-Comprende i seguenti Ticket MAC:
 
-1)	
-	-	
+- I fascicoli stesso ufficio archiviati automaticamente durante la validazione del cumulo 
+  non presentavano valorizzata i dati di DATA_AGGIORNAMENTO, COD_OPERATORE_AGGIORNEMANTO, COD_UFFICI_AGGIORNAMENTO
+  sull'evento e COD_OPERATORE_UNSERIMENTO, COD_UFFICIO_INSERIMENTO sulla PENA_RESIDUA.
+  La mancanza a del COD_UFFICIO_INSERIMENTO sulla PENA_RESIDUA determinava una possibile errata 
+  classificazione nella statistica del riepilogo ispettivo.
+  
+Modulo corretto
+DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo
 
-2)	
-	-	
