@@ -1,11 +1,13 @@
-RELEASE_12.4.17.0	-->	nato dal branch "release_12.4.16.0" in data 31/01/2022	
-
-Comprende i seguenti Ticket MAC:
-
 1)	Ticket#20220127012 - SIEP - Impossibilità aggiungere fascicoli a cumulo
 		Problema dovuto al disallineamento dei contatori dei record della lista e dei checkbox visualizzati/selezionabili
 		Classe modificata:
 		-	/jsp/files/siap/siep/istruttoriacumulo/RicercaProcedimentiUfficio.jsp
 
-2)	
-	-
+2)	Ticket#20220209011 - SIEP - Fascicoli archiviati per cumulo ancora pendenti nel riepilogo ispettivo.
+		I fascicoli stesso ufficio archiviati automaticamente durante la validazione del cumulo 
+  		non presentavano valorizzata i dati di DATA_AGGIORNAMENTO, COD_OPERATORE_AGGIORNEMANTO, COD_UFFICI_AGGIORNAMENTO
+  		sull'evento e COD_OPERATORE_UNSERIMENTO, COD_UFFICIO_INSERIMENTO sulla PENA_RESIDUA.
+ 		La mancanza a del COD_UFFICIO_INSERIMENTO sulla PENA_RESIDUA determinava una possibile errata 
+  		classificazione nella statistica del riepilogo ispettivo.
+		Classe modificata:
+		-	src/siap/siep/modulocumulo/controller/DatiFinaliCumuloController.java (metodo ExUpdateValidaProvvedimentoCumulo)
