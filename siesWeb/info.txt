@@ -1,3 +1,7 @@
+RELEASE_12.4.17.0	-->	nato dal branch "release_12.4.16.0" in data 31/01/2022	
+
+Comprende i seguenti Ticket MAC:
+
 1)	Ticket#20220127012 - SIEP - Impossibilità aggiungere fascicoli a cumulo
 		Problema dovuto al disallineamento dei contatori dei record della lista e dei checkbox visualizzati/selezionabili
 		Classe modificata:
