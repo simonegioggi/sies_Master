@@ -1,9 +1,10 @@
-RELEASE_12.4.17.0	-->	nato dal branch "release_12.4.16.0" in data 31/01/2022	
+Ticket#202202160112 — cumulo restituzione atti pervenuti
 
-Comprende i seguenti Ticket MAC:
 
-1)	
-	-	
+Modulo modificato:
+/jsp/files/siap/siep/istruttoriacumulo/LoadRestituzioneFascicolo.jsp
 
-2)	
-	-	
+Eliminata l'include di DettaglioSOggettoSentenza.jsp che andava in errore
+in caso di fascicolo non in sessione (da rierca atti presi in carico).
+Il dettaglio comununqe non era pertinente al fascicolo che si stava restituendo.
+

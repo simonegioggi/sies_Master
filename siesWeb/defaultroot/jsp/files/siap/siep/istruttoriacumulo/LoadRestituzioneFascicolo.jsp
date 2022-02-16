@@ -54,9 +54,13 @@ String newPage  = (String)request.getAttribute(IWebConstants.GOTO_PAGE);
       </td>
     </tr>
   </table>
+  <%-- Ticket#202202160112 -€” cumulo restituzione atti pervenuti: si commenta l'include 
+       che va in errore in caso di mancanza del fascicolo in sessione (se si proviene dalla ricerca atti presi in carico) 
+       e che comunque visaulizza dati non pertinenti.       
   <br>
     <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
   <br>
+  --%>
   <FORM method="POST" name="f" action="<%= IWebConstants.PG_MAIN%>">
   	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoriacumulo.action.ActRestituzioneFascicolo" >
   	<input type="HIDDEN" name="<%=IWebConstants.GOTO_PAGE%>"  value="<%=newPage%>">
