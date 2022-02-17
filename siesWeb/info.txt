@@ -15,3 +15,10 @@ Comprende i seguenti Ticket MAC:
   		classificazione nella statistica del riepilogo ispettivo.
 		Classe modificata:
 		-	src/siap/siep/modulocumulo/controller/DatiFinaliCumuloController.java (metodo ExUpdateValidaProvvedimentoCumulo)
+
+3)	Ticket#202202160112 — cumulo restituzione atti pervenuti
+		Eliminata l'include di DettaglioSOggettoSentenza.jsp che andava in errore
+		in caso di fascicolo non in sessione (da rierca atti presi in carico).
+		Il dettaglio comununqe non era pertinente al fascicolo che si stava restituendo.
+		Classe modificata:
+		-	/jsp/files/siap/siep/istruttoriacumulo/LoadRestituzioneFascicolo.jsp
