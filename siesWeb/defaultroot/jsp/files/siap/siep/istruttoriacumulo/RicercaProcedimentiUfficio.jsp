@@ -274,8 +274,8 @@ for (int k=0; k<ListaProcedimenti.size();k++){
         if(aStessoTitolo.length > 0 )
         {
           msgConfirm = "Attenzione! Già è presente in Istruttoria Cumulo\n il Procedimento "+aStessoTitolo+" con estremi del Titolo Esecutivo\n";
-          msgConfirm += "uguali a quelli di un procedimento che si sta per prendere in carico.";
-          msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato?"; 
+          msgConfirm += "uguali a quelli di un procedimento che si sta per iscrivere in istruttoria.";
+          msgConfirm += "\nSi vuole procedere all'iscrizione del/dei Titolo/i selezionato/i?"; 
           
           esegui = window.confirm(msgConfirm);
         } 
