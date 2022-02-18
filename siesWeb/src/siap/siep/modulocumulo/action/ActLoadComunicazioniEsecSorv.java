@@ -16,7 +16,6 @@ import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.controller.IEventoSimeone;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
-import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.ufficio.controller.IUfficio;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
@@ -195,22 +194,23 @@ public class ActLoadComunicazioniEsecSorv extends ActionModuloCumulo implements 
 		}
 
 		setRequestAttribute("UfficiSorveglianza", lUffNotifiche);
-		
-		//Ticket#20211216018 - Aggiunto controllo se modificabile per evitare che utenti di altri uffici
+
+		// Ticket#20211216018 - Aggiunto controllo se modificabile per evitare che utenti di altri uffici
 		// possano inviare comunicazioni.
 		String diCompetenza = "N";
-		//FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
-		
+		// FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
+
 		IFascicoloSiep ctrlFascicoloSiep = SIEPLookupRemote.getFascicoloSiepRemote();
-		FascicoloSiepModel lFas = ctrlFascicoloSiep.ExRicercaFascicoloByKey (lDatiFinaliCumulo.getProvvedimentoCumulo().getEvento().getFasSieIdFascicoloSiep());
-		
+		FascicoloSiepModel lFas = ctrlFascicoloSiep.ExRicercaFascicoloByKey(
+				lDatiFinaliCumulo.getProvvedimentoCumulo().getEvento().getFasSieIdFascicoloSiep());
+
 		UtenteModel lUtenteMod = getUtenteConnesso();
 		String lUffUtente = lUtenteMod.getUfficioUtente().getCodUfficio();
 
 		if (lUffUtente.equals(lFas.getChiaveUfficio()))
 			diCompetenza = "S";
 		setRequestAttribute("diCompetenza", diCompetenza);
-		//Ticket#20211216018 - FINE
+		// Ticket#20211216018 - FINE
 
 		setRequestAttribute("nextAction", "siap.siep.modulocumulo.action.ActLoadComunicazioniEsecSorv");
 
