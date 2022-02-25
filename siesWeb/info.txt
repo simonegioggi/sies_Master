@@ -1,70 +1,24 @@
-RELEASE_12.4.16.0	-->	nato dal branch "release_12.4.15.0" in data 30/11/2021	
+RELEASE_12.4.17.0	-->	nato dal branch "release_12.4.16.0" in data 31/01/2022	
 
-1)	Ticket#20211129018 - Rinvio udienza Sige
-		In caso di esistenza di Provvedimento Definitorio, si può
-	 	emettere un altro provvedimento (rinvio udienza o rinvio udienza da verbale) se lo stato del fascicolo è:
-	 	Opposizione - Accoglie (fissa l'udienza) = 14
-	 	Ricorso convertito in opposizione = 16
-	 	Decreto Fissazione Udienza = 20
-	 	Ricorso convertito in opposizione (Fissa Udienza) = 21
-		Classi modificate:
-		-	src/siap/sige/udienzaprocedimento/action/ActLoadInserisciRinvioUdienza.java
-		-	src/siap/sige/web/ActionSige.java
+Comprende i seguenti Ticket MAC:
 
-2)	Ticket 20211202015 - CUMULO - COMUNICAZIONI ALLE PROCURE E UFFICI DI SORVEGLIANZA
-		In fase di invio delle comunicazioni a Uffici di esecuzione e Sorveglianza il sistema, pur non effettuando l'invio alla sorveglianza in quanto non previsto,
-		restituiva un messaggio forviante indicando che la trasmissione era stata effettuata. 
-		Modificato il messaggio originale:
-			"Gli Atti sono stati trasmessi agli Uffici indicati!"
-		Aggiungendo il controllo sul numero effettivo di invii:
-			"Gli Atti sono stati trasmessi agli Uffici di Esecuzione indicati!"
-			oppure
-			"La trasmissione telematica è prevista solo verso gli Uffici di Esecuzione. Nessun Ufficio di Esecuzione è stato selezionato. Trasmissione non effettuata."
+1)	Ticket#20220127012 - SIEP - Impossibilità aggiungere fascicoli a cumulo
+		Problema dovuto al disallineamento dei contatori dei record della lista e dei checkbox visualizzati/selezionabili
 		Classe modificata:
-		-	siap.siep.modulocumulo.action.ActTrasferisciComunicazioniProcure.java
+		-	/jsp/files/siap/siep/istruttoriacumulo/RicercaProcedimentiUfficio.jsp
 
-3)	Ticket#20211216018 - cumulo - Provvedimenti di Comunicazione Emessi
-		Il sistema consentiva di inviare comunicazioni a procure e uffici di sorveglianza dal dettaglio 
-		del provvedimento di cumulo di un fascicolo di altro Ufficio.
-		Mancava il controllo sulla competenza.
-		Classi modificate:
-		-	siap.siep.modulocumulo.action.ActLoadComunicazioniEsecSorv.java
-		-	/jsp/files/siap/siep/modulocumulo/GrigliaComunicazioniProcure.jsp
-		Bloccato anche l'accesso alle funzioni di stampa delle comunicazioni a Cancellerie e Altro
-		-	siap.siep.modulocumulo.action.ActLoadComunicazioniCancellerie.java
-		-	siap.siep.modulocumulo.action.ActLoadComunicazioniAltro.java
-
-4)	Ticket#20220111018 - Sies - Cancellazione atti ricevuti per competenza
-		Lamentata lentezza della funzione di ricerca atti ricevuti per competenze dei classe IV.
-		La funzione non è paginata ne prevede filtri di ricerca per cui recupera tutti i messaggi ricevuti 
-		ed inoltre per ogni messaggio effettua unaulteriore query per recuperare eventuali solleciti ed
-		effettua il parsing del BLOG.
-		Interventi effettuati:
-		a) paginazione della ricerca;
-		b) recupero direttamente nella prima query dell'informazione dell'eventuale presenza di un sollecito in modo
-			da ricercare i solleciti solo se effettivamente presenti;
-		c) creato indice sulla tabella MESSAGGIO.
-		Classi modificate:
-		-	\jsp\files\siap\siep\misurasicurezza\ListaAttiRicevutiDaPrendereInCarico.jsp
-			Aggiunta sezione per la paginazione
-		-	siap.siep.misurasicurezza.action.ActRicercaAttiRicevuti
-			Aggiunta gestione Paginazione, pagina di transizione e recupero solleciti
-		-	siap.jms.messaggio.model.MessaggioModel
-			Aggiunto campo per il contatore dei solleciti restituito dalla query
-		-	siap.jms.messaggio.dao.MessaggioSqlDAO
-			Aggiunto nella query il recupero del numero di solleciti legati al messaggio
-			protected String getSqlQueryMS()
-			public GenericModel getModel()
-		-	Eliminato refuso
-			\jsp\files\siap\siep\modulocumulo\Attesa_Cumulo.jsp
-		-	Creata nuova pagina di wait per le MS
-			\jsp\files\siap\siep\misurasicurezza\AttesaRicerca.jsp
-		-	Aggiunta la pagina nelle costanti
-			siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza.java
-
-5)	Ticket#20220124013 - Nel provvedimento di cumulo - nota accompagnamento autorità destinatarie mancanti.
-		Aggiunto filtro nel controller per marcare come flagVisualizza = N ne note di trasmissione all'ufficio del cumulante.
+2)	Ticket#20220209011 - SIEP - Fascicoli archiviati per cumulo ancora pendenti nel riepilogo ispettivo.
+		I fascicoli stesso ufficio archiviati automaticamente durante la validazione del cumulo 
+  		non presentavano valorizzata i dati di DATA_AGGIORNAMENTO, COD_OPERATORE_AGGIORNEMANTO, COD_UFFICI_AGGIORNAMENTO
+  		sull'evento e COD_OPERATORE_UNSERIMENTO, COD_UFFICIO_INSERIMENTO sulla PENA_RESIDUA.
+ 		La mancanza a del COD_UFFICIO_INSERIMENTO sulla PENA_RESIDUA determinava una possibile errata 
+  		classificazione nella statistica del riepilogo ispettivo.
 		Classe modificata:
-		-	DatiFinaliCumuloController.java [metodo ExStampaProvvedimentoCumulo()]
-		Ripristinato il template:
-		-	/var/SIES/template/siep/cumulo/NoteDiTrasmissione.rtf
+		-	src/siap/siep/modulocumulo/controller/DatiFinaliCumuloController.java (metodo ExUpdateValidaProvvedimentoCumulo)
+
+3)	Ticket#202202160112 — cumulo restituzione atti pervenuti
+		Eliminata l'include di DettaglioSOggettoSentenza.jsp che andava in errore
+		in caso di fascicolo non in sessione (da rierca atti presi in carico).
+		Il dettaglio comununqe non era pertinente al fascicolo che si stava restituendo.
+		Classe modificata:
+		-	/jsp/files/siap/siep/istruttoriacumulo/LoadRestituzioneFascicolo.jsp
