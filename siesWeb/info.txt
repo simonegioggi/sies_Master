@@ -1,5 +1,3 @@
 RELEASE_12.4.18.0	-->	nato dal branch "release_12.4.17.0" in data 25/02/2022
 
-Comprende i seguenti Ticket MAC:
-
-1)	
+NON Comprende Ticket MAC
