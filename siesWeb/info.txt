@@ -1,3 +1,7 @@
-RELEASE_12.4.18.0	-->	nato dal branch "release_12.4.17.0" in data 25/02/2022
+RELEASE_12.4.19.0	-->	nato dal branch "release_12.4.18.0" in data 31/03/2022
 
-NON Comprende Ticket MAC
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#20220323018 - correzione template - SIEP_LS_ODARI
+	-	/var/SIES/siep/ls/SIEP_LS_ODARI.rtf
+	-	siap.sico.stampa.controller.StampaController.java
