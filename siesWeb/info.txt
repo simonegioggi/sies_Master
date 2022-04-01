@@ -1,7 +1,14 @@
-RELEASE_12.4.19.0	-->	nato dal branch "release_12.4.18.0" in data 31/03/2022
+Ticket#20220323018 - SIEP_LS_ODARI
 
-Comprende i seguenti Ticket MAC:
+Nella creazione dei dati da passare all'xml di stampa non gestiva i codici dell'OE con 
+sospensione per i minori non calcolando il residuo pena ad oggi da visualizzare sul template
 
-1)	Ticket#20220323018 - correzione template - SIEP_LS_ODARI
-	-	/var/SIES/siep/ls/SIEP_LS_ODARI.rtf
-	-	siap.sico.stampa.controller.StampaController.java
+Modulo corretto
+siap.sico.stampa.controller.StampaController  
+
+Metodi
+public TreeModel prelevaDatiEventoSiep
+public TreeModel prelevaDatiIstruttoria
+Aggiunti codici motivo dei minori: 5506-5507-5508
+
+

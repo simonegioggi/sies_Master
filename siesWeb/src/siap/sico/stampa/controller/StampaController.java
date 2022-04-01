@@ -774,6 +774,12 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			if (aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
 					&& (aEveModel.getEvento().getCodMotivo().equals("0061")
 							|| aEveModel.getEvento().getCodMotivo().equals("0062")
+							// Ticket#20220323018 — correzione template - SIEP_LS_ODARI
+							// Si aggiungono gli eventi previsti per i minori
+							|| aEveModel.getEvento().getCodMotivo().equals("5506")
+							|| aEveModel.getEvento().getCodMotivo().equals("5507")
+							|| aEveModel.getEvento().getCodMotivo().equals("5508")
+							// Ticket#20220323018 - FINE
 							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;
@@ -1840,7 +1846,14 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			if (aEveModel.getEvento() != null && aEveModel.getEvento().getCodMotivo() != null
 					&& (aEveModel.getEvento().getCodMotivo().equals("0061")
 							|| aEveModel.getEvento().getCodMotivo().equals("0062")
-							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) {
+							// Ticket#20220323018 — correzione template - SIEP_LS_ODARI
+							// Si aggiungono gli eventi previsti per i minori
+							|| aEveModel.getEvento().getCodMotivo().equals("5506")
+							|| aEveModel.getEvento().getCodMotivo().equals("5507")
+							|| aEveModel.getEvento().getCodMotivo().equals("5508")
+							// Ticket#20220323018 - FINE
+							|| aEveModel.getEvento().getCodMotivo().equals("0063"))) 
+			{
 				if (!lPos.isLibero()) {
 					PenaResiduaModel lPenaModel = null;
 
