@@ -1,7 +1,14 @@
-RELEASE_12.4.19.0	-->	nato dal branch "release_12.4.18.0" in data 31/03/2022
+Ticket#20220331017 — SIUS - Sorveglianza Minorenni Milano - Presa in carico atti pervenuti --> Ricerca per Atti - SIUS
 
-Comprende i seguenti Ticket MAC:
+Nella presa in carico ordinanza SIUS il sistema tentava di inserire il record STATO_PROCEDIMANTO anche in assenza
+collegamento andando in errore (dato obbligatorio.
 
-1)	Ticket#20220323018 - correzione template - SIEP_LS_ODARI
-	-	/var/SIES/siep/ls/SIEP_LS_ODARI.rtf
-	-	siap.sico.stampa.controller.StampaController.java
+Aggiunto controllo su presensa collegamento al fascicolo SIEP
+
+Classe modificata:
+siap.sico.jms.controller.PresaInCaricoController
+
+Metodo
+ExAggiornaStatoProcedimento
+
+
