@@ -1,7 +1,11 @@
-RELEASE_12.4.19.0	-->	nato dal branch "release_12.4.18.0" in data 31/03/2022
+Ticket#20220404012 — Misure sicurezza mancata visualizzazione provvedimento sorveglianza
 
-Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20220323018 - correzione template - SIEP_LS_ODARI
-	-	/var/SIES/siep/ls/SIEP_LS_ODARI.rtf
-	-	siap.sico.stampa.controller.StampaController.java
+Modulo modificato:
+siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO
+
+Metodo
+RicercaEventoProvvediementiArchiviazioneSIUSByFascicoloSiep
+
+Aggiunti i cod_motivo 9073 e 9074 e cod_esito 0054 nella query che recupera i provvedimenti della sorveglianza.
+
