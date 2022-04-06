@@ -20,3 +20,10 @@ Comprende i seguenti Ticket MAC:
 	-	siap.sico.jms.controller.PresaInCaricoController.java
 	Metodo:
 	-	ExAggiornaStatoProcedimento
+
+3)	Ticket#20220404012 — Misure sicurezza mancata visualizzazione provvedimento sorveglianza
+	Classe modificata:
+	-	siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO.java
+	Metodo:
+	-	RicercaEventoProvvediementiArchiviazioneSIUSByFascicoloSiep
+	Aggiunti i cod_motivo 9073 e 9074 e cod_esito 0054 nella query che recupera i provvedimenti della sorveglianza.
