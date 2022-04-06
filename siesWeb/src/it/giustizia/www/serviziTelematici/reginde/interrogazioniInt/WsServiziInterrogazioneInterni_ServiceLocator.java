@@ -22,7 +22,7 @@ public class WsServiziInterrogazioneInterni_ServiceLocator extends org.apache.ax
     }
 
     // Use to get a proxy class for ServiziInterrogazioneInterniBeanPort
-    private java.lang.String ServiziInterrogazioneInterniBeanPort_address = "https://89.119.251.203/ServiziInterrogazioneRegindeExt/ServiziInterrogazioneInterni";
+    private java.lang.String ServiziInterrogazioneInterniBeanPort_address = "http://dev-pst/ServiziInterrogazioneRegindeExt/ServiziInterrogazioneInterni";
 
     public java.lang.String getServiziInterrogazioneInterniBeanPortAddress() {
         return ServiziInterrogazioneInterniBeanPort_address;

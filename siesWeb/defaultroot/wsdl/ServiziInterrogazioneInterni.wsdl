@@ -1,17 +1,90 @@
 <definitions name='WsServiziInterrogazioneInterni' targetNamespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:ns1='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
  <types>
-  <xs:schema targetNamespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' version='1.0' xmlns:tns='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+  <xs:schema targetNamespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' version='1.0' xmlns:ns1='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' xmlns:tns='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:import namespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt'/>
+   <xs:element name='SearchLimitException' type='tns:SearchLimitException'/>
+   <xs:element name='ricercaEnteComplete' type='tns:ricercaEnteComplete'/>
+   <xs:element name='ricercaEnteCompleteResponse' type='tns:ricercaEnteCompleteResponse'/>
+   <xs:element name='ricercaSoggettoComplete' type='tns:ricercaSoggettoComplete'/>
+   <xs:element name='ricercaSoggettoCompleteResponse' type='tns:ricercaSoggettoCompleteResponse'/>
+   <xs:complexType name='ricercaEnteComplete'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='tipo' type='xs:string'/>
+     <xs:element minOccurs='0' name='descrizione' type='xs:string'/>
+     <xs:element minOccurs='0' name='codiceEnte' type='xs:string'/>
+     <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
+     <xs:element minOccurs='0' name='indirizzoPec' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='ricercaEnteCompleteResponse'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='ns1:ruoloente'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='indAbilitato'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='id' type='xs:string'/>
+     <xs:element minOccurs='0' name='email' type='xs:string'/>
+     <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='referente'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='idReferente' type='xs:string'/>
+     <xs:element minOccurs='0' name='nome' type='xs:string'/>
+     <xs:element minOccurs='0' name='cognome' type='xs:string'/>
+     <xs:element minOccurs='0' name='dataInserimento' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='dataUltimaModifica' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='tipologieEnti'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='id' type='xs:string'/>
+     <xs:element minOccurs='0' name='descrizione' type='xs:string'/>
+     <xs:element minOccurs='0' name='tipo' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='SearchLimitException'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='message' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='ricercaSoggettoComplete'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='cognome' type='xs:string'/>
+     <xs:element minOccurs='0' name='nome' type='xs:string'/>
+     <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
+     <xs:element minOccurs='0' name='indirizzo' type='xs:string'/>
+     <xs:element minOccurs='0' name='codiceEnte' type='xs:string'/>
+     <xs:element minOccurs='0' name='orderBy' type='xs:string'/>
+     <xs:element minOccurs='0' name='asc' type='xs:boolean'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='ricercaSoggettoCompleteResponse'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='ns1:soggetto'/>
+    </xs:sequence>
+   </xs:complexType>
+  </xs:schema>
+  <xs:schema targetNamespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' version='1.0' xmlns:ns1='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' xmlns:tns='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:import namespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt'/>
    <xs:complexType name='ruoloente'>
     <xs:sequence>
+     <xs:element minOccurs='0' name='classe' type='xs:string'/>
      <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
      <xs:element minOccurs='0' name='codice' type='xs:string'/>
      <xs:element minOccurs='0' name='descrizione' type='xs:string'/>
+     <xs:element minOccurs='0' name='id' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='indirizziAbilitati' type='ns1:indAbilitato'/>
      <xs:element name='pubblicaAmministrazione' type='xs:boolean'/>
      <xs:element minOccurs='0' name='pec' type='xs:string'/>
      <xs:element minOccurs='0' name='partitaIVA' type='xs:string'/>
+     <xs:element minOccurs='0' name='referente' type='ns1:referente'/>
      <xs:element minOccurs='0' name='ruolo' type='xs:string'/>
      <xs:element minOccurs='0' name='stato' type='xs:string'/>
-     <xs:element minOccurs='0' name='tipologia' type='xs:string'/>
+     <xs:element minOccurs='0' name='tipologia' type='ns1:tipologieEnti'/>
+     <xs:element name='visibile' type='xs:boolean'/>
     </xs:sequence>
    </xs:complexType>
    <xs:complexType name='soggetto'>
@@ -38,53 +111,22 @@
      <xs:element minOccurs='0' name='codFisc' type='xs:string'/>
      <xs:element minOccurs='0' name='cognome' type='xs:string'/>
      <xs:element minOccurs='0' name='dataNascita' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='DataScadenza' type='xs:string'/>
+     <xs:element minOccurs='0' name='Email' type='xs:string'/>
+     <xs:element minOccurs='0' name='Genere' type='xs:string'/>
+     <xs:element minOccurs='0' name='IdCard' type='xs:string'/>
+     <xs:element minOccurs='0' name='idSoggetto' type='xs:string'/>
+     <xs:element minOccurs='0' name='Indirizzo' type='xs:string'/>
+     <xs:element minOccurs='0' name='IndirizzoDigitale' type='xs:string'/>
+     <xs:element minOccurs='0' name='IvaCode' type='xs:string'/>
      <xs:element minOccurs='0' name='luogoNascita' type='xs:string'/>
+     <xs:element minOccurs='0' name='NazioneNascita' type='xs:string'/>
      <xs:element minOccurs='0' name='nome' type='xs:string'/>
+     <xs:element minOccurs='0' name='NomeCompagnia' type='xs:string'/>
+     <xs:element minOccurs='0' name='NumeroCellulare' type='xs:string'/>
      <xs:element minOccurs='0' name='pec' type='xs:string'/>
      <xs:element minOccurs='0' name='provNascita' type='xs:string'/>
-    </xs:sequence>
-   </xs:complexType>
-  </xs:schema>
-  <xs:schema targetNamespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' version='1.0' xmlns:ns1='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt' xmlns:tns='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-   <xs:import namespace='http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt'/>
-   <xs:element name='SearchLimitException' type='tns:SearchLimitException'/>
-   <xs:element name='ricercaEnteComplete' type='tns:ricercaEnteComplete'/>
-   <xs:element name='ricercaEnteCompleteResponse' type='tns:ricercaEnteCompleteResponse'/>
-   <xs:element name='ricercaSoggettoComplete' type='tns:ricercaSoggettoComplete'/>
-   <xs:element name='ricercaSoggettoCompleteResponse' type='tns:ricercaSoggettoCompleteResponse'/>
-   <xs:complexType name='ricercaEnteComplete'>
-    <xs:sequence>
-     <xs:element minOccurs='0' name='tipo' type='xs:string'/>
-     <xs:element minOccurs='0' name='descrizione' type='xs:string'/>
-     <xs:element minOccurs='0' name='codiceEnte' type='xs:string'/>
-     <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
-     <xs:element minOccurs='0' name='indirizzoPec' type='xs:string'/>
-    </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name='ricercaEnteCompleteResponse'>
-    <xs:sequence>
-     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='ns1:ruoloente'/>
-    </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name='SearchLimitException'>
-    <xs:sequence>
-     <xs:element minOccurs='0' name='message' type='xs:string'/>
-    </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name='ricercaSoggettoComplete'>
-    <xs:sequence>
-     <xs:element minOccurs='0' name='cognome' type='xs:string'/>
-     <xs:element minOccurs='0' name='nome' type='xs:string'/>
-     <xs:element minOccurs='0' name='codiceFiscale' type='xs:string'/>
-     <xs:element minOccurs='0' name='indirizzo' type='xs:string'/>
-     <xs:element minOccurs='0' name='codiceEnte' type='xs:string'/>
-     <xs:element minOccurs='0' name='orderBy' type='xs:string'/>
-     <xs:element minOccurs='0' name='asc' type='xs:boolean'/>
-    </xs:sequence>
-   </xs:complexType>
-   <xs:complexType name='ricercaSoggettoCompleteResponse'>
-    <xs:sequence>
-     <xs:element maxOccurs='unbounded' minOccurs='0' name='return' type='ns1:soggetto'/>
+     <xs:element minOccurs='0' name='SedeLegale' type='xs:string'/>
     </xs:sequence>
    </xs:complexType>
   </xs:schema>
@@ -145,7 +187,7 @@
  </binding>
  <service name='WsServiziInterrogazioneInterni'>
   <port binding='tns:WsServiziInterrogazioneInterniBinding' name='ServiziInterrogazioneInterniBeanPort'>
-   <soap:address location='https://89.119.251.203/ServiziInterrogazioneRegindeExt/ServiziInterrogazioneInterni'/>
+   <soap:address location='http://dev-pst/ServiziInterrogazioneRegindeExt/ServiziInterrogazioneInterni'/>
   </port>
  </service>
 </definitions>

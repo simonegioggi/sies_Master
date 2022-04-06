@@ -148,9 +148,30 @@ public class WsServiziInterrogazioneInterniBindingStub extends org.apache.axis.c
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "indAbilitato");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "referente");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.Referente.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "SearchLimitException");
             cachedSerQNames.add(qName);
             cls = it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.SearchLimitException.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "tipologieEnti");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.TipologieEnti.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);

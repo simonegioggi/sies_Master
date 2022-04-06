@@ -8,11 +8,17 @@
 package it.giustizia.www.serviziTelematici.reginde.interrogazioniExt;
 
 public class Ruoloente  implements java.io.Serializable {
+    private java.lang.String classe;
+
     private java.lang.String codiceFiscale;
 
     private java.lang.String codice;
 
     private java.lang.String descrizione;
+
+    private java.lang.String id;
+
+    private it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato[] indirizziAbilitati;
 
     private boolean pubblicaAmministrazione;
 
@@ -20,34 +26,68 @@ public class Ruoloente  implements java.io.Serializable {
 
     private java.lang.String partitaIVA;
 
+    private it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.Referente referente;
+
     private java.lang.String ruolo;
 
     private java.lang.String stato;
 
-    private java.lang.String tipologia;
+    private it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.TipologieEnti tipologia;
+
+    private boolean visibile;
 
     public Ruoloente() {
     }
 
     public Ruoloente(
+           java.lang.String classe,
            java.lang.String codiceFiscale,
            java.lang.String codice,
            java.lang.String descrizione,
+           java.lang.String id,
+           it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato[] indirizziAbilitati,
            boolean pubblicaAmministrazione,
            java.lang.String pec,
            java.lang.String partitaIVA,
+           it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.Referente referente,
            java.lang.String ruolo,
            java.lang.String stato,
-           java.lang.String tipologia) {
+           it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.TipologieEnti tipologia,
+           boolean visibile) {
+           this.classe = classe;
            this.codiceFiscale = codiceFiscale;
            this.codice = codice;
            this.descrizione = descrizione;
+           this.id = id;
+           this.indirizziAbilitati = indirizziAbilitati;
            this.pubblicaAmministrazione = pubblicaAmministrazione;
            this.pec = pec;
            this.partitaIVA = partitaIVA;
+           this.referente = referente;
            this.ruolo = ruolo;
            this.stato = stato;
            this.tipologia = tipologia;
+           this.visibile = visibile;
+    }
+
+
+    /**
+     * Gets the classe value for this Ruoloente.
+     * 
+     * @return classe
+     */
+    public java.lang.String getClasse() {
+        return classe;
+    }
+
+
+    /**
+     * Sets the classe value for this Ruoloente.
+     * 
+     * @param classe
+     */
+    public void setClasse(java.lang.String classe) {
+        this.classe = classe;
     }
 
 
@@ -112,6 +152,54 @@ public class Ruoloente  implements java.io.Serializable {
 
 
     /**
+     * Gets the id value for this Ruoloente.
+     * 
+     * @return id
+     */
+    public java.lang.String getId() {
+        return id;
+    }
+
+
+    /**
+     * Sets the id value for this Ruoloente.
+     * 
+     * @param id
+     */
+    public void setId(java.lang.String id) {
+        this.id = id;
+    }
+
+
+    /**
+     * Gets the indirizziAbilitati value for this Ruoloente.
+     * 
+     * @return indirizziAbilitati
+     */
+    public it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato[] getIndirizziAbilitati() {
+        return indirizziAbilitati;
+    }
+
+
+    /**
+     * Sets the indirizziAbilitati value for this Ruoloente.
+     * 
+     * @param indirizziAbilitati
+     */
+    public void setIndirizziAbilitati(it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato[] indirizziAbilitati) {
+        this.indirizziAbilitati = indirizziAbilitati;
+    }
+
+    public it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato getIndirizziAbilitati(int i) {
+        return this.indirizziAbilitati[i];
+    }
+
+    public void setIndirizziAbilitati(int i, it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.IndAbilitato _value) {
+        this.indirizziAbilitati[i] = _value;
+    }
+
+
+    /**
      * Gets the pubblicaAmministrazione value for this Ruoloente.
      * 
      * @return pubblicaAmministrazione
@@ -172,6 +260,26 @@ public class Ruoloente  implements java.io.Serializable {
 
 
     /**
+     * Gets the referente value for this Ruoloente.
+     * 
+     * @return referente
+     */
+    public it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.Referente getReferente() {
+        return referente;
+    }
+
+
+    /**
+     * Sets the referente value for this Ruoloente.
+     * 
+     * @param referente
+     */
+    public void setReferente(it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.Referente referente) {
+        this.referente = referente;
+    }
+
+
+    /**
      * Gets the ruolo value for this Ruoloente.
      * 
      * @return ruolo
@@ -216,7 +324,7 @@ public class Ruoloente  implements java.io.Serializable {
      * 
      * @return tipologia
      */
-    public java.lang.String getTipologia() {
+    public it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.TipologieEnti getTipologia() {
         return tipologia;
     }
 
@@ -226,8 +334,28 @@ public class Ruoloente  implements java.io.Serializable {
      * 
      * @param tipologia
      */
-    public void setTipologia(java.lang.String tipologia) {
+    public void setTipologia(it.giustizia.www.serviziTelematici.reginde.interrogazioniInt.TipologieEnti tipologia) {
         this.tipologia = tipologia;
+    }
+
+
+    /**
+     * Gets the visibile value for this Ruoloente.
+     * 
+     * @return visibile
+     */
+    public boolean isVisibile() {
+        return visibile;
+    }
+
+
+    /**
+     * Sets the visibile value for this Ruoloente.
+     * 
+     * @param visibile
+     */
+    public void setVisibile(boolean visibile) {
+        this.visibile = visibile;
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -242,6 +370,9 @@ public class Ruoloente  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
+            ((this.classe==null && other.getClasse()==null) || 
+             (this.classe!=null &&
+              this.classe.equals(other.getClasse()))) &&
             ((this.codiceFiscale==null && other.getCodiceFiscale()==null) || 
              (this.codiceFiscale!=null &&
               this.codiceFiscale.equals(other.getCodiceFiscale()))) &&
@@ -251,6 +382,12 @@ public class Ruoloente  implements java.io.Serializable {
             ((this.descrizione==null && other.getDescrizione()==null) || 
              (this.descrizione!=null &&
               this.descrizione.equals(other.getDescrizione()))) &&
+            ((this.id==null && other.getId()==null) || 
+             (this.id!=null &&
+              this.id.equals(other.getId()))) &&
+            ((this.indirizziAbilitati==null && other.getIndirizziAbilitati()==null) || 
+             (this.indirizziAbilitati!=null &&
+              java.util.Arrays.equals(this.indirizziAbilitati, other.getIndirizziAbilitati()))) &&
             this.pubblicaAmministrazione == other.isPubblicaAmministrazione() &&
             ((this.pec==null && other.getPec()==null) || 
              (this.pec!=null &&
@@ -258,6 +395,9 @@ public class Ruoloente  implements java.io.Serializable {
             ((this.partitaIVA==null && other.getPartitaIVA()==null) || 
              (this.partitaIVA!=null &&
               this.partitaIVA.equals(other.getPartitaIVA()))) &&
+            ((this.referente==null && other.getReferente()==null) || 
+             (this.referente!=null &&
+              this.referente.equals(other.getReferente()))) &&
             ((this.ruolo==null && other.getRuolo()==null) || 
              (this.ruolo!=null &&
               this.ruolo.equals(other.getRuolo()))) &&
@@ -266,7 +406,8 @@ public class Ruoloente  implements java.io.Serializable {
               this.stato.equals(other.getStato()))) &&
             ((this.tipologia==null && other.getTipologia()==null) || 
              (this.tipologia!=null &&
-              this.tipologia.equals(other.getTipologia())));
+              this.tipologia.equals(other.getTipologia()))) &&
+            this.visibile == other.isVisibile();
         __equalsCalc = null;
         return _equals;
     }
@@ -278,6 +419,9 @@ public class Ruoloente  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
+        if (getClasse() != null) {
+            _hashCode += getClasse().hashCode();
+        }
         if (getCodiceFiscale() != null) {
             _hashCode += getCodiceFiscale().hashCode();
         }
@@ -287,12 +431,29 @@ public class Ruoloente  implements java.io.Serializable {
         if (getDescrizione() != null) {
             _hashCode += getDescrizione().hashCode();
         }
+        if (getId() != null) {
+            _hashCode += getId().hashCode();
+        }
+        if (getIndirizziAbilitati() != null) {
+            for (int i=0;
+                 i<java.lang.reflect.Array.getLength(getIndirizziAbilitati());
+                 i++) {
+                java.lang.Object obj = java.lang.reflect.Array.get(getIndirizziAbilitati(), i);
+                if (obj != null &&
+                    !obj.getClass().isArray()) {
+                    _hashCode += obj.hashCode();
+                }
+            }
+        }
         _hashCode += (isPubblicaAmministrazione() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         if (getPec() != null) {
             _hashCode += getPec().hashCode();
         }
         if (getPartitaIVA() != null) {
             _hashCode += getPartitaIVA().hashCode();
+        }
+        if (getReferente() != null) {
+            _hashCode += getReferente().hashCode();
         }
         if (getRuolo() != null) {
             _hashCode += getRuolo().hashCode();
@@ -303,6 +464,7 @@ public class Ruoloente  implements java.io.Serializable {
         if (getTipologia() != null) {
             _hashCode += getTipologia().hashCode();
         }
+        _hashCode += (isVisibile() ? Boolean.TRUE : Boolean.FALSE).hashCode();
         __hashCodeCalc = false;
         return _hashCode;
     }
@@ -314,6 +476,13 @@ public class Ruoloente  implements java.io.Serializable {
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniExt", "ruoloente"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("classe");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "classe"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("codiceFiscale");
         elemField.setXmlName(new javax.xml.namespace.QName("", "codiceFiscale"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
@@ -333,6 +502,21 @@ public class Ruoloente  implements java.io.Serializable {
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("id");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "id"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("indirizziAbilitati");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "indirizziAbilitati"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "indAbilitato"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        elemField.setMaxOccursUnbounded(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("pubblicaAmministrazione");
@@ -355,6 +539,13 @@ public class Ruoloente  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("referente");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "referente"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "referente"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("ruolo");
         elemField.setXmlName(new javax.xml.namespace.QName("", "ruolo"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
@@ -371,8 +562,14 @@ public class Ruoloente  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("tipologia");
         elemField.setXmlName(new javax.xml.namespace.QName("", "tipologia"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/reginde/interrogazioniInt", "tipologieEnti"));
         elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("visibile");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "visibile"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
