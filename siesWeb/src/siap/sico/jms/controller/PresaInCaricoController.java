@@ -3291,11 +3291,11 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 
 				} // endif Natura
 
-				// Ticket#20220331017 - aggiunto controllo sulla presenza dell'ID_FASCICOLO_SIEP a cui 
+				// Ticket#20220331017 - aggiunto controllo sulla presenza dell'ID_FASCICOLO_SIEP a cui
 				// collegare lo STATO_PROCEDIMENTO. Non sempre viene passato.
 				// if (lStatoProcedimento != null) {
-				if (lStatoProcedimento != null && lEve.getFasSieIdFascicoloSiep()!=null) {
-			    // Ticket#20220331017 - FINE	
+				if (lStatoProcedimento != null && lEve != null && lEve.getFasSieIdFascicoloSiep() != null) {
+					// Ticket#20220331017 - FINE
 					lStatoDao = new StatoProcedimentoDAO(aConn);
 					// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
 					lStatoDao.setCondizioneByIdFascicolo(lEve.getFasSieIdFascicoloSiep());
