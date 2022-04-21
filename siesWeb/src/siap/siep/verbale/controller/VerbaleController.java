@@ -808,7 +808,7 @@ public class VerbaleController extends SiapController implements IVerbale {
 				// lEveNot = ExRicercaEventoVerbale(aKeyFasc, "Nessun Documento registrato in relazione al
 				// verbale d'arresto");
 				lEveNot = ExRicercaEventoOE(aKeyFasc,
-						"Nessun Documento registrato in relazione al verbale d'arresto");
+						"Nessun Provvedimento registrato in relazione al Verbale Vane Ricerche!");
 			}
 
 			// inserisco un evento
