@@ -1,3 +1,29 @@
-RELEASE_12.4.18.0	-->	nato dal branch "release_12.4.17.0" in data 25/02/2022
+RELEASE_12.4.19.0	-->	nato dal branch "release_12.4.18.0" in data 31/03/2022
 
-NON Comprende Ticket MAC
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#20220323018 - correzione template - SIEP_LS_ODARI
+	Nella creazione dei dati da passare all'xml di stampa non gestiva i codici dell'OE con 
+	sospensione per i minori non calcolando il residuo pena ad oggi da visualizzare sul template
+	Classe modificata:
+	-	siap.sico.stampa.controller.StampaController.java
+	Metodi:
+	-	public TreeModel prelevaDatiEventoSiep
+	-	public TreeModel prelevaDatiIstruttoria
+	Aggiunti codici motivo dei minori: 5506-5507-5508
+
+2)	Ticket#20220331017 - SIUS - Sorveglianza Minorenni Milano - Presa in carico atti pervenuti --> Ricerca per Atti - SIUS
+	Nella presa in carico ordinanza SIUS il sistema tentava di inserire il record STATO_PROCEDIMANTO anche in assenza
+	collegamento andando in errore (dato obbligatorio.
+	Aggiunto controllo su presensa collegamento al fascicolo SIEP
+	Classe modificata:
+	-	siap.sico.jms.controller.PresaInCaricoController.java
+	Metodo:
+	-	ExAggiornaStatoProcedimento
+
+3)	Ticket#20220404012 — Misure sicurezza mancata visualizzazione provvedimento sorveglianza
+	Classe modificata:
+	-	siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO.java
+	Metodo:
+	-	RicercaEventoProvvediementiArchiviazioneSIUSByFascicoloSiep
+	Aggiunti i cod_motivo 9073 e 9074 e cod_esito 0054 nella query che recupera i provvedimenti della sorveglianza.
