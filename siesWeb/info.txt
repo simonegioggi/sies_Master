@@ -1,5 +1,13 @@
-RELEASE_12.4.20.0	-->	nato dal branch "release_12.4.19.0" in data 22/04/2022
+Ticket#20220415019 — cancellazione/pagina errore
 
-Comprende i seguenti Ticket MAC:
+Andava in errore la cancellazione di una ordinanza di revoca MA in quanto era puntata erroneamente dal un record
+MISURA_SICUREZZA.
+Corretta la funzione di inserimento che inseriva erroneamente il record MISURA_SICUREZZA se trovava valorizzato in form 
+il campo "Data Decorrenza Revoca".
 
-1)	
+
+Modulo corretto 
+siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS
+
+
+
