@@ -1,5 +1,13 @@
-RELEASE_12.4.20.0	-->	nato dal branch "release_12.4.19.0" in data 22/04/2022
+Ticket#202205020111 — SIEP - Ordini di Esecuzione/Scarcerazione --> Sospensione Esecuzione ex art. 656 c.p.p. --> Ordine di Esecuzione
 
-Comprende i seguenti Ticket MAC:
+L'oe simeone, in fase di inserimento, non gestiva le posizioni giuridiche altra causa 
+74 - Espiazione pena per Altra Causa in Regime di Detenzione
+75 - Espiazione pena per Altra Causa in Misura Sicurezza Detentiva (Internato)
 
-1)	
+ed inseriva un provvedimento inseterminato.
+Aggiunte la PG in questione aggregandole alla 76
+
+Modulo modificato
+siap.siep.ordineesecuzione.action.ActInserisciOrdineEsecuzioneSimeone
+
+
