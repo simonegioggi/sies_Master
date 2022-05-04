@@ -1,5 +1,16 @@
-RELEASE_12.4.20.0	-->	nato dal branch "release_12.4.19.0" in data 22/04/2022
+Ticket#202204010111
 
-Comprende i seguenti Ticket MAC:
 
-1)	
+Problama causato dal un vettore caricato con model differenti (SentenzaModel) da quelli che si aspettava la jsp di visualizzazione
+ovvero SentenzaFascicoliModel.
+
+Classi Modificate:
+
+siap.siep.sentenza.controller.ISentenza
+siap.siep.sentenza.controller.SentenzaController
+siap.siep.sentenza.action.ActRicercaSentenzaDuplicata
+
+Nel CTRL è stato aggiunto il metodo ExRicercaSentenzaDuplicataFascicoli che effettua la stessa query del motodo originale ExRicercaSentenzaDuplicata
+ma aggungendo i fascicoli siep e restituendo un Vector <SentenzaFascicoliModel>.
+
+
