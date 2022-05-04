@@ -1,13 +1,11 @@
-Ticket#20220415019 — cancellazione/pagina errore
+RELEASE_12.4.20.0	-->	nato dal branch "release_12.4.19.0" in data 22/04/2022
 
-Andava in errore la cancellazione di una ordinanza di revoca MA in quanto era puntata erroneamente dal un record
-MISURA_SICUREZZA.
-Corretta la funzione di inserimento che inseriva erroneamente il record MISURA_SICUREZZA se trovava valorizzato in form 
-il campo "Data Decorrenza Revoca".
+Comprende i seguenti Ticket MAC:
 
+1)	Ticket#20220415019 — cancellazione/pagina errore
+	Andava in errore la cancellazione di una ordinanza di revoca MA in quanto era puntata erroneamente da un record MISURA_SICUREZZA.
+	Corretta la funzione di inserimento che inseriva erroneamente il record MISURA_SICUREZZA se trovava valorizzato in form il campo "Data Decorrenza Revoca".
+	Classe corretta:
+	-	siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS.java
 
-Modulo corretto 
-siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS
-
-
-
+2)	
