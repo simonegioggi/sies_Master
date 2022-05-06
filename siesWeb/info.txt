@@ -13,5 +13,14 @@ Comprende i seguenti Ticket MAC:
 2)	Ticket#20220415019 - cancellazione/pagina errore
 	Andava in errore la cancellazione di una ordinanza di revoca MA in quanto era puntata erroneamente da un record MISURA_SICUREZZA.
 	Corretta la funzione di inserimento che inseriva erroneamente il record MISURA_SICUREZZA se trovava valorizzato in form il campo "Data Decorrenza Revoca".
-	Classe corretta:
+	Classe modificata:
 	-	siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS.java
+
+3)	Ticket#202205020111 — SIEP - Ordini di Esecuzione/Scarcerazione --> Sospensione Esecuzione ex art. 656 c.p.p. --> Ordine di Esecuzione
+	L'oe simeone, in fase di inserimento, non gestiva le posizioni giuridiche altra causa:
+	74 - Espiazione pena per Altra Causa in Regime di Detenzione
+	75 - Espiazione pena per Altra Causa in Misura Sicurezza Detentiva (Internato)
+	ed inseriva un provvedimento inseterminato.
+	Aggiunte le Posizioni Giuridiche in questione aggregandole alla 76
+	Classe modificata:
+	-	siap.siep.ordineesecuzione.action.ActInserisciOrdineEsecuzioneSimeone.java
