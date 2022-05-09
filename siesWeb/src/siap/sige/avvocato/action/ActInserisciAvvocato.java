@@ -66,31 +66,55 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		ComuneModel comuneNascita = null;
 		// 20210722 MEV_21 Controllo e valorizzazione comuneNascita.
 		// Se presente, dal codice comune (e dalla descrizione).
-		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
-				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
-			comuneNascita = new ComuneModel(
-					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-			codLuogoNascita = comuneNascita.getCodComune();
-			codProvincia = comuneNascita.getCodProvincia();
-			codCap = comuneNascita.getCap();
-			descCodLuogoNascita = comuneNascita.getDescrizione();
+		
+		// D.F. 2022.05.06 
+		// - comuneNascita (ComuneModel)
+		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
+		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
+		siesLogger.debug("tipoInserimento = "+tipoInserimento);
+		if (!"manuale".equals(tipoInserimento)) {
+			String codiFisc = getRequestStringParameter(CAMPO_CODICE_FISCALE);
 
-			// altrimenti dalla sola descrizione (rischio omonimi).
-		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
-			comuneNascita = new ComuneModel(
-					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+			siesLogger.debug("Recupero il comune di nascicta a partire dalcodice fiscale = "+codiFisc);
+			siesLogger.debug("CAMPO_ID_AVVOCATO = "+getRequestStringParameter(CAMPO_ID_AVVOCATO));
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
+				flagReginde = true;
+			
+			comuneNascita = AvvocatoUtil.calcolaComuneNascita(codiFisc);			
+			siesLogger.debug("comuneNascita = "+comuneNascita);
+			codLuogoNascita     = comuneNascita.getCodComune();
 			descCodLuogoNascita = comuneNascita.getDescrizione();
-			codLuogoNascita = comuneNascita.getCodComune();
-			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
-		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
-				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
-				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
-			comuneNascita = AvvocatoUtil
-					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+			codCap              = comuneNascita.getCap();
+			codProvincia        = comuneNascita.getCodProvincia();
 		}
-
+		else {	
+			
+			if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+					&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+				comuneNascita = new ComuneModel(
+						getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+								getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+				codLuogoNascita = comuneNascita.getCodComune();
+				codProvincia = comuneNascita.getCodProvincia();
+				codCap = comuneNascita.getCap();
+				descCodLuogoNascita = comuneNascita.getDescrizione();
+	
+				// altrimenti dalla sola descrizione (rischio omonimi).
+			} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+				comuneNascita = new ComuneModel(
+						getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+				descCodLuogoNascita = comuneNascita.getDescrizione();
+				codLuogoNascita = comuneNascita.getCodComune();
+				// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
+			} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+					&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
+					&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
+				comuneNascita = AvvocatoUtil
+						.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+				// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+			}
+		}
+		
 		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
 			descLuogoNascitaReginde = getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
 
@@ -105,8 +129,15 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 				comuneResidenza = new ComuneModel(getCodComuneByDescr(descLuogoResidenza));
 			} catch (Exception e) {
 				siesLogger.info(e.getMessage());
-				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+				
+				//MEV_21: nel caso di avvocato REGINDE il dato potrebbe essere errato ma non modificabile. 
+				if (!"manuale".equals(tipoInserimento)) {
+					//Non rilancio eccezione, resta valorizzata la descrizione dello studio in form
+				}
+				else
+					throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
 			}
+			
 			if (!Utils.isNullObj(comuneResidenza)) {
 				codLuogoResidenza = comuneResidenza.getCodComune();
 				descLuogoResidenza = comuneResidenza.getDescrizione();
@@ -122,10 +153,10 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 		if (!isRequestParameterNullObj(CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(CAMPO_COD_NON_ATTIVITA);
 
-		// 20210726 Recupero tipoInserimento (reginde, sies, manuale)
-		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
+
 
 		if (!"manuale".equals(tipoInserimento)) {
+			// Quindi selezionato da REGINDE o da SIEP (ma certificato reginde)
 			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA"))
 				flagReginde = true;
 			// Provengo da Reginde o da SIES: quindi si cerca l'avvocato certificato su tabella AVVOCATO;
@@ -158,25 +189,37 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			if (flagReginde && lAvvCertRegSies == null) {
 				amReginde = lCtrl.ExInserisciAvvocato(amReginde);
 			} else {
+//?? d.f. 20220506 in questo else si da per scontato che lAvvCertRegSies!=null ovvero è stato trovato a sistema un avvocato certificato reginde
+//	con stesso nome cognome e cf di quello della form
 				// 20210720 MEV_21 Se l'avvocato certificato ha cambiato Foro, si storicizza
 				// l'avvocato legato al vecchio Foro (con FLAG_REGINDE="NO") e si inserisce un nuovo Avvocato.
 				// Se non cambia il foro si aggiornano solo i dati provenienti da REGINDE o non si
 				// interviene(Avv. presente solo in SIES).
+				siesLogger.debug("flagReginde = "+flagReginde);
+				siesLogger.debug("lAvvCertRegSies = "+lAvvCertRegSies);
+				
 				if (lAvvCertRegSies.getForo().equals(amReginde.getForo())) {
+					siesLogger.debug("Il foro non è cambiato...");
 					amReginde.setIdAvvocato(lAvvCertRegSies.getIdAvvocato());
 					amReginde.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					amReginde.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					amReginde.setDataAggiornamento(DateUtils.getSysDate());
-					if (flagReginde)
-						amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde);
-					else
+					if (flagReginde) {
+						siesLogger.debug("Il foro non è cambiato: flagReginde = true aggiorno i dati dell'avvocato reginde a sistema ");
+						amReginde = lCtrl.ExAggiornaAvvocatoDaReginde(amReginde); 
+					}
+					else {
+						siesLogger.debug("Il foro non è cambiato... flagReginde = false ");
 						amReginde = lAvvCertRegSies;
+					}
 				} else {
 					lAvvCertRegSies.setFlagRegInde("NO");
 					lAvvCertRegSies.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 					lAvvCertRegSies.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 					lAvvCertRegSies.setDataAggiornamento(DateUtils.getSysDate());
+					// Stroricizzo
 					lAvvCertRegSies = lCtrl.ExAggiornaAvvocatoDaReginde(lAvvCertRegSies);
+					// Inserisco il "nuovo" avvocato (nuovo FORO)
 					amReginde = lCtrl.ExInserisciAvvocato(amReginde);
 				}
 			}

@@ -105,8 +105,8 @@ function gestisciBottoniRicercaSies() {
 </table>
 </form>
 <script language="JavaScript" type="text/javascript">
-var frmvalidator = new Validator("f");
-frmvalidator.setAddnlValidationFunction("Verify");
+//var frmvalidator = new Validator("f");
+//frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>
 </html>

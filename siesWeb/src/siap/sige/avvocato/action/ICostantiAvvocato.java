@@ -14,7 +14,28 @@ public interface ICostantiAvvocato {
 	public static final String CAMPO_TELEFONO = "Telefono";
 	public static final String CAMPO_FAX = "Fax";
 	public static final String CAMPO_E_MAIL = "EMail";
-	public static final String CAMPO_CODICE_FISCALE = "CodiceFiscale";
+	public static final String CAMPO_CODICE_FISCALE = "CodiceFiscaleAvv";	            // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_COD_LUOGO_NASCITA = "CodLuogoNascitaAvv";        // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_COD_COMUNE_RESIDENZA = "CodComuneResidenzaAvv";  // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_GIORNO_DATA_NASCITA = "GiornoDataNascitaAvv";    // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_MESE_DATA_NASCITA = "MeseDataNascitaAvv";        // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_ANNO_DATA_NASCITA = "AnnoDataNascitaAvv";        // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascitaAvv";        // 202200505 MEV_21 Aggiunto suffisso Avv per risolvere il conflitto con il Soggetto
+	// MEV_21: aggiunte costanti e pagine per chiamata a WS per individuare lista avvocato in RegInde
+	public static final String CAMPO_PEC = "Pec";
+	public static final String CAMPO_DESC_COMUNE_NASCITA_REGINDE = "DescComuneNascitaEstero";
+	public static final String CAMPO_DESC_COMUNE_STUDIO = "DescComuneStudio";
+	public static final String CAMPO_COD_NON_ATTIVITA = "CodNonAttivita";
+	/*public static final String CAMPO_CODICE_FISCALE = "CodiceFiscale";
+	public static final String CAMPO_COD_LUOGO_NASCITA = "CodLuogoNascita";
+	public static final String CAMPO_COD_COMUNE_RESIDENZA = "CodComuneResidenza";
+	public static final String CAMPO_GIORNO_DATA_NASCITA = "GiornoDataNascita";
+	public static final String CAMPO_MESE_DATA_NASCITA = "MeseDataNascita";
+	public static final String CAMPO_ANNO_DATA_NASCITA = "AnnoDataNascita";
+
+	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascita";
+	*/
+
 	public static final String CAMPO_COD_OPERATORE_INSERIMENTO = "CodOperatoreInserimento";
 	public static final String CAMPO_GIORNO_DATA_INSERIMENTO = "GiornoDataInserimento";
 	public static final String CAMPO_MESE_DATA_INSERIMENTO = "MeseDataInserimento";
@@ -23,11 +44,6 @@ public interface ICostantiAvvocato {
 	public static final String CAMPO_GIORNO_DATA_AGGIORNAMENTO = "GiornoDataAggiornamento";
 	public static final String CAMPO_MESE_DATA_AGGIORNAMENTO = "MeseDataAggiornamento";
 	public static final String CAMPO_ANNO_DATA_AGGIORNAMENTO = "AnnoDataAggiornamento";
-	public static final String CAMPO_COD_LUOGO_NASCITA = "CodLuogoNascita";
-	public static final String CAMPO_GIORNO_DATA_NASCITA = "GiornoDataNascita";
-	public static final String CAMPO_MESE_DATA_NASCITA = "MeseDataNascita";
-	public static final String CAMPO_ANNO_DATA_NASCITA = "AnnoDataNascita";
-	public static final String CAMPO_COD_COMUNE_RESIDENZA = "CodComuneResidenza";
 
 	public static final String PG_LOAD_RICERCAAVVOCATO = IWebConstants.ROOT_DIR
 			+ "files/siap/sige/avvocato/LoadRicercaAvvocato.jsp";
@@ -76,11 +92,6 @@ public interface ICostantiAvvocato {
 	public static final String PG_FILTRAAVVSIEP = IWebConstants.ROOT_DIR
 			+ "files/siap/sige/avvocato/FiltraAvvSiep.jsp";
 
-	// MEV_21: aggiunte costanti e pagine per chiamata a WS per individuare lista avvocato in RegInde
-	public static final String CAMPO_PEC = "Pec";
-	public static final String CAMPO_DESC_COMUNE_NASCITA_REGINDE = "DescComuneNascitaEstero";
-	public static final String CAMPO_DESC_COMUNE_STUDIO = "DescComuneStudio";
-	public static final String CAMPO_COD_NON_ATTIVITA = "CodNonAttivita";
-	public static final String CAMPO_COD_STATO_NASCITA = "CodStatoNascita";
+
 
 }
