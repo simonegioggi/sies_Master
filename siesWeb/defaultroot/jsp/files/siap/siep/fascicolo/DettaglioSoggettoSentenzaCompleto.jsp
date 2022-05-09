@@ -4,9 +4,9 @@
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="java.math.BigDecimal"%>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="java.util.Set"%>
+<%@ page import="java.util.HashSet"%>
 
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -18,68 +18,65 @@
 <%@ page import="siap.sico.decodifiche.util.DecodificheUtils"%>
 <%@ page import="siap.sico.decodifiche.controller.IDecodifiche"%>
 <%@ page import="siap.sico.decodifiche.controller.DecodificheManager"%>
-
-<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep" %>
-<%@ page import="siap.siep.fascicolo.model.FascicoloSiepModel" %>
-<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto" %>
-<%@ page import="siap.siep.sentenza.action.ICostantiSentenza" %>
-<%@ page import="siap.siep.sentenza.model.SentenzaModel" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="siap.siep.avvocato.model.AvvocatoModel" %>
-<%@ page import="siap.siep.penapresunta.model.PenaPresuntaModel" %>
+<%@ page import="siap.sico.soggetto.action.ICostantiSoggetto"%>
+<%@ page import="siap.sico.soggetto.model.SoggettoModel"%>
 <%@ page import="siap.sico.util.CalendarUtil"%>
 <%@ page import="siap.sico.util.SICOLookupRemote"%>
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.evento.model.EventoNotificaModel"%>
 <%@ page import="siap.sico.camponota.model.CampoNotaModel"%>
 <%@ page import="siap.sico.calendar.model.CalendarModel"%>
-<%@ page import="siap.sico.misuraalternativa.model.MisuraAlternativaModel" %>
-<%@ page import="siap.siep.penacumulo.model.PenaCumuloModel" %>
-<%@ page import="siap.siep.misurasicurezza.model.FascMsToFascSiepModel" %>
+<%@ page import="siap.sico.misuraalternativa.model.MisuraAlternativaModel"%>
+<%@ page import="siap.sico.evento.action.ActGestisciButtonsProvvedimento"%>
+<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 
-<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel" %>
-<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel" %>
-<%@ page import="siap.siep.penaresidua.model.PenaResiduaModel" %>
-<%@ page import="siap.siep.penapecuniaria.action.ICostantiPenaPecuniaria" %>
-<%@ page import="siap.sico.evento.action.ActGestisciButtonsProvvedimento" %>
-<%@ page import="siap.sico.evento.action.ICostantiEvento" %>
-<%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel" %>
-<%@ page import="siap.siep.scambiosanzione.model.ScambioSanzioneModel" %>
+<%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
+<%@ page import="siap.siep.fascicolo.model.FascicoloSiepModel"%>
+<%@ page import="siap.siep.sentenza.action.ICostantiSentenza"%>
+<%@ page import="siap.siep.sentenza.model.SentenzaModel"%>
+<%@ page import="siap.siep.avvocato.model.AvvocatoModel"%>
+<%@ page import="siap.siep.penapresunta.model.PenaPresuntaModel"%>
+<%@ page import="siap.siep.penacumulo.model.PenaCumuloModel"%>
+<%@ page import="siap.siep.misurasicurezza.model.FascMsToFascSiepModel"%>
+<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel"%>
+<%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
+<%@ page import="siap.siep.penaresidua.model.PenaResiduaModel"%>
+<%@ page import="siap.siep.penapecuniaria.action.ICostantiPenaPecuniaria"%>
+<%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel"%>
+<%@ page import="siap.siep.scambiosanzione.model.ScambioSanzioneModel"%>
 <%@ page import="siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo"%>
 <%@ page import="siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza"%>
-<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius" %>
 <%@ page import="siap.siep.penapecuniaria.controller.RichiestaConversioneController"%>
-<%@ page import="siap.siep.modulocumulo.model.PenaRideterminataCumuloModel" %>
+<%@ page import="siap.siep.modulocumulo.model.PenaRideterminataCumuloModel"%>
+
+<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.misurasicurezza.model.PeriodoAltraMisuraModel"%>
 
-<%@page import="org.apache.log4j.Logger"%>
+<%@ page import="org.apache.log4j.Logger"%>
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
-<% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG); %>
-<jsp:useBean id="UtenteConnesso"          scope="session" class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="fascicolo"               scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
+<% final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);%>
 
-<jsp:useBean id="dettagliofascicolo"      scope="request" class="siap.siep.fascicolo.model.DettaglioFascicoloModel" />
-<jsp:useBean id="fascicoloCollMod"        scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
-<jsp:useBean id="richiestaconversione"    scope="request" class="siap.siep.penapecuniaria.model.RichiestaConversioneModel" />
-<jsp:useBean id="vectfasc"                scope="request" class="java.util.Vector" />
-<jsp:useBean id="registroIstanzaCollMod"  scope="request" class="java.util.Vector" />
-
-<jsp:useBean id="IstruttoriaCumuloAperta" scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel" />
-<jsp:useBean id="vecFascicoloIV"      scope="request" class="java.util.Vector" />
-<jsp:useBean id="vediLinkSorv"         	  scope="request" class="java.lang.String" />
-<jsp:useBean id="etichettaEta" scope="request" class="java.lang.String"/>
-<jsp:useBean id="oscuraEta" scope="request" class="java.lang.String"/>
-
-<%//MEV26 cumulo%>
-<jsp:useBean id="LastEveTrasm"            scope="request" class="siap.sico.evento.model.EventoModel" />
-<jsp:useBean id="AnnotazioneEsitoCumulo"  scope="request" class="siap.siep.annotazioneesitotrasmissione.model.AnnotazioneEsitoTrasmissioneModel" />
-<jsp:useBean id="CompetenzaCumulo"        scope="request" class="siap.siep.competenza.model.CompetenzaModel" />
-<jsp:useBean id="FascCompetenteCumulo"    scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
-
+<jsp:useBean id="UtenteConnesso"          	scope="session" class="siap.sico.utente.model.UtenteModel" />
+<jsp:useBean id="fascicolo"               	scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
+<jsp:useBean id="dettagliofascicolo"      	scope="request" class="siap.siep.fascicolo.model.DettaglioFascicoloModel" />
+<jsp:useBean id="fascicoloCollMod"        	scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
+<jsp:useBean id="richiestaconversione"    	scope="request" class="siap.siep.penapecuniaria.model.RichiestaConversioneModel" />
+<jsp:useBean id="vectfasc"                	scope="request" class="java.util.Vector" />
+<jsp:useBean id="registroIstanzaCollMod"  	scope="request" class="java.util.Vector" />
+<jsp:useBean id="IstruttoriaCumuloAperta" 	scope="request" class="siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel" />
+<jsp:useBean id="vecFascicoloIV"      		scope="request" class="java.util.Vector" />
+<jsp:useBean id="vediLinkSorv"         	  	scope="request" class="java.lang.String" />
+<jsp:useBean id="etichettaEta" 				scope="request" class="java.lang.String"/>
+<jsp:useBean id="oscuraEta" 				scope="request" class="java.lang.String"/>
+<%-- MEV26 cumulo --%>
+<jsp:useBean id="LastEveTrasm"            	scope="request" class="siap.sico.evento.model.EventoModel" />
+<jsp:useBean id="AnnotazioneEsitoCumulo"  	scope="request" class="siap.siep.annotazioneesitotrasmissione.model.AnnotazioneEsitoTrasmissioneModel" />
+<jsp:useBean id="CompetenzaCumulo"        	scope="request" class="siap.siep.competenza.model.CompetenzaModel" />
+<jsp:useBean id="FascCompetenteCumulo"    	scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel" />
 
 <%
-  SoggettoModel soggetto = fascicolo.getSoggetto();
-  SentenzaModel sentenza = fascicolo.getSentenza();
+SoggettoModel soggetto = fascicolo.getSoggetto();
+SentenzaModel sentenza = fascicolo.getSentenza();
 %>
 <%
 //==============================================================================
@@ -102,185 +99,149 @@
 // - POSIZIONE MATERIALE
 // - ULTIMI EVENTI
 //==============================================================================
-	// 26/01/2015 MEV023 Conversioni Pene Pecuniarie - Modifiche descrizioni.
-	int lFasPro = fascicolo.getChiaveProgr().intValue();
-	String lDescPena1="Pena irrogata in sentenza : ";
-	String lDescPena2="Pena da espiare : ";
-	String lDescPena3="Richiesta conversione : ";
-	if (lFasPro > 70000 && lFasPro < 80000) {
-		lDescPena1="Pena pecuniaria da recuperare : ";
-		lDescPena2="Sanzione pecuniaria residua : ";
-		lDescPena3="Richiesta conversione pena pecuniaria : ";
-	}
+// 26/01/2015 MEV023 Conversioni Pene Pecuniarie - Modifiche descrizioni.
+int lFasPro = fascicolo.getChiaveProgr().intValue();
+String lDescPena1 = "Pena irrogata in sentenza : ";
+String lDescPena2 = "Pena da espiare : ";
+String lDescPena3 = "Richiesta conversione : ";
+if (lFasPro > 70000 && lFasPro < 80000) {
+	lDescPena1 = "Pena pecuniaria da recuperare : ";
+	lDescPena2 = "Sanzione pecuniaria residua : ";
+	lDescPena3 = "Richiesta conversione pena pecuniaria : ";
+}
 %>
 <script language="JavaScript" src="/html/gestisciUploadStampa2.js"></script>
 <script language="JavaScript">
-       function ListaSanzioni()
-      {
-       desktop = window.open("/jsp/Main.jsp?Action=siap.sius.sanzionesostitutiva.action.ActLoadListaSanzioniSostitutiveUDS" , "Lista_Date", "toolbar=no, location=no, status=no, menubar=no ,scrollbars=yes, resizable=no, width=600, height=500");
-      }                                                                                         
-       <%-- MEV_39: rimossa funzione, scrivo direttamente sulla pagina --%>
-//     	function ListaMisure()
-//     	{
-<%--      		desktop = window.open("/jsp/Main.jsp?Action=siap.sius.misurasicurezza.action.ActLoadListaMisureSicurezzaPM&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>" , "Lista_Date", "toolbar=no, location=no, status=no, menubar=no ,scrollbars=yes, resizable=no, width=600, height=450"); --%>
-//     	}																																												  
+var desktop;
+function ListaSanzioni() {
+	desktop = window.open("/jsp/Main.jsp?Action=siap.sius.sanzionesostitutiva.action.ActLoadListaSanzioniSostitutiveUDS" , "Lista_Date", "toolbar=no, location=no, status=no, menubar=no ,scrollbars=yes, resizable=no, width=600, height=500");
+}                                                                                         
+<%-- MEV_39: rimossa funzione, scrivo direttamente sulla pagina --%>
+<%-- function ListaMisure() { --%>
+<%-- desktop = window.open("/jsp/Main.jsp?Action=siap.sius.misurasicurezza.action.ActLoadListaMisureSicurezzaPM&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>" , "Lista_Date", "toolbar=no, location=no, status=no, menubar=no ,scrollbars=yes, resizable=no, width=600, height=450"); --%>
+<%-- } --%>																																							  
 </script>
 
-<table cellspacing=0 cellpadding=0 width=95%>
+<table cellspacing="0" cellpadding="0" width="95%">
+<%--
+==============================================================================
+                                PROCEDIMENTO
+==============================================================================
+--%>
+	<tr>
+		<td class="L" colspan="2" width=100%>
+        	<font class="label">Procedimento : N.</font>
+        	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>" title="Procedimento">
+          		<%=StringUtils.toStringJSP(fascicolo.getChiaveAnno())%>
+          		/
+          		<%=StringUtils.toStringJSP(fascicolo.getChiaveProgr())%>
+        	</a>&nbsp;
 <%
-//==============================================================================
-//                                PROCEDIMENTO
-//==============================================================================
+if (!(UtenteConnesso.getUfficioUtente().getCodUfficio().equals(fascicolo.getChiaveUfficio()))) {
 %>
-    <tr>
-      <td class="L" colspan="2" width=100%>
-        <font class="label">Procedimento : N.</font>
-        <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>" title="Procedimento">
-          <%=StringUtils.toStringJSP(fascicolo.getChiaveAnno())%>
-          /
-          <%=StringUtils.toStringJSP(fascicolo.getChiaveProgr())%>
-        </a>&nbsp;
+          	<font class="label"><%=fascicolo.getDescrTipoUfficio() + " DI " + fascicolo.getDescrComuneUfficio()%></font>
+          	<br>
 <%
-        //if (!(UtenteConnesso.getUfficioUtente().getCodUfficio().equals(fascicolo.getCodUfficioInserimento())))
-        if (!(UtenteConnesso.getUfficioUtente().getCodUfficio().equals(fascicolo.getChiaveUfficio())))
-        {
+}
+if (fascicolo.getFlagCumulante() != null && fascicolo.getFlagCumulante().equals("S")) {
 %>
-          <font class="label"><%=fascicolo.getDescrTipoUfficio() + " DI " + fascicolo.getDescrComuneUfficio() %></font>
-          <br>
+          	<font class="cRossoCumulo"> &nbsp;C&nbsp; </font>&nbsp;
 <%
-        }
-
-        if(fascicolo.getFlagCumulante() != null && fascicolo.getFlagCumulante().equals("S"))
-        {
+}
+if (fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreInserimento().startsWith("res-")) {
 %>
-          <font class="cRossoCumulo"> &nbsp;C&nbsp; </font>&nbsp;
+          	<font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
 <%
-        }
+}
+if (fascicolo.getCodStatoFascicolo() != null && (fascicolo.getCodStatoFascicolo().equals("01"))) {
 %>
+          	<font class="cRossoCumulo"> &nbsp;Archiviato&nbsp;</font>&nbsp;
 <%
-        if(fascicolo.getCodOperatoreInserimento() != null && fascicolo.getCodOperatoreInserimento().startsWith("res-"))
-        {
+}
+boolean isPenaSospesa = false;
+if ((dettagliofascicolo.getPenaResidua() != null
+		&& dettagliofascicolo.getPenaResidua().getFlagPenaSospesa() != null
+     	&& dettagliofascicolo.getPenaResidua().getFlagPenaSospesa().equals("S"))
+     	|| (fascicolo!= null && fascicolo.getChiaveProgr() != null
+        && (fascicolo.getChiaveProgr().intValue() >= 30000 && fascicolo.getChiaveProgr().intValue() < 40000))) {
+	if (fascicolo!= null && fascicolo.getChiaveProgr() != null
+    		&& (fascicolo.getChiaveProgr().intValue() >= 30000 && fascicolo.getChiaveProgr().intValue() < 40000)) {
+		isPenaSospesa = true;
 %>
-          <font class="cRossoCumulo"> &nbsp;Migrato&nbsp; </font>&nbsp;
+			<font class="cRossoCumulo"> &nbsp;Pena Sospesa Condizionalmente&nbsp;</font>&nbsp;
 <%
-        }
+	} else {
+		isPenaSospesa = true;
 %>
+			<font class="cRossoCumulo"> &nbsp;Esecuzione Sospesa&nbsp;</font>&nbsp;
 <%
-        if(   fascicolo.getCodStatoFascicolo() != null
-           && (fascicolo.getCodStatoFascicolo().equals("01"))
-           )
-        {
+	}
+}
+if (dettagliofascicolo.getPenaResidua() != null
+		&& dettagliofascicolo.getPenaResidua().getFlagPenaSospesa() != null
+		&& dettagliofascicolo.getPenaResidua().getFlagPenaSospesa().equals("I")) {
 %>
-          <font class="cRossoCumulo"> &nbsp;Archiviato&nbsp;</font>&nbsp;
+          	<font class="cRossoCumulo"> &nbsp;Pena Interrotta&nbsp;</font>&nbsp;
 <%
-        }
-
-        boolean isPenaSospesa = false;
-        if(   ( dettagliofascicolo.getPenaResidua()!= null
-             && dettagliofascicolo.getPenaResidua().getFlagPenaSospesa()!= null
-             && dettagliofascicolo.getPenaResidua().getFlagPenaSospesa().equals("S") )
-             || (      fascicolo!= null && fascicolo.getChiaveProgr() != null
-                  && ( fascicolo.getChiaveProgr().intValue() >= 30000
-                  &&   fascicolo.getChiaveProgr().intValue() < 40000) ) )
-        {
-          if(    fascicolo!= null && fascicolo.getChiaveProgr() != null
-            && ( fascicolo.getChiaveProgr().intValue() >= 30000
-            &&   fascicolo.getChiaveProgr().intValue() < 40000) )
-          {
-            isPenaSospesa = true;
+}
+if (dettagliofascicolo.getPenaResidua() != null
+		&& dettagliofascicolo.getPenaResidua().getFlagPenaSospesa()!= null
+		&& dettagliofascicolo.getPenaResidua().getFlagPenaSospesa().equals("D")) {
 %>
-            <font class="cRossoCumulo"> &nbsp;Pena Sospesa Condizionalmente&nbsp;</font>&nbsp;
+          	<font class="cRossoCumulo"> &nbsp;Pena Differita&nbsp;</font>&nbsp;
 <%
-          }
-          else
-          {
-            isPenaSospesa = true;
+}
 %>
-            <font class="cRossoCumulo"> &nbsp;Esecuzione Sospesa&nbsp;</font>&nbsp;
+        	<font class="label">Data Iscrizione :</font>
 <%
-          }
-        }
-
-        if(   dettagliofascicolo.getPenaResidua()!= null
-           && dettagliofascicolo.getPenaResidua().getFlagPenaSospesa()!= null
-           && dettagliofascicolo.getPenaResidua().getFlagPenaSospesa().equals("I") )
-        {
+if (fascicolo.getDataIscrizione() != null) {
 %>
-          <font class="cRossoCumulo"> &nbsp;Pena Interrotta&nbsp;</font>&nbsp;
+          	<font class="campo">
+            	<%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataIscrizione(),"dd-MM-yyyy"))%>
+          	</font>
 <%
-        }
-        if(   dettagliofascicolo.getPenaResidua()!= null
-           && dettagliofascicolo.getPenaResidua().getFlagPenaSospesa()!= null
-           && dettagliofascicolo.getPenaResidua().getFlagPenaSospesa().equals("D"))
-        {
+} else {
 %>
-          <font class="cRossoCumulo"> &nbsp;Pena Differita&nbsp;</font>&nbsp;
+          	-
 <%
-        }
-%>
-        <font class="label">Data Iscrizione :</font>
-<%
-        if(fascicolo.getDataIscrizione()!= null)
-        {
-%>
-          <font class="campo">
-            <%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataIscrizione(),"dd-MM-yyyy"))%>
-          </font>
-<%
-        }
-        else
-        {
-%>
-          -
-<%
-        }
+}
 %>
 
+<%-- inizio modifica marzo 2010 --%>
+        	<font class="label"> Data Arrivo Atto :</font>
 <%
-/* inizio modifica marzo 2010 */
+if (fascicolo.getDataArrivoAtto() != null) {
 %>
-
-        <font class="label"> Data Arrivo Atto :</font>
+          	<font class="campo">
+            	<%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataArrivoAtto(),"dd-MM-yyyy"))%>
+          	</font>
 <%
-        if(fascicolo.getDataArrivoAtto()!= null)
-        {
+} else {
 %>
-          <font class="campo">
-            <%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataArrivoAtto(),"dd-MM-yyyy"))%>
-          </font>
+          	-
 <%
-        }
-        else
-        {
-%>
-          -
-<%
-        }
+}
 /* fine modifica marzo 2010 */
-%>
-
-<% 
-if( UtenteConnesso.getUfficioUtente().isUfficioDiCompetenza(fascicolo.getChiaveUfficio()   ))  {
+if (UtenteConnesso.getUfficioUtente().isUfficioDiCompetenza(fascicolo.getChiaveUfficio())) {
 // Visualizza l'istruttoria Aperta SOLO se Fascicolo di competenza. Se non di competenza
 // sono consultabili solo le istruttorie chiuse
-       if (IstruttoriaCumuloAperta.getIdIstruttoriaCumulo()!=null) {
+	if (IstruttoriaCumuloAperta.getIdIstruttoriaCumulo() != null) {
 %>
-        <font class="label" style="color:red">Aperta Istruttoria Cumulo N. :</font>
-        <a class="cliccabile" href="/jsp/Main.jsp?Action=siap.siep.istruttoriacumulo.action.ActLoadGrigliaCumulo&<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>=<%=IstruttoriaCumuloAperta.getIdIstruttoriaCumulo()%>" title="Istruttoria">
-          <%=IstruttoriaCumuloAperta.getAnnoProtocollo()%>
-          /
-          <%=IstruttoriaCumuloAperta.getNumProtocollo()%>
-        </a>&nbsp;
-      
-      <% } %>
-<% } %>
-      </td>
-    </tr>
-
+			<font class="label" style="color:red">Aperta Istruttoria Cumulo N. :</font>
+        	<a class="cliccabile" href="/jsp/Main.jsp?Action=siap.siep.istruttoriacumulo.action.ActLoadGrigliaCumulo&<%=ICostantiIstruttoriaCumulo.CAMPO_ID_ISTRUTTORIA_CUMULO%>=<%=IstruttoriaCumuloAperta.getIdIstruttoriaCumulo()%>" title="Istruttoria">
+          		<%=IstruttoriaCumuloAperta.getAnnoProtocollo()%>
+          		/
+          		<%=IstruttoriaCumuloAperta.getNumProtocollo()%>
+        	</a>&nbsp;
+<%
+	}
+}
+%>
+		</td>
+	</tr>
 <%
 // Ticket#20200525017 - archiviazione - versione 12.x: se archiviato (01) non faccio vedere il msg
-if (fascicolo.getCodStatoFascicolo() != null
-		&& !fascicolo.getCodStatoFascicolo().equals("01")) {
+if (fascicolo.getCodStatoFascicolo() != null && !fascicolo.getCodStatoFascicolo().equals("01")) {
 	// MEV26 Cumulo - Se fascicolo trasmesso x competenza x cumulo
 	if (LastEveTrasm.getIdEvento() != null) {
 		String strAlertCumulo = "";
@@ -382,33 +343,29 @@ if (!"01".equals(fascicolo.getCodStatoFascicolo())
 <%
 }
 %>  
-</script>    
+</script>
 <%
 	} // END MEV26
 } // FINE Ticket#20200525017
-%>
-    
-<%
 //==============================================================================
 //                                 SOGGETTO
 //==============================================================================
 String colspanSoggetto = "2";
-if (etichettaEta !=null && !"".equals(etichettaEta)){
+if (etichettaEta != null && !"".equals(etichettaEta)) {
 	colspanSoggetto = "1";
 }
 %>
-    <tr>
-      <td class="L" colspan="<%=colspanSoggetto%>"><font class="label">Soggetto  :</font>
-      <font class="campo">
-        <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.soggetto.action.ActLoadDettaglioSoggetto&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=soggetto.getIdSoggetto()%>" title="Soggetto">
-          <%=StringUtils.toStringJSP(soggetto.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(soggetto.getNome())%>
-        </a>
-      </font>&nbsp;
+	<tr>
+		<td class="L" colspan="<%=colspanSoggetto%>"><font class="label">Soggetto:</font>
+      		<font class="campo">
+	       		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.soggetto.action.ActLoadDettaglioSoggetto&<%=ICostantiSoggetto.CAMPO_ID_SOGGETTO%>=<%=soggetto.getIdSoggetto()%>" title="Soggetto">
+	          		<%=StringUtils.toStringJSP(soggetto.getCognome())%>&nbsp;<%=StringUtils.toStringJSP(soggetto.getNome())%>
+	        	</a>
+      		</font>&nbsp;
 <%
-if(soggetto.getDataNascita() == null){
-   if(soggetto.getDataNascitaPresunta().equals("S")) {
-    	if (soggetto.getSesso().compareTo("F")==0)
-    	{
+if (soggetto.getDataNascita() == null) {
+	if (soggetto.getDataNascitaPresunta().equals("S")) {
+    	if (soggetto.getSesso().compareTo("F") == 0) {
 %>
       		<font class="label">nata il :</font>&nbsp;
 <%
@@ -417,8 +374,7 @@ if(soggetto.getDataNascita() == null){
       		<font class="label">nato il :</font>&nbsp;
 <%
     	}
-    	
-    	if(soggetto.getAnnoNascita() != null){
+    	if (soggetto.getAnnoNascita() != null) {
 %>
         	<font class="campo"><%=StringUtils.toStringJSP(soggetto.getAnnoNascita())%></font>&nbsp;
 <%
@@ -427,368 +383,366 @@ if(soggetto.getDataNascita() == null){
 			<font class="campo">**-**-****</font>&nbsp;
 <%    	
    		}	
-    	
-   }else if (soggetto.getEtaPresuntaAnni() != null || soggetto.getEtaPresuntaMesi()!=null ){ %>
-      	<font class="label">Eta' Presunta: </font>
+	} else if (soggetto.getEtaPresuntaAnni() != null || soggetto.getEtaPresuntaMesi() != null ) {
+%>
+      		<font class="label">Eta' Presunta: </font>
 <%
-		if (soggetto.getEtaPresuntaAnni() != null){
+		if (soggetto.getEtaPresuntaAnni() != null) {
 %>
 			anni <font class="campo"><%=StringUtils.toStringJSP(soggetto.getEtaPresuntaAnni())%>&nbsp;</font>
 <%
 		}
-		if (soggetto.getEtaPresuntaMesi() != null){
+		if (soggetto.getEtaPresuntaMesi() != null) {
 %>
 			mesi <font class="campo"><%=StringUtils.toStringJSP(soggetto.getEtaPresuntaMesi())%>&nbsp;</font>
 <%			
 		}
+	} else {
 %>
-
-<% }else {%>
-      <font class="campo">**-**-****</font>&nbsp;
-<% }
-
-}else {
-    if (soggetto.getSesso().compareTo("F")==0)
-    {
-%>
-      <font class="label">nata il :</font>&nbsp;
+      		<font class="campo">**-**-****</font>&nbsp;
 <%
-    }
-    else
-    {
+	}
+} else {
+    if (soggetto.getSesso().compareTo("F") == 0) {
 %>
-      <font class="label">nato il :</font>&nbsp;
+      		<font class="label">nata il :</font>&nbsp;
+<%
+	} else {
+%>
+      		<font class="label">nato il :</font>&nbsp;
 <%
     }
 %>
-      <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(soggetto.getDataNascita(),"dd-MM-yyyy"))%></font>&nbsp;
+      		<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(soggetto.getDataNascita(),"dd-MM-yyyy"))%></font>&nbsp;
 <%
 } // chiude else presenza data nascita
 %>
-      <font class="label">in : </font>
-      <font class="campo">
+			<font class="label">in : </font>
+			<font class="campo">
 <%
-      if (soggetto.getDescrComuneNascita().compareTo("-")==0)
-      {
+if (soggetto.getDescrComuneNascita().compareTo("-") == 0) {
 %>
-       <%=soggetto.getDescComuneNascitaEstero()%>  (<%=soggetto.getDescrStatoNascita().toUpperCase()%>)
+      			<%=soggetto.getDescComuneNascitaEstero()%> (<%=soggetto.getDescrStatoNascita().toUpperCase()%>)
 <%
-      }
-      else
-      {
+} else {
 %>
-        <%=soggetto.getDescrComuneNascita()%> (<%=soggetto.getCodProvinciaNascita()%>)
+        		<%=soggetto.getDescrComuneNascita()%> (<%=soggetto.getCodProvinciaNascita()%>)
 <%
-      }
+}
 %>
-
-
-      </font>
-      <font class="label">Codice CUI : </font>
-      <font class="campo"> <%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>&nbsp;&nbsp;&nbsp;
-    </td>
-<%if ("1".equals(colspanSoggetto)){%>
-    <td class="L" align="right">
-    	<%=etichettaEta%>
-<%if ("SI".equals(oscuraEta)){%>
-         <a href="Javascript:disattiva('siap.siep.fascicolo.action.ActModificaFascicolo&oscuraEtichettaMinore=yes','<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>','<%=fascicolo.getIdFascicoloSiep()%>');">
-           <img src="/images/delete.gif" width="12" height="12" alt="Disattiva" border="0">
-         </a>
-<%}	%>
-    </td>
-<%}	%>
-  </tr>
-
+      		</font>
+      		<font class="label">Codice CUI : </font>
+      		<font class="campo"> <%=StringUtils.toStringJSP(soggetto.getCodAfis())%></font>&nbsp;&nbsp;&nbsp;
+		</td>
 <%
-//==============================================================================
-//                                SENTENZA
-//==============================================================================
+if ("1".equals(colspanSoggetto)) {
 %>
-    <tr>
-      <td class="L" colspan="2">
-        <font class="label"><%=sentenza.getDescrTipoProvvedimento().substring(0,1).toUpperCase()+sentenza.getDescrTipoProvvedimento().substring(1).toLowerCase()%></font>&nbsp;:<font class="label"> N.</font>
-    <%	if( fascicolo!= null && fascicolo.getChiaveProgr() != null
-            && ( fascicolo.getChiaveProgr().intValue() >= 40000
-              && fascicolo.getChiaveProgr().intValue() < 50000) 
-            && (sentenza!=null && sentenza.getCodTipoProvvedimento()!=null)
-            && (sentenza.getCodTipoProvvedimento().compareTo("02")==0 || 
-            	sentenza.getCodTipoProvvedimento().compareTo("03")==0) )
-    	{ 
-    		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-    		//siesLogger.debug("--XX-- DettaglioSoggettoSentenzaCompleto - sentenza = "+sentenza ); %>    
-        	<font class="campo"> <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioDatiProvvedimentoMSFuoriSent&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
-      <%}
-    	else
-    	{ %>
-        <font class="campo"> <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
-	<%	} %>        	
-          <%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%> </a>&nbsp;
-          <font class="label">del</font>&nbsp;
-
-            <%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>
-
+    	<td class="L" align="right">
+    		<%=etichettaEta%>
+<%
+	if ("SI".equals(oscuraEta)) {
+%>
+         	<a href="Javascript:disattiva('siap.siep.fascicolo.action.ActModificaFascicolo&oscuraEtichettaMinore=yes','<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>','<%=fascicolo.getIdFascicoloSiep()%>');">
+           		<img src="/images/delete.gif" width="12" height="12" alt="Disattiva" border="0">
+         	</a>
+<%
+	}
+%>
+		</td>
+<%
+}
+%>
+	</tr>
+<%--
+==============================================================================
+                               SENTENZA
+==============================================================================
+--%>
+	<tr>
+      	<td class="L" colspan="2">
+        	<font class="label"><%=sentenza.getDescrTipoProvvedimento().substring(0,1).toUpperCase()+sentenza.getDescrTipoProvvedimento().substring(1).toLowerCase()%></font>&nbsp;:<font class="label"> N.</font>
+<%
+if (fascicolo != null && fascicolo.getChiaveProgr() != null
+		&& (fascicolo.getChiaveProgr().intValue() >= 40000
+		&& fascicolo.getChiaveProgr().intValue() < 50000) 
+		&& (sentenza!=null && sentenza.getCodTipoProvvedimento() != null)
+		&& (sentenza.getCodTipoProvvedimento().compareTo("02") == 0
+			|| sentenza.getCodTipoProvvedimento().compareTo("03") == 0)) {
+%>    
+			<font class="campo">
+				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioDatiProvvedimentoMSFuoriSent&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+<%
+} else {
+%>
+        	<font class="campo">
+        		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>" title="Sentenza">
+<%
+}
+%>        	
+          			<%=StringUtils.toStringJSP(sentenza.getAnnoSentenza())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroSentenza())%>
+          		</a>&nbsp;
+          	</font>
+          	<font class="label">del</font>&nbsp;
+            	<%=DateUtils.getDateToString(sentenza.getDataProvvedimento(), "dd-MM-yyyy")%>
         	</font>
 <%
-	if (!sentenza.getCodTipoProvvedimento().equals("02")) {
+if (!sentenza.getCodTipoProvvedimento().equals("02")) {
 %>
-			&nbsp;<font class="label"> Emessa da: </font> <% 
-	} else {
+			&nbsp;<font class="label"> Emessa da: </font>
+<% 
+} else {
 %>
-			&nbsp;<font class="label"> Emesso da: </font><%} %>
+			&nbsp;<font class="label"> Emesso da: </font>
+<%
+}
+%>
         	<font class="campo"><%=StringUtils.toStringJSP(sentenza.getDescrTipoAutoritaEmittente())%></font>&nbsp;
 <%
-		if (sentenza.getNumSezioneAutoritaEmittente() != null) {
+if (sentenza.getNumSezioneAutoritaEmittente() != null) {
 %>
 			<font class="label">(Sez.</font> <font class="campo"><%=StringUtils.toStringJSP(sentenza.getNumSezioneAutoritaEmittente())%> </font> <font class="label">) </font>
 <%
-        }
+}
 %>
         	<font class="label"> di </font>
         	<font class="campo"><%=StringUtils.toStringJSP(sentenza.getDescrLuogoEmittente())%></font>
 <%
-        if (sentenza.getAnnoRegeGip() != null) {
+if (sentenza.getAnnoRegeGip() != null) {
 %>
 			&nbsp;<font class="label"> (N.Reg.Gen. </font>
 			<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeGip())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeGip())%></font>
 			<font class="label"> GIP) </font>
 <%
-        } else {
-			if (sentenza.getAnnoRegeDib() != null) {
+} else {
+	if (sentenza.getAnnoRegeDib() != null) {
 %>
           	&nbsp;<font class="label"> (N.Reg.Gen. </font>
           	<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeDib())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeDib())%></font>
           	<font class="label"> DIB) </font>
 <%
 			// MEV_66: aggiunte quattro nuove proprietà
-			} else if (sentenza.getAnnoRegeGup() != null) {
+	} else if (sentenza.getAnnoRegeGup() != null) {
 %>
           	&nbsp;<font class="label"> (N.Reg.Gen. </font>
           	<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeGup())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeGup())%></font>
           	<font class="label"> GUP) </font>
 <%
-			} else if (sentenza.getAnnoRegeCapsm() != null) {
+	} else if (sentenza.getAnnoRegeCapsm() != null) {
 %>
 	          	&nbsp;<font class="label"> (N.Reg.Gen. </font>
 	          	<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeCapsm())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeCapsm())%></font>
 	          	<font class="label"> CAPSM) </font>
 <%
-			// MEV_66: aggiunti anche CAS, CAP e CASAP
-			} else if (sentenza.getAnnoRegeCap() != null) {
+	// MEV_66: aggiunti anche CAS, CAP e CASAP
+	} else if (sentenza.getAnnoRegeCap() != null) {
 %>
 				&nbsp;<font class="label"> (N.Reg.Gen. </font>
 				<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeCap())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeCap())%></font>
 				<font class="label"> CAP) </font>
 <%
-			} else if (sentenza.getAnnoRegeCas() != null) {
+	} else if (sentenza.getAnnoRegeCas() != null) {
 %>
 				&nbsp;<font class="label"> (N.Reg.Gen. </font>
 				<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeCas())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeCas())%></font>
 				<font class="label"> CAS) </font>
 <%
-			} else if (sentenza.getAnnoRegeCasap() != null) {
+	} else if (sentenza.getAnnoRegeCasap() != null) {
 %>
 				&nbsp;<font class="label"> (N.Reg.Gen. </font>
 				<font class="campo"><%=StringUtils.toStringJSP(sentenza.getAnnoRegeCasap())%> / <%=StringUtils.toStringJSP(sentenza.getNumeroRegeCasap())%></font>
 				<font class="label"> CASAP) </font>
 <%
-			}
-		}
+	}
+}
 %>
 		</td>
 	</tr>
-
+<%--
+==============================================================================
+                              DATA IRREVOCABILITA'/NOTE
+==============================================================================
+--%>
 <%
-//==============================================================================
-//                               DATA IRREVOCABILITA'/NOTE
-//==============================================================================
+if (fascicolo.getDataIrrevocabilita() != null) {
 %>
-<%if(fascicolo.getDataIrrevocabilita()!=null){%>
-    <tr>
-      <td class="L" colspan="2">
-       
+	<tr>
+      	<td class="L" colspan="2">
 <% // paolo cherubini 05/01/2011 
-        if(!sentenza.getCodTipoProvvedimento().equals("02"))
-        {
+	if (!sentenza.getCodTipoProvvedimento().equals("02")) {
 %>
-      <font class="label">Data irrevocabilita' : </font>
+      		<font class="label">Data irrevocabilita' : </font>
 <% 
-        }
-    else
-    {
+	} else {
 %>
-      <font class="label">Esecutivo il : </font>
+      		<font class="label">Esecutivo il : </font>
 <%    
-    } 
+    }
 %>
-        <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataIrrevocabilita(), "dd-MM-yyyy"))%></font>
-      </td>
-    </tr>
-<%}%>
-
+        	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataIrrevocabilita(), "dd-MM-yyyy"))%></font>
+		</td>
+	</tr>
+<%
+}
+%>
 </table>
 
-<table width=95%>
-
-<%  // Ambros 25/03/2009  Collegamento Classi I e VII 
-//  ==============================================================================
-//       Richieste Conversione e Procedimenti di Classe VII
-//  ==============================================================================
-%>
-<tr>
-
-
-<%  int lFascProg = fascicolo.getChiaveProgr().intValue();
-  
-  if((lFascProg > 70000 && lFascProg < 80000) &&
-    (fascicoloCollMod.getChiaveProgr()!=null))  
-  { %>
-      
-          <td class="L" colspan=1>
-              <font class="label">Collegato al Procedimento: N.</font>
-              <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicoloCollMod.getIdFascicoloSiep()%>" title="Procedimento">
-                <%=StringUtils.toStringJSP(fascicoloCollMod.getChiaveAnno())%>/
-                <%=StringUtils.toStringJSP(fascicoloCollMod.getChiaveProgr())%>
-              </a>
-          </td>
-        
-<%  }  
-  if((lFascProg > 70000 && lFascProg < 80000) &&
-    (richiestaconversione.getIdRichiestaConversione() !=null))  
-  { 
-        String lDescrLink = "";
-        lDescrLink = "Dettaglio Conversione Pena Pecuniaria"; 
-%>            
-
-          <td align="right">
-            <font class="cRosso">
-              <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penapecuniaria.action.ActLoadDettaglioRichiestaConversione&<%=ICostantiPenaPecuniaria.CAMPO_ID_RICHIESTA_CONVERSIONE%>=<%=richiestaconversione.getIdRichiestaConversione()%>">
-                    <%=lDescrLink%>
-                
-                </a>
-              </font>
-          </td>       
+<table width="95%">
+<%--
+Ambros 25/03/2009  Collegamento Classi I e VII 
+  ==============================================================================
+       Richieste Conversione e Procedimenti di Classe VII
+  ==============================================================================
+--%>
+	<tr>
 <%
-  }
-  // ANNA per associazione a Reg. Istanza
-  Iterator itxReg = registroIstanzaCollMod.iterator();
-  int nRegColl=0;
-  while (itxReg.hasNext()) {
-    nRegColl++;
+int lFascProg = fascicolo.getChiaveProgr().intValue();
+if (lFascProg > 70000 && lFascProg < 80000 && fascicoloCollMod.getChiaveProgr() != null) {
+%>
+		<td class="L" colspan=1>
+			<font class="label">Collegato al Procedimento: N.</font>
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=fascicoloCollMod.getIdFascicoloSiep()%>" title="Procedimento">
+				<%=StringUtils.toStringJSP(fascicoloCollMod.getChiaveAnno())%>/
+                <%=StringUtils.toStringJSP(fascicoloCollMod.getChiaveProgr())%>
+			</a>
+		</td>
+<%
+}
+if (lFascProg > 70000 && lFascProg < 80000 && richiestaconversione.getIdRichiestaConversione() !=null) {
+	String lDescrLink = "Dettaglio Conversione Pena Pecuniaria";
+%>
+		<td align="right">
+			<font class="cRosso">
+				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penapecuniaria.action.ActLoadDettaglioRichiestaConversione&<%=ICostantiPenaPecuniaria.CAMPO_ID_RICHIESTA_CONVERSIONE%>=<%=richiestaconversione.getIdRichiestaConversione()%>">
+					<%=lDescrLink%>
+	            </a>
+			</font>
+		</td>
+<%
+}
+// ANNA per associazione a Reg. Istanza
+Iterator itxReg = registroIstanzaCollMod.iterator();
+int nRegColl = 0;
+while (itxReg.hasNext()) {
+	nRegColl++;
     FascicoloSiepModel regIstCollMod = (FascicoloSiepModel) itxReg.next();
     // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
     siesLogger.info("MODEL PERVENUTO ALLA JSP: " + regIstCollMod);
-  if( (regIstCollMod.getChiaveProgr()!=null) &&
-      (regIstCollMod.getChiaveProgr().intValue() > 90000 && 
-          regIstCollMod.getChiaveProgr().intValue() < 100000) ) 
-  { %>
-              <%if (nRegColl==1) { %>
-              <tr><td class="L" colspan=1>
-              <font class="label">Collegato al Registro Istanza: N.</font>
-              <% }  else { %>
-              <font class="label"> , </font>
-              <% } 
-              %>
-              <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=regIstCollMod.getIdFascicoloSiep()%>" title="Procedimento">
-                <%=StringUtils.toStringJSP(regIstCollMod.getChiaveAnno())%>/
-                <%=StringUtils.toStringJSP(regIstCollMod.getChiaveProgr())%>
-              </a>
-              <%if (!itxReg.hasNext()) { %>
-              </td></tr>
-              <% } %>
-        
-<%  } // Chiusura If 
-  } // Chiusura While 
-  
-// fine ANNA  
-
+  	if (regIstCollMod.getChiaveProgr() != null
+  			&& regIstCollMod.getChiaveProgr().intValue() > 90000
+  			&& regIstCollMod.getChiaveProgr().intValue() < 100000) {
+		if (nRegColl==1) {
 %>
-
+	<tr>
+		<td class="L" colspan=1>
+			<font class="label">Collegato al Registro Istanza: N.</font>
+<%
+		}  else {
+%>
+			<font class="label"> , </font>
+<%
+		} 
+%>
+				<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=regIstCollMod.getIdFascicoloSiep()%>" title="Procedimento">
+	                <%=StringUtils.toStringJSP(regIstCollMod.getChiaveAnno())%>/
+	                <%=StringUtils.toStringJSP(regIstCollMod.getChiaveProgr())%>
+              	</a>
+<%
+		if (!itxReg.hasNext()) {
+%>
+		</td>
+</tr>
+<%
+		}
+	} // Chiusura If 
+} // Chiusura While 
+// fine ANNA  
+%>
 </table>
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
-  int Conta = 0;
-  //if(lFascProg < 20000)
-  //{   
-    FascicoloSiepModel lFasciMod = new FascicoloSiepModel();
-    Iterator itx = vectfasc.iterator();
-    while ( itx.hasNext())
-    {
-      lFasciMod = (FascicoloSiepModel)itx.next();
-        if(lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000  )
-        {
-          Conta = Conta + 1;
-        }
+int Conta = 0;
+FascicoloSiepModel lFasciMod = new FascicoloSiepModel();
+Iterator itx = vectfasc.iterator();
+while (itx.hasNext()) {
+	lFasciMod = (FascicoloSiepModel)itx.next();
+	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
+		Conta = Conta + 1;
     }
-  //}
-  if (Conta > 0)
-  {
-%>    
-    <tr>  
-      <td class="L">
-          <font class="label">Collegato al Procedimento: N.</font>  
+}
+if (Conta > 0) {
+%>
+	<tr>
+		<td class="L">
+			<font class="label">Collegato al Procedimento: N.</font>
 <%            
-    //FascicoloSiepModel lFasciMod = new FascicoloSiepModel();
-	//Iterator itx = vectfasc.iterator();
 	lFasciMod = new FascicoloSiepModel();
 	itx = vectfasc.iterator();
-    while ( itx.hasNext())
-    {
-      lFasciMod = (FascicoloSiepModel)itx.next();
-      if(lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000  ) {
+    while (itx.hasNext()) {
+		lFasciMod = (FascicoloSiepModel)itx.next();
+      	if (lFasciMod.getChiaveProgr().intValue() > 70000 && lFasciMod.getChiaveProgr().intValue() < 80000) {
 %>
-              <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=lFasciMod.getIdFascicoloSiep()%>" title="Procedimento">
                 <%=StringUtils.toStringJSP(lFasciMod.getChiaveAnno())%>/
-                <%=StringUtils.toStringJSP(lFasciMod.getChiaveProgr())%>&nbsp;
-              </a>
-              <!-- 26/01/2015	Visualizzazione quantum Richiesta conversione. -->
-<%			  if (richiestaconversione !=null &&
-  				  ( richiestaconversione.getImportoMulta()!=null && 
-      				richiestaconversione.getImportoMulta().compareTo(new BigDecimal(0))!=0) ||
-    			  ( richiestaconversione.getImportoAmmenda()!=null && 
-      				richiestaconversione.getImportoAmmenda().compareTo(new BigDecimal(0))!=0)) 
-  			  {
+                <%=StringUtils.toStringJSP(lFasciMod.getChiaveProgr())%>
+           	</a>
+           	<!-- 26/01/2015	Visualizzazione quantum Richiesta conversione. -->
+<%
+			if (richiestaconversione != null
+					&& (richiestaconversione.getImportoMulta() != null
+					&& richiestaconversione.getImportoMulta().compareTo(new BigDecimal(0)) != 0)
+					|| (richiestaconversione.getImportoAmmenda() != null
+					&& richiestaconversione.getImportoAmmenda().compareTo(new BigDecimal(0)) != 0)) {
 %>
-          		<!--font class="label">&nbsp;&nbsp;&nbsp;(Richiesta Conversione :</font>-->
-          		<font class="label">&nbsp;&nbsp;&nbsp;(<%=lDescPena3 %></font>
-<%          	if ( richiestaconversione.getImportoMulta()!=null && 
-             		 richiestaconversione.getImportoMulta().compareTo(new BigDecimal(0))!=0) 
-        		{
-%>              
-            		<font class="label">Multa </font>
-          			<font class="campo"><%=StringUtils.toEuroFormat(richiestaconversione.getImportoMulta())%></font>&nbsp;&euro;&nbsp;&nbsp;&nbsp;&nbsp;
-<%          	}
-        		if ( richiestaconversione.getImportoAmmenda()!=null && 
-           			 richiestaconversione.getImportoAmmenda().compareTo(new BigDecimal(0))!=0) 
-        		{
+			<font class="label">&nbsp;&nbsp;&nbsp;(<%=lDescPena3%></font>
+<%
+				boolean existMulta = false;
+				if (richiestaconversione.getImportoMulta() != null
+						&& richiestaconversione.getImportoMulta().compareTo(new BigDecimal(0)) != 0) {
+					existMulta = true;
+%>
+			<font class="label">Multa</font>&nbsp;
+			<font class="campo"><%=StringUtils.toEuroFormat(richiestaconversione.getImportoMulta())%></font>&nbsp;&euro;
+<%
+				}
+        		if (richiestaconversione.getImportoAmmenda() != null
+        				&& richiestaconversione.getImportoAmmenda().compareTo(new BigDecimal(0)) != 0) {
+        			if (existMulta) {
+%>
+			&nbsp;&nbsp;&nbsp;
+<%
+        			}
 %>      
-           			<font class="label">Ammenda </font>
-           			<font class="campo"><%=StringUtils.toEuroFormat(richiestaconversione.getImportoAmmenda())%></font>&nbsp;&euro;&nbsp;)&nbsp;
-<%          	}
-      
-			  } %>  
-          </td>
-<%        }
-    } %>  
-    </tr>     
+   			<font class="label">Ammenda</font>&nbsp;
+   			<font class="campo"><%=StringUtils.toEuroFormat(richiestaconversione.getImportoAmmenda())%></font>&nbsp;&euro;)
+<%          	} else {
+%>
+			)
+<%
+}
+			}
+%>  
+		</td>
+<%
+		}
+	}
+%>  
+	</tr>     
 <%    
-  } %>
-
+}
+%>
 <!--  MISURE di SICUREZZA - Collegamento tra classi I e IV -->
 <%
-  if(vecFascicoloIV.size() > 0 )
-  {
-    Iterator iteIV = vecFascicoloIV.iterator();
-    while(iteIV.hasNext() )
-    { 
-      FascMsToFascSiepModel FascMSMod = (FascMsToFascSiepModel)iteIV.next();
+if (vecFascicoloIV.size() > 0) {
+	Iterator iteIV = vecFascicoloIV.iterator();
+    while (iteIV.hasNext()) {
+		FascMsToFascSiepModel FascMSMod = (FascMsToFascSiepModel) iteIV.next();
 %>
-        <tr>
-          <td class="L" colspan=1>
-          <%
-            if (ICostantiMisuraSicurezza.COD_TIPO_RELAZIONE_MS_ISCRITTO_AL.equals(FascMSMod.getCodTipoRelazioneMS()))
-            {
-          %>
+	<tr>
+		<td class="L" colspan=1>
+<%
+		if (ICostantiMisuraSicurezza.COD_TIPO_RELAZIONE_MS_ISCRITTO_AL.equals(FascMSMod.getCodTipoRelazioneMS())) {
+%>
             <font class="label">Iscritto al procedimento Misure di Sicurezza: N.</font>
             <% if (FascMSMod.getFasSieIdFascicoloCollegato()!=null) {%>
             <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP%>=<%=FascMSMod.getFasSieIdFascicoloCollegato()%>" title="Procedimento">

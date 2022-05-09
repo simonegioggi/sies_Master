@@ -431,6 +431,50 @@
       return false;
     }     
     
+    <%-- Ticket#202112240110  Aggiunti controlli su anno e numero SIUS --%>
+    if(document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value=="")
+    {
+      alert("Indicare Anno SIUS");
+      document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.focus();
+      return false;
+    }
+    else if (   document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value<1900
+             || document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.value>3000) 
+    {
+      alert("Indicare Correttamente Anno SIUS");
+      document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>.focus();
+      return false;
+    }
+    
+    if(document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>.value=="")
+    {
+      alert("Indicare Progressivo fascicolo SIUS");
+      document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>.focus();
+      return false;
+    }
+
+    if(document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_ANNO_REGISTRO%>.value=="")
+    {
+      alert("Indicare Anno Provvedimento SIUS");
+      document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_ANNO_REGISTRO%>.focus();
+      return false;
+    }
+    else if (   document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_ANNO_REGISTRO%>.value<1900
+             || document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_ANNO_REGISTRO%>.value>3000) 
+    {
+      alert("Indicare Correttamente Anno Provvedimento SIUS");
+      document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_ANNO_REGISTRO%>.focus();
+      return false;
+    }
+    
+    if(document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_NUMERO_REGISTRO%>.value=="")
+    {
+      alert("Indicare Progressivo Provvedimento SIUS");
+      document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_NUMERO_REGISTRO%>.focus();
+      return false;
+    }
+    <%-- Ticket#202112240110  FINE --%>
+    
     if(document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_COD_UFFICIO_EMITTENTE%>.value=="-")
     {
       alert("Selezionare l'Ufficio Emittente");
@@ -538,6 +582,20 @@
         document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_INIZIO_PAGA%>.focus();
         return false;
       }
+      
+      <%-- Ticket#202112240110  Aggiunto controllo Data prima rata deve essere maggiore della data di emissione --%>
+      if (data_to_verify!='//') {
+        var data_Emissione = document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+ 
+                       document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+ 
+                       document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiScambioSanzione.CAMPO_ANNO_DATA_EMISSIONE%>.value; 
+     
+        if (data_Emissione!='//' && CompareDate (data_to_verify,data_Emissione) ) {
+          alert("Data Pagamento Prima Rata non può precedere la data di emissione del provvedimento");
+          document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_INIZIO_PAGA%>.focus();
+          return false;        
+        }
+      }
+      <%-- Ticket#202112240110  FINE --%>
       
       if (data_to_verify=='//' && document.LoadInserisciAnnotazioneProvvedimento.<%=ICostantiPenaPecuniaria.CAMPO_GIORNI_INIZIO_PAGA%>.value=="") {
         alert("Indicare i termini di pagamento");

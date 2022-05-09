@@ -421,24 +421,47 @@ public class ActInserisciAnnotazioneProvvedimento extends ActionSiap implements 
 				lParteIntera = getRequestStringParameter(ICostantiPenaPecuniaria.CAMPO_VALORE_ULTIMA_RATA_I);
 				lParteDecimale = getRequestStringParameter(ICostantiPenaPecuniaria.CAMPO_VALORE_ULTIMA_RATA_D);
 
+				
+				//Ticket#202112240110 - Valorizzava l'importo ultima rata anche se non indicato in form
+				//                      in quanto utilizzava la stessa variabile "lImportRata" delle "prime rate"
+//				if (!lParteIntera.equals("")) {
+//					if (!lParteDecimale.equals("")) {
+//						lImportRata = new BigDecimal(lParteIntera + "." + lParteDecimale);
+//					} else
+//						lImportRata = new BigDecimal(lParteIntera);
+//				} else if (!lParteDecimale.equals("")) {
+//					lImportRata = new BigDecimal("0." + lParteDecimale);
+//				}
+//
+//				lRicConvModel.setValoreUltimaRata(lImportRata);
+
+				
+				BigDecimal lImportUltimaRata = null;
 				if (!lParteIntera.equals("")) {
 					if (!lParteDecimale.equals("")) {
-						lImportRata = new BigDecimal(lParteIntera + "." + lParteDecimale);
+						lImportUltimaRata = new BigDecimal(lParteIntera + "." + lParteDecimale);
 					} else
-						lImportRata = new BigDecimal(lParteIntera);
+						lImportUltimaRata = new BigDecimal(lParteIntera);
 				} else if (!lParteDecimale.equals("")) {
-					lImportRata = new BigDecimal("0." + lParteDecimale);
+					lImportUltimaRata = new BigDecimal("0." + lParteDecimale);
 				}
-
-				lRicConvModel.setValoreUltimaRata(lImportRata);
-
+				lRicConvModel.setValoreUltimaRata(lImportUltimaRata);
+				//Ticket#202112240110 - FINE
+				
 				// Data Pagamento Prima Rata
 				// Inizio 01/02/2016
 				if (getRequestStringParameter(ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_INIZIO_PAGA).length() > 0) {
+					//Ticket#202112240110 - Caricava la data prima rata dal campo sbagliato ovvero dalla data emissione
+//					lRicConvModel.setDataInizioPagamento(getRequestDateParameter(
+//							ICostantiScambioSanzione.CAMPO_ANNO_DATA_EMISSIONE,
+//							ICostantiScambioSanzione.CAMPO_MESE_DATA_EMISSIONE,
+//							ICostantiScambioSanzione.CAMPO_GIORNO_DATA_EMISSIONE));
 					lRicConvModel.setDataInizioPagamento(getRequestDateParameter(
-							ICostantiScambioSanzione.CAMPO_ANNO_DATA_EMISSIONE,
-							ICostantiScambioSanzione.CAMPO_MESE_DATA_EMISSIONE,
-							ICostantiScambioSanzione.CAMPO_GIORNO_DATA_EMISSIONE));
+							ICostantiPenaPecuniaria.CAMPO_ANNO_DATA_INIZIO_PAGA,
+							ICostantiPenaPecuniaria.CAMPO_MESE_DATA_INIZIO_PAGA,
+							ICostantiPenaPecuniaria.CAMPO_GIORNO_DATA_INIZIO_PAGA));					
+					//Ticket#202112240110 - Caricava la data prima rata dal campo sbagliato
+					
 				}
 				// fine 01/02/2016
 
