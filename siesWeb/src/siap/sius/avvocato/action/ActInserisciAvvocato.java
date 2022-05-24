@@ -511,10 +511,22 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 
   			// altrimenti dalla sola descrizione (rischio omonimi).
   		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+  			// new 2022.05.16 se reginde il comune di nascita viene decodificato dal CF
+  			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
+  				String codiFiscAvv = getRequestStringParameter(CAMPO_CODICE_FISCALE);
+  				comuneNascita = AvvocatoUtil.calcolaComuneNascita(codiFiscAvv);
+  				codLuogoNascita     = comuneNascita.getCodComune();
+  				descCodLuogoNascita = comuneNascita.getDescrizione();
+  				codCap              = comuneNascita.getCap();
+  				codProvincia        = comuneNascita.getCodProvincia();
+  			// new 2022.05.16
+  			}
+  			else {
   			comuneNascita = new ComuneModel(
   					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
   			descCodLuogoNascita = comuneNascita.getDescrizione();
   			codLuogoNascita = comuneNascita.getCodComune();
+  			}
   			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
   		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
   				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))

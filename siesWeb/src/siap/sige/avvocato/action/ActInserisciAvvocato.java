@@ -86,6 +86,11 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			descCodLuogoNascita = comuneNascita.getDescrizione();
 			codCap              = comuneNascita.getCap();
 			codProvincia        = comuneNascita.getCodProvincia();
+			
+		  // Salvo comunque la descrizione del comune di nascicta reginde per tenerne traccia se diversa da quella
+			// calcolata dal CF
+			if (!descCodLuogoNascita.equals(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)))
+			  descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);			
 		}
 		else {	
 			
