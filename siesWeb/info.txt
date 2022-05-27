@@ -1,29 +1,26 @@
-RELEASE_12.4.19.0	-->	nato dal branch "release_12.4.18.0" in data 31/03/2022
+RELEASE_12.4.20.0	-->	nato dal branch "release_12.4.19.0" in data 22/04/2022
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20220323018 - correzione template - SIEP_LS_ODARI
-	Nella creazione dei dati da passare all'xml di stampa non gestiva i codici dell'OE con 
-	sospensione per i minori non calcolando il residuo pena ad oggi da visualizzare sul template
-	Classe modificata:
-	-	siap.sico.stampa.controller.StampaController.java
-	Metodi:
-	-	public TreeModel prelevaDatiEventoSiep
-	-	public TreeModel prelevaDatiIstruttoria
-	Aggiunti codici motivo dei minori: 5506-5507-5508
+1)	Ticket#202204010111 - sige Gup 2022/146 Trib. di Foggia
+	Problama causato dal un vettore caricato con model differenti (SentenzaModel) da quelli che si aspettava la jsp di visualizzazione ovvero SentenzaFascicoliModel.
+	Classi Modificate:
+	-	siap.siep.sentenza.controller.ISentenza.java
+	-	siap.siep.sentenza.controller.SentenzaController.java
+	-	siap.siep.sentenza.action.ActRicercaSentenzaDuplicata.java
+	Nel CTRL è stato aggiunto il metodo "ExRicercaSentenzaDuplicataFascicoli" che effettua la stessa query del motodo originale "ExRicercaSentenzaDuplicata" ma aggungendo i fascicoli siep e restituendo un Vector <SentenzaFascicoliModel>.
 
-2)	Ticket#20220331017 - SIUS - Sorveglianza Minorenni Milano - Presa in carico atti pervenuti --> Ricerca per Atti - SIUS
-	Nella presa in carico ordinanza SIUS il sistema tentava di inserire il record STATO_PROCEDIMANTO anche in assenza
-	collegamento andando in errore (dato obbligatorio.
-	Aggiunto controllo su presensa collegamento al fascicolo SIEP
+2)	Ticket#20220415019 - cancellazione/pagina errore
+	Andava in errore la cancellazione di una ordinanza di revoca MA in quanto era puntata erroneamente da un record MISURA_SICUREZZA.
+	Corretta la funzione di inserimento che inseriva erroneamente il record MISURA_SICUREZZA se trovava valorizzato in form il campo "Data Decorrenza Revoca".
 	Classe modificata:
-	-	siap.sico.jms.controller.PresaInCaricoController.java
-	Metodo:
-	-	ExAggiornaStatoProcedimento
+	-	siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS.java
 
-3)	Ticket#20220404012 — Misure sicurezza mancata visualizzazione provvedimento sorveglianza
+3)	Ticket#202205020111 — SIEP - Ordini di Esecuzione/Scarcerazione --> Sospensione Esecuzione ex art. 656 c.p.p. --> Ordine di Esecuzione
+	L'oe simeone, in fase di inserimento, non gestiva le posizioni giuridiche altra causa:
+	74 - Espiazione pena per Altra Causa in Regime di Detenzione
+	75 - Espiazione pena per Altra Causa in Misura Sicurezza Detentiva (Internato)
+	ed inseriva un provvedimento inseterminato.
+	Aggiunte le Posizioni Giuridiche in questione aggregandole alla 76
 	Classe modificata:
-	-	siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO.java
-	Metodo:
-	-	RicercaEventoProvvediementiArchiviazioneSIUSByFascicoloSiep
-	Aggiunti i cod_motivo 9073 e 9074 e cod_esito 0054 nella query che recupera i provvedimenti della sorveglianza.
+	-	siap.siep.ordineesecuzione.action.ActInserisciOrdineEsecuzioneSimeone.java

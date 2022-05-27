@@ -13,8 +13,6 @@ import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
-// 06/02/2015
-//import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriFascicoloSiusModel;
 import f3b.web.RedirectTo;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.DecodificheModel;
@@ -37,22 +35,10 @@ import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- *
- * <p>
- * Title: ActInserisciAnnotazioneDecisioneDellaSorveglianza
- * </p>
- * <p>
- * Description: Inserimento della Annotazione della Sorveglinza dopo la
- * </p>
- * <p>
- * Accertamento di pericolosità Sociale
- * </p>
- * <p>
- * Copyright: Copyright (c) 2014
- * </p>
- * <p>
- * Company:
- * </p>
+ * Title: 		ActInserisciAnnotazioneDecisioneDellaSorveglianza
+ * Description: Inserimento della Annotazione della
+ * 				Sorveglianza dopo la Accertamento di pericolosità Sociale
+ * Copyright: 	Copyright (c) 2014
  *
  * @author AMBROS
  */
@@ -78,14 +64,6 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		IMagistratoCompetente lMagCtrl = SICOLookupRemote.getMagistratoCompetenteRemote();
 		lMagCoMag = lMagCtrl.ExRicercaMagistratoCompetenteByFascicolo(lFascicoloModel.getIdFascicoloSiep());
 
-		// Dati Provvedimenti SIUS
-		/*
-		 * 06/02/2015 Modificato criterio di recupero informazioni Misure di Sicurezza. Il COD_ESITO
-		 * dell'evento selezionato viene incrociato col corrispondente valore di RV_LOW_VALUE del Dominio
-		 * ESITO_PROVVEDIMENTO in CG_REF_CODES. Solo se il valore di RV_ALT2_VALUE incrociato è = "MSI" si
-		 * opera l'inserimento della nuova misura.
-		 */
-
 		// String lCodPosGiu =
 		// getRequestStringParameter(ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA);
 		String lCodiceOperatore = this.getCodUtenteConnesso();
@@ -101,6 +79,7 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		IEvento lCtrlE = SICOLookupRemote.getEventoRemote();
 		leveMod = lCtrlE.ExRicercaEventoByKey(new BigDecimal(ordEveKey));
 		if (leveMod != null && leveMod.getIdEvento() != null) {
+			siesLogger.debug("ID_EVENTO = " + leveMod.getIdEvento());
 		} else {
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Ricerca Evento selezionato dalla lista Fallita");
 			return IWebConstants.PG_MESSAGE;
@@ -113,17 +92,7 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 			lListMis = lMisCtrl
 					.ExRicercaMisuraSicurezzaByIdFascicoloOrd(lFascicoloModel.getIdFascicoloSiep());
 		} catch (F3BException e) {
-
-		}
-
-		// Ricerca Codice Tipo Misura per il provvedimento selezionato.
-		// --> (cerca il corrispondente Cod_Alt_2 relativo al codice esito dell'evento)
-		String lCodTipoMisura = "";
-		try {
-			lCodTipoMisura = lMisCtrl.ExRicercaCodTipoMisuraByIdEvento(
-					getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
-		} catch (F3BException e) {
-
+			siesLogger.error("ERRORE: " + e.getMessage());
 		}
 
 		EventoNotificaModel lEve = new EventoNotificaModel();
@@ -144,17 +113,14 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		}
 
 		if (!lCod.equals("")) {
-			// lEve.getEvento().setCodMotivo("1125");
 			lEve.getEvento().setCodMotivo(lCod);
 		} else {
-			// lEve.getEvento().setCodMotivo("1125");
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Codice Annotazione Ordinanza Errato ");
 			return IWebConstants.PG_MESSAGE;
 		}
 		// --->
 		lEve.getEvento().setCodTipoEvento("01");
 		lEve.getEvento().setCodTipoProvvedimento("25");
-		// lEve.getEvento().setCodMotivo("1125");
 		lEve.getEvento().setFlagStampaSiep("S");
 		lEve.getEvento().setFlagVideoSiep("S");
 
@@ -181,7 +147,6 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		ArrayList lNotificheArray = new ArrayList();
 
 		// Notifiche
-
 		NotificaModel lNotModUDS = new NotificaModel();
 
 		lNotModUDS.setCodEsito("-");
@@ -189,7 +154,6 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		lNotModUDS.setDataInserimento(DateUtils.getSysDate());
 		lNotModUDS.setCodUfficioInserimento(lCodiceUfficio);
 		lNotModUDS.setCodTipoNotifica("MS");
-
 		lNotModUDS.setUffCodUfficio(lCodiceUfficio);
 		lNotModUDS.setDataInvio(lDataEmissione);
 
@@ -201,7 +165,6 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA)) {
 			BigDecimal lIdPenaRes = getRequestBigDecimalParameter(ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA);
 			lPenaRes.setIdPenaResidua(lIdPenaRes);
-
 			if (!isRequestParameterNullObj(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE))
 				lPenaRes.setDataFine(getRequestDateParameter(ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE,
 						ICostantiPenaResidua.CAMPO_MESE_DATA_FINE,
@@ -213,7 +176,24 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 		IOrdineEsecuzione lCtrl = SIEPLookupRemote.getOrdineEsecuzioneRemote();
 		lEve.setNotifiche(lNotifiche);
 
+		// Ricerca Codice Tipo Misura per il provvedimento selezionato.
+		// --> (cerca il corrispondente Cod_Alt_2 relativo al codice esito dell'evento)
+		String lCodTipoMisura = "";
+		try {
+			lCodTipoMisura = lMisCtrl.ExRicercaCodTipoMisuraByIdEvento(
+					getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
+		} catch (F3BException e) {
+			siesLogger.error("ERRORE: " + e.getMessage());
+		}
+
+		// Dati Provvedimenti SIUS
 		Vector VecMisNewSius = new Vector();
+		/*
+		 * 06/02/2015 Modificato criterio di recupero informazioni Misure di Sicurezza. Il COD_ESITO
+		 * dell'evento selezionato viene incrociato col corrispondente valore di RV_LOW_VALUE del Dominio
+		 * ESITO_PROVVEDIMENTO in CG_REF_CODES. Solo se il valore di RV_ALT2_VALUE incrociato è = "MSI" si
+		 * opera l'inserimento della nuova misura.
+		 */
 		if (lCodTipoMisura != null && lCodTipoMisura.compareTo("MSI") == 0) {
 			VecMisNewSius = lMisCtrl.ExRicercaMisuraSicurezzaByEventoKey(
 					getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
@@ -225,8 +205,11 @@ public class ActInserisciAnnotazioneDecisioneDellaSorveglianza extends ActionSia
 			} else {
 				RedirectTo lRedirigi = new RedirectTo();
 				lRedirigi.setPage(IWebConstants.PG_MAIN);
+				siesLogger.error(
+						"La Ricerca Misure di Sicurezza legate al provvedimento e' Fallita per Evento: "
+								+ getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-						"La Ricerca Misure di Sicurezza legate al provvedimento è Fallita");
+						"La Ricerca Misure di Sicurezza legate al provvedimento e' Fallita");
 				lRedirigi.setAction(
 						"siap.siep.misurasicurezza.action.ActLoadInserisciAnnotazioneDecisioneDellaSorveglianza&"
 								+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
