@@ -806,7 +806,7 @@ public class PresaInCaricoController extends SiapController implements IPresaInC
 						// di LogF3B.getLogger()
 						siesLogger.error("ERRORE DURANTE LA STORE PROCEDURE Pulisci_Evento...");
 						throw new DAOException(
-								"Errore durante la chiamata alla Store Porcedure Pulisci_Evento");
+								"Errore durante la chiamata alla Store Procedure Pulisci_Evento");
 					}
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// LogF3B.getLogger()

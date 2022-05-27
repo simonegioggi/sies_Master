@@ -295,6 +295,71 @@ public class SentenzaController extends SiapController implements ISentenza {
 	}
 
 	/**
+	 * Ticket#202204010111 - si duplica il metodo ExRicercaSentenzaDuplicata per aggiungere anche i fascicoli SIEP
+	 * richiesti dalla jsp. Cambia l'object del vettore
+	 */
+	public Vector <SentenzaFascicoliModel> ExRicercaSentenzaDuplicataFascicoli(SentenzaModel aSentenza) throws F3BException 
+	{
+		Connection lConn = null;
+		Vector lSentenzeFascicoli = new Vector <SentenzaFascicoliModel>();
+		SentenzaSqlDAO lSenSqlDao = null;
+		FascicoloSiepSoggettoSqlDAO lFasSqlDao = null;
+		
+		try {
+			Vector lSentenze = new Vector();
+			
+			lConn = getDBConnection();
+			lSenSqlDao = new SentenzaSqlDAO(lConn);
+			lFasSqlDao = new FascicoloSiepSoggettoSqlDAO(lConn);
+			
+			lSenSqlDao.ricercaSentenzaDuplicata(aSentenza);
+			lSentenze = new Vector(lSenSqlDao.getModels());
+
+			if (lSentenze.isEmpty())
+				throw new SIEPException(SIEPException.USER_MESSAGE, "Nessun Elemento trovato");
+			
+			FascicoloSiepModel lFascicolo = new FascicoloSiepModel();
+
+			Iterator itx = lSentenze.iterator();
+
+			while (itx.hasNext()) {
+				SentenzaModel lSenMod = (SentenzaModel) itx.next();
+				
+				SentenzaFascicoliModel lSenFasMod = new SentenzaFascicoliModel();
+				lSenFasMod.setSentenza(lSenMod);
+
+				Vector lFascicoli = new Vector();
+				lFasSqlDao.ricercaFascicoloByIDSentenza(lSenMod.getIdSentenza());
+				lFasSqlDao.start();
+				while (lFasSqlDao.next()) {
+					lFascicolo = (FascicoloSiepModel) lFasSqlDao.getModelFascSogg();
+					lFascicoli.add(lFascicolo);
+				}
+				lFasSqlDao.stop();
+
+				if (!lFascicoli.isEmpty())
+					lSenFasMod.setFascicoli(
+							(FascicoloSiepModel[]) lFascicoli.toArray(new FascicoloSiepModel[0]));
+
+				lSentenzeFascicoli.add(lSenFasMod);
+			}
+			
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: "+daoEx);
+			throw new SIEPException(
+					"SentenzaController.ExRicercaSentenzaDuplicataFascicoli: Non posso leggere : " + daoEx);
+		} finally {
+			cleanup(lSenSqlDao);
+			cleanup(lFasSqlDao);
+			cleanup(lConn);
+		}
+
+		return lSentenzeFascicoli;
+	}	
+	
+	
+	/**
 	 * @param aSentenza
 	 * @return
 	 * @throws F3BException

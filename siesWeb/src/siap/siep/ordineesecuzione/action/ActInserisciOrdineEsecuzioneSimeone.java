@@ -95,7 +95,11 @@ public class ActInserisciOrdineEsecuzioneSimeone extends ActOrdineEsecuzione
 			lPage = InserisciLSArrestiDomiciliariPcCcAddpr("OE-CS-CC");
 			break;
 		}
-		case 76: {
+		//Ticket#202205020111 — SIEP - Ordini di Esecuzione/Scarcerazione
+		// Si aggiungono anche le PG 74 e 75
+		//case 76: {		
+		case 76: case 75: case 74: {
+	    //Ticket#202205020111 — FINE
 			lPage = InserisciLSAltraCausa();
 			break;
 		}
