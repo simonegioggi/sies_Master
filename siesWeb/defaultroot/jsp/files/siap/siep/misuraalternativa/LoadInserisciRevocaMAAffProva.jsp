@@ -693,12 +693,29 @@ if (oggettiMDS!=null){
 %>
         if(document.LoadInserisciMisuraAlternativa.tipo[0].checked == true)
         {
+        	
           document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INGRESSO_ISTITUTO%>.value = "";
           document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INGRESSO_ISTITUTO%>.value = "";
           document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INGRESSO_ISTITUTO%>.value = "";
+          
+          <%-- Ticket#202206160110 - Restava abilitata la data anche se contro soggetto non detenuto --%>
+          document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INGRESSO_ISTITUTO%>.readOnly = true; 
+          document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INGRESSO_ISTITUTO%>.readOnly = true; 
+          document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INGRESSO_ISTITUTO%>.readOnly = true; 
+          <%-- Ticket#202206160110 - FINE --%>
         }
         else if(document.LoadInserisciMisuraAlternativa.tipo[1].checked == true)
         {
+        	
+        
+        <% if(nuovapenaresidua == null || nuovapenaresidua.getIdPenaResidua()== null)  { %>        	
+          <%-- Ticket#202206160110 --%>
+          document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INGRESSO_ISTITUTO%>.readOnly = false; 
+          document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INGRESSO_ISTITUTO%>.readOnly = false; 
+          document.LoadInserisciMisuraAlternativa.<%= ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INGRESSO_ISTITUTO%>.readOnly = false; 
+          <%-- Ticket#202206160110 - FINE --%>     
+        <% } %>
+        
         <% if(misurasospesa != null && misurasospesa.getDataInizioMisura() != null) { %>
         <%
         // MEV29 - la data non va piu' precaricata ma resta obligatoria%>

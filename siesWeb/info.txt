@@ -1,3 +1,11 @@
-RELEASE_12.4.21.0	-->	nato dal branch "release_12.4.20.0" in data 27/05/2022
+Ticket#202206160110 — Anomalia SIES
 
-NON Comprende Ticket MAC
+In fase di inserimento della revoca Affidamento in prova, sulla prima form, 
+l'utente poteva inserire la data ingresso in istituto anche se selezionava il check
+"Esecuzione contro soggetto non detenuto". Il risultato è che non veniva data decorrenza 
+alla pena anche sel'utente indicava la data.
+Per evitare errori i campi data sono stati abilitati (readonly) sono se si seleziona il check
+"Esecuzione contro soggetto detenuto"
+
+Jsp modificata   
+/jsp/files/siap/siep/misuraalternativa/LoadInserisciRevocaMAAffProva.jsp
