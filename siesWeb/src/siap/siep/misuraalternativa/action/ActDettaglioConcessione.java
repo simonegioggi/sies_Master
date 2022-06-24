@@ -3,6 +3,8 @@ package siap.siep.misuraalternativa.action;
 import java.math.BigDecimal;
 import java.util.Hashtable;
 
+import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.controller.IEventoSimeone;
@@ -27,32 +29,24 @@ import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.util.F3BException;
 
 /**
  * <p>
  * Title: ActDettaglioConcessione
- * </p>
  * <p>
  * Description: Classe Action per la load dettaglio Concessione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
-
 public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICostantiMisuraAlternativa {
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
+
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		// id dell'evento inserito
-		BigDecimal lIdEvento = this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
 		// Controllo Esistenza pena residua per quel fascicolo
 		/*
@@ -61,22 +55,21 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 		 * lPenResCtrl.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascMod.getIdFascicoloSiep());
 		 * setRequestAttribute("penaresidua", lPenaResMod);
 		 */
+		PenaResiduaModel prm = getPenaResidua(lIdEvento, lFascMod.getIdFascicoloSiep());
+		if (Utils.isPresent(prm)) {
+			setRequestAttribute("penaresidua", prm);
 
-		PenaResiduaModel llPenMod = this.getPenaResidua(lIdEvento, lFascMod.getIdFascicoloSiep());
+			// sanzioni sostitutive
+			ISanzioneSostitutiva lSSCtrl = SIEPLookupRemote.getSanzioneSostitutivaRemote();
+			SanzioneSostResiduaModel lSSResiduaModel = lSSCtrl
+					.getUltimaSSResidua(lFascMod.getIdFascicoloSiep(), "S");
 
-		setRequestAttribute("penaresidua", llPenMod);
+			// Inserisco la SS residua nel model della PR
+			if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null)
+				lSSResiduaModel = lSSCtrl.getUltimaSSResidua(lFascMod.getIdFascicoloSiep(), "N");
 
-		// sanzioni sostitutive
-		ISanzioneSostitutiva lSSCtrl = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-		SanzioneSostResiduaModel lSSResiduaModel = lSSCtrl.getUltimaSSResidua(lFascMod.getIdFascicoloSiep(),
-				"S");
-
-		// Inserisco la SS residua nel model della PR
-		if (lSSResiduaModel == null || lSSResiduaModel.getIdSanzioneSostResidua() == null) {
-			lSSResiduaModel = lSSCtrl.getUltimaSSResidua(lFascMod.getIdFascicoloSiep(), "N");
+			prm.setSanzSostResidua(lSSResiduaModel);
 		}
-
-		llPenMod.setSanzSostResidua(lSSResiduaModel);
 
 		// ricerca posizione giuridica
 		/*
@@ -88,8 +81,8 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 		 * (lFascMod.getIdFascicoloSiep());
 		 */
 
-		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = this
-				.getPosizioneGiuridicaLuogoDetenzioneAltraCausa(lIdEvento, lFascMod.getIdFascicoloSiep());
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = getPosizioneGiuridicaLuogoDetenzioneAltraCausa(
+				lIdEvento, lFascMod.getIdFascicoloSiep());
 
 		setRequestAttribute("posizioneluogoaltra", lPos);
 
@@ -97,22 +90,21 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel lEveMod = new EventoNotificaModel();
 		lEveMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
-		this.setRequestAttribute("eventonotifica", lEveMod);
-		Hashtable lTable = this.ricercaNotifiche(lEveMod.getNotifiche());
+		setRequestAttribute("eventonotifica", lEveMod);
+		Hashtable lTable = ricercaNotifiche(lEveMod.getNotifiche());
 
 		// String lCodMotivo = lEveMod.getEvento().getCodMotivo();
 
 		// ricerca misura per il fascicolo
 		IMisuraAlternativa lMisAltCtrl = SICOLookupRemote.getMisuraAlternativaRemote();
 		MisuraAlternativaModel lMisAlModConcessa = new MisuraAlternativaModel();
-		lMisAlModConcessa = lMisAltCtrl.ExRicercaMisuraAlternativaByIdEvento(lEveMod.getEvento()
-				.getEveIdEvento());
+		lMisAlModConcessa = lMisAltCtrl
+				.ExRicercaMisuraAlternativaByIdEvento(lEveMod.getEvento().getEveIdEvento());
 		setRequestAttribute("misuraalternativa", lMisAlModConcessa);
 
 		String lTipoProvvVerbale = null;
 
 		if (lMisAlModConcessa != null) {
-
 			if (lMisAlModConcessa.getCodTipoMisura().equals("0005")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0010")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0013")) {
@@ -121,9 +113,7 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0001")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0003")
-					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")
-
-			) {
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")) {
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
 				lTipoProvvVerbale = "18";
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0004")) {
@@ -132,7 +122,8 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("2245")) {
 				setRequestAttribute("tipoMisura", "INDULTINO");
 				lTipoProvvVerbale = "18";
-			} else if (lMisAlModConcessa.getCodTipoMisura().equals("2630") || lMisAlModConcessa.getCodTipoMisura().equals("0610")) {
+			} else if (lMisAlModConcessa.getCodTipoMisura().equals("2630")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0610")) {
 				setRequestAttribute("tipoMisura", "ESP_PRESSO_DOM");
 				lTipoProvvVerbale = "18";
 			}
@@ -144,8 +135,6 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			IEventoSimeone lCtrlEven = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveVer = lCtrlEven.ExRicercaEventoByEveIdEventoTipoProvCodMotivo(
 					lMisAlModConcessa.getEveIdEvento(), "07", lTipoProvvVerbale, "0314");
-
-			// VerbaleModel lVerMod = new VerbaleModel();
 			IVerbale lCtrlVe = SIEPLookupRemote.getVerbaleRemote();
 			VerbaleModel lVerbMod = lCtrlVe.ExRicercaVerbaleObblighiByIdEvento(lEveVer.getIdEvento());
 			setRequestAttribute("verbale", lVerbMod);
@@ -159,7 +148,6 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			NoteAutE = ((NotificaModel) lTable.get("AutE")).getNote();
 			setRequestAttribute("NoteAutE", NoteAutE);
 			setRequestAttribute("autoritaEsternaE", lAutE);
-
 		}
 
 		// Autorità esterna C
@@ -171,7 +159,6 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			NoteAutC = ((NotificaModel) lTable.get("AutC")).getNote();
 			setRequestAttribute("NoteAutC", NoteAutC);
 			setRequestAttribute("autoritaEsternaC", lAutC);
-
 		}
 
 		// Cssa
@@ -252,8 +239,8 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 		EventoModel lEvent = new EventoModel();
 
 		// prende dalla Session l'ID del procedimento e lo carica nel model
-		lEvent.setFasSieIdFascicoloSiep(((FascicoloSiepModel) getSessionAttribute("fascicolo"))
-				.getIdFascicoloSiep());
+		lEvent.setFasSieIdFascicoloSiep(
+				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
 		// carica nel model il Tipo evento
 		lEvent.setCodTipoEvento("01");
 		// carica nel model il flag documento registrato
@@ -272,4 +259,5 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 
 		return PG_LOAD_DETTAGLIO_MA_CONCESSIONE;
 	}
+
 }
