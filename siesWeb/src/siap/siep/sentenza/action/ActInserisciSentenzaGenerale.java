@@ -4,15 +4,15 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.sentenza.controller.ISentenza;
 import siap.siep.sentenza.model.SentenzaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sige.sentenza.action.ICostantiFasSigeSentenza;
-import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -25,18 +25,13 @@ import f3b.web.IWebConstants;
  * tipi: Sentenza, Decreto, Sentenza Straniera. Per ognuna delle sentenze specifiche verra ereditata da questa
  * classe una classe specifica che richiamerà la funzione comune ai 3 tipi ed implementerà la funzione
  * abstract preparazioneDatiSpecifici() che invece implementa la parte specifica di quel tipo di sentenza.
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company:
- * </p>
- * 
+ *
  * @author Luigi
  * @version 1.0
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICostantiSentenza {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -66,7 +61,10 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 		// CAMPO_ANNO_DATA_ISCRIZIONE,CAMPO_MESE_DATA_ISCRIZIONE,CAMPO_GIORNO_DATA_ISCRIZIONE));
 		mSenMod.setDescrUfficioInserimento(getUfficioUtenteConnesso().getDescrTipoUfficio());
 
-		if (!isRequestParameterNullObj(CAMPO_ANNO_REGE_PM)) {
+		// [SG] 20220620: errore segnalato con Ticket#20220617017 - Errore assegnazione titolo esecutivo
+		if (!isRequestParameterNullObj(CAMPO_ANNO_REGE_PM)
+				&& getRequestStringParameter(CAMPO_ANNO_REGE_PM) != null
+				&& !getRequestStringParameter(CAMPO_ANNO_REGE_PM).equals("")) {
 			mSenMod.setAnnoRegePm(getRequestBigDecimalParameter(CAMPO_ANNO_REGE_PM));
 			mSenMod.setNumeroRegePm(getRequestStringParameter(CAMPO_NUMERO_REGE_PM));
 		}
@@ -88,9 +86,10 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 		mSenMod.setCodLuogoEmittente(lComMod.getCodComune());
 
 		if (!isRequestParameterNullObj(CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE)) {
-			mSenMod.setNumSezioneAutoritaEmittente(getRequestStringParameter(CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE));
+			mSenMod.setNumSezioneAutoritaEmittente(
+					getRequestStringParameter(CAMPO_NUM_SEZIONE_AUTORITA_EMITTENTE));
 		}
-		
+
 		if (!isRequestParameterNullObj(CAMPO_ANNO_SENTENZA)) {
 			mSenMod.setAnnoSentenza(getRequestBigDecimalParameter(CAMPO_ANNO_SENTENZA));
 		}
@@ -112,7 +111,8 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 		if (isRequestParameterNullObj(CAMPO_COD_TIPO_DECISIONE_CASSAZIONE))
 			mSenMod.setCodTipoDecisioneCassazione("-");
 		else {
-			mSenMod.setCodTipoDecisioneCassazione(getRequestStringParameter(CAMPO_COD_TIPO_DECISIONE_CASSAZIONE));
+			mSenMod.setCodTipoDecisioneCassazione(
+					getRequestStringParameter(CAMPO_COD_TIPO_DECISIONE_CASSAZIONE));
 			mSenMod.setAnnoSentenzaCassazione(getRequestBigDecimalParameter(CAMPO_ANNO_SENTENZA_CASSAZIONE));
 			mSenMod.setNumeroSentenzaCassazione(getRequestStringParameter(CAMPO_NUMERO_SENTENZA_CASSAZIONE));
 		}
@@ -129,7 +129,8 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 			mSenMod.setCodTipoProvvedimentoRif("-");
 
 		if (!isRequestParameterNullObj(CAMPO_COD_TIPO_PROVVEDIMENTO_ALTRO)) {
-			mSenMod.setCodTipoProvvedimentoAltro(getRequestStringParameter(CAMPO_COD_TIPO_PROVVEDIMENTO_ALTRO));
+			mSenMod.setCodTipoProvvedimentoAltro(
+					getRequestStringParameter(CAMPO_COD_TIPO_PROVVEDIMENTO_ALTRO));
 		} else
 			mSenMod.setCodTipoProvvedimentoAltro("-");
 
@@ -148,7 +149,7 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 		// 13/07/2010 Controllo presenza ufficio
 		if (getRequestStringParameter(CAMPO_COD_TIPO_AUTORITA_EMITTENTE).compareTo("-") != 0) {
 			String lCodTipo = getRequestStringParameter(CAMPO_COD_TIPO_AUTORITA_EMITTENTE);
-			/*String lCodice = */getCodUfficioByCodTipoUfficioDescrComune(lCodTipo,
+			/* String lCodice = */getCodUfficioByCodTipoUfficioDescrComune(lCodTipo,
 					getRequestStringParameter(CAMPO_COD_LUOGO_EMITTENTE));
 		}
 		mSenMod.setCodTipoAutoritaProvvRif("-");
@@ -174,11 +175,13 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 	protected String inserimento() throws Exception {
 
 		// chiama il contreller
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Sentenza da inserire -> " + mSenMod);
 		ISentenza lSCtrl = SIEPLookupRemote.getSentenzaRemote();
 		SentenzaModel lSen = lSCtrl.ExInserisciSentenza(mSenMod);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Sentenza inserita -> " + lSen);
 
 		// setta la risposta nella request
@@ -201,7 +204,8 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 
 		ISentenza lCtrl = SIEPLookupRemote.getSentenzaRemote();
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Sentenza con modifiche  -> " + mSenMod);
 
 		// Controllo se in presenza di Fascicoli SIGE collegati alla sentenza
@@ -211,8 +215,8 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 			// Sentenza)
 			// Nel caso siano stati selezionati tutti i Fascicoli per la modifica si effettua una modifica e
 			// non una duplicazione del record
-			if (lKeyFascicoliSelezionati != null
-					&& lKeyFascicoliSelezionati.size() == getRequestIntParameter(ICostantiFasSigeSentenza.NUM_FASCICOLI_SIGE))
+			if (lKeyFascicoliSelezionati != null && lKeyFascicoliSelezionati
+					.size() == getRequestIntParameter(ICostantiFasSigeSentenza.NUM_FASCICOLI_SIGE))
 				lSenRet = lCtrl.ExModificaSentenza(mSenMod);
 			else
 				lSenRet = lCtrl.ExModificaSentenzaSige(mSenMod, lKeyFascicoliSelezionati);
@@ -220,7 +224,8 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 			lSenRet = lCtrl.ExModificaSentenza(mSenMod);
 		}
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Sentenza modificata  -> " + lSenRet);
 
 		setRequestAttribute("modalita", "M");
@@ -235,26 +240,28 @@ abstract class ActInserisciSentenzaGenerale extends ActionSiap implements ICosta
 
 	/**
 	 * Costruisce l'elenco con gli Id dei Fascicoli SIGE selezionati per la modifica alla Sentenza
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
 	private Vector letturaIdFascicoliSige() throws Exception {
 
 		int lNumFascicoli = getRequestIntParameter(ICostantiFasSigeSentenza.NUM_FASCICOLI_SIGE);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("Num Fascicoli Sige  -> " + lNumFascicoli);
 
 		Vector lKeyFascicoliSelezionati = new Vector();
 		for (int y = 0; y < lNumFascicoli; y++) {
 			if (!isRequestParameterNullObj("fascicolo" + y)) {
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug(
-						"id Fascicolo selezionato " + getRequestStringParameter("fascicolo" + y));
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("id Fascicolo selezionato " + getRequestStringParameter("fascicolo" + y));
 				lKeyFascicoliSelezionati.add(getRequestBigDecimalParameter("fascicolo" + y));
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug(
-						"id Fascicolo selezionato " + getRequestBigDecimalParameter("fascicolo" + y));
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger
+						.debug("id Fascicolo selezionato " + getRequestBigDecimalParameter("fascicolo" + y));
 			}
 		}
 		return lKeyFascicoliSelezionati;
