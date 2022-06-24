@@ -1,3 +1,1 @@
-RELEASE_12.4.21.0	-->	nato dal branch "release_12.4.20.0" in data 27/05/2022
-
-NON Comprende Ticket MAC
+RELEASE_12.4.22.0	-->	nato dal branch "release_12.4.21.0" in data 27/06/2022
