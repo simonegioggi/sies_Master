@@ -499,7 +499,7 @@ function ListaUfficiPerTipo(a_formname, a_fieldname, codTipoUfficio) {
 
 function functionRadio() {
 	var tipoRevoca = '<%=tipoRevoca%>';
-	var nodebot = document.getElementById('bottone'); 
+	var nodebot = document.getElementById('bottone');
 	nodebot.style.display = 'block';
 <%
 // Sulla seconda form Visualizza le sezioni con i detinatari
@@ -605,8 +605,9 @@ if (lPosizione != null && lPosizione.getCodPosizioneGiuridica() != null && !lPos
 </script>
 <jsp:include page="/jsp/files/siap/siep/misuraalternativa/MinorScript.jsp"/>
 </head>
-
-<body class="corpo" onload="functionRadio();">
+<%-- [SG]: 20220622: Decisioni Sorveglianza >> Esecuzione Pena Presso domicilio >> Revoca = Revoca Espiazione Pena presso Domicilio
+	aggiunta chiamata a funzione al caricamento della pagina se la action torna un errore --%>
+<body class="corpo" onload="functionRadio(); caricaComboOggetto();">
 <table>
 	<tr>
 		<td class="LBG">
