@@ -79,19 +79,21 @@
 %>
       <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(soggetto.getDataNascita(),"dd-MM-yyyy"), "-")%></font>&nbsp;
       <font class="label">in : </font>
-      <font class="campo">
+      
 <%
       if (soggetto.getDescrComuneNascita().compareTo("-")==0) {
     	if(soggetto.getDescComuneNascitaEstero().compareTo("-")!=0){
     		comuneEsteroNascita = soggetto.getDescComuneNascitaEstero();
     	}
 %>
-        <%=comuneEsteroNascita + "  ("+  soggetto.getDescrStatoNascita() +")" %>
-        </font>
+        <font class="campo"><%=comuneEsteroNascita + "  ("+  soggetto.getDescrStatoNascita() +")" %></font>
+        <%-- Ticket#20220628015 -  non visualizza il codice CUI in quanto la sezione si trova nell'if del comune   --%>
+       <%-- 
        <font class="label">Cod Cui : </font> 
         &nbsp;
         <font class="campo">
         <%=codCui%>
+        --%>
         
         
 <%
@@ -99,12 +101,16 @@
       else
       {
 %>
-        <%=soggetto.getDescrComuneNascita()+ "  ("+soggetto.getCodProvinciaNascita()+")" %>
+        <font class="campo"><%=soggetto.getDescrComuneNascita()+ "  ("+soggetto.getCodProvinciaNascita()+")" %></font>
 <%
       }
 
   }
 %>
-      </font>
+   <%-- Ticket#20220628015 - Visualizzazione CUI portata fuori dall'IF--%>
+       <font class="label">Cod Cui : </font> 
+        &nbsp;
+        <font class="campo"><%=codCui%></font>
+   <%-- Ticket#20220628015 - FINE --%>
 
  <% } %>

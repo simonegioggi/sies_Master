@@ -1,1 +1,9 @@
-RELEASE_12.4.22.0	-->	nato dal branch "release_12.4.21.0" in data 27/06/2022
+Ticket#20220628015 — Sige – iscrizione soggetto manuale – mancata visibilità codice C.U.I. SUL DETTAGLIO DEL PROCEDIMENTO
+
+
+Sul dettaglio non riportava il CUI in quanto era previsto nella sezione in cui si testava la presenza del comune di nascita
+Solo se trattino si visualizzava il CUI
+
+Modulo corretto
+files/siap/sige/fascicolo/IncludeSoggetto.jsp
+
