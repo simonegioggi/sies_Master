@@ -1,1 +1,13 @@
-RELEASE_12.4.22.0	-->	nato dal branch "release_12.4.21.0" in data 27/06/2022
+Ticket#20220706018 — Sige – iscrizione decreto penale – visualizzazione maschera errata
+
+Il problema era legato alla funzione richiamata sulla onLoad (init()) in cui erano 
+invertite le chiamate alla funzioni di visualizzazione delle DIV relative
+al contenuto dei radio.
+
+Modulo corretto
+/jsp/files/siap/sige/sentenza/LoadInserisciSentenzaDecreto.jsp
+
+
+
+
+

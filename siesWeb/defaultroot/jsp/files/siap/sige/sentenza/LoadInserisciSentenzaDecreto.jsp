@@ -49,10 +49,17 @@
 	{
 		if (document.f.<%=ICostantiFasSigeSentenza.RADIO_TIPO_FUNZIONE%>[0].checked)
 			VisualizzaSentenza();
+<%-- Ticket#20220706018 - Il caricamento delle sezioni Decreto Penale e Sentenza Straniera 
+     erano invertite rispotto ai Radio Button
 		else if (document.f.<%=ICostantiFasSigeSentenza.RADIO_TIPO_FUNZIONE%>[1].checked)
 			VisualizzaSentenzaStraniera();
 		else
 			VisualizzaDecreto();
+--%>			
+		else if (document.f.<%=ICostantiFasSigeSentenza.RADIO_TIPO_FUNZIONE%>[1].checked)
+			VisualizzaDecreto();
+		else
+			VisualizzaSentenzaStraniera();
 	}
 </script>
 
@@ -61,8 +68,8 @@
 <body class="corpo" onLoad="Init();">
 
 <%-- inizio aggiunta --%> 
-<form name="f">
-  <table>
+<form name="f" >
+  <table id="tableTitle">
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Inserimento Sentenza, Decreto Penale, Sentenza Straniera Delibata</font>
 
