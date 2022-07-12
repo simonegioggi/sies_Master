@@ -11,4 +11,7 @@ Modulo Modificato
 siap.sico.evento.dao.EventoSqlDAO
 ricercaOrdineEsecuzioneByIdFascicoloDecretoSospensione
 
+Bypassato anche il controllo sulla presenza delle notifiche all'avvocato 
+associate al provvedimento per i codici di cui sopra
+siap.siep.ordineesecuzione.action.ActLoadInserisciRevocaSospensioneSimeone
 
