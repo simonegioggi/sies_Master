@@ -1,1 +1,14 @@
-RELEASE_12.4.22.0	-->	nato dal branch "release_12.4.21.0" in data 27/06/2022
+Ticket#20220712011	Eliminazione messaggio di attenzione dopo emissione provvedimento di cumulo
+
+In fase di inserimento della Revoca dell'OE con sospensione il sistema non riconosceva
+quelli emessi in cumulo.
+
+Aggiunti i codici delgi OE con sospensione del cumulo alla query di ricerca
+'0661','0635','0642','0637'
+
+Modulo Modificato
+
+siap.sico.evento.dao.EventoSqlDAO
+ricercaOrdineEsecuzioneByIdFascicoloDecretoSospensione
+
+
