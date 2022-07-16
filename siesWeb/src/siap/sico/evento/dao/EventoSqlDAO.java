@@ -998,7 +998,11 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
-		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
+		// Ticket#20220712011 si aggiungono alla ricerca anche i codice delle sospensini in cumulo
+		//lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
+		// Si aggiungono i codici '0661','0635','0642','0637'
+		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0661','0635','0642','0637','0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
+		// Ticket#20220712011 - FINE
 		lStatement += " AND (EVENTO.FLAG_DOCUMENTO_REGISTRATO ='S') ";
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
 
