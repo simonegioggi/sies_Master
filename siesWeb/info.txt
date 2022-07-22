@@ -1,3 +1,23 @@
-RELEASE_12.4.21.0	-->	nato dal branch "release_12.4.20.0" in data 27/05/2022
+RELEASE_12.4.22.0	-->	nato dal branch "release_12.4.21.0" in data 27/06/2022
 
-NON Comprende Ticket MAC
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#20220628015 - Sige – iscrizione soggetto manuale – mancata visibilità codice C.U.I. SUL DETTAGLIO DEL PROCEDIMENTO
+	Sul dettaglio non riportava il CUI in quanto era previsto nella sezione in cui si testava la presenza del comune di nascita
+	Solo se trattino si visualizzava il CUI
+	Modulo corretto:
+	-	siap/sige/fascicolo/IncludeSoggetto.jsp
+
+2)	Ticket#20220706018 - Sige – iscrizione decreto penale – visualizzazione maschera errata
+	Il problema era legato alla funzione richiamata sulla onLoad (init()) in cui erano 
+	invertite le chiamate alla funzioni di visualizzazione delle DIV relative al contenuto dei radio.
+	Modulo corretto:
+	-	siap/sige/sentenza/LoadInserisciSentenzaDecreto.jsp
+
+3)	Ticket#20220712011 - Eliminazione messaggio di attenzione dopo emissione provvedimento di cumulo
+	In fase di inserimento della Revoca dell'OE con sospensione il sistema non riconosceva quelli emessi in cumulo.
+	Aggiunti i codici delgi OE con sospensione del cumulo alla query di ricerca '0661','0635','0642','0637'.
+	Moduli corretti:
+	-	siap.sico.evento.dao.EventoSqlDAO.java (metodo ricercaOrdineEsecuzioneByIdFascicoloDecretoSospensione)
+	Bypassato anche il controllo sulla presenza delle notifiche all'avvocato associate al provvedimento per i codici di cui sopra:
+	-	siap.siep.ordineesecuzione.action.ActLoadInserisciRevocaSospensioneSimeone.java

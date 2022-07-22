@@ -20,12 +20,6 @@ import siap.web.ISIAPCostantiWeb;
  * <p>
  * Description: Ricerca Titolo Esecutivo
  * </p>
- * <p>
- * Copyright: Copyright (c) 2009
- * </p>
- * <p>
- * Company:
- * </p>
  *
  * @version 1.0
  */
@@ -156,8 +150,17 @@ public class ActRicercaSentenzaPerSige extends ActionSige implements ICostantiSe
 		if (!isRequestParameterNullObj(PARAMETRO_ORDINAMENTO)) // ma non dovrebbe essere mai nullo
 			lSenMod.setCodOrdinamento(getRequestStringParameter(PARAMETRO_ORDINAMENTO));
 
+		// [SG]: 20220627
+		// SIGE Ricerche >> Titolo Esecutivo >> Anno/Numero Titolo Esecutivo >> Ricerca >> Azioni-Dettagli >>
+		// Elenco Procedimenti SIGE (Vai)
+		String lAmbitoRicerca;
 		// Si imposta il codice ufficio se l'Ambito di ricerca è l'ufficio.
-		String lAmbitoRicerca = getRequestStringParameter(ICostantiFasSigeSentenza.CAMPO_AMBITO_RICERCA);
+		try {
+			lAmbitoRicerca = getRequestStringParameter(ICostantiFasSigeSentenza.CAMPO_AMBITO_RICERCA);
+		} catch (Exception e) {
+			lAmbitoRicerca = "U";
+		}
+
 		if (lAmbitoRicerca.equalsIgnoreCase("U"))
 			lSenMod.setCodUfficioInserimento(lUtenteMod.getUfficioUtente().getCodUfficio());
 		else
