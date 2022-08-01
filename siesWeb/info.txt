@@ -1,13 +1,12 @@
-Ticket#20220801013 — Sige Iscrizione manuale » Ricerca Procedimento SIEP per Soggetto – errore ricerca
+RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
 
-Se veniva specificato nella ricerca SOLO il codice CUI, la query andando in OR sul CUI restituiva tutti i soggetti.
+Comprende i seguenti Ticket MAC:
 
-In caso di SOLO codice cui la query è stata modificata per andare in AND.
-In presenza di altri parametri di ricerca resta valida la condizione in OR.
-
-Classe modificata: 
-siap.siep.fascicolo.dao.FascicoloSiepSoggettoSqlDAO
-
-Metodo:
-private String setCondizione(SoggettoModel aSm)
-
+1)	Ticket#20220801013 — Sige Iscrizione manuale » Ricerca Procedimento SIEP per Soggetto – errore ricerca
+	Se veniva specificato nella ricerca SOLO il codice CUI, la query andando in OR sul CUI restituiva tutti i soggetti.
+	In caso di SOLO codice cui la query è stata modificata per andare in AND.
+	In presenza di altri parametri di ricerca resta valida la condizione in OR.
+	Classe modificata: 
+	-	siap.siep.fascicolo.dao.FascicoloSiepSoggettoSqlDAO.java
+	Metodo:
+	-	private String setCondizione(SoggettoModel aSm)
