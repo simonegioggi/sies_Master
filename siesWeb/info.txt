@@ -1,5 +1,19 @@
-RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
+Ticket#20220801014 — SIEP - RICERCA PROCEDIMENTI NON VALIDATI – VISUALIZZAZIONE PROCEDIMENTI DEFINITI
 
-Comprende i seguenti Ticket MAC:
+Dalla ricerca dei fascicoli "NON VALIDATI" uscivano anche fascicoli che risultavano archiviati, principalmente classe 9.
+Il motivo è che l'archiviazione è consentita anche sui fascicoli non validati per cui il flag_validato resta a N.
+La funzione di ricerca dei non validati testava proprio il flag_validato = N.
 
-1)	
+Modificata la condizione dei non validati. Viene testato lo stato_fascicolo = 02 (Iscritto)
+Dall'analisi del DB gli 02 hanno tutti flag_vaòlidato a N mentre non è vero per gli altri stati (01 e 03).
+
+Classi modificate
+siap.siep.fascicolo.action.ActRicercaFascicoliNonValidati
+
+siap.siep.fascicolo.dao.FascicoloSiepOnViewSqlDAO
+Metodi 
+private String setCondizione
+private String setCondizionePGCAP
+
+
+
