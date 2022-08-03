@@ -1,5 +1,23 @@
-RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
+Ticket#20220803015 — trasmissione iscrizione in istruttoria errata
 
-Comprende i seguenti Ticket MAC:
 
-1)	
+Corrette 2 anomalie in caso di iscrizione titolo proprio uffico in istruttoria cumulo.
+
+Prima anomalia: se sul cumulato si annulla l'evento (01-31-1040) di trasmissione in istruttoria proprio ufficio, quando si esclude 
+dall'istruttorio il titolo tale eclusione va in errore in quanto il procedente annullamento ha inserito un record su CAMPO_NOTA 
+collegato all'evento con il motivo annullamento. Errore per la FK.
+In fase di esclusione è stato aggiunta anche la cancellazione di CAMPO_NOTA
+
+Seconda anomalia: l'annullamento dell'istruttoria dove sono presenti titoli iscritti proprio ufficio lasciava l'evento di 
+trasmissione sul cumulato che restava eternamente segnalato come in istruttoria. 
+Aggiunta, in fase di annullamento istruttoria, la cancellazione dell'evento di trasmissione sul cumulato ina analogia 
+all'esclusione titolo.
+
+Moduli modificati 
+siap.siep.modulocumulo.controller.TitoloCumulatoController
+Metodo
+ExCancellaTitoloDaIstruttoriaById
+
+siap.siep.istruttoriacumulo.controller.IstruttoriaCumuloController
+Metodo
+ExAnnullaIstruttoriaCumulo   
