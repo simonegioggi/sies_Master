@@ -37,6 +37,7 @@ import siap.sico.utente.model.DatiOperazioneModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.siep.SIEPException;
 import siap.siep.annotazioneesitotrasmissione.dao.AnnotazioneEsitoTrasmissioneDAO;
+import siap.siep.annotazioneesitotrasmissione.dao.AnnotazioneEsitoTrasmissioneSqlDAO;
 import siap.siep.annotazioneesitotrasmissione.model.AnnotazioneEsitoTrasmissioneModel;
 import siap.siep.cumulo.dao.CumuloDAO;
 import siap.siep.fascicolo.dao.FascicoloSiepSoggettoSqlDAO;
@@ -588,6 +589,15 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		IstruttoriaCumuloDAO lIstruttoriaDao = null;
 		CumuloDAO lCumuloDAO = null;
 
+		// Ticket#20220803015 - 
+		TitoloCumulatoSqlDAO lTitoloCumulatoSqlDao = null;
+		ProcedimentoCumulatoSqlDAO lProcCumSqlDao = null;
+		AnnotazioneEsitoTrasmissioneDAO lAnnEsiDao = null;
+		AnnotazioneEsitoTrasmissioneSqlDAO lAnnEsiSqlDao = null;
+		CampoNotaDAO lCampoNotaDao = null;
+		EventoDAO lEveDao = null;
+		// Ticket#20220803015 - 
+		
 		try {
 			lConn = getDBConnection();
 
@@ -599,6 +609,59 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			lIstruttoriaDao.selCondizioneUpdate(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
 			lIstruttoriaDao.update();
 
+			// Ticket#20220803015 - Se l'evento è già stato annullato sul fascicolo cumulante 
+			// è stata aggiunta la nota annullamento sulla tabella CAMPO_NOTA per cui la delete 
+			// dell'evento va in errore (FK). Si cancellaanche la nota se presente.
+			lTitoloCumulatoSqlDao = new TitoloCumulatoSqlDAO(lConn);
+			lTitoloCumulatoSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIstruttoriaCumulo.getIdIstruttoriaCumulo(), null);
+			lTitoloCumulatoSqlDao.start();			
+			
+			lEveDao = new EventoDAO(lConn);
+			lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(lConn);
+			lAnnEsiDao = new AnnotazioneEsitoTrasmissioneDAO(lConn);
+			lAnnEsiSqlDao = new AnnotazioneEsitoTrasmissioneSqlDAO(lConn);
+			lCampoNotaDao = new CampoNotaDAO(lConn);
+			
+			siesLogger.debug("Ricerco eventuali titoli 'Iscrizione in Istruttoria Fascicolo proprio Ufficio' per annullare gli eventi di trasmissione sui cumulati");
+			while (lTitoloCumulatoSqlDao.next()) {
+				TitoloCumulatoModel lTitoloModel = (TitoloCumulatoModel) lTitoloCumulatoSqlDao.getModel();
+				if ("04".equals(lTitoloModel.getTipoIscrizione())) // 04 = Iscrizione in Istruttoeia Fascicolo proprio Ufficio
+				{
+					siesLogger.debug("Titolo iscritto proprio ufficio: id = "+lTitoloModel.getIdTitoloCumulato());
+					siesLogger.debug("Ricerco il Procedimento Cumulato per avere Eve_id_Evento");
+
+					lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitoloModel.getIdTitoloCumulato());
+					ProcedimentoCumulatoModel lProcMod = (ProcedimentoCumulatoModel) lProcCumSqlDao.getModelByKey();
+					lProcCumSqlDao.stop();
+					
+					if (lProcMod != null && lProcMod.getEveIdEvento() != null) {
+						// Ricerco e Cancello Annotazione_Esito_Trasmissione
+						lAnnEsiSqlDao.ricercaAnnotazioneEsitoTrasmissioneByIdEvento(lProcMod.getEveIdEvento());
+						AnnotazioneEsitoTrasmissioneModel lAnnMod = (AnnotazioneEsitoTrasmissioneModel) lAnnEsiSqlDao.getModelByKey();
+						lAnnEsiSqlDao.stop();
+						
+						lAnnEsiDao.selCondizioneUpdate(lAnnMod.getIdEsitoTrasmissione());
+						lAnnEsiDao.delete();
+						lAnnEsiDao.stop();
+
+						siesLogger.debug("Cancellato AnnotazioneEsitoTrasmissioneModel");
+
+						lCampoNotaDao.setCondizioneEvento(lProcMod.getEveIdEvento());
+						lCampoNotaDao.delete();
+						lCampoNotaDao.stop();
+						
+						// Cancello Evento
+						lEveDao.selCondizioneUpdate(lProcMod.getEveIdEvento());
+						lEveDao.delete();
+						lEveDao.stop();
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+						// LogF3B.getLogger()
+						siesLogger.debug("Cancellato Evento");
+					}					
+				}				
+			}
+			// Ticket#20220803015 - FINE
+			
 			// ========================================================================
 			// Annullo tutti i CUMULI legati all'istruttoria
 			// ========================================================================
@@ -613,7 +676,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					aIstruttoriaCumulo.getIdIstruttoriaCumulo());
 
 			lCumuloDAO.update();
-
+			
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
@@ -623,6 +686,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		} finally {
 			cleanup(lIstruttoriaDao);
 			cleanup(lCumuloDAO);
+			
+			cleanup(lTitoloCumulatoSqlDao);
+			cleanup(lProcCumSqlDao);
+			cleanup(lAnnEsiDao);
+			cleanup(lAnnEsiSqlDao);
+			cleanup(lCampoNotaDao);
+			cleanup(lEveDao);
 
 			cleanup(lConn);
 		}

@@ -12,6 +12,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import siap.controller.SiapController;
+import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSimeoneSqlDAO;
 import siap.sico.evento.model.EventoModel;
@@ -415,6 +416,7 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 		LibAnticipataCumuloSqlDAO lLibAntSqlDao = null;
 		PeriodoLibAntCumuloDAO lPeriodoLibAntDao = null;
 		PosizioneGiuridicaCumuloDAO lPosizGiurDao = null;
+		CampoNotaDAO lCampoNotaDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -710,6 +712,15 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 					// LogF3B.getLogger()
 					siesLogger.debug("--XX-- >>>>>>>>>>>>>>>  Cancellato AnnotazioneEsitoTrasmissioneModel");
 
+					// Ticket#20220803015 - Se l'evento è già stato annullato sul fascicolo cumulante 
+					// è stata aggiunta la nota annullamento sulla tabella CAMPO_NOTA per cui la delete 
+					// dell'evento va in errore (FK). Si cancellaanche la nota se presente.
+					lCampoNotaDao = new CampoNotaDAO(lConn);
+					lCampoNotaDao.setCondizioneEvento(lProcMod.getEveIdEvento());
+					lCampoNotaDao.delete();
+					lCampoNotaDao.stop();
+					// Ticket#20220803015 - FINE
+					
 					// Cancello Evento
 					lEveDao = new EventoDAO(lConn);
 					lEveDao.selCondizioneUpdate(lProcMod.getEveIdEvento());
@@ -824,6 +835,8 @@ public class TitoloCumulatoController extends SiapController implements ITitoloC
 			cleanup(lLibAntSqlDao);
 			cleanup(lPeriodoLibAntDao);
 			cleanup(lPosizGiurDao);
+			
+			cleanup(lCampoNotaDao);
 
 			cleanup(lConn);
 		}
