@@ -109,12 +109,11 @@ if (Modificabile.compareTo("SI") == 0) {
 // La presenza della funzione di trasmissione del deposito decreto e deposito ordinanza e' un refuso della analoga funzione SIUS.
 // In realta' in SIGE non e' al momento prevista la trasmissione degli atti tra uffici SIGE, ne' con gli altri sottosistemi SIES,
 // tanto e' vero che mancano anche le funzioni di Presa in carico, Riscontro Trasmissioni e Ricerche Altra BDI.
-// Alla luce della modifica della normativa sulla competenza degli atti è emersa l'esigenza di rivedere la materia dell'interscambio
+// Alla luce della modifica della normativa sulla competenza degli atti e' emersa l'esigenza di rivedere la materia dell'interscambio
 // tra uffici, anche SIGE e sono gia' state inoltrate richieste di MEV all'Amministrazione.
 // Nell''iniziale documento di analisi era previsto di implementare le trasmissioni, ma in corso di realizzazione non furono ritenute
-// necessarie. Possiamo giustificare la presenza dell'azione di trasmissione con il fatto che nella realizzazione delle due funzioni
-// ci si era predisposti per una futura/eventuale trasmissione degli atti, ma non si era intervenuti per oscurare l'aggancio della
-// funzionalità.
+// necessarie. La presenza dell'azione di trasmissione sta nel fatto che nella realizzazione delle due funzioni ci si era predisposti
+// per una futura/eventuale trasmissione degli atti, ma non si era intervenuti per oscurare l'aggancio della funzionalita'.
 // if (Trasferibile.compareTo("SI") == 0) {
 %>
 		<!-- BOTTONE DI TRASFERIMENTO -->
