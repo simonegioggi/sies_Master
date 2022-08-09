@@ -1,5 +1,21 @@
-RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
+Ticket#20220803019 — Errore inserimento ordine di esecuzione
 
-Comprende i seguenti Ticket MAC:
+In fase di validazione dell'OE con sospensione il CTRL verificava 
+se il fascicolo aveva FLAG_ALTRA_CAUSA = S e in questo caso effettua
+una insert dell PG con copia del record AC puntato della PG.
+Non testava se tale record esistesse omeno per cui la insert falliva in sua assenza.
+Aggiunto il test
 
-1)	
+COrretta inoltre la funzione di validazione del cumulo che inserive il record AC ma non lo collegava 
+alla posizione giuridica.
+
+Moduli corretti 
+siap.siep.ordineesecuzione.controller.OrdineEsecuzioneController
+Metodo 
+ExUpdateValidaLS
+
+siap.siep.modulocumulo.controller.DatiFinaliCumuloController
+Metodo
+ExUpdateValidaProvvedimentoCumulo
+
+

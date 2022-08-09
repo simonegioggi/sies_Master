@@ -1104,6 +1104,13 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
 			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
 
+			// Ticket#202203210112 - Controllo aggiuntivo per evitare Tasto indietro e nuova sottomissione
+			if ("S".equals(lEveModel.getFlagDocumentoRegistrato())) {
+				throw new F3BException(F3BException.USER_MESSAGE, "Il provvedimento risulta già validato.");
+			} 
+			// Ticket#202203210112 - FINE 
+			
+			
 			lEveModel.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 			lEveModel.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
 			lEveModel.setDataAggiornamento(aEvento.getDataAggiornamento());
@@ -1345,7 +1352,7 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lNewPosGiuModel.setCodPosizioneProcessuale("-");
 
 			lPosDao.setDAOFromModel(lNewPosGiuModel);
-			lPosDao.insert();
+			BigDecimal lIdNewPG = lPosDao.insert();
 			lPosDao.stop();
 
 			// [Ticket#20210430011] - se la PG è detenuto altra causa, aggiporno il flga altra causa
@@ -1383,7 +1390,14 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 
 				lAltraCausaDao = new AltraCausaDAO(lConn);
 				lAltraCausaDao.setDAOFromModel(altraCausaModel);
-				lAltraCausaDao.insert();
+				BigDecimal lIdAltraCausa = lAltraCausaDao.insert();
+				
+				// Ticket#20220803019 -	Aggiorno il riferimento AC sul record della PG			
+				lPosDao.setAltCauIdAltraCausa (lIdAltraCausa);
+				lPosDao.setCondizioneUpdate(lIdNewPG);
+				lPosDao.update();
+				lPosDao.stop();
+				// Ticket#20220803019 - FINE
 			}
 			// FINE [Ticket#20210430011]
 
@@ -2137,7 +2151,13 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
-			ex.printStackTrace();
+		
+			if (ex instanceof F3BException) {
+			  if ( ((F3BException) ex).getErrorCode() == F3BException.USER_MESSAGE) 
+              {
+			    throw (F3BException) ex;
+			  }
+			}
 			throw new F3BException("DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);

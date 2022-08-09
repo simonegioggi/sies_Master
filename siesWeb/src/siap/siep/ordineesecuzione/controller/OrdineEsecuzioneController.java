@@ -5057,13 +5057,19 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 									.ExRicercaAltraCausaIstitutoByKey(lPosMod.getAltCauIdAltraCausa());
 						}
 						// lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
-						AltraCausaDAO lAltraCausaDao = null;
-						lAltraCausaDao = new AltraCausaDAO(lConn);
-						BigDecimal lKeyAltra = null;
-						lAltraCausa.setDataInserimento(DateUtils.getSysDate());
-						lAltraCausaDao.setDAOFromModel(lAltraCausa);
-						lKeyAltra = lAltraCausaDao.insert();
-						lPosDao.setAltCauIdAltraCausa(lKeyAltra);
+						// Ticket#20220803019 - In assenza del record AC legato all'ultima PG 
+						//  il sistema andava in errore sql inquanto cercava di inserire un model lAltraCausa
+						//  vuoto
+						if (lAltraCausa!=null && lAltraCausa.getIdAltraCausa()!=null) {
+							AltraCausaDAO lAltraCausaDao = null;
+							lAltraCausaDao = new AltraCausaDAO(lConn);
+							BigDecimal lKeyAltra = null;
+							lAltraCausa.setDataInserimento(DateUtils.getSysDate());
+							lAltraCausaDao.setDAOFromModel(lAltraCausa);
+							lKeyAltra = lAltraCausaDao.insert();
+							lPosDao.setAltCauIdAltraCausa(lKeyAltra);
+						}
+						// Ticket#20220803019 - FINE
 					}
 				}
 				lPosDao.setCodPosizioneGiuridica(lPosizione);
