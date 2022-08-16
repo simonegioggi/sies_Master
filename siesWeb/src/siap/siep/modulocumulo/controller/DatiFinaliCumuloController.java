@@ -2029,11 +2029,9 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 										// Ticket#20220209011 — SIEP - Fascicoli archiviati per cumulo ancora
 										// pendenti nel riepilogo ispettivo.
 										// i dati dell'"Aggiornamento" vanno subito valorizzati in quanto
-										// normalmente
-										// lo farebbe la action di validazione dell'archiviazione, ma da tale
-										// action non ci si passa
-										// e la PR che viene inserita dal controller risulta priva di tali
-										// dati
+										// normalmente lo farebbe la action di validazione dell'archiviazione,
+										// ma da tale action non ci si passa e la PR che viene inserita dal
+										// controller risulta priva di tali dati
 										lEveArc.setCodOperatoreAggiornamento(
 												lEveModel.getCodOperatoreAggiornamento());
 										lEveArc.setCodUfficioAggiornamento(
