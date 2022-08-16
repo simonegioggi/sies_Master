@@ -1,5 +1,17 @@
-RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
+Ticket#20220816012 — TRASFERIMENTO DA ALTRE BANCHE DATI - TDS SIUS
 
-Comprende i seguenti Ticket MAC:
+In fase di inserimento di un evento dalla presa in carico non era gestita per i campi nota
+la possibilità che l'evento venisse saltato. In questo caso l'inserimento della nota, non 
+trovando l'evento, viola le FK ma l'errore non deve essere bloccante. Eventualmente 
+l'evento viene gestito su un secondo giro.
 
-1)	
+Gestita ex.INTEGRITY_CONSTRAINT_VIOLATED in casi di inserimento del CAMPO_NOTA in analogia 
+all'inserimento della NOTIFICA.
+
+Modulo modificato 
+siap.jms.controller.SiapPresaInCaricoJMSController
+
+metodo
+inserisciEventoNotificaAvvocatoSiep
+
+	
