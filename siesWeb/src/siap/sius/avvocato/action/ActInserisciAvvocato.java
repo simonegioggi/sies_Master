@@ -595,7 +595,11 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			amReginde.setCodLuogoNascita(codLuogoNascita);
 			amReginde.setDescLuogoNascita(descCodLuogoNascita);
 			amReginde.setProvincia(codProvincia); // di nascita
-			amReginde.setDescLuogoNascitaReginde(descCodLuogoNascita);
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
+				if (!getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).equals(descCodLuogoNascita))
+					amReginde.setDescLuogoNascitaReginde(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA));
+			}
+			//amReginde.setDescLuogoNascitaReginde(descCodLuogoNascita);
 			amReginde.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
 			amReginde.setDescrStatoNascita(null);
 

@@ -93,8 +93,20 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
 			}
 		} catch (Exception e) {
 			siesLogger.info(e.getMessage());
-			if ("manuale".equals(tipoInserimento))
+			if ("manuale".equals(tipoInserimento)) {
 				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+			} else {
+				// deve decodificare il comune di nascita dal CF dell'avvocato
+				String codiFiscAvv = getRequestStringParameter(CAMPO_CODICE_FISCALE);
+				comuneNascita = AvvocatoUtil.calcolaComuneNascita(codiFiscAvv);
+				codLuogoNascita = comuneNascita.getCodComune();
+				descCodLuogoNascita = comuneNascita.getDescrizione();
+				codCap = comuneNascita.getCap();
+				codProvincia = comuneNascita.getCodProvincia();
+				// Salvo comunque la descrizione del comune di nascita reginde per tenerne traccia
+				descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);
+				// FINE
+			}			
 		}
 
 		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)

@@ -436,6 +436,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
       String codCap = null;
       String codNonAttivita = "-";
       ComuneModel comuneNascita = null;
+      String descLuogoNascitaReginde = "";
       String descCodLuogoNascita = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
           ? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
           : getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
@@ -445,30 +446,50 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
       //**********************************************************************
   		// MEV_21 Controllo e valorizzazione comuneNascita.
   		// Se presente, dal codice comune (e dalla descrizione).
-  		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
-  				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
-  			comuneNascita = new ComuneModel(
-  					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
-  							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-  			codLuogoNascita = comuneNascita.getCodComune();
-  			codProvincia = comuneNascita.getCodProvincia();
-  			codCap = comuneNascita.getCap();
-  			descCodLuogoNascita = comuneNascita.getDescrizione();
-
-  			// altrimenti dalla sola descrizione (rischio omonimi).
-  		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
-  			comuneNascita = new ComuneModel(
-  					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
-  			descCodLuogoNascita = comuneNascita.getDescrizione();
-  			codLuogoNascita = comuneNascita.getCodComune();
-  			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
-  		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
-  				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
-  				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
-  			comuneNascita = AvvocatoUtil
-  					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
-  			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
-  		}      
+  		// 20210727 Recupero tipoInserimento (reginde, sies, manuale)
+  		String tipoInserimento = getRequestStringParameter("lTipoInserimento");
+  		try {
+	  		if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
+	  				&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
+	  			comuneNascita = new ComuneModel(
+	  					getDatiComuneByCodDescr(getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE),
+	  							getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+	  			codLuogoNascita = comuneNascita.getCodComune();
+	  			codProvincia = comuneNascita.getCodProvincia();
+	  			codCap = comuneNascita.getCap();
+	  			descCodLuogoNascita = comuneNascita.getDescrizione();
+	
+	  			// altrimenti dalla sola descrizione (rischio omonimi).
+	  		} else if (getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).length() > 2) {
+	  			comuneNascita = new ComuneModel(
+	  					getDatiComuneByDescrOmonimia(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)));
+	  			descCodLuogoNascita = comuneNascita.getDescrizione();
+	  			codLuogoNascita = comuneNascita.getCodComune();
+	  			// altrimenti , in caso di Paese di Nascita Estero, dalla routine che ricava i dati dal C.F.
+	  		} else if (getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+	  				&& !("039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA)))
+	  				&& getRequestStringParameter(CAMPO_CODICE_FISCALE).length() == 16) {
+	  			comuneNascita = AvvocatoUtil
+	  					.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
+	  			// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+	  		} 
+  		} catch (Exception e) {
+  			siesLogger.info(e.getMessage());
+  			if ("manuale".equals(tipoInserimento)) {
+  				throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+  			} else {
+  				// deve decodificare il comune di nascita dal CF dell'avvocato
+  				String codiFiscAvv = getRequestStringParameter(CAMPO_CODICE_FISCALE);
+  				comuneNascita = AvvocatoUtil.calcolaComuneNascita(codiFiscAvv);
+  				codLuogoNascita = comuneNascita.getCodComune();
+  				descCodLuogoNascita = comuneNascita.getDescrizione();
+  				codCap = comuneNascita.getCap();
+  				codProvincia = comuneNascita.getCodProvincia();
+  				// Salvo comunque la descrizione del comune di nascita reginde per tenerne traccia
+  				descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);
+  				// FINE
+  			}
+  		}  		
 
       // Recupero Codice e descrizione comune di residenza/studio
       String codLuogoResidenza = "-";
@@ -516,7 +537,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
       amReginde.setCodLuogoNascita     (codLuogoNascita);
       amReginde.setDescLuogoNascita    (descCodLuogoNascita);
       amReginde.setProvincia           (codProvincia); // di nascita
-      amReginde.setDescLuogoNascitaReginde (descCodLuogoNascita);
+      amReginde.setDescLuogoNascitaReginde (descLuogoNascitaReginde);
       amReginde.setCodStatoNascita (getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
       amReginde.setDescrStatoNascita (null);
 
