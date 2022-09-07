@@ -27,6 +27,7 @@ import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
+import siap.sico.evento.dao.EventoStoreProcedurePulisciDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -54,6 +55,7 @@ import siap.siep.modulocumulo.dao.BeneficioCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.CircostanzaCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.ComputiCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.ContinuazioneCumuloSqlDAO;
+import siap.siep.modulocumulo.dao.DatiFinaliCumuloDAO;
 import siap.siep.modulocumulo.dao.DatiFinaliCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.DatiFinaliUlterioriSanzioniSqlDAO;
 import siap.siep.modulocumulo.dao.LibAnticipataCumuloSqlDAO;
@@ -597,7 +599,13 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		CampoNotaDAO lCampoNotaDao = null;
 		EventoDAO lEveDao = null;
 		// Ticket#20220803015 - 
-		
+		// Ticket#20220831013 - inizio
+		EventoStoreProcedurePulisciDAO lEventoProcSqlDao = null;
+		DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
+		DatiFinaliCumuloDAO lDatiFinaliCumuloDAO = null;
+		EventoSqlDAO lEveSqlDao = null;
+		// Ticket#20220831013 - fine
+
 		try {
 			lConn = getDBConnection();
 
@@ -609,37 +617,43 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			lIstruttoriaDao.selCondizioneUpdate(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
 			lIstruttoriaDao.update();
 
-			// Ticket#20220803015 - Se l'evento è già stato annullato sul fascicolo cumulante 
-			// è stata aggiunta la nota annullamento sulla tabella CAMPO_NOTA per cui la delete 
+			// Ticket#20220803015 - Se l'evento è già stato annullato sul fascicolo cumulante
+			// è stata aggiunta la nota annullamento sulla tabella CAMPO_NOTA per cui la delete
 			// dell'evento va in errore (FK). Si cancellaanche la nota se presente.
 			lTitoloCumulatoSqlDao = new TitoloCumulatoSqlDAO(lConn);
-			lTitoloCumulatoSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(aIstruttoriaCumulo.getIdIstruttoriaCumulo(), null);
-			lTitoloCumulatoSqlDao.start();			
-			
+			lTitoloCumulatoSqlDao.ricercaTitoloCumulatoByIstruttoriaOrderBy(
+					aIstruttoriaCumulo.getIdIstruttoriaCumulo(), null);
+			lTitoloCumulatoSqlDao.start();
+
 			lEveDao = new EventoDAO(lConn);
 			lProcCumSqlDao = new ProcedimentoCumulatoSqlDAO(lConn);
 			lAnnEsiDao = new AnnotazioneEsitoTrasmissioneDAO(lConn);
 			lAnnEsiSqlDao = new AnnotazioneEsitoTrasmissioneSqlDAO(lConn);
 			lCampoNotaDao = new CampoNotaDAO(lConn);
-			
-			siesLogger.debug("Ricerco eventuali titoli 'Iscrizione in Istruttoria Fascicolo proprio Ufficio' per annullare gli eventi di trasmissione sui cumulati");
+
+			siesLogger.debug(
+					"Ricerco eventuali titoli 'Iscrizione in Istruttoria Fascicolo proprio Ufficio' per annullare gli eventi di trasmissione sui cumulati");
 			while (lTitoloCumulatoSqlDao.next()) {
 				TitoloCumulatoModel lTitoloModel = (TitoloCumulatoModel) lTitoloCumulatoSqlDao.getModel();
-				if ("04".equals(lTitoloModel.getTipoIscrizione())) // 04 = Iscrizione in Istruttoeia Fascicolo proprio Ufficio
-				{
-					siesLogger.debug("Titolo iscritto proprio ufficio: id = "+lTitoloModel.getIdTitoloCumulato());
+				// 04 = Iscrizione in Istruttoeia Fascicolo proprio Ufficio
+				if ("04".equals(lTitoloModel.getTipoIscrizione())) {
+					siesLogger.debug(
+							"Titolo iscritto proprio ufficio: id = " + lTitoloModel.getIdTitoloCumulato());
 					siesLogger.debug("Ricerco il Procedimento Cumulato per avere Eve_id_Evento");
 
 					lProcCumSqlDao.ricercaProcedimentoCumulatoByIdTitolo(lTitoloModel.getIdTitoloCumulato());
-					ProcedimentoCumulatoModel lProcMod = (ProcedimentoCumulatoModel) lProcCumSqlDao.getModelByKey();
+					ProcedimentoCumulatoModel lProcMod = (ProcedimentoCumulatoModel) lProcCumSqlDao
+							.getModelByKey();
 					lProcCumSqlDao.stop();
-					
+
 					if (lProcMod != null && lProcMod.getEveIdEvento() != null) {
 						// Ricerco e Cancello Annotazione_Esito_Trasmissione
-						lAnnEsiSqlDao.ricercaAnnotazioneEsitoTrasmissioneByIdEvento(lProcMod.getEveIdEvento());
-						AnnotazioneEsitoTrasmissioneModel lAnnMod = (AnnotazioneEsitoTrasmissioneModel) lAnnEsiSqlDao.getModelByKey();
+						lAnnEsiSqlDao
+								.ricercaAnnotazioneEsitoTrasmissioneByIdEvento(lProcMod.getEveIdEvento());
+						AnnotazioneEsitoTrasmissioneModel lAnnMod = (AnnotazioneEsitoTrasmissioneModel) lAnnEsiSqlDao
+								.getModelByKey();
 						lAnnEsiSqlDao.stop();
-						
+
 						lAnnEsiDao.selCondizioneUpdate(lAnnMod.getIdEsitoTrasmissione());
 						lAnnEsiDao.delete();
 						lAnnEsiDao.stop();
@@ -649,19 +663,19 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 						lCampoNotaDao.setCondizioneEvento(lProcMod.getEveIdEvento());
 						lCampoNotaDao.delete();
 						lCampoNotaDao.stop();
-						
+
 						// Cancello Evento
 						lEveDao.selCondizioneUpdate(lProcMod.getEveIdEvento());
 						lEveDao.delete();
 						lEveDao.stop();
-						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-						// LogF3B.getLogger()
+						// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
+						// di LogF3B.getLogger()
 						siesLogger.debug("Cancellato Evento");
-					}					
-				}				
+					}
+				}
 			}
 			// Ticket#20220803015 - FINE
-			
+
 			// ========================================================================
 			// Annullo tutti i CUMULI legati all'istruttoria
 			// ========================================================================
@@ -676,7 +690,38 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 					aIstruttoriaCumulo.getIdIstruttoriaCumulo());
 
 			lCumuloDAO.update();
-			
+
+			// Ticket#20220831013 - procedura SIEP n. 4/2022 PROCURA DEI MINORI DI CAMPOBASSO
+			// Verifico se è stato prodotto, non validato, il provvedimento di cumulo, in questo caso
+			// va cancellato altrimenti blocca l'emissione di altri provvedimenti
+			lDatiFinaliSqlDAO = new DatiFinaliCumuloSqlDAO(lConn);
+			lDatiFinaliSqlDAO
+					.ricercaDatiFinaliCumuloByIdIstruttoria(aIstruttoriaCumulo.getIdIstruttoriaCumulo());
+
+			DatiFinaliCumuloModel lDatiFinaliModel = (DatiFinaliCumuloModel) lDatiFinaliSqlDAO
+					.getModelByKey();
+
+			if (lDatiFinaliModel != null && lDatiFinaliModel.getEveIdEvento() != null) {
+				// pulisco il puntamento dalla DatiFinaliCumulo
+				lDatiFinaliCumuloDAO = new DatiFinaliCumuloDAO(lConn);
+				lDatiFinaliCumuloDAO.selCondizioneUpdate(lDatiFinaliModel.getIdDatiFinaliCumulo());
+				lDatiFinaliCumuloDAO.setEveIdEvento(null);
+				lDatiFinaliCumuloDAO.update();
+
+				// n.b. per sicurezza si testa la presenza effettiva dell'evento non essendo presente la FK
+				lEveSqlDao = new EventoSqlDAO(lConn);
+				lEveSqlDao.ricercaEventoByKey(lDatiFinaliModel.getEveIdEvento());
+				EventoModel lProvvedimento = (EventoModel) lEveSqlDao.getModelByKey();
+
+				if (lProvvedimento != null) {
+					// se l'eveto esiste lo elimino
+					lEventoProcSqlDao = new EventoStoreProcedurePulisciDAO(lConn);
+					lEventoProcSqlDao.setIdEvento(lProvvedimento.getIdEvento());
+					lEventoProcSqlDao.execute();
+				}
+			}
+			// Ticket#20220831013 - FINE
+
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
@@ -686,13 +731,18 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		} finally {
 			cleanup(lIstruttoriaDao);
 			cleanup(lCumuloDAO);
-			
 			cleanup(lTitoloCumulatoSqlDao);
 			cleanup(lProcCumSqlDao);
 			cleanup(lAnnEsiDao);
 			cleanup(lAnnEsiSqlDao);
 			cleanup(lCampoNotaDao);
 			cleanup(lEveDao);
+			// Ticket#20220831013 - inizio
+			cleanup(lEventoProcSqlDao);
+			cleanup(lDatiFinaliSqlDAO);
+			cleanup(lDatiFinaliCumuloDAO);
+			cleanup(lEveSqlDao);
+			// Ticket#20220831013 - fine
 
 			cleanup(lConn);
 		}
@@ -2094,7 +2144,7 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 			Iterator itxSTE = lTitoliConStatoEsec.iterator();
 			while (itxSTE.hasNext()) {
 				TitoloCumulatoModel lTitoloSTE = (TitoloCumulatoModel) itxSTE.next();
-				Boolean lTrovato = false;
+				boolean lTrovato = false;
 				for (int kk = 0; kk < lTitoliInIstruttoria.size(); kk++) {
 					TitoloCumulatoModel lTitoloSENT = lTitoliInIstruttoria.get(kk);
 					if (lTitoloSTE.getIdTitoloCumulato().compareTo(lTitoloSENT.getIdTitoloCumulato()) == 0) {
