@@ -27,6 +27,7 @@ import siap.jms.messaggio.model.MessaggioModel;
 import siap.sico.camponota.dao.CampoNotaDAO;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
+import siap.sico.evento.dao.EventoStoreProcedurePulisciDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -53,6 +54,7 @@ import siap.siep.modulocumulo.dao.BeneficioCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.CircostanzaCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.ComputiCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.ContinuazioneCumuloSqlDAO;
+import siap.siep.modulocumulo.dao.DatiFinaliCumuloDAO;
 import siap.siep.modulocumulo.dao.DatiFinaliCumuloSqlDAO;
 import siap.siep.modulocumulo.dao.DatiFinaliUlterioriSanzioniSqlDAO;
 import siap.siep.modulocumulo.dao.LibAnticipataCumuloSqlDAO;
@@ -588,6 +590,11 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		IstruttoriaCumuloDAO lIstruttoriaDao = null;
 		CumuloDAO lCumuloDAO = null;
 
+		EventoStoreProcedurePulisciDAO lEventoProcSqlDao = null;
+		DatiFinaliCumuloSqlDAO lDatiFinaliSqlDAO = null;
+		DatiFinaliCumuloDAO lDatiFinaliCumuloDAO = null;
+		EventoSqlDAO lEveSqlDao = null;
+		
 		try {
 			lConn = getDBConnection();
 
@@ -614,6 +621,37 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 
 			lCumuloDAO.update();
 
+			
+			// Ticket#20220831013 — procedura SIEP n. 4/2022 PROCURA DEI MINORI DI CAMPOBASSO
+			// Verifico se è stato prodotto, non validato, il provvedimento di cumulo, in questo caso
+			// va cancellato altrimenti blocca l'emissione di altri provvedimenti
+			lDatiFinaliSqlDAO = new DatiFinaliCumuloSqlDAO (lConn);
+			lDatiFinaliSqlDAO.ricercaDatiFinaliCumuloByIdIstruttoria (aIstruttoriaCumulo.getIdIstruttoriaCumulo());
+
+			DatiFinaliCumuloModel lDatiFinaliModel = (DatiFinaliCumuloModel) lDatiFinaliSqlDAO.getModelByKey();
+
+			if (lDatiFinaliModel!=null && lDatiFinaliModel.getEveIdEvento()!=null) {
+				// pulisco il puntamento dalla DatiFinaliCumulo
+				lDatiFinaliCumuloDAO = new DatiFinaliCumuloDAO(lConn);
+				lDatiFinaliCumuloDAO.selCondizioneUpdate (lDatiFinaliModel.getIdDatiFinaliCumulo());
+				lDatiFinaliCumuloDAO.setEveIdEvento(null);
+				lDatiFinaliCumuloDAO.update();
+				
+				// n.b. per sicurezza si testa la presenza effettiva dell'evento non essendo presente la FK
+				lEveSqlDao = new EventoSqlDAO(lConn);
+				lEveSqlDao.ricercaEventoByKey(lDatiFinaliModel.getEveIdEvento());
+				EventoModel lProvvedimento = (EventoModel) lEveSqlDao.getModelByKey();
+				
+				if (lProvvedimento!=null) {
+					// se l'eveto esiste lo elimino
+					lEventoProcSqlDao = new EventoStoreProcedurePulisciDAO(lConn);
+					lEventoProcSqlDao.setIdEvento(lProvvedimento.getIdEvento());
+					lEventoProcSqlDao.execute();
+				}
+			}
+			// Ticket#20220831013 - FINE
+			
+			
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
@@ -623,6 +661,9 @@ public class IstruttoriaCumuloController extends SiapController implements IIstr
 		} finally {
 			cleanup(lIstruttoriaDao);
 			cleanup(lCumuloDAO);
+			
+			cleanup(lDatiFinaliSqlDAO);
+			cleanup(lEventoProcSqlDao);
 
 			cleanup(lConn);
 		}

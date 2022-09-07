@@ -1,5 +1,19 @@
-RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
+Ticket#20220831013 — procedura SIEP n. 4/2022 PROCURA DEI MINORI DI CAMPOBASSO
 
-Comprende i seguenti Ticket MAC:
+In fase di annullamento di una Istruttoria, il sistema non elimina il provvedimento di cumulo che resta 
+non validato bloccando l'emissione di ulteriori provvedimenti.
+L'evento è cancellabile da elenco provvedimento del PM ma l'utente potrebbe non accorgersene e nel caso segnalato 
+hanno semplicemente nascosto l'evento.
 
-1)	
+Modificato il modulo 
+siap.siep.istruttoriacumulo.controller.IstruttoriaCumuloController
+
+Metodo 
+ExAnnullaIstruttoriaCumulo
+
+per effttuare la cancellazione automatica del provvedimento collegato all'istruttoria, se presente.
+
+
+
+
+
