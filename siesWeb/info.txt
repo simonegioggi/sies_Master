@@ -1,5 +1,14 @@
-RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
+Ticket#20220907012 — Sige - Riscontro anomalie estrazioni dati con più oggetti
 
-Comprende i seguenti Ticket MAC:
 
-1)	
+Il modulo che ricostruiva la lista oggetti non resettava correttamente la variabile con gli oggetti 
+fascicolo se il fascicolo corrente ne era privo.
+Risultatao. Al fasicolo privo di oggetti venivano associati gli oggetti del fascicolo che lo precedeva.
+
+
+Modulo corretto:
+siap.sige.fascicolo.controller.FascicoloSigeController 
+
+Metodo:
+ExRicercaStatisticaFascicoloSigeByEstremi
+
