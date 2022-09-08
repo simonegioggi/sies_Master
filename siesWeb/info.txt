@@ -35,3 +35,12 @@ Comprende i seguenti Ticket MAC:
 	per una futura/eventuale trasmissione degli atti, ma non si era intervenuti per oscurare l'aggancio della funzionalita'.
 	Classe Modificata:
 	-	siap/sige/provvedimento/DettaglioDepositoProvvedimentoSige.jsp
+
+4)	Ticket#20220907012 — Sige - Riscontro anomalie estrazioni dati con più oggetti
+	Il modulo che ricostruiva la lista oggetti non resettava correttamente la variabile con gli oggetti 
+	fascicolo se il fascicolo corrente ne era privo.
+	Risultato: al fasicolo privo di oggetti venivano associati gli oggetti del fascicolo che lo precedeva.
+	Modulo corretto:
+	siap.sige.fascicolo.controller.FascicoloSigeController.java
+	Metodo:
+	ExRicercaStatisticaFascicoloSigeByEstremi
