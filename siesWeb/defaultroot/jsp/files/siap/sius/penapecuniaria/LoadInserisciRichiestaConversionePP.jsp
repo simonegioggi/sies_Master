@@ -360,21 +360,27 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 </body>
 
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("LoadInserisciRichiestaConversionePP");
+var frmvalidator  = new Validator("LoadInserisciRichiestaConversionePP");
 
-  <%--frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","req","Il campo Autorita è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Sede è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
-	--%>
-  frmvalidator.setAddnlValidationFunction("Verify"); 
+<%--frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","req","Il campo Autorita è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Sede è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
+ //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
+--%>
 
+// Ticket#20220909012 - descrizione problema uff sorveglianza di Bari
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT","numeric","Il campo Multa è numerico");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>DEC","numeric");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT","numeric","Il campo Ammenda è numerico");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>DEC","numeric");
+
+frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </html>
