@@ -169,13 +169,20 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// lSql+=" AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670')";
 
 		// MEV 39: APPELLO CONTRO: OCCORRE CONSIDERARE ANCHE MOTIVO 0258, 0259 E 0260
-		lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698','2700','2701', '0258','0259','0260')";
+		//Ticket#20220404012 - Si aggiungono anche i codici 9073 e 9074 usati da UDSM
+		//lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698','2700','2701', '0258','0259','0260')";
+		lSql += " AND EVE.COD_MOTIVO IN ('2440','2441','2110','2111','2113','2114','2670','2697','2698','2700','2701', '0258','0259','0260', '9073','9074')";
+		//Ticket#20220404012 - FINE
 		// lSql+=" AND EVE.COD_ESITO IN ('0052','0054','0118','0193','0194','0195','0350','0351','0387')";
 		// lSql+=" AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387')";
 
 		// MEV 39: APPELLO CONTRO: OCCORRE CONSIDERARE ANCHE ESITO 0209 (Accoglie Appello e Revoca
 		// Provvedimento Mds)
-		lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329', '0209')";
+		
+		//Ticket#20220404012 - Si aggiunge anche il codice 0054 - Dichiara cessata la pericolosità sociale e revoca la misura
+		// lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329', '0209')";
+		lSql += " AND EVE.COD_ESITO IN ('0052','0193','0194','0195','0350','0351','0387','0324','0329', '0209','0054')";
+		//Ticket#20220404012 - FINE
 		lSql += " AND UFF.COD_UFFICIO = FASC.CHIAVE_UFFICIO";
 		lSql += " AND UFF.COD_COMUNE = DESCR_COM_UFF.COD_COMUNE";
 		lSql += " AND UFF.COD_UFFICIO = UFD.COD_UFFICIO";

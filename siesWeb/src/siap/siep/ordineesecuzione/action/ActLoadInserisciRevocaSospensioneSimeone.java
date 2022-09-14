@@ -127,6 +127,15 @@ public class ActLoadInserisciRevocaSospensioneSimeone extends ActionSiap
 			lNotifiche = INotifica.ExRicercaNotificaAvvocatoNonAvvenuta(lNotMod);
 
 			if (lNotifiche != null && lNotifiche.size() == lAvvVect.size()) {
+				//Ticket#20220712011 - non si rilancia messaggio nel caso dei 
+				// provvedimenti di cumulo per i quali le notifiche ad oggi
+				// non sono comunque inseribili
+			} else if (   "0661".equals(lEventoMod.getCodMotivo())
+					   || "0635".equals(lEventoMod.getCodMotivo())
+					   || "0642".equals(lEventoMod.getCodMotivo())
+					   || "0637".equals(lEventoMod.getCodMotivo())
+					  ) {
+				//Ticket#20220712011 - FINE
 			} else {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()

@@ -7,3 +7,5 @@ MEV_21 (Interazione col Registro Generale degli Indirizzi Elettronici - ReGIndE)
 3)	in data 18/01/2022 eseguito merge con versione 12.4.15.0
 
 4)	in data 21/04/2022 eseguito merge con versione 12.4.18.0
+
+5)	in data 14/09/2022 eseguito merge con versione 12.4.22.0
