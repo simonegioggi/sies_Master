@@ -492,7 +492,15 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiAvv
   			codCap = comuneNascita.getCap();
   			codProvincia = comuneNascita.getCodProvincia();
   			// Salvo comunque la descrizione del comune di nascita reginde per tenerne traccia
-  			descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);
+  			if (  getRequestStringParameter(CAMPO_COD_STATO_NASCITA).length() == 3
+	  				&& !"039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
+	  			 )
+  			{	
+  			  descLuogoNascitaReginde = getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+  			}
+  			else {
+  				descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);
+  			}
   		}
   		
       // Recupero Codice e descrizione comune di residenza/studio
