@@ -488,6 +488,12 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
 					: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
 
+			String descLuogoNascitaReginde = null;
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
+				descLuogoNascitaReginde = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
+					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
+					: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+			}
 			// Decodifico il luogo di nascita
 			siesLogger.debug("Decodifico il luogo di nascita: " + descCodLuogoNascita);
 			// **********************************************************************
@@ -527,6 +533,10 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 				comuneNascita = AvvocatoUtil
 						.calcolaComuneNascita(getRequestStringParameter(CAMPO_CODICE_FISCALE));
 				// comuneNascita, in caso di stato estero, conterrà informazioni dello stato.
+				siesLogger.debug("Comune dal CF estero: " + comuneNascita);
+				//2022.09.05
+				codCap = comuneNascita.getCap();
+				codProvincia = comuneNascita.getCodProvincia();
 			}
 			// **********************************************************************
 			/*
@@ -596,8 +606,9 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			amReginde.setDescLuogoNascita(descCodLuogoNascita);
 			amReginde.setProvincia(codProvincia); // di nascita
 			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
-				if (!getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).equals(descCodLuogoNascita))
-					amReginde.setDescLuogoNascitaReginde(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA));
+				//2022.09.05 Si inserisce sempre la descisione del comune passato da REGINDE if (!getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA).equals(descCodLuogoNascita))
+					//amReginde.setDescLuogoNascitaReginde(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA));
+					amReginde.setDescLuogoNascitaReginde(descLuogoNascitaReginde);					
 			}
 			//amReginde.setDescLuogoNascitaReginde(descCodLuogoNascita);
 			amReginde.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));

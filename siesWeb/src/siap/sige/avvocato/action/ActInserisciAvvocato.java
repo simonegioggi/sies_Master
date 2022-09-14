@@ -87,13 +87,22 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			codCap = comuneNascita.getCap();
 			codProvincia = comuneNascita.getCodProvincia();
 
-			// Salvo comunque la descrizione del comune di nascicta reginde per tenerne traccia se diversa da
-			// quella
-			// calcolata dal CF
-			if (!descCodLuogoNascita.equals(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)))
-				descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);
+			
+			// 2022.09.05 si recupera sempre il comune di nascita passato REGINDE (nato in italia o estero)
+			if (getRequestStringParameter(CAMPO_ID_AVVOCATO).contains("COA")) {
+				descLuogoNascitaReginde = "039".equals(getRequestStringParameter(CAMPO_COD_STATO_NASCITA))
+					? getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)
+					: getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+			}
+			
+			// Salvo comunque la descrizione del comune di nascita reginde per tenerne traccia se diversa da
+			// quella calcolata dal CF
+//			if (!descCodLuogoNascita.equals(getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA)))
+//				descLuogoNascitaReginde = getRequestStringParameter(CAMPO_COD_LUOGO_NASCITA);
+			
+			
 		} else {
-
+      // Inserimento manuale
 			if (!isRequestParameterNullObj(ICostantiComune.CAMPO_COD_COMUNE_REALE)
 					&& getRequestStringParameter(ICostantiComune.CAMPO_COD_COMUNE_REALE).length() > 0) {
 				comuneNascita = new ComuneModel(getDatiComuneByCodDescr(
@@ -120,8 +129,8 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 			}
 		}
 
-		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
-			descLuogoNascitaReginde = getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
+//		if (getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE).length() > 0)
+//			descLuogoNascitaReginde = getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_REGINDE);
 
 		// Recupero Codice e descrizione comune di residenza.
 		String codLuogoResidenza = "-";
