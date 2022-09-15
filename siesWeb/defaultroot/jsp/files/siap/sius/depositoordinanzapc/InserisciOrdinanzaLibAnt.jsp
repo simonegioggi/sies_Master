@@ -1470,7 +1470,6 @@ function InseritoPeriodo() {
 // Decreto Legge 2013/146
 /* Abilita la modalità di selezione periodi concessi a seconda di L.A., L.A. speciale, Integrazione L.A. */
 function QualeLiberazioneConcede(cod, indd) {
-	alert(cod + " ### " + indd);
 	var lungh = <%=tenori.length%>;
 	document.InserisciOrdinanzaLiberazioneAnticipata.<%=ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO%>.value = indd;
 	// assegno valori fittizi agli INDICI degli Oggetti L.A.; 
