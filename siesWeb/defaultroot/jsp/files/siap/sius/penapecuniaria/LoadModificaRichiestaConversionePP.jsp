@@ -9,9 +9,9 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 
 <jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
-<jsp:useBean id="autoritaConv" scope="request" class="java.lang.String" />
+<jsp:useBean id="autoritaConv" scope="request" class="java.lang.String"/>
 <jsp:useBean id="richiestaconversione" scope="request" class="siap.siep.penapecuniaria.model.RichiestaConversioneModel"/>
-<jsp:useBean id="TornaQui" scope="request" class="java.lang.String" />
+<jsp:useBean id="TornaQui" scope="request" class="java.lang.String"/>
 <%
 Date dataIrrevocabilita = null;
 if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
@@ -36,23 +36,23 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 	  // Inserire i controlli che non possono essere effettuati dal genvalidator 
 	  function Verify() { 
 			// ANNO/NUMERO PARTITA o ci sono entrambi o nessuno 
-			if((document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA %>.value==""
-				&& !document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA %>.value=="")
-				|| (!document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA %>.value==""
-				&& document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA %>.value=="")){
+			if((document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA%>.value==""
+				&& !document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA%>.value=="")
+				|| (!document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA%>.value==""
+				&& document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA%>.value=="")){
 		        alert("anno e numero partita non corretti");
-		        document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA %>.focus(); 
+		        document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA%>.focus(); 
 		         return false;
 			}
 		  
 			// Deve essere valorizzata Almeno una delle tre informazioni tra ANNO/NUMERO PARTITA, NUMERO EX CAMPIONE e PROT. CIRCOSCRIZIONE DOGANALE 
-			if(document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA %>.value==""
-				&& document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA %>.value==""
-			   	&& document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_NUM_EX_CAMPIONE %>.value==""
-			    && document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_PROT_CIRCOSRIZIONE_DOGANALE %>.value==""){
+			if(document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA%>.value==""
+				&& document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA%>.value==""
+			   	&& document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_EX_CAMPIONE%>.value==""
+			    && document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_PROT_CIRCOSRIZIONE_DOGANALE%>.value==""){
 		 		 // 12/05/2010 Eliminato controllo bloccante sui dati di inserimento obbligatori.	
          <%--alert("Almeno uno fra Anno/Numero Partita, Numero Ex Campione Penale, Prot. Circoscrizione Doganale va inserito")
-         document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA %>.focus(); 
+         document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA%>.focus(); 
          return false; --%>
 		 		 if(! confirm("Confermi l'assenza di tutti i dati fra Anno/Numero Partita, Numero Ex Campione, Prot. Circoscrizione Doganale ?" ) )
  		 		 {
@@ -133,24 +133,24 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 				{
 					// se l'importo della multa è vuoto non posso inserire la data prescrizione o avvalorare il flag imprescrittibile
 					alert("Importo della multa non inserito");
-					document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT.focus(); 
+					document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT.focus(); 
 					return false;
 				}	
 			}else{
 				if (data_to_verify.length>2 
-				&& document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_MULTA%>.checked == true)
+				&& document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_MULTA%>.checked == true)
 				{
 					// se l'importo della multa è pieno devo inserire la data prescrizione o avvalorare il flag imprescrittibile
 					alert("Indicare la data di prescrizione o avvalorare il flag imprescrittibile")
-					document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT.focus(); 
+					document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT.focus(); 
 					return false;
 				}
 				if (( data_to_verify.length < 3 &&  data_irrevocabilita.length < 3) 
-				&& !document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_MULTA%>.checked == true)
+				&& !document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_MULTA%>.checked == true)
 				{
 					// se l'importo della multa è pieno devo inserire la data prescrizione o avvalorare il flag imprescrittibile
 					alert("Indicare la data di prescrizione o avvalorare il flag imprescrittibile")
-					document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA %>INT.focus(); 
+					document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT.focus(); 
 					return false;
 				}
 			}
@@ -171,28 +171,28 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 			&& document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>DEC.value=="")
 			{	
 				if (data_to_verify.length>2 
-				|| document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>.checked == true)
+				|| document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>.checked == true)
 				{
 					// se l'importo della multa è vuoto non posso inserire la data prescrizione o avvalorare il flag imprescrittibile
 					alert("Importo della Ammenda non inserito");
-					document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT.focus(); 
+					document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT.focus(); 
 					return false;
 				}	
 			}else{
 				if ((data_to_verify.length>2 ||  data_irrevocabilita.length>2)
-				&& document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>.checked == true)
+				&& document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>.checked == true)
 				{
 					// se l'importo della Ammenda è pieno devo inserire la data prescrizione o avvalorare il flag imprescrittibile
 					alert("Indicare la data di prescrizione o avvalorare il flag imprescrittibile")
-					document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT.focus(); 
+					document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT.focus(); 
 					return false;
 				}
 				if (( data_to_verify.length < 3 &&  data_irrevocabilita.length < 3) 
-				&& !document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>.checked == true)
+				&& !document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>.checked == true)
 				{
 					// se l'importo della Ammenda è pieno devo inserire la data prescrizione o avvalorare il flag imprescrittibile
 					alert("Indicare la data di prescrizione o avvalorare il flag imprescrittibile")
-					document.LoadModificaRichiestaConversionePP.<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA %>INT.focus(); 
+					document.LoadModificaRichiestaConversionePP.<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT.focus(); 
 					return false;
 				}
 			}
@@ -221,7 +221,7 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
     </tr>
   </table>
 
-<FORM method="POST" action="<%= IWebConstants.PG_MAIN %>" name="LoadModificaRichiestaConversionePP">
+<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadModificaRichiestaConversionePP">
   <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
   <input type="HIDDEN" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ID_RICHIESTA_CONVERSIONE%>" value="<%=richiestaconversione.getIdRichiestaConversione()%>">
 
@@ -233,26 +233,26 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
     <tr>
       <td class="l" colspan="2">Anno/Numero Partita</td>
       <td class="l" colspan="4"> 
-        <input type="text" maxlength="4" size="4" ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.toStringJSP(richiestaconversione.getAnnoPartita()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA %>"> /  
-        <input type="text" maxlength="9" size="11" ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.toStringJSP(richiestaconversione.getNumPartita()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA %>"> 
+        <input type="text" maxlength="4" size="4" ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.toStringJSP(richiestaconversione.getAnnoPartita())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_PARTITA%>"> /  
+        <input type="text" maxlength="9" size="11" ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.toStringJSP(richiestaconversione.getNumPartita())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_PARTITA%>"> 
       </td> 
     </tr>
     <tr>
       <td class="l" colspan="2">Numero Ex Campione</td>
       <td class="l" colspan="4"> 
-        <input type="text" maxlength="20" size="20" value="<%=StringUtils.toStringJSP(richiestaconversione.getNumExCampione()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_NUM_EX_CAMPIONE %>" > 
+        <input type="text" maxlength="20" size="20" value="<%=StringUtils.toStringJSP(richiestaconversione.getNumExCampione())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NUM_EX_CAMPIONE%>" > 
       </td> 
     </tr>
     <tr>
       <td class="l" colspan="2">Prot. Circosrizione Doganale</td>
       <td class="l" colspan="4"> 
-        <input type="text" maxlength="20" size="20" value="<%=StringUtils.toStringJSP(richiestaconversione.getProtCircosrizioneDoganale()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_PROT_CIRCOSRIZIONE_DOGANALE %>" > 
+        <input type="text" maxlength="20" size="20" value="<%=StringUtils.toStringJSP(richiestaconversione.getProtCircosrizioneDoganale())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_PROT_CIRCOSRIZIONE_DOGANALE%>" > 
       </td> 
   	</tr>
     <tr>
 		<td class="l" colspan="2">Autorità</td>
 		<td class="L" colspan=4>
-			<select Title="Autorità" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>">
+			<select Title="Autorità" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>">
 				<%=autoritaConv%>
 			</select></td>
 		</tr>
@@ -260,66 +260,66 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 			<td class="l" colspan="2" >Sede</td>
 			<td class="L"colspan="4" >
 				<input Title="Sede" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE%>" value="<%=richiestaconversione.getDescrLuogoEmittente()%>" type="text" maxlength="35" size="35"> 
-					<a href="Javascript:ListaComuni('LoadModificaRichiestaConversionePP','<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE %>');"> <img src="/images/filefolder.gif" border=0> </a>
+					<a href="Javascript:ListaComuni('LoadModificaRichiestaConversionePP','<%=ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE%>');"> <img src="/images/filefolder.gif" border=0> </a>
 			</td>
 		</tr>
     <tr>
-<%    if (dataIrrevocabilita != null) { %>
+<%    if (dataIrrevocabilita != null) {%>
       	<td class="l" colspan="2">Data Irrevocabilità Titolo Esecutivo</td>
       	<td class="l" colspan="4"> 
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"dd-MM-yyyy"))%> </font>
-			<input type="HIDDEN" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_IRREVOCABILITA %>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"dd"))%>" >
-			<input type="HIDDEN" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_IRREVOCABILITA %>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"MM"))%>" >
-			<input type="HIDDEN" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_IRREVOCABILITA %>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"yyyy"))%>" > 
+			<input type="HIDDEN" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_IRREVOCABILITA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"dd"))%>" >
+			<input type="HIDDEN" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_IRREVOCABILITA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"MM"))%>" >
+			<input type="HIDDEN" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_IRREVOCABILITA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataIrrevocabilita,"yyyy"))%>" > 
       	</td>
-    <%} else { %>
+    <%} else {%>
       	<td class="l" colspan="2">Data Irrevocabilità</td>
       	<td class="l" colspan="4"> 
-        <input type="text" size="2" maxlength="2" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_IRREVOCABILITA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_IRREVOCABILITA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_IRREVOCABILITA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
+        <input type="text" size="2" maxlength="2" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_IRREVOCABILITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="2" maxlength="2" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_IRREVOCABILITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="4" maxlength="4" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_IRREVOCABILITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
       	</td>
-    <%} %>
+    <%}%>
     </tr>
     <tr>
       <td class="l" colspan="2">Data Ricezione Atto</td>
       <td class="l" colspan="4"> 
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataRicezioneAtto(),"dd")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_RICEZIONE_ATTO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataRicezioneAtto(),"MM")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_RICEZIONE_ATTO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataRicezioneAtto(),"yyyy")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_RICEZIONE_ATTO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataRicezioneAtto(),"dd"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_RICEZIONE_ATTO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataRicezioneAtto(),"MM"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_RICEZIONE_ATTO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataRicezioneAtto(),"yyyy"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_RICEZIONE_ATTO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
       </td>
     </tr>
     <tr>
       <td class="l" colspan="2">Data Iscrizione Atto</td>
       <td class="l" colspan="4"> 
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataIscrizioneAtto(),"dd")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ISCRIZIONE_ATTO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataIscrizioneAtto(),"MM")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ISCRIZIONE_ATTO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"  >&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataIscrizioneAtto(),"yyyy")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ISCRIZIONE_ATTO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataIscrizioneAtto(),"dd"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ISCRIZIONE_ATTO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataIscrizioneAtto(),"MM"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ISCRIZIONE_ATTO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"  >&nbsp;/&nbsp;
+        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataIscrizioneAtto(),"yyyy"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ISCRIZIONE_ATTO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
       </td>
     </tr>
     <tr>
       <td class="l" colspan="2">Data Richiesta Impossibilità Esazione</td>
       <td class="l" colspan="4"> 
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataEsazione(),"dd")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataEsazione(),"MM")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataEsazione(),"yyyy")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ESAZIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataEsazione(),"dd"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataEsazione(),"MM"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">&nbsp;/&nbsp;
+        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataEsazione(),"yyyy"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ESAZIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
       </td>
     </tr>
     <tr>
       <td class="l">Multa</td>
       <td class="l"> 
-        <input type="text" maxlength="14" size="16"  ONKEYPRESS="return TicTabNumField(this,event)" style="text-align:right" value="<%=StringUtils.getParteIntera(richiestaconversione.getImportoMulta()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT" ><strong>&nbsp;,&nbsp;</strong>
-        <input type="text" maxlength="2" size="2"  ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.getParteDecimale(richiestaconversione.getImportoMulta()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA %>DEC" > 
+        <input type="text" maxlength="14" size="16"  ONKEYPRESS="return TicTabNumField(this,event)" style="text-align:right" value="<%=StringUtils.getParteIntera(richiestaconversione.getImportoMulta())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT" ><strong>&nbsp;,&nbsp;</strong>
+        <input type="text" maxlength="2" size="2"  ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.getParteDecimale(richiestaconversione.getImportoMulta())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>DEC" > 
       </td> 
       <td class="l">Data Prescrizione</td>
       <td class="l"> 
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneMulta(),"dd")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_PRESCRIZIONE_MULTA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneMulta(),"MM")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_PRESCRIZIONE_MULTA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneMulta(),"yyyy")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_PRESCRIZIONE_MULTA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneMulta(),"dd"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_PRESCRIZIONE_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneMulta(),"MM"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_PRESCRIZIONE_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneMulta(),"yyyy"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_PRESCRIZIONE_MULTA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"> 
        </td>
       <td class="l">Imprescrittibile</td>
       <td class="l"> 
-        <input type="checkbox" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_MULTA %>"  
+        <input type="checkbox" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_MULTA%>"  
         	<%if (richiestaconversione.getFlagImprescrittibileMulta().equals("S")){%> checked
           	<%}%> > 
       </td> 
@@ -327,18 +327,18 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
     <tr>
       <td class="l">Ammenda</td>
       <td class="l"> 
-        <input type="text" maxlength="14" size="16"  ONKEYPRESS="return TicTabNumField(this,event)" style="text-align:right" value="<%=StringUtils.getParteIntera(richiestaconversione.getImportoAmmenda()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT"><strong>&nbsp;,&nbsp;</strong>
-        <input type="text" maxlength="2" size="2"  ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.getParteDecimale(richiestaconversione.getImportoAmmenda()) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA %>DEC" > 
+        <input type="text" maxlength="14" size="16"  ONKEYPRESS="return TicTabNumField(this,event)" style="text-align:right" value="<%=StringUtils.getParteIntera(richiestaconversione.getImportoAmmenda())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT"><strong>&nbsp;,&nbsp;</strong>
+        <input type="text" maxlength="2" size="2"  ONKEYPRESS="return TicTabNumField(this,event)" value="<%=StringUtils.getParteDecimale(richiestaconversione.getImportoAmmenda())%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>DEC" > 
       </td> 
       <td class="l">Data Prescrizione</td>
       <td class="l"> 
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneAmmenda(),"dd")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_PRESCRIZIONE_AMMENDA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneAmmenda(),"MM")) %>" name="<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_PRESCRIZIONE_AMMENDA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
-        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneAmmenda(),"yyyy")) %>"            name="<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_PRESCRIZIONE_AMMENDA %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneAmmenda(),"dd"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_PRESCRIZIONE_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="2" maxlength="2" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneAmmenda(),"MM"))%>" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_PRESCRIZIONE_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" >&nbsp;/&nbsp;
+        <input type="text" size="4" maxlength="4" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(richiestaconversione.getDataPrescrizioneAmmenda(),"yyyy"))%>"            name="<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_PRESCRIZIONE_AMMENDA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
       </td>
       <td class="l">Imprescrittibile</td>
       <td class="l"> 
-        <input type="checkbox" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA %>" 
+        <input type="checkbox" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_FLAG_IMPRESCRITTIBILE_AMMENDA%>" 
         <% if(richiestaconversione.getFlagImprescrittibileAmmenda().equals("S")){%>
              checked
          <%}%> > 
@@ -347,7 +347,7 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 	  <tr>
 	    <td class="l">Note</td>
 	    <td class="l" colspan="5">
-	      <Textarea Title="Note" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NOTE %>" cols=90 rows=5></textarea>
+	      <Textarea Title="Note" name="<%=ICostantiSiusPenaPecuniaria.CAMPO_NOTE%>" cols=90 rows=5></textarea>
 	    </td>
 	  </tr>
 
@@ -363,21 +363,27 @@ if (! Utils.isNullObj(request.getAttribute("dataIrrevocabilita")))
 
 
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator  = new Validator("LoadModificaRichiestaConversionePP");
+var frmvalidator  = new Validator("LoadModificaRichiestaConversionePP");
 
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE %>","req","Il campo Autorità è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE %>","req","Il campo Sede è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_RICEZIONE_ATTO %>","req","Il campo Data Ricezione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ISCRIZIONE_ATTO %>","req","Il campo Data Iscrizione Atto è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
-  //frmvalidator.addValidation("<%= ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ESAZIONE %>","req","Il campo Data Esazione è obbligatorio");
+<%-- frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_COD_TIPO_AUTORITA_EMITTENTE%>","req","Il campo Autorità è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_COD_LUOGO_EMITTENTE%>","req","Il campo Sede è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_RICEZIONE_ATTO%>","req","Il campo Data Ricezione Atto è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_RICEZIONE_ATTO%>","req","Il campo Data Ricezione Atto è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_RICEZIONE_ATTO%>","req","Il campo Data Ricezione Atto è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ISCRIZIONE_ATTO%>","req","Il campo Data Iscrizione Atto è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ISCRIZIONE_ATTO%>","req","Il campo Data Iscrizione Atto è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ISCRIZIONE_ATTO%>","req","Il campo Data Iscrizione Atto è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_GIORNO_DATA_ESAZIONE%>","req","Il campo Data Esazione è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_MESE_DATA_ESAZIONE%>","req","Il campo Data Esazione è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_ANNO_DATA_ESAZIONE%>","req","Il campo Data Esazione è obbligatorio"); --%>
 
-  frmvalidator.setAddnlValidationFunction("Verify"); 
+// Ticket#20220909012 - descrizione problema uff sorveglianza di Bari
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>INT","numeric","Il campo Multa è numerico");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_MULTA%>DEC","numeric");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>INT","numeric","Il campo Ammenda è numerico");
+frmvalidator.addValidation("<%=ICostantiSiusPenaPecuniaria.CAMPO_IMPORTO_AMMENDA%>DEC","numeric");
+
+frmvalidator.setAddnlValidationFunction("Verify"); 
 
 </script>
 </body>

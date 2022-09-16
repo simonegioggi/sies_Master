@@ -120,6 +120,8 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 		soggettoFascicolomioUffi += setCondizioneMioUfficio(lCodUfficioUtenteConnesso);
 		soggettoFascicolomioUffi += setCondizioneSoggettoParziale(aModel);
 		soggettoFascicolomioUffi += setOrder();
+		// 20220128 test DF per ordinare la lista dei propri titoli come la liste dai titoli già iscritti
+		// soggettoFascicolomioUffi += " ORDER BY F.DATA_IRREVOCABILITA, CHIAVE_ANNO, CHIAVE_PROGR";
 		// soggettoFascicolomioUffi += setOrderByCoNome();
 
 		// Se apage = 0 , la Query serve per il totale
@@ -416,52 +418,74 @@ public class FascicoloSiepSoggettoSqlDAO extends SIAPSqlDAO {
 	private String setCondizione(SoggettoModel aSm) {
 		String lCondizioni = new String();
 		if (aSm.getIdSoggetto().doubleValue() == 0) {
-			lCondizioni += " AND (( 1=1 ";
-			if (!(aSm.getCognome().equals(""))) {
-				lCondizioni += " AND COGNOME like '" + StringUtils.convertSqlString(aSm.getCognome()) + "%'";
+
+			// Ticket#20220801013 - Se presente solo il CUI non si può andare in OR sul CUI
+			// altrimenti la presenza della ondizione 1=1
+			// per cui il codice originario viene messo sotto if:
+			// Se presente SOLO il codAfis la condizione va in AND
+			// se presenti altri filtro la condizione soll'AFIS va in OR
+			boolean isSoloCodAfis = true;
+			if (!(aSm.getCognome().equals("")) || !(aSm.getNome().equals(""))
+					|| !(aSm.getCodComuneNascita().equals("")) || !(aSm.getPaternita().equals(""))
+					|| !(aSm.getNomeMadre().equals("")) || !(aSm.getCognomeMadre().equals(""))
+					|| !(aSm.getCodStatoNascita().equals("")) || aSm.getDataNascita() != null) {
+				isSoloCodAfis = false;
 			}
 
-			if (!(aSm.getNome().equals(""))) {
-				lCondizioni += " AND NOME like '" + StringUtils.convertSqlString(aSm.getNome()) + "%'";
-			}
+			if (isSoloCodAfis) {
+				if (aSm.getCodAfis() != null && aSm.getCodAfis().length() > 0) {
+					lCondizioni += " AND (COD_AFIS = UPPER('" + aSm.getCodAfis() + "') )";
+				}
+			} else {
+				// Ticket#20220801013 - FINE
+				lCondizioni += " AND (( 1=1 ";
+				if (!(aSm.getCognome().equals(""))) {
+					lCondizioni += " AND COGNOME like '" + StringUtils.convertSqlString(aSm.getCognome())
+							+ "%'";
+				}
 
-			if (!(aSm.getCodComuneNascita().equals(""))) {
-				lCondizioni += " AND COD_COMUNE_NASCITA = '" + aSm.getCodComuneNascita() + "'";
-			}
+				if (!(aSm.getNome().equals(""))) {
+					lCondizioni += " AND NOME like '" + StringUtils.convertSqlString(aSm.getNome()) + "%'";
+				}
 
-			if (!(aSm.getPaternita().equals(""))) {
-				lCondizioni += " AND PATERNITA LIKE '"
-						+ StringUtils.convertSqlString(aSm.getPaternita().toUpperCase()) + "%'";
-			}
+				if (!(aSm.getCodComuneNascita().equals(""))) {
+					lCondizioni += " AND COD_COMUNE_NASCITA = '" + aSm.getCodComuneNascita() + "'";
+				}
 
-			if (!(aSm.getNomeMadre().equals(""))) {
-				lCondizioni += " AND NOME_MADRE LIKE '"
-						+ StringUtils.convertSqlString(aSm.getNomeMadre().toUpperCase()) + "%'";
-			}
+				if (!(aSm.getPaternita().equals(""))) {
+					lCondizioni += " AND PATERNITA LIKE '"
+							+ StringUtils.convertSqlString(aSm.getPaternita().toUpperCase()) + "%'";
+				}
 
-			if (!(aSm.getCognomeMadre().equals(""))) {
-				lCondizioni += " AND COGNOME_MADRE LIKE '"
-						+ StringUtils.convertSqlString(aSm.getCognomeMadre().toUpperCase()) + "%'";
-			}
+				if (!(aSm.getNomeMadre().equals(""))) {
+					lCondizioni += " AND NOME_MADRE LIKE '"
+							+ StringUtils.convertSqlString(aSm.getNomeMadre().toUpperCase()) + "%'";
+				}
 
-			if (!(aSm.getCodStatoNascita().equals(""))) {
-				lCondizioni += " AND COD_STATO_NASCITA = '" + aSm.getCodStatoNascita() + "'";
-			}
+				if (!(aSm.getCognomeMadre().equals(""))) {
+					lCondizioni += " AND COGNOME_MADRE LIKE '"
+							+ StringUtils.convertSqlString(aSm.getCognomeMadre().toUpperCase()) + "%'";
+				}
 
-			if (aSm.getDataNascita() != null) {
-				// 20180110: [SG] aggiunta trunc sulla data nascita per gestire la presenza di ore min sec
-				lCondizioni += " AND trunc(DATA_NASCITA) = TO_DATE('"
-						+ DateUtils.getDateToString(aSm.getDataNascita(), "ddMMyyyy") + "', 'DDMMYYYY') ";
-			}
+				if (!(aSm.getCodStatoNascita().equals(""))) {
+					lCondizioni += " AND COD_STATO_NASCITA = '" + aSm.getCodStatoNascita() + "'";
+				}
 
-			lCondizioni += " ) ";
+				if (aSm.getDataNascita() != null) {
+					// 20180110: [SG] aggiunta trunc sulla data nascita per gestire la presenza di ore min sec
+					lCondizioni += " AND trunc(DATA_NASCITA) = TO_DATE('"
+							+ DateUtils.getDateToString(aSm.getDataNascita(), "ddMMyyyy") + "', 'DDMMYYYY') ";
+				}
 
-			// MEV 15 - Revisione SIGE - Codice CUI
-			if (aSm.getCodAfis() != null && aSm.getCodAfis().length() > 0) {
-				lCondizioni += " OR (COD_AFIS = UPPER('" + aSm.getCodAfis() + "') )";
-			}
+				lCondizioni += " ) ";
 
-			lCondizioni += " ) ";
+				// MEV 15 - Revisione SIGE - Codice CUI
+				if (aSm.getCodAfis() != null && aSm.getCodAfis().length() > 0) {
+					lCondizioni += " OR (COD_AFIS = UPPER('" + aSm.getCodAfis() + "') )";
+				}
+
+				lCondizioni += " ) ";
+			} // Ticket#20220801013 - FINE
 		} else {
 			lCondizioni = " AND ID_SOGGETTO = " + aSm.getIdSoggetto();
 		}

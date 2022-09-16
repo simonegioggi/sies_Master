@@ -529,7 +529,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 	private String setCondizione(FascicoloSiepModel aModel) {
 		String lCondizioni = new String();
 		// boolean lInserito=false;
-
+		
 		if (aModel.getCodUfficioInserimento() != null && !aModel.getCodUfficioInserimento().equals("")) {
 			lCondizioni += "COD_UFFICIO_INSERIMENTO = '" + aModel.getCodUfficioInserimento() + "' ";
 		} else {
@@ -556,6 +556,16 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND FLAG_VALIDATO = '" + aModel.getFlagValidato() + "'";
 		}
 
+		// Ticket#20220801014 - nella ricerca dei procedimenti SIEP "non validati" escono anche procedimenti 
+		//                      Archiviati e molti classe 9 in quanto è possibile Archiviare un procedimento 
+		//                      senza validarlo. Es se isritto per errore.
+		// La condizione sul FLAG_VALIDATO non è quindi sufficiente per quel tipo di ricerca.
+		// La si sostituisce con lo COD_STATO_FASCICOLO = '02' Iscritto , ovvero non ancora validato 
+		if ("02".equals(aModel.getCodStatoFascicolo())) {
+			lCondizioni += " AND COD_STATO_FASCICOLO = '" + aModel.getCodStatoFascicolo() + "' ";
+		}		
+		// Ticket#20220801014 - FINE
+		
 		if ((aModel.getDataIscrizione() != null)) {
 			lCondizioni += " AND DATA_ISCRIZIONE = TO_DATE('"
 					+ DateUtils.getDateToString(aModel.getDataIscrizione(), "ddMMyyyy") + "', 'DDMMYYYY') ";
@@ -682,7 +692,7 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 	private String setCondizionePGCAP(FascicoloSiepModel aModel) {
 		String lCondizioni = new String();
 		// boolean lInserito=false;
-
+		
 		if (aModel.getCodUfficioInserimento() != null && !aModel.getCodUfficioInserimento().equals("")) {
 			lCondizioni += "(COD_UFFICIO_INSERIMENTO = '" + aModel.getCodUfficioInserimento()
 					+ "' or (nvl(vse.eta_ora, 18) < 18 and vfs.flag_validato = 'S') ) ";
@@ -710,6 +720,15 @@ public class FascicoloSiepOnViewSqlDAO extends SIAPSqlDAO {
 		if ((aModel.getFlagValidato() != null) && aModel.getFlagValidato().length() > 0) {
 			lCondizioni += " AND FLAG_VALIDATO = '" + aModel.getFlagValidato() + "'";
 		}
+		// Ticket#20220801014 - nella ricerca dei procedimenti SIEP "non validati" escono anche procedimenti 
+		//                      Archiviati e molti classe 9 in quanto è possibile Archiviare un procedimento 
+		//                      senza validarlo. Es se isritto per errore.
+		// La condizione sul FLAG_VALIDATO non è quindi sufficiente per quel tipo di ricerca.
+		// La si sostituisce con lo COD_STATO_FASCICOLO = '02' Iscritto , ovvero non ancora validato 
+		if ("02".equals(aModel.getCodStatoFascicolo())) {
+			lCondizioni += " AND COD_STATO_FASCICOLO = '" + aModel.getCodStatoFascicolo() + "' ";
+		}	
+		// Ticket#20220801014 - FINE 		
 
 		if ((aModel.getDataIscrizione() != null)) {
 			lCondizioni += " AND DATA_ISCRIZIONE = TO_DATE('"

@@ -1,23 +1,53 @@
-RELEASE_12.4.22.0	-->	nato dal branch "release_12.4.21.0" in data 27/06/2022
+RELEASE_12.4.23.0	-->	nato dal branch "release_12.4.22.0" in data 25/07/2022
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20220628015 - Sige – iscrizione soggetto manuale – mancata visibilità codice C.U.I. SUL DETTAGLIO DEL PROCEDIMENTO
-	Sul dettaglio non riportava il CUI in quanto era previsto nella sezione in cui si testava la presenza del comune di nascita
-	Solo se trattino si visualizzava il CUI
-	Modulo corretto:
-	-	siap/sige/fascicolo/IncludeSoggetto.jsp
+1)	Ticket#20220801013 - Sige Iscrizione manuale » Ricerca Procedimento SIEP per Soggetto – errore ricerca
+	Se veniva specificato nella ricerca SOLO il codice CUI, la query andando in OR sul CUI restituiva tutti i soggetti.
+	In caso di SOLO codice cui la query è stata modificata per andare in AND.
+	In presenza di altri parametri di ricerca resta valida la condizione in OR.
+	Classe modificata: 
+	-	siap.siep.fascicolo.dao.FascicoloSiepSoggettoSqlDAO.java
+	Metodo:
+	-	private String setCondizione(SoggettoModel aSm)
 
-2)	Ticket#20220706018 - Sige – iscrizione decreto penale – visualizzazione maschera errata
-	Il problema era legato alla funzione richiamata sulla onLoad (init()) in cui erano 
-	invertite le chiamate alla funzioni di visualizzazione delle DIV relative al contenuto dei radio.
-	Modulo corretto:
-	-	siap/sige/sentenza/LoadInserisciSentenzaDecreto.jsp
+2)	Ticket#20220801014 - SIEP - RICERCA PROCEDIMENTI NON VALIDATI – VISUALIZZAZIONE PROCEDIMENTI DEFINITI
+	Dalla ricerca dei fascicoli "NON VALIDATI" uscivano anche fascicoli che risultavano archiviati, principalmente classe 9.
+	Il motivo è che l'archiviazione è consentita anche sui fascicoli non validati per cui il flag_validato resta a N.
+	La funzione di ricerca dei non validati testava proprio il flag_validato = N.
+	Modificata la condizione dei non validati. Viene testato lo stato_fascicolo = 02 (Iscritto)
+	Dall'analisi del nostro DB gli 02 hanno tutti flag_validato ad N mentre non è vero per gli altri stati (01 e 03).
+	Classi modificate:
+	-	siap.siep.fascicolo.action.ActRicercaFascicoliNonValidati
+	-	siap.siep.fascicolo.dao.FascicoloSiepOnViewSqlDAO
+	Metodi:
+	-	private String setCondizione
+	-	private String setCondizionePGCAP
 
-3)	Ticket#20220712011 - Eliminazione messaggio di attenzione dopo emissione provvedimento di cumulo
-	In fase di inserimento della Revoca dell'OE con sospensione il sistema non riconosceva quelli emessi in cumulo.
-	Aggiunti i codici delgi OE con sospensione del cumulo alla query di ricerca '0661','0635','0642','0637'.
-	Moduli corretti:
-	-	siap.sico.evento.dao.EventoSqlDAO.java (metodo ricercaOrdineEsecuzioneByIdFascicoloDecretoSospensione)
-	Bypassato anche il controllo sulla presenza delle notifiche all'avvocato associate al provvedimento per i codici di cui sopra:
-	-	siap.siep.ordineesecuzione.action.ActLoadInserisciRevocaSospensioneSimeone.java
+3)	Ticket#202208040112 - SIGE - Trasferimento ordinanza
+	La presenza della funzione di trasmissione del deposito decreto e deposito ordinanza e' un refuso della analoga funzione SIUS.
+	In realta' in SIGE non e' al momento prevista la trasmissione degli atti tra uffici SIGE, ne' con gli altri sottosistemi SIES,
+	tanto e' vero che mancano anche le funzioni di Presa in carico, Riscontro Trasmissioni e Ricerche Altra BDI.
+	Alla luce della modifica della normativa sulla competenza degli atti e' emersa l'esigenza di rivedere la materia dell'interscambio
+	tra uffici, anche SIGE e sono gia' state inoltrate richieste di MEV all'Amministrazione.
+	Nell'iniziale documento di analisi era previsto di implementare le trasmissioni, ma in corso di realizzazione non furono ritenute
+	necessarie. La presenza dell'azione di trasmissione sta nel fatto che nella realizzazione delle due funzioni ci si era predisposti
+	per una futura/eventuale trasmissione degli atti, ma non si era intervenuti per oscurare l'aggancio della funzionalita'.
+	Classe Modificata:
+	-	siap/sige/provvedimento/DettaglioDepositoProvvedimentoSige.jsp
+
+4)	Ticket#20220907011 - Sige - Estrazione dati - Oggetto non qualificabile
+	Se il procedimento è privo di oggetti viene riportata la dicitura "Oggetto non presente".
+	Classe modificata: 
+	-	siap.sige.fascicolo.dao.FascicoloSigeSqlDAO.java
+	Metodo:
+	-	protected String getSqlQueryPerEstremiStatistica(RicercaFascicoloSigeModel aRicercaFascModel)
+
+5)	Ticket#20220907012 — Sige - Riscontro anomalie estrazioni dati con più oggetti
+	Il modulo che ricostruiva la lista oggetti non resettava correttamente la variabile con gli oggetti 
+	fascicolo se il fascicolo corrente ne era privo.
+	Risultato: al fasicolo privo di oggetti venivano associati gli oggetti del fascicolo che lo precedeva.
+	Modulo corretto:
+	-	siap.sige.fascicolo.controller.FascicoloSigeController.java
+	Metodo:
+	-	ExRicercaStatisticaFascicoloSigeByEstremi
