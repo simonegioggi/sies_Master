@@ -344,7 +344,8 @@
        }
 
 	if (lArcMod.getCodTipoAutoritaEmittente() != null && !lArcMod.getCodTipoAutoritaEmittente().equals("-")
-			&& lArcMod.getCodLuogoEmittente() != null && !lArcMod.getCodLuogoEmittente().equals("-")) {
+	    // Ticket#202209120114 - in assnza della sede non stampava nulla nemmeno Presidente delle Repubblica (privo di sede)
+			/*&& lArcMod.getCodLuogoEmittente() != null && !lArcMod.getCodLuogoEmittente().equals("-") */) {
 		// MEV_66: aggiunto campo in visualizzazione = tdsm + udsm + uepe
 		String descrTipoUfficio = lArcMod.getDescrTipoAutoritaEmittente();
 		if ("UDSM".equals(lArcMod.getCodTipoAutoritaEmittente()))
@@ -354,7 +355,10 @@
 			<td class="l">Autorità emittente</td>
          	<td class="L">
           		<font class="campo"><%=StringUtils.toStringJSP(descrTipoUfficio)%></font>
+          		<% // Ticket#202209120114 - di [sede] visualizzato solo se presente %> 
+          		<% if (lArcMod.getCodLuogoEmittente() != null && !lArcMod.getCodLuogoEmittente().equals("-") ) { %>
           		&nbsp;di&nbsp;<font class="campo"><%=StringUtils.toStringJSP(lArcMod.getDescrLuogoEmittente())%></font>
+          		<% } %>
          	</td>
        	</tr>
 

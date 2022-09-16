@@ -1,5 +1,20 @@
-RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
+Ticket#202209120114 — SIEP 481/2021 procura generale di bari
 
-Comprende i seguenti Ticket MAC:
+Nel caso di Archiviazione Altra Autorità se si selezionava "Presidente Della Repubblica" il relativo
+codice PDR non veniva risolto quando si faceva la select sulla tabella ARCHIVIAZIONE.
+Fallendo la join non caricava correttamente il dettaglio e falliva la validazione NullPointer.
 
-1)	
+Problema legato al fatto che il campo ARCHIVIAZIONE.COD_TIPO_AUTORITA_EMITTENTE non viene caricato con i codici di un SOLO 
+dominio ma di domini differenti e in alcuni casi con l'RV_HIGH_VALUE e non il RV_LOW_VALUE.
+La decodifica vine fatta incrociando altri 2 domini TIPO_AUTORITA e TIPO_UFFICIO dove il "Presidente Della Repubblica" 
+non è contenuto e non può essere aggiunto.
+
+Soluzione Modificata la query aggiungendo in OR la decodifoca del PDR
+
+Moduli modificati 
+siap.siep.archiviazione.dao.ArchiviazioneSqlDAO
+
+Corretta anche la jsp di dettaglio che non visualizzava l'autorità emittente quindio assente il campo sede non 
+previsto per Il presidente della repubblica
+/jsp//files/siap/siep/archiviazione/LoadDettaglioProvvAltraAutorita.jsp
+
