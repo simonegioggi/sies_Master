@@ -1,5 +1,11 @@
-RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
+Ticket#202209190112 — SIEP ORDINE DI ESECUZIONE ERRORE BLOCCANTE - ELIMINARE ANOMALIA
 
-Comprende i seguenti Ticket MAC:
+Nelle jsp sul controllo delle date è presente il valore 2050 come anno max
+es:
+frmvalidator.addValidation("<%=ICostantiRegeReato.CAMPO_ANNO_DATA_INIZIO%>","lt=2050");
 
-1)	
+Se tale data è il fine pena editabile, il valore del 2050 risulta ad oggi troppo basso.
+
+Sono state modificate a tappeto 148 jsp con una replace della stringa "lt=2050" 
+con la stringa "lt=2099".
+

@@ -904,7 +904,7 @@ else
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req","Il campo Anno Emissione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
   
   // DATA ESITO
   frmvalidator.addValidation("<%= ICostantiAnnotazioneEsitoTrasmissione.CAMPO_GIORNO_DATA_ESITO%>","req","Il campo Giorno Esito è obbligatorio");
@@ -916,7 +916,7 @@ else
   frmvalidator.addValidation("<%= ICostantiAnnotazioneEsitoTrasmissione.CAMPO_ANNO_DATA_ESITO%>","req","Il campo Anno Esito è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiAnnotazioneEsitoTrasmissione.CAMPO_ANNO_DATA_ESITO%>","numeric");
   frmvalidator.addValidation("<%= ICostantiAnnotazioneEsitoTrasmissione.CAMPO_ANNO_DATA_ESITO%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiAnnotazioneEsitoTrasmissione.CAMPO_ANNO_DATA_ESITO%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiAnnotazioneEsitoTrasmissione.CAMPO_ANNO_DATA_ESITO%>","lt=2099");
 
 </script>
 </body>
