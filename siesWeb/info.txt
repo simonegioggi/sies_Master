@@ -2,17 +2,7 @@ RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#202209190112 — SIEP ORDINE DI ESECUZIONE ERRORE BLOCCANTE - ELIMINARE ANOMALIA
-	Nelle jsp sul controllo delle date è presente il valore 2050 come anno max.
-	Esempio:
-	frmvalidator.addValidation("<%=ICostantiRegeReato.CAMPO_ANNO_DATA_INIZIO%>","lt=2050");
-	Se tale data è il fine pena editabile, il valore del 2050 risulta ad oggi troppo basso.
-	Sono state modificate a tappeto 148 jsp con una replace della stringa "lt=2050" con la stringa "lt=2099".
-	Classi modificate:
-	-	siap.siep.archiviazione.dao.ArchiviazioneSqlDAO.java
-	-	/siap/siep/archiviazione/LoadDettaglioProvvAltraAutorita.jsp
-
-2)	Ticket#202209120114 — SIEP 481/2021 procura generale di bari
+1)	Ticket#202209120114 — SIEP 481/2021 procura generale di bari
 	Nel caso di Archiviazione Altra Autorità se si selezionava "Presidente Della Repubblica" il relativo 
 	codice PDR non veniva risolto quando si faceva la select sulla tabella ARCHIVIAZIONE.
 	Fallendo la join non caricava correttamente il dettaglio e falliva la validazione NullPointer.
@@ -23,7 +13,16 @@ Comprende i seguenti Ticket MAC:
 	Soluzione: modificata la query aggiungendo in OR la decodifica del PDR.
 	Classe modificata:
 	-	siap.siep.archiviazione.dao.ArchiviazioneSqlDAO.java
-	Corretta anche la jsp di dettaglio che non visualizzava l'autorità emittente quindio assente il campo sede non 
-	previsto per il Presidente della Repubblica.
+	Corretta anche la jsp di dettaglio che non visualizzava l'autorità emittente quando era assente il campo sede,
+	non previsto per il Presidente della Repubblica.
 	Classe modificata:
-	-	/jsp//files/siap/siep/archiviazione/LoadDettaglioProvvAltraAutorita.jsp
+	-	\siap\siep\archiviazione\LoadDettaglioProvvAltraAutorita.jsp
+
+2)	Ticket#202209190112 — SIEP ORDINE DI ESECUZIONE ERRORE BLOCCANTE - ELIMINARE ANOMALIA
+	Nelle jsp sul controllo delle date è presente il valore 2050 come anno max.
+	Esempio:
+	frmvalidator.addValidation("<%=ICostantiRegeReato.CAMPO_ANNO_DATA_INIZIO%>","lt=2050");
+	Se tale data è il fine pena editabile, il valore del 2050 risulta ad oggi troppo basso.
+	E' stata modificata la pagina con una replace della stringa "lt=2050" con la stringa "lt=2099".
+	Classe modificata:
+	-	\siap\siep\ordineesecuzione\LoadInserisciOrdineEsecuzione.jsp
