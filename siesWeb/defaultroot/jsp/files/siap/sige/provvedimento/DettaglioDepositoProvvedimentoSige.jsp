@@ -105,25 +105,18 @@ if (Modificabile.compareTo("SI") == 0) {
 <%
 }
 // Abilitazione al trasferimento.
-// Ticket#202208040112 - SIGE - Trasferimento ordinanza
-// La presenza della funzione di trasmissione del deposito decreto e deposito ordinanza e' un refuso della analoga funzione SIUS.
-// In realta' in SIGE non e' al momento prevista la trasmissione degli atti tra uffici SIGE, ne' con gli altri sottosistemi SIES,
-// tanto e' vero che mancano anche le funzioni di Presa in carico, Riscontro Trasmissioni e Ricerche Altra BDI.
-// Alla luce della modifica della normativa sulla competenza degli atti e' emersa l'esigenza di rivedere la materia dell'interscambio
-// tra uffici, anche SIGE e sono gia' state inoltrate richieste di MEV all'Amministrazione.
-// Nell''iniziale documento di analisi era previsto di implementare le trasmissioni, ma in corso di realizzazione non furono ritenute
-// necessarie. La presenza dell'azione di trasmissione sta nel fatto che nella realizzazione delle due funzioni ci si era predisposti
-// per una futura/eventuale trasmissione degli atti, ma non si era intervenuti per oscurare l'aggancio della funzionalita'.
-// if (Trasferibile.compareTo("SI") == 0) {
+// Ticket#202208040112 - SIGE - Trasferimento ordinanza	--> OSCURATA ICONA
+// Ticket#202209260112 - Patch mensili - Test- SIES versione 12.4.23.0 ticket 202208040112 - Sige Trasferimento ordinanza --> RIPRISTINO ICONA
+if (Trasferibile.compareTo("SI") == 0) {
 %>
 		<!-- BOTTONE DI TRASFERIMENTO -->
-<!-- 		<td class="LBG"> -->
-<%-- 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sige.provvedimento.action.ActLoadTrasferisciProvvedimento&<%=ICostantiProvvedimentoSige.CAMPO_ID_EVENTO_GENERATO%>=<%=ProvvedimentoEvento.getProvvedimento().getIdEventoGenerato()%>"> --%>
-<%-- 				<img src="<%=IWebConstants.IMAGES_DIR%>net24.gif" alt="Trasferisci" width="24" height="24" border="0"> --%>
-<!-- 		  	</a> -->
-<!-- 		</td> -->
-<%  
-// }
+		<td class="LBG">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sige.provvedimento.action.ActLoadTrasferisciProvvedimento&<%=ICostantiProvvedimentoSige.CAMPO_ID_EVENTO_GENERATO%>=<%=ProvvedimentoEvento.getProvvedimento().getIdEventoGenerato()%>">
+				<img src="<%=IWebConstants.IMAGES_DIR%>net24.gif" alt="Trasferisci" width="24" height="24" border="0">
+		  	</a>
+		</td>
+<%
+}
 %>
 		<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 	</tr>
