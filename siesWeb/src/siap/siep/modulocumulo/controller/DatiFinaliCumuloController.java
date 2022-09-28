@@ -2715,15 +2715,24 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					if (lAgg != null && lAgg.getEventoNotifica() != null
 							&& lAgg.getEventoNotifica().getEvento() != null)
 						lEveMS = lAgg.getEventoNotifica().getEvento();
+					
+					// Ticket#20220926015 — Errore stampa SIES
+					// Si aggiunge il test sulla presenza di anno e numero prima del toString() andava in nullpointer
 					if (lEveMS != null && lEveMS.getIdEvento() != null) {
 						if (lEveMS.getCodTipoProvvedimento().equals("03")
-								&& lAgg.getDepositoOrdinanzaPc() != null) {
+								&& lAgg.getDepositoOrdinanzaPc() != null
+								&& lAgg.getDepositoOrdinanzaPc().getNumS3()!=null // Ticket#20220926015 - add
+								&& lAgg.getDepositoOrdinanzaPc().getAnnoS3()!=null // Ticket#20220926015 - add
+								) {
 							// NUMERO ORDINANZA
 							lMisSicMod.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
 							// ANNO ORDINANZA
 							lMisSicMod.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
 						} else if (lEveMS.getCodTipoProvvedimento().equals("02")
-								&& lAgg.getDepositoDecreto() != null) {
+								&& lAgg.getDepositoDecreto() != null
+								&& lAgg.getDepositoDecreto().getNumS72() != null // Ticket#20220926015 - add
+								&& lAgg.getDepositoDecreto().getAnnoS72() != null // Ticket#20220926015 - add
+								) {
 							// NUMERO DECRETO
 							lMisSicMod.setNumOrdDec(lAgg.getDepositoDecreto().getNumS72().toString());
 							// ANNO DECRETO

@@ -1,5 +1,17 @@
-RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
+Ticket#20220926015 — Errore stampa SIES
 
-Comprende i seguenti Ticket MAC:
+In fase di stampa del cumulo, in caso di presenza di Misure Sicurezza si cerca di recuperare un evento 
+della sorveglianza 02 o 03 legato alle MS per stampare anno e numero del provvedimento. In assenza di tali valori 
+andava in nullpointer.
+Gestita l'assenza dei valori.
 
-1)	
+Modulo Modificato:
+siap.siep.modulocumulo.controller.DatiFinaliCumuloController
+
+Metodo 
+ExStampaProvvedimentoCumulo
+
+
+
+
+
