@@ -549,8 +549,11 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.stop();
 
 			if (lAvvocati.size() == 0)
+				// MEV_21: modificato msg di risposta
+				// throw throw new SIGEException(SIGEException.USER_MESSAGE,
+				// "Nessun avvocato associato al fascicolo.");
 				throw new SIGEException(SIGEException.USER_MESSAGE,
-						"Nessun avvocato associato al fascicolo.");
+						"Avvocato con Foro inesistente, procedere con la Deassegnazione.");
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"AvvocatoController.ExRicercaAvvocatoFascicoloSigeByKeyAvvocato: " + daoEx);

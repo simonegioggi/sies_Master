@@ -28,7 +28,8 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "TELEFONO, " + "FAX, " + "E_MAIL, " + "COD_FISCALE, " + "PROVINCIA, " + "AVVOCATO.CAP, "
 				+ "FLAG_VISUALIZZA, " + "ID_AVVOCATO_STANDARD, " + "AVVOCATO.NOTE NOTEAVV, "
 				// MEV_21: aggiunti sei campi in tabella + 2 descrittivi
-				+ "COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " + "SN.RV_MEANING DESCR_STATO_NASCITA, "
+				// + "COMSEDEFORO.DESCRIZIONE descComuneSedeForo, " 
+				+ "SN.RV_MEANING DESCR_STATO_NASCITA, "
 				+ "PEC, " + "FLAG_REGINDE, " + "DESCR_COMUNE_STUDIO, " + "COD_STATO_NASCITA_AVV, "
 				+ "DESC_LUOGO_NAS_REGINDE, " + "ID_AVVOCATO_BONIFICATO, "
 				+ "AVVOCATO.COD_OPERATORE_INSERIMENTO, " + "AVVOCATO.DATA_INSERIMENTO, "
@@ -43,7 +44,7 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 				+ "AVVOCATO_FASCICOLO_SIGE.ID_AVVOCATO_FASCICOLO_SIGE ";
 		lStatement += " FROM AVVOCATO, AVVOCATO_FASCICOLO_SIGE, CG_REF_CODES AVVTIPODESC, CG_REF_CODES CG, COMUNE DESNASCITA, COMUNE DESCR";
 		// INIZIO: MEV_21 (avvocati)
-		lStatement += ", CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO";
+		// lStatement += ", CG_REF_CODES AVVFORO, COMUNE COMSEDEFORO";
 		lStatement += ", CG_REF_CODES SN";
 		// FINE: MEV_21
 		lStatement += " WHERE";
@@ -56,11 +57,11 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 		lStatement += " AND CG.RV_LOW_VALUE = COD_NON_ATTIVITA";
 		lStatement += " AND CG.RV_DOMAIN = 'NON_ATTIVITA'";
 		// INIZIO: MEV_21 (avvocati)
-		lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING";
-		lStatement += " AND AVVFORO.RV_DOMAIN = 'FORO_AVVOCATI'";
-		lStatement += " AND COMSEDEFORO.COD_COMUNE = AVVFORO.RV_ALT2_VALUE";
+		// lStatement += " AND AVVOCATO.FORO = AVVFORO.RV_MEANING";
+		// lStatement += " AND AVVFORO.RV_DOMAIN = 'FORO_AVVOCATI'";
+		// lStatement += " AND COMSEDEFORO.COD_COMUNE = AVVFORO.RV_ALT2_VALUE";
 		lStatement += " AND SN.RV_LOW_VALUE = COD_STATO_NASCITA_AVV";
-		lStatement += " AND SN.RV_DOMAIN  = 'NAZIONE'";
+		lStatement += " AND SN.RV_DOMAIN = 'NAZIONE'";
 		// FINE: MEV_21
 
 		lStatement += " " + setCondizione(aModel, aFModel);
@@ -216,7 +217,7 @@ public class DifensoreSqlDao extends SIAPSqlDAO {
 			if (aModel.getForo() != null && !aModel.getForo().equals("")) {
 				lCondizioni += " AND FORO LIKE '"
 						+ StringUtils.convertSqlString(aModel.getForo().toUpperCase()) + "%'";
-				;
+
 			}
 			if (aModel.getCodUffAppartenenza() != null && aModel.getCodUffAppartenenza() != "") {
 				lCondizioni += " AND (COD_UFFICIO_APPARTENENZA ='"

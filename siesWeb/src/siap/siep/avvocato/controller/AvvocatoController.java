@@ -330,7 +330,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 		return lAvvocato;
 	}
 
-	// 20210614 MEV_21 
+	// 20210614 MEV_21
 	public AvvocatoModel ExRicercaAvvocatoCertRegInde(AvvocatoModel lAvvMod) throws F3BException {
 
 		Connection lConn = null;
@@ -350,14 +350,14 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.stop();
 
 		} catch (Exception ex) {
-			//throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
+			// throw new F3BException(this.getClass().getName() + ".ExRicercaAvvocatoCertReginde: " + ex);
 		} finally {
 			cleanup(lAvvDao);
 			cleanup(lConn);
 		}
 		return lAvvocato;
 	}
-	
+
 	/*****************************************************************************
 	 * Ricerca gli avvocati ATTUALMENTE assegnati al fascicolo in input la condizione è per id avvocato o nome
 	 */
@@ -731,7 +731,7 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 
 		return aAvvocato;
 	}
-	
+
 	/*****************************************************************************
 	*
 	************************************************************************** */
@@ -1030,7 +1030,10 @@ public class AvvocatoController extends SiapController implements IAvvocato {
 			lAvvDao.ricercaAvvocatoFascicoloSiepByIdAvvocatoIdFascicolo(aIdAvvocato, aIdFascicolo);
 			lAvvFasModel = (AvvocatoSiepModel) lAvvDao.getModelByKey();
 			if (lAvvFasModel == null)
-				throw new SIEPException(SIEPException.USER_MESSAGE, "L'avvocato non esiste.");
+				// MEV_21: modificato msg di risposta
+				// throw new SIEPException(SIEPException.USER_MESSAGE, "L'avvocato non esiste.");
+				throw new SIEPException(SIEPException.USER_MESSAGE,
+						"Avvocato con Foro inesistente, procedere con la Dismissione del Mandato.");
 		} catch (DAOException daoEx) {
 			throw new F3BException(this.getClass().getName()
 					+ ".ExRicercaAvvocatoFascicoloSiepByKeyAvvocatoIdFascicolo: " + daoEx);
