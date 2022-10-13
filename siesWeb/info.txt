@@ -1,5 +1,21 @@
-RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
+Ticket#202210130113 — Siep cumulo - messaggio restituzione atti
 
-Comprende i seguenti Ticket MAC:
+Nel caso di RIGETTO degli atti trasmessi per cumulo, il sistema continuava a visualizzare, sul dettaglio del fascicolo,
+un messaggio con l'esito del rigetto.
 
-1)	
+Problema causato dalla mancata gestione del codice di rigetto 01007 che doveva essere gestito alla stregua del 
+codice di restituzione atti (01003). 
+
+Modulo Modificato
+siap.siep.fascicolo.action.ActLoadDettaglioFascicolo
+
+Inoltre il codice 01007 era inserito solo in fase di rigetto sul messaggio e quindi nella fase di annotazione 
+"esito atti" automatica, ma non in fase di inserimento manuale dell'annotazione esito.
+
+Il codice è stato aggiunto nella combo "Esito Provvedimento"
+
+Moduli modificati
+siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp
+/jsp/files/siap/siep/presaincarico/LoadInsAnnotazioneEsitoTrasmComp.jsp
+
+
