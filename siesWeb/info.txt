@@ -28,8 +28,8 @@ Comprende i seguenti Ticket MAC:
 	-	\siap\siep\ordineesecuzione\LoadInserisciOrdineEsecuzione.jsp
 
 3)	Ticket#202210060112 - Siep - errore copia reati
-	Nella JSP non era gestita la selezione dei reati da copiare: se non veniva selezionato alcun reato,
-	partiva un array vuoto (senza ID reato) e la classe Java andava in nullPointer.
+	Nella JSP non era gestita la selezione dei reati da copiare nel caso di almeno due reati presenti: se non
+	veniva selezionato alcun reato, partiva un array vuoto (senza ID reato) e la classe Java andava in errore.
 	Aggiunta obbligatorietà selezione reato.
 	Classe modificata:
 	-	\jsp\files\siap\siep\reato\RicercaReatiFascicolo.jsp
@@ -38,12 +38,12 @@ Comprende i seguenti Ticket MAC:
 	Nel caso di RIGETTO degli atti trasmessi per cumulo, il sistema continuava a visualizzare, sul dettaglio
 	del fascicolo, un messaggio con l'esito del rigetto.
 	Problema causato dalla mancata gestione del codice di rigetto 01007 che doveva essere gestito alla
-	stregua del codice di restituzione atti (01003). 
+	stregua del codice di restituzione atti (01003).
 	Classe modificata:
 	-	siap.siep.fascicolo.action.ActLoadDettaglioFascicolo.java
 	Inoltre il codice 01007 era inserito solo in fase di rigetto sul messaggio e quindi nella fase di
-	annotazione "esito atti" automatica, ma non in fase di inserimento manuale dell'annotazione esito.
-	Il codice è stato aggiunto nella combo "Esito Provvedimento"
+	annotazione "Esito Atti" automatica, ma non in fase di inserimento manuale dell'annotazione esito.
+	Il codice è stato aggiunto nella combo "Esito Provvedimento".
 	Classi modificate:
 	-	siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp.java
 	-	/jsp/files/siap/siep/presaincarico/LoadInsAnnotazioneEsitoTrasmComp.jsp

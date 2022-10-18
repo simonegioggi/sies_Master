@@ -34,18 +34,20 @@ function SelezionaTutti(total) {
 
 function CopiaReato(IdFascdaCopia, total) {
 	// INIZIO	Ticket#202210060112 - Siep - errore copia reati
-	var test = false;
-	for (var x = 0; x < total; x++) {
-		if (document.listareati.ceccati[x].checked) {
-			test = false;
-			break;
-		} else {
-			test = true;
+	if (total > 1) {
+		var test = false;
+		for (var x = 0; x < total; x++) {
+			if (document.listareati.ceccati[x].checked) {
+				test = false;
+				break;
+			} else {
+				test = true;
+			}
+	   	}
+		if (test) {
+			alert("Selezionare almeno un Reato!");
+	        return false;
 		}
-   	}
-	if (test) {
-		alert("Selezionare almeno un Reato!"); 
-        return false;
 	}
 	// FINE		Ticket#202210060112 - Siep - errore copia reati
 	IddeiReati = new Array();
@@ -62,7 +64,7 @@ function CopiaReato(IdFascdaCopia, total) {
     		}
     	}
 	}
-	window.parent.opener.document.<%=Formdipartenza%>.<%=ICostantiReato.CAMPO_NUM_REATI_N%>.value =IddeiReati;			
+	window.parent.opener.document.<%=Formdipartenza%>.<%=ICostantiReato.CAMPO_NUM_REATI_N%>.value = IddeiReati;			
 	window.parent.opener.document.<%=Formdipartenza%>.<%=IWebConstants.ACTION_FIELD%>.value = "siap.siep.reato.action.ActCopiaReato";
 	window.parent.opener.document.<%=Formdipartenza%>.<%=ICostantiReato.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP_DA_COPIA%>.value =IdFascdaCopia;
 	window.parent.opener.document.<%=Formdipartenza%>.submit();
