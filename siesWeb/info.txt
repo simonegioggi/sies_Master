@@ -1,3 +1,7 @@
+RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
+
+Comprende i seguenti Ticket MAC:
+
 1)	Ticket#202209120114 — SIEP 481/2021 procura generale di bari
 	Nel caso di Archiviazione Altra Autorità se si selezionava "Presidente Della Repubblica" il relativo 
 	codice PDR non veniva risolto quando si faceva la select sulla tabella ARCHIVIAZIONE.
