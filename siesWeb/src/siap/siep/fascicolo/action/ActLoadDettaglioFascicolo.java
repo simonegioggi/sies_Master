@@ -928,6 +928,11 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 					if (ICostantiJMS.RESTITUITO.equals(lAnnotaModel.getCodEsito())) {
 						// Niente da visualizzare. La trasmissione è di fatto annullata
 						lLastEveTrasm = null;
+					// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
+					} else if (ICostantiJMS.RIGETTATO.equals(lAnnotaModel.getCodEsito())) {
+							// Niente da visualizzare. La trasmissione è di fatto annullata
+						lLastEveTrasm = null;
+					// Ticket#202210130113 - FINE
 					} else if ("1040".equals(lLastEveTrasm.getCodMotivo())
 							&& ICostantiJMS.ASSORBITO_IN_CUMULO.equals(lAnnotaModel.getCodEsito())) {
 						// Niente da visualizzare. Archiviazione automatica stesso ufficio

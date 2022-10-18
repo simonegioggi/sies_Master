@@ -1,7 +1,3 @@
-RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
-
-Comprende i seguenti Ticket MAC:
-
 1)	Ticket#202209120114 — SIEP 481/2021 procura generale di bari
 	Nel caso di Archiviazione Altra Autorità se si selezionava "Presidente Della Repubblica" il relativo 
 	codice PDR non veniva risolto quando si faceva la select sulla tabella ARCHIVIAZIONE.
@@ -26,3 +22,17 @@ Comprende i seguenti Ticket MAC:
 	E' stata modificata la pagina con una replace della stringa "lt=2050" con la stringa "lt=2099".
 	Classe modificata:
 	-	\siap\siep\ordineesecuzione\LoadInserisciOrdineEsecuzione.jsp
+
+3)	Ticket#202210130113 — Siep cumulo - messaggio restituzione atti
+	Nel caso di RIGETTO degli atti trasmessi per cumulo, il sistema continuava a visualizzare, sul dettaglio del fascicolo,
+	un messaggio con l'esito del rigetto.
+	Problema causato dalla mancata gestione del codice di rigetto 01007 che doveva essere gestito alla stregua del 
+	codice di restituzione atti (01003). 
+	Classe modificata:
+	-	siap.siep.fascicolo.action.ActLoadDettaglioFascicolo.java
+	Inoltre il codice 01007 era inserito solo in fase di rigetto sul messaggio e quindi nella fase di annotazione 
+	"esito atti" automatica, ma non in fase di inserimento manuale dell'annotazione esito.
+	Il codice è stato aggiunto nella combo "Esito Provvedimento"
+	Classi modificate:
+	-	siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp.java
+	-	/jsp/files/siap/siep/presaincarico/LoadInsAnnotazioneEsitoTrasmComp.jsp

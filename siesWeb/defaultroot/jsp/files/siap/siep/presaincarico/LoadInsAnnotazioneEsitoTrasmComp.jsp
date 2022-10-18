@@ -117,7 +117,9 @@
       document.LoadInserisciEsitoTrasmissioneCompetenza.<%=ICostantiAnnotazioneEsitoTrasmissione.CAMPO_CHIAVE_PROGR%>.disabled=false;
       document.LoadInserisciEsitoTrasmissioneCompetenza.<%=ICostantiAnnotazioneEsitoTrasmissione.CAMPO_NOTE_ESITO%>.disabled=true;
     }
-    else if (codEsito=="<%=ICostantiJMS.RESTITUITO%>" ){
+    else if (codEsito=="<%=ICostantiJMS.RESTITUITO%>" ||
+    		<%-- Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO --%>
+    		 codEsito=="<%=ICostantiJMS.RIGETTATO%>"){
       // Restituito
       document.LoadInserisciEsitoTrasmissioneCompetenza.<%=ICostantiAnnotazioneEsitoTrasmissione.CAMPO_CHIAVE_ANNO%>.value="";
       document.LoadInserisciEsitoTrasmissioneCompetenza.<%=ICostantiAnnotazioneEsitoTrasmissione.CAMPO_CHIAVE_PROGR%>.value="";
