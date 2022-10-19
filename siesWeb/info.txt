@@ -47,3 +47,10 @@ Comprende i seguenti Ticket MAC:
 	Classi modificate:
 	-	siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp.java
 	-	/jsp/files/siap/siep/presaincarico/LoadInsAnnotazioneEsitoTrasmComp.jsp
+
+5)	Ticket#202210170122 - SIEP
+	Nel caso di POSIZIONE_GIURIDICA = "12" (Espiazione Pena in Regime di Detenzione Domiciliare) e
+	posizione giuridica precedente pari a LIBERO, il sistema non impostava la "Data Inizio Misura"
+	così che poi nel calcolo della "Nuova Data Fine Misura" si incorreva in un errore (NullPointer).
+	Classe modificata:
+	-	siap.siep.misuraalternativa.action.ActInserisciMADetDomTemp.java
