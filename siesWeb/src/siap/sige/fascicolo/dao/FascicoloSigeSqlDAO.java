@@ -196,7 +196,9 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		// aggiunto TSC.RV_MEANING nella group by
 		// lStatement += " listagg(TSC.RV_MEANING , ';'||chr(10)) WITHIN GROUP (ORDER BY F.ID_FASCICOLO_SIGE)
 		// as OGGETTI ";
-		lStatement += " TSC.RV_MEANING as OGGETTI ";
+		// Ticket#20220907011 - Sige - Estrazione dati - Oggetto non qualificabile
+		// lStatement += " TSC.RV_MEANING as OGGETTI ";
+		lStatement += " NVL(TSC.RV_MEANING,'Oggetto non presente') as OGGETTI ";
 		// Ticket#20210928015 - FINE
 
 		// @emma 13072018 post COLLAUDO 11.2 (aggiungo lo spazio prima di FROM )
@@ -1733,7 +1735,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ "and tdrs.rv_domain = 'TENORE_DECISIONE_RICORSO_SIGE' "
 				// Ticket#20210324015 - Per i fascicoli con impugnazione_sige.cod_tenore_decisione = null
 				// falliva la join con la CG_REF_CODES
-				// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
+				// + Ticket#202104010118 - Problematiche monitoraggio ricorsi SIES - SIGE
 				+ "and NVL (i.cod_tenore_decisione,'-') = tdrs.rv_low_value "
 				// + "and tdrs.rv_low_value = i.cod_tenore_decisione "
 				// Ticket#20210324015 - FINA
@@ -1834,7 +1836,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			break;
 		case 2:
 			// Ticket#20210324015 - statistiche ricorso/opposizione: il codice tenore può essere null
-			// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
+			// + Ticket#202104010118 - Problematiche monitoraggio ricorsi SIES - SIGE
 			s = " and i.cod_tipo_impugnazione = '01' and (i.cod_tenore_decisione = '-' or i.cod_tenore_decisione is null) ";
 			break;
 		case 3:
@@ -1845,7 +1847,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			break;
 		case 5:
 			// Ticket#20210324015 - statistiche ricorso/opposizione: il codice tenore può essere null
-			// + Ticket#202104010118 — Problematiche monitoraggio ricorsi SIES - SIGE
+			// + Ticket#202104010118 - Problematiche monitoraggio ricorsi SIES - SIGE
 			s = " and i.cod_tipo_impugnazione = '04' and (i.cod_tenore_decisione = '-' or i.cod_tenore_decisione is null)";
 			break;
 		case 6:

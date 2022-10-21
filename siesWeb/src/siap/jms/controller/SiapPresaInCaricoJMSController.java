@@ -573,6 +573,13 @@ public class SiapPresaInCaricoJMSController extends SiapController implements IC
 		} catch (DAOException ex) {
 			if (ex.UNIQUE_CONSTRAINT_VIOLATED) {
 				lCodEsito = "00000";
+				// Ticket#20220816012 - Se l'evento non è stato inserito sicuramente l'inserimento
+				// delle note collegate violano l'integrità referenziale. L'errore non è bloccante
+				// come per il caso dell'injsert delle NOTIFICHE
+			} else if (ex.INTEGRITY_CONSTRAINT_VIOLATED) {
+				siesLogger.warn("Integrità referenziale violata : " + ex.getMessage());
+				lCodEsito = "00002";
+				// Ticket#20220816012 - FINE
 			} else
 				throw new F3BException(F3BException.USER_MESSAGE, "Impossibile inserire le Note! ");
 
