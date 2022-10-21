@@ -24,10 +24,10 @@
 window.top.ricercareatifascicolo.f.CONFERMA.disabled = false;
 function SelezionaTutti(total) {
 	if (total == 1) {
-		document.listareati.ceccati.checked=true;
+		document.listareati.ceccati.checked = document.listareati.ceccatutti.checked;
 	} else {
 		for (var i = 0; i < total; i++) {
-			document.listareati.ceccati[i].checked=true;
+			document.listareati.ceccati[i].checked = document.listareati.ceccatutti.checked;
        	}
 	}
 }
@@ -109,7 +109,6 @@ if (notFound == "") {
 			str = (String)stringacampi.get(cont);
 			cont++;
 %>
-	       	        			
 		<td class="r" width="5%">&nbsp;
 			<input type="checkbox" name="ceccati" value="<%=lProgressivo%>">
 			<input type="hidden" name="<%=ICostantiReato.CAMPO_NUM_REATO_DA_COPIA%>" value="<%=lReato.getProgrReato()%>">
@@ -221,7 +220,7 @@ if (notFound == "") {
 		<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>		
 		<td class="LBG">&nbsp;&nbsp;&nbsp; SELEZIONA TUTTI I REATI &nbsp;&nbsp;&nbsp;</td> 
 		<td class="r" width="5%">&nbsp;
-   			<input  type="checkbox" name="ceccatutti" value="S" onclick="javascript:SelezionaTutti(<%=total%>);">
+   			<input type="checkbox" name="ceccatutti" value="S" onclick="javascript:SelezionaTutti(<%=total%>);">
 	    </td>	      				
 	</tr>
 </table>
