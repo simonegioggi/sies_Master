@@ -94,7 +94,7 @@ function Verifica()
 
   frmvalidator.addValidation("<%= ICostantiStatoProcedimento.CAMPO_ANNO_DATA%>","numeric");
   frmvalidator.addValidation("<%= ICostantiStatoProcedimento.CAMPO_ANNO_DATA%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiStatoProcedimento.CAMPO_ANNO_DATA%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiStatoProcedimento.CAMPO_ANNO_DATA%>","lt=2099");
 
 
    frmvalidator.setAddnlValidationFunction("Verifica");

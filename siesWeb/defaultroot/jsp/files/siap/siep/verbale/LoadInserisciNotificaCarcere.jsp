@@ -137,7 +137,7 @@ function Verifica()
 
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","numeric");
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2099");
 
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_GIORNO_DATA_SCADENZA%>","numeric");
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_GIORNO_DATA_SCADENZA%>","lt=31");
@@ -147,7 +147,7 @@ function Verifica()
 
    frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_SCADENZA%>","numeric");
   frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_SCADENZA%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_SCADENZA%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_SCADENZA%>","lt=2099");
 
    frmvalidator.setAddnlValidationFunction("Verifica");
 

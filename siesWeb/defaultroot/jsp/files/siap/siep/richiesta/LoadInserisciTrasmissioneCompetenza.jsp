@@ -791,14 +791,14 @@ if(Competenza!=null && Competenza.getIdCompetenza()!=null)
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req","Il campo Anno Emissione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
   
 <%  if(insManuale && NoCompetenza) {%>
     frmvalidator.addValidation("<%= ICostantiCompetenza.CAMPO_CHIAVE_ANNO%>","numeric");
     frmvalidator.addValidation("<%= ICostantiCompetenza.CAMPO_CHIAVE_PROGR%>","numeric");    
     <%-- Ticket#20211021014 - Aggiunti i controlli sui valori del campo Anno --%>
     frmvalidator.addValidation("<%= ICostantiCompetenza.CAMPO_CHIAVE_ANNO%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiCompetenza.CAMPO_CHIAVE_ANNO%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiCompetenza.CAMPO_CHIAVE_ANNO%>","lt=2099");
     <%-- Ticket#20211021014 - FINE --%>
 <%  }%>
 

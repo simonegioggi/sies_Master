@@ -52,7 +52,10 @@
 	        <font class="label"> N.</font>
 	        <font class="campo"> 
         		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sentenza.action.ActLoadDettaglioSentenza&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%><%=retParam%>" title="Sentenza">
-	          		<%=sentenza.getAnnoProvvedimento()%> / <%=sentenza.getNumeroProvvedimento()%> 
+	          		<%-- Ticket#20221018019 in assenza di anno e numero provvedimento visualizzava NULL/NULL
+	          		<%=sentenza.getAnnoProvvedimento()%> / <%=sentenza.getNumeroProvvedimento()%>
+	          		--%> 
+	          		<%=StringUtils.toStringJSP(sentenza.getAnnoProvvedimento(),"n.d.")%> / <%=StringUtils.toStringJSP(sentenza.getNumeroProvvedimento(),"n.d.")%> 
 	          	</a>&nbsp;
         	</font>
 <%      }else { %>

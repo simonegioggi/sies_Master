@@ -60,8 +60,7 @@ for (int i = 0; itx.hasNext();) {
 		<td>
       		<font class="label">
        			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sige.sentenza.action.ActDettaglioAltroTitolo&<%=ICostantiSentenza.CAMPO_ID_SENTENZA%>=<%=sentenza.getIdSentenza()%>&<%=ICostantiFasSigeSentenza.CAMPO_ID_FAS_SIGE_SENTENZA%>=<%=sentenza.getIdFasSigeSentenza()%><%=retParam%>" title="Titolo Esecutivo">
-          			<%=(lCompetenza.equalsIgnoreCase("S") ? "(-" : ("" + i))%>)
-          		</a>&nbsp;
+          			<%=(lCompetenza.equalsIgnoreCase("S") ? "(-" : ("" + i))%>)</a>&nbsp;
       		</font>
         	<font class="label"><%=sentenza.getDescrTipoProvvedimento().substring(0,1).toUpperCase()+sentenza.getDescrTipoProvvedimento().substring(1).toLowerCase()%></font>&nbsp;:
 <%
@@ -79,7 +78,10 @@ for (int i = 0; itx.hasNext();) {
 %>
 	        <font class="label"> N.</font>
         	<font class="campo"> 
-          		<%=sentenza.getAnnoProvvedimento()%> / <%=sentenza.getNumeroProvvedimento()%>&nbsp;
+        		<%-- Ticket#20221018019 in assenza di anno e numero provvedimento visualizzava NULL/NULL
+          		<%=sentenza.getAnnoProvvedimento()%> / <%=sentenza.getNumeroProvvedimento()%>&nbsp;  
+          		--%>
+          		<%=StringUtils.toStringJSP(sentenza.getAnnoProvvedimento(),"n.d.")%> / <%=StringUtils.toStringJSP(sentenza.getNumeroProvvedimento(),"n.d.")%>&nbsp;
         	</font>
 <%      }else{%>
 	        <font class="cRosso">
