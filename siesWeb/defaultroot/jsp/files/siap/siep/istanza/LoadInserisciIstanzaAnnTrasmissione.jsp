@@ -214,7 +214,7 @@
          frmvalidator.addValidation("<%= ICostantiIstanza.CAMPO_ANNO_DATA_PRESENTAZIONE%>","req","Il campo Anno Data Istanza è obbligatorio");
          frmvalidator.addValidation("<%= ICostantiIstanza.CAMPO_ANNO_DATA_PRESENTAZIONE%>","numeric");
          frmvalidator.addValidation("<%= ICostantiIstanza.CAMPO_ANNO_DATA_PRESENTAZIONE%>","gt=1900");
-         frmvalidator.addValidation("<%= ICostantiIstanza.CAMPO_ANNO_DATA_PRESENTAZIONE%>","lt=2050");
+         frmvalidator.addValidation("<%= ICostantiIstanza.CAMPO_ANNO_DATA_PRESENTAZIONE%>","lt=2099");
 
          frmvalidator.addValidation("<%= ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>","req","Il campo Numero Fascicolo è obbligatorio");
          frmvalidator.addValidation("<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>","maxlen=14","La lunghezza massima per il Numero Procedimento è di 14 caratteri");

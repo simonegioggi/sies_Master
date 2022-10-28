@@ -172,7 +172,7 @@ function Verify()
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>","numeric","Il campo Mese rinnovo è numerico");
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","numeric","Il campo Anno rinnovo è numerico");
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","gt=1900");
-   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","lt=2050");
+   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","lt=2099");
 
 
    frmvalidator.setAddnlValidationFunction("Verify");

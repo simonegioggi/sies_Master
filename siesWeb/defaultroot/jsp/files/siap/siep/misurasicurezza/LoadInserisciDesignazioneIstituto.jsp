@@ -300,7 +300,7 @@ List lMisure =(List) request.getAttribute("listaMisureSic");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","req","Il campo Anno Data Definizione è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","lt=2099");
 
 </script>
 </body>

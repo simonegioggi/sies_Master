@@ -272,7 +272,7 @@
 
   var frmvalidator  = new Validator("VeriazioneDecorrenzaQC");
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","lt=2099");
 
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_FINE_ALTRO%>","gt=1900");
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_FINE_ALTRO%>","lt=2100");

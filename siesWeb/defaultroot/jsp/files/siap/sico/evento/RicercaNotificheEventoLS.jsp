@@ -352,7 +352,7 @@
 	   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA%>","numeric","Il campo Mese Data Avvenuta Notifica è numerico");
 	   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>","numeric","Il campo Anno Data Avvenuta Notifica è numerico");
 	   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>","gt=1900");
-	   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>","lt=2050");
+	   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>","lt=2099");
 <% 
 	 }
 
@@ -365,7 +365,7 @@
 		   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA_AVV%>","<%=i%>","numeric","Il campo Mese Data Avvenuta Notifica è numerico");
 		   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA_AVV%>","<%=i%>","numeric","Il campo Anno Data Avvenuta Notifica è numerico");
 		   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA_AVV%>","<%=i%>","gt=1900");
-		   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA_AVV%>","<%=i%>","lt=2050");
+		   frmvalidator.addValidation("<%= ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA_AVV%>","<%=i%>","lt=2099");
 <%
 	   }
 	 }
