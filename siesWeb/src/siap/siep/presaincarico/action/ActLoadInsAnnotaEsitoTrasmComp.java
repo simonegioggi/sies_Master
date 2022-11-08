@@ -223,7 +223,12 @@ public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICosta
 				new DecodificheModel(ICostantiJMS.RESTITUITO, "Atti restituiti", "", "", "", "", "", "", ""));
 		lEsiti.add(new DecodificheModel(ICostantiJMS.ASSORBITO_IN_CUMULO, "Assorbito in Cumulo", "", "", "",
 				"", "", "", ""));
+		// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
+		lEsiti.add(new DecodificheModel(ICostantiJMS.RIGETTATO, "Atti Rigettati", "", "", "",
+				"", "", "", ""));
+		// Ticket#202210130113 - FINE
 
+		
 		Option lOptionEsiti = new Option(lEsiti);
 		if (lMessaggioComunicazione.getIdMessaggio() != null)
 			lOptionEsiti.setSelected(ICostantiJMS.ASSORBITO_IN_CUMULO);

@@ -614,7 +614,7 @@
 
   frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_INIZIO%>","numeric");
   frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_INIZIO%>","lt=2050");
+  frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_INIZIO%>","lt=2099");
 
   frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_GIORNO_DATA_FINE%>","numeric");
   frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_GIORNO_DATA_FINE%>","gt=1");
@@ -626,7 +626,7 @@
 
   frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_FINE%>","numeric");
   frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_FINE%>","gt=1900");
-  frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_FINE%>","lt=2050");
+  frmvalidator.addValidation("<%=ICostantiReatoCumulo.CAMPO_ANNO_DATA_FINE%>","lt=2099");
   
   frmvalidator.setAddnlValidationFunction("ControlloObbligatorieta");
 

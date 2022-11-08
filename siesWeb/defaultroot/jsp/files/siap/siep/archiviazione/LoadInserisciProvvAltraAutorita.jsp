@@ -512,7 +512,7 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
 
     frmvalidator.addValidation("<%= ICostantiArchiviazione.CAMPO_ANNO_PROVVEDIMENTO%>","numeric");
     frmvalidator.addValidation("<%= ICostantiArchiviazione.CAMPO_ANNO_PROVVEDIMENTO%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiArchiviazione.CAMPO_ANNO_PROVVEDIMENTO%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiArchiviazione.CAMPO_ANNO_PROVVEDIMENTO%>","lt=2099");
 
 //data emissione
     frmvalidator.addValidation("<%= ICostantiArchiviazione.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");

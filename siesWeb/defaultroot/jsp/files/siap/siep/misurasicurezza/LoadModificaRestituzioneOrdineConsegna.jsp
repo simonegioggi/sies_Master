@@ -414,7 +414,7 @@ if (Utils.isPresent(msNotificate)) {
   	frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI%>","req","Il campo Anno Emissione dell''Atto è obbligatorio");
   	frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI%>","numeric");
   	frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI%>","gt=1900");
-  	frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI%>","lt=2050");
+  	frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_TRASMISSIONE_ATTI%>","lt=2099");
 <%
 }
 %>

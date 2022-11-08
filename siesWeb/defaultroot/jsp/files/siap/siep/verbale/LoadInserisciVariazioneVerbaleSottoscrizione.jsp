@@ -427,7 +427,7 @@ if (vedoDataIntermedia.equals("S")) { %>
 
     frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","numeric");
     frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","gt=1900");
-    frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","lt=2050");
+    frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","lt=2099");
     
     frmvalidator.addValidation("<%=ICostantiVerbale.CAMPO_GIORNO_DATA_PERVENIMENTO%>","numeric");
     frmvalidator.addValidation("<%=ICostantiVerbale.CAMPO_GIORNO_DATA_PERVENIMENTO%>","lt=31");
@@ -437,7 +437,7 @@ if (vedoDataIntermedia.equals("S")) { %>
 
     frmvalidator.addValidation("<%=ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","numeric");
     frmvalidator.addValidation("<%=ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","gt=1900");
-    frmvalidator.addValidation("<%=ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2050");
+    frmvalidator.addValidation("<%=ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2099");
 
     frmvalidator.setAddnlValidationFunction("Verifica");
   </script>

@@ -439,6 +439,7 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 			for (ESITO esito : listEsito) {
 				codEsitoRichiesta += esito.getCODICE();
 				descEsitoRichiesta += " " + esito.getDESCRIZIONE();
+				siesLogger.info(codEsitoRichiesta + " ### " + descEsitoRichiesta);
 			}
 
 			// Presenza del Certificato Penale o Certificato Nullo

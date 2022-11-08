@@ -983,7 +983,7 @@ if(posizioneluogoaltra!=null && posizioneluogoaltra.getLuogoDetenzione()!=null &
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req","Il campo Anno Emissione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
 
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_RICEZIONE_ATTI %>","req","Il campo Giorno Ricezione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_RICEZIONE_ATTI %>","numeric");
@@ -994,7 +994,7 @@ if(posizioneluogoaltra!=null && posizioneluogoaltra.getLuogoDetenzione()!=null &
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_RICEZIONE_ATTI %>","req","Il campo Anno Ricezione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_RICEZIONE_ATTI %>","numeric");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_RICEZIONE_ATTI %>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_RICEZIONE_ATTI %>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_RICEZIONE_ATTI %>","lt=2099");
   
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_GIORNO_DATA_DEFINIZIONE%>","req","Il campo Giorno Definizione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_GIORNO_DATA_DEFINIZIONE%>","numeric");
@@ -1005,7 +1005,7 @@ if(posizioneluogoaltra!=null && posizioneluogoaltra.getLuogoDetenzione()!=null &
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","req","Il campo Anno Definizione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","lt=2099");
 
 <%
  if ( ((penaresidua.getFlagErgastolo() == null) || (penaresidua.getFlagErgastolo() != null && !penaresidua.getFlagErgastolo().equals("S") && !penaresidua.getFlagErgastolo().equals("D"))))
@@ -1021,7 +1021,7 @@ if(posizioneluogoaltra!=null && posizioneluogoaltra.getLuogoDetenzione()!=null &
 	  frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","req","Il campo Anno Data Fine Pena è obbligatorio");
 	  frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","numeric");
 	  frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","gt=1900");
-	  frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","lt=2050");
+	  frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","lt=2099");
 	<%}
  }
 %>

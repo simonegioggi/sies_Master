@@ -463,7 +463,7 @@ if(document.LoadOEOmessaNotifica.Notifica[0].checked)
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO_RA%>","numeric","Il campo Mese rinnovo è numerico");
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RA%>","numeric","Il campo Anno rinnovo è numerico");
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RA%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RA%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RA%>","lt=2099");
 
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>","alphabetic","Il campo luogo rinnovo è alfabetico")
  }else
@@ -472,7 +472,7 @@ if(document.LoadOEOmessaNotifica.Notifica[0].checked)
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>","numeric","Il campo Mese rinnovo è numerico");
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","numeric","Il campo Anno rinnovo è numerico");
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","gt=1900");
-   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","lt=2050");
+   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","lt=2099");
   }
 }else if(document.LoadOEOmessaNotifica.Notifica[1].checked)
  {
@@ -483,7 +483,7 @@ if(document.LoadOEOmessaNotifica.Notifica[0].checked)
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RELATA%>","numeric","Il campo Mese relata è numerico");
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RELATA%>","numeric","Il campo Anno relata è numerico");
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RELATA%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RELATA%>","lt=2050","Il campo luogo relata rinnovo è alfabetico");
+  frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RELATA%>","lt=2099","Il campo luogo relata rinnovo è alfabetico");
 
 
 
@@ -493,7 +493,7 @@ if(document.LoadOEOmessaNotifica.Notifica[0].checked)
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO_AR%>","numeric","Il campo Mese rinnovo è numerico");
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_AR%>","numeric","Il campo Anno rinnovo è numerico");
   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_AR%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_AR%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_AR%>","lt=2099");
 
   frmvalidator.addValidation("<%=  ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO_UG_AR%>","alphabetic","Il campo luogo rinnovo rinnovo è alfabetico")
  }else
@@ -502,7 +502,7 @@ if(document.LoadOEOmessaNotifica.Notifica[0].checked)
     frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO_RN%>","numeric","Il campo Mese rinnovo è numerico");
     frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RN%>","numeric","Il campo Anno rinnovo è numerico");
     frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RN%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RN%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RN%>","lt=2099");
 
     frmvalidator.addValidation("<%=  ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO_UG%>","alphabetic","Il campo luogo rinnovo rinnovo è alfabetico")
    }
