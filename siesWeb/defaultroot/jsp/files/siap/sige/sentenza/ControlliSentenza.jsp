@@ -4,10 +4,12 @@
 <script language="JavaScript">
 	function Verify()
 	{
+	  <%-- Ticket#20221018019 - La data arrivo atto non è presente in form e sltavano tutti i controlli js ininserimento e modifica)
 	  if (document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_ARRIVO_ATTO%>.value.length==1)
 	    document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_ARRIVO_ATTO%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_ARRIVO_ATTO%>.value;
 	  if (document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_ARRIVO_ATTO%>.value.length==1)
 	    document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_ARRIVO_ATTO%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_ARRIVO_ATTO%>.value;
+	  Ticket#20221018019 - FINE --%>
 	  if (document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>.value.length==1)
 	    document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>.value;
 	  if (document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVVEDIMENTO%>.value.length==1)
@@ -17,6 +19,7 @@
 	  if (document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVV_RIF%>.value.length==1)
 	    document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVV_RIF%>.value='0'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVV_RIF%>.value;
 	
+	  <%-- Ticket#20221018019 - La data arrivo atto non è presente in form e sltavano tutti i controlli js ininserimento e modifica)
 	  //Data arrivo atto
 	  var d1=document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_ARRIVO_ATTO%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_ARRIVO_ATTO%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_ANNO_DATA_ARRIVO_ATTO%>.value;
 	  if (! ControllaData(d1))
@@ -24,6 +27,7 @@
 	    alert('Data di arrivo atto non valida');
 	    return false;
 	  }
+	  --%>
 	  //Data Sentenza
 	  var d2=document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_GIORNO_DATA_PROVVEDIMENTO%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_MESE_DATA_PROVVEDIMENTO%>.value+'/'+document.LoadInserisciSentenza.<%=ICostantiSentenza.CAMPO_ANNO_DATA_PROVVEDIMENTO%>.value;
 	  if (! ControllaData(d2))
@@ -39,11 +43,13 @@
 	    return false;
 	  }
 	
+	  <%-- Ticket#20221018019 - La data arrivo atto non è presente in form e sltavano tutti i controlli js ininserimento e modifica)
 	  if (! CompareDate(d2,d1))
 	  {
 	    alert('La Data Sentenza deve essere antecedente alla Data di Arrivo');
 	    return false;
 	  }
+	  --%>
 	
 		/**
 		 * Nel caso in cui l'utente inserisca almeno uno tra i seguenti campi:

@@ -231,7 +231,7 @@
   //  frmvalidator.addValidation("<%= ICostantiTenore.CAMPO_ANNO_DATA%>","req","Il campo Anno della Data Emissione è obbligatorio");
  //   frmvalidator.addValidation("<%= ICostantiTenore.CAMPO_ANNO_DATA%>","numeric");
     //frmvalidator.addValidation("<%= ICostantiTenore.CAMPO_ANNO_DATA%>","gt=1900");
-    //frmvalidator.addValidation("<%= ICostantiTenore.CAMPO_ANNO_DATA%>","lt=2050");
+    //frmvalidator.addValidation("<%= ICostantiTenore.CAMPO_ANNO_DATA%>","lt=2099");
 
     frmvalidator.addValidation("<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>","numeric");
     frmvalidator.addValidation("<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>","numeric");

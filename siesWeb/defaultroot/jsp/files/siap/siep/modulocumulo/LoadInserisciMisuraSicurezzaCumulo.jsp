@@ -462,7 +462,7 @@
 
   frmvalidator.addValidation("<%= ICostantiProcedimentoCumulato.CAMPO_CHIAVE_ANNO_FAS_CUMULATO%>","numeric");
   frmvalidator.addValidation("<%= ICostantiProcedimentoCumulato.CAMPO_CHIAVE_ANNO_FAS_CUMULATO%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiProcedimentoCumulato.CAMPO_CHIAVE_ANNO_FAS_CUMULATO%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiProcedimentoCumulato.CAMPO_CHIAVE_ANNO_FAS_CUMULATO%>","lt=2099");
   
   frmvalidator.addValidation("<%= ICostantiProcedimentoCumulato.CAMPO_CHIAVE_PROGR_FAS_CUMULATO%>","numeric");
   frmvalidator.addValidation("<%= ICostantiProcedimentoCumulato.CAMPO_CHIAVE_PROGR_FAS_CUMULATO%>","gt=39999");

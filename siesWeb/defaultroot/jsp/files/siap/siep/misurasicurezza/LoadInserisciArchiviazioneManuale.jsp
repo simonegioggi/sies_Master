@@ -808,7 +808,7 @@
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","req","Il campo Anno Definizione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiMisuraSicurezza.CAMPO_ANNO_DATA_DEFINIZIONE%>","lt=2099");
 
 <%
  if ( ((penaresidua.getFlagErgastolo() == null) || (penaresidua.getFlagErgastolo() != null && !penaresidua.getFlagErgastolo().equals("S") && !penaresidua.getFlagErgastolo().equals("D"))))
@@ -824,7 +824,7 @@
     frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","req","Il campo Anno Data Fine Pena è obbligatorio");
     frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","numeric");
     frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","lt=2099");
   <%}
  }
 %>

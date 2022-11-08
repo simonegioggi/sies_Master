@@ -293,7 +293,7 @@
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","req","Il campo Anno Emissione dell'Atto è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_ANNO_PERVENIMENTO_VARIAZIONE%>","lt=2099");
 
 
   frmvalidator.addValidation("<%= ICostantiOrdineEsecuzione.CAMPO_GIORNO_FINE_ALTRO%>","req","Il campo Giorno Invio dell'Atto è obbligatorio");

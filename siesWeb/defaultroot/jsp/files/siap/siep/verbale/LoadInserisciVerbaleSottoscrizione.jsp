@@ -464,7 +464,7 @@ if(evento.getCodMotivo() != null)
 
     frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","numeric");
     frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_PERVENIMENTO%>","lt=2099");
 
 
     frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
@@ -475,7 +475,7 @@ if(evento.getCodMotivo() != null)
 
     frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
     frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
 
     frmvalidator.setAddnlValidationFunction("Verifica");
   </script>
