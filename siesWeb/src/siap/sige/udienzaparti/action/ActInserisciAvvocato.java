@@ -236,11 +236,19 @@ public class ActInserisciAvvocato extends ActionSiap implements ICostantiAvvocat
 						"I difensori possono essere due solo se entrambi sono di fiducia!");
 			}
 
-			if (lAvvModPrec.getIdAvvocato()
+			// MEV_21 - Se selezionato da REGINDE l'idAvvocato è una stringa es COA058091 e non 
+			//          può essere utilizzata per la varifica
+			/*if (lAvvModPrec.getIdAvvocato()
 					.compareTo(getRequestBigDecimalParameter(CAMPO_ID_AVVOCATO)) == 0) {
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Attenzione: il difensore risulta già inserito!");
+			}*/
+			if (idAvvocato!=null && lAvvModPrec.getIdAvvocato().compareTo(idAvvocato) == 0) {
+				throw new F3BException(F3BException.USER_MESSAGE,
+						"Attenzione: il difensore risulta già inserito!");
 			}
+		  // MEV_21 - FINE
+			
 		}
 
 		PartiUdienzaDifensoreModel lAvvParteMod = new PartiUdienzaDifensoreModel();

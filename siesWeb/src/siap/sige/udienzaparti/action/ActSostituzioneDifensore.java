@@ -41,8 +41,9 @@ import siap.sius.luogodetenzione.action.ICostantiLuogoDetenzione;
  *
  * @version 1.0
  */
-public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPartiUdienza {
+public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPartiUdienza  {
 
+	
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -137,11 +138,12 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 		}
 
 		// Recupero dataNascita, stato Attività Avvocato.
-		if (!isRequestParameterNullObj(CAMPO_ANNO_DATA_NASCITA)
-				&& (!isRequestParameterNullObj(CAMPO_MESE_DATA_NASCITA)
-						&& (!isRequestParameterNullObj(CAMPO_GIORNO_DATA_NASCITA))))
+		if (   !isRequestParameterNullObj(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA)
+				&& !isRequestParameterNullObj(ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA)
+			  && !isRequestParameterNullObj(ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA))
 			dataNascita = getRequestDateParameter(ICostantiAvvocato.CAMPO_ANNO_DATA_NASCITA,
 					ICostantiAvvocato.CAMPO_MESE_DATA_NASCITA, ICostantiAvvocato.CAMPO_GIORNO_DATA_NASCITA);
+		
 		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA))
 			codNonAttivita = getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_NON_ATTIVITA);
 
@@ -172,7 +174,7 @@ public class ActSostituzioneDifensore extends ActionSiap implements ICostantiPar
 					getCodUfficioUtenteConnesso(), null, null, null, codNonAttivita, "00000", null, "N", null,
 					getRequestStringParameter(ICostantiAvvocato.CAMPO_CODICE_FISCALE), codProvincia, codCap,
 					new BigDecimal(1), null, getRequestStringParameter(ICostantiAvvocato.CAMPO_PEC), "SI",
-					descLuogoResidenza, getRequestStringParameter(CAMPO_COD_STATO_NASCITA), null,
+					descLuogoResidenza, getRequestStringParameter(ICostantiAvvocato.CAMPO_COD_STATO_NASCITA), null,
 					descLuogoNascitaReginde, null);
 
 			/*
