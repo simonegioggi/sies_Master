@@ -633,7 +633,7 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
 
     frmvalidator.addValidation("<%= ICostantiFascicoloSiep.CAMPO_ANNO_UNIONE%>","numeric");
     frmvalidator.addValidation("<%= ICostantiFascicoloSiep.CAMPO_ANNO_UNIONE%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiFascicoloSiep.CAMPO_ANNO_UNIONE%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiFascicoloSiep.CAMPO_ANNO_UNIONE%>","lt=2099");
 
 //data emissione
     frmvalidator.addValidation("<%= ICostantiFascicoloSiep.CAMPO_GIORNO_UNIONE%>","numeric");

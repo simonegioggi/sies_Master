@@ -34,11 +34,26 @@ function Verify()
 
 		  var data_to_verify = document.LoadRinnovazioneNotifica.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value+'-'+document.LoadRinnovazioneNotifica.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value+'-'+document.LoadRinnovazioneNotifica.<%=ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>.value;
 
-     if (!ControllaDataPassaVuota(data_to_verify) )
+     <%-- Ticket#202106220110 - Aggiunti controlli di obbligatorietà sui campi --%>
+     <%-- if (!ControllaDataPassaVuota(data_to_verify) ) --%>
+     if (!ControllaData(data_to_verify) )
 		  {
        alert('Data Rinnovo non valida');
 			 return false;
 		  }
+      
+      if (document.LoadRinnovazioneNotifica.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.value=='-') {
+        alert("Indicare l'autorità delegata alla notifica");
+			  return false; 
+      }
+      
+      if (document.LoadRinnovazioneNotifica.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.value.length==0) {
+        alert("Indicare la sede dell'autorità delegata alla notifica");
+			  return false; 
+      }    
+      <%-- Ticket#202106220110 - FINE --%>
+
+      return true;
 
 }
 
@@ -100,7 +115,7 @@ function Verify()
 
 <table width="100%">
      <tr>
-      <td class="l">Risposta Pervenuta in Data</td>
+      <td class="l">Risposta Pervenuta in Data <font class="ob">(*)</font></td>
       <td class="l" colspan="3">
         <input title="Giorno Pervenimento" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" >
 				-
@@ -110,7 +125,7 @@ function Verify()
     </td>
 		</tr>
      <tr>
-       <td class="l">Autorità delegata alla notifica</td>
+       <td class="l">Autorità delegata alla notifica <font class="ob">(*)</font></td>
         <td class="l" colspan="3">
           <select title="TipoAutorita" name="<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>">
             <%=tipoAutoritaAltra%>
@@ -118,7 +133,7 @@ function Verify()
         </td>
       </tr>
       <tr>
-         <td class="l">Luogo</td>
+         <td class="l">Luogo <font class="ob">(*)</font></td>
          <td class="L">
             <input title="Luogo" type="text" name="<%=  ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>"  maxlength="35" size="35">
             <a href="Javascript:ListaComuni('LoadRinnovazioneNotifica','<%= ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO %>');">
@@ -157,7 +172,7 @@ function Verify()
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>","numeric","Il campo Mese rinnovo è numerico");
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","numeric","Il campo Anno rinnovo è numerico");
    frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","gt=1900");
-   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","lt=2050");
+   frmvalidator.addValidation("<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>","lt=2099");
 
 
    frmvalidator.setAddnlValidationFunction("Verify");

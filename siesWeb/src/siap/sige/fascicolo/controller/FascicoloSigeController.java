@@ -13,6 +13,7 @@ import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.StringUtils;
+import f3b.util.Utils;
 import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.sico.camponota.dao.CampoNotaDAO;
@@ -1471,7 +1472,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 			// siesLogger al posto di mLog
-			siesLogger.error("Exception: " + e);
+			siesLogger.error("Exception: " , e);
 			throw new F3BException("FascicoloSigeController.ExRicercaFascSigeDelSoggetto: " + e);
 		} finally {
 			cleanup(lFasSqlDao);
@@ -2892,9 +2893,63 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 
 			lFasSigeSqlDao.start();
 
-			FascicoloSigeEstesoModel lFascicoloEsteso = null;
+			// Ticket#20210928015 - L'aggregazione di tenori stesso fascicolo viene fatta da
+			// codice in quanto non effettuabile dalla qeury tramite la LISTAGG
+			Vector<FascicoloSigeEstesoModel> lFascicoliAppoggio = new Vector<>();
 			while (lFasSigeSqlDao.next()) {
-				lFascicoloEsteso = (FascicoloSigeEstesoModel) lFasSigeSqlDao.getModelEsteso();
+				FascicoloSigeEstesoModel lFascicoloEsteso = (FascicoloSigeEstesoModel) lFasSigeSqlDao
+						.getModelEsteso();
+				lFascicoliAppoggio.add(lFascicoloEsteso);
+			}
+			lFasSigeSqlDao.stop();
+
+			// Scorro il vettore per eliminare i doppioni ed aggregare le decrizioni
+			//siesLogger.debug("Record estratti dalla query: "+lFascicoliAppoggio.size());
+			FascicoloSigeEstesoModel lastFascicoloEstaso = null;
+			String listaOggetti = "";
+			//siesLogger.debug("Inizio ciclo per eliminare aggregare i tenori.. ");
+			for (int i = 0; i < lFascicoliAppoggio.size(); i++) {
+				//siesLogger.debug("i = "+i+")");
+				FascicoloSigeEstesoModel lFascicoloEsteso = lFascicoliAppoggio.elementAt(i);
+				if (i == 0) {
+					// siesLogger.debug("Primo record ");
+					if (lFascicoloEsteso.getFascicoloSige().getDescOggetto() != null)
+						listaOggetti = lFascicoloEsteso.getFascicoloSige().getDescOggetto() + ";";
+
+					lFascicoloEsteso.getFascicoloSige().setDescOggetto(listaOggetti);
+				} else if (lFascicoloEsteso.getFascicoloSige().getIdFascicoloSige()
+						.compareTo(lastFascicoloEstaso.getFascicoloSige().getIdFascicoloSige()) == 0) {
+					// Stesso fascicolo, concateno gli oggetti
+					//siesLogger.debug("Stesso fascicolo, concateno gli oggetti.. ");
+					if (lFascicoloEsteso.getFascicoloSige().getDescOggetto() != null)
+						listaOggetti = listaOggetti + "\n"
+								+ lFascicoloEsteso.getFascicoloSige().getDescOggetto() + ";";
+
+					lFascicoloEsteso.getFascicoloSige().setDescOggetto(listaOggetti);
+				} else {
+					// Ho cambiato fascicolo, aggiungo precedente model al vettore di output
+					lFascicoli.add(lastFascicoloEstaso);
+					// Ticket#20220907012 — Se fascicolo senza oggetti riportava gli oggetti del fascicolo precedente
+					listaOggetti = "";
+					// Ticket#20220907012 — FINE
+
+					if (lFascicoloEsteso.getFascicoloSige().getDescOggetto() != null)
+						listaOggetti = lFascicoloEsteso.getFascicoloSige().getDescOggetto() + ";";
+
+					lFascicoloEsteso.getFascicoloSige().setDescOggetto(listaOggetti);
+				}
+				lastFascicoloEstaso = lFascicoloEsteso;
+			}
+
+			// Ticket#20211116019 - Funzione RICERCA PROCEDIMENTO SIGE PER ESTREMI ATTO
+			// Aggiungo l'ultimo Fascicolo trattato <=> non è nullo
+			if (!Utils.isNullObj(lastFascicoloEstaso))
+				lFascicoli.add(lastFascicoloEstaso);
+
+			// A questo punto ho il vettore dei fascicoli trovati privi di doppioni e con gli oggetti
+			// concatenati
+			for (int i = 0; i < lFascicoli.size(); i++) {
+				FascicoloSigeEstesoModel lFascicoloEsteso = lFascicoli.elementAt(i);
 
 				lUdiDao = new UdienzaProcedimentoSigeSqlDAO(lConn);
 				lUdiDao.ricercaUdienzaProcedimentoUdienzaByFascicoloByFlagRinviata(
@@ -2905,12 +2960,24 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 					lFascicoloEsteso.setUdienzaProcedimento(lUdiMod);
 				}
 				lUdiDao.stop();
-
-				lFascicoli.add(lFascicoloEsteso);
 			}
 
-			lFasSigeSqlDao.stop();
-
+			/*
+			 * VECCHIO CODICE COMENTATO E SOSTITUITO FascicoloSigeEstesoModel lFascicoloEsteso = null; while
+			 * (lFasSigeSqlDao.next()) { lFascicoloEsteso = (FascicoloSigeEstesoModel)
+			 * lFasSigeSqlDao.getModelEsteso();
+			 *
+			 * lUdiDao = new UdienzaProcedimentoSigeSqlDAO(lConn);
+			 * lUdiDao.ricercaUdienzaProcedimentoUdienzaByFascicoloByFlagRinviata(
+			 * lFascicoloEsteso.getFascicoloSige().getIdFascicoloSige(), "'F','S'"); lUdiDao.start(); if
+			 * (lUdiDao.next()) { lUdiMod = (UdienzaProcedimentoSigeModel) lUdiDao.getModelConDataUdienza();
+			 * lFascicoloEsteso.setUdienzaProcedimento(lUdiMod); } lUdiDao.stop();
+			 *
+			 * lFascicoli.add(lFascicoloEsteso); }
+			 *
+			 * lFasSigeSqlDao.stop();
+			 */
+			// Ticket#20210928015 - FINE
 			if (lFascicoli.isEmpty())
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");
 		} catch (F3BException fE) {

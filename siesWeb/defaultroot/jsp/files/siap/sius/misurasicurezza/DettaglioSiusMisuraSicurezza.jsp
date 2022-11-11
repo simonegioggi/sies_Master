@@ -150,7 +150,9 @@
 <%
 	} else {
 		if (riferimentoTitoloEsecutivo.getAnnoFascicoloSiep() == null && riferimentoTitoloEsecutivo.getProgrFascicoloSiep() == null){
-			if(riferimentoTitoloEsecutivo.getFlagMS().equals("EMS")){
+			// Ticket#20210624014 - decodificava mae: EMS non viene mai recuperato. Va utilizzato M
+			if(riferimentoTitoloEsecutivo.getFlagMS().equals("M")){
+			// if(riferimentoTitoloEsecutivo.getFlagMS().equals("EMS")){
 %>		
 				Es. Mis. Sic.	
 <%		

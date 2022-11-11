@@ -43,7 +43,9 @@ public class ActLoadModificaDifensore extends ActionSige implements ICostantiPar
 
 		// INIZIO 20200624 [SG]: tolto set di navigazione, deve tornare sempre all'ordinanza
 		// Gestione pulsante di ritorno.
-		// setLinkRitorno();
+		// Ticket#202104210111 -ripristinato il setLinkRitorno precedentemente commentato.
+		// (vedi commento "INIZIO 20200624  [SG]:..."
+		setLinkRitorno();
 
 		// Identificativo della parte
 		String lIdSoggetto = getRequestStringParameter(CAMPO_ID_SOGGETTO);

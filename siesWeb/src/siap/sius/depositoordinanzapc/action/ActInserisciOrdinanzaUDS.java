@@ -661,76 +661,91 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			// "Proposta di aggravamento della libertà vigilata per persone in stato di
 			// infermità psichica (art.232 c.p.)" ed esito "Sostituisce la libertà vigilata
 			// con la casa di cura e custodia"
-			Date dataDecorrenzaMS = null;
-			if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
-				dataDecorrenzaMS = getRequestDateParameter(
-						ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA,
-						ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA,
-						ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA);
-			// MERGE v10: aggiunta porzione di codice per gestire la data
-			if (!Utils.isPresent(dataDecorrenzaMS)
-					&& !isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA))
-				dataDecorrenzaMS = getRequestDateParameter(
-						ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA,
-						ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA,
-						ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_DECORRENZA);
-			if (!Utils.isPresent(dataDecorrenzaMS)
-					&& !isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_PROROGA))
-				dataDecorrenzaMS = getRequestDateParameter(
-						ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_PROROGA,
-						ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_PROROGA,
-						ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_PROROGA);
-			if (dataDecorrenzaMS != null) {
-				// MERGE v10: spostata sopra questa impostazione
-				// recupero l'identificativo del fascicolo SIUS per il quale si sta emettendo l'ordinanza
-				// BigDecimal idFascicoloSius = mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
-				if (idFascicoloSius != null) {
-					IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
-					List lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(idFascicoloSius);
-					// non esiste la misura di sicurezza associata al fascicolo Sius corrente
-					// pertanto devo inserirla
-					if (lMisureSicurezza.size() == 0) {
-						MisuraSicurezzaModel lNuovaMisura = new MisuraSicurezzaModel();
-
-						lNuovaMisura.setCodOperatoreInserimento(getCodUtenteConnesso());
-						lNuovaMisura.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-						lNuovaMisura.setDataInserimento(DateUtils.getSysDate());
-						lNuovaMisura.setFasSiuIdFascicoloSius(
-								mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
-						lNuovaMisura.setCodNatura("-");
-						lNuovaMisura.setCodTipo("-");
-						lNuovaMisura.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
-						lNuovaMisura.setDataDecorrenza(dataDecorrenzaMS);
-						lNuovaMisura.setFlFormaMisura(
-								getBigDecimalParameter(ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA));
-						lNuovaMisura.setDescrizioneComunita(
-								getStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA));
-						// MERGE v10: aggiunto codice
-						lNuovaMisura.setNumAnni(getAnniMisuraParameter());
-						lNuovaMisura.setNumMesi(getMesiMisuraParameter());
-						lNuovaMisura.setNumGiorni(getGiorniMisuraParameter());
-
-						// Effettuo l'Inserimento della Misura di Sicurezza
-						lNuovaMisura = lCtrl.ExInserisciMisuraSicurezza(lNuovaMisura);
-					} else {
-						// aggiorno le misure di sicurezza trovate impostando la Data Decorrenza
-						Iterator itxMis = lMisureSicurezza.iterator();
-						while (itxMis.hasNext()) {
-							MisuraSicurezzaModel lMisSicuSius = (MisuraSicurezzaModel) itxMis.next();
-
-							lMisSicuSius.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-							lMisSicuSius.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-							lMisSicuSius.setDataAggiornamento(DateUtils.getSysDate());
-							lMisSicuSius.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
-							lMisSicuSius.setDataDecorrenza(dataDecorrenzaMS);
-
-							// Effettuo la Modifica della Misura di Sicurezza
-							lCtrl.ExModificaMisuraSicurezza(lMisSicuSius);
+			
+			// Ticket#20220415019 — cancellazione/pagina errore
+			// In caso di Revoca misura alternativa (C002) veniva inserito un record MISURA_SICUREZZA senza alcun
+			// motivo a causa della presenza dei campi AnnoDataDecorrenza ecc. In fase di cancellazione si verificava
+			// una violazione di integrità. Si escludono le revoche MA
+			if (   !isRequestParameterNullObj(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO)
+				&& getRequestStringParameter(ICostantiFascicoloSius.CAMPO_COD_CONTENUTO).equals("C002")) 
+			{
+   			    // non faccio nulla
+				siesLogger.debug("Revoca MA non gestisco l'inserimento MS ");
+			} 
+			else 
+			{
+				Date dataDecorrenzaMS = null;
+				if (!isRequestParameterNullObj(ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA))
+					dataDecorrenzaMS = getRequestDateParameter(
+							ICostantiSiusMisuraSicurezza.CAMPO_ANNO_DATA_DECORRENZA,
+							ICostantiSiusMisuraSicurezza.CAMPO_MESE_DATA_DECORRENZA,
+							ICostantiSiusMisuraSicurezza.CAMPO_GIORNO_DATA_DECORRENZA);
+				// MERGE v10: aggiunta porzione di codice per gestire la data
+				if (!Utils.isPresent(dataDecorrenzaMS)
+						&& !isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA))
+					dataDecorrenzaMS = getRequestDateParameter(
+							ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_DECORRENZA,
+							ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_DECORRENZA,
+							ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_DECORRENZA);
+				if (!Utils.isPresent(dataDecorrenzaMS)
+						&& !isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_PROROGA))
+					dataDecorrenzaMS = getRequestDateParameter(
+							ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_PROROGA,
+							ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_PROROGA,
+							ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_PROROGA);
+				if (dataDecorrenzaMS != null) {
+					// MERGE v10: spostata sopra questa impostazione
+					// recupero l'identificativo del fascicolo SIUS per il quale si sta emettendo l'ordinanza
+					// BigDecimal idFascicoloSius = mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius();
+					if (idFascicoloSius != null) {
+						IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
+						List lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(idFascicoloSius);
+						// non esiste la misura di sicurezza associata al fascicolo Sius corrente
+						// pertanto devo inserirla
+						if (lMisureSicurezza.size() == 0) {
+							MisuraSicurezzaModel lNuovaMisura = new MisuraSicurezzaModel();
+	
+							lNuovaMisura.setCodOperatoreInserimento(getCodUtenteConnesso());
+							lNuovaMisura.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+							lNuovaMisura.setDataInserimento(DateUtils.getSysDate());
+							lNuovaMisura.setFasSiuIdFascicoloSius(
+									mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+							lNuovaMisura.setCodNatura("-");
+							lNuovaMisura.setCodTipo("-");
+							lNuovaMisura.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
+							lNuovaMisura.setDataDecorrenza(dataDecorrenzaMS);
+							lNuovaMisura.setFlFormaMisura(
+									getBigDecimalParameter(ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA));
+							lNuovaMisura.setDescrizioneComunita(
+									getStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA));
+							// MERGE v10: aggiunto codice
+							lNuovaMisura.setNumAnni(getAnniMisuraParameter());
+							lNuovaMisura.setNumMesi(getMesiMisuraParameter());
+							lNuovaMisura.setNumGiorni(getGiorniMisuraParameter());
+	
+							// Effettuo l'Inserimento della Misura di Sicurezza
+							lNuovaMisura = lCtrl.ExInserisciMisuraSicurezza(lNuovaMisura);
+						} else {
+							// aggiorno le misure di sicurezza trovate impostando la Data Decorrenza
+							Iterator itxMis = lMisureSicurezza.iterator();
+							while (itxMis.hasNext()) {
+								MisuraSicurezzaModel lMisSicuSius = (MisuraSicurezzaModel) itxMis.next();
+	
+								lMisSicuSius.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+								lMisSicuSius.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+								lMisSicuSius.setDataAggiornamento(DateUtils.getSysDate());
+								lMisSicuSius.setEveIdEvento(lOrdEveTenGP.getEvento().getIdEvento());
+								lMisSicuSius.setDataDecorrenza(dataDecorrenzaMS);
+	
+								// Effettuo la Modifica della Misura di Sicurezza
+								lCtrl.ExModificaMisuraSicurezza(lMisSicuSius);
+							}
 						}
-					}
-				} // if(idFascicoloSius != null){
-			} // if(dataDecorrenzaMS != null){
+					} // if(idFascicoloSius != null){
+				} // if(dataDecorrenzaMS != null){
 
+			} // Ticket#20220415019 - FINE
+			
 			/*
 			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
 			 * 19/giu/2017 Branch : MEV_39

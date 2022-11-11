@@ -37,6 +37,12 @@ public class ActCancellaPenaAccessoria extends ActionSiap implements ICostantiPe
      //Si passa solo il Model
      lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.siep.penaaccessoria.action.ActRicercaPenaAccessoria&"+ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP+"="+((FascicoloSiepModel)getSessionAttribute("fascicolo")).getIdFascicoloSiep();
 
+     // Ticket 20210924018 - Se dopo la cancellazione non restavano PA a sistema la ricerca restituiva la pagina con 
+     // il mesaggio "nessun elemento trovato" ma non impostava la pagina di ritorno che per default è hostory-1 per 
+     // cui l'utente tornava sul dettaglio della PA appena cancellata o sull'elenco con la PA ancora presente.
+     setRequestAttribute(IWebConstants.GOTO_PAGE, IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.fascicolo.action.ActLoadDettaglioFascicolo");
+     // Ticket 20210924018 - FINE
+     
     return lPage;
 
   }

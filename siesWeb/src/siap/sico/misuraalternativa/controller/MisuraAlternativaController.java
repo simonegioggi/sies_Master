@@ -5557,13 +5557,23 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			if ("S".equals(lRevocaCalcolo)) {
 				lPenResMod.setEveIdEvento(null);
 			}
-
+			
+			// ticket#202012020116 [D.F.] A seguito dei test ci si è accorti che questa parte di codice
+			// va spostata dopo la insert/updeta altrimenti l'istruzione lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
+			// altera il test if (lPenResMod.getEveIdEvento() == null){...} che diventa sempre false
+			// La PR viene sempre duplicata anche quaindo non necessario.
+			// Comunqeu anche in assenza dell'errore il semplice test if (lPenResMod.getEveIdEvento() == null) {...}
+			// è ERRATO. la PR recuperata potrebbe già puntare l'evento corrente e in questo caso non 
+			// andrebbe recuperara.
 			// ticket#202007070114 [D.F.]- Aggiorno i dati del model da restituire alla chiamante
-			lPenResMod.setFlagValidato("S");
-			lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
+			//lPenResMod.setFlagValidato("S");
+			//lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
 			// end ticket#202007070114 
 			
+			siesLogger.debug("lPenResMod: " + lPenResMod.toString());
+			
 			if (lPenResMod.getEveIdEvento() == null) {
+				siesLogger.debug("lPenResMod eveIdevento null vado in update "+lPenResMod.getEveIdEvento());
 				lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
 				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
 				lPenResDao.setFlagValidato("S");
@@ -5576,6 +5586,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPenResDao.update();
 				lPenResDao.stop();
 			} else {
+				siesLogger.debug("lPenResMod eveIdevento not null vado in duplicazione "+lPenResMod.getEveIdEvento());
 				lPenResDao.setDAOFromModel(lPenResMod);
 				lPenResDao.setFlagValidato("S");
 				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
@@ -5587,6 +5598,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPenResDao.insert();
 				lPenResDao.stop();
 			}
+			
+			// ticket#202012020116 [D.F.] Codice spostato dopo l'inserimento
+			// ticket#202007070114 [D.F.]- Aggiorno i dati del model da restituire alla chiamante
+			lPenResMod.setFlagValidato("S");
+			lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
+			// end ticket#202007070114 
+			
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);

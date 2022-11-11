@@ -1,17 +1,12 @@
 package siap.siep.sospensione.action;
 
-/**
- * <p>Title: ActCalcolaAvvenutaEspulsione</p>
- * <p>Description: Classe Action per calcola avvenuta Espulsione</p>
- * <p>Copyright: Copyright (c) 2007</p>
- * <p>Company: Bull</p>
- * @version 1.0
- */
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.html.Option;
 import siap.sico.calendar.model.CalendarModel;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -38,16 +33,13 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.action.ICostantiVerbale;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.html.Option;
 
 @SuppressWarnings("rawtypes")
 public class ActCalcolaAvvenutaEspulsione extends ActionSiap implements ICostantiSospensione {
 
 	/**
 	 * Azione di Calcolo dell'Avvenuta Espulsione
-	 * 
+	 *
 	 * @return Nome della pagina JSP da visualizzare al termine dell'elaborazione
 	 * @throws F3BException
 	 */
@@ -334,7 +326,9 @@ public class ActCalcolaAvvenutaEspulsione extends ActionSiap implements ICostant
 
 		// Ufficio recupero crediti
 		Option lOptionUffRecCrediti = new Option(DecodificheManager.getInstance().getTipoUfficio());
-		lOptionUffRecCrediti.setFilter(new String[] { "-", "DIB", "CAP" });
+		// Ticket#20210922015 - Si aggiunge DIBM
+		lOptionUffRecCrediti.setFilter(new String[] { "-", "DIB", "CAP", "DIBM" });
+		// Ticket#20210922015 - FINE
 		setRequestAttribute("uffrecrediti", "" + lOptionUffRecCrediti);
 
 		// restituisce la jsp di VIEW

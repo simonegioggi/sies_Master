@@ -42,14 +42,14 @@
     <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG"> <font class=label>Funzione:</font>&nbsp; <font class="campo">Elenco Fogli Complementari</font> </td>
      <!-- BOTTONE DI STAMPA  -->
-     <td class=l>
+     <td class="LBG">
         <a href="Javascript:stampa2( '<%=ISIAPCostantiWeb.PG_STAMPA%>', '<%=IWebConstants.ACTION_FIELD%>=siap.sige.statistiche.action.ActExportStatisticheFogliComplementariInExcel&stampa=Si&TornaQui=<%=TornaQui%>')">
             <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>print24.gif" alt="Stampa" width="24" height="24" border="0">
           </a>
      </td>
     
     <!-- NUOVO BOTTONE PER STAMPA EXCEL --> 
-	<td class=l>
+	<td class="LBG">
 		<a class="cliccabile" href="javascript:stampa2( '<%=ISIAPCostantiWeb.PG_STATISTICA%>', '<%=IWebConstants.ACTION_FIELD%>=siap.sige.statistiche.action.ActExportStatisticheFogliComplementariInExcel')"><img src="<%=IWebConstants.IMAGES_DIR%>printexcel.gif" alt="Stampa Excel" width="24" height="24" border="0"></a>
 	</td>
 
@@ -120,25 +120,44 @@
     </tr>
     <%
     Iterator <StatisticheFogliComplementariModel>itProvv=Provvedimenti.iterator();
+    BigDecimal lastIdFascSIGE = null;
     while (itProvv.hasNext()) {
     	StatisticheFogliComplementariModel model=itProvv.next();
+    	
     	String fascicoloSiep=model.getDescrFascicolo();
     	BigDecimal idFascicolo=model.getIdFascicolo();
     	String dataProvvedimento = DateUtils.getDateToString(model.getDataProvvedimento(), "dd-MM-yyyy");
     	String dataFoglioComplementare=model.getDataFoglioComplementare();
     	String descrProvvedimento=model.getDescrProvvedimento();
     	String esito=model.getDescrEsito();
+    	
+    	// Ticket#20210514016 - gestione righe multiple
+    	if (lastIdFascSIGE!=null && model.getIdFascicolo().compareTo(lastIdFascSIGE)==0) {
+    		idFascicolo = null;
+    		dataProvvedimento = "";
+    		dataFoglioComplementare ="";
+    		esito = "";
+    	}
+    	else {
+    		lastIdFascSIGE = model.getIdFascicolo();
+    	}
+    	// Ticket#20210514016 - Fine
    %>
    
    <tr>
-       	<td class="c"><font class="label">
+    <td class="c">
+       	<% if (idFascicolo!=null) { %>
+    	<font class="label">
       	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sige.fascicolo.action.ActLoadDettaglioFascicolo&<%=ICostantiFascicoloSige.CAMPO_ID_FASCICOLO_SIGE%>=<%=idFascicolo%><%=retParam%>">
       	<%=fascicoloSiep%>
       	</a>
       	</font>
+		<% } else { %>
+		
+		<% } %>
     </td>
     <td class="c"><font class="label"><%=dataProvvedimento %></font></td>
-    <td class="c"><font class="label"><%=descrProvvedimento %></font></td>
+    <td class="l"><font class="label"><%=descrProvvedimento %></font></td>
     <td class="c"><font class="label"><%=dataFoglioComplementare %></font></td>
     <td class="c"><font class="label"><%=esito %></font></td>
    </tr>

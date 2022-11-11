@@ -27,7 +27,7 @@ import f3b.util.F3BException;
 @SuppressWarnings("rawtypes")
 public interface IRisultatoRicerca {
 
-	public BigDecimal ExRicercaConStorePocedure(String aCodUtente, String aCodUfficio, BigDecimal aAnnoInzio,
+	public BigDecimal ExRicercaConStoreProcedure(String aCodUtente, String aCodUfficio, BigDecimal aAnnoInzio,
 			BigDecimal aNumeroInzio, BigDecimal aAnnoFine, BigDecimal aNumeroFine, String aDataReato,
 			BigDecimal aAnniRes, BigDecimal aMesiRes, BigDecimal aGiorniRes, String aDataPr,
 			BigDecimal aPosAggregata, String aCodPosGiuridica, BigDecimal aAnniSen, BigDecimal aMesiSen,

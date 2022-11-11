@@ -426,12 +426,14 @@ siesLogger.debug("PenaResidua = "+PenaResidua);
 
       <td class="l">
         <table>
+        	<tr>
           <td class="lnobord"><font class="label">AA</font></td>
           <td class="rnobord"><font class="campo"><%=StringUtils.toStringJSP(lReato.getNumAnni(),"0")%></font></td>
           <td class="lnobord"><font class="label">MM</font></td>
           <td class="rnobord"><font class="campo"><%=StringUtils.toStringJSP(lReato.getNumMesi(),"0")%></font></td>
           <td class="lnobord"><font class="label">GG</font></td>
           <td class="rnobord"><font class="campo"><%=StringUtils.toStringJSP(lReato.getNumGiorni(),"0")%></font></td>
+         </tr>
         </table>
       </td>
       <td class="r">

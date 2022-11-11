@@ -2,7 +2,11 @@ package siap.siep.ordinescarcerazione.action;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.model.EventoModel;
@@ -18,9 +22,6 @@ import siap.siep.notifica.action.ICostantiNotifica;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.ordinescarcerazione.controller.IOrdineScarcerazione;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -86,6 +87,11 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 
 		lEveMod.setEvento(lEveModel);
 
+		//Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+		Date dataInvio = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
+				ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
+		//Ticket#20210521012 -FINE
+		
 		// =========================================
 		// Notifica all'Istituto di Detenzione
 		// =========================================
@@ -106,9 +112,11 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 			lNotModIst.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModIst.setCodTipoNotifica("E");
 
-			lNotModIst.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
-
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModIst.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+			//		ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			lNotModIst.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
 			lNotModIst.setIstDetIdIstitutoDetenzione(lIstituto);
 
 			lNotifiche.add(lNotModIst);
@@ -131,9 +139,11 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 			lNotModPolE.setCodTipoNotifica("C");
 
 			// lNotModPolE.setDataInvio(DateUtils.getSysDate());
-			lNotModPolE.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
-
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModPolE.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+			//		ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			lNotModPolE.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
 			lNotModPolE.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotModPolE.setDataInserimento(DateUtils.getSysDate());
 			lNotModPolE.setCodUfficioInserimento(lCodiceUfficio);
@@ -168,8 +178,13 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 			lNotModTDS.setDataInserimento(DateUtils.getSysDate());
 			lNotModTDS.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModTDS.setCodTipoNotifica("C");
-			lNotModTDS.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModTDS.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+			//		ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			lNotModTDS.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
+			
 			// String lCodiceUff =
 			// getCodUfficioByCodTipoUfficioDescrComune(getRequestStringParameter(ICostantiOrdineScarcerazione.CAMPO_COD_TRIBUNALE),
 			// getRequestStringParameter(ICostantiOrdineScarcerazione.CAMPO_SEDE_TRIBUNALE));
@@ -190,9 +205,13 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 			lNotModMDS.setDataInserimento(DateUtils.getSysDate());
 			lNotModMDS.setCodUfficioInserimento(lCodiceUfficio);
 			lNotModMDS.setCodTipoNotifica("C");
-			lNotModMDS.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
-
+			
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModMDS.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+			//		ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			lNotModMDS.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
+			
 			// String lMds = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS);
 			String lMds = this.getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 			String lSedeMds = this.getRequestStringParameter(ICostantiOrdineScarcerazione.CAMPO_SEDE_UDS);
@@ -218,9 +237,13 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 
 			lNotModAutEst.setCodEsito("-");
 			lNotModAutEst.setCodTipoNotifica("E");
-			lNotModAutEst.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
-
+			
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotModAutEst.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+			//		ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			lNotModAutEst.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE
+			
 			lNotModAutEst.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotModAutEst.setDataInserimento(DateUtils.getSysDate());
 			lNotModAutEst.setCodUfficioInserimento(lCodiceUfficio);
@@ -253,9 +276,13 @@ public class ActInserisciOSLiberazioneAnticipata extends ActOrdineScarcerazione 
 
 			lNotAvv.setCodTipoNotifica("N");
 			// lNot.setNote(lArrayNote[lIndMisura]);
-			lNotAvv.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-					ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
-
+			
+			// Ticket#20210521012 - La dataInvio delle notifihe deve essere la data di trasmissione
+			//lNotAvv.setDataInvio(getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+			//		ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE));
+			lNotAvv.setDataInvio (dataInvio);
+			//Ticket#20210521012 - FINE			
+			
 			lNotAvv.setCodEsito("-");
 			lNotAvv.setCodOperatoreInserimento(lCodiceOperatore);
 			lNotAvv.setDataInserimento(DateUtils.getSysDate());

@@ -1,2 +1,5 @@
 MEV_9: 07/10/2020
-1)	nato dal branch "release_12.4.3.0"
+
+1)	nato dal branch "RELEASE_12.4.3.0"
+
+2)	in data 11/11/2022 eseguito merge con "RELEASE_12.4.24.0"

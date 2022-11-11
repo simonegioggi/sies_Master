@@ -83,6 +83,7 @@ public class TestController {
 			lTest.setTestJMS("Test OpenJMS Fallito!");
 			lTest.setErroreJMS(ex.toString());
 		}
+
 		try {
 			// NUOVA INFRASTRUTTURA: aggiunti controlli sui WS
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -100,6 +101,7 @@ public class TestController {
 			lTest.setTestWSRichiestaCertificato(ex.toString());
 			lTest.setTestWebServer(ex.toString());
 		}
+
 		String lBDINome = JMSProperties.getInstance().getProperty("JMS_LOCAL_MITTENTE");
 		lTest.setBDIMittente(lBDINome);
 		String lBDI = JMSProperties.getInstance().getProperty("JMS_LOCAL");
@@ -131,6 +133,7 @@ public class TestController {
 					lTrovato = true;
 				}
 			}
+
 			if (!lTrovato) {
 				lTest.setErroreProgressivo("con progressivo ERRATO. Nel file di configurazione e' presente "
 						+ lProgressivo
@@ -171,9 +174,14 @@ public class TestController {
 			Iterator lItx = lTest.getBDI().iterator();
 			while (lItx.hasNext()) {
 				JmsCodeModel lCod = (JmsCodeModel) lItx.next();
-				lCod.setCodice(JMSProperties.getInstance().getConnectionString(lCod.getDescrizione()));
-
-				lTreeTest.add(new TreeModel(lCod));
+				// Ticket 20210507017 - veniva sovreascritto il codice BDI del singleton con la COnnection
+				// string, corrompendo il contenuto del singleton. Commentato il vecchio codice e corretto.
+				JmsCodeModel perStampa = new JmsCodeModel(lCod);
+				perStampa.setCodice(JMSProperties.getInstance().getConnectionString(lCod.getDescrizione()));
+				lTreeTest.add(new TreeModel(perStampa));
+				// lCod.setCodice(JMSProperties.getInstance().getConnectionString(lCod.getDescrizione()));
+				// lTreeTest.add(new TreeModel(lCod));
+				// FINE Ticket 20210507017
 			}
 		}
 		// TestOpenJMS

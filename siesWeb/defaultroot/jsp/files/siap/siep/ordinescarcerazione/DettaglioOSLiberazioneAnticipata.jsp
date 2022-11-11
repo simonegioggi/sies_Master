@@ -409,7 +409,9 @@ while(IteLic.hasNext())
       <td class="l">Data Trasmissione</td>
       <td class="L">
         <font class="campo">
-          <%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(),"dd-MM-yyyy") )%>
+          <%-- Ticket#20210521012 --%>
+          <%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(),"dd-MM-yyyy") )%>
+          <%-- StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataTrasmissioneAtti(),"dd-MM-yyyy") ) --%>
         </font>
       </td>
 <%

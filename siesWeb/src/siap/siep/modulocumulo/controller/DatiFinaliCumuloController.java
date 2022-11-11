@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -21,6 +22,7 @@ import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
 import siap.jms.ICostantiJMS;
 import siap.sico.calendar.model.CalendarModel;
+import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.dao.ComuneDAO;
 import siap.sico.decodifiche.dao.DecodificheDAO;
 import siap.sico.decodifiche.model.ComuneModel;
@@ -52,6 +54,8 @@ import siap.sico.util.SICOLookupRemote;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepDAO;
 import siap.siep.agdgfascicolosiep.dao.AgdgFascicoloSiepSqlDAO;
 import siap.siep.agdgfascicolosiep.model.AgdgFascicoloSiepModel;
+import siap.siep.altracausa.dao.AltraCausaDAO;
+import siap.siep.altracausa.model.AltraCausaModel;
 import siap.siep.altrigradigiudizio.model.AltriGradiGiudizioModel;
 import siap.siep.annotazioneesitotrasmissione.dao.AnnotazioneEsitoTrasmissioneDAO;
 import siap.siep.archiviazione.controller.IArchiviazione;
@@ -1087,6 +1091,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		PenaAccessoriaCumuloSqlDAO lPenAccCumSqlDao = null;
 		PenaAccessoriaDAO lPenAccDao = null;
 
+		AltraCausaDAO lAltraCausaDao = null;
+
 		try {
 			lConn = getDBTransaction();
 
@@ -1097,6 +1103,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lEveSqlDao = new EventoSqlDAO(lConn);
 			lEveSqlDao.ricercaEventoByKey(aEvento.getIdEvento());
 			EventoModel lEveModel = (EventoModel) lEveSqlDao.getModelByKey();
+
+			// Ticket#202203210112 - Controllo aggiuntivo per evitare Tasto indietro e nuova sottomissione
+			if ("S".equals(lEveModel.getFlagDocumentoRegistrato())) {
+				throw new F3BException(F3BException.USER_MESSAGE, "Il provvedimento risulta già validato.");
+			}
+			// Ticket#202203210112 - FINE
 
 			lEveModel.setCodOperatoreAggiornamento(aEvento.getCodOperatoreAggiornamento());
 			lEveModel.setCodUfficioAggiornamento(aEvento.getCodUfficioAggiornamento());
@@ -1339,8 +1351,54 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lNewPosGiuModel.setCodPosizioneProcessuale("-");
 
 			lPosDao.setDAOFromModel(lNewPosGiuModel);
-			lPosDao.insert();
+			BigDecimal lIdNewPG = lPosDao.insert();
 			lPosDao.stop();
+
+			// [Ticket#20210430011] - se la PG è detenuto altra causa, aggiporno il flga altra causa
+			// si FASCICOLO_SIEPe aggiungo il record ALTRA_CAUSA
+			siesLogger.debug("Verifico se detenutao Altra Causa...");
+			String flagAltraCausa = "N";
+			Collection<DecodificheModel> lCollPosGiuAltra = DecodificheManager.getInstance()
+					.getPosizioneGiuridicaAltraCausa();
+			Iterator iteCollPosGiuAltra = lCollPosGiuAltra.iterator();
+
+			while (iteCollPosGiuAltra.hasNext()) {
+				DecodificheModel dMPosGiuAltra = (DecodificheModel) iteCollPosGiuAltra.next();
+				String code = dMPosGiuAltra.getCode();
+				if (code.equals(lNewPosGiuModel.getCodPosizioneGiuridica())) {
+					flagAltraCausa = "S";
+					break;
+				}
+			}
+
+			if ("S".equals(flagAltraCausa)) {
+				siesLogger.debug("Detenuto Altra Causa inserisco il record AC");
+				AltraCausaModel altraCausaModel = new AltraCausaModel();
+				altraCausaModel.setFasSieIdFascicoloSiep(lFasModel.getIdFascicoloSiep());
+				altraCausaModel.setCodTipoPosGiuridica(lNewPosGiuModel.getCodPosizioneGiuridica());
+				altraCausaModel.setDataDecorrenza(lNewPosGiuModel.getDataInizio());
+				altraCausaModel.setCodAutorita("-");
+				altraCausaModel.setCodLuogo("-");
+
+				altraCausaModel
+						.setIstDetIdIstitutoDetenzione(lPosGiuCumModel.getIstDetIdIstitutoDetenzione());
+
+				altraCausaModel.setCodOperatoreInserimento(lEveModel.getCodOperatoreAggiornamento());
+				altraCausaModel.setDataInserimento(lEveModel.getDataAggiornamento());
+				altraCausaModel.setCodUfficioInserimento(lEveModel.getCodUfficioAggiornamento());
+
+				lAltraCausaDao = new AltraCausaDAO(lConn);
+				lAltraCausaDao.setDAOFromModel(altraCausaModel);
+				BigDecimal lIdAltraCausa = lAltraCausaDao.insert();
+
+				// Ticket#20220803019 - Aggiorno il riferimento AC sul record della PG
+				lPosDao.setAltCauIdAltraCausa(lIdAltraCausa);
+				lPosDao.setCondizioneUpdate(lIdNewPG);
+				lPosDao.update();
+				lPosDao.stop();
+				// Ticket#20220803019 - FINE
+			}
+			// FINE [Ticket#20210430011]
 
 			// ========================================================================
 			// Aggiorna flag cumulante e flag cumulato sul Fascicolo_model
@@ -1357,6 +1415,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			lFascDao.selCondizioneUpdate(lEveModel.getFasSieIdFascicoloSiep());
 
 			lFascDao.setFlagCumulante("S");
+
+			// [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
+			if ("S".equals(flagAltraCausa)) {
+				lFascDao.setFlagAltraCausa(flagAltraCausa);
+			}
+			// FINE [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
 
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
 			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
@@ -1962,6 +2026,19 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 												lEveModel.getCodUfficioAggiornamento());
 										lEveArc.setDataInserimento(lEveModel.getDataAggiornamento());
 
+										// Ticket#20220209011 — SIEP - Fascicoli archiviati per cumulo ancora
+										// pendenti nel riepilogo ispettivo.
+										// i dati dell'"Aggiornamento" vanno subito valorizzati in quanto
+										// normalmente lo farebbe la action di validazione dell'archiviazione,
+										// ma da tale action non ci si passa e la PR che viene inserita dal
+										// controller risulta priva di tali dati
+										lEveArc.setCodOperatoreAggiornamento(
+												lEveModel.getCodOperatoreAggiornamento());
+										lEveArc.setCodUfficioAggiornamento(
+												lEveModel.getCodUfficioAggiornamento());
+										lEveArc.setDataAggiornamento(lEveModel.getDataAggiornamento());
+										// Ticket#20220209011 - FINE
+
 										lEveDao.setDAOFromModel(lEveArc);
 										BigDecimal lKeyEve = lEveDao.insert();
 										lEveDao.stop();
@@ -2075,7 +2152,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 		} catch (Exception ex) {
 			siesLogger.error("Exception: ", ex);
 			rollback(lConn);
-			ex.printStackTrace();
+
+			if (ex instanceof F3BException) {
+				if (((F3BException) ex).getErrorCode() == F3BException.USER_MESSAGE) {
+					throw (F3BException) ex;
+				}
+			}
 			throw new F3BException("DatiFinaliCumuloController.ExUpdateValidaProvvedimentoCumulo : " + ex);
 		} finally {
 			cleanup(lEveSqlDao);
@@ -2220,6 +2302,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						UfficioModel lUffModel = (UfficioModel) lUffSqlDao.getModelByKey();
 						lUffSqlDao.stop();
 
+						// siesLogger.debug(lProcCumModel.getChiaveAnnoFasCumulato()+"/"+lProcCumModel.getChiaveProgrFasCumulato()+"
+						// di "+lUffModel.getCodTipoUfficio()+" di "+lUffModel.getDescrComune());
 						lListaUffEsecuzione.add(lUffModel);
 						lCod = lUffModel.getCodUfficio();
 
@@ -2237,12 +2321,26 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 							}
 						}
 
+						// siesLogger.debug("lVisibile = "+lVisibile);
 						if (lVisibile > 1)
 							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("N");
 						else
 							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("S");
 						//
-
+						// siesLogger.debug("Flag Visualizza =
+						// "+lNoteTrasmEsecXTitolo.getFlagVisualizzaUfficio());
+						// Ticket#20220124013: si esclude il PM del cumulante dalle note di trasmissione per
+						// l'esecuzione
+						// aFascicoloModel
+						if (lProcCumModel.getChiaveAnnoFasCumulato()
+								.compareTo(aFascicoloModel.getChiaveAnno()) == 0
+								&& lProcCumModel.getChiaveProgrFasCumulato()
+										.compareTo(aFascicoloModel.getChiaveProgr()) == 0
+								&& lProcCumModel.getCodUfficioFasCumulato()
+										.equals(aFascicoloModel.getChiaveUfficio())) {
+							lNoteTrasmEsecXTitolo.setFlagVisualizzaUfficio("N");
+						}
+						// Ticket#20220124013 - FINE
 						lListaNoteTrasmissione.add(lNoteTrasmEsecXTitolo);
 						// siesLogger.debug("NotaDiTrasmissioneModel per Ufficio ESECUZIONE scritta =
 						// "+lNoteTrasmEsecXTitolo);
@@ -2617,15 +2715,27 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 					if (lAgg != null && lAgg.getEventoNotifica() != null
 							&& lAgg.getEventoNotifica().getEvento() != null)
 						lEveMS = lAgg.getEventoNotifica().getEvento();
+
+					// Ticket#20220926015 — Errore stampa SIES
+					// Si aggiunge il test sulla presenza di anno e numero prima del toString() andava in
+					// nullpointer
 					if (lEveMS != null && lEveMS.getIdEvento() != null) {
 						if (lEveMS.getCodTipoProvvedimento().equals("03")
-								&& lAgg.getDepositoOrdinanzaPc() != null) {
+								&& lAgg.getDepositoOrdinanzaPc() != null
+								// Ticket#20220926015 - add
+								&& lAgg.getDepositoOrdinanzaPc().getNumS3() != null
+								// Ticket#20220926015 - add
+								&& lAgg.getDepositoOrdinanzaPc().getAnnoS3() != null) {
 							// NUMERO ORDINANZA
 							lMisSicMod.setNumOrdDec(lAgg.getDepositoOrdinanzaPc().getNumS3().toString());
 							// ANNO ORDINANZA
 							lMisSicMod.setAnnoOrdDec(lAgg.getDepositoOrdinanzaPc().getAnnoS3().toString());
 						} else if (lEveMS.getCodTipoProvvedimento().equals("02")
-								&& lAgg.getDepositoDecreto() != null) {
+								&& lAgg.getDepositoDecreto() != null
+								// Ticket#20220926015 - add
+								&& lAgg.getDepositoDecreto().getNumS72() != null
+								// Ticket#20220926015 - add
+								&& lAgg.getDepositoDecreto().getAnnoS72() != null) {
 							// NUMERO DECRETO
 							lMisSicMod.setNumOrdDec(lAgg.getDepositoDecreto().getNumS72().toString());
 							// ANNO DECRETO
@@ -2641,6 +2751,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 						lMisSicMod.setDescEsitoTemplate(lEveMS.getDescEsitoTemplate());
 					} else {
 						// NON ESISTE DECISIONE DEL MAGISTRATO DI SORVEGLIANZA
+						siesLogger.info("NON ESISTE DECISIONE DEL MAGISTRATO DI SORVEGLIANZA: in "
+								+ getClass().getName());
 					}
 					// mev56 FINE ****************************
 				}
@@ -4734,11 +4846,8 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 	// }
 
 	/*
-	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo
-	 * Numero MAC : 20191128013 
-	 * Autore : monica 
-	 * Data : 19/dic/2019 
-	 * Branch : 11.2.4
+	 * ISSUE MAC : aggiunto metodo che aggiorna il flag altra causa (posizione giuridica) sul fascicolo Numero
+	 * MAC : 20191128013 Autore : monica Data : 19/dic/2019 Branch : 11.2.4
 	 */
 	/**
 	 * Aggiorna il flag altra causa sul fascicolo
@@ -4789,6 +4898,6 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 			cleanup(lConn);
 		}
 	} // CHIUDE ExUpdateFlagAltraCausaFascicolo()
-	// ***** FINE INTERVENTO 20191128013 *****//
+		// ***** FINE INTERVENTO 20191128013 *****//
 
 }

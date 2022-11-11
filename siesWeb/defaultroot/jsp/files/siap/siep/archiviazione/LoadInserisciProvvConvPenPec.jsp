@@ -752,7 +752,7 @@ if((!lPosizione.isLibero()) || (lFascicoloAssociato.getFlagAltraCausa()!=null &&
 
     frmvalidator.addValidation("<%= ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","numeric");
     frmvalidator.addValidation("<%= ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","gt=1900");
-    frmvalidator.addValidation("<%= ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","lt=2050");
+    frmvalidator.addValidation("<%= ICostantiScambioSanzione.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","lt=2099");
 
 //data emissione
     frmvalidator.addValidation("<%= ICostantiArchiviazione.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");

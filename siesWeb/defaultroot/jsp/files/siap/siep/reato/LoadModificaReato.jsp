@@ -559,7 +559,7 @@ if
 
     frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","numeric");
     frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
-    frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","lt=2050");
+    frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","lt=2099");
 
     frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","numeric");
     frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","gt=1");
@@ -571,7 +571,7 @@ if
 
     frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","numeric");
     frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","gt=1900");
-    frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","lt=2050");
+    frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","lt=2099");
 
 	// *******************************************************************
 	// Federica - a9-rr-078

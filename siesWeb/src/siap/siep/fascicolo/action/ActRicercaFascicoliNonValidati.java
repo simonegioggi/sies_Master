@@ -40,7 +40,15 @@ public class ActRicercaFascicoliNonValidati extends ActionSiap implements ICosta
 			lFasMod.setClassiFascicolo(lClassiFascicolo);
 		}
 
-		lFasMod.setFlagValidato("N");
+		// Ticket#20220801014 - nella ricerca dei procedimenti SIEP "non validati" escono anche procedimenti 
+		//                      Archiviati e molti classe 9 in quanto è possibile Archiviare un procedimento 
+		//                      senza validarlo. Es se isritto per errore.
+		// La condizione sul FLAG_VALIDATO non è quindi sufficiente per quel tipo di ricerca.
+		// La si sostituisce con lo COD_STATO_FASCICOLO = '02' Iscritto , ovvero non ancora validato 
+		//lFasMod.setFlagValidato("N");
+		lFasMod.setCodStatoFascicolo("02"); // ISCRITTO (non validato)
+		// Ticket#20220801014 - FINE
+		
 		lFasMod.setChiaveUfficio(this.getCodUfficioUtenteConnesso());
 
 		IFascicoloSiep lCtrl = SIEPLookupRemote.getFascicoloSiepRemote();

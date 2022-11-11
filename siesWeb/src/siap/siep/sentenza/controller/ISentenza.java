@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.util.Vector;
 
 import siap.sico.soggetto.model.SoggettoModel;
+import siap.siep.sentenza.model.SentenzaFascicoliModel;
 import siap.siep.sentenza.model.SentenzaModel;
 import f3b.util.F3BException;
 
@@ -40,7 +41,9 @@ public interface ISentenza {
 			throws F3BException;
 
 	public Vector ExRicercaSentenzaDuplicata(SentenzaModel aSentenza) throws F3BException;
-
+	// Ticket#202204010111 - Aggiunto recupero di eventuali fascicoli SIEP
+	public Vector <SentenzaFascicoliModel> ExRicercaSentenzaDuplicataFascicoli(SentenzaModel aSentenza) throws F3BException;
+	// Ticket#202204010111 - FINE
 	public Vector ExRicercaSentenzaFascicolo(SoggettoModel aSoggetto, String TipoBen) throws F3BException;
 
 	public SentenzaModel ExModificaSentenzaSige(SentenzaModel aSentenza, Vector aKeyFascicoli)

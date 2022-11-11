@@ -1,8 +1,6 @@
 package siap.siep.modulocumulo.action;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -12,9 +10,6 @@ import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import siap.sico.calendar.model.CalendarModel;
 import siap.siep.calcolopena.controller.ICalcoloPena;
-import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.decodifiche.model.DecodificheModel;
-import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo;
 import siap.siep.modulocumulo.controller.IDatiFinaliCumulo;
 import siap.siep.modulocumulo.controller.IPosizioneGiuridicaCumulo;
@@ -113,16 +108,20 @@ public class ActInserisciPosGiuridicaCumulo extends ActionModuloCumulo
 		// ==========================================================================
 		// Recupero il fascicolo da aggiornare
 		// ==========================================================================
-		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-
-		String sFlagAltraCausa = this.getFlagAltraCausa(lPosizioneGiuridica.getCodPosizioneGiuridica());
-
-		lFascMod.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-		lFascMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-		lFascMod.setDataAggiornamento(DateUtils.getSysDate());
-		lCtrlDatiFinali.ExUpdateFlagAltraCausaFascicolo(lFascMod, sFlagAltraCausa);
+		// [Ticket#20210430011] - l'aggiornamente non va fatto qui ma solo in fase di validazione
+		// SI commenta l'aggiornamento del fascicolo
+		/*
+		 * FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		 *
+		 * String sFlagAltraCausa = this.getFlagAltraCausa(lPosizioneGiuridica.getCodPosizioneGiuridica());
+		 *
+		 * lFascMod.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+		 * lFascMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+		 * lFascMod.setDataAggiornamento(DateUtils.getSysDate());
+		 * lCtrlDatiFinali.ExUpdateFlagAltraCausaFascicolo(lFascMod, sFlagAltraCausa);
+		 */
 		// ***** FINE INTERVENTO 20191128013 *****//
-
+		// FINE [Ticket#20210430011]
 		// =============================
 		// Invoco la Action di dettaglio
 		// =============================
@@ -145,30 +144,29 @@ public class ActInserisciPosGiuridicaCumulo extends ActionModuloCumulo
 	 *
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private String getFlagAltraCausa(String codPosizioneGiuridica) throws F3BException {
-
-		String flagAltraCausa = "N";
-		Collection<DecodificheModel> lCollPosGiuAltra = DecodificheManager.getInstance()
-				.getPosizioneGiuridicaAltraCausa();
-		Iterator iteCollPosGiuAltra = lCollPosGiuAltra.iterator();
-
-		while (iteCollPosGiuAltra.hasNext()) {
-			DecodificheModel dMPosGiuAltra = (DecodificheModel) iteCollPosGiuAltra.next();
-			String code = dMPosGiuAltra.getCode();
-			if (code.equals(codPosizioneGiuridica)) {
-				flagAltraCausa = "S";
-				break;
-			}
-	}
-
-		return flagAltraCausa;
-	}
+	// private String getFlagAltraCausa(String codPosizioneGiuridica) throws F3BException {
+	//
+	// String flagAltraCausa = "N";
+	// Collection<DecodificheModel> lCollPosGiuAltra = DecodificheManager.getInstance()
+	// .getPosizioneGiuridicaAltraCausa();
+	// Iterator iteCollPosGiuAltra = lCollPosGiuAltra.iterator();
+	//
+	// while (iteCollPosGiuAltra.hasNext()) {
+	// DecodificheModel dMPosGiuAltra = (DecodificheModel) iteCollPosGiuAltra.next();
+	// String code = dMPosGiuAltra.getCode();
+	// if (code.equals(codPosizioneGiuridica)) {
+	// flagAltraCausa = "S";
+	// break;
+	// }
+	// }
+	//
+	// return flagAltraCausa;
+	// }
 	// ***** FINE INTERVENTO 20191128013 *****//
 
 	/**
 	 * Metodo che recupera i dati dalla form
-	 * 
+	 *
 	 * @return
 	 */
 	private PosizioneGiuridicaCumuloModel getDatiForm() throws F3BException {
@@ -347,7 +345,7 @@ public class ActInserisciPosGiuridicaCumulo extends ActionModuloCumulo
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */

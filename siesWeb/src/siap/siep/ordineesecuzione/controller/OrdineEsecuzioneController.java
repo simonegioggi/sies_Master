@@ -1966,7 +1966,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	 * @return
 	 * @throws F3BException
 	 */
-	public EventoModel ExCancellaEventoConStorePocedure(EventoModel aEvento) throws F3BException {
+	public EventoModel ExCancellaEventoConStoreProcedure(EventoModel aEvento) throws F3BException {
 
 		Connection lConn = null;
 
@@ -1985,7 +1985,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lEventoProc.setIdEvento(lEveRet.getIdEvento());
 			lEventoProc.execute();
 
-			//
 			// ========================================================================
 			// Se l'evento e' l'annotazione di Rideterminazione pena Altro e ha
 			// collegato un provvedimento altra autorita', devo annullare anche tale
@@ -2061,23 +2060,29 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 				lEveSqlDAO.ricercaEventoByKey(lEveRet.getEveIdEvento());
 				EventoModel em = (EventoModel) lEveSqlDAO.getModelByKey();
 				lEveSqlDAO.stop();
-				if (("02".equals(em.getCodTipoProvvedimento()) || "03".equals(em.getCodTipoProvvedimento()))
-						&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
-						&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
-						&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
-					lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
-					lEventoProc.execute();
+				// 20211013 [SG]: a seguito di correzione della SP "PULISCI.Pulisci_Evento"
+				// il SIUS ("lEveRet.getEveIdEvento()") viene cancellato già, per scrupolo lasciamo questo
+				// controllo; da Rideterminazione della Pena - Altro
+				if (!Utils.isNullObj(em)) {
+					if (("02".equals(em.getCodTipoProvvedimento())
+							|| "03".equals(em.getCodTipoProvvedimento()))
+							&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
+							&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
+							&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
+						lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
+						lEventoProc.execute();
+					}
 				}
 			}
 
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStorePocedure: " + daoEx);
+			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStoreProcedure: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			rollback(lConn);
-			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStorePocedure: " + ex);
+			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStoreProcedure: " + ex);
 		} finally {
 			cleanup(lEventoProc);
 			cleanup(lMisDao);
@@ -5052,13 +5057,19 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 									.ExRicercaAltraCausaIstitutoByKey(lPosMod.getAltCauIdAltraCausa());
 						}
 						// lAltraCausa = (AltraCausaModel) lAltCauDao.getModelByKey();
-						AltraCausaDAO lAltraCausaDao = null;
-						lAltraCausaDao = new AltraCausaDAO(lConn);
-						BigDecimal lKeyAltra = null;
-						lAltraCausa.setDataInserimento(DateUtils.getSysDate());
-						lAltraCausaDao.setDAOFromModel(lAltraCausa);
-						lKeyAltra = lAltraCausaDao.insert();
-						lPosDao.setAltCauIdAltraCausa(lKeyAltra);
+						// Ticket#20220803019 - In assenza del record AC legato all'ultima PG
+						// il sistema andava in errore sql inquanto cercava di inserire un model lAltraCausa
+						// vuoto
+						if (lAltraCausa != null && lAltraCausa.getIdAltraCausa() != null) {
+							AltraCausaDAO lAltraCausaDao = null;
+							lAltraCausaDao = new AltraCausaDAO(lConn);
+							BigDecimal lKeyAltra = null;
+							lAltraCausa.setDataInserimento(DateUtils.getSysDate());
+							lAltraCausaDao.setDAOFromModel(lAltraCausa);
+							lKeyAltra = lAltraCausaDao.insert();
+							lPosDao.setAltCauIdAltraCausa(lKeyAltra);
+						}
+						// Ticket#20220803019 - FINE
 					}
 				}
 				lPosDao.setCodPosizioneGiuridica(lPosizione);

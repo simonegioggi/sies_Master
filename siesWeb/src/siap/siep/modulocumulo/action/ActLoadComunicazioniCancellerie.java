@@ -14,6 +14,12 @@ public class ActLoadComunicazioniCancellerie extends ActionModuloCumulo implemen
 
 	public String processRequest() throws F3BException {
 
+		// Ticket#20211216018 - Aggiunto controllo se modificabile per evitare che utenti di altri uffici
+		//                      abbiano accesso alla fuzione che crea una stampa "al volo" ma con i dati 
+		//                      dell'ufficio dell'utente connesso
+		super.isFascicoloSiepDiCompetenza();
+		// Ticket#20211216018 - FINE
+		
 		// ==========================================================================
 		// Recupero i dati del cumulo
 		// ==========================================================================

@@ -35,6 +35,8 @@
 
 <jsp:useBean id="titoliGiaComunicati"  scope="request" class="java.util.ArrayList"/>
 <jsp:useBean id="nextAction"			scope="request" class="java.lang.String"/>
+<jsp:useBean id="diCompetenza"			scope="request" class="java.lang.String"/>
+
 
 <%
 //==============================================================================
@@ -183,9 +185,17 @@
       <td class="titolo" colspan="4">Nuove Comunicazioni</td>
     </tr>
   <tr>
+  
+
 <% if ("A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato())) {%>
 <td class="l" colspan="1"><font class="cRosso">Provvedimento di cumulo annullato, non è possibile emettere ulteriori comunicazioni</font>
 </td>
+<%-- Ticket#20211216018 - Aggiunto controllo se fascicolo di competenza. --%>  
+<% } else if (!"S".equals(diCompetenza)) { %>
+<td class="l" colspan="1">
+&nbsp;
+</td>
+<%-- Ticket#20211216018 - FINE --%>
 <% } else { %>
       <td class="l" colspan="1">Data emissione Comunicazione
         <input type="text" Title="Giorno Emissione provvedimento"
@@ -322,6 +332,10 @@ int contaCheck = 0;
           <td class="c" nowrap>
             <% if ("A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato())) {%>
             &nbsp;
+            <%-- Ticket#20211216018 - Aggiunto controllo se fascicolo di competenza. --%>
+            <% } else if (!"S".equals(diCompetenza)) { %>
+            &nbsp;
+            <%-- Ticket#20211216018 - FINE --%>
             <% } else if (AutoritaSiep.equals(AutoritaSiepCumulante)) { %>
               <%-- 
               <input type="checkbox" name="<%=(id_record==1)?StringUtils.toStringJSP(ICostantiUfficio.CAMPO_COD_UFFICIO):"" %>" value="" checked="checked" disabled="disabled" >
@@ -387,6 +401,10 @@ contaCheck++;
             <td class="c" nowrap>
 <% if ("A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato())) {%>
 &nbsp;
+<%-- Ticket#20211216018 - Aggiunto controllo se fascicolo di competenza. --%>
+<% } else if (!"S".equals(diCompetenza)) {%>
+&nbsp;
+<%-- Ticket#20211216018 - FINE --%>
 <%          // 27/08/2018 Verifica se una comunicazione è stata inviata all'Ufficio di Sorveglianza.
             } else if (ufficiDestinatariComunicazioni.contains(lUffNot.getCodUfficio() ) ) { %>
                 &nbsp;
@@ -411,9 +429,10 @@ contaCheck++;
     
   </table>
 
-
+<%-- Ticket#20211216018 - Aggiunto controllo se fascicolo di competenza.
 <% if (!"A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato()) && contaCheck>0 ) {%>
-
+--%>
+<% if (!"A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato()) && contaCheck>0 && "S".equals(diCompetenza)) {%>
   <table cellspacing="2" cellpadding="2" align="center" width="95%">
     <tr>
       <td style="text-align:left">
@@ -428,7 +447,10 @@ contaCheck++;
 </body>
 </html>
   
- <% if (!"A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato())) {%>
+<%-- Ticket#20211216018 - Aggiunto controllo se fascicolo di competenza.  
+<% if (!"A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato())) {%>
+--%>
+<% if (!"A".equals(ProvvedimentoCumulo.getFlagDocumentoRegistrato()) && "S".equals(diCompetenza) ) {%>
 <script language="JavaScript" type="text/javascript">
   var frmvalidator  = new Validator("formName");
 
@@ -441,7 +463,7 @@ contaCheck++;
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req","Il campo Anno Emissione della comunicazione è obbligatorio");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
   frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
-  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2050");
+  frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
 
 
   //================================================================

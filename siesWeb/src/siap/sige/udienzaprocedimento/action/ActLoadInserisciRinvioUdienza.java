@@ -36,7 +36,7 @@ import siap.sige.util.SIGELookupRemote;
  * <p>
  * Company: Eutelia
  * </p>
- * 
+ *
  * @version 1.0
  */
 public class ActLoadInserisciRinvioUdienza extends ActRicercaFSigePuntuale
@@ -63,23 +63,35 @@ public class ActLoadInserisciRinvioUdienza extends ActRicercaFSigePuntuale
 			super.processRequest();
 
 		// Fascicolo Sige Esteso in sessione.
-		mFasEsteso = this.getFascicoloSigeEstesoInSessione();
-		BigDecimal lIdFasSige = mFasEsteso.getFascicoloSige().getIdFascicoloSige();
+		mFasEsteso = getFascicoloSigeEstesoInSessione();
+		BigDecimal idFascicoloSige = mFasEsteso.getFascicoloSige().getIdFascicoloSige();
 
 		// Viene effettuato il controllo sulla preesistenza di un Provvedimento definitorio
 		// già emesso per il Fascicolo SIGE.
 		// Se esiste almeno un provvedimento di questo tipo non può esserne emesso una Ordinanza
 		// di Rinvio Udienza.
-		if (super.esisteProvvedimentoDefinitorio())
-			throw new SIGEException(SIGEException.USER_MESSAGE,
-					"Per il procedimento indicato è già stato emesso un provvedimento. "
-							+ "Non è consentito emettere un nuovo provvedimento.");
+		if (super.esisteProvvedimentoDefinitorio()) {
+			// Ticket#20211129018 - Rinvio udienza Sige: aggiunto metodo
+			// si puo' emettere nuovo provvedimento se lo stato del fascicolo è 14,16,20,21
+			if (!super.contolloStatoFascicoloConProvvedimentoDefinitorio()) {
+				siesLogger.debug(
+						"Posso iscrivere il provvedimento poiche' lo stato del fascicolo e' in uno di questi 4:"
+								+ " Opposizione - Accoglie (fissa l'udienza) = 14;"
+								+ " Ricorso convertito in opposizione = 16;"
+								+ " Decreto Fissazione Udienza = 20;"
+								+ " Ricorso convertito in opposizione (Fissa Udienza) = 21.");
+			} else {
+				throw new SIGEException(SIGEException.USER_MESSAGE,
+						"Per il procedimento indicato è già stato emesso un Provvedimento di tipo definitorio! "
+								+ "Non è consentito emettere un nuovo provvedimento.");
+			}
+		}
 
 		// Ricerca esistenza di udienze per quel Fascicolo con stato F o S o N
 		UdienzaProcedimentoSigeModel lUdiMod = new UdienzaProcedimentoSigeModel();
 		IUdienzaProcedimentoSige lUdiProcCtrl = SIGELookupRemote.getUdienzaProcedimentoSigeRemote();
-		lUdiMod = lUdiProcCtrl.ExRicercaUltimaUdienzaProcedimentoSigeByFascicoloByFlagRinviata(lIdFasSige,
-				"'F','S'");
+		lUdiMod = lUdiProcCtrl
+				.ExRicercaUltimaUdienzaProcedimentoSigeByFascicoloByFlagRinviata(idFascicoloSige, "'F','S'");
 
 		if (lUdiMod == null)
 			throw new SIGEException(SIGEException.USER_MESSAGE, "Rinvio Udienza non consentito. "
@@ -87,10 +99,10 @@ public class ActLoadInserisciRinvioUdienza extends ActRicercaFSigePuntuale
 
 		// Lock per evitare il rinvio ordinanza contemporanea di 2 Udienze per lo stesso fascicolo
 		LockModel lck = LockController.lockIfNotLocked(getServletContext(), "ProcedimentoSIGE",
-				lIdFasSige.toString(), getCodUtenteConnesso(), getSession().getId());
+				idFascicoloSige.toString(), getCodUtenteConnesso(), getSession().getId());
 		if (lck != null) {
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Il  " + lck.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi !");
+					"Il " + lck.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
 			return IWebConstants.PG_MESSAGE;
 		}
 
