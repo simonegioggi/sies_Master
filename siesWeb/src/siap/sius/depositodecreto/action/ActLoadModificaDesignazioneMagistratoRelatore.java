@@ -11,7 +11,7 @@ import siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.magistratorelatore.controller.IMagistratoRelatore;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
-import siap.sius.tenore.controller.ITenore;
+import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
@@ -19,13 +19,11 @@ import siap.sius.util.SIUSLookupRemote;
  *
  * @author Gioggi
  */
-public class ActLoadDettaglioDesignazioneMagistratoRelatore extends ActionSius
+public class ActLoadModificaDesignazioneMagistratoRelatore extends ActionSius
 		implements ICostantiDepositoDecreto {
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
-
-		setLinkRitorno();
 
 		FascicoloGPModel fgpm = new FascicoloGPModel();
 		fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");
@@ -41,33 +39,40 @@ public class ActLoadDettaglioDesignazioneMagistratoRelatore extends ActionSius
 		// Inserisce l'id evento nel model
 		ddemm.getEvento().setIdEvento(idEvento);
 
+		String codOggettiTenore = new String();
+		String descrOggettiTenore = new String();
+		String codDettagliOggetto = new String();
+		String codOggettoProcedimento = new String();
+
 		// Preleva i tenori, per il generale procedimento.
-		ITenore it = SIUSLookupRemote.getTenoreRemote();
-		Vector tenori = it.ExRicercaTenoreByDecreto(ddemm.getDepositoDecreto().getIdDepositoDecreto());
+		TenoreModel[] tm = fgpm.getTenori();
+		for (int i = 0; i < tm.length; i++) {
+			if (tm[i] != null) {
+				codOggettiTenore += tm[i].getCodOggettoTenore() + "|";
+				descrOggettiTenore += tm[i].getDescrOggettoTenore() + "\n";
+				if (fgpm.getTenori()[i].getCodDettaglioOggetto() != null
+						&& fgpm.getTenori()[i].getCodDettaglioOggetto().length() > 1)
+					codDettagliOggetto += fgpm.getTenori()[i].getCodOggettoTenore()
+							+ fgpm.getTenori()[i].getCodDettaglioOggetto() + "|";
+			}
+		}
 
 		// Imposta gli oggetti nella request
-		setRequestAttribute("tenori", tenori);
 		setRequestAttribute("depositoDecretoMotivazioni", ddemm);
+		setRequestAttribute("codOggetti", codOggettiTenore);
+		setRequestAttribute("descOggetti", descrOggettiTenore);
+		setRequestAttribute("codDettagli", codDettagliOggetto);
+
+		// Preleva il cod Oggetto procedimento per poi passarlo come contenuto
+		codOggettoProcedimento = fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+		// Imposta Contenuto.
+		setRequestAttribute("codContenuto", codOggettoProcedimento);
 
 		// Ricerca del Magistrato Relatore
 		IMagistratoRelatore imr = SIUSLookupRemote.getMagistratoRelatoreRemote();
 		MagistratoRelatoreModel mrm = imr
 				.ExRicercaEstesaMagRelByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 		setRequestAttribute("magistratorelatore", mrm);
-
-		// Modificabilità
-		String isModificabile = "NO";
-		if (IsFascicoloSiusModificabile()) {
-			// Stampabilità
-			if (ddemm.getEvento().getFlagDocumentoRegistrato() == null
-					|| ddemm.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0) {
-				// Se depositato non può essere cancellato
-				if (ddemm.getDepositoDecreto().getAnnoS72() == null
-						&& ddemm.getDepositoDecreto().getNumS72() == null)
-					isModificabile = "SI";
-			}
-		}
-		setRequestAttribute("Modificabile", isModificabile);
 
 		// Ricerca avvocati assegnati al fascicolo
 		IAvvocato ia = SIUSLookupRemote.getAvvocatoRemote();
@@ -76,7 +81,7 @@ public class ActLoadDettaglioDesignazioneMagistratoRelatore extends ActionSius
 		setRequestAttribute("avvocato", lAvvocato);
 
 		// Pagina di ritorno
-		return PG_LOAD_DETTAGLIO_DESIGNAZIONE_MAGISTRATO_RELATORE;
+		return PG_LOAD_MODIFICA_DESIGNAZIONE_MAGISTRATO_RELATORE;
 	}
 
 }

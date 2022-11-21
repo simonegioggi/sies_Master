@@ -466,10 +466,12 @@ public interface ICostantiDepositoDecreto {
 			+ "files/siap/sius/depositodecreto/DettaglioDesignazioneMagistratoRelatore.jsp";
 	public static final String PG_LOAD_DETTAGLIO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/DettaglioConfermaDecisioneMagistratoRelatore.jsp";
+	public static final String PG_LOAD_MODIFICA_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositodecreto/LoadModificaDesignazioneMagistratoRelatore.jsp";
 	public static final String TEMPLATE_DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE = "SIUS_DE_0610";
 	public static final String TEMPLATE_DECRETO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = "SIUS_DE_0271";
 	public static final String STATO_FASCICOLO_EMESSO_DECRETO_DESIGNAZIONE = "22";
-
+	public static final String CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE = "NumeroGiorniTermineEmissione";
 	// FINE MEV_9
 
 }

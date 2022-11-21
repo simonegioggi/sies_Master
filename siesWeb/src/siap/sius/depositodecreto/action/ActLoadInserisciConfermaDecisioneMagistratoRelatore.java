@@ -3,6 +3,9 @@ package siap.sius.depositodecreto.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -31,18 +34,24 @@ import siap.sius.util.SIUSLookupRemote;
 public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRicercaFSPuntuale
 		implements ICostantiDepositoDecreto {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
 
+		// Imposta la pagina di ritorno
+		String retPage = ICostantiDepositoDecreto.PG_LOAD_INSERISCI_CONFERMA_DECISIONE_MAGISTRATO_RELATORE;
+
+		// info per il log
+		siesLogger.debug("ActLoadInserisciConfermaDecisioneMagistratoRelatore: inizio!");
+		setLinkRitorno();
 		if (isRequestParameterNullObj("ritorno"))
 			// Invoca la process Request della superclasse se si provine dal menu'.
 			super.processRequest();
 
 		if (isSessionAttributeNullObj("fascicoloSiusGP"))
 			throw new SIUSException(SIUSException.USER_MESSAGE, "fascicoloSiusGP non in sessione!");
-
-		// Imposta la pagina di ritorno, con quella afferente al DECRETO_NDP-NLP.
-		String retPage = ICostantiDepositoDecreto.PG_LOAD_INSERISCI_CONFERMA_DECISIONE_MAGISTRATO_RELATORE;
 
 		// Preleva il fascicoloGPModel dalla sessione e Recupera l'id generale procedimento
 		FascicoloGPModel fgpm = (FascicoloGPModel) getSessionAttribute("fascicoloSiusGP");

@@ -96,11 +96,13 @@ public class DepositoDecretoModel extends GenericModel {
 	private BigDecimal mSommaRisarcimentoDanni;
 	// 02/2015 Mis.Sic
 	private String mFlagElaborato;
-	// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+	// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 	private Date mDataTermineEmissione;
+	private BigDecimal mNumGiorniTermineEmissione;
 
 	// COSTRUTTORE DI DEFAULT
 	public DepositoDecretoModel() {
+
 		this.mIdDepositoDecreto = null;
 		this.mAnnoS72 = null;
 		this.mNumS72 = null;
@@ -170,12 +172,14 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = null;
 		// 02/2015
 		this.mFlagElaborato = "";
-		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		this.mDataTermineEmissione = null;
+		this.mNumGiorniTermineEmissione = null;
 	}
 
 	// COSTRUTTORE DI COPIA
 	public DepositoDecretoModel(DepositoDecretoModel aModel) {
+
 		this.mIdDepositoDecreto = aModel.mIdDepositoDecreto;
 		this.mAnnoS72 = aModel.mAnnoS72;
 		this.mNumS72 = aModel.mNumS72;
@@ -243,8 +247,9 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = aModel.mSommaRisarcimentoDanni;
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aModel.mFlagElaborato;
-		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		this.mDataTermineEmissione = aModel.mDataTermineEmissione;
+		this.mNumGiorniTermineEmissione = aModel.mNumGiorniTermineEmissione;
 	}
 
 	// COSTRUTTORE MODEL
@@ -277,8 +282,9 @@ public class DepositoDecretoModel extends GenericModel {
 			BigDecimal aNumGiorniRiduzionePena, BigDecimal aSommaRisarcimentoDanni,
 			// 02/2015 Mis.Sic.
 			String aFlagElaborato,
-			// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
-			Date aDataTermineEmissione) {
+			// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+			Date aDataTermineEmissione, BigDecimal aNumGiorniTermineEmissione) {
+
 		this.mIdDepositoDecreto = aIdDepositoDecreto;
 		this.mAnnoS72 = aAnnoS72;
 		this.mNumS72 = aNumS72;
@@ -346,8 +352,9 @@ public class DepositoDecretoModel extends GenericModel {
 		this.mSommaRisarcimentoDanni = aSommaRisarcimentoDanni;
 		// 02/2015 Mis.Sic.
 		this.mFlagElaborato = aFlagElaborato;
-		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		this.mDataTermineEmissione = aDataTermineEmissione;
+		this.mNumGiorniTermineEmissione = aNumGiorniTermineEmissione;
 	}
 
 	//
@@ -623,6 +630,11 @@ public class DepositoDecretoModel extends GenericModel {
 		return mDataTermineEmissione;
 	}
 
+	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	public BigDecimal getNumGiorniTermineEmissione() {
+		return mNumGiorniTermineEmissione;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -880,8 +892,14 @@ public class DepositoDecretoModel extends GenericModel {
 		mDataTermineEmissione = aValore;
 	}
 
+	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	public void setNumGiorniTermineEmissione(BigDecimal aValore) {
+		mNumGiorniTermineEmissione = aValore;
+	}
+
 	// Metodo toString.
 	public String toString() {
+
 		String lStr = new String();
 		lStr = "" + mIdDepositoDecreto + " - " + mAnnoS72 + " - " + mNumS72 + " - " + mCodTipoDecreto + " - "
 				+ mDescrTipoDecreto + " - " + mDataEmissione + " - " + mDataDeposito + " - " + mCodMagistrato
@@ -907,7 +925,8 @@ public class DepositoDecretoModel extends GenericModel {
 				+ mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - "
 				+ mNumGiorniRevocaLA + " - " + mNumGiorniRiduzionePena + " - " + mSommaRisarcimentoDanni
 				+ " - " + mFlagElaborato // 02/2015 Mis.Sic.
-				+ " - " + mDataTermineEmissione; // MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+				// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+				+ " - " + mDataTermineEmissione + " - " + mNumGiorniTermineEmissione;
 
 		if (this.mUfficioCompetente != null)
 			lStr += " - UFFICIO COMP.: " + mUfficioCompetente;

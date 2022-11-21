@@ -102,8 +102,9 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
 		// 02/2015 Mis. Sic.
 		setField("FLAG_ELABORATO", STRING);
-		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		setField("DATA_TERMINE_EMISSIONE", DATE);
+		setField("NUM_GIORNI_TERMINE_EMISSIONE", BIG_DECIMAL);
 	}
 
 	//
@@ -316,6 +317,11 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		return getDate("DATA_TERMINE_EMISSIONE");
 	}
 
+	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	public BigDecimal getNumGiorniTermineEmissione() throws DAOException {
+		return getBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE");
+	}
+
 	//
 	// METODI SET()
 	//
@@ -526,6 +532,11 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setDate("DATA_TERMINE_EMISSIONE", aValore);
 	}
 
+	// MEV_9 aggiunto campo NUM_GIORNI_TERMINE_EMISSIONE
+	public void setNumGiorniTermineEmissione(BigDecimal aValore) {
+		setBigDecimal("NUM_GIORNI_TERMINE_EMISSIONE", aValore);
+	}
+
 	/**
 	 * Ritorna il model popolato con i dati del record.
 	 *
@@ -535,6 +546,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	 *             propaga errore di eccezione.
 	 */
 	public GenericModel getModel() throws DAOException {
+
 		return new DepositoDecretoModel(getIdDepositoDecreto(), getAnnoS72(), getNumS72(),
 				getCodTipoDecreto(), "", getDataEmissione(), getDataDeposito(), getCodMagistrato(), "",
 				getAltriDestinatari(), getDataParerePg(), getCodTipoParerePg(), "",
@@ -558,8 +570,8 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 				getNumeroGiorniRiduzionePena(), getSommaRisarcimentoDanni(),
 				// 02/2015 Mis.Sic.
 				getFlagElaborato(),
-				// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
-				getDataTermineEmissione());
+				// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
+				getDataTermineEmissione(), getNumGiorniTermineEmissione());
 	}
 
 	/**
@@ -572,6 +584,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	 *             propaga errore di eccezione.
 	 */
 	public void setDAOFromModel(DepositoDecretoModel aModel) throws DAOException {
+
 		setIdDepositoDecreto(aModel.getIdDepositoDecreto());
 		setAnnoS72(aModel.getAnnoS72());
 		setNumS72(aModel.getNumS72());
@@ -627,8 +640,9 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setSommaRisarcimentoDanni(aModel.getSommaRisarcimentoDanni());
 		// 02/2015 Mis.Sic.
 		setFlagElaborato(aModel.getFlagElaborato());
-		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		setDataTermineEmissione(aModel.getDataTermineEmissione());
+		setNumGiorniTermineEmissione(aModel.getNumGiorniTermineEmissione());
 	}
 
 	/**
@@ -641,6 +655,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	 *             propaga errore di eccezione.
 	 */
 	public void setDAOFromModelForUpdate(DepositoDecretoModel aModel) throws DAOException {
+
 		setIdDepositoDecreto(aModel.getIdDepositoDecreto());
 		setAnnoS72(aModel.getAnnoS72());
 		setNumS72(aModel.getNumS72());
@@ -692,8 +707,9 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 		setSommaRisarcimentoDanni(aModel.getSommaRisarcimentoDanni());
 		// 02/2015
 		setFlagElaborato(aModel.getFlagElaborato());
-		// MEV_9 aggiunto campo DATA_TERMINE_EMISSIONE
+		// MEV_9 aggiunti campi DATA_TERMINE_EMISSIONE e NUM_GIORNI_TERMINE_EMISSIONE
 		setDataTermineEmissione(aModel.getDataTermineEmissione());
+		setNumGiorniTermineEmissione(aModel.getNumGiorniTermineEmissione());
 
 		setCondizioneUpdate(aModel.getIdDepositoDecreto());
 	}
@@ -715,6 +731,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	 * @param aModel
 	 */
 	public void setCondizione(DepositoDecretoModel aModel) {
+
 		String lCondizioni = new String("");
 		String lAppoggio = new String("");
 		lInserito = false;
@@ -743,6 +760,7 @@ public class DepositoDecretoDAO extends SIAPTableDAO {
 	boolean lInserito = false;
 
 	private String setAND(String aCondizioni) {
+
 		if (lInserito)
 			aCondizioni = " AND " + aCondizioni;
 

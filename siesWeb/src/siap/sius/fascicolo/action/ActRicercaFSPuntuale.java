@@ -69,11 +69,8 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR), StrCodiceUfficioUtente);
 
 		/*
-		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051
-		 * Numero MEV : 9
-		 * Autore : Gioggi
-		 * Data : 12 nov 2020
-		 * Branch : MEV_9
+		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051 Numero MEV : 9 Autore : Gioggi Data
+		 * : 12 nov 2020 Branch : MEV_9
 		 */
 		if (mFasGPMod != null && mFasGPMod.getGeneraleProcedimentoModel() != null
 				&& mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null) {
@@ -83,6 +80,10 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 							ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE))
 					&& (this instanceof siap.sius.depositodecreto.action.ActLoadInserisciDesignazioneMagistratoRelatore
 							|| this instanceof siap.sius.depositodecreto.action.ActLoadInserisciConfermaDecisioneMagistratoRelatore)) {
+				/*
+				 * || this instanceof
+				 * siap.sius.depositoordinanzapc.action.ActLoadInserisciApplicazioneProvvisoriaMA
+				 */
 				String descrOggettoProcedimento = mFasGPMod.getGeneraleProcedimentoModel()
 						.getDescrOggettoProcedimento();
 				throw new F3BException(F3BException.USER_MESSAGE,

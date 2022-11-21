@@ -20,6 +20,7 @@ import siap.sius.fascicolo.action.ActRicercaFSPuntuale;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.magistratorelatore.controller.IMagistratoRelatore;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
+import siap.sius.provvedimento.util.RicercaProvvedimentiUtil;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
@@ -51,6 +52,16 @@ public class ActLoadInserisciDesignazioneMagistratoRelatore extends ActRicercaFS
 		BigDecimal idGP = fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
 		if (Utils.isNullObj(idGP))
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Id Generale Procedimento assente!");
+
+		// Viene effettuato il controllo sulla preesistenza di un Provvedimento declaratorio già emesso per
+		// il Fascicolo SIUS. Se esiste almeno un provvedimento di questo tipo non può esserne emesso un
+		// altro.
+		RicercaProvvedimentiUtil rpu = new RicercaProvvedimentiUtil(idGP);
+		boolean esisteProv = rpu.verificaEsistenzaProv();
+		if (esisteProv)
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"Per il procedimento indicato è già stato emesso un provvedimento. "
+					+ "Non è consentito emettere un nuovo provvedimento");
 
 		// Richiesta di accesso al controller
 		IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();

@@ -2,11 +2,11 @@
 <%-- MEV_9: creata nuova pagina di inserimento dati --%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
+<%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
-<%@ page import="siap.sius.avvocato.action.ICostantiAvvocatoFascicoloSius"%>
 <%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
@@ -20,7 +20,6 @@
 <jsp:useBean id="descOggetti"           scope="request" class="java.lang.String"/>
 <jsp:useBean id="magistratorelatore"	scope="request" class="siap.sius.magistratorelatore.model.MagistratoRelatoreModel"/>
 <jsp:useBean id="codDettagli"   		scope="request" class="java.lang.String"/>
-<jsp:useBean id="avvocato"           	scope="request" class="java.util.Vector"/>
 
 <%
 /* Check sospensione */
@@ -48,15 +47,6 @@ function Verify() {
 		if (!confirm("Attenzione: per questo procedimento è presente un'ordinanza di rimessione atti. Procedere con l'emissione di un nuovo provvedimento?"))
 			return false;
 	}
-<%
-int numAvvocati = avvocato.size();
-if (numAvvocati == 0) {
-%>
-	alert('Avvocato obbligatorio!');
-	return false;
-<%
-}
-%>
 	// Controllo obbligatorieta' campo magistrato relatore
 	if (document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>.value == ""
 			|| document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>.value == "-") {
@@ -77,10 +67,7 @@ if (Utils.isPresent(codMagistratoOld)) {
 		if (document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>.value != '<%=codMagistratoOld%>') {
 			if (!confirm("Attenzione: si sta inserendo un Magistrato Relatore diverso da quello già assegnato al fascicolo! Procedere con l'inserimento del nuovo Magistrato Relatore?"))
 				return false;
-		}/* else {
-			alert('Attenzione: si sta inserendo lo stesso Magistrato Relatore già assegnato al fascicolo!');
-			return false;
-		}*/
+		}
 <%
 }
 %>
@@ -91,32 +78,54 @@ if (Utils.isPresent(codMagistratoOld)) {
     					document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value + '/' +
     					document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 
+	var dataSistema = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
+
   	if (!ControllaData(dataEmissione)) {
 	    alert('Data Emissione non valida!');
+	    document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 	    return false;
   	}
+  	if (!CompareDate(dataEmissione, dataSistema)) {
+  		alert('Data Emissione non può essere superiore alla data odierna!');
+  		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+	    return false;
+    }
 
-	// Controllo validità data Termine Emissione
-	var dataTermineEmissione =
+	// Controllo validità data Termine
+	var dataTermine =
 		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.value + '/' +
 		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_TERMINE_EMISSIONE%>.value + '/' +
 		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>.value;
 
-	if (dataTermineEmissione != "//") {
-	  	if (!ControllaData(dataTermineEmissione)) {
-		    alert('Data Termine Emissione non valida!');
+	var dte = false;
+	var ngte = false;
+	if (dataTermine != "//") {
+		dte = true;
+	  	if (!ControllaData(dataTermine)) {
+		    alert('Data Termine non valida!');
 		    document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
 		    return false;
 	  	}
-	 	// Data Termine Emissione deve essere >= Data Emissione
-        if (!CompareDate(dataEmissione, dataTermineEmissione)) {
-          	alert('Data Termine Emissione deve essere maggiore od uguale Data Emissione!');
+	 	// Data Termine deve essere >= Data Emissione
+        if (!CompareDate(dataEmissione, dataTermine)) {
+          	alert('Data Termine deve essere maggiore od uguale Data Emissione!');
           	document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
           	return false;
         }
-	} else {
-		if (!confirm("Attenzione: data Termine Emissione non valorizzata! Procedere con l'inserimento del Decreto di Designazione Magistrato Relatore?"))
-			return false;
+	}
+	// Data Termine oppure Numero Giorni Termine obbligatori
+	if (document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE%>.value != "") {
+		if (document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE%>.value == 0) {
+			alert('Numero Giorni Termine deve essere maggiore di zero!');
+		    document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE%>.focus();
+		    return false;
+		}
+		ngte = true;
+	}
+	if ((dte && ngte) || (!dte && !ngte)) {
+		alert('Valorizzare Data Termine oppure Numero Giorni Termine!');
+	    document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
+	    return false;
 	}
 
    	return true;
@@ -159,29 +168,22 @@ String azione = "siap.sius.depositodecreto.action.ActInserisciDesignazioneMagist
         	<font class="campo">Emissione Decreto Designazione Magistrato Relatore</font>
       	</td>
 	</tr>
-    <tr>
-       	<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-    </tr>
-    <tr>
-    	<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>">
-       		<jsp:param name="MagRelRitorno" value="siap.sius.depositodecreto.action.ActLoadInserisciDesignazioneMagistratoRelatore"/>
-    	</jsp:include>
-	</tr>
+   	<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+  	<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>">
+   		<jsp:param name="MagRelRitorno" value="siap.sius.depositodecreto.action.ActLoadInserisciDesignazioneMagistratoRelatore"/>
+  	</jsp:include>
 </table>
-<jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>">
-	<jsp:param name="AvvRitorno" value="siap.sius.depositodecreto.action.ActLoadInserisciDesignazioneMagistratoRelatore"/>
-</jsp:include>
 <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciDesignazioneMagistratoRelatore">
 <table cellspacing="2" cellpadding="2" style="width: 95%;">
-<!-- Sezione Contenuto Oggetti -->
 	<tr>
-		<td class="l" width="20%">Data Emissione <font class="ob">(*)</font></td>
+		<td class="l" width="30%">Data Emissione <font class="ob">(*)</font></td>
 		<td class="L" colspan="3">
-			<input value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
     	</td>
 	</tr>
+	<!-- Sezione Contenuto Oggetti -->
 	<tr>
 		<td class="l">Contenuto</td>
 		<td class="L" colspan="3"><%=contenuto%></td>
@@ -199,22 +201,39 @@ String azione = "siap.sius.depositodecreto.action.ActInserisciDesignazioneMagist
       		</a>
     	</td>
 	</tr>
+<%
+String cm = "", nm = "", codmag = "";
+if (magistratorelatore != null) {
+	if (magistratorelatore.getMagistrato() != null) {
+		cm = StringUtils.toStringJSP(magistratorelatore.getMagistrato().getCognome());
+		nm = StringUtils.toStringJSP(magistratorelatore.getMagistrato().getNome());
+		codmag = magistratorelatore.getMagistrato().getCodMagistrato();
+	} else if (magistratorelatore.getEsperto() != null) {
+		cm = StringUtils.toStringJSP(magistratorelatore.getEsperto().getCognome());
+		nm = StringUtils.toStringJSP(magistratorelatore.getEsperto().getNome());
+		codmag = StringUtils.toStringJSP(magistratorelatore.getEsperto().getIdEsperto());
+	}
+}
+%>
 	<tr>
      	<td class="l">Magistrato Relatore <font class="ob">(*)</font></td>
-		<td class="l"><input value="" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" readonly="readonly" size="25"></td>
-		<td class="l"><input value="" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" readonly="readonly" size="25"></td>
+		<td class="l"><input value="<%=cm%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" readonly="readonly" size="25"></td>
+		<td class="l"><input value="<%=nm%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" readonly="readonly" size="25"></td>
 	  	<td class="l">
 	    	<a href="Javascript:ListaMagistratiRelatori('LoadInserisciDesignazioneMagistratoRelatore');">
 	    		Seleziona dalla lista&nbsp;<img src="/images/filefolder.gif" title="Elenco di tutti i Magistrati Relatori dell'Ufficio" border="0">
 	   		</a>
+	   		<input type="hidden" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>" value="<%=codmag%>">
 	  	</td>
 	</tr>
   	<tr>
-		<td class="l">Data Termine Emissione (Ammissione Provvisoria)</td>
-		<td class="L" colspan="3">
+		<td class="l">Emissione Ordinanza Ammissione Provvisoria / Restituzione Atti al Presidente (entro) <font class="ob">(*)</font></td>
+		<td class="L" colspan="3">Data Termine&nbsp;&nbsp;&nbsp;
 			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
 			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
 			<input value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			&nbsp;&nbsp;&nbsp;oppure Numero Giorni Termine&nbsp;&nbsp;&nbsp;
+			<input title="Numero Giorni Termine Emissione" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE%>" onkeypress="return TicTabNumField(this,event)">
     	</td>
 	</tr>
 	<tr>
@@ -227,7 +246,6 @@ String azione = "siap.sius.depositodecreto.action.ActInserisciDesignazioneMagist
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>" value="<%=codOggetti%>">
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>" value="<%=codDettagli%>">
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>" value="<%=codContenuto%>">
-<input type="hidden" name="<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>" value="">
 </form>
 
 <script language="JavaScript" type="text/javascript">
@@ -244,7 +262,7 @@ frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","min
 frmvalidator.addValidation("<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>","numeric");
 frmvalidator.addValidation("<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_TERMINE_EMISSIONE%>","numeric");
 frmvalidator.addValidation("<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>","minlen=4","La lunghezza del campo Anno Data Termine Emissione deve essere di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>","minlen=4","La lunghezza del campo Anno Data Termine deve essere di 4 caratteri");
 
 // Controllo campo oggetto.
 frmvalidator.addValidation("<%=ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO%>", "req","É necessario selezionare almeno un oggetto");

@@ -2280,8 +2280,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 			if (lEveMod.getCodEsito().compareTo("0601") != 0 && lEveMod.getCodEsito().compareTo("0602") != 0
 			// MEV_9: anche per il decreto di designazione del magistrato relatore non bisogna passare lo
 			// stato ad "Emesso Provvedimento" (07)
-					// && lEveMod.getCodEsito().compareTo("0270") != 0
-					// && lEveMod.getCodEsito().compareTo("0271") != 0
+			// && lEveMod.getCodEsito().compareTo("0270") != 0
+			// && lEveMod.getCodEsito().compareTo("0271") != 0
 					&& lEveMod.getCodEsito().compareTo("0610") != 0) {
 				lFasSiusDao.setCodStatoFascicolo("07");
 				lFasSiusDao.update();
@@ -3518,11 +3518,8 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 	}
 
 	/*
-	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore
-	 * Numero MEV : 9
-	 * Autore : Gioggi
-	 * Data : 17 nov 2020
-	 * Branch : MEV_9
+	 * ISSUE MEV : Aggiunto metodo di inserimento decreto di designazione Magistrato relatore Numero MEV : 9
+	 * Autore : Gioggi Data : 17 nov 2020 Branch : MEV_9
 	 */
 	@Override
 	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
@@ -3635,6 +3632,61 @@ public class DepositoDecretoController extends SiapController implements IDeposi
 		}
 
 		return ddemNew;
+	}
+
+	/**
+	 * Aggiunto metodo di modifica decreto di designazione Magistrato relatore
+	 */
+	@Override
+	public void ExModificaDecretoMagistratoRelatore(DepositoDecretoEventoModel ddem) throws F3BException {
+
+		Connection c = null;
+
+		DepositoDecretoDAO ddDAO = null;
+		EventoDAO eDAO = null;
+		TenoreSqlDAO tsDAO = null;
+
+		DepositoDecretoModel ddm = new DepositoDecretoModel(ddem.getDepositoDecreto());
+		EventoModel em = new EventoModel(ddem.getEvento());
+
+		try {
+			c = getDBTransaction();
+
+			ddDAO = new DepositoDecretoDAO(c);
+			eDAO = new EventoDAO(c);
+			tsDAO = new TenoreSqlDAO(c);
+
+			// Ricerca dati del tenore
+			tsDAO.ricercaTenoriByDecretoOrderByPeso(ddm.getIdDepositoDecreto());
+			TenoreModel tm = new TenoreModel((TenoreModel) tsDAO.getModelByKey());
+			// update Evento, imposta COD_MOTIVO e IdTenore, nel model
+			em.setCodMotivo(tm.getCodOggettoTenore());
+			em.setTenIdTenore(tm.getIdTenore());
+			eDAO.setDAOFromModel(em);
+			eDAO.setDAOFromModelForUpdate(em);
+			eDAO.update();
+			eDAO.stop();
+
+			// Effettua update del campo evento_generato in tabella DepositoDecreto
+			ddDAO.setDAOFromModel(ddm);
+			ddDAO.setCondizioneUpdate(ddm.getIdDepositoDecreto());
+			ddDAO.setIdEventoGenerato(em.getIdEvento());
+			ddDAO.update();
+			ddDAO.stop();
+
+			commit(c);
+		} catch (DAOException daoEx) {
+			rollback(c);
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug("DAOException: " + daoEx);
+			throw new SIUSException(
+					"DepositoDecretoController.ExModificaDecretoMagistratoRelatore: " + daoEx);
+		} finally {
+			cleanup(ddDAO);
+			cleanup(eDAO);
+			cleanup(c);
+		}
 	}
 	// ***** FINE INTERVENTO MEV_9 *****//
 

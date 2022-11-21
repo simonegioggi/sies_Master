@@ -14,6 +14,7 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
 <%@ page import="siap.sius.avvocatura.action.ICostantiAvvisiAvvocato"%>
+<%@ page import="siap.sius.avvocato.action.ICostantiAvvocatoFascicoloSius"%>
 
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
@@ -21,6 +22,7 @@
 <jsp:useBean id="tenori"    					scope="request" class="java.util.Vector"/>
 <jsp:useBean id="TornaQui"						scope="request" class="java.lang.String"/>
 <jsp:useBean id="magistratorelatore"   			scope="request" class="siap.sius.magistratorelatore.model.MagistratoRelatoreModel"/>
+<jsp:useBean id="Modificabile"              	scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -60,7 +62,16 @@ if (depositoDecretoMotivazioni != null && depositoDecretoMotivazioni.getDeposito
 			<jsp:param name="ValoreIdEntita" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>"/>
 		</jsp:include>
 <%
-		if (depositoDecretoMotivazioni.getDepositoDecreto().getDataDeposito() == null) {
+		if (Modificabile.compareTo("SI") == 0) {
+%>
+		<td class="LBG">
+		 	<a href="/jsp/Main.jsp?Action=siap.sius.depositodecreto.action.ActLoadModificaDesignazioneMagistratoRelatore&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>">
+		  		<img  align="middle" src="/images/modifica24.gif" alt="Modifica Decreto" width="24" height="24" border="0">
+		  	</a>
+		</td>
+<%
+//    		}
+// 		if (depositoDecretoMotivazioni.getDepositoDecreto().getDataDeposito() == null) {
 %>
 		<!-- BOTTONE DI CANCELLAZIONE -->
 		<td class="LBG">
@@ -76,15 +87,10 @@ if (depositoDecretoMotivazioni != null && depositoDecretoMotivazioni.getDeposito
 		<!-- BOTTONE DI RITORNO -->
 		<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 	</tr>
-	<tr>
-  		<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-	</tr>
-	<tr>
-		<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
-  	</tr>
-  	<tr><td>&nbsp;</td></tr>
 </table>
-
+<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
+<jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>"/>
 <table cellspacing="4" cellpadding="4" width="95%">
 	<tr><jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/></tr>
   	<tr><td colspan="2">&nbsp;</td></tr>
@@ -98,6 +104,7 @@ while (tenIter.hasNext()) {
 	TenoreModel tm = (TenoreModel) tenIter.next();
 %>
 		<td class="l" colspan="2"><%=tm.getDescrOggettoTenore()%></td>
+		<!-- ESITO = Designa Magistrato art. 678 1-ter -->
   	</tr>
 <%
 }
@@ -106,24 +113,35 @@ if (!Utils.isNullObj(magistratorelatore)
 %>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
-		<td class="l">Magistrato Relatore Designato</td>
+		<td class="l">Magistrato Relatore</td>
     	<td class="l">
     		<%=StringUtils.toStringJSP(magistratorelatore.getMagistrato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(magistratorelatore.getMagistrato().getNome())%>
     	</td>
 	</tr>
 <%
 }
-if (!Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto())
-		&& !Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione())) {
+if (!Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto())) {
+	if (!Utils.isNullObj(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione())) {
 %>
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr>
-		<td class="l">Data Termine Emissione</td>
+		<td class="l">Data Termine</td>
     	<td class="l">
     		<font class="campo"><%=DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione(),"dd/MM/yyyy")%></font>
     	</td>
 	</tr>
 <%
+	} else {
+%>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr>
+		<td class="l">Numero Giorni Termine</td>
+    	<td class="l">
+    		<font class="campo"><%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNumGiorniTermineEmissione())%></font>
+    	</td>
+	</tr>
+<%
+	}
 }
 %>
 </table>

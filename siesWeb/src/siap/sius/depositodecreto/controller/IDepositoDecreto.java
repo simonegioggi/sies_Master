@@ -177,4 +177,8 @@ public interface IDepositoDecreto {
 	public DepositoDecretoEventoModel ExInserisciDecretoMagistratoRelatore(GPTenoreModel gptm,
 			DepositoDecretoEventoModel ddem) throws F3BException;
 
+	// MEV_9: aggiunto metodo di aggiornamento
+	public void ExModificaDecretoMagistratoRelatore(DepositoDecretoEventoModel ddem)
+			throws F3BException;
+
 }
