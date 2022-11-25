@@ -39,9 +39,9 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		FascicoloGPModel fgpm = null;
 		boolean fascicoloInSessione = false;
 
-		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO))
+		if (!isRequestParameterNullObj(CAMPO_CHIAVE_ANNO)) {
 			fgpm = ricercaFascicolo();
-		else {
+		} else {
 			// il Fascicolo è in sessione
 			if (isSessionAttributeNullObj("fascicoloSiusGP"))
 				throw new SIUSException(SIUSException.USER_MESSAGE, "Dati del Fascicolo non in sessione!");
@@ -107,6 +107,10 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		String modalita = null;
 		if (fgpm == null || fgpm.getFascicoloSiusModel() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo non trovato!");
+
+		if (!COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"Operazione consentita solo su Procedimento in stato di 'Atti Restituiti al Presidente'!");
 
 		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_UNIFICATO))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
