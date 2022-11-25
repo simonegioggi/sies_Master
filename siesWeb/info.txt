@@ -1,56 +1,10 @@
-RELEASE_12.4.24.0	-->	nato dal branch "release_12.4.23.0" in data 19/09/2022
+RELEASE_12.4.25.0	-->	nato dal branch "release_12.4.24.0" in data 31/10/2022
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#202209120114 - SIEP 481/2021 procura generale di bari
-	Nel caso di Archiviazione Altra Autorità se si selezionava "Presidente Della Repubblica" il relativo
-	codice PDR non veniva risolto quando si faceva la select sulla tabella ARCHIVIAZIONE.
-	Fallendo la join non caricava correttamente il dettaglio e falliva la validazione NullPointer.
-	Problema legato al fatto che il campo ARCHIVIAZIONE.COD_TIPO_AUTORITA_EMITTENTE non viene caricato con i
-	codici di un SOLO dominio ma di domini differenti e in alcuni casi con l'RV_HIGH_VALUE e non il RV_LOW_VALUE.
-	La decodifica vine fatta incrociando altri 2 domini TIPO_AUTORITA e TIPO_UFFICIO dove il
-	"Presidente Della Repubblica" non è contenuto e non può essere aggiunto.
-	Soluzione: modificata la query aggiungendo in OR la decodifica del PDR.
-	Classe modificata:
-	-	siap.siep.archiviazione.dao.ArchiviazioneSqlDAO.java
-	Corretta anche la jsp di dettaglio che non visualizzava l'autorità emittente quando era assente il campo
-	sede, non previsto per il Presidente della Repubblica.
-	Classe modificata:
-	-	\siap\siep\archiviazione\LoadDettaglioProvvAltraAutorita.jsp
-
-2)	Ticket#202209190112 - SIEP ORDINE DI ESECUZIONE ERRORE BLOCCANTE - ELIMINARE ANOMALIA
-	Nelle jsp sul controllo delle date è presente il valore 2050 come anno max.
-	Esempio:
-	frmvalidator.addValidation("<%=ICostantiRegeReato.CAMPO_ANNO_DATA_INIZIO%>","lt=2050");
-	Se tale data è il fine pena editabile, il valore del 2050 risulta ad oggi troppo basso.
-	E' stata modificata la pagina con una replace della stringa "lt=2050" con la stringa "lt=2099".
-	Classe modificata:
-	-	\siap\siep\ordineesecuzione\LoadInserisciOrdineEsecuzione.jsp
-
-3)	Ticket#202210060112 - Siep - errore copia reati
-	Nella JSP non era gestita la selezione dei reati da copiare nel caso di almeno due reati presenti: se non
-	veniva selezionato alcun reato, partiva un array vuoto (senza ID reato) e la classe Java andava in errore.
-	Aggiunta obbligatorietà selezione reato.
-	Classe modificata:
-	-	\jsp\files\siap\siep\reato\RicercaReatiFascicolo.jsp
-
-4)	Ticket#202210130113 - Siep cumulo - messaggio restituzione atti
-	Nel caso di RIGETTO degli atti trasmessi per cumulo, il sistema continuava a visualizzare, sul dettaglio
-	del fascicolo, un messaggio con l'esito del rigetto.
-	Problema causato dalla mancata gestione del codice di rigetto 01007 che doveva essere gestito alla
-	stregua del codice di restituzione atti (01003).
-	Classe modificata:
-	-	siap.siep.fascicolo.action.ActLoadDettaglioFascicolo.java
-	Inoltre il codice 01007 era inserito solo in fase di rigetto sul messaggio e quindi nella fase di
-	annotazione "Esito Atti" automatica, ma non in fase di inserimento manuale dell'annotazione esito.
-	Il codice è stato aggiunto nella combo "Esito Provvedimento".
-	Classi modificate:
+1)	Ticket#20221102013 — riscontro trasmissioni/solleciti mancata eliminazione del record dopo annotazione provvedimento
+	Problema legato al fatto che il sistema cercava di caricare l'ultimo messaggio di assorbimento in cumulo 00079
+	ma lo ricercava cme RICHIESTA 01 ed invece il codice tipo messaggio è 02 (ESITO).
+	Non trovando il messaggio in fase di load non provvedeva a marcarlo come VISTO.
+	Classe corretta:
 	-	siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp.java
-	-	/jsp/files/siap/siep/presaincarico/LoadInsAnnotazioneEsitoTrasmComp.jsp
-
-5)	Ticket#202210170122 - SIEP
-	Nel caso di POSIZIONE_GIURIDICA = "12" (Espiazione Pena in Regime di Detenzione Domiciliare) e
-	posizione giuridica precedente pari a LIBERO, il sistema non impostava la "Data Inizio Misura"
-	così che poi nel calcolo della "Nuova Data Fine Misura" si incorreva in un errore (NullPointer).
-	Classe modificata:
-	-	siap.siep.misuraalternativa.action.ActInserisciMADetDomTemp.java

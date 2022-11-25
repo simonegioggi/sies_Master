@@ -189,7 +189,10 @@ public class ActLoadInsAnnotaEsitoTrasmComp extends ActionSiap implements ICosta
 		//FIXME da verificare
 		IMessaggio lCrtlMes = JMSLookupRemote.getMessaggioRemote();
 		MessaggioModel lMessaggioComunicazione = new MessaggioModel();
-		lMessaggioComunicazione.setCodTipoMessaggio("01");
+		// Ticket#20221102013 - Le comunicazioni di assorbimento sono degli esiti e non delle richieste
+		//lMessaggioComunicazione.setCodTipoMessaggio("01");
+		lMessaggioComunicazione.setCodTipoMessaggio(ICostantiJMS.ESITO);
+		// Ticket#20221102013 - FINE
 		lMessaggioComunicazione.setCodTipoOperazione(ICostantiJMS.COMUNICAZIONE_CUMULO_PROCURE_COMPETENTI);
 		lMessaggioComunicazione.setChiaveAnnoSiep(lFascMod.getChiaveAnno());
 		lMessaggioComunicazione.setChiaveProgrSiep(lFascMod.getChiaveProgr());
