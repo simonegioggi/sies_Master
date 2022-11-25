@@ -1,10 +1,5 @@
-RELEASE_12.4.25.0	-->	nato dal branch "release_12.4.24.0" in data 31/10/2022
+RELEASE_12.4.26.0	-->	nato dal branch "release_12.4.25.0" in data 28/11/2022
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20221102013 — riscontro trasmissioni/solleciti mancata eliminazione del record dopo annotazione provvedimento
-	Problema legato al fatto che il sistema cercava di caricare l'ultimo messaggio di assorbimento in cumulo 00079
-	ma lo ricercava cme RICHIESTA 01 ed invece il codice tipo messaggio è 02 (ESITO).
-	Non trovando il messaggio in fase di load non provvedeva a marcarlo come VISTO.
-	Classe corretta:
-	-	siap.siep.presaincarico.action.ActLoadInsAnnotaEsitoTrasmComp.java
+1)	
