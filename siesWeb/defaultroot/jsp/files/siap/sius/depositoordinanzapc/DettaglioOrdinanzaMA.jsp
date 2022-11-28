@@ -5,15 +5,46 @@
 <%@ page import="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
 
+
+<%@ page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
+<%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
+
 <jsp:useBean id="datiOrdinanza" scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
 <%-- MEV10-s3: aggiunto riferimento all'oggetto "codTipoUfficio" --%>
 <jsp:useBean id="codTipoUfficio" scope="request" class="java.lang.String"/>
 
+
+<%
+//INIZIO: MEV_9 (D.lgs. 123/2018)
+FascicoloGPModel mFasGPMod = (FascicoloGPModel) session.getAttribute("fascicoloSiusGP");
+GeneraleProcedimentoModel mGeneraleProcedimentoModel = mFasGPMod.getGeneraleProcedimentoModel();
+
+boolean is678 = false;
+if (   ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(mGeneraleProcedimentoModel.getCodOggettoProcedimento())
+    || ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(mGeneraleProcedimentoModel.getCodOggettoProcedimento())
+ )
+is678 = true;
+//FINE: MEV_9
+%>
 <table cellspacing="2" cellpadding="2">
+<% if (!is678) { %> 
 		<tr>
 			<td class="l">Ulteriore descrizione della decisione </td>
 			<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
 		</tr>
+<% } else { %>
+		<tr>
+			<td class="l">Ordinanza non emessa - Atti al presidente </td>
+			<td class="l"><% if ("S".equals(datiOrdinanza.getOrdinanza().getCkAttiPresidente())){%><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0"><% } %></td>
+		</tr>
+		<tr>
+			<td class="l">Note 
+			<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNoteAtti(), "-")%></font></td>
+		</tr>
+<% } %>
+		
     <tr><td><br></td></tr>
   	<tr>
     	<td class="Titolo" colspan="6">Misura Alternativa <td>
@@ -29,7 +60,7 @@
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getDescrComuneUssmComp(), "-")%></font></td>
     </tr>
     <% } %>
-    </tr>
+    <tr>
     	<%-- MEV10-s3: aggiunto controllo per le varie casistiche per tipo ufficio --%>
     	<% if ("TDS".equalsIgnoreCase(codTipoUfficio)) { %>
 	      	<td class="l">Tribunale di Sorveglianza Competente </td>
@@ -53,6 +84,19 @@
       <td class="l">Servizio terapeutico competente </td>
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getServizioTerapeuticoComp(), "-")%></font></td>
     </tr>
+
+<% if (is678) { %> 
+    <tr>
+      <td class="l">Procura Competente </td>
+      <td class="l">
+      	<font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getDescTipoProcuraCompetente(), "")%></font>
+		di      
+      	<font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getDescComProcuraCompetente(), "")%></font>
+      </td>
+    </tr>
+<% } %>
+    
+<% if (!is678) { %>    
      <tr>
       <td class="l">Data Termine Misura </td>
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataFineMisura(),"dd/MM/yyyy"), "-")%></font></td>
@@ -65,6 +109,7 @@
       </font>
        </td>
     </tr>
+<% } %>     
     <tr>
 			<td>
 				<br>

@@ -108,6 +108,16 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	// 10102014 - D.L. 92 2014 Violazione CEDU
 	private BigDecimal mSommaRisarcimento;
 
+	
+	//INIZIO: MEV_9 (D.lgs. 123/2018)
+	private String mCkAttiPresidente;
+	private String mNoteAtti;
+	private String mProcuraCompetente; // codUfficio	
+	private String mDescTipoProcuraCompetente; // tipo ufficio (PM, PGCAP, PMM)
+	private String mDescComProcuraCompetente;  // comuni ufficio 
+	//FINE: MEV_9
+	
+	
 	// COSTRUTTORE DI DEFAULT
 	public DepositoOrdinanzaPcModel() {
 		this.mIdDepositoOrdinanzaPc = null;
@@ -182,6 +192,13 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = null;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
+		//INIZIO: MEV_9 (D.lgs. 123/2018)
+		this.mCkAttiPresidente = null;
+		this.mNoteAtti = null;
+		this.mProcuraCompetente = null;
+		this.mDescTipoProcuraCompetente = null; 
+		this.mDescComProcuraCompetente = null;
+		//FINE: MEV_9
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -259,6 +276,14 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aModel.mDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
+		
+		//INIZIO: MEV_9 (D.lgs. 123/2018)
+		this.mCkAttiPresidente = aModel.mCkAttiPresidente;
+		this.mNoteAtti = aModel.mNoteAtti;
+		this.mProcuraCompetente = aModel.mProcuraCompetente;
+		this.mDescTipoProcuraCompetente = aModel.mDescTipoProcuraCompetente;
+		this.mDescComProcuraCompetente = aModel.mDescComProcuraCompetente;
+		//FINE: MEV_9
 
 	}
 
@@ -289,7 +314,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			Date aDataScadenzaSospensioneSS, BigDecimal aSospensioneGGSS, BigDecimal aSospensioneMMSS,
 			BigDecimal aSospensioneAASS, String aFlagNominaComActa, String aDescrCommActa,
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
-			BigDecimal aSommaRisarcimento) {
+			BigDecimal aSommaRisarcimento
+			, String aCkAttiPresidente, String aNoteAtti, String aProcuraCompetente
+			, String aDescTipoProcuraCompetente, String aDescComProcuraCompetente
+			) {
 		this.mIdDepositoOrdinanzaPc = aIdDepositoOrdinanzaPc;
 		this.mAnnoS3 = aAnnoS3;
 		this.mNumS3 = aNumS3;
@@ -359,6 +387,13 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mDescrTipoControlloEsecuzione = aDescrTipoControlloEsecuzione;
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
+		//INIZIO: MEV_9 (D.lgs. 123/2018)
+		this.mCkAttiPresidente = aCkAttiPresidente;  
+		this.mNoteAtti = aNoteAtti;
+		this.mProcuraCompetente = aProcuraCompetente;		
+		this.mDescTipoProcuraCompetente = aDescTipoProcuraCompetente;
+		this.mDescComProcuraCompetente = aDescComProcuraCompetente;
+		//FINE: MEV_9
 	}
 
 	//
@@ -655,6 +690,25 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			return new BigDecimal(0);
 	}
 
+	
+	//INIZIO: MEV_9 (D.lgs. 123/2018)
+	public String getCkAttiPresidente() {
+		return mCkAttiPresidente;
+	}
+	public String getNoteAtti() {
+		return mNoteAtti;
+	}
+	public String getProcuraCompetente() {
+		return mProcuraCompetente;
+	}
+	public String getDescTipoProcuraCompetente() {
+		return mDescTipoProcuraCompetente;
+	}
+	public String getDescComProcuraCompetente() {
+		return mDescComProcuraCompetente;
+	}
+	//FINE: MEV_9
+	
 	//
 	// METODI SET()
 	//
@@ -936,7 +990,25 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public void setSommaRisarcimento(BigDecimal aValore) {
 		mSommaRisarcimento = aValore;
 	}
-
+	
+	//INIZIO: MEV_9 (D.lgs. 123/2018)
+	public void setCkAttiPresidente(String aValore) {
+		mCkAttiPresidente = aValore;
+	}
+	public void setNoteAtti(String aValore) {
+		mNoteAtti = aValore;
+	}
+	public void setProcuraCompetente(String aValore) {
+		mProcuraCompetente = aValore;
+	}
+	public void setDescTipoProcuraCompetente(String aValore) {
+		mDescTipoProcuraCompetente = aValore;
+	}
+	public void setDescComProcuraCompetente(String aValore) {
+		mDescComProcuraCompetente = aValore;
+	}
+	//FINE: MEV_9
+	
 	// Metodo toString()
 	public String toString() {
 		String lStr = new String();
@@ -968,7 +1040,8 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
-				mSommaRisarcimento;
+				mSommaRisarcimento
+				;
 
 		return lStr;
 	}

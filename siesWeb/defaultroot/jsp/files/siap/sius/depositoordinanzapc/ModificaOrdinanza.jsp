@@ -103,6 +103,17 @@ if (data_deposito != null)
   	data2 = DateUtils.getDateToString(data_deposito,"dd/MM/yyyy");
 else
  	data2 = DateUtils.getSysDate("dd/MM/yyyy");
+
+
+//INIZIO: MEV_9 (D.lgs. 123/2018)
+String contenuto = "";
+contenuto = fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
+boolean is678 = false;
+if (   ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
+    || ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto)
+   )
+is678 = true;
+//FINE: MEV_9
 %>
 <html>
 	<head>
@@ -407,6 +418,40 @@ else
 				<% } %>
 			}
 		</script>
+		
+		
+	    
+	    <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+	    <% if (is678) { %>
+		<script >
+	      function checkEsiti()
+	      {
+	        //alert("asdsadda");
+
+	        var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");        
+	        
+	        console.log("listComboEsiti = "+listComboEsiti);
+	        console.log("listComboEsiti.length = "+listComboEsiti.length);
+	        
+	        for (i=0; i<listComboEsiti.length; i++) {  
+	          var comboEsito = listComboEsiti[i];
+	          
+	          for (j=0;j<comboEsito.length;  j++) {
+	             console.log("listComboEsiti.value = "+comboEsito.options[j].value);
+	          
+	             if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
+	               console.log("remove!!! ");
+	               comboEsito.remove(j);
+	               j--;
+	             }
+	          }          
+	        }
+	      }      
+
+		</script>
+		<% } %>
+	    <%-- FINE: MEV_9 --%>		
+		
 	</head>
   	<body class="corpo" onload="visualizza_data_decorrenza()">
   		<FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="ModificaOrdinanza">
@@ -622,6 +667,11 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 			<%-- MEV_39: aggiunta chiamata a nuova funzione js --%>
 			AbilitaCampiEsiti();
 
+		    <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+		    <% if (is678) { %>
+		      checkEsiti();
+		    <% } %>
+		    <%-- FINE: MEV_9  --%>
 			var frmvalidator  = new Validator("ModificaOrdinanza");
 
 			frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","req","Il campo Giorno  della Data Emissione è obbligatorio");

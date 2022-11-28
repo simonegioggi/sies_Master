@@ -93,6 +93,12 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO
 	setField("TIPO_CONTROLLO_ESECUZIONE", STRING);
     // 10102014 - DL 92 2014 Violazione CEDU
 	setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
+	
+	//INIZIO: MEV_9 (D.lgs. 123/2018)
+	setField("CK_ATTI_PRESIDENTE", STRING);
+	setField("NOTE_ATTI", STRING);
+	setField("PROCURA_COMPETENTE", STRING);
+    //FINE: MEV_9
   }
 
   //
@@ -160,6 +166,13 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO
   // 10102014 - DL 92 2014 Violazione CEDU
   public BigDecimal	getSommaRisarcimento()	throws DAOException		{return getBigDecimal("SOMMA_RISARC_DANNI"); }
   
+  
+  //INIZIO: MEV_9 (D.lgs. 123/2018)
+  public String	 getCkAttiPresidente()  throws DAOException { return getString("CK_ATTI_PRESIDENTE"); }
+  public String	 getNoteAtti()          throws DAOException { return getString("NOTE_ATTI"); }
+  public String	 getProcuraCompetente() throws DAOException { return getString("PROCURA_COMPETENTE"); }
+  //FINE: MEV_9
+  
   //
   // METODI SET()
   //
@@ -225,6 +238,12 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO
 // 10102014 - DL 92 2014 Violazione CEDU
   public void setSommaRisarcimento(BigDecimal aValore)	{ setBigDecimal("SOMMA_RISARC_DANNI", aValore); }
 
+  
+  //INIZIO: MEV_9 (D.lgs. 123/2018)
+  public void setCkAttiPresidente  (String aValore) {  setString("CK_ATTI_PRESIDENTE",aValore); }
+  public void setNoteAtti          (String aValore) {  setString("NOTE_ATTI",aValore); }
+  public void setProcuraCompetente (String aValore) {  setString("PROCURA_COMPETENTE",aValore); }
+  //FINE: MEV_9
   
   public GenericModel getModel() throws DAOException
   {
@@ -296,6 +315,13 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO
 	   "",
 // 10102014 - DL 92 2014 Violazione CEDU 
 	   getSommaRisarcimento()
+	 //INIZIO: MEV_9 (D.lgs. 123/2018)
+	   , getCkAttiPresidente()
+	   , getNoteAtti()
+	   , getProcuraCompetente()
+	   , ""
+	   , ""
+	 //FINE: MEV_9
      );
  }
 
@@ -363,6 +389,11 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO
     setCodTipoControlloEsecuzione(aModel.getCodTipoControlloEsecuzione());
     // 10102014 - DL 92 2014
     setSommaRisarcimento(aModel.getSommaRisarcimento());
+    //INIZIO: MEV_9 (D.lgs. 123/2018)
+    setCkAttiPresidente (aModel.getCkAttiPresidente());
+    setNoteAtti (aModel.getNoteAtti());
+    setProcuraCompetente (aModel.getProcuraCompetente());
+	//FINE: MEV_9    
   }
 
   public void    setDAOFromModelForUpdate(DepositoOrdinanzaPcModel aModel) throws DAOException
@@ -425,6 +456,12 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO
 
     // 10102014 - DL 92 2014 Violazione CEDU
     setSommaRisarcimento(aModel.getSommaRisarcimento());
+    
+    //INIZIO: MEV_9 (D.lgs. 123/2018)
+    setCkAttiPresidente  (aModel.getCkAttiPresidente());
+    setNoteAtti          (aModel.getNoteAtti());
+    setProcuraCompetente (aModel.getProcuraCompetente());
+	//FINE: MEV_9 
     
     setCondizioneUpdate(aModel.getIdDepositoOrdinanzaPc());
   }

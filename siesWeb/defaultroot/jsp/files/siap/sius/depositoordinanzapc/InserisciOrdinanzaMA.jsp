@@ -10,12 +10,16 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
 <%@ page import="siap.siep.util.MinorMask"%>
+<%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
 
 <jsp:useBean id="fascicoloSiusGP" 		scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
 <jsp:useBean id="contenuto"     		scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipo_decreto"     		scope="request" class="java.lang.String"/>
 <jsp:useBean id="data_emissione"     	scope="request" class="java.util.Date"/>
 <jsp:useBean id="inFormaDiPanelTDSM" 	scope="request" class="java.lang.String"/>
+
+<jsp:useBean id="tipoUfficioProcure" 	scope="request" class="java.lang.String"/>
+
 
 <%
 TenoreModel[] tenori = (TenoreModel[]) request.getAttribute("tenori");
@@ -27,6 +31,14 @@ if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio() != n
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(), "dd/MM/yyyy");
 else
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(), "dd/MM/yyyy");
+
+//INIZIO: MEV_9 (D.lgs. 123/2018)
+boolean is678 = false;
+if (   ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
+    || ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto)
+   )
+is678 = true;
+//FINE: MEV_9
 %>
 
 <html>
@@ -94,7 +106,8 @@ function Verify() {
 
 	var ritorno = true;
 	var data_camera = '<%=data1%>';
-
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<% if (!is678) { %>
  	// Controllo della data termine misura.
 	var data_termine = document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>.value
 		+ '/' + document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>.value
@@ -108,6 +121,8 @@ function Verify() {
 		    ritorno =  false;
    		}
  	}
+<% } %>
+<%-- FINE: MEV 9--%>
  	return ritorno;
 }
 
@@ -124,6 +139,40 @@ function ListaCSSA(a_formname,a_fieldname, a_fieldcode) {
 function ListaUSSM (a_formname,a_fieldname) {
 	desktop = window.open("/jsp/Main.jsp?Action=siap.sico.cssa.action.ActLoadListaUSSM&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_CSSA","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
 }
+
+
+      <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+      function ListaComuniProcure  (a_formname,a_fieldname) 
+      {
+          var ltipoUfficio = document.InserisciOrdinanzaMA.<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>.value;
+      	  desktop = window.open("/jsp/Main.jsp?Action=siap.sico.ufficio.action.ActLoadListaUfficiPerTipo&formname="+a_formname+"&fieldname="+a_fieldname+"&<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>="+ltipoUfficio, "Ricerca_Procure","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
+      }
+      
+      function checkEsiti()
+      {
+        //alert("asdsadda");
+
+        var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");        
+        
+        console.log("listComboEsiti = "+listComboEsiti);
+        console.log("listComboEsiti.length = "+listComboEsiti.length);
+        
+        for (i=0; i<listComboEsiti.length; i++) {  
+          var comboEsito = listComboEsiti[i];
+          
+          for (j=0;j<comboEsito.length;  j++) {
+             console.log("listComboEsiti.value = "+comboEsito.options[j].value);
+          
+             if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
+               console.log("remove!!! ");
+               comboEsito.remove(j);
+               j--;
+             }
+          }          
+        }
+      }      
+
+      <%-- FINE: MEV_9 --%>
 
 function updateCkCtrlE() {
 	if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[0].checked == true) {
@@ -175,7 +224,7 @@ function enableForma() {
 String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS";
 %>
 
-<body class="corpo" >
+<body class="corpo" onload="checkEsiti();">
 <table>
 	<tr>
   		<td class="LBG">
@@ -230,10 +279,31 @@ for (int i=0; i< tenori.length;i++) {
 </table>
 <br>
 <table cellspacing="2" cellpadding="2" style="width: 95%;">
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<% if (is678) { %>
+	<tr>
+		<td class="l">Ordinanza non emessa - Atti al presidente 
+	      	<input value="S" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>" onClick="javascript:updateCkCtrlE()">	
+		</td>
+		<td class="l">
+			<table>
+			<tr>
+				<td class="l" style="border:0px;">Note&nbsp;&nbsp;&nbsp;</td>
+				<td>&nbsp;&nbsp;<TEXTAREA title="Note" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NOTE_678%>" cols="70" rows="4" ></textarea></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+<% } %>
+<%-- FINE: MEV_9 --%>
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<% if (!is678) { %>
 	<tr>
 		<td class="l">Ulteriore descrizione della decisione</td>
 	 	<td class="l"><TEXTAREA title="Ulteriore descrizione della decisione" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE %>" cols="70" rows="4" ></textarea></td>
 	</tr>
+<% } %>
+<%-- FINE: MEV_9 --%>
     <tr>
       	<td class="l">UEPE Competente </td>
       	<td class="l">
@@ -321,6 +391,24 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
         	<input Title="Servizio terapeutico competente " name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP %>" value="" size=35 >
       	</td>
     </tr>
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<% if (is678) { %>     
+<tr>
+     <td class="l">Procura Competente </td>     
+     <td class="l">
+          <select Title="Tipo Procura Competente" name="<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>">
+            <%=tipoUfficioProcure%>
+          </select>
+         <input Title="Procura Competente" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_PROCURA_COMPETENTE %>" size="35" type="text"> 
+         <a href="Javascript:ListaComuniProcure('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_PROCURA_COMPETENTE%>');">
+           <img src="/images/filefolder.gif" border=0>
+         </a>
+     </td>        
+   </tr>
+<% } %>
+<%-- FINE: MEV_9 --%>    
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<% if (!is678) { %>       
     <tr>
       	<td class="l">In caso di Differimento Pena/Detenz. Dom. speciale indicare:</td>
     </tr>
@@ -343,6 +431,8 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 	        <input value="" title="Numero Giorni Detenzione" type="text" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM %>"  >
       	</td>
     </tr>
+<% } %>
+<%-- FINE: MEV_9 --%>    
   	<tr><td>&nbsp;</td></tr>
     <tr>
     	<td class="l">Controllo tramite mezzi elettronici 
@@ -394,10 +484,14 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 </form>
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("InserisciOrdinanzaMA");
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<% if (!is678) { %>  
 frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>","numeric");
 frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>","numeric");
 frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>","numeric");
 /*frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_PERMESSO_ACCORDATI%>","numeric"); */
+<% } %>
+<%-- FINE: MEV_9 --%>
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>

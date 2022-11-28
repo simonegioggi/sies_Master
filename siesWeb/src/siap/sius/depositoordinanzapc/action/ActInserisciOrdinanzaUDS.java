@@ -28,6 +28,7 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.sico.ufficio.action.ICostantiUfficio;
+import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.misurasicurezza.action.ICostantiMisuraSicurezza;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
@@ -1377,6 +1378,29 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			lDepOrdModel.setDescrCommActa(getRequestStringParameter(CAMPO_DESCR_COMM_ACTA));
 		}
 
+		
+		//INIZIO: MEV_9 (D.lgs. 123/2018)
+		if (!isRequestParameterNullObj(CAMPO_CK_ATTI_AL_PRESIDENTE)) {
+			lDepOrdModel.setCkAttiPresidente(getRequestStringParameter(CAMPO_CK_ATTI_AL_PRESIDENTE));
+		}	
+		if (!isRequestParameterNullObj(CAMPO_NOTE_678)) {
+			lDepOrdModel.setNoteAtti(getRequestStringParameter(CAMPO_NOTE_678));
+		}
+		// Procura Competente 
+		String lCodTipoUfficioProcura = null;
+		String lDescComuneProcura = null;
+		if (!isRequestParameterNullObj(ICostantiUfficio.CAMPO_TIPO_UFFICIO)) {
+			lCodTipoUfficioProcura = getRequestStringParameter(ICostantiUfficio.CAMPO_TIPO_UFFICIO);
+		}
+		if (!isRequestParameterNullObj(CAMPO_PROCURA_COMPETENTE)) {
+			lDescComuneProcura = getRequestStringParameter(CAMPO_PROCURA_COMPETENTE);
+		}
+		if (lCodTipoUfficioProcura!=null || lDescComuneProcura!=null) {
+			UfficioModel procura = getUfficioByCodTipoUfficioDescrComune(lCodTipoUfficioProcura, lDescComuneProcura);
+			lDepOrdModel.setProcuraCompetente(procura.getCodUfficio());
+		}
+		//FINE: MEV_9		
+		
 		return aModel;
 	}
 

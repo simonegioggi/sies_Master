@@ -2279,6 +2279,14 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 					RicercaComunebyUfficio(lDepOrdMod.getCodUfficioMagistratoComp()));
 			lDepOrdMod.setDescrUffTdsConcessoRiduzione(
 					RicercaComunebyUfficio(lDepOrdMod.getCodUffTdsConcessoRiduzione()));
+			
+			//INIZIO: MEV_9 (D.lgs. 123/2018)
+			UfficioModel ufficioProcura = RicercaUfficiobyCodUfficio (lDepOrdMod.getProcuraCompetente());
+			if (ufficioProcura!=null) {
+				lDepOrdMod.setDescTipoProcuraCompetente (ufficioProcura.getDescrTipoUfficio());
+				lDepOrdMod.setDescComProcuraCompetente (ufficioProcura.getDescrComune());
+			}
+			//FINE: MEV_9
 			lOrdEveTenPreMod.setOrdinanza(lDepOrdMod);
 
 			// Dati Prescrizioni.
@@ -2843,6 +2851,24 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDescComune = lUfficio.getDescrComune();
 		}
 		return lDescComune;
+	}
+	
+	/**
+	 * Funzione aggiunta per MEV_9 (D.lgs. 123/2018)
+	 * @param aCodUfficio
+	 * @return
+	 * @throws F3BException
+	 */
+	private UfficioModel RicercaUfficiobyCodUfficio(String aCodUfficio) throws F3BException {
+		UfficioModel lUfficio = null;
+		if (aCodUfficio != null && aCodUfficio.compareTo("-") != 0) {
+			IUfficio lUff = null;
+			lUff = SICOLookupRemote.getUfficioRemote();		
+
+			// Preleva Ufficio Competente
+			lUfficio = lUff.getUfficioByKey(aCodUfficio);
+		}
+		return lUfficio;
 	}
 
 	private DepositoOrdinanzaPcModel RicercaUffici(DepositoOrdinanzaPcModel aDepOrdinanza)

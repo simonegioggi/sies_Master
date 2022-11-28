@@ -177,6 +177,17 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String COD_OGGETTO_LIBERAZIONE_CONDIZIONALE = "U016";
 	// MEV63: aggiunta costante
 	public static final String COD_OGGETTO_ESECUZIONE_PRESSO_DOMICILIO_PENA_DETENTIVA = "U084";
+	
+	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678 = "C050";
+	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI = "C051";
+	
+	public static final String CAMPO_CK_ATTI_AL_PRESIDENTE = "AttiAlPresidente";
+	public static final String CAMPO_NOTE_678 = "Note678";
+	public static final String CAMPO_PROCURA_COMPETENTE= "ProcuraCompetente";
+	
+	// FINE: MEV_9
+	
 
 	public static final String PG_LOAD_RICERCADEPOSITOORDINANZAPC = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/LoadRicercaDepositoOrdinanzaPc.jsp";

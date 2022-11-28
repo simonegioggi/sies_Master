@@ -173,6 +173,12 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 		} else if (lCodTipoDec.compareTo(MISURA_ALTERNATIVA) == 0) {
 			// Ordinanza di Misurs Alternativa
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_MA;
+			//INIZIO: MEV_9 (D.lgs. 123/2018)
+			Option lOptionUffPM = new Option();
+			lOptionUffPM  = new Option( DecodificheManager.getInstance().getTipoUfficioPM()); 
+			lOptionUffPM.setFilter( new String[] {"-","PM","PMM","PGCAP"}); 
+			setRequestAttribute("tipoUfficioProcure", "" + lOptionUffPM);
+			//FINE: MEV_9
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Misurs Alternativa " + lCodTipoDec);
