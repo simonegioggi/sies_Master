@@ -69,8 +69,11 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR), StrCodiceUfficioUtente);
 
 		/*
-		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051 Numero MEV : 9 Autore : Gioggi Data
-		 * : 12 nov 2020 Branch : MEV_9
+		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051 
+		 * Numero MEV : 9 
+		 * Autore : Gioggi 
+		 * Data : 12 nov 2020 
+		 * Branch : MEV_9
 		 */
 		if (mFasGPMod != null && mFasGPMod.getGeneraleProcedimentoModel() != null
 				&& mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null) {

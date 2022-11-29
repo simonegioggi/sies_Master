@@ -9,22 +9,21 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
 
-
 <jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="TornaQui"     		scope="request" class="java.lang.String"/>
-<jsp:useBean id="data_restituzione" scope="request" class="java.util.Date"/>
-<jsp:useBean id="modalita" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita"     		scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataRestituzione"	scope="request" class="java.util.Date"/>
+<jsp:useBean id="descrRestituzione"	scope="request" class="java.lang.String"/>
 
 <%
-boolean readonly = false;
-if (modalita.equalsIgnoreCase("dettaglio"))
-	readonly = true;
 /* Estrazione della data udienza o data iscrizione */
 String data1;
 if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio() != null)
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(),"dd/MM/yyyy");
 else
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(),"dd/MM/yyyy");
+String actionModifica = "siap.sius.fascicolo.action.ActLoadModificaRestituzioneAttiPresidente";
+String actionCancella = "siap.sius.fascicolo.action.ActCancellaRestituzioneAttiPresidente";
 %>
 
 <html>
@@ -59,19 +58,7 @@ function  Verifica() {
 </script>
 </head>
 <%
-String lAction = "";
-String lDocumento = null;
-String lTitolo = "";
-String lActRet = null;
-if (modalita.equalsIgnoreCase("inserimento")) {
-	lAction = "siap.sius.fascicolo.action.ActInserisciGestioneRestituzioneAttiPresidente";
-	lTitolo = "Inserimento Gestione Restituzione Atti al Presidente";
-} else if (modalita.equalsIgnoreCase("dettaglio")) {
-	lTitolo = "Dettaglio Gestione Restituzione Atti al Presidente";
-} else if (modalita.equalsIgnoreCase("modifica")) {
-	lTitolo = "Modifica Gestione Restituzione Atti al Presidente";
-	lAction = "siap.sius.fascicolo.action.ActInserisciGestioneRestituzioneAttiPresidente";
-}
+String action = "siap.sius.fascicolo.action.ActModificaRestituzioneAttiPresidente";
 %>
 <body class="corpo">
 <table>
@@ -81,20 +68,16 @@ if (modalita.equalsIgnoreCase("inserimento")) {
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
 			</a>
 		</td>
-		<td class="LBG"><font class="label">Funzione : </font>&nbsp;<font class="campo"><%=lTitolo%></font></td>
-<%
-if (modalita.equalsIgnoreCase("dettaglio")) {
-%>
+		<td class="LBG"><font class="label">Funzione : Gestione Restituzione Atti al Presidente</font></td>
 		<td class="LBG">
-			<jsp:include page="<%=IWebConstants.PG_TOOLBAR_HEADER%>">
-				<jsp:param name="CampoIdEntita" value="<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>" />
-				<jsp:param name="ValoreIdEntita" value="<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>" />
-			</jsp:include>
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=actionModifica%>&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">
+            	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
+          	</a>
+          	<a href="Javascript:conferma('<%=actionCancella%>','<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>','<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>');">
+            	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
+          	</a>
      	</td>
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
-<%
-}
-%>
 	</tr>
     <tr>
        	<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
@@ -102,25 +85,40 @@ if (modalita.equalsIgnoreCase("dettaglio")) {
 </table>
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadGestioneRestituzioneAttiPresidente">
 <table cellspacing="2" cellpadding="2">
+<%
+if (modalita.equals("dettaglio")) {
+%>
 	<tr>
 		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
 		<td class="L">
-			<input <%if (readonly) {%> readonly <%}%> value="<%=DateUtils.getDateToString(data_restituzione,"dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
-			<input <%if (readonly) {%> readonly <%}%> value="<%=DateUtils.getDateToString(data_restituzione,"MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
-			<input <%if (readonly) {%> readonly <%}%> value="<%=DateUtils.getDateToString(data_restituzione,"yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
 		</td>
 	</tr>
 	<tr>
 		<td class="l">Note</td>
 	    <td class="l">
-			<textarea <% if (readonly) {%> readonly <%}%>Title="Note" name="<%=ICostantiFascicoloSius.CAMPO_NOTE%>" cols=80 rows=5>
-				<%=StringUtils.toStringJSP(fascicoloSiusGP.getGeneraleProcedimentoModel().getAnnotazione())%>
-			</textarea>
+			<textarea readonly title="Note" name="<%=ICostantiFascicoloSius.CAMPO_NOTE%>" cols=80 rows=5><%=StringUtils.toStringJSP(descrRestituzione)%></textarea>
 	    </td>
  	 </tr>
 <%
-if (!readonly) {
+} else {
 %>
+	<tr>
+		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
+		<td class="L">
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Note</td>
+	    <td class="l">
+			<textarea title="Note" name="<%=ICostantiFascicoloSius.CAMPO_NOTE%>" cols=80 rows=5><%=StringUtils.toStringJSP(descrRestituzione)%></textarea>
+	    </td>
+ 	 </tr>
 	<tr>
     	<td>
       		<input class="bottone" type="submit" value="Conferma">
@@ -130,8 +128,8 @@ if (!readonly) {
 }
 %>
 </table>
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
-<input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>" >
+<input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=action%>">
 </FORM>
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("LoadGestioneRestituzioneAttiPresidente");

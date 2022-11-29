@@ -288,6 +288,7 @@ public interface ICostantiFascicoloSius {
 	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE = "GiornoDataRestituzione";
 	public static final String CAMPO_MESE_DATA_RESTITUZIONE = "MeseDataRestituzione";
 	public static final String CAMPO_ANNO_DATA_RESTITUZIONE = "AnnoDataRestituzione";
+	public static final String COD_EMESSO_DECRETO_DESIGNAZIONE = "22";
 	public static final String COD_ATTI_RESTITUITI_PRESIDENTE = "23";
 	//***** FINE INTERVENTO MEV_9 *****//
 

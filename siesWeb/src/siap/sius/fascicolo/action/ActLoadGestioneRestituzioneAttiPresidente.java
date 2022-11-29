@@ -26,6 +26,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	// variabile di classe
 	private FascicoloSiepModel fsm = null;
 
 	public String processRequest() throws Exception {
@@ -60,6 +61,13 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			setSessionAttribute("fascicolo", fsm);
 		}
 
+		// ricerco dati sulla tabella Generale_Procedimento
+		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
+		GeneraleProcedimentoModel gpm = igp
+				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
+		setRequestAttribute("dataRestituzione", gpm.getDataRestituzione());
+		setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
@@ -71,7 +79,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 	private FascicoloGPModel ricercaFascicolo() throws Exception {
 
 		if (isRequestParameterNullObj(CAMPO_CHIAVE_ANNO) || isRequestParameterNullObj(CAMPO_CHIAVE_PROGR))
-			throw new SIUSException(SIUSException.USER_MESSAGE, "Assenti ANNO/PROG !");
+			throw new SIUSException(SIUSException.USER_MESSAGE, "Assenti ANNO/PROG!");
 
 		FascicoloGPModel fgpm = null;
 		IFascicoloSius ifss = SIUSLookupRemote.getFascicoloSiusRemote();
@@ -104,7 +112,6 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 	private String analisiStatoFascicolo(FascicoloGPModel fgpm) throws Exception {
 
 		String retPage = PG_LOAD_GESTIONE_RESTITUZIONE_ATTI_PRESIDENTE;
-		String modalita = null;
 		if (fgpm == null || fgpm.getFascicoloSiusModel() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo non trovato!");
 
@@ -124,30 +131,16 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita per Procedimento di altro ufficio!");
 
-		// Costruzione dell'Option filtrata dal Codice tipo Ufficio (UDS-UDSM)
-		String codTipoUfficio = getUfficioUtenteConnesso().getCodTipoUfficio();
-		if ("UDSM".equals(codTipoUfficio))
-			codTipoUfficio = "UDS";
+		// possibile inserire Restituzione Procedimento e quindi lock
+		// Lock per evitare più definizioni contemporanee del Fascicolo
+		LockModel lm = LockController.lockIfNotLocked(getServletContext(), "ProcedimentoSIUS",
+				fgpm.getFascicoloSiusModel().getIdFascicoloSius().toString(), getCodUtenteConnesso(),
+				getSession().getId());
+		if (lm != null)
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"Il " + lm.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
 
-		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_DEFINITO)) {
-			IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
-			GeneraleProcedimentoModel gpm = igp.ExRicercaGeneraleProcedimentoByFascicolo(
-					fgpm.getFascicoloSiusModel().getIdFascicoloSius());
-			modalita = "dettaglio";
-			setRequestAttribute("data_restituzione", gpm.getDataRestituzione());
-		} else {
-			// possibile inserire Restituzione Procedimento e quindi lock
-			// Lock per evitare più definizioni contemporanee del Fascicolo
-			LockModel lm = LockController.lockIfNotLocked(getServletContext(), "ProcedimentoSIUS",
-					fgpm.getFascicoloSiusModel().getIdFascicoloSius().toString(), getCodUtenteConnesso(),
-					getSession().getId());
-			if (lm != null)
-				throw new SIUSException(SIUSException.USER_MESSAGE, "Il " + lm.getEntity()
-						+ " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
-			modalita = "inserimento";
-		}
-
-		setRequestAttribute("modalita", modalita);
+		setRequestAttribute("modalita", "dettaglio");
 
 		return retPage;
 	}

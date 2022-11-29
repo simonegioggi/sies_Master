@@ -597,8 +597,7 @@ public class GeneraleProcedimentoDAO extends SIAPTableDAO {
 			setCodSedeMittente(aModel.getCodSedeMittente());
 		if (aModel.getDescrSedeMittente() != "")
 			setDescrSedeMittente(aModel.getDescrSedeMittente());
-		if (aModel.getDataRestituzione() != null)
-			setDataRestituzione(aModel.getDataRestituzione());
+		setDataRestituzione(aModel.getDataRestituzione());
 		if (aModel.getDescrRestituzione() != "")
 			setDescrRestituzione(aModel.getDescrRestituzione());
 
