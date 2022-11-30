@@ -1,10 +1,15 @@
 package siap.sius.fascicolo.action;
 
+import java.util.Vector;
+
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -12,8 +17,6 @@ import siap.sius.ActionSius;
 import siap.sius.SIUSException;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
-import siap.sius.generaleprocedimento.controller.IGeneraleProcedimento;
-import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
@@ -21,7 +24,8 @@ import siap.sius.util.SIUSLookupRemote;
  *
  * @author Gioggi
  */
-public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implements ICostantiFascicoloSius {
+public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends ActionSius
+		implements ICostantiFascicoloSius {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -51,7 +55,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		}
 		if (fgpm.getTenori() == null || fgpm.getTenori().length == 0) {
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Restituzione Procedimento non consentita con campo Oggetto vuoto!");
+					"Esecutivita' Ordinanza Applicazione Provvisoria M.A. non consentita con campo Oggetto vuoto!");
 		}
 
 		retPage = analisiStatoFascicolo(fgpm);
@@ -61,18 +65,10 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			setSessionAttribute("fascicolo", fsm);
 		}
 
-		// ricerco dati sulla tabella Generale_Procedimento
-		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
-		GeneraleProcedimentoModel gpm = igp
-				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
-		setRequestAttribute("dataRestituzione", gpm.getDataRestituzione());
-		setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
-		// valore di ritorno
 		return retPage;
 	}
 
@@ -96,7 +92,6 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 					.ExRicercaFascicoloByKeyNoError(fgpm.getFascicoloSiusModel().getFasSieIdFascicoloSiep());
 		}
 
-		// valore di ritorno
 		return fgpm;
 	}
 
@@ -105,7 +100,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTOO : viene lanciata un'eccezione, l'operazione
 	 * non può essere eseguita. 2) STATO = COD_DEFINITO : il fascicolo è già in stato definito, viene
 	 * visualizzato il dettaglio della definizione. 3) Negli altri casi viene preparata la form di input per
-	 * la Gestione Restituzione atti al Presidente del procedimento.
+	 * la Esecutivita' Ordinanza Applicazione Provvisoria M.A. del procedimento.
 	 *
 	 * @param fgpm
 	 * @return String pagina di input o di dettaglio
@@ -113,19 +108,35 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 	 */
 	private String analisiStatoFascicolo(FascicoloGPModel fgpm) throws Exception {
 
-		String retPage = PG_LOAD_GESTIONE_RESTITUZIONE_ATTI_PRESIDENTE;
+		String retPage = PG_LOAD_ESECUTIVITA_ORDINANZA_APPLICAZIONE_PROVVISORIA_MA;
 		if (fgpm == null || fgpm.getFascicoloSiusModel() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo non trovato!");
 
-		if (!COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		Vector<?> v = ie.ExRicercaEventoByFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
+				null);
+		boolean existOrdinanzaApplicazioneProvvisoria = false;
+		for (int i = 0; i < v.size(); i++) {
+			EventoModel em = (EventoModel) v.elementAt(i);
+			if ("0680".equals(em.getCodMotivo()) && "0270".equals(em.getCodEsito())
+					&& "S".equals(em.getFlagDocumentoRegistrato()) && em.getNumAllValidati() > 0) {
+				existOrdinanzaApplicazioneProvvisoria = true;
+				setRequestAttribute("EventoModel", em);
+				break;
+			}
+		}
+		if (!existOrdinanzaApplicazioneProvvisoria)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Operazione consentita solo su Procedimento in stato di 'Atti Restituiti al Presidente'!");
+					"Operazione consentita solo se sul Procedimento sia stata emessa un'ordinanza di "
+							+ "Applicazione Provvisoria M.A. con esito 'Applica provvisoriamente' "
+							+ "depositata e validata!");
 
 		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_UNIFICATO))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento Unificato!");
 
-		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO))
+		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO)
+				&& !existOrdinanzaApplicazioneProvvisoria)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento con Provvedimento!");
 
@@ -141,8 +152,6 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		if (lm != null)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Il " + lm.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
-
-		setRequestAttribute("modalita", "dettaglio");
 
 		// valore di ritorno
 		return retPage;

@@ -91,8 +91,8 @@ if (modalita.equals("dettaglio")) {
 	<tr>
 		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
 		<td class="L">
-			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
-			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>"> /
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>"> /
 			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
 		</td>
 	</tr>
@@ -108,9 +108,9 @@ if (modalita.equals("dettaglio")) {
 	<tr>
 		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
 		<td class="L">
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillYear(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
 		</td>
 	</tr>
 	<tr>
