@@ -1,10 +1,15 @@
 package siap.sius.fascicolo.action;
 
+import java.util.Date;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.lock.controller.LockController;
@@ -12,9 +17,12 @@ import siap.sico.lock.model.LockModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.notifica.controller.INotifica;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -112,6 +120,32 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		if (fgpm == null || fgpm.getFascicoloSiusModel() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo non trovato!");
 
+		// controllo consistenza della data esecutivita'
+		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProc(
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		if (Utils.isPresent(dopcm.getDataEsecutivita())) {
+			if (isRequestParameterNullObj("provenienza")) {
+				// Prepara la "pagina" di destinAction
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				rt.setAction(
+						"siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA");
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+				// valore di ritorno
+				return rt.toString();
+			} else {
+				setRequestAttribute("dataEsecutivita", DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
+				setRequestAttribute("noteAtti", dopcm.getNoteAtti());
+				setRequestAttribute("provenienza", "modifica");
+			}
+		}
+
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		Vector<?> v = ie.ExRicercaEventoByFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
 				null);
@@ -121,7 +155,14 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 			if ("0680".equals(em.getCodMotivo()) && "0270".equals(em.getCodEsito())
 					&& "S".equals(em.getFlagDocumentoRegistrato()) && em.getNumAllValidati() > 0) {
 				existOrdinanzaApplicazioneProvvisoria = true;
-				setRequestAttribute("EventoModel", em);
+				setRequestAttribute("eventoModel", em);
+				INotifica in = SIEPLookupRemote.getNotificaRemote();
+				Date maxDataAvvenutaNotifica = in.ExRicercaDataNotifica(em.getIdEvento());
+				String mdan = "";
+				if (maxDataAvvenutaNotifica != null)
+					mdan = DateUtils.getDateToString(maxDataAvvenutaNotifica, "dd/MM/yyyy");
+				setRequestAttribute("maxDataAvvenutaNotifica", mdan);
+				siesLogger.debug("maxDataAvvenutaNotifica = " + mdan);
 				break;
 			}
 		}

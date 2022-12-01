@@ -4,10 +4,7 @@
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
-<%@ page import="siap.sius.fascicolo.model.FascicoloGPModel"%>
-<%@ page import="siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
-<%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
 
 <jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="TornaQui"     		scope="request" class="java.lang.String"/>
@@ -34,7 +31,6 @@ String actionCancella = "siap.sius.fascicolo.action.ActCancellaRestituzioneAttiP
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 <script language="JavaScript">
-var desktop;
 function  Verifica() {
 	var ritorno = true;
 	var data_minima = '<%=data1%>';
@@ -43,15 +39,15 @@ function  Verifica() {
     // Controllo della data di Restituzione
     if (ritorno && (!ControllaData(data_restituzione))) {
 		alert('Data Restituzione non valida: '+ data_restituzione );
-		return false;
+		ritorno = false;
     }
     // Controllo data di sistema >= Data Restituzione .
     else if (!CompareDate(data_restituzione, data_sistema)) {
 		alert('Data Restituzione non può essere superiore alla data odierna!');
-		ritorno =  false;
+		ritorno = false;
     } else if (!CompareDate(data_minima, data_restituzione)) {
 		alert("Data Restituzione non può precedere: " + data_minima);
-		ritorno =  false;
+		ritorno = false;
    	}
   	return ritorno;
 }
