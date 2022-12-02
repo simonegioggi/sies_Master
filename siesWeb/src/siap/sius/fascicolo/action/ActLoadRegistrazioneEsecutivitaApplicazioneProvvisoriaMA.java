@@ -124,7 +124,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProc(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-		if (Utils.isPresent(dopcm.getDataEsecutivita())) {
+		if (!Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getDataEsecutivita())) {
 			if (isRequestParameterNullObj("provenienza")) {
 				// Prepara la "pagina" di destinAction
 				RedirectTo rt = new RedirectTo();
@@ -140,7 +140,8 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 				// valore di ritorno
 				return rt.toString();
 			} else {
-				setRequestAttribute("dataEsecutivita", DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
+				setRequestAttribute("dataEsecutivita",
+						DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
 				setRequestAttribute("noteAtti", dopcm.getNoteAtti());
 				setRequestAttribute("provenienza", "modifica");
 			}

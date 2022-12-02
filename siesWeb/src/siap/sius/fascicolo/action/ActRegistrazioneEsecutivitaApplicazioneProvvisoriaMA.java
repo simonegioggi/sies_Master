@@ -118,6 +118,8 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 			}
 		}
 		setRequestAttribute("eventoModel", em);
+		setRequestAttribute("Upload", "NO");
+		setRequestAttribute("ListaTemplate", "SIUS_OR_0270");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()

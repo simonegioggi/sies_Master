@@ -90,7 +90,7 @@ function Verifica() {
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA">
 <table cellspacing="2" cellpadding="2" width="95%">
 	<tr>
-		<td class="label">Estremi Ordinanza (art. 678 comma 1-ter c.p.p.)</td>
+		<td class="label" nowrap>Estremi Ordinanza (art. 678 comma 1-ter c.p.p.)</td>
 	</tr>
 	<tr>
 	    <td class="int">Contenuto</td>
