@@ -33,7 +33,7 @@ String action = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazi
 
 <html>
 <head>
-<title>[S.I.E.S.] - Load Esecutivita' Ordinanza Applicazione Provvisoria M.A.</title>
+<title>[S.I.E.S.] - Load Esecutivita&#768; Ordinanza Applicazione Provvisoria M.A.</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -43,12 +43,12 @@ function Verifica() {
 	var data_minima = '<%=data1%>';
 	var data_sistema = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
 	var data_esecutivita = document.LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value+'/'+document.LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ESECUTIVITA%>.value+'/'+document.LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_ESECUTIVITA%>.value;
-    // Controllo della data di Esecutivita'
+    // Controllo della data di Esecutivita&#768;
     if (!ControllaData(data_esecutivita)) {
 		alert('Data Esecutività non valida: '+ data_esecutivita);
 		return false;
     }
-    // Controllo data di sistema >= Data Esecutivita'
+    // Controllo data di sistema >= Data Esecutivita&#768;
     else if (!CompareDate(data_esecutivita, data_sistema)) {
 		alert('Data Esecutività non può essere superiore alla data odierna!');
 		return false;

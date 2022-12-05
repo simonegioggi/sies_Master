@@ -2,17 +2,15 @@
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Iterator"%>
 
-<%@ page import="f3b.web.IWebConstants"%>
+<%@ page import="f3b.security.model.FunctionModel"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
-<%@ page import="f3b.security.model.FunctionModel"%>
+<%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.sico.security.action.ICostantiSecurity"%>
-<%@ page import="siap.sico.security.model.FunzioneModel"%>
 <%@ page import="siap.sico.security.ICostantiFunzioni"%>
 
-<%@ page import="siap.sico.evento.model.EventoModel"%>
-<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.sius.provvedimento.action.ICostantiProvvedimento"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
@@ -23,12 +21,13 @@
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="flag_valida"  				scope="request" class="java.lang.String"/>
 <jsp:useBean id="isModificabile"			scope="request" class="java.lang.String"/>
+<%-- MEV_9: aggiunto useBean --%>
+<jsp:useBean id="dataEsecutivita" 			scope="request" class="java.util.Date"/>
 
 <html>
 <head>
 <title>[S.I.E.S.] - Lista Provvedimenti</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
-<!-- <link rel="STYLESHEET" type="text/css" href="/css/style.css"> -->
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 <script language="JavaScript">
 // funzione per il richiamo alla cancellazione
@@ -77,7 +76,7 @@ String lFunAnnullaValidaProvvedimento = "";
 String lFunAnnullaValidaAllegato = "";
 
 if (flag_valida.equals(""))
-	flag_valida="SI";
+	flag_valida = "SI";
 String isDepositato = "NO";
 
 if (fascicoloSiusGP != null) {
@@ -101,16 +100,25 @@ if (provvedimenti.size() == 0) {
 } else {
 %>
 <%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
-<%--FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="ListaAtti"--%>
 <table width="96%">
-<!-- <div align=center> -->
 	<tr>
-		<td class="int" width=10%>Data emissione</td>
-		<td class="int" width=20%>Tipo provvedimento</td>
-		<td class="int" width=30%>Motivo provvedimento</td>
-		<td class="int" width=20%>Esito provvedimento</td>
-		<td class="int" width=10%>Data Deposito</td>
-		<td class="int" width=10%>Data Ricorso </td>
+		<td class="int" nowrap>Data emissione</td>
+		<td class="int">Tipo provvedimento</td>
+		<td class="int">Motivo provvedimento</td>
+		<td class="int">Esito provvedimento</td>
+		<td class="int" nowrap>Data Deposito</td>
+		<%-- MEV_9: aggiunta data esecutivita e gestita nella pagina solo per C050 e C051 --%>
+<%
+	if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
+			&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
+			&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
+			|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
+%>
+		<td class="int" nowrap>Data Esecutivita&#768;</td>
+<%
+	}
+%>
+		<td class="int" nowrap>Data Ricorso </td>
 <%
 	if (flag_valida.equals("SI")) {
 		// Estrazione funzioni annulla Validazione
@@ -130,14 +138,13 @@ if (provvedimenti.size() == 0) {
         	}
       	}
 %>
-		<td class="int" width=3%>Provv.<br>Validato</td>
-      	<td class="int" width=3%>Deposito<br>Validato</td>
+		<td class="int">Provv.<br>Validato</td>
+      	<td class="int">Deposito<br>Validato</td>
 <%
 	}
 %>
-      	<td class="int" width=7%>Azioni</td>
+      	<td class="int">Azioni</td>
 	</tr>
-<!-- </div> -->
 <%
 	Iterator<?> itx = provvedimenti.iterator();
     int i = 0;
@@ -145,14 +152,30 @@ if (provvedimenti.size() == 0) {
 		EventoDepositoModel lProv = (EventoDepositoModel) itx.next();
 %>
 	<tr>
-		<td class="l">
+		<td class="c">
 		 	<%=StringUtils.toStringJSP(DateUtils.getDateToString(lProv.getDataEmissione(),"dd-MM-yyyy"), "-")%>
 		</td>
-		<td class="l" ><%=StringUtils.toStringJSP(lProv.getDescrTipoProvvedimento(),"-")%></td>
-		<td class="l" ><%=StringUtils.toStringJSP(lProv.getDescrMotivo(),"-")%></td>
-		<td class="l" ><%=StringUtils.toStringJSP(lProv.getDescrEsito(),"-")%></td>
-		<td class="l" ><%=StringUtils.toStringJSP(DateUtils.getDateToString(lProv.getDataDeposito(),"dd-MM-yyyy"),"-")%></td>
-		<td class="L">
+		<td class="c"><%=StringUtils.toStringJSP(lProv.getDescrTipoProvvedimento(),"-")%></td>
+		<td class="c"><%=StringUtils.toStringJSP(lProv.getDescrMotivo(),"-")%></td>
+		<td class="c"><%=StringUtils.toStringJSP(lProv.getDescrEsito(),"-")%></td>
+		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lProv.getDataDeposito(),"dd-MM-yyyy"),"-")%></td>
+<%
+		if (!Utils.isNullObj(fascicoloSiusGP) && !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel())
+				&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
+				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
+				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
+			if ("0270".equals(lProv.getCodEsito()) && "0680".equals(lProv.getCodMotivo()) && "03".equals(lProv.getCodTipoProvvedimento())) {
+%>
+		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></td>
+<%
+			} else {
+%>
+		<td class="c">-</td>
+<%
+			}
+		}
+%>
+		<td class="c">
 			<font class="campo">
 <%
 		if (provvedimentiDataRicorso != null && provvedimentiDataRicorso.size() > i) {
@@ -176,7 +199,7 @@ if (provvedimenti.size() == 0) {
 <%
 		if (flag_valida.equals("SI")) {
 %>
-        <td class="l">
+        <td class="c">
 <%
 			if (lProv.getFlagDocumentoRegistrato() != null && lProv.getFlagDocumentoRegistrato().compareTo("S") == 0) {
            		// SVALIDAZIONE. Il decreto di Unificazione è sempre svalidabile !
@@ -207,7 +230,7 @@ if (provvedimenti.size() == 0) {
 			}
 %>
 		</td>
-        <td class="l">
+        <td class="c">
 <%
         	isDepositato = "NO";
         	if (lProv.getNumAllValidati() > 0) {
@@ -239,7 +262,7 @@ if (provvedimenti.size() == 0) {
 <%
  		}
 %>
-      	<td class="l" >
+      	<td class="c">
 <%
 		String isBlob = "SI";
 		if (lProv.getFlagDocumentoRegistrato() == null) {

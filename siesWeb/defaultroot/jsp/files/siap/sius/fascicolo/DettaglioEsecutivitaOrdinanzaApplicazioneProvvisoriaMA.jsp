@@ -23,7 +23,7 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
 
 <html>
 <head>
-<title>[S.I.E.S.] - Dettaglio Esecutivita' Ordinanza Applicazione Provvisoria M.A.</title>
+<title>[S.I.E.S.] - Dettaglio Esecutivita&#768; Ordinanza Applicazione Provvisoria M.A.</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 </head>
