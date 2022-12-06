@@ -153,8 +153,8 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		boolean existOrdinanzaApplicazioneProvvisoria = false;
 		for (int i = 0; i < v.size(); i++) {
 			EventoModel em = (EventoModel) v.elementAt(i);
-			if ("0680".equals(em.getCodMotivo()) && "0270".equals(em.getCodEsito())
-					&& "S".equals(em.getFlagDocumentoRegistrato()) && em.getNumAllValidati() > 0) {
+			if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
+					&& em.getNumAllValidati() > 0) {
 				existOrdinanzaApplicazioneProvvisoria = true;
 				setRequestAttribute("eventoModel", em);
 				INotifica in = SIEPLookupRemote.getNotificaRemote();

@@ -108,7 +108,7 @@ if (provvedimenti.size() == 0) {
 				&& !Utils.isNullObj(fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
 				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
 				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
-			if ("0270".equals(lProv.getCodEsito()) && "0680".equals(lProv.getCodMotivo()) && "03".equals(lProv.getCodTipoProvvedimento())) {
+			if ("0270".equals(lProv.getCodEsito()) && "03".equals(lProv.getCodTipoProvvedimento())) {
 %>
 		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></font></td>
 <%
