@@ -58,6 +58,11 @@ function  Verifica() {
 </head>
 <%
 String action = "siap.sius.fascicolo.action.ActModificaRestituzioneAttiPresidente";
+String testo = "Dettaglio";
+if (modalita.equals("inserimento"))
+	testo = "Inserimento";
+else if (modalita.equals("modifica"))
+	testo = "Modifica";
 %>
 <body class="corpo">
 <table>
@@ -67,7 +72,7 @@ String action = "siap.sius.fascicolo.action.ActModificaRestituzioneAttiPresident
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
 			</a>
 		</td>
-		<td class="LBG"><font class="label">Funzione : Gestione Restituzione Atti al Presidente</font></td>
+		<td class="LBG"><font class="label">Funzione : <%=testo%> Restituzione Atti al Presidente</font></td>
 <%
 if (!modalita.equals("inserimento")) {
 %>
