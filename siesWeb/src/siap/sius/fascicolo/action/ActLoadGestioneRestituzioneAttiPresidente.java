@@ -3,6 +3,10 @@ package siap.sius.fascicolo.action;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
@@ -65,8 +69,20 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
 		GeneraleProcedimentoModel gpm = igp
 				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
-		setRequestAttribute("dataRestituzione", gpm.getDataRestituzione());
-		setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
+		if (Utils.isNullObj(gpm.getDataRestituzione())) {
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			rt.setAction("siap.sius.fascicolo.action.ActLoadModificaRestituzioneAttiPresidente");
+			rt.setParameter(ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS,
+					fgpm.getFascicoloSiusModel().getIdFascicoloSius().toString());
+			// valore di ritorno
+			return rt.toString();
+		} else {
+			setRequestAttribute("dataRestituzioneStr",
+					DateUtils.getDateToString(gpm.getDataRestituzione(), "dd/MM/yyyy"));
+			setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
+			setRequestAttribute("modalita", "dettaglio");
+		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()

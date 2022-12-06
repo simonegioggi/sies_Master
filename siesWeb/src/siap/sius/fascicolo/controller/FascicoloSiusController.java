@@ -59,7 +59,6 @@ import siap.sius.SIUSException;
 import siap.sius.avvocato.dao.AvvocatoSqlDAO;
 import siap.sius.avvocato.model.AvvocatoModel;
 import siap.sius.cancassfascsius.model.CancAssFascSiusModel;
-import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.depositodecreto.dao.DepositoDecretoSqlDAO;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.dao.DepositoOrdinanzaPcSqlDAO;
@@ -100,18 +99,8 @@ import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
  * Title: FascicoloSiusController
- * </p>
- * <p>
  * Description: Classe Controller per FascicoloSius
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -1831,11 +1820,8 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 
 			/*
 			 * ISSUE MAC : Ticket#20200610014 — Anomalia SIES: modificato come in inserimento
-			 * 				FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS
-			 * Numero MAC : 20200610014
-			 * Autore : Gioggi
-			 * Data : 11 giu 2020
-			 * Branch : MAC_20200610014
+			 * FascicoloSiusUDSController.ExInserisciFascicoloSiusUDS Numero MAC : 20200610014 Autore : Gioggi
+			 * Data : 11 giu 2020 Branch : MAC_20200610014
 			 */
 			if (aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals("U004")
 					|| aFascicoloGPModel.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
@@ -3929,7 +3915,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// ORDINANZA.
 			// Altrimenti viene effettuato l'inserimento previsto in presenza dell'ordinanza.
 			EsecuzioneMisuraAlternativaModel lMisAltModel = new EsecuzioneMisuraAlternativaModel();
-			if (insertEMA == true) {
+			if (insertEMA) {
 				// Inserimento dell' ESECUZIONE_MISURA_ALTERNATIVA.
 				lEsMisAltDao = new EsecuzioneMisuraAlternativaDAO(lConn);
 				lMisAltModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
@@ -4195,7 +4181,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// di ORDINANZA.
 			// Altrimenti viene effettuato l'inserimento previsto in presenza dell'ordinanza.
 			EsecuzioneSanzioneSostitutivaModel lSanzSostModel = new EsecuzioneSanzioneSostitutivaModel();
-			if (insertESS == true) {
+			if (insertESS) {
 				// Inserimento dell' ESECUZIONE_SANZIONE_SOSTITUTIVA.
 				lEsSanzSostDao = new EsecuzioneSanzioneSostitutivaDAO(lConn);
 				lSanzSostModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
@@ -4453,7 +4439,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 			// ORDINANZA.
 			// Altrimenti viene effettuato l'inserimento previsto in presenza dell'ordinanza.
 			EsecuzioneMisuraSicurezzaModel lMisSicModel = new EsecuzioneMisuraSicurezzaModel();
-			if (insertEMS == true) {
+			if (insertEMS) {
 				// Inserimento dell' ESECUZIONE_MISURA_SICUREZZA.
 				lEsMisSicDao = new EsecuzioneMisuraSicurezzaDAO(lConn);
 				lMisSicModel.setAnnoS07(aFascicoloGPModel.getGeneraleProcedimentoModel().getAnnoS1());
@@ -5041,10 +5027,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 				lFasDao.stop();
 			}
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Certificato Giudiziale Associato");
 		} catch (F3BException eF3b) {
 			throw eF3b;
@@ -5371,10 +5354,10 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 
 	/*
-	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM
-	 * Numero MEV : 9
-	 * Autore : Gioggi
-	 * Data : 19 nov 2020
+	 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
+	 * Numero MEV : 9 
+	 * Autore : Gioggi 
+	 * Data : 19 nov 2020 
 	 * Branch : MEV_9
 	 */
 	public void aggiornaStatoFascicoloSius(FascicoloSiusModel fsm) throws F3BException {
@@ -5386,8 +5369,7 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		try {
 			lConn = getDBTransaction();
 			lFasDao = new FascicoloSiusDAO(lConn);
-			if (ICostantiDepositoDecreto.STATO_FASCICOLO_EMESSO_DECRETO_DESIGNAZIONE
-					.equals(fsm.getCodStatoFascicolo())
+			if (ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE.equals(fsm.getCodStatoFascicolo())
 					|| ICostantiFascicoloSius.COD_ISCRITTO.equals(fsm.getCodStatoFascicolo())) {
 				FascicoloGPModel fgpm = ExRicercaFascicoloByKey(fsm.getIdFascicoloSius());
 				FascicoloSiusModel fsmOld = fgpm.getFascicoloSiusModel();

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.Utils;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
 import siap.sius.ActionSius;
@@ -67,7 +68,8 @@ public class ActModificaRestituzioneAttiPresidente extends ActionSius implements
 		gpm.setDataRestituzione(getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE,
 				CAMPO_MESE_DATA_RESTITUZIONE, CAMPO_GIORNO_DATA_RESTITUZIONE));
 		igp.ExModificaDatiRestituzioneGeneraleProcedimento(gpm);
-		setRequestAttribute("dataRestituzione", gpm.getDataRestituzione());
+		setRequestAttribute("dataRestituzioneStr", Utils.isNullObj(gpm.getDataRestituzione()) ? null
+				: DateUtils.getDateToString(gpm.getDataRestituzione(), "dd/MM/yyyy"));
 		setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
 
 		setRequestAttribute("modalita", "dettaglio");

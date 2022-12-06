@@ -1,16 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_9: creata nuova pagina di caricamento dati --%>
+<%@ page import="java.util.Date"%>
+
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 
-<jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<jsp:useBean id="TornaQui"     		scope="request" class="java.lang.String"/>
-<jsp:useBean id="modalita"     		scope="request" class="java.lang.String"/>
-<jsp:useBean id="dataRestituzione"	scope="request" class="java.util.Date"/>
-<jsp:useBean id="descrRestituzione"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="fascicoloSiusGP" 		scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
+<jsp:useBean id="TornaQui"     			scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita"     			scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataRestituzioneStr"	scope="request" class="java.lang.String"/>
+<jsp:useBean id="descrRestituzione"		scope="request" class="java.lang.String"/>
 
 <%
 /* Estrazione della data udienza o data iscrizione */
@@ -21,6 +23,7 @@ else
 	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(),"dd/MM/yyyy");
 String actionModifica = "siap.sius.fascicolo.action.ActLoadModificaRestituzioneAttiPresidente";
 String actionCancella = "siap.sius.fascicolo.action.ActCancellaRestituzioneAttiPresidente";
+Date dataRestituzione = DateUtils.getDate(dataRestituzioneStr,"dd/MM/yyyy");
 %>
 
 <html>
@@ -65,6 +68,9 @@ String action = "siap.sius.fascicolo.action.ActModificaRestituzioneAttiPresident
 			</a>
 		</td>
 		<td class="LBG"><font class="label">Funzione : Gestione Restituzione Atti al Presidente</font></td>
+<%
+if (!modalita.equals("inserimento")) {
+%>
 		<td class="LBG">
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=actionModifica%>&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
@@ -73,6 +79,9 @@ String action = "siap.sius.fascicolo.action.ActModificaRestituzioneAttiPresident
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
           	</a>
      	</td>
+<%
+}
+%>
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 	</tr>
     <tr>
@@ -87,9 +96,9 @@ if (modalita.equals("dettaglio")) {
 	<tr>
 		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
 		<td class="L">
-			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>"> /
-			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>"> /
-			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione, "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>"> /
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione, "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>"> /
+			<input readonly value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione, "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>">
 		</td>
 	</tr>
 	<tr>
@@ -104,9 +113,9 @@ if (modalita.equals("dettaglio")) {
 	<tr>
 		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
 		<td class="L">
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione,"yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillYear(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione, "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione, "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillDM(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(dataRestituzione, "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>" onBlur="javascript:value=FillYear(value)" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
 		</td>
 	</tr>
 	<tr>

@@ -33,28 +33,17 @@ import siap.sius.avvocato.controller.IAvvocato;
 import siap.sius.avvocato.model.AvvocatoSiusModel;
 import siap.sius.avvocatura.action.ICostantiAvvisiAvvocato;
 import siap.sius.avvocatura.model.AvvisiAvvocatoModel;
-import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
  * Title: ActUploadDocument
- * </p>
- * <p>
  * Description: Azione demandata alla realizzazione delle funzioni di validazione ed upload sulla tabella
  * EVENTO.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
  *
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -231,19 +220,20 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 					"Aggiornamento Documento Avvenuto Correttamente!");
 
 			/*
-			 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM
-			 * Numero MEV : 9
-			 * Autore : Gioggi
-			 * Data : 19 nov 2020
+			 * ISSUE MEV : aggiunto aggiornamento stato fascicolo per decreto di tipo DM 
+			 * Numero MEV : 9 
+			 * Autore : Gioggi 
+			 * Data : 19 nov 2020 
 			 * Branch : MEV_9
 			 */
-			if ("SIUS".equals(stato) && ("0610".equals(em.getCodEsito()) || "0271".equals(em.getCodEsito()))) {
+			if ("SIUS".equals(stato)
+					&& ("0610".equals(em.getCodEsito()) || "0271".equals(em.getCodEsito()))) {
 				IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
 				FascicoloSiusModel fsm = new FascicoloSiusModel();
 				fsm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 				fsm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 				fsm.setDataAggiornamento(DateUtils.getSysDate());
-				fsm.setCodStatoFascicolo(ICostantiDepositoDecreto.STATO_FASCICOLO_EMESSO_DECRETO_DESIGNAZIONE);
+				fsm.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
 				fsm.setIdFascicoloSius(em.getFasSiuIdFascicoloSius());
 				ifs.aggiornaStatoFascicoloSius(fsm);
 			}
@@ -464,11 +454,11 @@ public class ActUploadDocument extends ActionSiap implements ICostantiEvento {
 
 			/*
 			 * ISSUE MEV : segnalazione Maffucci oggetto mail: SIUS Avvocati Di pre-esercizio - SIES MO di
-			 * 				Roma: Eliminato recupero dalla session del soggetto che viene inserito nella
-			 * 				tabella degli avvisi_avvocato
-			 * Numero MEV : MEV_20
-			 * Autore : monica
-			 * Data : 13/mar/2020
+			 * Roma: Eliminato recupero dalla session del soggetto che viene inserito nella tabella degli
+			 * avvisi_avvocato 
+			 * Numero MEV : MEV_20 
+			 * Autore : monica 
+			 * Data : 13/mar/2020 
 			 * Branch : MEV_20
 			 */
 			/*
