@@ -69,7 +69,6 @@ import siap.sius.esecuzionemisurasicurezza.dao.EsecuzioneMisuraSicurezzaDAO;
 import siap.sius.esecuzionemisurasicurezza.model.EsecuzioneMisuraSicurezzaModel;
 import siap.sius.esecuzionesanzionesostitutiva.dao.EsecuzioneSanzioneSostitutivaDAO;
 import siap.sius.esecuzionesanzionesostitutiva.model.EsecuzioneSanzioneSostitutivaModel;
-import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.dao.FascicoloGPSqlDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusSoggettoSqlDAO;
@@ -99,8 +98,7 @@ import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: FascicoloSiusController
- * Description: Classe Controller per FascicoloSius
+ * Title: FascicoloSiusController Description: Classe Controller per FascicoloSius
  *
  * @version 1.0
  */
@@ -5369,19 +5367,16 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 		try {
 			lConn = getDBTransaction();
 			lFasDao = new FascicoloSiusDAO(lConn);
-			if (ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE.equals(fsm.getCodStatoFascicolo())
-					|| ICostantiFascicoloSius.COD_ISCRITTO.equals(fsm.getCodStatoFascicolo())) {
-				FascicoloGPModel fgpm = ExRicercaFascicoloByKey(fsm.getIdFascicoloSius());
-				FascicoloSiusModel fsmOld = fgpm.getFascicoloSiusModel();
-				// Set del DAO e aggiornamento del FascicoloSius
-				lFasDao.setDAOFromModel(fsmOld);
-				lFasDao.setDataAggiornamento(fsm.getDataAggiornamento());
-				lFasDao.setCodOperatoreAggiornamento(fsm.getCodOperatoreAggiornamento());
-				lFasDao.setCodUfficioAggiornamento(fsm.getCodUfficioAggiornamento());
-				lFasDao.setCodStatoFascicolo(fsm.getCodStatoFascicolo());
-				lFasDao.setCondizioneUpdateStatoFascicolo(fsmOld.getIdFascicoloSius(),
-						fsmOld.getCodStatoFascicolo());
-			}
+			FascicoloGPModel fgpm = ExRicercaFascicoloByKey(fsm.getIdFascicoloSius());
+			FascicoloSiusModel fsmOld = fgpm.getFascicoloSiusModel();
+			// Set del DAO e aggiornamento del FascicoloSius
+			lFasDao.setDAOFromModel(fsmOld);
+			lFasDao.setDataAggiornamento(fsm.getDataAggiornamento());
+			lFasDao.setCodOperatoreAggiornamento(fsm.getCodOperatoreAggiornamento());
+			lFasDao.setCodUfficioAggiornamento(fsm.getCodUfficioAggiornamento());
+			lFasDao.setCodStatoFascicolo(fsm.getCodStatoFascicolo());
+			lFasDao.setCondizioneUpdateStatoFascicolo(fsmOld.getIdFascicoloSius(),
+					fsmOld.getCodStatoFascicolo());
 			lFasDao.update();
 			lFasDao.stop();
 

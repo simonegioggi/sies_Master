@@ -69,7 +69,8 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
 		GeneraleProcedimentoModel gpm = igp
 				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
-		if (Utils.isNullObj(gpm.getDataRestituzione())) {
+		if (Utils.isNullObj(gpm.getDataRestituzione()) && COD_EMESSO_DECRETO_DESIGNAZIONE
+				.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
 			rt.setAction("siap.sius.fascicolo.action.ActLoadModificaRestituzioneAttiPresidente");
@@ -133,7 +134,9 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 		if (fgpm == null || fgpm.getFascicoloSiusModel() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo non trovato!");
 
-		if (!COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+		if (!(COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())
+				|| COD_EMESSO_DECRETO_DESIGNAZIONE
+						.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione consentita solo su Procedimento in stato di 'Atti Restituiti al Presidente'!");
 

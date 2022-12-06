@@ -5,11 +5,15 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
+import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
+import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.generaleprocedimento.controller.IGeneraleProcedimento;
 import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -68,6 +72,39 @@ public class ActModificaRestituzioneAttiPresidente extends ActionSius implements
 		gpm.setDataRestituzione(getRequestDateParameter(CAMPO_ANNO_DATA_RESTITUZIONE,
 				CAMPO_MESE_DATA_RESTITUZIONE, CAMPO_GIORNO_DATA_RESTITUZIONE));
 		igp.ExModificaDatiRestituzioneGeneraleProcedimento(gpm);
+
+		// se siamo in inserimento allora salvo e modifico stato fascicolo
+		// aggiorno dati sulla tabella FASCICOLO_SIUS
+		if (COD_EMESSO_DECRETO_DESIGNAZIONE
+				.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())) {
+			IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
+			FascicoloSiusModel fsm = new FascicoloSiusModel();
+			fsm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+			fsm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+			fsm.setDataAggiornamento(DateUtils.getSysDate());
+			fsm.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ATTI_RESTITUITI_PRESIDENTE);
+			fsm.setIdFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
+			ifs.aggiornaStatoFascicoloSius(fsm);
+
+			// setta la risposta nella request
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Inserimento Avvenuto Correttamente!");
+
+			// Prepara la "pagina" di destinAction
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			rt.setAction("siap.sius.fascicolo.action.ActLoadDettaglioFascicolo");
+			rt.setParameter(CAMPO_ID_FASCICOLO_SIUS,
+					fgpm.getFascicoloSiusModel().getIdFascicoloSius().toString());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+			// valore di ritorno
+			return IWebConstants.PG_MESSAGE;
+		}
+
 		setRequestAttribute("dataRestituzioneStr", Utils.isNullObj(gpm.getDataRestituzione()) ? null
 				: DateUtils.getDateToString(gpm.getDataRestituzione(), "dd/MM/yyyy"));
 		setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
