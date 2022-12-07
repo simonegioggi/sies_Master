@@ -250,7 +250,9 @@ public interface ICostantiFascicoloSius {
 	public static final String COD_UNIFICATO = "05";
 	public static final String COD_EMESSO_PROVVEDIMENTOO = "07";
 	public static final String COD_RINVIATO_NUOVO_RUOLO = "10";
-
+	//INIZIO: MEV_9 (D.lgs. 123/2018)
+	public static final String COD_RESTITUITI_ATTI_AL_PRESIDENTE = "23";  //Restituiti Atti al Presidente 
+	//FINE: MEV_9 
 	public static final String PG_SINTESIPROCEDIMENTOORIGINESIUS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/fascicolo/SintesiProcedimentoOrigineSius.jsp";
 	public static final String PG_LOAD_DETTAGLIOPROCEDIMENTOCOLLEGATO = IWebConstants.ROOT_DIR

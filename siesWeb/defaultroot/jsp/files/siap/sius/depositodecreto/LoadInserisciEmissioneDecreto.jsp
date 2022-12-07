@@ -33,6 +33,8 @@
 <jsp:useBean id="UtenteConnesso"     scope="session" class="siap.sico.utente.model.UtenteModel" />
 <jsp:useBean id="TornaQui"           scope="request" class="java.lang.String"/>
 
+<jsp:useBean id="isOrdProvvisoria"   scope="request" class="java.lang.String"/>
+
 <%
 /* Estrazione della data udienza  o data iscrizione */
  String data1;
@@ -249,6 +251,10 @@
   <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>" value="<%=codOggetti%>">
   <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>" value="<%=codDettagli%>">
   <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
+  <input type="HIDDEN" name="isOrdProvvisoria" value="<%=isOrdProvvisoria%>">
+
+
+
 
   </FORM>
   <script language="JavaScript" type="text/javascript">

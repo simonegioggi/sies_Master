@@ -5401,4 +5401,73 @@ public class FascicoloSiusController extends SiapController implements IFascicol
 	}
 	// ***** FINE INTERVENTO MEV_9 *****//
 
+	/**
+	 * Aggiorna Generale procedimento con la data restituzione e il motivo
+	 * Aggiorna lo stato del fascicolo SIUS
+	 * @param aFasGPMod
+	 * @throws F3BException
+	 * @since MEV_9
+	 */
+	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	public void ExInserisciRestituzioneAttiAlPresidente(FascicoloGPModel aFasGPMod) throws F3BException {
+
+		Connection lConn = null;
+		FascicoloSiusDAO lFasDao = null;
+		GeneraleProcedimentoDAO lGenProcDao = null;
+
+		FascicoloSiusModel lFasc = aFasGPMod.getFascicoloSiusModel();
+		GeneraleProcedimentoModel lGenProc = aFasGPMod.getGeneraleProcedimentoModel();
+		if (lFasc == null || lFasc.getIdFascicoloSius() == null || lGenProc == null
+				|| lGenProc.getIdGeneraleProcedimento() == null)
+			throw new SIUSException(F3BException.USER_MESSAGE, "Dati Fascicolo non definiti !");
+
+		try {
+			lConn = getDBTransaction();
+			// Update del FASCICOLO_SIUS
+			lFasDao = new FascicoloSiusDAO(lConn);
+			lFasDao.setCodStatoFascicolo(lFasc.getCodStatoFascicolo());
+			
+			//lFasDao.setDataDefinizione(lFasc.getDataDefinizione());
+			
+			lFasDao.setCondizioneUpdate(lFasc.getIdFascicoloSius());
+			
+			lFasDao.setCodOperatoreAggiornamento(lFasc.getCodOperatoreAggiornamento());
+			lFasDao.setCodUfficioAggiornamento(lFasc.getCodUfficioAggiornamento());
+			lFasDao.setDataAggiornamento(lFasc.getDataAggiornamento());
+
+			lFasDao.update();
+			lFasDao.stop();
+
+			// Update del GENERALE_PROCEDIMENTO
+			lGenProcDao = new GeneraleProcedimentoDAO(lConn);
+			// lGenProcDao.setTipoDefinizione(lGenProc.getTipoDefinizione());
+			lGenProcDao.setDescrRestituzione (lGenProc.getDescrRestituzione());
+			lGenProcDao.setDataRestituzione  (lGenProc.getDataRestituzione());
+			
+			lGenProcDao.setCodOperatoreAggiornamento(lGenProc.getCodOperatoreAggiornamento());
+			lGenProcDao.setCodUfficioAggiornamento(lGenProc.getCodUfficioAggiornamento());
+			lGenProcDao.setDataAggiornamento(lGenProc.getDataAggiornamento());
+
+			lGenProcDao.setCondizioneUpdate(lGenProc.getIdGeneraleProcedimento());
+
+			lGenProcDao.update();
+			lGenProcDao.stop();
+
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusController.ExInserisciRestituzioneAttiAlPresidente : " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			throw new SIUSException(F3BException.USER_MESSAGE,
+					"FascicoloSiusController.ExInserisciRestituzioneAttiAlPresidente : " + ex);
+		} finally {
+			cleanup(lFasDao);
+			cleanup(lGenProcDao);
+			cleanup(lConn);
+		}
+		return;
+	}
+	// FINE: MEV_9
 }

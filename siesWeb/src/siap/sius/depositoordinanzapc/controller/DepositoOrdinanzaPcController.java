@@ -2012,8 +2012,16 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			if (lEveMod.getCodEsito().compareTo("0603") != 0) {
 				lFasSiusDao = new FascicoloSiusDAO(lConn);
 				lFasSiusDao.setDAOFromModelForUpdate(aFasGPMod.getFascicoloSiusModel());
-				if (lEveMod.getCodEsito().compareTo("0605") != 0)
-					lFasSiusDao.setCodStatoFascicolo("07");
+				
+				//INIZIO: MEV_9 (D.lgs. 123/2018)
+				if (lEveMod.getCodEsito().compareTo("0605") != 0) {
+					//INIZIO: MEV_9 (D.lgs. 123/2018)				
+					if (lEveMod.getCodEsito().compareTo("0270") == 0) {
+						lFasSiusDao.setCodStatoFascicolo("24");
+					}//FINE: MEV_9 
+					else
+						lFasSiusDao.setCodStatoFascicolo("07");
+				}
 				else if (aFasGPMod.getFascicoloSiusModel().getCodStatoFascicolo().compareTo("07") != 0)
 					lFasSiusDao.setCodStatoFascicolo("13");
 				lFasSiusDao.update();

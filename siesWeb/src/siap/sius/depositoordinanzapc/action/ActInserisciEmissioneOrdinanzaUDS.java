@@ -182,6 +182,13 @@ public class ActInserisciEmissioneOrdinanzaUDS extends ActInserisciEmissioneDecr
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.debug("Ordinanza Misurs Alternativa " + lCodTipoDec);
+			// INIZIO: MEV_9 (D.lgs. 123/2018)
+			if (!isRequestParameterNullEmptyObj("isOrdProvvisoria")) {
+				siesLogger.debug("Ordinanza Misurs Alternativa Provvisoria forzo il codice tipo ordinanza in AM");
+				lCodTipoDec = MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA;
+				// ed eventualmente cambio jsp
+			}
+			// FINE: MEV_9
 		} else if (lCodTipoDec.compareTo(INDULTINO) == 0) {
 			// Ordinanza di Indultino
 			mRetPage = PG_LOAD_INSERISCI_ORDINANZA_INDULTINO;

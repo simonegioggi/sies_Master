@@ -183,7 +183,6 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI = "C051";
 	
 	public static final String CAMPO_CK_ATTI_AL_PRESIDENTE = "AttiAlPresidente";
-	public static final String CAMPO_NOTE_678 = "Note678";
 	public static final String CAMPO_PROCURA_COMPETENTE= "ProcuraCompetente";
 	
 	// FINE: MEV_9
@@ -275,6 +274,9 @@ public interface ICostantiDepositoOrdinanzaPc {
 			+ "files/siap/sius/depositoordinanzapc/DettaglioOrdinanzaLicenza.jsp";
 
 	public static final String MISURA_ALTERNATIVA = "MA";
+	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	public static final String MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA = "AM";
+	// FINE: MEV_9 (D.lgs. 123/2018)
 	public static final String PG_LOAD_INSERISCI_ORDINANZA_MA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaMA.jsp";
 	public static final String PG_LOAD_DETTAGLIO_ORDINANZA_MA = IWebConstants.ROOT_DIR

@@ -3542,7 +3542,10 @@ public class EventoController extends SiapController implements IEvento {
 				FascicoloSiusModel fsm = (FascicoloSiusModel) fssDAO.getModelByKey();
 				String codStatoFascicolo = fsm.getCodStatoFascicolo();
 				if ("07".equals(codStatoFascicolo) || "13".equals(codStatoFascicolo)
-						|| "22".equals(codStatoFascicolo)) {
+						|| "22".equals(codStatoFascicolo)
+						|| "24".equals(codStatoFascicolo) //d.f.
+					) 
+				{
 					FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
 					lFasSiusDao.setCodStatoFascicolo("02");
 					lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
@@ -3555,6 +3558,11 @@ public class EventoController extends SiapController implements IEvento {
 						// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe'
 						// sospeso)
 						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "13");
+					else if ("24".equals(codStatoFascicolo)) { //d.f
+						// Aggiorno il fascicolo a stato_fascicolo = 22 se lo stato attuale e' 24 
+						lFasSiusDao.setCodStatoFascicolo("22");
+						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "24");	
+					}
 					else
 						// Aggiorno il fascicolo a stato_fascicolo = "02" (iscritto) se lo stato attuale e'
 						// "22"
