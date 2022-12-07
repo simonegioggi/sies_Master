@@ -29,21 +29,11 @@ is678 = true;
 //FINE: MEV_9
 %>
 <table cellspacing="2" cellpadding="2">
-<% if (!is678) { %> 
-		<tr>
-			<td class="l">Ulteriore descrizione della decisione </td>
-			<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
-		</tr>
-<% } else { %>
-		<tr>
-			<td class="l">Ordinanza non emessa - Atti al presidente </td>
-			<td class="l"><% if ("S".equals(datiOrdinanza.getOrdinanza().getCkAttiPresidente())){%><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0"><% } %></td>
-		</tr>
-		<tr>
-			<td class="l">Note 
-			<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getNoteAtti(), "-")%></font></td>
-		</tr>
-<% } %>
+
+	<tr>
+		<td class="l">Ulteriore descrizione della decisione </td>
+		<td class="l"><font class="campo"> <%=StringUtils.toStringJSP( datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "-")%></font></td>
+	</tr>
 		
     <tr><td><br></td></tr>
   	<tr>
@@ -84,17 +74,6 @@ is678 = true;
       <td class="l">Servizio terapeutico competente </td>
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getServizioTerapeuticoComp(), "-")%></font></td>
     </tr>
-
-<% if (is678) { %> 
-    <tr>
-      <td class="l">Procura Competente </td>
-      <td class="l">
-      	<font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getDescTipoProcuraCompetente(), "")%></font>
-		di      
-      	<font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getDescComProcuraCompetente(), "")%></font>
-      </td>
-    </tr>
-<% } %>
     
 <% if (!is678) { %>    
      <tr>

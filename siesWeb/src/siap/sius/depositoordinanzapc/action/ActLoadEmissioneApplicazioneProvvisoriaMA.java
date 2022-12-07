@@ -62,9 +62,13 @@ public class ActLoadEmissioneApplicazioneProvvisoriaMA extends ActLoadEmissioneD
 			if (!"0610".equals(codEsito))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
 						"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
+			
+			if (!"22".equals(lFascicoloGPModel.getFascicoloSiusModel().getCodStatoFascicolo()))
+					throw new SIUSException(SIUSException.USER_MESSAGE,
+							"Stato Procedimento non coerente con l'emissione dell'Applicazione Provvisoria!");
 		}
 		else {
-			throw new SIUSException(SIUSException.USER_MESSAGE,
+			throw new SIUSException(SIUSException.USER_MESSAGE,					
 					"Per il procedimento indicato non è stato emesso il provvedimento di designazione Magistrato Relatore!");
 		}
 		

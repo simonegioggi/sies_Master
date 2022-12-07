@@ -907,6 +907,11 @@ if (!modificaOrdinanza) {
 		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA) == 0) {
 %>
 <jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
+<% 
+// INIZIO: MEV_9 (D.lgs. 123/2018) gestito il caso di tipo ordinanza AM Si aggancia per ora lo stesso dettaglio della MA
+		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoOrdinanzaPc.PG_LOAD_DETTAGLIO_ORDINANZA_MA%>"/>
 <%
    		} else if (datiOrdinanza.getOrdinanza().getCodTipoOrdinanza().compareTo(ICostantiDepositoOrdinanzaPc.REVOCA_MA) == 0) {
 %>
