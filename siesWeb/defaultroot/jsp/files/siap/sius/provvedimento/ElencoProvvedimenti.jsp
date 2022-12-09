@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="java.util.Date"%>
 <%@ page import="java.util.Collection"%>
 <%@ page import="java.util.Iterator"%>
 
@@ -22,7 +23,7 @@
 <jsp:useBean id="flag_valida"  				scope="request" class="java.lang.String"/>
 <jsp:useBean id="isModificabile"			scope="request" class="java.lang.String"/>
 <%-- MEV_9: aggiunto useBean --%>
-<jsp:useBean id="dataEsecutivita" 			scope="request" class="java.util.Date"/>
+<jsp:useBean id="dataEsecutivitaStr" 		scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -165,6 +166,7 @@ if (provvedimenti.size() == 0) {
 				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
 				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
 			if ("0270".equals(lProv.getCodEsito()) && "03".equals(lProv.getCodTipoProvvedimento())) {
+				Date dataEsecutivita = DateUtils.getDate(dataEsecutivitaStr, "dd/MM/yyyy");
 %>
 		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></td>
 <%

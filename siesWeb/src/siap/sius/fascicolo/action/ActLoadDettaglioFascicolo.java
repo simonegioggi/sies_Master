@@ -407,26 +407,25 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 		if (!"N".equals(lFasGPMod.getFascicoloSiusModel().getVisibilitaMinorenne()))
 			checkMinorenne(lFasGPMod.getFascicoloSiusModel().getSoggetto(), lFasGPMod, lParser.getSentenza());
 
-		/* 
-		 * ISSUE MEV : aggiunta estrazione data esecutivita
-		 * Numero MEV : 9
-		 * Autore    : sgioggi
-		 * Data      : 5 dic 2022
-		 * Branch    : MEV_9
+		/*
+		 * ISSUE MEV : aggiunta estrazione data esecutivita Numero MEV : 9 Autore : sgioggi Data : 5 dic 2022
+		 * Branch : MEV_9
 		 */
 		if (!Utils.isNullObj(lFasGPMod) && !Utils.isNullObj(lFasGPMod.getGeneraleProcedimentoModel())
 				&& !Utils.isNullObj(lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento())
-				&& (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
-				|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
+				&& (lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+						.compareTo("C050") == 0
+						|| lFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
+								.compareTo("C051") == 0)) {
 			IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 			DepositoOrdinanzaPcModel dopm = idop.ExRicercaDepositoOrdinanzaPcByGenProc(
 					lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			Date dataEsecutivita = null;
+			String dataEsecutivita = null;
 			if (!Utils.isNullObj(dopm) && !Utils.isNullObj(dopm.getDataEsecutivita()))
-				dataEsecutivita = dopm.getDataEsecutivita();
-			setRequestAttribute("dataEsecutivita", dataEsecutivita);
+				dataEsecutivita = DateUtils.getDateToString(dopm.getDataEsecutivita(), "dd/MM/yyyy");
+			setRequestAttribute("dataEsecutivitaStr", dataEsecutivita);
 		}
-		//***** FINE INTERVENTO MEV_9 *****//
+		// ***** FINE INTERVENTO MEV_9 *****//
 
 		// info per il log
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

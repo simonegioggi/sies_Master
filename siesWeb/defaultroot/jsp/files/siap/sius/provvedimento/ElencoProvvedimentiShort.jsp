@@ -20,7 +20,7 @@
 <jsp:useBean id="opposizioniEvento"   		scope="request" class="java.util.Hashtable"/>
 <%-- MEV_9: aggiunti useBean --%>
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<jsp:useBean id="dataEsecutivita" 			scope="request" class="java.util.Date"/>
+<jsp:useBean id="dataEsecutivitaStr" 		scope="request" class="java.lang.String"/>
 
 <html>
 <table width="100%">
@@ -109,6 +109,7 @@ if (provvedimenti.size() == 0) {
 				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
 				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
 			if ("0270".equals(lProv.getCodEsito()) && "03".equals(lProv.getCodTipoProvvedimento())) {
+				Date dataEsecutivita = DateUtils.getDate(dataEsecutivitaStr, "dd/MM/yyyy");
 %>
 		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></font></td>
 <%
