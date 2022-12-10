@@ -138,7 +138,8 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 				|| COD_EMESSO_DECRETO_DESIGNAZIONE
 						.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Operazione consentita solo su Procedimento in stato di 'Atti Restituiti al Presidente'!");
+					"Operazione consentita solo su Procedimento in stato di 'Restituiti Atti al Presidente'"
+					+ " oppure 'Emesso Decreto Designazione'!");
 
 		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_UNIFICATO))
 			throw new SIUSException(SIUSException.USER_MESSAGE,

@@ -120,33 +120,9 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		if (fgpm == null || fgpm.getFascicoloSiusModel() == null)
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Fascicolo non trovato!");
 
-		// controllo consistenza della data esecutivita'
-		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProc(
-				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-		if (!Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getDataEsecutivita())) {
-			if (isRequestParameterNullObj("provenienza")) {
-				// Prepara la "pagina" di destinAction
-				RedirectTo rt = new RedirectTo();
-				rt.setPage(IWebConstants.PG_MAIN);
-				rt.setAction(
-						"siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA");
-				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-				// LogF3B.getLogger()
-				siesLogger.debug(getClass().getName() + ".processRequest: fine");
-
-				// valore di ritorno
-				return rt.toString();
-			} else {
-				setRequestAttribute("dataEsecutivita",
-						DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
-				setRequestAttribute("noteAtti", dopcm.getNoteAtti());
-				setRequestAttribute("provenienza", "modifica");
-			}
-		}
-
+		// Ricerco evento del fascicolo:
+		// Ordinanza Affidamento in Prova al Servizio Sociale (Art. 47 O.P. - Art. 678 comma 1-ter
+		// c.p.p.) - Applica provvisoriamente
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		Vector<?> v = ie.ExRicercaEventoByFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
 				null);
@@ -185,6 +161,33 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 		if (getCodUfficioUtenteConnesso().compareTo(fgpm.getFascicoloSiusModel().getChiaveUfficio()) != 0)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita per Procedimento di altro ufficio!");
+
+		// controllo consistenza della data esecutivita'
+		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProc(
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		if (!Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getDataEsecutivita())) {
+			if (isRequestParameterNullObj("provenienza")) {
+				// Prepara la "pagina" di destinAction
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				rt.setAction(
+						"siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA");
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+				// valore di ritorno
+				return rt.toString();
+			} else {
+				setRequestAttribute("dataEsecutivita",
+						DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
+				setRequestAttribute("noteAtti", dopcm.getNoteAtti());
+				setRequestAttribute("provenienza", "modifica");
+			}
+		}
 
 		// possibile inserire Restituzione Procedimento e quindi lock
 		// Lock per evitare più definizioni contemporanee del Fascicolo

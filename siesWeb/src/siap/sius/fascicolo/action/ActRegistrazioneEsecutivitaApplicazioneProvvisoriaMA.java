@@ -1,11 +1,13 @@
 package siap.sius.fascicolo.action;
 
+import java.util.Date;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -14,6 +16,8 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
 import siap.sico.util.SICOLookupRemote;
+import siap.siep.notifica.controller.INotifica;
+import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
 import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
@@ -31,6 +35,8 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	boolean existOrdinanzaApplicazioneProvvisoria = false;
 
 	public String processRequest() throws Exception {
 
@@ -62,6 +68,30 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		if (lm != null)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Il " + lm.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
+
+		// Ricerco evento del fascicolo:
+		// Ordinanza Affidamento in Prova al Servizio Sociale (Art. 47 O.P. - Art. 678 comma 1-ter
+		// c.p.p.) - Applica provvisoriamente
+		EventoModel em = new EventoModel();
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		if (!isRequestParameterNullObj("IdEvento")) {
+			em = ie.ExRicercaEventoByKey(getRequestBigDecimalParameter("IdEvento"));
+			controllaEvento(em, true);
+		} else {
+			Vector<?> v = ie.ExRicercaEventoByFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
+					null);
+			for (int i = 0; i < v.size(); i++) {
+				em = (EventoModel) v.elementAt(i);
+				controllaEvento(em, false);
+				if (existOrdinanzaApplicazioneProvvisoria)
+					break;
+			}
+		}
+		if (!existOrdinanzaApplicazioneProvvisoria)
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"Operazione consentita solo se sul Procedimento sia stata emessa un'ordinanza di "
+							+ "Applicazione Provvisoria M.A. con esito 'Applica provvisoriamente' "
+							+ "depositata e validata!");
 
 		// aggiorno dati sulla tabella "deposito_ordinanza_pc" (colonne "DATA_ESECUTIVITA" e "NOTE_ATTI")
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
@@ -101,23 +131,6 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 
 		setRequestAttribute("dataEsecutivita", dopcm.getDataEsecutivita());
 		setRequestAttribute("noteAtti", dopcm.getNoteAtti());
-
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoModel em = new EventoModel();
-		if (!isRequestParameterNullObj("IdEvento")) {
-			em = ie.ExRicercaEventoByKey(getRequestBigDecimalParameter("IdEvento"));
-		} else {
-			Vector<?> v = ie.ExRicercaEventoByFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
-					null);
-			for (int i = 0; i < v.size(); i++) {
-				em = (EventoModel) v.elementAt(i);
-				if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
-						&& em.getNumAllValidati() > 0) {
-					break;
-				}
-			}
-		}
-		setRequestAttribute("eventoModel", em);
 		setRequestAttribute("Upload", "NO");
 		setRequestAttribute("ListaTemplate", "SIUS_OR_0270");
 
@@ -127,6 +140,28 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 
 		// valore di ritorno
 		return retPage;
+	}
+
+	private boolean controllaEvento(EventoModel em, boolean existIdEvento) throws F3BException {
+
+		if (existIdEvento) {
+			existOrdinanzaApplicazioneProvvisoria = true;
+			setRequestAttribute("eventoModel", em);
+		} else {
+			if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
+					&& em.getNumAllValidati() > 0) {
+				existOrdinanzaApplicazioneProvvisoria = true;
+				setRequestAttribute("eventoModel", em);
+				INotifica in = SIEPLookupRemote.getNotificaRemote();
+				Date maxDataAvvenutaNotifica = in.ExRicercaDataNotifica(em.getIdEvento());
+				String mdan = "";
+				if (maxDataAvvenutaNotifica != null)
+					mdan = DateUtils.getDateToString(maxDataAvvenutaNotifica, "dd/MM/yyyy");
+				setRequestAttribute("maxDataAvvenutaNotifica", mdan);
+				siesLogger.debug("maxDataAvvenutaNotifica = " + mdan);
+			}
+		}
+		return existOrdinanzaApplicazioneProvvisoria;
 	}
 
 }
