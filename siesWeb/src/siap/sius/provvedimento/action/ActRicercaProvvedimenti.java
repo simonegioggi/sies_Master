@@ -81,7 +81,12 @@ public class ActRicercaProvvedimenti extends ActionSius implements ICostantiProv
 			DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
 			dopcm.setGenPridGeneraleProcedimento(
 					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			Vector<?> depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			Vector<?> depositoOrdinanzaVector = null;
+			try {
+				depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			} catch (Exception e) {
+				depositoOrdinanzaVector = new Vector<>();
+			}
 			setRequestAttribute("depositoOrdinanzaVector", depositoOrdinanzaVector);
 			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 			// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");

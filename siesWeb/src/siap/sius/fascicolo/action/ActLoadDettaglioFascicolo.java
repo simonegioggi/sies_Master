@@ -422,7 +422,12 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 			DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
 			dopcm.setGenPridGeneraleProcedimento(
 					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			Vector<?> v = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			Vector<?> v = null;
+			try {
+				v = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			} catch (Exception e) {
+				v = new Vector<>();
+			}
 			siesLogger.debug(v != null ? "vettore con " + v.size() + " elementi" : "vettore vuoto");
 			setRequestAttribute("depositoOrdinanzaVector", v);
 			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
