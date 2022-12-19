@@ -768,7 +768,25 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 	}
 
 	public String setCondizione(DepositoOrdinanzaPcModel aModel) {
+
 		String lCondizioni = new String();
+		/* 
+		 * ISSUE MEV : aggiunte condizioni
+		 * Numero MEV : 9
+		 * Autore    : sgioggi
+		 * Data      : 16 dic 2022
+		 * Branch    : MEV_9
+		 */
+		if (aModel.getIdDepositoOrdinanzaPc() != null)
+			lCondizioni = lCondizioni + " AND ID_DEPOSITO_ORDINANZA_PC = " + aModel.getIdDepositoOrdinanzaPc();
+
+		if (aModel.getGenPridGeneraleProcedimento() != null)
+			lCondizioni = lCondizioni + " AND GEN_PRID_GENERALE_PROCEDIMENTO = " + aModel.getGenPridGeneraleProcedimento();
+
+		if (aModel.getIdEventoGenerato() != null)
+			lCondizioni = lCondizioni + " AND ID_EVENTO_GENERATO = " + aModel.getIdEventoGenerato();
+		//***** FINE INTERVENTO MEV_9 *****//
+
 		return lCondizioni;
 	}
 

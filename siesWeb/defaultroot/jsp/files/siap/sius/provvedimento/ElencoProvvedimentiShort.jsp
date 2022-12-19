@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.Hashtable"%>
@@ -20,7 +21,7 @@
 <jsp:useBean id="opposizioniEvento"   		scope="request" class="java.util.Hashtable"/>
 <%-- MEV_9: aggiunti useBean --%>
 <jsp:useBean id="fascicoloSiusGP" 			scope="request" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<jsp:useBean id="dataEsecutivitaStr" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="depositoOrdinanzaVector"	scope="request" class="java.util.Vector"/>
 
 <html>
 <table width="100%">
@@ -109,7 +110,16 @@ if (provvedimenti.size() == 0) {
 				&& (fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
 				|| fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C051") == 0)) {
 			if ("0270".equals(lProv.getCodEsito()) && "03".equals(lProv.getCodTipoProvvedimento())) {
-				Date dataEsecutivita = DateUtils.getDate(dataEsecutivitaStr, "dd/MM/yyyy");
+				Date dataEsecutivita = null;
+				Iterator iter = depositoOrdinanzaVector.iterator();
+				while (iter.hasNext()) {
+					DepositoOrdinanzaPcModel dopcm = (DepositoOrdinanzaPcModel) iter.next();
+					if (lProv.getIdEvento().compareTo(dopcm.getIdEventoGenerato()) == 0
+							&& !Utils.isNullObj(dopcm.getDataEsecutivita())) {
+						dataEsecutivita = dopcm.getDataEsecutivita();
+						break;
+					}
+				}
 %>
 		<td class="c"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(dataEsecutivita, "dd-MM-yyyy"), "-")%></font></td>
 <%

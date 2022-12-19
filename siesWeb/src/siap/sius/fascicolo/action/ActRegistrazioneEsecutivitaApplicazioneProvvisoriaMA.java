@@ -95,8 +95,13 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 
 		// aggiorno dati sulla tabella "deposito_ordinanza_pc" (colonne "DATA_ESECUTIVITA" e "NOTE_ATTI")
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProc(
-				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+		// DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
+		// dopcm.setGenPridGeneraleProcedimento(
+		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		// Vector<?> depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+		// setRequestAttribute("depositoOrdinanzaVector", depositoOrdinanzaVector);
 		// controllo consistenza della data esecutivita': se non esiste allora la gestisco
 		if (!Utils.isPresent(dopcm.getDataEsecutivita()) || !isRequestParameterNullObj("provenienza")) {
 			dopcm.setCodOperatoreAggiornamento(getCodUtenteConnesso());

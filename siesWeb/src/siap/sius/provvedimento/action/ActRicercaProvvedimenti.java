@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
 
-import f3b.util.DateUtils;
 import f3b.util.Utils;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -18,8 +17,8 @@ import siap.sius.impugnazione.controller.IImpugnazione;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: ActRicercaProvvedimentii Description: Azione specializzazione per la ricerca dei Provvedimenti
- * legati al fascicolo SIUS.
+ * Title: ActRicercaProvvedimenti Description: Azione specializzazione per la ricerca dei Provvedimenti legati
+ * al fascicolo SIUS.
  *
  * @version 1.0
  */
@@ -67,7 +66,10 @@ public class ActRicercaProvvedimenti extends ActionSius implements ICostantiProv
 		setRequestAttribute("isModificabile", modificabile);
 
 		/*
-		 * ISSUE MEV : aggiunta estrazione data esecutivita Numero MEV : 9 Autore : sgioggi Data : 5 dic 2022
+		 * ISSUE MEV : aggiunta estrazione data esecutivita 
+		 * Numero MEV : 9 
+		 * Autore : sgioggi 
+		 * Data : 5 dic 2022
 		 * Branch : MEV_9
 		 */
 		if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())
@@ -75,13 +77,18 @@ public class ActRicercaProvvedimenti extends ActionSius implements ICostantiProv
 				&& (fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("C050") == 0
 						|| fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 								.compareTo("C051") == 0)) {
-			IDepositoOrdinanzaPc idop = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-			DepositoOrdinanzaPcModel dopm = idop.ExRicercaDepositoOrdinanzaPcByGenProc(
+			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
+			dopcm.setGenPridGeneraleProcedimento(
 					fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
-			String dataEsecutivita = null;
-			if (!Utils.isNullObj(dopm) && !Utils.isNullObj(dopm.getDataEsecutivita()))
-				dataEsecutivita = DateUtils.getDateToString(dopm.getDataEsecutivita(), "dd/MM/yyyy");
-			setRequestAttribute("dataEsecutivitaStr", dataEsecutivita);
+			Vector<?> depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+			setRequestAttribute("depositoOrdinanzaVector", depositoOrdinanzaVector);
+			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+			// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+			// String dataEsecutivita = null;
+			// if (!Utils.isNullObj(dopcm) && !Utils.isNullObj(dopcm.getDataEsecutivita()))
+			// dataEsecutivita = DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy");
+			// setRequestAttribute("dataEsecutivitaStr", dataEsecutivita);
 		}
 		// ***** FINE INTERVENTO MEV_9 *****//
 

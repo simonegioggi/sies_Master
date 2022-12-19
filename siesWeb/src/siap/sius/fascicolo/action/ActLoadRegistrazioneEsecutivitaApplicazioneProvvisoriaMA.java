@@ -164,8 +164,13 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 
 		// controllo consistenza della data esecutivita'
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
-		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProc(
-				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+		// DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
+		// dopcm.setGenPridGeneraleProcedimento(
+		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
+		// Vector<?> depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
+		// setRequestAttribute("depositoOrdinanzaVector", depositoOrdinanzaVector);
 		if (!Utils.isNullObj(dopcm) && Utils.isPresent(dopcm.getDataEsecutivita())) {
 			if (isRequestParameterNullObj("provenienza")) {
 				// Prepara la "pagina" di destinAction
