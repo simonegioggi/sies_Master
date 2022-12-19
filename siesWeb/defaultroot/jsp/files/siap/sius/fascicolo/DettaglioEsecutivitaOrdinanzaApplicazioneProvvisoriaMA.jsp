@@ -9,12 +9,13 @@
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
-<jsp:useBean id="fascicoloSiusGP" 	scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
-<jsp:useBean id="TornaQui"     		scope="request" class="java.lang.String"/>
-<jsp:useBean id="eventoModel"		scope="request" class="siap.sico.evento.model.EventoModel"/>
-<jsp:useBean id="dataEsecutivita"	scope="request" class="java.util.Date"/>
-<jsp:useBean id="noteAtti"			scope="request" class="java.lang.String"/>
-<jsp:useBean id="ListaTemplate" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="fascicoloSiusGP" 			scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
+<jsp:useBean id="TornaQui"     				scope="request" class="java.lang.String"/>
+<jsp:useBean id="eventoModel"				scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="dataEsecutivita"			scope="request" class="java.util.Date"/>
+<jsp:useBean id="noteAtti"					scope="request" class="java.lang.String"/>
+<jsp:useBean id="ListaTemplate" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="existConfermaDecisioneMR" 	scope="request" class="java.lang.String"/>
 
 <%
 String actionModifica = "siap.sius.fascicolo.action.ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA";
@@ -43,6 +44,9 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
 	      	<jsp:param name="CampoIdEntita" value="<%=ICostantiEvento.CAMPO_ID_EVENTO%>"/>
 	      	<jsp:param name="ValoreIdEntita" value="<%=eventoModel.getIdEvento()%>"/>
 	    </jsp:include>
+<%
+if ("false".equals(existConfermaDecisioneMR)) {
+%>
 		<td class="LBG">
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=actionModifica%>&TornaQui=<%=TornaQui%>&provenienza=dettaglio">
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
@@ -51,6 +55,9 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
           	</a>
      	</td>
+<%
+}
+%>
 		<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
 	</tr>
     <tr>

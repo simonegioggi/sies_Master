@@ -97,13 +97,19 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+		DepositoOrdinanzaPcModel dopcmMA = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "MA");
+		boolean existConfermaDecisioneMR = false;
+		if (!Utils.isNullObj(dopcmMA))
+			existConfermaDecisioneMR = true;
 		// DepositoOrdinanzaPcModel dopcm = new DepositoOrdinanzaPcModel();
 		// dopcm.setGenPridGeneraleProcedimento(
 		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
 		// Vector<?> depositoOrdinanzaVector = idopc.ExRicercaDepositoOrdinanzaPc(dopcm);
 		// setRequestAttribute("depositoOrdinanzaVector", depositoOrdinanzaVector);
 		// controllo consistenza della data esecutivita': se non esiste allora la gestisco
-		if (!Utils.isPresent(dopcm.getDataEsecutivita()) || !isRequestParameterNullObj("provenienza")) {
+		if ((!Utils.isPresent(dopcm.getDataEsecutivita()) || !isRequestParameterNullObj("provenienza"))
+				&& !existConfermaDecisioneMR) {
 			dopcm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 			dopcm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 			dopcm.setDataAggiornamento(DateUtils.getSysDate());
@@ -111,6 +117,7 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 			if ("cancella".equals(getRequestStringParameter("provenienza"))) {
 				dopcm.setDataEsecutivita(null);
 				idopc.ExModificaDepositoOrdinanzaPc(dopcm);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Cancellazione Avvenuta Correttamente!");
 				// Prepara la "pagina" di destinAction
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
@@ -124,7 +131,7 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 				siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 				// valore di ritorno
-				return rt.toString();
+				return IWebConstants.PG_MESSAGE; /* rt.toString(); */
 			} else {
 				if (!isRequestParameterNullEmptyObj(CAMPO_NOTE))
 					dopcm.setNoteAtti(getRequestStringParameter(CAMPO_NOTE));
@@ -138,6 +145,7 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		setRequestAttribute("noteAtti", dopcm.getNoteAtti());
 		setRequestAttribute("Upload", "NO");
 		setRequestAttribute("ListaTemplate", "SIUS_OR_0270");
+		setRequestAttribute("existConfermaDecisioneMR", "" + existConfermaDecisioneMR);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
