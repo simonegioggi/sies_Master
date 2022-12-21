@@ -23,6 +23,7 @@
 <jsp:useBean id="codOggetti"            		scope="request" class="java.lang.String"/>
 <jsp:useBean id="codDettagli"   				scope="request" class="java.lang.String"/>
 <jsp:useBean id="descOggetti"          			scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataArrivoCancelleria"   		scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -82,6 +83,12 @@ if (Utils.isPresent(codMagistratoOld)) {
   		document.LoadModificaDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 	    return false;
     }
+  	var dataArrivoCancelleria = '<%=dataArrivoCancelleria%>';
+  	if (!CompareDate(dataArrivoCancelleria, dataEmissione)) {
+  		alert('Data Emissione non può essere inferiore alla Data Arrivo in Cancellaria (' + dataArrivoCancelleria + ')!');
+  		document.LoadModificaDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+	    return false;
+    }
 
 	// Controllo validità data Termine
 	var dataTermine =
@@ -118,10 +125,15 @@ if (Utils.isPresent(codMagistratoOld)) {
 		}
 		ngte = true;
 	}
-	if ((dte && ngte) || (!dte && !ngte)) {
+	if (dte && ngte) {
 		alert('Valorizzare Data Termine oppure Numero Giorni Termine!');
-	    document.LoadModificaDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
-	    return false;
+		document.LoadModificaDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
+		return false;
+	} else if (!dte && !ngte) {
+		if (!confirm("Attenzione: Procedere con l'emissione del Decreto Designazione Magistrato Relatore senza valorizzare Data Termine oppure Numero Giorni Termine?")) {
+			document.LoadModificaDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
+			return false;
+		}
 	}
 
    	return true;

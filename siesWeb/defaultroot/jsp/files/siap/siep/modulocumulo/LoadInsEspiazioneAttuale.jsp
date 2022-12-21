@@ -182,12 +182,10 @@ if (modalita.equals("M") ) {
             || comboPG.value=="29" || comboPG.value=="54" // Aff e Det dom Provv
             )
         { 
-          //console.log("Mostro data inizio misura");
           $('#trDataInizioMisura').show();
           $('#trDataInizioMisura input').prop('disabled',false);
         }
         else {
-          //console.log("Nascondo data inizio misura");
           $('#trDataInizioMisura').hide();
           $('#trDataInizioMisura input').prop('disabled',true);
         }
@@ -253,12 +251,10 @@ if (modalita.equals("M") ) {
           || comboPG.value=="33" // Sosp Provv 51 ter (Semilib)
           )
       {
-        //console.log("Mostro data inizio misura IST");
         $('#trDataInizioMisuraIst').show();
         $('#trDataInizioMisuraIst input').prop('disabled',false);
       }
       else {
-        //console.log("Nascondo data inizio misura IST");
         $('#trDataInizioMisuraIst').hide();
         $('#trDataInizioMisuraIst input').prop('disabled',true);
       }
@@ -440,13 +436,11 @@ if (modalita.equals("M") ) {
 
         // Data Inizio Misura
         var dataInizioMisuraEnabled = $('#trDataInizioMisuraIst [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_GIORNO_DATA_INIZIO_MISURA%>]:enabled');
-        //console.log("dataInizioMisuraEnabled: "+dataInizioMisuraEnabled);
         if (dataInizioMisuraEnabled.size()>0) {
           var giorno = $('#trDataInizioMisuraIst [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_GIORNO_DATA_INIZIO_MISURA%>]').val();
           var mese   = $('#trDataInizioMisuraIst [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_MESE_DATA_INIZIO_MISURA%>]').val();
           var anno   = $('#trDataInizioMisuraIst [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_ANNO_DATA_INIZIO_MISURA%>]').val();
           var data_to_verify = giorno+'/'+mese+'/'+anno;
-          //console.log("dataInizioMisuraEnabled = "+data_to_verify);
 
           checkData = ControllaDataPassaVuota (data_to_verify); // Data decorrenza non obbligatoria per la custodia cautelare altra causa
           
@@ -510,13 +504,11 @@ if (modalita.equals("M") ) {
         
         // Data Inizio Misura
         var dataInizioMisuraEnabled = $('#trDataInizioMisura [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_GIORNO_DATA_INIZIO_MISURA%>]:enabled');
-        //console.log("dataInizioMisuraEnabledAltro: "+dataInizioMisuraEnabled);
         if (dataInizioMisuraEnabled.size()>0) {
           var giorno = $('#trDataInizioMisura [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_GIORNO_DATA_INIZIO_MISURA%>]').val();
           var mese   = $('#trDataInizioMisura [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_MESE_DATA_INIZIO_MISURA%>]').val();
           var anno   = $('#trDataInizioMisura [name=<%=ICostantiPosizioneGiuridicaCumulo.CAMPO_ANNO_DATA_INIZIO_MISURA%>]').val();
           var data_to_verify = giorno+'/'+mese+'/'+anno;
-          //console.log("dataInizioMisuraEnabledAltro = "+data_to_verify);
 
           checkData = ControllaDataPassaVuota (data_to_verify); // Data decorrenza non obbligatoria per la custodia cautelare altra causa
           

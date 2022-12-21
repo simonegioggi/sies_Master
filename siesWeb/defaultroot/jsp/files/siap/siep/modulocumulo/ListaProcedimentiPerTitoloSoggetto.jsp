@@ -240,9 +240,6 @@
     
       // Incrementa/decrementa il valore numerico del campo utilizzando le frecce
       function slideVal(e,obj) {
-        //console.log(e);
-        //console.log(e.which);
-        
         var maxVal = 2000;
         if (obj.prop("class")=="dataGG")
           maxVal = 31;

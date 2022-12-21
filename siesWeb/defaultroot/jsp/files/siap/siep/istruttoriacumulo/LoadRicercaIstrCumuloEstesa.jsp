@@ -53,7 +53,6 @@ filter: progid:DXImageTransform.Microsoft.Shadow(color=gray,direction=135);
   
  function radioBase()
  {
-  //console.log("radioBase");
 	document.d.distrettoUffcio.value=document.d.distretto.value;
 
   if (   !document.g.tipo[0].checked

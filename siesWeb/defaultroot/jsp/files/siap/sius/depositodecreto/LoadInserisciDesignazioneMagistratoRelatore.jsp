@@ -20,6 +20,7 @@
 <jsp:useBean id="descOggetti"           scope="request" class="java.lang.String"/>
 <jsp:useBean id="magistratorelatore"	scope="request" class="siap.sius.magistratorelatore.model.MagistratoRelatoreModel"/>
 <jsp:useBean id="codDettagli"   		scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataArrivoCancelleria"	scope="request" class="java.lang.String"/>
 
 <%
 /* Check sospensione */
@@ -90,6 +91,12 @@ if (Utils.isPresent(codMagistratoOld)) {
   		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 	    return false;
     }
+  	var dataArrivoCancelleria = '<%=dataArrivoCancelleria%>';
+  	if (!CompareDate(dataArrivoCancelleria, dataEmissione)) {
+  		alert('Data Emissione non può essere inferiore alla Data Arrivo in Cancellaria (' + dataArrivoCancelleria + ')!');
+  		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+	    return false;
+    }
 
 	// Controllo validità data Termine
 	var dataTermine =
@@ -122,10 +129,15 @@ if (Utils.isPresent(codMagistratoOld)) {
 		}
 		ngte = true;
 	}
-	if ((dte && ngte) || (!dte && !ngte)) {
+	if (dte && ngte) {
 		alert('Valorizzare Data Termine oppure Numero Giorni Termine!');
-	    document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
-	    return false;
+		document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
+		return false;
+	} else if (!dte && !ngte) {
+		if (!confirm("Attenzione: Procedere con l'emissione del Decreto Designazione Magistrato Relatore senza valorizzare Data Termine oppure Numero Giorni Termine?")) {
+			document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>.focus();
+			return false;
+		}
 	}
 
    	return true;
@@ -236,6 +248,7 @@ if (magistratorelatore != null) {
 			<input title="Numero Giorni Termine Emissione" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE%>" onkeypress="return TicTabNumField(this,event)">
     	</td>
 	</tr>
+	<tr><td>&nbsp;</td></tr>
 	<tr>
   		<td>
     		<input class="bottone" type="submit" value="Conferma" onclick="Javascript:return Verify();">

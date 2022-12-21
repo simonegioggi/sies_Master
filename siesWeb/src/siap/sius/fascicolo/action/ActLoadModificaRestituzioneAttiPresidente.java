@@ -1,12 +1,17 @@
 package siap.sius.fascicolo.action;
 
+import java.util.Vector;
+
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sius.ActionSius;
 import siap.sius.SIUSException;
 import siap.sius.fascicolo.model.FascicoloGPModel;
@@ -59,6 +64,20 @@ public class ActLoadModificaRestituzioneAttiPresidente extends ActionSius implem
 		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
 		GeneraleProcedimentoModel gpm = igp
 				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
+
+		// Ricerco evento del fascicolo di Designazione Magistarto Relatore
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		Vector<?> v = ie.ExRicercaEventoByFascicoloSius(fgpm.getFascicoloSiusModel().getIdFascicoloSius(),
+				"01");
+		for (int i = 0; i < v.size(); i++) {
+			EventoModel em = (EventoModel) v.elementAt(i);
+			if ("0610".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())) {
+				setRequestAttribute("dataEmissioneDD",
+						DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"));
+				break;
+			}
+		}
+
 		if (Utils.isNullObj(gpm.getDataRestituzione())) {
 			setRequestAttribute("modalita", "inserimento");
 			setRequestAttribute("dataRestituzioneStr", null);

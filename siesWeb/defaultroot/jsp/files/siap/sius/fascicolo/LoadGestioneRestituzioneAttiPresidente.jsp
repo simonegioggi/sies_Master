@@ -13,17 +13,20 @@
 <jsp:useBean id="modalita"     			scope="request" class="java.lang.String"/>
 <jsp:useBean id="dataRestituzioneStr"	scope="request" class="java.lang.String"/>
 <jsp:useBean id="descrRestituzione"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataEmissioneDD"		scope="request" class="java.lang.String"/>
 
 <%
 /* Estrazione della data udienza o data iscrizione */
 String data1;
 if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio() != null)
-	data1 = DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(),"dd/MM/yyyy");
+	data1 = DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(), "dd/MM/yyyy");
+else  if (fascicoloSiusGP.getGeneraleProcedimentoModel().getDataArrivoCancelleria() != null)
+	data1 = DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataArrivoCancelleria(), "dd/MM/yyyy");
 else
-	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(),"dd/MM/yyyy");
+	data1 = DateUtils.getDateToString(fascicoloSiusGP.getFascicoloSiusModel().getDataIscrizione(), "dd/MM/yyyy");
 String actionModifica = "siap.sius.fascicolo.action.ActLoadModificaRestituzioneAttiPresidente";
 String actionCancella = "siap.sius.fascicolo.action.ActCancellaRestituzioneAttiPresidente";
-Date dataRestituzione = DateUtils.getDate(dataRestituzioneStr,"dd/MM/yyyy");
+Date dataRestituzione = DateUtils.getDate(dataRestituzioneStr, "dd/MM/yyyy");
 %>
 
 <html>
@@ -37,7 +40,8 @@ Date dataRestituzione = DateUtils.getDate(dataRestituzioneStr,"dd/MM/yyyy");
 function  Verifica() {
 	var ritorno = true;
 	var data_minima = '<%=data1%>';
-	var data_sistema='<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
+	var data_sistema = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
+	var data_emissione_DD = '<%=dataEmissioneDD%>';
 	var data_restituzione = document.LoadGestioneRestituzioneAttiPresidente.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value+'/'+document.LoadGestioneRestituzioneAttiPresidente.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_RESTITUZIONE%>.value+'/'+document.LoadGestioneRestituzioneAttiPresidente.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
     // Controllo della data di Restituzione
     if (ritorno && (!ControllaData(data_restituzione))) {
@@ -48,8 +52,11 @@ function  Verifica() {
     else if (!CompareDate(data_restituzione, data_sistema)) {
 		alert('Data Restituzione non può essere superiore alla data odierna!');
 		ritorno = false;
-    } else if (!CompareDate(data_minima, data_restituzione)) {
-		alert("Data Restituzione non può precedere: " + data_minima);
+    } else if (!CompareDate(data_emissione_DD, data_restituzione)) {
+		alert("Data Restituzione non può precedere la Data di Emissione del Decreto di Designazione: " + data_emissione_DD);
+		ritorno = false;
+   	} else if (!CompareDate(data_minima, data_restituzione)) {
+		alert("Data Restituzione non può precedere la Data Arrivo in Cancellaria: " + data_minima);
 		ritorno = false;
    	}
   	return ritorno;

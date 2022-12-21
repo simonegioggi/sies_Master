@@ -407,10 +407,7 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 			checkMinorenne(fgpm.getFascicoloSiusModel().getSoggetto(), fgpm, lParser.getSentenza());
 
 		/*
-		 * ISSUE MEV : aggiunta estrazione data esecutivita 
-		 * Numero MEV : 9 
-		 * Autore : sgioggi 
-		 * Data : 5 dic 2022
+		 * ISSUE MEV : aggiunta estrazione data esecutivita Numero MEV : 9 Autore : sgioggi Data : 5 dic 2022
 		 * Branch : MEV_9
 		 */
 		if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())
@@ -430,6 +427,11 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 			}
 			siesLogger.debug(v != null ? "vettore con " + v.size() + " elementi" : "vettore vuoto");
 			setRequestAttribute("depositoOrdinanzaVector", v);
+			String dataRestituzioneStr = "";
+			if (!Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getDataRestituzione()))
+				dataRestituzioneStr = DateUtils.getDateToString(
+						fgpm.getGeneraleProcedimentoModel().getDataRestituzione(), "dd/MM/yyyy");
+			setRequestAttribute("dataRestituzioneStr", dataRestituzioneStr);
 			// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 			// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
 			// String dataEsecutivita = null;

@@ -3,6 +3,7 @@ package siap.sius.depositodecreto.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import f3b.util.DateUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -150,6 +151,19 @@ public class ActLoadInserisciDesignazioneMagistratoRelatore extends ActRicercaFS
 			Vector lAvvocato = ia
 					.ExRicercaAvvocatiByFascicoloNoError(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
 			setRequestAttribute("avvocato", lAvvocato);
+
+			/* Impostazione della data arrivo in cancelleria */
+			String dataArrivoCancelleria;
+			if (fgpm.getGeneraleProcedimentoModel().getDataArrivoCancelleria() != null)
+				dataArrivoCancelleria = DateUtils.getDateToString(
+						fgpm.getGeneraleProcedimentoModel().getDataArrivoCancelleria(), "dd/MM/yyyy");
+			else if (fgpm.getGeneraleProcedimentoModel().getDataCameraConsiglio() != null)
+				dataArrivoCancelleria = DateUtils.getDateToString(
+						fgpm.getGeneraleProcedimentoModel().getDataCameraConsiglio(), "dd/MM/yyyy");
+			else
+				dataArrivoCancelleria = DateUtils
+						.getDateToString(fgpm.getFascicoloSiusModel().getDataIscrizione(), "dd/MM/yyyy");
+			setRequestAttribute("dataArrivoCancelleria", dataArrivoCancelleria);
 		}
 
 		// restituisce la jsp di VIEW

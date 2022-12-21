@@ -20,7 +20,6 @@
 
 <jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori"    					scope="request" class="java.util.Vector"/>
-<jsp:useBean id="TornaQui"						scope="request" class="java.lang.String"/>
 <jsp:useBean id="magistratorelatore"   			scope="request" class="siap.sius.magistratorelatore.model.MagistratoRelatoreModel"/>
 <jsp:useBean id="Modificabile"              	scope="request" class="java.lang.String"/>
 
@@ -75,7 +74,7 @@ if (depositoDecretoMotivazioni != null && depositoDecretoMotivazioni.getDeposito
 %>
 		<!-- BOTTONE DI CANCELLAZIONE -->
 		<td class="LBG">
-			<a href="Javascript:conferma('siap.sius.depositodecreto.action.ActCancellaDepositoDecreto','<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>','<%=depositoDecretoMotivazioni.getDepositoDecreto().getIdDepositoDecreto()%>','TornaQui','<%=TornaQui%>');">
+			<a href="Javascript:conferma('siap.sius.depositodecreto.action.ActCancellaDepositoDecreto','<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>','<%=depositoDecretoMotivazioni.getDepositoDecreto().getIdDepositoDecreto()%>');">
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="CancellaDM" width="24" height="24" border="0">
 		  	</a>
 		</td>

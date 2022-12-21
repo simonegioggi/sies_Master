@@ -20,7 +20,6 @@
 
 <jsp:useBean id="tipoUfficioProcure" 	scope="request" class="java.lang.String"/>
 
-
 <%
 TenoreModel[] tenori = (TenoreModel[]) request.getAttribute("tenori");
 String[] esiti = (String[]) request.getAttribute("esiti");
@@ -34,10 +33,9 @@ else
 
 //INIZIO: MEV_9 (D.lgs. 123/2018)
 boolean is678 = false;
-if (   ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
-    || ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto)
-   )
-is678 = true;
+if (ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
+		|| ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto))
+	is678 = true;
 //FINE: MEV_9
 %>
 
@@ -53,36 +51,34 @@ is678 = true;
 <script language="JavaScript">
 // STUB 21/07/2004 Controllo obbligatorietà esiti.
 function Verify() {
-	
-	<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-	<% if (is678) { %>
-		if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>.checked) {
-		  // Chiede conferma: nessun campo ma compilato ad eccezione del campo note
-		  if (confirm("Si stanno per restiture gli atti al Presidente. Nessuna ordinanza varra' inserita. Si vuole procedere?")){
-			  return true;
-		  }
-		  else 
-			  return false;
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<%
+if (is678) {
+%>
+	if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>.checked) {
+		// Chiede conferma: nessun campo ma compilato ad eccezione del campo note
+	  	if (confirm("Si stanno per restiture gli atti al Presidente. Nessuna ordinanza varra' inserita. Si vuole procedere?")) {
+			return true;
+		} else {
+			return false;
 		}
-		<%-- Se presenti più oggetti, solo uno può essere "applica Provvisoriamente" --%>
-		var listComboEsiti = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
-		//console.log("listComboEsiti.length = "+listComboEsiti.length);
-		var contaProvvisorie = 0;
-        for (idComboEsiti=0; idComboEsiti<listComboEsiti.length; idComboEsiti++) {  
-          var comboEsito = listComboEsiti[idComboEsiti];
-          //console.log("comboEsito["+idComboEsiti+"]... ");
-          
-          if (comboEsito[comboEsito.selectedIndex].value =='0680')
-        	  contaProvvisorie++;
+	}
+	<%-- Se presenti più oggetti, solo uno può essere "applica Provvisoriamente" --%>
+	var listComboEsiti = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
+	var contaProvvisorie = 0;
+    for (idComboEsiti = 0; idComboEsiti < listComboEsiti.length; idComboEsiti++) {
+    	var comboEsito = listComboEsiti[idComboEsiti];
+        if (comboEsito[comboEsito.selectedIndex].value =='0680')
+        	contaProvvisorie++;
         }
-        //console.log("contaProvvisorie = "+contaProvvisorie);
-		if (contaProvvisorie>1) {
+		if (contaProvvisorie > 1) {
 			alert("Attenzione. Può essere selezionato 'Applica Provvisoriamente' per un solo oggetto");
 			return false;
 		}
-	<% } %>
+<%
+}
+%>
 	<%-- MEV_9 --%>
-	
 	var lEsiti = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
 	if (!VerifyCombo(lEsiti, "Esito"))
   		return false;
@@ -137,7 +133,9 @@ function Verify() {
 	var ritorno = true;
 	var data_camera = '<%=data1%>';
 <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<% if (!is678) { %>
+<%
+if (!is678) {
+%>
  	// Controllo della data termine misura.
 	var data_termine = document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>.value
 		+ '/' + document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>.value
@@ -151,9 +149,11 @@ function Verify() {
 		    ritorno =  false;
    		}
  	}
-<% } %>
+<%
+}
+%>
 <%-- FINE: MEV 9--%>
- 	return ritorno;
+	return ritorno;
 }
 
 var desktop;
@@ -170,104 +170,97 @@ function ListaUSSM (a_formname,a_fieldname) {
 	desktop = window.open("/jsp/Main.jsp?Action=siap.sico.cssa.action.ActLoadListaUSSM&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_CSSA","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
 }
 
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+function checkEsiti() {
+	var listComboEsiti = document.getElementsByName('<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>');
+	if (typeof (listComboEsiti[1]) == "undefined") {
+		var comboEsito = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;
+		for (j = 0; j < comboEsito.length; j++) {
+			if ("AM" == "<%=tipo_decreto%>") {
+				if (comboEsito.options[j].value == '0685' || comboEsito.options[j].value == '0695') {
+					<%-- Si elimina CONCEDE --%>
+	        		comboEsito.remove(j);
+	        		j--;
+	      		}
+			} else {
+				if (comboEsito.options[j].value == '0680' || comboEsito.options[j].value == '0690') {
+					<%-- Si elimina APPLICA PROVVISORIAMENTE x ordinanza normale --%>
+	        		comboEsito.remove(j);
+	        		j--;
+	      		}
+			}
+   		}
+	} else {
+		for (i = 0; i < listComboEsiti.length; i++) {
+	   		var comboEsito = listComboEsiti[i];
+	   		for (j = 0; j < comboEsito.length; j++) {
+	   			if ("AM" == "<%=tipo_decreto%>") {
+					if (comboEsito.options[j].value == '0685' || comboEsito.options[j].value == '0695') {
+						<%-- Si elimina CONCEDE --%>
+		        		comboEsito.remove(j);
+		        		j--;
+		      		}
+				} else {
+					if (comboEsito.options[j].value == '0680' || comboEsito.options[j].value == '0690') {
+						<%-- Si elimina APPLICA PROVVISORIAMENTE x ordinanza normale --%>
+		        		comboEsito.remove(j);
+		        		j--;
+		      		}
+				}
+	     	}
+   		}
+	}
+}
 
-      <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-      function checkEsiti()
-      {
-        //alert("asdsadda");
-
-        var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");        
-        
-        console.log("listComboEsiti = "+listComboEsiti);
-        console.log("listComboEsiti[0] = "+listComboEsiti[0]);
-        console.log("listComboEsiti.length = "+listComboEsiti.length);
-        if (typeof (listComboEsiti[1]) == "undefined") {
-        	console.log("Oggetto unico");
-        	  var comboEsito = document.InserisciOrdinanzaMA.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;  
-	          for (j=0;j<comboEsito.length;  j++) {
-	             //console.log("listComboEsiti.value = "+comboEsito.options[j].value);
-	          
-	             if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
-	               //console.log("remove!!! ");
-	               comboEsito.remove(j);
-	               j--;
-	             }
-	          } 
-        }
-        else {
-        	console.log("Oggetto multiplo");
-	        for (i=0; i<listComboEsiti.length; i++) {  
-	          var comboEsito = listComboEsiti[i];
-	          
-	          for (j=0;j<comboEsito.length;  j++) {
-	             //console.log("listComboEsiti.value = "+comboEsito.options[j].value);
-	          
-	             if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
-	               //console.log("remove!!! ");
-	               comboEsito.remove(j);
-	               j--;
-	             }
-	          }          
-	        }
-	      }
-      }      
-
-      function checkAttiAlPresidente()
-      {
-    	  	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>"); 
-    	  	
-    		if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>.checked) 
-    		{
-				document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP%>.disabled = true;
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>.disabled = true;
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>.disabled = true;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.disabled = true;			
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>.disabled = true;	
-				
-				document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[0].disabled = true;	
-				document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[1].disabled = true;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>.disabled = true;			
-					
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>.disabled = true;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = true;	
-		        for (i=0; i<listComboEsiti.length; i++) {  
-		          var comboEsito = listComboEsiti[i];
-		          comboEsito.disabled = true;
-		        }
-    	 	} else {
-    	 		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP%>.disabled = false;
-    	 		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>.disabled = false;
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>.disabled = false;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.disabled = false;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>.disabled = false;
-					
-				document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[0].disabled = false;	
-				document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[1].disabled = false;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>.disabled = false;	
-					
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>.disabled = false;	
-				if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>)!="undefined")
-					document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = false;		
-		        for (i=0; i<listComboEsiti.length; i++) {  
-		          var comboEsito = listComboEsiti[i];
-		          comboEsito.disabled = false;
-			    }					
-    	 	}
-      }
-      <%-- FINE: MEV_9 --%>
+function checkAttiAlPresidente() {
+	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");
+	if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>.checked) {
+		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP%>.disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>.disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>.disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>.disabled = true;
+		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[0].disabled = true;
+		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[1].disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>.disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>.disabled = true;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = true;
+   		for (i = 0; i < listComboEsiti.length; i++) {
+     		var comboEsito = listComboEsiti[i];
+     		comboEsito.disabled = true;
+   		}
+	} else {
+		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP%>.disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>.disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>.disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>.disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>.disabled = false;
+		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[0].disabled = false;
+		document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[1].disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>.disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_FORMA_MISURA%>.disabled = false;
+		if (typeof(document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>) != "undefined")
+			document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>.disabled = false;
+	    for (i = 0; i < listComboEsiti.length; i++) {
+			var comboEsito = listComboEsiti[i];
+			comboEsito.disabled = false;
+		}					
+	}
+}
+<%-- FINE: MEV_9 --%>
 
 function updateCkCtrlE() {
 	if (document.InserisciOrdinanzaMA.<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_TIPO_CONTROLLO_ESECUZIONE%>[0].checked == true) {
@@ -311,9 +304,7 @@ function enableForma() {
 	}
 }
 </script>
-    
 <jsp:include page="/jsp/files/siap/siep/misuraalternativa/MinorScript.jsp"/>
-    
 </head>
 <%
 String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS";
@@ -347,22 +338,22 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
 <br>
 <table cellspacing="2" cellpadding="2" style="width: 95%;">
     <tr>
-        <td class="Titolo" colspan=6 > Specificare esito per ciascun oggetto: </td>
+        <td class="Titolo" colspan="6"> Specificare esito per ciascun oggetto: </td>
     </tr>
     <tr>
-        <td class="l" colspan=2 > Oggetto </td>
-        <td class="l" colspan=2 > Esito </td>
+        <td class="l" colspan="2"> Oggetto </td>
+        <td class="l" colspan="2"> Esito </td>
     </tr>
 <%
 for (int i=0; i< tenori.length;i++) {
 %>
 	<tr>
-		<td class="l"colspan=2 >
-          	<input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size="60%">
-          	<input Title="Cod Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>">
-          	<input Title="Cod Dettaglio Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>">
+		<td class="l"colspan="2">
+          	<input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>" readonly size="85%">
+          	<input Title="Cod Oggetto" type="hidden" name="<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>">
+          	<input Title="Cod Dettaglio Oggetto" type="hidden" name="<%=ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>">
         </td>
-		<td class="l"colspan=2 >
+		<td class="l"colspan="2">
            	<select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onChange="enableForma();">
              	<%=esiti[i]%>
           	</select>
@@ -375,7 +366,9 @@ for (int i=0; i< tenori.length;i++) {
 <br>
 <table cellspacing="2" cellpadding="2" style="width: 95%;">
 <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<% if (is678) { %>
+<%
+if (is678) {
+%>
 	<tr>
 		<td class="l">Ordinanza non emessa - Atti al Presidente 
 	      	<input value="S" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_ATTI_AL_PRESIDENTE%>" onClick="checkAttiAlPresidente()">	
@@ -384,26 +377,28 @@ for (int i=0; i< tenori.length;i++) {
 			<table>
 			<tr>
 				<td class="l" style="border:0px;">Note&nbsp;&nbsp;&nbsp;</td>
-				<td>&nbsp;&nbsp;<TEXTAREA title="Note" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4" ></textarea></td>
+				<td>&nbsp;&nbsp;<TEXTAREA title="Note" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4" ></textarea></td>
 			</tr>
 			</table>
 		</td>
 	</tr>
-<% } %>
-<%-- FINE: MEV_9 --%>
-<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<% if (!is678) { %>
+<%
+} /*else {*/
+if (!is678) {
+%>
 	<tr>
 		<td class="l">Ulteriore descrizione della decisione</td>
-	 	<td class="l"><TEXTAREA title="Ulteriore descrizione della decisione" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE %>" cols="70" rows="4" ></textarea></td>
+	 	<td class="l"><TEXTAREA title="Ulteriore descrizione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE %>" cols="70" rows="4" ></textarea></td>
 	</tr>
-<% } %>
+<%
+}
+%>
 <%-- FINE: MEV_9 --%>
     <tr>
       	<td class="l">UEPE Competente </td>
       	<td class="l">
-        	<input Title="UEPE Competente" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP%>" value="" size="35">
-        	<a href="Javascript:ListaCSSA('InserisciOrdinanzaMA','<%= ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP %>','<%= ICostantiDepositoOrdinanzaPc.CAMPO_ID_CSSA_COMP %>');">
+        	<input Title="UEPE Competente" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP%>" value="" size="35">
+        	<a href="Javascript:ListaCSSA('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COMUNE_CSSA_COMP %>','<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_CSSA_COMP %>');">
         		<img src="/images/filefolder.gif" border=0>
         	</a>
       	</td>
@@ -416,8 +411,8 @@ if ("TDSM".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUf
 	<tr>
        	<td class="l">USSM Competente </td>
        	<td class="l">
-			<input Title="USSM" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM %>" value="" size=35 >
-			<a href="Javascript:ListaUSSM('InserisciOrdinanzaMA','<%= ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM %>');">
+			<input Title="USSM" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>" value="" size=35 >
+			<a href="Javascript:ListaUSSM('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_UFFICIO_USSM%>');">
 	          	<img src="/images/filefolder.gif" border=0>
 			</a>        
 		</td>
@@ -440,7 +435,7 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 %>   
 	<tr>
 	 	<td class="l">Tribunale di sorveglianza per i Minorenni competente </td>
-	 	<td class="l" colspan="3">
+	 	<td class="l">
 	   		<input type="text" Title="Magistrato" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35  >
 			<a href="Javascript:ListaComuniEmitTdsMinor('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
 	     		<img src="/images/filefolder.gif" border=0>
@@ -453,7 +448,7 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 	<tr>
 	  	<td class="l">Ufficio di sorveglianza Competente </td>
 	  	<td class="l">
-	    	<input Title="Magistrato" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" value="" size=35 >
+	    	<input Title="Magistrato" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" value="" size=35 >
 			<a href="Javascript:ListaUDS('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
 	    		<img src="/images/filefolder.gif" border=0>
 	    	</a>
@@ -465,7 +460,7 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 	<tr>
      	<td class="l">Ufficio di Sorveglianza per i Minorenni competente </td>     
 		<td class="l">
-			<input Title="Magistrato" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35 type="text" onChange="pulisciId();">
+			<input Title="Magistrato" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP %>" size=35 type="text" onChange="pulisciId();">
   			<a href="Javascript:ListaComuniEmitUdsMinor('InserisciOrdinanzaMA','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>');">
 	        	<img src="/images/filefolder.gif" border=0>
 	      	</a>
@@ -477,42 +472,46 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 	<tr>
       	<td class="l">Luogo svolgimento della prova </td>
       	<td class="l">
-        	<input Title="Luogo svolgimento della prova" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA %>" value="" size=35 >
+        	<input Title="Luogo svolgimento della prova" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_LUOGO_SVOLGIMENTO_PROVA%>" value="" size="35">
       	</td>
     </tr>
 	<tr>
       	<td class="l">Servizio terapeutico competente </td>
       	<td class="l">
-        	<input Title="Servizio terapeutico competente " name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP %>" value="" size=35 >
+        	<input Title="Servizio terapeutico competente " name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_SERVIZIO_TERAPEUTICO_COMP%>" value="" size="35">
       	</td>
     </tr>
 
 <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<% if (!is678) { %>       
+<%
+if (!is678) {
+%>       
     <tr>
-      	<td class="l">In caso di Differimento Pena/Detenz. Dom. speciale indicare:</td>
+      	<td class="l" colspan="2">In caso di Differimento Pena/Detenz. Dom. speciale indicare:</td>
     </tr>
     <tr>
       	<td class="l">Data Termine Misura (gg-mm-aaaa)</td>
       	<td class="L">
-	        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
-	        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
-	        <input value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" >
+	        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> /
+	        <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> /
+	        <input value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_FINE_MISURA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)">
       	</td>
     </tr>
     <tr>
-   		<td class="l">oppure (solo per Differimento Pena)</td>
+   		<td class="l" colspan="2">oppure (solo per Differimento Pena)</td>
 	</tr>
 	<tr>
 		<td class="l">Durata Misura(AA-MM-GG)</td>
 		<td class="L">
-			<input value="" title="Numero Anni Detenzione" type="text" size="3" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM %>"  > -
-	        <input value="" title="Numero Mesi Detenzione" type="text" size="3" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM %>"  > -
-	        <input value="" title="Numero Giorni Detenzione" type="text" size="4" maxlength="2" name="<%= ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM %>"  >
+			<input value="" title="Numero Anni Detenzione" type="text" size="3" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>"> -
+	        <input value="" title="Numero Mesi Detenzione" type="text" size="3" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>"> -
+	        <input value="" title="Numero Giorni Detenzione" type="text" size="4" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>">
       	</td>
     </tr>
-<% } %>
-<%-- FINE: MEV_9 --%>    
+<%
+}
+%>
+<%-- FINE: MEV_9 --%>
   	<tr><td>&nbsp;</td></tr>
     <tr>
     	<td class="l">Controllo tramite mezzi elettronici 
@@ -523,13 +522,13 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
       	</td>
     </tr>
   	<tr><td>&nbsp;</td></tr>
-  	<tr><td>&nbsp;</td></tr>
 	<tr>
-    	<td class="l">Inserimento Prescrizioni <input value="06" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>"></td>
+    	<td class="l" colspan="2">Inserimento Prescrizioni <input value="06" type="checkbox" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_CK_PRESCRIZIONI%>"></td>
   	</tr>
 	<%-- MEV10-s3: refactoring del layout della pagina --%>
 	<tr><td>&nbsp;</td></tr>
-   	<table title="tableInForma" id="tableInForma" style="display: none;">
+</table>
+<table title="tableInForma" id="tableInForma" style="display: none; width: 95%;" cellspacing="2" cellpadding="2">
    		<tr>
    			<td class="l" colspan="3">Indicare se la misura deve essere eseguita nelle forme della</td>
    		</tr>
@@ -546,7 +545,8 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
    				<input value="" type="text" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NOME_COMUNITA%>" size="75">
    			</td>
    		</tr>
-   	</table>
+</table>
+<table cellspacing="2" cellpadding="2" style="width: 95%;">
   	<tr><td>&nbsp;</td></tr>
     <tr>
       	<td>
@@ -565,12 +565,16 @@ if ("UDS".equalsIgnoreCase(fascicoloSiusGP.getFascicoloSiusModel().getCodTipoUff
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("InserisciOrdinanzaMA");
 <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<% if (!is678) { %>  
+<%
+if (!is678) {
+%>
 frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_ANNI_DETENZIONE_DOM%>","numeric");
 frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_MESI_DETENZIONE_DOM%>","numeric");
 frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_DETENZIONE_DOM%>","numeric");
 /*frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_PERMESSO_ACCORDATI%>","numeric"); */
-<% } %>
+<%
+}
+%>
 <%-- FINE: MEV_9 --%>
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>

@@ -72,6 +72,8 @@
 <jsp:useBean id="etichettaEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="oscuraEta" 				scope="request" class="java.lang.String"/>
 <jsp:useBean id="esperto" 					scope="request" class="siap.sius.esperto.model.EspertoModel"/>
+<%-- MEV_9: aggiunto useBean --%>
+<jsp:useBean id="dataRestituzioneStr" 		scope="request" class="java.lang.String"/>
 <%
 String isVALIGN = "top";
 String isBorder = "0";
@@ -1300,6 +1302,26 @@ if (elencoNote != null && elencoNote.size() > 0) {
 		</td>
 	</tr>
 </table>
+
+<%
+// MEV_9: aggiunta riga per RESTITUZIONE ATTI AL PRESIDENTE
+if (Utils.isPresent(dataRestituzioneStr)) {
+%>
+<table cellspacing="1" cellpadding="1" style="width: 100%;" border=<%=isBorder%>>
+	<tr>
+		<td class="label" width="15%" valign=<%=isVALIGN%>>&nbsp;</td>
+		<td class="Label">
+			<font class="cRosso">
+				Atti Restituiti al Presidente il <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.fascicolo.action.ActLoadGestioneRestituzioneAttiPresidente&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>"><%=dataRestituzioneStr%></a>
+			</font>
+		</td>
+	</tr>
+</table>
+<%
+}
+// FINE MEV_9
+%>
+
 <%
 if (ulterioriistanze != null && ulterioriistanze.size() > 0) {
 %>

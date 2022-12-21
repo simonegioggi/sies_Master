@@ -35,7 +35,7 @@ public class ActModificaRestituzioneAttiPresidente extends ActionSius implements
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 		gestioneRitorno();
 
-		String retPage = PG_LOAD_GESTIONE_RESTITUZIONE_ATTI_PRESIDENTE;
+		// String retPage = PG_LOAD_GESTIONE_RESTITUZIONE_ATTI_PRESIDENTE;
 		FascicoloGPModel fgpm = null;
 
 		// il Fascicolo è in sessione
@@ -75,8 +75,7 @@ public class ActModificaRestituzioneAttiPresidente extends ActionSius implements
 
 		// se siamo in inserimento allora salvo e modifico stato fascicolo
 		// aggiorno dati sulla tabella FASCICOLO_SIUS
-		if (COD_EMESSO_DECRETO_DESIGNAZIONE
-				.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())) {
+		if (COD_EMESSO_DECRETO_DESIGNAZIONE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())) {
 			IFascicoloSius ifs = SIUSLookupRemote.getFascicoloSiusRemote();
 			FascicoloSiusModel fsm = new FascicoloSiusModel();
 			fsm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
@@ -111,11 +110,20 @@ public class ActModificaRestituzioneAttiPresidente extends ActionSius implements
 
 		setRequestAttribute("modalita", "dettaglio");
 
+		// setta la risposta nella request
+		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Avvenuto Correttamente!");
+		RedirectTo rt = new RedirectTo();
+		rt.setPage(IWebConstants.PG_MAIN);
+		rt.setAction("siap.sius.fascicolo.action.ActLoadDettaglioFascicolo");
+		rt.setParameter(CAMPO_ID_FASCICOLO_SIUS,
+				fgpm.getFascicoloSiusModel().getIdFascicoloSius().toString());
+		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
-		return retPage;
+		return IWebConstants.PG_MESSAGE; // return retPage;
 	}
 
 }
