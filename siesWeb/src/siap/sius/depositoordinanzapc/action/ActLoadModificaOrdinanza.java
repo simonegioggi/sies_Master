@@ -2,6 +2,7 @@ package siap.sius.depositoordinanzapc.action;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -9,6 +10,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.Utils;
 import f3b.web.html.Option;
@@ -26,6 +28,8 @@ import siap.siep.misurasicurezza.controller.MisuraSicurezzaController;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.SIUSException;
+import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
+import siap.sius.depositodecreto.controller.IDepositoDecreto;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
@@ -273,6 +277,25 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
 
+		// INIZIO: MEV_9 (D.lgs. 123/2018)
+		if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza().compareTo(MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0)
+		{
+			// Recupera la data emissione del decreto di designazione per i controlli in form 
+			FascicoloGPModel lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+		
+			// Recupero il deposito decreto per il fascicolo sius selezionato
+			BigDecimal idGP = lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
+			IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
+			DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,ICostantiDepositoDecreto.DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
+			
+			Date lDataEmissioneDecreto = ddm.getDataEmissione();
+			
+			String dataDecretoDesignazione = DateUtils.getDateToString(lDataEmissioneDecreto,"dd/MM/yyyy");
+			setRequestAttribute("dataDecretoDesignazione", dataDecretoDesignazione);
+		}
+		// FINE: MEV_9 (D.lgs. 123/2018)
+		
+		
 		IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
 		List<MisuraSicurezzaModel> lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(
 				((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP")).getFascicoloSiusModel()

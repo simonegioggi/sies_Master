@@ -22,10 +22,9 @@ FascicoloGPModel mFasGPMod = (FascicoloGPModel) session.getAttribute("fascicoloS
 GeneraleProcedimentoModel mGeneraleProcedimentoModel = mFasGPMod.getGeneraleProcedimentoModel();
 
 boolean is678 = false;
-if (   ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(mGeneraleProcedimentoModel.getCodOggettoProcedimento())
-    || ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(mGeneraleProcedimentoModel.getCodOggettoProcedimento())
- )
-is678 = true;
+if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+	is678 = true;
+}
 //FINE: MEV_9
 %>
 <table cellspacing="2" cellpadding="2">

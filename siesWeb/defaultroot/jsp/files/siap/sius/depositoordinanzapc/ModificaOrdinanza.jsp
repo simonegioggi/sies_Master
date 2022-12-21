@@ -28,6 +28,8 @@
 <jsp:useBean id="depositoDecretoMotivazioni" scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
 <jsp:useBean id="tenori" scope="request" class="java.util.Vector"/>
 <jsp:useBean id="misuraSicurezza" scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
+<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+<jsp:useBean id="dataDecretoDesignazione" scope="request" class="java.lang.String"/>
 
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -109,17 +111,40 @@ else
 String contenuto = "";
 contenuto = fascicoloSiusGP.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
 boolean is678 = false;
-if (   ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678.equals(contenuto)
-    || ICostantiDepositoOrdinanzaPc.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(contenuto)
-   )
-is678 = true;
+// String dataDecretoDesignazione = "";
+if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+	is678 = true;
+}
 //FINE: MEV_9
 %>
 <html>
 	<head>
 	    <script language="JavaScript">
 			function Verify() {
+
 		     	var flagDate = VerificaDate();
+
+		     	<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+		     	<% if (is678) { %>
+		     	  var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>"); 
+		     	  var contaProvvisorie = 0;
+		     	    
+		     	  if (typeof (listComboEsiti[1]) != "undefined") {
+		     		  for (idComboEsiti=0; idComboEsiti<listComboEsiti.length; idComboEsiti++) {  
+		     		    var comboEsito = listComboEsiti[idComboEsiti];
+		     		    
+		     		    if (comboEsito[comboEsito.selectedIndex].value =='0680')
+		     		      contaProvvisorie++;
+		     		  }
+		     	  }
+		     	  
+		     	  if (contaProvvisorie>1) {
+		     	    alert("Attenzione. Può essere selezionato 'Applica Provvisoriamente' per un solo oggetto");
+		     	    return false;
+		     	  }	
+		     	<% } %>
+		     	<%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+		     	
 		     	// MEV_39: aggiunto controllo
 		     	<% if ("42".equals(tipo) || "MS".equals(tipo)) { %>
 			     	node = document.getElementById("datarinvio");
@@ -172,6 +197,7 @@ is678 = true;
 		      	var ritorno = true;
 		      	var data_camera = '<%=data1%>';
 		      	var data_deposito = '<%=data2%>';
+		      	var dataDecretoDesignazione = '<%=dataDecretoDesignazione%>'; <%-- MEV_9 (D.lgs. 123/2018) --%>
 		      	var data_emissione = document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.ModificaOrdinanza.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 		      	var data_decorrenza;
 		      	var nodeDataDec;
@@ -190,6 +216,14 @@ is678 = true;
 			        alert("La data di emissione non può essere maggiore della data di deposito o in assenza di essa, della data di Sistema!");
 			        ritorno =  false;
 		     	}
+			  	<%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
+		      	<% if (is678) { %>		      	
+		      	else if (dataDecretoDesignazione != "" && !CompareDate(dataDecretoDesignazione, data_emissione)) {
+			        alert("La data di emissione non può essere minore della Data emissione del Decreto di Designazione!");
+			        ritorno =  false;
+		      	}		      	
+		      	<% } %>		      	
+		      	<%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
 		      	// Controllo della data deposito <= data camera di consiglio
 		      	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
 			        alert("La data di emissione non può essere minore della Data Udienza!");
@@ -424,30 +458,46 @@ is678 = true;
 	    <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
 	    <% if (is678) { %>
 		<script >
-	      function checkEsiti()
-	      {
-	        //alert("asdsadda");
+		function checkEsiti()
+		{
+		  //alert("checkEsiti...");
 
-	        var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");        
-	        
-	        console.log("listComboEsiti = "+listComboEsiti);
-	        console.log("listComboEsiti.length = "+listComboEsiti.length);
-	        
-	        for (i=0; i<listComboEsiti.length; i++) {  
-	          var comboEsito = listComboEsiti[i];
-	          
-	          for (j=0;j<comboEsito.length;  j++) {
-	             console.log("listComboEsiti.value = "+comboEsito.options[j].value);
-	          
-	             if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
-	               console.log("remove!!! ");
-	               comboEsito.remove(j);
-	               j--;
-	             }
-	          }          
-	        }
-	      }      
-
+		  var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>");        
+		  
+		  //console.log("listComboEsiti = "+listComboEsiti);
+		  //console.log("listComboEsiti[1] = "+listComboEsiti[1]);
+		  //console.log("listComboEsiti.length = "+listComboEsiti.length);
+		  
+		  if (typeof (listComboEsiti[1]) == "undefined") {
+		    //console.log("Oggetto unico");
+		      var comboEsito = document.ModificaOrdinanza.<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>;  
+		      for (j=0;j<comboEsito.length;  j++) {
+		         //console.log("listComboEsiti.value = "+comboEsito.options[j].value);
+		      
+		         if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
+		           //console.log("remove!!! ");
+		           comboEsito.remove(j);
+		           j--;
+		         }
+		      } 
+		  }
+		  else {
+		    //console.log("Oggetto multiplo");
+		    for (i=0; i<listComboEsiti.length; i++) {  
+		      var comboEsito = listComboEsiti[i];
+		      
+		      for (j=0;j<comboEsito.length;  j++) {
+		         //console.log("listComboEsiti.value = "+comboEsito.options[j].value);
+		      
+		         if (comboEsito.options[j].value=='0685') {  <%-- Si elimina CONCEDE--%>
+		           //console.log("remove!!! ");
+		           comboEsito.remove(j);
+		           j--;
+		         }
+		      }          
+		    }
+		  }  
+		}
 		</script>
 		<% } %>
 	    <%-- FINE: MEV_9 --%>		

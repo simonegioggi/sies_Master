@@ -276,6 +276,8 @@ public interface ICostantiDepositoOrdinanzaPc {
 	public static final String MISURA_ALTERNATIVA = "MA";
 	// INIZIO: MEV_9 (D.lgs. 123/2018)
 	public static final String MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA = "AM";
+	public static final String PG_LOAD_INSERISCI_ORDINANZA_MA_AMM_PROVV = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaMAAmmProvv.jsp";
 	// FINE: MEV_9 (D.lgs. 123/2018)
 	public static final String PG_LOAD_INSERISCI_ORDINANZA_MA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositoordinanzapc/InserisciOrdinanzaMA.jsp";
