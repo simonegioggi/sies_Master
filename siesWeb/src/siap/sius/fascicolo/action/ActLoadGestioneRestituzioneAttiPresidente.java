@@ -1,5 +1,7 @@
 package siap.sius.fascicolo.action;
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
@@ -32,6 +34,8 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 
 	// variabile di classe
 	private FascicoloSiepModel fsm = null;
+	private Date dataRestituzione = null;
+	private boolean isReadOnly = false;
 
 	public String processRequest() throws Exception {
 
@@ -58,6 +62,12 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 					"Restituzione Procedimento non consentita con campo Oggetto vuoto!");
 		}
 
+		// ricerco dati sulla tabella Generale_Procedimento
+		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
+		GeneraleProcedimentoModel gpm = igp
+				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
+		dataRestituzione = gpm.getDataRestituzione();
+
 		retPage = analisiStatoFascicolo(fgpm);
 
 		if (!fascicoloInSessione) {
@@ -65,11 +75,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			setSessionAttribute("fascicolo", fsm);
 		}
 
-		// ricerco dati sulla tabella Generale_Procedimento
-		IGeneraleProcedimento igp = SIUSLookupRemote.getGeneraleProcedimentoRemote();
-		GeneraleProcedimentoModel gpm = igp
-				.ExRicercaGeneraleProcedimentoByFascicolo(fgpm.getFascicoloSiusModel().getIdFascicoloSius());
-		if (Utils.isNullObj(gpm.getDataRestituzione()) && COD_EMESSO_DECRETO_DESIGNAZIONE
+		if (Utils.isNullObj(dataRestituzione) && COD_EMESSO_DECRETO_DESIGNAZIONE
 				.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
@@ -80,9 +86,12 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			return rt.toString();
 		} else {
 			setRequestAttribute("dataRestituzioneStr",
-					DateUtils.getDateToString(gpm.getDataRestituzione(), "dd/MM/yyyy"));
+					DateUtils.getDateToString(dataRestituzione, "dd/MM/yyyy"));
 			setRequestAttribute("descrRestituzione", gpm.getDescrRestituzione());
-			setRequestAttribute("modalita", "dettaglio");
+			if (isReadOnly)
+				setRequestAttribute("modalita", "readOnly");
+			else
+				setRequestAttribute("modalita", "dettaglio");
 		}
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -136,16 +145,18 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 
 		if (!(COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())
 				|| COD_EMESSO_DECRETO_DESIGNAZIONE
-						.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())))
+						.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+				&& Utils.isNullObj(dataRestituzione))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione consentita solo su Procedimento in stato di 'Restituiti Atti al Presidente'"
-					+ " oppure 'Emesso Decreto Designazione'!");
+							+ " oppure 'Emesso Decreto Designazione'!");
 
 		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_UNIFICATO))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento Unificato!");
 
-		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO))
+		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO)
+				&& Utils.isNullObj(dataRestituzione))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento con Provvedimento!");
 
@@ -162,7 +173,11 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Il " + lm.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
 
-		setRequestAttribute("modalita", "dettaglio");
+		if (!(COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())
+				|| COD_EMESSO_DECRETO_DESIGNAZIONE
+						.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+				&& !Utils.isNullObj(dataRestituzione))
+			isReadOnly = true;
 
 		// valore di ritorno
 		return retPage;

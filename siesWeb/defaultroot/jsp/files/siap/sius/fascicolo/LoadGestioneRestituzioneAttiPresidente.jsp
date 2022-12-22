@@ -81,7 +81,7 @@ else if (modalita.equals("modifica"))
 		</td>
 		<td class="LBG"><font class="label">Funzione : <%=testo%> Restituzione Atti al Presidente</font></td>
 <%
-if (!modalita.equals("inserimento")) {
+if (!(modalita.equals("inserimento") || modalita.equals("readOnly"))) {
 %>
 		<td class="LBG">
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=actionModifica%>&<%=ICostantiFascicoloSius.CAMPO_ID_FASCICOLO_SIUS%>=<%=fascicoloSiusGP.getFascicoloSiusModel().getIdFascicoloSius()%>&TornaQui=<%=TornaQui%>">
@@ -103,7 +103,7 @@ if (!modalita.equals("inserimento")) {
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadGestioneRestituzioneAttiPresidente">
 <table cellspacing="2" cellpadding="2">
 <%
-if (modalita.equals("dettaglio")) {
+if (modalita.equals("dettaglio") || modalita.equals("readOnly")) {
 %>
 	<tr>
 		<td class="l">Data Restituzione<font class="ob">(*)</font></td>
