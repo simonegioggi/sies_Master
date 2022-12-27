@@ -65,18 +65,8 @@ import siap.sige.udienzaprocedimento.model.UdienzaProcedimentoSigeModel;
 import siap.sige.util.SIGELookupRemote;
 
 /**
- * <p>
  * Title: UdienzaProcedimentoSigeController
- * </p>
- * <p>
  * Description: Classe Controller per UdienzaProcedimento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company:
- * </p>
  *
  * @version 1.0
  */
@@ -294,6 +284,8 @@ public class UdienzaProcedimentoSigeController extends SiapController implements
 			lFasSigeDAO.setCodUfficioAggiornamento(aUdienzaProcedimento.getCodUfficioAggiornamento());
 			lFasSigeDAO.setCodOperatoreAggiornamento(aUdienzaProcedimento.getCodOperatoreAggiornamento());
 			lFasSigeDAO.setDataAggiornamento(aUdienzaProcedimento.getDataAggiornamento());
+			// ma perchè se cancello fissazione udienza non torna ad iscritto???
+			// lFasSigeDAO.setCodStatoFascicolo("02"); // ISCRITTO
 			lFasSigeDAO.setCondizioneUpdate(lIdFascicolo);
 			lFasSigeDAO.update();
 			lFasSigeDAO.stop();
@@ -403,7 +395,6 @@ public class UdienzaProcedimentoSigeController extends SiapController implements
 
 	/**
 	 * Inserisce Ordinanza Rinvio Udienza
-	 * <p>
 	 *
 	 * @param aUdienza
 	 *            Dati udienza.
@@ -417,8 +408,8 @@ public class UdienzaProcedimentoSigeController extends SiapController implements
 	 *            dati deposito ordinanza
 	 * @param aGeneraleProcedimentoold
 	 *            dati Generale procedimento.
-	 * @return
-	 *         <p>
+	 * @return EventoModel
+	 *
 	 * @throws F3BException
 	 *             propaga errore di eccezione
 	 */
@@ -622,7 +613,6 @@ public class UdienzaProcedimentoSigeController extends SiapController implements
 
 	/**
 	 * Inserisce Ordinanza Rinvio Udienza
-	 * <p>
 	 *
 	 * @param aUdienza
 	 *            Dati udienza.
@@ -636,8 +626,8 @@ public class UdienzaProcedimentoSigeController extends SiapController implements
 	 *            dati deposito ordinanza
 	 * @param aGeneraleProcedimentoold
 	 *            dati Generale procedimento.
-	 * @return
-	 *         <p>
+	 * @return EventoModel
+	 *
 	 * @throws F3BException
 	 *             propaga errore di eccezione
 	 */
@@ -1442,9 +1432,6 @@ public class UdienzaProcedimentoSigeController extends SiapController implements
 		return lByteArrayOut;
 	}
 
-	/**
-	 *
-	 */
 	public ByteArrayOutputStream ExStampaProcedimentixDataUdienza(Date aDataUdienza, BigDecimal aIdFascicolo,
 			String aCodMagistrato, BigDecimal aIdEsperto, XModel aStampa, String aIdDocumento,
 			String lOrderBy, UtenteModel aUtenteModel, String aStatoProcedimento, String aTipoProc,
