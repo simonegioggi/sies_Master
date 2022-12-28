@@ -73,7 +73,14 @@ if (ICostantiDepositoOrdinanzaPc.MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA.equal
       <td class="l">Servizio terapeutico competente </td>
       <td class="l"><font class="campo"> <%=StringUtils.toStringJSP(  datiOrdinanza.getOrdinanza().getServizioTerapeuticoComp(), "-")%></font></td>
     </tr>
-    
+
+<% if (is678) { %>    
+     <tr>
+      <td class="l">Data Esecutivita' </td>
+      <td class="l"><font class="campo"> <%=StringUtils.toStringJSP( DateUtils.getDateToString(datiOrdinanza.getOrdinanza().getDataEsecutivita(),"dd/MM/yyyy"), "-")%></font></td>
+    </tr>
+<% } %>
+
 <% if (!is678) { %>    
      <tr>
       <td class="l">Data Termine Misura </td>

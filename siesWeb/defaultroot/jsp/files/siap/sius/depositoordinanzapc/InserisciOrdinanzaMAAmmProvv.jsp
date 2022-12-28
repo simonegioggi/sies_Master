@@ -271,6 +271,9 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
 			<font class="campo">Emissione Ordinanza Ammissione Provvisoria Misura Alternativa</font>
     	</td>
   	</tr>
+	  <tr>
+	    <jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+	  </tr>
 </table>
 
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="InserisciOrdinanzaMA">
@@ -281,24 +284,24 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
 	</tr>
 </table>
 <br>
-<table cellspacing="2" cellpadding="2" style="width: 95%;">
+<table cellspacing="2" cellpadding="2" style="width1: 95%;">
 	<tr>
-	    <td class="Titolo" colspan=6 > Specificare esito per ciascun oggetto: </td>
+	    <td class="Titolo" colspan="2" > Specificare esito per ciascun oggetto: </td>
 	</tr>
 	<tr>
-	    <td class="l" colspan=2 > Oggetto </td>
-	    <td class="l" colspan=2 > Esito </td>
+	    <td class="l" colspan=1 > Oggetto </td>
+	    <td class="l" colspan=1 > Esito </td>
 	</tr>
 <%
 for (int i=0; i< tenori.length;i++) {
 %>
 	<tr>
-	  	<td class="l"colspan=2 >
-	    	<input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size="60%">
+	  	<td class="l" colspan=1 >
+	    	<input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" value="<%=tenori[i].getDescrOggettoTenore()%>"  readonly size="100">
 			<input Title="Cod Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" value="<%=tenori[i].getCodOggettoTenore()%>">
 			<input Title="Cod Dettaglio Oggetto" type="hidden" name="<%= ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO %>" value="<%=tenori[i].getCodDettaglioOggetto()%>">
 		</td>
-		<td class="l"colspan=2 >
+		<td class="l" colspan=1 >
 	  		<select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" onChange="enableForma();">
 				<%=esiti[i]%>
 	    	</select>

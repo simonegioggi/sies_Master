@@ -79,7 +79,7 @@ else if (modalita.equals("modifica"))
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
 			</a>
 		</td>
-		<td class="LBG"><font class="label">Funzione : <%=testo%> Restituzione Atti al Presidente</font></td>
+		<td class="LBG"><font class="label">Funzione : </font><font class="campo"><%=testo%> Restituzione Atti al Presidente</font></td>
 <%
 if (!(modalita.equals("inserimento") || modalita.equals("readOnly"))) {
 %>
