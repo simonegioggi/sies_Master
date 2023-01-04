@@ -89,7 +89,7 @@
   	<%-- INTERVENTO PER 11.2.1 --%>
   	<input type="HIDDEN" name="listaIdUdienze" value="">
   	
-  	<table width=100%>
+  	<table>
     	<tr>
 			<td class="LBG">
 				<a href="Javascript:window.print();">

@@ -65,7 +65,8 @@ if (Stampabile.compareTo("SI") == 0){
           if(lFun.getVisualizzazionType().equals(ICostantiFunzioni.FUNZIONE_COMBO)){
 %>
 <td class="l">
-        	<select Title="Modello di stampa" name="ListaTemplate" >
+<%-- Ticket#202212280114 si aggiunge id per problemi con Edge --%>
+        	<select Title="Modello di stampa" name="ListaTemplate" id="ListaTemplate">
           	<%=ElencoTemplate%>
           </select>            
           	<a href="Javascript:stampaT('<%=lFun.getNameAction()%>')" >

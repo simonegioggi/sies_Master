@@ -38,7 +38,7 @@ if ("M".equals(tipoRito)) {
 <body class="corpo" >
 	<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="ListaSelezioneProcedimentixUdienza">
   	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sige.udienzaprocedimento.action.ActRicercaUdienzaProcedimento">
-  	<table width=100%>
+  	<table>
     	<tr>
     		<td class="LBG">
     			<a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a>
