@@ -733,6 +733,7 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 			// Altra Causa
 			lAltraCausaSqlDao = new AltraCausaSqlDAO(lConn);
 			lAltraCausaSqlDao.ricercaAltraCausaByIdFascicolo(aFascicoloModel.getIdFascicoloSiep());
+			
 			AltraCausaModel lAltraCausa = (AltraCausaModel) lAltraCausaSqlDao.getModelByKey();
 
 			lAltraCausaDao = new AltraCausaDAO(lConn);
@@ -748,12 +749,23 @@ public class ScambioSanzioneController extends SiapController implements IScambi
 				}
 			} else {
 				if (lAltraCausa != null) {
-					lAltraCausaDao.setIdAltraCausa(lAltraCausa.getIdAltraCausa());
-					lAltraCausaDao.selByKey();
-					lAltraCausaDao.delete();
+					// Ticket#20221230011 - i record AltraCausa collegati al fascicolo potrebbero essere più 
+					// di uno e puntati anche dalla posizione giuridica.
+					// La vecchia gestione prevedeva un solo record AC che puntava il fascicolo scollegato dalla posizione giuridica
+					// La nuova gestione prevede di collegare il record ALTRA_CAUSA la fascicolo ma puntato della posizione giuridica,
+					// il record resta a sistema storicizzato anche in caso di cambio PG
+					// n.b. si mette in try catch il tentativo di cancellazione che funziona solo nel primo caso
+					try {
+						lAltraCausaDao.setIdAltraCausa(lAltraCausa.getIdAltraCausa());
+						lAltraCausaDao.selByKey();
+						lAltraCausaDao.delete();
+					} catch (Exception e) {
+						siesLogger.warn("ExInserisciRevocaConversione: Impossibile cancellare il record AltraCausa probabilmente puntato dalla posizione giuridica");
+					}
+					// Ticket#20221230011 - FINE
 				}
 			}
-
+			
 			// inserisco l'annotazione manuale
 			aAnnMod.setEveIdEvento(lKeyEvento);
 			aAnnMod.setFasSieIdFascicoloSiep(aEveMod.getFasSieIdFascicoloSiep());
