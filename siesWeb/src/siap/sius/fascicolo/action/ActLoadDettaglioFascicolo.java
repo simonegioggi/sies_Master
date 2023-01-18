@@ -407,7 +407,10 @@ public class ActLoadDettaglioFascicolo extends ActionSius
 			checkMinorenne(fgpm.getFascicoloSiusModel().getSoggetto(), fgpm, lParser.getSentenza());
 
 		/*
-		 * ISSUE MEV : aggiunta estrazione data esecutivita Numero MEV : 9 Autore : sgioggi Data : 5 dic 2022
+		 * ISSUE MEV : aggiunta estrazione data esecutivita 
+		 * Numero MEV : 9 
+		 * Autore : sgioggi 
+		 * Data : 5 dic 2022
 		 * Branch : MEV_9
 		 */
 		if (!Utils.isNullObj(fgpm) && !Utils.isNullObj(fgpm.getGeneraleProcedimentoModel())

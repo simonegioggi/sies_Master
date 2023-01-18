@@ -17,6 +17,8 @@ import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.controller.IDecodifiche;
 import siap.sico.decodifiche.util.DecodificheUtils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.libertaanticipata.controller.ILicenzaPeriodiLibAnticipata;
 import siap.sico.libertaanticipata.model.LicenzaLibAnticipataModel;
 import siap.sico.ufficio.controller.IUfficio;
@@ -31,6 +33,7 @@ import siap.sius.SIUSException;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
 import siap.sius.depositodecreto.controller.IDepositoDecreto;
 import siap.sius.depositodecreto.model.DepositoDecretoModel;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel;
 import siap.sius.depositoordinanzapc.util.RicercaProvvedimentiCollegati;
@@ -42,29 +45,17 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
  * Title: ActLoadModificaOrdinanza
- * </p>
- * <p>
  * Description: Classe Action devoluta alla preparazione della Form di modifica di un'Ordinanza.
- * </p>
- * <p>
  * Poichè i dati da visualizzare sono gli stessi utilizzati per la visualizzazione del Dettaglio, la classe è
  * ottenuta come specializzazione della ActDettaglioEmissioneOrdinanza in modo da poter utilizzare le stesse
  * funzioni per ricavare i dati.
- * </p>
- * *
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company: Eunics
- * </p>
  *
  * @version 2.2
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -191,8 +182,11 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		}
 
 		/*
-		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 - AP Numero MEV : 39 Autore : Gioggi Data :
-		 * 20/giu/2017 Branch : MEV_39
+		 * ISSUE MEV : aggiunto codice per gestione oggetto C029 - AP 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 20/giu/2017 
+		 * Branch : MEV_39
 		 */
 		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
 				&& mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza().compareTo(APPELLO_MS) == 0) {
@@ -215,12 +209,13 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 				if (ddm != null)
 					setRequestAttribute("decreto", ddm);
 			}
-			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();			
+			MisuraSicurezzaModel aMisuraSicurezza = new MisuraSicurezzaModel();
 			// ricerco non per id fasc sius ma per id fasc sius origine (UDS) se esiste
-						// altrimenti ricerco per id fasc sius 20200125 [SG]
-			aMisuraSicurezza.setFasSiuIdFascicoloSius(lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null
-								? lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine()
-								: lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
+			// altrimenti ricerco per id fasc sius 20200125 [SG]
+			aMisuraSicurezza.setFasSiuIdFascicoloSius(
+					lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine() != null
+							? lFasGPMod.getFascicoloSiusModel().getIdFascicoloSiusOrigine()
+							: lFasGPMod.getFascicoloSiusModel().getIdFascicoloSius());
 			MisuraSicurezzaController lCtrl = new MisuraSicurezzaController();
 			Vector lVect = lCtrl.ExRicercaMisuraSicurezza(aMisuraSicurezza);
 			MisuraSicurezzaModel msm = null;
@@ -278,24 +273,57 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 		// ***** FINE INTERVENTO MEV_39 *****//
 
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza().compareTo(MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0)
-		{
-			// Recupera la data emissione del decreto di designazione per i controlli in form 
-			FascicoloGPModel lFasGPMod = new FascicoloGPModel((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
-		
+		if (mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza()
+				.compareTo(MISURA_ALTERNATIVA_AMMISSIONE_PROVVISORIA) == 0) {
+			// Recupera la data emissione del decreto di designazione per i controlli in form
+			FascicoloGPModel lFasGPMod = new FascicoloGPModel(
+					(FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+
 			// Recupero il deposito decreto per il fascicolo sius selezionato
 			BigDecimal idGP = lFasGPMod.getGeneraleProcedimentoModel().getIdGeneraleProcedimento();
 			IDepositoDecreto idd = SIUSLookupRemote.getDepositoDecretoRemote();
-			DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,ICostantiDepositoDecreto.DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
-			
+			DepositoDecretoModel ddm = idd.ExRicercaDepositoDecretoByGenProc(idGP,
+					ICostantiDepositoDecreto.DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA);
+
 			Date lDataEmissioneDecreto = ddm.getDataEmissione();
-			
-			String dataDecretoDesignazione = DateUtils.getDateToString(lDataEmissioneDecreto,"dd/MM/yyyy");
+
+			String dataDecretoDesignazione = DateUtils.getDateToString(lDataEmissioneDecreto, "dd/MM/yyyy");
 			setRequestAttribute("dataDecretoDesignazione", dataDecretoDesignazione);
 		}
 		// FINE: MEV_9 (D.lgs. 123/2018)
-		
-		
+
+		/*
+		 * ISSUE MEV : aggiunta ricerca dati ordinanza applicazione provvisoria da scivere in dettaglio 
+		 * Numero MEV : 9 
+		 * Autore : sgioggi 
+		 * Data : 17 gen 2023 
+		 * Branch : MEV_9
+		 */
+		if (mOrdEveTenPreMod != null && mOrdEveTenPreMod.getOrdinanza() != null
+				&& CONFERMA_DECISIONE_MAGISTRATO_RELATORE
+						.equals(mOrdEveTenPreMod.getOrdinanza().getCodTipoOrdinanza())) {
+			IEvento ie = SICOLookupRemote.getEventoRemote();
+			Vector<?> v = ie.ExRicercaEventoByFascicoloSius(
+					mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(),	null);
+			BigDecimal idEventoOrdinanza = null;
+			for (int i = 0; i < v.size(); i++) {
+				EventoModel em = (EventoModel) v.elementAt(i);
+				if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
+						&& em.getNumAllValidati() > 0) {
+					idEventoOrdinanza = em.getIdEvento();
+					break;
+				}
+			}
+			IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+			DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
+			// dati x l'ordinanza di Applicazione Provvisoria M.A.
+			String descrTipoOrdinanza = (DecodificheUtils.getDescbyCode(
+					DecodificheManager.getInstance().getTipoOrdinanza(), dopcm.getCodTipoOrdinanza()));
+			dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);
+			setRequestAttribute("dopcm", dopcm);
+		}
+		// ***** FINE INTERVENTO MEV_9 *****//
+
 		IMisuraSicurezza lCtrl = SIEPLookupRemote.getMisuraSicurezzaRemote();
 		List<MisuraSicurezzaModel> lMisureSicurezza = lCtrl.ExRicercaMisuraSicurezzaByIdFascicoloSIUS(
 				((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP")).getFascicoloSiusModel()
@@ -347,7 +375,6 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 
 	// Preleva l'Elenco di Esiti corrispondente ad un dato oggetto compatibili con la modifica dell'esito
 	// attuale
-
 	private String getEsitiMSCompatibiliPerModifica(String codiceOggetto, String acodAltEsitoSelezionato)
 			throws Exception {
 
@@ -375,7 +402,6 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 			siesLogger.debug("codice esito selezionato -> null ");
 
 		return lOption.toString();
-
 	}
 
 	// Preleva l'Elenco di Esiti corrispondente ad un dato oggetto

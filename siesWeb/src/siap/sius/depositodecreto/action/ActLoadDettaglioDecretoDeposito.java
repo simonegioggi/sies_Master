@@ -465,11 +465,8 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 			ricercaPrescrizioni(lDepDecreto.getIdEventoGenerato());
 		}
 		/*
-		 * ISSUE MEV : aggiunta casisitica per gestione rinvio MS
-		 * Numero MEV : 39
-		 * Autore : Gioggi
-		 * Data : 09/giu/2017
-		 * Branch : MEV_39
+		 * ISSUE MEV : aggiunta casisitica per gestione rinvio MS Numero MEV : 39 Autore : Gioggi Data :
+		 * 09/giu/2017 Branch : MEV_39
 		 */
 		else if (lTipoDecreto.compareTo(RINVIO_ESECUZIONE_MS) == 0) {
 			// Rinvio Misura Sicurezza
@@ -480,17 +477,12 @@ public class ActLoadDettaglioDecretoDeposito extends ActionSius
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
 		/*
-		 * ISSUE MEV : aggiunta casistica per gestione Designazione Magistrato Relatore
-		 * 				& Conferma Decisione Magistrato Relatore
-		 * Numero MEV : 9
-		 * Autore : Gioggi
-		 * Data : 18 nov 2020
-		 * Branch : MEV_9
+		 * ISSUE MEV : aggiunta casistica per gestione Designazione Magistrato Relatore Numero MEV : 9 Autore
+		 * : Gioggi Data : 18 nov 2020 Branch : MEV_9
 		 */
 		else if (lTipoDecreto.compareTo(DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA) == 0) {
-			String action = "0610".equals(mDepDecrMotMod.getEvento().getCodEsito())
-					? "siap.sius.depositodecreto.action.ActLoadDettaglioDesignazioneMagistratoRelatore"
-					: "siap.sius.depositodecreto.action.ActLoadDettaglioConfermaDecisioneMagistratoRelatore";
+			// if ("0610".equals(mDepDecrMotMod.getEvento().getCodEsito()))
+			String action = "siap.sius.depositodecreto.action.ActLoadDettaglioDesignazioneMagistratoRelatore";
 			lRedirectTo.setAction(action);
 			lRetPage = lRedirectTo.toString();
 		}

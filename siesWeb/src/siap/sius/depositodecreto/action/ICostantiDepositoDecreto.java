@@ -454,8 +454,6 @@ public interface ICostantiDepositoDecreto {
 	// MEV_9: create nuove pagine
 	public static final String PG_LOAD_INSERISCI_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/LoadInserisciDesignazioneMagistratoRelatore.jsp";
-	public static final String PG_LOAD_INSERISCI_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
-			+ "files/siap/sius/depositodecreto/LoadInserisciConfermaDecisioneMagistratoRelatore.jsp";
 	public static final String COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C050";
 	public static final String COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE = "C051";
 	public static final String DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE_PER_MA = "DM";
@@ -464,12 +462,9 @@ public interface ICostantiDepositoDecreto {
 	public static final String CAMPO_ANNO_DATA_TERMINE_EMISSIONE = "AnnoDataTermineEmissione";
 	public static final String PG_LOAD_DETTAGLIO_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/DettaglioDesignazioneMagistratoRelatore.jsp";
-	public static final String PG_LOAD_DETTAGLIO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
-			+ "files/siap/sius/depositodecreto/DettaglioConfermaDecisioneMagistratoRelatore.jsp";
 	public static final String PG_LOAD_MODIFICA_DESIGNAZIONE_MAGISTRATO_RELATORE = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/depositodecreto/LoadModificaDesignazioneMagistratoRelatore.jsp";
 	public static final String TEMPLATE_DECRETO_DESIGNAZIONE_MAGISTRATO_RELATORE = "SIUS_DE_0610";
-	public static final String TEMPLATE_DECRETO_CONFERMA_DECISIONE_MAGISTRATO_RELATORE = "SIUS_DE_0271";
 	public static final String CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE = "NumeroGiorniTermineEmissione";
 	// FINE MEV_9
 

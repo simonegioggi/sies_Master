@@ -1,4 +1,4 @@
-package siap.sius.depositodecreto.action;
+package siap.sius.depositoordinanzapc.action;
 
 import siap.sius.fascicolo.action.ActLoadRicercaFSPuntuale;
 
@@ -14,7 +14,7 @@ public class ActLoadFSPConfermaDecisioneMagistratoRelatore extends ActLoadRicerc
 		// Imposta alla JSP il nome della funzione e l'azione da chiamare alla conferma.
 		setRequestAttribute("functionName", "Conferma della Decisione del Magistrato Relatore");
 		setRequestAttribute("nextAction",
-				"siap.sius.depositodecreto.action.ActLoadInserisciConfermaDecisioneMagistratoRelatore");
+				"siap.sius.depositoordinanzapc.action.ActLoadInserisciConfermaDecisioneMagistratoRelatore");
 		// Si invoca il metodo della superclasse.
 		String lPage = super.processRequest();
 		return lPage;

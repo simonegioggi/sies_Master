@@ -22,14 +22,14 @@
 <%@ page import="siap.sico.utente.model.UtenteModel" %>
 <%@ page import="siap.sico.ufficio.model.UfficioModel" %>
 
-<jsp:useBean id="modalita"  scope="request" class="java.lang.String"/>
-<jsp:useBean id="fascicoloSiusGP" scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
-<jsp:useBean id="datiOrdinanza" scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
-<jsp:useBean id="depositoDecretoMotivazioni" scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
-<jsp:useBean id="tenori" scope="request" class="java.util.Vector"/>
-<jsp:useBean id="misuraSicurezza" scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
+<jsp:useBean id="modalita"  					scope="request" class="java.lang.String"/>
+<jsp:useBean id="fascicoloSiusGP" 				scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel" />
+<jsp:useBean id="datiOrdinanza" 				scope="request" class="siap.sius.depositoordinanzapc.model.OrdinanzaEventoTenoriPrescrizioniModel"/>
+<jsp:useBean id="depositoDecretoMotivazioni" 	scope="request" class="siap.sius.depositodecreto.model.DepositoDecretoEventoMotivazioniModel"/>
+<jsp:useBean id="tenori" 						scope="request" class="java.util.Vector"/>
+<jsp:useBean id="misuraSicurezza" 				scope="request" class="siap.siep.misurasicurezza.model.MisuraSicurezzaModel"/>
 <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-<jsp:useBean id="dataDecretoDesignazione" scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataDecretoDesignazione" 		scope="request" class="java.lang.String"/>
   
 <%
 String[] esiti = (String[]) request.getAttribute("esiti");
@@ -142,6 +142,7 @@ if (is678) {
 }
 %>
 <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
+
 // MEV_39: aggiunto controllo
 <%
 if ("42".equals(tipo) || "MS".equals(tipo)) {
@@ -229,11 +230,20 @@ if (is678) {
 %>		      	
 	else if (dataDecretoDesignazione != "" && !CompareDate(dataDecretoDesignazione, data_emissione)) {
         alert("La data di emissione non può essere minore della Data emissione del Decreto di Designazione!");
-        ritorno =  false;
+        ritorno = false;
    	}
 <%
 }
-%>		      	
+if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+%>
+	// Controllo data di emissione >= data udienza
+	if (!CompareDate(data_camera, data_emissione)) {
+		alert('Data Emissione non può essere inferiore alla Data Udienza del ' + data_camera + '!');
+		ritorno = false;
+	}
+<%
+}
+%>
 <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
    	// Controllo della data deposito <= data camera di consiglio
    	else if (data_camera != null && !CompareDate(data_camera, data_emissione)) {
@@ -528,11 +538,11 @@ function checkEsiti() {
     	}
   	}
 }
-</script>
 <%
 }
 %>
 <%-- FINE: MEV_9 --%>
+</script>
 </head>
 <body class="corpo" onload="visualizza_data_decorrenza()">
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="ModificaOrdinanza">
@@ -596,11 +606,29 @@ for (int i = 0; i < lTenori.length; i++) {
    			</select>
    		</td>
 	</tr>
-  		<%
-  		}
-  		%>
-	<tr> <td>&nbsp;</td> </tr>
+<%
+}
+%>
+	<tr><td>&nbsp;</td></tr>
 </table>
+
+<%-- MEV_9: aggiunta tabella x "Ulteriore descrizione della decisione" --%>
+<%
+if (ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE.equals(datiOrdinanza.getOrdinanza().getCodTipoOrdinanza())) {
+%>
+<table cellspacing="4" cellpadding="4"  width="95%">
+	<tr>
+      	<td class="l" width="25%">Ulteriore descrizione della decisione</td>
+      	<td class="l">
+			<TEXTAREA title="Ulteriore descrizione della decisione" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE%>" cols="70" rows="4"><%=StringUtils.toStringJSP(datiOrdinanza.getOrdinanza().getUlterioreDescrizione(), "")%></textarea>
+      	</td>
+    </tr>
+</table>
+<%
+}
+%>
+<%-- FINE MEV_9 --%>
+
 <table id="tableInForma" style="visibility:hidden" width="95%" cellspacing="2" cellpadding="2">
 	<tr>
 		<td class="l" width="40%">Indicare se la misura deve essere eseguita nelle forme della:</td>
@@ -735,11 +763,11 @@ if ("42".equals(tipo) || "MS".equals(tipo)) {
 		</td>
 	</tr>
 </table>
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
-<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_DEPOSITO_ORDINANZA_PC%>" value="<%=lIdOrdinanza%>" >
-<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lIdEvento%>" >
-<input type="HIDDEN" name="<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>" value="<%=lIdDecreto%>" >
-<input type="HIDDEN" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>" value="" >
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>">
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_DEPOSITO_ORDINANZA_PC%>" value="<%=lIdOrdinanza%>">
+<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lIdEvento%>">
+<input type="HIDDEN" name="<%=ICostantiDepositoDecreto.CAMPO_ID_DEPOSITO_DECRETO%>" value="<%=lIdDecreto%>">
+<input type="HIDDEN" name="<%=ICostantiSiusMisuraSicurezza.CAMPO_DATA_DECORRENZA%>" value="">
 </form>
 
 <script language="JavaScript" type="text/javascript">
@@ -759,18 +787,18 @@ checkEsiti();
 
 var frmvalidator  = new Validator("ModificaOrdinanza");
 
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","req","Il campo Giorno  della Data Emissione è obbligatorio");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","gt=1");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","lt=31");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","req","Il campo Mese  della Data Emissione è obbligatorio");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","gt=1");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","lt=13");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req","Il campo Anno della Data Emissione è obbligatorio");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
-frmvalidator.addValidation("<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","req","Il campo Giorno  della Data Emissione è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","gt=1");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","lt=31");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","req","Il campo Mese  della Data Emissione è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","gt=1");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","lt=13");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req","Il campo Anno della Data Emissione è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=2099");
 
 // Chiama la funzione di Verify().
 frmvalidator.setAddnlValidationFunction("Verify");

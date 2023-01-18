@@ -75,8 +75,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 	private PeriodoClass[] mPeriodi = null;
 	private int mInd = 0;
 	private String mTipoConcessione; /* modalità di scelta dei periodi concessi. (S/C) L.A. ordinaria */
-	// private String mFlagConcessione = "C"; /* flag Concessione per generazione periodi libertà anticipata
-	// */
+	// private String mFlagConcessione = "C"; /*flag Concessione per generazione periodi libertà anticipata*/
 
 	private PeriodoClass[] mPeriodi_spe = null;
 	private int mInd_spe = 0;
@@ -84,10 +83,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	private PeriodoClass[] mPeriodi_int = null;
 	private int mInd_int = 0;
-	private String mTipoConcessione_int; /*
-											 * modalità di scelta dei periodi concessi. (S/C) L.A.
-											 * INTEGRAZIONE
-											 */
+	/*
+	 * modalità di scelta dei periodi concessi. (S/C) L.A.
+	 * INTEGRAZIONE
+	 */
+	private String mTipoConcessione_int;
 
 	public String processRequest() throws Exception {
 
@@ -240,8 +240,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		if (lIdOrdinanza != null) { // ORDINANZE
 			DepositoOrdinanzaPcModel lOrdinanza = lCtrl.ExRicercaDepositoOrdinanzaPcByKey(lIdOrdinanza);
 			// ============================================================================================================================
-			// --------------> 10102014 - DL 92 2014 Violazione CEDU - COD_TIPO_ORDINANZA = "VC"
-			// <------------------------
+			// 10102014 - DL 92 2014 Violazione CEDU - COD_TIPO_ORDINANZA = "VC"
 			// ============================================================================================================================
 			if ((!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA))
 					&& (getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA)
@@ -327,14 +326,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				// LicenzePeriodoLibAnticipata
 				//
 				lCtrl.ExAggiornaTenoriEventoPeriodiLA(lTenori, lEvento, lOrdinanza, null, lLicenze);
-
 			} // chiude if (CAMPO_COD_TIPO_ORDINANZA = VC ) Ordinanza VIOLAZIONE CEDU
 
 			// ============================================================================================================================
-			// --------------> DL 146 2013 Nuova Ordinanza L.A. - COD_TIPO_ORDINANZA = "LA"
-			// <------------------------
+			// DL 146 2013 Nuova Ordinanza L.A. - COD_TIPO_ORDINANZA = "LA"
 			// ============================================================================================================================
-
 			if ((!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA))
 					&& (getRequestStringParameter(ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA)
 							.compareTo(ICostantiDepositoOrdinanzaPc.LIBERAZIONE_ANTICIPATA) == 0)) {
@@ -411,7 +407,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				}
 
 				// lNumGiorniLA = somma di tutti i giorni concessi di tutti gli oggetti ORDINANZA
-
 				int lNumGiorniTotLA = 0;
 				lNumGiorniTotLA = SommatotLA + SommatotLS + SommatotLI;
 
@@ -641,8 +636,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				// = L.A. ))
 
 			/*
-			 * ISSUE MEV : aggiunta nuova gestione campi rinvio Numero MEV : 39 Autore : Gioggi Data :
-			 * 09/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunta nuova gestione campi rinvio 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 09/giu/2017 
+			 * Branch : MEV_39
 			 */
 			String codTipoOrdinanza = "";
 			if (lOrdinanza != null)
@@ -721,8 +719,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			// ***** FINE INTERVENTO MEV_39 *****//
 
 			/*
-			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 Numero MEV : 39 Autore : Gioggi Data :
-			 * 19/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 19/giu/2017 
+			 * Branch : MEV_39
 			 */
 			if (codTipoOrdinanza.equalsIgnoreCase(ICostantiDepositoOrdinanzaPc.APPELLO_MS)) {
 				IMisuraSicurezza ims = SIEPLookupRemote.getMisuraSicurezzaRemote();
@@ -811,6 +812,29 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 			// && super.isUserUDSM()) {
 			// modificaMisuraAlternativa();
 			// }
+
+			/* 
+			 * ISSUE MEV : aggiunto recupero valore
+			 * Numero MEV : 9
+			 * Autore    : sgioggi
+			 * Data      : 18 gen 2023
+			 * Branch    : MEV_9
+			 */
+			if (codTipoOrdinanza.equalsIgnoreCase(ICostantiDepositoOrdinanzaPc.CONFERMA_DECISIONE_MAGISTRATO_RELATORE)) {
+				if (!isRequestParameterNullObj(ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE)) {
+					if (getRequestStringParameter(
+							ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE) != null
+							&& !getRequestStringParameter(
+									ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE).equals("")
+							&& !getRequestStringParameter(
+									ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE).equals("-")) {
+						lOrdinanza.setUlterioreDescrizione(getRequestStringParameter(
+								ICostantiDepositoOrdinanzaPc.CAMPO_ULTERIORE_DESCRIZIONE));
+					}
+					lCtrl.ExModificaDepositoOrdinanzaPc(lOrdinanza);
+				}
+			}
+			//***** FINE INTERVENTO MEV_9 *****//
 		} else if (lIdDecreto != null) { // DECRETO
 			IDepositoDecreto lCtrlDD = SIUSLookupRemote.getDepositoDecretoRemote();
 			DepositoDecretoModel lDecretoMod = lCtrlDD.ExRicercaDepositoDecretoByEvento(lIdEvento);
@@ -889,8 +913,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 				lLicenze = AggiornaLicenzePeriodiCEDU(mFasGPMod, GiorniRiduzione, SommaRisarcimento);
 			} // Chiude DECRETO VIOLAZIONE CEDU
 			/*
-			 * ISSUE MEV : aggiunta nuova gestione campi rinvio Numero MEV : 39 Autore : Gioggi Data :
-			 * 09/giu/2017 Branch : MEV_39
+			 * ISSUE MEV : aggiunta nuova gestione campi rinvio 
+			 * Numero MEV : 39 
+			 * Autore : Gioggi 
+			 * Data : 09/giu/2017 
+			 * Branch : MEV_39
 			 */
 			else if (codTipoDecreto.compareTo("42") == 0) {
 				// Data Decorrenza Sospensione
@@ -981,9 +1008,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 		// Redirezione alla pagina di dettaglio Ordinanza, Decreto o Sentenza
 		if (lIdOrdinanza != null)
-			lRetPage =
-
-					dettaglioOrdinanza(lIdEvento);
+			lRetPage = dettaglioOrdinanza(lIdEvento);
 		else if (lIdSentenza != null)
 			lRetPage = dettaglioSentenza(lIdEvento);
 		else
@@ -994,7 +1019,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	/**
 	 * Prepara il Model per la Misura di Sicurezza da aggiornare.
-	 * <p>
 	 *
 	 * @param lMisSicuSius
 	 *            Misura di Sicurezza da aggiornare.
@@ -1124,6 +1148,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 	 */
 	private LicenzaPeriodiLibAnticipataModel[] generaLicenzaPeriodiLibAnticipataLA(FascicoloGPModel mFasGPMod,
 			int SommatotLA) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug("- ActModificaprovvedimento - generaLicenzaPeriodiLibAnticipataLA - L.A. NORMALE ");
@@ -1272,6 +1297,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	private LicenzaPeriodiLibAnticipataModel[] generaLicenzaPeriodiLibAnticipataLA_SPE(
 			FascicoloGPModel mFasGPMod, int SommatotLS) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(
@@ -1422,6 +1448,7 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 	private LicenzaPeriodiLibAnticipataModel[] generaLicenzaPeriodiLibAnticipataLA_INT(
 			FascicoloGPModel mFasGPMod, int SommatotLI) throws F3BException {
+
 		// -------------------------------------------------------------
 		// >>>>>>>>>>>>>>>>> L.A. INTEGRAZIONE <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 		//
@@ -1564,11 +1591,9 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		//
 	}
 
-	// ---------------------------------------------------------------------------------------------------
-
 	// >>>>>>>> L.A NORMALE preparazione di tutti i periodi di date valorizzati nella form di input.
-
 	private PeriodoClass[] leggiDate() throws F3BException {
+
 		PeriodoClass[] lPeriodi = null;
 		Date[] lDateInizio = null;
 		Date[] lDateFine = null;
@@ -1606,10 +1631,10 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		}
 
 		return lPeriodi;
-
 	} // chude leggiDate()
 
 	private void setPeriodiInLicenze(LicenzaPeriodiLibAnticipataModel aLicenza) throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + "setPeriodiInLicenze INI");
@@ -1650,11 +1675,11 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".setPeriodiInLicenze FINE");
-
 	} // chiude setPeriodiInLicenze
 
 	private LicenzaLibAnticipataModel generaLicenza(String aFlagConcesso, FascicoloGPModel mFasGPMod)
 			throws F3BException {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".generaLicenza INI ");
@@ -1689,7 +1714,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		siesLogger.debug(getClass().getName() + ".generaLicenza FINE ");
 
 		return lLicenza;
-
 	} // chiude generaLicenza(---)
 
 	private PeriodoLibAnticipataModel generaPeriodoLibAnticipa(String aFlagConcesso) throws F3BException {
@@ -1715,7 +1739,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 		return lPeriodoLib;
 
 	} // chiude generaPeriodoLibAnticipa(..)
-	// - - - End
 
 	// >>>>>>>> L.A SPECIALE Preparazione di tutti i periodi di date valorizzati nella form di input.
 	private PeriodoClass[] leggiDate_spe() throws F3BException {
@@ -1850,7 +1873,6 @@ public class ActModificaProvvedimento extends ActionSius implements ICostantiDep
 
 		return lPeriodoLib;
 	}
-	// - - - End
 
 	// >>>>>>>> L.A INTEGRAZIONE Preparazione di tutti i periodi di date valorizzati nella form di input.
 	private PeriodoClass[] leggiDate_int() throws F3BException {
