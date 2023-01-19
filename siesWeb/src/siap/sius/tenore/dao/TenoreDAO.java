@@ -500,22 +500,4 @@ public class TenoreDAO extends SIAPTableDAO {
 		setCondition(" DEP_ID_DEPOSITO_SENTENZA =" + aModel.getDepIdDepositoSentenza());
 	}
 
-	/* 
-	 * ISSUE MEV : aggiunto metodo di condizione
-	 * Numero MEV : 9
-	 * Autore    : sgioggi
-	 * Data      : 17 gen 2023
-	 * Branch    : MEV_9
-	 */
-	public void setDAOFromModelForUpdateDataFineCM(TenoreModel tm) {
-
-		setCodOperatoreAggiornamento(tm.getCodOperatoreAggiornamento());
-		setDataAggiornamento(tm.getDataAggiornamento());
-		setCodUfficioAggiornamento(tm.getCodUfficioAggiornamento());
-		setDataFine(tm.getDataFine());
-		setCondition(" DATA_FINE IS NULL AND GEN_PRID_GENERALE_PROCEDIMENTO = "
-				+ tm.getGenPridGeneraleProcedimento() + " AND COD_ESITO_TENORE <> '0270'");
-	}
-	//***** FINE INTERVENTO MEV_9 *****//
-
 }

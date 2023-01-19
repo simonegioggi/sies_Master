@@ -64,16 +64,6 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		if (Utils.isNullObj(idGP))
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Id Generale Procedimento assente!");
 
-		// Viene effettuato il controllo sulla preesistenza di un Provvedimento declaratorio
-		// già emesso per il Fascicolo SIUS.
-		// Se esiste almeno un provvedimento di questo tipo non può esserne emesso un altro.
-		RicercaProvvedimentiUtil lRicerca = new RicercaProvvedimentiUtil(idGP);
-		boolean esisteProv = lRicerca.verificaEsistenzaProv();
-		if (esisteProv)
-			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Per il procedimento indicato è già stato emesso un provvedimento. "
-					+ "Non è consentito emettere un nuovo provvedimento");
-
 		// Devono esistere 1) ordinanza applicazione provvisoria, 2) data esecutività e 3) data udienza
 		// Ricerco evento del fascicolo: COD_TIPO_PROVVEDIMENTO 03 COD_MOTIVO 0680 COD_ESITO 0270
 		// Ordinanza Affidamento in Prova al Servizio Sociale (Art. 47 O.P. - Art. 678 comma 1-ter
@@ -104,7 +94,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
 		if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"Data Esecutivita' assente per il procedimento!");
+					"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!");
 
 		UdienzaModel um = null;
 		if (Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getUdiIdUdienza()))
@@ -125,6 +115,16 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 				: "";
 		dopcm.setDescrTipoOrdinanza(descrTipoOrdinanza);
 		setRequestAttribute("dopcm", dopcm);
+
+		// Viene effettuato il controllo sulla preesistenza di un Provvedimento declaratorio
+		// già emesso per il Fascicolo SIUS.
+		// Se esiste almeno un provvedimento di questo tipo non può esserne emesso un altro.
+		RicercaProvvedimentiUtil lRicerca = new RicercaProvvedimentiUtil(idGP);
+		boolean esisteProv = lRicerca.verificaEsistenzaProv();
+		if (esisteProv)
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					"Per il procedimento indicato è già stato emesso un provvedimento. "
+							+ "Non è consentito emettere un nuovo provvedimento");
 
 		// Preleva il cod Oggetto procedimento per poi passarlo come contenuto
 		String codOggettoProcedimento = fgpm.getGeneraleProcedimentoModel().getCodOggettoProcedimento();
@@ -154,15 +154,22 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 				DecodificheManager.getInstance().getOggettoProcedimento(), codOggettoProcedimento);
 		setRequestAttribute("descContenuto", descContenuto);
 
-		String[] codOggettiTenore = new String[dimensione];
-		String[] descrOggettiTenore = new String[dimensione];
-		String[] codDettagliOggetto = new String[dimensione];
+		int dimFinale = 0;
+		for (int i = 0; i < dimensione; i++) {
+			// Deve essere riportato solo l'oggetto che è stato applicato provvisoriamente
+			if ("0270".equals(tm[i].getCodEsitoTenore()))
+				dimFinale += 1;
+		}
+
+		String[] codOggettiTenore = new String[dimFinale];
+		String[] descrOggettiTenore = new String[dimFinale];
+		String[] codDettagliOggetto = new String[dimFinale];
 		// motivi
-		String[] codMotiviProvvedimento = new String[dimensione];
-		String[] descrMotiviProvvedimento = new String[dimensione];
+		String[] codMotiviProvvedimento = new String[dimFinale];
+		String[] descrMotiviProvvedimento = new String[dimFinale];
 		// esiti
-		String[] codEsitiTenore = new String[dimensione];
-		String[] descrEsitiTenore = new String[dimensione];
+		String[] codEsitiTenore = new String[dimFinale];
+		String[] descrEsitiTenore = new String[dimFinale];
 
 		String codMotivoProvvedimento = null;
 		String descrMotivoProvvedimento = null;
@@ -177,18 +184,21 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 
 		// Recupera l'elenco dei tenori.
 		for (int i = 0; i < dimensione; i++) {
-			// dati per questa ordinanza di Conferma Decisione Magistrato Relatore
-			codMotivoProvvedimento = DecodificheUtils.getCodebyCodAlt2(
-					DecodificheManager.getInstance().getMotivoProvvedimento(), tm[i].getCodOggettoTenore());
-			codMotiviProvvedimento[i] = codMotivoProvvedimento;
-			descrMotivoProvvedimento = DecodificheUtils.getDescbyCode(
-					DecodificheManager.getInstance().getMotivoProvvedimento(), codMotivoProvvedimento);
-			descrMotiviProvvedimento[i] = descrMotivoProvvedimento;
-			codOggettiTenore[i] = codMotivoProvvedimento;
-			descrOggettiTenore[i] = descrMotivoProvvedimento;
-			codEsitiTenore[i] = codEsitoTenore;
-			descrEsitiTenore[i] = descrEsitoTenore;
-			codDettagliOggetto[i] = "-";
+			// Deve essere riportato solo l'oggetto che è stato applicato provvisoriamente
+			if ("0270".equals(tm[i].getCodEsitoTenore())) {
+				// dati per questa ordinanza di Conferma Decisione Magistrato Relatore
+				codMotivoProvvedimento = DecodificheUtils.getCodebyCodAlt2(
+						DecodificheManager.getInstance().getMotivoProvvedimento(), tm[i].getCodOggettoTenore());
+				codMotiviProvvedimento[i] = codMotivoProvvedimento;
+				descrMotivoProvvedimento = DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getMotivoProvvedimento(), codMotivoProvvedimento);
+				descrMotiviProvvedimento[i] = descrMotivoProvvedimento;
+				codOggettiTenore[i] = codMotivoProvvedimento;
+				descrOggettiTenore[i] = descrMotivoProvvedimento;
+				codEsitiTenore[i] = codEsitoTenore;
+				descrEsitiTenore[i] = descrEsitoTenore;
+				codDettagliOggetto[i] = "-";
+			}
 		}
 
 		setRequestAttribute("codOggetti", codOggettiTenore);

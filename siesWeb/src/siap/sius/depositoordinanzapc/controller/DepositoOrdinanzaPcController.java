@@ -712,20 +712,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 			// -- Parte Gestione Tenori --//
 			BigDecimal lIdGenProc = aGProcOrdEveTenori.getGeneraleProcedimento().getIdGeneraleProcedimento();
-			
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("Fase di chiusura per il Tenore");
-			TenoreModel lTenore = new TenoreModel();
-			// Valorizzazione dei campi da aggiornare + update
-			lTenore.setCodOperatoreAggiornamento(
-					lGProcOrdEveTenori.getGeneraleProcedimento().getCodOperatoreAggiornamento());
-			lTenore.setCodUfficioAggiornamento(
-					lGProcOrdEveTenori.getGeneraleProcedimento().getCodUfficioAggiornamento());
-			lTenore.setDataAggiornamento(
-					lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
-			lTenore.setDataFine(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
-			lTenore.setGenPridGeneraleProcedimento(lIdGenProc);
+
 			/*
 			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE 
 			 * Numero MEV : 9 
@@ -734,13 +721,24 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			 * Branch : MEV_9
 			 */
 			if (!"CM".equals(lGProcOrdEveTenori.getOrdinanza().getCodTipoOrdinanza())) {
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Fase di chiusura per il Tenore");
+				TenoreModel lTenore = new TenoreModel();
+				// Valorizzazione dei campi da aggiornare + update
+				lTenore.setCodOperatoreAggiornamento(
+						lGProcOrdEveTenori.getGeneraleProcedimento().getCodOperatoreAggiornamento());
+				lTenore.setCodUfficioAggiornamento(
+						lGProcOrdEveTenori.getGeneraleProcedimento().getCodUfficioAggiornamento());
+				lTenore.setDataAggiornamento(
+						lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
+				lTenore.setDataFine(lGProcOrdEveTenori.getGeneraleProcedimento().getDataAggiornamento());
+				lTenore.setGenPridGeneraleProcedimento(lIdGenProc);
 				lTenoreDao.setDAOFromModelForUpdateDataFine(lTenore);
-			} else {
-				lTenoreDao.setDAOFromModelForUpdateDataFineCM(lTenore);
+				lTenoreDao.update();
+				lTenoreDao.stop();
 			}
 			// ***** FINE INTERVENTO MEV_9 *****//
-			lTenoreDao.update();
-			lTenoreDao.stop();
 
 			// Insert dei tenori.
 			TenoreModel[] lTenori = lGProcOrdEveTenori.getTenori();
