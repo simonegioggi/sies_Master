@@ -1,11 +1,12 @@
-Ticket#20230107012
+RELEASE_12.4.26.0	-->	nato dal branch "release_12.4.25.0" in data 28/11/2022
 
-Corretta estrazione del riepilogo pendenti. Non conteggiava correttamente i pendenti inizio periodo
+Comprende i seguenti Ticket MAC:
 
-Classe modificata 
-siap.siep.statis.dao.StatisticheMSSqlDAO
-
-Metodi
-ricercaRiepilogoProcedimentiPendentiPeriodo
-gestioneRiaperti
-
+1)	Ticket#20230107012 - Calcolo statistiche
+	Corretta estrazione del riepilogo pendenti.
+	Non conteggiava correttamente i pendenti inizio periodo.
+	Classe modificata 
+	-	siap.siep.statis.dao.StatisticheMSSqlDAO
+	Metodi
+	-	ricercaRiepilogoProcedimentiPendentiPeriodo
+	-	gestioneRiaperti
