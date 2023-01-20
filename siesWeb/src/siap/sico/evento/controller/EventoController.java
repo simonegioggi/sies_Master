@@ -17,6 +17,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
 import siap.controller.SiapController;
@@ -101,24 +102,17 @@ import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusSqlDAO;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
 import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoDAO;
+import siap.sius.generaleprocedimento.dao.GeneraleProcedimentoSqlDAO;
+import siap.sius.generaleprocedimento.model.GeneraleProcedimentoModel;
 import siap.sius.misurasicurezza.dao.PeriodoAltraMisuraDAO;
+import siap.sius.tenore.dao.TenoreDAO;
+import siap.sius.tenore.model.TenoreModel;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoDAO;
 import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
 
 /**
- * <p>
- * Title: EventoController
- * </p>
- * <p>
- * Description: Classe Controller per Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * Title: EventoController Description: Classe Controller per Evento
  *
  * @version 1.0
  */
@@ -2546,10 +2540,7 @@ public class EventoController extends SiapController implements IEvento {
 
 			lEveDao.stop();
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
 
 		} catch (F3BException eF3b) {
@@ -3229,7 +3220,7 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 *
 	 * @param @return
-	 *            @throws
+	 * @throws
 	 */
 	public EventoModel ExRicercaUltimoEventoGeneratoByCodUtente(String aCodUtente) throws F3BException {
 
@@ -3529,12 +3520,9 @@ public class EventoController extends SiapController implements IEvento {
 			// LogF3B.getLogger()
 			siesLogger.debug("Num Provv Fascicolo SIUS: " + lNumProv);
 
-			/* 
-			 * ISSUE MEV : cambio stato fascicolo se annullo un decreto di designazione Magistrato relatore
-			 * Numero MEV : 9
-			 * Autore    : Gioggi
-			 * Data      : 2 dic 2020
-			 * Branch    : MEV_9
+			/*
+			 * ISSUE MEV : cambio stato fascicolo se annullo un decreto di designazione Magistrato Relatore
+			 * Numero MEV : 9 Autore : Gioggi Data : 2 dic 2020 Branch : MEV_9
 			 */
 			if (lNumProv < 1) {
 				FascicoloSiusSqlDAO fssDAO = new FascicoloSiusSqlDAO(lConn);
@@ -3557,10 +3545,10 @@ public class EventoController extends SiapController implements IEvento {
 						// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe'
 						// sospeso)
 						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "13");
-					else if ("24".equals(codStatoFascicolo)) { //d.f
-						// Aggiorno il fascicolo a stato_fascicolo = 22 se lo stato attuale e' 24 
+					else if ("24".equals(codStatoFascicolo)) { // d.f
+						// Aggiorno il fascicolo a stato_fascicolo = 22 se lo stato attuale e' 24
 						lFasSiusDao.setCodStatoFascicolo("22");
-						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "24");	
+						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "24");
 					} else
 						// Aggiorno il fascicolo a stato_fascicolo = "02" (iscritto) se lo stato attuale e'
 						// "22"
@@ -3573,6 +3561,53 @@ public class EventoController extends SiapController implements IEvento {
 							.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius());
 					cleanup(lFasSiusDao);
 				}
+			}
+			// se trattasi di Conferma Decisione Magistrato Relatore ci sta sicuramente una ordinanza di
+			// applicazione provvisoria di MA
+			if ("0271".equals(lEve.getCodEsito())) {
+				FascicoloSiusDAO fsdao = new FascicoloSiusDAO(lConn);
+				fsdao.setCodStatoFascicolo("24");
+				fsdao.setDataAggiornamento(aCampoNota.getDataInserimento());
+				fsdao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+				fsdao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+				// Aggiorno il fascicolo a stato_fascicolo = "24" se lo stato attuale e' "07"
+				fsdao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "07");
+				fsdao.update();
+				fsdao.stop();
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("Aggiornamento Stato Fascicolo SIUS: " + lEve.getFasSiuIdFascicoloSius());
+				cleanup(fsdao);
+				// passo all'aggiornamento del tenore
+				// Generale Procedimento
+				GeneraleProcedimentoSqlDAO gpsdao = new GeneraleProcedimentoSqlDAO(lConn);
+				gpsdao.ricercaGeneraleProcedimentoByIdFas(lEve.getFasSiuIdFascicoloSius());
+				GeneraleProcedimentoModel gpm = (GeneraleProcedimentoModel) gpsdao.getModelByKey();
+				cleanup(gpsdao);
+				// Deposito Ordinanza Pc
+				lDOPSqlDAO = new DepositoOrdinanzaPcSqlDAO(lConn);
+				lDOPSqlDAO.ricercaDepositoOrdinanzaPcByIdEveGenerato(lEve.getIdEvento());
+				DepositoOrdinanzaPcModel dopm = (DepositoOrdinanzaPcModel) lDOPSqlDAO.getModelByKey();
+				if (Utils.isNullObj(gpm) || Utils.isNullObj(dopm))
+					throw new F3BException(F3BException.USER_MESSAGE, "Tenore NON aggiornabile!");
+				TenoreModel tm = new TenoreModel();
+				// Valorizzazione dei campi da aggiornare + update
+				tm.setDataAggiornamento(aCampoNota.getDataInserimento());
+				tm.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+				tm.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+				tm.setDataFine(aCampoNota.getDataInserimento());
+				tm.setGenPridGeneraleProcedimento(gpm.getIdGeneraleProcedimento());
+				tm.setDepOpidDepositoOrdinanzaPc(dopm.getIdDepositoOrdinanzaPc());
+				TenoreDAO tdao = new TenoreDAO(lConn);
+				tdao.setDAOFromModelForUpdateDataFineCM(tm);
+				tdao.update();
+				tdao.stop();
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug(
+						"Aggiornamento Tenore: IdGeneraleProcedimento = " + gpm.getIdGeneraleProcedimento()
+								+ " ed IdDepositoOrdinanzaPc = " + dopm.getIdDepositoOrdinanzaPc());
+				cleanup(tdao);
 			}
 			// ***** FINE INTERVENTO MEV_9 *****//
 
@@ -3687,8 +3722,6 @@ public class EventoController extends SiapController implements IEvento {
 				lGenProDao.setCondizioneUpdate(lIdGenPro);
 				lGenProDao.update();
 				lGenProDao.stop();
-				// ---//
-
 			}
 
 			// Ricerca il documento (Foglio Complementare non trasmesso) allegato all'evento,
@@ -3711,7 +3744,6 @@ public class EventoController extends SiapController implements IEvento {
 				lDocAllDAO.setDAOFromModelForUpdate(lDocAll);
 				lDocAllDAO.setCondizioneUpdate(lDocAll.getIdDocumentoAllegato());
 				lDocAllDAO.update();
-
 			}
 
 			commit(lConn);
@@ -3843,9 +3875,7 @@ public class EventoController extends SiapController implements IEvento {
 			lConn = getDBConnection();
 			lEveSqlDao = new EventoSqlDAO(lConn);
 			lEveSqlDao.ricercaOrdiniEsecuzioneByIdFascicoloPerRestituzione(aIdFascicolo);
-
 			lListaOrdiniEsecuzione = new Vector(lEveSqlDao.getModels());
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -4677,7 +4707,6 @@ public class EventoController extends SiapController implements IEvento {
 				lEveVerMod = lEveDao.getModelIstituto();
 			lEveDao.stop();
 			commit(lConn);
-
 		} catch (DAOException ex) {
 			rollback(lConn);
 			ex.printStackTrace();
@@ -4923,7 +4952,6 @@ public class EventoController extends SiapController implements IEvento {
 				siesLogger.debug(
 						"--XX-- EventoController - ExRicercaEventoByTipoEveKeyIstruttoriaCumulo - NESSUN EVENTO TROVATO");
 			}
-
 		} catch (DAOException daoEx) {
 			throw new F3BException(
 					"EventoController.ExRicercaEventoByTipoEveKeyIstruttoriaCumulo: Non posso leggere : "

@@ -11,13 +11,13 @@
 <%@ page import="siap.sius.depositoordinanzapc.action.ICostantiDepositoOrdinanzaPc"%>
 <%@ page import="siap.sius.tenore.action.ICostantiTenore"%>
 
-<jsp:useBean id="dataUdienza"				scope="request" class="java.lang.String"/>
-<jsp:useBean id="dopcm"						scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
-<jsp:useBean id="TornaQui"					scope="request" class="java.lang.String"/>
-<jsp:useBean id="descContenuto"				scope="request" class="java.lang.String"/>
-<jsp:useBean id="codContenuto"				scope="request" class="java.lang.String"/>
-<jsp:useBean id="codTipoOrdinanza"			scope="request" class="java.lang.String"/>
-<jsp:useBean id="data_emissione"			scope="request" class="java.util.Date"/>
+<jsp:useBean id="dataUdienzaStr"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="dopcm"					scope="request" class="siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel"/>
+<jsp:useBean id="TornaQui"				scope="request" class="java.lang.String"/>
+<jsp:useBean id="descContenuto"			scope="request" class="java.lang.String"/>
+<jsp:useBean id="codContenuto"			scope="request" class="java.lang.String"/>
+<jsp:useBean id="codTipoOrdinanza"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="dataEsecutivitaStr"	scope="request" class="java.lang.String"/>
 
 <%
 boolean retFlag = false;
@@ -37,12 +37,13 @@ var desktop;
 
 // Funzione dei controlli formali della form
 function Verify() {
-	// Controllo validità data Emissione
-	var dataEmissione = document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value + '/' +
-    					document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value + '/' +
-    					document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
-	var dataUdienza = '<%=dataUdienza%>';
+	var dataEmissione = document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_EMISSIONE%>.value + '/' +
+    					document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_EMISSIONE%>.value + '/' +
+    					document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+	var dataUdienza = '<%=dataUdienzaStr%>';
+	var dataEsecutivita = '<%=dataEsecutivitaStr%>';
 
+	// Controllo validità data Emissione
   	if (!ControllaData(dataEmissione)) {
 	    alert('Data Emissione non valida!');
 	    return false;
@@ -52,6 +53,11 @@ function Verify() {
 		alert('Data Emissione non può essere inferiore alla Data Udienza del ' + dataUdienza + '!');
 		return false;
     }
+	// Controllo data di emissione >= data Esecutivita
+//     else if (!CompareDate(dataEsecutivita, dataEmissione)) {
+// 		alert('Data Emissione non può essere inferiore alla Data Esecutività del ' + dataEsecutivita + '!');
+// 		return false;
+//     }
 
    	return true;
 }
@@ -93,9 +99,9 @@ String azione = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS";
 	<tr>
 		<td class="l" width="25%">Data Emissione <font class="ob">(*)</font></td>
 		<td class="L">
-			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
     	</td>
 	</tr>
 </table>
@@ -166,20 +172,19 @@ for (int i = 0; i < descrMotiviProvvedimento.length; i++) {
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_DESCR_CONTENUTO%>" value="<%=descContenuto%>">
 <input type="HIDDEN" name="<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>" value="<%=codContenuto%>">
 <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="<%=codTipoOrdinanza%>">
-<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DATA_EMISSIONE%>" value="<%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%>">
 </form>
 
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("LoadInserisciConfermaDecisioneMagistratoRelatore");
 
 // Controllo data emissione.
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","req", "Il campo Giorno Data Emissione è obbligatorio");
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","req", "Il campo Mese Data Emissione é obbligatorio");
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req", "Il campo Anno Data Emissione é obbligatorio");
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","minlen=4","La lunghezza del campo Anno Data Emissione deve essere di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_EMISSIONE%>","req", "Il campo Giorno Data Emissione è obbligatorio");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_EMISSIONE%>","req", "Il campo Mese Data Emissione é obbligatorio");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_EMISSIONE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_EMISSIONE%>","req", "Il campo Anno Data Emissione é obbligatorio");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_EMISSIONE%>","minlen=4","La lunghezza del campo Anno Data Emissione deve essere di 4 caratteri");
 </script>
 
 </body>

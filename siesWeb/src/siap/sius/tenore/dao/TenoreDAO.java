@@ -13,8 +13,7 @@ import siap.sius.depositosentenza.model.DepositoSentenzaModel;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * Title: TenoreDAO 
- * Description: Classe DAO che rappresenta la tabella Tenore
+ * Title: TenoreDAO Description: Classe DAO che rappresenta la tabella Tenore
  *
  * @version 1.0
  */
@@ -499,5 +498,24 @@ public class TenoreDAO extends SIAPTableDAO {
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCondition(" DEP_ID_DEPOSITO_SENTENZA =" + aModel.getDepIdDepositoSentenza());
 	}
+
+	/* 
+	 * ISSUE MEV : aggiunto metodo di update
+	 * Numero MEV : 9
+	 * Autore    : sgioggi
+	 * Data      : 20 gen 2023
+	 * Branch    : MEV_9
+	 */
+	public void setDAOFromModelForUpdateDataFineCM(TenoreModel aModel) {
+
+		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
+		setDataAggiornamento(aModel.getDataAggiornamento());
+		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());
+		setDataFine(aModel.getDataFine());
+		setCondition("DATA_FINE IS NULL AND GEN_PRID_GENERALE_PROCEDIMENTO = "
+				+ aModel.getGenPridGeneraleProcedimento() + " AND DEP_OPID_DEPOSITO_ORDINANZA_PC = "
+				+ aModel.getDepOpidDepositoOrdinanzaPc());
+	}
+	//***** FINE INTERVENTO MEV_9 *****//
 
 }

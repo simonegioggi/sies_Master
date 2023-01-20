@@ -167,7 +167,14 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 		if (lMagRel != null && lMagRel.getMagistrato() != null)
 			mCodMagistrato = lMagRel.getMagistrato().getCodMagistrato();
 
-		Date lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
+		// MEV_9: aggiunto controllo preventivo poichè qui la data emissione è manuale
+		Date lDataEmissione = null;
+		if (CONFERMA_DECISIONE_MAGISTRATO_RELATORE
+				.equals(getRequestStringParameter(CAMPO_COD_TIPO_ORDINANZA)))
+			lDataEmissione = getRequestDateParameter(CAMPO_ANNO_DATA_EMISSIONE, CAMPO_MESE_DATA_EMISSIONE,
+					CAMPO_GIORNO_DATA_EMISSIONE);
+		else
+			lDataEmissione = getRequestDateParameter(CAMPO_DATA_EMISSIONE, "dd/MM/yyyy");
 
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		// Se selezionata la "Restituzione Atti Al presidente" non viene emesso evento ma

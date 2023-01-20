@@ -95,6 +95,9 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!");
+		else
+			setRequestAttribute("dataEsecutivitaStr",
+					DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
 
 		UdienzaModel um = null;
 		if (Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getUdiIdUdienza()))
@@ -107,7 +110,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 						"Data Udienza assente per il procedimento!");
 		}
 
-		setRequestAttribute("dataUdienza", DateUtils.getDateToString(um.getDataUdienza(), "dd/MM/yyyy"));
+		setRequestAttribute("dataUdienzaStr", DateUtils.getDateToString(um.getDataUdienza(), "dd/MM/yyyy"));
 		// dati x l'ordinanza di Applicazione Provvisoria M.A.
 		String descrTipoOrdinanza = (dopcm.getCodTipoOrdinanza() != null)
 				? (DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoOrdinanza(),
@@ -160,6 +163,8 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 			if ("0270".equals(tm[i].getCodEsitoTenore()))
 				dimFinale += 1;
 		}
+		if (dimFinale == 0)
+			throw new SIUSException(SIUSException.USER_MESSAGE, "Esito 'Applica Provvisoriamente' assente!");
 
 		String[] codOggettiTenore = new String[dimFinale];
 		String[] descrOggettiTenore = new String[dimFinale];
@@ -188,7 +193,8 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 			if ("0270".equals(tm[i].getCodEsitoTenore())) {
 				// dati per questa ordinanza di Conferma Decisione Magistrato Relatore
 				codMotivoProvvedimento = DecodificheUtils.getCodebyCodAlt2(
-						DecodificheManager.getInstance().getMotivoProvvedimento(), tm[i].getCodOggettoTenore());
+						DecodificheManager.getInstance().getMotivoProvvedimento(),
+						tm[i].getCodOggettoTenore());
 				codMotiviProvvedimento[i] = codMotivoProvvedimento;
 				descrMotivoProvvedimento = DecodificheUtils.getDescbyCode(
 						DecodificheManager.getInstance().getMotivoProvvedimento(), codMotivoProvvedimento);
