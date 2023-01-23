@@ -24,6 +24,7 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.magistratorelatore.controller.IMagistratoRelatore;
 import siap.sius.magistratorelatore.model.MagistratoRelatoreModel;
 import siap.sius.provvedimento.util.RicercaProvvedimentiUtil;
+import siap.sius.tenore.controller.ITenore;
 import siap.sius.tenore.model.TenoreModel;
 import siap.sius.udienza.controller.IUdienza;
 import siap.sius.udienza.model.UdienzaModel;
@@ -122,8 +123,8 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		// Viene effettuato il controllo sulla preesistenza di un Provvedimento declaratorio
 		// già emesso per il Fascicolo SIUS.
 		// Se esiste almeno un provvedimento di questo tipo non può esserne emesso un altro.
-		RicercaProvvedimentiUtil lRicerca = new RicercaProvvedimentiUtil(idGP);
-		boolean esisteProv = lRicerca.verificaEsistenzaProv();
+		RicercaProvvedimentiUtil rpu = new RicercaProvvedimentiUtil(idGP);
+		boolean esisteProv = rpu.verificaEsistenzaProv();
 		if (esisteProv)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Per il procedimento indicato è già stato emesso un provvedimento. "
@@ -157,10 +158,15 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 				DecodificheManager.getInstance().getOggettoProcedimento(), codOggettoProcedimento);
 		setRequestAttribute("descContenuto", descContenuto);
 
+		// cerco i tenori dell'ordinanza di applicazione provvisoria M.A.
+		ITenore it = SIUSLookupRemote.getTenoreRemote();
+		Vector<?> tenoriOrdinanza = it.ExRicercaTenoreByOrdinanza(dopcm.getIdDepositoOrdinanzaPc());
+		if (!Utils.isNullObj(tenoriOrdinanza) && !tenoriOrdinanza.isEmpty())
+			dimensione = tenoriOrdinanza.size();
 		int dimFinale = 0;
 		for (int i = 0; i < dimensione; i++) {
 			// Deve essere riportato solo l'oggetto che è stato applicato provvisoriamente
-			if ("0270".equals(tm[i].getCodEsitoTenore()))
+			if ("0270".equals(((TenoreModel) tenoriOrdinanza.get(i)).getCodEsitoTenore()))
 				dimFinale += 1;
 		}
 		if (dimFinale == 0)
@@ -190,11 +196,11 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		// Recupera l'elenco dei tenori.
 		for (int i = 0; i < dimensione; i++) {
 			// Deve essere riportato solo l'oggetto che è stato applicato provvisoriamente
-			if ("0270".equals(tm[i].getCodEsitoTenore())) {
+			if ("0270".equals(((TenoreModel) tenoriOrdinanza.get(i)).getCodEsitoTenore())) {
 				// dati per questa ordinanza di Conferma Decisione Magistrato Relatore
 				codMotivoProvvedimento = DecodificheUtils.getCodebyCodAlt2(
 						DecodificheManager.getInstance().getMotivoProvvedimento(),
-						tm[i].getCodOggettoTenore());
+						((TenoreModel) tenoriOrdinanza.get(i)).getCodOggettoTenore());
 				codMotiviProvvedimento[i] = codMotivoProvvedimento;
 				descrMotivoProvvedimento = DecodificheUtils.getDescbyCode(
 						DecodificheManager.getInstance().getMotivoProvvedimento(), codMotivoProvvedimento);
