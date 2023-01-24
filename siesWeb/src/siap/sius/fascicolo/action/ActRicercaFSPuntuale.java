@@ -1,24 +1,27 @@
 package siap.sius.fascicolo.action;
 
-/**
-* <p>Title: ActRicercaFSPuntuale</p>
-* <p>Description: Classe Action per la ricerca puntuale del Fascicolo SIUS</p>
-* <p>Copyright: Copyright (c) 2003</p>
-* <p>Company: Bull</p>
-* @version 1.0
-*/
+import java.math.BigDecimal;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.ActionSius;
+import siap.sius.SIUSException;
 import siap.sius.depositodecreto.action.ICostantiDepositoDecreto;
+import siap.sius.depositoordinanzapc.controller.IDepositoOrdinanzaPc;
+import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 import siap.sius.fascicolo.controller.IFascicoloSius;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.util.SIUSLookupRemote;
@@ -69,8 +72,11 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 					getRequestBigDecimalParameter(CAMPO_CHIAVE_PROGR), StrCodiceUfficioUtente);
 
 		/*
-		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051 Numero MEV : 9 Autore : Gioggi Data
-		 * : 12 nov 2020 Branch : MEV_9
+		 * ISSUE MEV : aggiunto controllo su tipo procedimento C050 e C051 
+		 * Numero MEV : 9 
+		 * Autore : Gioggi 
+		 * Data : 12 nov 2020 
+		 * Branch : MEV_9
 		 */
 		if (mFasGPMod != null && mFasGPMod.getGeneraleProcedimentoModel() != null
 				&& mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento() != null) {
@@ -84,6 +90,46 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 						.getDescrOggettoProcedimento();
 				throw new F3BException(F3BException.USER_MESSAGE,
 						"Operazione non consentita per il Procedimento di " + descrOggettoProcedimento);
+			}
+			if ((mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
+					ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVE_ALLA_DETENZIONE)
+					|| mFasGPMod.getGeneraleProcedimentoModel().getCodOggettoProcedimento().equals(
+							ICostantiDepositoDecreto.COD_OGGETTO_CONCESSIONE_MISURE_PENALI_DI_COMUNITA_MISURE_ALTERNATIVE_ALLA_DETENZIONE))
+					&& (this instanceof siap.sius.udienza.action.ActLoadInserisciFissazioneUdienza
+							|| this instanceof siap.sius.udienzaprocedimento.action.ActLoadPreFissazioneUdienza)) {
+				boolean isFissazione = this instanceof siap.sius.udienza.action.ActLoadInserisciFissazioneUdienza;
+				BigDecimal idEventoOrdinanza = null;
+				// verifico se già esiste Ordinanza di applicazione provvisoria di M.A.
+				IEvento ie = SICOLookupRemote.getEventoRemote();
+				Vector<?> v = ie.ExRicercaEventoByFascicoloSius(
+						mFasGPMod.getFascicoloSiusModel().getIdFascicoloSius(), null);
+				boolean existOrdinanzaApplicazioneProvvisoria = false;
+				for (int i = 0; i < v.size(); i++) {
+					EventoModel em = (EventoModel) v.elementAt(i);
+					if ("0270".equals(em.getCodEsito())) {
+						/* && "S".equals(em.getFlagDocumentoRegistrato()) && em.getNumAllValidati() > 0 */
+						existOrdinanzaApplicazioneProvvisoria = true;
+						idEventoOrdinanza = em.getIdEvento();
+						break;
+					}
+				}
+				if (existOrdinanzaApplicazioneProvvisoria && isFissazione)
+					throw new SIUSException(SIUSException.USER_MESSAGE,
+							"Operazione NON consentita poiché sul Procedimento è già stata emessa "
+									+ "un'ordinanza di Applicazione Provvisoria M.A. Utilizzare la funzione"
+									+ " di Prefissazione Udienza!");
+				IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
+				// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+				// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
+				DepositoOrdinanzaPcModel dopcm = idopc
+						.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
+				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()) && !isFissazione)
+					throw new SIUSException(SIUSException.USER_MESSAGE,
+							"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!"
+									+ " Impossibile prefissare l'Udienza!");
+				else
+					setRequestAttribute("dataEsecutivitaStr",
+							DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
 			}
 		}
 		// ***** FINE INTERVENTO MEV_9 *****//

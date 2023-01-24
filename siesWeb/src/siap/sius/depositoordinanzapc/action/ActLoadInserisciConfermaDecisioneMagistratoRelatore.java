@@ -1,6 +1,8 @@
 package siap.sius.depositoordinanzapc.action;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -10,7 +12,10 @@ import f3b.util.DateUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.controller.IDecodifiche;
+import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -96,9 +101,6 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!");
-		else
-			setRequestAttribute("dataEsecutivitaStr",
-					DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
 
 		UdienzaModel um = null;
 		if (Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getUdiIdUdienza()))
@@ -137,8 +139,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 			throw new SIUSException(SIUSException.USER_MESSAGE, "Contenuto Procedimento assente!");
 
 		TenoreModel[] tm = fgpm.getTenori();
-		int dimensione = tm.length;
-		if (dimensione == 0) {
+		if (tm.length == 0) {
 			// setta la risposta nella request
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Oggetto Procedimento assente!");
 			// Prepara la "pagina" di destinAction
@@ -161,10 +162,8 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		// cerco i tenori dell'ordinanza di applicazione provvisoria M.A.
 		ITenore it = SIUSLookupRemote.getTenoreRemote();
 		Vector<?> tenoriOrdinanza = it.ExRicercaTenoreByOrdinanza(dopcm.getIdDepositoOrdinanzaPc());
-		if (!Utils.isNullObj(tenoriOrdinanza) && !tenoriOrdinanza.isEmpty())
-			dimensione = tenoriOrdinanza.size();
 		int dimFinale = 0;
-		for (int i = 0; i < dimensione; i++) {
+		for (int i = 0; i < tenoriOrdinanza.size(); i++) {
 			// Deve essere riportato solo l'oggetto che è stato applicato provvisoriamente
 			if ("0270".equals(((TenoreModel) tenoriOrdinanza.get(i)).getCodEsitoTenore()))
 				dimFinale += 1;
@@ -180,21 +179,12 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		String[] descrMotiviProvvedimento = new String[dimFinale];
 		// esiti
 		String[] codEsitiTenore = new String[dimFinale];
-		String[] descrEsitiTenore = new String[dimFinale];
 
 		String codMotivoProvvedimento = null;
 		String descrMotivoProvvedimento = null;
-		// esito_tenore
-		String hvet = "MACA";
-		if (COD_OGGETTO_CONCESSIONE_MISURE_ALTERNATIVA_678_MINORI.equals(codOggettoProcedimento))
-			hvet = "MACM";
-		String codEsitoTenore = DecodificheUtils
-				.getCodebyCodAlt(DecodificheManager.getInstance().getEsitoTenore(), hvet);
-		String descrEsitoTenore = DecodificheUtils
-				.getDescbyCode(DecodificheManager.getInstance().getEsitoTenore(), codEsitoTenore);
 
-		// Recupera l'elenco dei tenori.
-		for (int i = 0; i < dimensione; i++) {
+		// Recupera l'elenco dei tenori
+		for (int i = 0; i < dimFinale; i++) {
 			// Deve essere riportato solo l'oggetto che è stato applicato provvisoriamente
 			if ("0270".equals(((TenoreModel) tenoriOrdinanza.get(i)).getCodEsitoTenore())) {
 				// dati per questa ordinanza di Conferma Decisione Magistrato Relatore
@@ -207,8 +197,7 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 				descrMotiviProvvedimento[i] = descrMotivoProvvedimento;
 				codOggettiTenore[i] = codMotivoProvvedimento;
 				descrOggettiTenore[i] = descrMotivoProvvedimento;
-				codEsitiTenore[i] = codEsitoTenore;
-				descrEsitiTenore[i] = descrEsitoTenore;
+				codEsitiTenore[i] = getEsito(codMotivoProvvedimento);
 				codDettagliOggetto[i] = "-";
 			}
 		}
@@ -219,7 +208,6 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		setRequestAttribute("codMotiviProvvedimento", codMotiviProvvedimento);
 		setRequestAttribute("descrMotiviProvvedimento", descrMotiviProvvedimento);
 		setRequestAttribute("codEsitiTenore", codEsitiTenore);
-		setRequestAttribute("descrEsitiTenore", descrEsitiTenore);
 		setRequestAttribute("codTipoOrdinanza", "CM");
 
 		// Ricerca del Magistrato Relatore
@@ -239,6 +227,23 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 
 		// restituisce la jsp di VIEW
 		return retPage;
+	}
+
+	// Preleva gli esiti dalla CG_REF_CODES
+	private String getEsito(String codiceOggetti) throws Exception {
+
+		IDecodifiche id = SICOLookupRemote.getDecodificheRemote();
+		Collection<?> c = id.ExRicercaEsitiByOggetto(codiceOggetti);
+		// INIZIO rimuovere se andrà messo anche l'esito di NON CONFERMA
+		Iterator<?> i = c.iterator();
+		while (i.hasNext()) {
+			DecodificheModel dm = (DecodificheModel) i.next();
+			if ("0272".equals(dm.getCodiceAlternativo()))
+				i.remove();
+		}
+		// FINE rimuovere
+		Option o = new Option(c, false);
+		return o.toString();
 	}
 
 }

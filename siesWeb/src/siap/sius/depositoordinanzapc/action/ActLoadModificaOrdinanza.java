@@ -16,6 +16,7 @@ import f3b.util.Utils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.controller.IDecodifiche;
+import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -359,6 +360,23 @@ public class ActLoadModificaOrdinanza extends ActDettaglioEmissioneOrdinanza {
 
 		IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
 		Collection<?> lColl = lDecodifiche.ExRicercaEsitiByOggetto(codiceOggetto);
+		/* 
+		 * ISSUE MEV : aggiunto controllo su estarazione codici 
+		 * 				(rimuovere se andrà messo anche l'esito di NON CONFERMA)
+		 * Numero MEV : 9
+		 * Autore    : sgioggi
+		 * Data      : 24 gen 2023
+		 * Branch    : MEV_9
+		 */
+		if ("0271".equals(acodAltEsitoSelezionato)) {
+			Iterator<?> i = lColl.iterator();
+			while (i.hasNext()) {
+				DecodificheModel dm = (DecodificheModel) i.next();
+				if ("0272".equals(dm.getCodiceAlternativo()))
+					i.remove();
+			}
+		}
+		//***** FINE INTERVENTO MEV_9 *****//
 		String lCodEsitoSelezionato = DecodificheUtils.getCodebyCodAlt(lColl, acodAltEsitoSelezionato);
 		Option lOption = new Option(lColl, lCodEsitoSelezionato);
 		if (lCodEsitoSelezionato != null)

@@ -17,7 +17,6 @@
 <jsp:useBean id="descContenuto"			scope="request" class="java.lang.String"/>
 <jsp:useBean id="codContenuto"			scope="request" class="java.lang.String"/>
 <jsp:useBean id="codTipoOrdinanza"		scope="request" class="java.lang.String"/>
-<jsp:useBean id="dataEsecutivitaStr"	scope="request" class="java.lang.String"/>
 
 <%
 boolean retFlag = false;
@@ -41,7 +40,6 @@ function Verify() {
     					document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiDepositoOrdinanzaPc.CAMPO_MESE_DATA_EMISSIONE%>.value + '/' +
     					document.LoadInserisciConfermaDecisioneMagistratoRelatore.<%=ICostantiDepositoOrdinanzaPc.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 	var dataUdienza = '<%=dataUdienzaStr%>';
-	var dataEsecutivita = '<%=dataEsecutivitaStr%>';
 
 	// Controllo validità data Emissione
   	if (!ControllaData(dataEmissione)) {
@@ -53,11 +51,6 @@ function Verify() {
 		alert('Data Emissione non può essere inferiore alla Data Udienza del ' + dataUdienza + '!');
 		return false;
     }
-	// Controllo data di emissione >= data Esecutivita
-//     else if (!CompareDate(dataEsecutivita, dataEmissione)) {
-// 		alert('Data Emissione non può essere inferiore alla Data Esecutività del ' + dataEsecutivita + '!');
-// 		return false;
-//     }
 
    	return true;
 }
@@ -66,7 +59,6 @@ function Verify() {
 
 <%
 // Imposta l'azione da Chiamare.
-// String azione = "siap.sius.depositoordinanzapc.action.ActInserisciConfermaDecisioneMagistratoRelatore";
 String azione = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS";
 %>
 
@@ -112,7 +104,6 @@ String azione = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS";
 	</tr>
 <%
 String[] descrMotiviProvvedimento = (String[]) request.getAttribute("descrMotiviProvvedimento");
-String[] descrEsitiTenore = (String[]) request.getAttribute("descrEsitiTenore");
 String[] codEsitiTenore = (String[]) request.getAttribute("codEsitiTenore");
 String[] codOggetti = (String[]) request.getAttribute("codOggetti");
 String[] descOggetti = (String[]) request.getAttribute("descOggetti");
@@ -125,11 +116,12 @@ for (int i = 0; i < descrMotiviProvvedimento.length; i++) {
     		<input readonly="readonly" value="<%=descrMotiviProvvedimento[i]%>" type="text" size="100" name="descrOggettoProvv">
     	</td>
       	<td class="l">
-      		<input readonly="readonly" value="<%=descrEsitiTenore[i]%>" type="text" size="50" name="descrEsitoProvv">
+      		<select Title="Esito" name="<%= ICostantiTenore.CAMPO_COD_ESITO_TENORE%>">
+				<%=codEsitiTenore[i]%>
+          	</select>
       		<input type="HIDDEN" name="<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>" value="<%=codOggetti[i]%>">
       		<input type="HIDDEN" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE%>" value="<%=descOggetti[i]%>">
       		<input type="HIDDEN" name="<%=ICostantiTenore.CAMPO_COD_DETTAGLIO_OGGETTO%>" value="<%=codDettagli[i]%>">
-      		<input type="HIDDEN" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>" value="<%=codEsitiTenore[i]%>">
       		<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" value="<%=codMotiviProvvedimento[i]%>">
       	</td>
 	</tr>
