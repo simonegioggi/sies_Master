@@ -18,6 +18,7 @@ import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.StringUtils;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
@@ -55,107 +56,109 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		String value = (uffUteConnesso.getDescrTipoUfficio().toUpperCase() + " DI "
 				+ uffUteConnesso.getDescrComune().toUpperCase());
 		setCell(row, (short) 0, value, csNull);
-
 		nRow++;
-		// Create a row and put some cells in it. Rows are 0 based.
+
 		// row = sheet.createRow(nRow);
-		// Create a cell and put a value in it.
-
 		// value = ("Tel. " + uffUteConnesso.getTelefono() + " - Fax " + uffUteConnesso.getFax());
-
 		// setCell(row, (short) 0, value, csNull);
 
 		row = sheet.createRow(nRow);
-
 		setCell(row, (short) 0, "T3 - Servizi Penali", csNull);
-
 		nRow++;
-
 		row = sheet.createRow(nRow);
 		setCell(row, (short) 0, "T3b - Tribunale, monocratico e collegiale, e Corte di Assise", csNull);
-
 		nRow++;
 		row = sheet.createRow(nRow);
 		setCell(row, (short) 0,
 				"T3b.13 - Elenco degli incidenti d'esecuzione conclusi dopo oltre 1 anno dall'iscrizione",
 				csNull);
-
 		nRow++;
 		row = sheet.createRow(nRow);
 		setCell(row, (short) 0, "Fonte del dato: cartacea/informatica", csNull);
-
-		nRow++;
-		row = sheet.createRow(nRow);
-		String dataIniziale = (ricercaFascSigeModel.getDataIscrizioneIniziale() == null ? ""
-				: DateUtils.getDateToString(ricercaFascSigeModel.getDataIscrizioneIniziale(), "dd/MM/yyyy"));
-		String dataFinale = (ricercaFascSigeModel.getDataIscrizioneFinale() == null ? ""
-				: DateUtils.getDateToString(ricercaFascSigeModel.getDataIscrizioneFinale(), "dd/MM/yyyy"));
-
-		value = "periodo dal " + dataIniziale + " al " + dataFinale;
-		setCell(row, (short) 0, value, csNull);
+		// nRow++;
 
 		return nRow;
 	}
 
 	// Criteri di Ricerca Selezionati
-	private int setCriteriRicercaSelezionati(HSSFSheet sheet, RicercaFascicoloSigeModel mRicercaFascSigeModel,
+	private int setCriteriRicercaSelezionati(HSSFSheet sheet, RicercaFascicoloSigeModel ricercaFascSigeModel,
 			HSSFCellStyle csNull, int nRow) throws Exception {
 
-		if (!(mRicercaFascSigeModel.getDataIscrizioneIniziale() == null
-				&& mRicercaFascSigeModel.getDataIscrizioneFinale() == null
-				&& mRicercaFascSigeModel.getDataDefinizioneIniziale() == null
-				&& mRicercaFascSigeModel.getDataDefinizioneFinale() == null
-				&& mRicercaFascSigeModel.getCodTipoAtto() == null
-				&& mRicercaFascSigeModel.getCodOggettoSige() == null
-				&& mRicercaFascSigeModel.getCodMagistrato() == null
-				&& mRicercaFascSigeModel.getIdSezione() == null
-				&& mRicercaFascSigeModel.getCodTipoRito() == null
-				&& mRicercaFascSigeModel.getCodTipoRito().equals("-")
-				&& mRicercaFascSigeModel.getDataFinePendenza() == null)) {
+		if (!(ricercaFascSigeModel.getDataIscrizioneIniziale() == null
+				&& ricercaFascSigeModel.getDataIscrizioneFinale() == null
+				&& ricercaFascSigeModel.getDataDefinizioneIniziale() == null
+				&& ricercaFascSigeModel.getDataDefinizioneFinale() == null
+				&& ricercaFascSigeModel.getCodTipoAtto() == null
+				&& ricercaFascSigeModel.getCodOggettoSige() == null
+				&& ricercaFascSigeModel.getCodMagistrato() == null
+				&& ricercaFascSigeModel.getIdSezione() == null
+				&& ricercaFascSigeModel.getCodTipoRito() == null
+				&& ricercaFascSigeModel.getCodTipoRito().equals("-")
+				&& ricercaFascSigeModel.getDataFinePendenza() == null)) {
 
 			// Create a row and put some cells in it. Rows are 0 based.
 			HSSFRow row = sheet.createRow(nRow);
 			// Create a cell and put a value in it.
 			String value = ("Criteri di ricerca selezionati: ");
 			setCell(row, (short) 0, value, csNull);
-
 			nRow++;
-			// Create a row and put some cells in it. Rows are 0 based.
 			row = sheet.createRow(nRow);
-			// Create a cell and put a value in it.
 
-			if (mRicercaFascSigeModel.getCodTipoAtto() != null
-					&& mRicercaFascSigeModel.getCodTipoAtto().length() > 1) {
+			row = sheet.createRow(nRow);
+			String dataIniziale = (ricercaFascSigeModel.getDataIscrizioneIniziale() == null ? ""
+					: DateUtils.getDateToString(ricercaFascSigeModel.getDataIscrizioneIniziale(),
+							"dd/MM/yyyy"));
+			String dataFinale = (ricercaFascSigeModel.getDataIscrizioneFinale() == null ? ""
+					: DateUtils.getDateToString(ricercaFascSigeModel.getDataIscrizioneFinale(),
+							"dd/MM/yyyy"));
+			// 20221214: [SG] aggiunto controllo consistenza dato
+			if (Utils.isPresent(dataIniziale) || Utils.isPresent(dataFinale)) {
+				value = "Intervallo date di Iscrizione:";
+				if (Utils.isPresent(dataIniziale))
+					value += " dal " + dataIniziale;
+				if (Utils.isPresent(dataFinale))
+					value += " al " + dataFinale;
+				setCell(row, (short) 0, value, csNull);
+			}
+
+			if (ricercaFascSigeModel.getCodTipoAtto() != null
+					&& ricercaFascSigeModel.getCodTipoAtto().length() > 1) {
 				nRow++;
 				row = sheet.createRow(nRow);
 				value = ("Tipo Atto: "
 						+ DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoAttoSige(),
-								mRicercaFascSigeModel.getCodTipoAtto()));
+								ricercaFascSigeModel.getCodTipoAtto()));
 				setCell(row, (short) 0, value, csNull);
 			}
 
-			if (mRicercaFascSigeModel.getCodOggettoSige() != null
-					&& mRicercaFascSigeModel.getCodOggettoSige().length() > 1) {
+			if (ricercaFascSigeModel.getCodOggettoSige() != null
+					&& ricercaFascSigeModel.getCodOggettoSige().length() > 1) {
 				nRow++;
 				row = sheet.createRow(nRow);
 				value = ("Oggetto: "
 						+ DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getOggettoSige(),
-								mRicercaFascSigeModel.getCodOggettoSige()));
+								ricercaFascSigeModel.getCodOggettoSige()));
+				setCell(row, (short) 0, value, csNull);
+			} else { // 20221214: [SG] aggiunta visualizzazione parametro di ricerca
+				nRow++;
+				row = sheet.createRow(nRow);
+				value = ("Oggetto: Tutti");
 				setCell(row, (short) 0, value, csNull);
 			}
 
-			if (mRicercaFascSigeModel.getCodMagistrato() != null
-					&& mRicercaFascSigeModel.getCodMagistrato().length() > 1) {
-				if (mRicercaFascSigeModel.getCodMagistrato().equals("9")) {
+			// 20221214: [SG] > 0 NON > 1
+			if (ricercaFascSigeModel.getCodMagistrato() != null
+					&& ricercaFascSigeModel.getCodMagistrato().length() > 0) {
+				if (ricercaFascSigeModel.getCodMagistrato().equals("9")) {
 					value = ("Magistrato: Tutti i Magistrati");
-				} else if (mRicercaFascSigeModel.getCodMagistrato().equals("0")) {
+				} else if (ricercaFascSigeModel.getCodMagistrato().equals("0")) {
 					value = ("Magistrato: Magistrato non presente");
 				} else {
 					IMagistrato iMag = SIGELookupRemote.getMagistratoRemote();
 					// 20170918: [SG] aggiunto parametro di passaggio poichè il magistrato può essere inserito
 					// da un ufficio differente da quello in cui ha delle udienze poichè trasferito
 					MagistratoModel magModel = iMag.ExRicercaMagistratoByCod(
-							mRicercaFascSigeModel.getCodMagistrato(), getCodUfficioUtenteConnesso());
+							ricercaFascSigeModel.getCodMagistrato(), getCodUfficioUtenteConnesso());
 					String nomeCognomeMag = magModel.getNome() + " " + magModel.getCognome();
 					value = ("Magistrato: " + nomeCognomeMag);
 				}
@@ -164,16 +167,17 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 				setCell(row, (short) 0, value, csNull);
 			}
 
-			if (mRicercaFascSigeModel.getIdSezione() != null
-					&& mRicercaFascSigeModel.getIdSezione().intValue() > 1) {
-				if (mRicercaFascSigeModel.getIdSezione().equals(new BigDecimal(9))) {
+			// 20221214: [SG] > 0 NON > 1 (.toString().length())
+			if (ricercaFascSigeModel.getIdSezione() != null
+					&& ricercaFascSigeModel.getIdSezione().toString().length() > 0) {
+				if (ricercaFascSigeModel.getIdSezione().equals(new BigDecimal(9))) {
 					value = ("Sezione: Tutte le Sezioni");
-				} else if (mRicercaFascSigeModel.getIdSezione().equals(new BigDecimal(0))) {
+				} else if (ricercaFascSigeModel.getIdSezione().equals(new BigDecimal(0))) {
 					value = ("Sezione: Sezione non presente");
 				} else {
 					ISezione lSezCtrl = SIGELookupRemote.getSezioneRemote();
 					SezioneModel lSezione = lSezCtrl
-							.ExRicercaSezioneByKey(mRicercaFascSigeModel.getIdSezione());
+							.ExRicercaSezioneByKey(ricercaFascSigeModel.getIdSezione());
 					String descSezione = lSezione.getDescrizione();
 					value = ("Sezione: " + descSezione);
 				}
@@ -182,15 +186,15 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 				setCell(row, (short) 0, value, csNull);
 			}
 
-			if (mRicercaFascSigeModel.getCodTipoRito() != null
-					&& !mRicercaFascSigeModel.getCodTipoRito().equals("-")) {
-				if (mRicercaFascSigeModel.getCodTipoRito().equals("N")) {
+			if (ricercaFascSigeModel.getCodTipoRito() != null
+					&& !ricercaFascSigeModel.getCodTipoRito().equals("-")) {
+				if (ricercaFascSigeModel.getCodTipoRito().equals("N")) {
 					value = ("Tipo Rito: Mancante");
-				} else if (mRicercaFascSigeModel.getCodTipoRito().equals("T")) {
+				} else if (ricercaFascSigeModel.getCodTipoRito().equals("T")) {
 					value = ("Tipo Rito: Monocratico e Collegiale");
-				} else if (mRicercaFascSigeModel.getCodTipoRito().equals("C")) {
+				} else if (ricercaFascSigeModel.getCodTipoRito().equals("C")) {
 					value = ("Tipo Rito: Collegiale");
-				} else if (mRicercaFascSigeModel.getCodTipoRito().equals("M")) {
+				} else if (ricercaFascSigeModel.getCodTipoRito().equals("M")) {
 					value = ("Tipo Rito: Monocratico");
 				}
 				nRow++;
@@ -199,56 +203,39 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 			}
 
 			/*
-			 * if(mRicercaFascSigeModel.getDataIscrizioneIniziale() != null ||
-			 * mRicercaFascSigeModel.getDataIscrizioneFinale() != null ){ value =
-			 * ("Procedimenti con Data Iscrizione: " ); if(mRicercaFascSigeModel.getDataIscrizioneIniziale()
-			 * != null){ value = value + (" Dal  ") +
-			 * DateUtils.getDateToString(mRicercaFascSigeModel.getDataIscrizioneIniziale(), "dd/MM/yyyy"); }
-			 * if(mRicercaFascSigeModel.getDataIscrizioneFinale() != null){ value = value + (" Al  ") +
-			 * DateUtils.getDateToString(mRicercaFascSigeModel.getDataIscrizioneFinale(), "dd/MM/yyyy"); }
+			 * if(ricercaFascSigeModel.getDataIscrizioneIniziale() != null ||
+			 * ricercaFascSigeModel.getDataIscrizioneFinale() != null ){ value =
+			 * ("Procedimenti con Data Iscrizione: " ); if(ricercaFascSigeModel.getDataIscrizioneIniziale() !=
+			 * null){ value = value + (" Dal  ") +
+			 * DateUtils.getDateToString(ricercaFascSigeModel.getDataIscrizioneIniziale(), "dd/MM/yyyy"); }
+			 * if(ricercaFascSigeModel.getDataIscrizioneFinale() != null){ value = value + (" Al  ") +
+			 * DateUtils.getDateToString(ricercaFascSigeModel.getDataIscrizioneFinale(), "dd/MM/yyyy"); }
 			 * setCell(row, (short) 0, value, csNull); }
 			 */
 
-			if (mRicercaFascSigeModel.getDataDefinizioneIniziale() != null
-					|| mRicercaFascSigeModel.getDataDefinizioneFinale() != null) {
+			if (ricercaFascSigeModel.getDataDefinizioneIniziale() != null
+					|| ricercaFascSigeModel.getDataDefinizioneFinale() != null) {
 				value = ("Procedimenti con Data Definizione: ");
-				if (mRicercaFascSigeModel.getDataDefinizioneIniziale() != null) {
-					value = value + (" Dal  ") + DateUtils.getDateToString(
-							mRicercaFascSigeModel.getDataDefinizioneIniziale(), "dd/MM/yyyy");
+				if (ricercaFascSigeModel.getDataDefinizioneIniziale() != null) {
+					value = value + (" Dal  ") + DateUtils
+							.getDateToString(ricercaFascSigeModel.getDataDefinizioneIniziale(), "dd/MM/yyyy");
 				}
-				if (mRicercaFascSigeModel.getDataDefinizioneFinale() != null) {
+				if (ricercaFascSigeModel.getDataDefinizioneFinale() != null) {
 					value = value + (" Al  ") + DateUtils
-							.getDateToString(mRicercaFascSigeModel.getDataDefinizioneFinale(), "dd/MM/yyyy");
+							.getDateToString(ricercaFascSigeModel.getDataDefinizioneFinale(), "dd/MM/yyyy");
 				}
 				nRow++;
 				row = sheet.createRow(nRow);
 				setCell(row, (short) 0, value, csNull);
 			}
 
-			if (mRicercaFascSigeModel.getDataDefinizioneIniziale() != null
-					|| mRicercaFascSigeModel.getDataDefinizioneFinale() != null) {
-				value = ("Procedimenti con Data Definizione: ");
-				if (mRicercaFascSigeModel.getDataDefinizioneIniziale() != null) {
-					value = value + (" Dal  ") + DateUtils.getDateToString(
-							mRicercaFascSigeModel.getDataDefinizioneIniziale(), "dd/MM/yyyy");
-				}
-				if (mRicercaFascSigeModel.getDataDefinizioneFinale() != null) {
-					value = value + (" Al  ") + DateUtils
-							.getDateToString(mRicercaFascSigeModel.getDataDefinizioneFinale(), "dd/MM/yyyy");
-				}
+			if (ricercaFascSigeModel.getDataFinePendenza() != null) {
+				value = ("Procedimenti Pendenti al: ")
+						+ DateUtils.getDateToString(ricercaFascSigeModel.getDataFinePendenza(), "dd/MM/yyyy");
 				nRow++;
 				row = sheet.createRow(nRow);
 				setCell(row, (short) 0, value, csNull);
 			}
-
-			if (mRicercaFascSigeModel.getDataFinePendenza() != null) {
-				value = ("Procedimenti Pendenti al: ") + DateUtils
-						.getDateToString(mRicercaFascSigeModel.getDataFinePendenza(), "dd/MM/yyyy");
-				nRow++;
-				row = sheet.createRow(nRow);
-				setCell(row, (short) 0, value, csNull);
-			}
-
 		}
 		return nRow;
 	}
@@ -303,7 +290,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 	 * @throws Exception
 	 */
 	private void creaFoglioElencoProcedimentiSige(HSSFWorkbook wb, UfficioModel aUffUteConnesso,
-			Vector<FascicoloSigeEstesoModel> lFascicoliSige, RicercaFascicoloSigeModel mRicercaFascSigeModel)
+			Vector<FascicoloSigeEstesoModel> lFascicoliSige, RicercaFascicoloSigeModel ricercaFascSigeModel)
 			throws Exception {
 
 		short numCol = 0;
@@ -316,7 +303,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		int nRow = 0;
 
 		// Intestazione del foglio excel
-		nRow = setIntestazione(sheet, aUffUteConnesso, csNull, mRicercaFascSigeModel);
+		nRow = setIntestazione(sheet, aUffUteConnesso, csNull, ricercaFascSigeModel);
 
 		nRow++;
 		nRow++;
@@ -325,7 +312,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		row = sheet.createRow(nRow);
 
 		// Criteri di Ricerca Selezionati
-		nRow = setCriteriRicercaSelezionati(sheet, mRicercaFascSigeModel, csNull, nRow);
+		nRow = setCriteriRicercaSelezionati(sheet, ricercaFascSigeModel, csNull, nRow);
 		nRow++;
 		nRow++;
 
@@ -512,9 +499,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 
 			// Scrittura riga del report
 			row = sheet.createRow(nRow++);
-
 		}
-
 	}
 
 	public String processRequest() throws Exception {
@@ -523,12 +508,10 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		// LogF3B.getLogger()
 		siesLogger.debug("" + getClass().getName() + " .processRequest: inizio ");
 
-		RicercaFascicoloSigeModel mRicercaFascSigeModel = letturaParametriRicerca();
+		RicercaFascicoloSigeModel ricercaFascSigeModel = letturaParametriRicerca();
 
-		// Vector<FascicoloSigeEstesoModel> lFascicoliSige = getElencoFascicoliSige(mRicercaFascSigeModel,
-		// "-1");
 		Vector<FascicoloSigeEstesoModel> lFascicoliSige = getElencoFascicoliStatisticaSige(
-				mRicercaFascSigeModel);
+				ricercaFascSigeModel);
 		// risultato della ricerca supera 65536 record
 		if (lFascicoliSige != null && lFascicoliSige.size() > 65536) {
 			throw new F3BException(F3BException.USER_MESSAGE,
@@ -543,7 +526,7 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 		HSSFWorkbook wb = new HSSFWorkbook();
 		ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
 		creaFoglioElencoProcedimentiSige(wb, getUfficioUtenteConnesso(), lFascicoliSige,
-				mRicercaFascSigeModel);
+				ricercaFascSigeModel);
 
 		// Generazione file xls
 		try {
@@ -568,13 +551,8 @@ public class ActRicercaFSigePerEstremiStatistica extends ActRicercaFSigePerEstre
 
 		// Viene istanziato il controller per la ricerca
 		IFascicoloSige lCtrl = SIGELookupRemote.getFascicoloSigeRemote();
-
-		Vector<FascicoloSigeEstesoModel> lFascicoli = null;
-
-		// lFascicoli = lCtrl.ExRicercaFascicoloSigeByEstremiPagina(lFascicoloSigeMod,
-		// Integer.parseInt(lPagina));
-
-		lFascicoli = lCtrl.ExRicercaStatisticaFascicoloSigeByEstremi(lFascicoloSigeMod);
+		Vector<FascicoloSigeEstesoModel> lFascicoli = lCtrl
+				.ExRicercaStatisticaFascicoloSigeByEstremi(lFascicoloSigeMod);
 
 		return lFascicoli;
 	}
