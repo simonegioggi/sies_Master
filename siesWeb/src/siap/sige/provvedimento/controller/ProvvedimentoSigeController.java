@@ -2652,6 +2652,8 @@ public class ProvvedimentoSigeController extends GenericController implements IP
 						&& lProSige.getCodTipoProvvedimentoSige().equals("62")) {
 					lFasSigeDao.setCondizioneUpdate(aIdFascicoloSige);
 				} else {
+					// ma forse pure nel caso di annullamento fissazione udienza?
+					// lFasSigeDao.setCondizioneUpdateStatoFascicolo(aIdFascicoloSige, "07,20");
 					lFasSigeDao.setCondizioneUpdateStatoFascicolo(aIdFascicoloSige, "07");
 				}
 				lFasSigeDao.update();

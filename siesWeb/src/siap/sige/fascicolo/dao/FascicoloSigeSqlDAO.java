@@ -170,8 +170,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		lStatement += "CHIAVE_UFFICIO,SEZ_ID_SEZIONE, ";
 		lStatement += "DATA_ISCRIZIONE, MIN(A.DATA_UDIENZA)DATA_UDIENZA_MIN, MAX ";
 		lStatement += "(A.DATA_UDIENZA) DATA_UDIENZA_MAX, ";
-		// 20170901; [SG] modificata query poichè data iscrizione ha anche ore, mi, sec ed il round non
-		// funziona
+		// 20170901; [SG] modificata query poichè data iscrizione ha anche ore, mi, sec ed il round non funge
 		lStatement += "DATA_DEFINIZIONE, ROUND(to_date(DATA_DEFINIZIONE, 'dd/MM/yyyy') - to_date(DATA_ISCRIZIONE, 'dd/MM/yyyy')) ";
 		lStatement += "DIFF_TOT, decode(sign(ROUND((to_date(DATA_DEFINIZIONE, 'dd/MM/yyyy') - to_date(DATA_ISCRIZIONE, 'dd/MM/yyyy'))) - 365), 1, ROUND((to_date(DATA_DEFINIZIONE, 'dd/MM/yyyy') - to_date(DATA_ISCRIZIONE, 'dd/MM/yyyy')) - 365), -1, null) diff_anno ";
 		// lStatement+="DATA_DEFINIZIONE, ROUND((DATA_DEFINIZIONE - DATA_ISCRIZIONE)) ";
@@ -893,11 +892,13 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		}
 
 		// Cerca i fascicoli fino ad una data fine pendenza.
-		if ((aRFSM.getDataFinePendenza() != null))
+		if ((aRFSM.getDataFinePendenza() != null)) {
 			lCondizioni += " AND (DATA_DEFINIZIONE is null OR TO_CHAR(DATA_DEFINIZIONE,'YYYYMMDD') > '"
 					+ DateUtils.getDateToString(aRFSM.getDataFinePendenza(), "yyyyMMdd") + "')";
-		lCondizioni += " AND TO_CHAR(DATA_ISCRIZIONE,'YYYYMMDD') <= '"
-				+ DateUtils.getDateToString(aRFSM.getDataFinePendenza(), "yyyyMMdd") + "'";
+			// 20221214: [SG] spostato dentro la if
+			lCondizioni += " AND TO_CHAR(DATA_ISCRIZIONE,'YYYYMMDD') <= '"
+					+ DateUtils.getDateToString(aRFSM.getDataFinePendenza(), "yyyyMMdd") + "'";
+		}
 
 		// Cerca i fascicoli a partire da una data definizione.
 		if ((aRFSM.getDataDefinizioneIniziale() != null))
@@ -985,11 +986,13 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		}
 
 		// Cerca i fascicoli fino ad una data fine pendenza.
-		if ((aRFSM.getDataFinePendenza() != null))
+		if ((aRFSM.getDataFinePendenza() != null)) {
 			lCondizioni += " AND (DATA_DEFINIZIONE is null OR TO_CHAR(DATA_DEFINIZIONE,'YYYYMMDD') > '"
 					+ DateUtils.getDateToString(aRFSM.getDataFinePendenza(), "yyyyMMdd") + "')";
-		lCondizioni += " AND TO_CHAR(DATA_ISCRIZIONE,'YYYYMMDD') <= '"
-				+ DateUtils.getDateToString(aRFSM.getDataFinePendenza(), "yyyyMMdd") + "'";
+			// 20221214: [SG] spostato dentro la if
+			lCondizioni += " AND TO_CHAR(DATA_ISCRIZIONE,'YYYYMMDD') <= '"
+					+ DateUtils.getDateToString(aRFSM.getDataFinePendenza(), "yyyyMMdd") + "'";
+		}
 
 		// Cerca i fascicoli a partire da una data definizione.
 		if ((aRFSM.getDataDefinizioneIniziale() != null))
