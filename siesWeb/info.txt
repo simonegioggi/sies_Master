@@ -1,3 +1,8 @@
 RELEASE_12.4.27.0	-->	nato dal branch "release_12.4.26.0" in data 30/01/2023
 
-NON Comprende Ticket MAC
+Comprende i seguenti Ticket MAC:
+
+1)	Ticket#20230125017 - SIEP - Impossibile visualizzare alcuni fascicolo mediante ricerca per numero.
+	Corretta impostazione del codice stato procedimento (validato '0109').
+	Classe modificata:
+	-	ActUploadTrasmAnnotazioneProvvedimentoSor.java
