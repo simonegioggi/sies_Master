@@ -1,3 +1,14 @@
-RELEASE_12.4.27.0	-->	nato dal branch "release_12.4.26.0" in data 30/01/2023
+Ticket#202301250123 - n. 30004/2021 e n. 30005/2021 SIEP CAMPOBASSO
 
-NON Comprende Ticket MAC
+In fase di cancellazione del record Annotazione Manuale non cancellava eventuali record 
+ANNMAN_PENACOMPL << PENA_COMPLESSIVA << SANZIONE_SOSTITUTIVA
+ANNMAN_REATO << REATO
+inseriti dalla funzione "Gestione Pene Sospese - richieste - Revoca beneficio ex art 168 c.p - 674 c.p.p"
+generando un errore di violazione ForeignKey
+
+Classi modificate
+siap.siep.ordineesecuzione.controller.OrdineEsecuzioneController
+metodo ExAggiornaEventoInserisciCampoNota
+
+siap.siep.penasospesa.dao.AnnmanPenacomplDAO
+siap.siep.penasospesa.dao.AnnmanReatoDAO
