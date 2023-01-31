@@ -4,6 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import f3b.util.DateUtils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -13,32 +16,17 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penapecuniaria.controller.IRichiestaConversione;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.util.DateUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 
 /**
- * <p>
- * Title: ActUploadTrasmissioneConversione
- * </p>
- * <p>
+ * Title: ActUploadTrasmissioneConversione 
  * Description: Validazione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
+ *
  * @version 1.0
  */
 public class ActUploadTrasmAnnotazioneProvvedimentoSor extends ActionSiap implements ICostantiEvento {
 
 	public String processRequest() throws Exception {
-		// EventoModel lModel = new EventoModel();
-		// lModel.setIdEvento( getRequestBigDecimalParameter( CAMPO_ID_EVENTO) );
+
 		BigDecimal lIdEvento = getRequestBigDecimalParameter(CAMPO_ID_EVENTO);
 		InputStream lInput = getFile(ICostantiEvento.CAMPO_BLOB);
 
@@ -66,7 +54,10 @@ public class ActUploadTrasmAnnotazioneProvvedimentoSor extends ActionSiap implem
 		else if (lModel.getCodMotivo().equals("2471"))
 			codStatoProc = "0342";
 		else
-			codStatoProc = "0000";
+			// Ticket#20230125017-SIEP-Impossibile visualizzare alcuni fascicolo mediante ricerca per numero.
+			// "0000" NON ESISTE NELLA TABELLA STATO_PROCEDIMENTO: mettiamo validato '0109'
+			// codStatoProc = "0000";
+			codStatoProc = "0109";
 
 		IEvento lCtrlUpd = SICOLookupRemote.getEventoRemote();
 		lCtrlUpd.ExUpdateValidaProvvedimento(lModel, codStatoProc);
