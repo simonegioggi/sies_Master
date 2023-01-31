@@ -55,7 +55,7 @@ public class ActUploadTrasmAnnotazioneProvvedimentoSor extends ActionSiap implem
 			codStatoProc = "0342";
 		else
 			// Ticket#20230125017-SIEP-Impossibile visualizzare alcuni fascicolo mediante ricerca per numero.
-			// NON ESISTE NELLA TABELLA STATO_PROCEDIMENTO: mettiamo validato '0109'
+			// "0000" NON ESISTE NELLA TABELLA STATO_PROCEDIMENTO: mettiamo validato '0109'
 			// codStatoProc = "0000";
 			codStatoProc = "0109";
 
