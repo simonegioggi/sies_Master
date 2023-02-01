@@ -409,32 +409,17 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", CK_ATTI_PRESIDENTE";
-		lStatement += ", NOTE_ATTI";
-		lStatement += ", PROCURA_COMPETENTE";
-		lStatement += ", TIP_UFF_PROC.RV_MEANING DESTIPUFFPROC";
-		lStatement += ", COM_UFF_PROC.DESCRIZIONE DESCOMUFFPROC";
 		lStatement += ", DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA, cg_ref_codes UFF_TIPO_MAG,";
 		lStatement += " COMUNE COM_UFF_MAG, UFFICIO UFFI_MAG,";
 		lStatement += " COMUNE COM_UFF_TDS, UFFICIO UFFI_TDS";
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", UFFICIO UFFI_PROC, COMUNE COM_UFF_PROC";
-		lStatement += ", CG_REF_CODES TIP_UFF_PROC ";
-		// FINE: MEV_9
 		lStatement += "WHERE CSSA.ID_CSSA = NVL('9999',ID_CSSA_COMP)";
 		lStatement += " AND UFF_TIPO_MAG.RV_LOW_VALUE = UFFI_MAG.COD_TIPO_UFFICIO";
 		lStatement += " AND UFFI_MAG.COD_UFFICIO = COD_UFFICIO_MAGISTRATO_COMP AND UFF_TIPO_MAG.RV_DOMAIN = 'TIPO_UFFICIO'";
 		lStatement += " AND COM_UFF_MAG.COD_COMUNE = UFFI_MAG.COD_COMUNE";
 		lStatement += " AND UFFI_TDS.COD_UFFICIO = NVL('-',COD_UFF_TDS_CONCESSO_RIDUZIONE)";
 		lStatement += " AND COM_UFF_TDS.COD_COMUNE = UFFI_TDS.COD_COMUNE";
-		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += " AND UFFI_PROC.COD_UFFICIO = NVL('-',PROCURA_COMPETENTE)";
-		lStatement += " AND COM_UFF_PROC.COD_COMUNE = UFFI_PROC.COD_COMUNE";
-		lStatement += " AND TIP_UFF_PROC.RV_DOMAIN = 'TIPO_UFFICIO'";
-		lStatement += " AND TIP_UFF_PROC.RV_LOW_VALUE = UFFI_PROC.COD_TIPO_UFFICIO";
-		// FINE: MEV_9
 
 		return lStatement;
 	}
@@ -505,11 +490,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", CK_ATTI_PRESIDENTE";
-		lStatement += ", NOTE_ATTI";
-		lStatement += ", PROCURA_COMPETENTE";
-		lStatement += ", '' DESTIPUFFPROC";
-		lStatement += ", '' DESCOMUFFPROC";
 		lStatement += ", DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA ON CSSA.ID_CSSA = ID_CSSA_COMP ";
@@ -583,11 +563,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += ", SOMMA_RISARC_DANNI";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", CK_ATTI_PRESIDENTE";
-		lStatement += ", NOTE_ATTI";
-		lStatement += ", PROCURA_COMPETENTE";
-		lStatement += ", '' DESTIPUFFPROC";
-		lStatement += ", '' DESCOMUFFPROC";
 		lStatement += ", DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA CSSA_CSSA  ON CSSA_CSSA .ID_CSSA = ID_CSSA_COMP ";
@@ -666,11 +641,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", CK_ATTI_PRESIDENTE";
-		lStatement += ", NOTE_ATTI";
-		lStatement += ", PROCURA_COMPETENTE";
-		lStatement += ", '' DESTIPUFFPROC";
-		lStatement += ", '' DESCOMUFFPROC";
 		lStatement += ", DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA ";
@@ -756,11 +726,6 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		// 10102014 - DL 92 2014 Violazione CEDU
 		aModel.setSommaRisarcimento(getBigDecimal("SOMMA_RISARC_DANNI"));
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		aModel.setCkAttiPresidente(getString("CK_ATTI_PRESIDENTE"));
-		aModel.setNoteAtti(getString("NOTE_ATTI"));
-		aModel.setProcuraCompetente(getString("PROCURA_COMPETENTE"));
-		aModel.setDescTipoProcuraCompetente(getString("DESTIPUFFPROC"));
-		aModel.setDescComProcuraCompetente(getString("DESCOMUFFPROC"));
 		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA"));
 		// FINE: MEV_9
 

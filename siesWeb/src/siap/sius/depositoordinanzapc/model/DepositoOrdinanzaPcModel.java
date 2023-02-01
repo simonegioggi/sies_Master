@@ -97,11 +97,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	private BigDecimal mSommaRisarcimento;
 
 	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	private String mCkAttiPresidente;
-	private String mNoteAtti;
-	private String mProcuraCompetente; // codUfficio
-	private String mDescTipoProcuraCompetente; // tipo ufficio (PM, PGCAP, PMM)
-	private String mDescComProcuraCompetente; // comuni ufficio
 	private Date mDataEsecutivita;
 	// FINE: MEV_9
 
@@ -178,11 +173,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = null;
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		this.mCkAttiPresidente = null;
-		this.mNoteAtti = null;
-		this.mProcuraCompetente = null;
-		this.mDescTipoProcuraCompetente = null;
-		this.mDescComProcuraCompetente = null;
 		this.mDataEsecutivita = null;
 		// FINE: MEV_9
 	}
@@ -261,11 +251,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		this.mCkAttiPresidente = aModel.mCkAttiPresidente;
-		this.mNoteAtti = aModel.mNoteAtti;
-		this.mProcuraCompetente = aModel.mProcuraCompetente;
-		this.mDescTipoProcuraCompetente = aModel.mDescTipoProcuraCompetente;
-		this.mDescComProcuraCompetente = aModel.mDescComProcuraCompetente;
 		this.mDataEsecutivita = aModel.mDataEsecutivita;
 		// FINE: MEV_9
 	}
@@ -297,8 +282,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			Date aDataScadenzaSospensioneSS, BigDecimal aSospensioneGGSS, BigDecimal aSospensioneMMSS,
 			BigDecimal aSospensioneAASS, String aFlagNominaComActa, String aDescrCommActa,
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
-			BigDecimal aSommaRisarcimento, String aCkAttiPresidente, String aNoteAtti,
-			String aProcuraCompetente, String aDescTipoProcuraCompetente, String aDescComProcuraCompetente,
+			BigDecimal aSommaRisarcimento, 
 			Date aDataEsecutivita) {
 
 		this.mIdDepositoOrdinanzaPc = aIdDepositoOrdinanzaPc;
@@ -370,11 +354,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		// 10102014 - D.L. 92 2014 Violazione CEDU
 		this.mSommaRisarcimento = aSommaRisarcimento;
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		this.mCkAttiPresidente = aCkAttiPresidente;
-		this.mNoteAtti = aNoteAtti;
-		this.mProcuraCompetente = aProcuraCompetente;
-		this.mDescTipoProcuraCompetente = aDescTipoProcuraCompetente;
-		this.mDescComProcuraCompetente = aDescComProcuraCompetente;
 		this.mDataEsecutivita = aDataEsecutivita;
 		// FINE: MEV_9
 	}
@@ -674,26 +653,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	}
 
 	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	public String getCkAttiPresidente() {
-		return mCkAttiPresidente;
-	}
-
-	public String getNoteAtti() {
-		return mNoteAtti;
-	}
-
-	public String getProcuraCompetente() {
-		return mProcuraCompetente;
-	}
-
-	public String getDescTipoProcuraCompetente() {
-		return mDescTipoProcuraCompetente;
-	}
-
-	public String getDescComProcuraCompetente() {
-		return mDescComProcuraCompetente;
-	}
-
 	public Date getDataEsecutivita() {
 		return mDataEsecutivita;
 	}
@@ -982,26 +941,6 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	}
 
 	// INIZIO: MEV_9 (D.lgs. 123/2018)
-	public void setCkAttiPresidente(String aValore) {
-		mCkAttiPresidente = aValore;
-	}
-
-	public void setNoteAtti(String aValore) {
-		mNoteAtti = aValore;
-	}
-
-	public void setProcuraCompetente(String aValore) {
-		mProcuraCompetente = aValore;
-	}
-
-	public void setDescTipoProcuraCompetente(String aValore) {
-		mDescTipoProcuraCompetente = aValore;
-	}
-
-	public void setDescComProcuraCompetente(String aValore) {
-		mDescComProcuraCompetente = aValore;
-	}
-
 	public void setDataEsecutivita(Date mDataEsecutivita) {
 		this.mDataEsecutivita = mDataEsecutivita;
 	}

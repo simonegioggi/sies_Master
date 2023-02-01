@@ -189,7 +189,6 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 			} else {
 				setRequestAttribute("dataEsecutivita",
 						DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
-				setRequestAttribute("noteAtti", dopcm.getNoteAtti());
 				setRequestAttribute("provenienza", "modifica");
 			}
 		}

@@ -113,7 +113,6 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 			dopcm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 			dopcm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 			dopcm.setDataAggiornamento(DateUtils.getSysDate());
-			dopcm.setNoteAtti(null);
 			if ("cancella".equals(getRequestStringParameter("provenienza"))) {
 				dopcm.setDataEsecutivita(null);
 				idopc.ExModificaDepositoOrdinanzaPc(dopcm);
@@ -133,8 +132,8 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 				// valore di ritorno
 				return IWebConstants.PG_MESSAGE; /* rt.toString(); */
 			} else {
-				if (!isRequestParameterNullEmptyObj(CAMPO_NOTE))
-					dopcm.setNoteAtti(getRequestStringParameter(CAMPO_NOTE));
+//				if (!isRequestParameterNullEmptyObj(CAMPO_NOTE))
+//					dopcm.setNoteAtti(getRequestStringParameter(CAMPO_NOTE));
 				dopcm.setDataEsecutivita(getRequestDateParameter(CAMPO_ANNO_DATA_ESECUTIVITA,
 						CAMPO_MESE_DATA_ESECUTIVITA, CAMPO_GIORNO_DATA_ESECUTIVITA));
 				idopc.ExModificaDepositoOrdinanzaPc(dopcm);
@@ -142,7 +141,7 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		}
 
 		setRequestAttribute("dataEsecutivita", dopcm.getDataEsecutivita());
-		setRequestAttribute("noteAtti", dopcm.getNoteAtti());
+		//setRequestAttribute("noteAtti", dopcm.getNoteAtti());
 		setRequestAttribute("Upload", "NO");
 		setRequestAttribute("ListaTemplate", "SIUS_OR_0270");
 		setRequestAttribute("existConfermaDecisioneMR", "" + existConfermaDecisioneMR);

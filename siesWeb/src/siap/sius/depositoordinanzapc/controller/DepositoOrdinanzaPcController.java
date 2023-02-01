@@ -2281,13 +2281,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepOrdMod.setDescrUffTdsConcessoRiduzione(
 					RicercaComunebyUfficio(lDepOrdMod.getCodUffTdsConcessoRiduzione()));
 
-			// INIZIO: MEV_9 (D.lgs. 123/2018)
-			UfficioModel ufficioProcura = RicercaUfficiobyCodUfficio(lDepOrdMod.getProcuraCompetente());
-			if (ufficioProcura != null) {
-				lDepOrdMod.setDescTipoProcuraCompetente(ufficioProcura.getDescrTipoUfficio());
-				lDepOrdMod.setDescComProcuraCompetente(ufficioProcura.getDescrComune());
-			}
-			// FINE: MEV_9
 			lOrdEveTenPreMod.setOrdinanza(lDepOrdMod);
 
 			// Dati Prescrizioni.
