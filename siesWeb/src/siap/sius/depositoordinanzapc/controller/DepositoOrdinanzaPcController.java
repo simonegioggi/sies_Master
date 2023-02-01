@@ -98,8 +98,7 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title: DepositoOrdinanzaPcController
- * Description: Classe Controller per DepositoOrdinanzaPc
+ * Title: DepositoOrdinanzaPcController Description: Classe Controller per DepositoOrdinanzaPc
  *
  * @version 1.0
  */
@@ -307,13 +306,10 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/**
-	 * Esegue l'inserimento del Emissione Ordinanza.
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico.
-	 * Le tabelle coinvolte sono:
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * EVENTO : viene inserito un nuovo record;
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procemimento.
+	 * Esegue l'inserimento del Emissione Ordinanza. Description: Funzione per l'inserimento dell'Emissione di
+	 * un'ordinanza generico. Le tabelle coinvolte sono: DEPOSITO_ORDINANZAPC : viene inserito il nuovo record
+	 * decreto; EVENTO : viene inserito un nuovo record; TENORE : vengono chiusi i tenori attivi (data_fine)
+	 * ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO : update del contenuto del procemimento.
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 * @throws F3BException
@@ -372,14 +368,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento del Emissione Ordinanza e l'aggiornamento del Fascicolo SIUS origine collegato al
-	 * Fascicolo SIUS.
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico.
-	 * Le tabelle coinvolte sono:
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * EVENTO : viene inserito un nuovo record;
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procemimento. FASCICOLO_SIUS : update del ID FASCICOLO
-	 * ORIGINE.
+	 * Fascicolo SIUS. Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico. Le
+	 * tabelle coinvolte sono: DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto; EVENTO : viene
+	 * inserito un nuovo record; TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi
+	 * tenori; GENERALE_PROCEDIMENTO : update del contenuto del procemimento. FASCICOLO_SIUS : update del ID
+	 * FASCICOLO ORIGINE.
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 * @throws F3BException
@@ -714,11 +707,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			BigDecimal lIdGenProc = aGProcOrdEveTenori.getGeneraleProcedimento().getIdGeneraleProcedimento();
 
 			/*
-			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE 
-			 * Numero MEV : 9 
-			 * Autore : sgioggi 
-			 * Data : 17 gen 2023 
-			 * Branch : MEV_9
+			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE Numero
+			 * MEV : 9 Autore : sgioggi Data : 17 gen 2023 Branch : MEV_9
 			 */
 			if (!"CM".equals(lGProcOrdEveTenori.getOrdinanza().getCodTipoOrdinanza())) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -978,12 +968,9 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// TENORI COLLEGATI
 			lTenDao = new TenoreDAO(aConn);
 			lTenDao.setDAOForDeleteDepOrd(aDepOrd);
-			/* 
+			/*
 			 * ISSUE MEV : cancello tenore se cancello ordinanza di conferma decisione magistrato relatore
-			 * Numero MEV : 9
-			 * Autore    : sgioggi
-			 * Data      : 18 gen 2023
-			 * Branch    : MEV_9
+			 * Numero MEV : 9 Autore : sgioggi Data : 18 gen 2023 Branch : MEV_9
 			 */
 			if (!"CM".equals(aDepOrd.getCodTipoOrdinanza())) {
 				// update Tenori collegati
@@ -992,7 +979,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 				// delete Tenori collegati
 				lTenDao.delete();
 			}
-			//***** FINE INTERVENTO MEV_9 *****//
+			// ***** FINE INTERVENTO MEV_9 *****//
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2029,7 +2016,7 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			// b) Si Inserisce opportunamente una occorrenza di SCAMBIO_SANZIONE.
 			if (lDepMod.getCodTipoOrdinanza()
 					.compareTo(ICostantiDepositoOrdinanzaPc.CONVERSIONE_PENE_PECUNIARIE) == 0
-							// 30/09/2015
+					// 30/09/2015
 					|| lDepMod.getCodTipoOrdinanza().compareTo(
 							ICostantiDepositoOrdinanzaPc.DICHIARAZIONE_ESTINZIONE_LIB_CONTROLLATA) == 0) {
 				lRicConvDao = new RichiestaConversioneDAO(lConn);
@@ -2260,11 +2247,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
-			 * Numero MEV : SIES v10 
-			 * Autore : gioggi 
-			 * Data : 27/gen/2016 
-			 * Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
+			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
 			 */
 			// lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByIdEveGenerato( aIdEvento );
 			lDepOrdSqlDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aIdEvento);
@@ -2507,11 +2491,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepDao = new DepositoOrdinanzaPcSqlDAO(lConn);
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
-			 * Numero MEV : SIES v10 
-			 * Autore : gioggi 
-			 * Data : 27/gen/2016 
-			 * Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
+			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
 			 */
 			// lDepDao.ricercaDepositoOrdinanzaPcByIdEveGenerato(aEveKey);
 			lDepDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aEveKey);
@@ -2833,25 +2814,6 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDescComune = lUfficio.getDescrComune();
 		}
 		return lDescComune;
-	}
-
-	/**
-	 * Funzione aggiunta per MEV_9 (D.lgs. 123/2018)
-	 *
-	 * @param aCodUfficio
-	 * @return
-	 * @throws F3BException
-	 */
-	private UfficioModel RicercaUfficiobyCodUfficio(String aCodUfficio) throws F3BException {
-		UfficioModel lUfficio = null;
-		if (aCodUfficio != null && aCodUfficio.compareTo("-") != 0) {
-			IUfficio lUff = null;
-			lUff = SICOLookupRemote.getUfficioRemote();
-
-			// Preleva Ufficio Competente
-			lUfficio = lUff.getUfficioByKey(aCodUfficio);
-		}
-		return lUfficio;
 	}
 
 	private DepositoOrdinanzaPcModel RicercaUffici(DepositoOrdinanzaPcModel aDepOrdinanza)
@@ -3321,16 +3283,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Emissione Ordinanza, del Periodo Altra Sanzione e modifica l'Esecuzione
-	 * Sanzione Sostitutiva .
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo Altra
-	 * Sanzione e Esecuzione Sanzione Sostitutiva
-	 * Le tabelle coinvolte sono:
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * EVENTO : viene inserito un nuovo record;
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procedimento. PERIODO_ALTRA_SANZIONE: viene inserito
-	 * un nuovo record. ESECUZIONE_SANZIONE_SOST: update della data_termine_attuale e dei dati di
-	 * aggiornamento
+	 * Sanzione Sostitutiva . Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico,
+	 * di Periodo Altra Sanzione e Esecuzione Sanzione Sostitutiva Le tabelle coinvolte sono:
+	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto; EVENTO : viene inserito un nuovo record;
+	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO :
+	 * update del contenuto del procedimento. PERIODO_ALTRA_SANZIONE: viene inserito un nuovo record.
+	 * ESECUZIONE_SANZIONE_SOST: update della data_termine_attuale e dei dati di aggiornamento
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 *            , aPeriodoAltraSanzioneModel, aEsecuzioneSanzioneSostitutivaModel
@@ -3403,15 +3361,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Emissione Ordinanza, di SCAMBIO_SANZIONE e modifica le RICHIESTA_CONVERSIONE
-	 * collegate al Procedimento.
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generica, di SCAMBIO_SANZIONE e
-	 * modifica di RICHIESTA_CONVERSIONE
-	 * Le tabelle coinvolte sono:
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * EVENTO : viene inserito un nuovo record;
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procedimento. SCAMBIO_SANZIONE: viene inserito un
-	 * nuovo record. RICHIESTA_CONVERSIONE: update dei dati immessi in fase di emissione ordinanza
+	 * collegate al Procedimento. Description: Funzione per l'inserimento dell'Emissione di un'ordinanza
+	 * generica, di SCAMBIO_SANZIONE e modifica di RICHIESTA_CONVERSIONE Le tabelle coinvolte sono:
+	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto; EVENTO : viene inserito un nuovo record;
+	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO :
+	 * update del contenuto del procedimento. SCAMBIO_SANZIONE: viene inserito un nuovo record.
+	 * RICHIESTA_CONVERSIONE: update dei dati immessi in fase di emissione ordinanza
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 * @throws F3BException
@@ -3509,16 +3464,12 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * Esegue l'inserimento dell'Emissione Ordinanza, del Periodo Altra Misura e modifica l'Esecuzione Misura
-	 * Sicurezza .
-	 * Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo Altra
-	 * Misura e Esecuzione Misura Sicurezza
-	 * Le tabelle coinvolte sono:
-	 * DEPOSITO_ORDINANZAPC : viene inserito il nuovo record decreto;
-	 * EVENTO : viene inserito un nuovo record;
-	 * TENORE : vengono chiusi i tenori attivi (data_fine) ed inseriti i nuovi tenori;
-	 * GENERALE_PROCEDIMENTO : update del contenuto del procedimento. PERIODO_ALTRA_MISURA: viene inserito un
-	 * nuovo record. ESECUZIONE_MISURA_SICUREZZA: update della data_termine_attuale e dei dati di
-	 * aggiornamento
+	 * Sicurezza . Description: Funzione per l'inserimento dell'Emissione di un'ordinanza generico, di Periodo
+	 * Altra Misura e Esecuzione Misura Sicurezza Le tabelle coinvolte sono: DEPOSITO_ORDINANZAPC : viene
+	 * inserito il nuovo record decreto; EVENTO : viene inserito un nuovo record; TENORE : vengono chiusi i
+	 * tenori attivi (data_fine) ed inseriti i nuovi tenori; GENERALE_PROCEDIMENTO : update del contenuto del
+	 * procedimento. PERIODO_ALTRA_MISURA: viene inserito un nuovo record. ESECUZIONE_MISURA_SICUREZZA: update
+	 * della data_termine_attuale e dei dati di aggiornamento
 	 *
 	 * @param OrdinanzaEventoTenoriGProcModel
 	 *            , aPeriodoAltraMisuraModel, aEsecuzioneMisuraSicurezzaModel
@@ -3858,11 +3809,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS 
-	 * Numero MEV : 39 
-	 * Autore : Gioggi
-	 * Data : 24/feb/2017 
-	 * Branch : MEV_39
+	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS Numero MEV : 39 Autore : Gioggi
+	 * Data : 24/feb/2017 Branch : MEV_39
 	 */
 	public Vector ExRicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws F3BException {
