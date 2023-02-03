@@ -123,13 +123,15 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 				// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
 				DepositoOrdinanzaPcModel dopcm = idopc
 						.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
-				if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()) && !isFissazione)
-					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!"
-									+ " Impossibile prefissare l'Udienza!");
-				else
-					setRequestAttribute("dataEsecutivitaStr",
-							DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
+				if (!Utils.isNullObj(dopcm)) {
+					if (Utils.isNullObj(dopcm.getDataEsecutivita()) && !isFissazione)
+						throw new SIUSException(SIUSException.USER_MESSAGE,
+								"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!"
+										+ " Impossibile prefissare l'Udienza!");
+					else
+						setRequestAttribute("dataEsecutivitaStr",
+								DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
+				}
 			}
 		}
 		// ***** FINE INTERVENTO MEV_9 *****//
