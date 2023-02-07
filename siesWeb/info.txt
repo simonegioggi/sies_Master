@@ -18,3 +18,10 @@ Comprende i seguenti Ticket MAC:
 	Corretta impostazione del codice stato procedimento (validato '0109').
 	Classe modificata:
 	-	ActUploadTrasmAnnotazioneProvvedimentoSor.java
+
+3)	Ticket#20230201017 - Anomalia Sies
+	Per la risoluzione della problematica è stato gestita l'ordinanza di rinvio udienza come l'ordinanza classica,
+	quindi l'avviso verrà visualizzato dall'avvocato solo a valle della validazione del deposito.
+	Classi modificate:
+	-	siap.sico.evento.controller.EventoController.java
+	-	siap.sius.documentoallegato.controller.DocumentoAllegatoController.java

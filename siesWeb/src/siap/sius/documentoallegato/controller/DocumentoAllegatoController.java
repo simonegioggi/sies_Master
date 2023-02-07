@@ -32,18 +32,8 @@ import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
  * Title: DocumentoAllegatoController
- * </p>
- * <p>
  * Description: Classe Controller per DocumentoAllegato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -1088,6 +1078,10 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 					if (!ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_ORDINANZA
 							.equals(avvisoAvvocato.getTestoAvviso())
 							&& !ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_DECRETO
+									.equals(avvisoAvvocato.getTestoAvviso())
+							// Ticket#20230201017 - Anomalia Sies: Ordinanza Rinvio Udienza va trattata come
+							// Ordinanza classica '03'
+							&& !ICostantiAvvisiAvvocato.CONTENUTO_ORDINANZA_RINVIO_UDIENZA
 									.equals(avvisoAvvocato.getTestoAvviso())) {
 						lAvvisiAvvocatoDao.setDAOFromModel(avvisoAvvocato);
 						lAvvisiAvvocatoDao.insert();

@@ -105,18 +105,8 @@ import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
 
 /**
- * <p>
  * Title: EventoController
- * </p>
- * <p>
  * Description: Classe Controller per Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -2544,10 +2534,7 @@ public class EventoController extends SiapController implements IEvento {
 
 			lEveDao.stop();
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
 
 		} catch (F3BException eF3b) {
@@ -3227,7 +3214,7 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 *
 	 * @param @return
-	 * 			@throws
+	 * @throws
 	 */
 	public EventoModel ExRicercaUltimoEventoGeneratoByCodUtente(String aCodUtente) throws F3BException {
 
@@ -4860,6 +4847,10 @@ public class EventoController extends SiapController implements IEvento {
 					if (!ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_ORDINANZA
 							.equals(avvisoAvvocato.getTestoAvviso())
 							&& !ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_DECRETO
+									.equals(avvisoAvvocato.getTestoAvviso())
+							// Ticket#20230201017 - Anomalia Sies: Ordinanza Rinvio Udienza va trattata come
+							// Ordinanza classica '03'
+							&& !ICostantiAvvisiAvvocato.CONTENUTO_ORDINANZA_RINVIO_UDIENZA
 									.equals(avvisoAvvocato.getTestoAvviso())) {
 						lAvvisiAvvocatoDao.setDAOFromModel(avvisoAvvocato);
 						lAvvisiAvvocatoDao.insert();
