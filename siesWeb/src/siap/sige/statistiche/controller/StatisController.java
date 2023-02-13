@@ -36,24 +36,15 @@ import siap.sius.fascicolo.util.HSSFUtils;
 import siap.sius.statistiche.action.ICostantiStatistiche;
 
 /**
+ * Title: StatisController Description: Controller per le statistiche
  *
- * <p>
- * Title: StatisController
- * </p>
- * <p>
- * Description: Controller per le statistiche
- * </p>
- * <p>
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
+ * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class StatisController extends GenericController {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
+
 	private HSSFCell setCell(HSSFRow row, short nCol, String value, HSSFCellStyle cs) {
 
 		HSSFCell cell = row.createCell(nCol);
@@ -83,7 +74,7 @@ public class StatisController extends GenericController {
 		int row = 0;
 
 		HSSFSheet riepilogoSheet = wb.createSheet("Riepilogo");
-riepilogoSheet.setColumnWidth(0, (50 * 256));
+		riepilogoSheet.setColumnWidth(0, (50 * 256));
 		row = writeIntestazioneRiepilogo(container, riepilogoSheet, wb);
 		elaboraRiepilogo(riepilogoSheet, row, container, wb);
 
@@ -166,21 +157,16 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 
 		row = sheet.createRow(++nRow);
 		row = sheet.createRow(++nRow);
-		
+
 		// Ticket#20230202011 - Si memorizza la posizione della colonna di ogni anno
 		/*
-		Vector<String> testataRiepilogo = container.getTestataRiepilogo();
-		Iterator<String> it = testataRiepilogo.iterator();
-		short cellIndex = 0;
-		while (it.hasNext()) {
-			setCell(row, cellIndex, it.next(), getBoldStyle(wb));
-			cellIndex++;
-		}
-		setCell(row, cellIndex, "Totale", getBoldStyle(wb));
-		return nRow;
-		*/
+		 * Vector<String> testataRiepilogo = container.getTestataRiepilogo(); Iterator<String> it =
+		 * testataRiepilogo.iterator(); short cellIndex = 0; while (it.hasNext()) { setCell(row, cellIndex,
+		 * it.next(), getBoldStyle(wb)); cellIndex++; } setCell(row, cellIndex, "Totale", getBoldStyle(wb));
+		 * return nRow;
+		 */
 		//
-		HashMap <String,Integer> testataRiepilogoHash = new HashMap <String,Integer> ();
+		HashMap<String, Integer> testataRiepilogoHash = new HashMap<>();
 		// Vector<String> testataRiepilogo = container.getTestataRiepilogo();
 		Vector<String> testataRiepilogo = container.getTestataRiepilogoOrderedByAnno();
 		Iterator<String> it = testataRiepilogo.iterator();
@@ -188,12 +174,13 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 		while (it.hasNext()) {
 			String testoCella = it.next();
 			setCell(row, cellIndex, testoCella, getBoldStyle(wb));
-			siesLogger.debug("put testoCella = "+testoCella+", posizione = "+new Short(cellIndex).intValue());
+			siesLogger.debug(
+					"put testoCella = " + testoCella + ", posizione = " + new Short(cellIndex).intValue());
 			testataRiepilogoHash.put(testoCella, new Short(cellIndex).intValue());
 			cellIndex++;
 		}
-		//setCell(row, cellIndex, "Totale", getBoldStyle(wb));
-		
+		// setCell(row, cellIndex, "Totale", getBoldStyle(wb));
+
 		container.setTestataRiepilogoHash(testataRiepilogoHash);
 		// Ticket#20230202011 - FINE
 		return nRow;
@@ -210,9 +197,9 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 		Vector<RiepilogoStatisticheFogliComplementari> provvedimentiConFC = container
 				.getRiepilogoProvvedimentiConFC();
 
-		HashMap <String,Integer> testataRiepilogoHash = container.getTestataRiepilogoHash();
-		
-		siesLogger.debug("fcIscrittiManualmente.size() = "+fcIscrittiManualmente.size());
+		HashMap<String, Integer> testataRiepilogoHash = container.getTestataRiepilogoHash();
+
+		siesLogger.debug("fcIscrittiManualmente.size() = " + fcIscrittiManualmente.size());
 		if (fcIscrittiManualmente.size() > 0) {
 			HSSFRow row = riepilogoSheet.createRow(++nRow);
 			Iterator<RiepilogoStatisticheFogliComplementari> it = fcIscrittiManualmente.iterator();
@@ -220,22 +207,27 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 			short cellIndex = 0;
 			RiepilogoStatisticheFogliComplementari riepilogo = it.next();
 			// Ticket#20230202011 - Per incolonnare correttamente gli anni si fa uso del testataRiepilogoHash
-			//                      che mappa l'anno con la colonna in cui va inserito il dato
-			siesLogger.debug("riepilogo: descrizione = "+riepilogo.getDescrizione()+", anno = "+riepilogo.getAnno()+", Conteggio = "+riepilogo.getConteggio());
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));  // prima colonna descrizione
-			
+			// che mappa l'anno con la colonna in cui va inserito il dato
+			siesLogger.debug("riepilogo: descrizione = " + riepilogo.getDescrizione() + ", anno = "
+					+ riepilogo.getAnno() + ", Conteggio = " + riepilogo.getConteggio());
+			// prima colonna descrizione
+			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));
+
 			// Prima Colonna Anno fuori ciclo
-			siesLogger.debug("testataRiepilogoHash: get = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()));
-			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(), riepilogo.getConteggio().toString());
+			siesLogger.debug("testataRiepilogoHash: get = "
+					+ testataRiepilogoHash.get(riepilogo.getAnno().toString()));
+			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+					riepilogo.getConteggio().toString());
 			totale += riepilogo.getConteggio().intValue();
-			
+
 			while (it.hasNext()) {
 				riepilogo = it.next();
-				
-				siesLogger.debug("get riepilogo.getAnno() = "+riepilogo.getAnno()+", posizione = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
-				
-				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue()
-						   , riepilogo.getConteggio().toString());
+
+				siesLogger.debug("get riepilogo.getAnno() = " + riepilogo.getAnno() + ", posizione = "
+						+ testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
+
+				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+						riepilogo.getConteggio().toString());
 				totale += riepilogo.getConteggio().intValue();
 			}
 			// Colonna Totale
@@ -243,21 +235,15 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 			setCell(row, testataRiepilogoHash.get("Totale").shortValue(), String.valueOf(totale));
 
 			/*
-			cellIndex += 1;
-			setCell(row, cellIndex, riepilogo.getConteggio().toString()); // seconda colonna "numero"
-			totale += riepilogo.getConteggio().intValue();
+			 * cellIndex += 1; setCell(row, cellIndex, riepilogo.getConteggio().toString()); // seconda
+			 * colonna "numero" totale += riepilogo.getConteggio().intValue();
+			 * 
+			 * while (it.hasNext()) { // ulteriori righe per anno riepilogo = it.next(); // BigDecimal totAnno
+			 * = riepilogo.getConteggio(); cellIndex += 1; setCell(row, cellIndex,
+			 * riepilogo.getConteggio().toString()); totale += riepilogo.getConteggio().intValue(); }
+			 * cellIndex += 1; setCell(row, cellIndex, String.valueOf(totale)); // Totale
+			 */
 
-			while (it.hasNext()) { // ulteriori righe per anno
-				riepilogo = it.next();
-				// BigDecimal totAnno = riepilogo.getConteggio();
-				cellIndex += 1;
-				setCell(row, cellIndex, riepilogo.getConteggio().toString());
-				totale += riepilogo.getConteggio().intValue();
-			}
-			cellIndex += 1;
-			setCell(row, cellIndex, String.valueOf(totale)); // Totale
-			*/
-			
 			// Ticket#20230202011 - FINE
 		}
 
@@ -268,44 +254,43 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 			short cellIndex = 0;
 			RiepilogoStatisticheFogliComplementari riepilogo = it.next();
 			// Ticket#20230202011 - Per incolonnare correttamente gli anni si fa uso del testataRiepilogoHash
-			//                      che mappa l'anno con la colonna in cui va inserito il dato
-			siesLogger.debug("riepilogo: descrizione = "+riepilogo.getDescrizione()+", anno = "+riepilogo.getAnno()+", Conteggio = "+riepilogo.getConteggio());
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));  // prima colonna descrizione
-			
+			// che mappa l'anno con la colonna in cui va inserito il dato
+			siesLogger.debug("riepilogo: descrizione = " + riepilogo.getDescrizione() + ", anno = "
+					+ riepilogo.getAnno() + ", Conteggio = " + riepilogo.getConteggio());
+			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb)); // prima colonna
+																					// descrizione
+
 			// Prima Colonna Anno fuori ciclo
-			siesLogger.debug("testataRiepilogoHash: get = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()));
-			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(), riepilogo.getConteggio().toString());
+			siesLogger.debug("testataRiepilogoHash: get = "
+					+ testataRiepilogoHash.get(riepilogo.getAnno().toString()));
+			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+					riepilogo.getConteggio().toString());
 			totale += riepilogo.getConteggio().intValue();
-			
+
 			while (it.hasNext()) {
 				riepilogo = it.next();
-				
-				siesLogger.debug("get riepilogo.getAnno() = "+riepilogo.getAnno()+", posizione = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
-				
-				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue()
-						   , riepilogo.getConteggio().toString());
+
+				siesLogger.debug("get riepilogo.getAnno() = " + riepilogo.getAnno() + ", posizione = "
+						+ testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
+
+				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+						riepilogo.getConteggio().toString());
 				totale += riepilogo.getConteggio().intValue();
 			}
 			// Colonna Totale
 			siesLogger.debug("Colonna Totale ");
 			setCell(row, testataRiepilogoHash.get("Totale").shortValue(), String.valueOf(totale));
-			
+
 			/*
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));
-			cellIndex++;
-			setCell(row, cellIndex, riepilogo.getConteggio().toString());
-			totale += riepilogo.getConteggio().intValue();
-
-			while (it.hasNext()) {
-				riepilogo = it.next();
-				BigDecimal totAnno = riepilogo.getConteggio();
-				cellIndex++;
-				setCell(row, cellIndex, totAnno.toString());
-				totale += totAnno.intValue();
-			}
-
-			setCell(row, ++cellIndex, String.valueOf(totale));
-			*/
+			 * setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb)); cellIndex++;
+			 * setCell(row, cellIndex, riepilogo.getConteggio().toString()); totale +=
+			 * riepilogo.getConteggio().intValue();
+			 * 
+			 * while (it.hasNext()) { riepilogo = it.next(); BigDecimal totAnno = riepilogo.getConteggio();
+			 * cellIndex++; setCell(row, cellIndex, totAnno.toString()); totale += totAnno.intValue(); }
+			 * 
+			 * setCell(row, ++cellIndex, String.valueOf(totale));
+			 */
 			// Ticket#20230202011 - FINE
 		}
 
@@ -316,43 +301,42 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 			short cellIndex = 0;
 			RiepilogoStatisticheFogliComplementari riepilogo = it.next();
 			// Ticket#20230202011 - Per incolonnare correttamente gli anni si fa uso del testataRiepilogoHash
-			//                      che mappa l'anno con la colonna in cui va inserito il dato
-			siesLogger.debug("riepilogo: descrizione = "+riepilogo.getDescrizione()+", anno = "+riepilogo.getAnno()+", Conteggio = "+riepilogo.getConteggio());
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));  // prima colonna descrizione
-			
+			// che mappa l'anno con la colonna in cui va inserito il dato
+			siesLogger.debug("riepilogo: descrizione = " + riepilogo.getDescrizione() + ", anno = "
+					+ riepilogo.getAnno() + ", Conteggio = " + riepilogo.getConteggio());
+			// prima colonna descrizione
+			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));
+
 			// Prima Colonna Anno fuori ciclo
-			siesLogger.debug("testataRiepilogoHash: get = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()));
-			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(), riepilogo.getConteggio().toString());
+			siesLogger.debug("testataRiepilogoHash: get = "
+					+ testataRiepilogoHash.get(riepilogo.getAnno().toString()));
+			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+					riepilogo.getConteggio().toString());
 			totale += riepilogo.getConteggio().intValue();
-			
+
 			while (it.hasNext()) {
 				riepilogo = it.next();
-				
-				siesLogger.debug("get riepilogo.getAnno() = "+riepilogo.getAnno()+", posizione = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
-				
-				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue()
-						   , riepilogo.getConteggio().toString());
+
+				siesLogger.debug("get riepilogo.getAnno() = " + riepilogo.getAnno() + ", posizione = "
+						+ testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
+
+				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+						riepilogo.getConteggio().toString());
 				totale += riepilogo.getConteggio().intValue();
 			}
 			// Colonna Totale
 			siesLogger.debug("Colonna Totale ");
-			setCell(row, testataRiepilogoHash.get("Totale").shortValue(), String.valueOf(totale));			
+			setCell(row, testataRiepilogoHash.get("Totale").shortValue(), String.valueOf(totale));
 			/*
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));
-			cellIndex++;
-			setCell(row, cellIndex, riepilogo.getConteggio().toString());
-			totale += riepilogo.getConteggio().intValue();
-
-			while (it.hasNext()) {
-				riepilogo = it.next();
-				BigDecimal totAnno = riepilogo.getConteggio();
-				cellIndex++;
-				setCell(row, cellIndex, totAnno.toString());
-				totale += totAnno.intValue();
-			}
-
-			setCell(row, ++cellIndex, String.valueOf(totale));
-			*/
+			 * setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb)); cellIndex++;
+			 * setCell(row, cellIndex, riepilogo.getConteggio().toString()); totale +=
+			 * riepilogo.getConteggio().intValue();
+			 * 
+			 * while (it.hasNext()) { riepilogo = it.next(); BigDecimal totAnno = riepilogo.getConteggio();
+			 * cellIndex++; setCell(row, cellIndex, totAnno.toString()); totale += totAnno.intValue(); }
+			 * 
+			 * setCell(row, ++cellIndex, String.valueOf(totale));
+			 */
 			// Ticket#20230202011 - FINE
 		}
 
@@ -363,43 +347,42 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 			short cellIndex = 0;
 			RiepilogoStatisticheFogliComplementari riepilogo = it.next();
 			// Ticket#20230202011 - Per incolonnare correttamente gli anni si fa uso del testataRiepilogoHash
-			//                      che mappa l'anno con la colonna in cui va inserito il dato
-			siesLogger.debug("riepilogo: descrizione = "+riepilogo.getDescrizione()+", anno = "+riepilogo.getAnno()+", Conteggio = "+riepilogo.getConteggio());
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));  // prima colonna descrizione
-			
+			// che mappa l'anno con la colonna in cui va inserito il dato
+			siesLogger.debug("riepilogo: descrizione = " + riepilogo.getDescrizione() + ", anno = "
+					+ riepilogo.getAnno() + ", Conteggio = " + riepilogo.getConteggio());
+			// prima colonna descrizione
+			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));
+
 			// Prima Colonna Anno fuori ciclo
-			siesLogger.debug("testataRiepilogoHash: get = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()));
-			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(), riepilogo.getConteggio().toString());
+			siesLogger.debug("testataRiepilogoHash: get = "
+					+ testataRiepilogoHash.get(riepilogo.getAnno().toString()));
+			setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+					riepilogo.getConteggio().toString());
 			totale += riepilogo.getConteggio().intValue();
-			
+
 			while (it.hasNext()) {
 				riepilogo = it.next();
-				
-				siesLogger.debug("riepilogo.getAnno() = "+riepilogo.getAnno()+", posizione = "+testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
-				
-				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue()
-						   , riepilogo.getConteggio().toString());
+
+				siesLogger.debug("riepilogo.getAnno() = " + riepilogo.getAnno() + ", posizione = "
+						+ testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue());
+
+				setCell(row, testataRiepilogoHash.get(riepilogo.getAnno().toString()).shortValue(),
+						riepilogo.getConteggio().toString());
 				totale += riepilogo.getConteggio().intValue();
 			}
 			// Colonna Totale
 			siesLogger.debug("Colonna Totale ");
-			setCell(row, testataRiepilogoHash.get("Totale").shortValue(), String.valueOf(totale));				
+			setCell(row, testataRiepilogoHash.get("Totale").shortValue(), String.valueOf(totale));
 			/*
-			setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb));
-			cellIndex++;
-			setCell(row, cellIndex, riepilogo.getConteggio().toString());
-			totale += riepilogo.getConteggio().intValue();
-
-			while (it.hasNext()) {
-				riepilogo = it.next();
-				BigDecimal totAnno = riepilogo.getConteggio();
-				cellIndex++;
-				setCell(row, cellIndex, totAnno.toString());
-				totale += totAnno.intValue();
-			}
-
-			setCell(row, ++cellIndex, String.valueOf(totale));
-			*/
+			 * setCell(row, cellIndex, riepilogo.getDescrizione(), getBoldStyle(wb)); cellIndex++;
+			 * setCell(row, cellIndex, riepilogo.getConteggio().toString()); totale +=
+			 * riepilogo.getConteggio().intValue();
+			 * 
+			 * while (it.hasNext()) { riepilogo = it.next(); BigDecimal totAnno = riepilogo.getConteggio();
+			 * cellIndex++; setCell(row, cellIndex, totAnno.toString()); totale += totAnno.intValue(); }
+			 * 
+			 * setCell(row, ++cellIndex, String.valueOf(totale));
+			 */
 			// Ticket#20230202011 - FINE
 		}
 		return nRow;
@@ -457,24 +440,24 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 
 		row = sheet.createRow(++nRow);
 		row = sheet.createRow(++nRow);
-		
-		// Ticket#20230202011 - Test per visualizzare nei fogli di dettaglio 
+
+		// Ticket#20230202011 - Test per visualizzare nei fogli di dettaglio
 		// anche l'anno del provvedimento su cui eggettua la count il riepilogo
 		// e l'anno del FC su cui viene effettuato il filtro
 		// DA ELIMINARE
 		setCell(row, (short) 0, "Numero SIGE", getBoldStyle(wb));
-		setCell(row, (short) 1, "Data Provvedimento", getBoldStyle(wb));		
-setCell(row, (short) 2, "Anno/Numero Provvedimento", getBoldStyle(wb));
+		setCell(row, (short) 1, "Data Provvedimento", getBoldStyle(wb));
+		setCell(row, (short) 2, "Anno/Numero Provvedimento", getBoldStyle(wb)); /* IN PIU' */
 		setCell(row, (short) 3, "Provvedimento", getBoldStyle(wb));
 		setCell(row, (short) 4, "Data Foglio Complementare", getBoldStyle(wb));
-setCell(row, (short) 5, "Anno/Numero FC", getBoldStyle(wb));		
+		setCell(row, (short) 5, "Anno/Numero FC", getBoldStyle(wb)); /* IN PIU' */
 		setCell(row, (short) 6, "Esito", getBoldStyle(wb));
 		/*
-		setCell(row, (short) 0, "Numero SIGE", getBoldStyle(wb));
-		setCell(row, (short) 1, "Data Provvedimento", getBoldStyle(wb));
-		setCell(row, (short) 2, "Provvedimento", getBoldStyle(wb));
-		setCell(row, (short) 3, "Data Foglio Complementare", getBoldStyle(wb));
-		setCell(row, (short) 4, "Esito", getBoldStyle(wb));*/
+		 * setCell(row, (short) 0, "Numero SIGE", getBoldStyle(wb)); setCell(row, (short) 1,
+		 * "Data Provvedimento", getBoldStyle(wb)); setCell(row, (short) 2, "Provvedimento",
+		 * getBoldStyle(wb)); setCell(row, (short) 3, "Data Foglio Complementare", getBoldStyle(wb));
+		 * setCell(row, (short) 4, "Esito", getBoldStyle(wb));
+		 */
 		// Ticket#20230202011 - FINE
 
 		return nRow;
@@ -487,25 +470,24 @@ setCell(row, (short) 5, "Anno/Numero FC", getBoldStyle(wb));
 		while (it.hasNext()) {
 			StatisticheFogliComplementariModel model = it.next();
 			HSSFRow row = sheet.createRow(++nRow);
-			// Ticket#20230202011 - Test per visualizzare nei fogli di dettaglio 
+			// Ticket#20230202011 - Test per visualizzare nei fogli di dettaglio
 			// anche l'anno del provvedimento su cui eggettua la count il riepilogo
 			// e l'anno del FC su cui viene effettuato il filtro
 			// DA ELIMINARE
 			setCell(row, (short) 0, model.getDescrFascicolo());
 			setCell(row, (short) 1, DateUtils.getDateToString(model.getDataProvvedimento(), "dd-MM-yyyy"));
-setCell(row, (short) 2, model.getAnnoNumeroProvvedimento());			
+			setCell(row, (short) 2, model.getAnnoNumeroProvvedimento()); /* IN PIU' */
 			setCell(row, (short) 3, model.getDescrProvvedimento());
 			setCell(row, (short) 4, model.getDataFoglioComplementare());
-setCell(row, (short) 5, model.getAnnoNumeroFoglioComplementare());			
+			setCell(row, (short) 5, model.getAnnoNumeroFoglioComplementare()); /* IN PIU' */
 			setCell(row, (short) 6, model.getDescrEsito());
 			/*
-			setCell(row, (short) 0, model.getDescrFascicolo());
-			setCell(row, (short) 1, DateUtils.getDateToString(model.getDataProvvedimento(), "dd-MM-yyyy"));
-			setCell(row, (short) 2, model.getDescrProvvedimento());
-			setCell(row, (short) 3, model.getDataFoglioComplementare());
-			setCell(row, (short) 4, model.getDescrEsito());
-			*/
-			// Ticket#20230202011 - FINE 
+			 * setCell(row, (short) 0, model.getDescrFascicolo()); setCell(row, (short) 1,
+			 * DateUtils.getDateToString(model.getDataProvvedimento(), "dd-MM-yyyy")); setCell(row, (short) 2,
+			 * model.getDescrProvvedimento()); setCell(row, (short) 3, model.getDataFoglioComplementare());
+			 * setCell(row, (short) 4, model.getDescrEsito());
+			 */
+			// Ticket#20230202011 - FINE
 		}
 		return nRow;
 	}
