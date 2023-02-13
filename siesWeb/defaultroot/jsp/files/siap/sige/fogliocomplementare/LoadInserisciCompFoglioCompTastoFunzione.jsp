@@ -81,6 +81,14 @@ String descrizioneProvvedimento="";
                           document.LoadInserisciCompFoglioComp.<%=ICostantiFoglioComp.CAMPO_MESE_DATA_TRASMISSIONE%>.value +'/'+
                           document.LoadInserisciCompFoglioComp.<%=ICostantiFoglioComp.CAMPO_ANNO_DATA_TRASMISSIONE%>.value;
 
+    <%-- Ticket Ticket#20230202011 --%>
+    if (dataCompilTrasm=="//")
+    {
+        alert('Data Compilazione/Trasmissione obbligatoria!');
+        return false;
+    }
+    <%-- Ticket Ticket#20230202011 - FINE --%>
+    
     if (! ControllaData(dataCompilTrasm))
     {
       alert('Data Compilazione/Trasmissione non valida!');
@@ -114,7 +122,11 @@ String descrizioneProvvedimento="";
     	<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
         <td class="LBG">
            <font class="label">Funzione :</font>&nbsp;
+           <% if (modalita.equalsIgnoreCase("M")) { %>
+           <font class="campo">Modifica Foglio Complementare</font>
+           <% } else {%>
            <font class="campo">Inserimento Foglio Complementare</font>
+           <% } %>
         </td>
   		<!-- BOTTONE DI RITORNO -->
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>

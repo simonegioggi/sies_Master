@@ -1,10 +1,17 @@
 package siap.sige.statistiche.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
+import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 
 public class StatisticheFogliComplementariContainerModel extends GenericModel{
@@ -12,6 +19,8 @@ public class StatisticheFogliComplementariContainerModel extends GenericModel{
 	 * 
 	 */
 	private static final long serialVersionUID = -8801797124630459308L;
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	
 	private Vector<StatisticheFogliComplementariModel> fcIscrittiManualmente=null;
     private Vector<StatisticheFogliComplementariModel> fcAnnullati=null;
     private Vector<StatisticheFogliComplementariModel> provvedimentiPriviFc=null;
@@ -27,6 +36,8 @@ public class StatisticheFogliComplementariContainerModel extends GenericModel{
     
     private Vector <String> testataRiepilogo=null;   
     
+    // Ticket#20230202011 - Aggiunta variabile
+    private HashMap <String,Integer> testataRiepilogoHash=null; 
 	
     public Vector<StatisticheFogliComplementariModel> getFcIscrittiManualmente() {
 		return fcIscrittiManualmente;
@@ -71,12 +82,67 @@ public class StatisticheFogliComplementariContainerModel extends GenericModel{
 			Vector<RiepilogoStatisticheFogliComplementari> riepilogoAnnullati) {
 		this.riepilogoAnnullati = riepilogoAnnullati;
 	}
+	
+	
+	// Ticket#20230202011 - i Vettori possono avere estratto sequenze di anni differenti
+	// devo ordinare per anno e memorizzare per ogni anno la colonna in cui vanno inseriti i dati
+	public  void setTestataRiepilogoHash(HashMap <String,Integer> value){
+		this.testataRiepilogoHash = value;
+	}
+	public HashMap <String,Integer> getTestataRiepilogoHash(){
+		return this.testataRiepilogoHash;
+	}
+	// Ticket#20230202011 - FINE
+	
+	// Ticket#20230202011 - metodo aggiunto per il corretto ordinamento dei dati sul foglio
+	//                      di riepologo
+	public Vector<String> getTestataRiepilogoOrderedByAnno() {
+		if (this.testataRiepilogo != null)
+		    return this.testataRiepilogo;	
+		
+		this.testataRiepilogo=new Vector <String> ();
+		
+		HashSet<Integer> listaAnni = new HashSet<Integer>();
+		
+		if (this.riepilogoAnnullati != null) {
+			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogoAnnullati)
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
+		}
+		if (this.riepilogoProvvedimentiPriviFC != null) {
+			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogoProvvedimentiPriviFC)
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
+		}
+		if (this.riepilogFCIscrittiManualmente != null) {
+			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogFCIscrittiManualmente)
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
+		}		
+		if (this.riepilogoProvvedimentiConFC != null) {
+			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogoProvvedimentiConFC)
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
+		}	
+		
+		ArrayList list = new ArrayList(listaAnni);
+		Collections.sort(list);
+		siesLogger.debug("Lista ordinata anni");
+		this.testataRiepilogo.add("Riepilogo Fogli Complementari");
+		for (int i = 0; i < list.size(); i++) {
+			siesLogger.debug(">> "+list.get(i));
+			this.testataRiepilogo.add(list.get(i).toString());
+		}	
+		this.testataRiepilogo.add("Totale");
+		siesLogger.debug("Lista "+this.testataRiepilogo);
+		
+		return testataRiepilogo;
+	}	
+	// Ticket#20230202011 - FINE
+	
 	public Vector<String> getTestataRiepilogo() {
 		if (this.testataRiepilogo != null)
 		    return this.testataRiepilogo;
 		
 		this.testataRiepilogo=new Vector <String> ();
 		Vector <RiepilogoStatisticheFogliComplementari> appo=null;
+		
 		if (this.riepilogoAnnullati != null) {
 			appo=this.riepilogoAnnullati;
 		}
@@ -102,6 +168,7 @@ public class StatisticheFogliComplementariContainerModel extends GenericModel{
 
 		return testataRiepilogo;
 	}
+	
 	public void setTestataRiepilogo(Vector<String> testataRiepilogo) {
 		this.testataRiepilogo = testataRiepilogo;
 	}

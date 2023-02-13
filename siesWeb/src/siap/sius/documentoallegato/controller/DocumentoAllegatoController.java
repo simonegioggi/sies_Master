@@ -202,16 +202,20 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			lDocAllDao = new DocumentoAllegatoDAO(lConn);
 			lDocAllDao.setDataEmissione(aDocumentoAllegato.getDataEmissione());
 			lDocAllDao.setDataTrasmissione(aDocumentoAllegato.getDataTrasmissione());
-			lDocAllDao.setComuneSedeGiudiziaria(aDocumentoAllegato.getComuneSedeGiudiziaria());
-			lDocAllDao.setDataAggiornamento(aDocumentoAllegato.getDataAggiornamento());
-			lDocAllDao.setCodOperatoreAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
-			lDocAllDao.setCodUfficioAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
-			lDocAllDao.setCondizioneUpdate(aDocumentoAllegato.getIdDocumentoAllegato());
+			lDocAllDao.setComuneSedeGiudiziaria(aDocumentoAllegato.getComuneSedeGiudiziaria());			
 			lDocAllDao.setCodMotivazioneNonInvio(aDocumentoAllegato.getCodMotivazioneNonInvio());
 			lDocAllDao.setDescrizioneNonInvio(aDocumentoAllegato.getDescrizioneNonInvio());
 			lDocAllDao.setDataUltInvio(aDocumentoAllegato.getDataUltInvio());
 			lDocAllDao.setDataInsMan(aDocumentoAllegato.getDataInsMan());
 
+			lDocAllDao.setDataAggiornamento(aDocumentoAllegato.getDataAggiornamento());
+			// Ticket#20230202011 Sige - anomalie foglio complementare
+			//lDocAllDao.setCodOperatoreAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
+			lDocAllDao.setCodOperatoreAggiornamento(aDocumentoAllegato.getCodOperatoreAggiornamento());
+			// Ticket#20230202011 - FINE
+			lDocAllDao.setCodUfficioAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
+
+			lDocAllDao.setCondizioneUpdate(aDocumentoAllegato.getIdDocumentoAllegato());
 			lDocAllDao.update();
 
 			// Aggiorna Decreto / Ordinanza

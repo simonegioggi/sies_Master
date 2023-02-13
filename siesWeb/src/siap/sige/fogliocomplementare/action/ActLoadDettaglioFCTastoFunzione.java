@@ -6,6 +6,8 @@ import org.apache.log4j.Logger;
 
 import siap.sige.documentoallegato.controller.IDocumentoAllegato;
 import siap.sige.documentoallegato.model.DocumentoAllegatoModel;
+import siap.sige.provvedimento.controller.IProvvedimentoSige;
+import siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel;
 import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 import siap.sius.documentoallegato.action.ICostantiDocumentoAllegato;
@@ -30,6 +32,17 @@ public class ActLoadDettaglioFCTastoFunzione extends ActionSige implements ICost
 		  setRequestAttribute("documentoAllegato", lDocAll);
 		  // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
 		  siesLogger.debug( getClass().getName() + ".processRequest: fine" );
+		  
+		  
+		  // Ticket#20230202011 - Si aggiungono gli estremi del provvedimento SIGE per il dettaglio 
+		  // Prelevo il Provvedimento
+		  ProvvedimentoSigeEventoModel provvSigeModel = null;
+		  IProvvedimentoSige mCtrl = SIGELookupRemote.getProvvedimentoRemote();
+		  provvSigeModel = mCtrl.ExRicercaProvvedimentoByIdEvento(lDocAll.getEveIdEvento());
+		  setRequestAttribute("provvSige", provvSigeModel);
+		  // Ticket#20230202011 - FINE
+		  
+		  
 		  return PG_LOADDETTAGLIOCOMPFOGLIOCOMPTASTOFUNZIONE;
 		  
 	  }

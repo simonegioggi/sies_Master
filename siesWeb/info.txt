@@ -1,3 +1,57 @@
-RELEASE_12.4.27.0	-->	nato dal branch "release_12.4.26.0" in data 30/01/2023
+Ticket#20230202011 — Sige - anomalie foglio complementare
 
-NON Comprende Ticket MAC
+
+
+Classi Modificate
+siap.sige.fogliocomplementare.action.ActInserisciCompFoglioComp
+Modificata action di Dettaglio di ritorno: agganciava a vecchia versione
+
+siap.sige.fogliocomplementare.action.ActLoadDettaglioFCTastoFunzione
+Aggiunto il provvedimento da visualizzare sul dettaglio 
+
+siap.sige.fogliocomplementare.action.ActModificaCompFoglioComp
+Modificata action di Dettaglio di ritorno: agganciava a vecchia versione
+
+siap.sius.documentoallegato.controller.DocumentoAllegatoController
+ExModificaFoglioComplementare
+setCodOperatoreAggiornamento era erroneamente valòorizzato con il cod ufficio
+
+jsp\files\siap\sige\fogliocomplementare\LoadDettaglioCompFoglioComp.jsp
+Corretta mancata visualizzazione della Data Compilazione/Trasmissione che venova prelevata dal campo errato
+
+jsp\files\siap\sige\fogliocomplementare\LoadDettaglioCompFoglioCompTastoFunzione.jsp
+si elimina dal dettaglio il riferimento alla motivazione non invio non più prevista
+
+jsp\files\siap\sige\fogliocomplementare\LoadInserisciCompFoglioCompTastoFunzione.jsp
+Modificato il messaggio in caso di mancato inserimento Data Compilazione/Trasmissione (obbligatoria)
+Corretta visualizzazione del totolo della form in caso di Modifica, riportava sempre "Inserimento Foglio Complementare"
+
+\jsp\files\siap\sige\statistiche\LoadRicercaStatisticheFogliComp.jsp
+Aggiunti i controlli sui filtri di ricerca come da documento di analisi
+
+
+siap.sige.statistiche.controller.StatisController
+Corretto incolonnamento dei dati nelle corrette colonne "anno" nel foglio di riepilogo
+metodo writeIntestazioneRiepilogo
+metodo elaboraRiepilogo
+
+
+metodo writeIntestazioneStatisticheFC [SOLO X TEST EFFETTUARE IL REVERT]
+metodo elaboraSheetStatisticheFC      [SOLO X TEST EFFETTUARE IL REVERT]
+
+
+siap.sige.statistiche.model.StatisticheFogliComplementariContainerModel
+Aggiunte le informazioni per gestire l'incolonnamento 
+
+siap.sige.statistiche.model.StatisticheFogliComplementariModel
+Aggiunti campi Anno/Num Provve e Anno/num FC
+
+siap.sige.statistiche.dao.StatisticheFogliComplementariSqlDAO
+Diversemodifche per:
+modificare il filtro per "Anno Compilazione" che puntava PROCDIMENTO_SIGE.CHIAVE_ANNO, moficato in DOCUMENTO_ALLEGATO.ANNO_FOGLIO_COMPLEMENTARE
+aggiunto filtro per data compilazioni per il dettaglio dei Privi CF che non era presente
+aggiunti i nelle select i campi Anno/Numero Provv e Anno/Numero FC da stampare sul foglio excel [SOLO PER TEST]
+aggiunte order by Anno/Numero Provv e Anno/Numero FC
+
+
+ 
