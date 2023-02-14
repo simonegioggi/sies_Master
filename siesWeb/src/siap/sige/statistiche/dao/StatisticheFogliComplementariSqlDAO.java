@@ -23,21 +23,27 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		
 		if (filtroModel.isFcIscrittiManualmente()) {
 			if (!sql.equals(""))
-			    sql += " UNION ALL ";
+				sql += " UNION ";
+				// Ticket#20230202011 - si elimina la UNION ALL che duplica i record degli iscritti manualmente 
+				//sql += " UNION ALL ";
 			
 			sql+=this.getQueryFcTrasmessiManualmente(filtroModel);
 		}
 		
 		if (filtroModel.isProvvedimentiPriviFC()) {
 			if (!sql.equals(""))
-			    sql += " UNION ALL ";
+				sql += " UNION ";
+				// Ticket#20230202011 - si elimina la UNION ALL che duplica i record degli iscritti manualmente 
+				//sql += " UNION ALL ";
 			
 			sql+=this.getQueryProvvedimentiPriviFC(filtroModel);
 		}
 		
 		if (filtroModel.isFcAnnullati()) {
 			if (!sql.equals(""))
-			    sql += " UNION ALL ";
+				sql += " UNION ";
+				// Ticket#20230202011 - si elimina la UNION ALL che duplica i record degli iscritti manualmente 
+				//sql += " UNION ALL ";
 			
 			sql+=this.getQueryProvvedimentiFcAnnullati(filtroModel);
 		}
