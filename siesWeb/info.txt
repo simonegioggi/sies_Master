@@ -60,3 +60,15 @@ Comprende i seguenti Ticket MAC:
 		aggiunto filtro per data compilazioni per il dettaglio dei Privi CF che non era presente;
 		aggiunti nelle select i campi Anno/Numero Provv e Anno/Numero FC da stampare sul foglio excel [SOLO PER TEST];
 		aggiunte order by Anno/Numero Provv e Anno/Numero FC.
+	-	LoadInserisciCompFoglioCompTastoFunzione.jsp
+		Aggiunto tasto di Stampa sulla form di Modifica come da Doc di analisi
+	-	StatisController.java
+		eliminata inserimento delle schede in caso di mancanza di dati 
+		corretto allineamenti dei dati numerici
+		corretta sovrapposizione delle celle dei criteri di ricerca si indicato sia anno che periodo
+		corretta mancata visualizzazion delle rigga di una tipologia selezionata come filtro in caso di assenza dati (non veniva visualizzata la riga del riepilogo ma veniva inserito un dettaglio vuoto non significativo)
+	-	StatisticheFogliComplementari.jsp
+		Aggiunta visualizzazione dei criteri relativi ai check box
+		Corretta gestione visualizzzione delle lista nel caso di presenza di più FC (uno valido e altri annullati). Visualizzava solo quello annullato
+	-	StatisticheFogliComplementariSqlDAO.java
+		Corretta la select in UNION ALL che duplicava i dati nel caso presenti nel filtro  sia i provv con fogli che quelli con iscritti manualmente
