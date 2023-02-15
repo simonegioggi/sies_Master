@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sius.esperto.model.EspertoModel;
@@ -25,26 +26,16 @@ import siap.sius.statistiche.model.RicercaAggregatiCognomeModel;
 import siap.sius.statistiche.model.RicercaOrdinanzaModel;
 import siap.sius.statistiche.model.RicercaProcedimentoModel;
 import siap.sius.statistiche.model.RicercaProvvedimentoModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: NotificaController
- * </p>
- * <p>
+ * Title: IStatisticheSius 
  * Description: interface per il controller di Statistiche SIUS.
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company: Eunics
- * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public interface IStatisticheSius {
+
 	public Vector ExRicercaProcSiusXProvvedimentiPaginata(RicercaOrdinanzaModel aModel, int aPageNum)
 			throws F3BException;
 
@@ -63,9 +54,10 @@ public interface IStatisticheSius {
 			throws F3BException;
 
 	public Vector ExRicercaMagistratiOggettiEstratti(String aCodUfficio) /* Mod. Michele 2/12/2008 */
-	throws F3BException;
+			throws F3BException;
 
-	public Vector ExRicercaStatisticaOggetti(String aCodUfficio) throws F3BException; /* Mod. Michele 4/12/2008 */
+	public Vector ExRicercaStatisticaOggetti(String aCodUfficio)
+			throws F3BException; /* Mod. Michele 4/12/2008 */
 
 	public Vector ExRicercaStatisticaRelatori(String aCodUfficio) throws F3BException;
 
@@ -79,20 +71,15 @@ public interface IStatisticheSius {
 	public void ExCreaStatisticaTempiStProc(String aCodUfficio, String aCodMag, Date aDataInizio,
 			Date aDataFine) throws F3BException;
 
-	public Vector ExRicercaStatisticaTempi(String aCodUfficio) throws F3BException; /* Mod. Michele 5/12/2008 */
+	public Vector ExRicercaStatisticaTempi(String aCodUfficio)
+			throws F3BException; /* Mod. Michele 5/12/2008 */
 
 	public Vector ExListaOggettiEstratti(String aNomeTabEstrazione) throws F3BException;
 
-	public Vector ExListaOggettiEstratti(String aNomeTabEstrazione, String aCodUfficio) throws F3BException; /*
-																											 * Mod
-																											 * .
-																											 * Michele
-																											 * 5
-																											 * /
-																											 * 12
-																											 * /
-																											 * 2008
-																											 */
+	public Vector ExListaOggettiEstratti(String aNomeTabEstrazione, String aCodUfficio)
+			throws F3BException; /*
+									 * Mod . Michele 5 / 12 / 2008
+									 */
 
 	public Vector ExRicercaOggettiEstratti(IspEstrazioneOggettiModel aModel) throws F3BException;
 
@@ -100,12 +87,10 @@ public interface IStatisticheSius {
 
 	public Vector ExRicercaTempiEstratti(IspProcIntervalliModel aModel) throws F3BException;
 
-	public Vector ExRicercaFascicoliPendenti(String aCodUfficio, String aCodMag) throws F3BException; /*
-																									 * Mod.
-																									 * Michele
-																									 * 15
-																									 * /12/2008
-																									 */
+	public Vector ExRicercaFascicoliPendenti(String aCodUfficio, String aCodMag)
+			throws F3BException; /*
+									 * Mod. Michele 15 /12/2008
+									 */
 
 	public Vector ExRicercaOggettiPendenti(String aCodUfficio, String aCodMag) throws F3BException;
 
@@ -184,8 +169,8 @@ public interface IStatisticheSius {
 	public BigDecimal ExGetNumRicercaProcPosizioneGiuridica(RicercaProcedimentoModel aRicerca)
 			throws F3BException;
 
-	public Collection<EveFasGepSogCancModel> ExRicercaProcPosizioneGiuridica(RicercaProcedimentoModel aRicerca)
-			throws F3BException;
+	public Collection<EveFasGepSogCancModel> ExRicercaProcPosizioneGiuridica(
+			RicercaProcedimentoModel aRicerca) throws F3BException;
 
 	public Collection<EveFasGepSogCancModel> ExRicercaProcPosizioneGiuridicaPaginata(
 			RicercaProcedimentoModel aRicerca, int aPage) throws F3BException;
@@ -196,8 +181,8 @@ public interface IStatisticheSius {
 
 	public ArrayList<IspMotivoOggettoSelezionatiModel> ExListaMotiviOggettiSelezionati() throws F3BException;
 
-	public Collection<IspConteggioOggettiModel> ExConteggioOggettiMagistrato(RicercaProcedimentoModel aRicerca)
-			throws F3BException;
+	public Collection<IspConteggioOggettiModel> ExConteggioOggettiMagistrato(
+			RicercaProcedimentoModel aRicerca) throws F3BException;
 
 	public ArrayList<IspMotivoOggettoSelezionatiModel> ExListaMotivoOggettiSelezionati(String aCodUfficio)
 			throws F3BException;
@@ -211,19 +196,31 @@ public interface IStatisticheSius {
 
 	public BigDecimal ExGetNumRicercaProcSiusXProvvedimenti(RicercaProvvedimentoModel aModel)
 			throws F3BException;
-	
+
 	// 15032019 - MEV 73
-	public Collection<EveFasGepSogModel> ExRicercaProcDlgs123_2018(
-			UfficioModel aUfficioUtenteConnesso, RicercaProcedimentoModel aRicercaModel) throws F3BException;
-	
+	public Collection<EveFasGepSogModel> ExRicercaProcDlgs123_2018(UfficioModel aUfficioUtenteConnesso,
+			RicercaProcedimentoModel aRicercaModel) throws F3BException;
+
 	/**
 	 * recupera la lista dei magistrati da visualizzare nella statistica per intervalli temporali
+	 *
 	 * @param aCodUfficio
 	 * @return
 	 * @throws F3BException
-	 * 
-	 * metodo introdotto per anomalia 7 del verbale collaudo sies 11.3 (terza sessione)
+	 *
+	 *             metodo introdotto per anomalia 7 del verbale collaudo sies 11.3 (terza sessione)
 	 */
 	public Vector ExRicercaMagistratiProcIntervalli(String aCodUfficio) throws F3BException;
+
+	// MEV_9: aggiunti metodi per le statistiche di Misure Alternative
+	public Collection<EveFasGepSogProvModel> ProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
+			throws F3BException;
+
+	public Collection<EveFasGepSogProvModel> ExRicercaProcPerStatisticaMisureAlternative(
+			RicercaProcedimentoModel rpm, int pagina) throws F3BException;
+
+	public BigDecimal ExGetNumRicercaProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
+			throws F3BException;
+	// FINE MEV_9
 
 }

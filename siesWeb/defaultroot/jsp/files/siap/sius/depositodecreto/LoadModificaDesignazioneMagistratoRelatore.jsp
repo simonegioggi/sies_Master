@@ -174,9 +174,9 @@ String azione = "siap.sius.depositodecreto.action.ActModificaDesignazioneMagistr
 	<tr>
 		<td class="l" width="30%">Data Emissione <font class="ob">(*)</font></td>
 		<td class="L" colspan="3">
-			<input value="<%=DateUtils.getDayToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione())%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=DateUtils.getMonthToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione())%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=DateUtils.getYearToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione())%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input value="<%=DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione(), "dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione(), "MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataEmissione(), "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
     	</td>
     </tr>
   	<tr><td colspan="4">&nbsp;</td></tr>
@@ -199,11 +199,11 @@ String azione = "siap.sius.depositodecreto.action.ActModificaDesignazioneMagistr
 	</tr>
 	<tr><td colspan="4">&nbsp;</td></tr>
 	<tr>
-		<td class="l">Emissione Ordinanza Ammissione Provvisoria / Restituzione Atti al Presidente (entro) <font class="ob">(*)</font></td>
+		<td class="l">Emissione Ordinanza Ammissione Provvisoria / Restituzione Atti al Presidente (entro)</td>
 		<td class="L" colspan="3">Data Termine&nbsp;&nbsp;&nbsp;
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione()))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione()))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
-			<input value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione()))%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione(), "dd"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione(), "MM"))%>" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(depositoDecretoMotivazioni.getDepositoDecreto().getDataTermineEmissione(), "yyyy"))%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_ANNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 			&nbsp;&nbsp;&nbsp;oppure Numero Giorni Termine&nbsp;&nbsp;&nbsp;
     		<input value="<%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNumGiorniTermineEmissione())%>" type="text" size="4" maxlength="4" name="<%=ICostantiDepositoDecreto.CAMPO_NUMERO_GIORNI_TERMINE_EMISSIONE%>" onkeypress="return TicTabNumField(this,event)">
     	</td>

@@ -207,10 +207,10 @@ String azione = "siap.sius.depositodecreto.action.ActInserisciDesignazioneMagist
  			<a href="Javascript:ListaOggetti('LoadInserisciDesignazioneMagistratoRelatore',document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_CONTENUTO%>.value, '<%= ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO %>', '<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>', '<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>', document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>.value, document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>.value );">
  				<img src="/images/fileselected.gif" title="Oggetti per il Contenuto selezionato" border="0">
  			</a>
- 			&nbsp;
- 			<a href="Javascript:ListaOggetti('LoadInserisciDesignazioneMagistratoRelatore','-', '<%= ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO %>', '<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>', '<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>', document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>.value, document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>.value );">
-      			<img src="/images/filefolder.gif" title="Elenco di tutti gli Oggetti Selezionabili" border="0">
-      		</a>
+<!--  			&nbsp; -->
+<%--  			<a href="Javascript:ListaOggetti('LoadInserisciDesignazioneMagistratoRelatore','-', '<%= ICostantiFascicoloSius.CAMPO_DESCR_OGGETTO %>', '<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>', '<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>', document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_OGGETTO%>.value, document.LoadInserisciDesignazioneMagistratoRelatore.<%=ICostantiFascicoloSius.CAMPO_COD_DETTAGLIO_OGGETTO%>.value );"> --%>
+<!--       			<img src="/images/filefolder.gif" title="Elenco di tutti gli Oggetti Selezionabili" border="0"> -->
+<!--       		</a> -->
     	</td>
 	</tr>
 <%
@@ -239,7 +239,7 @@ if (magistratorelatore != null) {
 	  	</td>
 	</tr>
   	<tr>
-		<td class="l">Emissione Ordinanza Ammissione Provvisoria / Restituzione Atti al Presidente (entro) <font class="ob">(*)</font></td>
+		<td class="l">Emissione Ordinanza Ammissione Provvisoria / Restituzione Atti al Presidente (entro)</td>
 		<td class="L" colspan="3">Data Termine&nbsp;&nbsp;&nbsp;
 			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_GIORNO_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
 			<input value="" type="text" size="2" maxlength="2" name="<%=ICostantiDepositoDecreto.CAMPO_MESE_DATA_TERMINE_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
