@@ -268,7 +268,7 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
       	</td>
     	<td class=LBG>
 			<font class="label">Funzione : </font>
-			<font class="campo">Emissione Ordinanza Ammissione Provvisoria Misura Alternativa</font>
+			<font class="campo">Emissione Ordinanza Applicazione Provvisoria Misura Alternativa</font>
     	</td>
   	</tr>
 	  <tr>

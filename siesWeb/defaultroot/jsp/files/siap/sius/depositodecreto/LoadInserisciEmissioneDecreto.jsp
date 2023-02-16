@@ -168,7 +168,10 @@
     {
         lAction = new String("siap.sius.depositoordinanzapc.action.ActInserisciEmissioneOrdinanzaUDS");
         lDocumento = new String("ordinanza");
-        lTitolo = new String("Emissione Ordinanza");
+        if ("SI".equals(isOrdProvvisoria))
+        	lTitolo = new String("Emissione Ordinanza Applicazione Provvisoria Misura Alternativa");
+        else
+        	lTitolo = new String("Emissione Ordinanza");
         lActRet = new String("siap.sius.depositoordinanzapc.action.ActLoadEmissioneOrdinanzaUDS");
     }
     else if(flagOrdinanza != null && flagOrdinanza.compareTo("sentenza") == 0)
