@@ -2079,13 +2079,13 @@ while (itxDT.hasNext()) {
    	    } else if (lLicPerDT.getLicenza().getFlagScorta() != null && lLicPerDT.getLicenza().getFlagScorta().compareTo("S") == 0) {	
 			numDT[1]++;
    	  	}
-	} else if ( lLicPerDT.getLicenza().getFlagConcesso().compareTo("R") == 0)
+	} else if (lLicPerDT.getLicenza().getFlagConcesso().compareTo("R") == 0)
 		numDT[2]++;
-	else if ( lLicPerDT.getLicenza().getFlagConcesso().compareTo("I")  == 0)
+	else if (lLicPerDT.getLicenza().getFlagConcesso().compareTo("I")  == 0)
 		numDT[3]++;
-	else if ( lLicPerDT.getLicenza().getFlagConcesso().compareTo("N") == 0)
+	else if (lLicPerDT.getLicenza().getFlagConcesso().compareTo("N") == 0)
 		numDT[4]++;
-	else if ( lLicPerDT.getLicenza().getFlagConcesso().compareTo("S") == 0) 
+	else if (lLicPerDT.getLicenza().getFlagConcesso().compareTo("S") == 0) 
 		numDT[5]++;
 }
 
@@ -2154,7 +2154,7 @@ if (numDT[0] > 0) {
 <%
 	        	} // chiude if (lLicPerConcDT1 != null && lLicPerConcDT1.getPeriodi() != null)
 			} // chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-   		} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
+   		} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0)
 	} // chiude while
 %>
 </table>
@@ -2290,1814 +2290,1258 @@ for (int jCheck=0; jCheck<NumCheck; jCheck++) {
 Iterator itx = LicenzePeriodi.iterator();
 // Conteggio delle licenze distinte per tipo
 while (itx.hasNext()) {
-      LicenzaPeriodiLibAnticipataModel lLicPer = (LicenzaPeriodiLibAnticipataModel) itx.next();
-      if (lLicPer.getLicenza().getDescrStatoPermesso() != null)
-      {
-    	  if (lLicPer.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LA") == 0 )
-    	  {	  
-		      if ( lLicPer.getLicenza().getFlagConcesso().compareTo("C") == 0) 
-		      {
-		    	    if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0)
-		    	    {	  
-		          		numLA[0]++;
-		                plamLA_i = NumTotaleSemestri;
-		                sceltaSemestriLA = 0;
-		    	    }    
-		    	  	else if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("S") == 0) 
-		    	  	{	
-		    	  		numLA[1]++;
-		    	  	}
-		
-		      }
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("R") == 0)
-		          numLA[2]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("I")  == 0)
-		          numLA[3]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("N") == 0)
-		          numLA[4]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("S") == 0) 
-		      {
-		          numLA[5]++;
-		          if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0)
-		          {
-		               plamLA_i = NumTotaleSemestri;
-		               sceltaSemestriLA = 0;
-		          }
-		      }
-    	  }     
-      }
-      else
-      {
-    	  
-      }
-  }
-
- // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
- // siesLogger.debug("--> Cpasso la conta dei giorniLA - plamLA_i = "+plamLA_i); 
-  
-// - - -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
-
- // I 'PERIODI CONCESSI' (titolo[0] + num[0];) SONO CALCOLATI FUORI CICLO - Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
-  if (numLA[0] > 0)
-  {
- 		Iterator itxP = LicenzePeriodi.iterator();
-		while (itxP.hasNext())
-		{
-			  LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxP.next();
-		      if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null)
-		      {
-		    	  if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LA") == 0 )
-		    	  {				
-			    		if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
-			    		{	
-			 	    			if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-				    				lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0 )
-				    			{
-						      		if (lLicPerConc != null && lLicPerConc.getPeriodi() != null )
-						        	{  
-									    nLA[0]++;
-									    PeriodoLibAnticipataModel[] pp = lLicPerConc.getPeriodi();
-									    
-									    plam_arrayLA[plamLA_i] = lLicPerConc.getPeriodi();
-									// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-									//    siesLogger.debug("--> C k=0 - numro periodi CONCESSI : " + pp.length +" - plamLA_i = "+plamLA_i); 
-				          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				          			//	siesLogger.debug("--> C k=0 - plam_arrayLA[plamLA_i] = "+plam_arrayLA[plamLA_i] );
-			
-						        	} // chiude if (lLicPerConc != nul
-				    			
-			   				}	// chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-							
-			   				if (plamLA_i < NumTotaleSemestri)    // era k == 0
-							{
-									plamLA_i++;
-							}
-			
-		    			} 	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
-
-		    	  }
-		    	  
-		      }		    	  
-		
-		 }	// chiude while
-			
-		 if (plamLA_i < NumTotaleSemestri)
-		 {
-		       	plamLA_i = NumTotaleSemestri + 1;
-		    // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		    //   	siesLogger.debug("--> C k=0 -LA 2 - plamLA_i = "+plamLA_i); 
-		 }
-		 else
-		 {
-				plamLA_i++;
-			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			//	siesLogger.debug("--> C k=0 -LA 3 - plamLA_i = "+plamLA_i); 
-		 }			
-
-  }  // chiude if (numLA[0] > 0)
-  
-// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//  siesLogger.debug("--> C Passo ciclo k=0 LA- plamLA_i = "+plamLA_i); 
-  
-// - -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	 
-
-//  CICLO FOR: PARTO DA 'SEMESTRI CONCESSI' (titolo[1] + num[1]) e ARRIVO  
-// 				FINO A  'PERIODI NON CONCESSI N.L.P./N.D.P' (titolo[4] + num[4]) 
-//		Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
-
-  for (int k= 1; k < 5; k++)
-  {
-	  	if (numLA[k] > 0)
-	    {
-      		Iterator itxC = LicenzePeriodi.iterator();
-      		while (itxC.hasNext())
-      		{
-       			LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC.next();
-  		      	if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null)
-  		      	{
-	  		    	  if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LA") == 0 )
-	  		    	  {	      			
-			        		if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLA[k]) == 0)
-			        		{
-					      		if ( lLicPerConc.getLicenza() != null && 
-						      		lLicPerConc.getLicenza().getFlagScorta() != null && 
-						      		lLicPerConc.getLicenza().getFlagScorta().compareTo("C") != 0 )
-						        {
-						      			if ( lLicPerConc != null && lLicPerConc.getPeriodi() != null )
-						      			{
-
-								   				nLA[k]++;
-						           				PeriodoLibAnticipataModel[] p = lLicPerConc.getPeriodi();
-						           				
-						           				plam_arrayLA[plamLA_i] = lLicPerConc.getPeriodi();		// si salva i periodi che verranno dettagliati poi nella form
-			
-						          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						          			//	siesLogger.debug("-------------> C periodi = " + p.length +" - plamLA_i = "+plamLA_i); 
-						          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						          			//	siesLogger.debug("-------------> C plam_arrayLA[plamLA_i] = "+plam_arrayLA[plamLA_i] );
-							
-						      			} // chiude if (lLicPerConc != nul
-						      			
-						         } // chiude if (lLicPerConc.getLicenza() != null && 
-						         
-						         if  ((k == 1) && (plamLA_i < NumTotaleSemestri))    // era k == 0
-								 {
-										plamLA_i++;
-								 }
-				
-							}	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().com
-									
-	  		    	  }
-  		      	}	  
-      	
-      		}	// chiude while (itxC.hasNext())
-      			
-		    if ((k == 1) && (plamLA_i < NumTotaleSemestri))
-		    {
-		       	plamLA_i = NumTotaleSemestri + 1;
-		       // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		       //	siesLogger.debug("--> C - K=1/5 1 -LA plamLA_i = semes+1 = "+plamLA_i); 
-		    }
-		    else
-			{
-				plamLA_i++;
-			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			//	siesLogger.debug("--> C - K=1/5 2 -LA plamLA_i = "+plamLA_i); 
+	LicenzaPeriodiLibAnticipataModel lLicPer = (LicenzaPeriodiLibAnticipataModel) itx.next();
+	if (lLicPer.getLicenza().getDescrStatoPermesso() != null) {
+		if (lLicPer.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LA") == 0) {
+			if (lLicPer.getLicenza().getFlagConcesso().compareTo("C") == 0) {
+				if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0) {
+					numLA[0]++;
+					plamLA_i = NumTotaleSemestri;
+					sceltaSemestriLA = 0;
+				} else if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("S") == 0) {	
+	    	  		numLA[1]++;
+	    	  	}
+			} else if (lLicPer.getLicenza().getFlagConcesso().compareTo("R") == 0)
+				numLA[2]++;
+			else if (lLicPer.getLicenza().getFlagConcesso().compareTo("I")  == 0)
+		   		numLA[3]++;
+		   	else if (lLicPer.getLicenza().getFlagConcesso().compareTo("N") == 0)
+		    	numLA[4]++;
+	    	else if (lLicPer.getLicenza().getFlagConcesso().compareTo("S") == 0) {
+				numLA[5]++;
+				if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0) {
+		            plamLA_i = NumTotaleSemestri;
+		            sceltaSemestriLA = 0;
+		   		}
 			}
+		}     
+	}
+}
 
-	  	}  // chiude if (num[k] > 0)
-		else
-		{						// metto (if k == 1) per avere i periodi NON CONCESSI
-			if (k == 1)
-	      	{
-				plamLA_i = NumTotaleSemestri + 1;
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				//siesLogger.debug("--> C- K=1/5 3 -LA plamLA_i = semes+1 = "+plamLA_i); 
-	      	}
-			else
-			{
-		   		plamLA_i++;
-		   		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		   		//siesLogger.debug("--> C - K=1/5 4 -LA plam_i = "+plamLA_i); 
-			}
-		}	
- 
-  }	// chiude for (int k= 1; k < 5; k++)
-
-	  
-// Aggiunta per modifica Ordinanza RECLAMA LA - 19/10/2009 :
-//		in mezzo ci sono le aggiunte per la Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014  
+// I 'PERIODI CONCESSI' (titolo[0] + num[0];) SONO CALCOLATI FUORI CICLO - Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014
+if (numLA[0] > 0) {
+	Iterator itxP = LicenzePeriodi.iterator();
+	while (itxP.hasNext()) {
+		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxP.next();
+		if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null) {
+			if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LA") == 0) {
+				if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0) {
+					if (lLicPerConc.getLicenza().getFlagScorta() != null
+							&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0) {
+						if (lLicPerConc != null && lLicPerConc.getPeriodi() != null) {
+							nLA[0]++;
+							PeriodoLibAnticipataModel[] pp = lLicPerConc.getPeriodi();
+						    plam_arrayLA[plamLA_i] = lLicPerConc.getPeriodi();
+			        	} // chiude if (lLicPerConc != null ...
+	   				} // chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && ...
+	   				if (plamLA_i < NumTotaleSemestri) { // era k == 0
+						plamLA_i++;
+					}
+				} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0)
+    	  	}
+      	}		    	  
+	}	// chiude while
+	if (plamLA_i < NumTotaleSemestri) {
+		plamLA_i = NumTotaleSemestri + 1;
+	} else {
+		plamLA_i++;
+	}			
+} // chiude if (numLA[0] > 0)
   
-  if (numLA[5] > 0) 
-  { 
-  		Iterator itxC = LicenzePeriodi.iterator();
-  		int plamS = 0;
-	   while (itxC.hasNext())
-       {
-	       LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC.next();
-	       if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLA[5]) == 0)
-	       {
-		          nLA[5]++;
-		          PeriodoLibAnticipataModel[] psc = lLicPerConc.getPeriodi();
-		          
-		          if (lLicPerConc.getLicenza().getFlagScorta() != null && lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0)
-		          		plam_arrayLA[NumTotaleSemestri] = lLicPerConc.getPeriodi();
-		          else
-		          {
-		        	  plam_arrayLA[plamS] = lLicPerConc.getPeriodi();
-		          	  plamS++;
-	          	  }
-			} 	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(cod[5]) == 0)
-     
-       }	// chiude while (itxC.hasNext())
-  
-  }		// chiude if (num[5] > 0) 
- 
-// Fine Aggiunta	-	-	-	-	-	>	Fine nuova parte introdotta 20/4/2009         %>
-
-<!-- 	FINE PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A. -->  
-
-
-<!-- 	INIZIO PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A.SSPECIALE L.A.S. -->  
-<% 	      
-  		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  		siesLogger.debug("--> C Inizio Modifica L.A. Spec - Tot giorni LS = "+TotggLS ); 
-  		
-  int[] numLS  = {0,0,0,0,0,0};
-  int[] nLS = {0,0,0,0,0,0};
-  String[] codLS = {"C","C","R","I","N","S"};
-  int sceltaSemestriLS = 1;
-  int plamLS_i = 0;
-  int plamLS_j = 0;
-
-  // PeriodoLibAnticipataModel[][] plam_arrayLS = new PeriodoLibAnticipataModel[NumCheck][NumDate];
-  for (int jCheck=0; jCheck<NumCheck; jCheck++)
-  {
-	  plam_arrayLS[jCheck] = null;
-	  periodiLS[jCheck] = 0;
-  }
-  
-   itx = LicenzePeriodi.iterator();
-  // Conteggio delle licenze distinte per tipo
-  while (itx.hasNext())
-  {
-      LicenzaPeriodiLibAnticipataModel lLicPer = (LicenzaPeriodiLibAnticipataModel) itx.next();
-      if (lLicPer.getLicenza().getDescrStatoPermesso() != null)
-      {
-    	  if (lLicPer.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LS") == 0 )
-    	  {	  
-		      if ( lLicPer.getLicenza().getFlagConcesso().compareTo("C") == 0) 
-		      {
-		    	    if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0)
-		    	    {	  
-		          		numLS[0]++;
-		                plamLS_i = NumTotaleSemestri;
-		                sceltaSemestriLS = 0;
-		              // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		              //  siesLogger.debug("--> C ModificaLS  - plamLS_i = "+plamLS_i); 
-		              // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		              //  siesLogger.debug("--> C ModificaLS  - periodi numLS[0] = "+numLS[0]); 
-		    	    }    
-		    	  	else if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("S") == 0) 
-		    	  	{	
-		    	  		numLS[1]++;
-		    	  	}
-		
-		      }
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("R") == 0)
-		          numLS[2]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("I")  == 0)
-		          numLS[3]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("N") == 0)
-		          numLS[4]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("S") == 0) 
-		      {
-		          numLS[5]++;
-		          if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0)
-		          {
-		               plamLS_i = NumTotaleSemestri;
-		               sceltaSemestriLS = 0;
-		          }
-		      }
-    	  }     
-      }
-      else
-      {
-    	  
-      }
-  }
-
- // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
- // siesLogger.debug("--> C LS passo la conta dei giorniLS - plamLS_i = "+plamLS_i); 
-  
-// - - -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
-
- // I 'PERIODI CONCESSI' (titolo[0] + num[0];) SONO CALCOLATI FUORI CICLO - Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
-  if (numLS[0] > 0)
-  {
- 		Iterator itxP1 = LicenzePeriodi.iterator();
-		while (itxP1.hasNext())
-		{
-			  LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxP1.next();
-		      if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null)
-		      {
-		    	  if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LS") == 0 )
-		    	  {				
-			    		if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
-			    		{	
-			 	    			if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-				    				lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0 )
-				    			{
-						      		if (lLicPerConc != null && lLicPerConc.getPeriodi() != null )
-						        	{  
-									    nLS[0]++;
-									    PeriodoLibAnticipataModel[] pp = lLicPerConc.getPeriodi();
-									    
-									    plam_arrayLS[plamLS_i] = lLicPerConc.getPeriodi();
-									 // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-									 //   siesLogger.debug("--> C LS k=0 - numro periodi CONCESSI : " + pp.length +" - plamLS_i = "+plamLS_i); 
-				          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				          			//	siesLogger.debug("--> C LS k=0 - plam_arrayLS[plamLS_i] = "+plam_arrayLS[plamLS_i] );
-			
-						        	} // chiude if (lLicPerConc != nul
-				    			
-			   				}	// chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-							
-			   				if (plamLS_i < NumTotaleSemestri)    
-							{
-									plamLS_i++;
-							}
-			
-		    			} 	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
-
-		    	  }
-		    	  
-		      }		    	  
-		
-		 }	// chiude while
-			
-		 if (plamLS_i < NumTotaleSemestri)
-		 {
-		       	plamLS_i = NumTotaleSemestri + 1;
-		     // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		     //  	siesLogger.debug("--> C k=0 -LS 2 - plamLS_i = "+plamLS_i); 
-		 }
-		 else
-		 {
-				plamLS_i++;
-			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			//	siesLogger.debug("--> C k=0 -LS 3 - plamLS_i = "+plamLS_i); 
-		 }			
-
-  }  // chiude if (numLS[0] > 0)
-  
-// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//  siesLogger.debug("--> C Passo ciclo k=0 LS- plamLS_i = "+plamLS_i); 
-  
-// - -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	 
-
-//  CICLO FOR: PARTO DA 'SEMESTRI CONCESSI' (titolo[1] + num[1]) e ARRIVO  
-// 				FINO A  'PERIODI NON CONCESSI N.L.P./N.D.P' (titolo[4] + num[4]) 
-//		Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
-
-  for (int k= 1; k < 5; k++)
-  {
-	  	if (numLS[k] > 0)
-	    {
-      		Iterator itxC1 = LicenzePeriodi.iterator();
-      		while (itxC1.hasNext())
-      		{
-       			LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC1.next();
-  		      	if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null)
-  		      	{
-	  		    	  if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LS") == 0 )
-	  		    	  {	      			
-			        		if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[k]) == 0)
-			        		{
-					      		if ( lLicPerConc.getLicenza() != null && 
-						      		lLicPerConc.getLicenza().getFlagScorta() != null && 
-						      		lLicPerConc.getLicenza().getFlagScorta().compareTo("C") != 0 )
-						        {
-						      			if ( lLicPerConc != null && lLicPerConc.getPeriodi() != null )
-						      			{
-
-								   				nLS[k]++;
-						           				PeriodoLibAnticipataModel[] p = lLicPerConc.getPeriodi();
-						           				
-						           				plam_arrayLS[plamLS_i] = lLicPerConc.getPeriodi();		// si salva i periodi che verranno dettagliati poi nella form
-			
-						          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						          			//	siesLogger.debug("-------------> C LS periodi = " + p.length +" - plamLS_i = "+plamLS_i); 
-						          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						          			//	siesLogger.debug("-------------> C LS plam_arrayLS[plamLS_i] = "+plam_arrayLS[plamLS_i] );
-							
-						      			} // chiude if (lLicPerConc != nul
-						      			
-						         } // chiude if (lLicPerConc.getLicenza() != null && 
-						         
-						         if  ((k == 1) && (plamLS_i < NumTotaleSemestri)) 
-								 {
-										plamLS_i++;
-								 }
-				
-							}	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().com
-									
-	  		    	  }
-  		      	}	  
-      	
-      		}	// chiude while (itxC.hasNext())
-      			
-		    if ((k == 1) && (plamLS_i < NumTotaleSemestri))
-		    {
-		       	plamLS_i = NumTotaleSemestri + 1;
-		     // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		     //  	siesLogger.debug("--> C - K=1/5 1 -LS plamLS_i = semes+1 = "+plamLS_i); 
-		    }
-		    else
-			{
-				plamLS_i++;
-			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			//	siesLogger.debug("--> C - K=1/5 2 -LS plamLS_i = "+plamLS_i); 
-			}
-
-	  	}  // chiude if (numLS[k] > 0)
-		else
-		{						// metto (if k == 1) per avere i periodi NON CONCESSI
-			if (k == 1)
-	      	{
-				plamLS_i = NumTotaleSemestri + 1;
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				//siesLogger.debug("--> C- K=1/5 3 -LS plamLS_i = semes+1 = "+plamLS_i); 
-	      	}
-			else
-			{
-		   		plamLS_i++;
-		   	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		   	//	siesLogger.debug("--> C - K=1/5 4 -LS plamLS_i = "+plamLS_i); 
-			}
-		}	
- 
-  }	// chiude for (int k= 1; k < 5; k++)
-
-
-// Aggiunta per modifica Ordinanza RECLAMA LA - 19/10/2009 :
-//		in mezzo ci sono le aggiunte per la Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014  
-  
-  if (numLS[5] > 0) 
-  { 
-  		Iterator itxC2 = LicenzePeriodi.iterator();
-  		int plamS = 0;
-	   while (itxC2.hasNext())
-       {
-	       LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC2.next();
-	       if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[5]) == 0)
-	       {
-		          nLS[5]++;
-		          PeriodoLibAnticipataModel[] psc = lLicPerConc.getPeriodi();
-		          
-		          if (lLicPerConc.getLicenza().getFlagScorta() != null && lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0)
-		          		plam_arrayLS[NumTotaleSemestri] = lLicPerConc.getPeriodi();
-		          else
-		          {
-		        	  plam_arrayLS[plamS] = lLicPerConc.getPeriodi();
-		          	  plamS++;
-	          	  }
-			} 	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[5]) == 0)
-     
-       }	// chiude while (itxC.hasNext())
-  
-  }		// chiude if (numLS[5] > 0) 
- 
-// Fine Aggiunta	-	-	-	-	-	>	Fine nuova parte introdotta 20/4/2009         %>
-
-<!-- 	FINE PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A. SPECIALE (L.A.S) -->  	  
-
-<!-- 	INIZIO PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A.INTEGRAZIONE (L.A.I.) -->  
-<% 	      
-  		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  		siesLogger.debug("--> C Inizio Modifica L.A. Integra - Tot giorni LI = "+TotggLI ); 
-  		
-  int[] numLI  = {0,0,0,0,0,0};
-  int[] nLI = {0,0,0,0,0,0};
-  String[] codLI = {"C","C","R","I","N","S"};
-  int sceltaSemestriLI = 1;
-  int plamLI_i = 0;
-  int plamLI_j = 0;
-
-  // PeriodoLibAnticipataModel[][] plam_arrayLI = new PeriodoLibAnticipataModel[NumCheck][NumDate];
-  for (int jCheck=0; jCheck<NumCheck; jCheck++)
-  {
-	  plam_arrayLI[jCheck] = null;
-	  periodiLI[jCheck] = 0;
-  }
-  
-  Iterator itx11 = LicenzePeriodi.iterator();
-  // Conteggio delle licenze distinte per tipo
-  while (itx11.hasNext())
-  {
-      LicenzaPeriodiLibAnticipataModel lLicPer = (LicenzaPeriodiLibAnticipataModel) itx11.next();
-      if (lLicPer.getLicenza().getDescrStatoPermesso() != null)
-      {
-    	  if (lLicPer.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LI") == 0 )
-    	  {	  
-		      if ( lLicPer.getLicenza().getFlagConcesso().compareTo("C") == 0) 
-		      {
-		    	    if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0)
-		    	    {	  
-		          		numLI[0]++;
-		                plamLI_i = NumTotaleSemestri;
-		                sceltaSemestriLI = 0;
-		              // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		              //  siesLogger.debug("--> C Modifica LI  - plamLI_i = "+plamLI_i); 
-		              // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		              //  siesLogger.debug("--> C Modifica LI  - periodi numLI[0] = "+numLI[0]); 
-		    	    }    
-		    	  	else if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("S") == 0) 
-		    	  	{	
-		    	  		numLI[1]++;
-		    	  	}
-		
-		      }
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("R") == 0)
-		      {	  
-		          numLI[2]++;
-		         // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-		         // siesLogger.debug("--> C Modifica LI  - periodi numLI[2] = "+numLI[2]); 
-		      }    
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("I")  == 0)
-		          numLI[3]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("N") == 0)
-		          numLI[4]++;
-		      else if ( lLicPer.getLicenza().getFlagConcesso().compareTo("S") == 0) 
-		      {
-		          numLI[5]++;
-		          if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0)
-		          {
-		               plamLI_i = NumTotaleSemestri;
-		               sceltaSemestriLI = 0;
-		          }
-		      }
-    	  }     
-      }
-      else
-      {
-    	  
-      }
-  }
-
- // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
- // siesLogger.debug("--> C LI passo la conta dei giorniLI - plamLI_i = "+plamLI_i); 
-  
-// - - -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
-
- // I 'PERIODI CONCESSI' (titolo[0] + num[0];) SONO CALCOLATI FUORI CICLO - Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
-  if (numLI[0] > 0)
-  {
- 		Iterator itxP11 = LicenzePeriodi.iterator();
-		while (itxP11.hasNext())
-		{
-			  LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxP11.next();
-		      if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null)
-		      {
-		    	  if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LI") == 0 )
-		    	  {				
-			    		if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
-			    		{	
-			 	    			if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-				    				lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0 )
-				    			{
-						      		if (lLicPerConc != null && lLicPerConc.getPeriodi() != null )
-						        	{  
-									    nLI[0]++;
-									    PeriodoLibAnticipataModel[] pp = lLicPerConc.getPeriodi();
-									    
-									    plam_arrayLI[plamLI_i] = lLicPerConc.getPeriodi();
-									 // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-									 //   siesLogger.debug("--> C LI k=0 - numro periodi CONCESSI : " + pp.length +" - plamLI_i = "+plamLI_i ); 
-				          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				          			//	siesLogger.debug("--> C LI k=0 - plam_arrayLI[plamLI_i] = "+plam_arrayLI[plamLI_i] );
-			
-						        	} // chiude if (lLicPerConc != nul
-				    			
-			   				}	// chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && 
-							
-			   				if (plamLI_i < NumTotaleSemestri)    
-							{
-									plamLI_i++;
-							}
-			
-		    			} 	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0 )
-
-		    	  }
-		    	  
-		      }		    	  
-		
-		 }	// chiude while
-			
-		 if (plamLI_i < NumTotaleSemestri)
-		 {
-		       	plamLI_i = NumTotaleSemestri + 1;
-		 }
-		 else
-		 {
-				plamLI_i++;
-		 }			
-
-  }  // chiude if (numLI[0] > 0)
-  
-// - -	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	 
-
-//  CICLO FOR: PARTO DA 'SEMESTRI CONCESSI' (titolo[1] + num[1]) e ARRIVO  
-// 				FINO A  'PERIODI NON CONCESSI N.L.P./N.D.P' (titolo[4] + num[4]) 
-//		Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
-
-  for (int k= 1; k < 5; k++)
-  {
-	  	if (numLI[k] > 0)
-	    {
-	  		Iterator itxC111 = LicenzePeriodi.iterator();
-      		while (itxC111.hasNext())
-      		{
-       			LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC111.next();
-  		      	if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null)
-  		      	{
-	  		    	  if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LI") == 0 )
-	  		    	  {	      			
-			        		if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLI[k]) == 0)
-			        		{
-					      		if ( lLicPerConc.getLicenza() != null && 
-						      		lLicPerConc.getLicenza().getFlagScorta() != null && 
-						      		lLicPerConc.getLicenza().getFlagScorta().compareTo("C") != 0 )
-						        {
-						      			if ( lLicPerConc != null && lLicPerConc.getPeriodi() != null )
-						      			{
-
-								   				nLI[k]++;
-						           				PeriodoLibAnticipataModel[] p = lLicPerConc.getPeriodi();
-						           				
-						           				plam_arrayLI[plamLI_i] = lLicPerConc.getPeriodi();		// si salva i periodi che verranno dettagliati poi nella form
-			
-						          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						          			//	siesLogger.debug("-------------> C LI periodi = " + p.length +" - plamLI_i = "+plamLI_i); 
-						          			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						          			//	siesLogger.debug("-------------> C LI plam_arrayLI[plamLI_i] = "+plam_arrayLI[plamLI_i] );
-							
-						      			} // chiude if (lLicPerConc != nul
-						      			
-						         } // chiude if (lLicPerConc.getLicenza() != null && 
-						         
-						         if  ((k == 1) && (plamLI_i < NumTotaleSemestri)) 
-								 {
-										plamLI_i++;
-								 }
-				
-							}	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().com
-									
-	  		    	  }
-  		      	}	  
-      	
-      		}	// chiude while (itxC.hasNext())
-      			
-		    if ((k == 1) && (plamLI_i < NumTotaleSemestri))
-		    {
-		       	plamLI_i = NumTotaleSemestri + 1;
-		    }
-		    else
-			{
-				plamLI_i++;
-			}
-
-	  	}  // chiude if (numLI[k] > 0)
-		else
-		{						// metto (if k == 1) per saltare i periodi NON CONCESSI
-			if (k == 1)
-	      	{
-				plamLI_i = NumTotaleSemestri + 1;
-	      	}
-			else
-			{
-		   		plamLI_i++;
-			}
-		}	
- 
-  }	// chiude for (int k= 1; k < 5; k++)
-
-
-// Aggiunta per modifica Ordinanza RECLAMA LA - 19/10/2009 :
-//		in mezzo ci sono le aggiunte per la Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014  
-  
-  if (numLI[5] > 0) 
-  { 
-	  Iterator itxC22 = LicenzePeriodi.iterator();
-  		int plamS = 0;
-	   while (itxC22.hasNext())
-       {
-	       LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC22.next();
-	       if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLI[5]) == 0)
-	       {
-		          nLI[5]++;
-		          PeriodoLibAnticipataModel[] psc = lLicPerConc.getPeriodi();
-		          
-		          if (lLicPerConc.getLicenza().getFlagScorta() != null && lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0)
-		          		plam_arrayLI[NumTotaleSemestri] = lLicPerConc.getPeriodi();
-		          else
-		          {
-		        	  plam_arrayLI[plamS] = lLicPerConc.getPeriodi();
-		          	  plamS++;
-	          	  }
- 
-			} 	// chiude if ( lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[5]) == 0)
-     
-       }	// chiude while (itxC.hasNext())
-  
-  }		// chiude if (numLS[5] > 0) 
- 
-// Fine Aggiunta	-	-	-	-	-	>	Fine nuova parte introdotta 20/4/2009         %>
-
-<!-- 	FINE PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A. INTEGRAZIONE (L.A.I) -->  	  
-
-
-<%  // Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014 
-	// Ciclo per totalizzare i gg di L.A, L.A. SPECIALE, e L.A. INTEGRAZIONE e 
-	// 		 per  totalizzare i periodi e i semestri di L.A, L.A. SPECIALE, e L.A. INTEGRAZIONE
-	//		 per totalizzare i le concessioni e i rigetti (inamm, NLP, scomputo)
-	
-	Iterator itxGG = LicenzePeriodi.iterator();
-	while (itxGG.hasNext())
-	{
-	    LicenzaPeriodiLibAnticipataModel lLicConc = (LicenzaPeriodiLibAnticipataModel) itxGG.next();
-		if ( lLicConc.getLicenza().getFlagConcesso().compareTo("C") == 0)	// concessione	*/
-		{	    
-		    if (lLicConc.getLicenza().getDescrStatoPermesso() != null)
-			{
-		    	if ( lLicConc.getLicenza().getDescrStatoPermesso().substring(0,2).compareTo("LA") == 0)	/* L.A. NORMALE	*/
-	    		{	    
-					TotggLA += lLicConc.getLicenza().getNumeroGiorni().intValue();				/* TOT gg L.A. NORMALE concessi	*/
-				    if (lLicConc.getLicenza().getFlagScorta().compareTo("C") == 0)				/* periodo Unico concesso	*/
-				    {
-				    	if (lLicConc.getPeriodi() != null)
-				    	{	
-				    		perUnicoConcLA_dalal = true;					/* periodo Unico con Periodi	*/
-				    	}
-				    	else							/* oppure	*/
-				    	{
-				    		perUnicoConcLA_sologg = true;						/* periodo Unico con soli gg SENZA Periodi	*/
-				    	}
-				    	
-				    }
-				    else if (lLicConc.getLicenza().getFlagScorta().compareTo("S") == 0)			/* Semestri concessi	*/
-				    {
-				    	semestriLA++;											/* TOT check semestri	*/
-				    }
-	    			
-			 	}
-		    	else if ( lLicConc.getLicenza().getDescrStatoPermesso().substring(0,2).compareTo("LS") == 0)		/* L.A. SPECIALE	*/
-			    {
-		    		TotggLS += lLicConc.getLicenza().getNumeroGiorni().intValue();					/* TOT gg L.A. SPECIALE	*/
-				   	if (lLicConc.getLicenza().getFlagScorta().compareTo("C") == 0)					/* periodo Unico concesso di L.A.S.	*/
-				   	{
-				   		if (lLicConc.getPeriodi() != null)
-				   		{	
-				   			perUnicoConcLS_dalal = true;						/* periodo Unico con Periodi di L.A.S.	*/
-				   		}
-				   		else							/* oppure	*/
-				   		{
-				   			perUnicoConcLS_sologg = true;						/* periodo Unico con soli gg SENZA Periodi di L.A.S.	*/
-				   		}
-				   	
-				   	}
-				   	else if (lLicConc.getLicenza().getFlagScorta().compareTo("S") == 0)			/* Semestri concessi di L.A.S.	*/
-				    {
-				    		semestriLS++;											/* TOT check semestri di L.A.S.	*/
-				    }
-			    }
-		    	else if ( lLicConc.getLicenza().getDescrStatoPermesso().substring(0,2).compareTo("LI") == 0)		/* L.A. INTEGRAZIONE	*/
-			    {
-		    		TotggLI += lLicConc.getLicenza().getNumeroGiorni().intValue();					/* TOT gg L.A. INTEGRAZIONE		*/
-				   	if (lLicConc.getLicenza().getFlagScorta().compareTo("C") == 0)					/* periodo Unico concesso di L.A.I.	*/
-				   	{
-				   		if (lLicConc.getPeriodi() != null)
-				   		{	
-				   			perUnicoConcLI_dalal = true;						/* periodo Unico con Periodi	di L.A.I.	*/
-				   		}
-				   		else									/* oppure	*/
-				   		{
-				   			perUnicoConcLI_sologg = true;						/* periodo Unico con soli gg SENZA Periodi di L.A.I.	*/
-				   		}
-				    	
-				   	}
-				    else if (lLicConc.getLicenza().getFlagScorta().compareTo("S") == 0)			/* Semestri concessi	di L.A.I.	*/
-				    {
-				    	semestriLI++;											/* TOT check semestri	di L.A.I.	*/
-				    }
-			    } //
-	    		
-		    }
-		    else		/* DescStatoPermesso = null - Concessione Vecchia Ordinanza L.A.	*/
-		    {
-			       if (datiOrdinanza.getOrdinanza().getNumGiorniLibanticipata() != null ) 
-			    		TotggLAold = datiOrdinanza.getOrdinanza().getNumGiorniLibanticipata().intValue();
-		    }
-		    
-		}	// chiude if ( lLicConc.getLicenza().getFlagConcesso().compareTo("C") == 0)
-    
-	}	/* chiude while	*/
-	
-	/*  
-	  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	  siesLogger.debug("--> C periodoSemestriLA = "+semestriLA ); 
-	  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	  siesLogger.debug("--> C perUnicoConcLA_dalal = "+perUnicoConcLA_dalal );
-	  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	  siesLogger.debug("--> C perUnicoConcLA_sologg = "+perUnicoConcLA_sologg ); 
-	  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	  siesLogger.debug("--> C TotggLA = "+TotggLA ); 
-	 */ 
-//  -	-	-	LS
-// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//	  siesLogger.debug("--> C periodoSemestriLS = "+semestriLS ); 
-// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//	  siesLogger.debug("--> C perUnicoConcLS_dalal = "+perUnicoConcLS_dalal );
-// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//	  siesLogger.debug("--> C perUnicoConcLS_sologg = "+perUnicoConcLS_sologg ); 
-// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-//	  siesLogger.debug("--> C TotggLS = "+TotggLS ); 
-%>
- 
-<!-- 		
-				---------------	S E P A R A Z I O N E   D E G L I   I N D I C I  -------------- 
-					 -->  
-					 
-
-
-<!-- 																																			 -->					 
-					 
-    <table cellspacing="2" cellpadding="2"   width=95%>
-     <tr >
-        <td class="Titolo" colspan=8 ><font class="label"> Dati Modificabili </font></td>
-    </tr>
-    </table>
-    <br>
-
-      <table cellspacing="2" cellpadding="2"   width=95%>
-    <tr>
-      <td class="l">Data Emissione<font class="ob"> (*)</font></td>
-      <td class="L">
-        <input value="<%=DateUtils.getDateToString(data_emissione,"dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
-        <input value="<%=DateUtils.getDateToString(data_emissione,"MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > /
-        <input value="<%=DateUtils.getDateToString(data_emissione,"yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)">
-      </td>
-    </tr>
-     </table>
-    
-         <br>
-    <table cellspacing="2" cellpadding="2"   width=95%>
-    	<tr>
-        	<td class="Titolo" colspan=2 width=50%> Oggetto </td>
-        	<td class="l" colspan=2 width="20%"> Seleziona </td>
-        	<td class="Titolo" colspan=2 width=50%> specificare esito per ciascuno oggetto: </td>
-    	</tr>
-    <%
-   for (int i=0; i< lTenori.length;i++)
-   {
-    %>
-	       <tr>
-	        <td class="l"  colspan=2 width="25%">
-	           <input Title="Oggetto" 					  name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE %>" 	value="<%=lTenori[i].getDescrOggettoTenore()%>"  readonly size=60%>
-	           <input Title="ID Tenore" 	type="hidden" name="<%=ICostantiTenore.CAMPO_ID_TENORE %>"	 			value="<%=lTenori[i].getIdTenore().toString()%>" >
-	           <input Title="Cod Oggetto" 	type="hidden" name="<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE %>" 	value="<%=lTenori[i].getCodOggettoTenore()%>" >
-	       </td>
-	        
-	        <td class ="l"colspan=2 width="20%">
-	        	<input value="" type="radio" onclick="Javascript:return QualeLiberazioneConcede(<%=lTenori[i].getCodOggettoTenore()%>,<%=i %>);" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>" >&nbsp;&nbsp;&nbsp;  
-	        </td>
-	                
-	        <td class="l" colspan=2>
-	         <select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>">
-	             <%=esiti[i]%>
-	         </select>
-	        </td>
-	      </tr>
-    <%
-   }
-    %>
-    </table>
-    <br> 
-    <%
-   for (int indTeno = 0; indTeno < lTenori.length; indTeno++)
-   {
-	  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	  // siesLogger.debug(" ------------------------------------------------> INIZIO GIRO - indTeno = " + indTeno);
-		if (lTenori[indTeno].getCodOggettoTenore().compareTo("2130") == 0)
-		{ 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("tenore oggetto 2130 L.A. normale ");
-		%>
-		
-	<!--  	> > >  		INIZIO PARTE CON LE DIV PER 	LIBERAZIONE ANTICIPATA normale ( L.A.)		  	< < < 	-->	
-		
-			<div id="tipoconcessioneLA" style="position: relative; top: 0; left: 0;" >  
-		   		<table>
-		      		<tr>
-		        		<td class="l"> Modalità di scelta dei periodi di concessione </td>
-		      		</tr>
-					<tr>
-				<% if (perUnicoConcLA_dalal == true || perUnicoConcLA_sologg == true )
-					{ 
-						// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						//siesLogger.debug(" L.A. unico - numLA[0] -> " + numLA[0]); 	%>	
-				         	<td> <input value="S" onclick="Javascript:return AbilitaSemestri();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>"  > per semestri &nbsp;
-				            <input value="C" onclick="Javascript:return AbilitaPeriodo();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>" CHECKED > unico periodo</td>
-				<%   }
-					 else
-					 {	
-						 // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						 //siesLogger.debug(" NO PERIODO - L.A. semestr - numLA[1] -> " + numLA[1]); %> 
-				      		<td> <input value="S" onclick="Javascript:return AbilitaSemestri();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>"  CHECKED > per semestri &nbsp;
-				           	<input value="C" onclick="Javascript:return AbilitaPeriodo();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>" > unico periodo</td>
-				<%	 } %>
-				      </tr>
-				      <tr> <td>&nbsp;</td> </tr>
-				</table>
-				
-			</div>	<!--  chiude DIV id="tipoconcessioneLA" -->
-			
-			<div id="comune" style="position: relative; top: 0; left: 0;" >
-			
-			  <%if ( semestriLA > 0) 
-			  	{%>
-			  		<div id="semestri" style="position: relative; top: 0; left: 0; " >
-			  <%}
-			    else  
-			    { %>
-			        <div id="semestri" style="position: relative; top: 0; left: 0; display:none; ">
-	       <%   }%>
-	       
-			    <table cellspacing="2" cellpadding="2" width=26%>
-			    	<tr>
-			        	<td class="Titolo" colspan=6> Semestri concessi:&nbsp;&nbsp;&nbsp; </td>
-			    	</tr>
-			    </table>
-			    
-			    <table width=26%>
-  <%		   
- // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
- /* siesLogger.debug("--> C - L.A. - Period num[0] = "+numLA[0] ); 
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C - L.A. - semest num[1] = "+numLA[1] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C - L.A. - Rigett num[2] = "+numLA[2] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C - L.A. - Inammi num[3] = "+numLA[3] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C - L.A. - NLP    num[4] = "+numLA[4] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C - L.A. - Scompu num[5] = "+numLA[5] ); 
- */ 
-  				for (int ii = 0; ii <NumRighe; ii++)
-			    {    
-			    	%>
-			    	<tr>
-  	<%
-			      	for (int j=0;j<NumColonne;j++)
-			      	{	
-			      		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			      		//siesLogger.debug("--> C int j = "+j ); 
-			      		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			      		//siesLogger.debug("--> C int i*NumColonne+j = "+(i*NumColonne+j) ); 
-			      		
-					//	if ((((i*NumColonne+j) < num[0]) || ((i*NumColonne+j) < num[4])) && (semestriLA > 0) ) 
-						if ((((ii*NumColonne+j) < numLA[1]) || ((ii*NumColonne+j) < numLA[5])) && (semestriLA > 0) ) 
-			      		{ 			
-			      				
-			      			%>
-			      			<td width=3%><span id="SL<%=ii*NumColonne+j%>" style="color=red;font-weight:bold;">Giorni 45</span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=ii*NumColonne+j%>');"></td>
-			<%     		}
-			       		else 
-			       		{ 	%>
-			       			<td width=3%><span id="SL<%=ii*NumColonne+j%>" style="color=navy;font-weight:bold;">Giorni 45</span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=ii*NumColonne+j%>');"></td>
-			<%     		}
-						
-			    	} 	%>
-			    	
-			        </tr>
-			        
-	     <%		}		%>
-			     </table>
-			     
-			</div>	<!--  chiude DIV = "semestri" -->
-						
-			  <%if ( semestriLA > 0) 
-			  	{
-				  	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  	//siesLogger.debug("--> C Div periododo NONE  = "+numLA[0] ); 	%>
-			  		<div id="periodo" style="position: relative; top: 0; left: 0; display:none; " >
-			  <%}
-			    else  
-			    { 
-			    	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			    	//siesLogger.debug("--> C Div periododo DISPLAY  = "+numLA[0] );  %>
-			    	<div id="periodo" style="position: relative; top: 0; left: 0; " >
- <%			    }	%>
- 
-			    	<table cellspacing="2" cellpadding="2" width=26%>
-			      		<tr>
-			        		<td class="Titolo" colspan=6> Periodo concesso:&nbsp;&nbsp;&nbsp; </td>
-			      		</tr>
-			    	</table>
-			    		
-			    	<table width=26%>
-			      		<tr>
-			<%	//	if ( ((num[0] > 0) || (num[4] > 0)) && (semestriLA == 0) ) // Rimane num[0] perchè trttasi di Periodo 
-					if ( ((numLA[0] > 0) || (numLA[5] > 0)) && (semestriLA == 0) && (perUnicoConcLA_dalal == true) )
-			      	{ %>
-			       			<td width=3%><span id="SL<%=IndPer%>" style="color=red;font-weight:bold;">Periodo  </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndPer%>');"></td>
-			<%      }
-			        else
-			        { %>
-			       			<td width=3%><span id="SL<%=IndPer%>" style="color=navy;font-weight:bold;">Periodo  </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndPer%>');"></td>
-			<%      } %>
-			      		</tr>
-			    	</table>
-			    	
-			  </div>	<!--  chiude DIV id="periodo" -->
-			
-			<%
-			int jDate = 0;
-			String iChecked = "";
-			
-			for ( int t = 0; t < NumCheck; t++)
-			{
-			
-				iChecked = "";
-				if (plam_arrayLA[t] != null)
-				{
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				//	siesLogger.debug("--------------> C Plam_arrayLA[t] NON nullo -  ichecked = t = "+t ); 
-					iChecked = "checked";
-				}	
-					
-			%>
-			<div id="L<%=t%>" style="position: relative; top: -120; left: 500; display:none;" >
-			  <table>
-			   <!-- COSTRUZIONE DEI CAMPI DATA DAL - AL -->
-			   <% 
-			   
-			   // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			   //siesLogger.debug("--> C Prima del ciclo for per le date Dal Al - NumDate = "+NumDate+" t = "+t ); 
-			    for (int k=0; k<NumDate; k++)
-				{
-			    	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			    	//siesLogger.debug("-----------------> t = "+t+" - k = "+k+" - plam_arrayLA[t]lengh = "+plam_arrayLA[t]);
-				   %>
-			    <tr>
-			      <td class=l>
-				  	Dal
-				  	<% 	
-				 /* 	if ((((t < num[0]) || (t < num[4])) && (plam_array[t] != null) && (k < plam_array[t].length) ) ||
-				  		((t == (IndPer)) && (num[0] > 0) && (plam_array[t] != null) && (k < plam_array[t].length) ) ||
-				  		((t == (IndRig)) && (num[1] > 0) && (plam_array[t] != null) && (k < plam_array[t].length) ) ||
-				  		((t == (IndIna)) && (num[2] > 0) && (plam_array[t] != null) && (k < plam_array[t].length) ) ||
-				  		((t == (IndNlp)) && (num[3] > 0) && (plam_array[t] != null) && (k < plam_array[t].length) ))	
-				 */
-				 
-				 //  Per semesri t<num[1] - per periodi t<num[0]
-				 
-				  	if (((((t < numLA[1]) || (t < numLA[5])) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
-				  			|| ((t == (IndPer)) && (numLA[0] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
-				  			|| ((t == (IndRig)) && (numLA[2] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
-				  			|| ((t == (IndIna)) && (numLA[3] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
-				  			|| ((t == (IndNlp)) && (numLA[4] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length)))
-				  		&& plam_arrayLA[t][k] != null) {
-				  		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		// siesLogger.debug("--> C LA DENTRO for per le date Dal Al -  t  = "+t+"  k = "+k );
-				  		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		// siesLogger.debug("--> C LA DENTRO for per le date Dal Al - plam_arrayLA[t] = "+plam_arrayLA[0]);
-				  	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  	//	siesLogger.debug("--> C LA DENTRO for per le date Dal Al - plam_arrayLA[t]lengh = "+plam_arrayLA[t].length);
-			%>
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataInizio(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataInizio(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataInizio(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-					     	&nbsp;&nbsp;
-					     	Al
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataFine(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataFine(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataFine(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-			      <% 
-				  	} else {
-				  		%>
-					       <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>" maxlength="4" size="4" value="" <%=IWebConstants.UTIL_DATA_ANNO%>>
-					     	&nbsp;&nbsp;
-					     	Al
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
-			     <%  } %>
-			     
-			      </td>
-			    </tr>
-		  
-		  <%	}%>
-			 </table>
-			     <%
-			      if (t < NumTotaleSemestri )
-			     {
-			     %>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_CONCESSI%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (t == IndPer)
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_PERIODO%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (t == (IndRig))
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_RIGETTATI%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (t == ( IndIna) )
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_INAMMISSIBILI%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (t == ( IndNlp) )
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_NLP%>" value=1 <%=iChecked%> style="display:none;">
-			  <% } %>
-			  
-			</div>
-			<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
-			<%-- chiude DIV id="L<%=i%>" --%>
-		
-		<%	 }%>
-			
-			    <table width=35%>
-			    <tr>
-			      <td class="l">Totale giorni concessi </td>
-			      <td class="l">
-			        <input id="giornidiLA" Title="TotGiorni_LA" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>" value="" size=5  onFocus="javascript:rifiutaFocusSemestri()">
-			      </td>
-			    </tr>
-			    </table>
-			    
-			  </div>	<!--  chiude DIV id="comune" -->
-			
-			<br>
-			
-			<div id="resto" style="position: relative; top: 0; left: 0;" >
-			    <table cellspacing="2" cellpadding="2" width=35%>
-			    <tr>
-			        <td class="Titolo" colspan=6> Periodi non concessi:&nbsp;&nbsp;&nbsp; </td>
-			    </tr>
-<%
-			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			/*	siesLogger.debug("--> C - NumTotaleSemestri = "+NumTotaleSemestri ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C - IndRig = "+IndRig ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C - IndIna = "+IndIna ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C - IndNlp = "+IndNlp ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C - IndPer = "+IndPer ); 
-			*/	
-%>			    
-			    </table>
-			    <table width=35%>
-			      <% if (numLA[(IndRig+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati    </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=IndRig%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati    </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndRig%>');"></td>
-			       <%     }  %> 
-			      <% if (numLA[(IndIna+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili    </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=IndIna%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili    </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndIna%>');"></td>
-			       <%     }  %> 
-			      <% if (numLA[(IndNlp+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=IndNlp%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndNlp%>');"></td>
-			       <%     }  %>     
-			   </table>
-			</div>		<!-- Chiude DIV id='resto' -->
-			   
-  <!--  chiusa qui da me (prima che ci fossero le L.A. SPECIALE e INTEGRAZIONE L.A. , che ora attaccherò qui sotto,
-  		la div veniva chiusa alla fine form, sotto al bottone e ai campi hidden -->	
-  			
-<%		}
-		else if (lTenori[indTeno].getCodOggettoTenore().compareTo("2131") == 0)
-		{				
-            // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-            siesLogger.debug("tenore oggetto 2131 L.A. Speciale = "); 	
-%>
-	<!--  	> > >  		INIZIO PARTE CON LE DIV PER 	LIBERAZIONE ANTICIPATA SPECIALE ( L.A.S.)		  	< < < 	-->	
-
-			<div id="tipoconcessione_SPE" style="position: relative; top: 0; left: 0;" >  
-		   		<table>
-		      		<tr>
-		        		<td class="l"> Modalità di scelta dei periodi di concessione </td>
-		      		</tr>
-					<tr>
-				<% if (perUnicoConcLS_dalal == true || perUnicoConcLS_sologg == true )
-					{ 
-						// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						//	siesLogger.debug(" numLS[0] SPE periodo CHECKED -> - per = " + numLS[0]); 	%>	
-				         	<td> <input value="S" onclick="Javascript:return AbilitaSemestri_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>"  > per semestri &nbsp;
-				            <input value="C" onclick="Javascript:return AbilitaPeriodo_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>" CHECKED > unico periodo </td>
-				<%   }
-					 else 
-					 {	
-						// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						//	 siesLogger.debug(" NO PERIODO - numLS[1] SPE semestri CHECKED-> - sem = " + numLS[1]); %> 
-				      		<td> <input value="S" onclick="Javascript:return AbilitaSemestri_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>"  CHECKED > per semestri &nbsp;
-				           	<input value="C" onclick="Javascript:return AbilitaPeriodo_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>" > unico periodo </td>
-				<%	 } %>					
-
-				      </tr>
-				      <tr> <td>&nbsp;</td> </tr>
-				</table>
-				
-			</div>	<!--  chiude DIV id="tipoconcessione_SPE" -->
-			
-			<div id="comune_SPE" style="position: relative; top: 0; left: 0;" >
-			
-			  <%if ( semestriLS > 0) 
-			  	{
-				  	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  	//	siesLogger.debug("--> C semestri_SPE - display_block  ");
-			  		%>
-			  		<div id="semestri_SPE" style="position: relative; top: 0; left: 0; " >
-			  <%}
-			    else  
-			    { 
-			    	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			    	//	siesLogger.debug("--> C semestri_SPE - display_none ");
-			    	%>
-			        <div id="semestri_SPE" style="position: relative; top: 0; left: 0; display:none; ">
-	       <%   }%>
-	       
-			    <table cellspacing="2" cellpadding="2" width=26%>
-			    	<tr>
-			        	<td class="Titolo" colspan=6> Semestri Concessi:&nbsp;&nbsp;&nbsp; </td>
-			    	</tr>
-			    </table>
-			    
-			    <table width=26%>
-  <%		   
-/* 
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _SPE Period num[0] = "+numLS[0] ); 
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _SPE semest num[1] = "+numLS[1] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _SPE Rigett num[2] = "+numLS[2] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _SPE Inammi num[3] = "+numLS[3] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _SPE NLP    num[4] = "+numLS[4] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _SPE Scompu num[5] = "+numLS[5] ); 
-*/  
-  				for (int r = 0; r <NumRighe; r++)
-			    {    
-			    	%>
-			    	<tr>
-  	<%
-			      	for (int j=0;j<NumColonne;j++)
-			      	{	
-			      		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			      		//	siesLogger.debug("--> C _SPE int j = "+j ); 
-			      		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			      		//	siesLogger.debug("--> C _SPE int r*NumColonne+j = "+(r*NumColonne+j) ); 
-
-						if ((((r*NumColonne+j) < numLS[1]) || ((r*NumColonne+j) < numLS[5])) && (semestriLS > 0) ) 
-			      		{ 			
-			      				
-			      			%>
-			      			<td width=3%><span id="SL_SPE<%=r*NumColonne+j%>" style="color=red;font-weight:bold;">Giorni 75</span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=r*NumColonne+j%>');"></td>
-			<%     		}
-			       		else 
-			       		{ 	%>
-			       			<td width=3%><span id="SL_SPE<%=r*NumColonne+j%>" style="color=navy;font-weight:bold;">Giorni 75</span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=r*NumColonne+j%>');"></td>
-			<%     		}
-						
-			    	} 	%>
-			    	
-			        </tr>
-			        
-	     <%		}		%>
-			     </table>
-			     
-			</div>	<!--  chiude DIV = "semestri_SPE" -->
-						
-			  <%if ( semestriLS > 0) 
-			  	{
-				  	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  	//	siesLogger.debug("--> C periodo_SPE - display_none ");
-			  		%>
-			  		<div id="periodo_SPE" style="position: relative; top: 0; left: 0; display:none; " >
-			  <%}
-			    else  
-			    { 
-			    	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			    	//	siesLogger.debug("--> C periodo_SPE  - display -  ");
-			    	%>
-			    	<div id="periodo_SPE" style="position: relative; top: 0; left: 0; " >
- <%			    }	%>
- 
-			    	<table cellspacing="2" cellpadding="2" width=26%>
-			      		<tr>
-			        		<td class="Titolo" colspan=6> Periodo Concesso:&nbsp;&nbsp;&nbsp; </td>
-			      		</tr>
-			    	</table>
-			    		
-			    	<table width=26%>
-			      		<tr>
-			<%		if ( ((numLS[0] > 0) || (numLS[5] > 0)) && (semestriLS == 0) && (perUnicoConcLS_dalal == true) )
-			      	{ %>
-			       			<td width=3%><span id="SL_SPE<%=IndPer%>" style="color=red;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndPer%>');"></td>
-			<%      }
-			        else
-			        { %>
-			       			<td width=3%><span id="SL_SPE<%=IndPer%>" style="color=navy;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndPer%>');"></td>
-			<%      } %>
-			      		</tr>
-			    	</table>
-			    	
-			  </div>	<!--  chiude DIV id="periodo_SPE" -->
-			
-			<%
-			int jDate = 0;
-			String iChecked = "";
-			
-			for ( int in=0; in<NumCheck; in++)
-			{
-			
-				iChecked = "";
-				if (plam_arrayLS[in] != null)
-				{
-					// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					//siesLogger.debug("--> C SPE - Plam_arrayLS[in] NON nullo  - ichecked = in = "+in ); 
-					iChecked = "checked";
-				}	
-					
-			%>
-			<div id="L_SPE<%=in%>" style="position: relative; top: -120; left: 500; display:none;" >
-			  <table>
-			   <!-- COSTRUZIONE DEI CAMPI DATA DAL - AL -->
-			   <% 
-			   
-			   // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			   //siesLogger.debug("--> C Prima del ciclo for per le date Dal Al - NumDate = "+NumDate+" in = "+in ); 
-			    for (int k=0; k<NumDate; k++)
-				{
-				   %>
-			    <tr>
-			      <td class=l>
-				  	Dal
-				  	<% 	
-				 //  Per semesri i<numLS[1] - per periodi i<numLS[0]
-						 
-				  	if (((((in < numLS[1]) || (in < numLS[5])) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
-				  			|| ((in == (IndPer)) && (numLS[0] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
-				  			|| ((in == (IndRig)) && (numLS[2] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
-				  			|| ((in == (IndIna)) && (numLS[3] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
-				  			|| ((in == (IndNlp)) && (numLS[4] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length)))
-				  		&& plam_arrayLS[in][k] != null) {
-				  		 // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		 //	siesLogger.debug("--> C LS DENTRO for per le date Dal Al -  in  = "+in+"  k = "+k );
-				  		 // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		 //	siesLogger.debug("--> C LS DENTRO for per le date Dal Al - plam_arrayLS[in] = "+plam_arrayLS[0]);
-				  		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		//	siesLogger.debug("--> C LS DENTRO for per le date Dal Al - plam_arrayLS[in]lengh = "+plam_arrayLS[in].length);
-%>
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataInizio(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataInizio(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataInizio(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-					     	&nbsp;&nbsp;
-					     	Al
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataFine(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataFine(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_SPE%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataFine(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-<%
-				  		} else { 
-%>
-					       <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE%>" maxlength="4" size="4" value="" <%=IWebConstants.UTIL_DATA_ANNO%>>
-					     	&nbsp;&nbsp;
-					     	Al
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_SPE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_SPE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_SPE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
-			     <%  } %>
-			     
-			      </td>
-			    </tr>
-		  
-		  <%	}%>
-			 </table>
-			     <%
-			      if (in < NumTotaleSemestri )
-			     {
-			     %>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_CONCESSI_SPE%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (in == IndPer)
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_PERIODO_SPE%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (in == (IndRig))
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_RIGETTATI_SPE%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (in == ( IndIna) )
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_INAMMISSIBILI_SPE%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (in == ( IndNlp) )
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_NLP_SPE%>" value=1 <%=iChecked%> style="display:none;">
-			  <% } %>
-			  
-			</div>
-			<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
-			<%-- chiude DIV id="L_SPE<%=in%>" --%>
-		
-		<%	 }%>
-			
-			    <table width=35%>
-			    <tr>
-			      <td class="l">Totale Giorni Concessi</td>
-			      <td class="l">
-			        <input id="giorni_SPE" Title="TotGiorni_SPE" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>" value="" size=5  onFocus="javascript:rifiutaFocusSemestri_SPE()">
-			      </td>
-			    </tr>
-			    </table>
-			    
-			  </div>	<!--  chiude DIV id="comune_SPE" -->
-			
-			<br>
-			
-			<div id="resto_SPE" style="position: relative; top: 0; left: 0;" >
-			    <table cellspacing="2" cellpadding="2" width=35%>
-			    <tr>
-			        <td class="Titolo" colspan=6> Periodi Non Concessi:&nbsp;&nbsp;&nbsp; </td>
-			    </tr>
-<%
-			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			/*	siesLogger.debug("--> C _SPE - NumTotaleSemestri = "+NumTotaleSemestri ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _SPE - IndRig = "+IndRig ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _SPE - IndIna = "+IndIna ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _SPE - IndNlp = "+IndNlp ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _SPE - IndPer = "+IndPer ); 
-			*/	
-%>			    
-			    </table>
-			    <table width=35%>
-			      <% if (numLS[(IndRig+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL_SPE<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=IndRig%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL_SPE<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndRig%>');"></td>
-			       <%     }  %> 
-			      <% if (numLS[(IndIna+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL_SPE<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=IndIna%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL_SPE<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndIna%>');"></td>
-			       <%     }  %> 
-			      <% if (numLS[(IndNlp+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL_SPE<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=IndNlp%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL_SPE<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndNlp%>');"></td>
-			       <%     }  %>     
-			   </table>
-			</div>		<!-- Chiude DIV id='resto_SPE' -->
-
-<%            
+// CICLO FOR: PARTO DA 'SEMESTRI CONCESSI' (titolo[1] + num[1]) e ARRIVO  
+// FINO A  'PERIODI NON CONCESSI N.L.P./N.D.P' (titolo[4] + num[4]) 
+// Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
+for (int k= 1; k < 5; k++) {
+	if (numLA[k] > 0) {
+		Iterator itxC = LicenzePeriodi.iterator();
+		while (itxC.hasNext()) {
+  			LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC.next();
+     		if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null) {
+				if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LA") == 0) {
+					if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLA[k]) == 0) {
+						if (lLicPerConc.getLicenza() != null
+								&& lLicPerConc.getLicenza().getFlagScorta() != null
+								&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") != 0) {
+							if (lLicPerConc != null && lLicPerConc.getPeriodi() != null) {
+								nLA[k]++;
+		           				PeriodoLibAnticipataModel[] p = lLicPerConc.getPeriodi();
+		           				plam_arrayLA[plamLA_i] = lLicPerConc.getPeriodi();
+		           				// si salva i periodi che verranno dettagliati poi nella form
+			      			} // chiude if (lLicPerConc != null ...
+						} // chiude if (lLicPerConc.getLicenza() != null && ...
+				   		if ((k == 1) && (plamLA_i < NumTotaleSemestri)) { // era k == 0
+							plamLA_i++;
+					 	}
+					} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().com
+				}
+     		}
+   		} // chiude while (itxC.hasNext())
+	    if ((k == 1) && (plamLA_i < NumTotaleSemestri)) {
+	    	plamLA_i = NumTotaleSemestri + 1;
+	    } else {
+			plamLA_i++;
 		}
-		else if (lTenori[indTeno].getCodOggettoTenore().compareTo("2132") == 0)
-		{
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("tenore oggetto 2132 L.A. Integrazione ");
+  	} // chiude if (num[k] > 0)
+	else {
+		// metto (if k == 1) per avere i periodi NON CONCESSI
+		if (k == 1) {
+			plamLA_i = NumTotaleSemestri + 1;
+	 	} else {
+			plamLA_i++;
+		}
+	}	
+} // chiude for (int k= 1; k < 5; k++)
+	  
+// Aggiunta per modifica Ordinanza RECLAMA LA - 19/10/2009:
+// in mezzo ci sono le aggiunte per la Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014  
+if (numLA[5] > 0) { 
+	Iterator itxC = LicenzePeriodi.iterator();
+	int plamS = 0;
+	while (itxC.hasNext()) {
+		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC.next();
+		if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLA[5]) == 0) {
+			nLA[5]++;
+			PeriodoLibAnticipataModel[] psc = lLicPerConc.getPeriodi();
+			if (lLicPerConc.getLicenza().getFlagScorta() != null && lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0)
+				plam_arrayLA[NumTotaleSemestri] = lLicPerConc.getPeriodi();
+			else {
+				plam_arrayLA[plamS] = lLicPerConc.getPeriodi();
+				plamS++;
+			}
+		} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(cod[5]) == 0)
+	}	// chiude while (itxC.hasNext())
+} // chiude if (num[5] > 0) 
+// Fine Aggiunta > Fine nuova parte introdotta 20/4/2009
+// FINE PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A.
+
+// INIZIO PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A.SSPECIALE L.A.S.
+// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+siesLogger.debug("--> C Inizio Modifica L.A. Spec - Tot giorni LS = "+TotggLS ); 
+
+int[] numLS  = {0,0,0,0,0,0};
+int[] nLS = {0,0,0,0,0,0};
+String[] codLS = {"C","C","R","I","N","S"};
+int sceltaSemestriLS = 1;
+int plamLS_i = 0;
+int plamLS_j = 0;
+
+for (int jCheck=0; jCheck<NumCheck; jCheck++) {
+	plam_arrayLS[jCheck] = null;
+	periodiLS[jCheck] = 0;
+}
+itx = LicenzePeriodi.iterator();
+// Conteggio delle licenze distinte per tipo
+while (itx.hasNext()) {
+	LicenzaPeriodiLibAnticipataModel lLicPer = (LicenzaPeriodiLibAnticipataModel) itx.next();
+	if (lLicPer.getLicenza().getDescrStatoPermesso() != null) {
+		if (lLicPer.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LS") == 0) {
+			if (lLicPer.getLicenza().getFlagConcesso().compareTo("C") == 0)  {
+				if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0) {
+	          		numLS[0]++;
+	                plamLS_i = NumTotaleSemestri;
+	                sceltaSemestriLS = 0;
+	    	    } else if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("S") == 0)  {	
+	    	  		numLS[1]++;
+	    	  	}
+			} else if (lLicPer.getLicenza().getFlagConcesso().compareTo("R") == 0)
+				numLS[2]++;
+			else if (lLicPer.getLicenza().getFlagConcesso().compareTo("I")  == 0)
+          		numLS[3]++;
+			else if (lLicPer.getLicenza().getFlagConcesso().compareTo("N") == 0)
+				numLS[4]++;
+			else if (lLicPer.getLicenza().getFlagConcesso().compareTo("S") == 0) {
+				numLS[5]++;
+				if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0) {
+					plamLS_i = NumTotaleSemestri;
+					sceltaSemestriLS = 0;
+				}
+			}
+		}     
+	}
+}
+
+// I 'PERIODI CONCESSI' (titolo[0] + num[0];) SONO CALCOLATI FUORI CICLO - Nuova Ordinanza L.A. del Decreto Legge 2013/46	- 20/03/2014
+if (numLS[0] > 0) {
+	Iterator itxP1 = LicenzePeriodi.iterator();
+	while (itxP1.hasNext()) {
+		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxP1.next();
+	   	if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null) {
+			if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LS") == 0) {
+				if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0) {
+					if (lLicPerConc.getLicenza().getFlagScorta() != null
+							&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0) {
+						if (lLicPerConc != null && lLicPerConc.getPeriodi() != null) {
+							nLS[0]++;
+							PeriodoLibAnticipataModel[] pp = lLicPerConc.getPeriodi();
+						    plam_arrayLS[plamLS_i] = lLicPerConc.getPeriodi();
+			        	} // chiude if (lLicPerConc != nul
+	   				} // chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && 
+	   				if (plamLS_i < NumTotaleSemestri) {
+						plamLS_i++;
+					}
+    			} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0)
+			}
+		}		    	  
+	} // chiude while
+	if (plamLS_i < NumTotaleSemestri) {
+		plamLS_i = NumTotaleSemestri + 1;
+	} else {
+		plamLS_i++;
+	}			
+} // chiude if (numLS[0] > 0)
+  
+// CICLO FOR: PARTO DA 'SEMESTRI CONCESSI' (titolo[1] + num[1]) e ARRIVO  
+// FINO A  'PERIODI NON CONCESSI N.L.P./N.D.P' (titolo[4] + num[4]) 
+// Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014
+for (int k= 1; k < 5; k++) {
+	if (numLS[k] > 0) {
+		Iterator itxC1 = LicenzePeriodi.iterator();
+		while (itxC1.hasNext()) {
+			LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC1.next();
+			if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null) {
+				if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LS") == 0) {
+	        		if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[k]) == 0) {
+						if (lLicPerConc.getLicenza() != null
+								&& lLicPerConc.getLicenza().getFlagScorta() != null
+								&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") != 0) {
+				    		if (lLicPerConc != null && lLicPerConc.getPeriodi() != null) {
+						   		nLS[k]++;
+				           		PeriodoLibAnticipataModel[] p = lLicPerConc.getPeriodi();
+		           				plam_arrayLS[plamLS_i] = lLicPerConc.getPeriodi();
+		           				// si salva i periodi che verranno dettagliati poi nella form
+				  			} // chiude if (lLicPerConc != null ...
+				 		} // chiude if (lLicPerConc.getLicenza() != null && ...
+				     	if ((k == 1) && (plamLS_i < NumTotaleSemestri)) {
+							plamLS_i++;
+						}
+					} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().com
+				}
+			}	  
+		}	// chiude while (itxC.hasNext())
+    	if ((k == 1) && (plamLS_i < NumTotaleSemestri)) {
+       		plamLS_i = NumTotaleSemestri + 1;
+    	} else {
+			plamLS_i++;
+		}
+	} // chiude if (numLS[k] > 0)
+	else {
+		// metto (if k == 1) per avere i periodi NON CONCESSI
+		if (k == 1) {
+			plamLS_i = NumTotaleSemestri + 1;
+		} else {
+			plamLS_i++;
+		}
+	}
+} // chiude for (int k= 1; k < 5; k++)
+
+// Aggiunta per modifica Ordinanza RECLAMA LA - 19/10/2009:
+// in mezzo ci sono le aggiunte per la Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014  
+if (numLS[5] > 0) {
+	Iterator itxC2 = LicenzePeriodi.iterator();
+	int plamS = 0;
+	while (itxC2.hasNext()) {
+		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC2.next();
+		if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[5]) == 0) {
+			nLS[5]++;
+			PeriodoLibAnticipataModel[] psc = lLicPerConc.getPeriodi();
+			if (lLicPerConc.getLicenza().getFlagScorta() != null && lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0)
+				plam_arrayLS[NumTotaleSemestri] = lLicPerConc.getPeriodi();
+			else {
+				plam_arrayLS[plamS] = lLicPerConc.getPeriodi();
+				plamS++;
+			}
+		} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[5]) == 0)
+	} // chiude while (itxC.hasNext())
+} // chiude if (numLS[5] > 0) 
+// Fine Aggiunta >>> Fine nuova parte introdotta 20/4/2009
+// FINE PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A. SPECIALE (L.A.S)
+
+// INIZIO PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A.INTEGRAZIONE (L.A.I.)
+// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+siesLogger.debug("--> C Inizio Modifica L.A. Integra - Tot giorni LI = "+TotggLI );
+
+int[] numLI  = {0,0,0,0,0,0};
+int[] nLI = {0,0,0,0,0,0};
+String[] codLI = {"C","C","R","I","N","S"};
+int sceltaSemestriLI = 1;
+int plamLI_i = 0;
+int plamLI_j = 0;
+
+for (int jCheck=0; jCheck<NumCheck; jCheck++) {
+	plam_arrayLI[jCheck] = null;
+	periodiLI[jCheck] = 0;
+}
+Iterator itx11 = LicenzePeriodi.iterator();
+// Conteggio delle licenze distinte per tipo
+while (itx11.hasNext()) {
+	LicenzaPeriodiLibAnticipataModel lLicPer = (LicenzaPeriodiLibAnticipataModel) itx11.next();
+    if (lLicPer.getLicenza().getDescrStatoPermesso() != null) {
+		if (lLicPer.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LI") == 0) {
+      		if (lLicPer.getLicenza().getFlagConcesso().compareTo("C") == 0) {
+    	    	if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0) {
+	          		numLI[0]++;
+	                plamLI_i = NumTotaleSemestri;
+	                sceltaSemestriLI = 0;
+	    	    } else if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("S") == 0) {
+	    	  		numLI[1]++;
+	    	  	}
+	      	} else if (lLicPer.getLicenza().getFlagConcesso().compareTo("R") == 0) {
+				numLI[2]++;
+	      	} else if (lLicPer.getLicenza().getFlagConcesso().compareTo("I")  == 0)
+				numLI[3]++;
+	      	else if (lLicPer.getLicenza().getFlagConcesso().compareTo("N") == 0)
+	          	numLI[4]++;
+	      	else if (lLicPer.getLicenza().getFlagConcesso().compareTo("S") == 0) {
+	          	numLI[5]++;
+	          	if (lLicPer.getLicenza().getFlagScorta() != null && lLicPer.getLicenza().getFlagScorta().compareTo("C") == 0) {
+					plamLI_i = NumTotaleSemestri;
+	               	sceltaSemestriLI = 0;
+	          	}
+			}
+		}
+	}
+}
+
+// I 'PERIODI CONCESSI' (titolo[0] + num[0];) SONO CALCOLATI FUORI CICLO - Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014
+if (numLI[0] > 0) {
+	Iterator itxP11 = LicenzePeriodi.iterator();
+	while (itxP11.hasNext()) {
+  		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxP11.next();
+     	if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null) {
+   	  		if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LI") == 0) {
+    			if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0) {
+ 	    			if (lLicPerConc.getLicenza().getFlagScorta() != null
+ 	    					&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0) {
+						if (lLicPerConc != null && lLicPerConc.getPeriodi() != null) {
+							nLI[0]++;
+						    PeriodoLibAnticipataModel[] pp = lLicPerConc.getPeriodi();
+						    plam_arrayLI[plamLI_i] = lLicPerConc.getPeriodi();
+			        	} // chiude if (lLicPerConc != nul
+   					} // chiude if (lLicPerConc.getLicenza().getFlagScorta() != null && 
+   					if (plamLI_i < NumTotaleSemestri) {
+						plamLI_i++;
+					}
+   				} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo("C") == 0)
+   	  		}
+     	}
+	} // chiude while
+	if (plamLI_i < NumTotaleSemestri) {
+      	plamLI_i = NumTotaleSemestri + 1;
+	} else {
+		plamLI_i++;
+	}			
+} // chiude if (numLI[0] > 0)
+
+// CICLO FOR: PARTO DA 'SEMESTRI CONCESSI' (titolo[1] + num[1]) e ARRIVO  
+// FINO A  'PERIODI NON CONCESSI N.L.P./N.D.P' (titolo[4] + num[4]) 
+// Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014
+for (int k= 1; k < 5; k++) {
+	if (numLI[k] > 0) {
+		Iterator itxC111 = LicenzePeriodi.iterator();
+		while (itxC111.hasNext()) {
+       		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC111.next();
+			if (lLicPerConc.getLicenza().getDescrStatoPermesso() != null) {
+				if (lLicPerConc.getLicenza().getDescrStatoPermesso().substring(0, 2).compareTo("LI") == 0) {
+					if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLI[k]) == 0) {
+						if (lLicPerConc.getLicenza() != null
+								&& lLicPerConc.getLicenza().getFlagScorta() != null
+								&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") != 0) {
+							if (lLicPerConc != null && lLicPerConc.getPeriodi() != null) {
+				   				nLI[k]++;
+						       	PeriodoLibAnticipataModel[] p = lLicPerConc.getPeriodi();
+						     	plam_arrayLI[plamLI_i] = lLicPerConc.getPeriodi();
+						     	// si salva i periodi che verranno dettagliati poi nella form
+			      			} // chiude if (lLicPerConc != nul
+						} // chiude if (lLicPerConc.getLicenza() != null && 
+						if ((k == 1) && (plamLI_i < NumTotaleSemestri))  {
+							plamLI_i++;
+					 	}
+					} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().com
+				}
+	      	}
+   		} // chiude while (itxC.hasNext())
+	    if ((k == 1) && (plamLI_i < NumTotaleSemestri)) {
+			plamLI_i = NumTotaleSemestri + 1;
+		} else {
+			plamLI_i++;
+		}
+  	} // chiude if (numLI[k] > 0)
+	else {
+		// metto (if k == 1) per saltare i periodi NON CONCESSI
+		if (k == 1) {
+			plamLI_i = NumTotaleSemestri + 1;
+		} else {
+			plamLI_i++;
+		}
+	}
+} // chiude for (int k= 1; k < 5; k++)
+
+// Aggiunta per modifica Ordinanza RECLAMA LA - 19/10/2009:
+// in mezzo ci sono le aggiunte per la Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014  
+if (numLI[5] > 0) {
+	Iterator itxC22 = LicenzePeriodi.iterator();
+	int plamS = 0;
+	while (itxC22.hasNext()) {
+		LicenzaPeriodiLibAnticipataModel lLicPerConc = (LicenzaPeriodiLibAnticipataModel) itxC22.next();
+		if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLI[5]) == 0) {
+	        nLI[5]++;
+	        PeriodoLibAnticipataModel[] psc = lLicPerConc.getPeriodi();
+          	if (lLicPerConc.getLicenza().getFlagScorta() != null
+          			&& lLicPerConc.getLicenza().getFlagScorta().compareTo("C") == 0)
+          		plam_arrayLI[NumTotaleSemestri] = lLicPerConc.getPeriodi();
+     		else {
+       	  		plam_arrayLI[plamS] = lLicPerConc.getPeriodi();
+         	  	plamS++;
+			}
+		} // chiude if (lLicPerConc.getLicenza().getFlagConcesso().compareTo(codLS[5]) == 0)
+	} // chiude while (itxC.hasNext())
+} // chiude if (numLS[5] > 0) 
+// Fine Aggiunta > Fine nuova parte introdotta 20/4/2009
+// FINE PARTE CONTEGGI SPECIFICI DI ORDINANZA L.A. INTEGRAZIONE (L.A.I) -->  	  
+
+// Nuova Ordinanza L.A. del Decreto Legge 2013/46 - 20/03/2014 
+// Ciclo per totalizzare i gg di L.A, L.A. SPECIALE, e L.A. INTEGRAZIONE e 
+// 		 per  totalizzare i periodi e i semestri di L.A, L.A. SPECIALE, e L.A. INTEGRAZIONE
+//		 per totalizzare i le concessioni e i rigetti (inamm, NLP, scomputo)
+Iterator itxGG = LicenzePeriodi.iterator();
+while (itxGG.hasNext()) {
+	LicenzaPeriodiLibAnticipataModel lLicConc = (LicenzaPeriodiLibAnticipataModel) itxGG.next();
+	// concessione
+	if (lLicConc.getLicenza().getFlagConcesso().compareTo("C") == 0) {
+		if (lLicConc.getLicenza().getDescrStatoPermesso() != null) {
+			if (lLicConc.getLicenza().getDescrStatoPermesso().substring(0,2).compareTo("LA") == 0) {
+				/* L.A. NORMALE	*/
+				TotggLA += lLicConc.getLicenza().getNumeroGiorni().intValue(); /* TOT gg L.A. NORMALE concessi	*/
+			    if (lLicConc.getLicenza().getFlagScorta().compareTo("C") == 0) {
+			    	/* periodo Unico concesso	*/
+			    	if (lLicConc.getPeriodi() != null) {
+				    	perUnicoConcLA_dalal = true; /* periodo Unico con Periodi */
+			    	} else	 {
+			    		perUnicoConcLA_sologg = true; /* periodo Unico con soli gg SENZA Periodi */
+			    	}
+			    } else if (lLicConc.getLicenza().getFlagScorta().compareTo("S") == 0) {
+			    	/* Semestri concessi	*/
+			    	semestriLA++; /* TOT check semestri	*/
+			    }
+		 	} else if (lLicConc.getLicenza().getDescrStatoPermesso().substring(0,2).compareTo("LS") == 0) {
+		 		/* L.A. SPECIALE	*/
+	    		TotggLS += lLicConc.getLicenza().getNumeroGiorni().intValue(); /* TOT gg L.A. SPECIALE */
+				if (lLicConc.getLicenza().getFlagScorta().compareTo("C") == 0) {
+					/* periodo Unico concesso di L.A.S.	*/
+			   		if (lLicConc.getPeriodi() != null) {
+						perUnicoConcLS_dalal = true; /* periodo Unico con Periodi di L.A.S.	*/
+			   		} else {
+				  		perUnicoConcLS_sologg = true; /* periodo Unico con soli gg SENZA Periodi di L.A.S. */
+			   		}
+			   	} else if (lLicConc.getLicenza().getFlagScorta().compareTo("S") == 0) {
+			   		/* Semestri concessi di L.A.S.	*/
+    				semestriLS++; /* TOT check semestri di L.A.S. */
+			    }
+		    } else if (lLicConc.getLicenza().getDescrStatoPermesso().substring(0,2).compareTo("LI") == 0) {
+		    	/* L.A. INTEGRAZIONE	*/
+	    		TotggLI += lLicConc.getLicenza().getNumeroGiorni().intValue(); /* TOT gg L.A. INTEGRAZIONE */
+				if (lLicConc.getLicenza().getFlagScorta().compareTo("C") == 0) {
+					/* periodo Unico concesso di L.A.I.	*/
+			   		if (lLicConc.getPeriodi() != null) {
+				   		perUnicoConcLI_dalal = true; /* periodo Unico con Periodi	di L.A.I. */
+			   		} else {
+				   		perUnicoConcLI_sologg = true; /* periodo Unico con soli gg SENZA Periodi di L.A.I. */
+			   		}
+			   	} else if (lLicConc.getLicenza().getFlagScorta().compareTo("S") == 0) {
+			   		/* Semestri concessi	di L.A.I.	*/
+					semestriLI++; /* TOT check semestri	di L.A.I. */
+			    }
+		    }
+	    } else {
+	    	/* DescStatoPermesso = null - Concessione Vecchia Ordinanza L.A. */
+	       	if (datiOrdinanza.getOrdinanza().getNumGiorniLibanticipata() != null) 
+				TotggLAold = datiOrdinanza.getOrdinanza().getNumGiorniLibanticipata().intValue();
+	    }
+	} // chiude if (lLicConc.getLicenza().getFlagConcesso().compareTo("C") == 0)
+} /* chiude while */
 %>
+					 
+<table cellspacing="2" cellpadding="2"   width=95%>
+	<tr>
+    	<td class="Titolo" colspan=8 ><font class="label"> Dati Modificabili </font></td>
+	</tr>
+</table>
+<br>
+<table cellspacing="2" cellpadding="2"   width=95%>
+	<tr>
+  		<td class="l">Data Emissione<font class="ob"> (*)</font></td>
+  		<td class="L">
+			<input value="<%=DateUtils.getDateToString(data_emissione,"dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=DateUtils.getDateToString(data_emissione,"MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> /
+			<input value="<%=DateUtils.getDateToString(data_emissione,"yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+  		</td>
+	</tr>
+</table>
+<br>
+<table cellspacing="2" cellpadding="2"   width=95%>
+	<tr>
+    	<td class="Titolo" colspan=2 width=50%> Oggetto </td>
+    	<td class="l" colspan=2 width="20%"> Seleziona </td>
+    	<td class="Titolo" colspan=2 width=50%> specificare esito per ciascuno oggetto: </td>
+	</tr>
+<%
+for (int i=0; i< lTenori.length;i++) {
+%>
+	<tr>
+	 	<td class="l"  colspan=2 width="25%">
+	    	<input Title="Oggetto" name="<%=ICostantiTenore.CAMPO_DESCR_OGGETTO_TENORE%>" value="<%=lTenori[i].getDescrOggettoTenore()%>" readonly size=60%>
+			<input Title="ID Tenore" type="hidden" name="<%=ICostantiTenore.CAMPO_ID_TENORE%>" value="<%=lTenori[i].getIdTenore().toString()%>">
+			<input Title="Cod Oggetto" type="hidden" name="<%=ICostantiTenore.CAMPO_COD_OGGETTO_TENORE%>" value="<%=lTenori[i].getCodOggettoTenore()%>">
+		</td>
+	 	<td class ="l"colspan=2 width="20%">
+	 		<input value="" type="radio" onclick="Javascript:return QualeLiberazioneConcede(<%=lTenori[i].getCodOggettoTenore()%>,<%=i %>);" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_QUALE_LA_CONCEDE%>" >&nbsp;&nbsp;&nbsp;  
+		</td>
+		<td class="l" colspan=2>
+	 		<select Title="Cod Esito" name="<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>">
+				<%=esiti[i]%>
+	   		</select>
+		</td>
+	</tr>
+<%
+}
+%>
+</table>
+<br>
+<%
+for (int indTeno = 0; indTeno < lTenori.length; indTeno++) {
+	if (lTenori[indTeno].getCodOggettoTenore().compareTo("2130") == 0) {
+		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		siesLogger.debug("tenore oggetto 2130 L.A. normale ");
+%>
+<!-- INIZIO PARTE CON LE DIV PER LIBERAZIONE ANTICIPATA normale ( L.A.) -->	
+<div id="tipoconcessioneLA" style="position: relative; top: 0; left: 0;">  
+<table>
+	<tr>
+ 		<td class="l">Modalità di scelta dei periodi di concessione</td>
+	</tr>
+	<tr>
+<%
+		if (perUnicoConcLA_dalal == true || perUnicoConcLA_sologg == true) {
+%>	
+		<td>
+			<input value="S" onclick="Javascript:return AbilitaSemestri();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>"> per semestri &nbsp;
+            <input value="C" onclick="Javascript:return AbilitaPeriodo();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>" CHECKED> unico periodo
+        </td>
+<%
+		} else {
+%> 
+		<td>
+			<input value="S" onclick="Javascript:return AbilitaSemestri();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>" CHECKED> per semestri &nbsp;
+          	<input value="C" onclick="Javascript:return AbilitaPeriodo();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE%>"> unico periodo
+        </td>
+<%
+		}
+%>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+</table>
+</div>	<!-- chiude DIV id="tipoconcessioneLA" -->
 
-	<!--  	> > >  		INIZIO PARTE CON LE DIV PER 	LIBERAZIONE ANTICIPATA INTEGRAZIONE ( L.A.I.)		  	< < < 	-->	
-
-			<div id="tipoconcessione_INT" style="position: relative; display: none; top: 0; left: 0;" >  
-		   		<table>
-		      		<tr>
-		        		<td class="l"> Modalità di scelta dei periodi di Concessione </td>
-		      		</tr>
-					<tr>
-				<% if (perUnicoConcLI_dalal == true || perUnicoConcLI_sologg == true )
-					{ 
-						// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						//	siesLogger.debug(" numLI[0] INT - periodo CHECKED -> - per = " + numLI[0]); 	%>	
-				         	<td> <input value="S" onclick="Javascript:return AbilitaSemestri_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>"  > per Semestri &nbsp;
-				            <input value="C" onclick="Javascript:return AbilitaPeriodo_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>" CHECKED > Unico Periodo </td>
-				<%   }
-					 else 
-					 {	
-						 // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-						 //	siesLogger.debug(" NO PERIODO - numLI[1] INT semestri CHECKED-> - sem = " + numLI[1]); %> 
-				      		<td> <input value="S" onclick="Javascript:return AbilitaSemestri_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>"  CHECKED > per Semestri &nbsp;
-				           	<input value="C" onclick="Javascript:return AbilitaPeriodo_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>" > unico periodo </td>
-				<%	 } %>
-				      </tr>
-				      <tr> <td>&nbsp;</td> </tr>
-				</table>
-				
-			</div>	<!--  chiude DIV id="tipoconcessione_INT" -->
-			
-			<div id="comune_INT" style="position: relative; top: 0; left: 0;" >
-			
-			  <%if ( semestriLI > 0) 
-			  	{
-				  	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  	//	siesLogger.debug("--> C semestri_INT - display_block  ");
-			  		%>
-			  		<div id="semestri_INT" style="position: relative; top: 0; left: 0; " >
-			  <%}
-			    else  
-			    { 
-			    	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			    	//	siesLogger.debug("--> C semestri_INT - display_none ");
-			    	%>
-			        <div id="semestri_INT" style="position: relative; top: 0; left: 0; display:none; ">
-	       <%   }%>
-	       
-			    <table cellspacing="2" cellpadding="2" width=26%>
-			    	<tr>
-			        	<td class="Titolo" colspan=6> Semestri Concessi:&nbsp;&nbsp;&nbsp; </td>
-			    	</tr>
-			    </table>
-			    
-			    <table width=26%>
-  <%
- /* 
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _INT Period num[0] = "+numLI[0] ); 
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _INT semest num[1] = "+numLI[1] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _INT Rigett num[2] = "+numLI[2] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _INT Inammi num[3] = "+numLI[3] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _INT NLP    num[4] = "+numLI[4] );
-  // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-  siesLogger.debug("--> C _INT Scompu num[5] = "+numLI[5] ); 
- */ 
-  				for (int xx=0; xx<NumRighe; xx++)
-			    {    
-			    	%>
-			    	<tr>
-  	<%
-			      	for (int j=0;j<NumColonne;j++)
-			      	{	
-			      		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			      		//	siesLogger.debug("--> C _INT int j = "+j ); 
-			      		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			      		//	siesLogger.debug("--> C _INT int xx*NumColonne+j = "+(xx*NumColonne+j) ); 
- 
-						if ((((xx*NumColonne+j) < numLI[1]) || ((xx*NumColonne+j) < numLI[5])) && (semestriLI > 0) ) 
-			      		{ 			
-			      				
-			      			%>
-			      			<td width=3%><span id="SL_INT<%=xx*NumColonne+j%>" style="color=red;font-weight:bold;">Giorni 30</span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=xx*NumColonne+j%>');"></td>
-			<%     		}
-			       		else 
-			       		{ 	%>
-			       			<td width=3%><span id="SL_INT<%=xx*NumColonne+j%>" style="color=navy;font-weight:bold;">Giorni 30</span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=xx*NumColonne+j%>');"></td>
-			<%     		}
-						
-			    	} 	%>
-			    	
-			        </tr>
-			        
-	     <%		}		%>
-			     </table>
-			     
-			</div>	<!--  chiude DIV = "semestri_INT" -->
-						
-			  <%if ( semestriLI > 0) 
-			  	{
-				  	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  	//	siesLogger.debug("--> C periodo_INT - display_none - ");
-			  		%>
-			  		<div id="periodo_INT" style="position: relative; top: 0; left: 0; display:none; " >
-			  <%}
-			    else  
-			    { 
-			    	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			    	//	siesLogger.debug("--> C semes periodo_INT  display_block -  ");
-			    	%>
-			    	<div id="periodo_INT" style="position: relative; top: 0; left: 0; " >
- <%			    }	%>
- 
-			    	<table cellspacing="2" cellpadding="2" width=26%>
-			      		<tr>
-			        		<td class="Titolo" colspan=6> Periodo Concesso:&nbsp;&nbsp;&nbsp; </td>
-			      		</tr>
-			    	</table>
-			    		
-			    	<table width=26%>
-			      		<tr>
-			<%	//	 Rimane num[0] perchè trttasi di Periodo 
-					if ( ((numLI[0] > 0) || (numLI[5] > 0)) && (semestriLI == 0)  && (perUnicoConcLI_dalal == true) )
-			      	{ %>
-			       			<td width=3%><span id="SL_INT<%=IndPer%>" style="color=red;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndPer%>');"></td>
-			<%      }
-			        else
-			        { %>
-			       			<td width=3%><span id="SL_INT<%=IndPer%>" style="color=navy;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndPer%>');"></td>
-			<%      } %>
-			      		</tr>
-			    	</table>
-			    	
-			  </div>	<!--  chiude DIV id="periodo_INT" -->
-			
+<div id="comune" style="position: relative; top: 0; left: 0;">
+<%
+		if (semestriLA > 0) {
+%>
+<div id="semestri" style="position: relative; top: 0; left: 0; ">
+<%
+ 		} else {
+%>
+<div id="semestri" style="position: relative; top: 0; left: 0; display:none; ">
+<%
+		}
+%>
+<table cellspacing="2" cellpadding="2" width=26%>
+	<tr>
+    	<td class="Titolo" colspan=6>Semestri concessi:&nbsp;&nbsp;&nbsp;</td>
+	</tr>
+</table>
+<table width=26%>
+<% 
+		for (int ii = 0; ii <NumRighe; ii++) {
+%>
+	<tr>
+<%
+			for (int j=0; j<NumColonne; j++) {
+				if ((((ii*NumColonne+j) < numLA[1]) || ((ii*NumColonne+j) < numLA[5])) && (semestriLA > 0)) {
+%>
+		<td width=3%><span id="SL<%=ii*NumColonne+j%>" style="color=red;font-weight:bold;">Giorni 45 </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=ii*NumColonne+j%>');"></td>
+<%
+				} else {
+%>
+		<td width=3%><span id="SL<%=ii*NumColonne+j%>" style="color=navy;font-weight:bold;">Giorni 45 </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=ii*NumColonne+j%>');"></td>
+<%
+				}
+	    	}
+%>
+	</tr>
+<%
+		}
+%>
+</table>
+</div>	<!-- chiude DIV = "semestri" -->	
+<%
+		if ( semestriLA > 0) {
+%>
+<div id="periodo" style="position: relative; top: 0; left: 0; display:none;">
+<%
+		} else {
+%>
+<div id="periodo" style="position: relative; top: 0; left: 0;">	
+<%
+		}
+%>
+<table cellspacing="2" cellpadding="2" width=26%>
+	<tr>
+   		<td class="Titolo" colspan=6>Periodo concesso:&nbsp;&nbsp;&nbsp;</td>
+	</tr>
+</table>
+<table width=26%>
+	<tr>
+<%
+		if (((numLA[0] > 0) || (numLA[5] > 0)) && (semestriLA == 0) && (perUnicoConcLA_dalal == true)) {
+%>
+		<td width=3%><span id="SL<%=IndPer%>" style="color=red;font-weight:bold;">Periodo </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndPer%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL<%=IndPer%>" style="color=navy;font-weight:bold;">Periodo </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndPer%>');"></td>
+<%
+		}
+%>
+	</tr>
+</table>
+</div>	<!-- chiude DIV id="periodo" -->
+<%
+		int jDate = 0;
+		String iChecked = "";
+		for ( int t = 0; t < NumCheck; t++) {
+			iChecked = "";
+			if (plam_arrayLA[t] != null) {
+				iChecked = "checked";
+			}	
+%>
+<div id="L<%=t%>" style="position: relative; top: -120; left: 500; display:none;">
+<table>
+	<!-- COSTRUZIONE DEI CAMPI DATA DAL - AL -->
+<% 
+			for (int k=0; k<NumDate; k++) {
+%>
+	<tr>
+		<td class=l>
+			Dal
+<%
+	 			// Per semesri t<num[1] - per periodi t<num[0]
+			  	if (((((t < numLA[1]) || (t < numLA[5])) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
+			  			|| ((t == (IndPer)) && (numLA[0] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
+			  			|| ((t == (IndRig)) && (numLA[2] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
+			  			|| ((t == (IndIna)) && (numLA[3] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length))
+			  			|| ((t == (IndNlp)) && (numLA[4] > 0) && (plam_arrayLA[t] != null) && (k < plam_arrayLA[t].length)))
+			  		&& plam_arrayLA[t][k] != null) {
+%>
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataInizio(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataInizio(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataInizio(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+	     	&nbsp;&nbsp;
+	     	Al
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataFine(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataFine(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLA[t][k].getDataFine(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+				} else {
+%>
+	       	<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO%>" maxlength="4" size="4" value="" <%=IWebConstants.UTIL_DATA_ANNO%>>
+	     	&nbsp;&nbsp;
+	     	Al
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+				}
+%>
+		</td>
+	</tr>
+<%
+			}
+%>
+</table>
+<%
+			if (t < NumTotaleSemestri) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_CONCESSI%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (t == IndPer) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_PERIODO%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (t == (IndRig)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_RIGETTATI%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (t == ( IndIna)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_INAMMISSIBILI%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (t == ( IndNlp)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_NLP%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			}
+%>
+</div>
+<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
+<%-- chiude DIV id="L<%=i%>" --%>
+<%
+		}
+%>
+<table width=35%>
+	<tr>
+	  	<td class="l">Totale giorni concessi </td>
+	  	<td class="l">
+	    	<input id="giornidiLA" Title="TotGiorni_LA" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA%>" value="" size=5  onFocus="javascript:rifiutaFocusSemestri()">
+	  	</td>
+	</tr>
+</table>
+</div>	<!-- chiude DIV id="comune" -->
+<br>
+<div id="resto" style="position: relative; top: 0; left: 0;">
+<table cellspacing="2" cellpadding="2" width=35%>
+    <tr>
+        <td class="Titolo" colspan=6>Periodi non concessi:&nbsp;&nbsp;&nbsp;</td>
+    </tr>			    
+</table>
+<table width=35%>
+	<tr>
+<%
+		if (numLA[(IndRig+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=IndRig%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndRig%>');"></td>
+<%
+		}
+		if (numLA[(IndIna+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=IndIna%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndIna%>');"></td>
+<%
+		}
+		if (numLA[(IndNlp+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg value=2 onclick="Javascript:ViewLayer('<%=IndNlp%>');"></td>
 			<%
-			int jDate = 0;
-			String iChecked = "";
-			
-			for (int i1=0; i1<NumCheck; i1++)
-			{
-			
-				iChecked = "";
-				if (plam_arrayLI[i1] != null)
-				{
-					// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-					//siesLogger.debug("--> C INT Prima del ciclo for per le date Dal Al - ichecked = i1 = "+i1 ); 
-					iChecked = "checked";
-				}	
-					
-			%>
-			<div id="L_INT<%=i1%>" style="position: relative; top: -120; left: 500; display:none;" >
-			  <table>
-			   <!-- COSTRUZIONE DEI CAMPI DATA DAL - AL -->
-			   <% 
-			   
-			   // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-			   //siesLogger.debug("--> C INT Prima del ciclo for per le date Dal Al - NumDate = "+NumDate+" i1 = "+i1 ); 
-			    for (int k=0; k<NumDate; k++)
-				{
-				   %>
-			    <tr>
-			      <td class=l>
-				  	Dal
-				  	<% 	
-				 /* 	if ((((i < num[0]) || (i < num[4])) && (plam_array[i] != null) && (k < plam_array[i].length) ) ||
-				  		((i == (IndPer)) && (num[0] > 0) && (plam_array[i] != null) && (k < plam_array[i].length) ) ||
-				  		((i == (IndRig)) && (num[1] > 0) && (plam_array[i] != null) && (k < plam_array[i].length) ) ||
-				  		((i == (IndIna)) && (num[2] > 0) && (plam_array[i] != null) && (k < plam_array[i].length) ) ||
-				  		((i == (IndNlp)) && (num[3] > 0) && (plam_array[i] != null) && (k < plam_array[i].length) ))	
-				 */
-				  	if (((((i1 < numLI[1]) || (i1 < numLI[5])) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
-				  			|| ((i1 == (IndPer)) && (numLI[0] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
-				  			|| ((i1 == (IndRig)) && (numLI[2] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
-				  			|| ((i1 == (IndIna)) && (numLI[3] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
-				  			|| ((i1 == (IndNlp)) && (numLI[4] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length)))
-				  		&& plam_arrayLI[i1][k] != null) {
-				  		 	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		 	//siesLogger.debug("--> C INT DENTRO for per le date Dal Al -  i1  = "+i1+"  k = "+k );
-				  		 	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  		 	//siesLogger.debug("--> C INT DENTRO for per le date Dal Al - plam_arrayLI[i1] = "+plam_arrayLI[0]);
-				  			// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				  			//siesLogger.debug("--> C INT DENTRO for per le date Dal Al - plam_array[i1]lengh = "+plam_arrayLI[i1].length);
+		} else {
 %>
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataInizio(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataInizio(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataInizio(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-					     	&nbsp;&nbsp;
-					     	Al
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataFine(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataFine(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_INT%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataFine(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+		<td width=3%><span id="SL<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg value=1 onclick="Javascript:ViewLayer('<%=IndNlp%>');"></td>
 <%
-				  		} else {
+		}
 %>
-					       <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT%>" maxlength="4" size="4" value="" <%=IWebConstants.UTIL_DATA_ANNO%>>
-					     	&nbsp;&nbsp;
-					     	Al
-							<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_INT%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_INT%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-							/
-					        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_INT%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
-			     <%  } %>
-			     
-			      </td>
-			    </tr>
-		  
-		  <%	}%>
-			 </table>
-			     <%
-			      if (i1 < NumTotaleSemestri )
-			     {
-			     %>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_CONCESSI_INT%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (i1 == IndPer)
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_PERIODO_INT%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (i1 == (IndRig))
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_RIGETTATI_INT%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (i1 == ( IndIna) )
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_INAMMISSIBILI_INT%>" value=1 <%=iChecked%> style="display:none;">
-			     <% } else if (i1 == ( IndNlp) )
-			     {%>
-			    <input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_NLP_INT%>" value=1 <%=iChecked%> style="display:none;">
-			  <% } %>
-			  
-			</div>
-			<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
-			<%-- chiude DIV id="L_INT<%=i%>" --%>
-
-		<%	 }%>
-			
-			    <table width=35%>
-			    <tr>
-			      <td class="l">Totale Giorni Concessi</td>
-			      <td class="l">
-			        <input id="giorni_INT" Title="TotGiorni_LAI" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>" value="" size=5  onFocus="javascript:rifiutaFocusSemestri_INT()">
-			      </td>
-			    </tr>
-			    </table>
-			    
-			  </div>	<!--  chiude DIV id="comune_INT" -->
-			
-			<br>
-			
-			<div id="resto_INT" style="position: relative; top: 0; left: 0;" >
-			    <table cellspacing="2" cellpadding="2" width=35%>
-			    <tr>
-			        <td class="Titolo" colspan=6> Periodi Non Concessi:&nbsp;&nbsp;&nbsp; </td>
-			    </tr>
+	</tr>
+</table>
+</div> <!-- Chiude DIV id='resto' -->
 <%
-	/*
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _INT - NumTotaleSemestri = "+NumTotaleSemestri ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _INT - IndRig = "+IndRig ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _INT - IndIna = "+IndIna ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _INT - IndNlp = "+IndNlp ); 
-				// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug("--> C _INT - IndPer = "+IndPer );
-	*/			
-%>			    
-			    </table>
-			    <table width=35%>
-			      <% if (numLI[(IndRig+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL_INT<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL_INT<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
-			       <%     }  %> 
-			      <% if (numLI[(IndIna+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL_INT<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL_INT<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
-			       <%     }  %> 
-			      <% if (numLI[(IndNlp+1) - NumTotaleSemestri] > 0)  { %>
-			      <td width=3%><span id="SL_INT<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
-			<%     }
-			       else { %>
-			       <td width=3%><span id="SL_INT<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
-			       <%     }  %>     
-			   </table>
-			</div>		<!-- Chiude DIV id='resto_INT' -->
+	} else if (lTenori[indTeno].getCodOggettoTenore().compareTo("2131") == 0) {
+		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		siesLogger.debug("tenore oggetto 2131 L.A. Speciale = "); 	
+%>
+<!-- > > > INIZIO PARTE CON LE DIV PER	LIBERAZIONE ANTICIPATA SPECIALE ( L.A.S.) < < < -->	
+<div id="tipoconcessione_SPE" style="position: relative; top: 0; left: 0;">  
+<table>
+	<tr>
+ 		<td class="l"> Modalità di scelta dei periodi di concessione </td>
+	</tr>
+	<tr>
+<%
+		if (perUnicoConcLS_dalal == true || perUnicoConcLS_sologg == true) { 
+%>	
+		<td>
+			<input value="S" onclick="Javascript:return AbilitaSemestri_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>"> per semestri &nbsp;
+            <input value="C" onclick="Javascript:return AbilitaPeriodo_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>" CHECKED> unico periodo
+		</td>
+<%
+		} else {	
+%> 
+		<td>
+			<input value="S" onclick="Javascript:return AbilitaSemestri_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>" CHECKED > per semestri &nbsp;
+           	<input value="C" onclick="Javascript:return AbilitaPeriodo_SPE();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_SPE%>"> unico periodo
+		</td>
+<%
+		}
+%>					
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+</table>
+</div> <!-- chiude DIV id="tipoconcessione_SPE" -->
+<div id="comune_SPE" style="position: relative; top: 0; left: 0;">
+<%
+		if (semestriLS > 0) {
+%>
+<div id="semestri_SPE" style="position: relative; top: 0; left: 0; " >
+<%
+		} else { 
+%>
+<div id="semestri_SPE" style="position: relative; top: 0; left: 0; display:none; ">
+<%
+		}
+%>
+<table cellspacing="2" cellpadding="2" width=26%>
+	<tr>
+    	<td class="Titolo" colspan=6> Semestri Concessi:&nbsp;&nbsp;&nbsp; </td>
+	</tr>
+</table>
+<table width=26%>
+<%
+		for (int r = 0; r <NumRighe; r++) {
+%>
+	<tr>
+<%
+			for (int j=0; j<NumColonne; j++) {
+				if ((((r*NumColonne+j) < numLS[1]) || ((r*NumColonne+j) < numLS[5])) && (semestriLS > 0)) {
+%>
+		<td width=3%><span id="SL_SPE<%=r*NumColonne+j%>" style="color=red;font-weight:bold;">Giorni 75 </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=r*NumColonne+j%>');"></td>
+<%
+				} else {
+%>
+		<td width=3%><span id="SL_SPE<%=r*NumColonne+j%>" style="color=navy;font-weight:bold;">Giorni 75 </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=r*NumColonne+j%>');"></td>
+<%
+				}
+			}
+%>
+	</tr>
+<%
+		}
+%>
+</table>
+</div>	<!-- chiude DIV = "semestri_SPE" -->
+<%
+		if (semestriLS > 0) {
+%>
+<div id="periodo_SPE" style="position: relative; top: 0; left: 0; display:none;">
+<%
+		} else {
+%>
+<div id="periodo_SPE" style="position: relative; top: 0; left: 0;">
+<%
+		}
+%>
+<table cellspacing="2" cellpadding="2" width=26%>
+	<tr>
+   		<td class="Titolo" colspan=6>Periodo Concesso:&nbsp;&nbsp;&nbsp;</td>
+	</tr>
+</table>
+<table width=26%>
+	<tr>
+<%
+		if (((numLS[0] > 0) || (numLS[5] > 0)) && (semestriLS == 0) && (perUnicoConcLS_dalal == true)) {
+%>
+		<td width=3%><span id="SL_SPE<%=IndPer%>" style="color=red;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndPer%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_SPE<%=IndPer%>" style="color=navy;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndPer%>');"></td>
+<%
+		}
+%>
+	</tr>
+</table>
+</div>	<!-- chiude DIV id="periodo_SPE" -->
+<%
+		int jDate = 0;
+		String iChecked = "";
+		for (int in=0; in<NumCheck; in++) {
+			iChecked = "";
+			if (plam_arrayLS[in] != null) {
+				iChecked = "checked";
+			}	
+%>
+<div id="L_SPE<%=in%>" style="position: relative; top: -120; left: 500; display:none;">
+<table>
+	<!-- COSTRUZIONE DEI CAMPI DATA DAL - AL -->
+<% 
+			for (int k=0; k<NumDate; k++) {
+%>
+	<tr>
+		<td class=l>
+			Dal
+<% 	
+				// Per semestri i<numLS[1] - per periodi i<numLS[0]
+			  	if (((((in < numLS[1]) || (in < numLS[5])) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
+			  			|| ((in == (IndPer)) && (numLS[0] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
+			  			|| ((in == (IndRig)) && (numLS[2] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
+			  			|| ((in == (IndIna)) && (numLS[3] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length))
+			  			|| ((in == (IndNlp)) && (numLS[4] > 0) && (plam_arrayLS[in] != null) && (k < plam_arrayLS[in].length)))
+			  		&& plam_arrayLS[in][k] != null) {
+%>
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataInizio(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataInizio(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataInizio(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+	     	&nbsp;&nbsp;
+	     	Al
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataFine(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_SPE%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataFine(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_SPE%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLS[in][k].getDataFine(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+				} else { 
+%>
+	       	<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_SPE%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_SPE%>" maxlength="4" size="4" value="" <%=IWebConstants.UTIL_DATA_ANNO%>>
+	     	&nbsp;&nbsp;
+	     	Al
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_SPE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_SPE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_SPE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+				}
+%>
+		</td>
+    </tr>
+<%
+			}
+%>
+</table>
+<%
+			if (in < NumTotaleSemestri) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_CONCESSI_SPE%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (in == IndPer) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_PERIODO_SPE%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (in == (IndRig)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_RIGETTATI_SPE%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (in == (IndIna)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_INAMMISSIBILI_SPE%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (in == (IndNlp)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_NLP_SPE%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			}
+%>
+</div>
+<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
+<%-- chiude DIV id="L_SPE<%=in%>" --%>
+<%
+		}
+%>
+<table width=35%>
+	<tr>
+	  	<td class="l">Totale Giorni Concessi</td>
+	  	<td class="l">
+	    	<input id="giorni_SPE" Title="TotGiorni_SPE" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_SPE%>" value="" size=5  onFocus="javascript:rifiutaFocusSemestri_SPE()">
+	  	</td>
+	</tr>
+</table>
+</div> <!-- chiude DIV id="comune_SPE" -->
+<br>
+<div id="resto_SPE" style="position: relative; top: 0; left: 0;">
+<table cellspacing="2" cellpadding="2" width=35%>
+	<tr>
+	    <td class="Titolo" colspan=6>Periodi Non Concessi:&nbsp;&nbsp;&nbsp;</td>
+	</tr>		    
+</table>
+<table width=35%>
+	<tr>
+<%
+		if (numLS[(IndRig+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL_SPE<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=IndRig%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_SPE<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndRig%>');"></td>
+<%
+		}
+		if (numLS[(IndIna+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL_SPE<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=IndIna%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_SPE<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndIna%>');"></td>
+<%
+		}
+		if (numLS[(IndNlp+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL_SPE<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg_SPE value=2 onclick="Javascript:ViewLayer_SPE('<%=IndNlp%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_SPE<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg_SPE value=1 onclick="Javascript:ViewLayer_SPE('<%=IndNlp%>');"></td>
+<%
+		}
+%>  
+	</tr>   
+</table>
+</div> <!-- Chiude DIV id='resto_SPE' -->
+<%            
+	} else if (lTenori[indTeno].getCodOggettoTenore().compareTo("2132") == 0) {
+		// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		siesLogger.debug("tenore oggetto 2132 L.A. Integrazione ");
+%>
+<!-- INIZIO PARTE CON LE DIV PER LIBERAZIONE ANTICIPATA INTEGRAZIONE (L.A.I.) -->	
+<div id="tipoconcessione_INT" style="position: relative; display: none; top: 0; left: 0;">  
+<table>
+	<tr>
+		<td class="l"> Modalità di scelta dei periodi di Concessione </td>
+	</tr>
+	<tr>
+<%
+		if (perUnicoConcLI_dalal == true || perUnicoConcLI_sologg == true) {
+%>	
+		<td>
+			<input value="S" onclick="Javascript:return AbilitaSemestri_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>"> per Semestri &nbsp;
+			<input value="C" onclick="Javascript:return AbilitaPeriodo_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>" CHECKED> Unico Periodo
+		</td>
+<%
+		} else {	
+%> 
+   		<td>
+   			<input value="S" onclick="Javascript:return AbilitaSemestri_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>" CHECKED> per Semestri &nbsp;
+        	<input value="C" onclick="Javascript:return AbilitaPeriodo_INT();" type="radio" name="<%=ICostantiLibertaAnticipata.CAMPO_RADIO_TIPO_CONCESSIONE_INT%>"> unico periodo
+        </td>
+<%
+		}
+%>
+      </tr>
+      <tr><td>&nbsp;</td></tr>
+</table>
+</div> <!-- chiude DIV id="tipoconcessione_INT" -->
+<div id="comune_INT" style="position: relative; top: 0; left: 0;">
+<%
+		if (semestriLI > 0) {
+%>
+<div id="semestri_INT" style="position: relative; top: 0; left: 0;">
+<%
+		} else { 
+%>
+<div id="semestri_INT" style="position: relative; top: 0; left: 0; display:none;">
+<%
+		}
+%>
+<table cellspacing="2" cellpadding="2" width=26%>
+	<tr>
+    	<td class="Titolo" colspan=6>Semestri Concessi:&nbsp;&nbsp;&nbsp;</td>
+	</tr>
+</table>
+<table width=26%>
+<%
+		for (int xx=0; xx<NumRighe; xx++) {
+%>
+	<tr>
+<%
+			for (int j=0; j<NumColonne; j++) {
+				if ((((xx*NumColonne+j) < numLI[1]) || ((xx*NumColonne+j) < numLI[5])) && (semestriLI > 0)) {
+%>
+		<td width=3%><span id="SL_INT<%=xx*NumColonne+j%>" style="color=red;font-weight:bold;">Giorni 30 </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=xx*NumColonne+j%>');"></td>
+<%
+				} else {
+%>
+		<td width=3%><span id="SL_INT<%=xx*NumColonne+j%>" style="color=navy;font-weight:bold;">Giorni 30 </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=xx*NumColonne+j%>');"></td>
+<%
+				}
+	    	}
+%>
+	</tr>
+<%
+		}
+%>
+</table>
+</div> <!-- chiude DIV = "semestri_INT" -->
+<%
+		if (semestriLI > 0) {
+%>
+<div id="periodo_INT" style="position: relative; top: 0; left: 0; display:none;">
+<%
+		} else { 
+%>
+<div id="periodo_INT" style="position: relative; top: 0; left: 0;">
+<%
+		}
+%>
+<table cellspacing="2" cellpadding="2" width=26%>
+	<tr>
+   		<td class="Titolo" colspan=6>Periodo Concesso:&nbsp;&nbsp;&nbsp;</td>
+	</tr>
+</table>
+<table width=26%>
+	<tr>
+<%
+		// Rimane num[0] perchè trttasi di Periodo
+		if (((numLI[0] > 0) || (numLI[5] > 0)) && (semestriLI == 0)  && (perUnicoConcLI_dalal == true))	{
+%>
+		<td width=3%><span id="SL_INT<%=IndPer%>" style="color=red;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndPer%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_INT<%=IndPer%>" style="color=navy;font-weight:bold;">Periodo </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndPer%>');"></td>
+<%
+		}
+%>
+	</tr>
+</table>
+</div> <!-- chiude DIV id="periodo_INT" -->
+<%
+		int jDate = 0;
+		String iChecked = "";
+		for (int i1=0; i1<NumCheck; i1++) {
+			iChecked = "";
+			if (plam_arrayLI[i1] != null) {
+				iChecked = "checked";
+			}
+%>
+<div id="L_INT<%=i1%>" style="position: relative; top: -120; left: 500; display:none;">
+<table>
+	<!-- COSTRUZIONE DEI CAMPI DATA DAL - AL -->
+<% 
+			for (int k=0; k<NumDate; k++) {
+%>
+	<tr>
+  		<td class=l>
+			Dal
+<%
+			  	if (((((i1 < numLI[1]) || (i1 < numLI[5])) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
+			  			|| ((i1 == (IndPer)) && (numLI[0] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
+			  			|| ((i1 == (IndRig)) && (numLI[2] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
+			  			|| ((i1 == (IndIna)) && (numLI[3] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length))
+			  			|| ((i1 == (IndNlp)) && (numLI[4] > 0) && (plam_arrayLI[i1] != null) && (k < plam_arrayLI[i1].length)))
+			  		&& plam_arrayLI[i1][k] != null) {
+%>
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataInizio(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataInizio(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataInizio(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+	     	&nbsp;&nbsp;
+	     	Al
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataFine(),"dd")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_INT%>" maxlength="2" size="2" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataFine(),"MM")%>" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_INT%>" maxlength="4" size="4" value="<%=DateUtils.getDateToString(plam_arrayLI[i1][k].getDataFine(),"yyyy")%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+		  		} else {
+%>
+	       	<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_INIZIO_INT%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_INIZIO_INT%>" maxlength="2" size="2" value="" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_INIZIO_INT%>" maxlength="4" size="4" value="" <%=IWebConstants.UTIL_DATA_ANNO%>>
+	     	&nbsp;&nbsp;
+	     	Al
+			<input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_GIORNO_DATA_FINE_INT%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_MESE_DATA_FINE_INT%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			/
+	        <input type="text" name="<%=ICostantiLibertaAnticipata.CAMPO_ANNO_DATA_FINE_INT%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+				}
+%>
+		</td>
+	</tr>
+<%
+			}
+%>
+</table>
+<%
+			if (i1 < NumTotaleSemestri) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_CONCESSI_INT%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (i1 == IndPer) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_PERIODO_INT%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (i1 == (IndRig)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_RIGETTATI_INT%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (i1 == ( IndIna)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_INAMMISSIBILI_INT%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			} else if (i1 == ( IndNlp)) {
+%>
+<input type=checkbox name="<%=ICostantiLibertaAnticipata.CAMPO_CHECK_NLP_INT%>" value=1 <%=iChecked%> style="display:none;">
+<%
+			}
+%>
+</div>
+<%-- MEV NUOVA INFRASTRUTTURA: refactoring --%>
+<%-- chiude DIV id="L_INT<%=i%>" --%>
+<%
+		}
+%>
+<table width=35%>
+	<tr>
+  		<td class="l">Totale Giorni Concessi</td>
+  		<td class="l">
+    		<input id="giorni_INT" Title="TotGiorni_LAI" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_NUM_GIORNI_LIBANTICIPATA_INT%>" value="" size=5  onFocus="javascript:rifiutaFocusSemestri_INT()">
+   		</td>
+	</tr>
+</table>
+</div> <!-- chiude DIV id="comune_INT" -->
+<br>
+<div id="resto_INT" style="position: relative; top: 0; left: 0;" >
+<table cellspacing="2" cellpadding="2" width=35%>
+	<tr>
+	    <td class="Titolo" colspan=6>Periodi Non Concessi:&nbsp;&nbsp;&nbsp;</td>
+	</tr>			    
+</table>
+<table width=35%>
+	<tr>
+<% if (numLI[(IndRig+1) - NumTotaleSemestri] > 0)  { %>
+<td width=3%><span id="SL_INT<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
+<%     }
+else { %>
+<td width=3%><span id="SL_INT<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
+<%     }  %> 
+<% if (numLI[(IndIna+1) - NumTotaleSemestri] > 0)  { %>
+<td width=3%><span id="SL_INT<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
+<%     }
+else { %>
+<td width=3%><span id="SL_INT<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
+<%     }  %> 
+<% if (numLI[(IndNlp+1) - NumTotaleSemestri] > 0)  { %>
+<td width=3%><span id="SL_INT<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
+<%     }
+else { %>
+<td width=3%><span id="SL_INT<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
+<%     }  %>
+       </tr>
+   </table>
+</div>		<!-- Chiude DIV id='resto_INT' -->
 <%			
 		}	// chiude else if (lTenori[i].getCodOggettoTenore().compareTo("2132") == 0)
 			
@@ -4114,8 +3558,8 @@ while (itx.hasNext()) {
 	     <td class="l">
 	        <input Title="<%=labelUfficio%>" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size=35 >
 		        <a href="Javascript:ListaUDS('ModificaOrdinanzaLibAnt','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>','<%=CodUff%>');">
-		        <img src="/images/filefolder.gif" border=0></a></td>
-	     </td>
+		        <img src="/images/filefolder.gif" border=0></a>
+		 </td>
 	   </tr>
 	   <tr> <td>&nbsp;</td> </tr>
   </table>
