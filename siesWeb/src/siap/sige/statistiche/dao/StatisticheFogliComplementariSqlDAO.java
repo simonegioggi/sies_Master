@@ -11,14 +11,11 @@ import siap.sige.statistiche.model.RiepilogoStatisticheFogliComplementari;
 import siap.sige.statistiche.model.StatisticheFogliComplementariModel;
 
 public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
-
 	public StatisticheFogliComplementariSqlDAO(Connection con) {
-
 		super(con);
 	}
 
 	public void ricercaStatisticheFogliComplementari(RicercaFogliCompModel filtroModel) {
-
 		String sql = "";
 		if (filtroModel.isFcTrasmessi()) {
 			sql = getQueryFcTrasmessi(filtroModel);
@@ -29,6 +26,7 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				sql += " UNION ";
 			// Ticket#20230202011 - si elimina la UNION ALL che duplica i record degli iscritti manualmente
 			// sql += " UNION ALL ";
+
 			sql += this.getQueryFcTrasmessiManualmente(filtroModel);
 		}
 
@@ -37,6 +35,7 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				sql += " UNION ";
 			// Ticket#20230202011 - si elimina la UNION ALL che duplica i record degli iscritti manualmente
 			// sql += " UNION ALL ";
+
 			sql += this.getQueryProvvedimentiPriviFC(filtroModel);
 		}
 
@@ -45,6 +44,7 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				sql += " UNION ";
 			// Ticket#20230202011 - si elimina la UNION ALL che duplica i record degli iscritti manualmente
 			// sql += " UNION ALL ";
+
 			sql += this.getQueryProvvedimentiFcAnnullati(filtroModel);
 		}
 		sql += " order by data_emissione_provv, PRG ";
@@ -54,8 +54,11 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		super.setStatement(sql);
 	}
 
-	public void ricercaFcAnnullati(RicercaFogliCompModel filtroModel) {
+	// aModel.isFcAnnullati();
+	// aModel.isProvvedimentiPriviFC();
+	// aModel.isFcIscrittiManualmente();
 
+	public void ricercaFcAnnullati(RicercaFogliCompModel filtroModel) {
 		String sql = this.getQueryProvvedimentiFcAnnullati(filtroModel);
 		sql += " order by data_emissione_provv ";
 		// Ticket#20230202011 - ulteriori campi per order by
@@ -65,13 +68,11 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaConteggioFcAnnullati(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryConteggioProvvedimentiFcAnnullati(filtroModel);
 		super.setStatement(sql);
 	}
 
 	public void ricercaIscrittiManualmente(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryFcTrasmessiManualmente(filtroModel);
 		sql += " order by data_emissione_provv ";
 		// Ticket#20230202011 - ulteriori campi per order by
@@ -81,13 +82,11 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaConteggioFcIscrittiManualmente(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryConteggioFcTrasmessiManualmente(filtroModel);
 		super.setStatement(sql);
 	}
 
 	public void ricercaProvvedimentiPriviFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryProvvedimentiPriviFC(filtroModel);
 		sql += " order by data_emissione_provv ";
 		// Ticket#20230202011 - ulteriori campi per order by
@@ -97,19 +96,16 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaConteggioProvvedimentiPriviFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryConteggioProvvedimentiPriviFC(filtroModel);
 		super.setStatement(sql);
 	}
 
 	public void ricercaConteggioProvvedimentiConFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryConteggioProvvedimentiConFC(filtroModel);
 		super.setStatement(sql);
 	}
 
 	public void ricercaProvvedimentiConFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = this.getQueryFcTrasmessi(filtroModel);
 		// Ticket#20230202011 - ulteriori campi per order by
 		sql += " order by data_emissione_provv ";
@@ -119,25 +115,26 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryFcTrasmessi(RicercaFogliCompModel filtroModel) {
-
 		String sql = "SELECT D.ID_FASCICOLO_SIGE PRG, " + "D.chiave_anno||'/'||D.chiave_progr num_fasc_SIGE, "
 				+ "A.data_emissione data_emissione_provv, " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 				// "E.RV_MEANING motivo, " +
-				"TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
+				" TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
 				// Ticket#20210514016 - FINE
 				"to_char(B.DATA_EMISSIONE,'DD-MM-YYYY') DATA_EMISSIONE_FOGLIO, "
-				+ "decode(b.data_ins_man,null,'Trasmesso','Iscritto Manualmente') esito" +
+				+ "decode(b.data_ins_man,null,'Trasmesso','Iscritto Manualmente') esito " +
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
-				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento"
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare"
-				// solo per order by
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC" + 
+				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare "
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + // solo
+																										// per
+																										// order
+																										// by
 				// Ticket#20230202011 - FINE
 				" FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, "
 				+ "FASCICOLO_SIGE D, CG_REF_CODES E " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
-				" , CG_REF_CODES ET, TENORE_SIGE T, CG_REF_CODES TipoP" +
+				" , CG_REF_CODES ET, TENORE_SIGE T " + " , CG_REF_CODES TipoP " +
 				// Ticket#20210514016 - FINE
 				" WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND "
 				+ "C.COD_MOTIVO = E.RV_LOW_VALUE AND E.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND "
@@ -179,25 +176,26 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryFcTrasmessiManualmente(RicercaFogliCompModel filtroModel) {
-
 		String sql = "SELECT D.ID_FASCICOLO_SIGE prg, " + "D.chiave_anno||'/'||D.chiave_progr num_fasc_sige, "
 				+ "A.data_emissione data_emissione_provv, " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 				// "E.RV_MEANING motivo, " +
-				"TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
+				" TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
 				// Ticket#20210514016 - FINE
 				"to_char (B.DATA_EMISSIONE,'dd-MM-yyyy') as DATA_EMISSIONE_FOGLIO, "
 				+ "'Iscritto Manualmente' esito " +
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
-				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento"
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare"
-				// solo per order by
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " +
+				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare "
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + // solo
+																										// per
+																										// order
+																										// by
 				// Ticket#20230202011 - FINE
 				"FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, "
-				+ "FASCICOLO_SIGE D, CG_REF_CODES E" +
+				+ "FASCICOLO_SIGE D, CG_REF_CODES E " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
-				", CG_REF_CODES ET, TENORE_SIGE T, CG_REF_CODES TipoP " +
+				" , CG_REF_CODES ET, TENORE_SIGE T " + " , CG_REF_CODES TipoP " +
 				// Ticket#20210514016 - FINE
 				"WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND " + "D.COD_UFFICIO_INSERIMENTO='"
 				+ filtroModel.getUfficioConnesso().getCodUfficio() + "' AND "
@@ -240,23 +238,24 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryProvvedimentiPriviFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = "SELECT DISTINCT(D.ID_FASCICOLO_SIGE) prg , "
 				+ "D.chiave_anno||'/'||D.chiave_progr num_fasc_SIGE, "
 				+ "A.data_emissione data_emissione_provv, " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
 				// "E.RV_MEANING motivo, " +
-				"TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
+				" TipoP.RV_MEANING||' - '||ET.RV_MEANING motivo, " +
 				// Ticket#20210514016 - FINE
-				"'-' DATA_EMISSIONE_FOGLIO, " + "'Privo di Foglio Complementare' esito" +
+				"'-' DATA_EMISSIONE_FOGLIO, " + "'Privo di Foglio Complementare' esito " +
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
-				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento"
-				// solo per order by
-				+ ", null as annoNumeroFoglioComplementare, null as annoFC, null as numFC " +
+				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
+				+ ", null as annoNumeroFoglioComplementare " + ", null as annoFC, null as numFC " + // solo
+																									// per
+																									// order
+																									// by
 				// Ticket#20230202011 - FINE
-				"FROM PROVVEDIMENTO_SIGE A, EVENTO C, FASCICOLO_SIGE D, CG_REF_CODES E" +
+				"FROM PROVVEDIMENTO_SIGE A, EVENTO C, FASCICOLO_SIGE D, CG_REF_CODES E " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
-				", CG_REF_CODES ET, TENORE_SIGE T, CG_REF_CODES TipoP " +
+				" , CG_REF_CODES ET, TENORE_SIGE T " + " , CG_REF_CODES TipoP " +
 				// Ticket#20210514016 - FINE
 				"WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
@@ -273,6 +272,9 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				+ "A.COD_TIPO_PROVVEDIMENTO IN ('02','03') AND "
 				+ "C.ID_EVENTO NOT IN ( SELECT B.EVE_ID_EVENTO FROM DOCUMENTO_ALLEGATO B, "
 				+ "EVENTO G WHERE G.ID_EVENTO = B.EVE_ID_EVENTO AND B.COD_TIPO_DOCUMENTO  = '06') ";
+
+		// Ticket#20230202011 - si escludono i non depositati
+		sql += " and A.CHIAVE_ANNO is not null ";
 
 		if (filtroModel.getAnnoIniziale() != null) {
 			if (filtroModel.getAnnoFinale() == null)
@@ -300,7 +302,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryProvvedimentiFcAnnullati(RicercaFogliCompModel filtroModel) {
-
 		String sql = "SELECT D.ID_FASCICOLO_SIGE prg, " + "D.chiave_anno||'/'||D.chiave_progr num_fasc_sige, "
 				+ "A.data_emissione data_emissione_provv, " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
@@ -311,8 +312,10 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
 				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
 				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare "
-				// solo per order by
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " +
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + // solo
+																										// per
+																										// order
+																										// by
 				// Ticket#20230202011 - FINE
 				" FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, "
 				+ "FASCICOLO_SIGE D, CG_REF_CODES E " +
@@ -360,7 +363,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryConteggioProvvedimentiFcAnnullati(RicercaFogliCompModel filtroModel) {
-
 		String sql = "select a.chiave_anno as anno, count (b.chiave_anno) as conteggio, 'Fogli Complementari Annullati' as descrizione from provvedimento_sige A, "
 				+ "(" + "SELECT A.ID_PROVVEDIMENTO_SIGE, A.CHIAVE_ANNO, B.data_emissione as data_emissione " +
 				// Ticket#20230202011 - Aggiunti ANNO_FOGLIO_COMPLEMENTARE x la where condition cambiata
@@ -410,7 +412,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryConteggioFcTrasmessiManualmente(RicercaFogliCompModel filtroModel) {
-
 		String sql = "select a.chiave_anno as anno, count (b.chiave_anno) as conteggio, 'Fogli Complementari Iscritti Manualmente' as descrizione from provvedimento_sige A, "
 				+ "(" + "SELECT A.ID_PROVVEDIMENTO_SIGE, A.CHIAVE_ANNO, b.data_emissione as data_emissione " +
 				// Ticket#20230202011 - Aggiunti ANNO_FOGLIO_COMPLEMENTARE x la where condition cambiata
@@ -460,7 +461,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryConteggioProvvedimentiPriviFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = "select a.chiave_anno as anno, count (b.chiave_anno) as conteggio, 'Provvedimenti Privi di Fogli Complementari' as descrizione from provvedimento_sige A, "
 				+ "(" + "SELECT DISTINCT(D.ID_FASCICOLO_SIGE) prg , "
 				+ "A.ID_PROVVEDIMENTO_SIGE, A.CHIAVE_ANNO "
@@ -507,7 +507,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	private String getQueryConteggioProvvedimentiConFC(RicercaFogliCompModel filtroModel) {
-
 		String sql = "select a.chiave_anno as anno, count (b.chiave_anno) as conteggio, 'Provvedimenti con Fogli Complementari' as descrizione from provvedimento_sige A, "
 				+ "( "
 				+ "SELECT A.ID_PROVVEDIMENTO_SIGE, A.CHIAVE_ANNO, b.data_emissione as data_emissione, B.ANNO_FOGLIO_COMPLEMENTARE "
@@ -559,7 +558,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public StatisticheFogliComplementariModel getModel() throws DAOException {
-
 		StatisticheFogliComplementariModel model = new StatisticheFogliComplementariModel();
 		model.setIdFascicolo(super.getBigDecimal("PRG"));
 		model.setDescrFascicolo(super.getString("num_fasc_SIGE"));
@@ -576,7 +574,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public RiepilogoStatisticheFogliComplementari getRiepilogoModel() throws DAOException {
-
 		RiepilogoStatisticheFogliComplementari model = new RiepilogoStatisticheFogliComplementari();
 		model.setAnno(super.getBigDecimal("anno"));
 		model.setConteggio(super.getBigDecimal("conteggio"));
@@ -585,7 +582,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public Vector<StatisticheFogliComplementariModel> getLista() throws DAOException {
-
 		Vector<StatisticheFogliComplementariModel> lElencoFC = new Vector<>();
 		start();
 		while (next()) {
@@ -596,7 +592,6 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 	}
 
 	public Vector<RiepilogoStatisticheFogliComplementari> getListaRiepilogo() throws DAOException {
-
 		Vector<RiepilogoStatisticheFogliComplementari> lista = new Vector<>();
 		start();
 		while (next()) {
@@ -605,5 +600,4 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		stop();
 		return lista;
 	}
-
 }

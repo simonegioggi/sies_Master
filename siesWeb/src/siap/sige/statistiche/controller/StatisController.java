@@ -36,8 +36,7 @@ import siap.sius.fascicolo.util.HSSFUtils;
 import siap.sius.statistiche.action.ICostantiStatistiche;
 
 /**
- * Title: StatisController 
- * Description: Controller per le statistiche
+ * Title: StatisController Description: Controller per le statistiche
  *
  * @version 1.0
  */
@@ -491,24 +490,23 @@ public class StatisController extends GenericController {
 
 		setCell(row, (short) 0, "Criteri di Ricerca selezionati:", getBoldStyle(wb));
 		// Ticket#20230202011 - Per evitare sovrapposizione delle celle su foglio excel si splitta su 2 righe
-//		setCell(row, (short) 1, lCriterio1);
-//		setCell(row, (short) 2, lCriterio2);
-		if (lCriterio1.length()>0) {
+		// setCell(row, (short) 1, lCriterio1);
+		// setCell(row, (short) 2, lCriterio2);
+		if (lCriterio1.length() > 0) {
 			setCell(row, (short) 1, lCriterio1);
-			if (lCriterio2.length()>0) {
+			if (lCriterio2.length() > 0) {
 				row = sheet.createRow(++nRow);
 				setCell(row, (short) 1, lCriterio2);
 			}
-		}
-		else if (lCriterio2.length()>0) {
+		} else if (lCriterio2.length() > 0) {
 			setCell(row, (short) 1, lCriterio2);
 		}
-		// Ticket#20230202011 - FINE		
+		// Ticket#20230202011 - FINE
 
 		row = sheet.createRow(++nRow);
 		row = sheet.createRow(++nRow);
 
-		// Ticket#20230202011 - per visualizzare nei fogli di dettaglio
+		// Ticket#20230202011 - visualizzare nei fogli di dettaglio
 		// anche l'anno del provvedimento su cui eggettua la count il riepilogo
 		// e l'anno del FC su cui viene effettuato il filtro
 		setCell(row, (short) 0, "Numero SIGE", getBoldStyle(wb));
