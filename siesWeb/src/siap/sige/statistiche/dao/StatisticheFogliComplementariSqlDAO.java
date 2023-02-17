@@ -568,7 +568,7 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		model.setDescrEsito(super.getString("esito"));
 		model.setDescrProvvedimento(super.getString("motivo"));
 
-		// Ticket#20230202011 - Aggiunti campi per visualizzazione X TEST
+		// Ticket#20230202011 - Aggiunti campi per visualizzazione
 		model.setAnnoNumeroProvvedimento(super.getString("annoNumeroProvvedimento"));
 		model.setAnnoNumeroFoglioComplementare(super.getString("annoNumeroFoglioComplementare"));
 		// Ticket#20230202011 - FINE
