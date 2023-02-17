@@ -30,30 +30,42 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 		lCondizione = "fasc.CHIAVE_UFFICIO = '"
 				+ aModel.getUtenteConnesso().getUfficioUtente().getCodUfficio() + "' ";
 
-		if (aModel.getDataDepositoInizio() != null) {
+		if (aModel.getDataIscrizioneInizio() != null) {
 			lCondizione += "AND TO_CHAR (fasc.data_iscrizione, 'yyyyMMdd') >= '"
-					+ DateUtils.getDateToString(aModel.getDataDepositoInizio(), lDataPattern) + "' ";
+					+ DateUtils.getDateToString(aModel.getDataIscrizioneInizio(), lDataPattern) + "' ";
 		}
-		if (aModel.getDataDepositoFine() != null) {
+		if (aModel.getDataIscrizioneFine() != null) {
 			lCondizione += "AND TO_CHAR (fasc.data_iscrizione, 'yyyyMMdd') <= '"
-					+ DateUtils.getDateToString(aModel.getDataDepositoFine(), lDataPattern) + "' ";
+					+ DateUtils.getDateToString(aModel.getDataIscrizioneFine(), lDataPattern) + "' ";
 		}
 
-		if (aModel.getAnnoInizio() != null) {
-			lCondizione += "AND fasc.CHIAVE_ANNO >= " + aModel.getAnnoInizio() + " ";
+		boolean annoInizio, annoFine, numeroInizio, numeroFine = false;
+		annoInizio = aModel.getAnnoInizio() != null;
+		annoFine = aModel.getAnnoFine() != null;
+		numeroInizio = aModel.getNumeroInizio() != null;
+		numeroFine = aModel.getNumeroFine() != null;
+
+		if (annoInizio && annoFine && numeroInizio && numeroFine) {
+			lCondizione += "AND ((fasc.CHIAVE_ANNO > " + aModel.getAnnoInizio() + " AND fasc.CHIAVE_ANNO < "
+					+ aModel.getAnnoFine() + ")" + " OR (fasc.CHIAVE_ANNO = " + aModel.getAnnoFine()
+					+ " AND fasc.CHIAVE_PROGR <= " + aModel.getNumeroFine() + ")" + " OR (fasc.CHIAVE_ANNO = "
+					+ aModel.getAnnoInizio() + " AND fasc.CHIAVE_PROGR >= " + aModel.getNumeroInizio()
+					+ ")) ";
+			/*
+			 * AND (( fasc.CHIAVE_ANNO > 2022 AND fasc.CHIAVE_ANNO < 2023) OR (fasc.CHIAVE_ANNO = 2023 AND
+			 * fasc.CHIAVE_PROGR <= 5) OR (fasc.CHIAVE_ANNO = 2022 AND fasc.CHIAVE_PROGR >= 1))
+			 */
+		} else {
+			if (annoInizio && numeroInizio) {
+				lCondizione += "AND fasc.CHIAVE_ANNO >= " + aModel.getAnnoInizio() + " ";
+				lCondizione += "AND fasc.CHIAVE_PROGR >= " + aModel.getNumeroInizio() + " ";
+			}
+			if (annoFine && numeroFine) {
+				lCondizione += "AND fasc.CHIAVE_ANNO <= " + aModel.getAnnoFine() + " ";
+				lCondizione += "AND fasc.CHIAVE_PROGR <= " + aModel.getNumeroFine() + " ";
+			}
 		}
 
-		if (aModel.getAnnoFine() != null) {
-			lCondizione += "AND fasc.CHIAVE_ANNO <= " + aModel.getAnnoFine() + " ";
-		}
-
-		if (aModel.getNumeroInizio() != null) {
-			lCondizione += "AND fasc.CHIAVE_PROGR >= " + aModel.getNumeroInizio() + " ";
-		}
-
-		if (aModel.getNumeroFine() != null) {
-			lCondizione += "AND fasc.CHIAVE_PROGR <= " + aModel.getNumeroFine() + " ";
-		}
 		return lCondizione;
 	}
 
@@ -98,8 +110,7 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "NULL DATA_DEPOSITO, NULL DEPOSITO_VALIDATO, NULL DATA_UDIENZA, "
 				+ "EVENTO.FLAG_DOCUMENTO_REGISTRATO PROVVEDIMENTO_VALIDATO, CODMOT.RV_MEANING OGGETTO, "
 				+ "CODOGGPROC.RV_MEANING OGGETTO_PROCEDIMENTO, FASC.COD_STATO_FASCICOLO, "
-				+ "EVENTO.DATA_EMISSIONE DATA_EMISSIONE "
-				+ "FROM FASCICOLO_SIUS fasc LEFT OUTER JOIN EVENTO "
+				+ "EVENTO.DATA_EMISSIONE DATA_EMISSIONE " + "FROM FASCICOLO_SIUS fasc LEFT OUTER JOIN EVENTO "
 				+ "ON EVENTO.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS, "
 				+ "CG_REF_CODES CODESI, CG_REF_CODES CODTIPPRO, cg_ref_codes CODMOT, "
 				+ "CG_REF_CODES CODOGGPROC, CG_REF_CODES CODSTA, SOGGETTO SOG, GENERALE_PROCEDIMENTO GP "
@@ -110,13 +121,13 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "AND CODOGGPROC.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO') AND fasc.cod_stato_fascicolo = '23' "
 				+ "AND (FASC.COD_STATO_FASCICOLO = CODSTA.RV_LOW_VALUE "
 				+ "AND CODSTA.RV_DOMAIN = 'STATO_FASCICOLO') AND sog.id_soggetto = fasc.sog_id_soggetto "
-                + "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
-                + "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
-                + "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
-                + "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
-                + "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
+				+ "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
+				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
+				+ "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
+				+ "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
+				+ "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
 				+ "ORDER BY fasc.CHIAVE_ANNO, fasc.CHIAVE_PROGR";
 
 		setStatement(query);
@@ -132,8 +143,7 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "NULL DATA_DEPOSITO, NULL DEPOSITO_VALIDATO, NULL DATA_UDIENZA, "
 				+ "EVENTO.FLAG_DOCUMENTO_REGISTRATO PROVVEDIMENTO_VALIDATO, CODMOT.RV_MEANING OGGETTO, "
 				+ "CODOGGPROC.RV_MEANING OGGETTO_PROCEDIMENTO, FASC.COD_STATO_FASCICOLO, "
-				+ "EVENTO.DATA_EMISSIONE DATA_EMISSIONE "
-				+ "FROM FASCICOLO_SIUS fasc LEFT OUTER JOIN EVENTO "
+				+ "EVENTO.DATA_EMISSIONE DATA_EMISSIONE " + "FROM FASCICOLO_SIUS fasc LEFT OUTER JOIN EVENTO "
 				+ "ON EVENTO.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS, "
 				+ "CG_REF_CODES CODOGGPROC, CG_REF_CODES CODSTA, SOGGETTO SOG, "
 				+ "CG_REF_CODES CODESI, CG_REF_CODES CODTIPPRO, cg_ref_codes CODMOT, "
@@ -151,13 +161,13 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "AND EVENTO.FAS_SIU_ID_FASCICOLO_SIUS = fasc.ID_FASCICOLO_SIUS "
 				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = '02' AND EVENTO.COD_ESITO = '0610' "
 				+ "AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' AND DD.ID_EVENTO_GENERATO = EVENTO.ID_EVENTO "
-                + "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
-                + "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
-                + "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
-                + "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
-                + "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
+				+ "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
+				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
+				+ "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
+				+ "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
+				+ "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
 				+ "ORDER BY fasc.CHIAVE_ANNO, fasc.CHIAVE_PROGR";
 		setStatement(query);
 	}
@@ -172,8 +182,7 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "EVENTO.FLAG_DOCUMENTO_REGISTRATO PROVVEDIMENTO_VALIDATO, CODMOT.RV_MEANING OGGETTO, "
 				+ "NULL DATA_DEPOSITO, NULL DEPOSITO_VALIDATO, NULL DATA_UDIENZA, "
 				+ "CODOGGPROC.RV_MEANING OGGETTO_PROCEDIMENTO, FASC.COD_STATO_FASCICOLO, "
-				+ "EVENTO.DATA_EMISSIONE DATA_EMISSIONE "
-				+ "FROM FASCICOLO_SIUS fasc LEFT OUTER JOIN EVENTO "
+				+ "EVENTO.DATA_EMISSIONE DATA_EMISSIONE " + "FROM FASCICOLO_SIUS fasc LEFT OUTER JOIN EVENTO "
 				+ "ON EVENTO.FAS_SIU_ID_FASCICOLO_SIUS = FASC.ID_FASCICOLO_SIUS, "
 				+ "CG_REF_CODES CODOGGPROC, CG_REF_CODES CODSTA, SOGGETTO SOG, "
 				+ "CG_REF_CODES CODESI, CG_REF_CODES CODTIPPRO, cg_ref_codes CODMOT, "
@@ -189,13 +198,13 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = '03' AND EVENTO.COD_ESITO = '0270' "
 				+ "AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' "
 				+ "AND DO.ID_EVENTO_GENERATO = EVENTO.ID_EVENTO AND DO.DATA_ESECUTIVITA IS NULL "
-                + "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
-                + "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
-                + "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
-                + "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
-                + "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
+				+ "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
+				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
+				+ "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
+				+ "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
+				+ "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
 				+ "ORDER BY fasc.CHIAVE_ANNO, fasc.CHIAVE_PROGR";
 		setStatement(query);
 	}
@@ -230,13 +239,13 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "AND EVENTO.FAS_SIU_ID_FASCICOLO_SIUS = fasc.ID_FASCICOLO_SIUS "
 				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = '03' AND EVENTO.COD_ESITO = '0270' "
 				+ "AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' AND DO.ID_EVENTO_GENERATO = EVENTO.ID_EVENTO "
-                + "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
-                + "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
-                + "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
-                + "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
-                + "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
-                + "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
+				+ "AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE AND CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' "
+				+ "AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE "
+				+ "AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
+				+ "AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') "
+				+ "OR (EVENTO.COD_MOTIVO = CODMOT.RV_LOW_VALUE "
+				+ "AND CODMOT.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO')) "
 				+ "AND DO.DATA_ESECUTIVITA IS NOT NULL ORDER BY fasc.CHIAVE_ANNO, fasc.CHIAVE_PROGR";
 		setStatement(query);
 	}

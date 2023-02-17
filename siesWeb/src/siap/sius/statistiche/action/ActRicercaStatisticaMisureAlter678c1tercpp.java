@@ -33,8 +33,8 @@ public class ActRicercaStatisticaMisureAlter678c1tercpp extends ActionSius imple
 		BigDecimal numIni = null;
 		BigDecimal annoFine = null;
 		BigDecimal numFine = null;
-		Date dataDepositoIni = null;
-		Date dataDepositoFine = null;
+		Date dataIscrizioneIni = null;
+		Date dataIscrizioneFine = null;
 		RicercaProcedimentoModel rpm = null;
 		IStatisticheSius iss = null;
 		Collection<EveFasGepSogProvModel> elenco;
@@ -46,13 +46,13 @@ public class ActRicercaStatisticaMisureAlter678c1tercpp extends ActionSius imple
 		annoFine = getRequestBigDecimalParameter(ICostantiStatistiche.CAMPO_ANNO_FINE);
 		numFine = getRequestBigDecimalParameter(ICostantiStatistiche.CAMPO_NUM_FINE);
 
-		dataDepositoIni = getRequestDateParameter(ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_INI,
-				ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_INI,
-				ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_INI);
+		dataIscrizioneIni = getRequestDateParameter(ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_INIZIO,
+				ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_INIZIO,
+				ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_INIZIO);
 
-		dataDepositoFine = getRequestDateParameter(ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_FINE,
-				ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_FINE,
-				ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_FINE);
+		dataIscrizioneFine = getRequestDateParameter(ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_FINE,
+				ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_FINE,
+				ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_FINE);
 
 		rpm = new RicercaProcedimentoModel();
 
@@ -61,8 +61,8 @@ public class ActRicercaStatisticaMisureAlter678c1tercpp extends ActionSius imple
 		rpm.setNumeroInizio(numIni);
 		rpm.setAnnoFine(annoFine);
 		rpm.setNumeroFine(numFine);
-		rpm.setDataDepositoInizio(dataDepositoIni);
-		rpm.setDataDepositoFine(dataDepositoFine);
+		rpm.setDataIscrizioneInizio(dataIscrizioneIni);
+		rpm.setDataIscrizioneFine(dataIscrizioneFine);
 		rpm.setUtenteConnesso(getUtenteConnesso());
 
 		iss = SIUSLookupRemote.getStatisticheSiusRemote();

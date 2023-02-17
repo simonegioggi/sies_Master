@@ -66,19 +66,19 @@ if (ricercaProcedimenti != null) {
  		<td class="Cliccabile">Criteri di Ricerca selezionati:</td>
 	</tr>
 <%
-	if (ricercaProcedimenti.getDataDepositoInizio() != null || ricercaProcedimenti.getDataDepositoFine() != null) {
+	if (ricercaProcedimenti.getDataIscrizioneInizio() != null || ricercaProcedimenti.getDataIscrizioneFine() != null) {
 %>
 	<tr>
 	 	<td class="lVerdeNB">Procedimenti con Data Iscrizione :&nbsp;&nbsp;
 <%
-		if (ricercaProcedimenti.getDataDepositoInizio() != null) {
+		if (ricercaProcedimenti.getDataIscrizioneInizio() != null) {
 %>          	
-			Dal <%=DateUtils.getDateToString(ricercaProcedimenti.getDataDepositoInizio(), "dd-MM-yyyy" )%>&nbsp;&nbsp; 
+			Dal <%=DateUtils.getDateToString(ricercaProcedimenti.getDataIscrizioneInizio(), "dd-MM-yyyy" )%>&nbsp;&nbsp; 
 <%
 		}
-		if (ricercaProcedimenti.getDataDepositoFine() != null) {
+		if (ricercaProcedimenti.getDataIscrizioneFine() != null) {
 %>
-			&nbsp;Al&nbsp;&nbsp;<%=DateUtils.getDateToString(ricercaProcedimenti.getDataDepositoFine(),"dd-MM-yyyy")%>
+			&nbsp;Al&nbsp;&nbsp;<%=DateUtils.getDateToString(ricercaProcedimenti.getDataIscrizioneFine(),"dd-MM-yyyy")%>
 		</td>
 <%
 		}

@@ -15,18 +15,18 @@ function init() {
 	document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_ANNO_INI%>.focus();
 }
 function Verify() {																																																	
- 	var data_to_verify = document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_INI%>.value
- 		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_INI%>.value
- 		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_INI%>.value;
+ 	var data_to_verify = document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_INIZIO%>.value
+ 		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_INIZIO%>.value
+ 		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_INIZIO%>.value;
 	if (!ControllaData(data_to_verify) && data_to_verify.length > 2) {
- 		alert('Data di Deposito iniziale non valida!');
+ 		alert('Data Iscrizione iniziale non valida!');
  		return false;
 	}
-	var data_to_verify = document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_FINE%>.value
-		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_FINE%>.value
-		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_FINE%>.value;
+	var data_to_verify = document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_FINE%>.value
+		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_FINE%>.value
+		+ '/' + document.LoadRicercaStatisticaMisureAlter678c1tercpp.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_FINE%>.value;
 	if (!ControllaData(data_to_verify) && data_to_verify.length > 2) {
-    	alert('Data di Deposito finale non valida!');
+    	alert('Data Iscrizione finale non valida!');
     	return false;
   	}
 	return true;
@@ -59,8 +59,8 @@ function Verify() {
        	<td class="c" width="61%">Anno/Numero Iniziale 
        		<input Title="Anno Iniziale" type="text" name="<%=ICostantiStatistiche.CAMPO_ANNO_INI%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
        		/<input Title="Numero Iniziale" type="text" name="<%=ICostantiStatistiche.CAMPO_NUM_INI%>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-			&nbsp;&nbsp; Anno/Numero Finale &nbsp;&nbsp;<input Title="Anno Finale" type="text" name="<%= ICostantiStatistiche.CAMPO_ANNO_FINE %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
-			/<input Title="Numero Finale" type="text" name="<%= ICostantiStatistiche.CAMPO_NUM_FINE %>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+			&nbsp;&nbsp; Anno/Numero Finale &nbsp;&nbsp;<input Title="Anno Finale" type="text" name="<%=ICostantiStatistiche.CAMPO_ANNO_FINE%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
+			/<input Title="Numero Finale" type="text" name="<%=ICostantiStatistiche.CAMPO_NUM_FINE%>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)">
 		</td>
 	</tr>
 </table>
@@ -70,12 +70,12 @@ function Verify() {
   		<td class="Titolo">Intervallo Date Iscrizione</td>
   	</tr>
   	<tr>
-      	<td class="c" width="61%">Data Iscrizione Iniziale <input Title="dalla Data" type="text" name="<%= ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_INI %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
-	      	/<input Title="dalla Data" type="text" name="<%= ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_INI %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-	      	/<input Title="dalla Data" type="text" name="<%= ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_INI %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-			&nbsp;&nbsp;Data Iscrizione Finale&nbsp;&nbsp;<input Title="alla Data" type="text" name="<%= ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_FINE %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)">
-			/<input Title="alla Data" type="text" name="<%= ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_FINE %>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-			/<input Title="alla Data" type="text" name="<%= ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_FINE %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+      	<td class="c" width="61%">Data Iscrizione Iniziale <input Title="dalla Data" type="text" name="<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_INIZIO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+	      	/<input Title="dalla Data" type="text" name="<%=ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_INIZIO%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+	      	/<input Title="dalla Data" type="text" name="<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_INIZIO%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			&nbsp;&nbsp;Data Iscrizione Finale&nbsp;&nbsp;<input Title="alla Data" type="text" name="<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_FINE%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			/<input Title="alla Data" type="text" name="<%=ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_FINE%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			/<input Title="alla Data" type="text" name="<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_FINE%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
        	</td>
 	</tr>
 </table>
@@ -130,15 +130,15 @@ function Verify() {
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("LoadRicercaStatisticaMisureAlter678c1tercpp");
 
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_INI%>","numeric");
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_INI%>","numeric");
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_INI%>","numeric");
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_INI%>","minlen=4","La lunghezza minima per l'anno è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_INIZIO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_INIZIO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_INIZIO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_INIZIO%>","minlen=4","La lunghezza minima per l'anno è di 4 caratteri");
 
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_DEPOSITO_FINE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_MESE_DATA_DEPOSITO_FINE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_FINE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_DEPOSITO_FINE%>","minlen=4","La lunghezza minima per l'anno è di 4 caratteri");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_ISCRIZIONE_FINE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_MESE_DATA_ISCRIZIONE_FINE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_FINE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiStatistiche.CAMPO_ANNO_DATA_ISCRIZIONE_FINE%>","minlen=4","La lunghezza minima per l'anno è di 4 caratteri");
 </script>
 </body>
 </html>

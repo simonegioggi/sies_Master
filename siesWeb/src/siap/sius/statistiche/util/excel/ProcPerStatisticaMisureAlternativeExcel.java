@@ -96,13 +96,13 @@ public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 				rowCounter++;
 			}
 
-			if (rpm.getDataDepositoInizio() != null || rpm.getDataDepositoFine() != null) {
+			if (rpm.getDataIscrizioneInizio() != null || rpm.getDataIscrizioneFine() != null) {
 				buffer = "Procedimenti con Data Iscrizione : ";
-				if (rpm.getDataDepositoInizio() != null) {
-					buffer += " dal " + DateUtils.getDateToString(rpm.getDataDepositoInizio(), patternData);
+				if (rpm.getDataIscrizioneInizio() != null) {
+					buffer += " dal " + DateUtils.getDateToString(rpm.getDataIscrizioneInizio(), patternData);
 				}
-				if (rpm.getDataDepositoFine() != null) {
-					buffer += " al " + DateUtils.getDateToString(rpm.getDataDepositoFine(), patternData);
+				if (rpm.getDataIscrizioneFine() != null) {
+					buffer += " al " + DateUtils.getDateToString(rpm.getDataIscrizioneFine(), patternData);
 				}
 				hssfr = hssfs.createRow(rowCounter);
 				setCell(hssfr, 0, buffer, hssfcsNull);
