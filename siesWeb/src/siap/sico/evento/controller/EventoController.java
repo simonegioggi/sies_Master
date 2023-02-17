@@ -194,7 +194,7 @@ public class EventoController extends SiapController implements IEvento {
 
 		return lEveRet;
 	}
-
+	
 	// / Luigi 2-2-2005
 	public EventoNotificaModel ExInserisciEventoNotifica(EventoNotificaModel aEvento, Connection aConn)
 			throws F3BException {
@@ -5109,5 +5109,34 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lConn);
 		}
 	}
+	
+	/**
+	 * MEV_9 (D.lgs. 123/2018). 
+	 * Ricerca ultimo evento di Fase istruttoria » Richiesta Atti in cui è valorizzata la 
+	 * DATA_RESTITUZIONE_AI per poterla precaricare nelle successive richieste dove prevista
+	 * @param aIdFascicoloSius
+	 * @throws DAOException
+	 */
+	public EventoModel ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (BigDecimal aIdFascicoloSius) throws F3BException {
 
+		Connection lConn = null;
+		EventoSqlDAO lEveSqlDao = null;
+		EventoModel lEveMod;
+
+		try {
+			lConn = getDBConnection();
+			lEveSqlDao = new EventoSqlDAO(lConn);
+			lEveSqlDao.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc(aIdFascicoloSius);
+			lEveMod = (EventoModel) lEveSqlDao.getModelByKey();
+		} catch (DAOException daoEx) {
+			throw new F3BException("EventoController.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc: " + daoEx);
+		} catch (Exception e) {
+			throw new F3BException("EventoController.ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc: " + e);
+		} finally {
+			cleanup(lEveSqlDao);
+			cleanup(lConn);
+		}
+		return lEveMod;
+	}
+	
 }

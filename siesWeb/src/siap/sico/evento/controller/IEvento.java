@@ -369,5 +369,7 @@ public interface IEvento {
 	// intervento per MEV 64- AVVOCATURA (anche in stampa devono apparire solo le ordinanze/decreti depositati)
 	public Vector ExRicercaProvvedimentiConDataDeposito(EventoModel aEvento) throws F3BException;
 	
-
+	// INIZIO: MEV_9 (D.lgs. 123/2018)
+	public EventoModel ricercaUltimoEventoRichiestaAttiIsruttoriByIdFasc (BigDecimal aIdFascicoloSius) throws F3BException;
+	// FINE: MEV_9 (D.lgs. 123/2018)
 }
