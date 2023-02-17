@@ -490,9 +490,22 @@ riepilogoSheet.setColumnWidth(0, (50 * 256));
 		}
 
 		row = sheet.createRow(++nRow);
+
 		setCell(row, (short) 0, "Criteri di Ricerca selezionati:", getBoldStyle(wb));
-		setCell(row, (short) 1, lCriterio1);
-		setCell(row, (short) 2, lCriterio2);
+		// Ticket#20230202011 - Per evitare sovrapposizione delle celle su foglio excel si splitta su 2 righe
+//		setCell(row, (short) 1, lCriterio1);
+//		setCell(row, (short) 2, lCriterio2);
+		if (lCriterio1.length()>0) {
+			setCell(row, (short) 1, lCriterio1);
+			if (lCriterio2.length()>0) {
+				row = sheet.createRow(++nRow);
+				setCell(row, (short) 1, lCriterio2);
+			}
+		}
+		else if (lCriterio2.length()>0) {
+			setCell(row, (short) 1, lCriterio2);
+		}
+		// Ticket#20230202011 - FINE		
 
 		row = sheet.createRow(++nRow);
 		row = sheet.createRow(++nRow);

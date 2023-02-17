@@ -269,6 +269,9 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
     	           "C.ID_EVENTO NOT IN ( SELECT B.EVE_ID_EVENTO FROM DOCUMENTO_ALLEGATO B, " +  
     	           "EVENTO G WHERE G.ID_EVENTO = B.EVE_ID_EVENTO AND B.COD_TIPO_DOCUMENTO  = '06') ";
     	
+    	// Ticket#20230202011 - si escludono i non depositati
+    	sql += " and A.CHIAVE_ANNO is not null ";
+    	
     	if (filtroModel.getAnnoIniziale() != null) {
 		    if (filtroModel.getAnnoFinale() == null)
 			    sql += " and A.CHIAVE_ANNO=" + filtroModel.getAnnoIniziale();
