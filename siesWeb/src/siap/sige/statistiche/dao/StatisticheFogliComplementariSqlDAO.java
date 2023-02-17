@@ -134,15 +134,13 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
 				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
 				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare "
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + // solo
-																										// per
-																										// order
-																										// by
+				// solo per order by
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC" +
 				// Ticket#20230202011 - FINE
 				" FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, "
-				+ "FASCICOLO_SIGE D, CG_REF_CODES E " +
+				+ "FASCICOLO_SIGE D, CG_REF_CODES E" +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
-				" , CG_REF_CODES ET, TENORE_SIGE T " + " , CG_REF_CODES TipoP " +
+				", CG_REF_CODES ET, TENORE_SIGE T, CG_REF_CODES TipoP" +
 				// Ticket#20210514016 - FINE
 				" WHERE A.FAS_ID_FASCICOLO_SIGE = D.ID_FASCICOLO_SIGE AND "
 				+ "C.COD_MOTIVO = E.RV_LOW_VALUE AND E.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND "
@@ -196,10 +194,8 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
 				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
 				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare "
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + // solo
-																										// per
-																										// order
-																										// by
+				// solo per order by
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + 
 				// Ticket#20230202011 - FINE
 				"FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, "
 				+ "FASCICOLO_SIGE D, CG_REF_CODES E " +
@@ -258,10 +254,8 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				"'-' DATA_EMISSIONE_FOGLIO, " + "'Privo di Foglio Complementare' esito " +
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
 				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
-				+ ", null as annoNumeroFoglioComplementare " + ", null as annoFC, null as numFC " + // solo
-																									// per
-																									// order
-																									// by
+				// solo per order by
+				+ ", null as annoNumeroFoglioComplementare " + ", null as annoFC, null as numFC " +
 				// Ticket#20230202011 - FINE
 				"FROM PROVVEDIMENTO_SIGE A, EVENTO C, FASCICOLO_SIGE D, CG_REF_CODES E " +
 				// Ticket#20210514016 - recuparato descrizione oggetto dal Tenore invece che da Evento
@@ -320,10 +314,8 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 				// Ticket#20230202011 - Aggiunti ulteriori campi alla select
 				", A.CHIAVE_ANNO||'/'||A.CHIAVE_PROGR as annoNumeroProvvedimento "
 				+ ", B.ANNO_FOGLIO_COMPLEMENTARE||'/'||B.PROGR_FOGLIO_COMPLEMENTARE as annoNumeroFoglioComplementare "
-				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + // solo
-																										// per
-																										// order
-																										// by
+				// solo per order by
+				+ ", B.ANNO_FOGLIO_COMPLEMENTARE as annoFC, B.PROGR_FOGLIO_COMPLEMENTARE as numFC " + 
 				// Ticket#20230202011 - FINE
 				" FROM PROVVEDIMENTO_SIGE A, DOCUMENTO_ALLEGATO B, EVENTO C, "
 				+ "FASCICOLO_SIGE D, CG_REF_CODES E " +
@@ -579,7 +571,7 @@ public class StatisticheFogliComplementariSqlDAO extends SIAPSqlDAO {
 		model.setDescrEsito(super.getString("esito"));
 		model.setDescrProvvedimento(super.getString("motivo"));
 
-		// Ticket#20230202011 - Aggiunti campi per visualizzazione X TEST
+		// Ticket#20230202011 - Aggiunti campi per visualizzazione
 		model.setAnnoNumeroProvvedimento(super.getString("annoNumeroProvvedimento"));
 		model.setAnnoNumeroFoglioComplementare(super.getString("annoNumeroFoglioComplementare"));
 		// Ticket#20230202011 - FINE

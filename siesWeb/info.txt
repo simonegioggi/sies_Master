@@ -27,11 +27,11 @@ Comprende i seguenti Ticket MAC:
 4)	Ticket#20230202011 — Sige - anomalie foglio complementare
 	Classi Modificate:
 	-	siap.sige.fogliocomplementare.action.ActInserisciCompFoglioComp.java
-		Modificata action di Dettaglio di ritorno: agganciava a vecchia versione!
+		Modificata action di Dettaglio di ritorno: agganciava a vecchia versione.
 	-	siap.sige.fogliocomplementare.action.ActLoadDettaglioFCTastoFunzione.java
 		Aggiunto il provvedimento da visualizzare sul dettaglio.
 	-	siap.sige.fogliocomplementare.action.ActModificaCompFoglioComp.java
-		Modificata action di Dettaglio di ritorno: agganciava a vecchia versione!
+		Modificata action di Dettaglio di ritorno: agganciava a vecchia versione.
 	-	siap.sius.documentoallegato.controller.DocumentoAllegatoController.java
 		(metodo ExModificaFoglioComplementare)
 		setCodOperatoreAggiornamento era erroneamente valorizzato con il cod ufficio.
@@ -48,27 +48,31 @@ Comprende i seguenti Ticket MAC:
 		Corretto incolonnamento dei dati nelle corrette colonne "anno" nel foglio di riepilogo.
 		metodo writeIntestazioneRiepilogo
 		metodo elaboraRiepilogo
-		metodo writeIntestazioneStatisticheFC [SOLO X TEST EFFETTUARE IL REVERT]
-		metodo elaboraSheetStatisticheFC      [SOLO X TEST EFFETTUARE IL REVERT]
+		metodo writeIntestazioneStatisticheFC
+		metodo elaboraSheetStatisticheFC
 	-	siap.sige.statistiche.model.StatisticheFogliComplementariContainerModel.java
 		Aggiunte le informazioni per gestire l'incolonnamento.
 	-	siap.sige.statistiche.model.StatisticheFogliComplementariModel.java
 		Aggiunti campi Anno/Num Provve e Anno/num FC.
 	-	siap.sige.statistiche.dao.StatisticheFogliComplementariSqlDAO.java
 		Diverse modifche per:
-		modificare il filtro per "Anno Compilazione" che puntava PROCDIMENTO_SIGE.CHIAVE_ANNO, moficato in DOCUMENTO_ALLEGATO.ANNO_FOGLIO_COMPLEMENTARE;
+		modificare il filtro per "Anno Compilazione" che puntava PROCDIMENTO_SIGE.CHIAVE_ANNO,
+		moficato in DOCUMENTO_ALLEGATO.ANNO_FOGLIO_COMPLEMENTARE;
 		aggiunto filtro per data compilazioni per il dettaglio dei Privi CF che non era presente;
-		aggiunti nelle select i campi Anno/Numero Provv e Anno/Numero FC da stampare sul foglio excel [SOLO PER TEST];
+		aggiunti nelle select i campi Anno/Numero Provv e Anno/Numero FC da stampare sul foglio excel;
 		aggiunte order by Anno/Numero Provv e Anno/Numero FC.
 	-	LoadInserisciCompFoglioCompTastoFunzione.jsp
-		Aggiunto tasto di Stampa sulla form di Modifica come da Doc di analisi
+		Aggiunto tasto di Stampa sulla form di Modifica come da Doc di analisi.
 	-	StatisController.java
-		eliminata inserimento delle schede in caso di mancanza di dati 
-		corretto allineamenti dei dati numerici
-		corretta sovrapposizione delle celle dei criteri di ricerca si indicato sia anno che periodo
-		corretta mancata visualizzazion delle rigga di una tipologia selezionata come filtro in caso di assenza dati (non veniva visualizzata la riga del riepilogo ma veniva inserito un dettaglio vuoto non significativo)
+		eliminato inserimento delle schede in caso di mancanza di dati;
+		corretto allineamenti dei dati numerici;
+		corretta sovrapposizione delle celle dei criteri di ricerca si indicato sia anno che periodo;
+		corretta mancata visualizzazion delle rigga di una tipologia selezionata come filtro in caso di assenza dati
+		(non veniva visualizzata la riga del riepilogo ma veniva inserito un dettaglio vuoto non significativo).
 	-	StatisticheFogliComplementari.jsp
-		Aggiunta visualizzazione dei criteri relativi ai check box
-		Corretta gestione visualizzzione delle lista nel caso di presenza di più FC (uno valido e altri annullati). Visualizzava solo quello annullato
+		Aggiunta visualizzazione dei criteri relativi ai check box;
+		corretta gestione visualizzzione delle lista nel caso di presenza di più FC
+		(uno valido e altri annullati). Visualizzava solo quello annullato.
 	-	StatisticheFogliComplementariSqlDAO.java
-		Corretta la select in UNION ALL che duplicava i dati nel caso presenti nel filtro  sia i provv con fogli che quelli con iscritti manualmente
+		Corretta la select in UNION ALL che duplicava i dati nel caso presenti nel filtro sia i provv con fogli
+		che quelli con iscritti manualmente.

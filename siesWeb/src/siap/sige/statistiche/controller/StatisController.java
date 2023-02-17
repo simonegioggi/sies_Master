@@ -495,10 +495,9 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(++nRow);
 		row = sheet.createRow(++nRow);
 
-		// Ticket#20230202011 - Test per visualizzare nei fogli di dettaglio
+		// Ticket#20230202011 - per visualizzare nei fogli di dettaglio
 		// anche l'anno del provvedimento su cui eggettua la count il riepilogo
 		// e l'anno del FC su cui viene effettuato il filtro
-		// DA ELIMINARE
 		setCell(row, (short) 0, "Numero SIGE", getBoldStyle(wb));
 		setCell(row, (short) 1, "Data Provvedimento", getBoldStyle(wb));
 		setCell(row, (short) 2, "Anno/Numero Provvedimento", getBoldStyle(wb));
@@ -524,10 +523,9 @@ public class StatisController extends GenericController {
 		while (it.hasNext()) {
 			StatisticheFogliComplementariModel model = it.next();
 			HSSFRow row = sheet.createRow(++nRow);
-			// Ticket#20230202011 - Test per visualizzare nei fogli di dettaglio
+			// Ticket#20230202011 - per visualizzare nei fogli di dettaglio
 			// anche l'anno del provvedimento su cui eggettua la count il riepilogo
 			// e l'anno del FC su cui viene effettuato il filtro
-			// DA ELIMINARE
 			setCell(row, (short) 0, model.getDescrFascicolo());
 			setCell(row, (short) 1, DateUtils.getDateToString(model.getDataProvvedimento(), "dd-MM-yyyy"));
 			setCell(row, (short) 2, model.getAnnoNumeroProvvedimento());
