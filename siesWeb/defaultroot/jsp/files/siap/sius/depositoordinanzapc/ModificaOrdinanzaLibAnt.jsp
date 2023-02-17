@@ -3521,124 +3521,108 @@ for (int indTeno = 0; indTeno < lTenori.length; indTeno++) {
 </table>
 <table width=35%>
 	<tr>
-<% if (numLI[(IndRig+1) - NumTotaleSemestri] > 0)  { %>
-<td width=3%><span id="SL_INT<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
-<%     }
-else { %>
-<td width=3%><span id="SL_INT<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
-<%     }  %> 
-<% if (numLI[(IndIna+1) - NumTotaleSemestri] > 0)  { %>
-<td width=3%><span id="SL_INT<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
-<%     }
-else { %>
-<td width=3%><span id="SL_INT<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
-<%     }  %> 
-<% if (numLI[(IndNlp+1) - NumTotaleSemestri] > 0)  { %>
-<td width=3%><span id="SL_INT<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
-<%     }
-else { %>
-<td width=3%><span id="SL_INT<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P.  </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
-<%     }  %>
-       </tr>
-   </table>
-</div>		<!-- Chiude DIV id='resto_INT' -->
+<%
+		if (numLI[(IndRig+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL_INT<%=IndRig%>" style="color=red;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_INT<%=IndRig%>" style="color=navy;font-weight:bold;">Rigettati </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndRig%>');"></td>
+<%
+		}
+		if (numLI[(IndIna+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL_INT<%=IndIna%>" style="color=red;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_INT<%=IndIna%>" style="color=navy;font-weight:bold;">Inammissibili </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndIna%>');"></td>
+<%
+		}
+		if (numLI[(IndNlp+1) - NumTotaleSemestri] > 0) {
+%>
+		<td width=3%><span id="SL_INT<%=IndNlp%>" style="color=red;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg_INT value=2 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
+<%
+		} else {
+%>
+		<td width=3%><span id="SL_INT<%=IndNlp%>" style="color=navy;font-weight:bold;">N.L.P./N.D.P. </span> <input type=checkbox name=gg_INT value=1 onclick="Javascript:ViewLayer_INT('<%=IndNlp%>');"></td>
+<%
+		}
+%>
+	</tr>
+</table>
+</div> <!-- Chiude DIV id='resto_INT' -->
 <%			
-		}	// chiude else if (lTenori[i].getCodOggettoTenore().compareTo("2132") == 0)
-			
-	// [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-	//	siesLogger.debug("---------------------------> C prima di chiusura ciclo FOR  - indTeno = "+indTeno ); 	
-			
-   }	// chiude ciclo for (int i=0; i< lTenori.length;i++)
-    %>
-  
-  <br><br>
-	<table cellspacing="2" cellpadding="2" style="width: 90%;">
-	   <tr>
-	     <td class="l">In caso di Incompetenza indicare l'<%=labelUfficio%> destinatario </td>
-	     <td class="l">
-	        <input Title="<%=labelUfficio%>" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size=35 >
-		        <a href="Javascript:ListaUDS('ModificaOrdinanzaLibAnt','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>','<%=CodUff%>');">
-		        <img src="/images/filefolder.gif" border=0></a>
-		 </td>
-	   </tr>
-	   <tr> <td>&nbsp;</td> </tr>
-  </table>
-  
-  <table>
+	} // chiude else if (lTenori[i].getCodOggettoTenore().compareTo("2132") == 0)
+} // chiude ciclo for (int i=0; i< lTenori.length;i++)
+%>
+<br><br>
+<table cellspacing="2" cellpadding="2" style="width: 90%;">
+	<tr>
+  		<td class="l">In caso di Incompetenza indicare l'<%=labelUfficio%> destinatario </td>
+		<td class="l">
+   			<input Title="<%=labelUfficio%>" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>" value="" size=35 >
+			<a href="Javascript:ListaUDS('ModificaOrdinanzaLibAnt','<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_UFFICIO_MAGISTRATO_COMP%>','<%=CodUff%>');">
+        		<img src="/images/filefolder.gif" border=0>
+       		</a>
+		</td>
+  	</tr>
+  	<tr><td>&nbsp;</td></tr>
+</table>
+<table>
     <tr>
-      <td>
-        <input class="bottone" type="submit" value="Conferma" >
-      </td>
+		<td>
+       		<input class="bottone" type="submit" value="Conferma">
+      	</td>
     </tr>
- </table>
- 
-    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>" >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="LA" >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DATA_EMISSIONE%>" value=<%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%> >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_DEPOSITO_ORDINANZA_PC%>" value="<%=lIdOrdinanza%>" >
-    <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lIdEvento%>" >
-    <input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_ESITO_RECLAMO_LA_PM_ACCOLTO%>" >
-   
-    <input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA%>" value="<%=TotggLA %>" >
-    <input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_SPE%>" value="<%=TotggLS %>" >
-    <input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_INT%>" value="<%=TotggLI %>" >
-    <input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_QUALE_SELEZIONATO%>" value="" >
-    <input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO%>" value="" >
-  <!--  /div>	-->
+</table>
+
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAction%>">
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_COD_TIPO_ORDINANZA%>" value="LA">
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_DATA_EMISSIONE%>" value=<%=DateUtils.getDateToString(data_emissione,"dd/MM/yyyy")%>>
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_ID_DEPOSITO_ORDINANZA_PC%>" value="<%=lIdOrdinanza%>">
+<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=lIdEvento%>">
+<input type="HIDDEN" name="<%=ICostantiDepositoOrdinanzaPc.CAMPO_FLAG_ESITO_RECLAMO_LA_PM_ACCOLTO%>">
+<input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA%>" value="<%=TotggLA %>">
+<input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_SPE%>" value="<%=TotggLS %>">
+<input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_SALVA_GIORNI_LA_INT%>" value="<%=TotggLI %>">
+<input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_QUALE_SELEZIONATO%>" value="">
+<input type="HIDDEN" name="<%=ICostantiLibertaAnticipata.CAMPO_QUALE_IND_SELEZIONATO%>" value="">
 
 <%-- // [FT] - 05/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger() --%>
-<%			siesLogger.debug("--> C Fine Modifica  ");    %>
+<%
+siesLogger.debug("--> C Fine Modifica");
+%>
+</form>
+<script language="JavaScript" type="text/javascript">
+var frmvalidator = new Validator("ModificaOrdinanzaLibAnt");
 
-  </form>
-  <script language="JavaScript" type="text/javascript">
-    var frmvalidator = new Validator("ModificaOrdinanzaLibAnt");
-
-
-	<%
-	// CONTROLLO PER I CAMPI ANNO DATE DAL AL SEMESTRI/PERIODI
-	int cont = 0;
-	String mex = "";
-	for (int i=0; i<NumCheck; i++)
-	{
-		//for (int x=0; x< NumCheck*NumDate; x++)
-		for (int x=0; x< NumDate; x++)
-   		{
-			// Costruzione dei messaggi di errore in base alla sezione Semestri o Periodi
-			if (i<12)
-			{
-				mex ="Semestri Concessi: sezione "+ (i+1) +"\\n\\n";
-			}
-			else if (i == 12)
-			{
-				mex ="Periodo Concesso: \\n\\n";
-			}
-			else if (i == 13)
-			{
-				mex ="Periodi Non Concessi: Rigettati \\n\\n";
-			}
-			else if (i == 14)
-			{
-				mex ="Periodi Non Concessi: Inammissibili \\n\\n";
-			}
-			else if (i == 15)
-			{
-				mex ="Periodi Non Concessi: N.L.P./N.D.P. \\n\\n";
-			}
-
-			else
-			{
-				mex ="";
-			}
-
-		 cont = cont + 1;
+<%
+// CONTROLLO PER I CAMPI ANNO DATE DAL AL SEMESTRI/PERIODI
+int cont = 0;
+String mex = "";
+for (int i=0; i<NumCheck; i++) {
+	for (int x=0; x< NumDate; x++) {
+		// Costruzione dei messaggi di errore in base alla sezione Semestri o Periodi
+		if (i<12) {
+			mex ="Semestri Concessi: sezione "+ (i+1) +"\\n\\n";
+		} else if (i == 12) {
+			mex ="Periodo Concesso: \\n\\n";
+		} else if (i == 13) {
+			mex ="Periodi Non Concessi: Rigettati \\n\\n";
+		} else if (i == 14) {
+			mex ="Periodi Non Concessi: Inammissibili \\n\\n";
+		} else if (i == 15) {
+			mex ="Periodi Non Concessi: N.L.P./N.D.P. \\n\\n";
+		} else {
+			mex = "";
 		}
-  	}
-	%>
-
-    frmvalidator.setAddnlValidationFunction("Verify");
-
-  </script>
-
- </body>
-
+		cont = cont + 1;
+	}
+}
+%>
+frmvalidator.setAddnlValidationFunction("Verify");
+</script>
+</body>
 </html>
