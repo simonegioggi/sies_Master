@@ -1,78 +1,45 @@
-Comprende i seguenti Ticket MAC:
+MEV_2023-13	-->	nato dal branch "release_12.4.27.0" in data 21/02/2023
 
-1)	Ticket#20230125017 - SIEP - Impossibile visualizzare alcuni fascicolo mediante ricerca per numero.
-	Corretta impostazione del codice stato procedimento (validato '0109').
-	Classe modificata:
-	-	ActUploadTrasmAnnotazioneProvvedimentoSor.java
+Richiesta scheda 2023-13 - APP/SICP/SIES - pagamenti PagoPA per pene pecuniarie.
 
-2)	Ticket#202301250123 - n. 30004/2021 e n. 30005/2021 SIEP CAMPOBASSO
-	In fase di cancellazione del record Annotazione Manuale non cancellava eventuali record 
-	ANNMAN_PENACOMPL << PENA_COMPLESSIVA << SANZIONE_SOSTITUTIVA
-	ANNMAN_REATO << REATO
-	inseriti dalla funzione "Gestione Pene Sospese - richieste - Revoca beneficio ex art 168 c.p - 674 c.p.p"
-	generando un errore di violazione ForeignKey.
-	Classi modificate:
-	-	siap.siep.ordineesecuzione.controller.OrdineEsecuzioneController.java
-		(metodo ExAggiornaEventoInserisciCampoNota)
-	-	siap.siep.penasospesa.dao.AnnmanPenacomplDAO.java
-	-	siap.siep.penasospesa.dao.AnnmanReatoDAO.java
+Premessa:
+Si trasmettono i requisiti relativi per rendere operative le previsioni degli artt. 460 e 660 c.p.p. 
+rispettivamente per cognizione ed esecuzione. Allo stesso modo si chiede di implementare le medesime
+funzionalità in relazione ai casi di pagamento dell'oblazione (ex art. 162 c.p.).
 
-3)	Ticket#20230201017 - Anomalia Sies
-	Per la risoluzione della problematica è stato gestita l'ordinanza di rinvio udienza come l'ordinanza classica,
-	quindi l'avviso verrà visualizzato dall'avvocato solo a valle della validazione del deposito.
-	Classi modificate:
-	-	siap.sico.evento.controller.EventoController.java
-	-	siap.sius.documentoallegato.controller.DocumentoAllegatoController.java
+Applicativi:
+WorkFlow Manager (WFM) - da rinominarsi in Applicativo Area Penale (APP) - RegeWeb/SICP - SIES.
 
-4)	Ticket#20230202011 — Sige - anomalie foglio complementare
-	Classi Modificate:
-	-	siap.sige.fogliocomplementare.action.ActInserisciCompFoglioComp.java
-		Modificata action di Dettaglio di ritorno: agganciava a vecchia versione.
-	-	siap.sige.fogliocomplementare.action.ActLoadDettaglioFCTastoFunzione.java
-		Aggiunto il provvedimento da visualizzare sul dettaglio.
-	-	siap.sige.fogliocomplementare.action.ActModificaCompFoglioComp.java
-		Modificata action di Dettaglio di ritorno: agganciava a vecchia versione.
-	-	siap.sius.documentoallegato.controller.DocumentoAllegatoController.java
-		(metodo ExModificaFoglioComplementare)
-		setCodOperatoreAggiornamento era erroneamente valorizzato con il cod ufficio.
-	-	jsp\files\siap\sige\fogliocomplementare\LoadDettaglioCompFoglioComp.jsp
-		Corretta mancata visualizzazione della Data Compilazione/Trasmissione che veniva prelevata dal campo errato.
-	-	jsp\files\siap\sige\fogliocomplementare\LoadDettaglioCompFoglioCompTastoFunzione.jsp
-		si elimina dal dettaglio il riferimento alla motivazione non invio non più prevista.
-	-	jsp\files\siap\sige\fogliocomplementare\LoadInserisciCompFoglioCompTastoFunzione.jsp
-		Modificato il messaggio in caso di mancato inserimento Data Compilazione/Trasmissione (obbligatoria).
-		Corretta visualizzazione del titolo della form in caso di Modifica, riportava sempre "Inserimento Foglio Complementare".
-	-	\jsp\files\siap\sige\statistiche\LoadRicercaStatisticheFogliComp.jsp
-		Aggiunti i controlli sui filtri di ricerca come da documento di analisi.
-	-	siap.sige.statistiche.controller.StatisController.java
-		Corretto incolonnamento dei dati nelle corrette colonne "anno" nel foglio di riepilogo.
-		metodo writeIntestazioneRiepilogo
-		metodo elaboraRiepilogo
-		metodo writeIntestazioneStatisticheFC
-		metodo elaboraSheetStatisticheFC
-	-	siap.sige.statistiche.model.StatisticheFogliComplementariContainerModel.java
-		Aggiunte le informazioni per gestire l'incolonnamento.
-	-	siap.sige.statistiche.model.StatisticheFogliComplementariModel.java
-		Aggiunti campi Anno/Num Provve e Anno/num FC.
-	-	siap.sige.statistiche.dao.StatisticheFogliComplementariSqlDAO.java
-		Diverse modifche per:
-		modificare il filtro per "Anno Compilazione" che puntava PROCDIMENTO_SIGE.CHIAVE_ANNO,
-		moficato in DOCUMENTO_ALLEGATO.ANNO_FOGLIO_COMPLEMENTARE;
-		aggiunto filtro per data compilazioni per il dettaglio dei Privi CF che non era presente;
-		aggiunti nelle select i campi Anno/Numero Provv e Anno/Numero FC da stampare sul foglio excel;
-		aggiunte order by Anno/Numero Provv e Anno/Numero FC.
-	-	LoadInserisciCompFoglioCompTastoFunzione.jsp
-		Aggiunto tasto di Stampa sulla form di Modifica come da Doc di analisi.
-	-	StatisController.java
-		eliminato inserimento delle schede in caso di mancanza di dati;
-		corretto allineamenti dei dati numerici;
-		corretta sovrapposizione delle celle dei criteri di ricerca si indicato sia anno che periodo;
-		corretta mancata visualizzazion delle rigga di una tipologia selezionata come filtro in caso di assenza dati
-		(non veniva visualizzata la riga del riepilogo ma veniva inserito un dettaglio vuoto non significativo).
-	-	StatisticheFogliComplementari.jsp
-		Aggiunta visualizzazione dei criteri relativi ai check box;
-		corretta gestione visualizzzione delle lista nel caso di presenza di più FC
-		(uno valido e altri annullati). Visualizzava solo quello annullato.
-	-	StatisticheFogliComplementariSqlDAO.java
-		Corretta la select in UNION ALL che duplicava i dati nel caso presenti nel filtro sia i provv con fogli
-		che quelli con iscritti manualmente.
+Uffici interessati dalla modifica:
+tutti gli uffici requirenti e giudicanti di primo grado.
+
+Requisiti funzionali:
+Servizi PST da interfacciare:
+A. Invocare un servizio per la generazione del Bollettino (quando viene creato un bollettino viene in 
+	automatico generato uno stato ad esso associato, identificativo IUV);
+B. Invocare un servizio per avere aggiornamenti sullo stato del bollettino.
+
+Flusso:
+1) Generazione bollettino (Sistema Penale --> PST): Quando viene generato un atto esecutivo o provvedimento 
+	del giudice con obbligo di pagamento, o altri eventi (ad esempio proroga di un pagamento scaduto) sarà 
+	possibile effettuare l'azione “Genera Bollettino”, richiamando il servizio del PST che genera il 
+	bollettino di pagamento e eventualmente anche quello rateizzato. Il servizio del PST restituisce il 
+	bollettino e lo IUV che lo identifica univocamente;
+2) Il sistema penale mostrerà all'utente cancelliere un record con le informazioni opportune (IUV, scadenza, 
+	stato, link al pdf);
+3) Tasto STAMPA: l'utente dovrà poter stampare il bollettino, contenente altresì le informazioni relative al 
+	procedimento e al titolo di pagamento, che verrà notificato al destinatario finale che dovrà procedere al 
+	pagamento (online o presso qualsiasi sportello);
+4) Aggiornamento STATO (Sistema Penale --> PST): il sistema penale invocherà il servizio del PST (una volta 
+	al giorno) per aggiornare lo stato del pagamento. Infatti, quando verrà effettuato il pagamento il PST 
+	(collegandosi a PagoPA) si aggiorna di conseguenza;
+5) I sistemi penali verranno aggiornati in base allo stato del pagamento, ed alla scadenza andrà scatenata 
+	un'azione (alert o simili) di notifica sul sistema.
+
+Note:
+• Se il pagamento scade non è più possibile pagarlo, ed in caso di proroga da parte del giudice sarà 
+	necessario generare un nuovo bollettino, in questo caso riabilitando il tasto “Genera Bollettino”. 
+	Questo dovrà accadere anche in caso di rate non pagate totalmente. Va considerato il caso di pagamento 
+	parziale con relative tracciamento.
+• Successivamente all'invio della presente richiesta di scheda l'Amministrazione provvederà ad inviare al RTI 
+	la lista degli atti coinvolti.
