@@ -119,6 +119,11 @@
         	  else
         		  controlloAvvocato = false;
           } // endif Decreto/Ordinanza
+          
+          // MEV_9 (D.lgs. 123/2018) - L'avvocato è obbligatorio
+          if ("SI".equals(isOrdProvvisoria))
+        	  controlloAvvocato = true;
+          
        	  if (controlloAvvocato)
           {
           int numAvvocati = avvocato.size();
