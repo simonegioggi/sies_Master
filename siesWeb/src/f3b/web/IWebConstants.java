@@ -122,4 +122,8 @@ public interface IWebConstants {
 	// 20190611 [SG]: aggiunta costante
 	public static final String PG_MAIN_ATTESA = ROOT_DIR + "MainAttesa.jsp";
 
+	// MEV_2023-13: aggiunta costante
+	public static final String PG_VISUALIZZA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
+			+ "files/siap/sico/webservice/VisualizzaAvvisoPagoPA.jsp";
+
 }
