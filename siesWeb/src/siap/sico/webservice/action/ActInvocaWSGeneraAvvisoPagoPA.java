@@ -200,15 +200,16 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 			fspcb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
 			fspcb.setCodOperatoreAggiornamento(utm.getUserId());
 			fspcb.setDataAggiornamento(DateUtils.getSysDate());
-			// Caricamento CERTIFICATO (Campo BLOB) nel Model
+			// Caricamento BOLLETTINO (Campo BLOB) nel Model
 			ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
 			fspcb.caricaCertPenaleBlobIn(bais);
 			fsc.ExInsertCertificatoPenale(fspcb);
-		} else { // Salvare il certificato penale sulla tabella FASCICOLO_SIUS
+		} else { // Salvare il bollettino sulla tabella FASCICOLO_SIUS
 			FascicoloSiusController fsc = new FascicoloSiusController();
 			fsscb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
 			fsscb.setCodOperatoreAggiornamento(utm.getUserId());
 			fsscb.setDataAggiornamento(DateUtils.getSysDate());
+			// Caricamento BOLLETTINO (Campo BLOB) nel Model
 			ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
 			fsscb.caricaCertPenaleBlobIn(bais);
 			fsc.ExInsertCertificatoPenale(fsscb);
