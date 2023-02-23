@@ -67,6 +67,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 			IEvento ie = SICOLookupRemote.getEventoRemote();
 			em = ie.ExRicercaEventoByKey(idEvento);
 		}
+		// info per il log
 		siesLogger.debug(em.getIdEvento() + " " + em.getDescrProvvedimento() + " " + em.getDescrEsito() + " "
 				+ em.getDescrMotivo() + " " + em.getDescrTipoEvento() + " " + em.getDescrTipoProvvedimento());
 
@@ -114,6 +115,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 			// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
 		}
 
+		// info per il log
 		siesLogger
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
 
@@ -123,6 +125,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
 		service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
 		ServiziInvioPagamentiTelematici port = service.getServiziInvioPagamentiTelematiciSOAPPort();
+		// info per il log
 		siesLogger.debug("Chiamo generaAvviso(RichiestaPagamentoTelematico) su " + endpointAddress);
 
 		// DATI PER RICHIESTA PAGAMENTO
@@ -136,20 +139,24 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		// DATI VERSAMENTO
 		DatiVersamento dv = new DatiVersamento();
 		dv.setBicAddebito(null);
-		DatiSingoloVersamento[] dsv = new DatiSingoloVersamento[1];
+		DatiSingoloVersamento[] dsv = new DatiSingoloVersamento[5]; // da 1 a 5 occorrenze
 		dsv[0] = new DatiSingoloVersamento();
 		String causale = "Pagamenti in favore Amministrazione";
+		// se DatiMarcaBolloDigitale è valorizzato allora l'importo è di 16.00
 		DatiMarcaBolloDigitale dmbd = new DatiMarcaBolloDigitale();
+		// contiene l'impronta informatica (digest), rappresentata in "base 64 binary", del documento
+		// informatico o della segnatura di procollo cui è associata la marca da bollo digitale.
+		// algoritmo di hash da utilizzare è SHA-256
 		MessageDigest md = null;
-		String str = "ciccio";
-		String strCriptata = null;
+		String hd = "MarcaBolloDigitale";
+		String hdCripted = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
-			strCriptata = new String(Base64.encode(md.digest(str.getBytes())));
+			hdCripted = new String(Base64.encode(md.digest(hd.getBytes())));
 		} catch (Exception ex) {
 			throw new SecurityException("Errore durante il crypting del digest");
 		}
-		dmbd.setHashDocumento(strCriptata);
+		dmbd.setHashDocumento(hdCripted);
 		dmbd.setProvinciaResidenza(sm.getCodProvinciaNascita());
 		dmbd.setTipoBollo("01");
 		dsv[0].setDatiMarcaBolloDigitale(dmbd);
@@ -160,14 +167,18 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 								.getSanzionePecuniariaMulta()
 						: dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
 								.getSanzionePecuniariaAmmenda();
+		// Il valore dell'importo deve contenere obbligatoriamente le due cifre decimali con
+		// separatore il '.' --> 12345678.90
 		dsv[0].setImporto(importo);
 		dsv[0].setCausale("/" + dsv[0].getImporto() + "/TXT/" + causale); // MAX 100 chars
 		dv.setDatiSingoloVersamento(dsv);
-		dv.setDatiSingoloVersamento(0, dsv[0]);
+		for (int i = 0; i < dsv.length; i++)
+			dv.setDatiSingoloVersamento(i, dsv[i]); // da 1 a 5 occorrenze
+		// IbanAddebito: da non valorizzare nel caso in cui il file debba essere usato in generaAvviso()
 		dv.setIbanAddebito(null);
 		dv.setImportoTotale(null);
 		rpt.setDatiVersamento(dv);
-		// SOGGETTO PAGATORE (è il destinatario dell'avviso)
+		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
 		AnagraficaSoggetto asp = new AnagraficaSoggetto();
 		asp.setCap(null);
 		asp.setCivico(null);
@@ -177,26 +188,28 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		asp.setLocalita(null);
 		asp.setNaturaGiuridica("F"); // F or G
 		asp.setNazione(sm.getCodStatoNascita());
-		asp.setNominativo(sm.getNome() + " " + sm.getCognome()); // MAX 70 chars
+		asp.setNominativo(sm.getCognome() + " " + sm.getNome()); // MAX 70 chars
 		asp.setProvincia(sm.getCodProvinciaNascita());
 		asp.setRegione(sm.getCodComuneNascita());
 		rpt.setSoggettoPagatore(asp);
-		// SOGGETTO VERSANTE (è il soggetto che paga)
-		AnagraficaSoggetto asv = new AnagraficaSoggetto();
-		asv.setCap(null);
-		asv.setCivico(null);
-		asv.setCodiceIdentificativoUnivoco(sm.getCodFiscale()); // C.F. or P.I.
-		asv.setEmail(null);
-		asv.setIndirizzo(null);
-		asv.setLocalita(null);
-		asv.setNaturaGiuridica("F");
-		asv.setNazione(sm.getCodStatoNascita());
-		asv.setNominativo(sm.getNome() + " " + sm.getCognome());
-		asv.setProvincia(sm.getCodProvinciaNascita());
-		asv.setRegione(sm.getCodComuneNascita());
-		rpt.setSoggettoVersante(asv);
+		// SOGGETTO VERSANTE (opzionale, è il soggetto che effettivamente paga, inserire solo se diverso dal
+		// pagatore)
+		// AnagraficaSoggetto asv = new AnagraficaSoggetto();
+		// asv.setCap(null);
+		// asv.setCivico(null);
+		// asv.setCodiceIdentificativoUnivoco(sm.getCodFiscale()); // C.F. or P.I.
+		// asv.setEmail(null);
+		// asv.setIndirizzo(null);
+		// asv.setLocalita(null);
+		// asv.setNaturaGiuridica("F");
+		// asv.setNazione(sm.getCodStatoNascita());
+		// asv.setNominativo(sm.getCognome() + " " + sm.getNome());
+		// asv.setProvincia(sm.getCodProvinciaNascita());
+		// asv.setRegione(sm.getCodComuneNascita());
+		// rpt.setSoggettoVersante(asv);
 
 		EsitoGeneraAvviso ega = port.generaAvviso(rpt);
+		// info per il log
 		siesLogger.debug("EsitoGeneraAvviso: " + ega.getNumeroAvviso() + " # " + ega.getBollettino());
 
 		// per recuperare l'avviso
@@ -211,14 +224,14 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 			fsscb.setFascicoloSius(fgpm.getFascicoloSiusModel());
 		}
 
-		// Salvare il bollettino sulla tabella FASCICOLO_SIEP
-		if (fspcb.getFascicoloSiep() != null) {
+		// Caricamento BOLLETTINO (Campo BLOB) nel Model
+		ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
+
+		if (fspcb.getFascicoloSiep() != null) { // Salvare il bollettino sulla tabella FASCICOLO_SIEP
 			FascicoloSiepController fsc = new FascicoloSiepController();
 			fspcb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
 			fspcb.setCodOperatoreAggiornamento(utm.getUserId());
 			fspcb.setDataAggiornamento(DateUtils.getSysDate());
-			// Caricamento BOLLETTINO (Campo BLOB) nel Model
-			ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
 			fspcb.caricaCertPenaleBlobIn(bais);
 			fsc.ExInsertCertificatoPenale(fspcb);
 		} else { // Salvare il bollettino sulla tabella FASCICOLO_SIUS
@@ -226,12 +239,11 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 			fsscb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
 			fsscb.setCodOperatoreAggiornamento(utm.getUserId());
 			fsscb.setDataAggiornamento(DateUtils.getSysDate());
-			// Caricamento BOLLETTINO (Campo BLOB) nel Model
-			ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
 			fsscb.caricaCertPenaleBlobIn(bais);
 			fsc.ExInsertCertificatoPenale(fsscb);
 		}
 
+		// pagina di ritorno
 		return PG_VISUALIZZA_AVVISO_PAGOPA;
 	}
 
