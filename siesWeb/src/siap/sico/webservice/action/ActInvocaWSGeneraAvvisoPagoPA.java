@@ -12,6 +12,7 @@ import f3b.log.LogF3B;
 import f3b.security.SecurityException;
 import f3b.util.DateUtils;
 import f3b.util.F3BProperties;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto;
 import it.giustizia.www.serviziTelematici.serviziGenerici.DatiMarcaBolloDigitale;
@@ -31,6 +32,9 @@ import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.controller.FascicoloSiepController;
 import siap.siep.fascicolo.model.FascicoloSiepCertBlobModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.penacomplessiva.controller.IPenaComplessiva;
+import siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel;
+import siap.siep.util.SIEPLookupRemote;
 import siap.sius.fascicolo.controller.FascicoloSiusController;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusCertBlobModel;
@@ -90,16 +94,24 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 			}
 		}
 
+		DettaglioPenaComplessivaModel dpcm = null;
+		// PenaResiduaModel prm = null;
+		IPenaComplessiva ipc = SIEPLookupRemote.getPenaComplessivaRemote();
+		// IPenaResidua ipr = SIEPLookupRemote.getPenaResiduaRemote();
 		if (fsm != null) {
 			sm = fsm.getSoggetto();
 			annoProc = fsm.getChiaveAnno();
 			numeroProc = fsm.getChiaveProgr();
 			idFascicolo = fsm.getIdFascicoloSiep();
+			dpcm = ipc.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(idFascicolo);
+			// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
 		} else if (fgpm != null) {
 			sm = fgpm.getFascicoloSiusModel().getSoggetto();
 			annoProc = fgpm.getFascicoloSiusModel().getChiaveAnno();
 			numeroProc = fgpm.getFascicoloSiusModel().getChiaveProgr();
 			idFascicolo = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
+			dpcm = ipc.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(idFascicolo);
+			// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
 		}
 
 		siesLogger
@@ -120,7 +132,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		rpt.setCodiceUfficio(ufm.getCodUfficio());
 		Calendar c = Calendar.getInstance();
 		c.setTime(DateUtils.getSysDate());
-		rpt.setDataScadenza(c);
+		rpt.setDataScadenza(c); // OBBLIGATORIA, altrimenti 30 giorni in automatico
 		// DATI VERSAMENTO
 		DatiVersamento dv = new DatiVersamento();
 		dv.setBicAddebito(null);
@@ -141,10 +153,15 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		dmbd.setProvinciaResidenza(sm.getCodProvinciaNascita());
 		dmbd.setTipoBollo("01");
 		dsv[0].setDatiMarcaBolloDigitale(dmbd);
-		dsv[0].setDatiSpecificiRiscossione("PENPE");
-		BigDecimal importo = new BigDecimal("1234567890");
+		dsv[0].setDatiSpecificiRiscossione("PENPE"); // valore fisso
+		BigDecimal importo = !Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva()
+				.getSanzioneSostitutiva().getSanzionePecuniariaMulta())
+						? dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
+								.getSanzionePecuniariaMulta()
+						: dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
+								.getSanzionePecuniariaAmmenda();
 		dsv[0].setImporto(importo);
-		dsv[0].setCausale("/" + dsv[0].getImporto() + "/TXT/" + causale);
+		dsv[0].setCausale("/" + dsv[0].getImporto() + "/TXT/" + causale); // MAX 100 chars
 		dv.setDatiSingoloVersamento(dsv);
 		dv.setDatiSingoloVersamento(0, dsv[0]);
 		dv.setIbanAddebito(null);
@@ -154,13 +171,13 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		AnagraficaSoggetto asp = new AnagraficaSoggetto();
 		asp.setCap(null);
 		asp.setCivico(null);
-		asp.setCodiceIdentificativoUnivoco(sm.getCodFiscale());
+		asp.setCodiceIdentificativoUnivoco(sm.getCodFiscale()); // C.F. or P.I.
 		asp.setEmail(null);
 		asp.setIndirizzo(null);
 		asp.setLocalita(null);
-		asp.setNaturaGiuridica("F");
+		asp.setNaturaGiuridica("F"); // F or G
 		asp.setNazione(sm.getCodStatoNascita());
-		asp.setNominativo(sm.getNome() + " " + sm.getCognome());
+		asp.setNominativo(sm.getNome() + " " + sm.getCognome()); // MAX 70 chars
 		asp.setProvincia(sm.getCodProvinciaNascita());
 		asp.setRegione(sm.getCodComuneNascita());
 		rpt.setSoggettoPagatore(asp);
@@ -168,7 +185,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		AnagraficaSoggetto asv = new AnagraficaSoggetto();
 		asv.setCap(null);
 		asv.setCivico(null);
-		asv.setCodiceIdentificativoUnivoco(sm.getCodFiscale());
+		asv.setCodiceIdentificativoUnivoco(sm.getCodFiscale()); // C.F. or P.I.
 		asv.setEmail(null);
 		asv.setIndirizzo(null);
 		asv.setLocalita(null);
