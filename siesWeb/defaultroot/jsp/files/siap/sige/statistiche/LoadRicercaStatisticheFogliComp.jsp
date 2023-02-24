@@ -18,27 +18,52 @@
       }
 
       function Verify () {
+    	  var data_compilazione = '';
     	  if (document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_EMISSIONE_INIZIO%>.value != '' || 
     		  document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_MESE_DATA_EMISSIONE_INIZIO%>.value != ''	||
     		  document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_INIZIO%>.value != '') {
-    	      var data_to_verify=document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_EMISSIONE_INIZIO%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_MESE_DATA_EMISSIONE_INIZIO%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_INIZIO%>.value;
-              if (! ControllaData(data_to_verify)) {
+    	      var data_compilazione=document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_EMISSIONE_INIZIO%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_MESE_DATA_EMISSIONE_INIZIO%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_INIZIO%>.value;
+              if (! ControllaData(data_compilazione)) {
                   alert('Data Compilazione non valida');
                   return false;
               }
     	  }
  
+    	  var data_finale = '';
     	  if (document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_EMISSIONE_FINE%>.value != '' || 
         	  document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_MESE_DATA_EMISSIONE_FINE%>.value != ''	||
         	  document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_FINE%>.value != '') {
 
-              var data_to_verify=document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_EMISSIONE_FINE%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_MESE_DATA_EMISSIONE_FINE%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_FINE%>.value;
-              if (! ControllaData(data_to_verify)) {
+              var data_finale=document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_GIORNO_DATA_EMISSIONE_FINE%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_MESE_DATA_EMISSIONE_FINE%>.value+'/'+document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_FINE%>.value;
+              if (! ControllaData(data_finale)) {
                   alert('Data Finale non valida');
                   return false;
               }
     	  }
 
+    	  <%-- Ticket#20230202011 - Aggiunti controlli sulle date --%>
+    	  var annoIniziale = document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_INIZIALE%>.value;
+    	  var annoFinale = document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_FINALE%>.value;
+    	  
+    	  if (annoIniziale=='' && annoFinale!=''){
+    		  alert("Se indicato l'anno finale va indicato anche l'anno iniziale");
+    		  document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_INIZIALE%>.focus();
+              return false; 
+    	  } 
+    	  
+    	  if (annoIniziale!='' && annoFinale!='' && annoFinale<annoIniziale){
+    		  alert("L'anno finale non puo' essere inferiore all'anno iniziale");
+    		  document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_FINALE%>.focus();
+              return false;
+    	  }
+    	  
+    	  var annoCompilazione = document.RicercaStatisticheFC.<%=ICostantiStatistiche.CAMPO_ANNO_DATA_EMISSIONE_INIZIO%>.value;
+    	  if (annoCompilazione!='' && annoIniziale!='' &&  annoCompilazione!=annoIniziale){
+    		  alert("L'anno della Data Compilazione deve coincidere con l'anno iniziale se indicato");
+              return false;
+    	  }    	  
+    	  <%-- Ticket#20230202011 - FINE --%>
+    	  
     	  if (!isReportSelected ()) {
     		  alert('Selezionare almeno una tipologia di Foglio Complementare.');
               return false;

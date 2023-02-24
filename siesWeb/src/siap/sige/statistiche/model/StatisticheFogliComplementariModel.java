@@ -19,6 +19,23 @@ public class StatisticheFogliComplementariModel extends GenericModel{
 	private String descrProvvedimento=null;
 	private String dataProvvedimentoAsString=null;
 	
+	// Ticket#20230202011 - Aggiunte informazioni 
+	private String annoNumeroProvvedimento=null;
+	private String annoNumeroFoglioComplementare=null;
+	public String getAnnoNumeroProvvedimento() {
+		return annoNumeroProvvedimento;
+	}
+	public void setAnnoNumeroProvvedimento(String annoNumeroProvvedimento) {
+		this.annoNumeroProvvedimento = annoNumeroProvvedimento;
+	}
+	public String getAnnoNumeroFoglioComplementare() {
+		return annoNumeroFoglioComplementare;
+	}
+	public void setAnnoNumeroFoglioComplementare(String annoNumeroFoglioComplementare) {
+		this.annoNumeroFoglioComplementare = annoNumeroFoglioComplementare;
+	}
+	// Ticket#20230202011 -	FINE
+	
 	
 	public BigDecimal getIdFascicolo() {
 		return idFascicolo;

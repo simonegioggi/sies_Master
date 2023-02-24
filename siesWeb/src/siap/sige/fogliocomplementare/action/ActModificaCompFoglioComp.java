@@ -103,10 +103,14 @@ public class ActModificaCompFoglioComp extends ActionSige implements ICostantiFo
     // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
     siesLogger.debug( getClass().getName() + ".processRequest: fine" );
     
-    return IWebConstants.PG_MAIN + "?" + 
+    // Ticket#20230202011 - si aggancia la stessa funzione di dettaglio agganciata dalla nuova lista
+    /*return IWebConstants.PG_MAIN + "?" + 
            IWebConstants.ACTION_FIELD + 
            "=siap.sige.fogliocomplementare.action.ActLoadDettaglioCompFoglioComp&"+
-           ICostantiEvento.CAMPO_ID_EVENTO+"="+lEveMod.getIdEvento().toString()+"&Provenienza=null";
+           ICostantiEvento.CAMPO_ID_EVENTO+"="+lEveMod.getIdEvento().toString()+"&Provenienza=null";*/
+    return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.sige.fogliocomplementare.action.ActLoadDettaglioFCTastoFunzione&"+ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO+"="+aDocAllegato.getIdDocumentoAllegato();
+    // Ticket#20230202011 - FINE
+
   }
 
 }

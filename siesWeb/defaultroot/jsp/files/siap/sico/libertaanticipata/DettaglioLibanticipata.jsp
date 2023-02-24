@@ -82,6 +82,7 @@ if (num[0] > 0) {
 <%
 				}
 	   			for (int i = 0; i < pp.length; i++) {
+	   				if (pp[i] != null) {
 %>
 		<td class="L">
 			<font class="l">
@@ -90,6 +91,15 @@ if (num[0] > 0) {
 			</font>
 		</td>
 <%
+	   				} else {
+%>
+		<td class="cRosso">
+			<font class="c">ATTENZIONE! PERIODI ASSENTI! ANDARE IN MODIFICA E REINSERIRLI!
+			<br>
+			OPPURE CANCELLARE L'ORDINANZA E REINSERIRLA!</font>
+		</td>
+<%
+					}
 				}
 %>
 	</tr>
@@ -101,7 +111,6 @@ if (num[0] > 0) {
 </table>
 <%			
 } // chiude if (num[0] > 0)
-//	  
 // NEL seguente CICLO FOR SONO GESTITI I CASI DA 'SEMESTRI CONCESSI' (num[1] / Titolo[1]))
 // FINO A 'Periodi non concessi N.L.P./N.D.P.'(num[4] / Titolo[4])
 for (int k= 1; k < 5; k++) {
@@ -143,6 +152,7 @@ for (int k= 1; k < 5; k++) {
 		</td>
 <%
 						for (int i = 0; i < p.length; i++) {
+							if (p[i] != null) {
 %>
 		<td class="L">
 			<font class="l">
@@ -151,6 +161,15 @@ for (int k= 1; k < 5; k++) {
 			</font>
 		</td>
 <%
+							} else {
+%>
+		<td class="cRosso">
+			<font class="c">ATTENZIONE! PERIODI ASSENTI! ANDARE IN MODIFICA E REINSERIRLI!
+			<br>
+			OPPURE CANCELLARE L'ORDINANZA E REINSERIRLA!</font>
+		</td>
+<%
+							}
 					     }
 %>
 	</tr>
@@ -199,6 +218,7 @@ if (num[5] > 0) {
 		<td class="L"><font class="l"><%=tipo%>&nbsp;<%=n[5]%>)<br></font></td>							
 <%
 				for (int i = 0; i < ppSco.length; i++) {
+					if (ppSco[i] != null) {
 %>
 		<td class="L">
 		  	<font class="l">
@@ -207,6 +227,15 @@ if (num[5] > 0) {
 			</font>
 		</td>
 <%
+					} else {
+%>
+		<td class="cRosso">
+			<font class="c">ATTENZIONE! PERIODI ASSENTI! ANDARE IN MODIFICA E REINSERIRLI!
+			<br>
+			OPPURE CANCELLARE L'ORDINANZA E REINSERIRLA!</font>
+		</td>
+<%
+					}
 				}
 %>
 	</tr>
