@@ -2,21 +2,14 @@ package siap.sico.webservice.action;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.security.MessageDigest;
-import java.util.Calendar;
 
 import org.apache.log4j.Logger;
-import org.apache.xerces.impl.dv.util.Base64;
 
 import f3b.log.LogF3B;
-import f3b.security.SecurityException;
 import f3b.util.DateUtils;
 import f3b.util.F3BProperties;
-import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto;
-import it.giustizia.www.serviziTelematici.serviziGenerici.DatiMarcaBolloDigitale;
-import it.giustizia.www.serviziTelematici.serviziGenerici.DatiSingoloVersamento;
 import it.giustizia.www.serviziTelematici.serviziGenerici.DatiVersamento;
 import it.giustizia.www.serviziTelematici.serviziGenerici.EsitoGeneraAvviso;
 import it.giustizia.www.serviziTelematici.serviziGenerici.RichiestaPagamentoTelematico;
@@ -28,7 +21,9 @@ import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.GeneraAvvisoPagoPAUtil;
 import siap.sico.util.SICOLookupRemote;
+import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.controller.FascicoloSiepController;
 import siap.siep.fascicolo.model.FascicoloSiepCertBlobModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -45,7 +40,7 @@ import siap.sius.fascicolo.model.FascicoloSiusCertBlobModel;
  * @author sgioggi
  * @version 1.0
  */
-public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebConstants {
+public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements IWebConstants {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -54,7 +49,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		siesLogger.info("######## ActInvocaWSGeneraAvvisoPagoPA ##########");
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
 		FascicoloSiepModel fsm = null;
 		FascicoloGPModel fgpm = null;
@@ -129,83 +124,16 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActWsBase implements IWebCons
 		siesLogger.debug("Chiamo generaAvviso(RichiestaPagamentoTelematico) su " + endpointAddress);
 
 		// DATI PER RICHIESTA PAGAMENTO
-		RichiestaPagamentoTelematico rpt = new RichiestaPagamentoTelematico();
-		rpt.setAutenticazioneSoggetto("OTH");
-		rpt.setCodiceDistretto(ufm.getCodDistretto());
-		rpt.setCodiceUfficio(ufm.getCodUfficio());
-		Calendar c = Calendar.getInstance();
-		c.setTime(DateUtils.getSysDate());
-		rpt.setDataScadenza(c); // OBBLIGATORIA, altrimenti 30 giorni in automatico
+		RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil.caricaDatiRichiestaPagamentoTelematico(ufm);
 		// DATI VERSAMENTO
-		DatiVersamento dv = new DatiVersamento();
-		dv.setBicAddebito(null);
-		DatiSingoloVersamento[] dsv = new DatiSingoloVersamento[5]; // da 1 a 5 occorrenze
-		dsv[0] = new DatiSingoloVersamento();
-		String causale = "Pagamenti in favore Amministrazione";
-		// se DatiMarcaBolloDigitale è valorizzato allora l'importo è di 16.00
-		DatiMarcaBolloDigitale dmbd = new DatiMarcaBolloDigitale();
-		// contiene l'impronta informatica (digest), rappresentata in "base 64 binary", del documento
-		// informatico o della segnatura di procollo cui è associata la marca da bollo digitale.
-		// algoritmo di hash da utilizzare è SHA-256
-		MessageDigest md = null;
-		String hd = "MarcaBolloDigitale";
-		String hdCripted = null;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-			hdCripted = new String(Base64.encode(md.digest(hd.getBytes())));
-		} catch (Exception ex) {
-			throw new SecurityException("Errore durante il crypting del digest");
-		}
-		dmbd.setHashDocumento(hdCripted);
-		dmbd.setProvinciaResidenza(sm.getCodProvinciaNascita());
-		dmbd.setTipoBollo("01");
-		dsv[0].setDatiMarcaBolloDigitale(dmbd);
-		dsv[0].setDatiSpecificiRiscossione("PENPE"); // valore fisso
-		BigDecimal importo = !Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva()
-				.getSanzioneSostitutiva().getSanzionePecuniariaMulta())
-						? dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
-								.getSanzionePecuniariaMulta()
-						: dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
-								.getSanzionePecuniariaAmmenda();
-		// Il valore dell'importo deve contenere obbligatoriamente le due cifre decimali con
-		// separatore il '.' --> 12345678.90
-		dsv[0].setImporto(importo);
-		dsv[0].setCausale("/" + dsv[0].getImporto() + "/TXT/" + causale); // MAX 100 chars
-		dv.setDatiSingoloVersamento(dsv);
-		for (int i = 0; i < dsv.length; i++)
-			dv.setDatiSingoloVersamento(i, dsv[i]); // da 1 a 5 occorrenze
-		// IbanAddebito: da non valorizzare nel caso in cui il file debba essere usato in generaAvviso()
-		dv.setIbanAddebito(null);
-		dv.setImportoTotale(null);
+		DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, dpcm);
 		rpt.setDatiVersamento(dv);
 		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
-		AnagraficaSoggetto asp = new AnagraficaSoggetto();
-		asp.setCap(null);
-		asp.setCivico(null);
-		asp.setCodiceIdentificativoUnivoco(sm.getCodFiscale()); // C.F. or P.I.
-		asp.setEmail(null);
-		asp.setIndirizzo(null);
-		asp.setLocalita(null);
-		asp.setNaturaGiuridica("F"); // F or G
-		asp.setNazione(sm.getCodStatoNascita());
-		asp.setNominativo(sm.getCognome() + " " + sm.getNome()); // MAX 70 chars
-		asp.setProvincia(sm.getCodProvinciaNascita());
-		asp.setRegione(sm.getCodComuneNascita());
+		AnagraficaSoggetto asp = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
 		rpt.setSoggettoPagatore(asp);
 		// SOGGETTO VERSANTE (opzionale, è il soggetto che effettivamente paga, inserire solo se diverso dal
 		// pagatore)
-		// AnagraficaSoggetto asv = new AnagraficaSoggetto();
-		// asv.setCap(null);
-		// asv.setCivico(null);
-		// asv.setCodiceIdentificativoUnivoco(sm.getCodFiscale()); // C.F. or P.I.
-		// asv.setEmail(null);
-		// asv.setIndirizzo(null);
-		// asv.setLocalita(null);
-		// asv.setNaturaGiuridica("F");
-		// asv.setNazione(sm.getCodStatoNascita());
-		// asv.setNominativo(sm.getCognome() + " " + sm.getNome());
-		// asv.setProvincia(sm.getCodProvinciaNascita());
-		// asv.setRegione(sm.getCodComuneNascita());
+		// AnagraficaSoggetto asv = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
 		// rpt.setSoggettoVersante(asv);
 
 		EsitoGeneraAvviso ega = port.generaAvviso(rpt);
