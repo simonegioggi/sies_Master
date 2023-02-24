@@ -39,8 +39,12 @@ public class ActInserisciCompFoglioComp extends ActionSige implements ICostantiF
 	    aDocAllegato.setCodOperatoreInserimento(this.getCodUtenteConnesso());
 	    aDocAllegato.setCodUfficioInserimento(this.getCodUfficioUtenteConnesso());
 	    aDocAllegato.setDataInserimento(DateUtils.getSysDate());
+	    
 	    aDocAllegato = lDocCtrl.ExInserisciFoglioComplementare(aDocAllegato);
 	    //return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.sius.provvedimento.action.ActLoadInserisciCompFoglioComp&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+lEveMod.getIdEvento().toString();
-	    return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.sige.fogliocomplementare.action.ActLoadDettaglioCompFoglioComp&"+ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO+"="+aDocAllegato.getIdDocumentoAllegato();
+	    // Ticket#20230202011 - si aggancia la stessa funzione di dettaglio agganciata dalla nuova lista
+	    // return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.sige.fogliocomplementare.action.ActLoadDettaglioCompFoglioComp&"+ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO+"="+aDocAllegato.getIdDocumentoAllegato();
+	    return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.sige.fogliocomplementare.action.ActLoadDettaglioFCTastoFunzione&"+ICostantiDocumentoAllegato.CAMPO_ID_DOCUMENTO_ALLEGATO+"="+aDocAllegato.getIdDocumentoAllegato();
+	    // Ticket#20230202011 - FINE
 	}  	 
 }

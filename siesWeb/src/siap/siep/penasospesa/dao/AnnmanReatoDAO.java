@@ -91,5 +91,11 @@ public class AnnmanReatoDAO extends TableDAO
  			 {
 	 setCondition(" ID_ANNMAN_REATO = " + key ); 
 		 }
+	
+	// Ticket#202301250123 -
+	public void setCondizioneUpdateByIdAnn(BigDecimal idAnnotazione)
+	{
+		setCondition(" ANNOTAZIONEMANUALE_ID = " + idAnnotazione ); 
+    }
 
 }
