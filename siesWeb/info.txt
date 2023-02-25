@@ -1,13 +1,10 @@
-Ticket#20230224014 - errata stampa su dettaglio ruolo udienza
+RELEASE_12.4.28.0	-->	nato dal branch "release_12.4.27.0" in data 27/02/2023
 
-Si elimina l'idMagistrato dalla chiamata alla ActStampaFlashVerbaleUdienza 
-altrimenti la funzione di ricerca filtra per magistrto invece che per IdFascicolo stampando il verbale per 
-tutti i fascicoli dell'udienza.
+Comprende i seguenti Ticket MAC:
 
-Risorsa modificata
-\jsp\files\siap\sige\udienzaprocedimento\dettaglioruolo\ListaProcedimentixUdienza.jsp
-
-
-
-
-
+1)	Ticket#20230224014 - errata stampa su dettaglio ruolo udienza
+	Si elimina l'idMagistrato dalla chiamata alla ActStampaFlashVerbaleUdienza altrimenti la funzione di 
+	ricerca filtra per magistrto invece che per IdFascicolo stampando il verbale per tutti i fascicoli 
+	dell'udienza.
+	Risorsa modificata:
+	-	\jsp\files\siap\sige\udienzaprocedimento\dettaglioruolo\ListaProcedimentixUdienza.jsp
