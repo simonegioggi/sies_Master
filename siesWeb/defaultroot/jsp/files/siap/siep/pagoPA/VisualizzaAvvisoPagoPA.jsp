@@ -26,7 +26,7 @@ function VisualizzaAvviso(lAzione) {
 </script>
 </head>
 
-<body class="corpo" onLoad="VisualizzaAvviso('/jsp/Main.jsp?Action=siap.sico.webservice.action.ActLoadAvvisoPagoPA&IDFascicolo=<%=idFascicolo%>')"> 
+<body class="corpo" onLoad="VisualizzaAvviso('/jsp/Main.jsp?Action=siap.siep.pagoPA.action.ActLoadAvvisoPagoPA&IDFascicolo=<%=idFascicolo%>')"> 
 
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="VisualizzaAvvisoPagoPA">
 <table>

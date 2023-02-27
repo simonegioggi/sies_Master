@@ -1,4 +1,4 @@
-package siap.sico.webservice.action;
+package siap.siep.pagoPA.action;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BProperties;
-import f3b.web.IWebConstants;
 import it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto;
 import it.giustizia.www.serviziTelematici.serviziGenerici.DatiVersamento;
 import it.giustizia.www.serviziTelematici.serviziGenerici.EsitoGeneraAvviso;
@@ -40,7 +39,7 @@ import siap.sius.fascicolo.model.FascicoloSiusCertBlobModel;
  * @author sgioggi
  * @version 1.0
  */
-public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements IWebConstants {
+public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPagoPA {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);

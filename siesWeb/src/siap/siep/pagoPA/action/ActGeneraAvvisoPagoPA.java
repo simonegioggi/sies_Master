@@ -1,4 +1,4 @@
-package siap.siep.istruttoria.action;
+package siap.siep.pagoPA.action;
 
 import java.math.BigDecimal;
 

@@ -148,8 +148,4 @@ public interface ICostantiIstruttoria {
 	public static final String PG_LOAD_POPUP_LISTA_TITOLI_ESTRATTO_SENTENZA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/istruttoria/LoadPopupElencoTitoli.jsp";
 
-	// MEV_2023-13: aggiunta costante
-	public static final String PG_LOAD_GENERA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/istruttoria/LoadGeneraAvvisoPagoPA.jsp";
-
 }

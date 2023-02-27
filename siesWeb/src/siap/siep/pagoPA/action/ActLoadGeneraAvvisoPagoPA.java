@@ -1,4 +1,4 @@
-package siap.siep.istruttoria.action;
+package siap.siep.pagoPA.action;
 
 import f3b.web.IWebConstants;
 import siap.sico.utente.model.UtenteModel;
@@ -13,7 +13,7 @@ import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
  * @author sgioggi
  * @version 1.0
  */
-public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiIstruttoria {
+public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPagoPA {
 
 	public String processRequest() throws Exception {
 
@@ -21,7 +21,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiIs
 			String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 					+ "=siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "="
-					+ "siap.siep.istruttoria.action.ActLoadGeneraAvvisoPagoPA";
+					+ "siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA";
 			return lPage;
 		}
 

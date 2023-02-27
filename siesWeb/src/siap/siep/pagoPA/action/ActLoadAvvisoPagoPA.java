@@ -1,4 +1,4 @@
-package siap.sico.webservice.action;
+package siap.siep.pagoPA.action;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;

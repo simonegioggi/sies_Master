@@ -135,10 +135,6 @@ if (!"S".equals(fascicoloNotInSession)) {
 		<td width="32%" class="menulines" nowrap>
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.istruttoria.action.ActLoadInserisciIstruttoriaRichiestaPagamentoPP">Notizie - Pagamento Pena Pecuniaria</a>
       	</td>
-      	<%-- MEV_2023-13: aggiunta etichetta --%>
-      	<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.istruttoria.action.ActLoadGeneraAvvisoPagoPA">Genera Avviso PagoPA</a>
-      	</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr>

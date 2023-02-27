@@ -42,7 +42,7 @@
 <br>
   
 <FORM method="POST" name="LoadGeneraAvvisoPagoPA" action="<%= IWebConstants.PG_MAIN%>">
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.istruttoria.action.ActGeneraAvvisoPagoPA">
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActGeneraAvvisoPagoPA">
 
 <table>
 	<tr>

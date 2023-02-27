@@ -18,7 +18,7 @@ function downloadAvviso() {
 
 <body onLoad="downloadAvviso()" class="corpo">
 <FORM method="POST"  action="<%=IWebConstants.PG_MAIN%>" name="LoadDownloadAvvisoPagoPA"> 
-<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sico.webservice.action.ActInvocaWSGeneraAvvisoPagoPA"/>
+<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInvocaWSGeneraAvvisoPagoPA"/>
 <input type="hidden" name="tipoFascicolo" value="<%=tipoFascicolo%>" />
 <input type="hidden" name="idEvento" value="<%=idEvento%>" />
 	
