@@ -4,15 +4,17 @@ import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 
 /**
- * Title: ActLoadCivilmenteObbligato 
- * Description: Classe Action per la load Civilmente Obbligato
+ * MEV_2023-13
+ * Title: ActLoadInserisciCivilmenteObbligato 
+ * Description: Classe Action per la load del Civilmente Obbligato
  *
  * @author sgioggi
  * @version 1.0
  */
-public class ActLoadCivilmenteObbligato extends ActionSiap implements ICostantiPagoPA {
+public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements ICostantiPagoPA {
 
 	public String processRequest() throws Exception {
 
@@ -39,6 +41,7 @@ public class ActLoadCivilmenteObbligato extends ActionSiap implements ICostantiP
 
 		// Imposta Modalità Inserimento.
 		setRequestAttribute("modalita", "I");
+		setRequestAttribute("civilmenteObbligato", new CivilmenteObbligatoModel());
 
 		return lPage; // restituisce la jsp di VIEW
 	}

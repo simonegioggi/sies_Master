@@ -1,5 +1,7 @@
 package siap.siep.util;
 
+import f3b.util.F3BException;
+import f3b.util.LookupClass;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.siep.agdgfascicolosiep.controller.IAgdgFascicoloSiep;
 import siap.siep.altracausa.controller.IAltraCausa;
@@ -58,6 +60,7 @@ import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzioneAlfano;
 import siap.siep.ordinescarcerazione.controller.IOrdineScarcerazione;
+import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.parametro.controller.IParametro;
 import siap.siep.penaaccessoria.controller.IPenaAccessoria;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
@@ -98,8 +101,6 @@ import siap.siep.tipoeventibdmc.controller.ITipoEventiBdmc;
 import siap.siep.tipologiaorario.controller.ITipologiaOrario;
 import siap.siep.ulterioresanzionecumulo.controller.IUlterioreSanzioneCumulo;
 import siap.siep.verbale.controller.IVerbale;
-import f3b.util.F3BException;
-import f3b.util.LookupClass;
 
 public class SIEPLookupRemote extends LookupClass {
 
@@ -216,10 +217,10 @@ public class SIEPLookupRemote extends LookupClass {
 	/*
 	 * public static ICircostanzaReato getCircostanzaReatoRemote() throws F3BException { Object lRef;
 	 * ICircostanzaReato lRemote;
-	 * 
+	 *
 	 * lRef = lookup("siap.siep.circostanzareato.controller.CircostanzaReatoController"); lRemote =
 	 * (ICircostanzaReato)lRef;
-	 * 
+	 *
 	 * return lRemote; }
 	 */
 
@@ -673,7 +674,7 @@ public class SIEPLookupRemote extends LookupClass {
 
 	/*****************************************************************************
 	 * Istanzia e restituisce l'interfaccia del controller CertificatoStatoEsecController
-	 * 
+	 *
 	 * @return Un'istanza dell'interfaccia del controller CertificatoStatoEsecController
 	 * @throws F3BException
 	 ****************************************************************************/
@@ -687,7 +688,7 @@ public class SIEPLookupRemote extends LookupClass {
 
 	/*****************************************************************************
 	 * Istanzia e restituisce l'interfaccia del controller ScambioSanzioneController
-	 * 
+	 *
 	 * @return Un'istanza dell'interfaccia del controller ScambioSanzioneController
 	 * @throws F3BException
 	 *             blablablablablabla
@@ -711,7 +712,7 @@ public class SIEPLookupRemote extends LookupClass {
 
 	/*****************************************************************************
 	 * Istanzia e restituisce l'interfaccia del controller IstruttoriaCumuloController
-	 * 
+	 *
 	 * @return Un'istanza dell'interfaccia del controller IstruttoriaCumuloController
 	 * @throws F3BException
 	 ****************************************************************************/
@@ -749,7 +750,7 @@ public class SIEPLookupRemote extends LookupClass {
 
 	/*****************************************************************************
 	 * Istanzia e restituisce l'interfaccia del controller RichiestaConversioneController
-	 * 
+	 *
 	 * @return Un'istanza dell'interfaccia del controller RichiestaConversioneController
 	 * @throws F3BException
 	 ****************************************************************************/
@@ -854,14 +855,15 @@ public class SIEPLookupRemote extends LookupClass {
 
 	/*****************************************************************************
 	 * Istanzia e restituisce l'interfaccia del controller AnnotazioneEsitoTrasmissioneController
-	 * 
+	 *
 	 * @return Un'istanza dell'interfaccia del controller AnnotazioneEsitoTrasmissioneController
 	 * @throws F3BException
 	 ****************************************************************************/
 	public static IAnnotazioneEsitoTrasmissione getAnnotazioneEsitoTrasmissioneRemote() throws F3BException {
 		Object lRef;
 		IAnnotazioneEsitoTrasmissione lRemote;
-		lRef = lookup("siap.siep.annotazioneesitotrasmissione.controller.AnnotazioneEsitoTrasmissioneController");
+		lRef = lookup(
+				"siap.siep.annotazioneesitotrasmissione.controller.AnnotazioneEsitoTrasmissioneController");
 		lRemote = (IAnnotazioneEsitoTrasmissione) lRef;
 		return lRemote;
 	}
@@ -890,122 +892,127 @@ public class SIEPLookupRemote extends LookupClass {
 		return lRemote;
 	}
 
-  public static ITitoloCumulato getTitoloCumulatoRemote() throws F3BException {
-    Object lRef;
-    ITitoloCumulato lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.TitoloCumulatoController");
-    lRemote = (ITitoloCumulato)lRef;
-    return lRemote;
-  }  
-  
-  public static IModuloCumulo getModuloCumuloRemote() throws F3BException {
-    Object lRef;
-    IModuloCumulo lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.ModuloCumuloController");
-    lRemote = (IModuloCumulo)lRef;
-    return lRemote;
-  }
-  
-  public static ISoggettoCumulato getSoggettoCumuloRemote() throws F3BException
-  {
-    Object lRef;
-    ISoggettoCumulato lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.SoggettoCumulatoController");
-    lRemote = (ISoggettoCumulato)lRef;
-    return lRemote;
-  }
-  
-  public static IPenaAccessoriaCumulo getPenaAccessoriaCumuloRemote() throws F3BException
-  {
-    Object lRef;
-    IPenaAccessoriaCumulo lRemote;
+	public static ITitoloCumulato getTitoloCumulatoRemote() throws F3BException {
+		Object lRef;
+		ITitoloCumulato lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.TitoloCumulatoController");
+		lRemote = (ITitoloCumulato) lRef;
+		return lRemote;
+	}
 
-    lRef = lookup("siap.siep.modulocumulo.controller.PenaAccessoriaCumuloController");
-    lRemote = (IPenaAccessoriaCumulo)lRef;
+	public static IModuloCumulo getModuloCumuloRemote() throws F3BException {
+		Object lRef;
+		IModuloCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.ModuloCumuloController");
+		lRemote = (IModuloCumulo) lRef;
+		return lRemote;
+	}
 
-    return lRemote;
-  }
-  
-  public static IDatiFinaliCumulo getDatiFinaliCumuloRemote() throws F3BException {
-    Object lRef;
-    IDatiFinaliCumulo lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.DatiFinaliCumuloController");
-    lRemote = (IDatiFinaliCumulo)lRef;
-    return lRemote;
-  }
-  
-  public static IMisuraCautelareCumulo getMisuraCautelareCumuloRemote() throws F3BException {
-    Object lRef;
-    IMisuraCautelareCumulo lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.MisuraCautelareCumuloController");
-    lRemote = (IMisuraCautelareCumulo)lRef;
-    return lRemote;
-  }
-  
-  public static IBeneficioCumulo getBeneficioCumuloRemote() throws F3BException
-  {
-    Object lRef;
-    IBeneficioCumulo lRemote;
+	public static ISoggettoCumulato getSoggettoCumuloRemote() throws F3BException {
+		Object lRef;
+		ISoggettoCumulato lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.SoggettoCumulatoController");
+		lRemote = (ISoggettoCumulato) lRef;
+		return lRemote;
+	}
 
-    lRef = lookup("siap.siep.modulocumulo.controller.BeneficioCumuloController");
-    lRemote = (IBeneficioCumulo)lRef;
+	public static IPenaAccessoriaCumulo getPenaAccessoriaCumuloRemote() throws F3BException {
+		Object lRef;
+		IPenaAccessoriaCumulo lRemote;
 
-    return lRemote;
-  }
-  
-  public static IComputiCumulo getComputiCumuloRemote() throws F3BException {
-    Object lRef;
-    IComputiCumulo lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.ComputiCumuloController");
-    lRemote = (IComputiCumulo)lRef;
-    return lRemote;
-  }
-  
-  public static IStampaCumulo getStampaCumuloRemote() throws F3BException
-  {
-    Object lRef;
-    IStampaCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.PenaAccessoriaCumuloController");
+		lRemote = (IPenaAccessoriaCumulo) lRef;
 
-    lRef = lookup("siap.siep.istruttoriacumulo.controller.StampaCumuloController");
-    lRemote = (IStampaCumulo) lRef;
+		return lRemote;
+	}
 
-    return lRemote;
-  }  
-  
-  public static IPosizioneGiuridicaCumulo getPosizioneGiuridicaCumuloRemote() throws F3BException
-  {
-    Object lRef;
-    IPosizioneGiuridicaCumulo lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.PosizioneGiuridicaCumuloController");
-    lRemote = (IPosizioneGiuridicaCumulo)lRef;
-    return lRemote;
-  }
-  
-  public static ICircostanzaCumulo getCircostanzaCumuloRemote() throws F3BException
-  {
-    Object lRef;
-    ICircostanzaCumulo lRemote;
+	public static IDatiFinaliCumulo getDatiFinaliCumuloRemote() throws F3BException {
+		Object lRef;
+		IDatiFinaliCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.DatiFinaliCumuloController");
+		lRemote = (IDatiFinaliCumulo) lRef;
+		return lRemote;
+	}
 
-    lRef = lookup("siap.siep.modulocumulo.controller.CircostanzaCumuloController");
-    lRemote = (ICircostanzaCumulo)lRef;
+	public static IMisuraCautelareCumulo getMisuraCautelareCumuloRemote() throws F3BException {
+		Object lRef;
+		IMisuraCautelareCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.MisuraCautelareCumuloController");
+		lRemote = (IMisuraCautelareCumulo) lRef;
+		return lRemote;
+	}
 
-    return lRemote;
-  }
-  
-  public static IStatoEsecTitoloCumulato getStatoEsecTitoloCumulatoRemote() throws F3BException {
-    Object lRef;
-    IStatoEsecTitoloCumulato lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.StatoEsecTitoloCumulatoController");
-    lRemote = (IStatoEsecTitoloCumulato)lRef;
-    return lRemote;
-  }  
-  
-  public static IRichiestePmInCumulo getRichiestePmInCumuloRemote() throws F3BException {
-    Object lRef;
-    IRichiestePmInCumulo lRemote;
-    lRef = lookup("siap.siep.modulocumulo.controller.RichiestePmInCumuloController");
-    lRemote = (IRichiestePmInCumulo)lRef;
-    return lRemote;
-  }  
-  
+	public static IBeneficioCumulo getBeneficioCumuloRemote() throws F3BException {
+		Object lRef;
+		IBeneficioCumulo lRemote;
+
+		lRef = lookup("siap.siep.modulocumulo.controller.BeneficioCumuloController");
+		lRemote = (IBeneficioCumulo) lRef;
+
+		return lRemote;
+	}
+
+	public static IComputiCumulo getComputiCumuloRemote() throws F3BException {
+		Object lRef;
+		IComputiCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.ComputiCumuloController");
+		lRemote = (IComputiCumulo) lRef;
+		return lRemote;
+	}
+
+	public static IStampaCumulo getStampaCumuloRemote() throws F3BException {
+		Object lRef;
+		IStampaCumulo lRemote;
+
+		lRef = lookup("siap.siep.istruttoriacumulo.controller.StampaCumuloController");
+		lRemote = (IStampaCumulo) lRef;
+
+		return lRemote;
+	}
+
+	public static IPosizioneGiuridicaCumulo getPosizioneGiuridicaCumuloRemote() throws F3BException {
+		Object lRef;
+		IPosizioneGiuridicaCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.PosizioneGiuridicaCumuloController");
+		lRemote = (IPosizioneGiuridicaCumulo) lRef;
+		return lRemote;
+	}
+
+	public static ICircostanzaCumulo getCircostanzaCumuloRemote() throws F3BException {
+		Object lRef;
+		ICircostanzaCumulo lRemote;
+
+		lRef = lookup("siap.siep.modulocumulo.controller.CircostanzaCumuloController");
+		lRemote = (ICircostanzaCumulo) lRef;
+
+		return lRemote;
+	}
+
+	public static IStatoEsecTitoloCumulato getStatoEsecTitoloCumulatoRemote() throws F3BException {
+		Object lRef;
+		IStatoEsecTitoloCumulato lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.StatoEsecTitoloCumulatoController");
+		lRemote = (IStatoEsecTitoloCumulato) lRef;
+		return lRemote;
+	}
+
+	public static IRichiestePmInCumulo getRichiestePmInCumuloRemote() throws F3BException {
+		Object lRef;
+		IRichiestePmInCumulo lRemote;
+		lRef = lookup("siap.siep.modulocumulo.controller.RichiestePmInCumuloController");
+		lRemote = (IRichiestePmInCumulo) lRef;
+		return lRemote;
+	}
+
+	// MEV_2023-13: aggiunta metodo per l'interfaccia di gestione Civilmente Obbligato
+	public static ICivilmenteObbligato getCivilmenteObbligatoRemote() throws F3BException {
+
+		Object lRef;
+		ICivilmenteObbligato lRemote;
+		lRef = lookup("siap.siep.pagoPA.controller.CivilmenteObbligatoController");
+		lRemote = (ICivilmenteObbligato) lRef;
+		return lRemote;
+	}
+	// FINE MEV_2023-13
+
 }

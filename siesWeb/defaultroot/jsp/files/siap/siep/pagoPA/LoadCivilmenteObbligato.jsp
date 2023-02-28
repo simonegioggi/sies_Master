@@ -6,7 +6,7 @@
 
 <html>
 <head>
-<title>[S.I.E.S.] - Carica Inserimento Civilmente Obbligato </title>
+<title>[S.I.E.S.] - Gestione Civilmente Obbligato Pena Pecuniaria</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
@@ -29,15 +29,15 @@ function Init() {
 <table>
 	<tr>
 		<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Inserimento Civilmente Obbligato</font></td>
+        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Inserimento Civilmente Obbligato Pena Pecuniaria</font></td>
   		<!-- BOTTONE DI RITORNO -->
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
     </tr>
 </table>
 
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
-  
-<table width="87%">
+<br>
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 		<td class="c" >
 			Persona Fisica <input type="radio" name="<%=ICostantiPagoPA.RADIO_COD_PERSONA%>" value="F" onClick="VisualizzaPersonaFisica();" checked>
@@ -47,7 +47,7 @@ function Init() {
 	</tr>
 </table>
 </FORM>
-    
+
 <div id="tipoPersona" style="position: relative; top: 0; left: 0; visibility:visible;">
 	<div id="PersonaFisicaDiv" style="position:relative; top: 0; left: 0; visibility:visible;">
 		<jsp:include page="<%=ICostantiPagoPA.DIV_PERSONA_FISICA%>"/>
