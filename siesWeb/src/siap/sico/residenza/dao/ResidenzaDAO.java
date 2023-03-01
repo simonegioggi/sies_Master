@@ -233,7 +233,7 @@ public class ResidenzaDAO extends SIAPTableDAO {
 		setFlgDomAvv(aModel.getFlgDomAvv());
 		setIdParteUdienza(aModel.getIdParteUdienza());
 		setFlgDomicilioDifensore(aModel.getFlgDomicilioDifensore());
-		setIdCivilmenteObbligato(getIdCivilmenteObbligato());
+		setIdCivilmenteObbligato(aModel.getIdCivilmenteObbligato());
 	}
 
 	/**
@@ -259,6 +259,7 @@ public class ResidenzaDAO extends SIAPTableDAO {
 		setIdParteUdienza(aModel.getIdParteUdienza());
 		setFlgDomicilioDifensore(aModel.getFlgDomicilioDifensore());
 		setIdCivilmenteObbligato(aModel.getIdCivilmenteObbligato());
+
 		setCondizioneUpdate(aModel.getIdResidenza());
 	}
 

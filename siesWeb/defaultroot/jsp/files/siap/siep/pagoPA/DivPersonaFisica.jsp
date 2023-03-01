@@ -174,7 +174,7 @@ if(modalita.equals("I")) {
 	</tr>
 	<tr>
         <td class="l">Codice Fiscale</td>
-        <td class="l"><input title="Codice Fiscale" id=<%=ICostantiPagoPA.CAMPO_COD_FISCALE%> value="<%=StringUtils.toStringJSP(civilmenteObbligato.getCodFiscale()) %>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>" maxlength="16" size="25">
+        <td class="l"><input title="Codice Fiscale" id=<%=ICostantiPagoPA.CAMPO_COD_FISCALE%> value="<%=StringUtils.toStringJSP(civilmenteObbligato.getCodFiscale())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>" maxlength="16" size="25">
         </td>
         <td class="l" colspan="2">&nbsp;</td>
 	</tr>
@@ -193,12 +193,12 @@ if(modalita.equals("I")) {
 	</tr>
 	<tr>
 		<td class="l">Indirizzo</td>
-		<td class="l"><input size="50" maxlength="200" value="<%if(civilmenteObbligato.getResidenza()!= null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getIndirizzo())%>" title="Indirizzo" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>">
+		<td class="l"><input size="50" maxlength="200" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getIndirizzo())%>" title="Indirizzo" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>">
 			<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_RESIDENZA%>" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=civilmenteObbligato.getResidenza().getIdResidenza()%>">
 		</td>
         <td class="l">Luogo</td>
         <td class="L">
-          	<input title="Comune di Residenza" value="<%if(civilmenteObbligato.getResidenza()!= null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35">
+          	<input title="Comune di Residenza" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35">
           	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>');">
             	<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -207,19 +207,17 @@ if(modalita.equals("I")) {
 	<tr>
 		<td class="l">CAP</td>
 		<td class="l">
-			<input size=5 maxlength=5 value="<%if(civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getCap())%>" title="Cap" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>">
+			<input size=5 maxlength=5 value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getCap())%>" title="Cap" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>">
 		</td>
 		<td class="l">Comune Estero</td>
 		<td class="l">
-			<input size=50 maxlength=200 value="<%if(civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescComuneEstero())%>" title="ComuneEstero" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>">
+			<input size=50 maxlength=200 value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescComuneEstero())%>" title="ComuneEstero" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>">
 		</td>
 	</tr>
 	<tr>
 		<td class="l">Stato</td>
 		<td class="L">
-       		<select title="Stato di Residenza" name="<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>">
-   				<%= nazioniResidenza %>
-       		</select>
+       		<select title="Stato di Residenza" name="<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>"><%=nazioniResidenza%></select>
         </td>
 		<td class="l" colspan="2">&nbsp;</td>
 	</tr>

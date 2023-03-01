@@ -12,9 +12,9 @@ import siap.sico.residenza.model.ResidenzaFascicoloSiusModel;
 import siap.sico.residenza.model.ResidenzaModel;
 
 /**
- * Title: ResidenzaSqlDAO
+ * Title: ResidenzaSqlDAO 
  * Description: Classe SqlDAO che rappresenta la tabella Residenza
- * 
+ *
  * @version 1.0
  */
 public class ResidenzaSqlDAO extends SIAPSqlDAO {
@@ -28,42 +28,37 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 	// METODO RICERCA()
 	//
 	public void ricercaResidenza(ResidenzaModel aModel) throws DAOException {
+
 		String lStatement = getSqlStringResidenza();
-
 		lStatement += setCondizioni(aModel);
-
 		lStatement += " ORDER BY RESIDENZA.ID_RESIDENZA DESC";
-
 		setStatement(lStatement);
 	}
 
 	public void ricercaResidenzaByFascicolo(BigDecimal aKeyFascicolo) throws DAOException {
-		String lStatement = getSqlStringRelazioneSiep();
 
+		String lStatement = getSqlStringRelazioneSiep();
 		lStatement += " AND (RESIDENZA_FASCICOLO_SIEP.FAS_SIE_ID_FASCICOLO_SIEP = " + aKeyFascicolo + ")";
 		lStatement += " AND (COD_TIPO_RESIDENZA = 'R')";
 		lStatement += " AND (RESIDENZA_FASCICOLO_SIEP.DATA_FINE_VALIDITA IS NULL)";
 		lStatement += " ORDER BY RESIDENZA.ID_RESIDENZA DESC";
-
 		setStatement(lStatement);
 	}
 
 	public void ricercaResidenzeDomiciliByFascicolo(BigDecimal aKeyFascicolo) throws DAOException {
-		String lStatement = getSqlStringRelazioneSiep();
 
+		String lStatement = getSqlStringRelazioneSiep();
 		lStatement += " AND (RESIDENZA_FASCICOLO_SIEP.FAS_SIE_ID_FASCICOLO_SIEP = " + aKeyFascicolo + ")";
 		lStatement += " ORDER BY RESIDENZA.ID_RESIDENZA DESC";
-
 		setStatement(lStatement);
 	}
 
 	// 15/01/2008 Ricerca Residenze/Domicili per Fascicolo SIUS.
 	public void ricercaResidenzeDomiciliByFascicoloSius(BigDecimal aKeyFascicolo) throws DAOException {
-		String lStatement = getSqlStringRelazioneSius();
 
+		String lStatement = getSqlStringRelazioneSius();
 		lStatement += " AND (RESIDENZA_FASCICOLO_SIUS.FAS_SIU_ID_FASCICOLO_SIUS = " + aKeyFascicolo + ")";
 		lStatement += " ORDER BY RESIDENZA.ID_RESIDENZA DESC";
-
 		setStatement(lStatement);
 	}
 
@@ -255,7 +250,8 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 				+ " RESIDENZA_FASCICOLO_SIEP.DATA_FINE_VALIDITA,"
 				+ " RESIDENZA_FASCICOLO_SIEP.RES_ID_RESIDENZA,"
 				+ " RESIDENZA_FASCICOLO_SIEP.FAS_SIE_ID_FASCICOLO_SIEP," + " RESIDENZA.FLG_DOM_AVV,"
-				+ " RESIDENZA.ID_PARTE_UDIENZA," + " RESIDENZA.FLG_DOMICILIO_DIFENSORE";
+				+ " RESIDENZA.ID_PARTE_UDIENZA,"
+				+ " RESIDENZA.FLG_DOMICILIO_DIFENSORE, RESIDENZA.ID_CIVILMENTE_OBBLIGATO";
 		lStatement += " FROM RESIDENZA, RESIDENZA_FASCICOLO_SIEP, CG_REF_CODES DESCR_STATO, CG_REF_CODES DESCR_PROVINCIA,";
 		lStatement += " COMUNE, CG_REF_CODES DESCR_TIPO_RESIDENZA";
 		lStatement += " WHERE (DESCR_STATO.RV_DOMAIN = 'NAZIONE' AND DESCR_STATO.RV_LOW_VALUE = RESIDENZA.COD_STATO)";
@@ -280,7 +276,8 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 				+ " RESIDENZA.SOG_ID_SOGGETTO," + " RESIDENZA_FASCICOLO_SIUS.DATA_INIZIO_VALIDITA,"
 				+ " RESIDENZA_FASCICOLO_SIUS.DATA_FINE_VALIDITA,"
 				+ " RESIDENZA_FASCICOLO_SIUS.FAS_SIU_ID_FASCICOLO_SIUS," + " RESIDENZA.FLG_DOM_AVV,"
-				+ " RESIDENZA.ID_PARTE_UDIENZA," + " RESIDENZA.FLG_DOMICILIO_DIFENSORE";
+				+ " RESIDENZA.ID_PARTE_UDIENZA,"
+				+ " RESIDENZA.FLG_DOMICILIO_DIFENSORE, RESIDENZA.ID_CIVILMENTE_OBBLIGATO";
 		lStatement += " FROM RESIDENZA, FASCICOLO_SIUS, RESIDENZA_FASCICOLO_SIUS, CG_REF_CODES DESCR_STATO, CG_REF_CODES DESCR_PROVINCIA,";
 		lStatement += " COMUNE, CG_REF_CODES DESCR_TIPO_RESIDENZA";
 		lStatement += " WHERE (DESCR_STATO.RV_DOMAIN = 'NAZIONE' AND DESCR_STATO.RV_LOW_VALUE = RESIDENZA.COD_STATO)";
@@ -306,7 +303,8 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 				+ " RESIDENZA.SOG_ID_SOGGETTO," + " RESIDENZA_FASCICOLO_SIGE.DATA_INIZIO_VALIDITA,"
 				+ " RESIDENZA_FASCICOLO_SIGE.DATA_FINE_VALIDITA,"
 				+ " RESIDENZA_FASCICOLO_SIGE.FAS_SIGE_ID_FASCICOLO_SIGE," + " RESIDENZA.FLG_DOM_AVV,"
-				+ " RESIDENZA.ID_PARTE_UDIENZA," + " RESIDENZA.FLG_DOMICILIO_DIFENSORE";
+				+ " RESIDENZA.ID_PARTE_UDIENZA,"
+				+ " RESIDENZA.FLG_DOMICILIO_DIFENSORE, RESIDENZA.ID_CIVILMENTE_OBBLIGATO";
 		lStatement += " FROM RESIDENZA, FASCICOLO_SIGE, RESIDENZA_FASCICOLO_SIGE, CG_REF_CODES DESCR_STATO, CG_REF_CODES DESCR_PROVINCIA,";
 		lStatement += " COMUNE, CG_REF_CODES DESCR_TIPO_RESIDENZA";
 		lStatement += " WHERE (DESCR_STATO.RV_DOMAIN = 'NAZIONE' AND DESCR_STATO.RV_LOW_VALUE = RESIDENZA.COD_STATO)";
@@ -330,7 +328,7 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 				+ " DATA_INSERIMENTO," + " COD_UFFICIO_INSERIMENTO," + " COD_OPERATORE_AGGIORNAMENTO,"
 				+ " DATA_AGGIORNAMENTO," + " COD_UFFICIO_AGGIORNAMENTO," + " SOG_ID_SOGGETTO,"
 				+ " RESIDENZA.FLG_DOM_AVV," + " RESIDENZA.ID_PARTE_UDIENZA,"
-				+ " RESIDENZA.FLG_DOMICILIO_DIFENSORE";
+				+ " RESIDENZA.FLG_DOMICILIO_DIFENSORE, RESIDENZA.ID_CIVILMENTE_OBBLIGATO";
 		lStatement += " FROM RESIDENZA, CG_REF_CODES DESCR_STATO, CG_REF_CODES DESCR_PROVINCIA,";
 		lStatement += " COMUNE, CG_REF_CODES DESCR_TIPO_RESIDENZA";
 		lStatement += " WHERE (DESCR_STATO.RV_DOMAIN = 'NAZIONE' AND DESCR_STATO.RV_LOW_VALUE = RESIDENZA.COD_STATO)";
@@ -386,6 +384,8 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 		aModel.setFlgDomAvv(getString("FLG_DOM_AVV"));
 		aModel.setIdParteUdienza(getBigDecimal("ID_PARTE_UDIENZA"));
 		aModel.setFlgDomicilioDifensore(getString("FLG_DOMICILIO_DIFENSORE"));
+		// MEV_2023-13: aggiunto campo in estrazione e gestito ovunque
+		aModel.setIdCivilmenteObbligato(getBigDecimal("ID_CIVILMENTE_OBBLIGATO"));
 		return aModel;
 	}
 
@@ -529,10 +529,9 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void ricercaDomicilioCorrenteByIdParteUdienza(BigDecimal aKeyParteUdienza) throws DAOException {
+
 		String lStatement = getSqlStringResidenza();
-
 		lStatement += " AND ID_PARTE_UDIENZA = " + aKeyParteUdienza;
-
 		setStatement(lStatement);
 	}
 
@@ -540,12 +539,10 @@ public class ResidenzaSqlDAO extends SIAPSqlDAO {
 	// METODO RICERCA SIGE
 	//
 	public void ricercaResidenzaSige(ResidenzaModel aModel, BigDecimal idSoggettoSiep) throws DAOException {
+
 		String lStatement = getSqlStringResidenza();
-
 		lStatement += setCondizioneSige(aModel, idSoggettoSiep);
-
 		lStatement += " ORDER BY RESIDENZA.ID_RESIDENZA DESC";
-
 		setStatement(lStatement);
 	}
 

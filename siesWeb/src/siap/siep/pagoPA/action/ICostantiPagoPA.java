@@ -10,21 +10,6 @@ import f3b.web.IWebConstants;
  */
 public interface ICostantiPagoPA {
 
-	public static final String PG_VISUALIZZA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/VisualizzaAvvisoPagoPA.jsp";
-
-	public static final String PG_LOAD_GENERA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/LoadGeneraAvvisoPagoPA.jsp";
-
-	public static final String PG_DOWNLOAD_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/DownloadAvvisoPagoPA.jsp";
-
-	public static final String PG_LOAD_INSERISCI_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/LoadInserisciCivilmenteObbligato.jsp";
-
-	public static final String PG_LOAD_MODIFICA_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/LoadModificaCivilmenteObbligato.jsp";
-
 	public static final String RADIO_COD_PERSONA = "CodPersona";
 	public static final String CAMPO_ID_CIVILMENTE_OBBLIGATO = "IdCivilmenteObbligato";
 	public static final String CAMPO_COGNOME = "Cognome";
@@ -62,6 +47,21 @@ public interface ICostantiPagoPA {
 	public static final String CAMPO_PEC = "Pec";
 	public static final String CAMPO_EMAIL = "Email";
 
+	public static final String PG_VISUALIZZA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/VisualizzaAvvisoPagoPA.jsp";
+
+	public static final String PG_LOAD_GENERA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/LoadGeneraAvvisoPagoPA.jsp";
+
+	public static final String PG_DOWNLOAD_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/DownloadAvvisoPagoPA.jsp";
+
+	public static final String PG_LOAD_INSERISCI_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/LoadInserisciCivilmenteObbligato.jsp";
+
+	public static final String PG_LOAD_MODIFICA_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/LoadModificaCivilmenteObbligato.jsp";
+
 	public static final String DIV_PERSONA_FISICA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/DivPersonaFisica.jsp";
 
@@ -70,5 +70,8 @@ public interface ICostantiPagoPA {
 
 	public static final String JS_TIPO_PERSONA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/JsTipoPersona.js";
+	
+	public static final String PG_DETTAGLIO_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/DettaglioCivilmenteObbligato.jsp";
 
 }
