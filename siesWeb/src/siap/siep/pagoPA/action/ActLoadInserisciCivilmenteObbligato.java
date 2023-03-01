@@ -19,7 +19,7 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 	public String processRequest() throws Exception {
 
 		// Prepara la pagina di destinazione
-		String lPage = PG_LOAD_CIVILMENTE_OBBLIGATO;
+		String lPage = PG_LOAD_INSERISCI_CIVILMENTE_OBBLIGATO;
 
 		// Gestione pulsante di ritorno
 		gestioneRitorno();

@@ -19,8 +19,8 @@ public interface ICostantiPagoPA {
 	public static final String PG_DOWNLOAD_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/DownloadAvvisoPagoPA.jsp";
 
-	public static final String PG_LOAD_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/LoadCivilmenteObbligato.jsp";
+	public static final String PG_LOAD_INSERISCI_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/LoadInserisciCivilmenteObbligato.jsp";
 
 	public static final String PG_LOAD_MODIFICA_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/LoadModificaCivilmenteObbligato.jsp";

@@ -236,7 +236,7 @@ if(modalita.equals("I")) {
 <input type="HIDDEN" name="Action" value="<%=lAction%>"> 
 <input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
 <input type="HIDDEN" name="<%=ICostantiPagoPA.RADIO_COD_PERSONA %>" value="F">
-<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_SOGGETTO%>" value="<%=civilmenteObbligato.getIdSoggetto()%>">
+<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>" value="<%=civilmenteObbligato.getIdCivilmenteObbligato()%>">
 <input type="HIDDEN" name="modalita" value="<%=modalita%>">
 <input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_FLAG_DOMICILIO_PRESSO_DIFENSORE%>" value="<%if(civilmenteObbligato.getResidenza()!= null)%><%=civilmenteObbligato.getResidenza().getFlgDomicilioDifensore()%>">
 </form>
