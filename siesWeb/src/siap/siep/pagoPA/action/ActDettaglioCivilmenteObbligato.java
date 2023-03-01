@@ -1,6 +1,3 @@
-/**
- *
- */
 package siap.siep.pagoPA.action;
 
 import java.math.BigDecimal;
