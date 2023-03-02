@@ -27,17 +27,17 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 
 		String s = new String("");
 
-		s += "SELECT CO.ID_CIVILMENTE_OBBLIGATO, CO.COD_TIPO_PART, CO.COD_PARTE,"
+		s += "SELECT CO.ID_CIVILMENTE_OBBLIGATO, CO.COD_TUTORE, CO.COD_PERSONA,"
 				+ " CO.COD_FISCALE, CO.COGNOME, CO.NOME, CO.DENOMINAZIONE,"
 				+ " CO.DATA_NASCITA, CO.COD_COMUNE_NASCITA, COM.DESCRIZIONE COMUNE_NASCITA,"
 				+ " CO.COD_STATO_NASCITA, DESCR_STATO.RV_MEANING DESCR_STATO_NASCITA,"
 				+ " CO.DESC_COMUNE_NASCITA_ESTERO, CO.SESSO, CO.RAG_SOCIALE,"
 				+ " CO.COD_PROVINCIA, CO.IND_SEDE_LEGALE, CO.IND_SEDE_OPERATIVA,"
-				+ " CO.FLG_CONV_UDIENZA, CO.COD_OPERATORE_INSERIMENTO,"
+				+ " CO.COD_OPERATORE_INSERIMENTO,"
 				+ " CO.DATA_INSERIMENTO, CO.COD_UFFICIO_INSERIMENTO,"
 				+ " CO.COD_OPERATORE_AGGIORNAMENTO, CO.DATA_AGGIORNAMENTO,"
 				+ " CO.COD_UFFICIO_AGGIORNAMENTO, CO.COD_FISCALE_RAP,"
-				+ " CO.COD_PROVINCIA_NASCITA, DESCR_PROVINCIA.RV_MEANING DESCR_PROVINCIA"
+				+ " CO.COD_PROVINCIA_NASCITA, DESCR_PROVINCIA.RV_MEANING DESCR_PROVINCIA,"
 				+ " CO.PEC, CO.E_MAIL, CO.FAS_SIE_ID_FASCICOLO_SIEP"
 				+ " FROM CIVILMENTE_OBBLIGATO CO"
 				+ " LEFT OUTER JOIN COMUNE COM ON (CO.COD_COMUNE_NASCITA = COM.COD_COMUNE)"
@@ -57,8 +57,8 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 		CivilmenteObbligatoModel aModel = new CivilmenteObbligatoModel();
 
 		aModel.setIdCivilmenteObbligato(getBigDecimal("ID_CIVILMENTE_OBBLIGATO"));
-		aModel.setCodTipoPart(getString("COD_TIPO_PART"));
-		aModel.setCodParte(getString("COD_PARTE"));
+		aModel.setCodTutore(getString("COD_TUTORE"));
+		aModel.setCodPersona(getString("COD_PERSONA"));
 		aModel.setCodFiscale(getString("COD_FISCALE"));
 		aModel.setCognome(getString("COGNOME"));
 		aModel.setNome(getString("NOME"));
@@ -74,7 +74,6 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 		aModel.setCodProvincia(getString("COD_PROVINCIA"));
 		aModel.setIndSedeLegale(getString("IND_SEDE_LEGALE"));
 		aModel.setIndSedeOperativa(getString("IND_SEDE_OPERATIVA"));
-		aModel.setFlagConvUdienza(getString("FLG_CONV_UDIENZA"));
 		aModel.setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO"));
 		aModel.setDataInserimento(getDate("DATA_INSERIMENTO"));
 		aModel.setCodUfficioInserimento(getString("COD_UFFICIO_INSERIMENTO"));

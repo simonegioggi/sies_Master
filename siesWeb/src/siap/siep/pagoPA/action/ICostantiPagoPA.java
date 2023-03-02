@@ -11,7 +11,9 @@ import f3b.web.IWebConstants;
 public interface ICostantiPagoPA {
 
 	public static final String RADIO_COD_PERSONA = "CodPersona";
+	public static final String CHECK_COD_TUTORE = "CodTutore";
 	public static final String CAMPO_ID_CIVILMENTE_OBBLIGATO = "IdCivilmenteObbligato";
+	public static final String CAMPO_ID_FASCICOLO_SIEP = "IdFascicoloSiep";
 	public static final String CAMPO_COGNOME = "Cognome";
 	public static final String CAMPO_NOME = "Nome";
 	public static final String CAMPO_SESSO = "Sesso";
@@ -58,9 +60,6 @@ public interface ICostantiPagoPA {
 
 	public static final String PG_LOAD_INSERISCI_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/LoadInserisciCivilmenteObbligato.jsp";
-
-	public static final String PG_LOAD_MODIFICA_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/LoadModificaCivilmenteObbligato.jsp";
 
 	public static final String DIV_PERSONA_FISICA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/DivPersonaFisica.jsp";

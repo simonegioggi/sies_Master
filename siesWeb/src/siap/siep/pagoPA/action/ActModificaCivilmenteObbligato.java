@@ -26,23 +26,23 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 
 	public String processRequest() throws Exception {
 
-		// Identificativo della parte
+		// Identificativo del civilmente obbligato
 		String idCivilmenteObbligato = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO);
+		// Identificativo del fascicolo siep
+		String idFascicolSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
 
 		CivilmenteObbligatoModel com = riempiDatiCivilmenteObbligato();
 		com.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
-		com.getResidenza().setIdParteUdienza(new BigDecimal(idCivilmenteObbligato));
+		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
+		com.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
 
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		ico.ExModificaCivilmenteObbligato(com);
 
 		RedirectTo lRedir = new RedirectTo();
 		lRedir.setPage(IWebConstants.PG_MAIN);
-		lRedir.setAction("siap.siep.pagoPA.action.ActDettaglioParteUdienza");
+		lRedir.setAction("siap.siep.pagoPA.action.ActDettaglioCivilmenteObbligato");
 		lRedir.setParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO, idCivilmenteObbligato);
-
-		// Torna alla pagina di dettaglio parti senza aggiungerla allo stack
-		lRedir.setParameter(IWebConstants.LINK_RITORNO, "10");
 
 		return lRedir.toString();
 	}
@@ -55,7 +55,13 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 
 		// Parte interessata all'udienza (F=Fisica, G=Giuridica)
 		String codPersona = getRequestStringParameter(RADIO_COD_PERSONA);
-		com.setCodParte(codPersona);
+		com.setCodPersona(codPersona);
+
+		// tutore
+		String codTutore = "N";
+		if (isRequestChecked(CHECK_COD_TUTORE))
+			codTutore = "S";
+		com.setCodTutore(codTutore);
 
 		// Persona Giuridica
 		if (codPersona != null && codPersona.equals("G")) {
@@ -121,6 +127,15 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// Codice Fiscale/Partita IVA
 		if (!isRequestParameterNullObj(CAMPO_COD_FISCALE)) {
 			com.setCodFiscale(getRequestStringParameter(CAMPO_COD_FISCALE).toUpperCase().trim());
+		}
+
+		// Pec
+		if (!isRequestParameterNullObj(CAMPO_PEC)) {
+			com.setPec(getRequestStringParameter(CAMPO_PEC));
+		}
+		// Email
+		if (!isRequestParameterNullObj(CAMPO_EMAIL)) {
+			com.setEmail(getRequestStringParameter(CAMPO_EMAIL));
 		}
 
 		// Imposto la descrizione della nazione

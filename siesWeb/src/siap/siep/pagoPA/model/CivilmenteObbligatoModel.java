@@ -21,8 +21,8 @@ public class CivilmenteObbligatoModel extends GenericModel {
 	private static final long serialVersionUID = -5554540802737804756L;
 
 	private BigDecimal mIdCivilmenteObbligato;
-	private String mCodTipoPart;
-	private String mCodParte;
+	private String mCodTutore;
+	private String mCodPersona;
 	private String mCodFiscale;
 	private String mCognome;
 	private String mNome;
@@ -36,7 +36,6 @@ public class CivilmenteObbligatoModel extends GenericModel {
 	private String mCodProvincia;
 	private String mIndSedeLegale;
 	private String mIndSedeOperativa;
-	private String mFlagConvUdienza;
 	private String mCodOperatoreInserimento;
 	private Date mDataInserimento;
 	private String mCodUfficioInserimento;
@@ -60,8 +59,8 @@ public class CivilmenteObbligatoModel extends GenericModel {
 	public CivilmenteObbligatoModel() {
 
 		this.mIdCivilmenteObbligato = null;
-		this.mCodTipoPart = "";
-		this.mCodParte = "";
+		this.mCodTutore = "";
+		this.mCodPersona = "";
 		this.mCodFiscale = "";
 		this.mCognome = "";
 		this.mNome = "";
@@ -75,7 +74,6 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mCodProvincia = "";
 		this.mIndSedeLegale = "";
 		this.mIndSedeOperativa = "";
-		this.mFlagConvUdienza = "";
 		this.mCodOperatoreInserimento = "";
 		this.mDataInserimento = null;
 		this.mCodUfficioInserimento = "";
@@ -100,8 +98,8 @@ public class CivilmenteObbligatoModel extends GenericModel {
 	public CivilmenteObbligatoModel(CivilmenteObbligatoModel aModel) {
 
 		this.mIdCivilmenteObbligato = aModel.mIdCivilmenteObbligato;
-		this.mCodTipoPart = aModel.mCodTipoPart;
-		this.mCodParte = aModel.mCodParte;
+		this.mCodTutore = aModel.mCodTutore;
+		this.mCodPersona = aModel.mCodPersona;
 		this.mCodFiscale = aModel.mCodFiscale;
 		this.mCognome = aModel.mCognome;
 		this.mNome = aModel.mNome;
@@ -115,7 +113,6 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mCodProvincia = aModel.mCodProvincia;
 		this.mIndSedeLegale = aModel.mIndSedeLegale;
 		this.mIndSedeOperativa = aModel.mIndSedeOperativa;
-		this.mFlagConvUdienza = aModel.mFlagConvUdienza;
 		this.mCodOperatoreInserimento = aModel.mCodOperatoreInserimento;
 		this.mDataInserimento = aModel.mDataInserimento;
 		this.mCodUfficioInserimento = aModel.mCodUfficioInserimento;
@@ -137,19 +134,19 @@ public class CivilmenteObbligatoModel extends GenericModel {
 	}
 
 	// COSTRUTTORE MODEL
-	public CivilmenteObbligatoModel(BigDecimal aIdCivilmenteObbligato, String aCodTipoPart, String aCodParte,
+	public CivilmenteObbligatoModel(BigDecimal aIdCivilmenteObbligato, String aCodTutore, String aCodPersona,
 			String aCodFiscale, String aCognome, String aNome, String aDenominazione, Date aDataNascita,
 			String aCodComuneNascita, String aCodStatoNascita, String aDescrStatoNascita,
 			String aDescComuneNascitaEstero, String aCodProvinciaNascita, String aDescrProvinciaNascita,
 			String aSesso, String aRagSociale, String aCodProvincia, String aIndSedeLegale,
-			String aIndSedeOperativa, String aFlagConvUdienza, String aCodOperatoreInserimento,
-			Date aDataInserimento, String aCodUfficioInserimento, String aCodOperatoreAggiornamento,
-			Date aDataAggiornamento, String aCodUfficioAggiornamento, String aCodFiscaleRap,
-			String aPec, String aEmail, BigDecimal aFasSieIdFascicolSiep) {
+			String aIndSedeOperativa, String aCodOperatoreInserimento, Date aDataInserimento,
+			String aCodUfficioInserimento, String aCodOperatoreAggiornamento, Date aDataAggiornamento,
+			String aCodUfficioAggiornamento, String aCodFiscaleRap, String aPec, String aEmail,
+			BigDecimal aFasSieIdFascicolSiep) {
 
 		this.mIdCivilmenteObbligato = aIdCivilmenteObbligato;
-		this.mCodTipoPart = aCodTipoPart;
-		this.mCodParte = aCodParte;
+		this.mCodTutore = aCodTutore;
+		this.mCodPersona = aCodPersona;
 		this.mCodFiscale = aCodFiscale;
 		this.mCognome = aCognome;
 		this.mNome = aNome;
@@ -163,7 +160,6 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mCodProvincia = aCodProvincia;
 		this.mIndSedeLegale = aIndSedeLegale;
 		this.mIndSedeOperativa = aIndSedeOperativa;
-		this.mFlagConvUdienza = aFlagConvUdienza;
 		this.mCodOperatoreInserimento = aCodOperatoreInserimento;
 		this.mDataInserimento = aDataInserimento;
 		this.mCodUfficioInserimento = aCodUfficioInserimento;
@@ -187,12 +183,12 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		return mIdCivilmenteObbligato;
 	}
 
-	public String getCodTipoPart() {
-		return mCodTipoPart;
+	public String getCodTutore() {
+		return mCodTutore;
 	}
 
-	public String getCodParte() {
-		return mCodParte;
+	public String getCodPersona() {
+		return mCodPersona;
 	}
 
 	public String getCodFiscale() {
@@ -245,10 +241,6 @@ public class CivilmenteObbligatoModel extends GenericModel {
 
 	public String getIndSedeOperativa() {
 		return mIndSedeOperativa;
-	}
-
-	public String getFlagConvUdienza() {
-		return mFlagConvUdienza;
 	}
 
 	public String getCodOperatoreInserimento() {
@@ -330,12 +322,12 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		mIdCivilmenteObbligato = aValore;
 	}
 
-	public void setCodTipoPart(String aValore) {
-		mCodTipoPart = aValore;
+	public void setCodTutore(String aValore) {
+		mCodTutore = aValore;
 	}
 
-	public void setCodParte(String aValore) {
-		mCodParte = aValore;
+	public void setCodPersona(String aValore) {
+		mCodPersona = aValore;
 	}
 
 	public void setCodFiscale(String aValore) {
@@ -388,10 +380,6 @@ public class CivilmenteObbligatoModel extends GenericModel {
 
 	public void setIndSedeOperativa(String aValore) {
 		mIndSedeOperativa = aValore;
-	}
-
-	public void setFlagConvUdienza(String aValore) {
-		mFlagConvUdienza = aValore;
 	}
 
 	public void setCodOperatoreInserimento(String aValore) {
@@ -467,27 +455,14 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mFasSieIdFascicolSiep = mFasSieIdFascicolSiep;
 	}
 
-	public String getDescrTipoPart() {
-
-		String descTipoPart = "";
-		if (mCodTipoPart != null && mCodTipoPart.equals("O")) {
-			descTipoPart = "Offesa";
-		} else {
-			descTipoPart = "Civile";
-		}
-
-		return descTipoPart;
-	}
-
 	public String getDescrParte() {
 
 		String descParte = "";
-		if (mCodParte != null && mCodParte.equals("G")) {
+		if (mCodPersona != null && mCodPersona.equals("G")) {
 			descParte = "Giuridica";
 		} else {
 			descParte = "Fisica";
 		}
-
 		return descParte;
 	}
 

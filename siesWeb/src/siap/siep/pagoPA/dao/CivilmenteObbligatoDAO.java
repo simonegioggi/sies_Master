@@ -29,8 +29,8 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		setFieldKey("ID_CIVILMENTE_OBBLIGATO", BIG_DECIMAL);
 
 		setField("ID_CIVILMENTE_OBBLIGATO", BIG_DECIMAL);
-		setField("COD_TIPO_PART", STRING);
-		setField("COD_PARTE", STRING);
+		setField("COD_TUTORE", STRING);
+		setField("COD_PERSONA", STRING);
 		setField("COD_FISCALE", STRING);
 		setField("COGNOME", STRING);
 		setField("NOME", STRING);
@@ -45,7 +45,6 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		setField("COD_PROVINCIA", STRING);
 		setField("IND_SEDE_LEGALE", STRING);
 		setField("IND_SEDE_OPERATIVA", STRING);
-		setField("FLG_CONV_UDIENZA", STRING);
 		setField("COD_OPERATORE_INSERIMENTO", STRING);
 		setField("DATA_INSERIMENTO", DATE);
 		setField("COD_UFFICIO_INSERIMENTO", STRING);
@@ -65,12 +64,12 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		return getBigDecimal("ID_CIVILMENTE_OBBLIGATO");
 	}
 
-	public String getCodTipoPart() throws DAOException {
-		return getString("COD_TIPO_PART");
+	public String getCodTutore() throws DAOException {
+		return getString("COD_TUTORE");
 	}
 
-	public String getCodParte() throws DAOException {
-		return getString("COD_PARTE");
+	public String getCodPersona() throws DAOException {
+		return getString("COD_PERSONA");
 	}
 
 	public String getCodFiscale() throws DAOException {
@@ -129,10 +128,6 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		return getString("IND_SEDE_OPERATIVA");
 	}
 
-	public String getFlagConvUdienza() throws DAOException {
-		return getString("FLG_CONV_UDIENZA");
-	}
-
 	public String getCodOperatoreInserimento() throws DAOException {
 		return getString("COD_OPERATORE_INSERIMENTO");
 	}
@@ -166,7 +161,7 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 	}
 
 	public String getEmail() throws DAOException {
-		return getString("EMAIL");
+		return getString("E_MAIL");
 	}
 
 	public BigDecimal getFasSieIdFascicolSiep() throws DAOException {
@@ -180,12 +175,12 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		setBigDecimal("ID_CIVILMENTE_OBBLIGATO", aValore);
 	}
 
-	public void setCodTipoPart(String aValore) {
-		setString("COD_TIPO_PART", aValore);
+	public void setCodTutore(String aValore) {
+		setString("COD_TUTORE", aValore);
 	}
 
-	public void setCodParte(String aValore) {
-		setString("COD_PARTE", aValore);
+	public void setCodPersona(String aValore) {
+		setString("COD_PERSONA", aValore);
 	}
 
 	public void setCodFiscale(String aValore) {
@@ -244,10 +239,6 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		setString("IND_SEDE_OPERATIVA", aValore);
 	}
 
-	public void setFlagConvUdienza(String aValore) {
-		setString("FLG_CONV_UDIENZA", aValore);
-	}
-
 	public void setCodOperatoreInserimento(String aValore) {
 		setString("COD_OPERATORE_INSERIMENTO", aValore);
 	}
@@ -281,7 +272,7 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 	}
 
 	public void setEmail(String aValore) {
-		setString("EMAIL", aValore);
+		setString("E_MAIL", aValore);
 	}
 
 	public void setFasSieIdFascicolSiep(BigDecimal aValore) {
@@ -290,21 +281,20 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 
 	public GenericModel getModel() throws DAOException {
 
-		return new CivilmenteObbligatoModel(getIdSoggetto(), getCodTipoPart(), getCodParte(),
-				getCodFiscale(), getCognome(), getNome(), getDenominazione(), getDataNascita(),
-				getCodComuneNascita(), getCodStatoNascita(), "", getDescComuneNascitaEstero(),
-				getCodProvinciaNascita(), "", getSesso(), getRagSociale(), getCodProvincia(),
-				getIndSedeLegale(), getIndSedeOperativa(), getFlagConvUdienza(), getCodOperatoreInserimento(),
-				getDataInserimento(), getCodUfficioInserimento(), getCodOperatoreAggiornamento(),
-				getDataAggiornamento(), getCodUfficioAggiornamento(), getCodFiscaleRap(), getPec(),
-				getEmail(), getFasSieIdFascicolSiep());
+		return new CivilmenteObbligatoModel(getIdSoggetto(), getCodTutore(), getCodPersona(), getCodFiscale(),
+				getCognome(), getNome(), getDenominazione(), getDataNascita(), getCodComuneNascita(),
+				getCodStatoNascita(), "", getDescComuneNascitaEstero(), getCodProvinciaNascita(), "",
+				getSesso(), getRagSociale(), getCodProvincia(), getIndSedeLegale(), getIndSedeOperativa(),
+				getCodOperatoreInserimento(), getDataInserimento(), getCodUfficioInserimento(),
+				getCodOperatoreAggiornamento(), getDataAggiornamento(), getCodUfficioAggiornamento(),
+				getCodFiscaleRap(), getPec(), getEmail(), getFasSieIdFascicolSiep());
 	}
 
 	public void setDAOFromModel(CivilmenteObbligatoModel aModel) throws DAOException {
 
 		setIdSoggetto(aModel.getIdCivilmenteObbligato());
-		setCodTipoPart(aModel.getCodTipoPart());
-		setCodParte(aModel.getCodParte());
+		setCodTutore(aModel.getCodTutore());
+		setCodPersona(aModel.getCodPersona());
 		setCodFiscale(aModel.getCodFiscale());
 		setCognome(aModel.getCognome());
 		setNome(aModel.getNome());
@@ -319,7 +309,6 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		setCodProvincia(aModel.getCodProvincia());
 		setIndSedeLegale(aModel.getIndSedeLegale());
 		setIndSedeOperativa(aModel.getIndSedeOperativa());
-		setFlagConvUdienza(aModel.getFlagConvUdienza());
 		setCodOperatoreInserimento(aModel.getCodOperatoreInserimento());
 		setDataInserimento(aModel.getDataInserimento());
 		setCodUfficioInserimento(aModel.getCodUfficioInserimento());
@@ -345,7 +334,6 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 		setCodProvincia(aModel.getCodProvincia());
 		setIndSedeLegale(aModel.getIndSedeLegale());
 		setIndSedeOperativa(aModel.getIndSedeOperativa());
-		setFlagConvUdienza(aModel.getFlagConvUdienza());
 		setCodOperatoreAggiornamento(aModel.getCodOperatoreAggiornamento());
 		setDataAggiornamento(aModel.getDataAggiornamento());
 		setCodUfficioAggiornamento(aModel.getCodUfficioAggiornamento());

@@ -4,12 +4,21 @@
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
-<jsp:useBean id="civilmenteObbligato" scope="request" class="siap.siep.pagoPA.model.CivilmenteObbligatoModel"/>
+<%@ page import="java.util.Iterator"%>
+
+<%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
+<%@ page import="siap.siep.pagoPA.model.CivilmenteObbligatoModel"%>
+
+<jsp:useBean id="civilmenteObbligati" 	scope="request" class="java.util.Vector<CivilmenteObbligatoModel>"/>
+<jsp:useBean id="idFascicoloSiep" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="Modificabile" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="Cancellabile" 			scope="request" class="java.lang.String"/>
 
 <html>
 <head>
 <title>[S.I.E.S.] - Dettaglio Civilmente Obbligato</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 </head>
 
 <body class="corpo">
@@ -24,29 +33,49 @@
        	<td class="LBG">
 			<font class="label">Funzione :</font>&nbsp;<font class="campo">Dettaglio Civilmente Obbligato</font>
      	</td>
+     	<!-- BOTTONE DI MODIFICA -->
+     	<td class="LBG">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActLoadModificaCivilmenteObbligato&<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>=<%=idFascicoloSiep%>">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
+			</a>
+		</td>
+    	<!-- BOTTONE DI CANCELLAZIONE -->
+     	<td class="LBG">
+			<a href="Javascript:conferma('siap.siep.pagoPA.action.ActCancellaCivilmenteObbligato','<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>','<%=idFascicoloSiep%>');">
+            	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
+          	</a>
+		</td>
 		<!-- BOTTONE DI RITORNO -->
-    	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
+    	<td class="LBG">
+          	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&ChiaveFascicolo=<%=idFascicoloSiep%>">
+            	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          	</a>
+        </td>
 	</tr>
 </table>
 </FORM>
-
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
+<%
+Iterator<CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
+while (itx.hasNext()) {
+	CivilmenteObbligatoModel com = (CivilmenteObbligatoModel) itx.next();
+%>
 	<tr>
       	<td class="L">Cognome:</td>
       	<td class="l">
-        	<font class="campo"><%=civilmenteObbligato.getCognome()%></font>
+        	<font class="campo"><%=com.getCognome()%></font>
         </td>
         <td class="L">Nome:</td>
       	<td class="l">
-        	<font class="campo"><%=civilmenteObbligato.getNome()%></font>
+        	<font class="campo"><%=com.getNome()%></font>
         </td>
     </tr>
     <tr>
       	<td class="L">Sesso:</td>
       	<td class="l">
-        	<font class="campo"><%=civilmenteObbligato.getSesso()%></font>
+        	<font class="campo"><%=com.getSesso()%></font>
         </td>
         <td class="l" colspan="2">&nbsp;</td>
     </tr>
@@ -54,43 +83,43 @@
       	<td class="L">Data di Nascita:</td>
       	<td class="l">
         	<font class="campo">
-        		<%=StringUtils.toStringJSP(StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "dd-MM-yyyy")))%>
+        		<%=StringUtils.toStringJSP(StringUtils.toStringJSP(DateUtils.getDateToString(com.getDataNascita(), "dd-MM-yyyy")))%>
         	</font>
         </td>
         <td class="L">Comune di Nascita:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascita())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getDescComuneNascita())%></font>
         </td>
     </tr>
     <tr>
       	<td class="L">Stato di Nascita:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getDescrStatoNascita())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getDescrStatoNascita())%></font>
         </td>
         <td class="L">Comune di Nascita Estero:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascitaEstero())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getDescComuneNascitaEstero())%></font>
         </td>
     </tr>
     <tr>
       	<td class="L">Codice Fiscale:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getCodFiscale())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getCodFiscale())%></font>
         </td>
         <td class="l" colspan="2">&nbsp;</td>
     </tr>
     <tr>
       	<td class="L">Pec:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getPec())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getPec())%></font>
         </td>
         <td class="L">Email:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getEmail())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getEmail())%></font>
         </td>
     </tr>
 <%
-if (civilmenteObbligato.getResidenza() != null) {
+	if (com.getResidenza() != null) {
 %>
     <tr>
 		<td class="Titolo" colspan="4">Residenza/Domicilio</td>
@@ -98,33 +127,40 @@ if (civilmenteObbligato.getResidenza() != null) {
 	<tr>
       	<td class="L">Indirizzo:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getIndirizzo())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getResidenza().getIndirizzo())%></font>
         </td>
         <td class="L">Luogo:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescrComune())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getResidenza().getDescrComune())%></font>
         </td>
     </tr>
     <tr>
       	<td class="L">CAP:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getCap())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getResidenza().getCap())%></font>
         </td>
         <td class="L">Comune Estero:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescComuneEstero())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getResidenza().getDescComuneEstero())%></font>
         </td>
     </tr>
     <tr>
       	<td class="L">Stato:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescrStato())%></font>
+        	<font class="campo"><%=StringUtils.toStringJSP(com.getResidenza().getDescrStato())%></font>
         </td>
         <td class="l" colspan="2">&nbsp;</td>
     </tr>
 <%
+	}
 }
 %>
+	<tr><td>&nbsp;</td></tr>
+	<tr>
+        <td class="l">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Gestione Difensore</a>
+        </td>
+	</tr>
 </table>
 </body>
 </html>

@@ -29,7 +29,7 @@ function Init() {
 <table>
 	<tr>
 		<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Inserimento Civilmente Obbligato Pena Pecuniaria</font></td>
+        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Gestione Civilmente Obbligato Pena Pecuniaria</font></td>
   		<!-- BOTTONE DI RITORNO -->
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
     </tr>

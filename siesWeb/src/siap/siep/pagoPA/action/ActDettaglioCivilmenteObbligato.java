@@ -1,16 +1,17 @@
 package siap.siep.pagoPA.action;
 
 import java.math.BigDecimal;
+import java.util.Vector;
 
-import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.sico.web.ActionSiap;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13 
- * Title: ActDettaglioCivilmenteObbligato 
+ * MEV_2023-13
+ * Title: ActDettaglioCivilmenteObbligato
  * Description: Classe Action per il dettaglio del Civilmente Obbligato
  *
  * @author sgioggi
@@ -18,13 +19,31 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActDettaglioCivilmenteObbligato extends ActionSiap implements ICostantiPagoPA {
 
-	public String processRequest() throws F3BException {
+	public String processRequest() throws Exception {
 
-		String idCivilmenteObbligato = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO);
+		// Gestione pulsante di ritorno
+		setLinkRitorno();
+
+		// String idCivilmenteObbligato = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO);
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
-		CivilmenteObbligatoModel com = ico
-				.ExRicercaCivilmenteObbligatoByKey(new BigDecimal(idCivilmenteObbligato));
-		setRequestAttribute("civilmenteObbligato", com);
+		// CivilmenteObbligatoModel com = ico
+		// .ExRicercaCivilmenteObbligatoByKey(new BigDecimal(idCivilmenteObbligato));
+		// setRequestAttribute("civilmenteObbligato", com);
+		String idFascicoloSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
+		Vector<CivilmenteObbligatoModel> coms = ico
+				.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(new BigDecimal(idFascicoloSiep));
+		setRequestAttribute("civilmenteObbligati", coms);
+		setRequestAttribute("idFascicoloSiep", idFascicoloSiep);
+
+		String modificabile = "SI";
+		String cancellabile = "SI";
+    	if (!Utils.isPresent(coms)) {
+    		modificabile = "NO";
+    		cancellabile = "NO";
+    	}
+
+	    setRequestAttribute("Modificabile", modificabile);
+	    setRequestAttribute("Cancellabile", cancellabile);
 
 		return PG_DETTAGLIO_CIVILMENTE_OBBLIGATO;
 	}
