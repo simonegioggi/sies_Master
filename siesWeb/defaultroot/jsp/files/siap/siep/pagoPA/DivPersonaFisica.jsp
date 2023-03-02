@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-13_ aggiunta pagina di caricamento dati civilmente obbligato --%>
-<%@page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.html.Option"%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -9,6 +10,7 @@
 
 <%@ page import="siap.sico.security.action.ICostantiSecurity"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
+<%@ page import="siap.sico.decodifiche.controller.DecodificheManager"%>
 
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 <%@ page import="siap.siep.pagoPA.model.CivilmenteObbligatoModel"%>
@@ -115,6 +117,8 @@ function VisualizzaSecondoTutore() {
 Iterator<CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
 while (itx.hasNext()) {
 	CivilmenteObbligatoModel civilmenteObbligato = (CivilmenteObbligatoModel) itx.next();
+	if (modalita.equals("M"))
+		sesso = "" + new Option(DecodificheManager.getInstance().getSesso(), civilmenteObbligato.getSesso());
 %>
 	<tr>
 		<td class="Titolo" colspan="4"><%=titolo%></td>
@@ -127,12 +131,12 @@ while (itx.hasNext()) {
 		</td>
 		<td class="l">Nome <font class=ob>(*)</font></td>
 		<td class="L">
-			<input title="Nome" value="<%=civilmenteObbligato.getNome() %>" type="text" name="<%=ICostantiPagoPA.CAMPO_NOME%>" maxlength="100" size="35">
+			<input title="Nome" value="<%=civilmenteObbligato.getNome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_NOME%>" maxlength="100" size="35">
 		</td>
 	</tr>
 	<tr>
 		<td class="l">Sesso <font class=ob>(*)</font></td>
-		<td class="L"><select title="Sesso" name="<%=ICostantiPagoPA.CAMPO_SESSO%>"> <%=sesso%></select></td>
+		<td class="L"><select title="Sesso" name="<%=ICostantiPagoPA.CAMPO_SESSO%>"><%=sesso%></select></td>
 		<td class="l" colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
