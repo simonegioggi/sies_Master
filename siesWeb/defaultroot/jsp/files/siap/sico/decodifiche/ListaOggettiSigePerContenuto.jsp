@@ -21,7 +21,12 @@
 
       // Funzione di caricamento degli Oggetti selezionati
       function caricaOggetti()
-      {
+      { 
+    	<%-- Ticket#202303020115 --%>
+    	var lOggetti = document.getElementsByName("lOggetti");
+    	var lDescOggetto = document.getElementsByName("lDescOggetto");
+    	<%-- Ticket#202303020115 - FINE --%>
+    	
         if (typeof (lOggetti.length) == "undefined")
         {
           if (lOggetti.checked)

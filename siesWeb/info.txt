@@ -1,5 +1,9 @@
-RELEASE_12.4.28.0	-->	nato dal branch "release_12.4.27.0" in data 27/02/2023
+Ticket#202303020115
 
-Comprende i seguenti Ticket MAC:
+Corretto errore JS che impediva la selezione dalla finsetra di popup
 
-1)	
+siap.sico.decodifiche
+ListaReatiSige.jsp
+ListaTitoliEsecutiviSige.jsp
+ListaOggettiSigePerContenuto.jsp
+
