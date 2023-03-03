@@ -1,5 +1,11 @@
-RELEASE_12.4.28.0	-->	nato dal branch "release_12.4.27.0" in data 27/02/2023
+Ticket#202302280124
 
-Comprende i seguenti Ticket MAC:
+Si modifica nuovamente l'estrazione dati delle statistiche
 
-1)	
+Classe modificata
+siap.siep.statis.dao.StatisticheMSSqlDAO.java
+
+L'intervento prevede anche la modifica delle seguenti viste
+VW_MS_PROCEDIMENTI
+VW_MS_PROC_ESAURITI
+VW_MS_PROC_ESAURITI_MAG
