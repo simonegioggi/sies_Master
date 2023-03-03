@@ -16,8 +16,9 @@ import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13 Title: ActModificaCivilmenteObbligato Description: Classe Action per la modifica del Civilmente
- * Obbligato
+ * MEV_2023-13 
+ * Title: ActModificaCivilmenteObbligato 
+ * Description: Classe Action per la modifica del Civilmente Obbligato
  *
  * @author sgioggi
  * @version 1.0
@@ -31,13 +32,26 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// Identificativo del fascicolo siep
 		String idFascicolSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
 
-		CivilmenteObbligatoModel com = riempiDatiCivilmenteObbligato();
+		CivilmenteObbligatoModel com = riempiDatiCivilmenteObbligato("");
 		com.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
 		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
 		com.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
 
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		ico.ExModificaCivilmenteObbligato(com);
+
+		// tutore
+		String codTutore = getRequestStringParameter(CAMPO_TIPO_TUTORE);
+		com.setCodTutore(codTutore);
+		if (!"-".equals(codTutore)) {
+			String idCivilmenteObbligato_ST = getRequestStringParameter(
+					CAMPO_ID_CIVILMENTE_OBBLIGATO + "_ST");
+			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
+			com_ST.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
+			com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
+			com_ST.setCodTutore(codTutore);
+			ico.ExModificaCivilmenteObbligato(com_ST);
+		}
 
 		RedirectTo lRedir = new RedirectTo();
 		lRedir.setPage(IWebConstants.PG_MAIN);
@@ -48,7 +62,7 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 	}
 
 	@SuppressWarnings("rawtypes")
-	protected CivilmenteObbligatoModel riempiDatiCivilmenteObbligato() throws Exception {
+	protected CivilmenteObbligatoModel riempiDatiCivilmenteObbligato(String st) throws Exception {
 
 		CivilmenteObbligatoModel com = new CivilmenteObbligatoModel();
 		ResidenzaModel rm = new ResidenzaModel();
@@ -56,12 +70,6 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// Parte interessata all'udienza (F=Fisica, G=Giuridica)
 		String codPersona = getRequestStringParameter(RADIO_COD_PERSONA);
 		com.setCodPersona(codPersona);
-
-		// tutore
-		String codTutore = "N";
-		if (isRequestChecked(CHECK_COD_TUTORE))
-			codTutore = "S";
-		com.setCodTutore(codTutore);
 
 		// Persona Giuridica
 		if (codPersona != null && codPersona.equals("G")) {
@@ -91,21 +99,21 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		}
 
 		// Cognome
-		com.setCognome(getRequestStringParameter(CAMPO_COGNOME).toUpperCase().trim());
+		com.setCognome(getRequestStringParameter(CAMPO_COGNOME + st).toUpperCase().trim());
 		// Nome
-		com.setNome(getRequestStringParameter(CAMPO_NOME).toUpperCase().trim());
+		com.setNome(getRequestStringParameter(CAMPO_NOME + st).toUpperCase().trim());
 		// Sesso
-		com.setSesso(getRequestStringParameter(CAMPO_SESSO));
+		com.setSesso(getRequestStringParameter(CAMPO_SESSO + st));
 		// Data Nascita
-		com.setDataNascita(getRequestDateParameter(CAMPO_ANNO_DATA_NASCITA, CAMPO_MESE_DATA_NASCITA,
-				CAMPO_GIORNO_DATA_NASCITA));
+		com.setDataNascita(getRequestDateParameter(CAMPO_ANNO_DATA_NASCITA + st, CAMPO_MESE_DATA_NASCITA + st,
+				CAMPO_GIORNO_DATA_NASCITA + st));
 
 		// Recupero dati del Comune di nascita
 		ComuneModel lComMod = null;
-		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA)
-				&& getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA).length() > 0) {
+		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_NASCITA + st)
+				&& getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA + st).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			lComMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA));
+			lComMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_NASCITA + st));
 			// Comune Nascita
 			com.setCodComuneNascita(lComMod.getCodComune());
 			com.setCodProvinciaNascita(lComMod.getCodProvincia());
@@ -115,27 +123,27 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		}
 
 		// Stato Nascita
-		if (!isRequestParameterNullObj(CAMPO_COD_STATO_NASCITA)) {
-			com.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA));
+		if (!isRequestParameterNullObj(CAMPO_COD_STATO_NASCITA + st)) {
+			com.setCodStatoNascita(getRequestStringParameter(CAMPO_COD_STATO_NASCITA + st));
 		}
 		// Comune Nascita Estero
-		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_NASCITA_ESTERO)) {
+		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_NASCITA_ESTERO + st)) {
 			com.setDescComuneNascitaEstero(
-					getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_ESTERO).toUpperCase().trim());
+					getRequestStringParameter(CAMPO_DESC_COMUNE_NASCITA_ESTERO + st).toUpperCase().trim());
 		}
 
 		// Codice Fiscale/Partita IVA
-		if (!isRequestParameterNullObj(CAMPO_COD_FISCALE)) {
-			com.setCodFiscale(getRequestStringParameter(CAMPO_COD_FISCALE).toUpperCase().trim());
+		if (!isRequestParameterNullObj(CAMPO_COD_FISCALE + st)) {
+			com.setCodFiscale(getRequestStringParameter(CAMPO_COD_FISCALE + st).toUpperCase().trim());
 		}
 
 		// Pec
-		if (!isRequestParameterNullObj(CAMPO_PEC)) {
-			com.setPec(getRequestStringParameter(CAMPO_PEC));
+		if (!isRequestParameterNullObj(CAMPO_PEC + st)) {
+			com.setPec(getRequestStringParameter(CAMPO_PEC + st));
 		}
 		// Email
-		if (!isRequestParameterNullObj(CAMPO_EMAIL)) {
-			com.setEmail(getRequestStringParameter(CAMPO_EMAIL));
+		if (!isRequestParameterNullObj(CAMPO_EMAIL + st)) {
+			com.setEmail(getRequestStringParameter(CAMPO_EMAIL + st));
 		}
 
 		// Imposto la descrizione della nazione
@@ -171,20 +179,20 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		rm.setCodTipoResidenza("R");
 
 		// Id Residenza
-		if (!isRequestParameterNullObj(CAMPO_ID_RESIDENZA)) {
-			rm.setIdResidenza(getRequestBigDecimalParameter(CAMPO_ID_RESIDENZA));
+		if (!isRequestParameterNullObj(CAMPO_ID_RESIDENZA + st)) {
+			rm.setIdResidenza(getRequestBigDecimalParameter(CAMPO_ID_RESIDENZA + st));
 		}
 
 		// Indirizzo
-		if (!isRequestParameterNullObj(CAMPO_INDIRIZZO)) {
-			rm.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase().trim());
+		if (!isRequestParameterNullObj(CAMPO_INDIRIZZO + st)) {
+			rm.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO + st).toUpperCase().trim());
 		}
 
 		// Luogo
 		ComuneModel lComuneMod = null;
-		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA)
-				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA).length() > 0) {
-			lComuneMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA));
+		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA + st)
+				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st).length() > 0) {
+			lComuneMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st));
 			rm.setCodComune(lComuneMod.getCodComune());
 			rm.setCodProvincia(lComuneMod.getCodProvincia());
 		} else {
@@ -193,19 +201,19 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		}
 
 		// CAP
-		if (!isRequestParameterNullObj(CAMPO_CAP_RESIDENZA)) {
-			rm.setCap(getRequestStringParameter(CAMPO_CAP_RESIDENZA));
+		if (!isRequestParameterNullObj(CAMPO_CAP_RESIDENZA + st)) {
+			rm.setCap(getRequestStringParameter(CAMPO_CAP_RESIDENZA + st));
 		}
 
 		// Comune Estero
-		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA)) {
+		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)) {
 			rm.setDescComuneEstero(
-					getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA).toUpperCase().trim());
+					getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st).toUpperCase().trim());
 		}
 
 		// Stato
-		if (!isRequestParameterNullObj(CAMPO_COD_STATO_RESIDENZA)) {
-			rm.setCodStato(getRequestStringParameter(CAMPO_COD_STATO_RESIDENZA));
+		if (!isRequestParameterNullObj(CAMPO_COD_STATO_RESIDENZA + st)) {
+			rm.setCodStato(getRequestStringParameter(CAMPO_COD_STATO_RESIDENZA + st));
 		}
 
 		// Imposto la descrizione della Nazione di Residenza
@@ -244,11 +252,6 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 			rm.setCodOperatoreInserimento(getCodUtenteConnesso());
 			rm.setDataInserimento(DateUtils.getSysDate());
 			rm.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-		}
-
-		// Domicilio Presso Difensore
-		if (!isRequestParameterNullObj(CAMPO_FLAG_DOMICILIO_PRESSO_DIFENSORE)) {
-			rm.setFlgDomicilioDifensore(getRequestStringParameter(CAMPO_FLAG_DOMICILIO_PRESSO_DIFENSORE));
 		}
 
 		com.setResidenza(rm);

@@ -33,16 +33,14 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		CivilmenteObbligatoModel com = riempiDatiCivilmenteObbligato("");
 		com.setFasSieIdFascicolSiep(fsm.getIdFascicoloSiep());
+		// tutore
+		String codTutore = getRequestStringParameter(CAMPO_TIPO_TUTORE);
+		com.setCodTutore(codTutore);
 
 		// Chiama il controller.
 		/* CivilmenteObbligatoModel comRet = */ico.ExInserisciCivilmenteObbligato(com);
 
-		// tutore
-		String codTutore = "N";
-		if (isRequestChecked(CHECK_COD_TUTORE))
-			codTutore = "S";
-		com.setCodTutore(codTutore);
-		if ("S".equals(codTutore)) {
+		if (!"-".equals(codTutore)) {
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
 			com_ST.setFasSieIdFascicolSiep(fsm.getIdFascicoloSiep());
 			com_ST.setCodTutore(codTutore);
@@ -95,11 +93,11 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 		}
 
 		// Cognome
-		com.setCognome((getRequestStringParameter(CAMPO_COGNOME) + st).toUpperCase().trim());
+		com.setCognome((getRequestStringParameter(CAMPO_COGNOME + st)).toUpperCase().trim());
 		// Nome
-		com.setNome((getRequestStringParameter(CAMPO_NOME) + st).toUpperCase().trim());
+		com.setNome((getRequestStringParameter(CAMPO_NOME + st)).toUpperCase().trim());
 		// Sesso
-		com.setSesso(getRequestStringParameter(CAMPO_SESSO) + st);
+		com.setSesso(getRequestStringParameter(CAMPO_SESSO + st));
 		// Data Nascita
 		com.setDataNascita(getRequestDateParameter(CAMPO_ANNO_DATA_NASCITA + st, CAMPO_MESE_DATA_NASCITA + st,
 				CAMPO_GIORNO_DATA_NASCITA + st));
@@ -181,16 +179,16 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 		rm.setFlgDomicilioDifensore("N");
 
 		// Indirizzo
-		if (!isRequestParameterNullObj(CAMPO_INDIRIZZO)) {
-			rm.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO).toUpperCase().trim());
+		if (!isRequestParameterNullObj(CAMPO_INDIRIZZO + st)) {
+			rm.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO + st).toUpperCase().trim());
 		}
 
 		// Recupero dati del Comune di Residenza
 		ComuneModel lComuneMod = null;
-		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA)
-				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA).length() > 0) {
+		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA + st)
+				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st).length() > 0) {
 			// se presente dal codice comune (e descrizione)
-			lComuneMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA));
+			lComuneMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st));
 			rm.setCodComune(lComuneMod.getCodComune());
 			rm.setCodProvincia(lComuneMod.getCodProvincia());
 		} else {
@@ -199,19 +197,19 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 		}
 
 		// CAP
-		if (!isRequestParameterNullObj(CAMPO_CAP_RESIDENZA)) {
-			rm.setCap(getRequestStringParameter(CAMPO_CAP_RESIDENZA));
+		if (!isRequestParameterNullObj(CAMPO_CAP_RESIDENZA + st)) {
+			rm.setCap(getRequestStringParameter(CAMPO_CAP_RESIDENZA + st));
 		}
 
 		// Comune Estero
-		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA)) {
+		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)) {
 			rm.setDescComuneEstero(
-					getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA).toUpperCase().trim());
+					getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st).toUpperCase().trim());
 		}
 
 		// Stato
-		if (!isRequestParameterNullObj(CAMPO_COD_STATO_RESIDENZA)) {
-			rm.setCodStato(getRequestStringParameter(CAMPO_COD_STATO_RESIDENZA));
+		if (!isRequestParameterNullObj(CAMPO_COD_STATO_RESIDENZA + st)) {
+			rm.setCodStato(getRequestStringParameter(CAMPO_COD_STATO_RESIDENZA + st));
 		}
 
 		// Imposto la descrizione della Nazione di Residenza

@@ -4,9 +4,20 @@
 
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 
+<jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
+
+<%
+String titolo = "";
+if (modalita.equals("I")) {
+	titolo = "Inserimento";
+} else if (modalita.equals("M")) {
+	titolo = "Modifica";
+}
+%>
+
 <html>
 <head>
-<title>[S.I.E.S.] - Gestione Civilmente Obbligato Pena Pecuniaria</title>
+<title>[S.I.E.S.] - <%=titolo%> Civilmente Obbligato Pena Pecuniaria</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
@@ -24,12 +35,12 @@ function Init() {
 </script>
 </head>
 
-<body class="corpo" onLoad="Init();">
+<body class="corpo" onLoad="Init();VisualizzaSecondoTutore();">
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadInserisciCivilmenteObbligato">
 <table>
 	<tr>
 		<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo">Gestione Civilmente Obbligato Pena Pecuniaria</font></td>
+        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo"><%=titolo%> Civilmente Obbligato Pena Pecuniaria</font></td>
   		<!-- BOTTONE DI RITORNO -->
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
     </tr>

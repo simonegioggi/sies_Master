@@ -1,16 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-13_ aggiunta pagina di caricamento dati civilmente obbligato --%>
-<%@ page import="f3b.web.html.Option"%>
 <%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.DateUtils"%>
 
-<%@ page import="java.util.Iterator"%>
-
 <%@ page import="siap.sico.security.action.ICostantiSecurity"%>
 <%@ page import="siap.sico.decodifiche.action.ICostantiComune"%>
-<%@ page import="siap.sico.decodifiche.controller.DecodificheManager"%>
 
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 <%@ page import="siap.siep.pagoPA.model.CivilmenteObbligatoModel"%>
@@ -19,7 +15,10 @@
 <jsp:useBean id="sesso"             	scope="request" class="java.lang.String"/>
 <jsp:useBean id="nazioni"           	scope="request" class="java.lang.String"/>
 <jsp:useBean id="nazioniResidenza"  	scope="request" class="java.lang.String"/>
-<jsp:useBean id="TornaQui"          	scope="request" class="java.lang.String"/>
+<jsp:useBean id="sesso_ST"             	scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazioni_ST"           	scope="request" class="java.lang.String"/>
+<jsp:useBean id="nazioniResidenza_ST"  	scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoTutore"  			scope="request" class="java.lang.String"/>
 <jsp:useBean id="idFascicolSiep"		scope="request" class="java.lang.String"/>
 <jsp:useBean id="civilmenteObbligati" 	scope="request" class="java.util.Vector<siap.siep.pagoPA.model.CivilmenteObbligatoModel>"/>
 
@@ -71,12 +70,12 @@ function Verify() {
 	    alert('Data di nascita non valida');
 	    return false;
 	}
-	<%-- EVENTUALE SECONDO TUTORE --%>
-	var secondoTutore = document.getElementById("secondoTutore");
-	if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CHECK_COD_TUTORE%>.checked == true) {
+	<%-- EVENTUALE Secondo Civilmente Obbligato --%>
+	var sel = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>.options.value;
+	if (sel != "-") {
 		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST.selectedIndex].value == '039') {
 			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.value.length == 0) {
-				alert('Il Comune di Nascita del secondo Tutore è obbligatorio se lo Stato di Nascita è Italia');
+				alert('Il Comune di Nascita del Secondo Civilmente Obbligato è obbligatorio se lo Stato di Nascita è Italia');
 				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.focus;
 				return false;
 	  		}
@@ -93,7 +92,7 @@ function Verify() {
 			+ '/' + document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value
 			+ '/' + document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST.value;
 		if (! ControllaData(data_to_verify_ST)) {
-		    alert('Data di nascita del secondo Tutore non valida');
+		    alert('Data di nascita del Secondo Civilmente Obbligato non valida');
 		    return false;
 		}
 	}
@@ -102,7 +101,8 @@ function Verify() {
 
 function VisualizzaSecondoTutore() {
 	var secondoTutore = document.getElementById("secondoTutore");
-	if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CHECK_COD_TUTORE%>.checked == true) {
+	var sel = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>.options.value;
+    if (sel != '-') {
 		secondoTutore.style.display = "block";
 	} else {
 		secondoTutore.style.display = "none";
@@ -112,26 +112,23 @@ function VisualizzaSecondoTutore() {
 
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>"	name="LoadInserisciPersonaFisica">
 <table cellspacing="0" cellpadding="0" width="95%">
-<%
-// se è vuoto vengo da insert altrimenti da update
-Iterator<CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
-while (itx.hasNext()) {
-	CivilmenteObbligatoModel civilmenteObbligato = (CivilmenteObbligatoModel) itx.next();
-	if (modalita.equals("M"))
-		sesso = "" + new Option(DecodificheManager.getInstance().getSesso(), civilmenteObbligato.getSesso());
-%>
 	<tr>
 		<td class="Titolo" colspan="4"><%=titolo%></td>
 	</tr>
 	<tr>
+		<td class="l">Qualifica</td>
+		<td class="L"><select title="tipoTutore" name="<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>" onchange="VisualizzaSecondoTutore();"><%=tipoTutore%></select></td>
+		<td class="l" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
 		<td class="l">Cognome <font class=ob>(*)</font></td>
 		<td class="L">
-			<input type="hidden" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>" value="<%=civilmenteObbligato.getIdCivilmenteObbligato()%>">
-			<input title="Cognome" value="<%=civilmenteObbligato.getCognome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COGNOME%>" maxlength="100" size="35">
+			<input type="hidden" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>" value="<%=civilmenteObbligati.get(0).getIdCivilmenteObbligato()%>">
+			<input title="Cognome" value="<%=civilmenteObbligati.get(0).getCognome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COGNOME%>" maxlength="100" size="35">
 		</td>
 		<td class="l">Nome <font class=ob>(*)</font></td>
 		<td class="L">
-			<input title="Nome" value="<%=civilmenteObbligato.getNome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_NOME%>" maxlength="100" size="35">
+			<input title="Nome" value="<%=civilmenteObbligati.get(0).getNome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_NOME%>" maxlength="100" size="35">
 		</td>
 	</tr>
 	<tr>
@@ -153,11 +150,11 @@ if(modalita.equals("I")) {
 <%
 } else {
 %>
-			<input title="Giorno Data di nascita" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "dd"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			<input title="Giorno Data di nascita" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligati.get(0).getDataNascita(), "dd"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
 			/
-			<input title="Mese Data di nascita" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "MM"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			<input title="Mese Data di nascita" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligati.get(0).getDataNascita(), "MM"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
 			/
-			<input title="Anno Data di nascita" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "yyyy"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+			<input title="Anno Data di nascita" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligati.get(0).getDataNascita(), "yyyy"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 <%
 }
 %>
@@ -167,7 +164,7 @@ if(modalita.equals("I")) {
 		</td>
         <td class="l">Comune di Nascita <font class=ob>(*)</font></td>
         <td class="L">
-          	<input title="Comune di Nascita" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascita())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>" size="35">
+          	<input title="Comune di Nascita" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getDescComuneNascita())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>" size="35">
           	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>');">
             	<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -180,128 +177,36 @@ if(modalita.equals("I")) {
         </td>
 		<td class="l">Comune di Nascita Estero</td>
 		<td class="L">
-			<input title="Comune di Nascita Estero" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>" maxlength="200" size="35">
+			<input title="Comune di Nascita Estero" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>" maxlength="200" size="35">
         </td>
 	</tr>
 	<tr>
         <td class="l">Codice Fiscale</td>
-        <td class="l"><input title="Codice Fiscale" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getCodFiscale())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>" maxlength="16" size="25">
+        <td class="l"><input title="Codice Fiscale" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getCodFiscale())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>" maxlength="16" size="25">
         </td>
         <td class="l" colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
         <td class="l">Pec</td>
         <td class="l">
-        	<input title="Pec" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getPec())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_PEC%>" maxlength="200" size="50">
+        	<input title="Pec" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getPec())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_PEC%>" maxlength="200" size="50">
         </td>
         <td class="l">Email</td>
         <td class="l">
-        	<input title="Email" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getEmail())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_EMAIL%>" maxlength="200" size="50">
+        	<input title="Email" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getEmail())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_EMAIL%>" maxlength="200" size="50">
         </td>
 	</tr>
-	<%-- EVENTUALE SECONDO TUTORE --%>
-	<tr>
-		<td class="l">Tutore&nbsp;<input type="checkbox" name="<%=ICostantiPagoPA.CHECK_COD_TUTORE%>" onclick="VisualizzaSecondoTutore();"></td>
-	</tr>
-</table>
-<div id="secondoTutore" style="display: none;">
-<br>
-<table cellspacing="0" cellpadding="0" width="95%">
-<tr>
-		<td class="Titolo" colspan="4">Eventuale Secondo Tutore</td>
-	</tr>
-<tr>
-		<td class="l">Cognome <font class=ob>(*)</font></td>
-		<td class="L">
-			<input type="hidden" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>_ST" value="<%=civilmenteObbligato.getIdCivilmenteObbligato()%>">
-			<input title="Cognome Secondo Tutore" value="<%=civilmenteObbligato.getCognome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COGNOME%>_ST" maxlength="100" size="35">
-		</td>
-		<td class="l">Nome <font class=ob>(*)</font></td>
-		<td class="L">
-			<input title="Nome Secondo Tutore" value="<%=civilmenteObbligato.getNome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_NOME%>_ST" maxlength="100" size="35">
-		</td>
-	</tr>
-	<tr>
-		<td class="l">Sesso <font class=ob>(*)</font></td>
-		<td class="L"><select title="Sesso Secondo Tutore" name="<%=ICostantiPagoPA.CAMPO_SESSO%>_ST"><%=sesso%></select></td>
-		<td class="l" colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-		<td class="l">Data di Nascita <font class=ob>(*)</font></td>
-        <td class="l">
-<%
-if (modalita.equals("I")) {
-%>
-            <input type="text" title="Giorno Data di nascita Secondo Tutore" name="<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-            /
-            <input type="text" title="Mese Data di nascita Secondo Tutore" name="<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-            /
-            <input type="text" title="Anno Data di nascita Secondo Tutore" name="<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-<%
-} else {
-%>
-			<input title="Giorno Data di nascita Secondo Tutore" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "dd"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-			/
-			<input title="Mese Data di nascita Secondo Tutore" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "MM"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-			/
-			<input title="Anno Data di nascita Secondo Tutore" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligato.getDataNascita(), "yyyy"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-<%
-}
-%>
-			<a href="javascript:calendario('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST','<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST','<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST');">
-       			<img src="/images/calendario.gif" border=0>
-        	</a>
-		</td>
-        <td class="l">Comune di Nascita <font class=ob>(*)</font></td>
-        <td class="L">
-          	<input title="Comune di Nascita Secondo Tutore" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascita())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST" size="35">
-          	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST');">
-            	<img src="/images/filefolder.gif" border=0>
-          	</a>
-        </td>
-	</tr>
-	<tr>
-		<td class="l">Stato di Nascita</td>
-		<td class="L">
-       		<select  title="Stato di Nascita Secondo Tutore" name="<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST"><%=nazioni%></select>
-        </td>
-		<td class="l">Comune di Nascita Estero</td>
-		<td class="L">
-			<input title="Comune di Nascita Estero Secondo Tutore" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST" maxlength="200" size="35">
-        </td>
-	</tr>
-	<tr>
-        <td class="l">Codice Fiscale</td>
-        <td class="l"><input title="Codice Fiscale Secondo Tutore" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getCodFiscale())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>_ST" maxlength="16" size="25">
-        </td>
-        <td class="l" colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-        <td class="l">Pec</td>
-        <td class="l">
-        	<input title="Pec Secondo Tutore" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getPec())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_PEC%>_ST" maxlength="200" size="50">
-        </td>
-        <td class="l">Email</td>
-        <td class="l">
-        	<input title="Email Secondo Tutore" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getEmail())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_EMAIL%>_ST" maxlength="200" size="50">
-        </td>
-	</tr>
-</table>
-<br>
-</div>
-<%-- FINE DIV SECONDO TUTORE --%>
-<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 		<td class="Titolo" colspan="4">Residenza/Domicilio</td>
 	</tr>
 	<tr>
 		<td class="l">Indirizzo</td>
-		<td class="l"><input size="50" maxlength="200" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getIndirizzo())%>" title="Indirizzo" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>">
-			<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_RESIDENZA%>" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=civilmenteObbligato.getResidenza().getIdResidenza()%>">
+		<td class="l"><input size="50" maxlength="200" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getIndirizzo())%>" title="Indirizzo" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>">
+			<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_RESIDENZA%>" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=civilmenteObbligati.get(1).getResidenza().getIdResidenza()%>">
 		</td>
         <td class="l">Luogo</td>
         <td class="L">
-          	<input title="Comune di Residenza" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35">
+          	<input title="Comune di Residenza" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35">
           	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>');">
             	<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -310,11 +215,11 @@ if (modalita.equals("I")) {
 	<tr>
 		<td class="l">CAP</td>
 		<td class="l">
-			<input size=5 maxlength=5 value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getCap())%>" title="Cap" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>">
+			<input size=5 maxlength=5 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getCap())%>" title="CAP" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>">
 		</td>
 		<td class="l">Comune Estero</td>
 		<td class="l">
-			<input size=50 maxlength=200 value="<%if (civilmenteObbligato.getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligato.getResidenza().getDescComuneEstero())%>" title="ComuneEstero" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>">
+			<input size=50 maxlength=200 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescComuneEstero())%>" title="Comune Estero" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>">
 		</td>
 	</tr>
 	<tr>
@@ -324,11 +229,128 @@ if (modalita.equals("I")) {
         </td>
 		<td class="l" colspan="2">&nbsp;</td>
 	</tr>
+</table>
+<br>
+<%-- EVENTUALE Secondo Civilmente Obbligato --%>
+<div id="secondoTutore" style="display: none;">
+<br>
+<table cellspacing="0" cellpadding="0" width="95%">
+<tr>
+		<td class="Titolo" colspan="4">Eventuale Seconda Persona Civilmente Obbligata</td>
+	</tr>
+<tr>
+		<td class="l">Cognome <font class=ob>(*)</font></td>
+		<td class="L">
+			<input type="hidden" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>_ST" value="<%=civilmenteObbligati.get(1).getIdCivilmenteObbligato()%>">
+			<input title="Cognome Secondo Civilmente Obbligato" value="<%=civilmenteObbligati.get(1).getCognome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COGNOME%>_ST" maxlength="100" size="35">
+		</td>
+		<td class="l">Nome <font class=ob>(*)</font></td>
+		<td class="L">
+			<input title="Nome Secondo Civilmente Obbligato" value="<%=civilmenteObbligati.get(1).getNome()%>" type="text" name="<%=ICostantiPagoPA.CAMPO_NOME%>_ST" maxlength="100" size="35">
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Sesso <font class=ob>(*)</font></td>
+		<td class="L"><select title="Sesso Secondo Civilmente Obbligato" name="<%=ICostantiPagoPA.CAMPO_SESSO%>_ST"><%=sesso_ST%></select></td>
+		<td class="l" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="l">Data di Nascita <font class=ob>(*)</font></td>
+        <td class="l">
+<%
+if (modalita.equals("I")) {
+%>
+            <input type="text" title="Giorno Data di nascita Secondo Civilmente Obbligato" name="<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            /
+            <input type="text" title="Mese Data di nascita Secondo Civilmente Obbligato" name="<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            /
+            <input type="text" title="Anno Data di nascita Secondo Civilmente Obbligato" name="<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+<%
+} else {
+%>
+			<input title="Giorno Data di nascita Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligati.get(1).getDataNascita(), "dd"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			/
+			<input title="Mese Data di nascita Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligati.get(1).getDataNascita(), "MM"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST" maxlength="2" size="2" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+			/
+			<input title="Anno Data di nascita Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(civilmenteObbligati.get(1).getDataNascita(), "yyyy"))%>" type="text" name="<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 <%
 }
 %>
+			<a href="javascript:calendario('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST','<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST','<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST');">
+       			<img src="/images/calendario.gif" border=0>
+        	</a>
+		</td>
+        <td class="l">Comune di Nascita <font class=ob>(*)</font></td>
+        <td class="L">
+          	<input title="Comune di Nascita Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getDescComuneNascita())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST" size="35">
+          	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST');">
+            	<img src="/images/filefolder.gif" border=0>
+          	</a>
+        </td>
+	</tr>
+	<tr>
+		<td class="l">Stato di Nascita</td>
+		<td class="L">
+       		<select  title="Stato di Nascita Secondo Civilmente Obbligato" name="<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST"><%=nazioni_ST%></select>
+        </td>
+		<td class="l">Comune di Nascita Estero</td>
+		<td class="L">
+			<input title="Comune di Nascita Estero Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST" maxlength="200" size="35">
+        </td>
+	</tr>
+	<tr>
+        <td class="l">Codice Fiscale</td>
+        <td class="l"><input title="Codice Fiscale Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getCodFiscale())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_FISCALE%>_ST" maxlength="16" size="25">
+        </td>
+        <td class="l" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+        <td class="l">Pec</td>
+        <td class="l">
+        	<input title="Pec Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getPec())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_PEC%>_ST" maxlength="200" size="50">
+        </td>
+        <td class="l">Email</td>
+        <td class="l">
+        	<input title="Email Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getEmail())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_EMAIL%>_ST" maxlength="200" size="50">
+        </td>
+	</tr>
+	<tr>
+		<td class="Titolo" colspan="4">Residenza/Domicilio</td>
+	</tr>
+	<tr>
+		<td class="l">Indirizzo</td>
+		<td class="l"><input size="50" maxlength="200" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getIndirizzo())%>" title="Indirizzo Secondo Civilmente Obbligato" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>_ST">
+			<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_RESIDENZA%>_ST" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=civilmenteObbligati.get(1).getResidenza().getIdResidenza()%>">
+		</td>
+        <td class="l">Luogo</td>
+        <td class="L">
+          	<input title="Comune di Residenza Secondo Civilmente Obbligato" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST" maxlength="35" size="35">
+          	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST');">
+            	<img src="/images/filefolder.gif" border=0>
+          	</a>
+		</td>
+    </tr>
+	<tr>
+		<td class="l">CAP</td>
+		<td class="l">
+			<input size=5 maxlength=5 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getCap())%>" title="CAP Secondo Civilmente Obbligato" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>_ST">
+		</td>
+		<td class="l">Comune Estero</td>
+		<td class="l">
+			<input size=50 maxlength=200 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescComuneEstero())%>" title="Comune Estero Secondo Civilmente Obbligato" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>_ST">
+		</td>
+	</tr>
+	<tr>
+		<td class="l">Stato</td>
+		<td class="L">
+       		<select title="Stato di Residenza Secondo Civilmente Obbligato" name="<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST"><%=nazioniResidenza_ST%></select>
+        </td>
+		<td class="l" colspan="2">&nbsp;</td>
+	</tr>
 </table>
 <br>
+</div>
+<%-- FINE DIV Secondo Civilmente Obbligato --%>
 <table cellspacing="0" cellpadding="0">	
 	<tr>
 		<td>

@@ -48,24 +48,33 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 			rt.setParameter(CAMPO_ID_FASCICOLO_SIEP, fsm.getIdFascicoloSiep().toString());
 			return rt.toString();
 		} else {
-			// aggiungo model vuoto per insert
+			// aggiungo 2 model vuoti per insert
+			coms.add(new CivilmenteObbligatoModel());
+			// secondo tutore
 			coms.add(new CivilmenteObbligatoModel());
 		}
 
-		Option lOption = new Option(DecodificheManager.getInstance().getSesso(), "M");
-		setRequestAttribute("sesso", "" + lOption);
+		Option o = new Option(DecodificheManager.getInstance().getSesso(), "M");
+		setRequestAttribute("sesso", "" + o);
+		setRequestAttribute("sesso_ST", "" + o);
 
-		lOption = new Option(DecodificheManager.getInstance().getRagioneSociale(), "-");
-		setRequestAttribute("ragioneSociale", "" + lOption);
+		o = new Option(DecodificheManager.getInstance().getRagioneSociale(), "-");
+		setRequestAttribute("ragioneSociale", "" + o);
 
-		lOption = new Option(DecodificheManager.getInstance().getProvincie(), "-");
-		setRequestAttribute("province", "" + lOption);
+		o = new Option(DecodificheManager.getInstance().getProvincie(), "-");
+		setRequestAttribute("province", "" + o);
 
-		lOption = new Option(
+		o = new Option(
 				DecodificheUtils.getDecodesWithoutCode(DecodificheManager.getInstance().getNazioni(), "-"),
 				"039");
-		setRequestAttribute("nazioni", "" + lOption);
-		setRequestAttribute("nazioniResidenza", "" + lOption);
+		setRequestAttribute("nazioni", "" + o);
+		setRequestAttribute("nazioniResidenza", "" + o);
+		setRequestAttribute("nazioni_ST", "" + o);
+		setRequestAttribute("nazioniResidenza_ST", "" + o);
+
+		// TIPO_TUTORE
+		o = new Option(DecodificheManager.getInstance().getTipoTutore(), "-");
+		setRequestAttribute("tipoTutore", "" + o);
 
 		// Imposta Modalità Inserimento.
 		setRequestAttribute("modalita", "I");

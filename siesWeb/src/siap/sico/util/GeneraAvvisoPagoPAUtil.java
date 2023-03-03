@@ -84,7 +84,7 @@ public class GeneraAvvisoPagoPAUtil {
 		// separatore il '.' --> 12345678.90
 		dsv[0].setImporto(calcolaImporto(dpcm));
 		dsv[0].setCausale("/" + dsv[0].getImporto() + "/TXT/" + causale); // MAX 100 chars
-		return null;
+		return dsv;
 	}
 
 	private static BigDecimal calcolaImporto(DettaglioPenaComplessivaModel dpcm) {
@@ -92,12 +92,23 @@ public class GeneraAvvisoPagoPAUtil {
 		// info per il log
 		siesLogger.debug(GeneraAvvisoPagoPAUtil.class.getName() + ".calcolaImporto");
 
-		BigDecimal importo = !Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva()
-				.getSanzioneSostitutiva().getSanzionePecuniariaMulta())
-						? dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
-								.getSanzionePecuniariaMulta()
-						: dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
-								.getSanzionePecuniariaAmmenda();
+		BigDecimal importo = null;
+		if (!Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva())) {
+			if (!Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva())) {
+				importo = !Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva()
+						.getSanzioneSostitutiva().getSanzionePecuniariaMulta())
+								? dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
+										.getSanzionePecuniariaMulta()
+								: dpcm.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva()
+										.getSanzionePecuniariaAmmenda();
+			} else if (!Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva())) {
+				importo = !Utils.isNullObj(dpcm.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva())
+						? dpcm.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva().getImportoMulta()
+						: dpcm.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva()
+								.getImportoAmmenda();
+			}
+		}
+
 		return importo;
 	}
 

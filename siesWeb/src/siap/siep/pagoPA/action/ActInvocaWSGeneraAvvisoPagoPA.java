@@ -114,8 +114,8 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
 
 		// INVOCO WS:
-		// inizio chiamata al servizio REGINDE
-		String endpointAddress = F3BProperties.getProperty("EndpointAddressPagoPA");
+		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
+		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
 		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
 		service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
 		ServiziInvioPagamentiTelematici port = service.getServiziInvioPagamentiTelematiciSOAPPort();

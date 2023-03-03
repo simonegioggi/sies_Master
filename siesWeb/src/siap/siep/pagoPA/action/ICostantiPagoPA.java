@@ -11,7 +11,6 @@ import f3b.web.IWebConstants;
 public interface ICostantiPagoPA {
 
 	public static final String RADIO_COD_PERSONA = "CodPersona";
-	public static final String CHECK_COD_TUTORE = "CodTutore";
 	public static final String CAMPO_ID_CIVILMENTE_OBBLIGATO = "IdCivilmenteObbligato";
 	public static final String CAMPO_ID_FASCICOLO_SIEP = "IdFascicoloSiep";
 	public static final String CAMPO_COGNOME = "Cognome";
@@ -48,6 +47,7 @@ public interface ICostantiPagoPA {
 	public static final String CAMPO_FLAG_SNT = "FlagSNT";
 	public static final String CAMPO_PEC = "Pec";
 	public static final String CAMPO_EMAIL = "Email";
+	public static final String CAMPO_TIPO_TUTORE = "TipoTutore";
 
 	public static final String PG_VISUALIZZA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/VisualizzaAvvisoPagoPA.jsp";

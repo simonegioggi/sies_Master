@@ -2,7 +2,6 @@ package siap.siep.pagoPA.action;
 
 import java.math.BigDecimal;
 
-import f3b.web.IWebConstants;
 import siap.sico.web.ActionSiap;
 
 /**
@@ -20,7 +19,7 @@ public class ActDownloadAvvisoPagoPA extends ActionSiap implements ICostantiPago
 		BigDecimal idEvento = getRequestBigDecimalParameter("IdEvento");
 		setRequestAttribute("idEvento", idEvento);
 
-		return IWebConstants.ROOT_DIR + PG_DOWNLOAD_AVVISO_PAGOPA;
+		return PG_DOWNLOAD_AVVISO_PAGOPA;
 	}
 
 }

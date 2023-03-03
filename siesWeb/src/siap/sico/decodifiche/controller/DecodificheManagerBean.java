@@ -416,6 +416,9 @@ public class DecodificheManagerBean {
 
 	private Collection mSoggettoImpugnanteSige;
 
+	// MEV_2023-13: aggiunta collezione per il tipo tutore
+	private Collection mTipoTutore;
+
 	/**
 	 * Inizializzazione degli attributi del Singleton
 	 */
@@ -778,7 +781,7 @@ public class DecodificheManagerBean {
 			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
 			lModel.setContesto("POSIZIONE_GIURIDICA");
 			lModel.setFiltro("PRIMA");
-			lModel.setCode("90");			
+			lModel.setCode("90");
 			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
 			mPosizioneGiuridicaIscrizione = lListPrima;
 
@@ -1855,6 +1858,10 @@ public class DecodificheManagerBean {
 
 			lModel.setContesto("TIPO_UFFICIO");
 			mTipoUfficioSige = lDecodifiche.ExRicercaDecodifiche(lModel);
+
+			// MEV_2023-13: aggiunta collezione per il tipo tutore
+			lModel.setContesto("TIPO_TUTORE");
+			mTipoTutore = lDecodifiche.ExRicercaDecodifiche(lModel);
 
 			// FIXME MEV26 solo per sviluppo da sostituire con la versione ufficiale LPU
 			DecodificheModel lTipoLPUModel = new DecodificheModel();
@@ -3078,6 +3085,11 @@ public class DecodificheManagerBean {
 
 	public Collection getTipoUfficioSige() {
 		return mTipoUfficioSige;
+	}
+
+	// MEV_2023-13: aggiunta collezione per il tipo tutore
+	public Collection getTipoTutore() {
+		return mTipoTutore;
 	}
 
 }

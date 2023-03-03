@@ -3,15 +3,14 @@ package siap.siep.pagoPA.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
-import f3b.util.Utils;
 import siap.sico.web.ActionSiap;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13
- * Title: ActDettaglioCivilmenteObbligato
+ * MEV_2023-13 
+ * Title: ActDettaglioCivilmenteObbligato 
  * Description: Classe Action per il dettaglio del Civilmente Obbligato
  *
  * @author sgioggi
@@ -34,16 +33,8 @@ public class ActDettaglioCivilmenteObbligato extends ActionSiap implements ICost
 				.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(new BigDecimal(idFascicoloSiep));
 		setRequestAttribute("civilmenteObbligati", coms);
 		setRequestAttribute("idFascicoloSiep", idFascicoloSiep);
-
-		String modificabile = "SI";
-		String cancellabile = "SI";
-    	if (!Utils.isPresent(coms)) {
-    		modificabile = "NO";
-    		cancellabile = "NO";
-    	}
-
-	    setRequestAttribute("Modificabile", modificabile);
-	    setRequestAttribute("Cancellabile", cancellabile);
+		setRequestAttribute("Modificabile", "SI");
+		setRequestAttribute("Cancellabile", "SI");
 
 		return PG_DETTAGLIO_CIVILMENTE_OBBLIGATO;
 	}

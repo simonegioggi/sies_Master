@@ -15,20 +15,21 @@
 <jsp:useBean id="nazioniResidenza"      scope="request" class="java.lang.String"/>
 <jsp:useBean id="ragioneSociale"        scope="request" class="java.lang.String"/>
 <jsp:useBean id="province"              scope="request" class="java.lang.String"/>
-<jsp:useBean id="TornaQui"              scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoTutore"  			scope="request" class="java.lang.String"/>
+<jsp:useBean id="idFascicolSiep"		scope="request" class="java.lang.String"/>
 
 <%
-String lAction = new String();
-String lTitolo = new String();
+String action = new String();
+String titolo = new String();
 String azioneChiamante = new String();
 
 if (modalita.equals("I")) {
-	lAction = "siap.siep.pagoPA.action.ActInserisciCivilmenteObbligato";
-	lTitolo = "Inserimento Civilmente Obbligato Pena Pecuniaria";
+	action = "siap.siep.pagoPA.action.ActInserisciCivilmenteObbligato";
+	titolo = "Inserimento Civilmente Obbligato Pena Pecuniaria";
 	azioneChiamante = "siap.siep.pagoPA.action.ActLoadInserisciCivilmenteObbligato";
 } else if (modalita.equals("M")) {
-	lAction = "siap.siep.pagoPA.action.ActModificaCivilmenteObbligato";
-	lTitolo = "Modifica Civilmente Obbligato Pena Pecuniaria";
+	action = "siap.siep.pagoPA.action.ActModificaCivilmenteObbligato";
+	titolo = "Modifica Civilmente Obbligato Pena Pecuniaria";
 	azioneChiamante = "siap.siep.pagoPA.action.ActLoadModificaCivilmenteObbligato";
 }
 %>
@@ -42,32 +43,6 @@ function calendario(a_formname,a_field_year,a_field_month,a_field_day) {
 	desktop = window.open("<%=IWebConstants.ROOT_DIR%>" + "files/siap/sico/Calendario.jsp?formname="+a_formname+"&fieldyear="+a_field_year+"&fieldmonth="+a_field_month+"&fieldday="+a_field_day, "Calendario","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=250");
 }
 
-function ListaUffici(a_formname,a_fieldname) {
-	desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.ufficio.action.ActLoadRicercaUfficio&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Ufficio","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=370,height=500");
-}
-
-function cancellaCodComuneReale() {
-  	document.LoadInserisciPersonaGiuridica.<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>.value = "";      	
-}
-
-function checkSNT(idEle) {
-  	var flag = document.getElementById("flagSNT_"+idEle);
-  	var select = document.getElementById("<%=ICostantiPagoPA.CAMPO_COD_DESTINATARIO%>_"+idEle);
-	var sede = document.getElementById("<%=ICostantiPagoPA.CAMPO_SEDE%>_"+idEle);
-  	var autRow = document.getElementById("AutDestRow_"+idEle);
-  	var sedeRow = document.getElementById("SedeDestRow_"+idEle);
-  	if (flag.checked) {
-		select.options[0].setAttribute("selected", "selected");
-  		sede.value = "";
-  		autRow.style.display="none";
-  		sedeRow.style.display="none";
-  	} else {
-  		// SNT off
-		autRow.style.display="block";
-		sedeRow.style.display="block";
-  	}
-}
-
 function VerifyG() {
 	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value == '039') {
   		if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.value.length == 0) {
@@ -77,7 +52,6 @@ function VerifyG() {
   		}
 	} else {
 		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.value='';
-		cancellaCodComuneReale();
 	}
 	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value.length == 1)
 		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value;
@@ -109,7 +83,12 @@ function VerifyG() {
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>"	name="LoadInserisciPersonaGiuridica">
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td class="Titolo" colspan="4"><%=lTitolo%></td>
+		<td class="Titolo" colspan="4"><%=titolo%></td>
+	</tr>
+	<tr>
+		<td class="l">Qualifica</td>
+		<td class="L"><select title="tipoTutore" name="<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>"><%=tipoTutore%></select></td>
+		<td class="l" colspan="2">&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="l">Società <font class=ob>(*)</font></td>
@@ -189,7 +168,7 @@ if (modalita.equals("I")) {
 		</td>
         <td class="l">Comune di Nascita <font class=ob>(*)</font></td>
         <td class="L">
-          	<input title="Comune di Nascita" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascita())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>" maxlength="35" size="35" onChange="cancellaCodComuneReale();">
+          	<input title="Comune di Nascita" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascita())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>" maxlength="35" size="35">
           	<a href="Javascript:ListaComuni('LoadInserisciPersonaGiuridica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>');">
             	<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -266,12 +245,11 @@ if (modalita.equals("I")) {
 	</tr>
 </table>
 
-<input type="HIDDEN" name="Action" value="<%=lAction%>"> 
-<input type="HIDDEN" name="<%=ICostantiComune.CAMPO_COD_COMUNE_REALE%>" value="">
+<input type="HIDDEN" name="Action" value="<%=action%>"> 
 <input type="HIDDEN" name="<%=ICostantiPagoPA.RADIO_COD_PERSONA%>" value="G">
 <input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>" value="<%=civilmenteObbligato.getIdCivilmenteObbligato()%>">
 <input type="HIDDEN" name="modalita" value="<%=modalita%>">
-<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_FLAG_DOMICILIO_PRESSO_DIFENSORE%>" value="<%if (civilmenteObbligato.getResidenza() != null)%><%=civilmenteObbligato.getResidenza().getFlgDomicilioDifensore()%>">
+<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicolSiep%>">
 </form>
 
 <script language="JavaScript" type="text/javascript">
