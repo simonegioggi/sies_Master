@@ -114,6 +114,22 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
 
 		// INVOCO WS:
+		// ########################################################################################
+		// ESER
+		// String pathProp = System.getProperty("path.properties");
+		// String nomeFileCertificatoX509 = pathProp + System.getProperty("file.separator")
+		// + NscProperties.getInstance().getProperty("CERTIFICATO_X509");
+		// System.setProperty("javax.net.ssl.trustStore", nomeFileCertificatoX509);
+		// LOCAL
+		System.setProperty("javax.net.ssl.trustStore",
+				"C:/LAVORO/Progetti/ANALISI/SIES-NSC/CONFIG/certs/sies.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
+		System.setProperty("javax.net.debug", "ssl");
+		System.setProperty("javax.net.ssl.keyStore", "C:/LAVORO/Progetti/ANALISI/SIES-NSC/CONFIG/certs/serversies.jks");
+		System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
+		// sun.security.ssl.allowUnsafeRenegotiation=true
+		// javax.net.ssl.keyStoreType="JKS"
+		// ########################################################################################
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
 		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
 		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();

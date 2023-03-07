@@ -29,9 +29,9 @@ public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecuri
 		EventoNotificaModel enm = new EventoNotificaModel();
 
 		// TODO: fissare i valori
-		enm.getEvento().setCodTipoEvento("99"); // Tipo Evento = Genera Avviso PagoPA
+		enm.getEvento().setCodTipoEvento("05"); // Tipo Evento = Genera Avviso PagoPA
 		enm.getEvento().setCodTipoProvvedimento("-");
-		enm.getEvento().setCodMotivo("-"); // Codice Motivo = Richiesta Avviso PagoPA
+		enm.getEvento().setCodMotivo("0050"); // Codice Motivo = Richiesta Avviso PagoPA
 
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		enm.getEvento().setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
