@@ -5,8 +5,11 @@
 
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 
-<jsp:useBean id="modalita" 		scope="request" class="java.lang.String"/>
-<jsp:useBean id="codPersona"  	scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="codPersona"  		scope="request" class="java.lang.String"/>
+<jsp:useBean id="Modificabile" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="Cancellabile" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="idFascicoloSiep"	scope="request" class="java.lang.String"/>
 
 <%
 String titolo = "";
@@ -52,8 +55,12 @@ if (Utils.isPresent(codPersona)) {
 	<tr>
 		<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
         <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo"><%=titolo%> Civilmente Obbligato Pena Pecuniaria</font></td>
-  		<!-- BOTTONE DI RITORNO -->
-    	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
+		<!-- BOTTONE DI RITORNO -->
+    	<td class="LBG">
+          	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&ChiaveFascicolo=<%=idFascicoloSiep%>">
+            	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          	</a>
+        </td>
     </tr>
 </table>
 

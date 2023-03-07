@@ -34,13 +34,13 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 		gestioneRitorno();
 
 		// Identificativo del fascicolo siep agganciato
-		String idFascicolSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
-		setRequestAttribute("idFascicolSiep", "" + idFascicolSiep);
+		String idFascicoloSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
+		setRequestAttribute("idFascicoloSiep", "" + idFascicoloSiep);
 
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 
 		Vector<CivilmenteObbligatoModel> coms = ico
-				.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(new BigDecimal(idFascicolSiep));
+				.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(new BigDecimal(idFascicoloSiep));
 		// gestione secondo tutore
 		if (coms.size() == 1)
 			coms.add(new CivilmenteObbligatoModel());
@@ -105,6 +105,9 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 		// COD_PERSONA
 		String codPersona = coms.get(0).getCodPersona();
 		setRequestAttribute("codPersona", "" + codPersona);
+
+		setRequestAttribute("Modificabile", "SI");
+		setRequestAttribute("Cancellabile", "SI");
 
 		// restituisce la jsp di VIEW
 		return retPage;

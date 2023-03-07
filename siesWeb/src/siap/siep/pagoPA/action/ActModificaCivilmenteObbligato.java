@@ -31,11 +31,11 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// Identificativo del civilmente obbligato
 		String idCivilmenteObbligato = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO);
 		// Identificativo del fascicolo siep
-		String idFascicolSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
+		String idFascicoloSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
 
 		CivilmenteObbligatoModel com = riempiDatiCivilmenteObbligato("");
 		com.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
-		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
+		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicoloSiep));
 		com.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
 		// tutore
 		String codTutore = getRequestStringParameter(CAMPO_TIPO_TUTORE);
@@ -50,7 +50,7 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// controllo del codice tutore
 		if (!"-".equals(codTutore) && !"G".equals(com.getCodPersona())) {
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
-			com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
+			com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicoloSiep));
 			com_ST.setCodTutore(codTutore);
 			if (Utils.isPresent(idCivilmenteObbligato_ST) && !"null".equals(idCivilmenteObbligato_ST)) {
 				com_ST.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));

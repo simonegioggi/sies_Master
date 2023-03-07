@@ -16,7 +16,7 @@
 <jsp:useBean id="ragioneSociale"        scope="request" class="java.lang.String"/>
 <jsp:useBean id="province"              scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoTutore"  			scope="request" class="java.lang.String"/>
-<jsp:useBean id="idFascicolSiep"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="idFascicoloSiep"		scope="request" class="java.lang.String"/>
 
 <%
 String action = new String();
@@ -253,7 +253,7 @@ if (modalita.equals("I")) {
 <input type="HIDDEN" name="<%=ICostantiPagoPA.RADIO_COD_PERSONA%>" value="G">
 <input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>" value="<%=com.getIdCivilmenteObbligato()%>">
 <input type="HIDDEN" name="modalita" value="<%=modalita%>">
-<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicolSiep%>">
+<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicoloSiep%>">
 </form>
 
 <script language="JavaScript" type="text/javascript">

@@ -19,7 +19,7 @@
 <jsp:useBean id="nazioni_ST"           	scope="request" class="java.lang.String"/>
 <jsp:useBean id="nazioniResidenza_ST"  	scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoTutore"  			scope="request" class="java.lang.String"/>
-<jsp:useBean id="idFascicolSiep"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="idFascicoloSiep"		scope="request" class="java.lang.String"/>
 <jsp:useBean id="civilmenteObbligati" 	scope="request" class="java.util.Vector<siap.siep.pagoPA.model.CivilmenteObbligatoModel>"/>
 
 <%
@@ -385,7 +385,7 @@ if (modalita.equals("I")) {
 
 <input type="HIDDEN" name="Action" value="<%=action%>"> 
 <input type="HIDDEN" name="<%=ICostantiPagoPA.RADIO_COD_PERSONA%>" value="F">
-<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicolSiep%>">
+<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicoloSiep%>">
 <input type="HIDDEN" name="modalita" value="<%=modalita%>">
 </form>
 

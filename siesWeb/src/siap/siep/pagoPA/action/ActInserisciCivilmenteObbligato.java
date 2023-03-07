@@ -40,7 +40,7 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 		// Chiama il controller.
 		/* CivilmenteObbligatoModel comRet = */ico.ExInserisciCivilmenteObbligato(com);
 
-		if (!"-".equals(codTutore)) {
+		if (!"-".equals(codTutore) && !"G".equals(com.getCodPersona())) {
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
 			com_ST.setFasSieIdFascicolSiep(fsm.getIdFascicoloSiep());
 			com_ST.setCodTutore(codTutore);
