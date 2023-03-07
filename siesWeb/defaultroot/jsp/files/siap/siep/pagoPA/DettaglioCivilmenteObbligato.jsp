@@ -72,6 +72,33 @@ while (itx.hasNext()) {
         </td>
         <td class="l" colspan="2">&nbsp;</td>
     </tr>
+<%
+	if ("G".equals(com.getCodPersona())) {
+%>
+	<tr>
+		<td class="l">Società</td>
+		<td class="L"><font class="campo"><%=StringUtils.toStringJSP(com.getDenominazione())%></font></td>
+		<td class="l">Ragione Sociale</td>
+		<td class="L"><font class="campo"><%=StringUtils.toStringJSP(com.getRagSociale())%></font></td>
+	</tr>
+	<tr>
+		<td class="l">Provincia</td>
+		<td class="L"><font class="campo"><%=StringUtils.toStringJSP(com.getDescrProvincia())%></font></td>
+		<td class="l">Partita IVA/Codice Fiscale</td>
+        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(com.getCodFiscale())%></font></td>
+	</tr>
+	<tr>
+		<td class="l">Sede Legale</td>
+		<td class="L"><font class="campo"><%=StringUtils.toStringJSP(com.getIndSedeLegale())%></font></td>
+		<td class="l">Sede Operativa/Indirizzo Attività</td>
+		<td class="L"><font class="campo"><%=StringUtils.toStringJSP(com.getIndSedeOperativa())%></font></td>
+	</tr>
+	<tr>
+		<td class="Titolo" colspan="4">Dettaglio Legale Rappresentente</td>
+	</tr>
+<%
+	}
+%>
 	<tr>
       	<td class="L">Cognome:</td>
       	<td class="l">
@@ -114,7 +141,7 @@ while (itx.hasNext()) {
     <tr>
       	<td class="L">Codice Fiscale:</td>
       	<td class="l">
-        	<font class="campo"><%=StringUtils.toStringJSP(com.getCodFiscale())%></font>
+        	<font class="campo"><%="G".equals(com.getCodPersona()) ? StringUtils.toStringJSP(com.getCodFiscaleRap()) : StringUtils.toStringJSP(com.getCodFiscale())%></font>
         </td>
         <td class="l" colspan="2">&nbsp;</td>
     </tr>

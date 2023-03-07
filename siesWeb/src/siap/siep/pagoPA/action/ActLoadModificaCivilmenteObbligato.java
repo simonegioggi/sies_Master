@@ -55,24 +55,26 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 			CivilmenteObbligatoModel com = iter.next();
 			if (i != 0)
 				st = "_ST";
-			i++;
 			Option o = new Option(DecodificheManager.getInstance().getSesso(),
 					Utils.isPresent(com.getSesso()) ? com.getSesso() : "M");
 			setRequestAttribute("sesso" + st, "" + o);
 
-			if (Utils.isPresent(com.getRagSociale())) {
-				o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(), com.getRagSociale());
-			} else {
-				o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(), "-");
-			}
-			setRequestAttribute("ragioneSociale", "" + o);
+			if (i == 0) {
+				if (Utils.isPresent(com.getRagSociale())) {
+					o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(),
+							com.getRagSociale());
+				} else {
+					o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(), "-");
+				}
+				setRequestAttribute("ragioneSociale", "" + o);
 
-			if (Utils.isPresent(com.getCodProvincia())) {
-				o = new Option(DecodificheManager.getInstance().getProvincie(), com.getCodProvincia());
-			} else {
-				o = new Option(DecodificheManager.getInstance().getProvincie(), "-");
+				if (Utils.isPresent(com.getCodProvincia())) {
+					o = new Option(DecodificheManager.getInstance().getProvincie(), com.getCodProvincia());
+				} else {
+					o = new Option(DecodificheManager.getInstance().getProvincie(), "-");
+				}
+				setRequestAttribute("province", "" + o);
 			}
-			setRequestAttribute("province", "" + o);
 
 			if (Utils.isPresent(com.getCodStatoNascita())) {
 				o = new Option(DecodificheUtils.getDecodesWithoutCode(
@@ -92,6 +94,7 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 						.getDecodesWithoutCode(DecodificheManager.getInstance().getNazioni(), "-"), "039");
 			}
 			setRequestAttribute("nazioniResidenza" + st, "" + o);
+			i++;
 		}
 
 		// TIPO_TUTORE
@@ -100,7 +103,7 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 		setRequestAttribute("tipoTutore", "" + o);
 
 		// COD_PERSONA
-		String codPersona= coms.get(0).getCodPersona();
+		String codPersona = coms.get(0).getCodPersona();
 		setRequestAttribute("codPersona", "" + codPersona);
 
 		// restituisce la jsp di VIEW

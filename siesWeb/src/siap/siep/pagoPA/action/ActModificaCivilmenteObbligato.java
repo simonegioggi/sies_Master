@@ -44,10 +44,11 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		ico.ExModificaCivilmenteObbligato(com);
 
-		String idCivilmenteObbligato_ST = getRequestStringParameter(
-				CAMPO_ID_CIVILMENTE_OBBLIGATO + "_ST");
+		String idCivilmenteObbligato_ST = "";
+		if (!"G".equals(com.getCodPersona()))
+			idCivilmenteObbligato_ST = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO + "_ST");
 		// controllo del codice tutore
-		if (!"-".equals(codTutore)) {
+		if (!"-".equals(codTutore) && !"G".equals(com.getCodPersona())) {
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
 			com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
 			com_ST.setCodTutore(codTutore);
