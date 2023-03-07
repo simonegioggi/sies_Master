@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Vector;
 
+import f3b.util.Utils;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
@@ -32,7 +33,7 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 		// Gestione pulsante di ritorno
 		gestioneRitorno();
 
-		// Identificativo della parte
+		// Identificativo del fascicolo siep agganciato
 		String idFascicolSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
 		setRequestAttribute("idFascicolSiep", "" + idFascicolSiep);
 
@@ -55,24 +56,25 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 			if (i != 0)
 				st = "_ST";
 			i++;
-			Option o = new Option(DecodificheManager.getInstance().getSesso(), com.getSesso());
+			Option o = new Option(DecodificheManager.getInstance().getSesso(),
+					Utils.isPresent(com.getSesso()) ? com.getSesso() : "M");
 			setRequestAttribute("sesso" + st, "" + o);
 
-			if (com.getRagSociale() != null && !com.getRagSociale().equals("")) {
-				o = new Option(DecodificheManager.getInstance().getRagioneSociale(), com.getRagSociale());
+			if (Utils.isPresent(com.getRagSociale())) {
+				o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(), com.getRagSociale());
 			} else {
-				o = new Option(DecodificheManager.getInstance().getRagioneSociale(), "-");
+				o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(), "-");
 			}
 			setRequestAttribute("ragioneSociale", "" + o);
 
-			if (com.getCodProvincia() != null && !com.getCodProvincia().equals("")) {
+			if (Utils.isPresent(com.getCodProvincia())) {
 				o = new Option(DecodificheManager.getInstance().getProvincie(), com.getCodProvincia());
 			} else {
 				o = new Option(DecodificheManager.getInstance().getProvincie(), "-");
 			}
 			setRequestAttribute("province", "" + o);
 
-			if (com.getCodStatoNascita() != null) {
+			if (Utils.isPresent(com.getCodStatoNascita())) {
 				o = new Option(DecodificheUtils.getDecodesWithoutCode(
 						DecodificheManager.getInstance().getNazioni(), "-"), com.getCodStatoNascita());
 			} else {
@@ -81,7 +83,7 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 			}
 			setRequestAttribute("nazioni" + st, "" + o);
 
-			if (com.getResidenza() != null && com.getResidenza().getCodStato() != null) {
+			if (com.getResidenza() != null && Utils.isPresent(com.getResidenza().getCodStato())) {
 				o = new Option(DecodificheUtils
 						.getDecodesWithoutCode(DecodificheManager.getInstance().getNazioni(), "-"),
 						com.getResidenza().getCodStato());
@@ -96,6 +98,10 @@ public class ActLoadModificaCivilmenteObbligato extends ActionSiap
 		String tipoTutore = coms.get(0).getCodTutore();
 		Option o = new Option(DecodificheManager.getInstance().getTipoTutore(), tipoTutore);
 		setRequestAttribute("tipoTutore", "" + o);
+
+		// COD_PERSONA
+		String codPersona= coms.get(0).getCodPersona();
+		setRequestAttribute("codPersona", "" + codPersona);
 
 		// restituisce la jsp di VIEW
 		return retPage;

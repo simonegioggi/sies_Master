@@ -49,6 +49,7 @@ function calendario(a_formname,a_field_year,a_field_month,a_field_day) {
 
 function Verify() {
 	if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value == '039') {
+		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>.value = "";
 		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>.value.length == 0) {
 			alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
 			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>.focus;
@@ -70,10 +71,22 @@ function Verify() {
 	    alert('Data di nascita non valida');
 	    return false;
 	}
+	// RESIDENZA
+	if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>.selectedIndex].value == '039') {
+		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>.value = "";
+		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>.value.length == 0) {
+			alert('Il Comune di Residenza è obbligatorio se lo Stato di Residenza è Italia');
+			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>.focus;
+			return false;
+  		}
+	} else {
+  		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>.value = '';
+	}
 	<%-- EVENTUALE Secondo Civilmente Obbligato --%>
 	var sel = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>.options.value;
 	if (sel != "-") {
 		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST.selectedIndex].value == '039') {
+			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST.value = "";
 			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.value.length == 0) {
 				alert('Il Comune di Nascita del Secondo Civilmente Obbligato è obbligatorio se lo Stato di Nascita è Italia');
 				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.focus;
@@ -94,6 +107,17 @@ function Verify() {
 		if (! ControllaData(data_to_verify_ST)) {
 		    alert('Data di nascita del Secondo Civilmente Obbligato non valida');
 		    return false;
+		}
+		// RESIDENZA SECONDO C.O.
+		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST.selectedIndex].value == '039') {
+			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>_ST.value = "";
+			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST.value.length == 0) {
+				alert('Il Comune di Residenza è obbligatorio se lo Stato di Residenza è Italia');
+				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST.focus;
+				return false;
+	  		}
+		} else {
+	  		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST.value = '';
 		}
 	}
 	return true;
@@ -201,12 +225,12 @@ if(modalita.equals("I")) {
 	</tr>
 	<tr>
 		<td class="l">Indirizzo</td>
-		<td class="l"><input size="50" maxlength="200" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getIndirizzo())%>" title="Indirizzo" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>">
-			<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_RESIDENZA%>" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=civilmenteObbligati.get(1).getResidenza().getIdResidenza()%>">
+		<td class="l"><input size="50" maxlength="200" value="<%if (civilmenteObbligati.get(0).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getResidenza().getIndirizzo())%>" title="Indirizzo" type="text" name="<%=ICostantiPagoPA.CAMPO_INDIRIZZO%>">
+			<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_RESIDENZA%>" value="<%if (civilmenteObbligati.get(0).getResidenza() != null)%><%=civilmenteObbligati.get(0).getResidenza().getIdResidenza()%>">
 		</td>
         <td class="l">Luogo</td>
         <td class="L">
-          	<input title="Comune di Residenza" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35">
+          	<input title="Comune di Residenza" value="<%if (civilmenteObbligati.get(0).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getResidenza().getDescrComune())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>" maxlength="35" size="35">
           	<a href="Javascript:ListaComuni('LoadInserisciPersonaFisica','<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>');">
             	<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -215,11 +239,11 @@ if(modalita.equals("I")) {
 	<tr>
 		<td class="l">CAP</td>
 		<td class="l">
-			<input size=5 maxlength=5 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getCap())%>" title="CAP" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>">
+			<input size=5 maxlength=5 value="<%if (civilmenteObbligati.get(0).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getResidenza().getCap())%>" title="CAP" type="text" name="<%=ICostantiPagoPA.CAMPO_CAP_RESIDENZA%>">
 		</td>
 		<td class="l">Comune Estero</td>
 		<td class="l">
-			<input size=50 maxlength=200 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescComuneEstero())%>" title="Comune Estero" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>">
+			<input size=50 maxlength=200 value="<%if (civilmenteObbligati.get(0).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(0).getResidenza().getDescComuneEstero())%>" title="Comune Estero" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>">
 		</td>
 	</tr>
 	<tr>
@@ -295,7 +319,7 @@ if (modalita.equals("I")) {
         </td>
 		<td class="l">Comune di Nascita Estero</td>
 		<td class="L">
-			<input title="Comune di Nascita Estero Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST" maxlength="200" size="35">
+			<input title="Comune di Nascita Estero Secondo Civilmente Obbligato" value="<%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST" maxlength="200" size="50">
         </td>
 	</tr>
 	<tr>
@@ -337,7 +361,7 @@ if (modalita.equals("I")) {
 		</td>
 		<td class="l">Comune Estero</td>
 		<td class="l">
-			<input size=50 maxlength=200 value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescComuneEstero())%>" title="Comune Estero Secondo Civilmente Obbligato" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>_ST">
+			<input size="50" maxlength="200" value="<%if (civilmenteObbligati.get(1).getResidenza() != null)%><%=StringUtils.toStringJSP(civilmenteObbligati.get(1).getResidenza().getDescComuneEstero())%>" title="Comune Estero Secondo Civilmente Obbligato" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>_ST">
 		</td>
 	</tr>
 	<tr>

@@ -58,7 +58,7 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 		setRequestAttribute("sesso", "" + o);
 		setRequestAttribute("sesso_ST", "" + o);
 
-		o = new Option(DecodificheManager.getInstance().getRagioneSociale(), "-");
+		o = new Option(DecodificheManager.getInstance().getRagioneSocialeCO(), "-");
 		setRequestAttribute("ragioneSociale", "" + o);
 
 		o = new Option(DecodificheManager.getInstance().getProvincie(), "-");

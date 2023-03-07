@@ -45,7 +45,7 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 				+ " DESCR_PROVINCIA.RV_LOW_VALUE AND DESCR_PROVINCIA.RV_DOMAIN = 'PROVINCIA')"
 				+ " LEFT OUTER JOIN CG_REF_CODES DESCR_STATO ON (DESCR_STATO.RV_DOMAIN = 'NAZIONE' AND"
 				+ " DESCR_STATO.RV_LOW_VALUE = CO.COD_STATO_NASCITA)"
-				+ " WHERE 1 = 1 ";
+				+ " WHERE 1 = 1";
 		return s;
 	}
 
@@ -94,7 +94,7 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 			throws DAOException {
 
 		String lSql = getSqlQuery();
-		lSql += "  " + setCondizioniByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
+		lSql += setCondizioniByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
 		setStatement(lSql);
 	}
 
@@ -102,7 +102,8 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 
 		String condizioni = new String();
 		condizioni += " AND CO.FAS_SIE_ID_FASCICOLO_SIEP = " + fasSieIdFascicoloSiep;
-		condizioni += " ORDER BY CO.COGNOME, CO.NOME, CO.DENOMINAZIONE ";
+		// condizioni += " ORDER BY CO.COGNOME, CO.NOME, CO.DENOMINAZIONE";
+		condizioni += " ORDER BY CO.ID_CIVILMENTE_OBBLIGATO";
 		return condizioni;
 	}
 
@@ -115,7 +116,7 @@ public class CivilmenteObbligatoSqlDAO extends SIAPSqlDAO {
 
 	private String setCondizionByKey(BigDecimal aId) {
 
-		String condizioni = " AND CO.ID_CIVILMENTE_OBBLIGATO = " + aId;
+		String condizioni = "AND CO.ID_CIVILMENTE_OBBLIGATO = " + aId;
 		return condizioni;
 	}
 

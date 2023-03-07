@@ -60,7 +60,7 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 	//
 	// METODI GET()
 	//
-	public BigDecimal getIdSoggetto() throws DAOException {
+	public BigDecimal getIdCivilmenteObbligato() throws DAOException {
 		return getBigDecimal("ID_CIVILMENTE_OBBLIGATO");
 	}
 
@@ -171,7 +171,7 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 	//
 	// METODI SET()
 	//
-	public void setIdSoggetto(BigDecimal aValore) {
+	public void setIdCivilmenteObbligato(BigDecimal aValore) {
 		setBigDecimal("ID_CIVILMENTE_OBBLIGATO", aValore);
 	}
 
@@ -281,18 +281,19 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 
 	public GenericModel getModel() throws DAOException {
 
-		return new CivilmenteObbligatoModel(getIdSoggetto(), getCodTutore(), getCodPersona(), getCodFiscale(),
-				getCognome(), getNome(), getDenominazione(), getDataNascita(), getCodComuneNascita(),
-				getCodStatoNascita(), "", getDescComuneNascitaEstero(), getCodProvinciaNascita(), "",
-				getSesso(), getRagSociale(), getCodProvincia(), getIndSedeLegale(), getIndSedeOperativa(),
-				getCodOperatoreInserimento(), getDataInserimento(), getCodUfficioInserimento(),
-				getCodOperatoreAggiornamento(), getDataAggiornamento(), getCodUfficioAggiornamento(),
-				getCodFiscaleRap(), getPec(), getEmail(), getFasSieIdFascicolSiep());
+		return new CivilmenteObbligatoModel(getIdCivilmenteObbligato(), getCodTutore(), getCodPersona(),
+				getCodFiscale(), getCognome(), getNome(), getDenominazione(), getDataNascita(),
+				getCodComuneNascita(), getCodStatoNascita(), "", getDescComuneNascitaEstero(),
+				getCodProvinciaNascita(), "", getSesso(), getRagSociale(), getCodProvincia(),
+				getIndSedeLegale(), getIndSedeOperativa(), getCodOperatoreInserimento(), getDataInserimento(),
+				getCodUfficioInserimento(), getCodOperatoreAggiornamento(), getDataAggiornamento(),
+				getCodUfficioAggiornamento(), getCodFiscaleRap(), getPec(), getEmail(),
+				getFasSieIdFascicolSiep());
 	}
 
 	public void setDAOFromModel(CivilmenteObbligatoModel aModel) throws DAOException {
 
-		setIdSoggetto(aModel.getIdCivilmenteObbligato());
+		setIdCivilmenteObbligato(aModel.getIdCivilmenteObbligato());
 		setCodTutore(aModel.getCodTutore());
 		setCodPersona(aModel.getCodPersona());
 		setCodFiscale(aModel.getCodFiscale());
@@ -321,6 +322,8 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 	public void setDAOFromModelForUpdate(CivilmenteObbligatoModel aModel) throws DAOException {
 
 		setCodFiscale(aModel.getCodFiscale());
+		setCodPersona(aModel.getCodPersona());
+		setCodTutore(aModel.getCodTutore());
 		setCognome(aModel.getCognome());
 		setNome(aModel.getNome());
 		setDenominazione(aModel.getDenominazione());

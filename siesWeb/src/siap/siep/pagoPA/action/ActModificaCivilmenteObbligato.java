@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import f3b.util.DateUtils;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import siap.sico.decodifiche.controller.DecodificheManager;
@@ -36,21 +37,32 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		com.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
 		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
 		com.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
+		// tutore
+		String codTutore = getRequestStringParameter(CAMPO_TIPO_TUTORE);
+		com.setCodTutore(codTutore);
 
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		ico.ExModificaCivilmenteObbligato(com);
 
-		// tutore
-		String codTutore = getRequestStringParameter(CAMPO_TIPO_TUTORE);
-		com.setCodTutore(codTutore);
+		String idCivilmenteObbligato_ST = getRequestStringParameter(
+				CAMPO_ID_CIVILMENTE_OBBLIGATO + "_ST");
+		// controllo del codice tutore
 		if (!"-".equals(codTutore)) {
-			String idCivilmenteObbligato_ST = getRequestStringParameter(
-					CAMPO_ID_CIVILMENTE_OBBLIGATO + "_ST");
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
-			com_ST.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
 			com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
 			com_ST.setCodTutore(codTutore);
-			ico.ExModificaCivilmenteObbligato(com_ST);
+			if (Utils.isPresent(idCivilmenteObbligato_ST) && !"null".equals(idCivilmenteObbligato_ST)) {
+				com_ST.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
+				com_ST.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
+				ico.ExModificaCivilmenteObbligato(com_ST);
+			} else {
+				ico.ExInserisciCivilmenteObbligato(com_ST);
+			}
+		} else {
+			// cancello nel caso che prima erano due poi passo ad uno solo
+			if (Utils.isPresent(idCivilmenteObbligato_ST) && !"null".equals(idCivilmenteObbligato_ST)) {
+				ico.ExCancellaCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
+			}
 		}
 
 		RedirectTo lRedir = new RedirectTo();

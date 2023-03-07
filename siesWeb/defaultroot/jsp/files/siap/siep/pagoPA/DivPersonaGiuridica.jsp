@@ -45,13 +45,14 @@ function calendario(a_formname,a_field_year,a_field_month,a_field_day) {
 
 function VerifyG() {
 	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value == '039') {
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>.value = "";
   		if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.value.length == 0) {
 			alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
 			document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.focus;
 			return false;
   		}
 	} else {
-		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.value='';
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.value = '';
 	}
 	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value.length == 1)
 		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value;
@@ -64,18 +65,17 @@ function VerifyG() {
 		alert('Data di nascita non valida');
 		return false;
 	}
-	if (typeof(document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_FLAG_DOMICILIO_PRESSO_DIFENSORE%>) != "undefined") {
-		if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_FLAG_DOMICILIO_PRESSO_DIFENSORE%>.checked == false) {
-			// se il civilmente obbligato non è domiciliato presso il difensore
-			// bisogna compilare la sezione "Notifica al Soggetto"
-   			if ( document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_IST_DETENZIONE%>.value == "-"
-					|| document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_IST_DETENZIONE%>.value == ""
-					|| document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_LUOGO_DETENZIONE%>.value == "") {
-				alert('Scegliere Autorità di Destinazione e Sede per il destinario Soggetto!');
-				return false;
- 	  		}
-   		}
-  	}
+	// RESIDENZA
+	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>[document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>.selectedIndex].value == '039') {
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>.value = "";
+		if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>.value.length == 0) {
+			alert('Il Comune di Residenza è obbligatorio se lo Stato di Residenza è Italia');
+			document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>.focus;
+			return false;
+  		}
+	} else {
+  		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>.value = '';
+	}
 	return true;
 }
 </script>
@@ -181,7 +181,7 @@ if (modalita.equals("I")) {
         </td>
 		<td class="l">Comune di Nascita Estero</td>
 		<td class="L">
-			<input title="Comune di Nascita Estero" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>">
+			<input title="Comune di Nascita Estero" value="<%=StringUtils.toStringJSP(civilmenteObbligato.getDescComuneNascitaEstero())%>" type="text" name="<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>" maxlength="200" size="50">
         </td>
 	</tr>
 	<tr>

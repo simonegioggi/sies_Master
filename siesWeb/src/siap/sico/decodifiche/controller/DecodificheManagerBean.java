@@ -418,6 +418,8 @@ public class DecodificheManagerBean {
 
 	// MEV_2023-13: aggiunta collezione per il tipo tutore
 	private Collection mTipoTutore;
+	// MEV_2023-13: aggiunta collezione per la ragione sociale
+	private Collection mRagioneSocialeCO;
 
 	/**
 	 * Inizializzazione degli attributi del Singleton
@@ -1863,6 +1865,12 @@ public class DecodificheManagerBean {
 			lModel.setContesto("TIPO_TUTORE");
 			mTipoTutore = lDecodifiche.ExRicercaDecodifiche(lModel);
 
+			// MEV_2023-13: aggiunta collezione per la ragione sociale
+			mRagioneSocialeCO = new Vector();
+			mRagioneSocialeCO.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
+			mRagioneSocialeCO.add(new DecodificheModel("Ente", "Ente", "RAGIONE_SOCIALE", "", "", "", "", "",
+					""));
+
 			// FIXME MEV26 solo per sviluppo da sostituire con la versione ufficiale LPU
 			DecodificheModel lTipoLPUModel = new DecodificheModel();
 			lTipoLPUModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA_LPU");
@@ -3090,6 +3098,11 @@ public class DecodificheManagerBean {
 	// MEV_2023-13: aggiunta collezione per il tipo tutore
 	public Collection getTipoTutore() {
 		return mTipoTutore;
+	}
+
+	// MEV_2023-13: aggiunta collezione per la ragione sociale
+	public Collection getRagioneSocialeCO() {
+		return mRagioneSocialeCO;
 	}
 
 }

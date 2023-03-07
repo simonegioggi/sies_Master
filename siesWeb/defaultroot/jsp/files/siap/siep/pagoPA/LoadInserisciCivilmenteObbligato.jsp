@@ -1,10 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-13_ aggiunta pagina di caricamento dati civilmente obbligato --%>
+<%@page import="f3b.util.Utils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 
-<jsp:useBean id="modalita" scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="codPersona"  	scope="request" class="java.lang.String"/>
 
 <%
 String titolo = "";
@@ -26,6 +28,17 @@ if (modalita.equals("I")) {
 
 <script language="JavaScript">
 function Init() {
+	alert("ciao " + <%=codPersona%>);
+<%
+if (Utils.isPresent(codPersona)) {
+%>
+	alert(<%=codPersona%>);
+	document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[0].checked = true;
+	if ("G" == <%=codPersona%>)
+		document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[1].checked = true;
+<%
+}
+%>
 	if (document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[0].checked) {
 		VisualizzaPersonaFisica();
     } else {
