@@ -74,6 +74,7 @@ import siap.siep.posizione.controller.IPosizioneGiuridicaLuogoDetenzione;
 import siap.siep.posizionemateriale.controller.IPosizioneMateriale;
 import siap.siep.posizionematerialefasc.controller.IPosizioneMaterialeFasc;
 import siap.siep.provvedimentopm.controller.IProvvedimento;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.reato.controller.IReato;
 import siap.siep.refertoscarcerazione.controller.IRefertoScarcerazione;
 import siap.siep.richiesta.controller.IRichiesta;
@@ -1014,5 +1015,16 @@ public class SIEPLookupRemote extends LookupClass {
 		return lRemote;
 	}
 	// FINE MEV_2023-13
-
+	
+	// MEV_2023-13:
+    public static IRateizzazionePP getRateizzazionePPRemote() throws F3BException {
+          Object lRef;
+          IRateizzazionePP lRemote;
+    
+          lRef = lookup("siap.siep.rateizzazionepp.controller.RateizzazionePPController");
+          lRemote = (IRateizzazionePP) lRef;
+    
+          return lRemote;
+    }
+    //FINE MEV_2023-13
 }
