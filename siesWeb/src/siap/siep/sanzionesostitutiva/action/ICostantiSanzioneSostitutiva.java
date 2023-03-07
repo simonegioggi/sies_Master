@@ -59,6 +59,17 @@ public interface ICostantiSanzioneSostitutiva
   public static final String CAMPO_COD_UFFICIO_ = "CodUfficio";
   public static final String CAMPO_SEDE_UFFICIO = "SedeUfficio";
   
+  //MEV_2023-13
+  public static final String CAMPO_COD_TIPO_PENA_SOSTITUTIVA = "CodTipoPenaSostitutiva";  
+  public static final String CAMPO_NUM_ANNI_PENA_SOSTITUTIVA = "NumAnniPenaSostitutiva";
+  public static final String CAMPO_NUM_MESI_PENA_SOSTITUTIVA = "NumMesiPenaSostitutiva";
+  public static final String CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA = "NumGiorniPenaSostitutiva";  
+  public static final String CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA = "interoPenaPecuniariaSostitutiva";
+  public static final String CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA = "decimalePenaPecuniariaSostitutiva";  
+  
+  public static final String TIPO_PENA_SOSTITUTIVA_SS = "Sanzione Sostitutiva"; 
+  public static final String TIPO_PENA_SOSTITUTIVA_PS = "Pena Sostitutiva"; 
+  //MEV_2023-13 - FINE    
   
   public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA	= IWebConstants.ROOT_DIR + "files/siap/siep/sanzionesostitutiva/LoadRicercaSanzioneSostitutiva.jsp";
   public static final String PG_LOAD_DETTAGLIOSANZIONESOSTITUTIVA	= IWebConstants.ROOT_DIR + "files/siap/siep/sanzionesostitutiva/LoadRicercaSanzioneSostitutiva.jsp";

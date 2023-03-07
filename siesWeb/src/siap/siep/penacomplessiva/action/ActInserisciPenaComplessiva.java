@@ -68,8 +68,13 @@ public class ActInserisciPenaComplessiva extends ActionSiap
 		return lPage;
 	}
 
-	protected void letturaDati(BigDecimal aIdFascicoloSiep) throws Exception {
-
+	/**
+	 * 
+	 * @param aIdFascicoloSiep
+	 * @throws Exception
+	 */
+	protected void letturaDati(BigDecimal aIdFascicoloSiep) throws Exception {	    
+	    // Pena detentiva
 		mPenaCompMod.setCodTipoPenaDetentiva(getRequestStringParameter(CAMPO_COD_TIPO_PENA_DETENTIVA));
 		mPenaCompMod.setNumAnniReclusione(getRequestBigDecimalParameter(CAMPO_NUM_ANNI_RECLUSIONE));
 		mPenaCompMod.setNumMesiReclusione(getRequestBigDecimalParameter(CAMPO_NUM_MESI_RECLUSIONE));
@@ -185,7 +190,42 @@ public class ActInserisciPenaComplessiva extends ActionSiap
 			mSanzSostMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 			mSanzSostMod.setDataInserimento(DateUtils.getSysDate());
 		}
+		// MEV_2023-13 - Si aggiungono le pene sostitutive delle pene detentive brevi che son altrenative 
+		//               alle precedenti Sanzioni Sostitutive
+	    else if (isRequestChecked(CAMPO_FLAG_PENA_SOSTITUTIVA)) {
+	        mSanzSostMod = new SanzioneSostitutivaModel();
 
+	        mSanzSostMod.setCodTipoSanzione(getRequestStringParameter(CAMPO_COD_TIPO_PENA_SOSTITUTIVA));
+	        
+	        // DURATA
+	        if (!this.isRequestParameterNullObj(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA))
+	          mSanzSostMod.setNumAnni(getRequestBigDecimalParameter(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA));
+
+	        if (!this.isRequestParameterNullObj(CAMPO_NUM_MESI_PENA_SOSTITUTIVA))
+	          mSanzSostMod.setNumMesi(getRequestBigDecimalParameter(CAMPO_NUM_MESI_PENA_SOSTITUTIVA));
+
+	        if (!this.isRequestParameterNullObj(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA))
+	          mSanzSostMod.setNumGiorni(getRequestBigDecimalParameter(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA));
+
+	        // IMPORTO
+	        if (!this.isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA)  // not disable
+	            && (   !getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
+	                || !getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
+	               )
+	           ) 
+	        {
+	          // Previsto un solo importo, si carica sulla multa
+	          mSanzSostMod.setSanzionePecuniariaMulta(new BigDecimal(
+	                        getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA) 
+	                + "." + getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA)));
+	        }
+
+	        mSanzSostMod.setCodOperatoreInserimento (getCodUtenteConnesso());
+	        mSanzSostMod.setCodUfficioInserimento   (getCodUfficioUtenteConnesso());
+	        mSanzSostMod.setDataInserimento         (DateUtils.getSysDate());	        
+	    }
+	    // MEV_2023-13 - FINE
+		
 		mPenaCompMod.setCodOperatoreInserimento(getCodUtenteConnesso());
 		mPenaCompMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
 		mPenaCompMod.setDataInserimento(DateUtils.getSysDate());

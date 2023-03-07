@@ -2,6 +2,8 @@ package siap.siep.penacomplessiva.action;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
@@ -9,6 +11,7 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel;
 import siap.siep.util.SIEPLookupRemote;
+import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -23,6 +26,8 @@ import f3b.web.html.Option;
 */
 public class ActLoadInserisciPenaComplessiva extends ActionSiap implements ICostantiPenaComplessiva
 {
+    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+    
   public String processRequest() throws Exception
   {
 
@@ -105,8 +110,14 @@ public class ActLoadInserisciPenaComplessiva extends ActionSiap implements ICost
 	    setRequestAttribute("autoritaSentenza", ""+lOption );
 
 	    lOption = new Option( DecodificheManager.getInstance().getTipoSanzioneSostitutiva(), "-");
+	    siesLogger.debug("lOption = "+lOption);
 	    setRequestAttribute("tipoSanzioneSostitutiva", ""+lOption );
 
+	   // MEV_2023-13 - Aggiunta nuova combo
+       lOption = new Option( DecodificheManager.getInstance().getTipoPenaSostitutiva(), "-");
+       setRequestAttribute("tipoPenaSostitutiva", ""+lOption );
+       // MEV_2023-13 - FINE
+	        
 	    lOption = new Option( DecodificheManager.getInstance().getTipoContinuazione(), "-");
 	    setRequestAttribute("tipoContinuazione", ""+lOption );
 
