@@ -16,7 +16,7 @@
 <jsp:useBean id="ragioneSociale"        scope="request" class="java.lang.String"/>
 <jsp:useBean id="province"              scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoTutore"  			scope="request" class="java.lang.String"/>
-<jsp:useBean id="idFascicolSiep"		scope="request" class="java.lang.String"/>
+<jsp:useBean id="idFascicoloSiep"		scope="request" class="java.lang.String"/>
 
 <%
 String action = new String();
@@ -59,13 +59,15 @@ function VerifyG() {
 		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA %>.value = '';
 	}
 	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value.length == 1)
-		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value='0'+document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value;
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value = '0' +
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value;
 	if (document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>.value.length == 1)
-		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>.value='0'+document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>.value;
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>.value = '0' +
+		document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>.value;
 	var data_to_verify = document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>.value
 		+ '/' + document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>.value
 		+ '/' + document.LoadInserisciPersonaGiuridica.<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>.value;
-	if (! ControllaData(data_to_verify)){
+	if (! ControllaData(data_to_verify)) {
 		alert('Data di nascita non valida');
 		return false;
 	}
@@ -253,7 +255,7 @@ if (modalita.equals("I")) {
 <input type="HIDDEN" name="<%=ICostantiPagoPA.RADIO_COD_PERSONA%>" value="G">
 <input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_CIVILMENTE_OBBLIGATO%>" value="<%=com.getIdCivilmenteObbligato()%>">
 <input type="HIDDEN" name="modalita" value="<%=modalita%>">
-<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicolSiep%>">
+<input type="HIDDEN" name="<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>" value="<%=idFascicoloSiep%>">
 </form>
 
 <script language="JavaScript" type="text/javascript">

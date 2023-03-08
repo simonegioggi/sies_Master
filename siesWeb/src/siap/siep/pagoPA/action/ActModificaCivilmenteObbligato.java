@@ -31,12 +31,13 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// Identificativo del civilmente obbligato
 		String idCivilmenteObbligato = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO);
 		// Identificativo del fascicolo siep
-		String idFascicolSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
+		String idFascicoloSiep = getRequestStringParameter(CAMPO_ID_FASCICOLO_SIEP);
 
 		CivilmenteObbligatoModel com = riempiDatiCivilmenteObbligato("");
 		com.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
-		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
-		com.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
+		com.setFasSieIdFascicolSiep(new BigDecimal(idFascicoloSiep));
+		if (com.getResidenza() != null)
+			com.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato));
 		// tutore
 		String codTutore = getRequestStringParameter(CAMPO_TIPO_TUTORE);
 		com.setCodTutore(codTutore);
@@ -50,14 +51,20 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 		// controllo del codice tutore
 		if (!"-".equals(codTutore) && !"G".equals(com.getCodPersona())) {
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
-			com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicolSiep));
-			com_ST.setCodTutore(codTutore);
-			if (Utils.isPresent(idCivilmenteObbligato_ST) && !"null".equals(idCivilmenteObbligato_ST)) {
-				com_ST.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
-				com_ST.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
-				ico.ExModificaCivilmenteObbligato(com_ST);
+			if (Utils.isPresent(com_ST.getCognome()) && Utils.isPresent(com_ST.getNome())) {
+				com_ST.setFasSieIdFascicolSiep(new BigDecimal(idFascicoloSiep));
+				com_ST.setCodTutore(codTutore);
+				if (Utils.isPresent(idCivilmenteObbligato_ST) && !"null".equals(idCivilmenteObbligato_ST)) {
+					com_ST.setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
+					if (com_ST.getResidenza() != null)
+						com_ST.getResidenza().setIdCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
+					ico.ExModificaCivilmenteObbligato(com_ST);
+				} else {
+					ico.ExInserisciCivilmenteObbligato(com_ST);
+				}
 			} else {
-				ico.ExInserisciCivilmenteObbligato(com_ST);
+				if (Utils.isPresent(idCivilmenteObbligato_ST) && !"null".equals(idCivilmenteObbligato_ST))
+					ico.ExCancellaCivilmenteObbligato(new BigDecimal(idCivilmenteObbligato_ST));
 			}
 		} else {
 			// cancello nel caso che prima erano due poi passo ad uno solo
@@ -78,7 +85,6 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 	protected CivilmenteObbligatoModel riempiDatiCivilmenteObbligato(String st) throws Exception {
 
 		CivilmenteObbligatoModel com = new CivilmenteObbligatoModel();
-		ResidenzaModel rm = new ResidenzaModel();
 
 		// Parte interessata all'udienza (F=Fisica, G=Giuridica)
 		String codPersona = getRequestStringParameter(RADIO_COD_PERSONA);
@@ -187,87 +193,98 @@ public class ActModificaCivilmenteObbligato extends ActionSiap implements ICosta
 			com.setDescrProvinciaNascita("-");
 		}
 
-		// Residenza/Domicilio
-		// Tipo Residenza
-		rm.setCodTipoResidenza("R");
+		// inserimento RESIDENZA solo se sono valorizzati indirizzo e comune o comune estero
+		boolean indirizzoResidenza, comuneResidenza, comuneEsteroResidenza = false;
+		indirizzoResidenza = !isRequestParameterNullObj(CAMPO_INDIRIZZO + st)
+				&& getRequestStringParameter(CAMPO_INDIRIZZO + st).length() > 0;
+		comuneResidenza = !isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA + st)
+				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st).length() > 0;
+		comuneEsteroResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)
+				&& getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st).length() > 0;
+		if (indirizzoResidenza && (comuneResidenza || comuneEsteroResidenza)) {
+			// Residenza/Domicilio
+			ResidenzaModel rm = new ResidenzaModel();
+			// Tipo Residenza
+			rm.setCodTipoResidenza("R");
 
-		// Id Residenza
-		if (!isRequestParameterNullObj(CAMPO_ID_RESIDENZA + st)) {
-			rm.setIdResidenza(getRequestBigDecimalParameter(CAMPO_ID_RESIDENZA + st));
+			// Id Residenza
+			if (!isRequestParameterNullObj(CAMPO_ID_RESIDENZA + st)) {
+				rm.setIdResidenza(getRequestBigDecimalParameter(CAMPO_ID_RESIDENZA + st));
+			}
+
+			// Indirizzo
+			if (!isRequestParameterNullObj(CAMPO_INDIRIZZO + st)) {
+				rm.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO + st).toUpperCase().trim());
+			}
+
+			// Luogo
+			ComuneModel lComuneMod = null;
+			if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA + st)
+					&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st).length() > 0) {
+				lComuneMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st));
+				rm.setCodComune(lComuneMod.getCodComune());
+				rm.setCodProvincia(lComuneMod.getCodProvincia());
+			} else {
+				rm.setCodComune("-");
+				rm.setCodProvincia("-");
+			}
+
+			// CAP
+			if (!isRequestParameterNullObj(CAMPO_CAP_RESIDENZA + st)) {
+				rm.setCap(getRequestStringParameter(CAMPO_CAP_RESIDENZA + st));
+			}
+
+			// Comune Estero
+			if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)) {
+				rm.setDescComuneEstero(getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)
+						.toUpperCase().trim());
+			}
+
+			// Stato
+			if (!isRequestParameterNullObj(CAMPO_COD_STATO_RESIDENZA + st)) {
+				rm.setCodStato(getRequestStringParameter(CAMPO_COD_STATO_RESIDENZA + st));
+			}
+
+			// Imposto la descrizione della Nazione di Residenza
+			DecodificheModel lDecModRes = new DecodificheModel();
+			lDecModRes.setContesto("NAZIONE");
+			lDecModRes.setCode(rm.getCodStato());
+			// List lNazioniRes = (List) DecodificheManager.getInstance().getNazioni();
+			int lIndModelRes = lNazioni.indexOf(lDecModRes);
+			String lDescriRes = ((DecodificheModel) lNazioni.get(lIndModelRes)).getDescription();
+			rm.setDescrStato(lDescriRes);
+
+			if (lComuneMod != null) {
+				rm.setDescrComune(lComuneMod.getDescrizione());
+			} else {
+				rm.setDescrComune(null);
+			}
+
+			// Imposto la descrizione della Provincia di Residenza
+			lDecModRes = new DecodificheModel();
+			lDecModRes.setContesto("PROVINCIA");
+			lDecModRes.setCode(rm.getCodProvincia());
+			List lProvincieRes = (List) DecodificheManager.getInstance().getProvincie();
+			lIndModelRes = lProvincieRes.indexOf(lDecMod);
+			if (lIndModelRes != -1) {
+				lDescriRes = ((DecodificheModel) lProvincieRes.get(lIndModelRes)).getDescription();
+				rm.setDescrProvincia(lDescriRes);
+			} else {
+				rm.setDescrProvincia("-");
+			}
+
+			if (rm.getIdResidenza() != null) {
+				rm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
+				rm.setDataAggiornamento(DateUtils.getSysDate());
+				rm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+			} else {
+				rm.setCodOperatoreInserimento(getCodUtenteConnesso());
+				rm.setDataInserimento(DateUtils.getSysDate());
+				rm.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+			}
+
+			com.setResidenza(rm);
 		}
-
-		// Indirizzo
-		if (!isRequestParameterNullObj(CAMPO_INDIRIZZO + st)) {
-			rm.setIndirizzo(getRequestStringParameter(CAMPO_INDIRIZZO + st).toUpperCase().trim());
-		}
-
-		// Luogo
-		ComuneModel lComuneMod = null;
-		if (!isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA + st)
-				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st).length() > 0) {
-			lComuneMod = getCodComuneByDescr(getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st));
-			rm.setCodComune(lComuneMod.getCodComune());
-			rm.setCodProvincia(lComuneMod.getCodProvincia());
-		} else {
-			rm.setCodComune("-");
-			rm.setCodProvincia("-");
-		}
-
-		// CAP
-		if (!isRequestParameterNullObj(CAMPO_CAP_RESIDENZA + st)) {
-			rm.setCap(getRequestStringParameter(CAMPO_CAP_RESIDENZA + st));
-		}
-
-		// Comune Estero
-		if (!isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)) {
-			rm.setDescComuneEstero(
-					getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st).toUpperCase().trim());
-		}
-
-		// Stato
-		if (!isRequestParameterNullObj(CAMPO_COD_STATO_RESIDENZA + st)) {
-			rm.setCodStato(getRequestStringParameter(CAMPO_COD_STATO_RESIDENZA + st));
-		}
-
-		// Imposto la descrizione della Nazione di Residenza
-		DecodificheModel lDecModRes = new DecodificheModel();
-		lDecModRes.setContesto("NAZIONE");
-		lDecModRes.setCode(rm.getCodStato());
-		// List lNazioniRes = (List) DecodificheManager.getInstance().getNazioni();
-		int lIndModelRes = lNazioni.indexOf(lDecModRes);
-		String lDescriRes = ((DecodificheModel) lNazioni.get(lIndModelRes)).getDescription();
-		rm.setDescrStato(lDescriRes);
-
-		if (lComuneMod != null) {
-			rm.setDescrComune(lComuneMod.getDescrizione());
-		} else {
-			rm.setDescrComune(null);
-		}
-
-		// Imposto la descrizione della Provincia di Residenza
-		lDecModRes = new DecodificheModel();
-		lDecModRes.setContesto("PROVINCIA");
-		lDecModRes.setCode(rm.getCodProvincia());
-		List lProvincieRes = (List) DecodificheManager.getInstance().getProvincie();
-		lIndModelRes = lProvincieRes.indexOf(lDecMod);
-		if (lIndModelRes != -1) {
-			lDescriRes = ((DecodificheModel) lProvincieRes.get(lIndModelRes)).getDescription();
-			rm.setDescrProvincia(lDescriRes);
-		} else {
-			rm.setDescrProvincia("-");
-		}
-
-		if (rm.getIdResidenza() != null) {
-			rm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
-			rm.setDataAggiornamento(DateUtils.getSysDate());
-			rm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-		} else {
-			rm.setCodOperatoreInserimento(getCodUtenteConnesso());
-			rm.setDataInserimento(DateUtils.getSysDate());
-			rm.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-		}
-
-		com.setResidenza(rm);
 
 		com.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 		com.setDataAggiornamento(DateUtils.getSysDate());

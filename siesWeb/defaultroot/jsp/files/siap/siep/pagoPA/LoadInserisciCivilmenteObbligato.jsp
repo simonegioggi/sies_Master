@@ -5,8 +5,11 @@
 
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 
-<jsp:useBean id="modalita" 		scope="request" class="java.lang.String"/>
-<jsp:useBean id="codPersona"  	scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="codPersona"  		scope="request" class="java.lang.String"/>
+<jsp:useBean id="Modificabile" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="Cancellabile" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="idFascicoloSiep"	scope="request" class="java.lang.String"/>
 
 <%
 String titolo = "";
@@ -29,19 +32,30 @@ if (modalita.equals("I")) {
 <script language="JavaScript">
 function Init() {
 <%
-if (Utils.isPresent(codPersona)) {
+if (modalita.equals("I")) {
+	if (Utils.isPresent(codPersona)) {
 %>
 	document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[0].checked = true;
 	if ("G" == "<%=codPersona%>")
 		document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[1].checked = true;
 <%
-}
+	}
 %>
 	if (document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[0].checked) {
 		VisualizzaPersonaFisica();
     } else {
     	VisualizzaPersonaGiuridica();
     }
+<%
+} else {
+%>
+	if ("G" == "<%=codPersona%>")
+		VisualizzaPersonaGiuridica();
+	else
+		VisualizzaPersonaFisica();
+<%
+}
+%>
 }
 </script>
 </head>
@@ -52,12 +66,19 @@ if (Utils.isPresent(codPersona)) {
 	<tr>
 		<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
         <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo"><%=titolo%> Civilmente Obbligato Pena Pecuniaria</font></td>
-  		<!-- BOTTONE DI RITORNO -->
-    	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
+		<!-- BOTTONE DI RITORNO -->
+    	<td class="LBG">
+          	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&ChiaveFascicolo=<%=idFascicoloSiep%>">
+            	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          	</a>
+        </td>
     </tr>
 </table>
 
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
+<%
+if (modalita.equals("I")) {
+%>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
@@ -68,6 +89,9 @@ if (Utils.isPresent(codPersona)) {
       	</td>
 	</tr>
 </table>
+<%
+}
+%>
 </FORM>
 
 <div id="tipoPersona" style="position: relative; top: 0; left: 0; visibility: visible;">

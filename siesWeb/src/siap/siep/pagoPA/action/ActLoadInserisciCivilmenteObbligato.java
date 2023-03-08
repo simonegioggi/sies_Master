@@ -34,7 +34,7 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 
 		// Fascicolo siep in sessione
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		String idFascicolSiep = fsm.getIdFascicoloSiep().toString();
+		String idFascicoloSiep = fsm.getIdFascicoloSiep().toString();
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
 		// Chiama il controller.
 		Vector<CivilmenteObbligatoModel> coms = ico
@@ -79,7 +79,7 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 		// Imposta Modalità Inserimento.
 		setRequestAttribute("modalita", "I");
 		setRequestAttribute("civilmenteObbligati", coms);
-		setRequestAttribute("idFascicolSiep", "" + idFascicolSiep);
+		setRequestAttribute("idFascicoloSiep", "" + idFascicoloSiep);
 
 		// restituisce la jsp di VIEW
 		return lPage;
