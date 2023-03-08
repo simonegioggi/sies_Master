@@ -1413,7 +1413,13 @@ if (lPenComSanSost != null) {
 	if (lSanSos != null && lSanSos.getIdSanzioneSostitutiva() != null) {
 %>
 	<tr>
-		<td class="L"><font class="label">Sanzione Sostitutiva applicata: </font>
+		<% // MEV_2023-13  %>
+	    <% if (lSanSos.isPenaSostitutiva ()) { %>
+		<td class="L"><font class="label">Pena sostitutiva applicata: </font>
+		<% } else { %>
+        <td class="L"><font class="label">Sanzione Sostitutiva applicata: </font>
+		<% } %>
+		
 <%
 		if ((lSanSos.getNumAnni() != null && lSanSos.getNumAnni().compareTo(new BigDecimal(0)) != 0)
 				|| (lSanSos.getNumMesi() != null && lSanSos.getNumMesi().compareTo(new BigDecimal(0)) != 0)
@@ -1433,15 +1439,17 @@ if (lPenComSanSost != null) {
 			<font class="label">Giorni:&nbsp; </font><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getNumGiorni(), "0")%></font>
 <%
 		}
+
 		if (lSanSos.getSanzionePecuniariaMulta() != null && lSanSos.getSanzionePecuniariaMulta().intValue() != 0) {
 %>
-			<font class="label"> Sanz.Pec. Multa&nbsp;</font>
+			<font class="label"> <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%> Multa&nbsp;</font>
 			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>&nbsp;</font>&euro;&nbsp;&nbsp;&nbsp;
 <%
 		}
+		
 		if (lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniariaAmmenda().intValue() != 0) {
 %>
-			<font class="label"> Sanz.Pec. Ammenda&nbsp;</font>
+			<font class="label"> <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%> Ammenda&nbsp;</font>
 			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaAmmenda())%>&nbsp;</font>&euro;
 <%
 		}

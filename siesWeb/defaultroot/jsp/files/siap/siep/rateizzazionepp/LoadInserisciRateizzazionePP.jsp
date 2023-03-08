@@ -18,6 +18,18 @@
 <%
 PenaComplessivaModel     lPenCom = (dettaglioPenaComplessiva!= null && dettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva() != null) ? dettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva() : null;
 SanzioneSostitutivaModel lSanSos = (dettaglioPenaComplessiva!= null && dettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva() != null) ? dettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva().getSanzioneSostitutiva() : null;
+
+BigDecimal importoTotale = new BigDecimal(0);
+
+if (lPenCom.getImportoMulta()!=null)
+    importoTotale = importoTotale.add(lPenCom.getImportoMulta());
+if (lPenCom.getImportoAmmenda()!=null)
+    importoTotale = importoTotale.add(lPenCom.getImportoAmmenda());
+
+if (lSanSos!=null && lSanSos.getSanzionePecuniariaMulta()!=null)
+    importoTotale = importoTotale.add(lSanSos.getSanzionePecuniariaMulta());
+if (lSanSos!=null && lSanSos.getSanzionePecuniariaAmmenda()!=null)
+    importoTotale = importoTotale.add(lSanSos.getSanzionePecuniariaAmmenda());
 %>
 
 
@@ -43,6 +55,10 @@ if ("M".equals(modalita)) {
     importoRataUnicaD = StringUtils.getParteDecimale (primaRata.getImportoRata()); 
     scadenzaRataUnica = StringUtils.toStringJSP      (primaRata.getScadenzaGiorni(),""); 
   }
+}
+else {
+  importoDaPagareI = StringUtils.getParteIntera   (importoTotale);
+  importoDaPagareD = StringUtils.getParteDecimale (importoTotale);    
 }
   
 
@@ -75,6 +91,8 @@ function Verify() {
     return false;
   }
   
+  
+  var sommaRate = 0.0;
   if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val()=="U") {  
     var valoreRata = document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>.value
                +"."+ document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>.value; 
@@ -91,7 +109,8 @@ function Verify() {
       alert("Indicare la scadenza pagamento");
       document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI_RATA_UNICA%>.focus();
       return false;
-    }      
+    }
+    sommaRate = parseFloat(valoreRata);
   }    
   else if ($('$<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>:checked').val()=="R") { 
     for (i=0; i<maxNumRate; i++){
@@ -115,6 +134,9 @@ function Verify() {
           document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_'+Rigo).focus();
           return false;
         }
+        // alert ("sommaRate = "+sommaRate+" + "+parseFloat(valoreRata));
+        sommaRate = sommaRate + (numRate * parseFloat(valoreRata));
+        // alert ("sommaRate = "+sommaRate);
         
         var scadenzaGiorni = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).value;
         
@@ -127,6 +149,24 @@ function Verify() {
     }
   }
   
+  //alert ("sommaRate = "+sommaRate);
+  if (sommaRate < parseFloat (importoDaPagare)) {
+	  var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+") "
+	           + "risulta inferiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+". "
+	           + "Si vuole procedre comunque?";
+  
+	  if (!window.confirm(msg))
+		  return false;
+  }
+  else if (sommaRate > parseFloat (importoDaPagare)) {
+      var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+") "
+               + "risulta superiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+". "
+               + "Si vuole procedre comunque?";
+  
+      if (!window.confirm(msg))
+          return false;
+  }
+
   return true;
 }
 
@@ -287,17 +327,35 @@ else
     <tr>
       <td class="L">
         <font class="label">Pena Pecuniaria: </font>&nbsp;
+        <% if (lPenCom.getImportoMulta()!=null && lPenCom.getImportoMulta().compareTo(new BigDecimal(0))>0 ) { %>
         <font class="label">MULTA</font> <font class="campo"><%=StringUtils.toEuroFormat( (lPenCom!=null ? lPenCom.getImportoMulta() : null) )%></font>&nbsp;<font class="label">&euro;</font>
-        <font class="label">,&nbsp;AMMENDA</font> <font class="campo"><%=StringUtils.toEuroFormat( (lPenCom!=null ? lPenCom.getImportoAmmenda() : null) )%> </font>&nbsp;<font class="label">&euro;</font>  
+        <% } %>
+        <% if (lPenCom.getImportoAmmenda()!=null && lPenCom.getImportoAmmenda().compareTo(new BigDecimal(0))>0) { %>
+            <% if (lPenCom.getImportoMulta()!=null && lPenCom.getImportoMulta().compareTo(new BigDecimal(0))>0) { %>,&nbsp;<% } %>
+        <font class="label">AMMENDA</font> <font class="campo"><%=StringUtils.toEuroFormat( (lPenCom!=null ? lPenCom.getImportoAmmenda() : null) )%> </font>&nbsp;<font class="label">&euro;</font>  
+        <% } %>
       </td>
     </tr>
+    
+    <% if (lSanSos!=null && lSanSos.getIdSanzioneSostitutiva()!=null 
+           && (   lSanSos.getCodTipoSanzione().equals("P") 
+               || lSanSos.getCodTipoSanzione().equals("Z") 
+              )
+          ) 
+       { %>
     <tr>
       <td class="L">
         <font class="label">Pena Pecuniaria Sostitutiva: </font>&nbsp;
-        <font class="label">MULTA</font> <font class="campo"><%=StringUtils.toEuroFormat( (lSanSos!=null ? lSanSos.getSanzionePecuniariaMulta() : null) )%></font>&nbsp;<font class="label">&euro;</font>
-        <font class="label">,&nbsp;AMMENDA</font> <font class="campo"><%=StringUtils.toEuroFormat( (lSanSos!=null ? lSanSos.getSanzionePecuniariaAmmenda() : null) )%> </font>&nbsp;<font class="label">&euro;</font>  
+        <% if (lSanSos.getSanzionePecuniariaMulta()!=null) { %>
+        <font class="label"><% if (lSanSos.isPenaSostitutiva()) {%>IMPORTO<%} else { %>MULTA<% } %></font> <font class="campo"><%=StringUtils.toEuroFormat( (lSanSos!=null ? lSanSos.getSanzionePecuniariaMulta() : null) )%></font>&nbsp;<font class="label">&euro;</font>
+        <% } %>
+        <% if (lSanSos.getSanzionePecuniariaAmmenda()!=null) { %>
+            <% if (lSanSos.getSanzionePecuniariaMulta()!=null) { %>,&nbsp;<% } %>
+        <font class="label">AMMENDA</font> <font class="campo"><%=StringUtils.toEuroFormat( (lSanSos!=null ? lSanSos.getSanzionePecuniariaAmmenda() : null) )%> </font>&nbsp;<font class="label">&euro;</font>  
+        <% } %>
       </td>
     </tr>
+    <% } %>
   </table>
 
 <br>

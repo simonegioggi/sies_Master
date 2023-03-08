@@ -66,13 +66,22 @@
   	<br>
   
     <table style="width: 95%;">
-      <tr><td class="Titolo" colspan="6">Pena Complessiva/Sanzione Sostitutiva</td></tr>
+      <tr><td class="Titolo" colspan="6">Pena Complessiva/Sanzione Sostitutiva/Pene sostitutive Pene Detentive Brevi</td></tr>
       <tr>
         <td class="int">Ergastolo</td>
         <td class="int">Reclusione</td>
         <td class="int">Arresto</td>
+
+        <% // MEV_2023-13  %>
+        <% if (lSanSos.isPenaSostitutiva()){ %>
+        <td class="int">Tipo Sanzione</td>
+        <td class="int">Pena Sostitutiva</td>
+        <%} else {%>
         <td class="int">Tipo Sanzione</td>
         <td class="int">Sanzione Sostitutiva</td>
+        <% } %>
+        <% // MEV_2023-13 - FINE %>
+        
         <td class="int" width="5%">Azioni</td>
       </tr>
       <tr>
@@ -83,17 +92,20 @@
           Anni&nbsp;<%=StringUtils.toStringJSP(lPenCom.getNumAnniReclusione(), "0")%>&nbsp;
           Mesi&nbsp;<%=StringUtils.toStringJSP(lPenCom.getNumMesiReclusione(), "0")%>&nbsp;
           Giorni&nbsp;<%=StringUtils.toStringJSP(lPenCom.getNumGiorniReclusione(), "0")%>
+          <% if (lPenCom.getImportoMulta()!=null && lPenCom.getImportoMulta().intValue() != 0) {%><br>Multa <%=StringUtils.toEuroFormat(lPenCom.getImportoMulta())%><% } %>
         </td>
         <td class="l">
           Anni&nbsp;<%=StringUtils.toStringJSP(lPenCom.getNumAnniArresto(), "0")%>&nbsp;
           Mesi&nbsp;<%=StringUtils.toStringJSP(lPenCom.getNumMesiArresto(), "0")%>&nbsp;
           Giorni&nbsp;<%=StringUtils.toStringJSP(lPenCom.getNumGiorniArresto(), "0")%>
+          <% if (lPenCom.getImportoAmmenda()!=null && lPenCom.getImportoAmmenda().intValue() != 0) {%><br>Ammenda <%=StringUtils.toEuroFormat(lPenCom.getImportoAmmenda())%><% } %>
         </td>
         <td class="l">
           <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%>&nbsp;
         </td>
         <%if (lSanSos.getIdSanzioneSostitutiva()!=null){%>
-          <%if (lSanSos.getCodTipoSanzione().equals("P")){%>
+          <% // MEV_2023-13  censito anche il valore Z per le Pena Sosptitutive %>
+          <%if (lSanSos.getCodTipoSanzione().equals("P") || lSanSos.getCodTipoSanzione().equals("Z")){%>
         	  <td class="l">
           		<%if (lSanSos.getSanzionePecuniariaMulta() !=null) {%>   
 			            Multa   <%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>
