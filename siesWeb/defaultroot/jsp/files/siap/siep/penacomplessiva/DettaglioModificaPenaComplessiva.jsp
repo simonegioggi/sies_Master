@@ -108,12 +108,11 @@
           <%if (lSanSos.getCodTipoSanzione().equals("P") || lSanSos.getCodTipoSanzione().equals("Z")){%>
         	  <td class="l">
           		<%if (lSanSos.getSanzionePecuniariaMulta() !=null) {%>   
-			            Multa   <%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>
-			            <br> 
+			       <% if (lSanSos.isPenaSostitutiva()){ %>Importo <% } else { %>Multa <% } %>  <%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>
+			           <br> 
 			     <% }   
 			    if (lSanSos.getSanzionePecuniariaAmmenda() !=null) {%>
 			            Ammenda <%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaAmmenda())%>
-
 			     <% } %>    
 			   </td>
 			     

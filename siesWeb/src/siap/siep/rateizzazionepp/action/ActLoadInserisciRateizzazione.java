@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel;
@@ -44,8 +46,20 @@ public class ActLoadInserisciRateizzazione extends ActionSiap
             return lPage;
         }
         else {
-            setRequestAttribute("modalita", "I");
-            return PG_LOAD_INSERISCI_RATEIZZAZIONE_PP;
+            // Se fascicolo validato non posso consentire l'inserimento 
+            if ("S".equals(lFascMod.getFlagValidato())) {
+                RedirectTo lRedirigi = new RedirectTo();
+                lRedirigi.setPage(IWebConstants.PG_MAIN);
+                setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Impossibile procedere, il procedimento risulta già validato.");
+                lRedirigi.setAction("siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&"
+                    + ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP + "=" + lFascMod.getIdFascicoloSiep());
+                setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+                return IWebConstants.PG_MESSAGE;                
+            }
+            else {
+                setRequestAttribute("modalita", "I");
+                return PG_LOAD_INSERISCI_RATEIZZAZIONE_PP;                
+            }
         }
     }
 }

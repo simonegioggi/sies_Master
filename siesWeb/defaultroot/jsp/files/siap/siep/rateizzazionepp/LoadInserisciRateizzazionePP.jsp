@@ -134,9 +134,10 @@ function Verify() {
           document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_'+Rigo).focus();
           return false;
         }
-        // alert ("sommaRate = "+sommaRate+" + "+parseFloat(valoreRata));
-        sommaRate = sommaRate + (numRate * parseFloat(valoreRata));
-        // alert ("sommaRate = "+sommaRate);
+        //alert ("valoreRata = "+valoreRata);
+        //alert ("sommaRate = "+sommaRate+" + "+(numRate*parseFloat(valoreRata)) );
+        sommaRate = sommaRate + (numRate*parseFloat(valoreRata));
+        //alert ("sommaRate = "+sommaRate);
         
         var scadenzaGiorni = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).value;
         
@@ -442,6 +443,8 @@ else
       if (i>0) disabled = "disabled";
       
       String display = "";
+      if (i==0) display = "block";
+      
       if (i>0) display = "none";
       
       if (tipoRateizzazione.equals("R")) {

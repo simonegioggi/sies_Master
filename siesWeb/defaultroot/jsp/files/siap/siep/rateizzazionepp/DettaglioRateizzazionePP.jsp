@@ -10,8 +10,11 @@
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
 <%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel"%>
 
-<jsp:useBean id="listaRateizzazioni" scope="request"   class="java.util.Vector" />
+<jsp:useBean id="listaRateizzazioni"        scope="request"   class="java.util.Vector" />
 <jsp:useBean id="dettaglioPenaComplessiva" 	scope="request" class="siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel"/>
+
+<jsp:useBean id="fascicolo" scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+
 
 <html>
 <head>
@@ -54,11 +57,13 @@ function modificaRate(){
       <font class="campo">Dettaglio Modalita' pagamento Pena Pecuniaria</font>
     </td>
     <td class="LBG">
+       <% if (!"S".equals(fascicolo.getFlagValidato())) { %>
        <a href="javascript:modificaRate()">
           <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Rate" width="24" height="24" border="0"></a>
           
       <a href="javascript:cancellaRate()" >
           <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella Rate" width="24" height="24" border="0"></a>
+      <% } %>
     </td>
     <jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
   </tr>
