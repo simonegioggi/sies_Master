@@ -32,19 +32,30 @@ if (modalita.equals("I")) {
 <script language="JavaScript">
 function Init() {
 <%
-if (Utils.isPresent(codPersona)) {
+if (modalita.equals("I")) {
+	if (Utils.isPresent(codPersona)) {
 %>
 	document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[0].checked = true;
 	if ("G" == "<%=codPersona%>")
 		document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[1].checked = true;
 <%
-}
+	}
 %>
 	if (document.LoadInserisciCivilmenteObbligato.<%=ICostantiPagoPA.RADIO_COD_PERSONA%>[0].checked) {
 		VisualizzaPersonaFisica();
     } else {
     	VisualizzaPersonaGiuridica();
     }
+<%
+} else {
+%>
+	if ("G" == "<%=codPersona%>")
+		VisualizzaPersonaGiuridica();
+	else
+		VisualizzaPersonaFisica();
+<%
+}
+%>
 }
 </script>
 </head>
@@ -65,6 +76,9 @@ if (Utils.isPresent(codPersona)) {
 </table>
 
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
+<%
+if (modalita.equals("I")) {
+%>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
@@ -75,6 +89,9 @@ if (Utils.isPresent(codPersona)) {
       	</td>
 	</tr>
 </table>
+<%
+}
+%>
 </FORM>
 
 <div id="tipoPersona" style="position: relative; top: 0; left: 0; visibility: visible;">

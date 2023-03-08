@@ -21,6 +21,7 @@
 <jsp:useBean id="tipoTutore"  			scope="request" class="java.lang.String"/>
 <jsp:useBean id="idFascicoloSiep"		scope="request" class="java.lang.String"/>
 <jsp:useBean id="civilmenteObbligati" 	scope="request" class="java.util.Vector<siap.siep.pagoPA.model.CivilmenteObbligatoModel>"/>
+<jsp:useBean id="codPersona"  			scope="request" class="java.lang.String"/>
 
 <%
 String action = "";
@@ -50,7 +51,7 @@ function calendario(a_formname,a_field_year,a_field_month,a_field_day) {
 function Verify() {
 	if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>.selectedIndex].value == '039') {
 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>.value = "";
-		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>.value.length == 0) {
+		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>.value.length < 2) {
 			alert('Il Comune di Nascita è obbligatorio se lo Stato di Nascita è Italia');
 			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>.focus;
 			return false;
@@ -85,52 +86,64 @@ function Verify() {
 	<%-- EVENTUALE Secondo Civilmente Obbligato --%>
 	var sel = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>.options.value;
 	if (sel != "-") {
-		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST.selectedIndex].value == '039') {
-			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST.value = "";
-			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.value.length == 0) {
-				alert('Il Comune di Nascita del Secondo Civilmente Obbligato è obbligatorio se lo Stato di Nascita è Italia');
-				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.focus;
-				return false;
-	  		}
-		} else {
-	  		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.value = '';
-		}
-		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value.length == 1)
-	 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value = '0'+
-	 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value;
-		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value.length == 1)
-	 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value = '0' +
-	 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value;
-		var data_to_verify_ST = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value
-			+ '/' + document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value
-			+ '/' + document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST.value;
-		if (! ControllaData(data_to_verify_ST)) {
-		    alert('Data di nascita del Secondo Civilmente Obbligato non valida');
-		    return false;
-		}
-		// RESIDENZA SECONDO C.O.
-		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST.selectedIndex].value == '039') {
-			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>_ST.value = "";
-			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST.value.length == 0) {
-				alert('Il Comune di Residenza è obbligatorio se lo Stato di Residenza è Italia');
-				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST.focus;
-				return false;
-	  		}
-		} else {
-	  		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST.value = '';
+		if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COGNOME%>_ST.value != ''
+				&& document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_NOME%>_ST.value != '') {
+			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_NASCITA%>_ST.selectedIndex].value == '039') {
+				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_NASCITA_ESTERO%>_ST.value = "";
+				if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.value.length < 2) {
+					alert('Il Comune di Nascita del Secondo Civilmente Obbligato è obbligatorio se lo Stato di Nascita è Italia');
+					document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.focus;
+					return false;
+		  		}
+			} else {
+		  		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_NASCITA%>_ST.value = '';
+			}
+			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value.length == 1)
+		 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value = '0'+
+		 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value;
+			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value.length == 1)
+		 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value = '0' +
+		 		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value;
+			var data_to_verify_ST = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_GIORNO_DATA_NASCITA%>_ST.value
+				+ '/' + document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_MESE_DATA_NASCITA%>_ST.value
+				+ '/' + document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_ANNO_DATA_NASCITA%>_ST.value;
+			if (! ControllaData(data_to_verify_ST)) {
+			    alert('Data di nascita del Secondo Civilmente Obbligato non valida');
+			    return false;
+			}
+			// RESIDENZA SECONDO C.O.
+			if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST[document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST.selectedIndex].value == '039') {
+				document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_DESC_COMUNE_ESTERO_RESIDENZA%>_ST.value = "";
+				if (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_STATO_RESIDENZA%>_ST.value.length == 0) {
+					alert('Il Comune di Residenza è obbligatorio se lo Stato di Residenza è Italia');
+					document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST.focus;
+					return false;
+		  		}
+			} else {
+		  		document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COD_COMUNE_RESIDENZA%>_ST.value = '';
+			}
+		} else if ((document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COGNOME%>_ST.value != ''
+						&& document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_NOME%>_ST.value == '')
+						|| (document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COGNOME%>_ST.value == ''
+								&& document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_NOME%>_ST.value != '')) {
+			alert('Valorizzare sia Cognome che Nome del secondo Civilmente Obbligato!');
+			document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_COGNOME%>_ST.focus;
+			return false;
 		}
 	}
 	return true;
 }
 
 function VisualizzaSecondoTutore() {
-	var secondoTutore = document.getElementById("secondoTutore");
-	var sel = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>.options.value;
-    if (sel != '-') {
-		secondoTutore.style.display = "block";
-	} else {
-		secondoTutore.style.display = "none";
-  	}
+	if ("G" != "<%=codPersona%>") {
+		var secondoTutore = document.getElementById("secondoTutore");
+		var sel = document.LoadInserisciPersonaFisica.<%=ICostantiPagoPA.CAMPO_TIPO_TUTORE%>.options.value;
+		if (sel != '-') {
+			secondoTutore.style.display = "block";
+		} else {
+			secondoTutore.style.display = "none";
+	  	}
+	}
 }
 </script>
 

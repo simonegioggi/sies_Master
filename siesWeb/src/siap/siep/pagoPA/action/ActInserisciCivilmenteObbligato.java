@@ -3,6 +3,7 @@ package siap.siep.pagoPA.action;
 import java.util.List;
 
 import f3b.util.DateUtils;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import siap.sico.decodifiche.controller.DecodificheManager;
@@ -42,9 +43,11 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 
 		if (!"-".equals(codTutore) && !"G".equals(com.getCodPersona())) {
 			CivilmenteObbligatoModel com_ST = riempiDatiCivilmenteObbligato("_ST");
-			com_ST.setFasSieIdFascicolSiep(fsm.getIdFascicoloSiep());
-			com_ST.setCodTutore(codTutore);
-			ico.ExInserisciCivilmenteObbligato(com_ST);
+			if (Utils.isPresent(com_ST.getCognome()) && Utils.isPresent(com_ST.getNome())) {
+				com_ST.setFasSieIdFascicolSiep(fsm.getIdFascicoloSiep());
+				com_ST.setCodTutore(codTutore);
+				ico.ExInserisciCivilmenteObbligato(com_ST);
+			}
 		}
 
 		RedirectTo rt = new RedirectTo();
@@ -170,10 +173,12 @@ public class ActInserisciCivilmenteObbligato extends ActionSiap implements ICost
 
 		// inserimento RESIDENZA solo se sono valorizzati indirizzo e comune o comune estero
 		boolean indirizzoResidenza, comuneResidenza, comuneEsteroResidenza = false;
-		indirizzoResidenza = !isRequestParameterNullObj(CAMPO_INDIRIZZO + st);
+		indirizzoResidenza = !isRequestParameterNullObj(CAMPO_INDIRIZZO + st)
+				&& getRequestStringParameter(CAMPO_INDIRIZZO + st).length() > 0;
 		comuneResidenza = !isRequestParameterNullObj(CAMPO_COD_COMUNE_RESIDENZA + st)
 				&& getRequestStringParameter(CAMPO_COD_COMUNE_RESIDENZA + st).length() > 0;
-		comuneEsteroResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st);
+		comuneEsteroResidenza = !isRequestParameterNullObj(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st)
+				&& getRequestStringParameter(CAMPO_DESC_COMUNE_ESTERO_RESIDENZA + st).length() > 0;
 		if (indirizzoResidenza && (comuneResidenza || comuneEsteroResidenza)) {
 			// Residenza/Domicilio
 			ResidenzaModel rm = new ResidenzaModel();

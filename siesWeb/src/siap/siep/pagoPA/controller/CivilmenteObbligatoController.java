@@ -95,10 +95,12 @@ public class CivilmenteObbligatoController extends SiapController implements ICi
 			comRet.setIdCivilmenteObbligato(bd);
 
 			// Inserimento sulla tabella RESIDENZA
-			rdao = new ResidenzaDAO(c);
-			comRet.getResidenza().setIdCivilmenteObbligato(bd);
-			rdao.setDAOFromModel(comRet.getResidenza());
-			rdao.insert();
+			if (com.getResidenza() != null) {
+				rdao = new ResidenzaDAO(c);
+				comRet.getResidenza().setIdCivilmenteObbligato(bd);
+				rdao.setDAOFromModel(comRet.getResidenza());
+				rdao.insert();
+			}
 
 			commit(c);
 		} catch (F3BException fe) {
@@ -166,8 +168,6 @@ public class CivilmenteObbligatoController extends SiapController implements ICi
 		CivilmenteObbligatoDAO codao = null;
 
 		try {
-			// EventoNotificaModel lEve = new EventoNotificaModel();
-
 			// Prende una connessione in transazione.
 			c = getDBTransaction();
 
@@ -178,17 +178,27 @@ public class CivilmenteObbligatoController extends SiapController implements ICi
 			codao.update();
 			codao.stop();
 
-			rdao = new ResidenzaDAO(c);
-			BigDecimal idResidenza = com.getResidenza().getIdResidenza();
-			if (idResidenza != null) {
-				// aggiorno la residenza
-				rdao.setDAOFromModelForUpdate(com.getResidenza());
-				rdao.update();
+			// la residenza può essere inserita, modificata o cancellata in MODIFICA
+			if (com.getResidenza() != null) {
+				rdao = new ResidenzaDAO(c);
+				BigDecimal idResidenza = com.getResidenza().getIdResidenza();
+				if (idResidenza != null) {
+					// aggiorno la residenza
+					rdao.setDAOFromModelForUpdate(com.getResidenza());
+					rdao.update();
+				} else {
+					// inserisco la residenza
+					rdao.setDAOFromModel(com.getResidenza());
+					BigDecimal lSequence = rdao.insert();
+					com.getResidenza().setIdResidenza(lSequence);
+				}
 			} else {
-				// inserisco la residenza
-				rdao.setDAOFromModel(com.getResidenza());
-				BigDecimal lSequence = rdao.insert();
-				com.getResidenza().setIdResidenza(lSequence);
+				// Cancellazione della Residenza del Civilmente Obbligato
+				// tabella RESIDENZA
+				rdao = new ResidenzaDAO(c);
+				rdao.selPerIdCivilmenteObbligato(com.getIdCivilmenteObbligato());
+				rdao.delete();
+				rdao.stop();
 			}
 
 			commit(c);
