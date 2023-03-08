@@ -116,19 +116,24 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// INVOCO WS:
 		// ########################################################################################
 		// ESER
-		// String pathProp = System.getProperty("path.properties");
+		// CONFIG=/var/SIES/CONFIG (pathProp)
+		// CERTIFICATO_X509=certs//mev.casellario.giustizia.it.cer
+		// JKS=certs/sies.jks
+		String pathProp = System.getProperty("path.properties");
+		String jks = "certs/sies.jks";
 		// String nomeFileCertificatoX509 = pathProp + System.getProperty("file.separator")
 		// + NscProperties.getInstance().getProperty("CERTIFICATO_X509");
+		// siesLogger.debug(nomeFileCertificatoX509);
 		// System.setProperty("javax.net.ssl.trustStore", nomeFileCertificatoX509);
+		String pathJKS = pathProp + System.getProperty("file.separator") + jks;
+		siesLogger.debug("PERCORSO DEL JKS: " + pathJKS);
+		System.setProperty("javax.net.ssl.trustStore", pathJKS);
 		// LOCAL
-		System.setProperty("javax.net.ssl.trustStore",
-				"C:/LAVORO/Progetti/ANALISI/SIES-NSC/CONFIG/certs/sies.jks");
+		// System.setProperty("javax.net.ssl.trustStore",
+		// "C:/LAVORO/Progetti/ANALISI/SIES-NSC/CONFIG/certs/sies.jks");
+		// UNIVERSALI
 		System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
 		System.setProperty("javax.net.debug", "ssl");
-		System.setProperty("javax.net.ssl.keyStore", "C:/LAVORO/Progetti/ANALISI/SIES-NSC/CONFIG/certs/serversies.jks");
-		System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
-		// sun.security.ssl.allowUnsafeRenegotiation=true
-		// javax.net.ssl.keyStoreType="JKS"
 		// ########################################################################################
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
 		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
