@@ -138,10 +138,30 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
     lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
 
+    lSql += " order by PROGRESSIVO_RATA ";
+    
     // Imposta lo statement da eseguire
     setStatement(lSql);
   }
 
+  
+  /**
+   * 
+   * @param aIdEvento
+   * @throws DAOException
+   */
+  public void ricercaRateizzazionePPByEveIdEvento (BigDecimal aIdEvento) throws DAOException {
+      // Recupera la select...from
+      String lSql = getSqlQuery();
+
+      lSql += setCondizioniByEveIdEvento (aIdEvento);
+
+      lSql += " order by PROGRESSIVO_RATA ";
+      
+      // Imposta lo statement da eseguire
+      setStatement(lSql);
+    }
+  
   /**
    * Metodo che carica il record del result set nel model
    * 
@@ -159,9 +179,10 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
     lModel.setTipoRateizzazione (getString    ("TIPO_RATEIZZAZIONE"));
     lModel.setScadenzaGiorni    (getBigDecimal("SCADENZA_GIORNI"));
     lModel.setDescrTipoRateizzazione(getString("descTipoRateizzazione") );
+    lModel.setProgressivoRata   (getBigDecimal("PROGRESSIVO_RATA"));
 
     lModel.setFasSieIdFascicoloSiep (getBigDecimal("FAS_SIE_ID_FASCICOLO_SIEP"));
-    //lModel.setEveIdEvento           (getBigDecimal("ID_RATEIZZAZIONE_PP"));
+    lModel.setEveIdEvento           (getBigDecimal("EVE_ID_EVENTO"));
 
     lModel.setCodOperatoreInserimento (getString("COD_OPERATORE_INSERIMENTO"));
     lModel.setDataInserimento         (getDate("DATA_INSERIMENTO"));
@@ -203,38 +224,17 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
       lCondizioni += " and SCADENZA_GIORNI = " + aModel.getScadenzaGiorni() + "";
     }
     
+    if (aModel.getProgressivoRata() != null) {
+        lCondizioni += " and PROGRESSIVO_RATA = " + aModel.getProgressivoRata() + "";
+      }
+    
     if (aModel.getFasSieIdFascicoloSiep() != null) {
       lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep() + "";
     } 
     
-//    if (aModel.getEveIdEvento() != null) {
-//      lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + "";
-//    }
-
-    /*
-    if (aModel.getCodOperatoreInserimento() != null && aModel.getCodOperatoreInserimento().length() > 0) {
-      lCondizioni += " and COD_OPERATORE_INSERIMENTO = '" + aModel.getCodOperatoreInserimento()+ "' ";
+    if (aModel.getEveIdEvento() != null) {
+      lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + "";
     }
-    if (aModel.getDataInserimento() != null) {
-      lCondizioni += " and to_char(DATA_INSERIMENTO,'dd/MM/yyyy') = '"
-          + DateUtils.getDateToString(aModel.getDataInserimento(), "dd/MM/yyyy") + "' ";
-    }    
-    if (aModel.getCodUfficioInserimento() != null && aModel.getCodUfficioInserimento().length() > 0) {
-      lCondizioni += " and COD_UFFICIO_INSERIMENTO = '" + aModel.getCodUfficioInserimento() + "' ";
-    }    
-    if (aModel.getCodOperatoreAggiornamento() != null
-        && aModel.getCodOperatoreAggiornamento().length() > 0) {
-      lCondizioni += " and RI.COD_OPERATORE_AGGIORNAMENTO = '" + aModel.getCodOperatoreAggiornamento()
-          + "' ";
-    }    
-    if (aModel.getDataAggiornamento() != null) {
-      lCondizioni += " and to_char(RI.DATA_AGGIORNAMENTO,'dd/MM/yyyy') = '"
-          + DateUtils.getDateToString(aModel.getDataAggiornamento(), "dd/MM/yyyy") + "' ";
-    }    
-    if (aModel.getCodUfficioAggiornamento() != null && aModel.getCodUfficioAggiornamento().length() > 0) {
-      lCondizioni += " and COD_UFFICIO_AGGIORNAMENTO = '" + aModel.getCodUfficioAggiornamento() + "' ";
-    }
-    */
 
     // Elimino il primo and
     if (lCondizioni.length() > 0) {
@@ -273,6 +273,14 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
     return lCondizioni;
   }
 
+  public String setCondizioniByEveIdEvento(BigDecimal aIdEvento) {
+      String lCondizioni = new String();
+
+      lCondizioni += " and EVE_ID_EVENTO = " + aIdEvento;
+
+      return lCondizioni;
+    }
+  
   /**
    * Metodo per la costruzione della sezione order by
    * 
@@ -314,7 +322,8 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
     String lStatement = new String("");
 
     lStatement += " SELECT ID_RATEIZZAZIONE_PP, IMPORTO_DA_PAGARE, IMPORTO_RATA, NUMERO_RATE "
-                      + ", TIPO_RATEIZZAZIONE, SCADENZA_GIORNI, FAS_SIE_ID_FASCICOLO_SIEP "
+                      + ", TIPO_RATEIZZAZIONE, SCADENZA_GIORNI, PROGRESSIVO_RATA, FAS_SIE_ID_FASCICOLO_SIEP "
+                      + ", EVE_ID_EVENTO "
                       + ", cgTipoRateizzazione.RV_MEANING descTipoRateizzazione"
                       + ", COD_OPERATORE_INSERIMENTO, DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO " 
                       + ", COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO ";

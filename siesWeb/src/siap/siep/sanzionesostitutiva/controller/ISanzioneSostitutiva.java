@@ -191,4 +191,13 @@ public interface ISanzioneSostitutiva {
 	 */
 	public EventoModel exUpdateRichiestaRevocaSS(EventoModel aEvRichiesta) throws F3BException;
 
+	
+	/**
+	 * MEV_2023-13 
+	 * @param aEvNotModel
+	 * @return
+	 * @throws F3BException
+	 */
+   public EventoNotificaModel exInserisciOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
+
 }

@@ -139,29 +139,31 @@ function Verify() {
         sommaRate = sommaRate + (numRate*parseFloat(valoreRata));
         //alert ("sommaRate = "+sommaRate);
         
-        var scadenzaGiorni = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).value;
-        
-        if (isNaN(scadenzaGiorni) || scadenzaGiorni<1 ) {
-          alert("Indicare la scadenza pagamento per la rata N. "+(Rigo+1));
-          document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).focus();
-          return false;
-        }         
+        if (Rigo==0) {
+	        var scadenzaGiorni = document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).value;
+	        
+	        if (isNaN(scadenzaGiorni) || scadenzaGiorni<1 ) {
+	          alert("Indicare la scadenza pagamento per la rata N. "+(Rigo+1));
+	          document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).focus();
+	          return false;
+	        }
+        }
       }
     }
   }
   
   //alert ("sommaRate = "+sommaRate);
   if (sommaRate < parseFloat (importoDaPagare)) {
-	  var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+") "
-	           + "risulta inferiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+". "
+	  var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+" euro) "
+	           + "risulta inferiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+" euro. "
 	           + "Si vuole procedre comunque?";
   
 	  if (!window.confirm(msg))
 		  return false;
   }
   else if (sommaRate > parseFloat (importoDaPagare)) {
-      var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+") "
-               + "risulta superiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+". "
+      var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+" euro) "
+               + "risulta superiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+" euro. "
                + "Si vuole procedre comunque?";
   
       if (!window.confirm(msg))
@@ -247,12 +249,15 @@ function addUlterioreRata(){
       document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_'+Rigo).disabled = false ;
       document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_'+Rigo).disabled = false ;
       document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_'+Rigo).disabled = false ;
-      document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).disabled = false ;
+      
+      if (Rigo==0)
+    	  document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).disabled = false ;
       
       strTdCancella = '<a href="Javascript:cancellaRata(\''+Rigo+'\');"><img src="/images/delete.gif" border="0" title="Cancella rata"></a>';
 
       document.getElementById('tdCancella_'+Rigo).innerHTML = strTdCancella;
-      document.getElementById('tdCancella_'+(Rigo-1)).innerHTML = '<br>';
+      if (Rigo>1)
+    	  document.getElementById('tdCancella_'+(Rigo-1)).innerHTML = '<br>';
 
       document.getElementById(idrata).style.display = "block";
       break;
@@ -266,12 +271,13 @@ function cancellaRata(Rigo) {
   document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_'+Rigo).value = "" ;
   document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_'+Rigo).value = "" ;
   document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_'+Rigo).value = "" ;
-  document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).value = "" ;
+  
+  //document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).value = "" ;
   
   document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_'+Rigo).disabled = true ;
   document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_'+Rigo).disabled = true ;
   document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_'+Rigo).disabled = true ;
-  document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).disabled = true ;
+  //document.getElementById('<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_'+Rigo).disabled = true ;
   
   if (Rigo>1){
     strTdCancella = '<a href="Javascript:cancellaRata(\''+(Rigo-1)+'\');"><img src="/images/delete.gif" border="0" title="Cancella computo"></a>';
@@ -430,7 +436,7 @@ else
   
   <table width="90%">
     <tr>
-      <td class="Titolo" colspan="4">Pagamento Rateizzato </td>
+      <td class="Titolo" colspan="3">Pagamento Rateizzato </td>
     </tr>
     <%
     for (int i=0;i<maxNumRate;i++) {
@@ -485,8 +491,10 @@ else
                value="<%=StringUtils.toStringJSP(importoD,"")%>"
                onkeypress="return TicTabNumField(this,event)" >      
       </td>
-      <td class="L">
-        <font class="label">temine di pagamento della prima rata fissato entro</font>
+      
+      <% if (i==0)  { %>
+      <td class="L" nowrap>
+        <font class="label">termine di pagamento della prima rata fissato entro</font>
           <input type="text" title="giorni" maxlength="4" size="4" <%=disabled%>
                  name="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_<%=i%>"   
                  id="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_<%=i%>"        
@@ -494,8 +502,9 @@ else
                  onkeypress="return TicTabNumField(this,event)">
           giorni dalla notifica dell'avviso di pagamento
       </td>
-
+      <% } else { %>
       <td valign="middle" class="c" id="tdCancella_<%=i%>" width="15px">&nbsp;</td>
+      <% } %>
     </tr>
     <% } %>
   </table>

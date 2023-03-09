@@ -40,7 +40,8 @@ public class RateizzazionePPDAO extends SIAPTableDAO
     setField("SCADENZA_GIORNI"              , BIG_DECIMAL);
     
     setField("FAS_SIE_ID_FASCICOLO_SIEP"    , BIG_DECIMAL);
-    //setField("EVE_ID_EVENTO"                , BIG_DECIMAL);
+    setField("EVE_ID_EVENTO"                , BIG_DECIMAL);
+    setField("PROGRESSIVO_RATA"             , BIG_DECIMAL);    
     
     setField("COD_OPERATORE_INSERIMENTO"    , STRING);
     setField("DATA_INSERIMENTO"             , DATE);
@@ -60,9 +61,10 @@ public class RateizzazionePPDAO extends SIAPTableDAO
   public  BigDecimal  getNumeroRate()                throws DAOException  { return getBigDecimal ("NUMERO_RATE"        ); } 
   public  String      getTipoRateizzazione()         throws DAOException  { return getString     ("TIPO_RATEIZZAZIONE" ); } 
   public  BigDecimal  getScadenzaGiorni()            throws DAOException  { return getBigDecimal ("SCADENZA_GIORNI"    ); } 
+  public  BigDecimal  getProgressivoRata()           throws DAOException  { return getBigDecimal ("PROGRESSIVO_RATA"    ); } 
   
   public  BigDecimal  getFasSieIdFascicoloSiep()     throws DAOException  { return getBigDecimal ("FAS_SIE_ID_FASCICOLO_SIEP"    ); } 
-  //public  BigDecimal  getEveIdEvento()               throws DAOException  { return getBigDecimal ("EVE_ID_EVENTO"                ); } 
+  public  BigDecimal  getEveIdEvento()               throws DAOException  { return getBigDecimal ("EVE_ID_EVENTO"                ); } 
   public  String      getCodOperatoreInserimento()   throws DAOException  { return getString     ("COD_OPERATORE_INSERIMENTO"    ); } 
   public  Date        getDataInserimento()           throws DAOException  { return getDate       ("DATA_INSERIMENTO"             ); } 
   public  String      getCodUfficioInserimento()     throws DAOException  { return getString     ("COD_UFFICIO_INSERIMENTO"      ); } 
@@ -79,9 +81,10 @@ public class RateizzazionePPDAO extends SIAPTableDAO
   public void  setNumeroRate                   (BigDecimal  aValore )   { setBigDecimal ("NUMERO_RATE"        , aValore); } 
   public void  setTipoRateizzazione            (String      aValore )   { setString     ("TIPO_RATEIZZAZIONE" , aValore); } 
   public void  setScadenzaGiorni               (BigDecimal  aValore )   { setBigDecimal ("SCADENZA_GIORNI"    , aValore); } 
+  public void  setProgressivoRata              (BigDecimal  aValore )   { setBigDecimal ("PROGRESSIVO_RATA"    , aValore); } 
   
   public void  setFasSieIdFascicoloSiep        (BigDecimal  aValore )   { setBigDecimal ("FAS_SIE_ID_FASCICOLO_SIEP"    , aValore); } 
-  //public void  setEveIdEvento                  (BigDecimal  aValore )   { setBigDecimal ("EVE_ID_EVENTO"                , aValore); } 
+  public void  setEveIdEvento                  (BigDecimal  aValore )   { setBigDecimal ("EVE_ID_EVENTO"                , aValore); } 
   
   public void  setCodOperatoreInserimento      (String      aValore )   { setString     ("COD_OPERATORE_INSERIMENTO"    , aValore); } 
   public void  setDataInserimento              (Date        aValore )   { setDate       ("DATA_INSERIMENTO"             , aValore); } 
@@ -106,9 +109,10 @@ public class RateizzazionePPDAO extends SIAPTableDAO
     lModel.setNumeroRate        (getNumeroRate());
     lModel.setTipoRateizzazione (getTipoRateizzazione());
     lModel.setScadenzaGiorni    (getScadenzaGiorni());
+    lModel.setProgressivoRata   (getProgressivoRata());
 
     lModel.setFasSieIdFascicoloSiep (getFasSieIdFascicoloSiep());
-    //lModel.setEveIdEvento           (getEveIdEvento());
+    lModel.setEveIdEvento           (getEveIdEvento());
 
     lModel.setCodOperatoreInserimento (getCodOperatoreInserimento());
     lModel.setDataInserimento         (getDataInserimento());
@@ -135,9 +139,10 @@ public class RateizzazionePPDAO extends SIAPTableDAO
     setNumeroRate        ( aModel.getNumeroRate()       );  
     setTipoRateizzazione ( aModel.getTipoRateizzazione());  
     setScadenzaGiorni    ( aModel.getScadenzaGiorni()   );  
+    setProgressivoRata   ( aModel.getProgressivoRata());
    
     setFasSieIdFascicoloSiep     ( aModel.getFasSieIdFascicoloSiep()     );  
-    //setEveIdEvento               ( aModel.getEveIdEvento()               );  
+    setEveIdEvento               ( aModel.getEveIdEvento()               );  
     
     setCodOperatoreInserimento   ( aModel.getCodOperatoreInserimento()   );  
     setDataInserimento           ( aModel.getDataInserimento()           );  
@@ -167,6 +172,8 @@ public class RateizzazionePPDAO extends SIAPTableDAO
       setTipoRateizzazione ( aModel.getTipoRateizzazione() );  
     if ( aModel.getScadenzaGiorni() != null  )
       setScadenzaGiorni ( aModel.getScadenzaGiorni() );  
+    if ( aModel.getProgressivoRata() != null  )
+        setProgressivoRata ( aModel.getProgressivoRata() );  
     
     if ( aModel.getCodOperatoreAggiornamento() != null  && aModel.getCodOperatoreAggiornamento().length() > 1  )
       setCodOperatoreAggiornamento ( aModel.getCodOperatoreAggiornamento()   );  
@@ -175,8 +182,8 @@ public class RateizzazionePPDAO extends SIAPTableDAO
     if ( aModel.getCodUfficioAggiornamento() != null  && aModel.getCodUfficioAggiornamento().length() > 1  )
       setCodUfficioAggiornamento ( aModel.getCodUfficioAggiornamento() );    
     
-    /*if ( aModel.getEveIdEvento() != null  )
-      setEveIdEvento ( aModel.getEveIdEvento() );  */
+    if ( aModel.getEveIdEvento() != null  )
+      setEveIdEvento ( aModel.getEveIdEvento() );
   }
   
   /***************************************************************************** 
@@ -202,33 +209,17 @@ public class RateizzazionePPDAO extends SIAPTableDAO
     if (aModel.getTipoRateizzazione() != null && aModel.getTipoRateizzazione().length() > 0) { 
       lCondizioni += " and TIPO_RATEIZZAZIONE = '" + aModel.getTipoRateizzazione() + "' "; 
     }    
+    if (aModel.getProgressivoRata() != null) { 
+        lCondizioni += " and PROGRESSIVO_RATA = '" + aModel.getProgressivoRata() + "' "; 
+    } 
 
     if (aModel.getFasSieIdFascicoloSiep() != null ) { 
       lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep() + ""; 
     } 
-//    if (aModel.getEveIdEvento() != null ) { 
-//      lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + ""; 
-//    } 
-    /*
-    if (aModel.getCodOperatoreInserimento() != null && aModel.getCodOperatoreInserimento().length() > 0) { 
-      lCondizioni += " and COD_OPERATORE_INSERIMENTO = '" + aModel.getCodOperatoreInserimento() + "' "; 
-    } 
-    if (aModel.getDataInserimento() != null ) { 
-      lCondizioni += " and to_char(DATA_INSERIMENTO,'dd/MM/yyyy') = '" + DateUtils.getDateToString(aModel.getDataInserimento(),"dd/MM/yyyy") + "' "; 
-    } 
-    if (aModel.getCodUfficioInserimento() != null && aModel.getCodUfficioInserimento().length() > 0) { 
-      lCondizioni += " and COD_UFFICIO_INSERIMENTO = '" + aModel.getCodUfficioInserimento() + "' "; 
-    } 
-    if (aModel.getCodOperatoreAggiornamento() != null && aModel.getCodOperatoreAggiornamento().length() > 0) { 
-      lCondizioni += " and COD_OPERATORE_AGGIORNAMENTO = '" + aModel.getCodOperatoreAggiornamento() + "' "; 
-    } 
-    if (aModel.getDataAggiornamento() != null ) { 
-      lCondizioni += " and to_char(DATA_AGGIORNAMENTO,'dd/MM/yyyy') = '" + DateUtils.getDateToString(aModel.getDataAggiornamento(),"dd/MM/yyyy") + "' "; 
-    } 
-    if (aModel.getCodUfficioAggiornamento() != null && aModel.getCodUfficioAggiornamento().length() > 0) { 
-      lCondizioni += " and COD_UFFICIO_AGGIORNAMENTO = '" + aModel.getCodUfficioAggiornamento() + "' "; 
-    } */
     
+    if (aModel.getEveIdEvento() != null ) { 
+      lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + ""; 
+    } 
 
     // Elimino il primo and 
     if (lCondizioni.length() > 0) { 

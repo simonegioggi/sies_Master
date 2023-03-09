@@ -61,6 +61,7 @@ public class NotificaDAO extends SIAPTableDAO
      setField("CUR_ID_CURATORE", BIG_DECIMAL);
      setField("ID_PARTE_UDIENZA", BIG_DECIMAL);
      setField("FLAG_NOTIFICA_VIA_FAX", BIG_DECIMAL);
+     setField("ID_CIVILMENTE_OBBLIGATO", BIG_DECIMAL); //MEV_2023-13 
   }
 
   //
@@ -97,6 +98,9 @@ public class NotificaDAO extends SIAPTableDAO
   public BigDecimal 		 getFlagNotificaViaFax() 			 throws DAOException	    { return getBigDecimal("FLAG_NOTIFICA_VIA_FAX"); }
   public BigDecimal 		 getIdParteUdienza() 				 throws DAOException	    { return getBigDecimal("ID_PARTE_UDIENZA"); }
   
+  // MEV_2023-13 
+  public BigDecimal          getIdCivilmenteObbligato()          throws DAOException        { return getBigDecimal("ID_CIVILMENTE_OBBLIGATO"); }
+  
   //
   // METODI SET()
   //
@@ -131,7 +135,9 @@ public class NotificaDAO extends SIAPTableDAO
   public void setCurIdCuratore(BigDecimal aValore )					  { setBigDecimal("CUR_ID_CURATORE", aValore); }
   public void setFlagNotificaViaFax(BigDecimal aValore )			  { setBigDecimal("FLAG_NOTIFICA_VIA_FAX", aValore); }
   public void setIdParteUdienza(BigDecimal aValore )				  { setBigDecimal("ID_PARTE_UDIENZA", aValore); }
-
+  // MEV_2023-13 
+  public void setIdCivilmenteObbligato (BigDecimal aValore )           { setBigDecimal("ID_CIVILMENTE_OBBLIGATO", aValore); }   
+  
 	public GenericModel getModel() throws DAOException
   {
 	  return new NotificaModel(
@@ -169,6 +175,7 @@ public class NotificaDAO extends SIAPTableDAO
                  getCurIdCuratore(),
 				 getFlagNotificaViaFax(),
                  getIdParteUdienza()
+                 , null  //MEV_2023-13 
 								);
 		}
 
@@ -204,6 +211,8 @@ public class NotificaDAO extends SIAPTableDAO
       setCurIdCuratore( aModel.getCurIdCuratore() );
       setFlagNotificaViaFax (aModel.getFlagNotificaViaFax());
       setIdParteUdienza( aModel.getIdParteUdienza() );
+      // MEV_2023-13 
+      setIdCivilmenteObbligato ( aModel.getIdCivilmenteObbligato() );
    }
 
   public void setDAOFromModelForUpdate(NotificaModel aModel) throws DAOException
@@ -235,6 +244,8 @@ public class NotificaDAO extends SIAPTableDAO
      setAutEstIdAutoritaEstDeleg( aModel.getAutEstIdAutoritaEstDeleg() );
      setCurIdCuratore( aModel.getCurIdCuratore() );
      setFlagNotificaViaFax (aModel.getFlagNotificaViaFax());
+     // MEV_2023-13 
+     setIdCivilmenteObbligato ( aModel.getIdCivilmenteObbligato() );
   }
 
   // Update del SOG_ID_SOGGETTO per le NOTIFICHE legate ad EVENTI collegati ad un FASCICOLO SIUS.

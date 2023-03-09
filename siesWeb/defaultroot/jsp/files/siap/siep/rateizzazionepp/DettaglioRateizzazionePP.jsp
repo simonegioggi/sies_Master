@@ -131,7 +131,9 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
     
     <%
     Iterator IteRate = listaRateizzazioni.iterator();
+    int conta = 0;
     while(IteRate.hasNext()) {
+      conta++;
       RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
       
       if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
@@ -146,10 +148,14 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
     <tr>
       <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
       <td class="L"><font class="label"> rate da </font></td>
-      <td class="R"><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
-      <td class="R"><font class="label">temine di pagamento della prima rata fissato entro </font></td>
-      <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-      <td class="L"><font class="label">giorni dalla notifica dell'avviso di pagamento </font></td>
+      <td class="R"><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>   
+      <% if (conta==1) { %>
+	      <td class="L"><font class="label">temine di pagamento della prima rata fissato entro </font></td>
+	      <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+	      <td class="L"><font class="label">giorni dalla notifica dell'avviso di pagamento </font></td>
+      <% } else { %>
+          <td class="R" colspan="3">&nbsp;</td>
+      <% } %>
     </tr>    
     <% } %>
     

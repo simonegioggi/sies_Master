@@ -20,9 +20,10 @@ public class RateizzazionePPModel extends GenericModel {
   private BigDecimal mNumeroRate;
   private String mTipoRateizzazione;
   private BigDecimal mScadenzaGiorni;
+  private BigDecimal mProgressivoRata;  
   
   private BigDecimal mFasSieIdFascicoloSiep;
-  //private BigDecimal mEveIdEvento; 
+  private BigDecimal mEveIdEvento; 
   
   private String mCodOperatoreInserimento;
   private Date   mDataInserimento;
@@ -48,9 +49,10 @@ public class RateizzazionePPModel extends GenericModel {
     this.mNumeroRate = null;
     this.mTipoRateizzazione = "";
     this.mScadenzaGiorni = null;
+    this.mProgressivoRata = null;
     
     this.mFasSieIdFascicoloSiep = null;
-    //this.mEveIdEvento = null;
+    this.mEveIdEvento = null;
     
     this.mCodOperatoreInserimento = "";
     this.mDataInserimento = null;
@@ -78,9 +80,10 @@ public class RateizzazionePPModel extends GenericModel {
     this.mNumeroRate = aModel.mNumeroRate;
     this.mTipoRateizzazione = aModel.mTipoRateizzazione;
     this.mScadenzaGiorni = aModel.mScadenzaGiorni;
-    
+    this.mProgressivoRata = aModel.mProgressivoRata;
+        
     this.mFasSieIdFascicoloSiep = aModel.mFasSieIdFascicoloSiep;
-    //this.mEveIdEvento = aModel.mEveIdEvento;
+    this.mEveIdEvento = aModel.mEveIdEvento;
     
     this.mCodOperatoreInserimento = aModel.mCodOperatoreInserimento;
     this.mDataInserimento = aModel.mDataInserimento;
@@ -107,9 +110,10 @@ public class RateizzazionePPModel extends GenericModel {
   public BigDecimal getNumeroRate()                { return mNumeroRate;}
   public String     getTipoRateizzazione()         { return mTipoRateizzazione;}
   public BigDecimal getScadenzaGiorni()            { return mScadenzaGiorni;}
+  public BigDecimal getProgressivoRata()           { return mProgressivoRata;}  
   
   public BigDecimal getFasSieIdFascicoloSiep()     { return mFasSieIdFascicoloSiep;}
-  //public BigDecimal getEveIdEvento()               { return mEveIdEvento;}
+  public BigDecimal getEveIdEvento()               { return mEveIdEvento;}
   
   public String     getCodOperatoreInserimento()   { return mCodOperatoreInserimento;}
   public Date       getDataInserimento()           { return mDataInserimento;}
@@ -130,9 +134,10 @@ public class RateizzazionePPModel extends GenericModel {
   public void setNumeroRate (BigDecimal mNumeroRate) {  this.mNumeroRate = mNumeroRate;}
   public void setTipoRateizzazione (String mTipoRateizzazione) {  this.mTipoRateizzazione = mTipoRateizzazione;}
   public void setScadenzaGiorni (BigDecimal mScadenzaGiorni) {  this.mScadenzaGiorni = mScadenzaGiorni;}
+  public void setProgressivoRata (BigDecimal mProgressivoRata) {  this.mProgressivoRata = mProgressivoRata;}  
   
   public void setFasSieIdFascicoloSiep (BigDecimal mFasSieIdFascicoloSiep) {  this.mFasSieIdFascicoloSiep = mFasSieIdFascicoloSiep;}
-  //public void setEveIdEvento (BigDecimal mEveIdEvento) {  this.mEveIdEvento = mEveIdEvento;}
+  public void setEveIdEvento (BigDecimal mEveIdEvento) {  this.mEveIdEvento = mEveIdEvento;}
   
   public void setCodOperatoreInserimento (String mCodOperatoreInserimento) {  this.mCodOperatoreInserimento = mCodOperatoreInserimento;}
   public void setDataInserimento (Date mDataInserimento) {  this.mDataInserimento = mDataInserimento; }
@@ -158,9 +163,10 @@ public class RateizzazionePPModel extends GenericModel {
         + "[ mNumeroRate                = " + mNumeroRate + " ]\n"
         + "[ mTipoRateizzazione         = " + mTipoRateizzazione + " ]\n"
         + "[ mDescrTipoRateizzazione    = " + mDescrTipoRateizzazione + " ]\n"
-        + "[ mScadenzaGiorni            = " + mScadenzaGiorni + " ]\n"        
+        + "[ mScadenzaGiorni            = " + mScadenzaGiorni + " ]\n"    
+        + "[ mProgressivoRata           = " + mProgressivoRata + " ]\n" 
         + "[ mFasSieIdFascicoloSiep     = " + mFasSieIdFascicoloSiep + " ]\n"
-//        + "[ mEveIdEvento               = " + mEveIdEvento + " ]\n"
+        + "[ mEveIdEvento               = " + mEveIdEvento + " ]\n"
         + "[ mCodOperatoreInserimento   = " + mCodOperatoreInserimento + " ]\n"
         + "[ mDataInserimento           = " + mDataInserimento + " ]\n"
         + "[ mCodUfficioInserimento     = " + mCodUfficioInserimento + " ]\n"

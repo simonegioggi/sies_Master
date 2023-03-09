@@ -67,6 +67,9 @@ public class ActInserisciRateizzazione extends ActionSiap implements ICostantiRa
             rateizzazioneModel.setTipoRateizzazione(lTipoRateizzazione);
             rateizzazioneModel.setNumeroRate (new BigDecimal(1));
             rateizzazioneModel.setScadenzaGiorni (getRequestBigDecimalParameter(CAMPO_SCADENZA_GIORNI_RATA_UNICA));
+            
+            rateizzazioneModel.setProgressivoRata(new BigDecimal(1));            
+            
             BigDecimal lImportoRata = null;
             if (    (    getRequestStringParameter(CAMPO_VALORE_RATA_UNICA_I) != null
                      && !getRequestStringParameter(CAMPO_VALORE_RATA_UNICA_I).equals("")
@@ -105,7 +108,14 @@ public class ActInserisciRateizzazione extends ActionSiap implements ICostantiRa
                     
                     rateizzazioneModel.setTipoRateizzazione (lTipoRateizzazione);
                     rateizzazioneModel.setNumeroRate     (getRequestBigDecimalParameter(ICostantiRateizzazionePP.CAMPO_NUM_RATE+"_"+i));
-                    rateizzazioneModel.setScadenzaGiorni (getRequestBigDecimalParameter(CAMPO_SCADENZA_GIORNI+"_"+i));
+                    
+                    rateizzazioneModel.setProgressivoRata(new BigDecimal(i+1));
+                    
+                    if (i==0) {
+                        // Il numero di giorni di scadenza vanno solo sullaprima rata
+                        rateizzazioneModel.setScadenzaGiorni (getRequestBigDecimalParameter(CAMPO_SCADENZA_GIORNI+"_"+i));
+                    }
+                    
                     BigDecimal lImportoRata = null;
                     if (    (    getRequestStringParameter(CAMPO_VALORE_RATA_I+"_"+i) != null
                              && !getRequestStringParameter(CAMPO_VALORE_RATA_I+"_"+i).equals("")
