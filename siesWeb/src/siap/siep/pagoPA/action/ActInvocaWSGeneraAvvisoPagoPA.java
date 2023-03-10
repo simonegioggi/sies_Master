@@ -2,6 +2,7 @@ package siap.siep.pagoPA.action;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 import org.apache.log4j.Logger;
 
@@ -12,8 +13,12 @@ import it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto;
 import it.giustizia.www.serviziTelematici.serviziGenerici.DatiVersamento;
 import it.giustizia.www.serviziTelematici.serviziGenerici.EsitoGeneraAvviso;
 import it.giustizia.www.serviziTelematici.serviziGenerici.RichiestaPagamentoTelematico;
+import it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca;
+import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziConsultazionePagamentiTelematici;
+import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziConsultazionePagamentiTelematiciBeanServiceLocator;
 import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziInvioPagamentiTelematici;
 import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziInvioPagamentiTelematiciBeanServiceLocator;
+import it.giustizia.www.serviziTelematici.serviziGenerici.StatoRichiestaPagamento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.security.action.ICostantiSecurity;
@@ -55,145 +60,203 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 
 		BigDecimal idEvento = null;
 		EventoModel em = null;
+		boolean testWS = false;
 
 		if (!isRequestParameterNullObj("idEvento")) {
 			idEvento = getRequestBigDecimalParameter("idEvento");
 			IEvento ie = SICOLookupRemote.getEventoRemote();
 			em = ie.ExRicercaEventoByKey(idEvento);
+			// info per il log
+			siesLogger.debug(em.getIdEvento() + " " + em.getDescrProvvedimento() + " " + em.getDescrEsito()
+					+ " " + em.getDescrMotivo() + " " + em.getDescrTipoEvento() + " "
+					+ em.getDescrTipoProvvedimento());
+		} else {
+			testWS = true;
 		}
-		// info per il log
-		siesLogger.debug(em.getIdEvento() + " " + em.getDescrProvvedimento() + " " + em.getDescrEsito() + " "
-				+ em.getDescrMotivo() + " " + em.getDescrTipoEvento() + " " + em.getDescrTipoProvvedimento());
 
-		UtenteModel utm = new UtenteModel(
-				(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
+		if (!testWS) {
+			UtenteModel utm = new UtenteModel(
+					(UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 
-		UfficioModel ufm = utm.getUfficioUtente();
+			UfficioModel ufm = utm.getUfficioUtente();
 
-		String tipoFascicolo = "";
-		SoggettoModel sm = null;
-		BigDecimal annoProc = null;
-		BigDecimal numeroProc = null;
-		BigDecimal idFascicolo = null;
+			String tipoFascicolo = "";
+			SoggettoModel sm = null;
+			BigDecimal annoProc = null;
+			BigDecimal numeroProc = null;
+			BigDecimal idFascicolo = null;
 
-		if (!isRequestParameterNullObj("tipoFascicolo")) {
-			tipoFascicolo = getRequestStringParameter("tipoFascicolo");
-			if (tipoFascicolo.equals("SIEP")) {
-				if (!isSessionAttributeNullObj("fascicolo")) {
-					fsm = ((FascicoloSiepModel) getSessionAttribute("fascicolo"));
+			if (!isRequestParameterNullObj("tipoFascicolo")) {
+				tipoFascicolo = getRequestStringParameter("tipoFascicolo");
+				if (tipoFascicolo.equals("SIEP")) {
+					if (!isSessionAttributeNullObj("fascicolo")) {
+						fsm = ((FascicoloSiepModel) getSessionAttribute("fascicolo"));
+					}
+				} else {
+					if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
+						fgpm = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+					}
 				}
+			}
+
+			DettaglioPenaComplessivaModel dpcm = null;
+			// PenaResiduaModel prm = null;
+			IPenaComplessiva ipc = SIEPLookupRemote.getPenaComplessivaRemote();
+			// IPenaResidua ipr = SIEPLookupRemote.getPenaResiduaRemote();
+			if (fsm != null) {
+				sm = fsm.getSoggetto();
+				annoProc = fsm.getChiaveAnno();
+				numeroProc = fsm.getChiaveProgr();
+				idFascicolo = fsm.getIdFascicoloSiep();
+				dpcm = ipc.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(idFascicolo);
+				// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
+			} else if (fgpm != null) {
+				sm = fgpm.getFascicoloSiusModel().getSoggetto();
+				annoProc = fgpm.getFascicoloSiusModel().getChiaveAnno();
+				numeroProc = fgpm.getFascicoloSiusModel().getChiaveProgr();
+				idFascicolo = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
+				dpcm = ipc.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(idFascicolo);
+				// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
+			}
+
+			// info per il log
+			siesLogger.debug(
+					"ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
+
+			// INVOCO WS: impostazioni per il certificato
+			// CONFIG = /var/SIES/CONFIG (pathProp)
+			// String pathProp = System.getProperty("path.properties");
+			// String truststore = "/certs/sies.jks";
+			// String keystore = "/certs/serversies.jks";
+			// String pathtruststore = pathProp + truststore;
+			// siesLogger.debug("PERCORSO DEL truststore: " + pathJKS);
+			// System.setProperty("javax.net.ssl.trustStore", pathJKS);
+			// System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
+			// String pathkeystore = pathProp + keystore;
+			String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
+					+ "standalone" + System.getProperty("file.separator") + "configuration"
+					+ System.getProperty("file.separator") + "serversies.jks";
+			siesLogger.debug("PERCORSO DEL keystore: " + pathkeystore);
+			System.setProperty("javax.net.ssl.keyStore", pathkeystore);
+			System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
+			System.setProperty("javax.net.debug", "ssl");
+			// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
+			String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
+			ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
+			service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
+			ServiziInvioPagamentiTelematici port = service.getServiziInvioPagamentiTelematiciSOAPPort();
+			// info per il log
+			siesLogger.debug("Chiamo generaAvviso(RichiestaPagamentoTelematico) su " + endpointAddress);
+
+			// DATI PER RICHIESTA PAGAMENTO
+			RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil
+					.caricaDatiRichiestaPagamentoTelematico(ufm);
+			// DATI VERSAMENTO
+			DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, dpcm);
+			rpt.setDatiVersamento(dv);
+			// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
+			AnagraficaSoggetto asp = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
+			rpt.setSoggettoPagatore(asp);
+			// SOGGETTO VERSANTE (opzionale, è il soggetto che effettivamente paga, inserire solo se diverso
+			// dal
+			// pagatore)
+			// AnagraficaSoggetto asv = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
+			// rpt.setSoggettoVersante(asv);
+
+			EsitoGeneraAvviso ega = null;
+			try {
+				ega = port.generaAvviso(rpt);
+			} catch (Exception e) {
+				e.printStackTrace();
+				siesLogger.error(e.getMessage());
+				throw e;
+			}
+			// info per il log
+			siesLogger.debug("EsitoGeneraAvviso: " + ega.getNumeroAvviso() + " # " + ega.getBollettino());
+
+			// per recuperare l'avviso
+			// byte[] avviso = port.downloadAvviso(ega.getNumeroAvviso());
+
+			FascicoloSiusCertBlobModel fsscb = new FascicoloSiusCertBlobModel();
+			FascicoloSiepCertBlobModel fspcb = new FascicoloSiepCertBlobModel();
+
+			if (fsm != null) {
+				fspcb.setFascicoloSiep(fsm);
 			} else {
-				if (!isSessionAttributeNullObj("fascicoloSiusGP")) {
-					fgpm = ((FascicoloGPModel) getSessionAttribute("fascicoloSiusGP"));
+				fsscb.setFascicoloSius(fgpm.getFascicoloSiusModel());
+			}
+
+			// Caricamento BOLLETTINO (Campo BLOB) nel Model
+			ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
+
+			if (fspcb.getFascicoloSiep() != null) { // Salvare il bollettino sulla tabella FASCICOLO_SIEP
+				FascicoloSiepController fsc = new FascicoloSiepController();
+				fspcb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
+				fspcb.setCodOperatoreAggiornamento(utm.getUserId());
+				fspcb.setDataAggiornamento(DateUtils.getSysDate());
+				fspcb.caricaCertPenaleBlobIn(bais);
+				fsc.ExInsertCertificatoPenale(fspcb);
+			} else { // Salvare il bollettino sulla tabella FASCICOLO_SIUS
+				FascicoloSiusController fsc = new FascicoloSiusController();
+				fsscb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
+				fsscb.setCodOperatoreAggiornamento(utm.getUserId());
+				fsscb.setDataAggiornamento(DateUtils.getSysDate());
+				fsscb.caricaCertPenaleBlobIn(bais);
+				fsc.ExInsertCertificatoPenale(fsscb);
+			}
+			setRequestAttribute("idFascicolo", idFascicolo.toString());
+			setRequestAttribute("evento", em);
+		} else {
+			// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
+			String endpointAddressSCPT = F3BProperties.getProperty("EAPPA_SCPT");
+			ServiziConsultazionePagamentiTelematiciBeanServiceLocator scptbsl = new ServiziConsultazionePagamentiTelematiciBeanServiceLocator();
+			scptbsl.setServiziConsultazionePagamentiTelematiciSOAPPortEndpointAddress(endpointAddressSCPT);
+			ServiziConsultazionePagamentiTelematici scpt = scptbsl
+					.getServiziConsultazionePagamentiTelematiciSOAPPort();
+			// info per il log
+			siesLogger.debug("Chiamo elencoPagamenti(...) su " + endpointAddressSCPT);
+			RisultatoRicerca rr = null;
+			try {
+				// java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale,
+				// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
+				// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
+				// dimensionePagina,
+				// int numeroPagina
+				Calendar c = Calendar.getInstance();
+				c.setTime(DateUtils.getSysDate());
+				rr = scpt.elencoPagamenti(/* ega.getNumeroAvviso() */null, "PENPE",
+						/* asp.getCodiceIdentificativoUnivoco() */"SGMSMV72D23H501S", "GLTO",
+						"Pagamenti in favore Amministrazione", null, null, null, 0, 0);
+			} catch (Exception e) {
+				e.printStackTrace();
+				siesLogger.error(e.getMessage());
+				throw e;
+			}
+			// info per il log
+			siesLogger.debug("Risultato Ricerca: Count = " + rr.getCount());
+			siesLogger.debug("codiceCRS = " + /* ega.getNumeroAvviso() */"330097149392676039");
+			siesLogger.debug("tipologia = PENPE");
+			siesLogger
+					.debug("codiceFiscale = " + /* asp.getCodiceIdentificativoUnivoco() */"SGMSMV72D23H501S");
+			siesLogger.debug("codiceDistretto = GLTO");
+			siesLogger.debug("causale = Pagamenti in favore Amministrazione");
+			siesLogger.debug("stato = #NULL=tutti#");
+			if (rr != null && rr.getCount() > 0) {
+				Object[] srps = rr.getItems();
+				for (int i = 0; i < srps.length; i++) {
+					StatoRichiestaPagamento srp = (StatoRichiestaPagamento) srps[i];
+					String dataRichiesta = (srp.getDataRichiesta() != null)
+							? DateUtils.getDateToString(srp.getDataRichiesta().getTime(), "dd/MM/yyyy")
+							: null;
+					siesLogger.debug("Risultato Ricerca: Count = " + (i + 1) + "; Denominazione Pagatore = "
+							+ srp.getDenominazionePagatore() + "; Descrizione Tipologia = "
+							+ srp.getDescrizioneTipologia() + "; Importo = " + srp.getImporto()
+							+ "; Numero Avviso = " + srp.getNumeroAvviso() + "; Pagatore = "
+							+ srp.getPagatore() + "; Stato = " + srp.getStato() + "; Data Richiesta = "
+							+ dataRichiesta);
 				}
 			}
 		}
-
-		DettaglioPenaComplessivaModel dpcm = null;
-		// PenaResiduaModel prm = null;
-		IPenaComplessiva ipc = SIEPLookupRemote.getPenaComplessivaRemote();
-		// IPenaResidua ipr = SIEPLookupRemote.getPenaResiduaRemote();
-		if (fsm != null) {
-			sm = fsm.getSoggetto();
-			annoProc = fsm.getChiaveAnno();
-			numeroProc = fsm.getChiaveProgr();
-			idFascicolo = fsm.getIdFascicoloSiep();
-			dpcm = ipc.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(idFascicolo);
-			// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
-		} else if (fgpm != null) {
-			sm = fgpm.getFascicoloSiusModel().getSoggetto();
-			annoProc = fgpm.getFascicoloSiusModel().getChiaveAnno();
-			numeroProc = fgpm.getFascicoloSiusModel().getChiaveProgr();
-			idFascicolo = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
-			dpcm = ipc.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(idFascicolo);
-			// prm = ipr.ExRicercaPenaResiduaCorrenteByFascicoloSiep(idFascicolo);
-		}
-
-		// info per il log
-		siesLogger
-				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
-
-		// INVOCO WS: impostazioni per il certificato
-		// CONFIG = /var/SIES/CONFIG (pathProp)
-		// String pathProp = System.getProperty("path.properties");
-		// String truststore = "/certs/sies.jks";
-		// String keystore = "/certs/serversies.jks";
-		// String pathtruststore = pathProp + truststore;
-		// siesLogger.debug("PERCORSO DEL truststore: " + pathJKS);
-		// System.setProperty("javax.net.ssl.trustStore", pathJKS);
-		// System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
-		// String pathkeystore = pathProp + keystore;
-		String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
-				+ "standalone" + System.getProperty("file.separator") + "configuration"
-				+ System.getProperty("file.separator") + "serversies.jks";
-		siesLogger.debug("PERCORSO DEL keystore: " + pathkeystore);
-		System.setProperty("javax.net.ssl.keyStore", pathkeystore);
-		System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
-		System.setProperty("javax.net.debug", "ssl");
-		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
-		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
-		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
-		service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
-		ServiziInvioPagamentiTelematici port = service.getServiziInvioPagamentiTelematiciSOAPPort();
-		// info per il log
-		siesLogger.debug("Chiamo generaAvviso(RichiestaPagamentoTelematico) su " + endpointAddress);
-
-		// DATI PER RICHIESTA PAGAMENTO
-		RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil.caricaDatiRichiestaPagamentoTelematico(ufm);
-		// DATI VERSAMENTO
-		DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, dpcm);
-		rpt.setDatiVersamento(dv);
-		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
-		AnagraficaSoggetto asp = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
-		rpt.setSoggettoPagatore(asp);
-		// SOGGETTO VERSANTE (opzionale, è il soggetto che effettivamente paga, inserire solo se diverso dal
-		// pagatore)
-		// AnagraficaSoggetto asv = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
-		// rpt.setSoggettoVersante(asv);
-
-		EsitoGeneraAvviso ega = null;
-		try {
-			ega = port.generaAvviso(rpt);
-		} catch (Exception e) {
-			e.printStackTrace();
-			siesLogger.error(e.getMessage());
-			throw e;
-		}
-		// info per il log
-		siesLogger.debug("EsitoGeneraAvviso: " + ega.getNumeroAvviso() + " # " + ega.getBollettino());
-
-		// per recuperare l'avviso
-		// byte[] avviso = port.downloadAvviso(ega.getNumeroAvviso());
-
-		FascicoloSiusCertBlobModel fsscb = new FascicoloSiusCertBlobModel();
-		FascicoloSiepCertBlobModel fspcb = new FascicoloSiepCertBlobModel();
-
-		if (fsm != null) {
-			fspcb.setFascicoloSiep(fsm);
-		} else {
-			fsscb.setFascicoloSius(fgpm.getFascicoloSiusModel());
-		}
-
-		// Caricamento BOLLETTINO (Campo BLOB) nel Model
-		ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
-
-		if (fspcb.getFascicoloSiep() != null) { // Salvare il bollettino sulla tabella FASCICOLO_SIEP
-			FascicoloSiepController fsc = new FascicoloSiepController();
-			fspcb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
-			fspcb.setCodOperatoreAggiornamento(utm.getUserId());
-			fspcb.setDataAggiornamento(DateUtils.getSysDate());
-			fspcb.caricaCertPenaleBlobIn(bais);
-			fsc.ExInsertCertificatoPenale(fspcb);
-		} else { // Salvare il bollettino sulla tabella FASCICOLO_SIUS
-			FascicoloSiusController fsc = new FascicoloSiusController();
-			fsscb.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
-			fsscb.setCodOperatoreAggiornamento(utm.getUserId());
-			fsscb.setDataAggiornamento(DateUtils.getSysDate());
-			fsscb.caricaCertPenaleBlobIn(bais);
-			fsc.ExInsertCertificatoPenale(fsscb);
-		}
-		setRequestAttribute("idFascicolo", idFascicolo.toString());
-		setRequestAttribute("evento", em);
 
 		// pagina di ritorno
 		return PG_VISUALIZZA_AVVISO_PAGOPA;
