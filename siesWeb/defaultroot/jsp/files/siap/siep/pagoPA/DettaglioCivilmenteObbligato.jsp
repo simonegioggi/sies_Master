@@ -35,7 +35,9 @@
        	<td class="LBG">
 			<font class="label">Funzione :</font>&nbsp;<font class="campo">Dettaglio Civilmente Obbligato</font>
      	</td>
-     	<% if (!"S".equals(fascicolo.getFlagValidato())) { %>
+<%
+if (!"S".equals(fascicolo.getFlagValidato())) {
+%>
      	<!-- BOTTONE DI MODIFICA -->
      	<td class="LBG">
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActLoadModificaCivilmenteObbligato&<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>=<%=idFascicoloSiep%>">
@@ -48,7 +50,9 @@
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
           	</a>
 		</td>
-		<% } %>
+<%
+}
+%>
 		<!-- BOTTONE DI RITORNO -->
     	<td class="LBG">
           	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&ChiaveFascicolo=<%=idFascicoloSiep%>">
@@ -217,6 +221,21 @@ while (itx.hasNext()) {
 	</tr>
 	<tr>
     	<td colspan="4" class="Titolo">########## FINE TEST x Genera Avviso PagoPA ##########</td>
+  	</tr>
+  	  	<tr><td>&nbsp;</td></tr>
+	<tr>
+    	<td colspan="4" class="Titolo">########## INIZIO TEST x Elenco Pagamenti PagoPA ##########</td>
+  	</tr>
+	<tr>
+		<%-- MEV_2023-13: aggiunta etichetta --%>
+		<td class="l" colspan="4" style="text-align: center;">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActInvocaWSGeneraAvvisoPagoPA">
+				WS Elenco Pagamenti PagoPA
+			</a>
+		</td>
+	</tr>
+	<tr>
+    	<td colspan="4" class="Titolo">########## FINE TEST x Elenco Pagamenti PagoPA ##########</td>
   	</tr>
 </table>
 </body>
