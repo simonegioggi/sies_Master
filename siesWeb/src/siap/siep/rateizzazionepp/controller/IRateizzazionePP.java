@@ -14,4 +14,6 @@ public interface IRateizzazionePP {
     public void exCancellaRateizzazioniByIdFasc (BigDecimal aIdFasc) throws F3BException;
     
     public void exModificaRateizzazioni (Vector <RateizzazionePPModel> aListaRate, BigDecimal aIdFasc) throws F3BException;
+    
+    public Vector <RateizzazionePPModel> exRicercaRateizzazioniByIdEvento (BigDecimal aIdEvento) throws F3BException;
 }

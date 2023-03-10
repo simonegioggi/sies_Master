@@ -7,6 +7,8 @@
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
+<%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
+<%@ page import="siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP"%>
 <%@ page import="siap.siep.notifica.model.NotificaModel"%>
 <%@ page import="siap.siep.posizione.action.ICostantiPosizioneGiuridica"%>
 <%@ page import="siap.siep.posizione.model.PosizioneGiuridicaModel"%>
@@ -21,6 +23,8 @@
 
 <jsp:useBean id="eventonotifica"      scope="request" class="siap.sico.evento.model.EventoNotificaModel" />
 <jsp:useBean id="posizioneluogoaltra" scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
+
+<jsp:useBean id="listaRateizzazioni"   scope="request" class="java.util.Vector" />
 
 <jsp:useBean id="magistrato"           scope="request" class="siap.sico.magistrato.model.MagistratoModel" />
 <jsp:useBean id="notificaAlCondannato" scope="request" class="siap.siep.notifica.model.NotificaModel"/>
@@ -107,6 +111,70 @@
       </td>
     </tr>
   </table>
+
+<%
+if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
+{
+  // Se l'evento non è annullato faccio vedere i dati della rate agganciate
+  RateizzazionePPModel primarata = (RateizzazionePPModel) listaRateizzazioni.elementAt(0);
+  String lTipoRateizzazione = primarata.getTipoRateizzazione();
+  BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
+  %>
+    <table>
+      <tr>
+        <td class="L">
+          <font class="label">Importo da pagare</font>
+          <font class="campo"><%=StringUtils.toEuroFormat(lImportoDaPagare)%> &euro;</font>
+          <font class="label">con le seguenti modalita'</font>
+        </td>
+      </tr>
+    </table>
+    
+    <table>
+      <tr>
+         <% if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) { %>
+         <td class="Titolo" colspan="6"> Pagamento in una Unica Soluzione </td>
+         <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
+         <td class="Titolo" colspan="6"> Pagamento Rateizzato </td>
+         <% } %>
+      </tr>
+      
+      <%
+      Iterator IteRate = listaRateizzazioni.iterator();
+      int conta = 0;
+      while(IteRate.hasNext()) {
+        RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
+        conta++;
+        
+        
+        if (rata.getEveIdEvento()!=null && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento())==0) 
+        {
+          if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
+          %>
+          <tr>
+            <td class="L"><font class="label" nowrap>Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+            <td class="R"><font class="label" nowrap>termine di pagamento fissato entro </font></td>
+            <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+            <td class="L"><font class="label" nowrap>giorni dalla notifica dell'avviso di pagamento</font></td>
+          </tr>
+          <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
+          <tr>
+            <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
+            <td class="L"><font class="label" nowrap> rate da </font></td>
+            <td class="R"><font class="campo" nowrap><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+            <% if (conta==1) { %>
+              <td class="L"><font class="label" nowrap>temine di pagamento della prima rata fissato entro </font></td>
+              <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+              <td class="L"><font class="label" nowrap>giorni dalla notifica dell'avviso di pagamento </font></td>
+            <% } else { %>
+              <td class="R" colspan="3">&nbsp;</td>
+            <% } %>
+          </tr>    
+          <% } %>
+        <% } %>
+      <% } // end while %>
+    </table>
+<% } %>
 
   <table>
     <tr>

@@ -14,6 +14,8 @@
 <jsp:useBean id="Modificabile" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="Cancellabile" 			scope="request" class="java.lang.String"/>
 
+<jsp:useBean id="fascicolo" scope="session" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+
 <html>
 <head>
 <title>[S.I.E.S.] - Dettaglio Civilmente Obbligato</title>
@@ -33,6 +35,7 @@
        	<td class="LBG">
 			<font class="label">Funzione :</font>&nbsp;<font class="campo">Dettaglio Civilmente Obbligato</font>
      	</td>
+     	<% if (!"S".equals(fascicolo.getFlagValidato())) { %>
      	<!-- BOTTONE DI MODIFICA -->
      	<td class="LBG">
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActLoadModificaCivilmenteObbligato&<%=ICostantiPagoPA.CAMPO_ID_FASCICOLO_SIEP%>=<%=idFascicoloSiep%>">
@@ -45,6 +48,7 @@
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
           	</a>
 		</td>
+		<% } %>
 		<!-- BOTTONE DI RITORNO -->
     	<td class="LBG">
           	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&ChiaveFascicolo=<%=idFascicoloSiep%>">

@@ -199,5 +199,5 @@ public interface ISanzioneSostitutiva {
 	 * @throws F3BException
 	 */
    public EventoNotificaModel exInserisciOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
-
+   public EventoModel exUpdateOrdineIngiunzione (EventoModel aEvRichiesta) throws F3BException;
 }

@@ -2607,4 +2607,100 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	    return lEveRet;
 	  }	
 	
+/**
+ * 	  
+ */
+  public EventoModel exUpdateOrdineIngiunzione(EventoModel aEvento) throws F3BException {
+
+        Connection lConn = null;
+
+        EventoDAO lEventoDao = null;
+        EventoSqlDAO lEveSqlDAO = null;        
+        StatoProcedimentoDAO lStatoDao = null;
+        
+        EventoDAO lEveDaoBlob = null;
+
+        EventoModel lEveRet = new EventoModel(aEvento);
+
+        try {
+            lConn = getDBConnection();
+
+            // ========================================================================
+            // Recupero l'EVENTO completo, quello in input contiene solo i dati da
+            // aggiornare
+            // ========================================================================
+            lEveSqlDAO = new EventoSqlDAO(lConn);
+            lEveSqlDAO.ricercaEventoByKey(aEvento.getIdEvento());
+
+            EventoModel lEveModelRich = (EventoModel) lEveSqlDAO.getModelByKey();
+            lEveSqlDAO.stop();
+
+            // ====================================
+            // Modifico lo stato del procedimento
+            // ====================================
+            // ========================================================================
+            // Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+            // ========================================================================
+            siesLogger.debug("Aggiornamento stato procedimento");
+
+            StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+
+            lStatoProcMod.setProgressivo (new BigDecimal(1));
+            lStatoProcMod.setFasSieIdFascicoloSiep (lEveModelRich.getFasSieIdFascicoloSiep());
+
+            lStatoProcMod.setData (lEveModelRich.getDataEmissione());
+            lStatoProcMod.setCodStatoProcedimento ("0336");
+
+            lStatoProcMod.setCodOperatoreInserimento (aEvento.getCodOperatoreAggiornamento());
+            lStatoProcMod.setDataInserimento         (aEvento.getDataAggiornamento());
+            lStatoProcMod.setCodUfficioInserimento   (aEvento.getCodUfficioAggiornamento());
+
+            lStatoDao = new StatoProcedimentoDAO(lConn);
+
+            // - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+            lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
+            lStatoDao.delete();
+            siesLogger.debug("Cancellato old stato");
+            // - Inserisce
+            lStatoDao.setDAOFromModel(lStatoProcMod);
+            lStatoDao.insert();
+            lStatoDao.stop();
+            siesLogger.debug("Inserito nuovo stato");
+
+            // ========================================================================
+            // Aggiorno il blob sull'evento
+            // ========================================================================
+            siesLogger.debug("Aggiornamento Blob");
+            // lConnBlob = getDBConnection();
+
+            lEveDaoBlob = new EventoDAO(lConn);
+            lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+
+            lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+            lEveDaoBlob.update();
+            lEveDaoBlob.stop();
+            siesLogger.debug("Blob Aggiornato");
+
+            // -----------------------
+            commit(lConn);
+            // commit(lConnBlob);
+        } catch (DAOException ex) {
+            siesLogger.error("DAOException",ex);
+            rollback(lConn);
+            throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+        } catch (Exception ex) {
+            siesLogger.error("Exception",ex);
+            rollback(lConn);
+            throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+        } finally {
+            cleanup(lEventoDao);
+            cleanup(lEveSqlDAO);
+            cleanup(lStatoDao);
+            
+            cleanup(lConn);
+            cleanup(lEveDaoBlob);
+        }
+
+        return lEveRet;
+    }
 }

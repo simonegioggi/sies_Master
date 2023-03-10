@@ -65,9 +65,6 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
         this.isEventoNonValidato();
         //=======================================
         
-        
-
-        
         // Ricerca i pagamenti per id Fascicolo 
         Vector <RateizzazionePPModel> listaRateizzazioni = new Vector <RateizzazionePPModel>();
         IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -137,9 +134,14 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
         setRequestAttribute("autoritaEsternaE", "" + lOptionAutoritaEsternaE);
         
         
-        // Riempimento ComboBoX
+        // Autorita Notifica Avvocato 
         Option lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(), "C0");
         setRequestAttribute("autoritaEsternaN", "" + lOption);
+        
+        
+        // Autorita Notifica Civilmente Obbligati
+        Option lOptCivilObb = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+        setRequestAttribute("autoritaEsternaCivilObb", "" + lOptCivilObb);
         
         return PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE;
     }

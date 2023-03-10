@@ -170,5 +170,48 @@ public class RateizzazionePPController extends SiapController implements IRateiz
         }
 
         return;        
-    }    
+    } 
+    
+    /**
+     * 
+     */
+    public Vector <RateizzazionePPModel> exRicercaRateizzazioniByIdEvento (BigDecimal aIdEvento) throws F3BException
+    {   
+        Vector <RateizzazionePPModel> lListaRate = new Vector <RateizzazionePPModel> ();
+        
+        Connection lConn = null;
+        
+        RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
+        try {
+            lConn = getDBConnection();
+            
+            lRateizzazioneSqlDao = new RateizzazionePPSqlDAO (lConn);           
+                        
+            lRateizzazioneSqlDao.ricercaRateizzazionePPByEveIdEvento (aIdEvento);
+
+            lRateizzazioneSqlDao.start();
+            while (lRateizzazioneSqlDao.next()) {
+                lListaRate.add((RateizzazionePPModel)lRateizzazioneSqlDao.getModel());
+            }
+            lRateizzazioneSqlDao.stop();
+            
+            commit(lConn);
+        } catch (DAOException daoEx) {
+            siesLogger.error("DAOException",daoEx);
+            rollback(lConn);
+            throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdEvento: " + daoEx);
+        } catch (Exception ex) {
+            siesLogger.error("Exception",ex);
+            rollback(lConn);
+            throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdEvento: " + ex);
+        } finally {
+            cleanup(lRateizzazioneSqlDao);
+
+            cleanup(lConn);
+        }        
+        
+        return lListaRate;
+    }
+        
+    
 }
