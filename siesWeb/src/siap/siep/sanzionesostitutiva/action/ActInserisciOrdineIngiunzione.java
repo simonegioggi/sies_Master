@@ -248,7 +248,7 @@ public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostan
                   NotificaModel lNotModCO = new NotificaModel();
 
                   lNotModCO.setIdCivilmenteObbligato (obbligatoModel.getIdCivilmenteObbligato());
-                  lNotModCO.setCodTipoNotifica("E");
+                  lNotModCO.setCodTipoNotifica("N");
                   lNotModCO.setNote (lNote_E_CO);          
                   lNotModCO.setDataInvio (lTrasmissione);
 

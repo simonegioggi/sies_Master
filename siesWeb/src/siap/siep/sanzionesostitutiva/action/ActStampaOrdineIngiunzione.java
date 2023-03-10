@@ -2,6 +2,7 @@ package siap.siep.sanzionesostitutiva.action;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -20,6 +21,9 @@ import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
+import siap.siep.util.SIEPLookupRemote;
 
 public class ActStampaOrdineIngiunzione extends ActionSiap 
 {
@@ -40,6 +44,15 @@ public class ActStampaOrdineIngiunzione extends ActionSiap
     IEvento lCtrl = SICOLookupRemote.getEventoRemote();
     EventoModel lEventoModel = lCtrl.ExRicercaEventoByKey(lIdEvento);
 
+    
+    String flagTemplate = "0"; // 0 = rata unica, 1 = pagamento rateizzato
+    IRateizzazionePP lCtrlRate = SIEPLookupRemote.getRateizzazionePPRemote();
+    Vector <RateizzazionePPModel> listaRateEvento = lCtrlRate.exRicercaRateizzazioniByIdEvento (lIdEvento);
+    if ("U".equals(listaRateEvento.elementAt(0).getTipoRateizzazione()) )
+        flagTemplate = "0";
+     else if ("R".equals(listaRateEvento.elementAt(0).getTipoRateizzazione()))
+        flagTemplate = "1";
+        
     //==========================================================================
     // Recupero il template
     //==========================================================================
@@ -47,7 +60,7 @@ public class ActStampaOrdineIngiunzione extends ActionSiap
     TemplateModel lTemMod = new TemplateModel();
     lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(lEventoModel.getCodTipoEvento(),
                                                                               lEventoModel.getCodTipoProvvedimento(),   
-                                                                              lEventoModel.getCodMotivo(),null);
+                                                                              lEventoModel.getCodMotivo(),flagTemplate);
 
     siesLogger.debug("lTemMod = "+lTemMod);
     

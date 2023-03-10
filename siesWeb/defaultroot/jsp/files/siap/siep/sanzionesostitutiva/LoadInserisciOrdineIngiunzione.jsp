@@ -34,6 +34,8 @@
 <jsp:useBean id="avvocati"           scope="request" class="java.util.Vector"/>
 <jsp:useBean id="autoritaEsternaN"   scope="request" class="java.lang.String"/>
 <jsp:useBean id="autoritaEsternaE"   scope="request" class="java.lang.String"/>
+<jsp:useBean id="autoritaEsternaCivilObb"   scope="request" class="java.lang.String"/>
+
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
@@ -64,6 +66,53 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       
       function Verify() {
         // Aggiungere i controlli
+        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length==1)
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value='0'+document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
+        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length==1)
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value='0'+document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
+
+        var data_to_verify = document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value
+                       +'/'+ document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
+                       +'/'+ document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+
+        if (!ControllaData(data_to_verify) )
+        {
+          alert('Data di emissione non valida');
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+          return false;
+        }        
+        
+        // Data Trasmissione
+        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length==1)
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value='0'+document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
+        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length==1)
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value='0'+document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
+
+        var data_to_verify = document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value
+                       +'/'+ document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
+                       +'/'+ document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
+
+        if (!ControllaData(data_to_verify) )
+        {
+          alert('Data di Trasmissione non valida');
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+          return false;
+        }
+        
+        // Autorita x la Notifica
+        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value=="-")
+        {
+          alert("Selezionare l'autorita' per la notifica al condannato");
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
+          return false; 
+        }
+        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value=="")
+        {
+          alert("Selezionare la sede dell'autorita' per la notifica al condannato");
+          document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
+          return false; 
+        }
+
         return true;
       }
     </script>
@@ -107,12 +156,13 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   
   
   
-<%--  Sezione con l'importo da pagare a la rateizzazione --%>
 <%
+// Sezione con l'importo da pagare a la rateizzazione
 RateizzazionePPModel primarata = (RateizzazionePPModel) listaRateizzazioni.elementAt(0);
 String lTipoRateizzazione = primarata.getTipoRateizzazione();
 BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
 %>
+<br>
 <table width="70%">
 <tr>
 <td>
@@ -128,8 +178,7 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       </td>
     </tr>
   </table>
-
-
+  
   <table>
     <tr>
        <% if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) { %>
@@ -149,31 +198,31 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
       %>
       <tr>
-        <td class="L"><font class="label" nowrap>Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
-        <td class="R"><font class="label" nowrap>termine di pagamento fissato entro </font></td>
-        <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-        <td class="L"><font class="label" nowrap>giorni dalla notifica dell'avviso di pagamento</font></td>
+        <td class="L" nowrap><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+        <td class="R" nowrap><font class="label">termine di pagamento fissato entro </font></td>
+        <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+        <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
         <% if (rata.getEveIdEvento()!=null) { %> 
-        <td class="L" ><font class="label" style="color:red;" nowrap>Emesso ordine di ingiunzione</td>
+        <td class="L" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione</td>
         <% } else { %>
           <td class="r">&nbsp;</td>
         <% } %>         
       </tr>
       <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
       <tr>
-        <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
-        <td class="L"><font class="label" nowrap> rate da </font></td>
-        <td class="R"><font class="campo" nowrap><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+        <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
+        <td class="L" nowrap><font class="label"> rate da </font></td>
+        <td class="R" nowrap><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
         <% if (conta==1) { %>
-          <td class="L"><font class="label" nowrap>temine di pagamento della prima rata fissato entro </font></td>
-          <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-          <td class="L"><font class="label" nowrap>giorni dalla notifica dell'avviso di pagamento </font></td>
+          <td class="L" nowrap><font class="label">temine di pagamento della prima rata fissato entro </font></td>
+          <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+          <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento </font></td>
         <% } else { %>
           <td class="R" colspan="3">&nbsp;</td>
         <% } %>
         
         <% if (rata.getEveIdEvento()!=null) {%> 
-        <td class="L" ><font class="label" style="color:red;" nowrap>Emesso ordine di ingiunzione</td>
+        <td class="L" nowrap><font class="label" style="color:red;" >Emesso ordine di ingiunzione</td>
         <% } else { %>
           <td class="r">&nbsp;</td>
         <% } %>       
@@ -193,18 +242,26 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
   
     <table>
       <%
-      Iterator<CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
+      Iterator <CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
       while (itx.hasNext()) 
       {
         CivilmenteObbligatoModel com = (CivilmenteObbligatoModel) itx.next();
       %>
       <tr>
         <td class="l">Civilmente Obbligato: </td>
-        <td class="l"><font class="campo"><%=com.getCognome()%></font>&nbsp;<font class="campo"><%=com.getNome()%></font></td> 
+        <td class="l">
+          <font class="campo"><%=com.getCognome()%></font>&nbsp;<font class="campo"><%=com.getNome()%></font>
+          <% if ("G".equals(com.getCodPersona())) { %>
+          <font class="label"> in qualita' di Legale Rappresentante di </font>
+          <font class="campo"><%=com.getDenominazione()%></font>
+          <% } %>
+        </td> 
       </tr>
       <% } %>
     </table>
-  
+   
+   <br> 
+   
     <table>
       <tr>
         <td class="l">Data Emissione</td>
@@ -228,6 +285,7 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
 //                     Magistrato
 //=======================================================================
 %>
+<br>
 <table width="100%">
   <tr>
     <td class="Titolo" colspan=6> Magistrato </td>
@@ -283,7 +341,7 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       <td class="L">Sede <font class="ob">(*)</font></td>
       <td class="L">
         <input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>"  maxlength="35" size="35">
-       <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>');">
+        <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>');">
           <img src="/images/filefolder.gif" border=0>
         </a>
       </td>
@@ -484,11 +542,15 @@ while (itx1.hasNext())
   <tr><td class="Titolo" colspan="4">Notifica al Civilmente Obbligato </td></tr>
   <tr>
     <td class="L">Civilmente Obbligato: </td>
-    <td class="L">
+    <td class="L" colspan="3">
       <font class="campo"><%=lObbligatoModel.getCognome()%></font>&nbsp;
       <font class="campo"><%=lObbligatoModel.getNome()%></font>&nbsp;
       <font class="label">nato a</font>&nbsp;<font class="campo"><%=lObbligatoModel.getDescComuneNascita()%></font>&nbsp;
       <font class="label">il</font>&nbsp;<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lObbligatoModel.getDataNascita(),"dd-MM-yyyy"))%></font>&nbsp;
+      <% if ("G".equals(lObbligatoModel.getCodPersona())) { %>
+      <font class="label"> in qualita' di Legale Rappresentante di </font>
+      <font class="campo"><%=lObbligatoModel.getDenominazione()%></font>
+      <% } %>    
     </td> 
   </tr>    
   
@@ -496,7 +558,7 @@ while (itx1.hasNext())
     <td class="L">Autorita' Destinazione</td>
     <td class="L" colspan="3">
      <select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>">
-      <%=autoritaEsternaN%>
+      <%=autoritaEsternaCivilObb%>
      </select>
     </td>
   </tr>

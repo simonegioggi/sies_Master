@@ -3,6 +3,7 @@ package siap.siep.sanzionesostitutiva.action;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import f3b.util.F3BException;
 import siap.sico.evento.action.ICostantiEvento;
@@ -14,6 +15,8 @@ import siap.sico.web.ActionSiap;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
@@ -34,6 +37,12 @@ public class ActLoadDettaglioOrdineIngiunzione extends ActionSiap implements ICo
         IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
         lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo (lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
         setRequestAttribute("posizioneluogoaltra", lPos);        
+        
+        // Ricerca i pagamenti per id Fascicolo 
+        Vector <RateizzazionePPModel> listaRateizzazioni = new Vector <RateizzazionePPModel>();
+        IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
+        listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lEveNotMod.getEvento().getFasSieIdFascicoloSiep());      
+        setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
         
         // MAGISTRATO
         MagistratoModel lMag = lEveNotMod.getMagistrato();
