@@ -113,28 +113,23 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		siesLogger
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
 
-		// INVOCO WS:
-		// ########################################################################################
-		// ESER
-		// CONFIG=/var/SIES/CONFIG (pathProp)
-		// CERTIFICATO_X509=certs//mev.casellario.giustizia.it.cer
-		// JKS=certs/sies.jks
-		String pathProp = System.getProperty("path.properties");
-		String jks = "certs/sies.jks";
-		// String nomeFileCertificatoX509 = pathProp + System.getProperty("file.separator")
-		// + NscProperties.getInstance().getProperty("CERTIFICATO_X509");
-		// siesLogger.debug(nomeFileCertificatoX509);
-		// System.setProperty("javax.net.ssl.trustStore", nomeFileCertificatoX509);
-		String pathJKS = pathProp + System.getProperty("file.separator") + jks;
-		siesLogger.debug("PERCORSO DEL JKS: " + pathJKS);
-		System.setProperty("javax.net.ssl.trustStore", pathJKS);
-		// LOCAL
-		// System.setProperty("javax.net.ssl.trustStore",
-		// "C:/LAVORO/Progetti/ANALISI/SIES-NSC/CONFIG/certs/sies.jks");
-		// UNIVERSALI
-		System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
+		// INVOCO WS: impostazioni per il certificato
+		// CONFIG = /var/SIES/CONFIG (pathProp)
+		// String pathProp = System.getProperty("path.properties");
+		// String truststore = "/certs/sies.jks";
+		// String keystore = "/certs/serversies.jks";
+		// String pathtruststore = pathProp + truststore;
+		// siesLogger.debug("PERCORSO DEL truststore: " + pathJKS);
+		// System.setProperty("javax.net.ssl.trustStore", pathJKS);
+		// System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
+		// String pathkeystore = pathProp + keystore;
+		String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
+				+ "standalone" + System.getProperty("file.separator") + "configuration"
+				+ System.getProperty("file.separator") + "serversies.jks";
+		siesLogger.debug("PERCORSO DEL keystore: " + pathkeystore);
+		System.setProperty("javax.net.ssl.keyStore", pathkeystore);
+		System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
 		System.setProperty("javax.net.debug", "ssl");
-		// ########################################################################################
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
 		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
 		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
@@ -156,7 +151,14 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// AnagraficaSoggetto asv = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
 		// rpt.setSoggettoVersante(asv);
 
-		EsitoGeneraAvviso ega = port.generaAvviso(rpt);
+		EsitoGeneraAvviso ega = null;
+		try {
+			ega = port.generaAvviso(rpt);
+		} catch (Exception e) {
+			e.printStackTrace();
+			siesLogger.error(e.getMessage());
+			throw e;
+		}
 		// info per il log
 		siesLogger.debug("EsitoGeneraAvviso: " + ega.getNumeroAvviso() + " # " + ega.getBollettino());
 
@@ -190,6 +192,8 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			fsscb.caricaCertPenaleBlobIn(bais);
 			fsc.ExInsertCertificatoPenale(fsscb);
 		}
+		setRequestAttribute("idFascicolo", idFascicolo.toString());
+		setRequestAttribute("evento", em);
 
 		// pagina di ritorno
 		return PG_VISUALIZZA_AVVISO_PAGOPA;

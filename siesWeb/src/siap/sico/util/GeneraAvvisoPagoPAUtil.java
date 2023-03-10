@@ -41,7 +41,7 @@ public class GeneraAvvisoPagoPAUtil {
 
 		RichiestaPagamentoTelematico rpt = new RichiestaPagamentoTelematico();
 		rpt.setAutenticazioneSoggetto("OTH");
-		rpt.setCodiceDistretto(ufm.getCodDistretto());
+		rpt.setCodiceDistretto(/*ufm.getCodDistretto()*/"GLTO");
 		rpt.setCodiceUfficio(ufm.getCodUfficio());
 		Calendar c = Calendar.getInstance();
 		c.setTime(DateUtils.getSysDate());
@@ -150,7 +150,7 @@ public class GeneraAvvisoPagoPAUtil {
 		as.setIndirizzo(null);
 		as.setLocalita(null);
 		as.setNaturaGiuridica("F"); // F or G
-		as.setNazione(sm.getCodStatoNascita());
+		as.setNazione(/*sm.getCodStatoNascita()*/null);
 		as.setNominativo(sm.getCognome() + " " + sm.getNome()); // MAX 70 chars
 		as.setProvincia(sm.getCodProvinciaNascita());
 		as.setRegione(sm.getCodComuneNascita());

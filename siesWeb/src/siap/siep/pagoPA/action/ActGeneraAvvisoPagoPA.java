@@ -81,7 +81,7 @@ public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecuri
 		EventoNotificaModel enmNew = ie.ExInserisciEventoNotifica(enm);
 
 		String returnAction = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-				+ "=siap.siep.pagoPA.action.ActDownloadAvvisoPagoPA&" + "TipoFascicolo=SIEP&IdEvento="
+				+ "=siap.siep.pagoPA.action.ActDownloadAvvisoPagoPA&TipoFascicolo=SIEP&IdEvento="
 				+ enmNew.getEvento().getIdEvento();
 
 		return returnAction;

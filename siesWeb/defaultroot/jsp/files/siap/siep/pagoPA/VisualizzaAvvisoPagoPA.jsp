@@ -26,7 +26,7 @@ function VisualizzaAvviso(lAzione) {
 </script>
 </head>
 
-<body class="corpo" onLoad="VisualizzaAvviso('/jsp/Main.jsp?Action=siap.siep.pagoPA.action.ActLoadAvvisoPagoPA&IDFascicolo=<%=idFascicolo%>')"> 
+<body class="corpo" onLoad="VisualizzaAvviso('/jsp/Main.jsp?Action=siap.siep.pagoPA.action.ActLoadAvvisoPagoPA&IDFascicolo=<%=idFascicolo%>&TipoFascicolo=SIEP')"> 
 
 <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name="VisualizzaAvvisoPagoPA">
 <table>
@@ -42,21 +42,14 @@ function VisualizzaAvviso(lAzione) {
 		</td>
    	</tr>
 </table>
-
 <br>
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
-<br>
-<table>
-	<tr>
-      	<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-    </tr>
-</table>
-<br>
-<input type="hidden" name="IDFascicolo" value="<%=idFascicolo%>"/>
-<input type="hidden" name="idEvento" 	value="<%=evento.getIdEvento()%>"/>
+<input type="hidden" name="IDFascicolo" 	value="<%=idFascicolo%>"/>
+<input type="hidden" name="idEvento" 		value="<%=evento.getIdEvento()%>"/>
+<input type="hidden" name="TipoFascicolo" 	value="SIEP"/>
 
-<div align=center id="visualizzaCertificato" style="visibility:visible;position:absolute;top:150px;left:250px">
+<div align=center id="visualizzaBollettino" style="visibility:visible;position:absolute;top:150px;left:250px">
 <table bgcolor="#EEEEEE">
 	<tr>
 		<td>
