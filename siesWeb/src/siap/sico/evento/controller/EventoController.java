@@ -1111,6 +1111,16 @@ public class EventoController extends SiapController implements IEvento {
 				    
 				    lEve.getNotifiche()[count].setCivilmenteObbligato(lObblogatoModel);
 				}
+				
+                // Autorita Esterne Delegata
+                if (lEve.getNotifiche()[count].getAutEstIdAutoritaEstDeleg() != null) {
+                    lAutoritaSqlDao.ricercaAutoritaEsternaByKey(
+                            lEve.getNotifiche()[count].getAutEstIdAutoritaEstDeleg());
+                    AutoritaEsternaModel lAutorita = (AutoritaEsternaModel) lAutoritaSqlDao.getModelByKey();
+                    // Inserisce l'occorenza nel model delle notifiche.
+                    lEve.getNotifiche()[count].setAutoritaEsternaDelegata(lAutorita);
+                    lAutoritaSqlDao.stop();
+                }				
 				// MEV_2023-13 - FINE
 	            
 				

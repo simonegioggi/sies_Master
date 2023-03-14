@@ -152,20 +152,20 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
           if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
           %>
           <tr>
-            <td class="L"><font class="label" nowrap>Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
-            <td class="R"><font class="label" nowrap>termine di pagamento fissato entro </font></td>
-            <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-            <td class="L"><font class="label" nowrap>giorni dalla notifica dell'avviso di pagamento</font></td>
+            <td class="L" nowrap><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+            <td class="R" nowrap><font class="label">termine di pagamento fissato entro </font></td>
+            <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+            <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
           </tr>
           <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
           <tr>
-            <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
-            <td class="L"><font class="label" nowrap> rate da </font></td>
-            <td class="R"><font class="campo" nowrap><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+            <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
+            <td class="L" nowrap><font class="label"> rate da </font></td>
+            <td class="R" nowrap><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
             <% if (conta==1) { %>
-              <td class="L"><font class="label" nowrap>temine di pagamento della prima rata fissato entro </font></td>
-              <td class="R"><font class="campo" nowrap><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-              <td class="L"><font class="label" nowrap>giorni dalla notifica dell'avviso di pagamento </font></td>
+              <td class="L" nowrap><font class="label">temine di pagamento della prima rata fissato entro </font></td>
+              <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
+              <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento </font></td>
             <% } else { %>
               <td class="R" colspan="3">&nbsp;</td>
             <% } %>
@@ -214,7 +214,7 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
 </tr>
 <% if (notificaAlCondannato.getAutoritaEsterna() != null) { %>
    <tr>
-     <td class="l">Autorità Destinazione</td>
+     <td class="l">Autorita' Destinazione</td>
      <td class="L" colspan=2>
       <font class="campo"><%=StringUtils.toStringJSP( notificaAlCondannato.getAutoritaEsterna().getDescrTipoAutorita() )%></font>&nbsp;
       di
@@ -238,7 +238,7 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
 %>
     <tr>
       <td class="L">Istituto Notifica</td>
-      <td class="L" colspan=2>
+      <td class="L" colspan="2">
         <font class="campo"><%=StringUtils.toStringJSP(lNotificaIstituto)%></font>&nbsp;
       </td>
     </tr>
@@ -316,6 +316,10 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
         <font class="campo"><%=lObbligatoModel.getNome()%></font>&nbsp;
         <font class="label">nato a</font>&nbsp;<font class="campo"><%=lObbligatoModel.getDescComuneNascita()%></font>&nbsp;
         <font class="label">il</font>&nbsp;<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lObbligatoModel.getDataNascita(),"dd-MM-yyyy"))%></font>&nbsp;
+        <% if ("G".equals(lObbligatoModel.getCodPersona())) { %>
+        <font class="label"> in qualita' di Legale Rappresentante di </font>
+        <font class="campo"><%=lObbligatoModel.getDenominazione()%></font>
+        <% } %>   
        </td>
       </tr>
 <%
@@ -341,7 +345,15 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
 %>
   </table>
 
-
+<% if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) { %>   
+<table>
+  <tr>
+    <td class="L">
+      <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione">Visualizza stato notifiche</a>
+    </td>
+  </tr>
+</table>
+<% } %>
 
 <br>
 <div align=left style="visibility:hidden" id="upld">

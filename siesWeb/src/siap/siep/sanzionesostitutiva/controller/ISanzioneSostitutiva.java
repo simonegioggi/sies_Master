@@ -10,6 +10,7 @@ import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.utente.model.UtenteModel;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.sospensione.model.SospensioneModel;
@@ -199,5 +200,7 @@ public interface ISanzioneSostitutiva {
 	 * @throws F3BException
 	 */
    public EventoNotificaModel exInserisciOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
-   public EventoModel exUpdateOrdineIngiunzione (EventoModel aEvRichiesta) throws F3BException;
+   public EventoModel exUpdateOrdineIngiunzione (EventoModel aEvento) throws F3BException;
+   public void exAggiornaNotificheOrdineIngiunzione (EventoModel aEvento, Vector <NotificaModel> listaNotDaAggiornare ) throws F3BException;
+   
 }

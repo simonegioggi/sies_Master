@@ -73,6 +73,10 @@ public interface ICostantiSanzioneSostitutiva
   public static final String PG_GRIGLIA_RISCOSSIONE_PP = IWebConstants.ROOT_DIR + "/files/siap/siep/sanzionesostitutiva/GrigliaRiscossionePenePecuniarie.jsp";
   public static final String PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR + "/files/siap/siep/sanzionesostitutiva/LoadInserisciOrdineIngiunzione.jsp";
   public static final String PG_DETTAGLIO_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR + "/files/siap/siep/sanzionesostitutiva/LoadDettaglioOrdineIngiunzione.jsp";
+  public static final String PG_LOAD_GRIGLIA_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR
+          + "/files/siap/siep/sanzionesostitutiva/LoadGrigliaOrdineIngiunzione.jsp";
+  public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
+          + "/files/siap/siep/sanzionesostitutiva/LoadInserimentoNotificheOrdineIngiunzione.jsp";  
   //MEV_2023-13 - FINE    
   
   public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA	= IWebConstants.ROOT_DIR + "files/siap/siep/sanzionesostitutiva/LoadRicercaSanzioneSostitutiva.jsp";

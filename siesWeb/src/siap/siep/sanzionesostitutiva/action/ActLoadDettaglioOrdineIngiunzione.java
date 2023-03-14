@@ -55,8 +55,7 @@ public class ActLoadDettaglioOrdineIngiunzione extends ActionSiap implements ICo
         
         for (int i = 0; i < lNotifiche.length; i++) {
             // Autorita Esterne
-            if (   lNotifiche[i].getAutEstIdAutoritaEsterna() != null
-                && lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
+            if (   lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
                 && lNotifiche[i].getIdCivilmenteObbligato()==null
                ) 
             {
