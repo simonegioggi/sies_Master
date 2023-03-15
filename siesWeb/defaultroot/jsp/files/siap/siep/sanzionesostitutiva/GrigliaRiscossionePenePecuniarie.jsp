@@ -75,7 +75,7 @@ if (!fascicoloNotInSession.equals("S")) {
     		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciOrdineIngiunzione">Ordine Ingiunzione Pagamento</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Gestione Ordine Ingiunzione</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione">Gestione Ordine Ingiunzione</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA">Gestione Bollettini PagoPA</a>
