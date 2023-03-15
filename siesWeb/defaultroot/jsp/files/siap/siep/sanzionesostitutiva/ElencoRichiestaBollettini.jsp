@@ -70,6 +70,10 @@ if (listaRichiestaBollettini.size() == 0) {
 } else {
 %>
 	<tr>
+		<td class="titolo" colspan="6">Richiesta Generazione Bollettini PagoPA relativi a:</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr>
 		<td class="int">Provvedimento</td>
 		<td class="int">Modalit&agrave; Pagamento</td>
 		<td class="int">Inoltra</td>
