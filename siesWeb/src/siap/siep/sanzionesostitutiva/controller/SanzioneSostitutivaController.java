@@ -47,7 +47,6 @@ import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
-import siap.siep.rinnovo.dao.RinnovoSqlDAO;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaDAO;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaSqlDAO;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
@@ -64,12 +63,8 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * <p>
  * Title: SanzioneSostitutivaController
- * </p>
- * <p>
  * Description: Controller della SanzioniSostitutive
- * </p>
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
@@ -2482,358 +2477,362 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		return lCodEsito;
 	}
 
-	
-	  /**
-	   * Effettua l'inserimento dell'OE a seguito revoca/conversione SS su fascicolo con cumulo. Inserisce la
-	   * pena residua rideterminata
-	   *
-	   * @param aEvNotModel
-	   * @param aPenResMod
-	   *            pena rideterminata
-	   * @return
-	   * @throws F3BException
-	   */
-	  public EventoNotificaModel exInserisciOrdineIngiunzione(EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException 
-	  {
-	    Connection lConn = null;
+	/**
+	 * Effettua l'inserimento dell'OE a seguito revoca/conversione SS su fascicolo con cumulo. Inserisce la
+	 * pena residua rideterminata
+	 *
+	 * @param aEvNotModel
+	 * @param aPenResMod
+	 *            pena rideterminata
+	 * @return
+	 * @throws F3BException
+	 */
+	public EventoNotificaModel exInserisciOrdineIngiunzione(EventoNotificaModel aEvNotModel,
+			String[] lArrayIdRate) throws F3BException {
+		Connection lConn = null;
 
-	    EventoDAO lEventoDao = null;
-	    NotificaDAO lNotDao = null;
-	    AutoritaEsternaDAO lAutDao = null;
-	    
-	    RateizzazionePPDAO lRateDao = null;
-	    /*
-	    PenaResiduaDAO lPenResDao = null;
-	    PenaResiduaSqlDAO lPenResSqlDao = null;
-	    */
-	    EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+		EventoDAO lEventoDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
 
-	    try {
-	      lConn = getDBConnection();
+		RateizzazionePPDAO lRateDao = null;
+		/*
+		 * PenaResiduaDAO lPenResDao = null; PenaResiduaSqlDAO lPenResSqlDao = null;
+		 */
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
 
-	      // =========================================
-	      // Inserisco l'OE
-	      // =========================================
-	      lEventoDao = new EventoDAO(lConn);
-	      lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
-	      BigDecimal lIdEvento = lEventoDao.insert();
-	      lEventoDao.stop();
-	      lEveRet.getEvento().setIdEvento(lIdEvento);
-	      siesLogger.debug("lIdEvento = " + lIdEvento);
+		try {
+			lConn = getDBConnection();
 
-	      // =========================================================
-	      // Inserisco le Notifiche collegate all'evento se presenti
-	      // =========================================================
-	      int count = 0;
-	      lAutDao = new AutoritaEsternaDAO(lConn);
-	      BigDecimal lKeyAutorita = null;
+			// =========================================
+			// Inserisco l'OE
+			// =========================================
+			lEventoDao = new EventoDAO(lConn);
+			lEventoDao.setDAOFromModel(aEvNotModel.getEvento());
+			BigDecimal lIdEvento = lEventoDao.insert();
+			lEventoDao.stop();
+			lEveRet.getEvento().setIdEvento(lIdEvento);
+			siesLogger.debug("lIdEvento = " + lIdEvento);
 
-	      if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
-	        siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			BigDecimal lKeyAutorita = null;
 
-	        while (count < aEvNotModel.getNotifiche().length) {
-	          siesLogger.debug("count = " + count);
-	          siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
+			if (aEvNotModel != null && aEvNotModel.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + aEvNotModel.getNotifiche().length + " notifiche");
 
-	          if (aEvNotModel.getNotifiche()[count] != null) {
-	            // Se è stata specificata anche l'autorità esterna per l'avvocato,
-	            // recupero l'id da inserire nella notifica
-	            // n.b. se autorità non presente la creo
-	            if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
-	              // Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-	              // già l'autorità esterna specificata nella form (dalla form ho solo
-	              // codice e sede)
-	              lAutDao.setRicercaByAutSede( aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
-	              AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-	              lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+				while (count < aEvNotModel.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + aEvNotModel.getNotifiche()[count]);
 
-	              if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
-	                siesLogger.debug("Ins Aut Est = " + aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
-	                lAutDao.setDAOFromModel(aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
-	                lKeyAutorita = lAutDao.insert();
-	                aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-	              } else {
-	                lKeyAutorita = lAutMod.getIdAutoritaEsterna();
-	                aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-	              }
-	            }
+					if (aEvNotModel.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (aEvNotModel.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							lAutDao.setRicercaByAutSede(
+									aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
-	            // ===========================================
-	            aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug("Ins Aut Est = "
+										+ aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+								lAutDao.setDAOFromModel(
+										aEvNotModel.getNotifiche()[count].getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEvNotModel.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+						}
 
-	            lNotDao = new NotificaDAO(lConn);
+						// ===========================================
+						aEvNotModel.getNotifiche()[count].setEveIdEvento(lIdEvento);
 
-	            lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
-	            BigDecimal lKeyNotifica = lNotDao.insert();
-	            lNotDao.stop();
+						lNotDao = new NotificaDAO(lConn);
 
-	            siesLogger.debug("Inserita Notifica " + lKeyNotifica);
-	          }
+						lNotDao.setDAOFromModel(aEvNotModel.getNotifiche()[count]);
+						BigDecimal lKeyNotifica = lNotDao.insert();
+						lNotDao.stop();
 
-	          count++;
-	        }
-	      }
+						siesLogger.debug("Inserita Notifica " + lKeyNotifica);
+					}
 
-	      // =========================================================
-          // Aggiorno le rate collegandolo all'evento
-          // =========================================================
-	      lRateDao = new RateizzazionePPDAO(lConn);
-	      for (int i=0;i<lArrayIdRate.length; i++) {
-	          String idRata = lArrayIdRate [i];
-	          
-	          siesLogger.debug("idRata = " + idRata);
-	          
-	          lRateDao.setEveIdEvento (lIdEvento);
-	          lRateDao.selCondizioneUpdate(new BigDecimal(idRata));
-	          lRateDao.update();
-	      }
-	      
-	      commit(lConn);
-	    } catch (DAOException ex) {
-	      rollback(lConn);
-	      throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
-	    } catch (Exception ex) {
-          siesLogger.error("Eccezione Generica",ex);
-	      rollback(lConn);
-	      throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
-	    } finally {
-	      cleanup(lEventoDao);
-	      cleanup(lNotDao);
-	      cleanup(lAutDao);
-	      cleanup(lRateDao);
-	      
-	      //cleanup(lPenResDao);
-	      //cleanup(lPenResSqlDao);
+					count++;
+				}
+			}
 
-	      cleanup(lConn);
-	    }
+			// =========================================================
+			// Aggiorno le rate collegandolo all'evento
+			// =========================================================
+			lRateDao = new RateizzazionePPDAO(lConn);
+			for (int i = 0; i < lArrayIdRate.length; i++) {
+				String idRata = lArrayIdRate[i];
 
-	    return lEveRet;
-	  }	
-	
-/**
- * 	  
- */
-  public EventoModel exUpdateOrdineIngiunzione(EventoModel aEvento) throws F3BException {
+				siesLogger.debug("idRata = " + idRata);
 
-        Connection lConn = null;
+				lRateDao.setEveIdEvento(lIdEvento);
+				lRateDao.selCondizioneUpdate(new BigDecimal(idRata));
+				lRateDao.update();
+			}
 
-        EventoDAO lEventoDao = null;
-        EventoSqlDAO lEveSqlDAO = null;        
-        StatoProcedimentoDAO lStatoDao = null;
-        
-        EventoDAO lEveDaoBlob = null;
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+			cleanup(lRateDao);
 
-        EventoModel lEveRet = new EventoModel(aEvento);
+			// cleanup(lPenResDao);
+			// cleanup(lPenResSqlDao);
 
-        try {
-            lConn = getDBConnection();
+			cleanup(lConn);
+		}
 
-            // ========================================================================
-            // Recupero l'EVENTO completo, quello in input contiene solo i dati da
-            // aggiornare
-            // ========================================================================
-            lEveSqlDAO = new EventoSqlDAO(lConn);
-            lEveSqlDAO.ricercaEventoByKey(aEvento.getIdEvento());
+		return lEveRet;
+	}
 
-            EventoModel lEveModelRich = (EventoModel) lEveSqlDAO.getModelByKey();
-            lEveSqlDAO.stop();
+	/**
+	 * 	  
+	 */
+	public EventoModel exUpdateOrdineIngiunzione(EventoModel aEvento) throws F3BException {
 
-            // ====================================
-            // Modifico lo stato del procedimento
-            // ====================================
-            // ========================================================================
-            // Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
-            // ========================================================================
-            siesLogger.debug("Aggiornamento stato procedimento");
+		Connection lConn = null;
 
-            StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+		EventoDAO lEventoDao = null;
+		EventoSqlDAO lEveSqlDAO = null;
+		StatoProcedimentoDAO lStatoDao = null;
 
-            lStatoProcMod.setProgressivo (new BigDecimal(1));
-            lStatoProcMod.setFasSieIdFascicoloSiep (lEveModelRich.getFasSieIdFascicoloSiep());
+		EventoDAO lEveDaoBlob = null;
 
-            lStatoProcMod.setData (lEveModelRich.getDataEmissione());
-            lStatoProcMod.setCodStatoProcedimento ("0336");
+		EventoModel lEveRet = new EventoModel(aEvento);
 
-            lStatoProcMod.setCodOperatoreInserimento (aEvento.getCodOperatoreAggiornamento());
-            lStatoProcMod.setDataInserimento         (aEvento.getDataAggiornamento());
-            lStatoProcMod.setCodUfficioInserimento   (aEvento.getCodUfficioAggiornamento());
+		try {
+			lConn = getDBConnection();
 
-            lStatoDao = new StatoProcedimentoDAO(lConn);
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
+			lEveSqlDAO.ricercaEventoByKey(aEvento.getIdEvento());
 
-            // - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
-            lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
-            lStatoDao.delete();
-            siesLogger.debug("Cancellato old stato");
-            // - Inserisce
-            lStatoDao.setDAOFromModel(lStatoProcMod);
-            lStatoDao.insert();
-            lStatoDao.stop();
-            siesLogger.debug("Inserito nuovo stato");
+			EventoModel lEveModelRich = (EventoModel) lEveSqlDAO.getModelByKey();
+			lEveSqlDAO.stop();
 
-            // ========================================================================
-            // Aggiorno il blob sull'evento
-            // ========================================================================
-            siesLogger.debug("Aggiornamento Blob");
-            // lConnBlob = getDBConnection();
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
 
-            lEveDaoBlob = new EventoDAO(lConn);
-            lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
 
-            lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
-            lEveDaoBlob.update();
-            lEveDaoBlob.stop();
-            siesLogger.debug("Blob Aggiornato");
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelRich.getFasSieIdFascicoloSiep());
 
-            // -----------------------
-            commit(lConn);
-            // commit(lConnBlob);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(lConn);
-            throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
-        } catch (Exception ex) {
-            siesLogger.error("Exception",ex);
-            rollback(lConn);
-            throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
-        } finally {
-            cleanup(lEventoDao);
-            cleanup(lEveSqlDAO);
-            cleanup(lStatoDao);
-            
-            cleanup(lConn);
-            cleanup(lEveDaoBlob);
-        }
+			lStatoProcMod.setData(lEveModelRich.getDataEmissione());
+			lStatoProcMod.setCodStatoProcedimento("0336");
 
-        return lEveRet;
-  }
-  
-  
-  public void exAggiornaNotificheOrdineIngiunzione (EventoModel aEvento, Vector <NotificaModel> aListaNotDaAggiornare ) 
-          throws F3BException
-  {
-      Connection lConn = null;  
+			lStatoProcMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvento.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
 
-      NotificaDAO lNotDAO = null;
-      AutoritaEsternaDAO lAutDao = null;
+			lStatoDao = new StatoProcedimentoDAO(lConn);
 
-      ScadenzarioDAO lScaDao = null;
-      
-      RateizzazionePPSqlDAO lRateSqlDao = null;
-      
-      Vector lVectNot = new Vector();
-      
-      try {
-          lConn = getDBTransaction();
-          
-          lNotDAO = new NotificaDAO(lConn);
-          lScaDao = new ScadenzarioDAO(lConn);
-          
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			siesLogger.debug("Inserito nuovo stato");
 
-          for (int i = 0; i < aListaNotDaAggiornare.size(); i++) {
-              NotificaModel lNotModel = aListaNotDaAggiornare.elementAt(i);
-              
-              BigDecimal lKeyAutDeleg = null;
-              if (lNotModel.getAutoritaEsternaDelegata() != null) {
-                  lAutDao = new AutoritaEsternaDAO(lConn);
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			// lConnBlob = getDBConnection();
 
-                  lAutDao.setRicercaByAutSede (lNotModel.getAutoritaEsternaDelegata());
-                  AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-                  lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+			lEveDaoBlob = new EventoDAO(lConn);
+			lEveDaoBlob.setDAOFromModelForUpdateBlob(aEvento);
 
-                  if (lAutMod == null) {
-                      // Autorità non presente, la inserisco
-                      lAutDao.setDAOFromModel (lNotModel.getAutoritaEsternaDelegata());
-                      lKeyAutDeleg = lAutDao.insert();
-                      lAutDao.stop();
-                      
-                      lNotModel.getAutoritaEsternaDelegata().setIdAutoritaEsterna(lKeyAutDeleg);
-                  } else {
-                      // Autorità già presente a sistema la aggancio alla notifixa
-                      lKeyAutDeleg = lAutMod.getIdAutoritaEsterna();
+			lEveDaoBlob.selCondizioneUpdate(aEvento.getIdEvento());
+			lEveDaoBlob.update();
+			lEveDaoBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
 
-                      // Il campo descrizione rappresenta l'indirizzo in maschera
-                      // della 'Autorita' che ha effettuato la notifica'
-                      lAutDao.setDescrizione (lNotModel.getAutoritaEsternaDelegata().getDescrizione());
+			// -----------------------
+			commit(lConn);
+			// commit(lConnBlob);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(lConn);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(lEventoDao);
+			cleanup(lEveSqlDAO);
+			cleanup(lStatoDao);
 
-                      lAutDao.setCondizioneUpdate(lKeyAutDeleg);
-                      lAutDao.update();
-                      lAutDao.stop();
+			cleanup(lConn);
+			cleanup(lEveDaoBlob);
+		}
 
-                      lNotModel.getAutoritaEsternaDelegata().setIdAutoritaEsterna(lKeyAutDeleg); //????
-                  }
-              }
+		return lEveRet;
+	}
 
-              // n.b. chi ha effettuato la notifica viene scritto su AutEstIdAutoritaEstDeleg mentre il delegato 
-              //      iniziale su AutEstIdAutoritaEsterna
-              lNotDAO.setAutEstIdAutoritaEstDeleg (lKeyAutDeleg);
-              lNotDAO.setDataAvvenutaNotifica     (lNotModel.getDataAvvenutaNotifica());
-              lNotDAO.setCodEsito                 (lNotModel.getCodEsito());
-              
-              lNotDAO.setCodiceOperatoreAggiornamento (lNotModel.getCodiceOperatoreAggiornamento());
-              lNotDAO.setCodUfficioAggiornamento      (lNotModel.getCodUfficioAggiornamento());
-              lNotDAO.setDataAggiornamento            (lNotModel.getDataAggiornamento());
+	public void exAggiornaNotificheOrdineIngiunzione(EventoModel aEvento,
+			Vector<NotificaModel> aListaNotDaAggiornare) throws F3BException {
+		Connection lConn = null;
 
-              lNotDAO.setCondizioneUpdate (lNotModel.getIdNotifica());
+		NotificaDAO lNotDAO = null;
+		AutoritaEsternaDAO lAutDao = null;
 
-              lNotDAO.update();
-              lNotDAO.stop();
+		ScadenzarioDAO lScaDao = null;
 
-              lVectNot.add(lNotModel);
-              siesLogger.debug("lNotModel.getCodTipoNotifica() = "+lNotModel.getCodTipoNotifica());
-              if ("E".equals(lNotModel.getCodTipoNotifica())) {
-                  siesLogger.debug("Notifica al condannato. Attivo lo scadenzario");
-                  // Notifica al condannato, devo attivare lo scadenzario                  
-                  lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
-                  RateizzazionePPModel primaRata = null;
-                   
-                  lRateSqlDao.ricercaRateizzazionePPByIdFascicoloSiep (aEvento.getFasSieIdFascicoloSiep());
-                  Vector <RateizzazionePPModel> listaRate = new  Vector <RateizzazionePPModel> (lRateSqlDao.getModels());
-                  for (RateizzazionePPModel rata : listaRate) {
-                      if (rata.getProgressivoRata().compareTo(new BigDecimal(1))==0) {
-                          primaRata = rata;
-                          break;
-                      }
-                  }
-                  
-                  Date dataScadenza = DateUtils.moveDateTo(lNotModel.getDataAvvenutaNotifica(), Calendar.DAY_OF_MONTH,primaRata.getScadenzaGiorni().intValue());
-                  
-                  ScadenzarioModel lScadModel = new ScadenzarioModel ();
-                  lScadModel.setFasSieIdFascicoloSiep (aEvento.getFasSieIdFascicoloSiep());
-                  
-                  lScadModel.setCodTipoScadenzario ("30");
-                  lScadModel.setDataInizioScadenza (lNotModel.getDataAvvenutaNotifica() );
-                  lScadModel.setDataFineScadenza   (dataScadenza);
+		RateizzazionePPSqlDAO lRateSqlDao = null;
 
-                  lScadModel.setCodOperatoreInserimento  (lNotModel.getCodiceOperatoreAggiornamento());
-                  lScadModel.setCodUfficioInserimento    (lNotModel.getCodUfficioAggiornamento());
-                  lScadModel.setDataInserimento          (lNotModel.getDataAggiornamento());
-                  
-                  lScadModel.setFlagVisto("N");
-                  
-                  lScaDao.setDAOFromModel(lScadModel);
-                  lScaDao.insert();
-                  lScaDao.stop();
-              }
-          }
-          
-          commit(lConn);
-      } catch (DAOException daoEx) {
-          siesLogger.error("DAOException",daoEx);
-          rollback(lConn);
-          throw new F3BException("SanzioneSostitutivaController.exAggiornaNotificheOrdineIngiunzione: daoEx --> " + daoEx);
-      } catch (Exception ex) {
-          siesLogger.error("Exception",ex);
-          rollback(lConn);
-          throw new F3BException("SanzioneSostitutivaController.exAggiornaNotificheOrdineIngiunzione: ex --> " + ex);
-      } finally {
-        cleanup(lNotDAO);
-        cleanup(lAutDao);
+		Vector lVectNot = new Vector();
 
-        cleanup(lScaDao);
-        cleanup(lRateSqlDao);
-        
-        cleanup(lConn);
-      }
-  }
+		try {
+			lConn = getDBTransaction();
+
+			lNotDAO = new NotificaDAO(lConn);
+			lScaDao = new ScadenzarioDAO(lConn);
+
+			for (int i = 0; i < aListaNotDaAggiornare.size(); i++) {
+				NotificaModel lNotModel = aListaNotDaAggiornare.elementAt(i);
+
+				BigDecimal lKeyAutDeleg = null;
+				if (lNotModel.getAutoritaEsternaDelegata() != null) {
+					lAutDao = new AutoritaEsternaDAO(lConn);
+
+					lAutDao.setRicercaByAutSede(lNotModel.getAutoritaEsternaDelegata());
+					AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+					lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+
+					if (lAutMod == null) {
+						// Autorità non presente, la inserisco
+						lAutDao.setDAOFromModel(lNotModel.getAutoritaEsternaDelegata());
+						lKeyAutDeleg = lAutDao.insert();
+						lAutDao.stop();
+
+						lNotModel.getAutoritaEsternaDelegata().setIdAutoritaEsterna(lKeyAutDeleg);
+					} else {
+						// Autorità già presente a sistema la aggancio alla notifixa
+						lKeyAutDeleg = lAutMod.getIdAutoritaEsterna();
+
+						// Il campo descrizione rappresenta l'indirizzo in maschera
+						// della 'Autorita' che ha effettuato la notifica'
+						lAutDao.setDescrizione(lNotModel.getAutoritaEsternaDelegata().getDescrizione());
+
+						lAutDao.setCondizioneUpdate(lKeyAutDeleg);
+						lAutDao.update();
+						lAutDao.stop();
+
+						lNotModel.getAutoritaEsternaDelegata().setIdAutoritaEsterna(lKeyAutDeleg); // ????
+					}
+				}
+
+				// n.b. chi ha effettuato la notifica viene scritto su AutEstIdAutoritaEstDeleg mentre il
+				// delegato
+				// iniziale su AutEstIdAutoritaEsterna
+				lNotDAO.setAutEstIdAutoritaEstDeleg(lKeyAutDeleg);
+				lNotDAO.setDataAvvenutaNotifica(lNotModel.getDataAvvenutaNotifica());
+				lNotDAO.setCodEsito(lNotModel.getCodEsito());
+
+				lNotDAO.setCodiceOperatoreAggiornamento(lNotModel.getCodiceOperatoreAggiornamento());
+				lNotDAO.setCodUfficioAggiornamento(lNotModel.getCodUfficioAggiornamento());
+				lNotDAO.setDataAggiornamento(lNotModel.getDataAggiornamento());
+
+				lNotDAO.setCondizioneUpdate(lNotModel.getIdNotifica());
+
+				lNotDAO.update();
+				lNotDAO.stop();
+
+				lVectNot.add(lNotModel);
+				siesLogger.debug("lNotModel.getCodTipoNotifica() = " + lNotModel.getCodTipoNotifica());
+				if ("E".equals(lNotModel.getCodTipoNotifica())) {
+					siesLogger.debug("Notifica al condannato. Attivo lo scadenzario");
+					// Notifica al condannato, devo attivare lo scadenzario
+					lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
+					RateizzazionePPModel primaRata = null;
+
+					lRateSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep());
+					Vector<RateizzazionePPModel> listaRate = new Vector<RateizzazionePPModel>(
+							lRateSqlDao.getModels());
+					for (RateizzazionePPModel rata : listaRate) {
+						if (rata.getProgressivoRata().compareTo(new BigDecimal(1)) == 0) {
+							primaRata = rata;
+							break;
+						}
+					}
+
+					Date dataScadenza = DateUtils.moveDateTo(lNotModel.getDataAvvenutaNotifica(),
+							Calendar.DAY_OF_MONTH, primaRata.getScadenzaGiorni().intValue());
+
+					ScadenzarioModel lScadModel = new ScadenzarioModel();
+					lScadModel.setFasSieIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep());
+
+					lScadModel.setCodTipoScadenzario("30");
+					lScadModel.setDataInizioScadenza(lNotModel.getDataAvvenutaNotifica());
+					lScadModel.setDataFineScadenza(dataScadenza);
+
+					lScadModel.setCodOperatoreInserimento(lNotModel.getCodiceOperatoreAggiornamento());
+					lScadModel.setCodUfficioInserimento(lNotModel.getCodUfficioAggiornamento());
+					lScadModel.setDataInserimento(lNotModel.getDataAggiornamento());
+
+					lScadModel.setFlagVisto("N");
+
+					lScaDao.setDAOFromModel(lScadModel);
+					lScaDao.insert();
+					lScaDao.stop();
+				}
+			}
+
+			commit(lConn);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(lConn);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exAggiornaNotificheOrdineIngiunzione: daoEx --> " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(lConn);
+			throw new F3BException(
+					"SanzioneSostitutivaController.exAggiornaNotificheOrdineIngiunzione: ex --> " + ex);
+		} finally {
+			cleanup(lNotDAO);
+			cleanup(lAutDao);
+
+			cleanup(lScaDao);
+			cleanup(lRateSqlDao);
+
+			cleanup(lConn);
+		}
+	}
+
 }
