@@ -12,7 +12,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<jsp:useBean id="listaRichiestaBollettini" scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
+<jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
+<jsp:useBean id="listaRateizzazioni" 		scope="request" class="java.util.ArrayList<String>"/>
+<jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -41,7 +43,7 @@ function tornaIndietro(action) {
       	<td class="LBG"><a href="Javascript:window.print();"><img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Elenco Pagamenti Pena Pecuniaria &nbsp;</font>
+			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
       	</td>
       	<td class="LBG"><!-- Tasto indietro alla Griglia dei dati analitici -->
         	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
@@ -75,6 +77,7 @@ if (listaRichiestaBollettini.size() == 0) {
 		<td class="int">Visualizza</td>
 	</tr>
 <%
+	String azione = "siap.siep.pagoPA.action.ActGeneraAvvisoPagoPA";
 	Iterator<EventoRateizzazionePPModel> itx = listaRichiestaBollettini.iterator();
 	while (itx.hasNext()) {
 		EventoRateizzazionePPModel erppm = (EventoRateizzazionePPModel) itx.next();
@@ -84,8 +87,22 @@ if (listaRichiestaBollettini.size() == 0) {
 			<%=StringUtils.toStringJSP(erppm.getEvento().getDescrTipoProvvedimento()) + " " + StringUtils.toStringJSP(erppm.getEvento().getDescrMotivo())%>
 			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(erppm.getEvento().getDataEmissione(), "dd-MM-yyyy"))%>
 		</td>
-		<td class="c">&nbsp;</td>
-      	<td class="c">&nbsp;</td>
+		<td class="c">
+<%
+		Iterator<String> iter = listaRateizzazioni.iterator();
+		while (iter.hasNext()) {
+			String testo = (String) iter.next();
+%>
+			<%=testo%>
+		</td>
+<%
+		}
+%>
+      	<td class="c">
+      		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=azione%>&TornaQui=<%=TornaQui%>">
+				<img src="/images/esegui.gif" alt="Inoltra" width="12" height="12" border="0">
+			</a>
+		</td>
       	<td class="c">&nbsp;</td>
       	<td class="c">&nbsp;</td>
       	<td class="c" style="text-align: center;"> &nbsp;
