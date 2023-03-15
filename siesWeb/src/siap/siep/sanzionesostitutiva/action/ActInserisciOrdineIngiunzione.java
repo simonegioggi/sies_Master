@@ -31,250 +31,261 @@ import siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP;
 import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.util.SIEPLookupRemote;
 
-public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva
-{
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-    
-    public String processRequest() throws Exception 
-    {        
-        FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+/**
+ * MEV_2023-13: aggiunta classe per l'inserimento dell'ordine di ingiunzione
+ * 
+ * @author sgioggi
+ * @version 1.0
+ */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-        EventoModel lEve = new EventoModel();
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-        lEve.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
+	public String processRequest() throws Exception {
 
-        lEve.setCodTipoEvento("01");        // Tipo Evento = PROVVEDIMENTO
-        lEve.setCodTipoProvvedimento("06"); // Tipo Provvedimento = ORDINE ESECUZIONE
-        lEve.setCodMotivo("0622");          // Motivo Evento = Ordine di ingiunzione
-        
-        lEve.setFlagStampaSiep ("S");
-        lEve.setFlagVideoSiep  ("S");
-            
-        Date lDataEmissione = getRequestDateParameter (ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE
-                                                     , ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE
-                                                     , ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
-        lEve.setDataEmissione(lDataEmissione);
-           
-        lEve.setCodLuogoEmittente    (getCodComuneUtenteConnesso());
-        lEve.setCodUfficioEmittente  (getCodUfficioUtenteConnesso());
-        
-        // Magistrato
-        lEve.setCodMagistrato (getRequestStringParameter(ICostantiEvento.CAMPO_COD_MAGISTRATO));
+		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
-        lEve.setAnnoProtocollo (new BigDecimal(DateUtils.getSysDate("yyyy")));
+		EventoModel lEve = new EventoModel();
 
-        lEve.setCodEsito("-");
-        lEve.setCodLuogoDestinatario("-");
-        lEve.setCodTipoUfficioDestinatario("-");
-        
-        lEve.setCodOperatoreInserimento (getCodUtenteConnesso());
-        lEve.setDataInserimento         (DateUtils.getSysDate());
-        lEve.setCodUfficioInserimento   (getCodUfficioUtenteConnesso());
-        //lEve.setCodOperatoreAggiornamento(lCodiceOperatore);
-        //lEve.setCodUfficioAggiornamento(lCodiceUfficio);
-        //lEve.setDataAggiornamento(DateUtils.getSysDate());
-        
-        EventoNotificaModel lEveNot = new EventoNotificaModel();
-        // Recupero le notifiche
-        NotificaModel[] lNotifiche = this.setNotificheOrdineIngiunzione();
-        
-//        siesLogger.debug("Elenco notifiche "+lNotifiche.length);
-//        for (int i=0; i<lNotifiche.length; i++) {
-//            siesLogger.debug("Notifica ["+i+"] = \n"+lNotifiche[i].toString());
-//        }
-        
-        lEveNot.setEvento(lEve);
-        lEveNot.setNotifiche(lNotifiche);
-        
-        
-        // recupero le rateizzazioni da collegare all'evento 
-        String[] lArrayIdRate = this.getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
-        
-        
-        ISanzioneSostitutiva lCtrlSS = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-        EventoNotificaModel lRetModel = lCtrlSS.exInserisciOrdineIngiunzione(lEveNot, lArrayIdRate);
+		lEve.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
 
-        
-        String lPage = null;
+		lEve.setCodTipoEvento("01"); // Tipo Evento = PROVVEDIMENTO
+		lEve.setCodTipoProvvedimento("06"); // Tipo Provvedimento = ORDINE ESECUZIONE
+		lEve.setCodMotivo("0622"); // Motivo Evento = Ordine di ingiunzione
 
-        lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-                + "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione&"
-                + ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
-        
-        return lPage;
-    }
-    
-    
-    /**
-     * 
-     * @return
-     * @throws F3BException
-     */
-    protected NotificaModel[] setNotificheOrdineIngiunzione() throws F3BException {
-        
-        String lCodiceOperatore = getCodUtenteConnesso();
-        String lCodiceUfficio   = getCodUfficioUtenteConnesso();
-        Date lDataEmissione = getRequestDateParameter (ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE
-                                                     , ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE
-                                                     , ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
-        Date lTrasmissione = lDataEmissione;
-        
-        if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO))
-            lTrasmissione = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO
-                                                  , ICostantiNotifica.CAMPO_MESE_DATA_INVIO
-                                                  , ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
-        
-        ArrayList lNotificheArray = new ArrayList();
-        
-        String[] lArrayDestinatari     = this.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
-        String[] lArraySedeDestinatari = this.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
-        String[] lArrayNote = getRequestStringParameters(ICostantiNotifica.CAMPO_NOTE);
-        String[] lAvvocati  = getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
-        
-        
-        // Dimensione dell'Array di Notifiche...
-        // Gli Avvocati più Una Notifica di Esecuzione
-        int lIndNotifiche = 0;
-        int lNumAvvNotifiche = lAvvocati.length;
-        if (lArrayDestinatari[0].compareTo("-") == 0)
-            lNumAvvNotifiche -= 1;
-        
-        //===================================================
-        // Notifica per l'esecuzione
-        //===================================================
-        {
-            String lSedeDestinatario_E = null;
-            String lDestinatario_E = null;
-            String lDestinatario_EAE = null;
-            String lNote_E = null;
-            
-            if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E)) {
-                lDestinatario_EAE = this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E);
-                lSedeDestinatario_E = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E);
-            }
-    
-            if (!isRequestParameterNullObj(ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
-                lDestinatario_E = this.getRequestStringParameter(ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-    
-            if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
-                lDestinatario_E = this.getRequestStringParameter(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-    
-            if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_E))
-                lNote_E = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
-            
-            NotificaModel lNotMod = new NotificaModel();
-            lNotMod.setCodTipoNotifica("E");
-            lNotMod.setDataInvio(lTrasmissione);
-            lNotMod.setCodEsito("-");
-            lNotMod.setCodOperatoreInserimento (lCodiceOperatore);
-            lNotMod.setDataInserimento         (DateUtils.getSysDate());
-            lNotMod.setCodUfficioInserimento   (lCodiceUfficio);
-            lNotMod.setNote(lNote_E);
-            
-            // Prima notifica esecuzione
-            if (lDestinatario_E != null)
-                lNotMod.setIstDetIdIstitutoDetenzione(lDestinatario_E);
-    
-            if (lDestinatario_EAE != null) {
-                AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-    
-                lAutMod.setCodTipoAutorita(lDestinatario_EAE);
-                ComuneModel lComModel = new ComuneModel(getCodComuneByDescrFlagVal(lSedeDestinatario_E));
-                lAutMod.setCodSede(lComModel.getCodComune());
-                lAutMod.setCodOperatoreInserimento(lCodiceOperatore);
-                lAutMod.setCodUfficioInserimento(lCodiceUfficio);
-                lAutMod.setDataInserimento(DateUtils.getSysDate());
-                lNotMod.setIstDetIdIstitutoDetenzione("");
-    
-                lNotMod.setAutoritaEsterna(lAutMod);
-            }
-            
-            lNotificheArray.add(lNotMod);
-        }
-        
-        //===================================================
-        // Notifica agli avvocati del Condannato
-        //===================================================
-        // Notifiche all'avvocato
-        while (lIndNotifiche < lNumAvvNotifiche) {
+		lEve.setFlagStampaSiep("S");
+		lEve.setFlagVideoSiep("S");
 
-            NotificaModel lNot = new NotificaModel();
-            lNot.setCodTipoNotifica("N");
-            lNot.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(lAvvocati[lIndNotifiche]));
-            lNot.setNote(lArrayNote[lIndNotifiche]);
-            lNot.setDataInvio(lTrasmissione);
-            lNot.setCodEsito("-");
-            lNot.setCodOperatoreInserimento(lCodiceOperatore);
-            lNot.setDataInserimento(DateUtils.getSysDate());
-            lNot.setCodUfficioInserimento(lCodiceUfficio);
+		Date lDataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
+		lEve.setDataEmissione(lDataEmissione);
 
-            AutoritaEsternaModel lAut = new AutoritaEsternaModel();
-            lAut.setCodTipoAutorita(lArrayDestinatari[lIndNotifiche]);
+		lEve.setCodLuogoEmittente(getCodComuneUtenteConnesso());
+		lEve.setCodUfficioEmittente(getCodUfficioUtenteConnesso());
 
-            ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
+		// Magistrato
+		lEve.setCodMagistrato(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MAGISTRATO));
 
-            lAut.setCodSede(lComMod.getCodComune());
-            lAut.setCodOperatoreInserimento(lCodiceOperatore);
-            lAut.setCodUfficioInserimento(lCodiceUfficio);
-            lAut.setDataInserimento(DateUtils.getSysDate());
+		lEve.setAnnoProtocollo(new BigDecimal(DateUtils.getSysDate("yyyy")));
 
-            // Setto l'Autorita Esterna per la notifica corrente
-            lNot.setAutoritaEsterna(lAut);
-            lIndNotifiche++;
-            lNotificheArray.add(lNot);
-        }        
-        
-        //===================================================
-        // Notifiche ai Civilmente Obbligati
-        //===================================================
-        // Ricerco il civilmente Obbligato se esiste
-        FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-        ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
-        Vector <CivilmenteObbligatoModel> lListaObbligati = ico.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
+		lEve.setCodEsito("-");
+		lEve.setCodLuogoDestinatario("-");
+		lEve.setCodTipoUfficioDestinatario("-");
 
-        siesLogger.debug("Carico le Notifiche ai Civilmente Obbligati N. : "+lListaObbligati.size());
-        Iterator <CivilmenteObbligatoModel> itx = lListaObbligati.iterator();
-        while (itx.hasNext()) 
-        {
-          CivilmenteObbligatoModel obbligatoModel = (CivilmenteObbligatoModel) itx.next();
-          siesLogger.debug("Civilmente Obbligato id = "+obbligatoModel.getIdCivilmenteObbligato());
-          if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E+"_CO_"+obbligatoModel.getIdCivilmenteObbligato())) 
-          {
-              String lTipoAutorita_E_CO = this.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E+"_CO_"+obbligatoModel.getIdCivilmenteObbligato());
-              String lSedeDestinatario_E_CO = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E+"_CO_"+obbligatoModel.getIdCivilmenteObbligato());
-              String lNote_E_CO = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E+"_CO_"+obbligatoModel.getIdCivilmenteObbligato());
+		lEve.setCodOperatoreInserimento(getCodUtenteConnesso());
+		lEve.setDataInserimento(DateUtils.getSysDate());
+		lEve.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+		// lEve.setCodOperatoreAggiornamento(lCodiceOperatore);
+		// lEve.setCodUfficioAggiornamento(lCodiceUfficio);
+		// lEve.setDataAggiornamento(DateUtils.getSysDate());
 
-              if (!"-".equals(lTipoAutorita_E_CO)) {
-                  NotificaModel lNotModCO = new NotificaModel();
+		EventoNotificaModel lEveNot = new EventoNotificaModel();
+		// Recupero le notifiche
+		NotificaModel[] lNotifiche = this.setNotificheOrdineIngiunzione();
 
-                  lNotModCO.setIdCivilmenteObbligato (obbligatoModel.getIdCivilmenteObbligato());
-                  lNotModCO.setCodTipoNotifica("N");
-                  lNotModCO.setNote (lNote_E_CO);          
-                  lNotModCO.setDataInvio (lTrasmissione);
+		// siesLogger.debug("Elenco notifiche "+lNotifiche.length);
+		// for (int i=0; i<lNotifiche.length; i++) {
+		// siesLogger.debug("Notifica ["+i+"] = \n"+lNotifiche[i].toString());
+		// }
 
-                  lNotModCO.setCodEsito("-");
-                  lNotModCO.setIstDetIdIstitutoDetenzione("");
-                  lNotModCO.setCodOperatoreInserimento (lCodiceOperatore);
-                  lNotModCO.setDataInserimento         (DateUtils.getSysDate());
-                  lNotModCO.setCodUfficioInserimento   (lCodiceUfficio);                 
-                  
+		lEveNot.setEvento(lEve);
+		lEveNot.setNotifiche(lNotifiche);
 
-                  AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+		// recupero le rateizzazioni da collegare all'evento
+		String[] lArrayIdRate = this.getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
 
-                  lAutMod.setCodTipoAutorita (lTipoAutorita_E_CO);
-                  ComuneModel lComModel = new ComuneModel(getCodComuneByDescrFlagVal(lSedeDestinatario_E_CO));
-                  lAutMod.setCodSede(lComModel.getCodComune());
-                  lAutMod.setCodOperatoreInserimento(lCodiceOperatore);
-                  lAutMod.setCodUfficioInserimento(lCodiceUfficio);
-                  lAutMod.setDataInserimento(DateUtils.getSysDate());
-                  
-                  lNotModCO.setAutoritaEsterna(lAutMod);
-                  
-                  lNotificheArray.add (lNotModCO);
-              }
-          }
-        }
-        
-        return (NotificaModel[]) lNotificheArray.toArray(new NotificaModel[0]);
-    }
+		ISanzioneSostitutiva lCtrlSS = SIEPLookupRemote.getSanzioneSostitutivaRemote();
+		/* EventoNotificaModel lRetModel = */lCtrlSS.exInserisciOrdineIngiunzione(lEveNot, lArrayIdRate);
+
+		String lPage = null;
+
+		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione&"
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
+
+		return lPage;
+	}
+
+	/**
+	 * Imposta le notifiche per l'ordine di ingiunzione
+	 *
+	 * @return
+	 * @throws F3BException
+	 */
+	protected NotificaModel[] setNotificheOrdineIngiunzione() throws F3BException {
+
+		String lCodiceOperatore = getCodUtenteConnesso();
+		String lCodiceUfficio = getCodUfficioUtenteConnesso();
+		Date lDataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
+		Date lTrasmissione = lDataEmissione;
+
+		if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO))
+			lTrasmissione = getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
+					ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO);
+
+		ArrayList lNotificheArray = new ArrayList();
+
+		String[] lArrayDestinatari = this
+				.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+		String[] lArraySedeDestinatari = this
+				.getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+		String[] lArrayNote = getRequestStringParameters(ICostantiNotifica.CAMPO_NOTE);
+		String[] lAvvocati = getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+
+		// Dimensione dell'Array di Notifiche...
+		// Gli Avvocati più Una Notifica di Esecuzione
+		int lIndNotifiche = 0;
+		int lNumAvvNotifiche = lAvvocati.length;
+		if (lArrayDestinatari[0].compareTo("-") == 0)
+			lNumAvvNotifiche -= 1;
+
+		// ===================================================
+		// Notifica per l'esecuzione
+		// ===================================================
+		{
+			String lSedeDestinatario_E = null;
+			String lDestinatario_E = null;
+			String lDestinatario_EAE = null;
+			String lNote_E = null;
+
+			if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E)) {
+				lDestinatario_EAE = this
+						.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E);
+				lSedeDestinatario_E = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E);
+			}
+
+			if (!isRequestParameterNullObj(ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
+				lDestinatario_E = this
+						.getRequestStringParameter(ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+
+			if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
+				lDestinatario_E = this.getRequestStringParameter(
+						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+
+			if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_E))
+				lNote_E = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
+
+			NotificaModel lNotMod = new NotificaModel();
+			lNotMod.setCodTipoNotifica("E");
+			lNotMod.setDataInvio(lTrasmissione);
+			lNotMod.setCodEsito("-");
+			lNotMod.setCodOperatoreInserimento(lCodiceOperatore);
+			lNotMod.setDataInserimento(DateUtils.getSysDate());
+			lNotMod.setCodUfficioInserimento(lCodiceUfficio);
+			lNotMod.setNote(lNote_E);
+
+			// Prima notifica esecuzione
+			if (lDestinatario_E != null)
+				lNotMod.setIstDetIdIstitutoDetenzione(lDestinatario_E);
+
+			if (lDestinatario_EAE != null) {
+				AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+
+				lAutMod.setCodTipoAutorita(lDestinatario_EAE);
+				ComuneModel lComModel = new ComuneModel(getCodComuneByDescrFlagVal(lSedeDestinatario_E));
+				lAutMod.setCodSede(lComModel.getCodComune());
+				lAutMod.setCodOperatoreInserimento(lCodiceOperatore);
+				lAutMod.setCodUfficioInserimento(lCodiceUfficio);
+				lAutMod.setDataInserimento(DateUtils.getSysDate());
+				lNotMod.setIstDetIdIstitutoDetenzione("");
+
+				lNotMod.setAutoritaEsterna(lAutMod);
+			}
+
+			lNotificheArray.add(lNotMod);
+		}
+
+		// ===================================================
+		// Notifica agli avvocati del Condannato
+		// ===================================================
+		// Notifiche all'avvocato
+		while (lIndNotifiche < lNumAvvNotifiche) {
+
+			NotificaModel lNot = new NotificaModel();
+			lNot.setCodTipoNotifica("N");
+			lNot.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(lAvvocati[lIndNotifiche]));
+			lNot.setNote(lArrayNote[lIndNotifiche]);
+			lNot.setDataInvio(lTrasmissione);
+			lNot.setCodEsito("-");
+			lNot.setCodOperatoreInserimento(lCodiceOperatore);
+			lNot.setDataInserimento(DateUtils.getSysDate());
+			lNot.setCodUfficioInserimento(lCodiceUfficio);
+
+			AutoritaEsternaModel lAut = new AutoritaEsternaModel();
+			lAut.setCodTipoAutorita(lArrayDestinatari[lIndNotifiche]);
+
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescr(lArraySedeDestinatari[lIndNotifiche]));
+
+			lAut.setCodSede(lComMod.getCodComune());
+			lAut.setCodOperatoreInserimento(lCodiceOperatore);
+			lAut.setCodUfficioInserimento(lCodiceUfficio);
+			lAut.setDataInserimento(DateUtils.getSysDate());
+
+			// Setto l'Autorita Esterna per la notifica corrente
+			lNot.setAutoritaEsterna(lAut);
+			lIndNotifiche++;
+			lNotificheArray.add(lNot);
+		}
+
+		// ===================================================
+		// Notifiche ai Civilmente Obbligati
+		// ===================================================
+		// Ricerco il civilmente Obbligato se esiste
+		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
+		Vector<CivilmenteObbligatoModel> lListaObbligati = ico
+				.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
+
+		siesLogger.debug("Carico le Notifiche ai Civilmente Obbligati N. : " + lListaObbligati.size());
+		Iterator<CivilmenteObbligatoModel> itx = lListaObbligati.iterator();
+		while (itx.hasNext()) {
+			CivilmenteObbligatoModel obbligatoModel = itx.next();
+			siesLogger.debug("Civilmente Obbligato id = " + obbligatoModel.getIdCivilmenteObbligato());
+			if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E + "_CO_"
+					+ obbligatoModel.getIdCivilmenteObbligato())) {
+				String lTipoAutorita_E_CO = this
+						.getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E + "_CO_"
+								+ obbligatoModel.getIdCivilmenteObbligato());
+				String lSedeDestinatario_E_CO = getRequestStringParameter(
+						ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E + "_CO_"
+								+ obbligatoModel.getIdCivilmenteObbligato());
+				String lNote_E_CO = getRequestStringParameter(
+						ICostantiNotifica.CAMPO_NOTE_E + "_CO_" + obbligatoModel.getIdCivilmenteObbligato());
+
+				if (!"-".equals(lTipoAutorita_E_CO)) {
+					NotificaModel lNotModCO = new NotificaModel();
+
+					lNotModCO.setIdCivilmenteObbligato(obbligatoModel.getIdCivilmenteObbligato());
+					lNotModCO.setCodTipoNotifica("N");
+					lNotModCO.setNote(lNote_E_CO);
+					lNotModCO.setDataInvio(lTrasmissione);
+
+					lNotModCO.setCodEsito("-");
+					lNotModCO.setIstDetIdIstitutoDetenzione("");
+					lNotModCO.setCodOperatoreInserimento(lCodiceOperatore);
+					lNotModCO.setDataInserimento(DateUtils.getSysDate());
+					lNotModCO.setCodUfficioInserimento(lCodiceUfficio);
+
+					AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+
+					lAutMod.setCodTipoAutorita(lTipoAutorita_E_CO);
+					ComuneModel lComModel = new ComuneModel(
+							getCodComuneByDescrFlagVal(lSedeDestinatario_E_CO));
+					lAutMod.setCodSede(lComModel.getCodComune());
+					lAutMod.setCodOperatoreInserimento(lCodiceOperatore);
+					lAutMod.setCodUfficioInserimento(lCodiceUfficio);
+					lAutMod.setDataInserimento(DateUtils.getSysDate());
+
+					lNotModCO.setAutoritaEsterna(lAutMod);
+
+					lNotificheArray.add(lNotModCO);
+				}
+			}
+		}
+
+		return (NotificaModel[]) lNotificheArray.toArray(new NotificaModel[0]);
+	}
+
 }

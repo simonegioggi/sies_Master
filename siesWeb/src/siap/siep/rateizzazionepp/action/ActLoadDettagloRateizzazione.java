@@ -15,24 +15,33 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 public class ActLoadDettagloRateizzazione extends ActionSiap implements ICostantiRateizzazionePP {
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-    
-    public String processRequest() throws F3BException {
-        
-        FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-        
-        // Recupero la pena Complessiva da visualizzare (multa e ammenda)
-        IPenaComplessiva lCtrl = SIEPLookupRemote.getPenaComplessivaRemote();
-        DettaglioPenaComplessivaModel lDettMod = lCtrl.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(lFascMod.getIdFascicoloSiep());
-        setRequestAttribute("dettaglioPenaComplessiva", lDettMod);
-        
-        //Ricerca i pagamenti per id Facicolo 
-        Vector <RateizzazionePPModel> listaRateizzazioni = new Vector <RateizzazionePPModel>();
-        IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-        listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
-        
-        setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
-        return PG_LOAD_DETTAGLIO_RATEIZZAZIONE_PP;
-    }
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	public String processRequest() throws F3BException {
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
+		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+
+		// Recupero la pena Complessiva da visualizzare (multa e ammenda)
+		IPenaComplessiva lCtrl = SIEPLookupRemote.getPenaComplessivaRemote();
+		DettaglioPenaComplessivaModel lDettMod = lCtrl
+				.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(lFascMod.getIdFascicoloSiep());
+		setRequestAttribute("dettaglioPenaComplessiva", lDettMod);
+
+		// Ricerca i pagamenti per id Facicolo
+		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
+		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
+		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+
+		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		return PG_LOAD_DETTAGLIO_RATEIZZAZIONE_PP;
+	}
+
 }

@@ -1,6 +1,5 @@
 package siap.siep.sanzionesostitutiva.action;
 
-import java.math.BigDecimal;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -26,124 +25,138 @@ import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
-public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva 
-{
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-    
-    public String processRequest() throws Exception {
+public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-        FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-        // Controlli preliminari allìinserimento di un nuovo evento 
-        if (lFascMod.getFlagValidato().equalsIgnoreCase("N")) {
+	@SuppressWarnings("rawtypes")
+	public String processRequest() throws Exception {
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
+		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+
+		// Controlli preliminari allìinserimento di un nuovo evento
+		if (lFascMod.getFlagValidato().equalsIgnoreCase("N")) {
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + lFascMod.getChiaveAnno()
+					+ "/" + lFascMod.getChiaveProgr()
+                    + " non è stato Validato. Impossibile inserire un ordine di Ingiunzione!");
+			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+
+			return IWebConstants.PG_MESSAGE;
+		}
+
+		isFascicoloSiepDiCompetenza();
+
+		if (lFascMod.getDescrStatoFascicolo().equalsIgnoreCase("ARCHIVIATO/DEFINITO")) {
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
+							+ " Il fascicolo risulta Definito. Impossibile procedere!");
+			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+			return IWebConstants.PG_MESSAGE;
+		}
+
+		this.isEventoNonValidato();
+		// =======================================
+
+		// Ricerca i pagamenti per id Fascicolo
+		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
+		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
+		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+
+		if (listaRateizzazioni.size() == 0) {
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. Impossibile procedere");
+		}
+		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+
+		// Posizione giuridica
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lFascMod.getIdFascicoloSiep());
+        if (lPos == null || lPos.getPosizioneGiuridica() == null) {
             RedirectTo lRedirigi = new RedirectTo();
             lRedirigi.setPage(IWebConstants.PG_MAIN);
-            setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + lFascMod.getChiaveAnno()
-                    + "/" + lFascMod.getChiaveProgr()
-                    + " non è stato Validato. Impossibile inserire un ordine d'esecuzione con sospensione!");
-            lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
+            setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + lFascMod.getChiaveAnno()
+                    + "/" + lFascMod.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
+            lRedirigi.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
                     + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
             setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
             return IWebConstants.PG_MESSAGE;
         }
+		setRequestAttribute("posizioneluogoaltra", lPos);
 
-        isFascicoloSiepDiCompetenza();
+		// Ricerco il civilmente Obbligato se esiste
+		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
+		Vector<CivilmenteObbligatoModel> coms = ico
+				.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		setRequestAttribute("civilmenteObbligati", coms);
 
-        if (lFascMod.getDescrStatoFascicolo().equalsIgnoreCase("ARCHIVIATO/DEFINITO")) {
-            RedirectTo lRedirigi = new RedirectTo();
-            lRedirigi.setPage(IWebConstants.PG_MAIN);
-            setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-                    "Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
-                            + " Il fascicolo risulta Definito. Impossibile procedere!");
-            lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
-                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-            return IWebConstants.PG_MESSAGE;
-        }
+		// Magistrato
+		IMagistratoCompetente lMagCtrl = SICOLookupRemote.getMagistratoCompetenteRemote();
+		MagistratoCompetenteMagistratoModel lMagi = lMagCtrl
+				.ExRicercaMagistratoCompetenteByFascicoloDataFine(lFascMod.getIdFascicoloSiep());
+		setRequestAttribute("magistrato", lMagi);
 
-        this.isEventoNonValidato();
-        //=======================================
-        
-        // Ricerca i pagamenti per id Fascicolo 
-        Vector <RateizzazionePPModel> listaRateizzazioni = new Vector <RateizzazionePPModel>();
-        IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-        listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
-        
-        if (listaRateizzazioni.size()==0) {
-            throw new F3BException(F3BException.USER_MESSAGE,
-              "Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. Impossibile procedere");
-        }        
-        setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-        
-        // Posizione giuridica
-        PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
-        IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-        lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo (lFascMod.getIdFascicoloSiep());
-        setRequestAttribute("posizioneluogoaltra", lPos);
-        
-        // Ricerco il civilmente Obbligato se esiste
-        ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
-        Vector<CivilmenteObbligatoModel> coms = ico
-                .ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-        setRequestAttribute("civilmenteObbligati", coms);
-        
-        // Magistrato
-        IMagistratoCompetente lMagCtrl = SICOLookupRemote.getMagistratoCompetenteRemote();
-        MagistratoCompetenteMagistratoModel lMagi = lMagCtrl
-                .ExRicercaMagistratoCompetenteByFascicoloDataFine(lFascMod.getIdFascicoloSiep());
-        setRequestAttribute("magistrato", lMagi);
-        
-        // Avvocati
-        IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
-        Vector lAvvocati = lAvvCtrl.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
-        setRequestAttribute("avvocati", lAvvocati);        
-        
-        
-        // Autorità esterna
-        Option lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
-        // Verifico se sovrescrivere l'auturità esterna
-        if (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S")) {
-            // modifica relativa al tipo istituto
-            if (  lPos.getAltraCausa() != null
-               && (    lPos.getAltraCausa().getCodTipoPosGiuridica().equals("23")
-                    || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
-                    || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
-                    || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-                    || lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) 
-            {
-                lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
-            } else {
-                if (lPos.getAltraCausa() != null  && lPos.getAltraCausa().getIstitutoDetenzione() != null)
-                    lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(),
-                            lPos.getAltraCausa().getIstitutoDetenzione().getCodTipoIstituto());
-            }
-        } else {
-            if (   lPos.getPosizioneGiuridica().isLibero()
-                || lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("02")
-                || lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("04")) 
-            {
-                lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
-            } else {
-                if (lPos.getLuogoDetenzione() != null && lPos.getLuogoDetenzione().getIstitutoDetenzione() != null)
-                    lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(),
-                            lPos.getLuogoDetenzione().getIstitutoDetenzione().getCodTipoIstituto());
-            }
-        }
-        lOptionAutoritaEsternaE.setSelected("-");
-        setRequestAttribute("autoritaEsternaE", "" + lOptionAutoritaEsternaE);
-        
-        
-        // Autorita Notifica Avvocato 
-        Option lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(), "C0");
-        setRequestAttribute("autoritaEsternaN", "" + lOption);
-        
-        
-        // Autorita Notifica Civilmente Obbligati
-        Option lOptCivilObb = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
-        setRequestAttribute("autoritaEsternaCivilObb", "" + lOptCivilObb);
-        
-        return PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE;
-    }
-    
+		// Avvocati
+		IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
+		Vector lAvvocati = lAvvCtrl.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
+		setRequestAttribute("avvocati", lAvvocati);
+
+		// Autorità esterna
+		Option lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
+		// Verifico se sovrescrivere l'auturità esterna
+		if (lFascMod.getFlagAltraCausa() != null && lFascMod.getFlagAltraCausa().equals("S")) {
+			// modifica relativa al tipo istituto
+			if (lPos.getAltraCausa() != null && (lPos.getAltraCausa().getCodTipoPosGiuridica().equals("23")
+					|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("78")
+					|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("79")
+					|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("80")
+					|| lPos.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
+				lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+			} else {
+				if (lPos.getAltraCausa() != null && lPos.getAltraCausa().getIstitutoDetenzione() != null)
+					lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+							lPos.getAltraCausa().getIstitutoDetenzione().getCodTipoIstituto());
+			}
+		} else {
+			if (lPos.getPosizioneGiuridica().isLibero()
+					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("02")
+					|| lPos.getPosizioneGiuridica().getCodPosizioneGiuridica().equals("04")) {
+				lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
+			} else {
+				if (lPos.getLuogoDetenzione() != null
+						&& lPos.getLuogoDetenzione().getIstitutoDetenzione() != null)
+					lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+							lPos.getLuogoDetenzione().getIstitutoDetenzione().getCodTipoIstituto());
+			}
+		}
+		lOptionAutoritaEsternaE.setSelected("-");
+		setRequestAttribute("autoritaEsternaE", "" + lOptionAutoritaEsternaE);
+
+		// Autorita Notifica Avvocato
+		Option lOption = new Option(DecodificheManager.getInstance().getTipoAutorita(), "C0");
+		setRequestAttribute("autoritaEsternaN", "" + lOption);
+
+		// Autorita Notifica Civilmente Obbligati
+		Option lOptCivilObb = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+		setRequestAttribute("autoritaEsternaCivilObb", "" + lOptCivilObb);
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		return PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE;
+	}
+
 }

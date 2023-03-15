@@ -5,336 +5,328 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 
-import siap.dao.SIAPSqlDAO;
-import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
-import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
+import siap.dao.SIAPSqlDAO;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
 /**
- * <p>
+ * MEV_2023-13: aggiunta classe SQL DAO
  * Title: RateizzazionePPSqlDAO
- * </p>
- * <p>
  * Description: Classe SqlDAO che rappresenta la tabella RATEIZZAZIONE_PP
- * </p>
+ *
  * @version 1.0
  */
 public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
-  private static Logger logger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger logger = Logger.getLogger(LogF3B.SIES_LOG);
 
-  /**
-   * Costruttore
-   * 
-   * @param con
-   */
-  public RateizzazionePPSqlDAO(Connection con) {
-    super(con);
-  }
+	/**
+	 * Costruttore
+	 * 
+	 * @param con
+	 */
+	public RateizzazionePPSqlDAO(Connection con) {
+		super(con);
+	}
 
-  /**
-   * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
-   * model utilizzato per la ricerca
-   * 
-   * @param aModel
-   * @throws DAOException
-   */
-  public void getCountRateizzazionePP (RateizzazionePPModel aModel) throws DAOException {
-    // Costruisce lo statement da eseguire
-    String lStatement = "SELECT COUNT(*) HowManyRecords FROM RATEIZZAZIONE_PP ";
+	/**
+	 * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
+	 * model utilizzato per la ricerca
+	 * 
+	 * @param aModel
+	 * @throws DAOException
+	 */
+	public void getCountRateizzazionePP(RateizzazionePPModel aModel) throws DAOException {
+		// Costruisce lo statement da eseguire
+		String lStatement = "SELECT COUNT(*) HowManyRecords FROM RATEIZZAZIONE_PP ";
 
-    // Recupero la where condition in base al model
-    String lCondizioni = this.setCondizioni(aModel);
+		// Recupero la where condition in base al model
+		String lCondizioni = this.setCondizioni(aModel);
 
-    if (!lCondizioni.trim().equals(""))
-      lStatement += " WHERE " + lCondizioni;
+		if (!lCondizioni.trim().equals(""))
+			lStatement += " WHERE " + lCondizioni;
 
-    // Imposta lo statement da eseguire
-    setStatement(lStatement);
-  }
+		// Imposta lo statement da eseguire
+		setStatement(lStatement);
+	}
 
-  /**
-   * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagfina
-   * passata in input
-   * 
-   * @param aModel
-   * @param aPage
-   * @throws DAOException
-   */
-  public void ricercaRateizzazionePPPaged (RateizzazionePPModel aModel, int aPage)
-      throws DAOException {
-    String lStatement = new String("");
+	/**
+	 * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagfina
+	 * passata in input
+	 * 
+	 * @param aModel
+	 * @param aPage
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPPaged(RateizzazionePPModel aModel, int aPage) throws DAOException {
+		String lStatement = new String("");
 
-    lStatement += getSqlQuery();
+		lStatement += getSqlQuery();
 
-    // Recupero la where condition in base al model
-    String lCondizioni = this.setCondizioni(aModel);
+		// Recupero la where condition in base al model
+		String lCondizioni = this.setCondizioni(aModel);
 
-    if (!lCondizioni.trim().equals(""))
-      lStatement += " WHERE " + lCondizioni;
+		if (!lCondizioni.trim().equals(""))
+			lStatement += " WHERE " + lCondizioni;
 
-    lStatement += " " + getOrderBy() + " ";
+		lStatement += " " + getOrderBy() + " ";
 
-    String lPaginedStatement = "";
-    lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
-        + "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-        + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		String lPaginedStatement = "";
+		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
+				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 
-    setStatement(lPaginedStatement);
-  }
+		setStatement(lPaginedStatement);
+	}
 
-  /**
-   * Effettua la generica ricerca in base ai dati specificati nel model
-   * 
-   * @param aModel
-   * @throws DAOException
-   */
-  public void ricercaRateizzazionePP (RateizzazionePPModel aModel) throws DAOException {
-    // Recupera la select...from
-    String lSql = getSqlQuery();
+	/**
+	 * Effettua la generica ricerca in base ai dati specificati nel model
+	 * 
+	 * @param aModel
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePP(RateizzazionePPModel aModel) throws DAOException {
+		// Recupera la select...from
+		String lSql = getSqlQuery();
 
-    // Recupero la where condition in base al model
-    String lCondizioni = setCondizioni(aModel);
+		// Recupero la where condition in base al model
+		String lCondizioni = setCondizioni(aModel);
 
-    if (!lCondizioni.trim().equals(""))
-      lSql += " AND " + lCondizioni;
+		if (!lCondizioni.trim().equals(""))
+			lSql += " AND " + lCondizioni;
 
-    lSql += " " + getOrderBy() + " ";
+		lSql += " " + getOrderBy() + " ";
 
-    // Imposta lo statement da eseguire
-    setStatement(lSql);
-  }
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
 
-  /**
-   * Metodo che imposta la statement di ricerca per chiave
-   * 
-   * @param aKey
-   * @throws DAOException
-   */
-  public void ricercaRateizzazionePPByKey(BigDecimal aIdRateizzazionePP) throws DAOException {
-    // Recupera la select...from
-    String lSql = getSqlQuery();
+	/**
+	 * Metodo che imposta la statement di ricerca per chiave
+	 * 
+	 * @param aKey
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPByKey(BigDecimal aIdRateizzazionePP) throws DAOException {
+		// Recupera la select...from
+		String lSql = getSqlQuery();
 
-    // Aggiunge le where condition per chiave
-    lSql += setCondizioniByKey(aIdRateizzazionePP);
+		// Aggiunge le where condition per chiave
+		lSql += setCondizioniByKey(aIdRateizzazionePP);
 
-    // Imposta lo statement da eseguire
-    setStatement(lSql);
-  }
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
 
+	/**
+	 * Metodo che imposta la statement di ricerca per chiave Fascicolo SIEP
+	 * 
+	 * @param aIdFasSIEP
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPByIdFasSIEP(BigDecimal aIdFasSIEP) throws DAOException {
+		// Recupera la select...from
+		String lSql = getSqlQuery();
 
-  /**
-   * Metodo che imposta la statement di ricerca per chiave Fascicolo SIEP
-   * 
-   * @param aIdFasSIEP
-   * @throws DAOException
-   */
-  public void ricercaRateizzazionePPByIdFasSIEP(BigDecimal aIdFasSIEP) throws DAOException {
-    // Recupera la select...from
-    String lSql = getSqlQuery();
+		lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
 
-    lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
+		lSql += " order by PROGRESSIVO_RATA ";
 
-    lSql += " order by PROGRESSIVO_RATA ";
-    
-    // Imposta lo statement da eseguire
-    setStatement(lSql);
-  }
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
 
-  
-  /**
-   * 
-   * @param aIdEvento
-   * @throws DAOException
-   */
-  public void ricercaRateizzazionePPByEveIdEvento (BigDecimal aIdEvento) throws DAOException {
-      // Recupera la select...from
-      String lSql = getSqlQuery();
+	/**
+	 * 
+	 * @param aIdEvento
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPByEveIdEvento(BigDecimal aIdEvento) throws DAOException {
+		// Recupera la select...from
+		String lSql = getSqlQuery();
 
-      lSql += setCondizioniByEveIdEvento (aIdEvento);
+		lSql += setCondizioniByEveIdEvento(aIdEvento);
 
-      lSql += " order by PROGRESSIVO_RATA ";
-      
-      // Imposta lo statement da eseguire
-      setStatement(lSql);
-    }
-  
-  /**
-   * Metodo che carica il record del result set nel model
-   * 
-   * @return
-   * @throws DAOException
-   */
-  public GenericModel getModel() throws DAOException {
-    RateizzazionePPModel lModel = new RateizzazionePPModel();
+		lSql += " order by PROGRESSIVO_RATA ";
 
-    // Inserire le opportune set delle descrizioni!
-    lModel.setIdRateizzazionePP (getBigDecimal("ID_RATEIZZAZIONE_PP"));
-    lModel.setImportoDaPagare   (getBigDecimal("IMPORTO_DA_PAGARE"));
-    lModel.setImportoRata       (getBigDecimal("IMPORTO_RATA"));
-    lModel.setNumeroRate        (getBigDecimal("NUMERO_RATE"));
-    lModel.setTipoRateizzazione (getString    ("TIPO_RATEIZZAZIONE"));
-    lModel.setScadenzaGiorni    (getBigDecimal("SCADENZA_GIORNI"));
-    lModel.setDescrTipoRateizzazione(getString("descTipoRateizzazione") );
-    lModel.setProgressivoRata   (getBigDecimal("PROGRESSIVO_RATA"));
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
 
-    lModel.setFasSieIdFascicoloSiep (getBigDecimal("FAS_SIE_ID_FASCICOLO_SIEP"));
-    lModel.setEveIdEvento           (getBigDecimal("EVE_ID_EVENTO"));
+	/**
+	 * Metodo che carica il record del result set nel model
+	 * 
+	 * @return
+	 * @throws DAOException
+	 */
+	public GenericModel getModel() throws DAOException {
+		RateizzazionePPModel lModel = new RateizzazionePPModel();
 
-    lModel.setCodOperatoreInserimento (getString("COD_OPERATORE_INSERIMENTO"));
-    lModel.setDataInserimento         (getDate("DATA_INSERIMENTO"));
-    lModel.setCodUfficioInserimento   (getString("COD_UFFICIO_INSERIMENTO"));
+		// Inserire le opportune set delle descrizioni!
+		lModel.setIdRateizzazionePP(getBigDecimal("ID_RATEIZZAZIONE_PP"));
+		lModel.setImportoDaPagare(getBigDecimal("IMPORTO_DA_PAGARE"));
+		lModel.setImportoRata(getBigDecimal("IMPORTO_RATA"));
+		lModel.setNumeroRate(getBigDecimal("NUMERO_RATE"));
+		lModel.setTipoRateizzazione(getString("TIPO_RATEIZZAZIONE"));
+		lModel.setScadenzaGiorni(getBigDecimal("SCADENZA_GIORNI"));
+		lModel.setDescrTipoRateizzazione(getString("descTipoRateizzazione"));
+		lModel.setProgressivoRata(getBigDecimal("PROGRESSIVO_RATA"));
 
-    lModel.setCodOperatoreAggiornamento (getString("COD_OPERATORE_AGGIORNAMENTO"));
-    lModel.setDataAggiornamento         (getDate("DATA_AGGIORNAMENTO"));
-    lModel.setCodUfficioAggiornamento   (getString("COD_UFFICIO_AGGIORNAMENTO"));    
+		lModel.setFasSieIdFascicoloSiep(getBigDecimal("FAS_SIE_ID_FASCICOLO_SIEP"));
+		lModel.setEveIdEvento(getBigDecimal("EVE_ID_EVENTO"));
 
-    return lModel;
-  }
+		lModel.setCodOperatoreInserimento(getString("COD_OPERATORE_INSERIMENTO"));
+		lModel.setDataInserimento(getDate("DATA_INSERIMENTO"));
+		lModel.setCodUfficioInserimento(getString("COD_UFFICIO_INSERIMENTO"));
 
-  /**
-   * Metodo che imposta le condizioni di where per la ricerca
-   * 
-   * @param aModel
-   * @return
-   */
-  public String setCondizioni(RateizzazionePPModel aModel) {
-    String lCondizioni = new String();
+		lModel.setCodOperatoreAggiornamento(getString("COD_OPERATORE_AGGIORNAMENTO"));
+		lModel.setDataAggiornamento(getDate("DATA_AGGIORNAMENTO"));
+		lModel.setCodUfficioAggiornamento(getString("COD_UFFICIO_AGGIORNAMENTO"));
 
-    if (aModel.getIdRateizzazionePP() != null) {
-      lCondizioni += " and ID_RATEIZZAZIONE_PP = " + aModel.getIdRateizzazionePP() + "";
-    }
-    
-    if (aModel.getImportoRata() != null) {
-      lCondizioni += " and IMPORTO_RATA = " + aModel.getImportoRata() + "";
-    }
-    
-    if (aModel.getNumeroRate() != null) {
-      lCondizioni += " and NUMERO_RATE = " + aModel.getNumeroRate() + "";
-    }
-    
-    if (aModel.getTipoRateizzazione() != null && aModel.getTipoRateizzazione().length() > 0) {
-      lCondizioni += " and TIPO_RATEIZZAZIONE = '" + aModel.getTipoRateizzazione() + "' ";
-    }
-    
-    if (aModel.getScadenzaGiorni() != null) {
-      lCondizioni += " and SCADENZA_GIORNI = " + aModel.getScadenzaGiorni() + "";
-    }
-    
-    if (aModel.getProgressivoRata() != null) {
-        lCondizioni += " and PROGRESSIVO_RATA = " + aModel.getProgressivoRata() + "";
-      }
-    
-    if (aModel.getFasSieIdFascicoloSiep() != null) {
-      lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep() + "";
-    } 
-    
-    if (aModel.getEveIdEvento() != null) {
-      lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + "";
-    }
+		return lModel;
+	}
 
-    // Elimino il primo and
-    if (lCondizioni.length() > 0) {
-      lCondizioni = lCondizioni.substring(4);
-    }
+	/**
+	 * Metodo che imposta le condizioni di where per la ricerca
+	 * 
+	 * @param aModel
+	 * @return
+	 */
+	public String setCondizioni(RateizzazionePPModel aModel) {
+		String lCondizioni = new String();
 
-    logger.debug("lCondizioni = " + lCondizioni);
-    return lCondizioni;
-  }
+		if (aModel.getIdRateizzazionePP() != null) {
+			lCondizioni += " and ID_RATEIZZAZIONE_PP = " + aModel.getIdRateizzazionePP() + "";
+		}
 
-  /**
-   * Metodo che imposta le condizioni di select per chiave
-   * 
-   * @param aKey
-   * @return
-   */
-  public String setCondizioniByKey(BigDecimal aIdRateizzazionePP) {
-    String lCondizioni = new String();
+		if (aModel.getImportoRata() != null) {
+			lCondizioni += " and IMPORTO_RATA = " + aModel.getImportoRata() + "";
+		}
 
-    lCondizioni += " and ID_RATEIZZAZIONE_PP = " + aIdRateizzazionePP;
+		if (aModel.getNumeroRate() != null) {
+			lCondizioni += " and NUMERO_RATE = " + aModel.getNumeroRate() + "";
+		}
 
-    return lCondizioni;
-  }
+		if (aModel.getTipoRateizzazione() != null && aModel.getTipoRateizzazione().length() > 0) {
+			lCondizioni += " and TIPO_RATEIZZAZIONE = '" + aModel.getTipoRateizzazione() + "' ";
+		}
 
-  /**
-   * Metodo che imposta le condizioni di select per Id Fascicolo SIEP
-   * 
-   * @param aKey
-   * @return
-   */
-  public String setCondizioniByIdFasSIEP(BigDecimal aIdFasSIEP) {
-    String lCondizioni = new String();
+		if (aModel.getScadenzaGiorni() != null) {
+			lCondizioni += " and SCADENZA_GIORNI = " + aModel.getScadenzaGiorni() + "";
+		}
 
-    lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFasSIEP;
+		if (aModel.getProgressivoRata() != null) {
+			lCondizioni += " and PROGRESSIVO_RATA = " + aModel.getProgressivoRata() + "";
+		}
 
-    return lCondizioni;
-  }
+		if (aModel.getFasSieIdFascicoloSiep() != null) {
+			lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep() + "";
+		}
 
-  public String setCondizioniByEveIdEvento(BigDecimal aIdEvento) {
-      String lCondizioni = new String();
+		if (aModel.getEveIdEvento() != null) {
+			lCondizioni += " and EVE_ID_EVENTO = " + aModel.getEveIdEvento() + "";
+		}
 
-      lCondizioni += " and EVE_ID_EVENTO = " + aIdEvento;
+		// Elimino il primo and
+		if (lCondizioni.length() > 0) {
+			lCondizioni = lCondizioni.substring(4);
+		}
 
-      return lCondizioni;
-    }
-  
-  /**
-   * Metodo per la costruzione della sezione order by
-   * 
-   * @return
-   */
-  protected String getOrderBy() {
-    String orderBy = new String("");
-    //orderBy = " ORDER BY xxxxx";
-    return orderBy;
-  }
+		logger.debug("lCondizioni = " + lCondizioni);
+		return lCondizioni;
+	}
 
+	/**
+	 * Metodo che imposta le condizioni di select per chiave
+	 * 
+	 * @param aKey
+	 * @return
+	 */
+	public String setCondizioniByKey(BigDecimal aIdRateizzazionePP) {
+		String lCondizioni = new String();
 
-  /**
-   * Metodo che imposta la statement di ricerca per id Fascicolo Siep
-   * 
-   * @param aKey
-   * @throws DAOException
-   */
-  public void ricercaRateizzazionePPByIdFascicoloSiep(BigDecimal aIdFascicoloSiep) throws DAOException {
+		lCondizioni += " and ID_RATEIZZAZIONE_PP = " + aIdRateizzazionePP;
 
-    // Recupera la select...from
-    String lSql = getSqlQuery();
+		return lCondizioni;
+	}
 
-    // Aggiunge le where condition per chiave
+	/**
+	 * Metodo che imposta le condizioni di select per Id Fascicolo SIEP
+	 * 
+	 * @param aKey
+	 * @return
+	 */
+	public String setCondizioniByIdFasSIEP(BigDecimal aIdFasSIEP) {
+		String lCondizioni = new String();
 
-    lSql += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicoloSiep;
-    lSql += " ORDER BY DATA_INSERIMENTO DESC";
+		lCondizioni += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFasSIEP;
 
-    // Imposta lo statement da eseguire
-    setStatement(lSql);
-  }
+		return lCondizioni;
+	}
 
-  /**
-   * Metodo per la costruzione della sql query per ricercaRichiestaConversioneByEvento
-   * 
-   * @return
-   */
-  protected String getSqlQuery() {
-    String lStatement = new String("");
+	public String setCondizioniByEveIdEvento(BigDecimal aIdEvento) {
+		String lCondizioni = new String();
 
-    lStatement += " SELECT ID_RATEIZZAZIONE_PP, IMPORTO_DA_PAGARE, IMPORTO_RATA, NUMERO_RATE "
-                      + ", TIPO_RATEIZZAZIONE, SCADENZA_GIORNI, PROGRESSIVO_RATA, FAS_SIE_ID_FASCICOLO_SIEP "
-                      + ", EVE_ID_EVENTO "
-                      + ", cgTipoRateizzazione.RV_MEANING descTipoRateizzazione"
-                      + ", COD_OPERATORE_INSERIMENTO, DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO " 
-                      + ", COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO ";
+		lCondizioni += " and EVE_ID_EVENTO = " + aIdEvento;
 
-    // Aggiungo la from condition (completarla con eventuali altre tabelle per recuperare le descrizioni)
-    lStatement +=  " FROM RATEIZZAZIONE_PP, CG_REF_CODES cgTipoRateizzazione";
-    lStatement += " WHERE 1=1 ";
-    lStatement +=   " AND cgTipoRateizzazione.RV_DOMAIN = 'TIPO_RATEIZZAZIONE'  ";
-    lStatement +=   " AND (nvl(RATEIZZAZIONE_PP.TIPO_RATEIZZAZIONE,'-')) = cgTipoRateizzazione.RV_LOW_VALUE ";
+		return lCondizioni;
+	}
 
-    return lStatement;
-  }
+	/**
+	 * Metodo per la costruzione della sezione order by
+	 * 
+	 * @return
+	 */
+	protected String getOrderBy() {
+		String orderBy = new String("");
+		// orderBy = " ORDER BY xxxxx";
+		return orderBy;
+	}
+
+	/**
+	 * Metodo che imposta la statement di ricerca per id Fascicolo Siep
+	 * 
+	 * @param aKey
+	 * @throws DAOException
+	 */
+	public void ricercaRateizzazionePPByIdFascicoloSiep(BigDecimal aIdFascicoloSiep) throws DAOException {
+
+		// Recupera la select...from
+		String lSql = getSqlQuery();
+
+		// Aggiunge le where condition per chiave
+
+		lSql += " and FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicoloSiep;
+		lSql += " ORDER BY DATA_INSERIMENTO DESC";
+
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
+
+	/**
+	 * Metodo per la costruzione della sql query per ricercaRichiestaConversioneByEvento
+	 * 
+	 * @return
+	 */
+	protected String getSqlQuery() {
+		String lStatement = new String("");
+
+		lStatement += " SELECT ID_RATEIZZAZIONE_PP, IMPORTO_DA_PAGARE, IMPORTO_RATA, NUMERO_RATE "
+				+ ", TIPO_RATEIZZAZIONE, SCADENZA_GIORNI, PROGRESSIVO_RATA, FAS_SIE_ID_FASCICOLO_SIEP "
+				+ ", EVE_ID_EVENTO " + ", cgTipoRateizzazione.RV_MEANING descTipoRateizzazione"
+				+ ", COD_OPERATORE_INSERIMENTO, DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO "
+				+ ", COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO ";
+
+		// Aggiungo la from condition (completarla con eventuali altre tabelle per recuperare le descrizioni)
+		lStatement += " FROM RATEIZZAZIONE_PP, CG_REF_CODES cgTipoRateizzazione";
+		lStatement += " WHERE 1=1 ";
+		lStatement += " AND cgTipoRateizzazione.RV_DOMAIN = 'TIPO_RATEIZZAZIONE'  ";
+		lStatement += " AND (nvl(RATEIZZAZIONE_PP.TIPO_RATEIZZAZIONE,'-')) = cgTipoRateizzazione.RV_LOW_VALUE ";
+
+		return lStatement;
+	}
 
 }

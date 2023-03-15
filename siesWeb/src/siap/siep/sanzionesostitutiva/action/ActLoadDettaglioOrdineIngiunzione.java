@@ -20,62 +20,62 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * 
- * @since MEV_2023-13 
+ * @since MEV_2023-13
  */
 public class ActLoadDettaglioOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-    public String processRequest() throws F3BException {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String processRequest() throws F3BException {
 
-        BigDecimal lId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-        
-        IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-        EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey(lId);
-        setRequestAttribute("eventonotifica", lEveNotMod);
-        
-        PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
-        IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-        lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo (lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
-        setRequestAttribute("posizioneluogoaltra", lPos);        
-        
-        // Ricerca i pagamenti per id Fascicolo 
-        Vector <RateizzazionePPModel> listaRateizzazioni = new Vector <RateizzazionePPModel>();
-        IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-        listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lEveNotMod.getEvento().getFasSieIdFascicoloSiep());      
-        setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-        
-        // MAGISTRATO
-        MagistratoModel lMag = lEveNotMod.getMagistrato();
-        setRequestAttribute("magistrato", lMag);        
-        
-        // NOTIFICHE
-        NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
-        List lListAvvocatiSiep = new ArrayList();
-        List lListaObbligati = new ArrayList();
-        
-        for (int i = 0; i < lNotifiche.length; i++) {
-            // Autorita Esterne
-            if (   lNotifiche[i].getAutEstIdAutoritaEsterna() != null
-                && lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
-                && lNotifiche[i].getIdCivilmenteObbligato()==null
-               ) 
-            {
-                setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
-            }
+		BigDecimal lId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
-            // Avvocati Siep
-            if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() != null) {
-                lListAvvocatiSiep.add(lNotifiche[i]);
-            }
-            
-            // Civilmente Obbligati
-            if (lNotifiche[i].getIdCivilmenteObbligato() != null) {
-                lListaObbligati.add(lNotifiche[i]);
-            }
-        }
-        setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
-        setRequestAttribute("lListaNotObbligati", lListaObbligati);
-        
-        return ICostantiSanzioneSostitutiva.PG_DETTAGLIO_ORDINE_INGIUNZIONE;
-    }
+		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+		EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey(lId);
+		setRequestAttribute("eventonotifica", lEveNotMod);
+
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+		setRequestAttribute("posizioneluogoaltra", lPos);
+
+		// Ricerca i pagamenti per id Fascicolo
+		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
+		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
+		listaRateizzazioni = lRateCTRL
+				.exRicercaRateizzazioniByIdFasc(lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+
+		// MAGISTRATO
+		MagistratoModel lMag = lEveNotMod.getMagistrato();
+		setRequestAttribute("magistrato", lMag);
+
+		// NOTIFICHE
+		NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
+		List lListAvvocatiSiep = new ArrayList();
+		List lListaObbligati = new ArrayList();
+
+		for (int i = 0; i < lNotifiche.length; i++) {
+			// Autorita Esterne
+            if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
+					&& lNotifiche[i].getIdCivilmenteObbligato() == null) {
+				setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
+			}
+
+			// Avvocati Siep
+			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() != null) {
+				lListAvvocatiSiep.add(lNotifiche[i]);
+			}
+
+			// Civilmente Obbligati
+			if (lNotifiche[i].getIdCivilmenteObbligato() != null) {
+				lListaObbligati.add(lNotifiche[i]);
+			}
+		}
+		setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
+		setRequestAttribute("lListaNotObbligati", lListaObbligati);
+
+		return ICostantiSanzioneSostitutiva.PG_DETTAGLIO_ORDINE_INGIUNZIONE;
+	}
+
 }

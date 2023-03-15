@@ -10,17 +10,16 @@ import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
  * @author sgioggi
  * @version 1.0
  */
-public class ActGrigliaRiscossionePP extends ActionSiap implements ICostantiSanzioneSostitutiva {
+public class ActGrigliaBollettiniPagoPA extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
 	public String processRequest() throws F3BException {
 
-		if (this.isSessionAttributeNullObj("fascicolo")) {
+		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
-		}
 
-		setRequestAttribute("strFunzione", "Gestione Riscossione Pene Pecuniarie");
+		setRequestAttribute("strFunzione", "Gestione Bollettini PagoPA");
 
-		return ICostantiSanzioneSostitutiva.PG_GRIGLIA_RISCOSSIONE_PP;
+		return ICostantiSanzioneSostitutiva.PG_GRIGLIA_BOLLETTINI_PAGOPA;
 	}
 
 }
