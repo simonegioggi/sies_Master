@@ -281,7 +281,7 @@ listaIdNotObbl="["+ listaIdNotObbl.substring(1)+"]";
         </td>
         <td class="L">Data Notifica</td>
         <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></td>
+          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></font>
         </td>
       </tr>
       <tr>
@@ -418,7 +418,7 @@ listaIdNotObbl="["+ listaIdNotObbl.substring(1)+"]";
         </td>
         <td class="L">Data Notifica</td>
         <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaDifensore.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></td>
+          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaDifensore.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></font>
         </td>
       </tr>
       <tr>
@@ -564,7 +564,7 @@ listaIdNotObbl="["+ listaIdNotObbl.substring(1)+"]";
         </td>
         <td class="L">Data Notifica</td>
         <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaObbligato.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></td>
+          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaObbligato.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></font>
         </td>
       </tr>
       <tr>
