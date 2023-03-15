@@ -24,9 +24,10 @@
 var azione;
 function eseguiAzione(tipoAzione, idEvento) {
 	if (tipoAzione == 'Dettaglio') {
-		azione = "siap.sico.evento.action.ActLoadDettaglioEvento";
+		azione = "siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione";
 		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_ID_EVENTO%>.value = idEvento;
 		document.ListaRichiestaBollettini.<%=IWebConstants.ACTION_FIELD%>.value = azione;
+		document.ListaRichiestaBollettini.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
 		document.ListaRichiestaBollettini.submit();
 	}
 }
@@ -57,7 +58,7 @@ function tornaIndietro(action) {
 <br>
 <FORM action="<%=IWebConstants.PG_MAIN%>" method="post" name="ListaRichiestaBollettini">
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="">
-<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="">
+<input type="hidden" name="<%=IWebConstants.LINK_RITORNO%>" value="">
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
 if (listaRichiestaBollettini.size() == 0) {
@@ -100,14 +101,15 @@ if (listaRichiestaBollettini.size() == 0) {
 %>
       	<td class="c">
       		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=azione%>&TornaQui=<%=TornaQui%>">
-				<img src="/images/esegui.gif" alt="Inoltra" width="12" height="12" border="0">
+				<img src="/images/esegui.gif" alt="Genera Avviso PagoPA" width="12" height="12" border="0">
 			</a>
 		</td>
       	<td class="c">&nbsp;</td>
       	<td class="c">&nbsp;</td>
-      	<td class="c" style="text-align: center;"> &nbsp;
+      	<td class="c" style="text-align: center;">
+      		<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="">
         	<a href="javascript:eseguiAzione('Dettaglio', <%=erppm.getEvento().getIdEvento()%>)">
-          		<img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Evento" border="0">
+          		<img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Ordine Ingiunzione" border="0">
           	</a>
       	</td>
 	</tr>

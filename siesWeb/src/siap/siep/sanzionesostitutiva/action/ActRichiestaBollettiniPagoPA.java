@@ -9,7 +9,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import f3b.util.F3BException;
 import f3b.util.Utils;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -29,10 +28,11 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	public String processRequest() throws F3BException {
+	public String processRequest() throws Exception {
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+		setLinkRitorno();
 
 		// if (!isSessionAttributeNullObj("fascicolo") && getSessionAttribute("fascicolo") != null)
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
