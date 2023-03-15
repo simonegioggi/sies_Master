@@ -41,9 +41,9 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 		if (lFascMod.getFlagValidato().equalsIgnoreCase("N")) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + lFascMod.getChiaveAnno()
-					+ "/" + lFascMod.getChiaveProgr()
-                    + " non è stato Validato. Impossibile inserire un ordine di Ingiunzione!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
+							+ " non è stato Validato. Impossibile inserire un ordine di Ingiunzione!");
 			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
@@ -84,17 +84,17 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 				lFascMod.getIdFascicoloSiep());
-        if (lPos == null || lPos.getPosizioneGiuridica() == null) {
-            RedirectTo lRedirigi = new RedirectTo();
-            lRedirigi.setPage(IWebConstants.PG_MAIN);
-            setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + lFascMod.getChiaveAnno()
-                    + "/" + lFascMod.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
-            lRedirigi.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
-                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+		if (lPos == null || lPos.getPosizioneGiuridica() == null) {
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + lFascMod.getChiaveAnno()
+					+ "/" + lFascMod.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
+			lRedirigi.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
-            return IWebConstants.PG_MESSAGE;
-        }
+			return IWebConstants.PG_MESSAGE;
+		}
 		setRequestAttribute("posizioneluogoaltra", lPos);
 
 		// Ricerco il civilmente Obbligato se esiste

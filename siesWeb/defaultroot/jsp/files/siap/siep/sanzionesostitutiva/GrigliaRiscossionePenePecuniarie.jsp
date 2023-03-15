@@ -68,6 +68,7 @@ if (!fascicoloNotInSession.equals("S")) {
 <%
 }
 %>
+<<<<<<< HEAD
 <br>
 <table cellpadding="5" cellspacing="5" width="95%" onMouseover="over_effect(event,'outset')" onMouseout="over_effect(event,'solid')" onMousedown="over_effect(event,'inset')" onMouseup="over_effect(event,'outset')">
 	<tr>
@@ -89,3 +90,32 @@ if (!fascicoloNotInSession.equals("S")) {
 </table>
 </body>
 </html>
+=======
+  <br>
+    <table cellpadding="5" cellspacing="5" width="95%" 
+           onMouseover="over_effect(event,'outset')" 
+           onMouseout="over_effect(event,'solid')" 
+           onMousedown="over_effect(event,'inset')" 
+           onMouseup="over_effect(event,'outset')">
+
+      <tr>
+        <td width="32%" class="menulines" nowrap>
+          <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciOrdineIngiunzione">Ordine Ingiunzione Pagamento </a>
+        </td>      
+        <td width="32%" class="menulines" nowrap>
+          <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione">Gestione Ordine Ingiunzione</a>
+        </td>
+        <td width="32%" class="menulines" nowrap>
+          <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Gestione Bollettini pagaPA</a>
+        </td>
+      </tr>
+      
+      <tr>
+        <td width="32%" class="menulines" nowrap>
+          <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Scadenzari</a>
+        </td>      
+      </tr>          
+    </table>
+  </body>
+</html>
+>>>>>>> branch 'MEV_2023-13' of https://production.eng.it/gitlab/giustizia-siut/sies/sviluppo.git

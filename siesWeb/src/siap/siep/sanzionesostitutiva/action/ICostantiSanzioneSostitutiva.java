@@ -3,8 +3,7 @@ package siap.siep.sanzionesostitutiva.action;
 import f3b.web.IWebConstants;
 
 /**
- * Title: ICostantiSanzioneSostitutiva
- * Description: Classe di costanti di SanzioneSostitutiva
+ * Title: ICostantiSanzioneSostitutiva Description: Classe di costanti di SanzioneSostitutiva
  *
  * @version 1.0
  */
@@ -54,7 +53,6 @@ public interface ICostantiSanzioneSostitutiva {
 	public static final String CAMPO_GIORNO_DATA_RICEZIONE = "GiornoDataRicezione";
 	public static final String CAMPO_MESE_DATA_RICEZIONE = "MeseDataRicezione";
 	public static final String CAMPO_ANNO_DATA_RICEZIONE = "AnnoDataRicezione";
-
 	public static final String CAMPO_COD_UFFICIO_ = "CodUfficio";
 	public static final String CAMPO_SEDE_UFFICIO = "SedeUfficio";
 
@@ -79,10 +77,10 @@ public interface ICostantiSanzioneSostitutiva {
 			+ "/files/siap/siep/sanzionesostitutiva/GrigliaBollettiniPagoPA.jsp";
 	public static final String PG_ELENCO_RICHIESTA_BOLLETTINI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/ElencoRichiestaBollettini.jsp";
-  public static final String PG_LOAD_GRIGLIA_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR
-          + "/files/siap/siep/sanzionesostitutiva/LoadGrigliaOrdineIngiunzione.jsp";
-  public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
-          + "/files/siap/siep/sanzionesostitutiva/LoadInserimentoNotificheOrdineIngiunzione.jsp";  
+	public static final String PG_LOAD_GRIGLIA_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadGrigliaOrdineIngiunzione.jsp";
+	public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserimentoNotificheOrdineIngiunzione.jsp";
 	// MEV_2023-13 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR
