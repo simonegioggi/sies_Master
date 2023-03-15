@@ -214,7 +214,7 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
         <td class="L" nowrap><font class="label"> rate da </font></td>
         <td class="R" nowrap><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
         <% if (conta==1) { %>
-          <td class="L" nowrap><font class="label">temine di pagamento della prima rata fissato entro </font></td>
+          <td class="L" nowrap><font class="label">termine di pagamento della prima rata fissato entro </font></td>
           <td class="R" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
           <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento </font></td>
         <% } else { %>

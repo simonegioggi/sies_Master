@@ -52,7 +52,11 @@ listaIdNotAvv="["+ listaIdNotAvv.substring(1)+"]";
 String listaIdNotObbl = "";
 for (int i=0;i<lListaNotObbligati.size();i++) 
   listaIdNotObbl+=","+((NotificaModel) lListaNotObbligati.get(i)).getIdNotifica();
-listaIdNotObbl="["+ listaIdNotObbl.substring(1)+"]";
+
+if (lListaNotObbligati.size()>0)
+    listaIdNotObbl="["+ listaIdNotObbl.substring(1)+"]";
+else
+    listaIdNotObbl="[]";
 %>
 
 <html>
