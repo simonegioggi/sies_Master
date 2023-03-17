@@ -1,5 +1,6 @@
 package siap.siep.pagoPA.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
@@ -16,7 +17,8 @@ import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * Title: BollettinoPagopaController Description: Classe Controller per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaController 
+ * Description: Classe Controller per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -190,6 +192,35 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			cleanup(bpdao);
 			cleanup(c);
 		}
+	}
+
+	@Override
+	public ByteArrayOutputStream ExGetBollettino(BigDecimal idBollettinoPagopa) throws F3BException {
+
+		Connection c = null;
+		BollettinoPagopaSqlDAO bpsdao = null;
+		ByteArrayOutputStream baos = null;
+		try {
+			c = getDBConnection();
+			bpsdao = new BollettinoPagopaSqlDAO(c);
+			bpsdao.getBollettinoByIdBollettinoPagopa(idBollettinoPagopa);
+			bpsdao.start();
+			if (bpsdao.next()) {
+				baos = bpsdao.getBlob("DOC_BOLL_BLOB");
+				bpsdao.stop();
+			}
+			if ((baos == null) || (baos.size() == 0))
+				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Bollettino Associato");
+		} catch (F3BException eF3b) {
+			throw eF3b;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			cleanup(bpsdao);
+			cleanup(c);
+		}
+		return baos;
 	}
 
 }

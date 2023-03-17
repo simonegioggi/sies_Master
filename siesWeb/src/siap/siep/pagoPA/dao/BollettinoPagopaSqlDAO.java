@@ -104,4 +104,14 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		return condizioni;
 	}
 
+	public void getBollettinoByIdBollettinoPagopa(BigDecimal idBollettinoPagopa) {
+
+		String s = new String();
+
+		s += " SELECT DOC_BOLL_BLOB ";
+		s += " FROM BOLLETTINO_PAGOPA WHERE ";
+		s += " ID_BOLLETTINO_PAGOPA = " + idBollettinoPagopa;
+		setStatement(s);
+	}
+
 }

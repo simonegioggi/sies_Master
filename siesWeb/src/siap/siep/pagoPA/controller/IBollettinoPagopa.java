@@ -1,5 +1,6 @@
 package siap.siep.pagoPA.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.Vector;
 
@@ -27,5 +28,7 @@ public interface IBollettinoPagopa {
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
 			BigDecimal fasSieIdFascicolSiep) throws F3BException;
+
+	ByteArrayOutputStream ExGetBollettino(BigDecimal idBollettinoPagopa) throws F3BException;
 
 }

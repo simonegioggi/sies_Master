@@ -20,6 +20,7 @@
 <head>
 <title>[S.I.E.S.] - Gestione Richiesta Bollettini PagoPA</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+<script language="JavaScript" src="/html/gestisciUploadStampa2.js"></script>
 <script language="JavaScript">
 var azione;
 function eseguiAzione(tipoAzione, id) {
@@ -30,11 +31,15 @@ function eseguiAzione(tipoAzione, id) {
 		document.ElencoStatoPagamenti.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
 		document.ElencoStatoPagamenti.submit();
 	} else if (tipoAzione == 'Stampa') {
-		azione = "siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA";
-		document.ElencoStatoPagamenti.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id;
-		document.ElencoStatoPagamenti.<%=IWebConstants.ACTION_FIELD%>.value = azione;
-		document.ElencoStatoPagamenti.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
-		document.ElencoStatoPagamenti.submit();
+		azione = "/jsp/Main.jsp?Action=siap.siep.pagoPA.action.ActLoadAvvisoPagoPA&idBollettinoPagopa=" + id;
+<%-- 		document.ElencoStatoPagamenti.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id; --%>
+<%-- 		document.ElencoStatoPagamenti.<%=IWebConstants.ACTION_FIELD%>.value = azione; --%>
+<%-- 		document.ElencoStatoPagamenti.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>"; --%>
+		// document.ElencoStatoPagamenti.submit();
+		var hrefStampa = azione;
+		var indice = hrefStampa.indexOf("?");
+		var parametri = hrefStampa.substring(indice + 1, azione.length);
+		stampa2("/jsp/files/Stampa.jsp", parametri);
 	}
 }
 </script>
@@ -42,7 +47,11 @@ function eseguiAzione(tipoAzione, id) {
 <body class="corpo">
 <table>
     <tr>
-      	<td class="LBG"><a href="Javascript:window.print();"><img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+      	<td class="LBG">
+      		<a href="Javascript:window.print();">
+      			<img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
+      		</a>
+      	</td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
 			<font class="campo">Stato Bollettini per Pagamento Pena Pecuniaria</font>
@@ -74,7 +83,7 @@ if (elencoStatoPagamenti.size() == 0) {
 } else {
 %>
 	<tr>
-		<td class="titolo" colspan="6">Elenco Stato Pagamenti Bollettini PagoPA</td>
+		<td class="titolo" colspan="9">Elenco Stato Pagamenti Bollettini PagoPA</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr>
@@ -112,11 +121,16 @@ if (elencoStatoPagamenti.size() == 0) {
       	<td class="c"><%=StringUtils.toStringJSP(bpm.getImportoPagato())%></td>
 		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataAvvPagamento(), "dd-MM-yyyy"), "-")%></td>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenza(), "dd-MM-yyyy"), "-")%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
-      	<td class="c" style="text-align: center;">
-        	<a href="javascript:eseguiAzione('Dettaglio', <%=bpm.getIdBollettinoPagopa()%>)">
-          		<img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Bollettino" border="0">
-          	</a>&nbsp;&nbsp;&nbsp;
+<%
+		String coloreClasse = "cVerde";
+		if ("PN".equals(bpm.getStatoPagamento()))
+			coloreClasse = "cRosso";
+%>
+      	<td class="<%=coloreClasse%>"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
+      	<td class="c">
+        <%--<a href="javascript:eseguiAzione('Dettaglio', <%=bpm.getIdBollettinoPagopa()%>)"> 
+				<img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Bollettino" border="0">
+          	</a>&nbsp;&nbsp;&nbsp;--%>
       		<a href="javascript:eseguiAzione('Stampa', <%=bpm.getIdBollettinoPagopa()%>)">
 				<img src="/images/print24.gif" alt="Stampa Bollettino" width="12" height="12" border="0">
 			</a>
