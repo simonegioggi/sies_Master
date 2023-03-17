@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.Utils;
+import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -16,13 +17,13 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Classe per la gestione della richiesta bollettini PagoPA
+ * Classe per la verifica pagamenti bollettini PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
  * @version 1.0
  */
-public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostantiSanzioneSostitutiva {
+public class ActVerificaStatoPagamenti extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -32,9 +33,13 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 		setLinkRitorno();
 
-		// if (!isSessionAttributeNullObj("fascicolo") && getSessionAttribute("fascicolo") != null)
-		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
+		BigDecimal idFascicolo = null;
+		if (!isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP))
+			idFascicolo = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP);
+		else {
+			FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+			idFascicolo = fsm.getIdFascicoloSiep();
+		}
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
@@ -77,7 +82,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
-		return PG_ELENCO_RICHIESTA_BOLLETTINI;
+		return PG_VERIFICA_STATO_PAGAMENTI;
 	}
 
 }

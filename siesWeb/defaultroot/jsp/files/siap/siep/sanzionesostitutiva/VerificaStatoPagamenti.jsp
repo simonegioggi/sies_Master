@@ -1,7 +1,6 @@
 <%-- MEV_2023-13: aggiunta pagina --%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
-<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="java.util.Iterator"%>
@@ -30,12 +29,6 @@ function eseguiAzione(tipoAzione, id) {
 		document.ListaRichiestaBollettini.<%=IWebConstants.ACTION_FIELD%>.value = azione;
 		document.ListaRichiestaBollettini.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
 		document.ListaRichiestaBollettini.submit();
-	} else if (tipoAzione == 'Inoltra') {
-		azione = "siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA";
-		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id;
-		document.ListaRichiestaBollettini.<%=IWebConstants.ACTION_FIELD%>.value = azione;
-		document.ListaRichiestaBollettini.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
-		document.ListaRichiestaBollettini.submit();
 	}
 }
 
@@ -51,7 +44,7 @@ function tornaIndietro(action) {
       	<td class="LBG"><a href="Javascript:window.print();"><img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
+			<font class="campo">Verifica Stato Bollettini per Pagamento Pena Pecuniaria</font>
       	</td>
       	<td class="LBG"><!-- Tasto indietro alla Griglia dei dati analitici -->
         	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
@@ -64,11 +57,8 @@ function tornaIndietro(action) {
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
 <FORM action="<%=IWebConstants.PG_MAIN%>" method="post" name="ListaRichiestaBollettini">
-
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="">
 <input type="hidden" name="<%=IWebConstants.LINK_RITORNO%>" value="">
-<input type="hidden" name="<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>" value="">
-
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
 if (listaRichiestaBollettini.size() == 0) {
@@ -86,7 +76,6 @@ if (listaRichiestaBollettini.size() == 0) {
 	<tr>
 		<td class="int">Provvedimento</td>
 		<td class="int">Modalit&agrave; Pagamento</td>
-		<td class="int">Inoltra</td>
 		<td class="int">Data Richiesta</td>
 		<td class="int">Data Ricezione</td>
 		<td class="int">Visualizza</td>
@@ -106,28 +95,14 @@ if (listaRichiestaBollettini.size() == 0) {
 		<td class="l">
 			<%=modalitaPagamento%>
 		</td>
-<%
-if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti())) {
-%>
-      	<td class="c">
-      		<a href="javascript:eseguiAzione('Inoltra', <%=em.getFasSieIdFascicoloSiep()%>)">
-				<img src="/images/esegui.gif" alt="Genera Avviso PagoPA" width="12" height="12" border="0">
-			</a>
-		</td>
-<%
-} else {
-%>
-		<td class="c">-</td>
-<%
-}
-%>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd-MM-yyyy"), "-")%></td>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd-MM-yyyy"), "-")%></td>
-      	<td class="c" style="text-align: center;">
-        	<a href="javascript:eseguiAzione('Dettaglio', <%=em.getFasSieIdFascicoloSiep()%>)">
-          		<img src="/images/dettagli.gif" width="12" height="12" alt="Verifica Stato Pagamenti" border="0">
-          	</a>
-      	</td>
+      	<td class="c">
+      		<input type="hidden" name="<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>" value="">
+      		<a href="javascript:eseguiAzione('Dettaglio', <%=em.getFasSieIdFascicoloSiep()%>)">
+				<img src="/images/dettagli.gif" alt="Elenco Stato Bollettini" width="12" height="12" border="0">
+			</a>
+		</td>
 	</tr>
 <%
 	} // end while su iterator sugli eventi

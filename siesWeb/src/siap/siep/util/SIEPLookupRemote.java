@@ -60,6 +60,7 @@ import siap.siep.nuovaistanza.controller.INuovaIstanza;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.ordineesecuzione.controller.IOrdineEsecuzioneAlfano;
 import siap.siep.ordinescarcerazione.controller.IOrdineScarcerazione;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.parametro.controller.IParametro;
 import siap.siep.penaaccessoria.controller.IPenaAccessoria;
@@ -1005,7 +1006,13 @@ public class SIEPLookupRemote extends LookupClass {
 		return lRemote;
 	}
 
-	// MEV_2023-13: aggiunta metodo per l'interfaccia di gestione Civilmente Obbligato
+	/*
+	 * ISSUE MEV : aggiunte interfacce per MEV PagoPA 
+	 * Numero MEV : 2023-13 
+	 * Autore : sgioggi 
+	 * Data : 17 mar 2023
+	 * Branch : MEV_2023-13
+	 */
 	public static ICivilmenteObbligato getCivilmenteObbligatoRemote() throws F3BException {
 
 		Object lRef;
@@ -1014,17 +1021,26 @@ public class SIEPLookupRemote extends LookupClass {
 		lRemote = (ICivilmenteObbligato) lRef;
 		return lRemote;
 	}
-	// FINE MEV_2023-13
-	
-	// MEV_2023-13:
-    public static IRateizzazionePP getRateizzazionePPRemote() throws F3BException {
-          Object lRef;
-          IRateizzazionePP lRemote;
-    
-          lRef = lookup("siap.siep.rateizzazionepp.controller.RateizzazionePPController");
-          lRemote = (IRateizzazionePP) lRef;
-    
-          return lRemote;
-    }
-    //FINE MEV_2023-13
+
+	public static IRateizzazionePP getRateizzazionePPRemote() throws F3BException {
+		Object lRef;
+		IRateizzazionePP lRemote;
+
+		lRef = lookup("siap.siep.rateizzazionepp.controller.RateizzazionePPController");
+		lRemote = (IRateizzazionePP) lRef;
+
+		return lRemote;
+	}
+
+	public static IBollettinoPagopa getBollettinoPagopaRemote() throws F3BException {
+		Object lRef;
+		IBollettinoPagopa lRemote;
+
+		lRef = lookup("siap.siep.pagoPA.controller.BollettinoPagopaController");
+		lRemote = (IBollettinoPagopa) lRef;
+
+		return lRemote;
+	}
+	// ***** FINE INTERVENTO MEV_2023-13 *****//
+
 }

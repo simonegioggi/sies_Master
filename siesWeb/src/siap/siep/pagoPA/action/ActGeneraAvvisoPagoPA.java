@@ -33,6 +33,9 @@ public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecuri
 		enm.getEvento().setCodTipoProvvedimento("-");
 		enm.getEvento().setCodMotivo("0050"); // Codice Motivo = Richiesta Avviso PagoPA
 
+		// data_richiesta e data_ricezione vanno su EVENTO nei campi:
+		// DATA_TRASMISSIONE_ATTI & DATA_RICEZIONE_ATTI
+
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		enm.getEvento().setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
 
