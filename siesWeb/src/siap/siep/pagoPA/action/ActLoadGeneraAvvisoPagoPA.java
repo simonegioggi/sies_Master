@@ -3,8 +3,17 @@ package siap.siep.pagoPA.action;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
@@ -19,15 +28,36 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPagoPA {
 
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws Exception {
 
-		BigDecimal idFascicolo = getRequestBigDecimalParameter(
-				ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP);
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
+		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		siesLogger.debug("ID_EVENTO = " + idEvento);
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+		setRequestAttribute("evento", em);
+		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
+		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);
 		// Ricerca i pagamenti per id evento
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 				.exRicercaEventoRateizzazionePP(idFascicolo);
-		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
+		// dalle rateizzazioni creo i bollettini
+		// TODO
+		// poi li imposto nella pagina
+		// Ricerca lo stato dei pagamenti per id fascicolo
+		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
+		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+		setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		return PG_LOAD_GENERA_AVVISO_PAGOPA;
 	}

@@ -9,7 +9,8 @@
 <%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
 <%@ page import="siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel"%>
 
-<jsp:useBean id="listaRichiestaBollettini" scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
+<jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
+<jsp:useBean id="evento"    				scope="request" class="siap.sico.evento.model.EventoModel"/>
 
 <html>
 <head>
@@ -58,7 +59,13 @@ if (listaRichiestaBollettini.size() == 0) {
 } else {
 %>
 	<tr>
-		<td class="titolo" colspan="6">Richiesta Generazione Bollettini PagoPA relativi a:</td>
+		<td class="l" colspan="6">
+			Elenco Bollettini Generati da PagoPA per Richiesta del 
+			<%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataRichiesta(), "dd-MM-yyyy"))%> relativa a
+			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
+			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
+			<%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%>
+		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr>

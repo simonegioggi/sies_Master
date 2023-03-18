@@ -229,10 +229,10 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       </tr>    
       <% } %>
       
-      <% if (rata.getEveIdEvento()==null) {%>      
+<%--       <% if (rata.getEveIdEvento()==null) {%>       --%>
         <input type="HIDDEN" name="<%=ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO%>" 
                             value="<%=rata.getIdRateizzazionePP()%>">
-      <% } %>    
+<%--       <% } %>     --%>
     <%
     }
     %>

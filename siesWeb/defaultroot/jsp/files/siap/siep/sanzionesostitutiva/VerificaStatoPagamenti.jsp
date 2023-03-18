@@ -25,7 +25,7 @@ var azione;
 function eseguiAzione(tipoAzione, id) {
 	if (tipoAzione == 'Dettaglio') {
 		azione = "siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti";
-		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id;
+		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_ID_EVENTO%>.value = id;
 		document.ListaRichiestaBollettini.<%=IWebConstants.ACTION_FIELD%>.value = azione;
 		document.ListaRichiestaBollettini.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
 		document.ListaRichiestaBollettini.submit();
@@ -59,6 +59,7 @@ function tornaIndietro(action) {
 <FORM action="<%=IWebConstants.PG_MAIN%>" method="post" name="ListaRichiestaBollettini">
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="">
 <input type="hidden" name="<%=IWebConstants.LINK_RITORNO%>" value="">
+<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="">
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
 if (listaRichiestaBollettini.size() == 0) {
@@ -98,8 +99,7 @@ if (listaRichiestaBollettini.size() == 0) {
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd-MM-yyyy"), "-")%></td>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd-MM-yyyy"), "-")%></td>
       	<td class="c">
-      		<input type="hidden" name="<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>" value="">
-      		<a href="javascript:eseguiAzione('Dettaglio', <%=em.getFasSieIdFascicoloSiep()%>)">
+      		<a href="javascript:eseguiAzione('Dettaglio', <%=em.getIdEvento()%>)">
 				<img src="/images/dettagli.gif" alt="Elenco Stato Bollettini" width="12" height="12" border="0">
 			</a>
 		</td>

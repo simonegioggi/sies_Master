@@ -1,4 +1,5 @@
 <%-- MEV_2023-13: aggiunta pagina --%>
+<%@page import="java.math.BigDecimal"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
@@ -15,6 +16,10 @@
 
 <jsp:useBean id="elencoStatoPagamenti" 	scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
 <jsp:useBean id="TornaQui"    			scope="request" class="java.lang.String"/>
+<jsp:useBean id="evento"    			scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="modalitaPagamento" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="importoPagato" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -24,18 +29,8 @@
 <script language="JavaScript">
 var azione;
 function eseguiAzione(tipoAzione, id) {
-	if (tipoAzione == 'Dettaglio') {
-		azione = "siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti";
-		document.ElencoStatoPagamenti.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id;
-		document.ElencoStatoPagamenti.<%=IWebConstants.ACTION_FIELD%>.value = azione;
-		document.ElencoStatoPagamenti.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
-		document.ElencoStatoPagamenti.submit();
-	} else if (tipoAzione == 'Stampa') {
+	if (tipoAzione == 'Stampa') {
 		azione = "/jsp/Main.jsp?Action=siap.siep.pagoPA.action.ActLoadAvvisoPagoPA&idBollettinoPagopa=" + id;
-<%-- 		document.ElencoStatoPagamenti.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id; --%>
-<%-- 		document.ElencoStatoPagamenti.<%=IWebConstants.ACTION_FIELD%>.value = azione; --%>
-<%-- 		document.ElencoStatoPagamenti.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>"; --%>
-		// document.ElencoStatoPagamenti.submit();
 		var hrefStampa = azione;
 		var indice = hrefStampa.indexOf("?");
 		var parametri = hrefStampa.substring(indice + 1, azione.length);
@@ -70,7 +65,6 @@ function eseguiAzione(tipoAzione, id) {
 
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="">
 <input type="hidden" name="<%=IWebConstants.LINK_RITORNO%>" value="">
-<input type="hidden" name="<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>" value="">
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
@@ -83,7 +77,23 @@ if (elencoStatoPagamenti.size() == 0) {
 } else {
 %>
 	<tr>
-		<td class="titolo" colspan="9">Elenco Stato Pagamenti Bollettini PagoPA</td>
+		<td class="l" colspan="9">
+			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
+			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
+			<font class="cViola"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+		</td>
+	</tr>
+	<tr>
+		<td class="l" colspan="9">
+			<%=modalitaPagamento%>
+		</td>
+	</tr>
+	<tr>
+		<td class="l" colspan="9">
+			Importo Pagato:&nbsp;<font class="cVerde"><%=StringUtils.toEuroFormat(new BigDecimal(importoPagato))%></font>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			Importo da Pagare:&nbsp;<font class="cRosso"><%=StringUtils.toEuroFormat(new BigDecimal(importoDaPagare))%></font>
+		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr>

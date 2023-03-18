@@ -26,13 +26,13 @@ var azione;
 function eseguiAzione(tipoAzione, id) {
 	if (tipoAzione == 'Dettaglio') {
 		azione = "siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti";
-		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id;
+		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_ID_EVENTO%>.value = id;
 		document.ListaRichiestaBollettini.<%=IWebConstants.ACTION_FIELD%>.value = azione;
 		document.ListaRichiestaBollettini.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
 		document.ListaRichiestaBollettini.submit();
 	} else if (tipoAzione == 'Inoltra') {
 		azione = "siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA";
-		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>.value = id;
+		document.ListaRichiestaBollettini.<%=ICostantiEvento.CAMPO_ID_EVENTO%>.value = id;
 		document.ListaRichiestaBollettini.<%=IWebConstants.ACTION_FIELD%>.value = azione;
 		document.ListaRichiestaBollettini.<%=IWebConstants.LINK_RITORNO%>.value = "<%=TornaQui%>";
 		document.ListaRichiestaBollettini.submit();
@@ -67,7 +67,7 @@ function tornaIndietro(action) {
 
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="">
 <input type="hidden" name="<%=IWebConstants.LINK_RITORNO%>" value="">
-<input type="hidden" name="<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>" value="">
+<input type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="">
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
@@ -110,7 +110,7 @@ if (listaRichiestaBollettini.size() == 0) {
 if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti())) {
 %>
       	<td class="c">
-      		<a href="javascript:eseguiAzione('Inoltra', <%=em.getFasSieIdFascicoloSiep()%>)">
+      		<a href="javascript:eseguiAzione('Inoltra', <%=em.getIdEvento()%>)">
 				<img src="/images/esegui.gif" alt="Genera Avviso PagoPA" width="12" height="12" border="0">
 			</a>
 		</td>
@@ -124,7 +124,7 @@ if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataR
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd-MM-yyyy"), "-")%></td>
       	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd-MM-yyyy"), "-")%></td>
       	<td class="c" style="text-align: center;">
-        	<a href="javascript:eseguiAzione('Dettaglio', <%=em.getFasSieIdFascicoloSiep()%>)">
+        	<a href="javascript:eseguiAzione('Dettaglio', <%=em.getIdEvento()%>)">
           		<img src="/images/dettagli.gif" width="12" height="12" alt="Verifica Stato Pagamenti" border="0">
           	</a>
       	</td>
