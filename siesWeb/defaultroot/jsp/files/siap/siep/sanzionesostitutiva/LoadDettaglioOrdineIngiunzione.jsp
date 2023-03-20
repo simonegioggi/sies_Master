@@ -82,6 +82,12 @@
          )
       {
       %>   
+      <td class="LBG">
+        <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadModificaOrdineIngiunzione&IdEvento=<%=eventonotifica.getEvento().getIdEvento()%>">
+          <img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Ordine Ingiunzione" width="24" height="24" border="0">
+        </a>
+      </td>
+      
       <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
        <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaOrdineIngiunzione&IdEvento="+eventonotifica.getEvento().getIdEvento()%>"/>
       </jsp:include>
@@ -115,7 +121,7 @@
 <%
 if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
 {
-  // Se l'evento non è annullato faccio vedere i dati della rate agganciate
+  // Se l'evento non e'annullato faccio vedere i dati della rate agganciate
   RateizzazionePPModel primarata = (RateizzazionePPModel) listaRateizzazioni.elementAt(0);
   String lTipoRateizzazione = primarata.getTipoRateizzazione();
   BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();

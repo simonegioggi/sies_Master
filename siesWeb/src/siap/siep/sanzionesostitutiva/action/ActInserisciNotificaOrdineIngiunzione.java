@@ -108,6 +108,32 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 				}
 				listaNotDaAggiornare.add(lNotMod);
 			}
+			else if (!isRequestParameterNullEmptyObj(ICostantiOrdineEsecuzione.ABILITA_CANCELLA + "_" + lNotificaModel.getIdNotifica())) {
+                NotificaModel lNotMod = new NotificaModel();
+
+                String IdNotifica = lNotificaModel.getIdNotifica().toString();
+
+                lNotMod.setCodEsito("-"); // Non Notificato
+                lNotMod.setDataAvvenutaNotifica(null);
+                lNotMod.setAutoritaEsternaDelegata(null);
+                lNotMod.setAutEstIdAutoritaEstDeleg(null);
+                lNotMod.setIstDetIdIstitutoDetenzione(""); // ????
+                
+                lNotMod.setIdNotifica(new BigDecimal(IdNotifica));
+                lNotMod.setEveIdEvento(this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
+
+                lNotMod.setCodiceOperatoreAggiornamento(getCodUtenteConnesso());
+                lNotMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+                lNotMod.setDataAggiornamento(DateUtils.getSysDate());
+
+                if (lNotificaModel.getAvvIdAvvocatoFascicoloSiep() == null
+                        && lNotificaModel.getIdCivilmenteObbligato() == null) {
+                    // Notifica la condannato
+                    lNotMod.setCodTipoNotifica("E");
+                }			    
+			    
+			    listaNotDaAggiornare.add(lNotMod);
+			}
 
 		}
 

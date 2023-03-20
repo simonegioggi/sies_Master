@@ -202,5 +202,6 @@ public interface ISanzioneSostitutiva {
    public EventoNotificaModel exInserisciOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
    public EventoModel exUpdateOrdineIngiunzione (EventoModel aEvento) throws F3BException;
    public void exAggiornaNotificheOrdineIngiunzione (EventoModel aEvento, Vector <NotificaModel> listaNotDaAggiornare ) throws F3BException;
+   public EventoNotificaModel exModificaOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
    
 }

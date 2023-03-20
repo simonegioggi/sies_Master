@@ -37,7 +37,7 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
-		// Controlli preliminari allìinserimento di un nuovo evento
+		// Controlli preliminari all'inserimento di un nuovo evento
 		if (lFascMod.getFlagValidato().equalsIgnoreCase("N")) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
@@ -156,6 +156,7 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
+		setRequestAttribute("modalita", "I");
 		return PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE;
 	}
 

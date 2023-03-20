@@ -25,8 +25,9 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * MEV_2023-13: aggiunta classe 
- * Title: ActGrigliaNotifiche 
- * Description: Classe Action per la load ricerca di Omesse Notifica
+ * 
+ * Classe per la load della form di inserimento e mnodifica delle notifiche
+ * 
  *
  * @author sgioggi
  * @version 1.0
@@ -71,7 +72,7 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 			return IWebConstants.PG_MESSAGE;
 		}
 
-		// Recupero i destinatari previsti
+		// Recupero l'ordine di ingiunzione
 		EventoNotificaModel lEveNotMod = eventoCtrl
 				.ExRicercaEventoNotificaByKey(lOrdineIngiunzione.getIdEvento());
 		setRequestAttribute("ordineIngiunzione", lEveNotMod);
@@ -113,7 +114,6 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 
 			if (!"03".equals(lNotifiche[i].getCodEsito()))
 				notifichePending = "SI";
-
 		}
 		setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
 		setRequestAttribute("lListaNotObbligati", lListaObbligati);

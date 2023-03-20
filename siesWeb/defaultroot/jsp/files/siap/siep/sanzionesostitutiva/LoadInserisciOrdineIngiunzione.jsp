@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.math.BigDecimal"%>
+<%@ page import="java.util.Date"%>
 
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -24,6 +25,7 @@
 <%@ page import="siap.siep.altracausa.model.AltraCausaModel"%>
 <%@ page import="siap.siep.posizione.action.ICostantiPosizioneGiuridica"%>
 <%@ page import="siap.siep.pagoPA.model.CivilmenteObbligatoModel"%>
+<%@ page import="siap.siep.notifica.model.NotificaModel"%>
 
 <jsp:useBean id="listaRateizzazioni"        scope="request"   class="java.util.Vector" />
 <jsp:useBean id="civilmenteObbligati"       scope="request"   class="java.util.Vector" />
@@ -36,12 +38,23 @@
 <jsp:useBean id="autoritaEsternaE"   scope="request" class="java.lang.String"/>
 <jsp:useBean id="autoritaEsternaCivilObb"   scope="request" class="java.lang.String"/>
 
+<jsp:useBean id="modalita"         scope="request" class="java.lang.String"/>
+<jsp:useBean id="eventonotifica"   scope="request" class="siap.sico.evento.model.EventoNotificaModel" />
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
 LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+
+
+Date dataEmissione    = DateUtils.getSysDate();
+Date dataTrasmissione = DateUtils.getSysDate();
+
+if (eventonotifica.getEvento().getIdEvento()!=null) {
+  dataEmissione    = eventonotifica.getEvento().getDataEmissione();
+  dataTrasmissione = eventonotifica.getNotifiche()[0].getDataInvio();
+}
 %>
 
 
@@ -51,6 +64,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
     <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
     <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+    <script language="JavaScript" src="<%=IWebConstants.JS_JQUERY%>"></script>  
     <script language="JavaScript">
       function ListaComuni(a_formname,a_fieldname) {
         var desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
@@ -100,26 +114,89 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         }
         
         // Autorita x la Notifica
-        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value=="-")
+        if (typeof document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") 
         {
-          alert("Selezionare l'autorita' per la notifica al condannato");
-          document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
-          return false; 
+          if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value=="-")
+          {
+            alert("Selezionare l'autorita' per la notifica al condannato");
+            document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
+            return false; 
+          }
+        
+          if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value=="")
+          {
+            alert("Selezionare la sede dell'autorita' per la notifica al condannato");
+            document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
+            return false; 
+          }
         }
-        if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value=="")
-        {
-          alert("Selezionare la sede dell'autorita' per la notifica al condannato");
-          document.LoadInserisciOrdineIngiunzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
-          return false; 
+        else if (typeof document.LoadInserisciOrdineIngiunzione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
+          if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value=="")
+          {
+            alert("Selezionare l'istituto di detenzione per la notifica al condannato");
+            document.LoadInserisciOrdineIngiunzione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
+            return false; 
+          }
+        }
+        else if (typeof document.LoadInserisciOrdineIngiunzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %> !== "undefined") {
+          if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value=="")
+          {
+            alert("Selezionare l'istituto di detenzione per la notifica al condannato");
+            document.LoadInserisciOrdineIngiunzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
+            return false; 
+          }          
+        }
+        else {
+          alert("destinatario sconosciuto");
+          return false;
         }
 
         return true;
+      }
+      
+      
+      function caricaNotifiche () {
+        <% 
+        if ("M".equals(modalita)) 
+        {
+          NotificaModel[] lNotifiche = eventonotifica.getNotifiche();
+          for (int i = 0; i < lNotifiche.length; i++) 
+          {
+            NotificaModel lNotifica = lNotifiche[i];
+
+            String codTipoAutorita = "";
+            String sedeAutorita = "";
+            String indirizzoAutorita = "";
+              
+            if (lNotifica.getAutoritaEsterna()!=null) {
+              codTipoAutorita = lNotifica.getAutoritaEsterna().getCodTipoAutorita();
+              sedeAutorita    = StringUtils.toStringJSP(lNotifica.getAutoritaEsterna().getDescrSede(),"");
+              indirizzoAutorita = StringUtils.toStringJSP(lNotifica.getNote(),"");
+              if ("-".equals(sedeAutorita)) sedeAutorita="";
+            }
+            %>
+            
+            <% if (lNotifica.getIdCivilmenteObbligato()!=null) { %>
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%>').val('<%=sedeAutorita%>');
+            $('#<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%>').val('<%=indirizzoAutorita%>');
+            <% } %>
+            <% if (lNotifica.getAvvIdAvvocatoFascicoloSiep()!=null) { %>
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=sedeAutorita%>');
+            $('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=indirizzoAutorita%>');
+            <% } %>
+          
+          <% } %>        
+        
+        
+        <% } %>
       }
     </script>
   </head>
   
   
-<body class="corpo">
+<body class="corpo" onLoad="caricaNotifiche();">
   <table>
     <tr>
       <td class="LBG">
@@ -128,7 +205,11 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       </td>
       <td class="LBG">
         <font class="label">Funzione :</font>&nbsp;&nbsp;
+        <% if ("I".equals(modalita)) { %>
         <font class="campo">Ordine di Ingiunzione al Pagamento Pena Pecuniaria</font>
+        <% } else if ("M".equals(modalita)) { %>
+        <font class="campo">Modifica Ordine di Ingiunzione al Pagamento Pena Pecuniaria</font>
+        <% } %>
       </td>
     </tr>
   </table>
@@ -167,8 +248,13 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
 <tr>
 <td>
   <FORM method="POST" name="LoadInserisciOrdineIngiunzione" action="<%= IWebConstants.PG_MAIN%>">
+    <% if ("I".equals(modalita)) { %>
     <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActInserisciOrdineIngiunzione">
-
+    <% } else if ("M".equals(modalita)) { %>
+    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActModificaOrdineIngiunzione">
+    <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%= eventonotifica.getEvento().getIdEvento() %>">
+    <% } %>
+    
   <table>
     <tr>
       <td class="L">
@@ -221,7 +307,11 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
           <td class="R" colspan="3">&nbsp;</td>
         <% } %>
         
-        <% if (rata.getEveIdEvento()!=null) {%> 
+        <% 
+        if (   (rata.getEveIdEvento()!=null && "I".equals(modalita))
+            || ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento())!=0)
+           )
+        {%>   
         <td class="L" nowrap><font class="label" style="color:red;" >Emesso ordine di ingiunzione</td>
         <% } else { %>
           <td class="r">&nbsp;</td>
@@ -229,10 +319,14 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       </tr>    
       <% } %>
       
-<%--       <% if (rata.getEveIdEvento()==null) {%>       --%>
+      <% 
+      if (   rata.getEveIdEvento()==null
+          || ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento())==0)
+         )
+      {%>      
         <input type="HIDDEN" name="<%=ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO%>" 
                             value="<%=rata.getIdRateizzazionePP()%>">
-<%--       <% } %>     --%>
+      <% } %>    
     <%
     }
     %>
@@ -266,15 +360,15 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       <tr>
         <td class="l">Data Emissione</td>
         <td class="L" colspan=2 >
-          <input value="<%=DateUtils.getSysDate("dd")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
-          <input value="<%=DateUtils.getSysDate("MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
-          <input value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" >
+          <input value="<%=DateUtils.getDateToString(dataEmissione, "dd")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
+          <input value="<%=DateUtils.getDateToString(dataEmissione, "MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
+          <input value="<%=DateUtils.getDateToString(dataEmissione, "yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" >
         </td>
          <td class="l">Data Trasmissione</td>
         <td class="L" colspan=2>
-          <input value="<%=DateUtils.getSysDate("dd")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > -
-          <input value="<%=DateUtils.getSysDate("MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiNotifica.CAMPO_MESE_DATA_INVIO %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
-          <input value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiNotifica.CAMPO_ANNO_DATA_INVIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" >
+          <input value="<%=DateUtils.getDateToString(dataTrasmissione, "dd")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)" > -
+          <input value="<%=DateUtils.getDateToString(dataTrasmissione, "MM")%>"   type="text" size="2" maxlength="2" name="<%= ICostantiNotifica.CAMPO_MESE_DATA_INVIO %>"  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
+          <input value="<%=DateUtils.getDateToString(dataTrasmissione, "yyyy")%>" type="text" size="4" maxlength="4" name="<%= ICostantiNotifica.CAMPO_ANNO_DATA_INVIO %>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" >
         </td>
       </tr>
     </table>  
@@ -366,7 +460,7 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       </td>
       <% } else {%>
         <td class="l">
-          <input readonly Title="Istituto" name="Comune" value="" size=50>
+          <input readonly Title="Istituto" name="Comune" value="" size="50">
           <input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
           <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineIngiunzione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           <img src="/images/filefolder.gif" border=0></a>
@@ -375,7 +469,7 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
 
       <td class="l">Note</td>
       <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
+        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols="35"></textarea>
       </td>
    </tr>
   <%}%>
@@ -388,6 +482,12 @@ else
     <tr>
   <%if(    lPosizione.getCodPosizioneGiuridica().equals("74") || lPosizione.getCodPosizioneGiuridica().equals("75") 
         || lPosizione.getCodPosizioneGiuridica().equals("76") || lPosizione.getCodPosizioneGiuridica().equals("77"))
+      // ALTRA_CAUSA
+      // Espiazione pena per Altra Causa in Regime di Detenzione
+      // Espiazione pena per Altra Causa in Misura Sicurezza Detentiva (Internato)
+      // Custodia Cautelare per Altra Causa in Regime di Detenzione
+      // Espiazione pena per Altra Causa in Misura di Sicurezza Applicata in Via Provvisoria
+      
   {%>
      <td class="l" width="20%">Istituto di Detenzione <font class=ob>(*)</font></td>
   <%} else {%>
@@ -496,7 +596,8 @@ else
           <tr>
             <td class="l">Autorita' Destinazione </td >
             <td class="L" colspan="3">
-               <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
+               <select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" 
+                       id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
                  <%=autoritaEsternaN%>
                </select>
            </td>
@@ -504,7 +605,10 @@ else
          <tr>
            <td class="l">Sede </td>
            <td class="L">
-            <input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+            <input title="Sede Foro Avvocato" type="text" maxlength="35" size="35"
+                   name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" 
+                   id="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" 
+                   >
             <% if( lNumAvvocati < 2 ) { %>
               <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
             <% } else {%>
@@ -515,7 +619,9 @@ else
           </td>
            <td class="l">Note</td>
            <td class="L">
-              <textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>"  cols="35"></textarea>
+              <textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>"  
+                        id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" 
+                        cols="35"></textarea>
            </td>
         </tr>
         <tr><td>&nbsp;</td></tr>
@@ -557,7 +663,10 @@ while (itx1.hasNext())
   <tr>
     <td class="L">Autorita' Destinazione</td>
     <td class="L" colspan="3">
-     <select  Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>">
+     <select Title="Autorita Esterna" class="small" 
+             id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
+             name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
+     >
       <%=autoritaEsternaCivilObb%>
      </select>
     </td>
@@ -566,14 +675,18 @@ while (itx1.hasNext())
   <tr>
     <td class="L">Sede</td>
     <td class="L">
-      <input title="Sede Autorita Esterna" value="" type="text" name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"  maxlength="35" size="35">
+      <input type="text" maxlength="35" size="35" title="Sede Autorita Esterna"
+             id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
+             name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"  >
       <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E %>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>');">
         <img src="/images/filefolder.gif" border="0">
       </a>
     </td>
     <td class="L">Indirizzo</td>
     <td class="L">
-      <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"  cols="30" ></textarea>
+      <TEXTAREA title="Note"   cols="30" 
+                id="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
+                name="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"></textarea>
     </td>
   </tr>  
 </table>  
