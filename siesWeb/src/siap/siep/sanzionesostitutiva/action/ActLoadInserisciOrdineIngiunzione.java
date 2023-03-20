@@ -1,5 +1,7 @@
 package siap.siep.sanzionesostitutiva.action;
 
+import java.math.BigDecimal;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -10,6 +12,8 @@ import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.util.SICOLookupRemote;
@@ -77,6 +81,22 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. Impossibile procedere");
 		}
+		
+        IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+        Hashtable <BigDecimal, EventoNotificaModel> listaOrdiniIngiunzione = new Hashtable <BigDecimal, EventoNotificaModel>();
+        for (RateizzazionePPModel rata : listaRateizzazioni) {
+                if (rata.getEveIdEvento()!=null)  {
+                    if (listaOrdiniIngiunzione.get(rata.getEveIdEvento())!=null) {
+                        rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento()));
+                    }
+                    else {                                                
+                        EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey (rata.getEveIdEvento());
+                        rata.setOrdineIngiunzione(lEveNotMod);
+                        listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod);
+                    }
+                }
+        }
+            
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
 		// Posizione giuridica

@@ -27,6 +27,9 @@
 function cancellaRate(){
   var lAzione = "siap.siep.rateizzazionepp.action.ActCancellaRateizzazione";
 
+  <% if (listaRateizzazioni.size()>0 && ((RateizzazionePPModel)listaRateizzazioni.elementAt(0)).getEveIdEvento()!=null) { %>
+  alert("Non e' possibile Cancellare le rate in quanto e' gia' stato emesso o e' in fase di inserimento un Ordine di Ingiunzione.");
+  <% } else { %>
   var msgConfirm = "Si vuole procedere con la cancellazione di tutte le rate?"; 
   if (window.confirm(msgConfirm)) {
     document.RateizzazionePP.Action.value = lAzione;
@@ -34,12 +37,17 @@ function cancellaRate(){
   }
   else 
     return false; 
+  <% } %>
 }
 
 function modificaRate(){
+  <% if (listaRateizzazioni.size()>0 && ((RateizzazionePPModel)listaRateizzazioni.elementAt(0)).getEveIdEvento()!=null) { %>
+  alert("Non e' possibile Modificare le rate in quanto e' gia' stato emesso o e' in fase di inserimento un Ordine di Ingiunzione.");
+  <% } else { %>
   var lAzione = "siap.siep.rateizzazionepp.action.ActLoadModificaRateizzazione";
   document.RateizzazionePP.Action.value = lAzione;
   document.RateizzazionePP.submit();
+  <% } %>
 }
 </script>
 </head>
@@ -143,6 +151,11 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       <td class="R"><font class="label">termine di pagamento fissato entro </font></td>
       <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
       <td class="L"><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
+       <% if (rata.getEveIdEvento()!=null) { %> 
+       <td class="L" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione</td>
+       <% } else { %>
+         <td class="r">&nbsp;</td>
+       <% } %>      
     </tr>
     <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
     <tr>
@@ -156,6 +169,11 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       <% } else { %>
           <td class="R" colspan="3">&nbsp;</td>
       <% } %>
+        <%  if ( rata.getEveIdEvento()!=null)  {%>   
+        <td class="L" nowrap><font class="label" style="color:red;" >Emesso ordine di ingiunzione</td>
+        <% } else { %>
+          <td class="r">&nbsp;</td>
+        <% } %>
     </tr>    
     <% } %>
     

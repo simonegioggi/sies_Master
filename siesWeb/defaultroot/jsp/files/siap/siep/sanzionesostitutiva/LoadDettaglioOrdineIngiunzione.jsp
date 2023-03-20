@@ -300,9 +300,11 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
     }
 %>
 
+<% if (lListaNotObbligati.size()>0) { %>
 <tr>
  <td class="Titolo" colspan="3"> Civilmente Obbligati </td>
 </tr>
+<% } %>
 
   <%
   // Civilmente Obbligati

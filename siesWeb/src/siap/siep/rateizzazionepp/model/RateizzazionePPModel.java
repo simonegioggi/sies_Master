@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import f3b.model.GenericModel;
+import siap.sico.evento.model.EventoNotificaModel;
 
 public class RateizzazionePPModel extends GenericModel {
   private static final long serialVersionUID = 7652960898545828432L;
@@ -36,6 +37,8 @@ public class RateizzazionePPModel extends GenericModel {
   private String mDescrUfficioAggiornamento;
   
   private String mDescrTipoRateizzazione;
+  
+  private EventoNotificaModel mOrdineIngiunzione = null;
 
 
   /*****************************************************************************
@@ -125,6 +128,8 @@ public class RateizzazionePPModel extends GenericModel {
   public String     getDescrUfficioAggiornamento() { return mDescrUfficioAggiornamento;}
   public String     getDescrTipoRateizzazione()    { return mDescrTipoRateizzazione;}
   
+  public EventoNotificaModel  getOrdineIngiunzione()    { return mOrdineIngiunzione;}
+  
   // ============================================================================
   // METODI SET()
   // ============================================================================
@@ -148,6 +153,8 @@ public class RateizzazionePPModel extends GenericModel {
   public void setCodUfficioAggiornamento (String mCodUfficioAggiornamento) {  this.mCodUfficioAggiornamento = mCodUfficioAggiornamento;}
   public void setDescrUfficioAggiornamento( String mDescrUfficioAggiornamento) {  this.mDescrUfficioAggiornamento = mDescrUfficioAggiornamento;}
   public void setDescrTipoRateizzazione (String mDescrTipoRateizzazione) {  this.mDescrTipoRateizzazione = mDescrTipoRateizzazione;}
+  
+  public void setOrdineIngiunzione (EventoNotificaModel mOrdineIngiunzione) {  this.mOrdineIngiunzione = mOrdineIngiunzione;}
   
   /*****************************************************************************
    * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
