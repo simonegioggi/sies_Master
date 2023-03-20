@@ -10,7 +10,7 @@
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <title>Download Avviso PagoPA</title>
 <script language="JavaScript">
-function downloadAvviso() { 
+function downloadAvviso() {
 	document.LoadDownloadAvvisoPagoPA.submit();
 }
 </script>
@@ -19,7 +19,7 @@ function downloadAvviso() {
 <body onLoad="downloadAvviso()" class="corpo">
 <FORM method="POST"  action="<%=IWebConstants.PG_MAIN%>" name="LoadDownloadAvvisoPagoPA"> 
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInvocaWSGeneraAvvisoPagoPA"/>
-<input type="hidden" name="tipoFascicolo" value="<%=tipoFascicolo%>" />
+<input type="hidden" name="tipoFascicolo" value="<%=tipoFascicolo%>"/>
 <input type="hidden" name="idEvento" value="<%=idEvento%>" />
 	
 <div align=center id="richCert" style="visibility:visible;position:absolute;top:200px;left:200px">

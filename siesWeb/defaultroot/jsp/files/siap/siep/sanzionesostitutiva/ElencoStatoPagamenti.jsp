@@ -1,10 +1,10 @@
 <%-- MEV_2023-13: aggiunta pagina --%>
-<%@page import="java.math.BigDecimal"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
+<%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Iterator"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
@@ -126,11 +126,11 @@ if (elencoStatoPagamenti.size() == 0) {
 <%
 		}
 %>
-      	<td class="c"><%=StringUtils.toStringJSP(bpm.getIuv())%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(bpm.getImportoRata())%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(bpm.getImportoPagato())%></td>
-		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataAvvPagamento(), "dd-MM-yyyy"), "-")%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenza(), "dd-MM-yyyy"), "-")%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(bpm.getIuv(), "-")%></td>
+      	<td class="c"><%=StringUtils.toEuroFormat(bpm.getImportoRata())%></td>
+      	<td class="c"><%=StringUtils.toEuroFormat(bpm.getImportoPagato())%></td>
+		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataAvvPagamento(), "dd/MM/yyyy"), "-")%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenzaRich(), "dd/MM/yyyy"), "-")%></td>
 <%
 		String coloreClasse = "cVerde";
 		if ("PN".equals(bpm.getStatoPagamento()))

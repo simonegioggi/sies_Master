@@ -33,7 +33,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			BigDecimal fasSieIdFascicoloSiep) throws F3BException {
 
 		Connection c = null;
-		Vector<BollettinoPagopaModel> coms = new Vector<>();
+		Vector<BollettinoPagopaModel> bpms = new Vector<>();
 
 		BollettinoPagopaSqlDAO bpsdao = null;
 
@@ -44,8 +44,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			bpsdao.start();
 
 			while (bpsdao.next()) {
-				BollettinoPagopaModel com = (BollettinoPagopaModel) bpsdao.getModel();
-				coms.add(com);
+				BollettinoPagopaModel bpm = (BollettinoPagopaModel) bpsdao.getModel();
+				bpms.add(bpm);
 			}
 			bpsdao.stop();
 		} catch (DAOException daoEx) {
@@ -60,27 +60,26 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			cleanup(c);
 		}
 
-		return coms;
+		return bpms;
 	}
 
-	public BollettinoPagopaModel ExInserisciBollettinoPagopa(BollettinoPagopaModel com) throws F3BException {
+	public BollettinoPagopaModel ExInserisciBollettinoPagopa(BollettinoPagopaModel bpm) throws F3BException {
 
-		BollettinoPagopaModel comRet = null;
+		BollettinoPagopaModel bpmRet = null;
 		BollettinoPagopaDAO bpdao = null;
 		Connection c = null;
 
 		try {
 			c = getDBConnection();
 
-			comRet = new BollettinoPagopaModel(com);
+			bpmRet = new BollettinoPagopaModel(bpm);
 			bpdao = new BollettinoPagopaDAO(c);
 
 			// Inserimento Bollettino Pagopa sulla tabella BOLLETTINO_PAGOPA
-			bpdao.setDAOFromModel(comRet);
+			bpdao.setDAOFromModel(bpmRet);
 
-			BigDecimal bd = null;
-			bd = bpdao.insert();
-			comRet.setIdBollettinoPagopa(bd);
+			BigDecimal idBollettinoPagopa = bpdao.insert();
+			bpmRet.setIdBollettinoPagopa(idBollettinoPagopa);
 
 			commit(c);
 		} catch (F3BException fe) {
@@ -97,7 +96,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			cleanup(c);
 		}
 
-		return comRet;
+		return bpmRet;
 	}
 
 	public BollettinoPagopaModel ExRicercaBollettinoPagopaByKey(BigDecimal idBollettinoPagopa)
@@ -105,7 +104,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 
 		Connection c = null;
 
-		BollettinoPagopaModel com = new BollettinoPagopaModel();
+		BollettinoPagopaModel bpm = new BollettinoPagopaModel();
 		BollettinoPagopaSqlDAO bpsdao = null;
 
 		try {
@@ -115,7 +114,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			bpsdao = new BollettinoPagopaSqlDAO(c);
 			bpsdao.start();
 			while (bpsdao.next()) {
-				com = new BollettinoPagopaModel((BollettinoPagopaModel) bpsdao.getModel());
+				bpm = new BollettinoPagopaModel((BollettinoPagopaModel) bpsdao.getModel());
 			}
 			bpsdao.stop();
 		} catch (DAOException daoEx) {
@@ -129,10 +128,10 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			cleanup(c);
 		}
 
-		return com;
+		return bpm;
 	}
 
-	public void ExModificaBollettinoPagopa(BollettinoPagopaModel com) throws F3BException {
+	public void ExModificaBollettinoPagopa(BollettinoPagopaModel bpm) throws F3BException {
 
 		Connection c = null;
 
@@ -145,7 +144,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			// Modifica Bollettino Pagopa
 			// Aggiornamento sulla tabella BOLLETTINO_PAGOPA
 			bpdao = new BollettinoPagopaDAO(c);
-			bpdao.setDAOFromModelForUpdate(com);
+			bpdao.setDAOFromModelForUpdate(bpm);
 			bpdao.update();
 			bpdao.stop();
 
@@ -221,6 +220,36 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			cleanup(c);
 		}
 		return baos;
+	}
+
+	@Override
+	public String[] ExRicercaCodiciUfficiProduzione(String codUfficio) throws F3BException {
+
+		Connection c = null;
+		String[] codici = new String[2];
+		BollettinoPagopaSqlDAO bpsdao = null;
+
+		try {
+			c = getDBConnection();
+			bpsdao = new BollettinoPagopaSqlDAO(c);
+			bpsdao.ricercaCodiciUfficiProduzione(codUfficio);
+			bpsdao.start();
+			while (bpsdao.next()) {
+				codici[0] = bpsdao.getString("codUfficio");
+				codici[1] = bpsdao.getString("codGl");
+			}
+			bpsdao.stop();
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"BollettinoPagopaController.ExRicercaCodiciUfficiProduzione: Non posso leggere : "
+							+ daoEx);
+		} catch (Exception e) {
+			throw new F3BException("BollettinoPagopaController.ExRicercaCodiciUfficiProduzione: " + e);
+		} finally {
+			cleanup(bpsdao);
+			cleanup(c);
+		}
+		return codici;
 	}
 
 }

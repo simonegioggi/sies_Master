@@ -5,9 +5,10 @@ import java.math.BigDecimal;
 import siap.sico.web.ActionSiap;
 
 /**
- * MEV_2023-13: aggiunta classe di download avviso
+ * Classe che permette di generare un avviso di pagamento per PagoPA
  *
  * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class ActDownloadAvvisoPagoPA extends ActionSiap implements ICostantiPagoPA {

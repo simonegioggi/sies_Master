@@ -16,11 +16,12 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 
 /**
- * MEV_2023-13: aggiunta classe di generazione avviso 
  * Classe che permette di generare un avviso di pagamento per PagoPA
  *
  * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
+ * @deprecated
  */
 public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecurity {
 
@@ -28,7 +29,6 @@ public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecuri
 
 		EventoNotificaModel enm = new EventoNotificaModel();
 
-		// TODO: fissare i valori
 		enm.getEvento().setCodTipoEvento("05"); // Tipo Evento = Genera Avviso PagoPA
 		enm.getEvento().setCodTipoProvvedimento("-");
 		enm.getEvento().setCodMotivo("0050"); // Codice Motivo = Richiesta Avviso PagoPA

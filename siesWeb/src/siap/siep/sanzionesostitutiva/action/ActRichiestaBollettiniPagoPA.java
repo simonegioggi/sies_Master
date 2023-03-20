@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.StringUtils;
 import f3b.util.Utils;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -48,7 +49,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 			while (iter.hasNext()) {
 				RateizzazionePPModel rata = iter.next();
 				if (cont == 0)
-					testo = "Importo da Pagare: " + rata.getImportoDaPagare() + "&#8364; ";
+					testo = "Importo da Pagare: " + StringUtils.toEuroFormat(rata.getImportoDaPagare()) + " ";
 				if ("R".equals(rata.getTipoRateizzazione())) { // RATE
 					if (cont == 0) {
 						testo += "in:";

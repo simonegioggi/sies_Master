@@ -1,16 +1,17 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-13_ aggiunta pagina di caricamento avviso PagoPA --%>
+<%@ page import="f3b.util.Utils"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.web.IWebConstants"%>
 
 <%@ page import="java.util.Iterator"%>
 
-<%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
-<%@ page import="siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel"%>
+<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
+<%@ page import="siap.siep.pagoPA.model.BollettinoPagopaModel"%>
 
-<jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
-<jsp:useBean id="evento"    				scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="elencoStatoPagamenti" 	scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
+<jsp:useBean id="evento"    			scope="request" class="siap.sico.evento.model.EventoModel"/>
 
 <html>
 <head>
@@ -46,11 +47,12 @@ function tornaIndietro(action) {
 <br>
   
 <FORM method="POST" name="LoadGeneraAvvisoPagoPA" action="<%= IWebConstants.PG_MAIN%>">
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActGeneraAvvisoPagoPA">
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActDownloadAvvisoPagoPA">
+<input type="HIDDEN" name="tipoFascicolo" value="SIEP">
 
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
-if (listaRichiestaBollettini.size() == 0) {
+if (elencoStatoPagamenti.size() == 0) {
 %>
 	<tr>
       	<td>Nessuna Richiesta Pagamento Bollettini presente</td>
@@ -65,6 +67,7 @@ if (listaRichiestaBollettini.size() == 0) {
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%>
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=evento.getIdEvento()%>">
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -77,33 +80,35 @@ if (listaRichiestaBollettini.size() == 0) {
 		<td class="int">Stato</td>
 	</tr>
 <%
-	EventoRateizzazionePPModel erppm = listaRichiestaBollettini.firstElement();
-	Iterator<RateizzazionePPModel> itx = erppm.getListaRateizzazioniPP().iterator();
+	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+	int cont = 1;
 	while (itx.hasNext()) {
-		RateizzazionePPModel rppm = (RateizzazionePPModel) itx.next();
+		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
 %>
 	<tr>
-		<td class="c"><%=StringUtils.toStringJSP(rppm.getProgressivoRata())%></td>
+		<td class="c"><%=cont%></td>
 		<td class="l">
-			<%="U".equals(rppm.getTipoRateizzazione()) ? rppm.getDescrTipoRateizzazione().toUpperCase() : StringUtils.toStringJSP(rppm.getProgressivoRata()) + " RATA"%>
+			<%="U".equals(bpm.getTipoRateizzazione()) ? bpm.getDescrTipoRateizzazione().toUpperCase() : "RATA " + StringUtils.toStringJSP(bpm.getProgRata())%>
 		</td>
-      	<td class="c"><%="IUV"%></td>
-      	<td class="c">
-      		<%="U".equals(rppm.getTipoRateizzazione()) ? StringUtils.toStringJSP(rppm.getImportoDaPagare())
-      				: StringUtils.toStringJSP(rppm.getImportoRata())%>
-      	</td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(rppm.getDataInserimento(), "dd-MM-yyyy"))%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(rppm.getScadenzaGiorni())%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(bpm.getIuv(), "-")%></td>
+      	<td class="c"><%=StringUtils.toEuroFormat(bpm.getImportoRata())%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenzaRich(), "dd/MM/yyyy"))%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
 	</tr>
 <%
+		cont++;
 	} // end while su iterator sugli eventi
 } // end else
+if (Utils.isNullObj(evento.getDataTrasmissioneAtti()) && Utils.isNullObj(evento.getDataRicezioneAtti())) {
 %>
    	<tr>
 		<td class="lNoBord">
        		<br><INPUT class="bottone" type="submit" name="S" value="Salva">
        	</td>
    	</tr>
+<%
+}
+%>
 </table>
 </form>
 </body>

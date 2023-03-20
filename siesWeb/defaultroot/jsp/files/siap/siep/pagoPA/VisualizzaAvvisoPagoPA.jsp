@@ -2,11 +2,8 @@
 <%-- MEV_2023-13_ aggiunta pagina di esito generazione avviso PagoPA --%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
-<%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
-<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 
-<jsp:useBean id="idFascicolo"   scope="request" class="java.lang.String"/>
-<jsp:useBean id="evento"        scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="idFascicolo" scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -46,14 +43,13 @@ function VisualizzaAvviso(lAzione) {
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
 <input type="hidden" name="IDFascicolo" 	value="<%=idFascicolo%>"/>
-<input type="hidden" name="idEvento" 		value="<%=evento.getIdEvento()%>"/>
 <input type="hidden" name="TipoFascicolo" 	value="SIEP"/>
 
 <div align=center id="visualizzaBollettino" style="visibility:visible;position:absolute;top:150px;left:250px">
 <table bgcolor="#EEEEEE">
 	<tr>
 		<td>
-			<font size=+1 color=navy>La Generazione dell'Avviso PagoPA è andata a buon fine.</font>
+			<font size="+1" color="navy">La Generazione dell'Avviso PagoPA è andata a buon fine.</font>
 		</td>
 	</tr>
 </table>

@@ -31,4 +31,6 @@ public interface IBollettinoPagopa {
 
 	ByteArrayOutputStream ExGetBollettino(BigDecimal idBollettinoPagopa) throws F3BException;
 
+	String[] ExRicercaCodiciUfficiProduzione(String codUfficio) throws F3BException;
+
 }

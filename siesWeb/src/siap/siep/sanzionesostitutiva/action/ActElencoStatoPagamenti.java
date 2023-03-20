@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.StringUtils;
 import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.web.ActionSiap;
@@ -71,15 +72,16 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 			while (iter.hasNext()) {
 				RateizzazionePPModel rata = iter.next();
 				if (cont == 0)
-					testo = "Importo da Pagare:  <font class='cRosso'>" + rata.getImportoDaPagare()
-							+ "&#8364;</font> ";
+					testo = "Importo da Pagare:  <font class='cRosso'>"
+							+ StringUtils.toEuroFormat(rata.getImportoDaPagare()) + "</font> ";
 				if ("R".equals(rata.getTipoRateizzazione())) { // RATE
 					if (cont == 0) {
 						testo += " con le seguenti modalit&agrave:";
 						testo += "<ul>";
 					}
 					testo += "<li><font class='cViola'>" + "" + rata.getNumeroRate() + "</font> rate da "
-							+ "<font class='cViola'>" + rata.getImportoRata() + "</font>";
+							+ "<font class='cViola'>" + StringUtils.toEuroFormat(rata.getImportoRata())
+							+ "</font>";
 					if (!Utils.isNullObj(rata.getScadenzaGiorni()) /* && cont == 0 */)
 						testo += ", con scadenza pagamento entro n.ro giorni <font class='cViola'>"
 								+ rata.getScadenzaGiorni().toString()

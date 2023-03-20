@@ -9,9 +9,11 @@ import siap.dao.SIAPSqlDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * MEV_2023-13 Title: BollettinoPagopaSqlDAO Description: Classe SqlDAO per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaSqlDAO 
+ * Description: Classe SqlDAO per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
@@ -37,8 +39,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE"
 				+ " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE')"
 				+ " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE"
-				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO')"
-				+ " WHERE 1 = 1";
+				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO')" + " WHERE 1 = 1";
 		return s;
 	}
 
@@ -111,6 +112,15 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		s += " SELECT DOC_BOLL_BLOB ";
 		s += " FROM BOLLETTINO_PAGOPA WHERE ";
 		s += " ID_BOLLETTINO_PAGOPA = " + idBollettinoPagopa;
+		setStatement(s);
+	}
+
+	public void ricercaCodiciUfficiProduzione(String codUfficio) {
+
+		String s = new String();
+
+		s += "select t.codice_ufficio codUfficio, t.codice_gl codGl from UFFICI_PRODUZIONE t"
+				+ " where t.cod_ufficio_sies = '" + codUfficio + "'";
 		setStatement(s);
 	}
 
