@@ -32,7 +32,6 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 		setLinkRitorno();
 
-		// if (!isSessionAttributeNullObj("fascicolo") && getSessionAttribute("fascicolo") != null)
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 

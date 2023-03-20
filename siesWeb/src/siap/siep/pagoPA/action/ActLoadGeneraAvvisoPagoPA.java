@@ -7,15 +7,13 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import siap.sico.evento.action.ICostantiEvento;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
@@ -37,9 +35,6 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		siesLogger.debug("ID_EVENTO = " + idEvento);
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
-		setRequestAttribute("evento", em);
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);
@@ -47,9 +42,14 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 				.exRicercaEventoRateizzazionePP(idFascicolo);
-		// dalle rateizzazioni creo i bollettini
-		// TODO
-		// poi li imposto nella pagina
+		if (!listaRichiestaBollettini.isEmpty()) {
+			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
+					.getListaRateizzazioniPP();
+			setRequestAttribute("evento", listaRichiestaBollettini.firstElement().getEvento());
+			// dalle rateizzazioni creo i bollettini
+			// TODO
+			// poi li imposto nella pagina
+		}
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp

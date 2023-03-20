@@ -9,9 +9,6 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
@@ -43,9 +40,6 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		siesLogger.debug("ID_EVENTO = " + idEvento);
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
-		setRequestAttribute("evento", em);
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
@@ -70,6 +64,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();
+			setRequestAttribute("evento", listaRichiestaBollettini.firstElement().getEvento());
 			Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
 			String testo = "";
 			int cont = 0;
