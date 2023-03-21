@@ -15,7 +15,7 @@ public class ActDownloadAvvisoPagoPA extends ActionSiap implements ICostantiPago
 
 	public String processRequest() throws Exception {
 
-		String tipoFascicolo = getRequestStringParameter("TipoFascicolo");
+		String tipoFascicolo = getRequestStringParameter("tipoFascicolo");
 		setRequestAttribute("tipoFascicolo", tipoFascicolo);
 		BigDecimal idEvento = getRequestBigDecimalParameter("IdEvento");
 		setRequestAttribute("idEvento", idEvento);

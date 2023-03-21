@@ -55,7 +55,8 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 						testo += "in:";
 						testo += "<ul>";
 					}
-					testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + "" + rata.getImportoRata();
+					testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + ""
+							+ StringUtils.toEuroFormat(rata.getImportoRata());
 					if (!Utils.isNullObj(rata.getScadenzaGiorni()) && cont == 0)
 						testo += ", termine di pagamento fissato entro " + rata.getScadenzaGiorni().toString()
 								+ " giorni dalla Notifica dell'Avviso di Pagamento" + "</li>";

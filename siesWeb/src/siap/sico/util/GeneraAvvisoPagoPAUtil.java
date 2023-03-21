@@ -1,5 +1,7 @@
 package siap.sico.util;
 
+import java.math.BigDecimal;
+
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
@@ -40,9 +42,9 @@ public class GeneraAvvisoPagoPAUtil {
 		rpt.setAutenticazioneSoggetto("OTH");
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		String[] codici = ibp.ExRicercaCodiciUfficiProduzione(ufm.getCodUfficio());
-		// "GLTO"
-		rpt.setCodiceDistretto(codici[0]);
-		rpt.setCodiceUfficio(codici[1]);
+		rpt.setCodiceUfficio(codici[0]);
+		// "GLTO" esempio di codice distretto
+		rpt.setCodiceDistretto(codici[1]);
 		// DataScadenza OBBLIGATORIA, altrimenti 30 giorni in automatico
 		// la imposto nel metodo chiamante
 		// rpt.setDataScadenza(null);
@@ -57,35 +59,52 @@ public class GeneraAvvisoPagoPAUtil {
 
 		DatiVersamento dv = new DatiVersamento();
 		dv.setBicAddebito(null);
-		DatiSingoloVersamento[] dsv = caricaDatiSingoloVersamento(sm, bpm);
-		dv.setDatiSingoloVersamento(dsv);
-		for (int i = 0; i < dsv.length; i++)
-			dv.setDatiSingoloVersamento(i, dsv[i]); // da 1 a 5 occorrenze
+		// DatiSingoloVersamento[] dsv = caricaDatiSingoloVersamento(sm, bpm);
+		DatiSingoloVersamento[] dsvs = new DatiSingoloVersamento[1];
+		// dati singolo versamento
+		DatiSingoloVersamento dsv = new DatiSingoloVersamento();
+		String importo = (Utils.isNullObj(bpm.getImportoRata())) ? "" : bpm.getImportoRata().toString();
+		dsv.setImporto(new BigDecimal(importo));
+		String causale = "Pagamenti in favore Amministrazione";
+		dsv.setCausale("/" + importo + "/TXT/" + causale);
+		dsv.setDatiSpecificiRiscossione("PENPE");
+		dsv.setDatiMarcaBolloDigitale(null);
+		dsvs[0] = dsv;
+		dv.setDatiSingoloVersamento(dsvs);
+		// for (int i = 0; i < dsv.length; i++)
+		// dv.setDatiSingoloVersamento(i, dsv[i]); // da 1 a 5 occorrenze
 		// IbanAddebito: da non valorizzare nel caso in cui il file debba essere usato in generaAvviso()
+		dv.setImportoTotale(dsvs[0].getImporto());
 		dv.setIbanAddebito(null);
-		dv.setImportoTotale(null); // se DatiMarcaBolloDigitale è valorizzato
 		return dv;
 	}
 
-	private static DatiSingoloVersamento[] caricaDatiSingoloVersamento(SoggettoModel sm,
-			BollettinoPagopaModel bpm) throws SecurityException {
-
-		// info per il log
-		siesLogger.debug(GeneraAvvisoPagoPAUtil.class.getName() + ".caricaDatiSingoloVersamento");
-
-		DatiSingoloVersamento[] dsv = new DatiSingoloVersamento[1]; // da 1 a 5 occorrenze
-		dsv[0] = new DatiSingoloVersamento();
-		String causale = "Pagamenti in favore Amministrazione";
-		// se DatiMarcaBolloDigitale è valorizzato allora l'importo è di 16.00
-		// DatiMarcaBolloDigitale dmbd = caricaDatiMarcaBolloDigitale(sm);
-		dsv[0].setDatiMarcaBolloDigitale(null);
-		dsv[0].setDatiSpecificiRiscossione("PENPE"); // valore fisso
-		// Il valore dell'importo deve contenere obbligatoriamente le due cifre decimali con
-		// separatore il '.' --> 12345678.90
-		dsv[0].setImporto(bpm.getImportoRata());
-		dsv[0].setCausale("/" + dsv[0].getImporto() + "/TXT/" + causale); // MAX 100 chars
-		return dsv;
-	}
+	// private static DatiSingoloVersamento[] caricaDatiSingoloVersamento(SoggettoModel sm,
+	// BollettinoPagopaModel bpm) throws SecurityException {
+	//
+	// // info per il log
+	// siesLogger.debug(GeneraAvvisoPagoPAUtil.class.getName() + ".caricaDatiSingoloVersamento");
+	//
+	// DatiSingoloVersamento[] dsv = new DatiSingoloVersamento[1]; // da 1 a 5 occorrenze???
+	// dsv[0] = new DatiSingoloVersamento();
+	// String causale = "Pagamenti in favore Amministrazione";
+	// // se DatiMarcaBolloDigitale è valorizzato allora l'importo è di 16.00
+	// // DatiMarcaBolloDigitale dmbd = caricaDatiMarcaBolloDigitale(sm);
+	// dsv[0].setDatiMarcaBolloDigitale(null);
+	// dsv[0].setDatiSpecificiRiscossione("PENPE"); // valore fisso
+	// // Il valore dell'importo deve contenere obbligatoriamente le due cifre decimali con
+	// // separatore il '.' --> 12345678.90 nel DB abbiamo 10000,00 deve essere 10000.00
+	// String importo = (Utils.isNullObj(bpm.getImportoRata())) ? "" : bpm.getImportoRata().toString();
+	// if (Utils.isPresent(importo)) {
+	// if (importo.contains(","))
+	// importo = importo.replace(",", ".");
+	// else
+	// importo += ".00";
+	// }
+	// dsv[0].setImporto(new BigDecimal(importo));
+	// dsv[0].setCausale("/" + importo + "/TXT/" + causale); // MAX 100 chars
+	// return dsv;
+	// }
 
 	// private static DatiMarcaBolloDigitale caricaDatiMarcaBolloDigitale(SoggettoModel sm)
 	// throws SecurityException {
@@ -120,13 +139,13 @@ public class GeneraAvvisoPagoPAUtil {
 		AnagraficaSoggetto as = new AnagraficaSoggetto();
 		as.setCap(null);
 		as.setCivico(null);
-		// C.F. or P.I.
-		as.setCodiceIdentificativoUnivoco(Utils.isPresent(sm.getCodFiscale()) ? sm.getCodFiscale() : null);
+		// C.F. or P.I. (OBBLIGATORIO)
+		as.setCodiceIdentificativoUnivoco("CFNONDISPONIBILE");
 		as.setEmail(null);
 		as.setIndirizzo(null);
 		as.setLocalita(null);
 		as.setNaturaGiuridica("F"); // F or G
-		as.setNazione(sm.getCodStatoNascita()); // null
+		as.setNazione(null); // sm.getCodStatoNascita() questo non lo accetta il WS
 		as.setNominativo(sm.getCognome() + " " + sm.getNome()); // MAX 70 chars
 		as.setProvincia(sm.getCodProvinciaNascita());
 		as.setRegione(sm.getCodComuneNascita());
@@ -150,13 +169,11 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setProgRata(cont);
 		bpm.setRatIdRateizzazionePP(rata.getIdRateizzazionePP());
 		bpm.setStatoPagamento(statoPagamento);
-		if (cont == 0) {
-			bpm.setTipoRateizzazione("U");
+		bpm.setTipoRateizzazione(rata.getTipoRateizzazione());
+		if ("U".equals(rata.getTipoRateizzazione()))
 			bpm.setImportoRata(rata.getImportoDaPagare());
-		} else {
-			bpm.setTipoRateizzazione(rata.getTipoRateizzazione());
+		else
 			bpm.setImportoRata(rata.getImportoRata());
-		}
 
 		// valore di ritorno
 		return bpm;

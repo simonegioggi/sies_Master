@@ -91,13 +91,13 @@ if (listaRichiestaBollettini.size() == 0) {
 		<td class="c">
 			<%=StringUtils.toStringJSP(em.getDescrTipoProvvedimento()) 
 			+ " " + StringUtils.toStringJSP(em.getDescrMotivo())%>
-			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd-MM-yyyy"))%>
+			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
 		</td>
 		<td class="l">
 			<%=modalitaPagamento%>
 		</td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd-MM-yyyy"), "-")%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd-MM-yyyy"), "-")%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd/MM/yyyy"), "-")%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd/MM/yyyy"), "-")%></td>
       	<td class="c">
       		<a href="javascript:eseguiAzione('Dettaglio', <%=em.getIdEvento()%>)">
 				<img src="/images/dettagli.gif" alt="Elenco Stato Bollettini" width="12" height="12" border="0">

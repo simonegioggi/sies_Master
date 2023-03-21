@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BProperties;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto;
@@ -94,13 +95,13 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		siesLogger
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
 
-		String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
-				+ "standalone" + System.getProperty("file.separator") + "configuration"
-				+ System.getProperty("file.separator") + "serversies.jks";
-		siesLogger.debug("PERCORSO DEL keystore: " + pathkeystore);
-		System.setProperty("javax.net.ssl.keyStore", pathkeystore);
-		System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
-		System.setProperty("javax.net.debug", "ssl");
+		// String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
+		// + "standalone" + System.getProperty("file.separator") + "configuration"
+		// + System.getProperty("file.separator") + "serversies.jks";
+		// siesLogger.debug("PERCORSO DEL keystore: " + pathkeystore);
+		// System.setProperty("javax.net.ssl.keyStore", pathkeystore);
+		// System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
+		// System.setProperty("javax.net.debug", "ssl");
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
 		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
 		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
@@ -135,7 +136,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, bpm);
 			rpt.setDatiVersamento(dv);
 			Calendar c = Calendar.getInstance();
-			c.setTime(bpm.getDataScadenza());
+			c.setTime(bpm.getDataScadenzaRich());
 			rpt.setDataScadenza(c);
 
 			EsitoGeneraAvviso ega = null;
@@ -156,7 +157,8 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			bpm.setCodOperatoreAggiornamento(utm.getUserId());
 			bpm.setDataAggiornamento(DateUtils.getSysDate());
 			bpm.setDocBollBlob(bais);
-			bpm.setIuv(ega.getNumeroAvviso());
+			String iuv = Utils.isPresent(ega.getNumeroAvviso()) ? ega.getNumeroAvviso().substring(1) : "";
+			bpm.setIuv(iuv);
 			ibp.ExModificaBollettinoPagopa(bpm);
 		}
 		setRequestAttribute("idFascicolo", idFascicolo.toString());

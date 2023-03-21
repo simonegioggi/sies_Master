@@ -61,21 +61,13 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 			setRequestAttribute("evento", listaRichiestaBollettini.firstElement().getEvento());
 			if (isElencoEmpty) {
 				// dalle rateizzazioni creo i bollettini
-				int cont = 0;
-				BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rateizzazioni.firstElement(), codUtente,
-						codUfficio, "PN", cont);
-				ibp.ExInserisciBollettinoPagopa(bpm);
-				cont++;
-				if (rateizzazioni.size() > 1) {
-					Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
-					while (iter.hasNext()) {
-						RateizzazionePPModel rata = iter.next();
-						for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
-							bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata, codUtente,
-									codUfficio, "PN", cont);
-							ibp.ExInserisciBollettinoPagopa(bpm);
-							cont++;
-						}
+				Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
+				while (iter.hasNext()) {
+					RateizzazionePPModel rata = iter.next();
+					for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
+						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata,
+								codUtente, codUfficio, "PN", i + 1);
+						ibp.ExInserisciBollettinoPagopa(bpm);
 					}
 				}
 				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);

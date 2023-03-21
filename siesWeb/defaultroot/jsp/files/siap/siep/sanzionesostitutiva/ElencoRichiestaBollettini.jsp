@@ -101,7 +101,7 @@ if (listaRichiestaBollettini.size() == 0) {
 		<td class="c">
 			<%=StringUtils.toStringJSP(em.getDescrTipoProvvedimento()) 
 			+ " " + StringUtils.toStringJSP(em.getDescrMotivo())%>
-			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd-MM-yyyy"))%>
+			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
 		</td>
 		<td class="l">
 			<%=modalitaPagamento%>
@@ -121,9 +121,9 @@ if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataR
 <%
 }
 %>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd-MM-yyyy"), "-")%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd-MM-yyyy"), "-")%></td>
-      	<td class="c" style="text-align: center;">
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataTrasmissioneAtti(), "dd/MM/yyyy"), "-")%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataRicezioneAtti(), "dd/MM/yyyy"), "-")%></td>
+      	<td class="c">
         	<a href="javascript:eseguiAzione('Dettaglio', <%=em.getIdEvento()%>)">
           		<img src="/images/dettagli.gif" width="12" height="12" alt="Verifica Stato Pagamenti" border="0">
           	</a>
