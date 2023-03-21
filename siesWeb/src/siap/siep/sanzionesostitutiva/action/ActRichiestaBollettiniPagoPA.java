@@ -9,6 +9,9 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -35,6 +38,21 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
+
+		// controllo obbligatorietà CF
+		SoggettoModel sm = fsm.getSoggetto();
+		if (Utils.isNullObj(sm.getCodFiscale())) {
+			// pagina di ritorno
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Impossibile generare la Richiesta "
+					+ "Bollettini poiché il condannato risulta privo di Codice Fiscale.");
+			rt.setAction(
+					"siap.sico.soggetto.action.ActLoadModificaSoggetto&IdSoggetto=" + sm.getIdSoggetto());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+			// return rt.toString();
+			return IWebConstants.PG_MESSAGE;
+		}
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp

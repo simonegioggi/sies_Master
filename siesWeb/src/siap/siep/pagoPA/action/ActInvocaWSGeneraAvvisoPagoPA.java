@@ -95,20 +95,6 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		siesLogger
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
 
-		// controllo obbligatorietà CF
-		if (Utils.isNullObj(sm.getCodFiscale())) {
-			// pagina di ritorno
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Impossibile generare Avviso poiché"
-					+ " la persona fisica risulta priva di Codice Fiscale.");
-			rt.setAction(
-					"siap.sico.soggetto.action.ActLoadModificaSoggetto&IdSoggetto=" + sm.getIdSoggetto());
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			// return rt.toString();
-			return IWebConstants.PG_MESSAGE;
-		}
-
 		// String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
 		// + "standalone" + System.getProperty("file.separator") + "configuration"
 		// + System.getProperty("file.separator") + "serversies.jks";
