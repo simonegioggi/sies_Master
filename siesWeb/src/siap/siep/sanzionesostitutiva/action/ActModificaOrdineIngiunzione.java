@@ -15,18 +15,30 @@ import siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP;
 import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * Classe per modificare l'ordine di ingiunzione
+ * 
+ * @author sgioggi
+ * @since MEV_2023-13
+ * @version 1.0
+ */
 public class ActModificaOrdineIngiunzione extends ActInserisciOrdineIngiunzione {
+
     private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
     public String processRequest() throws Exception {
 
-        FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+    	// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
+
+        FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+        siesLogger.debug("ID_FASCICOLO = " + fsm.getIdFascicoloSiep());
         
         EventoNotificaModel lEveNot = new EventoNotificaModel();
         // Procedo alla cancellazione e quind al nuovo inserimento
         EventoModel lEve = super.getEventoOrdineIngiunzione();
         NotificaModel[] lNotifiche = super.getNotificheOrdineIngiunzione();
-        
         
         BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
         lEve.setIdEvento(lIdEvento);
@@ -46,6 +58,11 @@ public class ActModificaOrdineIngiunzione extends ActInserisciOrdineIngiunzione 
                 + "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione&"
                 + ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
 
+    	// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
         return lPage;
     }
+
 }
