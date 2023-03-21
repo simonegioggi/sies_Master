@@ -207,36 +207,6 @@ while (itx.hasNext()) {
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Gestione Difensore</a>
         </td>
 	</tr>
-	<tr><td>&nbsp;</td></tr>
-	<tr>
-    	<td colspan="4" class="Titolo">########## INIZIO TEST x Genera Avviso PagoPA ##########</td>
-  	</tr>
-	<tr>
-		<%-- MEV_2023-13: aggiunta etichetta --%>
-		<td class="l" colspan="4" style="text-align: center;">
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA">
-				WS Genera Avviso PagoPA
-			</a>
-		</td>
-	</tr>
-	<tr>
-    	<td colspan="4" class="Titolo">########## FINE TEST x Genera Avviso PagoPA ##########</td>
-  	</tr>
-  	  	<tr><td>&nbsp;</td></tr>
-	<tr>
-    	<td colspan="4" class="Titolo">########## INIZIO TEST x Elenco Pagamenti PagoPA ##########</td>
-  	</tr>
-	<tr>
-		<%-- MEV_2023-13: aggiunta etichetta --%>
-		<td class="l" colspan="4" style="text-align: center;">
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActInvocaWSGeneraAvvisoPagoPA">
-				WS Elenco Pagamenti PagoPA
-			</a>
-		</td>
-	</tr>
-	<tr>
-    	<td colspan="4" class="Titolo">########## FINE TEST x Elenco Pagamenti PagoPA ##########</td>
-  	</tr>
 </table>
 </body>
 </html>
