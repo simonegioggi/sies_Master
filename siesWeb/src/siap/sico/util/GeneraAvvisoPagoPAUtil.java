@@ -140,8 +140,7 @@ public class GeneraAvvisoPagoPAUtil {
 		as.setCap(null);
 		as.setCivico(null);
 		// C.F. or P.I. (OBBLIGATORIO)
-		as.setCodiceIdentificativoUnivoco(
-				Utils.isPresent(sm.getCodFiscale()) ? sm.getCodFiscale() : "CFNONDISPONIBILE");
+		as.setCodiceIdentificativoUnivoco(sm.getCodFiscale());
 		as.setEmail(null);
 		as.setIndirizzo(null);
 		as.setLocalita(null);
