@@ -85,6 +85,10 @@ public interface ICostantiSanzioneSostitutiva {
 			+ "/files/siap/siep/sanzionesostitutiva/VerificaStatoPagamenti.jsp";
 	public static final String PG_ELENCO_STATO_PAGAMENTI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/ElencoStatoPagamenti.jsp";
+	public static final String PG_VERIFICA_STATO_BOLLETTINO = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/VerificaStatoBollettino.jsp";
+	public static final String PG_VERIFICA_ELENCO_STATO_BOLLETTINI = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/VerificaElencoStatoBollettini.jsp";
 	// MEV_2023-13 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR

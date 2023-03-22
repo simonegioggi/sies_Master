@@ -73,4 +73,7 @@ public interface ICostantiPagoPA {
 	public static final String PG_DETTAGLIO_CIVILMENTE_OBBLIGATO = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/DettaglioCivilmenteObbligato.jsp";
 
+	public static final String PG_INOLTRA_DOWNLOAD_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/pagoPA/InoltraDownloadAvvisoPagoPA.jsp";
+
 }

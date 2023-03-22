@@ -2,8 +2,8 @@
 <%-- MEV_2023-13_ aggiunta pagina di download avviso PagoPA --%>
 <%@ page import="f3b.web.IWebConstants"%>
 
-<jsp:useBean id="tipoFascicolo" scope="request" class="java.lang.String"/>
-<jsp:useBean id="idEvento" 		scope="request" class="java.lang.Object"/>
+<jsp:useBean id="tipoFascicolo" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="idEvento" 				scope="request" class="java.lang.Object"/>
 
 <html>
 <head>
@@ -15,12 +15,12 @@ function downloadAvviso() {
 }
 </script>
 </head>
-
 <body onLoad="downloadAvviso()" class="corpo">
 <FORM method="POST"  action="<%=IWebConstants.PG_MAIN%>" name="LoadDownloadAvvisoPagoPA"> 
-<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInvocaWSGeneraAvvisoPagoPA"/>
+<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInvocaWSVerificaStatoBollettini"/>
 <input type="hidden" name="tipoFascicolo" value="<%=tipoFascicolo%>"/>
-<input type="hidden" name="idEvento" value="<%=idEvento%>"/>
+<input type="hidden" name="IdEvento" value="<%=idEvento%>"/>
+<input type="hidden" name="idBollettinoPagopa" value="<%=(String[]) request.getAttribute("idBollettinoPagopa")%>"/>
 	
 <div align=center id="richCert" style="visibility:visible;position:absolute;top:200px;left:200px">
 <table bgcolor="#EEEEEE">
@@ -29,7 +29,7 @@ function downloadAvviso() {
 			<img src="/images/rotelle3.gif">
 		</td>
 		<td>
-			<font size=+1 color=navy>Attendere... Generazione Avviso PagoPA in corso.</font>
+			<font size=+1 color=navy>Attendere... Verifica Stato Bollettini in corso.</font>
 		</td>
 	</tr>
 </table>
