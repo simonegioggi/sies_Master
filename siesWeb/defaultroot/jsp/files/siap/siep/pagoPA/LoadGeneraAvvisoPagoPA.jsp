@@ -81,12 +81,11 @@ if (elencoStatoPagamenti.size() == 0) {
 	</tr>
 <%
 	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
-	int cont = 1;
 	while (itx.hasNext()) {
 		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
 %>
 	<tr>
-		<td class="c"><%=cont%></td>
+		<td class="c"><%=StringUtils.toStringJSP(bpm.getProgRata())%></td>
 		<td class="l">
 			<%="U".equals(bpm.getTipoRateizzazione()) ? bpm.getDescrTipoRateizzazione().toUpperCase() : "RATA " + StringUtils.toStringJSP(bpm.getProgRata())%>
 		</td>
@@ -96,7 +95,6 @@ if (elencoStatoPagamenti.size() == 0) {
       	<td class="c"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
 	</tr>
 <%
-		cont++;
 	} // end while su iterator sugli eventi
 } // end else
 if (Utils.isNullObj(evento.getDataTrasmissioneAtti()) && Utils.isNullObj(evento.getDataRicezioneAtti())) {

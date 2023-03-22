@@ -60,14 +60,16 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 					.getListaRateizzazioniPP();
 			setRequestAttribute("evento", listaRichiestaBollettini.firstElement().getEvento());
 			if (isElencoEmpty) {
+				int progressivoRata = 1;
 				// dalle rateizzazioni creo i bollettini
 				Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
 				while (iter.hasNext()) {
 					RateizzazionePPModel rata = iter.next();
 					for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
 						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata,
-								codUtente, codUfficio, "PN", i + 1);
+								codUtente, codUfficio, "PN", progressivoRata);
 						ibp.ExInserisciBollettinoPagopa(bpm);
+						progressivoRata++;
 					}
 				}
 				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);

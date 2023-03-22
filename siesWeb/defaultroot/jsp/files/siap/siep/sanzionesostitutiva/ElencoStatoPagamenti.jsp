@@ -109,12 +109,11 @@ if (elencoStatoPagamenti.size() == 0) {
 	</tr>
 <%
 	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
-	int numeroOrdine = 1;
 	while (itx.hasNext()) {
 		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
 %>
 	<tr>
-		<td class="c"><%="" + numeroOrdine%></td>
+		<td class="c"><%=StringUtils.toStringJSP(bpm.getProgRata())%></td>
 <%
 		if ("U".equals(bpm.getTipoRateizzazione())) {
 %>
@@ -147,7 +146,6 @@ if (elencoStatoPagamenti.size() == 0) {
       	</td>
 	</tr>
 <%
-		numeroOrdine += 1;
 	} // end while su iterator sugli eventi
 } // end else
 %>
