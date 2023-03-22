@@ -23,6 +23,12 @@
 <title>[S.I.E.S.] - Gestione Richiesta Bollettini PagoPA</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="/html/gestisciUploadStampa2.js"></script>
+<script language="JavaScript">
+function tornaIndietro(action) {
+	document.VerificaElencoStatoBollettini.<%=IWebConstants.ACTION_FIELD%>.value = action;
+	document.VerificaElencoStatoBollettini.submit();
+}
+</script>
 </head>
 <body class="corpo">
 <table>
@@ -37,7 +43,7 @@
 			<font class="campo">Verifica Stato Pagamento Bollettini per PagoPA</font>
       	</td>
       	<td class="LBG">
-			<a href="javascript:history.back()">
+			<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
           		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         	</a>
 		</td>

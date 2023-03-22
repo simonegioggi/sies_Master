@@ -24,7 +24,10 @@ public class ActInoltraDownloadAvvisoPagoPA extends ActionSiap implements ICosta
 		String[] idBollettinoPagopa = null;
 		if (!isRequestParameterNullObj("idBollettinoPagopa")) {
 			idBollettinoPagopa = getRequestStringParameters("idBollettinoPagopa");
-			setRequestAttribute("idBollettinoPagopa", idBollettinoPagopa);
+			String listaIdBollettini = "";
+			for (int i = 0; i < idBollettinoPagopa.length; i++)
+				listaIdBollettini += idBollettinoPagopa[i] + "#";
+			setRequestAttribute("listaIdBollettini", listaIdBollettini);
 		} else {
 			// pagina di ritorno
 			RedirectTo rt = new RedirectTo();

@@ -2,8 +2,9 @@
 <%-- MEV_2023-13_ aggiunta pagina di download avviso PagoPA --%>
 <%@ page import="f3b.web.IWebConstants"%>
 
-<jsp:useBean id="tipoFascicolo" 		scope="request" class="java.lang.String"/>
-<jsp:useBean id="idEvento" 				scope="request" class="java.lang.Object"/>
+<jsp:useBean id="tipoFascicolo" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="idEvento" 			scope="request" class="java.lang.Object"/>
+<jsp:useBean id="listaIdBollettini" scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -20,7 +21,7 @@ function downloadAvviso() {
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInvocaWSVerificaStatoBollettini"/>
 <input type="hidden" name="tipoFascicolo" value="<%=tipoFascicolo%>"/>
 <input type="hidden" name="IdEvento" value="<%=idEvento%>"/>
-<input type="hidden" name="idBollettinoPagopa" value="<%=(String[]) request.getAttribute("idBollettinoPagopa")%>"/>
+<input type="hidden" name="listaIdBollettini" value="<%=listaIdBollettini%>"/>
 	
 <div align=center id="richCert" style="visibility:visible;position:absolute;top:200px;left:200px">
 <table bgcolor="#EEEEEE">

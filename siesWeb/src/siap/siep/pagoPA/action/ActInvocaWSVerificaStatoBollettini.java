@@ -67,8 +67,9 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 			idFascicolo = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
 		setRequestAttribute("idFascicolo", idFascicolo.toString());
 
-		String[] idBollettinoPagopa = getRequestStringParameters("idBollettinoPagopa");
-		ArrayList<String> al = new ArrayList<>(Arrays.asList(idBollettinoPagopa));
+		String listaIdBollettini = getRequestStringParameter("listaIdBollettini");
+		String[] lista = listaIdBollettini.split("#");
+		ArrayList<String> al = new ArrayList<>(Arrays.asList(lista));
 
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
@@ -92,39 +93,28 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					// java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale,
 					// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
 					// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
-					// dimensionePagina,
-					// int numeroPagina
-					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE",
-							/* bpm.getCodiceFiscale() */"SGMSMV72D23H501S",
-							/* bpm.getCodiceDistretto() */"GLTO", "Pagamenti in favore Amministrazione", null,
-							null, null, 0, 0);
+					// dimensionePagina, int numeroPagina
+					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", bpm.getCodiceFiscale(),
+							bpm.getCodiceDistretto(), null, null, null, null, 0, 0);
 				} catch (Exception e) {
 					e.printStackTrace();
 					siesLogger.error(e.getMessage());
 					throw e;
 				}
 				// info per il log
-				siesLogger.debug("Risultato Ricerca: Count = " + rr.getCount());
-				siesLogger.debug("codiceCRS = " + /* ega.getNumeroAvviso() */"330097149392676039");
-				siesLogger.debug("tipologia = PENPE");
-				siesLogger.debug(
-						"codiceFiscale = " + /* asp.getCodiceIdentificativoUnivoco() */"SGMSMV72D23H501S");
-				siesLogger.debug("codiceDistretto = GLTO");
-				siesLogger.debug("causale = Pagamenti in favore Amministrazione");
-				siesLogger.debug("stato = #NULL=tutti#");
 				if (rr != null && rr.getCount() > 0) {
 					Object[] srps = rr.getItems();
 					for (int i = 0; i < srps.length; i++) {
 						StatoRichiestaPagamento srp = (StatoRichiestaPagamento) srps[i];
 						String dataRichiesta = (srp.getDataRichiesta() != null)
 								? DateUtils.getDateToString(srp.getDataRichiesta().getTime(), "dd/MM/yyyy")
-								: null;
-						siesLogger.debug("Risultato Ricerca: Count = " + (i + 1)
-								+ "; Denominazione Pagatore = " + srp.getDenominazionePagatore()
-								+ "; Descrizione Tipologia = " + srp.getDescrizioneTipologia()
-								+ "; Importo = " + srp.getImporto() + "; Numero Avviso = "
-								+ srp.getNumeroAvviso() + "; Pagatore = " + srp.getPagatore() + "; Stato = "
-								+ srp.getStato() + "; Data Richiesta = " + dataRichiesta);
+								: "";
+						String dataRicevuta = (srp.getDataRicevuta() != null)
+								? DateUtils.getDateToString(srp.getDataRicevuta().getTime(), "dd/MM/yyyy")
+								: "";
+						siesLogger
+								.debug("Risultato Ricerca: Stato = " + srp.getStato() + "; Data Richiesta = "
+										+ dataRichiesta + "; Data Ricevuta = " + dataRicevuta);
 					}
 				}
 			}

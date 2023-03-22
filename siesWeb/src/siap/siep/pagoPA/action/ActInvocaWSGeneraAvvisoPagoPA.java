@@ -157,8 +157,8 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			bpm.setCodOperatoreAggiornamento(utm.getUserId());
 			bpm.setDataAggiornamento(DateUtils.getSysDate());
 			bpm.setDocBollBlob(bais);
-			// bpm.setCodiceFiscale(sm.getCodFiscale());
-			// bpm.setCodiceDistretto(rpt.getCodiceDistretto());
+			bpm.setCodiceFiscale(sm.getCodFiscale());
+			bpm.setCodiceDistretto(rpt.getCodiceDistretto());
 			String iuv = Utils.isPresent(ega.getNumeroAvviso()) ? ega.getNumeroAvviso().substring(1) : "";
 			bpm.setIuv(iuv);
 			ibp.ExModificaBollettinoPagopa(bpm);

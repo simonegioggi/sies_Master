@@ -37,6 +37,11 @@ function eseguiAzione(tipoAzione, id) {
 		stampa2("/jsp/files/Stampa.jsp", parametri);
 	}
 }
+
+function tornaIndietro(action) {
+	document.ElencoStatoPagamenti.<%=IWebConstants.ACTION_FIELD%>.value = action;
+	document.ElencoStatoPagamenti.submit();
+}
 </script>
 </head>
 <body class="corpo">
@@ -52,7 +57,7 @@ function eseguiAzione(tipoAzione, id) {
 			<font class="campo">Stato Bollettini per Pagamento Pena Pecuniaria</font>
       	</td>
       	<td class="LBG">
-			<a href="javascript:history.back()">
+			<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
           		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         	</a>
 		</td>
