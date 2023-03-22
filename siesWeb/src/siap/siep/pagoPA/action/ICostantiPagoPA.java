@@ -49,6 +49,15 @@ public interface ICostantiPagoPA {
 	public static final String CAMPO_EMAIL = "Email";
 	public static final String CAMPO_TIPO_TUTORE = "TipoTutore";
 
+    public static final String PAGOPA_STATO_CARRELLO    = "CARRELLO";
+    public static final String PAGOPA_STATO_DISPONIBILE = "DISPONIBILE";
+    public static final String PAGOPA_STATO_ERRORE      = "ERRORE";
+    public static final String PAGOPA_STATO_GENERATA    = "GENERATA";
+    
+    public static final String SIES_STATO_NON_PAGATO = "PN";
+    public static final String SIES_STATO_PAGATO     = "PA";
+    public static final String SIES_STATO_PAGATO_PARZIALMENTE = "PP";
+    
 	public static final String PG_VISUALIZZA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/VisualizzaAvvisoPagoPA.jsp";
 

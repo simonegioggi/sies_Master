@@ -33,4 +33,14 @@ public interface IBollettinoPagopa {
 
 	String[] ExRicercaCodiciUfficiProduzione(String codUfficio) throws F3BException;
 
+	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaNonPagati (int dayOffset) throws F3BException;
+
+	public void ExAggiornaStatoPagamentoBollettinoPagopa (BollettinoPagopaModel com) throws F3BException;
+	
+	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte (int dayOffset) throws F3BException;
+
+    public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperteInScadenza (int inScadenzaTraGiorni, int controllateDaGiorni) throws F3BException;
+
+    public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
+
 }

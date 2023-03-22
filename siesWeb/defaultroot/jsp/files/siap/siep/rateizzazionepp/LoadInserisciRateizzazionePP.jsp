@@ -156,7 +156,7 @@ function Verify() {
   if (sommaRate < parseFloat (importoDaPagare)) {
 	  var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+" euro) "
 	           + "risulta inferiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+" euro. "
-	           + "Si vuole procedre comunque?";
+	           + "Si vuole procedere comunque?";
   
 	  if (!window.confirm(msg))
 		  return false;
@@ -164,7 +164,7 @@ function Verify() {
   else if (sommaRate > parseFloat (importoDaPagare)) {
       var msg =  "Attenzione la somma delle rate da pagare ("+sommaRate+" euro) "
                + "risulta superiore al valore indicato come Importo Da Pagare "+parseFloat (importoDaPagare)+" euro. "
-               + "Si vuole procedre comunque?";
+               + "Si vuole procedere comunque?";
   
       if (!window.confirm(msg))
           return false;

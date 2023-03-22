@@ -17,6 +17,8 @@ public interface LogF3B {
 	public final static String AVVOCATURA_LOG = "AvvocaturaLog";
 	// mev problema code per sies 11.3: aggiunto un log per le code jms
 	public final static String JMS_LOG = "CodeJmsLog";
+	
+	public final static String PAGO_PA_LOG = "PagoPALog";
 
 
 }

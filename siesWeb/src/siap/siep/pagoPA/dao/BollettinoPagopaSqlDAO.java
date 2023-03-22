@@ -124,4 +124,64 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		setStatement(s);
 	}
 
+    /**
+     * 
+     * @param offset
+     * @throws DAOException
+     */
+   public void ricercaBollettiniPagopaNonPagati(int dayOffset) throws DAOException {
+
+        String s = getSqlQuery();
+        s += " AND STATO_PAGAMENTO = 'PN' ";  //PN = NON PAGATO
+        if (dayOffset>0) {
+            s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-"+dayOffset+")";  //
+        }
+        setStatement(s);
+    }
+   
+   public void ricercaBollettiniPagopaNonPagatiByCF(String aCodiceFiscale, int dayOffset) throws DAOException {
+
+       String s = getSqlQuery();
+       s += " AND STATO_PAGAMENTO = 'PN' ";  //PN = NON PAGATO
+       s += " AND CODICE_FISCALE = '"+aCodiceFiscale+"' ";
+       if (dayOffset>0) {
+           s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-"+dayOffset+")";  //
+       }
+       setStatement(s);
+   }
+   
+   public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni) throws DAOException {
+
+       String s = "SELECT DISTINCT CODICE_FISCALE, CODICE_DISTRETTO "
+               + " FROM BOLLETTINO_PAGOPA "
+               + " WHERE 1=1 ";
+       s += " AND CODICE_FISCALE IS NOT NULL ";  // Codice fiscale Valorizzato
+       s += " AND IUV IS NOT NULL ";  // Bollettino generato
+       s += " AND STATO_PAGAMENTO = 'PN' ";  // PN = NON PAGATO
+      
+       if (inScadenzaTraGiorni>0) {
+           s += " AND DATA_SCADENZA > (SYSDATE-"+controllateDaGiorni+")";  //
+       }
+       
+       if (controllateDaGiorni>0) {
+           s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-"+controllateDaGiorni+")";  //
+       }
+       setStatement(s);
+   }
+
+   public GenericModel getModelDebitori() throws DAOException {
+
+       BollettinoPagopaModel aModel = new BollettinoPagopaModel();
+       aModel.setCodiceFiscale(getString("CODICE_FISCALE"));   
+       aModel.setCodiceDistretto(getString("CODICE_DISTRETTO"));
+
+       return aModel;
+   }
+   
+   public void ricercaBollettinoPagopaByIUV(String codiceCRS) throws DAOException {
+
+       String s = getSqlQuery();
+       s += " AND IUV = '" + codiceCRS +"' ";
+       setStatement(s);
+   }
 }

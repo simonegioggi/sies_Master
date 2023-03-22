@@ -41,7 +41,12 @@ public class BollettinoPagopaModel extends GenericModel {
 	private BigDecimal mRatIdRateizzazionePP;
 	private String mDescrTipoRateizzazione;
 	private String mDescrStatoPagamento;
-
+	private Date mDataUltimoControllo;
+	private String mCodiceFiscale;
+    private String mStatoPagopa;
+    private String mErrorePagopa;
+    private String mCodiceDistretto;
+    
 	// COSTRUTTORE DI DEFAULT
 	public BollettinoPagopaModel() {
 
@@ -67,6 +72,11 @@ public class BollettinoPagopaModel extends GenericModel {
 		this.mRatIdRateizzazionePP = null;
 		this.mDescrTipoRateizzazione = "";
 		this.mDescrStatoPagamento = "";
+		this.mDataUltimoControllo = null;
+		this.mCodiceFiscale = null;		
+		this.mStatoPagopa = null;
+		this.mErrorePagopa = null;
+		this.mCodiceDistretto = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -94,6 +104,11 @@ public class BollettinoPagopaModel extends GenericModel {
 		this.mRatIdRateizzazionePP = aModel.mRatIdRateizzazionePP;
 		this.mDescrTipoRateizzazione = aModel.mDescrTipoRateizzazione;
 		this.mDescrStatoPagamento = aModel.mDescrStatoPagamento;
+		this.mDataUltimoControllo = aModel.mDataUltimoControllo;
+		this.mCodiceFiscale = aModel.mCodiceFiscale;
+	    this.mStatoPagopa = aModel.mStatoPagopa;
+	    this.mErrorePagopa = aModel.mErrorePagopa;
+	    this.mCodiceDistretto = aModel.mCodiceDistretto;
 	}
 
 	// COSTRUTTORE MODEL
@@ -103,7 +118,9 @@ public class BollettinoPagopaModel extends GenericModel {
 			String aCodOperatoreInserimento, Date aDataInserimento,
 			String aCodUfficioInserimento, String aCodOperatoreAggiornamento, Date aDataAggiornamento,
 			String aCodUfficioAggiornamento, BigDecimal aFasSieIdFascicolSiep,
-			BigDecimal aRatIdRateizzazionePP, String aDescrTipoRateizzazione, String aDescrStatoPagamento) {
+			BigDecimal aRatIdRateizzazionePP, Date aDataUltimoControllo, String aCodiceFiscale,
+			String aStatoPagopa, String aErrorePagopa, String aCodiceDistretto		
+			,  String aDescrTipoRateizzazione, String aDescrStatoPagamento) {
 
 		this.mIdBollettinoPagopa = aIdBollettinoPagopa;
 		this.mProgRata = aProgRata;
@@ -127,6 +144,11 @@ public class BollettinoPagopaModel extends GenericModel {
 		this.mRatIdRateizzazionePP = aRatIdRateizzazionePP;
 		this.mDescrTipoRateizzazione = aDescrTipoRateizzazione;
 		this.mDescrStatoPagamento = aDescrStatoPagamento;
+		this.mDataUltimoControllo = aDataUltimoControllo;
+		this.mCodiceFiscale = aCodiceFiscale;
+		this.mStatoPagopa = aStatoPagopa;
+		this.mErrorePagopa = aErrorePagopa;
+		this.mCodiceDistretto = aCodiceDistretto;
 	}
 
 	//
@@ -218,7 +240,26 @@ public class BollettinoPagopaModel extends GenericModel {
 	public String getDescrStatoPagamento() {
 		return mDescrStatoPagamento;
 	}
+	
+    public Date getDataUltimoControllo() {
+        return mDataUltimoControllo;
+    }
+    
+    public String getCodiceFiscale() {
+        return mCodiceFiscale;
+    }
+    
+    public String getStatoPagopa() {
+        return mStatoPagopa;
+    }
+    
+    public String getErrorePagopa() {
+        return mErrorePagopa;
+    }
 
+    public String getCodiceDistretto() {
+        return mCodiceDistretto;
+    }
 	//
 	// METODI SET()
 	//
@@ -311,4 +352,23 @@ public class BollettinoPagopaModel extends GenericModel {
 		this.mDescrStatoPagamento = mDescrStatoPagamento;
 	}
 
+   public void setDataUltimoControllo(Date aValore) {
+        this.mDataUltimoControllo = aValore;
+   }
+   
+   public void setCodiceFiscale(String aValore) {
+       this.mCodiceFiscale = aValore;
+   }
+   
+   public void setStatoPagopa(String aValore) {
+       this.mStatoPagopa = aValore;
+   }
+   
+   public void setErrorePagopa(String aValore) {
+       this.mErrorePagopa = aValore;
+   }
+   
+   public void setCodiceDistretto(String aValore) {
+       this.mCodiceDistretto= aValore;
+   }
 }

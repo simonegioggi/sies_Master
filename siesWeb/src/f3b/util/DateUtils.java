@@ -964,5 +964,13 @@ public class DateUtils {
 
 		return days;
 	}
+	
+	   public static Date getDate (Calendar aCalendar) {
+//	        GregorianCalendar lCalendar = new GregorianCalendar(aYear, aMonth - 1, 1, 0, 0, 0);
+//	        lCalendar.add(Calendar.MONTH, 1);
+//	        lCalendar.add(Calendar.SECOND, -1);
+
+	        return (aCalendar.getTime());
+	    }
 
 }

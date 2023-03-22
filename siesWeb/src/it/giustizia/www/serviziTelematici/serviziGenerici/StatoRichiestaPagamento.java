@@ -7,6 +7,8 @@
 
 package it.giustizia.www.serviziTelematici.serviziGenerici;
 
+import f3b.util.DateUtils;
+
 public class StatoRichiestaPagamento  implements java.io.Serializable {
     private java.lang.String id;
 
@@ -814,5 +816,36 @@ public class StatoRichiestaPagamento  implements java.io.Serializable {
           new  org.apache.axis.encoding.ser.BeanDeserializer(
             _javaType, _xmlType, typeDesc);
     }
+    
+    
+    public String toString1() {
+        String lStr = new String();
+
+        lStr = "StatoRichiestaPagamento:\n" 
+          + "[ id                    = " + id + " ]\n"
+          + "[ codiceCRS             = " + codiceCRS + " ]\n"
+          + "[ stato                 = " + stato + " ]\n"  
+          + "[ importo               = " + importo + " ]\n"  
+          + "[ dataRichiesta         = " + dataRichiesta + " ]\n"  
+          + "[ dataRichiestaAsDate   = " + (dataRichiesta!=null ? DateUtils.getDate(dataRichiesta):null) + " ]\n"  
+          + "[ dataRicevuta          = " + dataRicevuta + " ]\n"  
+          + "[ dataRicevutaAsDate    = " + (dataRicevuta!=null ? DateUtils.getDate(dataRicevuta):null) + " ]\n"  
+          + "[ numeroAvviso          = " + numeroAvviso + " ]\n"
+          + "[ errore                = " + errore + " ]\n"  
+          + "[ codiceDistretto       = " + codiceDistretto + " ]\n"
+          + "[ descrizioneDistretto  = " + descrizioneDistretto + " ]\n"
+          + "[ pagatore              = " + pagatore + " ]\n"
+          + "[ denominazionePagatore = " + denominazionePagatore + " ]\n"
+          + "[ versante              = " + versante + " ]\n"
+          + "[ denominazioneVersante = " + denominazioneVersante + " ]\n"  
+          + "[ causale               = " + causale + " ]\n"  
+          + "[ statoNodoPA           = " + statoNodoPA + " ]\n"  
+          + "[ tipologia             = " + tipologia + " ]\n"  
+          + "[ ruolo                 = " + ruolo + " ]\n"  
+          + "[ destinazione          = " + destinazione + " ]\n"  
+          + "[ descrizioneTipologia  = " + descrizioneTipologia + " ]";  
+
+      return lStr;
+    }    
 
 }
