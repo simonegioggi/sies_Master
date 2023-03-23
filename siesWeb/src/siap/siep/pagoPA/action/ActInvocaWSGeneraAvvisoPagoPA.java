@@ -206,7 +206,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// c.setTime(DateUtils.getSysDate());
 		// rr = scpt.elencoPagamenti(/* ega.getNumeroAvviso() */null, "PENPE",
 		// /* asp.getCodiceIdentificativoUnivoco() */"SGMSMV72D23H501S", "GLTO",
-		// "Pagamenti in favore Amministrazione", null, null, null, 0, 0);
+		// "Sanzione pecuniaria", null, null, null, 0, 0);
 		// } catch (Exception e) {
 		// e.printStackTrace();
 		// siesLogger.error(e.getMessage());
@@ -219,7 +219,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// siesLogger
 		// .debug("codiceFiscale = " + /* asp.getCodiceIdentificativoUnivoco() */"SGMSMV72D23H501S");
 		// siesLogger.debug("codiceDistretto = GLTO");
-		// siesLogger.debug("causale = Pagamenti in favore Amministrazione");
+		// siesLogger.debug("causale = Sanzione pecuniaria");
 		// siesLogger.debug("stato = #NULL=tutti#");
 		// if (rr != null && rr.getCount() > 0) {
 		// Object[] srps = rr.getItems();

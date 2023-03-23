@@ -53,8 +53,7 @@ function tornaIndietro(action) {
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
 <FORM action="<%=IWebConstants.PG_MAIN%>" method="post" name="VerificaElencoStatoBollettini">
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInoltraDownloadAvvisoPagoPA">
-<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="">
+<input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInoltraDownloadAvvisoPagoPA">
 <input type="hidden" name="<%=IWebConstants.LINK_RITORNO%>" value="">
 <input type="hidden" name="tipoFascicolo" value="SIEP">
 <input type="hidden" name="IdEvento" value="<%=evento.getIdEvento()%>">

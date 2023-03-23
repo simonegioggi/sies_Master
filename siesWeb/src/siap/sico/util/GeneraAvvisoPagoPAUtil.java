@@ -65,7 +65,7 @@ public class GeneraAvvisoPagoPAUtil {
 		DatiSingoloVersamento dsv = new DatiSingoloVersamento();
 		String importo = (Utils.isNullObj(bpm.getImportoRata())) ? "" : bpm.getImportoRata().toString();
 		dsv.setImporto(new BigDecimal(importo));
-		String causale = "Pagamenti in favore Amministrazione";
+		String causale = "Sanzione pecuniaria"; // ex "Pagamenti in favore Amministrazione"
 		dsv.setCausale("/" + importo + "/TXT/" + causale);
 		dsv.setDatiSpecificiRiscossione("PENPE");
 		dsv.setDatiMarcaBolloDigitale(null);
@@ -87,7 +87,7 @@ public class GeneraAvvisoPagoPAUtil {
 	//
 	// DatiSingoloVersamento[] dsv = new DatiSingoloVersamento[1]; // da 1 a 5 occorrenze???
 	// dsv[0] = new DatiSingoloVersamento();
-	// String causale = "Pagamenti in favore Amministrazione";
+	// String causale = "Sanzione pecuniaria";
 	// // se DatiMarcaBolloDigitale è valorizzato allora l'importo è di 16.00
 	// // DatiMarcaBolloDigitale dmbd = caricaDatiMarcaBolloDigitale(sm);
 	// dsv[0].setDatiMarcaBolloDigitale(null);

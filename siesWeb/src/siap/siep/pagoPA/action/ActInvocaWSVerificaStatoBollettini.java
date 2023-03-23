@@ -94,8 +94,13 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
 					// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
 					// dimensionePagina, int numeroPagina
-					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", bpm.getCodiceFiscale(),
-							bpm.getCodiceDistretto(), null, null, null, null, 0, 0);
+					siesLogger.debug("Parametri di passaggio: codiceCRS = " + "3" + bpm.getIuv()
+							+ "; tipologia = PENPE; " + "codiceFiscale = " + bpm.getCodiceFiscale()
+							+ "; codiceDistretto = " + bpm.getCodiceDistretto()
+							+ "; causale,stato,dataRichiestaDa,dataRichiestaA = NULL; dimensionePagina, numeroPagina = 0;");
+					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), /* "PENPE" */null,
+							bpm.getCodiceFiscale(), /* bpm.getCodiceDistretto() */null, null, null,
+							null, null, 0, 0);
 				} catch (Exception e) {
 					e.printStackTrace();
 					siesLogger.error(e.getMessage());
@@ -116,7 +121,8 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 								.debug("Risultato Ricerca: Stato = " + srp.getStato() + "; Data Richiesta = "
 										+ dataRichiesta + "; Data Ricevuta = " + dataRicevuta);
 					}
-				}
+				} else
+					siesLogger.debug("Risultato Ricerca: ATTENZIONE! Nessun Bollettino restituito!");
 			}
 		}
 
