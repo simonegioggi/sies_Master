@@ -8,8 +8,8 @@
 <%@ page import="java.util.Iterator"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
-
 <%@ page import="siap.siep.pagoPA.model.BollettinoPagopaModel"%>
+<%@ page import="siap.web.ISIAPCostantiWeb"%>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -61,6 +61,10 @@ function tornaIndietro(action) {
           		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         	</a>
 		</td>
+		<!-- BOTTONE DI STAMPA -->
+<%-- 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
+<%--        		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/> --%>
+<%--       	</jsp:include> --%>
 	</tr>
 </table>
 <br>

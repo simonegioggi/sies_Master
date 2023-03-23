@@ -21,7 +21,7 @@ public class ActDettaglioCivilmenteObbligato extends ActionSiap implements ICost
 	public String processRequest() throws Exception {
 
 		// Gestione pulsante di ritorno
-		setLinkRitorno();
+		// setLinkRitorno();
 
 		// String idCivilmenteObbligato = getRequestStringParameter(CAMPO_ID_CIVILMENTE_OBBLIGATO);
 		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();

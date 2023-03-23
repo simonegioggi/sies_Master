@@ -30,7 +30,7 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 		String lPage = PG_LOAD_INSERISCI_CIVILMENTE_OBBLIGATO;
 
 		// Gestione pulsante di ritorno
-		gestioneRitorno();
+		// gestioneRitorno();
 
 		// Fascicolo siep in sessione
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
