@@ -70,26 +70,6 @@ public class BatchPagopaModel extends GenericModel {
         this.mTipoRateizzazione = aTipoRateizzazione;
         this.mIuv = aIuv;
         this.mImportoRata = aImportoRata;
-        this.mImportoPagato = aImportoPagato;
-        this.mDataAvvPagamento = aDataAvvPagamento;
-        this.mDataScadenza = aDataScadenza;
-        this.mDataScadenzaRich = aDataScadenzaRich;
-        if (aStatoPagamento != null)
-            this.mStatoPagamento = aStatoPagamento.toUpperCase();
-        this.mCodOperatoreInserimento = aCodOperatoreInserimento;
-        this.mDataInserimento = aDataInserimento;
-        this.mCodUfficioInserimento = aCodUfficioInserimento;
-        this.mCodOperatoreAggiornamento = aCodOperatoreAggiornamento;
-        this.mDataAggiornamento = aDataAggiornamento;
-        this.mCodUfficioAggiornamento = aCodUfficioAggiornamento;
-        this.mFasSieIdFascicolSiep = aFasSieIdFascicolSiep;
-        this.mRatIdRateizzazionePP = aRatIdRateizzazionePP;
-        this.mDescrTipoRateizzazione = aDescrTipoRateizzazione;
-        this.mDescrStatoPagamento = aDescrStatoPagamento;
-        this.mDataUltimoControllo = aDataUltimoControllo;
-        this.mCodiceFiscale = aCodiceFiscale;
-        this.mStatoPagopa = aStatoPagopa;
-        this.mErrorePagopa = aErrorePagopa;
     }
 */
     public BigDecimal getIdBatchPagopa() {
@@ -150,4 +130,18 @@ public class BatchPagopaModel extends GenericModel {
     }
 
     
+    public String toString() {
+        String lStr = new String();
+
+        lStr = "BatchPagopaModel:\n" 
+                + "[ mIdBatchPagopa             = " + mIdBatchPagopa + " ]\n"
+                + "[ mDataInizioEsecuzione      = " + mDataInizioEsecuzione + " ]\n"
+                + "[ mDataFineEsecuzione        = " + mDataFineEsecuzione + " ]\n"
+                + "[ mNumPosDebitorieVerificate = " + mNumPosDebitorieVerificate + " ]\n"
+                + "[ mNumBollettiniAggiornati   = " + mNumBollettiniAggiornati + " ]\n"
+                + "[ mEsitoEsecuzione           = " + mEsitoEsecuzione + " ]\n"
+                + "[ mErroreEsecuzione          = " + mErroreEsecuzione + " ]" ;
+                
+        return lStr;
+    }
 }

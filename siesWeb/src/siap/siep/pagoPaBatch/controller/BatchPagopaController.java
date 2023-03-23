@@ -66,6 +66,11 @@ public class BatchPagopaController extends SiapController  implements IBatchPago
             
             batchDao = new BatchPagopaDAO(c);
 
+            siesLogger.debug("batchModelRet = "+batchModelRet);
+            if (batchModelRet.getErroreEsecuzione()!=null)
+                siesLogger.debug("batchModelRet = "+batchModelRet.getErroreEsecuzione().length());
+            if (batchModelRet.getErroreEsecuzione()!=null)
+                siesLogger.debug("getEsitoEsecuzione = "+batchModelRet.getEsitoEsecuzione().length());
             // Aggiornamento esito lancio batch
             batchDao.setDAOFromModelForUpdate(batchModelRet);
             batchDao.setCondizioneUpdate (batchModel.getIdBatchPagopa());

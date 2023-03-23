@@ -56,9 +56,9 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 			if (!isRequestParameterNullEmptyObj(
 					ICostantiOrdineEsecuzione.ABILITA_NOTIFICA + "_" + lNotificaModel.getIdNotifica())) {
 				siesLogger.debug("Trovata notifica per id = " + lNotificaModel.getIdNotifica());
-
+				
 				NotificaModel lNotMod = new NotificaModel();
-				String IdNotifica = lNotificaModel.getIdNotifica().toString();
+                String IdNotifica = lNotificaModel.getIdNotifica().toString();
 
 				String lGiornoNot = this.getRequestStringParameter(
 						ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
@@ -67,6 +67,20 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 				String lAnnoNot = this.getRequestStringParameter(
 						ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
 
+                String lAutoritaDelegata = this.getRequestStringParameter(
+                        ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA + "_" + IdNotifica);
+                String lSedeAutoritaDelegata = this.getRequestStringParameter(
+                        ICostantiAutoritaEsterna.CAMPO_COD_SEDE + "_" + IdNotifica);
+                String lIndirizzo = this.getRequestStringParameter(
+                        ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE + "_" + IdNotifica);
+
+                // Devo controllare se i campi sono stati valorizzati
+                if (lGiornoNot.equals("")) 
+                {
+                    // dato obbligatorio in presenza di altri campi, se a "" vuol dire che gli
+                    // altri campi sono vuoti e si deve saltare la notifica
+                    continue;
+                }
 				lNotMod.setDataAvvenutaNotifica(DateUtils.getDate(lAnnoNot, lMeseNot, lGiornoNot));
 				lNotMod.setIdNotifica(new BigDecimal(IdNotifica));
 				lNotMod.setEveIdEvento(this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
@@ -83,12 +97,6 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 					lNotMod.setCodTipoNotifica("E");
 				}
 
-				String lAutoritaDelegata = this.getRequestStringParameter(
-						ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA + "_" + IdNotifica);
-				String lSedeAutoritaDelegata = this.getRequestStringParameter(
-						ICostantiAutoritaEsterna.CAMPO_COD_SEDE + "_" + IdNotifica);
-				String lIndirizzo = this.getRequestStringParameter(
-						ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE + "_" + IdNotifica);
 
 				if (!lAutoritaDelegata.equals("-")) {
 					AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();

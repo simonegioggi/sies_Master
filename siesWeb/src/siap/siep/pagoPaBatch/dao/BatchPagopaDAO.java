@@ -123,7 +123,8 @@ public class BatchPagopaDAO extends SIAPTableDAO {
         setNumPosDebitorieVerificate(aModel.getNumPosDebitorieVerificate());
         setNumBollettiniAggiornati(aModel.getNumBollettiniAggiornati());
         setEsitoEsecuzione(aModel.getEsitoEsecuzione());
-        setErroreEsecuzione(aModel.getErroreEsecuzione());    }
+        setErroreEsecuzione(aModel.getErroreEsecuzione());    
+    }
 
     public void setCondizioneUpdate(BigDecimal IdBatchPagopa) {
         setCondition(" ID_BATCH_PAGOPA = " + IdBatchPagopa);
