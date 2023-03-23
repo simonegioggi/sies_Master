@@ -237,6 +237,10 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// }
 		// }
 
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
 		// pagina di ritorno
 		RedirectTo rt = new RedirectTo();
 		rt.setPage(IWebConstants.PG_MAIN);
