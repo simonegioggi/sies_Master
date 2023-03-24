@@ -4,11 +4,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfImportedPage;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfWriter;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
@@ -38,12 +45,15 @@ public class ActStampaMassivaBollettini extends ActionSiap {
 				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		ByteArrayOutputStream baosSingolo = null;
-		ByteArrayOutputStream baosMassivo = new ByteArrayOutputStream();
+		byte[][] listaByteArray = new byte[elencoStatoPagamenti.size()][];
+		int cont = 0;
 		while (iterBPM.hasNext()) {
 			BollettinoPagopaModel bpm = iterBPM.next();
 			baosSingolo = ibp.ExGetBollettino(bpm.getIdBollettinoPagopa());
-			baosMassivo.write(baosSingolo.toByteArray());
+			listaByteArray[cont] = baosSingolo.toByteArray();
+			cont++;
 		}
+		ByteArrayOutputStream baosMassivo = concatPDF(null);
 		baosMassivo.close();
 
 		// ==============================================
@@ -57,6 +67,43 @@ public class ActStampaMassivaBollettini extends ActionSiap {
 
 		// valore di ritorno
 		return IWebConstants.PG_DOWNLOAD_PDF;
+	}
+
+	private static PdfReader getReader(byte[] b) {
+
+		try {
+			return new PdfReader(b);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static ByteArrayOutputStream/* byte[] */ concatPDF(List<byte[]> bytes)
+			throws IOException, DocumentException {
+
+		List<PdfReader> readers = bytes.stream().map(i -> getReader(i)).collect(Collectors.toList());
+		Document document = new Document();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PdfWriter writer = PdfWriter.getInstance(document, baos);
+		document.open();
+		PdfContentByte pageContentByte = writer.getDirectContent();
+		PdfImportedPage pdfImportedPage;
+		int currentPdfReaderPage = 1;
+		Iterator<PdfReader> iteratorPDFReader = readers.iterator();
+		while (iteratorPDFReader.hasNext()) {
+			PdfReader pdfReader = iteratorPDFReader.next();
+			while (currentPdfReaderPage <= pdfReader.getNumberOfPages()) {
+				document.newPage();
+				pdfImportedPage = writer.getImportedPage(pdfReader, currentPdfReaderPage);
+				pageContentByte.addTemplate(pdfImportedPage, 0, 0);
+				currentPdfReaderPage++;
+			}
+			currentPdfReaderPage = 1;
+		}
+		baos.flush();
+		document.close();
+		baos.close();
+		return baos/* .toByteArray() */;
 	}
 
 }
