@@ -335,4 +335,7 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 		setCondition(" ID_BOLLETTINO_PAGOPA = " + IdBollettinoPagopa);
 	}
 
+    public void selCondizioneDeleteByIdRata(BigDecimal IdRateizzazione) {
+        setCondition(" RAT_ID_RATEIZZAZIONE_PP = " + IdRateizzazione);
+    }	
 }

@@ -191,5 +191,12 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		s += " AND IUV = '" + codiceCRS + "' ";
 		setStatement(s);
 	}
+	
+   public void ricercaBollettinoPagopaByReteizzazione(BigDecimal idRateizzazione) throws DAOException {
+
+       String s = getSqlQuery();
+       s += " AND RAT_ID_RATEIZZAZIONE_PP = " + idRateizzazione;
+       setStatement(s);
+   }
 
 }

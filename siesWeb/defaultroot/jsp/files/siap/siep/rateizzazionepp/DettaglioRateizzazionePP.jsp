@@ -31,12 +31,12 @@ function cancellaRate(){
   alert("Non e' possibile Cancellare le rate in quanto e' gia' stato emesso o e' in fase di inserimento un Ordine di Ingiunzione.");
   <% } else { %>
   var msgConfirm = "Si vuole procedere con la cancellazione di tutte le rate?"; 
+  msgConfirm = msgConfirm+" Gli eventuali bollettini già emessi verranno cancellati."
+
   if (window.confirm(msgConfirm)) {
     document.RateizzazionePP.Action.value = lAzione;
     document.RateizzazionePP.submit();
   }
-  else 
-    return false; 
   <% } %>
 }
 
@@ -131,12 +131,15 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
        <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
        <td class="Titolo" colspan="6"> Pagamento Rateizzato </td>
        <% } %>
+       <td class="Titolo" colspan="1">Emessi bollettini</td>
+       <td class="Titolo" colspan="1">Emesso ordine di ingiunzione</td>
     </tr>
     
+    <!--
     <tr>
-      <td class="R" colspan="6">&nbsp;</td>
+      <td class="R" colspan="4">&nbsp;</td>
     </tr>
-    
+    -->
     <%
     Iterator IteRate = listaRateizzazioni.iterator();
     int conta = 0;
@@ -169,11 +172,24 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       <% } else { %>
           <td class="R" colspan="3">&nbsp;</td>
       <% } %>
-        <%  if ( rata.getEveIdEvento()!=null)  {%>   
-        <td class="L" nowrap><font class="label" style="color:red;" >Emesso ordine di ingiunzione</td>
+        
+
+        <%  if ( rata.getListaBollettini()!=null && rata.getListaBollettini().size()>0)  {%>   
+<!--        <td class="L" nowrap><font class="label" style="color:red;" >Emessi bollettini</font></td> -->
+        <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
         <% } else { %>
           <td class="r">&nbsp;</td>
         <% } %>
+        
+        <%  if ( rata.getEveIdEvento()!=null)  {%>   
+<!--        <td class="L" nowrap><font class="label" style="color:red;" >Emesso ordine di ingiunzione</font></td> -->
+        <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
+        <% } else { %>
+          <td class="r">&nbsp;</td>
+        <% } %>
+        
+
+        
     </tr>    
     <% } %>
     

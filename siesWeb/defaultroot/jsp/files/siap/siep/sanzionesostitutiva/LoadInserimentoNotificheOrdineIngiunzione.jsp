@@ -72,14 +72,16 @@ else
         var desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }
 
-
-
       function abilitaCancella(idNot) {
         if ( document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_"+idNot)!=null )
         {
           if (document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_"+idNot).checked)
           {
             document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+idNot).checked = false;
+            abilitaNotifica (idNot);
+          }
+          else {
+            document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+idNot).checked = true;
             abilitaNotifica (idNot);
           }
         }
@@ -107,9 +109,9 @@ else
           else {
             document.getElementById("<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_"+idNot).disabled = true;
 
-            document.getElementById("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot).disabled = true;
-            document.getElementById("<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_"+idNot).disabled = true;
-            document.getElementById("<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot).disabled = true;
+            //document.getElementById("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot).disabled = true;
+            //document.getElementById("<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_"+idNot).disabled = true;
+            //document.getElementById("<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot).disabled = true;
 
             document.getElementById("<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>_"+idNot).disabled = true;
             document.getElementById("folderIcon_"+idNot).style.display = "none";
@@ -147,10 +149,41 @@ else
       
       
       function checkNotifica (idNot) {
-        //alert ("idNot = "+idNot);
-        if ( document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+idNot)!=null ){
-          if (document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+idNot).checked){
-            //alert ("Sezione Abilitata, verifico i dati");
+        var giornoObj = document.getElementById("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot);
+        var meseObj   = document.getElementById("<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_"+idNot);
+        var annoObj   = document.getElementById("<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot);          
+        
+        if (giornoObj.value.length==1) giornoObj.value='0'+giornoObj.value;
+        if (meseObj.value.length==1)   meseObj.value='0'+meseObj.value;
+
+        var data_to_verify = giornoObj.value+'/'+ meseObj.value+'/'+ annoObj.value;
+        if (!ControllaDataPassaVuota(data_to_verify) )
+        {
+          alert('Data Notifica non valida');
+          giornoObj.focus();
+          return false;
+        }
+        
+        var dataOdierna = "<%=DateUtils.getSysDate("dd/MM/yyyy")%>";
+        if (data_to_verify!='//') {
+          if(!CompareDate(data_to_verify,dataOdierna))
+          {
+            alert("La Data di Notifica non puo' essere superiore alla data odierna");
+            giornoObj.focus();
+            return false;
+          }
+        }
+        
+        if ( document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+idNot)!=null )
+        {
+          if (document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+idNot).checked)
+          {
+            // La notifica è stata effettuata a una autorità differente da quella di partenza
+            if (data_to_verify=='//') {
+              alert("Non e' stata indicata la data di notifica");
+              giornoObj.focus();
+              return false;
+            }
 
             if (document.getElementById("<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_"+idNot).value=="-")
             {
@@ -158,39 +191,7 @@ else
               document.getElementById("<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_"+idNot).focus();
               return false;
             }
-            
-            /*
-            if (document.getElementById("<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>_"+idNot).value=="")
-            {
-              alert("Indicare la SEDE dell'autorita' che ha effettuato la notifica");
-              document.getElementById("<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_"+idNot).focus();
-              return false;
-            }*/
-
-            var giornoObj = document.getElementById("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot);
-            var meseObj   = document.getElementById("<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_"+idNot);
-            var annoObj   = document.getElementById("<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_"+idNot);          
-            
-            if (giornoObj.value.length==1) giornoObj.value='0'+giornoObj.value;
-            if (meseObj.value.length==1)   meseObj.value='0'+meseObj.value;
-
-            var data_to_verify = giornoObj.value+'/'+ meseObj.value+'/'+ annoObj.value;
-            if (!ControllaData(data_to_verify) )
-            {
-              alert('Data Notifica non valida');
-              giornoObj.focus();
-              return false;
-            }
-            
-            var dataOdierna = "<%=DateUtils.getSysDate("dd/MM/yyyy")%>";
-            if(!CompareDate(data_to_verify,dataOdierna))
-            {
-              alert("La Data di Notifica non puo' essere superiore alla data odierna");
-              giornoObj.focus();
-              return false;
-            }          
-          }
-          else {
+          } else {
             //alert ("Sezione NON Abilitata, non controllo");
           }
         }
@@ -214,13 +215,15 @@ else
               codTipoAutorita = lNotifica.getAutoritaEsternaDelegata().getCodTipoAutorita();
               sedeAutorita    = StringUtils.toStringJSP(lNotifica.getAutoritaEsternaDelegata().getDescrSede(),"");
               indirizzoAutorita = StringUtils.toStringJSP(lNotifica.getAutoritaEsternaDelegata().getDescrizione(),"");
-            }
-            
-          %>
-          $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotifica.getIdNotifica()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-          $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_<%=lNotifica.getIdNotifica()%>').val('<%=sedeAutorita%>');
-          $('#<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotifica.getIdNotifica()%>').val('<%=indirizzoAutorita%>');
-          <% } %>
+            %>
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotifica.getIdNotifica()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_<%=lNotifica.getIdNotifica()%>').val('<%=sedeAutorita%>');
+            $('#<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotifica.getIdNotifica()%>').val('<%=indirizzoAutorita%>');
+            document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+<%=lNotifica.getIdNotifica()%>).checked = true;
+            <% } else { %>
+            document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+<%=lNotifica.getIdNotifica()%>).checked = false;
+            <% } %>
+        <% } %>
           abilitaNotifica ('<%=lNotifica.getIdNotifica()%>');
         <% } %>
       }
@@ -322,24 +325,6 @@ else
       </tr>
   <% } %>
 
- <% if ("03".equals(notificaAlCondannato.getCodEsito())) { %>
-      <tr>
-        <td class="l">Autorita' che ha effettuato la notifica</td>
-        <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP( notificaAlCondannato.getAutoritaEsternaDelegata().getDescrTipoAutorita() )%></font>&nbsp;
-          di
-          <font class="campo"><%=StringUtils.toStringJSP( notificaAlCondannato.getAutoritaEsternaDelegata().getDescrSede())%></font>&nbsp;
-        </td>
-        <td class="L">Data Notifica</td>
-        <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></font>
-        </td>
-      </tr>
-      <tr>
-        <td class="l">Note</td>
-        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font>&nbsp;</td>
-      </tr> 
-<% } %>
 
 <%
 // ==================================================
@@ -347,27 +332,39 @@ else
 // ==================================================
 %>
   <tr>
+    <td class="l">Data Notifica</td>
+    <td class="l">
+      <font class="campo">
+        <input type="text" maxlength="2" size="2" 
+               id="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
+               name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
+               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "dd") )%>"         
+               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+        -
+        <input type="text" maxlength="2" size="2" 
+               id="<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_<%=notificaAlCondannato.getIdNotifica()%>"  
+               name="<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_<%=notificaAlCondannato.getIdNotifica()%>"  
+               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "MM") )%>"         
+               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+        -
+        <input type="text" maxlength="4" size="4" 
+               id="<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>"   
+               name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>"   
+               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "yyyy") )%>" 
+               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+      </font>
+    </td>    
+  </tr> 
+
+  <tr>
     <td class="l">
       <input type="checkbox" onclick="Javascript:abilitaNotifica('<%=notificaAlCondannato.getIdNotifica()%>');" 
                id="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
              name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
             value="<%=notificaAlCondannato.getIdNotifica()%>" >
-      <% if ("03".equals(notificaAlCondannato.getCodEsito())) { %>
-      <font class="campo" style="color:red;"> MODIFICA</font>
-      <% } else{ %>
-      <font class="campo" style="color:green;"> INSERISCI</font>
-      <% } %>            
-    </td>
-    <% if ("03".equals(notificaAlCondannato.getCodEsito())) { %>
-    <td class="l">
-      <input type="checkbox" onclick="Javascript:abilitaCancella('<%=notificaAlCondannato.getIdNotifica()%>');" 
-               id="<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
-             name="<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_<%=notificaAlCondannato.getIdNotifica()%>"
-            value="<%=notificaAlCondannato.getIdNotifica()%>" >
-      <font class="campo" style="color:red;"> CANCELLA</font>
     </td>    
-    <% } %>
   </tr> 
+
   <tr>               
     <td class="l">Autorita' che ha effettuato la notifica</td>
     <td class="l">
@@ -378,34 +375,12 @@ else
         <%=comboAutNotifica%>
       </select>
     </td>
-    <td class="l">Data Notifica</td>
-    <td class="l">
-      <font class="campo">
-        <input type="text" maxlength="2" size="2" disabled
-               id="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
-               name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>" 
-               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "dd") )%>"         
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-        -
-        <input type="text" maxlength="2" size="2" disabled
-               id="<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_<%=notificaAlCondannato.getIdNotifica()%>"  
-               name="<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_<%=notificaAlCondannato.getIdNotifica()%>"  
-               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "MM") )%>"         
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
-        -
-        <input type="text" maxlength="4" size="4" disabled
-               id="<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>"   
-               name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_<%=notificaAlCondannato.getIdNotifica()%>"   
-               value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(notificaAlCondannato.getDataAvvenutaNotifica(), "yyyy") )%>" 
-               onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
-      </font>
-    </td>    
-  </tr>  
+  </tr>
 
   <tr>               
     <td class="l">Sede</td>
     <td class="L">
-      <input type="text" maxlength="35" size="35" disabled 
+      <input type="text" maxlength="35" size="35"  
             title="Sede Autorita' che ha effettuato la notifica" 
             value="" 
              name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>_<%=notificaAlCondannato.getIdNotifica()%>"
@@ -419,7 +394,7 @@ else
     </td>
     <td class="l">Indirizzo</td>
     <td class="L">
-      <TEXTAREA title="Indirizzo" disabled 
+      <TEXTAREA title="Indirizzo"  
                 id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" 
                 name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" 
                 cols="30"></TEXTAREA>
@@ -457,7 +432,6 @@ else
         </font>
        </td>
       </tr>  
-
       
       <tr>
         <td class="L">Autorita preposta alla Notifica</td>
@@ -471,24 +445,6 @@ else
         <td class="L">Indirizzo</td>
         <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(lNotificaDifensore.getAutoritaEsterna().getDescrizione())%></font>&nbsp;</td>
       </tr>
-      <% if ("03".equals(lNotificaDifensore.getCodEsito())) { %>
-      <tr>
-        <td class="L">Autorita' che ha effettuato la notifica</td>
-        <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP( lNotificaDifensore.getAutoritaEsternaDelegata().getDescrTipoAutorita() )%></font>&nbsp;
-          di
-          <font class="campo"><%=StringUtils.toStringJSP( lNotificaDifensore.getAutoritaEsternaDelegata().getDescrSede())%></font>&nbsp;
-        </td>
-        <td class="L">Data Notifica</td>
-        <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaDifensore.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></font>
-        </td>        
-      </tr>
-      <tr>
-        <td class="L">Indirizzo</td>
-        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(lNotificaDifensore.getAutoritaEsternaDelegata().getDescrizione())%></font>&nbsp;</td>
-      </tr>      
-      <% } %>
 
 <%
 // ==================================================
@@ -496,38 +452,6 @@ else
 // ==================================================
 %>
   <tr>
-    <td class="l">
-      <input type="checkbox" onclick="Javascript:abilitaNotifica('<%=lNotificaDifensore.getIdNotifica()%>');" 
-               id="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaDifensore.getIdNotifica()%>" 
-             name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaDifensore.getIdNotifica()%>"
-            value="<%=lNotificaDifensore.getIdNotifica()%>" >
-      <% if ("03".equals(lNotificaDifensore.getCodEsito())) { %>
-      <font class="campo" style="color:red;"> MODIFICA</font>
-      <% } else{ %>
-      <font class="campo" style="color:green;"> INSERISCI</font>
-      <% } %>
-    </td>
-    
-    <% if ("03".equals(lNotificaDifensore.getCodEsito())) { %>
-    <td class="l">
-      <input type="checkbox" onclick="Javascript:abilitaCancella('<%=lNotificaDifensore.getIdNotifica()%>');" 
-               id="<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_<%=lNotificaDifensore.getIdNotifica()%>" 
-             name="<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_<%=lNotificaDifensore.getIdNotifica()%>"
-            value="<%=lNotificaDifensore.getIdNotifica()%>" >
-      <font class="campo" style="color:red;"> CANCELLA</font>
-    </td>    
-    <% } %>
-  </tr> 
-  <tr>               
-    <td class="l">Autorita' che ha effettuato la notifica</td>
-    <td class="l">
-      <select Title="Autorita' che ha effettuato la notifica"  class="small" 
-              id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaDifensore.getIdNotifica()%>"
-              name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaDifensore.getIdNotifica()%>"
-              >
-        <%=comboAutNotifica%>
-      </select>
-    </td>
     <td class="l">Data Notifica</td>
     <td class="l">
       <font class="campo">
@@ -550,6 +474,30 @@ else
                onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
       </font>
     </td>    
+  </tr>  
+
+
+  <tr>
+    <td class="l">
+      <input type="checkbox" onclick="Javascript:abilitaNotifica('<%=lNotificaDifensore.getIdNotifica()%>');" 
+               id="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaDifensore.getIdNotifica()%>" 
+             name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaDifensore.getIdNotifica()%>"
+            value="<%=lNotificaDifensore.getIdNotifica()%>" 
+            >          
+    </td>    
+  </tr>
+   
+  <tr>               
+    <td class="l">Autorita' che ha effettuato la notifica</td>
+    <td class="l">
+      <select Title="Autorita' che ha effettuato la notifica"  class="small" 
+              id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaDifensore.getIdNotifica()%>"
+              name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaDifensore.getIdNotifica()%>"
+              >
+        <%=comboAutNotifica%>
+      </select>
+    </td>
+    
   </tr>  
 
   <tr>               
@@ -630,78 +578,28 @@ else
         <td class="l">Note</td>
         <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(lNotificaObbligato.getNote())%></font>&nbsp;</td>
       </tr>
-      <% if ("03".equals(lNotificaObbligato.getCodEsito())) { %>
-      <tr>
-        <td class="l">Autorita' che ha effettuato la notifica</td>
-        <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP( lNotificaObbligato.getAutoritaEsternaDelegata().getDescrTipoAutorita() )%></font>&nbsp;
-          di
-          <font class="campo"><%=StringUtils.toStringJSP( lNotificaObbligato.getAutoritaEsternaDelegata().getDescrSede())%></font>&nbsp;
-        </td>
-        <td class="L">Data Notifica</td>
-        <td class="L">
-          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaObbligato.getDataAvvenutaNotifica(), "dd-MM-yyyy") )%></font>
-        </td>
-      </tr>
-      <tr>
-        <td class="l">Note</td>
-        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(lNotificaObbligato.getAutoritaEsternaDelegata().getDescrizione())%></font>&nbsp;</td>
-      </tr>      
-      <% } %>     
-      
 <%
 // ==================================================
 // sezione per registrare
 // ==================================================
 %>
   <tr>
-    <td class="l">
-      <input type="checkbox" onclick="Javascript:abilitaNotifica('<%=lNotificaObbligato.getIdNotifica()%>');" 
-               id="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
-             name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
-            value="<%=lNotificaObbligato.getIdNotifica()%>" >
-      <% if ("03".equals(lNotificaObbligato.getCodEsito())) { %>
-      <font class="campo" style="color:red;"> MODIFICA</font>
-      <% } else{ %>
-      <font class="campo" style="color:green;"> INSERISCI</font>
-      <% } %>
-    </td>
-    <% if ("03".equals(lNotificaObbligato.getCodEsito())) { %>
-    <td class="l">
-      <input type="checkbox" onclick="Javascript:abilitaCancella('<%=lNotificaObbligato.getIdNotifica()%>');" 
-               id="<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
-             name="<%=ICostantiOrdineEsecuzione.ABILITA_CANCELLA%>_<%=lNotificaObbligato.getIdNotifica()%>"
-            value="<%=lNotificaObbligato.getIdNotifica()%>" >
-      <font class="campo" style="color:red;"> CANCELLA</font>
-    </td>    
-    <% } %>    
-  </tr> 
-  <tr>               
-    <td class="l">Autorita' che ha effettuato la notifica</td>
-    <td class="l">
-      <select disabled Title="Autorita' che ha effettuato la notifica"  class="small" 
-              id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaObbligato.getIdNotifica()%>"
-              name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaObbligato.getIdNotifica()%>"
-              >
-        <%=comboAutNotifica%>
-      </select>
-    </td>
     <td class="l">Data Notifica</td>
     <td class="l">
       <font class="campo">
-        <input type="text" maxlength="2" size="2" disabled
+        <input type="text" maxlength="2" size="2" 
                id="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
                name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
                value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaObbligato.getDataAvvenutaNotifica(), "dd") )%>"         
                onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
         -
-        <input type="text" maxlength="2" size="2" disabled
+        <input type="text" maxlength="2" size="2" 
                id="<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_<%=lNotificaObbligato.getIdNotifica()%>"  
                name="<%=ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA %>_<%=lNotificaObbligato.getIdNotifica()%>"  
                value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaObbligato.getDataAvvenutaNotifica(), "MM") )%>"         
                onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
         -
-        <input type="text" maxlength="4" size="4" disabled
+        <input type="text" maxlength="4" size="4" 
                id="<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>"   
                name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>"   
                value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lNotificaObbligato.getDataAvvenutaNotifica(), "yyyy") )%>" 
@@ -710,10 +608,31 @@ else
     </td>    
   </tr>  
 
+  <tr>
+    <td class="l">
+      <input type="checkbox" onclick="Javascript:abilitaNotifica('<%=lNotificaObbligato.getIdNotifica()%>');" 
+               id="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
+             name="<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_<%=lNotificaObbligato.getIdNotifica()%>" 
+            value="<%=lNotificaObbligato.getIdNotifica()%>" >
+    </td>    
+  </tr> 
+
+  <tr>               
+    <td class="l">Autorita' che ha effettuato la notifica</td>
+    <td class="l">
+      <select Title="Autorita' che ha effettuato la notifica"  class="small" 
+              id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaObbligato.getIdNotifica()%>"
+              name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotificaObbligato.getIdNotifica()%>"
+              >
+        <%=comboAutNotifica%>
+      </select>
+    </td>
+  </tr>
+
   <tr>               
     <td class="l">Sede</td>
     <td class="L">
-      <input type="text" maxlength="35" size="35" value=""  disabled 
+      <input type="text" maxlength="35" size="35" value=""   
             title="Sede Autorita' che ha effettuato la notifica" 
             name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>_<%=lNotificaObbligato.getIdNotifica()%>" 
              id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>_<%=lNotificaObbligato.getIdNotifica()%>"  >
@@ -726,7 +645,7 @@ else
     </td>
     <td class="l">Indirizzo</td>
     <td class="L">
-      <TEXTAREA title="Indirizzo" disabled 
+      <TEXTAREA title="Indirizzo"  
          id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" 
          name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" 
          cols="30"></TEXTAREA>

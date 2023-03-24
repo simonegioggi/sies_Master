@@ -43,6 +43,7 @@ String importoDaPagareD = "";
 String importoRataUnicaI = "";
 String importoRataUnicaD = "";
 String scadenzaRataUnica  = "";
+boolean isPresentiBollettini = false;
 if ("M".equals(modalita)) {
   RateizzazionePPModel primaRata = (RateizzazionePPModel)listaRateizzazioni.elementAt(0);
   tipoRateizzazione = primaRata.getTipoRateizzazione();
@@ -55,14 +56,19 @@ if ("M".equals(modalita)) {
     importoRataUnicaD = StringUtils.getParteDecimale (primaRata.getImportoRata()); 
     scadenzaRataUnica = StringUtils.toStringJSP      (primaRata.getScadenzaGiorni(),""); 
   }
+  
+  for (int i = 0; i< listaRateizzazioni.size(); i++ ) {
+    RateizzazionePPModel  lRata = (RateizzazionePPModel)listaRateizzazioni.elementAt(i); 
+    if (lRata.getListaBollettini()!=null && lRata.getListaBollettini().size()>0)
+      isPresentiBollettini = true;
+  }
 }
 else {
   importoDaPagareI = StringUtils.getParteIntera   (importoTotale);
   importoDaPagareD = StringUtils.getParteDecimale (importoTotale);    
 }
-  
-
 %>
+
 <%
 //==============================================================================
 // Form per inserimento e modifica della Rateizzazione Pena Pecuniaria
@@ -82,6 +88,15 @@ var tipoRateizzazione = "<%=tipoRateizzazione%>";
 var numRateDaModificare = <%=numRateDaModificare%>;
 
 function Verify() {
+  
+  <% if ("M".equals(modalita) && isPresentiBollettini ) { %>
+  var msgConfirm = "La modifica delle rate comportera' la cancellazione dei bollettini gia' emessi. Si vuole procedere?"; 
+
+  if (!window.confirm(msgConfirm)) {
+    return false;
+  }
+  <% } %>
+  
   var importoDaPagare = document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_I%>.value
                    +"."+document.LoadInserisciRateizzazionePP.<%=ICostantiRateizzazionePP.CAMPO_VALORE_IMPORTO_D%>.value;
 
@@ -384,6 +399,16 @@ else
      </tr>
   </table>
 
+
+<% if (isPresentiBollettini) { %>
+<br>
+  <table width="90%">
+    <tr>
+      <td class="L"><font style="color:red">Attenzione. Sono gia stati emessi dei bollettini. La modifica comportera' la concellazione degli stessi.</font></td>
+    </tr>
+  </table>
+<br>
+<% } %>
 
   <table width="90%">
     <tr>

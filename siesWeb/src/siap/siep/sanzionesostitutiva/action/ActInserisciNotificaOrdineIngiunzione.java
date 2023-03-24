@@ -1,6 +1,7 @@
 package siap.siep.sanzionesostitutiva.action;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -53,19 +54,29 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 		NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
 		for (int i = 0; i < lNotifiche.length; i++) {
 			NotificaModel lNotificaModel = lNotifiche[i];
-			if (!isRequestParameterNullEmptyObj(
-					ICostantiOrdineEsecuzione.ABILITA_NOTIFICA + "_" + lNotificaModel.getIdNotifica())) {
-				siesLogger.debug("Trovata notifica per id = " + lNotificaModel.getIdNotifica());
-				
-				NotificaModel lNotMod = new NotificaModel();
-                String IdNotifica = lNotificaModel.getIdNotifica().toString();
 
-				String lGiornoNot = this.getRequestStringParameter(
-						ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
-				String lMeseNot = this.getRequestStringParameter(
-						ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
-				String lAnnoNot = this.getRequestStringParameter(
-						ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
+			NotificaModel lNotMod = new NotificaModel();
+            String IdNotifica = lNotificaModel.getIdNotifica().toString();
+
+			String lGiornoNot = this.getRequestStringParameter(
+					ICostantiNotifica.CAMPO_GIORNO_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
+			String lMeseNot = this.getRequestStringParameter(
+					ICostantiNotifica.CAMPO_MESE_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
+			String lAnnoNot = this.getRequestStringParameter(
+					ICostantiNotifica.CAMPO_ANNO_DATA_AVVENUTA_NOTIFICA + "_" + IdNotifica);
+			
+			Date dataAvventaNotifica = null;
+			if (lGiornoNot!="") {
+			    // solo se presente la data di notifica vado ad aggiornare il record della notifica
+			    dataAvventaNotifica = DateUtils.getDate(lAnnoNot, lMeseNot, lGiornoNot);
+			}
+			
+            lNotMod.setDataAvvenutaNotifica(dataAvventaNotifica);
+			
+	        if (!isRequestParameterNullEmptyObj(ICostantiOrdineEsecuzione.ABILITA_NOTIFICA + "_" + lNotificaModel.getIdNotifica())) 
+	        {
+	            // L'utente ha modificato l'autorita che ha effettuato la notifica rispetto a quella prevista
+	            siesLogger.debug("Modificata autorità di notifica per id = " + lNotificaModel.getIdNotifica());
 
                 String lAutoritaDelegata = this.getRequestStringParameter(
                         ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA + "_" + IdNotifica);
@@ -74,49 +85,48 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
                 String lIndirizzo = this.getRequestStringParameter(
                         ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE + "_" + IdNotifica);
 
-                // Devo controllare se i campi sono stati valorizzati
-                if (lGiornoNot.equals("")) 
-                {
-                    // dato obbligatorio in presenza di altri campi, se a "" vuol dire che gli
-                    // altri campi sono vuoti e si deve saltare la notifica
-                    continue;
-                }
-				lNotMod.setDataAvvenutaNotifica(DateUtils.getDate(lAnnoNot, lMeseNot, lGiornoNot));
-				lNotMod.setIdNotifica(new BigDecimal(IdNotifica));
-				lNotMod.setEveIdEvento(this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
+                AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
 
-				lNotMod.setCodiceOperatoreAggiornamento(getCodUtenteConnesso());
-				lNotMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
-				lNotMod.setDataAggiornamento(DateUtils.getSysDate());
+                lAutMod.setCodTipoAutorita(lAutoritaDelegata);
+                ComuneModel lComModel = new ComuneModel(getCodComuneByDescr(lSedeAutoritaDelegata));
+                lAutMod.setCodSede(lComModel.getCodComune());
+                lAutMod.setDescrizione(lIndirizzo);
 
-				lNotMod.setCodEsito("03"); // Notificato
+                lAutMod.setCodOperatoreInserimento(getCodUtenteConnesso());
+                lAutMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+                lAutMod.setDataInserimento(DateUtils.getSysDate());
 
-				if (lNotificaModel.getAvvIdAvvocatoFascicoloSiep() == null
-						&& lNotificaModel.getIdCivilmenteObbligato() == null) {
-					// Notifica la condannato
-					lNotMod.setCodTipoNotifica("E");
-				}
+                lNotMod.setIstDetIdIstitutoDetenzione(""); // ????
 
+                lNotMod.setAutoritaEsternaDelegata(lAutMod);
+            }
 
-				if (!lAutoritaDelegata.equals("-")) {
-					AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+                // Ho la data per cui devo 
+                // Se mancano i dati devo confermare la notifica allo stesso destinatario iniziale
+                
+			lNotMod.setIdNotifica(new BigDecimal(IdNotifica));
+			lNotMod.setEveIdEvento(this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO));
 
-					lAutMod.setCodTipoAutorita(lAutoritaDelegata);
-					ComuneModel lComModel = new ComuneModel(getCodComuneByDescr(lSedeAutoritaDelegata));
-					lAutMod.setCodSede(lComModel.getCodComune());
-					lAutMod.setDescrizione(lIndirizzo);
+			lNotMod.setCodiceOperatoreAggiornamento(getCodUtenteConnesso());
+			lNotMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
+			lNotMod.setDataAggiornamento(DateUtils.getSysDate());
 
-					lAutMod.setCodOperatoreInserimento(getCodUtenteConnesso());
-					lAutMod.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-					lAutMod.setDataInserimento(DateUtils.getSysDate());
-
-					lNotMod.setIstDetIdIstitutoDetenzione(""); // ????
-
-					lNotMod.setAutoritaEsternaDelegata(lAutMod);
-				}
-				listaNotDaAggiornare.add(lNotMod);
+			if (lNotMod.getDataAvvenutaNotifica()!=null)
+			    lNotMod.setCodEsito("03"); // Notificato
+			else
+			    lNotMod.setCodEsito(lNotificaModel.getCodEsito()); 
+			
+			if (lNotificaModel.getAvvIdAvvocatoFascicoloSiep() == null
+					&& lNotificaModel.getIdCivilmenteObbligato() == null) {
+				// Notifica la condannato
+				lNotMod.setCodTipoNotifica("E");
 			}
-			else if (!isRequestParameterNullEmptyObj(ICostantiOrdineEsecuzione.ABILITA_CANCELLA + "_" + lNotificaModel.getIdNotifica())) {
+
+		    listaNotDaAggiornare.add(lNotMod);
+			
+		    // Cancela ??
+			/*
+		    if (!isRequestParameterNullEmptyObj(ICostantiOrdineEsecuzione.ABILITA_CANCELLA + "_" + lNotificaModel.getIdNotifica())) {
                 NotificaModel lNotMod = new NotificaModel();
 
                 String IdNotifica = lNotificaModel.getIdNotifica().toString();
@@ -142,6 +152,7 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 			    
 			    listaNotDaAggiornare.add(lNotMod);
 			}
+			*/
 
 		}
 

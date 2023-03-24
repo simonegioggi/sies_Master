@@ -8,9 +8,11 @@ package siap.siep.rateizzazionepp.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Vector;
 
 import f3b.model.GenericModel;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 public class RateizzazionePPModel extends GenericModel {
   private static final long serialVersionUID = 7652960898545828432L;
@@ -40,6 +42,7 @@ public class RateizzazionePPModel extends GenericModel {
   
   private EventoNotificaModel mOrdineIngiunzione = null;
 
+  private Vector <BollettinoPagopaModel> mListaBollettini = null;
 
   /*****************************************************************************
    * Costruttore di default che inizializza i campi del model I campi String vengono inizializzati a "",
@@ -129,7 +132,8 @@ public class RateizzazionePPModel extends GenericModel {
   public String     getDescrTipoRateizzazione()    { return mDescrTipoRateizzazione;}
   
   public EventoNotificaModel  getOrdineIngiunzione()    { return mOrdineIngiunzione;}
-  
+  public Vector <BollettinoPagopaModel>  getListaBollettini()    { return mListaBollettini;}
+
   // ============================================================================
   // METODI SET()
   // ============================================================================
@@ -155,7 +159,8 @@ public class RateizzazionePPModel extends GenericModel {
   public void setDescrTipoRateizzazione (String mDescrTipoRateizzazione) {  this.mDescrTipoRateizzazione = mDescrTipoRateizzazione;}
   
   public void setOrdineIngiunzione (EventoNotificaModel mOrdineIngiunzione) {  this.mOrdineIngiunzione = mOrdineIngiunzione;}
-  
+  public void setListaBollettini ( Vector <BollettinoPagopaModel> mListaBollettini) {  this.mListaBollettini = mListaBollettini;}
+ 
   /*****************************************************************************
    * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
    ****************************************************************************/
