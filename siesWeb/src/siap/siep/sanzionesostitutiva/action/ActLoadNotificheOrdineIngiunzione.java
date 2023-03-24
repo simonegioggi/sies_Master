@@ -94,8 +94,13 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		List lListAvvocatiSiep = new ArrayList();
 		List lListaObbligati = new ArrayList();
 		String notifichePending = "NO";
-
+		
+		int contaAvvenute = 0;
 		for (int i = 0; i < lNotifiche.length; i++) {
+		    
+		    if (lNotifiche[i].getDataAvvenutaNotifica()!=null)
+		        contaAvvenute++;
+		    
 			// Autorita Esterne
 			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
 					&& lNotifiche[i].getIdCivilmenteObbligato() == null) {
@@ -119,8 +124,9 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		setRequestAttribute("lListaNotObbligati", lListaObbligati);
 		setRequestAttribute("notifichePending", notifichePending);
 
-		// info per il log
-		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+		if (contaAvvenute>0 && isRequestParameterNullEmptyObj("modifica"))
+		    return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+	        + "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione";
 
 		return PG_LOAD_INSERIMENTO_NOTIFICHE_OI;
 	}

@@ -3,15 +3,20 @@ package siap.siep.pagoPA.controller;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import siap.controller.SiapController;
 import siap.siep.SIEPException;
+import siap.siep.notifica.dao.NotificaEventoSqlDAO;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.action.ICostantiPagoPA;
 import siap.siep.pagoPA.dao.BollettinoPagopaDAO;
 import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
@@ -302,7 +307,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		BollettinoPagopaDAO lBollDao = null;
 		BollettinoPagopaSqlDAO lBollSqlDao = null;
 		RateizzazionePPSqlDAO lRateSqlDao = null;
-
+		NotificaEventoSqlDAO lNotEveSqlDao = null;
+		
 		try {
 			// Prende una connessione in transazione.
 			lConn = getDBTransaction();
@@ -313,9 +319,9 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 
 			lBollDao.setStatoPagamento(aBollettinoModel.getStatoPagamento());
 
-			lBollDao.setDataUltimoControllo(aBollettinoModel.getDataUltimoControllo());
-			lBollDao.setStatoPagopa(aBollettinoModel.getStatoPagopa());
-			lBollDao.setErrorePagopa(aBollettinoModel.getErrorePagopa());
+			lBollDao.setDataUltimoControllo (aBollettinoModel.getDataUltimoControllo());
+			lBollDao.setStatoPagopa         (aBollettinoModel.getStatoPagopa());
+			lBollDao.setErrorePagopa        (aBollettinoModel.getErrorePagopa());
 
 			lBollDao.setCodOperatoreAggiornamento(aBollettinoModel.getCodOperatoreAggiornamento());
 			lBollDao.setCodUfficioAggiornamento(aBollettinoModel.getCodUfficioAggiornamento());
@@ -323,22 +329,28 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 
 			lBollDao.setCondizioneUpdate(aBollettinoModel.getIdBollettinoPagopa());
 
+			lBollDao.setDataAvvPagamento (aBollettinoModel.getDataAvvPagamento());
+			lBollDao.setImportoPagato    (aBollettinoModel.getImportoPagato());
+			
 			lBollDao.update();
 			lBollDao.stop();
 
 			// TODO
-			if (ICostantiPagoPA.SIES_STATO_PAGATO.equals(aBollettinoModel.getStatoPagamento())) {
+			if (   ICostantiPagoPA.SIES_STATO_PAGATO.equals(aBollettinoModel.getStatoPagamento())
+			    && "R".equals(aBollettinoModel.getTipoRateizzazione())    
+			   ) 
+			{
+			    siesLogger.debug("Bollettino Pagato verifico se è il primo");
 				// Sto scaricando l'avvenuto pagamento devo controllare se è il primo per il fascicolo
-				// In questo caso devo calcolare la data della rata successiva
+				// In questo caso devo calcolare la data delle rate successive
 				// Attenzione che nella realtà nella risposta del WS potrei avere più di un nuovo pagamento
 				// Dovrei quindo prima ordinare i bollettini restituiti per data avvenuto pagamento
 				// e quindi procedere all'inserimento nell'ordine di pagamento
-				// ricerca bollettiny by fasc
+				// ricerca bollettini by fasc
+			    
 				lBollSqlDao = new BollettinoPagopaSqlDAO(lConn);
-				lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(
-						aBollettinoModel.getFasSieIdFascicolSiep());
-				Vector<BollettinoPagopaModel> listaBollettiniFasc = new Vector<BollettinoPagopaModel>(
-						lBollSqlDao.getModels());
+				lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(aBollettinoModel.getFasSieIdFascicolSiep());
+				Vector<BollettinoPagopaModel> listaBollettiniFasc = new Vector<BollettinoPagopaModel>(lBollSqlDao.getModels());
 				int contaPagati = 0;
 				for (BollettinoPagopaModel lBollettinoFasc : listaBollettiniFasc) {
 					if (ICostantiPagoPA.SIES_STATO_PAGATO.equals(lBollettinoFasc.getStatoPagamento()))
@@ -346,13 +358,58 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 				}
 
 				if (contaPagati == 1) {
+				    siesLogger.debug("E' il primo bollettino pagato per il fascicolo "+aBollettinoModel.getFasSieIdFascicolSiep());
+				    
 					// E' il primo bollettino pagato, recupera i termini d
 					lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
 					lRateSqlDao.ricercaRateizzazionePPByKey(aBollettinoModel.getRatIdRateizzazionePP());
 					RateizzazionePPModel lRata = (RateizzazionePPModel) lRateSqlDao.getModelByKey();
-					siesLogger.info(lRata);
-					// Date dataScadenzaPrimaRata = DateUtils.moveDateTo (lNotModel.getDataAvvenutaNotifica(),
-					// Calendar.DAY_OF_MONTH, lRata.getScadenzaGiorni().intValue());
+					
+					// Recupero la notifica la condannato per calcolare la scadenza della prima rata
+					if (lRata.getEveIdEvento()!=null && lRata.getScadenzaGiorni()!=null) {
+					  lNotEveSqlDao = new NotificaEventoSqlDAO(lConn);
+					  lNotEveSqlDao.ricercaNotificaByEvento (lRata.getEveIdEvento());
+			          Vector <NotificaModel> lListaNotifiche = new Vector <NotificaModel> (lNotEveSqlDao.getModels());
+			            
+			          Date dataNotificaCond = null;
+			          for (NotificaModel lNotCondannato : lListaNotifiche ) {			              
+			              if (   lNotCondannato.getDataAvvenutaNotifica()!=null
+			                  && lNotCondannato.getAvvIdAvvocatoFascicoloSiep() == null
+			                  && lNotCondannato.getIdCivilmenteObbligato() == null) 
+			              {
+			                  dataNotificaCond = lNotCondannato.getDataAvvenutaNotifica();
+			                  break;
+			              }
+			          }
+			          
+			          if (dataNotificaCond!=null) {
+			              BigDecimal scadenzaGG = lRata.getScadenzaGiorni();
+			              Date dataScadenzaPrevistaPrimaRata = DateUtils.moveDateTo ( dataNotificaCond
+					        , Calendar.DAY_OF_MONTH
+					        , lRata.getScadenzaGiorni().intValue());
+				    
+			              lBollDao.setDataScadenza (dataScadenzaPrevistaPrimaRata);
+			              lBollDao.setCondizioneUpdate(aBollettinoModel.getIdBollettinoPagopa());
+			              lBollDao.update();
+			          }
+					}
+					//
+					
+				    siesLogger.debug("aBollettinoModel.getDataAvvPagamento() = "+aBollettinoModel.getDataAvvPagamento());
+				    Date ultimaData = aBollettinoModel.getDataAvvPagamento();
+				    				    
+	                for (BollettinoPagopaModel lBollettinoFasc : listaBollettiniFasc) {
+	                    if (lBollettinoFasc.getIdBollettinoPagopa().compareTo(aBollettinoModel.getIdBollettinoPagopa())!=0) {
+	                        Date dataScadenzaRataSuccessiva = DateUtils.calcolaUtimoDelProxMese(ultimaData);
+	                        siesLogger.debug("ProgRata = "+lBollettinoFasc.getProgRata()+", dataScadenza "+dataScadenzaRataSuccessiva);
+	                        lBollDao.setDataScadenza (dataScadenzaRataSuccessiva);
+	                        lBollDao.setCondizioneUpdate(lBollettinoFasc.getIdBollettinoPagopa());
+	                        
+	                        lBollDao.update();
+
+	                        ultimaData = dataScadenzaRataSuccessiva;
+	                    }
+	                }
 				}
 			}
 
@@ -370,6 +427,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		} finally {
 			cleanup(lBollDao);
 			cleanup(lBollSqlDao);
+			cleanup(lRateSqlDao);
+			cleanup(lNotEveSqlDao);
 
 			cleanup(lConn);
 		}

@@ -162,7 +162,8 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 		lCtrlSS.exAggiornaNotificheOrdineIngiunzione(lEveNotMod.getEvento(), listaNotDaAggiornare);
 
 		String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-				+ "=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione";
+//				+ "=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione";
+        + "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione";
 
 		return lPage;
 	}

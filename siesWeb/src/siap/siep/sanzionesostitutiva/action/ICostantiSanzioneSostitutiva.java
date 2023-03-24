@@ -81,6 +81,8 @@ public interface ICostantiSanzioneSostitutiva {
 			+ "/files/siap/siep/sanzionesostitutiva/LoadGrigliaOrdineIngiunzione.jsp";
 	public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadInserimentoNotificheOrdineIngiunzione.jsp";
+	public static final String PG_LOAD_DETTAGLIO_NOTIFICHE_OI = IWebConstants.ROOT_DIR
+	            + "/files/siap/siep/sanzionesostitutiva/LoadDettaglioNotificheOrdineIngiunzione.jsp";
 	public static final String PG_VERIFICA_STATO_PAGAMENTI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/VerificaStatoPagamenti.jsp";
 	public static final String PG_ELENCO_STATO_PAGAMENTI = IWebConstants.ROOT_DIR

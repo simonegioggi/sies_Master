@@ -972,5 +972,23 @@ public class DateUtils {
 
 	        return (aCalendar.getTime());
 	    }
+	   
+	   public static Date calcolaUtimoDelProxMese (Date data) {
+           Date primoDelMese = DateUtils.getDate(DateUtils.getDateToString(data, "yyyy")
+                   , DateUtils.getDateToString(data, "MM")
+                   , "01");
+           
+           Date primoDelMeseSucc = DateUtils.moveDateTo (primoDelMese, Calendar.MONTH ,1);
+           Calendar myCalendar= Calendar.getInstance();
+           myCalendar.setTime(primoDelMeseSucc);
+           
+           String ultimoGG = (myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH)>9 ? ""+myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH) : "0"+myCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+           
+           Date ultimoDelMeseSucc = DateUtils.getDate(DateUtils.getDateToString(primoDelMeseSucc, "yyyy")
+                   , DateUtils.getDateToString(primoDelMeseSucc, "MM")
+                   , ultimoGG);
+	       
+	       return ultimoDelMeseSucc;
+	   }
 
 }

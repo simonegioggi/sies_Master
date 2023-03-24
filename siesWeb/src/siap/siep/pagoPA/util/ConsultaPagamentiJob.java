@@ -2,9 +2,11 @@ package siap.siep.pagoPA.util;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -44,7 +46,9 @@ public class ConsultaPagamentiJob implements Job {
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-
+	    MDC.put("utente", "BATCH_PAGOPA");
+	    MDC.put("ufficio", "DISTRETTUALE");
+	    
 		pagoPaLogger.debug("===================================================");
 		pagoPaLogger.debug(" Avvio job di PagoPA - ConsultazionePagamenti      ");
 		pagoPaLogger.debug("===================================================");
@@ -128,26 +132,33 @@ public class ConsultaPagamentiJob implements Job {
 
 					// servono quelli pagati? se CARRELLO allora sono quelli ancora non pagati
 					// vedi pg 12 - APPLICATIVI - Flussi pagamento telematico tramite PST vers. 3.1.pdf
-					Calendar dataRichiestaDa = null; // testare
-					Calendar dataRichiestaA = null;
-					// ? il numero di risultati restituiti per es se invocato da web
+					Calendar dataRichiestaDa = null;
+					Calendar dataRichiestaA = null; 
 					int dimensionePagina = 0;
 					int numeroPagina = 0;
 
-					// Nota: per lo stesso soggetto (CF) potrebbero essere presenti più fascicoli
-					RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
-							codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
-							dimensionePagina, numeroPagina);
-
-					pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
-					pagoPaLogger
-							.debug("RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
-					pagoPaLogger.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
-					pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
-							+ (rr.getItems() != null ? rr.getItems().length : null));
-
-					Object[] pagamenti = rr.getItems();
-
+					// 
+					Object[] pagamenti = null;
+					if ("true".equals(F3BProperties.getInstance().getProperty("PagoPaTest"))) {
+					    pagoPaLogger.warn("FASE DI TEST ATTIVA! Si utilizza una ricevuta di prova");
+					    pagamenti = new Object[1];
+					    pagamenti[0] = getBollettinoTest();
+					}
+					else {
+    					// Nota: per lo stesso soggetto (CF) potrebbero essere presenti più fascicoli
+    					RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
+    							codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
+    							dimensionePagina, numeroPagina);
+    
+    					pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
+    					pagoPaLogger
+    							.debug("RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
+    					pagoPaLogger.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
+    					pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
+    							+ (rr.getItems() != null ? rr.getItems().length : null));
+    					pagamenti = rr.getItems();
+					}
+					
 					if (pagamenti == null || pagamenti.length == 0) {
 						pagoPaLogger
 								.warn("Nessuna StatoRichiesta restituito per il debitore " + codiceFiscale);
@@ -378,6 +389,23 @@ public class ConsultaPagamentiJob implements Job {
 
 		return stringa;
 
+	}
+	
+	private StatoRichiestaPagamento getBollettinoTest () {
+	    StatoRichiestaPagamento statoPagamento = new StatoRichiestaPagamento ();
+	    
+	    Date dataPagamento = DateUtils.getDate(2023, 3, 15);
+	    Calendar myCalendar= Calendar.getInstance();
+        myCalendar.setTime(dataPagamento);
+	    
+	    // nb sul DB deve essere "RATA_DI_TEST"
+	    statoPagamento.setNumeroAvviso("3RATA_DI_TEST");
+	    statoPagamento.setStato(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE);
+	    statoPagamento.setDataRicevuta(myCalendar);
+	    statoPagamento.setImporto(1000.21f);
+	    
+	    
+	    return statoPagamento;
 	}
 
 }
