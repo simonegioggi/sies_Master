@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
@@ -73,7 +74,11 @@ function modificaRate(){
           <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella Rate" width="24" height="24" border="0"></a>
       <% } %>
     </td>
-    <jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
+    <td class="LBG">
+      <a href="<%=IWebConstants.PG_MAIN %>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&<%=ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP %>=<%=fascicolo.getIdFascicoloSiep()%>">
+              <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+            </a>
+    </td>
   </tr>
 </table>
 
@@ -150,10 +155,10 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
     %>
     <tr>
-      <td class="L"><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
-      <td class="R"><font class="label">termine di pagamento fissato entro </font></td>
+      <td class="L" nowrap><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
+      <td class="R" nowrap><font class="label">termine di pagamento fissato entro </font></td>
       <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-      <td class="L"><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
+      <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
        <% if (rata.getEveIdEvento()!=null) { %> 
        <td class="L" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione</td>
        <% } else { %>
@@ -175,21 +180,16 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
         
 
         <%  if ( rata.getListaBollettini()!=null && rata.getListaBollettini().size()>0)  {%>   
-<!--        <td class="L" nowrap><font class="label" style="color:red;" >Emessi bollettini</font></td> -->
-        <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
+          <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
         <% } else { %>
           <td class="r">&nbsp;</td>
         <% } %>
         
         <%  if ( rata.getEveIdEvento()!=null)  {%>   
-<!--        <td class="L" nowrap><font class="label" style="color:red;" >Emesso ordine di ingiunzione</font></td> -->
-        <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
+          <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
         <% } else { %>
           <td class="r">&nbsp;</td>
         <% } %>
-        
-
-        
     </tr>    
     <% } %>
     

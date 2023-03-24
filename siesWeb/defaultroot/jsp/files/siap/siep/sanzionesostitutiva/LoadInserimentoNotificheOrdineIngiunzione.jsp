@@ -536,6 +536,7 @@ else
 //                  Notifica al Civilmente Obbligato
 //=======================================================================
 %>
+<% if (lListaNotObbligati.size()>0) {%>
   <tr><td class="Titolo" colspan="4">Notifica al Civilmente Obbligato </td></tr>
 
   <%
@@ -653,7 +654,8 @@ else
   </tr>
   
 <%
-    } // end obbligati
+    } // end FOR obbligati
+} // end if obbligati
 %>  
 </table>
 

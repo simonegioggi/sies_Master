@@ -18,6 +18,7 @@ import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.SIEPException;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -85,16 +86,16 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
         IEvento lCtrl = SICOLookupRemote.getEventoRemote();
         Hashtable <BigDecimal, EventoNotificaModel> listaOrdiniIngiunzione = new Hashtable <BigDecimal, EventoNotificaModel>();
         for (RateizzazionePPModel rata : listaRateizzazioni) {
-                if (rata.getEveIdEvento()!=null)  {
-                    if (listaOrdiniIngiunzione.get(rata.getEveIdEvento())!=null) {
-                        rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento()));
-                    }
-                    else {                                                
-                        EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey (rata.getEveIdEvento());
-                        rata.setOrdineIngiunzione(lEveNotMod);
-                        listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod);
-                    }
+            if (rata.getEveIdEvento()!=null)  {
+                if (listaOrdiniIngiunzione.get(rata.getEveIdEvento())!=null) {
+                    rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento()));
                 }
+                else {                                                
+                    EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey (rata.getEveIdEvento());
+                    rata.setOrdineIngiunzione(lEveNotMod);
+                    listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod);
+                }
+            }
         }
             
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
@@ -130,9 +131,23 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 		setRequestAttribute("magistrato", lMagi);
 
 		// Avvocati
-		IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
-		Vector lAvvocati = lAvvCtrl.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
-		setRequestAttribute("avvocati", lAvvocati);
+		try {
+	        IAvvocato lAvvCtrl = SIEPLookupRemote.getAvvocatoRemote();
+		    Vector lAvvocati = lAvvCtrl.ExRicercaAvvocatiByFascicolo(lFascMod.getIdFascicoloSiep());
+	        setRequestAttribute("avvocati", lAvvocati);
+		}
+		catch (SIEPException e) {
+		    // nessun avvocato trovato
+            RedirectTo lRedirigi = new RedirectTo();
+            lRedirigi.setPage(IWebConstants.PG_MAIN);
+            setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + lFascMod.getChiaveAnno()
+                    + "/" + lFascMod.getChiaveProgr() + " non è stato associato alcun avvocato.");
+            lRedirigi.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
+                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+
+            return IWebConstants.PG_MESSAGE;		    
+		}
 
 		// Autorità esterna
 		Option lOptionAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita());

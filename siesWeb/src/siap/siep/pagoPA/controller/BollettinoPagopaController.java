@@ -335,10 +335,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			lBollDao.update();
 			lBollDao.stop();
 
-			// TODO
-			if (   ICostantiPagoPA.SIES_STATO_PAGATO.equals(aBollettinoModel.getStatoPagamento())
-			    && "R".equals(aBollettinoModel.getTipoRateizzazione())    
-			   ) 
+			// Aggiornamento della Data Scadenza su Unico o prima Rata
+			if (   ICostantiPagoPA.SIES_STATO_PAGATO.equals(aBollettinoModel.getStatoPagamento())) 
 			{
 			    siesLogger.debug("Bollettino Pagato verifico se è il primo");
 				// Sto scaricando l'avvenuto pagamento devo controllare se è il primo per il fascicolo
