@@ -3,6 +3,7 @@ package siap.siep.sanzionesostitutiva.action;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -45,15 +46,17 @@ public class ActStampaMassivaBollettini extends ActionSiap {
 				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		ByteArrayOutputStream baosSingolo = null;
-		byte[][] listaByteArray = new byte[elencoStatoPagamenti.size()][];
-		int cont = 0;
+		List<byte[]> listaByteArray = new ArrayList<byte[]>(elencoStatoPagamenti.size());
+		siesLogger.debug("Stampa Massiva di: " + elencoStatoPagamenti.size() + " Bollettini!");
 		while (iterBPM.hasNext()) {
 			BollettinoPagopaModel bpm = iterBPM.next();
 			baosSingolo = ibp.ExGetBollettino(bpm.getIdBollettinoPagopa());
-			listaByteArray[cont] = baosSingolo.toByteArray();
-			cont++;
+			listaByteArray.add(baosSingolo.toByteArray());
 		}
-		ByteArrayOutputStream baosMassivo = concatPDF(null);
+		siesLogger.debug("Inizio la concatenzaione dei PDFs!");
+		ByteArrayOutputStream baosMassivo = concatPDF(listaByteArray);
+
+		baosMassivo.flush();
 		baosMassivo.close();
 
 		// ==============================================
