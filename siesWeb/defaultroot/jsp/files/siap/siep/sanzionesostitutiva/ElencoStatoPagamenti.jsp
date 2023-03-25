@@ -62,9 +62,9 @@ function tornaIndietro(action) {
         	</a>
 		</td>
 		<!-- BOTTONE DI STAMPA -->
-		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-       		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/>
-      	</jsp:include>
+<%-- 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
+<%--        		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/> --%>
+<%--       	</jsp:include> --%>
 	</tr>
 </table>
 <br>
