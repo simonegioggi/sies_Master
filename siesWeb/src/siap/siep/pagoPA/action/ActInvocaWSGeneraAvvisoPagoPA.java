@@ -1,6 +1,7 @@
 package siap.siep.pagoPA.action;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -45,7 +46,7 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPagoPA {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public String processRequest() throws Exception {
 
@@ -142,6 +143,21 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			EsitoGeneraAvviso ega = null;
 			try {
 				ega = port.generaAvviso(rpt);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				siesLogger.error(ioe.getMessage());
+				if (Utils.isPresent(ioe.getMessage()) && ioe.getMessage().contains("UnknownHostException")) {
+					// pagina di ritorno
+					RedirectTo rt = new RedirectTo();
+					rt.setPage(IWebConstants.PG_MAIN);
+					int index = ioe.getMessage().lastIndexOf(": ");
+					setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Collegamento col servizio: "
+							+ ioe.getMessage().substring(index + 1) + " non disponibile.");
+					rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA");
+					setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+					// return rt.toString();
+					return IWebConstants.PG_MESSAGE;
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				siesLogger.error(e.getMessage());

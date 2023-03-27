@@ -2,6 +2,9 @@ package siap.siep.pagoPA.action;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.action.ICostantiComune;
@@ -25,7 +28,13 @@ import siap.siep.notifica.model.NotificaModel;
  */
 public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecurity {
 
+	// info per il log dedicato
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+
 	public String processRequest() throws Exception {
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
 		EventoNotificaModel enm = new EventoNotificaModel();
 
@@ -87,6 +96,10 @@ public class ActGeneraAvvisoPagoPA extends ActionSiap implements ICostantiSecuri
 				+ "=siap.siep.pagoPA.action.ActDownloadAvvisoPagoPA&TipoFascicolo=SIEP&IdEvento="
 				+ enmNew.getEvento().getIdEvento();
 
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// pagina di ritorno
 		return returnAction;
 	}
 

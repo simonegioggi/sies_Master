@@ -2,7 +2,7 @@ package f3b.log;
 
 /**
  * L'interfaccia definisce le costanti identificati i logger definiti in log4j.properties
- * 
+ *
  * @author [FT]
  */
 public interface LogF3B {
@@ -17,8 +17,9 @@ public interface LogF3B {
 	public final static String AVVOCATURA_LOG = "AvvocaturaLog";
 	// mev problema code per sies 11.3: aggiunto un log per le code jms
 	public final static String JMS_LOG = "CodeJmsLog";
-	
-	public final static String PAGO_PA_LOG = "PagoPALog";
 
+	// MEV_2023_13: aggiunti 2 logs
+	public final static String PAGO_PA_LOG = "PagoPALog";
+	public final static String WS_PAGO_PA_LOG = "WSPagoPALog";
 
 }

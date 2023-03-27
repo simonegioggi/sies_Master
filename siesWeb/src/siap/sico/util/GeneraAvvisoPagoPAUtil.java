@@ -30,7 +30,7 @@ import siap.siep.util.SIEPLookupRemote;
 public class GeneraAvvisoPagoPAUtil {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public static RichiestaPagamentoTelematico caricaDatiRichiestaPagamentoTelematico(UfficioModel ufm)
 			throws F3BException {

@@ -9,7 +9,10 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -47,6 +50,18 @@ public class ActVerificaStatoPagamenti extends ActionSiap implements ICostantiSa
 				.exRicercaEventoRateizzazionePP(idFascicolo);
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 		if (!listaRichiestaBollettini.isEmpty()) {
+			EventoModel em = listaRichiestaBollettini.firstElement().getEvento();
+			if (Utils.isNullObj(em.getDataRicezioneAtti()) && Utils.isNullObj(em.getDataTrasmissioneAtti())) {
+				// pagina di ritorno
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Attenzione! Non sono stati emessi Bollettini per questo fascicolo.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA");
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				// return rt.toString();
+				return IWebConstants.PG_MESSAGE;
+			}
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();
 			Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();

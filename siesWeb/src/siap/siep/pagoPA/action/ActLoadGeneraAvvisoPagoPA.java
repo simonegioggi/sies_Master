@@ -28,7 +28,9 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPagoPA {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	// info per il log dedicato
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+
 	private static String codUtente = null;
 	private static String codUfficio = null;
 

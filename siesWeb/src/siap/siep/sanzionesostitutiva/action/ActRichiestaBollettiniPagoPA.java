@@ -41,7 +41,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 
 		// controllo obbligatorietà CF
 		SoggettoModel sm = fsm.getSoggetto();
-		if (Utils.isNullObj(sm.getCodFiscale())) {
+		if (!Utils.isPresent(sm.getCodFiscale())) {
 			// pagina di ritorno
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
