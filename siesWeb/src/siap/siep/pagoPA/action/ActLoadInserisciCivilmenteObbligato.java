@@ -9,6 +9,7 @@ import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
@@ -48,10 +49,22 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
 			rt.setParameter(CAMPO_ID_FASCICOLO_SIEP, fsm.getIdFascicoloSiep().toString());
 			return rt.toString();
 		} else {
-			// aggiungo 2 model vuoti per insert
-			coms.add(new CivilmenteObbligatoModel());
-			// secondo tutore
-			coms.add(new CivilmenteObbligatoModel());
+            // Se fascicolo validato non posso consentire l'inserimento 
+            if ("S".equals(fsm.getFlagValidato())) {
+                RedirectTo lRedirigi = new RedirectTo();
+                lRedirigi.setPage(IWebConstants.PG_MAIN);
+                setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Impossibile procedere, il procedimento risulta già validato.");
+                lRedirigi.setAction("siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&"
+                    + ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP + "=" + fsm.getIdFascicoloSiep());
+                setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+                return IWebConstants.PG_MESSAGE;                
+            }
+            else {
+    			// aggiungo 2 model vuoti per insert
+    			coms.add(new CivilmenteObbligatoModel());
+    			// secondo tutore
+    			coms.add(new CivilmenteObbligatoModel());
+            }
 		}
 
 		Option o = new Option(DecodificheManager.getInstance().getSesso(), "M");

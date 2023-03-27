@@ -158,12 +158,20 @@ BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
       <td class="L" nowrap><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
       <td class="R" nowrap><font class="label">termine di pagamento fissato entro </font></td>
       <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-      <td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
-       <% if (rata.getEveIdEvento()!=null) { %> 
-       <td class="L" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione</td>
-       <% } else { %>
-         <td class="r">&nbsp;</td>
-       <% } %>      
+      <td class="L" colspan="3"><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
+
+        <%  if ( rata.getListaBollettini()!=null && rata.getListaBollettini().size()>0)  {%>   
+          <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
+        <% } else { %>
+          <td class="r">&nbsp;</td>
+        <% } %>
+        
+        <%  if ( rata.getEveIdEvento()!=null)  {%>   
+          <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
+        <% } else { %>
+          <td class="r">&nbsp;</td>
+        <% } %>       
+            
     </tr>
     <% } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) { %>
     <tr>
