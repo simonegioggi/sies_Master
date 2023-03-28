@@ -24,91 +24,94 @@ import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaMode
 import siap.siep.util.SIEPLookupRemote;
 
 public class ActDettaglioNotificaOrdineIngiunzione extends ActionSiap
-implements ICostantiSanzioneSostitutiva {
+		implements ICostantiSanzioneSostitutiva {
 
-    
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-    
-    
-    public String processRequest() throws F3BException {
-        FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
-        // Verifico esistenza Ordine di ingiunzione
-        IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String processRequest() throws F3BException {
 
-        EventoModel lEveRicerca = new EventoModel();
-        lEveRicerca.setCodTipoEvento("01");
-        lEveRicerca.setCodTipoProvvedimento("06");
-        lEveRicerca.setCodMotivo("0622");
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
-        lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-        lEveRicerca.setFlagDocumentoRegistrato("S");
+		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
-        EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
-        if (lOrdineIngiunzione == null || lOrdineIngiunzione.getIdEvento() == null) {
-            RedirectTo lRedirigi = new RedirectTo();
-            lRedirigi.setPage(IWebConstants.PG_MAIN);
-            setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-                    "Sul Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
-                            + " non è presente alcun ordine di ingiunzione valido. Impossibile procedere.");
-            lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
-                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+		// Verifico esistenza Ordine di ingiunzione
+		IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
 
-            return IWebConstants.PG_MESSAGE;
-        }
+		EventoModel lEveRicerca = new EventoModel();
+		lEveRicerca.setCodTipoEvento("01");
+		lEveRicerca.setCodTipoProvvedimento("06");
+		lEveRicerca.setCodMotivo("0622");
 
-        // Recupero l'ordine di ingiunzione
-        EventoNotificaModel lEveNotMod = eventoCtrl
-                .ExRicercaEventoNotificaByKey(lOrdineIngiunzione.getIdEvento());
-        setRequestAttribute("ordineIngiunzione", lEveNotMod);
+		lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		lEveRicerca.setFlagDocumentoRegistrato("S");
 
-        // Verifica per ogni destinatario se già registrate l'avvenuta notifica
-        PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
-        IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-        lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
-                lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
-        setRequestAttribute("posizioneluogoaltra", lPos);
+		EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
+		if (lOrdineIngiunzione == null || lOrdineIngiunzione.getIdEvento() == null) {
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Sul Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
+							+ " non è presente alcun ordine di ingiunzione valido. Impossibile procedere.");
+			lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 
-        // Carico i dati in form
-        // Autorita che ha effettuato la notifica
-        Option lComboAutNotifica = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
-        setRequestAttribute("comboAutNotifica", "" + lComboAutNotifica);
+			return IWebConstants.PG_MESSAGE;
+		}
 
-        // NOTIFICHE
-        NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
-        List lListAvvocatiSiep = new ArrayList();
-        List lListaObbligati = new ArrayList();
-        String notifichePending = "NO";
+		// Recupero l'ordine di ingiunzione
+		EventoNotificaModel lEveNotMod = eventoCtrl
+				.ExRicercaEventoNotificaByKey(lOrdineIngiunzione.getIdEvento());
+		setRequestAttribute("ordineIngiunzione", lEveNotMod);
 
-        for (int i = 0; i < lNotifiche.length; i++) {
-            // Autorita Esterne
-            if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
-                    && lNotifiche[i].getIdCivilmenteObbligato() == null) {
-                setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
-            }
+		// Verifica per ogni destinatario se già registrate l'avvenuta notifica
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+		setRequestAttribute("posizioneluogoaltra", lPos);
 
-            // Avvocati Siep
-            if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() != null) {
-                lListAvvocatiSiep.add(lNotifiche[i]);
-            }
+		// Carico i dati in form
+		// Autorita che ha effettuato la notifica
+		Option lComboAutNotifica = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+		setRequestAttribute("comboAutNotifica", "" + lComboAutNotifica);
 
-            // Civilmente Obbligati
-            if (lNotifiche[i].getIdCivilmenteObbligato() != null) {
-                lListaObbligati.add(lNotifiche[i]);
-            }
+		// NOTIFICHE
+		NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
+		List lListAvvocatiSiep = new ArrayList();
+		List lListaObbligati = new ArrayList();
+		String notifichePending = "NO";
 
-            if (!"03".equals(lNotifiche[i].getCodEsito()))
-                notifichePending = "SI";
-        }
-        setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
-        setRequestAttribute("lListaNotObbligati", lListaObbligati);
-        setRequestAttribute("notifichePending", notifichePending);
+		for (int i = 0; i < lNotifiche.length; i++) {
+			// Autorita Esterne
+			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
+					&& lNotifiche[i].getIdCivilmenteObbligato() == null) {
+				setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
+			}
 
-        // info per il log
-        siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+			// Avvocati Siep
+			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() != null) {
+				lListAvvocatiSiep.add(lNotifiche[i]);
+			}
 
-        return PG_LOAD_DETTAGLIO_NOTIFICHE_OI;
-    }
-    
+			// Civilmente Obbligati
+			if (lNotifiche[i].getIdCivilmenteObbligato() != null) {
+				lListaObbligati.add(lNotifiche[i]);
+			}
+
+			if (!"03".equals(lNotifiche[i].getCodEsito()))
+				notifichePending = "SI";
+		}
+		setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
+		setRequestAttribute("lListaNotObbligati", lListaObbligati);
+		setRequestAttribute("notifichePending", notifichePending);
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		return PG_LOAD_DETTAGLIO_NOTIFICHE_OI;
+	}
+
 }

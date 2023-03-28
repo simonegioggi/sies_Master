@@ -30,9 +30,15 @@ import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * MEV_2023-13: aggiunta classe per il caricamento dell'inserimento dell'ordine di ingiunzione
+ *
+ * @author sgioggi
+ * @version 1.0
+ */
 public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {

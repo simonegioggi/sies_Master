@@ -11,7 +11,9 @@ import f3b.util.StringUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
+import siap.sico.soggetto.controller.ISoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -28,7 +30,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public String processRequest() throws Exception {
 
@@ -40,8 +42,11 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 
 		// controllo obbligatorietà CF
-		SoggettoModel sm = fsm.getSoggetto();
+		ISoggetto is = SICOLookupRemote.getSoggettoRemote();
+		SoggettoModel sm = is.ExRicercaSoggettoByKey(fsm.getSoggetto().getIdSoggetto());
 		if (!Utils.isPresent(sm.getCodFiscale())) {
+			siesLogger
+					.info("Soggetto Privo di Codice Fiscale: reindirizzo alla pagina di modifica soggetto!");
 			// pagina di ritorno
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);

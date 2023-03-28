@@ -33,17 +33,20 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * MEV_2023-13: aggiunta classe per l'inserimento dell'ordine di ingiunzione
- * 
+ *
  * @author sgioggi
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public String processRequest() throws Exception {
-	    
+
+    	// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
+
 		EventoNotificaModel lEveNot = new EventoNotificaModel();
 		EventoModel lEve = getEventoOrdineIngiunzione();
 		// Recupero le notifiche
@@ -64,50 +67,59 @@ public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostan
 				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione&"
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
 
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		// valore di ritorno
 		return lPage;
 	}
 
-	
 	protected EventoModel getEventoOrdineIngiunzione() throws F3BException {
-       FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-       EventoModel lEve = new EventoModel();
-       
-       lEve.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
 
-        lEve.setCodTipoEvento("01"); // Tipo Evento = PROVVEDIMENTO
-        lEve.setCodTipoProvvedimento("06"); // Tipo Provvedimento = ORDINE ESECUZIONE
-        lEve.setCodMotivo("0622"); // Motivo Evento = Ordine di ingiunzione
+		// info per il log
+		siesLogger.info("getEventoOrdineIngiunzione(): inizio");
 
-        lEve.setFlagStampaSiep("S");
-        lEve.setFlagVideoSiep("S");
+		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		EventoModel lEve = new EventoModel();
 
-        Date lDataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
-                ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
-        lEve.setDataEmissione(lDataEmissione);
+		lEve.setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
 
-        lEve.setCodLuogoEmittente(getCodComuneUtenteConnesso());
-        lEve.setCodUfficioEmittente(getCodUfficioUtenteConnesso());
+		lEve.setCodTipoEvento("01"); // Tipo Evento = PROVVEDIMENTO
+		lEve.setCodTipoProvvedimento("06"); // Tipo Provvedimento = ORDINE ESECUZIONE
+		lEve.setCodMotivo("0622"); // Motivo Evento = Ordine di ingiunzione
 
-        // Magistrato
-        lEve.setCodMagistrato(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MAGISTRATO));
+		lEve.setFlagStampaSiep("S");
+		lEve.setFlagVideoSiep("S");
 
-        lEve.setAnnoProtocollo(new BigDecimal(DateUtils.getSysDate("yyyy")));
+		Date lDataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
+				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
+		lEve.setDataEmissione(lDataEmissione);
 
-        lEve.setCodEsito("-");
-        lEve.setCodLuogoDestinatario("-");
-        lEve.setCodTipoUfficioDestinatario("-");
+		lEve.setCodLuogoEmittente(getCodComuneUtenteConnesso());
+		lEve.setCodUfficioEmittente(getCodUfficioUtenteConnesso());
 
-        lEve.setCodOperatoreInserimento(getCodUtenteConnesso());
-        lEve.setDataInserimento(DateUtils.getSysDate());
-        lEve.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-        // lEve.setCodOperatoreAggiornamento(lCodiceOperatore);
-        // lEve.setCodUfficioAggiornamento(lCodiceUfficio);
-        // lEve.setDataAggiornamento(DateUtils.getSysDate());
-        
-        return lEve;
+		// Magistrato
+		lEve.setCodMagistrato(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MAGISTRATO));
+
+		lEve.setAnnoProtocollo(new BigDecimal(DateUtils.getSysDate("yyyy")));
+
+		lEve.setCodEsito("-");
+		lEve.setCodLuogoDestinatario("-");
+		lEve.setCodTipoUfficioDestinatario("-");
+
+		lEve.setCodOperatoreInserimento(getCodUtenteConnesso());
+		lEve.setDataInserimento(DateUtils.getSysDate());
+		lEve.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+		// lEve.setCodOperatoreAggiornamento(lCodiceOperatore);
+		// lEve.setCodUfficioAggiornamento(lCodiceUfficio);
+		// lEve.setDataAggiornamento(DateUtils.getSysDate());
+
+		// info per il log
+		siesLogger.info("getEventoOrdineIngiunzione(): fine");
+
+		return lEve;
 	}
-	
-	
+
 	/**
 	 * Imposta le notifiche per l'ordine di ingiunzione
 	 *
@@ -115,6 +127,9 @@ public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostan
 	 * @throws F3BException
 	 */
 	protected NotificaModel[] getNotificheOrdineIngiunzione() throws F3BException {
+
+		// info per il log
+		siesLogger.info("getNotificheOrdineIngiunzione(): inizio");
 
 		String lCodiceOperatore = getCodUtenteConnesso();
 		String lCodiceUfficio = getCodUfficioUtenteConnesso();
@@ -203,7 +218,6 @@ public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostan
 		// ===================================================
 		// Notifiche all'avvocato
 		while (lIndNotifiche < lNumAvvNotifiche) {
-
 			NotificaModel lNot = new NotificaModel();
 			lNot.setCodTipoNotifica("N");
 			lNot.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(lAvvocati[lIndNotifiche]));
@@ -286,6 +300,10 @@ public class ActInserisciOrdineIngiunzione extends ActionSiap implements ICostan
 			}
 		}
 
+		// info per il log
+		siesLogger.info("getNotificheOrdineIngiunzione(): fine");
+
+		// valore di ritorno
 		return (NotificaModel[]) lNotificheArray.toArray(new NotificaModel[0]);
 	}
 

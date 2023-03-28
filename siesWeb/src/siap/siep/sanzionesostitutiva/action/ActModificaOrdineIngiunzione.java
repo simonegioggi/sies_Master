@@ -24,7 +24,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActModificaOrdineIngiunzione extends ActInserisciOrdineIngiunzione {
 
-    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+    private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
     public String processRequest() throws Exception {
 

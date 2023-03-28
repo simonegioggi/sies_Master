@@ -34,7 +34,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
@@ -128,6 +128,10 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		    return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 	        + "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione";
 
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		// valore di ritorno
 		return PG_LOAD_INSERIMENTO_NOTIFICHE_OI;
 	}
 

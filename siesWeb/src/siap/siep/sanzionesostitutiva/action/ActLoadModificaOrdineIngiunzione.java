@@ -31,17 +31,21 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * Classe per caricare la modifica dell'ordine di ingiunzione
- * 
+ *
  * @author sgioggi
  * @since MEV_2023-13
  * @version 1.0
  */
 public class ActLoadModificaOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
 		BigDecimal lId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
@@ -168,6 +172,10 @@ public class ActLoadModificaOrdineIngiunzione extends ActionSiap implements ICos
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
 
 		setRequestAttribute("modalita", "M");
 		return PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE;

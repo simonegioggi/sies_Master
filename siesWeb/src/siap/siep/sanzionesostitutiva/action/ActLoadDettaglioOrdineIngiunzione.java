@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -24,8 +27,14 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActLoadDettaglioOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
+
+    	// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
 		BigDecimal lId = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
@@ -75,6 +84,11 @@ public class ActLoadDettaglioOrdineIngiunzione extends ActionSiap implements ICo
 		setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
 		setRequestAttribute("lListaNotObbligati", lListaObbligati);
 
+    	// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		// valore di ritorno
 		return ICostantiSanzioneSostitutiva.PG_DETTAGLIO_ORDINE_INGIUNZIONE;
 	}
 
