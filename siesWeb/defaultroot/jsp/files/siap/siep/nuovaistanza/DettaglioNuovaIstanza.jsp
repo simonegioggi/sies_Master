@@ -96,7 +96,7 @@ if(nuovaistanza != null && "P".equals(nuovaistanza.getFlagPresdep()))
     <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(nuovaistanza.getDataIstanza(),"dd-MM-yyyy"))%> </font>&nbsp;</td>
   </tr>
   <tr>
-    <td class="l">Autorita Mittente</td>
+    <td class="l">Autorita' Mittente</td>
     <%-- 20170913: [SG] aggiunto spazio tra nome e cognome --%>
     <td class="l"><font class="campo"><%=StringUtils.toStringJSP(nuovaistanza.getDescrAutoritaMittente())%>&nbsp;<%=StringUtils.toStringJSP(nuovaistanza.getDescrMittente())%></font> 
     di <font class="campo"><%=StringUtils.toStringJSP(nuovaistanza.getDescrSedeMittente()) %></font>&nbsp;</td>
@@ -141,7 +141,11 @@ if(nuovaistanza != null && "P".equals(nuovaistanza.getFlagPresdep()))
 			NomeAvvocato = nuovaistanza.getAvvocato().getCognome()+" " +nuovaistanza.getAvvocato().getNome(); 
 			Foro=nuovaistanza.getAvvocato().getForo();
 			TipoDifensore=nuovaistanza.getAvvocato().getDescrTipo();
-			Nominato = StringUtils.toStringJSP(DateUtils.getDateToString(nuovaistanza.getDataIstanza(),"dd-MM-yyyy"));
+      
+			// Ticket#20230328019 — SIEP : Data visualizzata Istanza non corretta
+			//Nominato = StringUtils.toStringJSP(DateUtils.getDateToString(nuovaistanza.getDataIstanza(),"dd-MM-yyyy"));
+			Nominato = StringUtils.toStringJSP(DateUtils.getDateToString(nuovaistanza.getDataNotificaAvvocato(),"dd-MM-yyyy"));
+			// Ticket#20230328019 - FINE
 		}
 %>
 	<tr><td class="l">Avvocato</td>	<td class="l"><font class="campo"><%=NomeAvvocato%></font> </td></tr>

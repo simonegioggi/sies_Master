@@ -198,7 +198,10 @@ public class NuovaIstanzaController extends GenericController implements INuovaI
 			lStatoUno.setProgressivo(codStatoMax);
 
 			lStatoUno.setCodStatoProcedimento("0012"); // Presentata Istanza il
-			lStatoUno.setData(DateUtils.getSysDate());
+			// Ticket#20230328019 — SIEP : Data visualizzata Istanza non corretta
+			lStatoUno.setData(aNuovaIstanza.getDataIstanza());
+			// lStatoUno.setData(DateUtils.getSysDate());
+			// Ticket#20230328019 — FINE
 			lStatoUno.setFasSieIdFascicoloSiep(aEveMod.getFasSieIdFascicoloSiep());
 			lStatoUno.setCodOperatoreInserimento(aNuovaIstanza.getCodOperatoreInserimento());
 			lStatoUno.setDataInserimento(aNuovaIstanza.getDataInserimento());
