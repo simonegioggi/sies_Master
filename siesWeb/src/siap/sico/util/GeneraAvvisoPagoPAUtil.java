@@ -161,7 +161,7 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setDataInserimento(DateUtils.getSysDate());
 		// bpm.setDataAvvPagamento(null);
 		// bpm.setDataScadenza(null);
-		bpm.setDataScadenzaRich(DateUtils.getDate("31/12/2099", "dd/MM/yyyy"));
+		bpm.setDataScadenzaRich(DateUtils.getDate("31/12/2049", "dd/MM/yyyy"));
 		bpm.setFasSieIdFascicolSiep(rata.getFasSieIdFascicoloSiep());
 		// bpm.setImportoPagato(null);
 		// bpm.setIuv(null);
