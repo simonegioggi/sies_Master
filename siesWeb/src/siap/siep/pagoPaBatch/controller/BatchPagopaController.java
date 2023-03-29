@@ -12,9 +12,15 @@ import siap.controller.SiapController;
 import siap.siep.pagoPaBatch.dao.BatchPagopaDAO;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
 
+/**
+ * Batch per PagoPA
+ *
+ * @author d.fiorletta
+ * @since MEV_2023-13
+ * @version 1.0
+ */
 public class BatchPagopaController extends SiapController  implements IBatchPagopa {
 
-    // private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
     private static Logger siesLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
     public BatchPagopaModel ExInserisciLancioBatchPagopa(BatchPagopaModel batchModel) throws F3BException {

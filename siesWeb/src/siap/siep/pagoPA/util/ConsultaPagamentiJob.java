@@ -33,7 +33,8 @@ import siap.siep.util.SIEPLookupRemote;
  * Viene aggiornata BOLLETTINO_PAGOPA con la data ultimo controllo e la eventuale risposta XML
  *
  * @author d.fiorletta
- *
+ * @since MEV_2023-13
+ * @version 1.0
  */
 public class ConsultaPagamentiJob implements Job {
 
@@ -46,9 +47,10 @@ public class ConsultaPagamentiJob implements Job {
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-	    MDC.put("utente", "BATCH_PAGOPA");
-	    MDC.put("ufficio", "DISTRETTUALE");
-	    
+
+		MDC.put("utente", "BATCH_PAGOPA");
+		MDC.put("ufficio", "DISTRETTUALE");
+
 		pagoPaLogger.debug("===================================================");
 		pagoPaLogger.debug(" Avvio job di PagoPA - ConsultazionePagamenti      ");
 		pagoPaLogger.debug("===================================================");
@@ -86,20 +88,32 @@ public class ConsultaPagamentiJob implements Job {
 				throw e;
 			}
 
-			int controllateDaGiorni = 0;
-			int inScadenzaTraGiorni = 0;
-
-			IBollettinoPagopa lCtrlBollettini = SIEPLookupRemote.getBollettinoPagopaRemote();
+			String controllateDaGiorni = F3BProperties.getProperty("CONTROLLATEDAGIORNI");
+			String inScadenzaTraGiorni = F3BProperties.getProperty("INSCADENZATRAGIORNI");
 			pagoPaLogger.debug(" Ricerca debitori con posizioni aperte: inScadenzaTraGiorni "
 					+ inScadenzaTraGiorni + ", controllateDaGiorni " + controllateDaGiorni);
+
+			int cdg = 0;
+			int istg = 0;
+			try {
+				cdg = new Integer(controllateDaGiorni).intValue();
+				istg = new Integer(inScadenzaTraGiorni).intValue();
+			} catch (Exception e) {
+				e.printStackTrace();
+				pagoPaLogger.error(e.getMessage());
+				pagoPaLogger.error("ATTENZIONE! Nel file f3b.properties sono stati inseriti valori "
+						+ "NON numerici per i parametri richiesti!");
+				pagoPaLogger.info("I parametri valgono entrambi 0!");
+			}
+
+			IBollettinoPagopa lCtrlBollettini = SIEPLookupRemote.getBollettinoPagopaRemote();
 			Vector<BollettinoPagopaModel> lElencoDebitori = lCtrlBollettini
-					.ExRicercaDebitoriConPosizioniAperteInScadenza(inScadenzaTraGiorni, controllateDaGiorni);
-			pagoPaLogger.debug(" Debitori trovati = " + lElencoDebitori.size());
+					.ExRicercaDebitoriConPosizioniAperteInScadenza(istg, cdg);
+			pagoPaLogger.debug("Debitori trovati = " + lElencoDebitori.size());
 
 			// Ricerca per debitore
 			for (int i = 0; i < lElencoDebitori.size(); i++) {
 				BollettinoPagopaModel lDebitore = lElencoDebitori.elementAt(i);
-
 				try {
 					pagoPaLogger.debug(
 							" Inizio richiesta a pagoPa per il Debitore = " + lDebitore.getCodiceFiscale()
@@ -133,37 +147,36 @@ public class ConsultaPagamentiJob implements Job {
 					// servono quelli pagati? se CARRELLO allora sono quelli ancora non pagati
 					// vedi pg 12 - APPLICATIVI - Flussi pagamento telematico tramite PST vers. 3.1.pdf
 					Calendar dataRichiestaDa = null;
-					Calendar dataRichiestaA = null; 
+					Calendar dataRichiestaA = null;
 					int dimensionePagina = 0;
 					int numeroPagina = 0;
 
-					// 
 					Object[] pagamenti = null;
-					if ("true".equals(F3BProperties.getInstance().getProperty("PagoPaTest"))) {
-					    pagoPaLogger.warn("FASE DI TEST ATTIVA! Si utilizza una ricevuta di prova");
-					    pagamenti = new Object[1];
-					    pagamenti[0] = getBollettinoTest();
+					// SOLO PER TEST
+					if ("true".equals(F3BProperties.getProperty("PagoPaTest"))) {
+						pagoPaLogger.warn("FASE DI TEST ATTIVA! Si utilizza una ricevuta di prova");
+						pagamenti = new Object[1];
+						pagamenti[0] = getBollettinoTest();
+					} else {
+						// Nota: per lo stesso soggetto (CF) potrebbero essere presenti più fascicoli
+						RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
+								codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
+								dimensionePagina, numeroPagina);
+
+						pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
+						pagoPaLogger.debug(
+								"RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
+						pagoPaLogger
+								.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
+						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
+								+ (rr.getItems() != null ? rr.getItems().length : null));
+						pagamenti = rr.getItems();
 					}
-					else {
-    					// Nota: per lo stesso soggetto (CF) potrebbero essere presenti più fascicoli
-    					RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
-    							codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
-    							dimensionePagina, numeroPagina);
-    
-    					pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
-    					pagoPaLogger
-    							.debug("RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
-    					pagoPaLogger.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
-    					pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
-    							+ (rr.getItems() != null ? rr.getItems().length : null));
-    					pagamenti = rr.getItems();
-					}
-					
+
 					if (pagamenti == null || pagamenti.length == 0) {
 						pagoPaLogger
 								.warn("Nessuna StatoRichiesta restituito per il debitore " + codiceFiscale);
-						// TODO dovrei aggiornare tutte le posizioni
-						esitoEsecuzione = this.appendString(esitoEsecuzione,
+						esitoEsecuzione = appendString(esitoEsecuzione,
 								"\nNessuna StatoRichiesta restituita per il debitore " + codiceFiscale);
 					} else {
 						// recupero in una sola transazione tutti i bollettini a carico del CF per poterli
@@ -187,9 +200,7 @@ public class ConsultaPagamentiJob implements Job {
 									if (bollettinoSIES != null) {
 										if (ICostantiPagoPA.SIES_STATO_NON_PAGATO
 												.equals(bollettinoSIES.getStatoPagamento())) {
-
 											bollettinoSIES.setDataUltimoControllo(DateUtils.getSysDate());
-
 											bollettinoSIES.setCodOperatoreAggiornamento("BATCH");
 											bollettinoSIES.setCodUfficioAggiornamento("BATCH");
 											bollettinoSIES.setDataAggiornamento(DateUtils.getSysDate());
@@ -199,21 +210,16 @@ public class ConsultaPagamentiJob implements Job {
 
 											if (statoRichiesta.getStato()
 													.equals(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE)) {
-												// Il bollettino è stato pagato. Aggiorno opportunamente i
-												// campo
+												// Il bollettino è stato pagato. Aggiorno opportunamente il
+												// campo; PA = Pagato
 												bollettinoSIES
-														.setStatoPagamento(ICostantiPagoPA.SIES_STATO_PAGATO); // PA
-																												// =
-																												// Pagato
+														.setStatoPagamento(ICostantiPagoPA.SIES_STATO_PAGATO);
 												bollettinoSIES.setDataAvvPagamento(
 														DateUtils.getDate(statoRichiesta.getDataRicevuta()));
 												// verificare che sia l'importo veramente pagato
 												bollettinoSIES.setImportoPagato(
 														BigDecimal.valueOf(statoRichiesta.getImporto()));
-
 												contaNumBollettiniAggiornati++;
-												// TODO calcolare le scadenze delle successive rate se
-												// necessario
 											}
 											// else if
 											// (statoRichiesta.getStato().equals(ICostantiPagoPA.PAGOPA_STATO_CARRELLO))
@@ -232,13 +238,11 @@ public class ConsultaPagamentiJob implements Job {
 											lCtrlBollettini
 													.ExAggiornaStatoPagamentoBollettinoPagopa(bollettinoSIES);
 											pagoPaLogger.debug(" Aggiornamento effettuato");
-										} else {
-											// TODO per scrupolo verifico lo stato comunque
 										}
 									} else {
 										pagoPaLogger.warn("Per il numero di avviso " + iuv
 												+ " non esiste alcuna posizione sulla tabella dei bollettini");
-										esitoEsecuzione = this.appendString(esitoEsecuzione,
+										esitoEsecuzione = appendString(esitoEsecuzione,
 												"\nwarn iuv " + iuv + " non presente in banca dati");
 									}
 								} else {
@@ -247,7 +251,7 @@ public class ConsultaPagamentiJob implements Job {
 								}
 							} catch (Exception e) {
 								pagoPaLogger.error("Exception", e);
-								erroriEsecuzione = this.appendString(erroriEsecuzione, "\n" + e.getMessage());
+								erroriEsecuzione = appendString(erroriEsecuzione, "\n" + e.getMessage());
 								// Errore sul singolo bollettino
 								if (bollettinoSIES != null) {
 									bollettinoSIES.setDataUltimoControllo(DateUtils.getSysDate());
@@ -270,14 +274,14 @@ public class ConsultaPagamentiJob implements Job {
 							" Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
 									+ lDebitore.getCodiceFiscale(),
 							e);
-					erroriEsecuzione = this.appendString(erroriEsecuzione,
+					erroriEsecuzione = appendString(erroriEsecuzione,
 							"\nErrore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
 									+ lDebitore.getCodiceFiscale());
 				}
 			}
 		} catch (Exception e) {
 			pagoPaLogger.error("Errore in fase di esecuzione del job di consultazionePagamenti", e);
-			erroriEsecuzione = this.appendString(erroriEsecuzione,
+			erroriEsecuzione = appendString(erroriEsecuzione,
 					"\nErrore in fase di esecuzione del job di consultazionePagamenti");
 		} finally {
 			try {
@@ -302,7 +306,7 @@ public class ConsultaPagamentiJob implements Job {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	// private void checkBollettiniByIUV() {
 	//
@@ -380,6 +384,7 @@ public class ConsultaPagamentiJob implements Job {
 	// }
 
 	private String appendString(String stringa, String strToAppend) {
+
 		int maxLength = 2000;
 
 		if ((stringa.length() + strToAppend.length()) < maxLength)
@@ -390,22 +395,22 @@ public class ConsultaPagamentiJob implements Job {
 		return stringa;
 
 	}
-	
-	private StatoRichiestaPagamento getBollettinoTest () {
-	    StatoRichiestaPagamento statoPagamento = new StatoRichiestaPagamento ();
-	    
-	    Date dataPagamento = DateUtils.getDate(2023, 3, 15);
-	    Calendar myCalendar= Calendar.getInstance();
-        myCalendar.setTime(dataPagamento);
-	    
-	    // nb sul DB deve essere "RATA_DI_TEST"
-	    statoPagamento.setNumeroAvviso("3RATA_DI_TEST");
-	    statoPagamento.setStato(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE);
-	    statoPagamento.setDataRicevuta(myCalendar);
-	    statoPagamento.setImporto(1000.21f);
-	    
-	    
-	    return statoPagamento;
+
+	private StatoRichiestaPagamento getBollettinoTest() {
+
+		StatoRichiestaPagamento statoPagamento = new StatoRichiestaPagamento();
+
+		Date dataPagamento = DateUtils.getDate(2023, 3, 15);
+		Calendar myCalendar = Calendar.getInstance();
+		myCalendar.setTime(dataPagamento);
+
+		// nb sul DB deve essere "RATA_DI_TEST"
+		statoPagamento.setNumeroAvviso("3RATA_DI_TEST");
+		statoPagamento.setStato(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE);
+		statoPagamento.setDataRicevuta(myCalendar);
+		statoPagamento.setImporto(1000.21f);
+
+		return statoPagamento;
 	}
 
 }

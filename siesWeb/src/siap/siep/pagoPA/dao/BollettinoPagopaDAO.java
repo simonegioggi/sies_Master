@@ -12,9 +12,11 @@ import siap.dao.SIAPTableDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * MEV_2023-13 Title: BollettinoPagopaDAO Description: Classe DAO per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaDAO 
+ * Description: Classe DAO per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class BollettinoPagopaDAO extends SIAPTableDAO {
@@ -337,5 +339,6 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 
     public void selCondizioneDeleteByIdRata(BigDecimal IdRateizzazione) {
         setCondition(" RAT_ID_RATEIZZAZIONE_PP = " + IdRateizzazione);
-    }	
+    }
+
 }

@@ -3,19 +3,26 @@ package siap.siep.pagoPA.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
+import org.apache.log4j.Logger;
+
 import f3b.dao.DAOException;
+import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import siap.dao.SIAPSqlDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * Title: BollettinoPagopaSqlDAO Description: Classe SqlDAO per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaSqlDAO 
+ * Description: Classe SqlDAO per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
  * @version 1.0
  */
 public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
+
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
 	public BollettinoPagopaSqlDAO(Connection con) {
 
@@ -41,6 +48,8 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE')"
 				+ " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE"
 				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO')" + " WHERE 1 = 1";
+
+		// valore di ritorno
 		return s;
 	}
 
@@ -82,12 +91,19 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		return aModel;
 	}
 
-	public void ricercaBollettinoPagopaByFasSieIdFascicoloSiep(BigDecimal fasSieIdFascicoloSiep)
+	public void ricercaBollettinoPagopaByFasSieIdFascicoloSiep(BigDecimal fasSieIdFascicoloSiep, String chiamante)
 			throws DAOException {
 
-		String lSql = getSqlQuery();
-		lSql += setCondizioniByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
-		setStatement(lSql);
+		String s = getSqlQuery();
+		s += setCondizioniByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
+		setStatement(s);
+
+		if ("batch".equalsIgnoreCase(chiamante))
+			// info per il log
+			pagoPaLogger.info("Query >>>>>>>>> " + s);
+		else
+			// info per il log
+			siesLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	public String setCondizioniByFasSieIdFascicoloSiep(BigDecimal fasSieIdFascicoloSiep) {
@@ -95,6 +111,8 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		String condizioni = new String();
 		condizioni += " AND BP.FAS_SIE_ID_FASCICOLO_SIEP = " + fasSieIdFascicoloSiep;
 		condizioni += " ORDER BY BP.ID_BOLLETTINO_PAGOPA";
+
+		// valore di ritorno
 		return condizioni;
 	}
 
@@ -103,6 +121,9 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		String s = getSqlQuery();
 		s += " " + setCondizionByKey(aKey);
 		setStatement(s);
+
+		// info per il log
+		siesLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	private String setCondizionByKey(BigDecimal aId) {
@@ -119,20 +140,25 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		s += " FROM BOLLETTINO_PAGOPA WHERE ";
 		s += " ID_BOLLETTINO_PAGOPA = " + idBollettinoPagopa;
 		setStatement(s);
+
+		// info per il log
+		siesLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	public void ricercaCodiciUfficiProduzione(String codUfficio) {
 
 		String s = new String();
-
 		s += "select t.codice_ufficio codUfficio, t.codice_gl codGl from UFFICI_PRODUZIONE t"
 				+ " where t.cod_ufficio_sies = '" + codUfficio + "'";
 		setStatement(s);
+
+		// info per il log
+		siesLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	/**
 	 *
-	 * @param offset
+	 * @param dayOffset
 	 * @throws DAOException
 	 */
 	public void ricercaBollettiniPagopaNonPagati(int dayOffset) throws DAOException {
@@ -143,6 +169,9 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + dayOffset + ")"; //
 		}
 		setStatement(s);
+
+		// info per il log
+		pagoPaLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	public void ricercaBollettiniPagopaNonPagatiByCF(String aCodiceFiscale, int dayOffset)
@@ -155,25 +184,31 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + dayOffset + ")"; //
 		}
 		setStatement(s);
+
+		// info per il log
+		pagoPaLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni)
 			throws DAOException {
 
-		String s = "SELECT DISTINCT CODICE_FISCALE, CODICE_DISTRETTO " + " FROM BOLLETTINO_PAGOPA "
-				+ " WHERE 1=1 ";
-		s += " AND CODICE_FISCALE IS NOT NULL "; // Codice fiscale Valorizzato
-		s += " AND IUV IS NOT NULL "; // Bollettino generato
-		s += " AND STATO_PAGAMENTO = 'PN' "; // PN = NON PAGATO
+		String s = "SELECT DISTINCT CODICE_FISCALE, CODICE_DISTRETTO FROM BOLLETTINO_PAGOPA" + " WHERE 1 = 1";
+		s += " AND CODICE_FISCALE IS NOT NULL"; // Codice fiscale Valorizzato
+		s += " AND IUV IS NOT NULL"; // Bollettino generato
+		s += " AND STATO_PAGAMENTO = 'PN'"; // PN = NON PAGATO
 
 		if (inScadenzaTraGiorni > 0) {
-			s += " AND DATA_SCADENZA > (SYSDATE-" + controllateDaGiorni + ")"; //
+			s += " AND DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
+			s += " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
 		}
 
 		if (controllateDaGiorni > 0) {
-			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")"; //
+			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")";
 		}
 		setStatement(s);
+
+		// info per il log
+		pagoPaLogger.info("Query >>>>>>>>> " + s);
 	}
 
 	public GenericModel getModelDebitori() throws DAOException {
@@ -190,13 +225,19 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		String s = getSqlQuery();
 		s += " AND IUV = '" + codiceCRS + "' ";
 		setStatement(s);
-	}
-	
-   public void ricercaBollettinoPagopaByReteizzazione(BigDecimal idRateizzazione) throws DAOException {
 
-       String s = getSqlQuery();
-       s += " AND RAT_ID_RATEIZZAZIONE_PP = " + idRateizzazione;
-       setStatement(s);
-   }
+		// info per il log
+		pagoPaLogger.info("Query >>>>>>>>> " + s);
+	}
+
+	public void ricercaBollettinoPagopaByReteizzazione(BigDecimal idRateizzazione) throws DAOException {
+
+		String s = getSqlQuery();
+		s += " AND RAT_ID_RATEIZZAZIONE_PP = " + idRateizzazione;
+		setStatement(s);
+
+		// info per il log
+		siesLogger.info("Query >>>>>>>>> " + s);
+	}
 
 }

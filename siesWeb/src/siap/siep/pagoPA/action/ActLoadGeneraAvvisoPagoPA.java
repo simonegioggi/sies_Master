@@ -51,7 +51,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
 		boolean isElencoEmpty = elencoStatoPagamenti.isEmpty();
 		// Ricerca i pagamenti per id evento
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -74,7 +74,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 						progressivoRata++;
 					}
 				}
-				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
 			}
 		}
 

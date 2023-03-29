@@ -77,7 +77,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> bpms = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
 		Iterator<BollettinoPagopaModel> iter = bpms.iterator();
 
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici

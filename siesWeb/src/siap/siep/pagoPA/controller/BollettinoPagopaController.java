@@ -37,7 +37,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
-			BigDecimal fasSieIdFascicoloSiep) throws F3BException {
+			BigDecimal fasSieIdFascicoloSiep, String chiamante) throws F3BException {
 
 		Connection c = null;
 		Vector<BollettinoPagopaModel> bpms = new Vector<>();
@@ -47,7 +47,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		try {
 			c = getDBConnection();
 			bpsdao = new BollettinoPagopaSqlDAO(c);
-			bpsdao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
+			bpsdao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep, "");
 			bpsdao.start();
 
 			while (bpsdao.next()) {
@@ -347,7 +347,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 
 				lBollSqlDao = new BollettinoPagopaSqlDAO(lConn);
 				lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(
-						aBollettinoModel.getFasSieIdFascicolSiep());
+						aBollettinoModel.getFasSieIdFascicolSiep(), "batch");
 				Vector<BollettinoPagopaModel> listaBollettiniFasc = new Vector<BollettinoPagopaModel>(
 						lBollSqlDao.getModels());
 				int contaPagati = 0;
@@ -392,8 +392,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 							lBollDao.update();
 						}
 					}
-					//
 
+					// info per il log
 					siesLogger.debug("aBollettinoModel.getDataAvvPagamento() = "
 							+ aBollettinoModel.getDataAvvPagamento());
 					Date ultimaData = aBollettinoModel.getDataAvvPagamento();

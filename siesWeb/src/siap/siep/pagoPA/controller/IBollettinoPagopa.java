@@ -27,20 +27,23 @@ public interface IBollettinoPagopa {
 	public void ExModificaBollettinoPagopa(BollettinoPagopaModel com) throws F3BException;
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
-			BigDecimal fasSieIdFascicolSiep) throws F3BException;
+			BigDecimal fasSieIdFascicolSiep, String chiamante) throws F3BException;
 
 	ByteArrayOutputStream ExGetBollettino(BigDecimal idBollettinoPagopa) throws F3BException;
 
 	String[] ExRicercaCodiciUfficiProduzione(String codUfficio) throws F3BException;
 
-	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaNonPagati (int dayOffset) throws F3BException;
+	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaNonPagati(int dayOffset)
+			throws F3BException;
 
-	public void ExAggiornaStatoPagamentoBollettinoPagopa (BollettinoPagopaModel com) throws F3BException;
-	
-	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte (int dayOffset) throws F3BException;
+	public void ExAggiornaStatoPagamentoBollettinoPagopa(BollettinoPagopaModel com) throws F3BException;
 
-    public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperteInScadenza (int inScadenzaTraGiorni, int controllateDaGiorni) throws F3BException;
+	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte(int dayOffset)
+			throws F3BException;
 
-    public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
+	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperteInScadenza(
+			int inScadenzaTraGiorni, int controllateDaGiorni) throws F3BException;
+
+	public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
 
 }

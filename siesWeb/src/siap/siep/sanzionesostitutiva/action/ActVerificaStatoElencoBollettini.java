@@ -44,7 +44,7 @@ public class ActVerificaStatoElencoBollettini extends ActionSiap implements ICos
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		BigDecimal importoPagato = new BigDecimal(0);
 		BigDecimal importoDaPagare = new BigDecimal(0);
