@@ -36,6 +36,9 @@ import siap.siep.nomeprovvedimento.dao.NomeProvvedimentoDAO;
 import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.notifica.dao.NotificaEventoSqlDAO;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.pagoPA.dao.BollettinoPagopaDAO;
+import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.parametro.controller.IParametro;
 import siap.siep.parametro.model.ParametroModel;
 import siap.siep.penaresidua.dao.PenaResiduaDAO;
@@ -2711,6 +2714,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		RateizzazionePPSqlDAO lRateSqlDao = null;
 
+		BollettinoPagopaSqlDAO lBollSqlDao = null;
+		BollettinoPagopaDAO    lBollDao = null;
+		
 		Vector lVectNot = new Vector();
 
 		try {
@@ -2784,6 +2790,8 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
     	                    lScaDao.delete();
                             lScaDao.stop();
 	                    }
+	                    
+	                    
 					}
 					else {
 					    siesLogger.debug("Notifica al condannato Inserita/Modificata Attivo/Modifico lo scadenzario");   
@@ -2848,6 +2856,51 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
                             lScaDao.update();
                             lScaDao.stop();
     					}
+    					
+    					// Se presenti i bollettini aggiorno la data di scadenza
+    					lBollSqlDao = new BollettinoPagopaSqlDAO (lConn);
+    					lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep(), null);
+
+    					Vector <BollettinoPagopaModel> lListaBollettini = new Vector <BollettinoPagopaModel> (lBollSqlDao.getModels());
+    					if (lListaBollettini.size()>0) {
+    					    boolean isBollettiniGenerati = false;
+    					    boolean isBollettiniPagati = false;
+    					    boolean isDataScadenzaCalcolata = false;
+    					    for (BollettinoPagopaModel lBoll : lListaBollettini) {
+    					        if (lBoll.getIuv()!=null)
+    					            isBollettiniGenerati = true;
+                                if (lBoll.getDataAvvPagamento()!=null)
+                                    isBollettiniPagati = true;
+    					        if (lBoll.getDataScadenza()!=null)
+    					            isDataScadenzaCalcolata = true;    					            
+    					    }
+    					    
+    					    if (isBollettiniGenerati) {
+    					        if (!isBollettiniPagati /*&& !isDataScadenzaCalcolata*/) {
+    					            // Calcolo la data scadenza e la aggiornao
+    					            lBollDao = new BollettinoPagopaDAO(lConn);
+    					            lBollDao.setDataScadenza (dataScadenza);
+    					            lBollDao.selCondizioneByIdFascicolo (aEvento.getFasSieIdFascicoloSiep());
+    					            lBollDao.update();
+    					        }
+    					        else {
+    					            // se il primo bollettino è stato già pagato allora le date dei successivi sono state 
+    					            // calcolate in base al pagamento della prima rata. NON HA SENSO MODIFICARE LE SCADENZA
+    					            // Al più si potrebbe modificare SOLO la data scadenza del PRIMO bollettino pagato
+    					        }
+    					    }
+    					    else {
+    					        // la potrei aggiornare comunque
+                                lBollDao = new BollettinoPagopaDAO(lConn);
+                                lBollDao.setDataScadenza (dataScadenza);
+                                lBollDao.selCondizioneByIdFascicolo (aEvento.getFasSieIdFascicoloSiep());
+                                lBollDao.update();
+    					    }
+    					}
+    					
+    					
+    					
+    					
 					}
 				}
 			}
@@ -2869,6 +2922,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 			cleanup(lScaDao);
 			cleanup(lRateSqlDao);
+			
+			cleanup(lBollSqlDao);
+			cleanup(lBollDao);
 
 			cleanup(lConn);
 		}

@@ -340,5 +340,9 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
     public void selCondizioneDeleteByIdRata(BigDecimal IdRateizzazione) {
         setCondition(" RAT_ID_RATEIZZAZIONE_PP = " + IdRateizzazione);
     }
+    
+    public void selCondizioneByIdFascicolo(BigDecimal IdFascicoloSIEP) {
+        setCondition(" FAS_SIE_ID_FASCICOLO_SIEP = " + IdFascicoloSIEP);
+    }
 
 }
