@@ -58,9 +58,6 @@ public interface ICostantiPagoPA {
     public static final String SIES_STATO_PAGATO     = "PA";
     public static final String SIES_STATO_PAGATO_PARZIALMENTE = "PP";
     
-	public static final String PG_VISUALIZZA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/pagoPA/VisualizzaAvvisoPagoPA.jsp";
-
 	public static final String PG_LOAD_GENERA_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/LoadGeneraAvvisoPagoPA.jsp";
 
