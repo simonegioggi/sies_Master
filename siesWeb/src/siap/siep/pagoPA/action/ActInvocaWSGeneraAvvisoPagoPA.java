@@ -137,7 +137,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, bpm);
 			rpt.setDatiVersamento(dv);
 			Calendar c = Calendar.getInstance();
-			c.setTime(bpm.getDataScadenzaRich());
+			c.setTime(bpm.getDataScadenza());
 			rpt.setDataScadenza(c);
 
 			EsitoGeneraAvviso ega = null;

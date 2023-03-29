@@ -138,7 +138,7 @@ if (elencoStatoPagamenti.size() == 0) {
       	<td class="c"><%=StringUtils.toEuroFormat(bpm.getImportoRata())%></td>
       	<td class="c"><%=StringUtils.toEuroFormat(bpm.getImportoPagato())%></td>
 		<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataAvvPagamento(), "dd/MM/yyyy"), "-")%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenzaRich(), "dd/MM/yyyy"), "-")%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenza(), "dd/MM/yyyy"), "-")%></td>
 <%
 		String coloreClasse = "cVerde";
 		if ("PN".equals(bpm.getStatoPagamento()))

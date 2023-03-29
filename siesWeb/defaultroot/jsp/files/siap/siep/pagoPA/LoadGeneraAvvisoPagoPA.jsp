@@ -91,7 +91,7 @@ if (elencoStatoPagamenti.size() == 0) {
 		</td>
       	<td class="c"><%=StringUtils.toStringJSP(bpm.getIuv(), "-")%></td>
       	<td class="c"><%=StringUtils.toEuroFormat(bpm.getImportoRata())%></td>
-      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenzaRich(), "dd/MM/yyyy"))%></td>
+      	<td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bpm.getDataScadenza(), "dd/MM/yyyy"))%></td>
       	<td class="c"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
 	</tr>
 <%
