@@ -1,10 +1,27 @@
-Ticket#20230328019 — SIEP : Data visualizzata Istanza non corretta
+RELEASE_12.4.28.0	-->	nato dal branch "release_12.4.27.0" in data 27/02/2023
 
-Corretto inserimento data per lo stato procedimento e visualizzazione data nomina difensore sul dettaglio istanza
+Comprende i seguenti Ticket MAC:
 
-Moduli Modificati
-siap.siep.nuovaistanza.controller.NuovaIstanzaController
-/jsp/files/siap/siep/nuovaistanza/DettaglioNuovaIstanza.jsp
+1)	Ticket#20230224014 - errata stampa su dettaglio ruolo udienza
+	Corretto link su icona di stampa che faceva stampare erroneamente il verbale per tutti i fascicoli.
+	Si elimina l'idMagistrato dalla chiamata alla ActStampaFlashVerbaleUdienza altrimenti la funzione di 
+	ricerca filtra per magistrto invece che per IdFascicolo stampando il verbale per tutti i fascicoli 
+	dell'udienza.
+	Classe modificata:
+	-	\jsp\files\siap\sige\udienzaprocedimento\dettaglioruolo\ListaProcedimentixUdienza.jsp
 
+2)	Ticket#202302280124 - estrazione classe IV. Singolo anno contro vari anni
+	Corrette query sia a livello applicativo che sulle viste per evitare la esclusione dei riaperti 
+	dal conteggio dei sopravvenuti e degli esauriti. Si modifica nuovamente l'estrazione dati delle statistiche.
+	Classe modificata:
+	-	siap.siep.statis.dao.StatisticheMSSqlDAO.java
+	L'intervento prevede anche la modifica delle seguenti viste:
+	-	VW_MS_PROCEDIMENTI
+	-	VW_MS_PROC_ESAURITI
+	-	VW_MS_PROC_ESAURITI_MAG
 
-
+3)	Ticket#20230328019 — SIEP : Data visualizzata Istanza non corretta
+	Corretto inserimento data per lo stato procedimento e visualizzazione data nomina difensore sul dettaglio istanza.
+	Classi Modificate:
+	-	siap.siep.nuovaistanza.controller.NuovaIstanzaController.java
+	-	/jsp/files/siap/siep/nuovaistanza/DettaglioNuovaIstanza.jsp
