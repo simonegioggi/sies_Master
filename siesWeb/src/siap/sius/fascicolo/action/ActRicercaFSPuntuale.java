@@ -106,8 +106,8 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 				boolean existOrdinanzaApplicazioneProvvisoria = false;
 				for (int i = 0; i < v.size(); i++) {
 					EventoModel em = (EventoModel) v.elementAt(i);
-					if ("0270".equals(em.getCodEsito())) {
-						/* && "S".equals(em.getFlagDocumentoRegistrato()) && em.getNumAllValidati() > 0 */
+					if ("0270".equals(em.getCodEsito()) && !"A".equals(em.getFlagDocumentoRegistrato())) {
+						// Ordinanza Applicazione Provvisoria deve esistere ma NON annullata
 						existOrdinanzaApplicazioneProvvisoria = true;
 						idEventoOrdinanza = em.getIdEvento();
 						break;
