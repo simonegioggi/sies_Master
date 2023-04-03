@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
+import f3b.util.F3BException;
 import f3b.util.F3BProperties;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
@@ -161,10 +162,11 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 					// return rt.toString();
 					return IWebConstants.PG_MESSAGE;
 				}
+				throw new F3BException(getClass().getName() + ".processRequest: " + ioe);
 			} catch (Exception e) {
 				e.printStackTrace();
 				siesLogger.error(e.getMessage());
-				throw e;
+				throw new F3BException(getClass().getName() + ".processRequest: " + e);
 			}
 			// info per il log
 			siesLogger.debug("EsitoGeneraAvviso: " + ega.getNumeroAvviso() + " # " + ega.getBollettino());

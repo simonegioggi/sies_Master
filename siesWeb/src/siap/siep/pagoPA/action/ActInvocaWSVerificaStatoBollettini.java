@@ -122,10 +122,11 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 						// return rt.toString();
 						return IWebConstants.PG_MESSAGE;
 					}
+					throw new F3BException(getClass().getName() + ".processRequest: " + ioe);
 				} catch (Exception e) {
 					e.printStackTrace();
 					siesLogger.error(e.getMessage());
-					throw e;
+					throw new F3BException(getClass().getName() + ".processRequest: " + e);
 				}
 				// info per il log
 				if (rr != null && rr.getCount() > 0) {
@@ -154,6 +155,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 						aggiornaBollettino(ibp, bpm, dataRicevuta, srp.getStato());
 					}
 				} else {
+					// info per il log
 					siesLogger.debug("Risultato Ricerca: ATTENZIONE! Nessun Bollettino restituito!");
 				}
 			}
