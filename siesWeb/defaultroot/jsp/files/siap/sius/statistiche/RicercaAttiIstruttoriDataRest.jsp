@@ -19,7 +19,7 @@
 <%@ page import="siap.sico.evento.action.ICostantiEvento" %>
 
 
-<jsp:useBean id="ricercaProcedimenti"   scope="session" class="siap.sius.statistiche.model.RicercaProcedimentoModel" />
+<jsp:useBean id="ricercaAttiIstruttori" scope="session" class="siap.sius.statistiche.model.RicercaProcedimentoModel" />
 <jsp:useBean id="elencoProcedimenti"    scope="request" class="java.util.ArrayList" />
 <jsp:useBean id="TornaQui"              scope="request" class="java.lang.String"/>
 
@@ -63,58 +63,58 @@
   <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
 
   <table cellspacing=2 cellpadding=2>
-<%  if( ricercaProcedimenti != null ) { %>
+<%  if( ricercaAttiIstruttori != null ) { %>
 
         <tr>
           <td class="Cliccabile">Criteri di Ricerca selezionati:</td>
         </tr>
         
 <%
-        if( (ricercaProcedimenti.getAnnoInizio() != null || ricercaProcedimenti.getNumeroInizio() != null) || 
-            (ricercaProcedimenti.getAnnoFine() != null || ricercaProcedimenti.getNumeroFine() != null) ) {
+        if( (ricercaAttiIstruttori.getAnnoInizio() != null || ricercaAttiIstruttori.getNumeroInizio() != null) || 
+            (ricercaAttiIstruttori.getAnnoFine() != null || ricercaAttiIstruttori.getNumeroFine() != null) ) {
 %>
           <tr>
             <td class="lVerdeNB">Procedimenti con Anno Numero :&nbsp;&nbsp;</td>
             <td class="lVerdeNB">
-              Dal&nbsp;<%=StringUtils.toStringJSP(ricercaProcedimenti.getAnnoInizio(),"____")%> 
+              Dal&nbsp;<%=StringUtils.toStringJSP(ricercaAttiIstruttori.getAnnoInizio(),"____")%> 
             /
-              <%=StringUtils.toStringJSP(ricercaProcedimenti.getNumeroInizio(),"_")%>
+              <%=StringUtils.toStringJSP(ricercaAttiIstruttori.getNumeroInizio(),"_")%>
             </td>                
             <td class="lVerdeNB">            
-              Al&nbsp;<%=StringUtils.toStringJSP(ricercaProcedimenti.getAnnoFine(),"____")%> 
+              Al&nbsp;<%=StringUtils.toStringJSP(ricercaAttiIstruttori.getAnnoFine(),"____")%> 
             /
-              <%=StringUtils.toStringJSP(ricercaProcedimenti.getNumeroFine(),"_")%>
+              <%=StringUtils.toStringJSP(ricercaAttiIstruttori.getNumeroFine(),"_")%>
             </td>
           </tr>
 <%      } %>        
         
         
 <%
-        if( ricercaProcedimenti.getDataDepositoInizio() != null || ricercaProcedimenti.getDataDepositoFine() != null ) {
+        if( ricercaAttiIstruttori.getDataDepositoInizio() != null || ricercaAttiIstruttori.getDataDepositoFine() != null ) {
 %>
           <tr>
             <td class="lVerdeNB">Procedimenti con Data Iscrizione :&nbsp;&nbsp;</td>
             <td class="lVerdeNB">
-              Dal&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(ricercaProcedimenti.getDataDepositoInizio(), "dd-MM-yyyy") ,"__/__/____")%>&nbsp;&nbsp;
+              Dal&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(ricercaAttiIstruttori.getDataDepositoInizio(), "dd-MM-yyyy") ,"__/__/____")%>&nbsp;&nbsp;
             </td>
             <td class="lVerdeNB">
-              Al&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString( ricercaProcedimenti.getDataDepositoFine(),"dd-MM-yyyy"),"__/__/____") %>
+              Al&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString( ricercaAttiIstruttori.getDataDepositoFine(),"dd-MM-yyyy"),"__/__/____") %>
             </td>
         </tr>
 <%      } %>
 
 
 <%
-        if(ricercaProcedimenti.getDataRestituzioneInizio() != null || ricercaProcedimenti.getDataRestituzioneFine() != null) 
+        if(ricercaAttiIstruttori.getDataRestituzioneInizio() != null || ricercaAttiIstruttori.getDataRestituzioneFine() != null) 
         {
 %>
           <tr>
             <td class="lVerdeNB">Atti con Data Restituzione :&nbsp;&nbsp;</td>
             <td class="lVerdeNB">
-              Dal&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(ricercaProcedimenti.getDataRestituzioneInizio(),"dd-MM-yyyy"),"__/__/____")%>&nbsp;&nbsp;
+              Dal&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(ricercaAttiIstruttori.getDataRestituzioneInizio(),"dd-MM-yyyy"),"__/__/____")%>&nbsp;&nbsp;
             </td>
             <td class="lVerdeNB">
-              Al&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(ricercaProcedimenti.getDataRestituzioneFine(),"dd-MM-yyyy"),"__/__/____")%>
+              Al&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(ricercaAttiIstruttori.getDataRestituzioneFine(),"dd-MM-yyyy"),"__/__/____")%>
             </td>
           </tr>
 <%     } %>
@@ -180,7 +180,7 @@
           <font class="label"><%=procedimento.getFascicoloSius().getSoggetto().getNome()%></font>
         </td>
 <%
-        if( ricercaProcedimenti.getStatoProcedimento() == 999 ) {
+        if( ricercaAttiIstruttori.getStatoProcedimento() == 999 ) {
 %>
           <td class="c">-</td>
           <td class="c">-</td>
