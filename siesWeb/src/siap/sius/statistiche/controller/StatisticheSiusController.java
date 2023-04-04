@@ -48,6 +48,7 @@ import siap.sius.statistiche.dao.ProcAggregatiCognomeElencoSqlDAO;
 import siap.sius.statistiche.dao.ProcAggregatiCognomeSqlDAO;
 import siap.sius.statistiche.dao.ProcAggregatiIstitutoDetenzioneSqlDAO;
 import siap.sius.statistiche.dao.ProcAggregatiProcuraMittenteSqlDAO;
+import siap.sius.statistiche.dao.ProcAttiIstruttoriDataRestSqlDAO;
 import siap.sius.statistiche.dao.ProcDataUdienzaFissataNoDefinitiNumGGSqlDAO;
 import siap.sius.statistiche.dao.ProcPerStatisticaMisureAlternativeSqlDAO;
 import siap.sius.statistiche.dao.ProcPosizioneGiuridicaSqlDAO;
@@ -2604,4 +2605,71 @@ public class StatisticheSiusController extends SiapController implements IStatis
 	}
 	// FINE MEV_9
 
+	
+	// MEV9
+	public Collection<EveFasGepSogProvModel> ExRicercaAttiIstruttoriDataRestPaginata (
+			RicercaProcedimentoModel aModel, int aPagina) throws F3BException {
+
+		Connection lConn = null;
+		Collection<EveFasGepSogProvModel> lProcedimenti = null;
+		ProcAttiIstruttoriDataRestSqlDAO lSqlDao = null;
+
+		try {
+			lConn = getDBConnection();
+			lSqlDao = new ProcAttiIstruttoriDataRestSqlDAO(lConn);
+
+			lSqlDao.ricercaProcedimentiAttiIstruttoriDataRest(aModel);
+
+			if (aPagina > 0) {
+				lSqlDao.startPage(aPagina);
+			} else {
+				lSqlDao.start();
+			}
+
+			lProcedimenti = new ArrayList<>();
+			while (lSqlDao.next()) {
+				EveFasGepSogProvModel lModel = (EveFasGepSogProvModel) lSqlDao.getModel();
+				lProcedimenti.add(lModel);
+			}
+			lSqlDao.stop();
+		} catch (Exception ex) {
+			siesLogger.error("ExRicercaAttiIstruttoriDataRestPaginata - Exception: ",ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(lSqlDao);
+			cleanup(lConn);
+		}
+		return lProcedimenti;
+	}
+	
+	
+	public BigDecimal ExGetNumRicercaAttiIstruttoriDataRestPaginata (RicercaProcedimentoModel aModel)
+			throws F3BException {
+
+		BigDecimal lRecords = new BigDecimal(0);
+		Connection lConn = null;
+		ProcAttiIstruttoriDataRestSqlDAO lSqlDao = null;
+
+		try {
+			lConn = getDBConnection(); 
+			lSqlDao = new ProcAttiIstruttoriDataRestSqlDAO(lConn);
+
+			lSqlDao.ricercaProcedimentiAttiIstruttoriDataRest(aModel);
+
+			lRecords = lSqlDao.getNumRowsSelected();
+		} catch (Exception ex) {
+			siesLogger.error("ExGetNumRicercaAttiIstruttoriDataRestPaginata - Exception: ", ex);
+			throw new SIUSException(SIUSException.USER_MESSAGE,
+					ICostantiStatistiche.MESSAGGIO_ERRORE_GENERICO);
+		} finally {
+			cleanup(lSqlDao);
+			cleanup(lConn);
+		}
+		return lRecords;
+	}
+	// MEV9 - FINE
+	
+	
+	
 }

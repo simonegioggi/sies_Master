@@ -96,6 +96,16 @@ public interface ICostantiStatistiche {
 	public static final String CAMPO_MESE_FINALE = "MeseFine";
 	public static final String CAMPO_ANNO_FINALE = "AnnoFine";
 
+	// MEV 9 
+	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE_INI = "GiornoDataRestituzioneIni";
+	public static final String CAMPO_MESE_DATA_RESTITUZIONE_INI = "MeseDataRestituzioneIni";
+	public static final String CAMPO_ANNO_DATA_RESTITUZIONE_INI = "AnnoDataRestituzioneIni";
+
+	public static final String CAMPO_GIORNO_DATA_RESTITUZIONE_FINE = "GiornoDataRestituzioneFin";
+	public static final String CAMPO_MESE_DATA_RESTITUZIONE_FINE = "MeseDataRestituzioneFin";
+	public static final String CAMPO_ANNO_DATA_RESTITUZIONE_FINE = "AnnoDataRestituzioneFin";
+	// MEV 9 - FINE
+	
 	public static final String PG_LOAD_ESTRAZIONE_OGGETTI = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/LoadEstrazioneOggetti.jsp";
 
@@ -155,6 +165,13 @@ public interface ICostantiStatistiche {
 	public static final String PG_RICERCA_PROC_PROVV_NO_VALIDATI_NO_DEP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/RicercaProcedimentiPerProvvNoValidatiNoDepositati.jsp";
 
+	// MEV9
+	public static final String PG_LOAD_ATTI_ISTRUTTORI_DATA_REST = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/LoadRicercaAttiIstruttoriDataRest.jsp";
+	public static final String PG_RICERCA_ATTI_ISTRUTTORI_DATA_REST = IWebConstants.ROOT_DIR
+			+ "files/siap/sius/statistiche/RicercaAttiIstruttoriDataRest.jsp";
+	// MEV9 - FINE
+	
 	// FR015, FA016 - Ricerca procedimenti con provvedimento emesso
 	public static final String RADIO_RICERCA_PER_STATO_PROVVEDIMENTO = "RicercaPerStatoProvvedimento";
 	public static final String VALUE_RICERCA_PER_STATO_PROVVEDIMENTO_NO = "0";

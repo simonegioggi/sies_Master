@@ -221,6 +221,12 @@ public interface IStatisticheSius {
 
 	public BigDecimal ExGetNumRicercaProcPerStatisticaMisureAlternative(RicercaProcedimentoModel rpm)
 			throws F3BException;
+	
+	public Collection<EveFasGepSogProvModel> ExRicercaAttiIstruttoriDataRestPaginata(
+			RicercaProcedimentoModel aModel, int aPagina) throws F3BException;
+	public BigDecimal ExGetNumRicercaAttiIstruttoriDataRestPaginata(RicercaProcedimentoModel aModel)
+			throws F3BException;
+
 	// FINE MEV_9
 
 }
