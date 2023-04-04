@@ -90,7 +90,7 @@ public class ActRicercaAttiIstruttoriDataRest extends ActionSius implements ICos
         setRequestAttribute(IWebConstants.NUM_PAGE,lPagina);
         setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
         
-        setSessionAttribute("ricercaProcedimenti", lRicercaModel);
+        setSessionAttribute("ricercaAttiIstruttori", lRicercaModel);
         setRequestAttribute("elencoProcedimenti", lElenco);
 
 		return PG_RICERCA_ATTI_ISTRUTTORI_DATA_REST;
