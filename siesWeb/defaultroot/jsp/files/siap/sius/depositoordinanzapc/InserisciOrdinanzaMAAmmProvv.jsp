@@ -84,12 +84,13 @@ function Verify() {
   	if (typeof (listComboEsiti[1]) != "undefined") {
 	  	for (idComboEsiti = 0; idComboEsiti < listComboEsiti.length; idComboEsiti++) {  
 	    	var comboEsito = listComboEsiti[idComboEsiti];
-	    	if (comboEsito[comboEsito.selectedIndex].value == '0680') {
+	    	if (comboEsito[comboEsito.selectedIndex].value == '0680'
+	    			|| comboEsito[comboEsito.selectedIndex].value == '0690') {
 	      		contaProvvisorie++;
 	    	}
 	  	}
   	}
-  	if (contaProvvisorie>1) {
+  	if (contaProvvisorie > 1) {
 	    alert("Attenzione. Può essere selezionato 'Applica Provvisoriamente' per un solo oggetto");
 	    return false;
   	}
@@ -293,7 +294,7 @@ String lAction = "siap.sius.depositoordinanzapc.action.ActInserisciOrdinanzaUDS"
 	    <td class="l" colspan=1 > Esito </td>
 	</tr>
 <%
-for (int i=0; i< tenori.length;i++) {
+for (int i = 0; i < tenori.length; i++) {
 %>
 	<tr>
 	  	<td class="l" colspan=1 >

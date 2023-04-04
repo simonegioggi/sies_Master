@@ -295,8 +295,8 @@ il provv. non appartiene ad uno dei seguenti tipi:
 	Irreperibilità (cod. Esito = 0602),
 	Rinvio Udienza (cod. Esito = 0603),
 	// MEV_9: aggiungo 3 nuovi esiti per il decreto di designazione magistrato relatore
-	ESITO_PROVVEDIMENTO 0270 Applica provvisoriamente,
-	ESITO_PROVVEDIMENTO 0271 Conferma Decisione del Magistrato Relatore,
+	ESITO_PROVVEDIMENTO 0270 Applica provvisoriamente,						NON PIU'
+	ESITO_PROVVEDIMENTO 0271 Conferma Decisione del Magistrato Relatore,	NON PIU'
 	ESITO_PROVVEDIMENTO 0610 Magistrato Designato art. 678 1-ter;
 */
 		String lModificaProvvedimento = "NO";
@@ -306,8 +306,8 @@ il provv. non appartiene ad uno dei seguenti tipi:
     				&& lProv.getCodEsito().compareTo("0601") != 0
     				&& lProv.getCodEsito().compareTo("0602") != 0
     				&& lProv.getCodEsito().compareTo("0603") != 0
-					&& lProv.getCodEsito().compareTo("0270") != 0
-    				&& lProv.getCodEsito().compareTo("0271") != 0
+					/*&& lProv.getCodEsito().compareTo("0270") != 0
+    				&& lProv.getCodEsito().compareTo("0271") != 0*/
     				&& lProv.getCodEsito().compareTo("0610") != 0)
         		lModificaProvvedimento = "SI";
 		}

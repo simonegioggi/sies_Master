@@ -127,14 +127,15 @@ if (is678) {
 	var listComboEsiti = document.getElementsByName("<%=ICostantiTenore.CAMPO_COD_ESITO_TENORE%>"); 
 	var contaProvvisorie = 0;
 	if (typeof (listComboEsiti[1]) != "undefined") {
-		for (idComboEsiti=0; idComboEsiti<listComboEsiti.length; idComboEsiti++) {
+		for (idComboEsiti = 0; idComboEsiti < listComboEsiti.length; idComboEsiti++) {
 			var comboEsito = listComboEsiti[idComboEsiti];
-  		    if (comboEsito[comboEsito.selectedIndex].value =='0680') {
+  		    if (comboEsito[comboEsito.selectedIndex].value == '0680'
+    				|| comboEsito[comboEsito.selectedIndex].value == '0690') {
 				contaProvvisorie++;
   		    }
 	  	}
 	}
-	if (contaProvvisorie>1) {
+	if (contaProvvisorie > 1) {
 		alert("Attenzione. Può essere selezionato 'Applica Provvisoriamente' per un solo oggetto");
   	    return false;
 	}
