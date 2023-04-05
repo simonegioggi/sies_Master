@@ -9,219 +9,239 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import siap.sico.ufficio.model.UfficioModel;
-import siap.sico.utente.model.UtenteModel;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
+import siap.sico.ufficio.model.UfficioModel;
+import siap.sico.utente.model.UtenteModel;
 
-public class StatisticheFogliComplementariContainerModel extends GenericModel{
-    /**
-	 * 
-	 */
+public class StatisticheFogliComplementariContainerModel extends GenericModel {
+
 	private static final long serialVersionUID = -8801797124630459308L;
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
-	private Vector<StatisticheFogliComplementariModel> fcIscrittiManualmente=null;
-    private Vector<StatisticheFogliComplementariModel> fcAnnullati=null;
-    private Vector<StatisticheFogliComplementariModel> provvedimentiPriviFc=null;
-    private Vector<StatisticheFogliComplementariModel> provvedimentiConFc=null;
-    private UfficioModel uffUteConnesso=null;
-    private UtenteModel utenteConnesso=null;
-    private RicercaFogliCompModel filtro=null;
-    private Vector <RiepilogoStatisticheFogliComplementari> riepilogoAnnullati=null;
-    private Vector <RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiPriviFC=null;
-    private Vector <RiepilogoStatisticheFogliComplementari> riepilogFCIscrittiManualmente=null;
-    private Vector <RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiConFC=null;
-    private Vector <StatisticheFogliComplementariModel> elenco=null;
-    
-    private Vector <String> testataRiepilogo=null;   
-    
-    // Ticket#20230202011 - Aggiunta variabile
-    private HashMap <String,Integer> testataRiepilogoHash=null; 
-	
-    public Vector<StatisticheFogliComplementariModel> getFcIscrittiManualmente() {
+
+	private Vector<StatisticheFogliComplementariModel> fcIscrittiManualmente = null;
+	private Vector<StatisticheFogliComplementariModel> fcAnnullati = null;
+	private Vector<StatisticheFogliComplementariModel> provvedimentiPriviFc = null;
+	private Vector<StatisticheFogliComplementariModel> provvedimentiConFc = null;
+	private UfficioModel uffUteConnesso = null;
+	private UtenteModel utenteConnesso = null;
+	private RicercaFogliCompModel filtro = null;
+	private Vector<RiepilogoStatisticheFogliComplementari> riepilogoAnnullati = null;
+	private Vector<RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiPriviFC = null;
+	private Vector<RiepilogoStatisticheFogliComplementari> riepilogFCIscrittiManualmente = null;
+	private Vector<RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiConFC = null;
+	private Vector<StatisticheFogliComplementariModel> elenco = null;
+
+	private Vector<String> testataRiepilogo = null;
+
+	// Ticket#20230202011 - Aggiunta variabile
+	private HashMap<String, Integer> testataRiepilogoHash = null;
+
+	public Vector<StatisticheFogliComplementariModel> getFcIscrittiManualmente() {
 		return fcIscrittiManualmente;
 	}
-	public void setFcIscrittiManualmente(
-			Vector<StatisticheFogliComplementariModel> fcIscrittiManualmente) {
+
+	public void setFcIscrittiManualmente(Vector<StatisticheFogliComplementariModel> fcIscrittiManualmente) {
 		this.fcIscrittiManualmente = fcIscrittiManualmente;
 	}
+
 	public Vector<StatisticheFogliComplementariModel> getFcAnnullati() {
 		return fcAnnullati;
 	}
-	public void setFcAnnullati(
-			Vector<StatisticheFogliComplementariModel> fcAnnullati) {
+
+	public void setFcAnnullati(Vector<StatisticheFogliComplementariModel> fcAnnullati) {
 		this.fcAnnullati = fcAnnullati;
 	}
+
 	public Vector<StatisticheFogliComplementariModel> getProvvedimentiPriviFc() {
 		return provvedimentiPriviFc;
 	}
-	public void setProvvedimentiPriviFc(
-			Vector<StatisticheFogliComplementariModel> provvedimentiPriviFc) {
+
+	public void setProvvedimentiPriviFc(Vector<StatisticheFogliComplementariModel> provvedimentiPriviFc) {
 		this.provvedimentiPriviFc = provvedimentiPriviFc;
 	}
+
 	public UfficioModel getUffUteConnesso() {
 		return uffUteConnesso;
 	}
+
 	public void setUffUteConnesso(UfficioModel uffUteConnesso) {
 		this.uffUteConnesso = uffUteConnesso;
 	}
+
 	public RicercaFogliCompModel getFiltro() {
 		return filtro;
 	}
+
 	public void setFiltro(RicercaFogliCompModel filtro) {
 		this.filtro = filtro;
 	}
+
 	public Vector<RiepilogoStatisticheFogliComplementari> getRiepilogoAnnullati() {
 		if (riepilogoAnnullati == null)
-			riepilogoAnnullati=new Vector <RiepilogoStatisticheFogliComplementari> ();
-			
+			riepilogoAnnullati = new Vector<>();
+
 		return riepilogoAnnullati;
 	}
-	public void setRiepilogoAnnullati(
-			Vector<RiepilogoStatisticheFogliComplementari> riepilogoAnnullati) {
+
+	public void setRiepilogoAnnullati(Vector<RiepilogoStatisticheFogliComplementari> riepilogoAnnullati) {
 		this.riepilogoAnnullati = riepilogoAnnullati;
 	}
-	
-	
+
 	// Ticket#20230202011 - i Vettori possono avere estratto sequenze di anni differenti
 	// devo ordinare per anno e memorizzare per ogni anno la colonna in cui vanno inseriti i dati
-	public  void setTestataRiepilogoHash(HashMap <String,Integer> value){
+	public void setTestataRiepilogoHash(HashMap<String, Integer> value) {
 		this.testataRiepilogoHash = value;
 	}
-	public HashMap <String,Integer> getTestataRiepilogoHash(){
+
+	public HashMap<String, Integer> getTestataRiepilogoHash() {
 		return this.testataRiepilogoHash;
 	}
 	// Ticket#20230202011 - FINE
-	
+
 	// Ticket#20230202011 - metodo aggiunto per il corretto ordinamento dei dati sul foglio
-	//                      di riepologo
+	// di riepologo
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Vector<String> getTestataRiepilogoOrderedByAnno() {
+
 		if (this.testataRiepilogo != null)
-		    return this.testataRiepilogo;	
-		
-		this.testataRiepilogo=new Vector <String> ();
-		
-		HashSet<Integer> listaAnni = new HashSet<Integer>();
-		
+			return this.testataRiepilogo;
+
+		this.testataRiepilogo = new Vector<>();
+
+		HashSet<Integer> listaAnni = new HashSet<>();
+
 		if (this.riepilogoAnnullati != null) {
 			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogoAnnullati)
-				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue()));
 		}
 		if (this.riepilogoProvvedimentiPriviFC != null) {
 			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogoProvvedimentiPriviFC)
-				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue()));
 		}
 		if (this.riepilogFCIscrittiManualmente != null) {
 			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogFCIscrittiManualmente)
-				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
-		}		
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue()));
+		}
 		if (this.riepilogoProvvedimentiConFC != null) {
 			for (RiepilogoStatisticheFogliComplementari riepilogo : this.riepilogoProvvedimentiConFC)
-				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue())) ;
-		}	
-		
+				listaAnni.add(Integer.valueOf(riepilogo.getAnno().intValue()));
+		}
+
 		ArrayList list = new ArrayList(listaAnni);
 		Collections.sort(list);
 		siesLogger.debug("Lista ordinata anni");
 		this.testataRiepilogo.add("Riepilogo Fogli Complementari");
 		for (int i = 0; i < list.size(); i++) {
-			siesLogger.debug(">> "+list.get(i));
+			siesLogger.debug(">> " + list.get(i));
 			this.testataRiepilogo.add(list.get(i).toString());
-		}	
+		}
 		this.testataRiepilogo.add("Totale");
-		siesLogger.debug("Lista "+this.testataRiepilogo);
-		
+		siesLogger.debug("Lista " + this.testataRiepilogo);
+
 		return testataRiepilogo;
-	}	
+	}
 	// Ticket#20230202011 - FINE
-	
+
 	public Vector<String> getTestataRiepilogo() {
+
 		if (this.testataRiepilogo != null)
-		    return this.testataRiepilogo;
-		
-		this.testataRiepilogo=new Vector <String> ();
-		Vector <RiepilogoStatisticheFogliComplementari> appo=null;
-		
+			return this.testataRiepilogo;
+
+		this.testataRiepilogo = new Vector<>();
+		Vector<RiepilogoStatisticheFogliComplementari> appo = null;
+
 		if (this.riepilogoAnnullati != null) {
-			appo=this.riepilogoAnnullati;
+			appo = this.riepilogoAnnullati;
 		}
-		
+
 		if (this.riepilogoProvvedimentiPriviFC != null) {
-			appo=this.riepilogoProvvedimentiPriviFC;
+			appo = this.riepilogoProvvedimentiPriviFC;
 		}
-		
+
 		if (this.riepilogFCIscrittiManualmente != null) {
-			appo=this.riepilogFCIscrittiManualmente;
+			appo = this.riepilogFCIscrittiManualmente;
 		}
-		
+
 		if (this.riepilogoProvvedimentiConFC != null) {
-			appo=this.riepilogoProvvedimentiConFC;
+			appo = this.riepilogoProvvedimentiConFC;
 		}
-		
+
 		this.testataRiepilogo.add("Riepilogo Fogli Complementari");
-		Iterator<RiepilogoStatisticheFogliComplementari> it=appo.iterator();
+		Iterator<RiepilogoStatisticheFogliComplementari> it = appo.iterator();
 		while (it.hasNext()) {
-			RiepilogoStatisticheFogliComplementari riepilogo=it.next();
+			RiepilogoStatisticheFogliComplementari riepilogo = it.next();
 			testataRiepilogo.add(riepilogo.getAnno().toString());
 		}
 
 		return testataRiepilogo;
 	}
-	
+
 	public void setTestataRiepilogo(Vector<String> testataRiepilogo) {
 		this.testataRiepilogo = testataRiepilogo;
 	}
+
 	public Vector<RiepilogoStatisticheFogliComplementari> getRiepilogFCIscrittiManualmente() {
 		if (riepilogFCIscrittiManualmente == null)
-			riepilogFCIscrittiManualmente = new Vector <RiepilogoStatisticheFogliComplementari>();
-		
+			riepilogFCIscrittiManualmente = new Vector<>();
+
 		return riepilogFCIscrittiManualmente;
 	}
-	
-	public void setRiepilogFCIscrittiManualmente(Vector<RiepilogoStatisticheFogliComplementari> riepilogFCIscrittiManualmente) {
+
+	public void setRiepilogFCIscrittiManualmente(
+			Vector<RiepilogoStatisticheFogliComplementari> riepilogFCIscrittiManualmente) {
 		this.riepilogFCIscrittiManualmente = riepilogFCIscrittiManualmente;
 	}
+
 	public Vector<RiepilogoStatisticheFogliComplementari> getRiepilogoProvvedimentiPriviFC() {
 		if (riepilogoProvvedimentiPriviFC == null)
-			riepilogoProvvedimentiPriviFC=new Vector <RiepilogoStatisticheFogliComplementari>();
-		
+			riepilogoProvvedimentiPriviFC = new Vector<>();
+
 		return riepilogoProvvedimentiPriviFC;
 	}
-	
-	public void setRiepilogoProvvedimentiPriviFC(Vector<RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiPriviFC) {
+
+	public void setRiepilogoProvvedimentiPriviFC(
+			Vector<RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiPriviFC) {
 		this.riepilogoProvvedimentiPriviFC = riepilogoProvvedimentiPriviFC;
 	}
+
 	public Vector<StatisticheFogliComplementariModel> getProvvedimentiConFc() {
 		if (provvedimentiConFc == null)
-			provvedimentiConFc = new Vector <StatisticheFogliComplementariModel>();
+			provvedimentiConFc = new Vector<>();
 		return provvedimentiConFc;
 	}
-	public void setProvvedimentiConFc(
-			Vector<StatisticheFogliComplementariModel> provvedimentiConFc) {
+
+	public void setProvvedimentiConFc(Vector<StatisticheFogliComplementariModel> provvedimentiConFc) {
 		this.provvedimentiConFc = provvedimentiConFc;
 	}
+
 	public Vector<RiepilogoStatisticheFogliComplementari> getRiepilogoProvvedimentiConFC() {
 		if (riepilogoProvvedimentiConFC == null)
-			riepilogoProvvedimentiConFC = new Vector <RiepilogoStatisticheFogliComplementari>();
-		
+			riepilogoProvvedimentiConFC = new Vector<>();
+
 		return riepilogoProvvedimentiConFC;
 	}
+
 	public void setRiepilogoProvvedimentiConFC(
 			Vector<RiepilogoStatisticheFogliComplementari> riepilogoProvvedimentiConFC) {
 		this.riepilogoProvvedimentiConFC = riepilogoProvvedimentiConFC;
 	}
+
 	public UtenteModel getUtenteConnesso() {
 		return utenteConnesso;
 	}
+
 	public void setUtenteConnesso(UtenteModel utenteConnesso) {
 		this.utenteConnesso = utenteConnesso;
 	}
+
 	public Vector<StatisticheFogliComplementariModel> getElenco() {
 		return elenco;
 	}
+
 	public void setElenco(Vector<StatisticheFogliComplementariModel> elenco) {
 		this.elenco = elenco;
 	}
-	
+
 }

@@ -30,6 +30,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
  * @since MEV_2023-13
  * @version 1.0
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class RateizzazionePPController extends SiapController implements IRateizzazionePP {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -256,7 +257,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return lListaRate;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo)
 			throws F3BException {
