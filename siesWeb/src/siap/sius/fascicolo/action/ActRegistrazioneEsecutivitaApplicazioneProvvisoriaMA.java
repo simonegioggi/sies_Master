@@ -116,8 +116,12 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		DepositoOrdinanzaPcModel dopcmMA = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "MA");
 		boolean existConfermaDecisioneMR = false;
-		if (!Utils.isNullObj(dopcmMA))
-			existConfermaDecisioneMR = true;
+		if (!Utils.isNullObj(dopcmMA)) {
+			BigDecimal idEventoMA = dopcmMA.getIdEventoGenerato();
+			EventoModel emMA = ie.ExRicercaEventoByKey(idEventoMA);
+			if (!"A".equals(emMA.getFlagDocumentoRegistrato()))
+				existConfermaDecisioneMR = true;
+		}
 		// DepositoOrdinanzaPcModel dopm = new DepositoOrdinanzaPcModel();
 		// dopm.setGenPridGeneraleProcedimento(
 		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento());
@@ -133,9 +137,6 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 				dopm.setDataEsecutivita(null);
 				dopm.setNoteDataEsecutivita(null);
 				idopc.ExModificaDepositoOrdinanzaPc(dopm);
-
-				// Cancellazione Notifiche ???
-
 				// messaggio di ritorno
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Cancellazione Avvenuta Correttamente!");
 				// Prepara la "pagina" di destinAction
