@@ -98,6 +98,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 
 	// INIZIO: MEV_9 (D.lgs. 123/2018)
 	private Date mDataEsecutivita;
+	private String mNoteDataEsecutivita;
 	// FINE: MEV_9
 
 	// COSTRUTTORE DI DEFAULT
@@ -174,6 +175,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSommaRisarcimento = null;
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		this.mDataEsecutivita = null;
+		this.mNoteDataEsecutivita = "";
 		// FINE: MEV_9
 	}
 
@@ -252,6 +254,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSommaRisarcimento = aModel.mSommaRisarcimento;
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		this.mDataEsecutivita = aModel.mDataEsecutivita;
+		this.mNoteDataEsecutivita = aModel.mNoteDataEsecutivita;
 		// FINE: MEV_9
 	}
 
@@ -283,7 +286,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 			BigDecimal aSospensioneAASS, String aFlagNominaComActa, String aDescrCommActa,
 			String aCodTipoControlloEsecuzione, String aDescrTipoControlloEsecuzione,
 			BigDecimal aSommaRisarcimento, 
-			Date aDataEsecutivita) {
+			Date aDataEsecutivita, String aNoteDataEsecutivita) {
 
 		this.mIdDepositoOrdinanzaPc = aIdDepositoOrdinanzaPc;
 		this.mAnnoS3 = aAnnoS3;
@@ -355,6 +358,7 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 		this.mSommaRisarcimento = aSommaRisarcimento;
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		this.mDataEsecutivita = aDataEsecutivita;
+		this.mNoteDataEsecutivita = aNoteDataEsecutivita;
 		// FINE: MEV_9
 	}
 
@@ -656,6 +660,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public Date getDataEsecutivita() {
 		return mDataEsecutivita;
 	}
+
+	public String getNoteDataEsecutivita() {
+		return mNoteDataEsecutivita;
+	}
 	// FINE: MEV_9
 
 	//
@@ -944,6 +952,10 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 	public void setDataEsecutivita(Date mDataEsecutivita) {
 		this.mDataEsecutivita = mDataEsecutivita;
 	}
+
+	public void setNoteDataEsecutivita(String mNoteDataEsecutivita) {
+		this.mNoteDataEsecutivita = mNoteDataEsecutivita;
+	}
 	// FINE: MEV_9
 
 	// Metodo toString()
@@ -978,7 +990,9 @@ public class DepositoOrdinanzaPcModel extends GenericModel {
 				// 20140603 - P.M. ( SIUS - implemntazione per il D.L. 146 )
 				mCodTipoControlloEsecuzione + " - " + mDescrTipoControlloEsecuzione + " - " +
 				// 10102014 - D.L. 92 2014 Violazione CEDU
-				mSommaRisarcimento;
+				mSommaRisarcimento + " - " +
+				// MEV_9 (D.lgs. 123/2018)
+				mDataEsecutivita + " - " + mNoteDataEsecutivita;
 
 		return lStr;
 	}

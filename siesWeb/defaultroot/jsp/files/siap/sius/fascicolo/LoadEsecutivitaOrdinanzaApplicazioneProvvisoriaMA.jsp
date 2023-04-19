@@ -8,14 +8,28 @@
 <%@ page import="java.util.Date"%>
 
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
+<%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
+<%@ page import="siap.sius.udienza.action.ICostantiUdienza"%>
 
 <jsp:useBean id="fascicoloSiusGP" 			scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="TornaQui"     				scope="request" class="java.lang.String"/>
 <jsp:useBean id="eventoModel"				scope="request" class="siap.sico.evento.model.EventoModel"/>
 <jsp:useBean id="maxDataAvvenutaNotifica"	scope="request" class="java.lang.String"/>
 <jsp:useBean id="dataEsecutivita"			scope="request" class="java.lang.String"/>
-<jsp:useBean id="noteAtti"					scope="request" class="java.lang.String"/>
+<jsp:useBean id="noteDataEsecutivita"		scope="request" class="java.lang.String"/>
 <jsp:useBean id="provenienza"				scope="request" class="java.lang.String"/>
+
+<jsp:useBean id="destDeposito" 				scope="request" class="java.util.Vector"/>
+<jsp:useBean id="TipiIstitutiSog" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="TipiIstituti1" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipoAutorita"  			scope="request" class="java.lang.String"/>
+<jsp:useBean id="altreAutoritaGiudiziarie"  scope="request" class="java.lang.String"/>
+<jsp:useBean id="Aggiungi"         			scope="request" class="java.lang.String"/>
+<jsp:useBean id="avvocato"      			scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="luogodet"					scope="request" class="siap.siep.luogodetenzione.model.LuogoDetenzioneModel"/>
+<jsp:useBean id="notificheSog"     			scope="request" class="java.lang.String"/>
+<jsp:useBean id="NotifichePresenti"     	scope="request" class="java.lang.String"/>
+<jsp:useBean id="notifiche" 				scope="request" class="java.util.Vector"/>
 
 <%
 /* Estrazione della data udienza o data iscrizione */
@@ -41,6 +55,7 @@ String action = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazi
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_DIR%>listeDestSIUS.js"></script>
 <script language="JavaScript">
 function Verifica() {
 	var data_minima = '<%=data1%>';
@@ -125,9 +140,42 @@ function Verifica() {
 	<tr>
 		<td class="l">Note</td>
 	    <td class="l">
-			<textarea title="Note" name="<%=ICostantiFascicoloSius.CAMPO_NOTE%>" cols="80" rows="5"><%=StringUtils.toStringJSP(noteAtti, "")%></textarea>
+			<textarea title="Note" name="<%=ICostantiFascicoloSius.CAMPO_NOTE%>" cols="80" rows="5"><%=StringUtils.toStringJSP(noteDataEsecutivita, "")%></textarea>
 	    </td>
  	 </tr>
+</table>
+
+<%-- DESTINATARI --%>
+<%
+if (provenienza.equals("modifica")) {
+	// controllo se esistono notifiche
+	if (!Utils.isNullObj(notifiche) && notifiche.size() > 0) {
+%>
+<jsp:include page="<%=ICostantiDepositoDecreto.PG_MODIFICA_DESTINATARI%>">
+	<jsp:param name="NomeForm" value="LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA"/>
+</jsp:include>
+<%
+	}
+} else {
+%>
+<div id="elenco" style="visibility:visible; width:100%;">
+<jsp:include page="<%=ICostantiUdienza.PG_LOAD_DESTINATARI%>"/>
+<jsp:include page="<%=ICostantiDepositoDecreto.PG_INSERIMENTO_DESTINATARI%>">
+	<jsp:param name="NomeForm" value="LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA"/>
+</jsp:include>
+<jsp:include page="<%=ICostantiDepositoDecreto.PG_INSERIMENTO_NOTIFICA_SOGGETTO%>">
+ 	<jsp:param name="NomeForm" value="LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA"/>
+</jsp:include>
+<jsp:include page="<%=ICostantiDepositoDecreto.PG_INSERIMENTO_NOTIFICA_AVVOCATI_ALTRO%>">
+ 	<jsp:param name="NomeForm" value="LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA"/>
+</jsp:include>
+</div>
+<%
+}
+%>
+<%-- FINE DESTINATARI --%>
+
+<table cellspacing="2" cellpadding="2" width="95%">
 	<tr>
     	<td>
       		<input class="bottone" type="submit" value="Conferma">

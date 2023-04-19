@@ -1,21 +1,26 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_9: creata nuova pagina di caricamento dati --%>
-<%@ page import="f3b.util.Utils"%>
-<%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
+<%@ page import="f3b.web.IWebConstants"%>
+
+<%@ page import="java.util.Iterator"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
+<%@ page import="siap.siep.notifica.model.NotificaModel"%>
 <%@ page import="siap.sius.fascicolo.action.ICostantiFascicoloSius"%>
+<%@ page import="siap.sius.udienza.action.ICostantiUdienza"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 
 <jsp:useBean id="fascicoloSiusGP" 			scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="TornaQui"     				scope="request" class="java.lang.String"/>
 <jsp:useBean id="eventoModel"				scope="request" class="siap.sico.evento.model.EventoModel"/>
 <jsp:useBean id="dataEsecutivita"			scope="request" class="java.util.Date"/>
-<jsp:useBean id="noteAtti"					scope="request" class="java.lang.String"/>
+<jsp:useBean id="noteDataEsecutivita"		scope="request" class="java.lang.String"/>
 <jsp:useBean id="ListaTemplate" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="existConfermaDecisioneMR" 	scope="request" class="java.lang.String"/>
+<jsp:useBean id="notifiche" 				scope="request" class="java.util.Vector<NotificaModel>"/>
 
 <%
 String actionModifica = "siap.sius.fascicolo.action.ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA";
@@ -37,9 +42,11 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
 				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
 			</a>
 		</td>
-		<td class="LBG"><font class="label">Funzione : Dettaglio Esecutivita&#768; Ordinanza Applicazione Provvisoria M.A.</font></td>
+		<td class="LBG">
+			<font class="label">Funzione : Dettaglio Esecutivita&#768; Ordinanza Applicazione Provvisoria M.A.</font>
+			<input type="HIDDEN" name="ListaTemplate" value="<%=ListaTemplate%>">
+		</td>
 		<!-- BOTTONE DI STAMPA -->
-		<input type="HIDDEN" name="ListaTemplate" value="<%=ListaTemplate%>">
 	    <jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIUS%>">
 	      	<jsp:param name="CampoIdEntita" value="<%=ICostantiEvento.CAMPO_ID_EVENTO%>"/>
 	      	<jsp:param name="ValoreIdEntita" value="<%=eventoModel.getIdEvento()%>"/>
@@ -48,7 +55,7 @@ String actionCancella = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaA
 if ("false".equals(existConfermaDecisioneMR)) {
 %>
 		<td class="LBG">
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=actionModifica%>&TornaQui=<%=TornaQui%>&provenienza=dettaglio">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=actionModifica%>&TornaQui=<%=TornaQui%>&provenienza=dettaglio&Aggiungi=yes">
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
           	</a>
           	<a href="Javascript:conferma('<%=actionCancella%>','provenienza','cancella');">
@@ -80,9 +87,9 @@ if ("false".equals(existConfermaDecisioneMR)) {
 	</tr>
 	<tr>
 		<td class="c"><font class="label"><%=fascicoloSiusGP.getGeneraleProcedimentoModel().getDescrOggettoProcedimento()%></font></td>
-        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(),"dd-MM-yyyy"),"-")%></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(),"dd-MM-yyyy"), "-")%></font></td>
         <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoModel.getDescrTipoProvvedimento(),"-")%></font></td>
-        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(),"dd-MM-yyyy"),"-")%></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(),"dd-MM-yyyy"), "-")%></font></td>
         <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoModel.getDescrMotivo(),"-")%></font></td>
         <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoModel.getDescrEsito(),"-")%></font></td>
 	</tr>
@@ -98,10 +105,27 @@ if ("false".equals(existConfermaDecisioneMR)) {
 	<tr>
 		<td class="l">Note</td>
 	    <td class="l">
-			<font class="campo"><%=Utils.isPresent(noteAtti)?StringUtils.toStringJSP(noteAtti):"-"%></font>
+			<font class="campo"><%=Utils.isPresent(noteDataEsecutivita) ? StringUtils.toStringJSP(noteDataEsecutivita) : "-"%></font>
 	    </td>
  	 </tr>
+ 	 <%-- NOTIFICHE --%>
+<%
+Iterator<NotificaModel> notificheIterator = notifiche.iterator();
+if (notificheIterator.hasNext()) {
+	NotificaModel nm = (NotificaModel) notificheIterator.next();
+%>
+	<tr>
+		<td class="l">Data Trasferimento Atti</td>
+		<td class="l"><font class="campo"><%=DateUtils.getDateToString(nm.getDataInvio(), "dd/MM/yyyy")%></font></td>
+    </tr>
+<%
+}
+%>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
 </table>
+<jsp:include page="<%=ICostantiUdienza.PG_LOAD_DESTINATARI%>"/>
 <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
 </body>
 </html>

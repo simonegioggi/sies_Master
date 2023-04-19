@@ -409,9 +409,9 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA ";
+		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA";
 		// FINE: MEV_9
-		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA, cg_ref_codes UFF_TIPO_MAG,";
+		lStatement += " FROM DEPOSITO_ORDINANZA_PC, CSSA, cg_ref_codes UFF_TIPO_MAG,";
 		lStatement += " COMUNE COM_UFF_MAG, UFFICIO UFFI_MAG,";
 		lStatement += " COMUNE COM_UFF_TDS, UFFICIO UFFI_TDS";
 		lStatement += " WHERE CSSA.ID_CSSA = NVL('9999',ID_CSSA_COMP)";
@@ -490,7 +490,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA ";
+		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA ON CSSA.ID_CSSA = ID_CSSA_COMP ";
 		lStatement += "LEFT OUTER JOIN CG_REF_CODES CODTIPOCONTROLLOESECUZIONE "
@@ -563,7 +563,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", TIPO_CONTROLLO_ESECUZIONE, CODTIPOCONTROLLOESECUZIONE.RV_MEANING AS DESC_TIPO_CONTROLLO_ESECUZIONE";
 		lStatement += ", SOMMA_RISARC_DANNI";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA ";
+		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC LEFT  OUTER JOIN CSSA CSSA_CSSA  ON CSSA_CSSA .ID_CSSA = ID_CSSA_COMP ";
 		lStatement += "LEFT OUTER JOIN CSSA CSSA_USSM ON CSSA_USSM.ID_CSSA = DEPOSITO_ORDINANZA_PC.COD_USSM ";
@@ -641,7 +641,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		lStatement += ", SOMMA_RISARC_DANNI";
 		lStatement += ", COD_USSM";
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
-		lStatement += ", DATA_ESECUTIVITA ";
+		lStatement += ", DATA_ESECUTIVITA, NOTE_DATA_ESECUTIVITA ";
 		// FINE: MEV_9
 		lStatement += "FROM DEPOSITO_ORDINANZA_PC, CSSA ";
 		lStatement += "WHERE ID_CSSA_COMP = ID_CSSA";
@@ -727,6 +727,7 @@ public class DepositoOrdinanzaPcSqlDAO extends SIAPSqlDAO {
 		aModel.setSommaRisarcimento(getBigDecimal("SOMMA_RISARC_DANNI"));
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA"));
+		aModel.setNoteDataEsecutivita(getString("NOTE_DATA_ESECUTIVITA"));
 		// FINE: MEV_9
 
 		return aModel;

@@ -93,6 +93,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setField("SOMMA_RISARC_DANNI", BIG_DECIMAL);
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		setField("DATA_ESECUTIVITA", DATE);
+		setField("NOTE_DATA_ESECUTIVITA", STRING);
 		// FINE: MEV_9
 	}
 
@@ -327,6 +328,10 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 	public Date getDataEsecutivita() throws DAOException {
 		return getDate("DATA_ESECUTIVITA");
 	}
+
+	public String getNoteDataEsecutivita() throws DAOException {
+		return getString("NOTE_DATA_ESECUTIVITA");
+	}
 	// FINE: MEV_9
 
 	//
@@ -560,6 +565,10 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 	public void setDataEsecutivita(Date aValore) throws DAOException {
 		setDate("DATA_ESECUTIVITA", aValore);
 	}
+
+	public void setNoteDataEsecutivita(String aValore) throws DAOException {
+		setString("NOTE_DATA_ESECUTIVITA", aValore);
+	}
 	// FINE: MEV_9
 
 	public GenericModel getModel() throws DAOException {
@@ -588,7 +597,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 				// 10102014 - DL 92 2014 Violazione CEDU
 				getSommaRisarcimento(),
 				// MEV_9 (D.lgs. 123/2018)
-				getDataEsecutivita());
+				getDataEsecutivita(), getNoteDataEsecutivita());
 	}
 
 	public void setDAOFromModel(DepositoOrdinanzaPcModel aModel) throws DAOException {
@@ -653,6 +662,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setSommaRisarcimento(aModel.getSommaRisarcimento());
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		setDataEsecutivita(aModel.getDataEsecutivita());
+		setNoteDataEsecutivita(aModel.getNoteDataEsecutivita());
 		// FINE: MEV_9
 	}
 
@@ -715,6 +725,7 @@ public class DepositoOrdinanzaPcDAO extends SIAPTableDAO {
 		setSommaRisarcimento(aModel.getSommaRisarcimento());
 		// INIZIO: MEV_9 (D.lgs. 123/2018)
 		setDataEsecutivita(aModel.getDataEsecutivita());
+		setNoteDataEsecutivita(aModel.getNoteDataEsecutivita());
 		// FINE: MEV_9
 
 		setCondizioneUpdate(aModel.getIdDepositoOrdinanzaPc());
