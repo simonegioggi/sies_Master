@@ -15,7 +15,8 @@ import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sius.statistiche.model.IspProcIntervalliModel;
 
 /**
- * Title: IspProcIntervalliDAO Description: Classe DAO che rappresenta la tabella IspProcIntervalli
+ * Title: IspProcIntervalliDAO 
+ * Description: Classe DAO che rappresenta la tabella IspProcIntervalli
  *
  * @version 1.0
  */
