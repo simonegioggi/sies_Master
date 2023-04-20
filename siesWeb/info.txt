@@ -20,8 +20,17 @@ Comprende i seguenti Ticket MAC:
 	-	VW_MS_PROC_ESAURITI
 	-	VW_MS_PROC_ESAURITI_MAG
 
-3)	Ticket#20230328019 — SIEP : Data visualizzata Istanza non corretta
+3)	Ticket#20230328019 - SIEP : Data visualizzata Istanza non corretta
 	Corretto inserimento data per lo stato procedimento e visualizzazione data nomina difensore sul dettaglio istanza.
 	Classi Modificate:
 	-	siap.siep.nuovaistanza.controller.NuovaIstanzaController.java
 	-	/jsp/files/siap/siep/nuovaistanza/DettaglioNuovaIstanza.jsp
+
+4)	Ticket#20230419018 - RITM0352453 - SIUS - Sheet names must not begin or end with (')
+	Nella creazione del nome della scheda del foglio Excel viene utilizzato il nome del magistrato.
+	Se contiene caratteri non accettabili per il nome di una scheda excel va in errore la generazione del foglio.
+	Nel caso specifico era l'apostrofo del nome del magistrato (MARILU'). Il nome della scheda NON può terminare o iniziare con tale carattere.
+	Aggiunto metodo in StringUtils per bonificare i nomi delle schede Excel:
+	-	StringUtils.encodeExcelSheetName
+	Modificata la classe che crea il foglio excel per benioficra il nome della scheda:
+	-	siap.sius.statistiche.util.excel.StatisticaComparataMagistratiExcel.java
