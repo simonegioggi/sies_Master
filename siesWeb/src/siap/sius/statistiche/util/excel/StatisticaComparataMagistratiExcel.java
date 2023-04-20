@@ -243,7 +243,11 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		// Collection<IspMotivoOggettoSelezionatiModel> lMotivoOggetti = null;
 		// IspMotivoOggettoSelezionatiModel lMotivoOggetto = null;
 
-		lSheet = aWb.createSheet("Dettaglio " + aMagistrato.getCognome() + " " + aMagistrato.getNome());
+		// Ticket#20230419018 - si bonifica il nome del foglio excel che potrebbe contenere le accentate
+		//                      del nome del magistrato
+		// lSheet = aWb.createSheet("Dettaglio " + aMagistrato.getCognome() + " " + aMagistrato.getNome());
+		lSheet = aWb.createSheet(StringUtils.encodeExcelSheetName("Dettaglio " + aMagistrato.getCognome() + " " + aMagistrato.getNome()));
+		// Ticket#20230419018 - FINE
 		lCellStyleNull = aWb.createCellStyle();
 
 		// Intestazione del foglio excel
@@ -436,7 +440,11 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		int lNumCol = 0;
 		IspEstrazioneOggettiModel lProcEstrModel = null;
 
-		HSSFSheet lSheet = wb.createSheet("Elenco Oggetti " + aDescMagistrato);
+		// Ticket#20230419018 - si bonifica il nome del foglio excel che potrebbe contenere le accentate
+		//                      del nome del magistrato
+		// HSSFSheet lSheet = wb.createSheet("Elenco Oggetti " + aDescMagistrato);
+		HSSFSheet lSheet = wb.createSheet(StringUtils.encodeExcelSheetName("Elenco Oggetti " + aDescMagistrato));
+		// Ticket#20230419018 - FINE
 		HSSFCellStyle csNull = wb.createCellStyle();
 
 		int nRow = 0;

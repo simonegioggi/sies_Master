@@ -1,19 +1,16 @@
-RELEASE_12.4.28.0	-->	nato dal branch "release_12.4.27.0" in data 27/02/2023
+Ticket#20230419018 - RITM0352453 - SIUS - Sheet names must not begin or end with (')
 
-Comprende i seguenti Ticket MAC:
+Nella creazioen del nome della scheda del fglio excel viene utilizzato il nome del magistrato.
+Se contiene caratteri non accettabili per il nome di una scheda excel va in errore la generazione del foglio.
 
-1)	Ticket#20230224014 - errata stampa su dettaglio ruolo udienza
-	Si elimina l'idMagistrato dalla chiamata alla ActStampaFlashVerbaleUdienza altrimenti la funzione di 
-	ricerca filtra per magistrto invece che per IdFascicolo stampando il verbale per tutti i fascicoli 
-	dell'udienza.
-	Classe modificata:
-	-	\jsp\files\siap\sige\udienzaprocedimento\dettaglioruolo\ListaProcedimentixUdienza.jsp
+Nel caso specifico era l'apostrofo del nome del magistrato (MARILU'). Il nome della scheda NON può terminare o iniziare con tale carattere.
 
-2)	Ticket#202302280124
-	Si modifica nuovamente l'estrazione dati delle statistiche
-	Classe modificata:
-	-	siap.siep.statis.dao.StatisticheMSSqlDAO.java
-	L'intervento prevede anche la modifica delle seguenti viste
-	-	VW_MS_PROCEDIMENTI
-	-	VW_MS_PROC_ESAURITI
-	-	VW_MS_PROC_ESAURITI_MAG
+Aggiunto metodo in StringUtils per bonificare i nomi delle schede excel
+
+StringUtils.encodeExcelSheetName
+
+Modificata la classe che crea il foglio excel per benioficra il nome della scheda
+siap.sius.statistiche.util.excel.StatisticaComparataMagistratiExcel
+
+
+

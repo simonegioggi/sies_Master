@@ -565,5 +565,47 @@ public class StringUtils {
        return out.toString();
    }
    
+   /**
+    * Ticket#20230419018 - I nomi dei fogli Excel non possono contenere alcuni caratteri per cui si aggiunge tale metodo 
+    * per bonificare il nome del foglio soprattutto nei casi in cui viene creato dinamicamente 
+    * es con il nominativo magistrato
+    * https://poi.apache.org/apidocs/dev/org/apache/poi/hssf/usermodel/HSSFWorkbook.html#createSheet-java.lang.String- 
+    * 
+    * POI's SpreadsheetAPI silently truncates the input argument to 31 characters.
+    * @param s
+    * @return
+    */
+   public static String encodeExcelSheetName (String sheetName)
+   {
+	   sheetName=sheetName.trim();
+	   sheetName=sheetName.replace(":","")
+			              .replace("\\", "")
+			              .replace("*", "")
+			              .replace("?", "")
+			              .replace("/", "")
+			              .replace("/", "")
+			              .replace("[", "")
+			              .replace("]", "");
+	   
+	   // Non può iniziare per ' quindi aggiungo uno spazio iniziale
+	   if (sheetName.startsWith("'"))
+		   sheetName = " "+sheetName; 
+	   
+	   // Non può terminare per ' quindi aggiungo uno spazio alla fine del nome ma solo se la lunghezza
+	   // è <> 31. Infatti il nome della scheda viene trovncato automaticamente a 31 per cui 
+	   // in questo caso lo spazio aggiunto verrebe rimossi e viene segnalato comunque un errore.
+	   if (sheetName.endsWith("'") ) {
+		   sheetName = sheetName.substring(0,sheetName.length()-1);
+//		 if (sheetName.length()<31) {
+//			 sheetName = sheetName+" ";
+//		 }
+//		 else { 
+//			 sheetName = sheetName.replace("\'",""); // lo rimuovo 
+//		 }
+	   }
+	   
+	   // n.b. non si eliminano gli apostrofi perchè potrebbero essere legati al mone del magistrato es MARILU'
+	   return sheetName;
+   }
 
 }
