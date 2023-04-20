@@ -33,6 +33,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 	public ByteArrayOutputStream creaStatisticaComparataMagistratiExcel(
 			RicercaProcedimentoModel aRicercaModel, UfficioModel aUfficioUtenteConnesso) throws F3BException {
+
 		ByteArrayOutputStream lFileOut = null;
 		HSSFWorkbook lWb = null;
 
@@ -55,6 +56,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 	protected void creaFoglioStatisticaComparataMagistratiExcel(HSSFWorkbook aWb,
 			UfficioModel aUfficioUtenteConnesso, RicercaProcedimentoModel aRicercaModel) throws F3BException {
+
 		HSSFSheet lSheet = null;
 		HSSFCellStyle lCellStyleNull = null;
 		HSSFCellStyle lCellStyleCenter = null;
@@ -149,7 +151,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		lItx = lElenco.iterator();
 		while (lItx.hasNext()) {
-			lModel = (IspConteggioRelatoriMagistratiModel) lItx.next();
+			lModel = lItx.next();
 
 			totalePendentiInizio = totalePendentiInizio.add(lModel.getNumPendentiInizio());
 			totaleSopravvenuti = totaleSopravvenuti.add(lModel.getNumSopravvenuti());
@@ -167,8 +169,8 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			lRow = lSheet.createRow(lRowCounter++);
 
 			if (lModel.getMagistrato().getCodMagistrato() != null) {
-				lBuffer = StringUtils.cStrForJS(lModel.getMagistrato().getCognome()) + " "
-						+ StringUtils.cStrForJS(lModel.getMagistrato().getNome());
+				// Ticket#20230419018: tolgo StringUtils.cStrForJS x nome e cognome
+				lBuffer = lModel.getMagistrato().getCognome() + " " + lModel.getMagistrato().getNome();
 			} else {
 				lBuffer = "";
 			}
@@ -244,9 +246,10 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		// IspMotivoOggettoSelezionatiModel lMotivoOggetto = null;
 
 		// Ticket#20230419018 - si bonifica il nome del foglio excel che potrebbe contenere le accentate
-		//                      del nome del magistrato
+		// del nome del magistrato
 		// lSheet = aWb.createSheet("Dettaglio " + aMagistrato.getCognome() + " " + aMagistrato.getNome());
-		lSheet = aWb.createSheet(StringUtils.encodeExcelSheetName("Dettaglio " + aMagistrato.getCognome() + " " + aMagistrato.getNome()));
+		lSheet = aWb.createSheet(StringUtils
+				.encodeExcelSheetName("Dettaglio " + aMagistrato.getCognome() + " " + aMagistrato.getNome()));
 		// Ticket#20230419018 - FINE
 		lCellStyleNull = aWb.createCellStyle();
 
@@ -328,7 +331,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 
 		lItx = aOggetti.iterator();
 		while (lItx.hasNext()) {
-			lModel = (IspConteggioOggettiModel) lItx.next();
+			lModel = lItx.next();
 			lRow = lSheet.createRow(lRowCounter++);
 
 			setCell(lRow, 0, StringUtils.cStrForJS("" + lModel.getDescContenutoStatis()), lCellStyleCenter);
@@ -389,7 +392,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		IMagistrato lCtrlMag = SICOLookupRemote.getMagistratoRemote();
 
 		// Elenco dei motivi oggetti per oggetti selezionati
-		ArrayList<IspMotivoOggettoSelezionatiModel> lMotivi = new ArrayList<IspMotivoOggettoSelezionatiModel>();
+		ArrayList<IspMotivoOggettoSelezionatiModel> lMotivi = new ArrayList<>();
 		lMotivi = lCtrl.ExListaMotivoOggettiSelezionati(aUfficioUtenteConnesso.getCodUfficio());
 		// crea un array di stringhe
 		String[] lCodMotivi = new String[lMotivi.size()];
@@ -399,7 +402,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		}
 
 		// Elenco dei procedimenti per oggetti selezionati e per Magistrato
-		Collection<IspEstrazioneOggettiModel> lElencoProc = new ArrayList<IspEstrazioneOggettiModel>();
+		Collection<IspEstrazioneOggettiModel> lElencoProc = new ArrayList<>();
 
 		for (String lCodMagistrato : lCodMagistrati) {
 			IspEstrazioneOggettiModel lModel = new IspEstrazioneOggettiModel();
@@ -415,7 +418,6 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 			this.creaFoglioDettaglioOggettiDelMagistrato(aWb, aUfficioUtenteConnesso,
 					lModel.getDescrMagistrato(), lElencoProc, aRicerca);
 		}
-
 	}
 
 	/**
@@ -425,7 +427,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 	 * periodo di riferimento. L'elenco dei procedimenti nella lista è quello passato attraverso il parametro
 	 * aElencoProc. Per ogni elemento nella lista viene riportato il suo stato di pendente, sopravvenuto,
 	 * definito.
-	 * 
+	 *
 	 * @param wb
 	 * @param aUuffUtenteConnesso
 	 * @param aTitolo
@@ -435,15 +437,17 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 	private void creaFoglioDettaglioOggettiDelMagistrato(HSSFWorkbook wb, UfficioModel aUuffUtenteConnesso,
 			String aDescMagistrato, Collection<IspEstrazioneOggettiModel> aElencoProc,
 			RicercaProcedimentoModel aRicerca) {
+
 		String lPatternData = "dd/MM/yyyy";
 		String lBuffer = null;
 		int lNumCol = 0;
 		IspEstrazioneOggettiModel lProcEstrModel = null;
 
 		// Ticket#20230419018 - si bonifica il nome del foglio excel che potrebbe contenere le accentate
-		//                      del nome del magistrato
+		// del nome del magistrato
 		// HSSFSheet lSheet = wb.createSheet("Elenco Oggetti " + aDescMagistrato);
-		HSSFSheet lSheet = wb.createSheet(StringUtils.encodeExcelSheetName("Elenco Oggetti " + aDescMagistrato));
+		HSSFSheet lSheet = wb
+				.createSheet(StringUtils.encodeExcelSheetName("Elenco Oggetti " + aDescMagistrato));
 		// Ticket#20230419018 - FINE
 		HSSFCellStyle csNull = wb.createCellStyle();
 
@@ -510,7 +514,7 @@ public class StatisticaComparataMagistratiExcel extends SIAPExcelProducer {
 		while (itx.hasNext()) {
 			lNumCol = 0;
 
-			lProcEstrModel = (IspEstrazioneOggettiModel) itx.next();
+			lProcEstrModel = itx.next();
 			String lDataIscrizione = "-";
 			String lDataDeposito = "-";
 			String lDataDefinizione = "-";
