@@ -146,6 +146,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 
 			EsitoGeneraAvviso ega = null;
 			try {
+				siesLogger.debug(rpt);
 				ega = port.generaAvviso(rpt);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();

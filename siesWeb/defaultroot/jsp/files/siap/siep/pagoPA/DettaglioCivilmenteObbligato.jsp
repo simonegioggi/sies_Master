@@ -76,7 +76,7 @@ while (itx.hasNext()) {
     <tr>
       	<td class="L">Qualifica:</td>
       	<td class="l">
-        	<font class="campo"><%=com.getCodTutore()%></font>
+        	<font class="campo"><%=com.getDescrTutore()%></font>
         </td>
         <td class="l" colspan="2">&nbsp;</td>
     </tr>

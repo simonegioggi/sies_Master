@@ -76,8 +76,8 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		Vector<BollettinoPagopaModel> bpms = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo,
+				"");
 		Iterator<BollettinoPagopaModel> iter = bpms.iterator();
 
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
@@ -143,7 +143,8 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 								: "";
 						siesLogger.debug("Risultato Ricerca: Stato = " + srp.getStato()
 								+ "; Data Richiesta = " + dataRichiesta + "; Data Ricevuta = " + dataRicevuta
-								+ "NUMERO AVVISO = " + srp.getNumeroAvviso());
+								+ "; NUMERO AVVISO = " + srp.getNumeroAvviso() + "; IMPORTO = "
+								+ srp.getImporto());
 						String statoPagamento = "DISPONIBILE".equals(srp.getStato())
 								? "PAGATO il " + dataRicevuta
 								: "Non PAGATO";
@@ -152,7 +153,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 						// if (("PN".equals(bpm.getStatoPagamento()) && "DISPONIBILE".equals(srp.getStato()))
 						// || ("PA".equals(bpm.getStatoPagamento())
 						// && !"DISPONIBILE".equals(srp.getStato())))
-						aggiornaBollettino(ibp, bpm, dataRicevuta, srp.getStato());
+						aggiornaBollettino(ibp, bpm, dataRicevuta, srp);
 					}
 				} else {
 					// info per il log
@@ -184,19 +185,24 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 	}
 
 	private void aggiornaBollettino(IBollettinoPagopa ibp, BollettinoPagopaModel bpm, String dataRicevuta,
-			String statoPagamento) throws F3BException {
+			StatoRichiestaPagamento srp) throws F3BException {
 
-		siesLogger.debug(getClass().getName() + ".aggiornaBollettino allo stato: " + statoPagamento);
+		siesLogger.debug(getClass().getName() + ".aggiornaBollettino allo stato: " + srp);
+
 		bpm.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
 		bpm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 		bpm.setDataAggiornamento(DateUtils.getSysDate());
+
 		if (Utils.isPresent(dataRicevuta))
 			bpm.setDataAvvPagamento(DateUtils.getDate(dataRicevuta, "dd/MM/yyyy"));
 		// STATO_PAGAMENTO PN NON PAGATO
 		// STATO_PAGAMENTO PA PAGATO
 		// STATO_PAGAMENTO PP PAGATO PARZIALMENTE
-		String sp = "DISPONIBILE".equals(statoPagamento) ? "PA" : "PN";
+		String sp = "DISPONIBILE".equals(srp.getStato()) ? "PA" : "PN";
 		bpm.setStatoPagamento(sp);
+		BigDecimal importoPagato = Utils.isNullObj(srp.getImporto()) ? new BigDecimal(0)
+				: new BigDecimal(srp.getImporto());
+		bpm.setImportoPagato(importoPagato);
 		ibp.ExModificaBollettinoPagopa(bpm);
 	}
 

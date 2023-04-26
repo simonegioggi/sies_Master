@@ -288,7 +288,7 @@ public class CivilmenteObbligatoDAO extends SIAPTableDAO {
 				getIndSedeLegale(), getIndSedeOperativa(), getCodOperatoreInserimento(), getDataInserimento(),
 				getCodUfficioInserimento(), getCodOperatoreAggiornamento(), getDataAggiornamento(),
 				getCodUfficioAggiornamento(), getCodFiscaleRap(), getPec(), getEmail(),
-				getFasSieIdFascicolSiep());
+				getFasSieIdFascicolSiep(), "");
 	}
 
 	public void setDAOFromModel(CivilmenteObbligatoModel aModel) throws DAOException {

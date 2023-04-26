@@ -54,6 +54,7 @@ public class CivilmenteObbligatoModel extends GenericModel {
 	private String mPec;
 	private String mEmail;
 	private BigDecimal mFasSieIdFascicolSiep;
+	private String mDescrTutore;
 
 	// COSTRUTTORE DI DEFAULT
 	public CivilmenteObbligatoModel() {
@@ -92,6 +93,7 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mPec = "";
 		this.mEmail = "";
 		this.mFasSieIdFascicolSiep = null;
+		this.mDescrTutore = "";
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -131,6 +133,7 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mPec = aModel.mPec;
 		this.mEmail = aModel.mEmail;
 		this.mFasSieIdFascicolSiep = aModel.mFasSieIdFascicolSiep;
+		this.mDescrTutore = aModel.mDescrTutore;
 	}
 
 	// COSTRUTTORE MODEL
@@ -142,7 +145,7 @@ public class CivilmenteObbligatoModel extends GenericModel {
 			String aIndSedeOperativa, String aCodOperatoreInserimento, Date aDataInserimento,
 			String aCodUfficioInserimento, String aCodOperatoreAggiornamento, Date aDataAggiornamento,
 			String aCodUfficioAggiornamento, String aCodFiscaleRap, String aPec, String aEmail,
-			BigDecimal aFasSieIdFascicolSiep) {
+			BigDecimal aFasSieIdFascicolSiep, String aDescrTutore) {
 
 		this.mIdCivilmenteObbligato = aIdCivilmenteObbligato;
 		this.mCodTutore = aCodTutore;
@@ -174,6 +177,7 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		this.mPec = aPec;
 		this.mEmail = aEmail;
 		this.mFasSieIdFascicolSiep = aFasSieIdFascicolSiep;
+		this.mDescrTutore = aDescrTutore;
 	}
 
 	//
@@ -315,6 +319,10 @@ public class CivilmenteObbligatoModel extends GenericModel {
 		return mFasSieIdFascicolSiep;
 	}
 
+	public String getDescrTutore() {
+		return mDescrTutore;
+	}
+
 	//
 	// METODI SET()
 	//
@@ -453,6 +461,10 @@ public class CivilmenteObbligatoModel extends GenericModel {
 
 	public void setFasSieIdFascicolSiep(BigDecimal mFasSieIdFascicolSiep) {
 		this.mFasSieIdFascicolSiep = mFasSieIdFascicolSiep;
+	}
+
+	public void setDescrTutore(String mDescrTutore) {
+		this.mDescrTutore = mDescrTutore;
 	}
 
 	public String getDescrParte() {

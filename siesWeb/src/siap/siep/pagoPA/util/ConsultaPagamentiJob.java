@@ -190,10 +190,8 @@ public class ConsultaPagamentiJob implements Job {
 								if (pagamenti[progPagamento] instanceof StatoRichiestaPagamento) {
 									statoRichiesta = (StatoRichiestaPagamento) pagamenti[progPagamento];
 									pagoPaLogger.debug("statoRichiesta " + statoRichiesta.toString1());
-
 									// Devo verificrae se il pagamento restituito è tra quelli pending e in
-									// caso aggiornare
-									// lo stato
+									// caso aggiornare lo stato
 									// Recupero il pagamento per numero di avviso (NON CRS)
 									String iuv = statoRichiesta.getNumeroAvviso().substring(1);
 									bollettinoSIES = lCtrlBollettini.ExRicercaBollettinoPagopaByIUV(iuv);
@@ -266,7 +264,6 @@ public class ConsultaPagamentiJob implements Job {
 									lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(bollettinoSIES);
 								}
 							}
-
 						}
 					}
 				} catch (Exception e) {
@@ -393,7 +390,6 @@ public class ConsultaPagamentiJob implements Job {
 			stringa = stringa.substring(strToAppend.length()) + strToAppend;
 
 		return stringa;
-
 	}
 
 	private StatoRichiestaPagamento getBollettinoTest() {
