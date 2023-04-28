@@ -12,6 +12,7 @@
 <%@ page import="siap.sius.tenore.model.TenoreModel"%>
 <%@ page import="siap.sius.magistratorelatore.action.ICostantiMagistratoRelatore"%>
 <%@ page import="siap.sius.depositodecreto.action.ICostantiDepositoDecreto"%>
+<%@ page import="siap.sius.avvocato.action.ICostantiAvvocatoFascicoloSius"%>
 <%@ page import="siap.sius.prescrizione.model.PrescrizioneModel"%>
 <%@ page import="siap.sico.decodifiche.util.DecodificheUtils"%>
 <%@ page import="siap.sius.prescrizione.action.ICostantiPrescrizione"%>
@@ -39,7 +40,7 @@
 
 </head>
 
-  <body class="corpo">
+<body class="corpo">
   <form name="dettaglio">
     <table>
       <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
@@ -47,18 +48,15 @@
           <font class="campo">Dettaglio Decreto di Modifica Attività Lavorativa</font>&nbsp;
         </td>
 
-      <jsp:include page="<%=ICostantiDepositoDecreto.BOTTONI_DETTAGLIO_DECRETO%>"/>
-
-    <tr>
-      <jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
-    </tr>
-    <tr>
-    <jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
-    </tr>
-    <tr>
-      <td>&nbsp;</td>
-    </tr>
-
+      	<jsp:include page="<%=ICostantiDepositoDecreto.BOTTONI_DETTAGLIO_DECRETO%>"/>
+      </tr>   
+    </table>  
+	<%-- Ticket#202304210120 - si utilizza l'import PG_INCLUDE_AVVOCATI al posto del codice locale per errore sul tipo --%>
+	<jsp:include page="<%=ICostantiFascicoloSius.PG_LOAD_SINTESIPROCEDIMENTOSIUS%>"/>
+	<jsp:include page="<%=ICostantiMagistratoRelatore.PG_SINTESIMAGISTRATORELATORE%>"/>
+	<jsp:include page="<%=ICostantiAvvocatoFascicoloSius.PG_INCLUDE_AVVOCATI%>"/>
+    
+    <%-- Ticket#202304210120 si commenta. Il bean "avvocato" è un vettore di AvvocatoSiusModel e non di AvvocatoModel
     <table cellspacing=2 cellpadding=2 width="100%">
     <tr>
       <td class="Titolo" colspan=6 > Difensori </td>
@@ -81,16 +79,15 @@
     <tr><td>&nbsp;</td></tr>
     </table>
   </table>
+  --%>
 
-  <table cellspacing=4 cellpadding=4 width=95%>
+<table cellspacing=4 cellpadding=4 width=95%>
   <tr>
     <input Title="Id Evento" type="hidden" name="<%=ICostantiEvento.CAMPO_ID_EVENTO %>" value="<%=depositoDecretoMotivazioni.getEvento().getIdEvento()%>" >
   </tr>
+  <jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/>
   <tr>
-        <jsp:include page="<%=ICostantiDepositoDecreto.PG_DETTAGLIO_DATA%>"/>
-  </tr>
-  <tr>
-    <td class="l"> Rilevato</td>
+    <td class="l">Rilevato</td>
     <td class="l"><font class="campo">  <%=StringUtils.toStringJSP(depositoDecretoMotivazioni.getDepositoDecreto().getNote(),"-")%></font> </td>
   </tr>
   <tr>
@@ -102,11 +99,11 @@
   </tr>
 
   <tr>
-    <td class="Titolo" colspan=2> Esiti</td>
+    <td class="Titolo" colspan=2>Esiti</td>
   </tr>
 </table>
-<table cellspacing=4 cellpadding=4 width=95%>
 
+<table cellspacing=4 cellpadding=4 width=95%>
 <%
   Iterator lInd = tenori.iterator();
   while (lInd.hasNext())
@@ -122,22 +119,16 @@
 <%
   }
 %>
-  <tr>
-    <td  colspan=2> &nbsp;</td>
-  </tr>
+</table>
 
-
-
-<tr>  <td> </td> </tr>
-<tr>  <td> </td> </tr>
-  </table>
+<br><br>
   <jsp:include page="<%=ICostantiTemplate.PG_COMBO_TEMPLATE%>"/>
 </form>
 
- <div align=left style="visibility:hidden" id="upld">
+<div align=left style="visibility:hidden" id="upld">
   <FORM name="comandi" enctype="multipart/form-data" method="post">
   <table>
-          <jsp:include page="<%=ISIAPCostantiWeb.CAMPI_VALIDA_UPLOAD%>" />
+	<jsp:include page="<%=ISIAPCostantiWeb.CAMPI_VALIDA_UPLOAD%>" />
     <tr>
       <td class="L">
        	<input class="bottone"  type="submit" value="Conferma">
@@ -150,7 +141,7 @@
   </table>
 
   </FORM>
-  </div>
+</div>
 
 </body>
 <script language="JavaScript">
