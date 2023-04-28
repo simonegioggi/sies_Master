@@ -1,36 +1,19 @@
-RELEASE_12.4.28.0	-->	nato dal branch "release_12.4.27.0" in data 27/02/2023
+RELEASE_12.4.29.0	-->	nato dal branch "release_12.4.28.0" in data 02/05/2023
 
 Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20230224014 - errata stampa su dettaglio ruolo udienza
-	Corretto link su icona di stampa che faceva stampare erroneamente il verbale per tutti i fascicoli.
-	Si elimina l'idMagistrato dalla chiamata alla ActStampaFlashVerbaleUdienza altrimenti la funzione di 
-	ricerca filtra per magistrto invece che per IdFascicolo stampando il verbale per tutti i fascicoli 
-	dell'udienza.
+1)	Ticket#202304210120 - SIUS 2023/2395 - UDS SALERNO
+	Il problema era legato al fatto che in presenza dell'avvocato sul procedimento con oggetto
+	"SEMILIBERTA' - Modifica attività lavorativa" il sistema andava in errore sul dettaglio del
+	decreto per una errata gestione della classe Model degli avvocati.
+	Per la risoluzione della problematica è stata corretta la gestione.
 	Classe modificata:
-	-	\jsp\files\siap\sige\udienzaprocedimento\dettaglioruolo\ListaProcedimentixUdienza.jsp
+	-	/files/siap/sius/depositodecreto/DettaglioDecretoModAttLavoro.jsp
 
-2)	Ticket#202302280124 - estrazione classe IV. Singolo anno contro vari anni
-	Corrette query sia a livello applicativo che sulle viste per evitare la esclusione dei riaperti 
-	dal conteggio dei sopravvenuti e degli esauriti. Si modifica nuovamente l'estrazione dati delle statistiche.
+2)	Ticket#20230427016 - Assegnazione Magistrato su P.P SIGE
+	Il problema era legato al fatto che la select di controllo sul magistrato estraeva erroneamente
+	il magistrato anche se assegnato come procuratore su una udienza di altro ufficio.
+	Per la risoluzione della problematica è stata corretta la query gestendo in maniera corretta le
+	condizioni in "OR".
 	Classe modificata:
-	-	siap.siep.statis.dao.StatisticheMSSqlDAO.java
-	L'intervento prevede anche la modifica delle seguenti viste:
-	-	VW_MS_PROCEDIMENTI
-	-	VW_MS_PROC_ESAURITI
-	-	VW_MS_PROC_ESAURITI_MAG
-
-3)	Ticket#20230328019 - SIEP : Data visualizzata Istanza non corretta
-	Corretto inserimento data per lo stato procedimento e visualizzazione data nomina difensore sul dettaglio istanza.
-	Classi Modificate:
-	-	siap.siep.nuovaistanza.controller.NuovaIstanzaController.java
-	-	/jsp/files/siap/siep/nuovaistanza/DettaglioNuovaIstanza.jsp
-
-4)	Ticket#20230419018 - RITM0352453 - SIUS - Sheet names must not begin or end with (')
-	Nella creazione del nome della scheda del foglio Excel viene utilizzato il nome del magistrato.
-	Se contiene caratteri non accettabili per il nome di una scheda excel va in errore la generazione del foglio.
-	Nel caso specifico era l'apostrofo del nome del magistrato (MARILU'). Il nome della scheda NON può terminare o iniziare con tale carattere.
-	Aggiunto metodo in StringUtils per bonificare i nomi delle schede Excel:
-	-	StringUtils.encodeExcelSheetName
-	Modificata la classe che crea il foglio excel per benioficra il nome della scheda:
-	-	siap.sius.statistiche.util.excel.StatisticaComparataMagistratiExcel.java
+	-    siap.sige.udienza.dao.UdienzaSigeSqlDAO.java
