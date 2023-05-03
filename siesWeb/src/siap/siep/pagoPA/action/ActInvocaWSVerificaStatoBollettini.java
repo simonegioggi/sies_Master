@@ -128,6 +128,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					siesLogger.error(e.getMessage());
 					throw new F3BException(getClass().getName() + ".processRequest: " + e);
 				}
+				
 				// info per il log
 				if (rr != null && rr.getCount() > 0) {
 					if (text.contains("!"))
@@ -193,16 +194,23 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 		bpm.setCodOperatoreAggiornamento(getCodUtenteConnesso());
 		bpm.setDataAggiornamento(DateUtils.getSysDate());
 
-		if (Utils.isPresent(dataRicevuta))
-			bpm.setDataAvvPagamento(DateUtils.getDate(dataRicevuta, "dd/MM/yyyy"));
 		// STATO_PAGAMENTO PN NON PAGATO
 		// STATO_PAGAMENTO PA PAGATO
 		// STATO_PAGAMENTO PP PAGATO PARZIALMENTE
 		String sp = "DISPONIBILE".equals(srp.getStato()) ? "PA" : "PN";
-		bpm.setStatoPagamento(sp);
-		BigDecimal importoPagato = Utils.isNullObj(srp.getImporto()) ? new BigDecimal(0)
-				: new BigDecimal(srp.getImporto());
-		bpm.setImportoPagato(importoPagato);
+		bpm.setStatoPagamento(sp);		
+		
+		// 02.05.2023 - Aggiorno i dati del pagamento Importo e Data solo se lo stato è PAGATO 
+		if ("DISPONIBILE".equals(srp.getStato())) {
+			if (Utils.isPresent(dataRicevuta))
+				bpm.setDataAvvPagamento(DateUtils.getDate(dataRicevuta, "dd/MM/yyyy"));
+
+			BigDecimal importoPagato = Utils.isNullObj(srp.getImporto()) ? new BigDecimal(0)
+					: new BigDecimal(srp.getImporto());
+			bpm.setImportoPagato(importoPagato);
+		}
+		// 02.05.2023 - FINE
+		
 		ibp.ExModificaBollettinoPagopa(bpm);
 	}
 

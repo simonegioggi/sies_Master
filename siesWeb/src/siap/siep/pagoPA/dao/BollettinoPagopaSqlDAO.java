@@ -198,8 +198,10 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		s += " AND STATO_PAGAMENTO = 'PN'"; // PN = NON PAGATO
 
 		if (inScadenzaTraGiorni > 0) {
-			s += " AND DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
-			s += " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
+			s += " AND (    DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
+			s +=      " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
+			s +=      " OR DATA_SCADENZA IS NULL ";
+		    s +=	  ")";
 		}
 
 		if (controllateDaGiorni > 0) {

@@ -53,7 +53,9 @@ public class ActLoadInserisciCivilmenteObbligato extends ActionSiap implements I
             if ("S".equals(fsm.getFlagValidato())) {
                 RedirectTo lRedirigi = new RedirectTo();
                 lRedirigi.setPage(IWebConstants.PG_MAIN);
-                setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Impossibile procedere, il procedimento risulta già validato.");
+                setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Civilmente Obbligato non presente. "
+                		+ "Impossibile procedere all'inserimento in quanto il procedimento risulta gia' validato. "
+                		+ "<BR>Per inserire i dati annullare la validazione del procedimento dal menu' 'Funzioni Amministrative'.");
                 lRedirigi.setAction("siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&"
                     + ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP + "=" + fsm.getIdFascicoloSiep());
                 setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
