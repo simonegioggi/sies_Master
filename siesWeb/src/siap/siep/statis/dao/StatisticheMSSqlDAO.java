@@ -341,14 +341,14 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 			s += magCondition;
 		s += "AND (v.Data_Iscr < TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy')) "
 				+ " and (V.Data_Arch is null  OR (V.COD_STATO_FASCICOLO <> '01' and  V.Data_Arch  is not null)"
-				// Ticket#20230107012 - Si correggela condizione sulla data archiviazione in >=
+				// Ticket#202302280124 - Si correggela condizione sulla data archiviazione in >=
 				//                      Venivano esclusi dai pendenti inizio periodo i procedimenti archiviati nel periodo
 				+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>=to_char('" + anni[0]
-//				+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>to_char('" + anni[0]
-				// FINE - Ticket#20230107012
+				//+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>to_char('" + anni[0]
+				// FINE - Ticket#202302280124
 				+ "')))) ";
 
-		s += " UNION ";
+		s += "UNION ";
 		// SOPRAVVENUTI NEL PERIODO
 		s += "SELECT * FROM (SELECT 'Procedimenti sopravvenuti nel periodo' Nome_Stat, " + "1 ordinamento, "
 				+ "V.ANNO_ISC, " + "V.FASC_SIEP " + "from " + from2 + " V " + "WHERE V.Cod_Uff_Ins = '"
@@ -357,7 +357,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 				+ dataIniziale + "', 'dd/MM/yyyy') and " + "TO_DATE('" + dataFinale + "', 'dd/MM/yyyy') ";
 		if (!"".equals(magCondition))
 			s += magCondition;
-		s += " UNION ";
+		s += "UNION ";
 		// ESAURITI NEL PERIODO
 		// INVOCARE UN METODO DI GESTIONE ESAURITI
 		// s += "SELECT 'Procedimenti esauriti nel periodo' Nome_Stat, " + "2 ordinamento, " + "V.ANNO_ISC, "
@@ -371,7 +371,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		// if (!"".equals(magCondition))
 		// s += magCondition;
 		// RIAPERTI NEL PERIODO
-		s += " UNION ";
+		s += "UNION ";
 		// INVOCARE UN METODO DI GESTIONE RIAPERTI
 		// s += "SELECT 'Procedimenti riaperti nel periodo' Nome_Stat, " + "3 ordinamento, "
 		// + "NVL(V.ANNO_ISC, 0) ANNO_ISC, " + "NVL(V.FASC_SIEP, 0) FASC_SIEP " + "FROM " + from4 + " V "
@@ -381,7 +381,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		s += gestioneRiaperti(from4, ufficioConnesso, anni, dataIniziale, dataFinale, magCondition);
 		// if (!"".equals(magCondition))
 		// s += magCondition;
-		s += " UNION ";
+		s += "UNION ";
 		// PENDENTI FINE PERIODO
 		// INVOCARE UN METODO DI GESTIONE PENDENTI FINE
 		// s += "SELECT 'Procedimenti pendenti fine periodo' Nome_Stat, " + "4 ordinamento, " + "V.ANNO_ISC, "
@@ -519,14 +519,8 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 			sql = " SELECT 'Procedimenti riaperti nel periodo' Nome_Stat,  3 ordinamento," + "'"
 					+ rangeAnni[0] + "'" + " AS ANNO_ISC, " + " NVL(V.FASC_SIEP, 0) FASC_SIEP" + " FROM   "
 					+ nomeVista + " V " + " WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "'"
-					// Ticket#20230107012 - si modifica il test sulla data. Veniva testata la data Archiviazione
-					// si testa invece la data iscrizione	
-					+ "  AND v.Data_Arch IS NOT NULL "
-					+ "  AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') and  TO_DATE('"
+					+ "  AND v.Data_Arch between TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') and  TO_DATE('"
 					+ dataFinale + "', 'dd/MM/yyyy')";
-			// + "  AND v.Data_Arch between TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') and  TO_DATE('"
-			// + dataFinale + "', 'dd/MM/yyyy')";
-			        // FINE - Ticket#20230107012 
 			if (!"".equals(magCondition))
 				sql += magCondition;
 		} else {
@@ -553,14 +547,8 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 				sql += " SELECT 'Procedimenti riaperti nel periodo' Nome_Stat,  3 ordinamento," + "'"
 						+ rangeAnni[i] + "'" + " AS ANNO_ISC, " + " NVL(V.FASC_SIEP, 0) FASC_SIEP" + " FROM  "
 						+ nomeVista + " V " + "  WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "'"
-						// Ticket#20230107012 - si modifica il test sulla data. Veniva testata la data Archiviazione
-					    // si testa invece la data iscrizione
-						+ "  AND v.Data_Arch IS NOT NULL "
-						+ "  AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between TO_DATE('" + dataInizialeTemp
-						+ "', 'dd/MM/yyyy') and  TO_DATE('" + dataFinaleTemp + "', 'dd/MM/yyyy')";						
-						//+ "  AND v.Data_Arch between TO_DATE('" + dataInizialeTemp
-						//+ "', 'dd/MM/yyyy') and  TO_DATE('" + dataFinaleTemp + "', 'dd/MM/yyyy')";
-				        // FINE - Ticket#20230107012
+						+ "  AND v.Data_Arch between TO_DATE('" + dataInizialeTemp
+						+ "', 'dd/MM/yyyy') and  TO_DATE('" + dataFinaleTemp + "', 'dd/MM/yyyy')";
 				if (!"".equals(magCondition))
 					sql += magCondition;
 
@@ -600,14 +588,14 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 				+ "AND v.Data_Iscr < TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy') ";
 		if (!"".equals(magCondition))
 			s += magCondition;
-		s += " union ";
+		s += "union ";
 		s += "SELECT DISTINCT V.DESC_MS, V.FASC_SIEP, 'Sopravvenuti' tipo_statistica " + "FROM " + from
 				+ " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' "
 				+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') between " + "TO_DATE('"
 				+ dataIniziale + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinale + "', 'dd/MM/yyyy') ";
 		if (!"".equals(magCondition))
 			s += magCondition;
-		s += " union ";
+		s += "union ";
 		// FASCICOLI esauriti
 		s += "SELECT DISTINCT V.DESC_MS, V.FASC_SIEP, 'Esauriti' tipo_statistica " + "FROM " + from
 				+ " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' "
@@ -618,7 +606,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 		// + dataIniziale + "', 'dd/MM/yyyy') and TO_DATE('" + dataFinale + "', 'dd/MM/yyyy') "
 		if (!"".equals(magCondition))
 			s += magCondition;
-		s += " union ";
+		s += "union ";
 		// FASCICOLI RIAPERTI
 		s += "SELECT DISTINCT V.DESC_MS, V.FASC_SIEP, 'Riaperti' tipo_statistica " + "FROM " + from
 				+ " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' "
@@ -627,7 +615,7 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 				+ dataFinale + "', 'dd/MM/yyyy') ";
 		if (!"".equals(magCondition))
 			s += magCondition;
-		s += " union ";
+		s += "union ";
 		// FASCICIOLI PENDENTI FINE
 		s += "SELECT DISTINCT V.DESC_MS, V.FASC_SIEP, 'Pendenti Fine' tipo_statistica " + "FROM " + from
 				+ " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso + "' "
@@ -946,6 +934,10 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "'Pendenti Inizio' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
 						+ "FROM " + from1 + " V where V.Cod_Uff_Ins = '" + ufficioConnesso
 						+ "' and (v.Data_Arch is null "
+						// Ticket#202302280124 - Come per il riepilogo sono considerati pendenti anche gli archiviati 
+						//                      purchè a partire dall'anno di riferimento
+						+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>=to_char('"+array[i]+"')) "
+						// Ticket#202302280124 - FINE						
 						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') < TO_DATE('"
 						+ dataInizialePendenti + "', 'dd/MM/yyyy') ";				
@@ -998,7 +990,12 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ array[i] + "' Anno " + "from " + from3 + " V WHERE V.Cod_Uff_Ins = '"
 						+ ufficioConnesso + "' "
 						+ "and v.Data_Arch is not null and v.mot_archiviazione is not null "
-						+ "and v.cod_stato_fascicolo = '01' "
+						// Ticket#202302280124 - Si commenta la condizione sullo stato attuale del fascicolo
+						// E' considerato (conteggiato) tra gli archiviati un fascicolo che ha la data archiviazione 
+						// valorizzata. Se poi riaperto verrà conteggiato anche tra i riaperti
+						// n.b. condizione commentata anche nella vista
+						//+ "and v.cod_stato_fascicolo = '01' "
+						// Ticket#202302280124 - FINE
 						+ "AND TO_DATE(TO_CHAR(v.Data_Arch, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
 						+ "TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('"
 						+ dataFinalePendenti + "', 'dd/MM/yyyy') "
@@ -1046,6 +1043,10 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "'Pendenti Fine' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
 						+ "FROM " + from1 + " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso
 						+ "' and (v.Data_Arch is null "
+						// Ticket#202302280124 - Gli archiviati dopo il fine periodo devono essere conteggati
+						//                      tra i pendenti fine epriodo
+						+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>to_char('"+ array[i] +"')) "
+						// Ticket#202302280124 - FINE						
 						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') <= TO_DATE('"
 						+ dataFinalePendenti + "', 'dd/MM/yyyy') ";				

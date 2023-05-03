@@ -1,4 +1,5 @@
 MEV_2023-13	-->	nato dal branch "release_12.4.27.0" in data 21/02/2023
+			--> merge del branch "release_12.4.28.0" in data 03/05/2023
 
 Richiesta scheda 2023-13 - APP/SICP/SIES - pagamenti PagoPA per pene pecuniarie.
 
