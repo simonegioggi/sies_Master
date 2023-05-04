@@ -90,14 +90,17 @@ public class ConsultaPagamentiJob implements Job {
 
 			String controllateDaGiorni = F3BProperties.getProperty("CONTROLLATEDAGIORNI");
 			String inScadenzaTraGiorni = F3BProperties.getProperty("INSCADENZATRAGIORNI");
+			String generatiDaGiorni    = F3BProperties.getProperty("GENERATIDAGIORNI");
 			pagoPaLogger.debug(" Ricerca debitori con posizioni aperte: inScadenzaTraGiorni "
 					+ inScadenzaTraGiorni + ", controllateDaGiorni " + controllateDaGiorni);
 
 			int cdg = 0;
 			int istg = 0;
+			int gdg = 0;
 			try {
 				cdg = new Integer(controllateDaGiorni).intValue();
 				istg = new Integer(inScadenzaTraGiorni).intValue();
+				gdg = new Integer(generatiDaGiorni).intValue();
 			} catch (Exception e) {
 				e.printStackTrace();
 				pagoPaLogger.error(e.getMessage());
@@ -108,7 +111,7 @@ public class ConsultaPagamentiJob implements Job {
 
 			IBollettinoPagopa lCtrlBollettini = SIEPLookupRemote.getBollettinoPagopaRemote();
 			Vector<BollettinoPagopaModel> lElencoDebitori = lCtrlBollettini
-					.ExRicercaDebitoriConPosizioniAperteInScadenza(istg, cdg);
+					.ExRicercaDebitoriConPosizioniAperteInScadenza(istg, cdg, gdg);
 			pagoPaLogger.debug("Debitori trovati = " + lElencoDebitori.size());
 
 			// Ricerca per debitore
