@@ -134,20 +134,20 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		
 		// 2023/05/02 - a seguito collaudo si richiede il blocco della registrazione delle notifiche in caso in cui
 		//              non siano stati emessi i bollettini. Per problema sull'aggiornamento della data scadenza
-//		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
-//		Vector<BollettinoPagopaModel> listaBollettini = lBollCtrl.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep (lFascMod.getIdFascicoloSiep(), null);
-//        if (listaBollettini == null || listaBollettini.size() == 0) {
-//            RedirectTo lRedirigi = new RedirectTo();
-//            lRedirigi.setPage(IWebConstants.PG_MAIN);
-//            setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-//                    "Nessun bollettino generato per il Procedimento corrente. Per poter procedere alla registrazione delle notifiche"
-//                            + " e' necessario prima produrre i relativi bollettini.");
-//            lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
-//                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-//            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-//
-//            return IWebConstants.PG_MESSAGE;
-//        }
+		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
+		Vector<BollettinoPagopaModel> listaBollettini = lBollCtrl.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep (lFascMod.getIdFascicoloSiep(), null);
+        if (listaBollettini == null || listaBollettini.size() == 0) {
+            RedirectTo lRedirigi = new RedirectTo();
+            lRedirigi.setPage(IWebConstants.PG_MAIN);
+            setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+                    "Nessun bollettino generato per il Procedimento corrente. Per poter procedere alla registrazione delle notifiche"
+                            + " e' necessario prima produrre i relativi bollettini.");
+            lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&"
+                    + ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+            setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+
+            return IWebConstants.PG_MESSAGE;
+        }
 		
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");

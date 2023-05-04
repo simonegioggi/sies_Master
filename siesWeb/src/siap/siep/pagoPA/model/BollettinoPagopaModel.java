@@ -46,7 +46,6 @@ public class BollettinoPagopaModel extends GenericModel {
     private String mStatoPagopa;
     private String mErrorePagopa;
     private String mCodiceDistretto;
-    private Date mDataGenerazioneBollettino;
     
 	// COSTRUTTORE DI DEFAULT
 	public BollettinoPagopaModel() {
@@ -78,7 +77,6 @@ public class BollettinoPagopaModel extends GenericModel {
 		this.mStatoPagopa = null;
 		this.mErrorePagopa = null;
 		this.mCodiceDistretto = null;
-		this.mDataGenerazioneBollettino = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -111,7 +109,6 @@ public class BollettinoPagopaModel extends GenericModel {
 	    this.mStatoPagopa = aModel.mStatoPagopa;
 	    this.mErrorePagopa = aModel.mErrorePagopa;
 	    this.mCodiceDistretto = aModel.mCodiceDistretto;
-	    this.mDataGenerazioneBollettino = aModel.mDataGenerazioneBollettino;
 	}
 
 	// COSTRUTTORE MODEL
@@ -123,9 +120,7 @@ public class BollettinoPagopaModel extends GenericModel {
 			String aCodUfficioAggiornamento, BigDecimal aFasSieIdFascicolSiep,
 			BigDecimal aRatIdRateizzazionePP, Date aDataUltimoControllo, String aCodiceFiscale,
 			String aStatoPagopa, String aErrorePagopa, String aCodiceDistretto		
-			,  String aDescrTipoRateizzazione, String aDescrStatoPagamento
-			, Date aDataGenerazioneBollettino
-			) {
+			,  String aDescrTipoRateizzazione, String aDescrStatoPagamento) {
 
 		this.mIdBollettinoPagopa = aIdBollettinoPagopa;
 		this.mProgRata = aProgRata;
@@ -154,7 +149,6 @@ public class BollettinoPagopaModel extends GenericModel {
 		this.mStatoPagopa = aStatoPagopa;
 		this.mErrorePagopa = aErrorePagopa;
 		this.mCodiceDistretto = aCodiceDistretto;
-		this.mDataGenerazioneBollettino = aDataGenerazioneBollettino;
 	}
 
 	//
@@ -266,12 +260,6 @@ public class BollettinoPagopaModel extends GenericModel {
     public String getCodiceDistretto() {
         return mCodiceDistretto;
     }
-    
-    public Date getDataGenerazioneBollettino() {
-        return mDataGenerazioneBollettino;
-    }
-    
-    
 	//
 	// METODI SET()
 	//
@@ -381,10 +369,6 @@ public class BollettinoPagopaModel extends GenericModel {
    }
    
    public void setCodiceDistretto(String aValore) {
-       this.mCodiceDistretto = aValore;
-   }
-   
-   public void setDataGenerazioneBollettino(Date aValore) {
-	   this.mDataGenerazioneBollettino = aValore;
+       this.mCodiceDistretto= aValore;
    }
 }
