@@ -30,11 +30,6 @@
       // Funzione di caricamento degli Oggetti e Dettagli selezionati coi checkbox e combobox,  in 4 variabili (descrizioni e codici).
       function loadOggetti(lOggetti, lDesc)
       {
-       	<%-- Ticket#202303020115 --%>
-       	var lOggetti = document.getElementsByName("lOggetti");
-       	var lDesc = document.getElementsByName("lDesc");
-       	<%-- Ticket#202303020115 - FINE --%>    	  
-    	  
       	// alert("loadOggetti: inizio");
         if (typeof (lOggetti.length) == "undefined")
         {
@@ -70,11 +65,6 @@
       
       function selezionaDeselezionaTutti()
       {
-       	 <%-- Ticket#202303020115 --%>
-         var lOggetti = document.getElementsByName("lOggetti");
-         var flagTutti = document.getElementsByName("flagTutti")[0];
-         <%-- Ticket#202303020115 - FINE --%>
-           	
     	  if( flagTutti.checked == true ){
     		  if (typeof (lOggetti.length) == "undefined")
     	      {
@@ -157,7 +147,7 @@
 	</table>
   <tr>
     <td>
-      <input onclick="Javascript:loadOggetti();" class="bottone" type="submit" value="Conferma">
+      <input onclick="Javascript:loadOggetti(lOggetti, lDesc);" class="bottone" type="submit" value="Conferma">
     </td>
   </tr>
   </table>
