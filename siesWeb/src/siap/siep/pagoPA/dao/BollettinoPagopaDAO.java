@@ -58,6 +58,7 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 		setField("DATA_ULTIMO_CONTROLLO", DATE);
 		setField("STATO_PAGOPA", STRING); // STATO comunicato nell'ultimo controllo
 		setField("ERRORE_PAGOPA", STRING); // esito dell'ultimo controllo es messaggio di errore
+		setField("DATA_GENERAZIONE_BOLLETTINO", DATE);		
 	}
 
 	//
@@ -162,6 +163,11 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 	public String getCodiceDistretto() throws DAOException {
 		return getString("CODICE_DISTRETTO");
 	}
+	
+	public Date getDataGenerazioneBollettino() throws DAOException {
+		return getDate("DATA_GENERAZIONE_BOLLETTINO");
+	}
+	
 
 	//
 	// METODI SET()
@@ -265,6 +271,10 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 	public void setCodiceDistretto(String aValore) throws DAOException {
 		setString("CODICE_DISTRETTO", aValore);
 	}
+	
+	public void setDataGenerazioneBollettino(Date aValore) throws DAOException {
+		setDate("DATA_GENERAZIONE_BOLLETTINO", aValore);
+	}
 
 	public GenericModel getModel() throws DAOException {
 
@@ -274,7 +284,7 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 				getDataInserimento(), getCodUfficioInserimento(), getCodOperatoreAggiornamento(),
 				getDataAggiornamento(), getCodUfficioAggiornamento(), getFasSieIdFascicolSiep(),
 				getRatIdRateizzazionePP(), getDataUltimoControllo(), getCodiceFiscale(), getStatoPagopa(),
-				getErrorePagopa(), getCodiceDistretto(), "", ""); // + 2 descrizioni
+				getErrorePagopa(), getCodiceDistretto(), "", "", getDataGenerazioneBollettino()); // + 2 descrizioni
 	}
 
 	public void setDAOFromModel(BollettinoPagopaModel aModel) throws DAOException {
@@ -301,6 +311,7 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 		setStatoPagopa(aModel.getStatoPagopa());
 		setErrorePagopa(aModel.getErrorePagopa());
 		setCodiceDistretto(aModel.getCodiceDistretto());
+		setDataGenerazioneBollettino(aModel.getDataGenerazioneBollettino());
 	}
 
 	public void setDAOFromModelForUpdate(BollettinoPagopaModel aModel) throws DAOException {
@@ -323,10 +334,12 @@ public class BollettinoPagopaDAO extends SIAPTableDAO {
 		setRatIdRateizzazionePP(aModel.getRatIdRateizzazionePP());
 		setDataUltimoControllo(aModel.getDataUltimoControllo());
 		setCodiceFiscale(aModel.getCodiceFiscale());
-		setCondizioneUpdate(aModel.getIdBollettinoPagopa());
 		setStatoPagopa(aModel.getStatoPagopa());
 		setErrorePagopa(aModel.getErrorePagopa());
 		setCodiceDistretto(aModel.getCodiceDistretto());
+		setDataGenerazioneBollettino(aModel.getDataGenerazioneBollettino());
+
+		setCondizioneUpdate(aModel.getIdBollettinoPagopa());
 	}
 
 	public void setCondizioneUpdate(BigDecimal IdBollettinoPagopa) {

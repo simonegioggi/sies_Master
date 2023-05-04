@@ -42,6 +42,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
 				+ " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO, BP.STATO_PAGOPA,"
 				+ " BP.ERRORE_PAGOPA,"
+				+ " BP.DATA_GENERAZIONE_BOLLETTINO, "
 				+ " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO"
 				+ " FROM BOLLETTINO_PAGOPA BP"
 				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE"
@@ -87,6 +88,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		aModel.setStatoPagopa(getString("STATO_PAGOPA"));
 		aModel.setErrorePagopa(getString("ERRORE_PAGOPA"));
 		aModel.setCodiceDistretto(getString("CODICE_DISTRETTO"));
+		aModel.setDataGenerazioneBollettino(getDate("DATA_GENERAZIONE_BOLLETTINO"));
 
 		return aModel;
 	}
@@ -189,7 +191,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		pagoPaLogger.info("Query >>>>>>>>> " + s);
 	}
 
-	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni)
+	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni)
 			throws DAOException {
 
 		String s = "SELECT DISTINCT CODICE_FISCALE, CODICE_DISTRETTO FROM BOLLETTINO_PAGOPA" + " WHERE 1 = 1";
@@ -200,10 +202,16 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		if (inScadenzaTraGiorni > 0) {
 			s += " AND (    DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
 			s +=      " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
-			s +=      " OR DATA_SCADENZA IS NULL ";
-		    s +=	  ")";
+			// s +=      " OR DATA_SCADENZA IS NULL ";
+			if (generatiDaGiorni > 0) {
+				s +=      " OR (DATA_SCADENZA IS NULL AND DATA_GENERAZIONE_BOLLETTINO >= (SYSDATE - " + generatiDaGiorni + ") ) ";
+			}
+			s +=	  ")";
 		}
-
+		else if (inScadenzaTraGiorni==0 && generatiDaGiorni > 0) {
+			s +=  " AND  (DATA_GENERAZIONE_BOLLETTINO >= (SYSDATE - " + generatiDaGiorni + ") ) ";
+		}
+		
 		if (controllateDaGiorni > 0) {
 			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")";
 		}
