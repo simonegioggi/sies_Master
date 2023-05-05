@@ -50,7 +50,7 @@ public class ActLoadInserisciRateizzazione extends ActionSiap
             if ("S".equals(lFascMod.getFlagValidato())) {
                 RedirectTo lRedirigi = new RedirectTo();
                 lRedirigi.setPage(IWebConstants.PG_MAIN);
-                setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Nessuna Rateizzazione presente. "
+                setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Modalita' di Pagamento non presente. "
                 		+ "Impossibile procedere all'inserimento in quanto il procedimento risulta gia' validato. "
                 		+ "<BR>Per inserire i dati annullare la validazione del procedimento dal menu' 'Funzioni Amministrative'.");
                 lRedirigi.setAction("siap.siep.penacomplessiva.action.ActLoadDettaglioPenaComplessiva&"
