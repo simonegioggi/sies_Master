@@ -180,7 +180,8 @@ public class TypeFactory {
 
 		data = (java.util.Date) attributes[DATA_AVVENUTA_NOTIFICA];
 		if (data != null) {
-			notifica.setMDataInvio(createDataType((java.util.Date) attributes[DATA_AVVENUTA_NOTIFICA]));
+			// Ticket#202305050125 - richiesta pervenuta da Santa Maria Capua Vetere
+			notifica.setMDataAvvenutaNotifica(createDataType((java.util.Date) attributes[DATA_AVVENUTA_NOTIFICA]));
 		}
 
 		return notifica;

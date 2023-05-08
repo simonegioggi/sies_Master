@@ -8,7 +8,7 @@ Comprende i seguenti Ticket MAC:
 	decreto per una errata gestione della classe Model degli avvocati.
 	Per la risoluzione della problematica è stata corretta la gestione.
 	Classe modificata:
-	-	/files/siap/sius/depositodecreto/DettaglioDecretoModAttLavoro.jsp
+	-	/siesWeb/defaultroot/jsp/files/siap/sius/depositodecreto/DettaglioDecretoModAttLavoro.jsp
 
 2)	Ticket#20230427016 - Assegnazione Magistrato su P.P SIGE
 	Il problema era legato al fatto che la select di controllo sul magistrato estraeva erroneamente
@@ -16,4 +16,10 @@ Comprende i seguenti Ticket MAC:
 	Per la risoluzione della problematica è stata corretta la query gestendo in maniera corretta le
 	condizioni in "OR".
 	Classe modificata:
-	-    siap.sige.udienza.dao.UdienzaSigeSqlDAO.java
+	-    /siesWeb/src/siap/sige/udienza/dao/UdienzaSigeSqlDAO.java
+
+3)	Ticket#202305050125 - richiesta pervenuta da Santa Maria Capua Vetere
+	Il problema era legato al fatto che per la richiesta di istruttoria la "Data Restituzione" veniva
+	erroneamente salvata nel campo "Data Richiesta" sovrascrivendola.
+	Per la risoluzione della problematica è stata corretta la giusta impostazione dei campi.
+	-	/siesWeb/src/it/eng/giustizia/avvocatura/util/TypeFactory.java
