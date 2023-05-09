@@ -90,9 +90,10 @@ public class ConsultaPagamentiJob implements Job {
 
 			String controllateDaGiorni = F3BProperties.getProperty("CONTROLLATEDAGIORNI");
 			String inScadenzaTraGiorni = F3BProperties.getProperty("INSCADENZATRAGIORNI");
-			String generatiDaGiorni    = F3BProperties.getProperty("GENERATIDAGIORNI");
-			pagoPaLogger.debug(" Ricerca debitori con posizioni aperte: inScadenzaTraGiorni "
-					+ inScadenzaTraGiorni + ", controllateDaGiorni " + controllateDaGiorni);
+			String generatiDaGiorni = F3BProperties.getProperty("GENERATIDAGIORNI");
+			pagoPaLogger.debug(" Ricerca debitori con posizioni aperte: inScadenzaTraGiorni = "
+					+ inScadenzaTraGiorni + ", controllateDaGiorni = " + controllateDaGiorni
+					+ ", generatiDaGiorni = " + generatiDaGiorni);
 
 			int cdg = 0;
 			int istg = 0;
