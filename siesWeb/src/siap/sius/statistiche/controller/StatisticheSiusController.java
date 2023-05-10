@@ -588,7 +588,7 @@ public class StatisticheSiusController extends SiapController implements IStatis
 			lConn = getDBConnection(); // Preleva connessione dal dbase
 			lIspDao = new IspConteggioOggettiDAO(lConn);
 			/* Mod. Michele 4/12/2008 */
-			lIspDao.setCondizione("FAS_SIU_CHIAVE_UFFICIO = " + aCodUfficio);
+			lIspDao.setCondizione("FAS_SIU_CHIAVE_UFFICIO = '" + aCodUfficio+"'");
 			lIspDao.setOrdinamentoPerContenutoStatistico();
 			lStatistiche = new Vector(lIspDao.getModels()); // Recupera le occorrenze
 

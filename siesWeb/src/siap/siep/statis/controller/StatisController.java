@@ -2728,22 +2728,25 @@ public class StatisController extends GenericController {
 		// settaggio della larghezza
 		// delle colonne
 		numCol = 0;
-		sheet.setColumnWidth(numCol++, (20 * 256));
+		sheet.setColumnWidth(numCol++, (20 * 256));  // CONTENUTO
 		// Nel caso di Aggregato non c'e' la colonna OGGETTO
 		if (!isAggregato)
-			sheet.setColumnWidth(numCol++, (30 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
+			sheet.setColumnWidth(numCol++, (30 * 256)); // OGGETTO
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Inizio Periodo
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Sopravvenuti
+		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti		
+		// MEV9 - Si aggiunge Accolti Provvisoriamente
+		sheet.setColumnWidth(numCol++, (10 * 256));   // Accolti Provvisoriamente
+		// MEV9 - FINE		
+		sheet.setColumnWidth(numCol++, (10 * 256));   // Rigettati
+		sheet.setColumnWidth(numCol++, (10 * 256));   // Inammissibilita'
+		sheet.setColumnWidth(numCol++, (10 * 256));   // NLP/NDP
+		sheet.setColumnWidth(numCol++, (10 * 256));   // Incompetenza
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Iscritti per errore
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Unificati
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Cancellati
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Altro
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Pendenti Fine Periodo 
 
 		// N.ro riga corrente
 		int nRow = 0;
@@ -2807,6 +2810,9 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
+		// MEV9 - Si aggiunge Accolti Provvisoriamente
+		setCell(row, numCol++, "Accolti Provvisoriamente", csCenter);
+		// MEV9 - FINE
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -2837,6 +2843,9 @@ public class StatisController extends GenericController {
 				setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 				setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter); // Accolti
+				// MEV9 - Si aggiunge Accolti Provvisoriamente
+				setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), csCenter); // Accolti
+				// MEV9 - FINE
 				setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter); // Rigettati
 				setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter); // Inammissibilita'
 				setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter); // NLP/NDP

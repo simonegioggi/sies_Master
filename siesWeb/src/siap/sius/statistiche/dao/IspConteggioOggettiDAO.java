@@ -41,6 +41,8 @@ public class IspConteggioOggettiDAO extends TableDAO
 		setField("FAS_SIU_CHIAVE_UFFICIO", STRING);	/* mod michele 2/12/2008 */
 		setField("NUM_CANCELLATI", BIG_DECIMAL);
 		setField("NUM_UNIFICATI", BIG_DECIMAL);
+		// MEV9 - Aggiunto conteggio applicati provvisoriamente
+		setField("NUM_APP_PROVV", BIG_DECIMAL);		
 	}
 
 
@@ -64,6 +66,8 @@ public class IspConteggioOggettiDAO extends TableDAO
 	public String 			getFasSiuChiaveUfficio() 		throws DAOException	 { return getString("FAS_SIU_CHIAVE_UFFICIO"); } /* mod michele 2/12/2008 */
 	public BigDecimal 		getNumCancellati() 	throws DAOException	 { return getBigDecimal("NUM_CANCELLATI"); } 
 	public BigDecimal 		getNumUnificati() 	throws DAOException	 { return getBigDecimal("NUM_UNIFICATI"); } 
+	// MEV9 - Aggiunto conteggio applicati provvisoriamente
+	public BigDecimal 		getNumAppProvv() 	throws DAOException	 { return getBigDecimal("NUM_APP_PROVV"); } 
 	
   //
   // METODI SET()
@@ -85,6 +89,8 @@ public class IspConteggioOggettiDAO extends TableDAO
 	public void  	 setFasSiuChiaveUfficio(String aValore ) 			 { setString("FAS_SIU_CHIAVE_UFFICIO", aValore); } /* mod michele 2/12/2008 */
 	public void  	 setNumCancellati(BigDecimal aValore ) 			 { setBigDecimal("NUM_CANCELLATI", aValore); }
 	public void  	 setNumUnificati(BigDecimal aValore ) 			 { setBigDecimal("NUM_UNIFICATI", aValore); }
+	// MEV9 - Aggiunto conteggio applicati provvisoriamente
+	public void  	 setNumAppProvv(BigDecimal aValore ) 			 { setBigDecimal("NUM_APP_PROVV", aValore); }
 		
 	public GenericModel getModel() throws DAOException
  	{ 
@@ -105,6 +111,7 @@ public class IspConteggioOggettiDAO extends TableDAO
 					getFasSiuChiaveUfficio(),	/* mod michele 2/12/2008 */
 					getNumCancellati(),
 					getNumUnificati()
+					, getNumAppProvv() // MEV9
 				);
 	}
 
@@ -127,6 +134,8 @@ public class IspConteggioOggettiDAO extends TableDAO
 		setFasSiuChiaveUfficio( aModel.getFasSiuChiaveUfficio() ); /* mod michele 2/12/2008 */
 		setNumCancellati( aModel.getNumCancellati() );
 		setNumUnificati( aModel.getNumUnificati() );
+		// MEV9 - Aggiunto conteggio applicati provvisoriamente
+		setNumAppProvv( aModel.getNumAccoltiProvv() );
 	}
 
 
