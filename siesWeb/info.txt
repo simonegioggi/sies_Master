@@ -37,5 +37,3 @@ Comprende i seguenti Ticket MAC:
 	erroneamente salvata nel campo "Data Richiesta" sovrascrivendola.
 	Per la risoluzione della problematica è stata corretta la giusta impostazione dei campi.
 	-	/siesWeb/src/it/eng/giustizia/avvocatura/util/TypeFactory.java
-	
-6)
