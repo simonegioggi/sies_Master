@@ -191,7 +191,16 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		pagoPaLogger.info("Query >>>>>>>>> " + s);
 	}
 
-	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni)
+	/**
+	 * 
+	 * @param inScadenzaTraGiorni
+	 * @param controllateDaGiorni
+	 * @param generatiDaGiorni
+	 * @param controllarePerGiorni
+	 * @throws DAOException
+	 */
+	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni
+			, int generatiDaGiorni, int controllarePerGiorni)
 			throws DAOException {
 
 		String s = "SELECT DISTINCT CODICE_FISCALE, CODICE_DISTRETTO FROM BOLLETTINO_PAGOPA" + " WHERE 1 = 1";
@@ -202,14 +211,20 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		if (inScadenzaTraGiorni > 0) {
 			s += " AND (    DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
 			s +=      " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
-			// s +=      " OR DATA_SCADENZA IS NULL ";
-			if (generatiDaGiorni > 0) {
-				s +=      " OR (DATA_SCADENZA IS NULL AND DATA_GENERAZIONE_BOLLETTINO >= (SYSDATE - " + generatiDaGiorni + ") ) ";
+			if (generatiDaGiorni > 0 && controllarePerGiorni > 0) {
+				s +=      " OR (    DATA_SCADENZA IS NULL ";
+				s +=          " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+") ";
+				s +=          " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+" + "+controllarePerGiorni+" ) ";
+				s +=	     " )";
 			}
 			s +=	  ")";
 		}
-		else if (inScadenzaTraGiorni==0 && generatiDaGiorni > 0) {
-			s +=  " AND  (DATA_GENERAZIONE_BOLLETTINO >= (SYSDATE - " + generatiDaGiorni + ") ) ";
+		else if (inScadenzaTraGiorni==0 && generatiDaGiorni > 0 && controllarePerGiorni > 0) {
+			// In assenza del vincolo sulla data scadenza posso usare comunque il vincolo 
+			// sulla DATA_GENERAZIONE_BOLLETTINO.
+			// n.b. anche in presenza della data scadenza sul bollettino.
+			s += " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+") ";
+			s += " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+" + "+controllarePerGiorni+" ) ";
 		}
 		
 		if (controllateDaGiorni > 0) {

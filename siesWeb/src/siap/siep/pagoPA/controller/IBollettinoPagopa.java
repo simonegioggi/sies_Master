@@ -42,7 +42,7 @@ public interface IBollettinoPagopa {
 			throws F3BException;
 
 	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperteInScadenza(
-			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni) throws F3BException;
+			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni) throws F3BException;
 
 	public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
 

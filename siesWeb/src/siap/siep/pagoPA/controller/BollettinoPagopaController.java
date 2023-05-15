@@ -437,9 +437,10 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 	}
 
 	/**
-	*
+	* @deprecated - Mai referenziata
 	*/
-	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte(int controllateDaGiorni,int generatiDaGiorni)
+	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte(int controllateDaGiorni
+			,int generatiDaGiorni)
 			throws F3BException {
 		Connection c = null;
 		Vector<BollettinoPagopaModel> coms = new Vector<>();
@@ -450,7 +451,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			c = getDBConnection();
 			bppaSqldao = new BollettinoPagopaSqlDAO(c);
 
-			bppaSqldao.ricercaDebitoriConPosizioniAperte(0, controllateDaGiorni, generatiDaGiorni);
+			bppaSqldao.ricercaDebitoriConPosizioniAperte(0, controllateDaGiorni, generatiDaGiorni,0);
 
 			bppaSqldao.start();
 
@@ -487,7 +488,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 	 * @throws F3BException
 	 */
 	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperteInScadenza(
-			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni) throws F3BException {
+			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni
+			,int controllarePerGiorni) throws F3BException {
 		Connection c = null;
 		Vector<BollettinoPagopaModel> coms = new Vector<>();
 
@@ -497,7 +499,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			c = getDBConnection();
 			bppaSqldao = new BollettinoPagopaSqlDAO(c);
 
-			bppaSqldao.ricercaDebitoriConPosizioniAperte(inScadenzaTraGiorni, controllateDaGiorni, generatiDaGiorni);
+			bppaSqldao.ricercaDebitoriConPosizioniAperte(inScadenzaTraGiorni, controllateDaGiorni, generatiDaGiorni, controllarePerGiorni);
 
 			bppaSqldao.start();
 

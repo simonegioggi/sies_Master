@@ -36,7 +36,7 @@ public class QuartzInit extends HttpServlet {
 			pagoPaLogger.info("PagoPaSchedulerEnabled = " + lPagoPaSchedulerEnabled);
 
 			if ("true".equals(lPagoPaSchedulerEnabled)) {
-				pagoPaLogger.info("Procedo ad attivare la schedulazione" + lPagoPaSchedulerEnabled);
+				pagoPaLogger.info("Procedo ad attivare la schedulazione");
 
 				SchedulerFactory sf = new StdSchedulerFactory();
 				Scheduler scheduler = sf.getScheduler();
