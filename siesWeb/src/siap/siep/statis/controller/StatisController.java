@@ -3418,11 +3418,12 @@ public class StatisController extends GenericController {
 		// settaggio della larghezza
 		// delle colonne
 		numCol = 0;
-		sheet.setColumnWidth(numCol++, (40 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
-		sheet.setColumnWidth(numCol++, (10 * 256));
+		sheet.setColumnWidth(numCol++, (40 * 256)); // 
+		sheet.setColumnWidth(numCol++, (10 * 256)); // 
+		sheet.setColumnWidth(numCol++, (10 * 256)); // 
+		sheet.setColumnWidth(numCol++, (10 * 256)); // 
+		sheet.setColumnWidth(numCol++, (10 * 256)); // Accolti Provvisoriamente - MEV 9
+		sheet.setColumnWidth(numCol++, (10 * 256)); // 
 		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
 		sheet.setColumnWidth(numCol++, (10 * 256));
@@ -3445,6 +3446,7 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Inizio Periodo", csCenter);
 		setCell(row, numCol++, "Sopravvenuti", csCenter);
 		setCell(row, numCol++, "Accolti", csCenter);
+		setCell(row, numCol++, "Accolti Provvisoriamente", csCenter); // MEV 9
 		setCell(row, numCol++, "Rigettati", csCenter);
 		setCell(row, numCol++, "Inammissibilita'", csCenter);
 		setCell(row, numCol++, "NLP/NDP", csCenter);
@@ -3498,6 +3500,7 @@ public class StatisController extends GenericController {
 			setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), csCenter);
+			setCell(row, numCol++, lMod.getNumAppProvv().doubleValue(), csCenter); // MEV 9			
 			setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), csCenter);
 			setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), csCenter);
