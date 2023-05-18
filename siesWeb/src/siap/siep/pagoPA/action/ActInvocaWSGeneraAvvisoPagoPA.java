@@ -26,6 +26,7 @@ import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziInvioPagamentiT
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.security.action.ICostantiSecurity;
+import siap.sico.soggetto.controller.ISoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
@@ -83,13 +84,14 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			}
 		}
 
+		ISoggetto is = SICOLookupRemote.getSoggettoRemote();
 		if (fsm != null) {
-			sm = fsm.getSoggetto();
+			sm = is.ExRicercaSoggettoByKey(fsm.getSoggetto().getIdSoggetto());
 			annoProc = fsm.getChiaveAnno();
 			numeroProc = fsm.getChiaveProgr();
 			idFascicolo = fsm.getIdFascicoloSiep();
 		} else if (fgpm != null) {
-			sm = fgpm.getFascicoloSiusModel().getSoggetto();
+			sm = is.ExRicercaSoggettoByKey(fgpm.getFascicoloSiusModel().getSogIdSoggetto());
 			annoProc = fgpm.getFascicoloSiusModel().getChiaveAnno();
 			numeroProc = fgpm.getFascicoloSiusModel().getChiaveProgr();
 			idFascicolo = fgpm.getFascicoloSiusModel().getIdFascicoloSius();
@@ -97,6 +99,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// info per il log
 		siesLogger
 				.debug("ID FASCICOLO: " + idFascicolo + "; con anno/numero: " + annoProc + "/" + numeroProc);
+		siesLogger.debug("CODICE FISCALE SOGGETTO: " + sm.getCodFiscale());
 
 		// String pathkeystore = System.getProperty("jboss.home.dir") + System.getProperty("file.separator")
 		// + "standalone" + System.getProperty("file.separator") + "configuration"
