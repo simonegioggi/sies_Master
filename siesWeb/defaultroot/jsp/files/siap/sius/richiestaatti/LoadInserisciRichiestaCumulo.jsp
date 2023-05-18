@@ -91,20 +91,22 @@
       }
 
       <%-- INIZIO: MEV_9 (D.lgs. 123/2018) --%>
-      var data_restituzione = document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
-                        +'/'+ document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
-                        +'/'+ document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
-      if (! ControllaDataPassaVuota(data_restituzione))
-      {
-        alert('Data Restituzione atti non valida');
-        return false;
+      if (document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CHECK_DATA_RESTITUZIONE%>.checked){
+	      var data_restituzione = document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_GIORNO_DATA_RESTITUZIONE%>.value
+	                        +'/'+ document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_MESE_DATA_RESTITUZIONE%>.value
+	                        +'/'+ document.LoadInserisciRichiestaCumulo.<%=ICostantiRichiestaAtti.CAMPO_ANNO_DATA_RESTITUZIONE%>.value;
+	      if (! ControllaData(data_restituzione))
+	      {
+	        alert('Data Restituzione atti non valida');
+	        return false;
+	      }
+	      
+	      if ( ! CompareDate( data_emissione, data_restituzione) )
+	      {
+	        alert('Data Emissione maggiore della Data Restituzione atti!');
+	        return false;
+	      }
       }
-      
-      if ( ! CompareDate( data_emissione, data_restituzione) )
-      {
-        alert('Data Emissione maggiore della Data Restituzione atti!');
-        return false;
-      }   
       <%-- FINE: MEV_9 (D.lgs. 123/2018) --%>
       
       return true;
