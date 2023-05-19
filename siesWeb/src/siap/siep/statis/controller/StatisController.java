@@ -2824,7 +2824,7 @@ public class StatisController extends GenericController {
 		setCell(row, numCol++, "Pendenti Fine Periodo", csCenter);
 
 		nRow++;
-		// Viene memorizzato il n.ro di riga dovo iniziano i dati
+		// Viene memorizzato il n.ro di riga dove iniziano i dati
 		nRowIni = nRow;
 		if (tipo_estrazione == 1)
 			nRow = scriviAggregato(aVect, sheet, nRow, csCenter);
@@ -2868,7 +2868,9 @@ public class StatisController extends GenericController {
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
 		// 12 totali su 12 colonne
-		for (int i = 0; i < 12; i++) {
+		// MEV9 - Si aggiunge Accolti Provvisoriamente le colonne diventano 13
+		//for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 13; i++) {
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
 			setFormulaCell(row, numCol++, formula, csCenter);
 		}
@@ -2950,6 +2952,9 @@ public class StatisController extends GenericController {
 					setCell(row, numCol++, lMod.getNumPendentiInizio().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumSopravvenuti().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito1().doubleValue(), aCsCenter);
+					// MEV9 - Accolti provvisoriamente
+					setCell(row, numCol++, lMod.getNumAccoltiProvv().doubleValue(), aCsCenter);
+					// MEV9 - FINE
 					setCell(row, numCol++, lMod.getNumDefEsito2().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito3().doubleValue(), aCsCenter);
 					setCell(row, numCol++, lMod.getNumDefEsito4().doubleValue(), aCsCenter);
@@ -3521,8 +3526,10 @@ public class StatisController extends GenericController {
 		nRow++;
 		row = sheet.createRow(nRow++);
 		setCell(row, numCol++, "TOTALI", csCenter);
+		// MEV9 Sono diventati 13
 		// 12 totali su 12 colonne
-		for (int i = 0; i < 12; i++) {
+		//for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 13; i++) {	
 			formula = getStringaSomma(nRowIni, numCol, nRowFine, numCol);
 			setFormulaCell(row, numCol++, formula, csCenter);
 		}
