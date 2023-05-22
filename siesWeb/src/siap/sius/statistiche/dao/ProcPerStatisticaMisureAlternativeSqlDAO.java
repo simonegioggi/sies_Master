@@ -257,7 +257,7 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 				+ "null data_emissione, null tipo_provvedimento, null oggetto, null esito, "
 				+ "null provvedimento_validato, null data_deposito, null deposito_validato "
 				+ "from fascicolo_sius fasc left outer join evento e "
-				+ "on e.fas_siu_id_fascicolo_sius = fs.id_fascicolo_sius, "
+				+ "on e.fas_siu_id_fascicolo_sius = fasc.id_fascicolo_sius, "
 				+ "soggetto s, generale_procedimento gp "
 				+ "where " + getCondizione(rpm)
 				+ "and fasc.cod_stato_fascicolo = '02' "
