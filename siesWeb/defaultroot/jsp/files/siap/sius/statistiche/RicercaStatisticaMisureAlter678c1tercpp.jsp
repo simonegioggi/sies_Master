@@ -18,7 +18,7 @@
 <%@ page import="siap.sius.provvedimento.action.ICostantiProvvedimento"%>
 
 <jsp:useBean id="ricercaProcedimenti"   scope="session" class="siap.sius.statistiche.model.RicercaProcedimentoModel"/>
-<jsp:useBean id="elencoProcedimenti"    scope="request" class="java.util.ArrayList"/>
+<jsp:useBean id="elencoProcedimenti"    scope="request" class="java.util.ArrayList<EveFasGepSogProvModel>"/>
 <jsp:useBean id="TornaQui"              scope="request" class="java.lang.String"/>
 
 <html>
@@ -150,6 +150,12 @@ if (ricercaProcedimenti != null) {
 	 	<td class="lVerdeNB">Ordinanze Applicazione Provvisoria Emesse ma prive di Decisione del Collegio</td>
 	</tr>
 <%
+	} else if (ricercaProcedimenti.getStatoProcedimento() == 4) {
+%>
+	<tr>
+	 	<td class="lVerdeNB">Procedimenti Privi di Provvedimenti</td>
+	</tr>
+<%
 	}
 }
 %>
@@ -168,7 +174,7 @@ if (ricercaProcedimenti != null) {
 	</tr>
 <%
 RedirectTo lRedirect = null;
-Iterator itx = elencoProcedimenti.iterator();
+Iterator<EveFasGepSogProvModel> itx = elencoProcedimenti.iterator();
 while (itx.hasNext()) {
 	EveFasGepSogProvModel procedimento = (EveFasGepSogProvModel) itx.next();
 %>
@@ -205,7 +211,7 @@ while (itx.hasNext()) {
 		</td>
 		<%-- 5) Data Emissione --%>
 		<td class="c">
-<% 			
+<%
 		String lDataEmissione = "-";		
 		if (procedimento.getEvento() != null && procedimento.getEvento().getDataEmissione() != null)
 			lDataEmissione = StringUtils.toStringJSP(DateUtils.getDateToString(procedimento.getEvento().getDataEmissione(), "dd-MM-yyyy"), "-") ;				

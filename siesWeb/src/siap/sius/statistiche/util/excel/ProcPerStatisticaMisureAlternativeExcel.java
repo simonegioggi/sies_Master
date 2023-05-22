@@ -14,6 +14,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.StringUtils;
+import f3b.util.Utils;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sius.statistiche.controller.IStatisticheSius;
 import siap.sius.statistiche.model.EveFasGepSogProvModel;
@@ -77,6 +78,9 @@ public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 				break;
 			case 3:
 				buffer = "Ordinanze Applicazione Provvisoria Emesse ma prive di Decisione del Collegio";
+				break;
+			case 4:
+				buffer = "Procedimenti Privi di Provvedimenti";
 				break;
 			}
 			hssfr = hssfs.createRow(rowCounter);
@@ -173,10 +177,18 @@ public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 
 			// Tipo Provvedimento
 			setCell(hssfr, 5,
-					efgspm.getEvento() != null ? efgspm.getEvento().getDescrTipoProvvedimento() + " " + efgspm.getEvento().getDescrMotivo() : "-",
+					efgspm.getEvento() != null
+							&& Utils.isPresent(efgspm.getEvento().getDescrTipoProvvedimento())
+							&& Utils.isPresent(efgspm.getEvento().getDescrMotivo())
+									? efgspm.getEvento().getDescrTipoProvvedimento() + " "
+											+ efgspm.getEvento().getDescrMotivo()
+									: "-",
 					hssfcsCenter);
 			// Esito
-			setCell(hssfr, 6, (efgspm.getEvento() != null ? efgspm.getEvento().getDescrEsito() : " - "),
+			setCell(hssfr, 6,
+					(efgspm.getEvento() != null && Utils.isPresent(efgspm.getEvento().getDescrEsito())
+							? efgspm.getEvento().getDescrEsito()
+							: " - "),
 					hssfcsCenter);
 		}
 

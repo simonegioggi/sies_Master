@@ -86,10 +86,18 @@ function Verify() {
  	</tr>
  	<tr>
      	<td class="l" width="50%">  
+        	Procedimenti Privi di Provvedimenti
+        </td>
+        <td class="l">
+        	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_PROCEDIMENTI_PRIVI_PROVVEDIMENTI%>" checked/>
+        </td>
+	</tr>
+ 	<tr>
+     	<td class="l" width="50%">  
         	Ordinanze Non Emesse - Atti al Presidente
         </td>
         <td class="l">
-        	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_NON_EMESSE_ATTI_AL_PRESIDENTE%>" checked/>
+        	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_NON_EMESSE_ATTI_AL_PRESIDENTE%>"/>
         </td>
 	</tr>
  	<tr>

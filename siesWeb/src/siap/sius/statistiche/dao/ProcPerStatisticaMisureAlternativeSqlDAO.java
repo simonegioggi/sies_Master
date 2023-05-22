@@ -250,4 +250,25 @@ public class ProcPerStatisticaMisureAlternativeSqlDAO extends SIAPSqlDAO {
 		setStatement(query);
 	}
 
+	public void ricercaProcedimentiPriviProvvedimenti(RicercaProcedimentoModel rpm) {
+
+		String query = "select distinct fasc.id_fascicolo_sius, fasc.chiave_anno, fasc.chiave_progr, "
+				+ "s.cognome, s.nome, fasc.data_iscrizione, null data_udienza, null id_evento, "
+				+ "null data_emissione, null tipo_provvedimento, null oggetto, null esito, "
+				+ "null provvedimento_validato, null data_deposito, null deposito_validato "
+				+ "from fascicolo_sius fasc, evento e, soggetto s, generale_procedimento gp "
+				+ "where " + getCondizione(rpm)
+				+ "and fasc.cod_stato_fascicolo = '02' "
+				+ "and (e.fas_siu_id_fascicolo_sius is null or "
+				+ "(e.fas_siu_id_fascicolo_sius = fasc.id_fascicolo_sius and "
+				+ "e.cod_tipo_provvedimento not in ('02', '03'))) "
+				+ "and gp.fas_siu_id_fascicolo_sius = fasc.id_fascicolo_sius "
+				+ "and gp.cod_oggetto_procedimento in ('C050', 'C051') "
+				+ "and s.id_soggetto = fasc.sog_id_soggetto "
+				+ "and gp.udi_id_udienza is null "
+				+ "and gp.data_camera_consiglio is null "
+				+ "order by fasc.chiave_anno, fasc.chiave_progr";
+		setStatement(query);
+	}
+
 }

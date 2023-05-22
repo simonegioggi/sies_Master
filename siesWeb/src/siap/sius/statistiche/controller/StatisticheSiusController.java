@@ -2528,11 +2528,14 @@ public class StatisticheSiusController extends SiapController implements IStatis
 			case 3:
 				ppsmasdao.ricercaOrdinanzeApplicazioneProvvisoriaEmesseNoDecisioneCollegio(rpm);
 				break;
+			case 4:
+				ppsmasdao.ricercaProcedimentiPriviProvvedimenti(rpm);
+				break;
 			default:
 				throw new F3BException(
 						"ExRicercaProcPerStatisticaMisureAlternative : Valore dell StatoProcedimento = "
 								+ rpm.getStatoProcedimento()
-								+ " non valido. Deve essere compreso nel range 0-3.");
+								+ " non valido. Deve essere compreso nel range 0-4.");
 			}
 
 			if (pagina > 0) {
@@ -2584,11 +2587,14 @@ public class StatisticheSiusController extends SiapController implements IStatis
 			case 3:
 				ppsmasdao.ricercaOrdinanzeApplicazioneProvvisoriaEmesseNoDecisioneCollegio(rpm);
 				break;
+			case 4:
+				ppsmasdao.ricercaProcedimentiPriviProvvedimenti(rpm);
+				break;
 			default:
 				throw new F3BException(
 						"ExGetNumRicercaProcPerStatisticaMisureAlternative : Valore dell StatoProcedimento = "
 								+ rpm.getStatoProcedimento()
-								+ " non valido. Deve essere compreso nel range 0-3.");
+								+ " non valido. Deve essere compreso nel range 0-4.");
 			}
 
 			records = ppsmasdao.getNumRowsSelected();

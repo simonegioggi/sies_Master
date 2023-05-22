@@ -286,6 +286,7 @@ public interface ICostantiStatistiche {
 	public static final String VALUE_RICERCA_ORD_NON_EMESSE = "1";
 	public static final String VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DATA_ESECUTIVITA = "2";
 	public static final String VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO = "3";
+	public static final String VALUE_RICERCA_PROCEDIMENTI_PRIVI_PROVVEDIMENTI = "4";
 	public static final String PG_RICERCA_STATISTICA_MISURE_ALTER_678C1TERCPP = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/statistiche/RicercaStatisticaMisureAlter678c1tercpp.jsp";
 	// FINE MEV_9
