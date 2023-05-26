@@ -150,7 +150,10 @@ public class ActInserisciEsitoImpugnazioneSige extends ActionSiap
 		}
 
 		if (esito.equals(COD_ESITO_ANNULLA_CON_RINVIO)) {
-			aggiornaStatoFascicolo(COD_ACCOGLIE_FISSA_UDIENZA, impugnazione.getDataDecisione());
+			// Ticket#202305030118 — Si corregge lo stato del fascicolo
+			//aggiornaStatoFascicolo(COD_ACCOGLIE_FISSA_UDIENZA, impugnazione.getDataDecisione());
+			aggiornaStatoFascicolo(COD_ANNULLA_CON_RINVIO, impugnazione.getDataDecisione());
+			// Ticket#202305030118 - FINE
 		}
 
 		if (esito.equals(COD_ESITO_ACCOGLIE_FISSA_UDIENZA)) {
