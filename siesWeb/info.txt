@@ -10,4 +10,3 @@ Comprende i seguenti Ticket MAC:
     -	siap.sius.scadenzario.controller.IScadenzarioSius.java
     -	siap.sius.scadenzario.controller.ScadenzarioSiusController.java
     -	siap.sius.scadenzario.dao.ScadenzarioSiusSqlDAO.java
-	-	/jsp/files/siap/sius/scadenzario/LoadRicercaScadenzarioSius.jsp
