@@ -2,4 +2,12 @@ RELEASE_12.4.30.0	-->	nato dal branch "release_12.4.29.0" in data 29/05/2023
 
 Comprende i seguenti Ticket MAC:
 
-1)	
+1)	Ticket#202305250112 - SIUS UDS MASSA-scadenziario indica anche i procedimenti dell'UDS di Genova
+	Il problema era legato al fatto che la ricerca non filtrava per ufficio.
+	Per la risoluzione della problematica è stato aggiunto nella ricerca il filtro per codice ufficio utente connesso.
+	Classi modificate:
+    -	siap.sius.scadenzario.action.ActRicercaScadenzarioSius.java
+    -	siap.sius.scadenzario.controller.IScadenzarioSius.java
+    -	siap.sius.scadenzario.controller.ScadenzarioSiusController.java
+    -	siap.sius.scadenzario.dao.ScadenzarioSiusSqlDAO.java
+	-	/jsp/files/siap/sius/scadenzario/LoadRicercaScadenzarioSius.jsp
