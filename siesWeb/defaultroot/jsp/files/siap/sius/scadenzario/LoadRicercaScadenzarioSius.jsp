@@ -11,7 +11,7 @@
 
 <html>
 <head>
-  <title> [S.I.E.S.] - Scadenzario Simeone - </title>
+  <title> [S.I.E.S.] - Scadenzario - </title>
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
@@ -27,12 +27,14 @@
           return false;
          }
       }
+      
     if(!(document.f.tipo[0].checked || document.f.tipo[1].checked || document.f.tipo[2].checked|| document.f.tipo[3].checked) )
     {
       alert("E' obbligatorio selezionare almeno un criterio");
       return false;
     }
-   document.f.submit();
+    
+    return true;
    }
   </script>
  </head>
@@ -72,11 +74,11 @@
         <td class="l"><input type="radio" name="tipo" value="intervallo" ></td>
         <td class="L" width="40%">
           entro:  Anni
-          <input title="Anni" size="2" maxlength="2" value="" type="text" name="<%=ICostantiScadenzarioSius.CAMPO_ANNI_SCADENZA%>"  >
+          <input title="Anni" size="2" maxlength="2" value="" type="text" name="<%=ICostantiScadenzarioSius.CAMPO_ANNI_SCADENZA%>"  onkeypress="return TicTabNumField(this,event)">
           Mesi
-          <input title="Mesi" size="2" maxlength="2" value="" type="text" name="<%= ICostantiScadenzarioSius.CAMPO_MESI_SCADENZA%>"  >
+          <input title="Mesi" size="2" maxlength="2" value="" type="text" name="<%= ICostantiScadenzarioSius.CAMPO_MESI_SCADENZA%>"  onkeypress="return TicTabNumField(this,event)">
           Giorni
-          <input title="Giorni" size="2" maxlength="2" value="" type="text" name="<%= ICostantiScadenzarioSius.CAMPO_GIORNI_SCADENZA %>"  >
+          <input title="Giorni" size="2" maxlength="2" value="" type="text" name="<%= ICostantiScadenzarioSius.CAMPO_GIORNI_SCADENZA %>"  onkeypress="return TicTabNumField(this,event)">
         </td>
         <td class="l" width="30%" colspan=2></td>
       </tr>
@@ -92,13 +94,14 @@
 <br>
 
     <tr>
-          <td colspan="2">
-              <INPUT class="bottone" type="button"   name="RICERCA" value="Ricerca" onClick="javascript:return verifica()">
-          </td>
-        </tr>
+		<td colspan="2">
+		    <INPUT class="bottone" type="submit"  name="RICERCA" value="Ricerca">
+		  </td>
+		</tr>
     </table>
     <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>" >
   </form>
+  
   <script language="JavaScript" type="text/javascript">
     var frmvalidator = new Validator("f");
     frmvalidator.addValidation("<%=ICostantiScadenzarioSius.CAMPO_ANNI_SCADENZA%>","numeric");
@@ -112,3 +115,4 @@
 </body>
 
 </html>
+
