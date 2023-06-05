@@ -1,45 +1,4 @@
-MEV_2023-13	-->	nato dal branch "release_12.4.27.0" in data 21/02/2023
+release_12.5.0.0 nato dal branch MEV_2023-13 in data 05/06/2023
 
-Richiesta scheda 2023-13 - APP/SICP/SIES - pagamenti PagoPA per pene pecuniarie.
-
-Premessa:
-Si trasmettono i requisiti relativi per rendere operative le previsioni degli artt. 460 e 660 c.p.p. 
-rispettivamente per cognizione ed esecuzione. Allo stesso modo si chiede di implementare le medesime
-funzionalità in relazione ai casi di pagamento dell'oblazione (ex art. 162 c.p.).
-
-Applicativi:
-WorkFlow Manager (WFM) - da rinominarsi in Applicativo Area Penale (APP) - RegeWeb/SICP - SIES.
-
-Uffici interessati dalla modifica:
-tutti gli uffici requirenti e giudicanti di primo grado.
-
-Requisiti funzionali:
-Servizi PST da interfacciare:
-A. Invocare un servizio per la generazione del Bollettino (quando viene creato un bollettino viene in 
-	automatico generato uno stato ad esso associato, identificativo IUV);
-B. Invocare un servizio per avere aggiornamenti sullo stato del bollettino.
-
-Flusso:
-1) Generazione bollettino (Sistema Penale --> PST): Quando viene generato un atto esecutivo o provvedimento 
-	del giudice con obbligo di pagamento, o altri eventi (ad esempio proroga di un pagamento scaduto) sarà 
-	possibile effettuare l'azione “Genera Bollettino”, richiamando il servizio del PST che genera il 
-	bollettino di pagamento e eventualmente anche quello rateizzato. Il servizio del PST restituisce il 
-	bollettino e lo IUV che lo identifica univocamente;
-2) Il sistema penale mostrerà all'utente cancelliere un record con le informazioni opportune (IUV, scadenza, 
-	stato, link al pdf);
-3) Tasto STAMPA: l'utente dovrà poter stampare il bollettino, contenente altresì le informazioni relative al 
-	procedimento e al titolo di pagamento, che verrà notificato al destinatario finale che dovrà procedere al 
-	pagamento (online o presso qualsiasi sportello);
-4) Aggiornamento STATO (Sistema Penale --> PST): il sistema penale invocherà il servizio del PST (una volta 
-	al giorno) per aggiornare lo stato del pagamento. Infatti, quando verrà effettuato il pagamento il PST 
-	(collegandosi a PagoPA) si aggiorna di conseguenza;
-5) I sistemi penali verranno aggiornati in base allo stato del pagamento, ed alla scadenza andrà scatenata 
-	un'azione (alert o simili) di notifica sul sistema.
-
-Note:
-• Se il pagamento scade non è più possibile pagarlo, ed in caso di proroga da parte del giudice sarà 
-	necessario generare un nuovo bollettino, in questo caso riabilitando il tasto “Genera Bollettino”. 
-	Questo dovrà accadere anche in caso di rate non pagate totalmente. Va considerato il caso di pagamento 
-	parziale con relative tracciamento.
-• Successivamente all'invio della presente richiesta di scheda l'Amministrazione provvederà ad inviare al RTI 
-	la lista degli atti coinvolti.
+Dopo il collaudo positivo della suddetta MEV si stacca il nuovo 
+branch che prende una nuova numerazione!
