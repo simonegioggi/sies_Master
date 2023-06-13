@@ -48,10 +48,14 @@ function tornaIndietro(action) {
 <body class="corpo">
 <table>
     <tr>
-      	<td class="LBG"><a href="Javascript:window.print();"><img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+      	<td class="LBG">
+      		<a href="Javascript:window.print();">
+      			<img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
+      		</a>
+      	</td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
+			<font class="campo">Richiesta a PagoPA Generazione Primo Bollettino Pagamento Pena Pecuniaria</font>
       	</td>
       	<td class="LBG"><!-- Tasto indietro alla Griglia dei dati analitici -->
         	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">

@@ -27,6 +27,13 @@ import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * Classe per la stampa massiva dei bollettini
+ *
+ * @author sgioggi
+ * @since MEV_2023-33
+ * @version 1.0
+ */
 public class ActStampaMassivaBollettini extends ActionSiap {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);

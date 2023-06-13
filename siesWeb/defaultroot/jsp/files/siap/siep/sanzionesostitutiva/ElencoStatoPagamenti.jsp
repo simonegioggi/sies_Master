@@ -1,4 +1,4 @@
-<%-- MEV_2023-13: aggiunta pagina --%>
+<%-- MEV_2023-33: aggiunta pagina --%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 <%@ page import="f3b.util.Utils"%>
@@ -62,9 +62,9 @@ function tornaIndietro(action) {
         	</a>
 		</td>
 		<!-- BOTTONE DI STAMPA -->
-<%-- 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
-<%--        		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/> --%>
-<%--       	</jsp:include> --%>
+		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
+       		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/>
+      	</jsp:include>
 	</tr>
 </table>
 <br>
@@ -146,9 +146,11 @@ if (elencoStatoPagamenti.size() == 0) {
 %>
       	<td class="<%=coloreClasse%>"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
       	<td class="c">
-        <%--<a href="javascript:eseguiAzione('Dettaglio', <%=bpm.getIdBollettinoPagopa()%>)"> 
+        	<%--
+        	<a href="javascript:eseguiAzione('Dettaglio', <%=bpm.getIdBollettinoPagopa()%>)"> 
 				<img src="/images/dettagli.gif" width="12" height="12" alt="Dettaglio Bollettino" border="0">
-          	</a>&nbsp;&nbsp;&nbsp;--%>
+          	</a>&nbsp;&nbsp;&nbsp;
+          	--%>
       		<a href="javascript:eseguiAzione('Stampa', <%=bpm.getIdBollettinoPagopa()%>)">
 				<img src="/images/print24.gif" alt="Stampa Bollettino" width="12" height="12" border="0">
 			</a>
