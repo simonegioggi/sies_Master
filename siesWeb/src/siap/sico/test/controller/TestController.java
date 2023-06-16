@@ -5,12 +5,22 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Iterator;
 import java.util.Vector;
 
 import javax.jms.QueueConnection;
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.log4j.Logger;
@@ -33,20 +43,8 @@ import siap.sico.versione.util.VersionProperties;
 import siap.sico.webservice.config.NscProperties;
 
 /**
- * <p>
- * Title: TestController
- * </p>
- * <p>
- * Description: Classe che realizza il test del sistema SIES interrogando varie componeti del nostro sistema e
- * compilando il documento di test
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
- * not attributable 1.0
+ * Title: TestController Description: Classe che realizza il test del sistema SIES interrogando varie
+ * componenti del nostro sistema e compilando il documento di test
  */
 @SuppressWarnings("rawtypes")
 public class TestController {
@@ -55,17 +53,16 @@ public class TestController {
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	/**
-	 * UNico metodo publico che stampa i risultati del test del sistema
+	 * Unico metodo publico che stampa i risultati del test del sistema
 	 *
 	 * @param aUtente
-	 * @return
+	 * @return ByteArrayOutputStream
 	 * @throws F3BException
 	 */
 	public ByteArrayOutputStream ExTestSistema(UtenteModel aUtente, UfficioModel aUfficio)
 			throws F3BException {
 
 		ByteArrayOutputStream lByteArrayOut = null;
-
 		TestModel lTest = new TestModel();
 
 		// Test OpenJMS
@@ -94,12 +91,18 @@ public class TestController {
 			lTest.setTestWSIscriviProvvedimentoEsecuzione(interrogateWS("wsipe"));
 			lTest.setTestWSTrasferisciFoglioComplementare(interrogateWS("wstfc"));
 			lTest.setTestWSRichiestaCertificato(interrogateWS("wsrc"));
+			// MEV_2023-33 aggiunti due controlli per endpoint address PagoPA-PST
+			lTest.setTestWSServiziInvioPagamentiTelematici(interrogateWS("wssipt"));
+			lTest.setTestWSServiziConsultazionePagamentiTelematici(interrogateWS("wsscpt"));
 		} catch (Exception ex) {
+			lTest.setTestWebServer(ex.toString());
 			lTest.setTestWSIscriviProvvedimentoProvvisorio(ex.toString());
 			lTest.setTestWSIscriviProvvedimentoEsecuzione(ex.toString());
 			lTest.setTestWSTrasferisciFoglioComplementare(ex.toString());
 			lTest.setTestWSRichiestaCertificato(ex.toString());
-			lTest.setTestWebServer(ex.toString());
+			// MEV_2023-33 aggiunti due controlli per endpoint address PagoPA-PST
+			lTest.setTestWSServiziInvioPagamentiTelematici(ex.toString());
+			lTest.setTestWSServiziConsultazionePagamentiTelematici(ex.toString());
 		}
 
 		String lBDINome = JMSProperties.getInstance().getProperty("JMS_LOCAL_MITTENTE");
@@ -127,8 +130,8 @@ public class TestController {
 						lTest.setErroreProgressivo(
 								"con progressivo ERRATO. Nel file di configurazione e' presente "
 										+ lProgressivo + " ma dovrebbe essere " + lCode.getDescrizione()
-										+ ". Provvedere alla sostituzione del paramentro nel file f3b.properties nella directory "
-										+ lTest.getProperties() + ".");
+										+ ". Provvedere alla sostituzione del paramentro nel file "
+										+ "f3b.properties nella directory " + lTest.getProperties() + ".");
 					}
 					lTrovato = true;
 				}
@@ -136,8 +139,8 @@ public class TestController {
 
 			if (!lTrovato) {
 				lTest.setErroreProgressivo("con progressivo ERRATO. Nel file di configurazione e' presente "
-						+ lProgressivo
-						+ " ma la descrizione della BDI non trova riscontro nella tabella dei CodiciBDI JMS_CODE.");
+						+ lProgressivo + " ma la descrizione della BDI non trova riscontro nella tabella "
+						+ "dei CodiciBDI JMS_CODE.");
 			}
 		}
 
@@ -216,8 +219,10 @@ public class TestController {
 	 */
 	private String interrogateWS(String cases) throws F3BException {
 
+		// MEV_2023-33 aggiunte due variabili per endpoint address PagoPA-PST
 		String messaggio = "", iscriviProvvedimentoProvvisorio = "", iscriviProvvedimentoEsecuzione = "",
-				trasferisciFoglioComplementare = "", richiestaCertificato = "";
+				trasferisciFoglioComplementare = "", richiestaCertificato = "",
+				serviziInvioPagamentiTelematici = "", serviziConsultazionePagamentiTelematici = "";
 		NscProperties nscProperty = NscProperties.getInstance();
 		try {
 			if ("webserver".equals(cases)) {
@@ -227,8 +232,8 @@ public class TestController {
 				siesLogger.info("Indirizzo pagina Web SIES NSC: #" + nscServer + "#");
 				String[] resp = testConnection(nscServer);
 				if ("200".equals(resp[0]))
-					messaggio = "La pagina Web di Interconnessione SIES-NSC e' disponibile all'indirizzo: "
-							+ nscServer;
+					messaggio = "La pagina Web di Interconnessione SIES-NSC e' disponibile "
+							+ "all'indirizzo: " + nscServer;
 				else
 					messaggio = "ERRORE: " + resp[1] + ". Pagina web non disponibile all'indirizzo: "
 							+ nscServer;
@@ -240,8 +245,8 @@ public class TestController {
 						+ iscriviProvvedimentoEsecuzione + "#");
 				String[] resp = testConnection(iscriviProvvedimentoEsecuzione);
 				if ("200".equals(resp[0]))
-					messaggio = "Il Web Service di Iscrizione Provvedimento Esecutivo e' disponibile all'indirizzo: "
-							+ iscriviProvvedimentoEsecuzione;
+					messaggio = "Il Web Service di Iscrizione Provvedimento Esecutivo e' disponibile "
+							+ "all'indirizzo: " + iscriviProvvedimentoEsecuzione;
 				else
 					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
 							+ iscriviProvvedimentoEsecuzione;
@@ -253,8 +258,8 @@ public class TestController {
 						+ iscriviProvvedimentoProvvisorio + "#");
 				String[] resp = testConnection(iscriviProvvedimentoProvvisorio);
 				if ("200".equals(resp[0]))
-					messaggio = "Il Web Service di Iscrizione Provvedimento Provvisorio e' disponibile all'indirizzo: "
-							+ iscriviProvvedimentoProvvisorio;
+					messaggio = "Il Web Service di Iscrizione Provvedimento Provvisorio e' disponibile "
+							+ "all'indirizzo: " + iscriviProvvedimentoProvvisorio;
 				else
 					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
 							+ iscriviProvvedimentoProvvisorio;
@@ -266,8 +271,8 @@ public class TestController {
 						+ trasferisciFoglioComplementare + "#");
 				String[] resp = testConnection(trasferisciFoglioComplementare);
 				if ("200".equals(resp[0]))
-					messaggio = "Il Web Service di Trasferimento Foglio Complementare e' disponibile all'indirizzo: "
-							+ trasferisciFoglioComplementare;
+					messaggio = "Il Web Service di Trasferimento Foglio Complementare e' disponibile "
+							+ "all'indirizzo: " + trasferisciFoglioComplementare;
 				else
 					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
 							+ trasferisciFoglioComplementare;
@@ -281,11 +286,39 @@ public class TestController {
 				else
 					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
 							+ richiestaCertificato;
+			} else if ("wssipt".equals(cases)) {
+				// MEV_2023-33 aggiunti due casi per endpoint address PagoPA-PST
+				serviziInvioPagamentiTelematici = F3BProperties.getProperty("EAPPA_SIPT");
+				siesLogger.info("Indirizzo WS SERVIZI INVIO PAGAMENTI TELEMATICI: #"
+						+ serviziInvioPagamentiTelematici + "#");
+				disableSslVerification();
+				String[] resp = testConnection(serviziInvioPagamentiTelematici);
+				// String[] resp = testConnectionPagoPA(serviziInvioPagamentiTelematici);
+				if ("200".equals(resp[0]))
+					messaggio = "Il Web Service di Servizi Invio Pagamenti Telematici e' disponibile "
+							+ "all'indirizzo: " + serviziInvioPagamentiTelematici;
+				else
+					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
+							+ serviziInvioPagamentiTelematici;
+			} else if ("wsscpt".equals(cases)) {
+				// MEV_2023-33 aggiunti due casi per endpoint address PagoPA-PST
+				serviziConsultazionePagamentiTelematici = F3BProperties.getProperty("EAPPA_SCPT");
+				siesLogger.info("Indirizzo WS SERVIZI CONSULTAZIONE PAGAMENTI TELEMATICI: #"
+						+ serviziConsultazionePagamentiTelematici + "#");
+				disableSslVerification();
+				String[] resp = testConnection(serviziConsultazionePagamentiTelematici);
+				// String[] resp = testConnectionPagoPA(serviziConsultazionePagamentiTelematici);
+				if ("200".equals(resp[0]))
+					messaggio = "Il Web Service di Servizi Consultazione Pagamenti Telematici e' disponibile"
+							+ " all'indirizzo: " + serviziConsultazionePagamentiTelematici;
+				else
+					messaggio = "ERRORE: " + resp[1] + ". Web Service non disponibile all'indirizzo: "
+							+ serviziConsultazionePagamentiTelematici;
 			} else
 				messaggio = "ERRORE GENERICO";
-		} catch (MalformedURLException mue) {
+		} catch (MalformedURLException murle) {
 			messaggio = "ERRORE: URL inesistente";
-			mue.printStackTrace();
+			murle.printStackTrace();
 		} catch (RemoteException re) {
 			messaggio = "ERRORE: " + re.getMessage();
 			re.printStackTrace();
@@ -293,7 +326,10 @@ public class TestController {
 			messaggio = "ERRORE: " + wse.getMessage();
 			wse.printStackTrace();
 		} catch (IOException ioe) {
-			messaggio = "ERRORE: " + ioe.getMessage();
+			if (ioe instanceof UnknownHostException)
+				messaggio = "ERRORE: il Web Service " + ioe.getMessage() + " NON e' disponibile";
+			else
+				messaggio = "ERRORE: " + ioe.getMessage();
 			ioe.printStackTrace();
 		} finally {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -339,6 +375,112 @@ public class TestController {
 		resp[0] = code;
 		resp[1] = msg;
 		return resp;
+	}
+
+	/*
+	 * ISSUE MEV : aggiunto metodo di test connessione Numero MEV : 33 Autore : sgioggi Data : 8 giu 2023
+	 * Branch : MEV_33
+	 */
+	// private String[] testConnectionPagoPA(String endpointAddress) throws F3BException, RemoteException {
+	//
+	// String code = "200", msg = "";
+	// if (endpointAddress.contains("Consultazione")) {
+	// ServiziConsultazionePagamentiTelematiciBeanServiceLocator scptbsl = new
+	// ServiziConsultazionePagamentiTelematiciBeanServiceLocator();
+	// scptbsl.setServiziConsultazionePagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
+	// ServiziConsultazionePagamentiTelematici scpt;
+	// try {
+	// scpt = scptbsl.getServiziConsultazionePagamentiTelematiciSOAPPort();
+	// scpt.elencoPagamenti("", "", "", "", "", "", null, null, 0, 0);
+	// } catch (ServiceException e) {
+	// code = "-1";
+	// msg = e.getMessage();
+	// throw new F3BException(e);
+	// } catch (RemoteException e) {
+	// code = "-1";
+	// msg = e.getMessage();
+	// throw e;
+	// }
+	// } else {
+	// ServiziInvioPagamentiTelematiciBeanServiceLocator service = new
+	// ServiziInvioPagamentiTelematiciBeanServiceLocator();
+	// service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
+	// ServiziInvioPagamentiTelematici sipt;
+	// try {
+	// sipt = service.getServiziInvioPagamentiTelematiciSOAPPort();
+	// AnagraficaSoggetto as1 = new AnagraficaSoggetto("", "", "", "", "", "", "", "", "", "", "");
+	// AnagraficaSoggetto as2 = new AnagraficaSoggetto("", "", "", "", "", "", "", "", "", "", "");
+	// DatiSingoloVersamento[] dsvs = new DatiSingoloVersamento[1];
+	// DatiSingoloVersamento dsv = new DatiSingoloVersamento(null, "", "", null);
+	// dsvs[0] = dsv;
+	// DatiVersamento dv = new DatiVersamento(null, "", "", dsvs);
+	// sipt.generaAvviso(new RichiestaPagamentoTelematico("", "", "", as1, as2, dv, null));
+	// // sipt.generaAvviso(new RichiestaPagamentoTelematico("", "", "", null, null, null, null));
+	// } catch (ServiceException e) {
+	// if (!Utils.isNullObj(e) && e.toString().contains("soggettoPagatore")) {
+	// msg = e.getMessage();
+	// } else {
+	// code = "-1";
+	// msg = e.getMessage();
+	// throw new F3BException(e);
+	// }
+	// } catch (RemoteException e) {
+	// if (!Utils.isNullObj(e) && e.toString().contains("soggettoPagatore")) {
+	// msg = e.getMessage();
+	// } else {
+	// code = "-1";
+	// msg = e.getMessage();
+	// throw e;
+	// }
+	// }
+	// }
+	//
+	// String[] resp = new String[2];
+	// resp[0] = code;
+	// resp[1] = msg;
+	// // valore di ritorno
+	// return resp;
+	// }
+	// ***** FINE INTERVENTO MEV_33 *****//
+
+	private static void disableSslVerification() {
+		try {
+			// Create a trust manager that does not validate certificate chains
+			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
+
+				@Override
+				public void checkClientTrusted(X509Certificate[] chain, String authType)
+						throws CertificateException {
+				}
+
+				@Override
+				public void checkServerTrusted(X509Certificate[] chain, String authType)
+						throws CertificateException {
+				}
+			} };
+
+			// Install the all-trusting trust manager
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+			// Create all-trusting host name verifier
+			HostnameVerifier allHostsValid = new HostnameVerifier() {
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			};
+
+			// Install the all-trusting host verifier
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
