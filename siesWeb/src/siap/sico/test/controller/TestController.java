@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -43,8 +42,9 @@ import siap.sico.versione.util.VersionProperties;
 import siap.sico.webservice.config.NscProperties;
 
 /**
- * Title: TestController Description: Classe che realizza il test del sistema SIES interrogando varie
- * componenti del nostro sistema e compilando il documento di test
+ * Title: TestController 
+ * Description: Classe che realizza il test del sistema SIES interrogando varie
+ * 				componenti del nostro sistema e compilando il documento di test
  */
 @SuppressWarnings("rawtypes")
 public class TestController {
@@ -291,9 +291,7 @@ public class TestController {
 				serviziInvioPagamentiTelematici = F3BProperties.getProperty("EAPPA_SIPT");
 				siesLogger.info("Indirizzo WS SERVIZI INVIO PAGAMENTI TELEMATICI: #"
 						+ serviziInvioPagamentiTelematici + "#");
-				disableSslVerification();
-				String[] resp = testConnection(serviziInvioPagamentiTelematici);
-				// String[] resp = testConnectionPagoPA(serviziInvioPagamentiTelematici);
+				String[] resp = testConnectionPagoPA(serviziInvioPagamentiTelematici + "?WSDL");
 				if ("200".equals(resp[0]))
 					messaggio = "Il Web Service di Servizi Invio Pagamenti Telematici e' disponibile "
 							+ "all'indirizzo: " + serviziInvioPagamentiTelematici;
@@ -305,9 +303,7 @@ public class TestController {
 				serviziConsultazionePagamentiTelematici = F3BProperties.getProperty("EAPPA_SCPT");
 				siesLogger.info("Indirizzo WS SERVIZI CONSULTAZIONE PAGAMENTI TELEMATICI: #"
 						+ serviziConsultazionePagamentiTelematici + "#");
-				disableSslVerification();
-				String[] resp = testConnection(serviziConsultazionePagamentiTelematici);
-				// String[] resp = testConnectionPagoPA(serviziConsultazionePagamentiTelematici);
+				String[] resp = testConnectionPagoPA(serviziConsultazionePagamentiTelematici + "?WSDL");
 				if ("200".equals(resp[0]))
 					messaggio = "Il Web Service di Servizi Consultazione Pagamenti Telematici e' disponibile"
 							+ " all'indirizzo: " + serviziConsultazionePagamentiTelematici;
@@ -326,10 +322,7 @@ public class TestController {
 			messaggio = "ERRORE: " + wse.getMessage();
 			wse.printStackTrace();
 		} catch (IOException ioe) {
-			if (ioe instanceof UnknownHostException)
-				messaggio = "ERRORE: il Web Service " + ioe.getMessage() + " NON e' disponibile";
-			else
-				messaggio = "ERRORE: " + ioe.getMessage();
+			messaggio = "ERRORE: " + ioe.getMessage();
 			ioe.printStackTrace();
 		} finally {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -374,76 +367,41 @@ public class TestController {
 		String[] resp = new String[2];
 		resp[0] = code;
 		resp[1] = msg;
+		// valore di ritorno
 		return resp;
 	}
 
 	/*
-	 * ISSUE MEV : aggiunto metodo di test connessione Numero MEV : 33 Autore : sgioggi Data : 8 giu 2023
-	 * Branch : MEV_33
+	 * ISSUE MEV : aggiunti metodi di test connessione per PagoPA - PST
+	 * Numero MEV : 2023-33 
+	 * Autore : sgioggi 
+	 * Data : 8 giu 2023
+	 * Branch : MEV_2023-33
 	 */
-	// private String[] testConnectionPagoPA(String endpointAddress) throws F3BException, RemoteException {
-	//
-	// String code = "200", msg = "";
-	// if (endpointAddress.contains("Consultazione")) {
-	// ServiziConsultazionePagamentiTelematiciBeanServiceLocator scptbsl = new
-	// ServiziConsultazionePagamentiTelematiciBeanServiceLocator();
-	// scptbsl.setServiziConsultazionePagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
-	// ServiziConsultazionePagamentiTelematici scpt;
-	// try {
-	// scpt = scptbsl.getServiziConsultazionePagamentiTelematiciSOAPPort();
-	// scpt.elencoPagamenti("", "", "", "", "", "", null, null, 0, 0);
-	// } catch (ServiceException e) {
-	// code = "-1";
-	// msg = e.getMessage();
-	// throw new F3BException(e);
-	// } catch (RemoteException e) {
-	// code = "-1";
-	// msg = e.getMessage();
-	// throw e;
-	// }
-	// } else {
-	// ServiziInvioPagamentiTelematiciBeanServiceLocator service = new
-	// ServiziInvioPagamentiTelematiciBeanServiceLocator();
-	// service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
-	// ServiziInvioPagamentiTelematici sipt;
-	// try {
-	// sipt = service.getServiziInvioPagamentiTelematiciSOAPPort();
-	// AnagraficaSoggetto as1 = new AnagraficaSoggetto("", "", "", "", "", "", "", "", "", "", "");
-	// AnagraficaSoggetto as2 = new AnagraficaSoggetto("", "", "", "", "", "", "", "", "", "", "");
-	// DatiSingoloVersamento[] dsvs = new DatiSingoloVersamento[1];
-	// DatiSingoloVersamento dsv = new DatiSingoloVersamento(null, "", "", null);
-	// dsvs[0] = dsv;
-	// DatiVersamento dv = new DatiVersamento(null, "", "", dsvs);
-	// sipt.generaAvviso(new RichiestaPagamentoTelematico("", "", "", as1, as2, dv, null));
-	// // sipt.generaAvviso(new RichiestaPagamentoTelematico("", "", "", null, null, null, null));
-	// } catch (ServiceException e) {
-	// if (!Utils.isNullObj(e) && e.toString().contains("soggettoPagatore")) {
-	// msg = e.getMessage();
-	// } else {
-	// code = "-1";
-	// msg = e.getMessage();
-	// throw new F3BException(e);
-	// }
-	// } catch (RemoteException e) {
-	// if (!Utils.isNullObj(e) && e.toString().contains("soggettoPagatore")) {
-	// msg = e.getMessage();
-	// } else {
-	// code = "-1";
-	// msg = e.getMessage();
-	// throw e;
-	// }
-	// }
-	// }
-	//
-	// String[] resp = new String[2];
-	// resp[0] = code;
-	// resp[1] = msg;
-	// // valore di ritorno
-	// return resp;
-	// }
-	// ***** FINE INTERVENTO MEV_33 *****//
+	private String[] testConnectionPagoPA(String endpointAddress)
+			throws MalformedURLException, IOException {
+
+		URL url = new URL(endpointAddress);
+		HttpsURLConnection connections;
+		String code, msg;
+		disableSslVerification();
+		connections = (HttpsURLConnection) url.openConnection();
+		try {
+			code = "" + connections.getResponseCode();
+			msg = connections.getResponseMessage();
+		} catch (Exception e) {
+			code = "-1";
+			msg = e.getMessage();
+		}
+		String[] resp = new String[2];
+		resp[0] = code;
+		resp[1] = msg;
+		// valore di ritorno
+		return resp;
+	}
 
 	private static void disableSslVerification() {
+
 		try {
 			// Create a trust manager that does not validate certificate chains
 			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
@@ -482,5 +440,6 @@ public class TestController {
 			e.printStackTrace();
 		}
 	}
+	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 }
