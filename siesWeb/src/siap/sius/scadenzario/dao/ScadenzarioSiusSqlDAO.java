@@ -60,10 +60,19 @@ public class ScadenzarioSiusSqlDAO extends SqlDAO {
 		setStatement(lSql);
 	}
 
-	public void ricercaScadenzarioSiusPerTipoDate(String aTipoScadenzario, Date aData1, Date aData2)
+	public void ricercaScadenzarioSiusPerTipoDate(String aTipoScadenzario, Date aData1, Date aData2
+			// Ticket#202305250112 - aggiunto filtro per codice ufficio 
+			, String aCodUfficio
+			)
 			throws DAOException {
 		String lSql = getSqlQuery();
 		lSql += " " + setCondizioniPerTipoDate(aTipoScadenzario, aData1, aData2);
+		
+		// Ticket#202305250112 - aggiunto filtro per codice ufficio
+		if (aCodUfficio!=null)
+			lSql += " AND COD_UFFICIO_INSERIMENTO = '"+aCodUfficio+"' ";
+		// Ticket#202305250112 - FINE
+		
 		// Modifica del 17/11/2016 MEV_50
 		// Aggiunto ordinamento per "Data Scadenza"
 		lSql += " ORDER BY DATA_FINE_SCADENZA";
