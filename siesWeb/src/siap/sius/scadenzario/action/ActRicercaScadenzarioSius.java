@@ -91,8 +91,13 @@ public class ActRicercaScadenzarioSius extends ActionSiap implements ICostantiSc
 		// LogF3B.getLogger()
 		siesLogger.warn("-------- ActRicercaScadenzario: data_fine-> " + data_fine);
 		IScadenzarioSius lCtrl = SIUSLookupRemote.getScadenzarioRemote();
-		Vector lVect = lCtrl.ExRicercaScadenzarioSius(aTipoScadenzario, data_ini, data_fine);
-
+		
+		// Ticket#202305250112 - aggiunto filtro per codice ufficio 
+		//Vector lVect = lCtrl.ExRicercaScadenzarioSius(aTipoScadenzario, data_ini, data_fine);
+		String lCodUfficio = getUfficioUtenteConnesso().getCodUfficio();
+		Vector lVect = lCtrl.ExRicercaScadenzarioSius(aTipoScadenzario, data_ini, data_fine, lCodUfficio);
+		// Ticket#202305250112 - FINE
+		
 		setRequestAttribute("scadenzarii", lVect);
 
 		setRequestAttribute("tipoScadenzario", getRequestStringParameter(CAMPO_COD_TIPO_SCADENZARIO));

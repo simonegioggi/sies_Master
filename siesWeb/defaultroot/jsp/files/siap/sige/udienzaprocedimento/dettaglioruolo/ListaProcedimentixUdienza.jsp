@@ -180,8 +180,10 @@
 //     }
 %>
     <td class=l>
-       <a href="Javascript:stampa2('<%=ISIAPCostantiWeb.PG_STAMPA%>',
-																	 '<%=IWebConstants.ACTION_FIELD%>=siap.sige.udienzaprocedimento.dettaglioruolo.action.ActStampaFlashVerbaleUdienza&<%=ICostantiFascicoloSige.CAMPO_ID_FASCICOLO_SIGE%>=<%=procedimento.getIdFasSIGE()%>&<%=ICostantiUdienzaProcedimentoSige.CAMPO_UDI_ID_UDIENZA_SIGE%>=<%=procedimento.getIdUdienza()%>&<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>=<%=udienza.getCodMagistratoAss()%>');">
+       <%-- Ticket#20230224014 - errata stampa su dettaglio ruolo udienza - Si toglie idMagistrato per evistare che stapi tuti i provvedimenti invece del solo fascicolo  --%>
+       <%-- <a href="Javascript:stampa2('<%=ISIAPCostantiWeb.PG_STAMPA%>','<%=IWebConstants.ACTION_FIELD%>=siap.sige.udienzaprocedimento.dettaglioruolo.action.ActStampaFlashVerbaleUdienza&<%=ICostantiFascicoloSige.CAMPO_ID_FASCICOLO_SIGE%>=<%=procedimento.getIdFasSIGE()%>&<%=ICostantiUdienzaProcedimentoSige.CAMPO_UDI_ID_UDIENZA_SIGE%>=<%=procedimento.getIdUdienza()%>&<%=ICostantiMagistrato.CAMPO_COD_MAGISTRATO%>=<%=udienza.getCodMagistratoAss()%>');"> --%>
+       <a href="Javascript:stampa2('<%=ISIAPCostantiWeb.PG_STAMPA%>','<%=IWebConstants.ACTION_FIELD%>=siap.sige.udienzaprocedimento.dettaglioruolo.action.ActStampaFlashVerbaleUdienza&<%=ICostantiFascicoloSige.CAMPO_ID_FASCICOLO_SIGE%>=<%=procedimento.getIdFasSIGE()%>&<%=ICostantiUdienzaProcedimentoSige.CAMPO_UDI_ID_UDIENZA_SIGE%>=<%=procedimento.getIdUdienza()%>');">
+       <%-- Ticket#20230224014 - FINE --%>
        <img src="/images/print.gif" alt="Stampa Verbale Udienza" width="12" height="12" border="0">
        </a>
     </td>
