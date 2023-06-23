@@ -1,12 +1,13 @@
-Branch MEV_2023-33 nato dal branch release_12.5.0.0 in data 05/06/2023
-					merge del branch release_12.5.1.0 in data 21/06/2023
+Branch MEV_2023-33: nato dal branch release_12.5.0.0 in data 05/06/2023
+				   merge del branch release_12.5.1.0 in data 21/06/2023
+Richiesta scheda 2023-33 - SIES - interventi Cartabia e pagoPA fase 2
 Requisiti funzionali lato SIEP:
 Completamento della versione Riscossione Pene Pecuniarie
 Il sistema consegnato con la scheda 2023-13 va integrato con le seguenti modifiche:
 	-	Template
 		-	Rivedere tabella posizioni giuridiche che deve comprendere solamente due valori:
 			-	Libero
-			.	Detenuto in istituto per qualsiasi titolo
+			-	Detenuto in istituto per qualsiasi titolo
 		-	Completamento template ingiunzione:
 			Quelli attualmente prodotti dall'applicativo vanno integrati nella parte dispositiva con la 
 			disposizione del giudice sulla tipologia di pagamento, unica soluzione rate mensili.
@@ -18,11 +19,10 @@ Il sistema consegnato con la scheda 2023-13 va integrato con le seguenti modific
 		-	Rinnovo ricerche per Omessa notifica
 		-	Richieste informazione
 		-	Rinnovazione notifiche
-		-	Irreperibilità?
+		-	Irreperibilità
 		-	Solleciti
 	-	Gestione civilmente obbligato
 	-	Gestione difensore
 	-	Annotazione notifiche
 	-	Generazione template
 	-	Emissione ordine ingiunzione di pagamento (prima notifica)
-Richiesta scheda 2023-33 - SIES - interventi Cartabia e pagoPA fase 2

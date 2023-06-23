@@ -9,11 +9,10 @@
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
 <%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel"%>
 
-<jsp:useBean id="modalita"           scope="request" class="java.lang.String"/>
-<jsp:useBean id="listaRateizzazioni" scope="request" class="java.util.Vector" />
+<jsp:useBean id="modalita"           		scope="request" class="java.lang.String"/>
+<jsp:useBean id="listaRateizzazioni" 		scope="request" class="java.util.Vector"/>
 <jsp:useBean id="dettaglioPenaComplessiva" 	scope="request" class="siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel"/>
-
-<jsp:useBean id="TornaQui"  scope="request" class="java.lang.String"/>
+<jsp:useBean id="TornaQui"  				scope="request" class="java.lang.String"/>
 
 <%
 PenaComplessivaModel     lPenCom = (dettaglioPenaComplessiva!= null && dettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva() != null) ? dettaglioPenaComplessiva.getPenaComplessivaSanzioneSostitutiva().getPenaComplessiva() : null;
@@ -30,10 +29,7 @@ if (lSanSos!=null && lSanSos.getSanzionePecuniariaMulta()!=null)
     importoTotale = importoTotale.add(lSanSos.getSanzionePecuniariaMulta());
 if (lSanSos!=null && lSanSos.getSanzionePecuniariaAmmenda()!=null)
     importoTotale = importoTotale.add(lSanSos.getSanzionePecuniariaAmmenda());
-%>
 
-
-<%
 int maxNumRate = ICostantiRateizzazionePP.NUM_MAX_RATE;
 String tipoRateizzazione = "U";
 int numRateDaModificare = 0;
@@ -42,7 +38,7 @@ String importoDaPagareD = "";
 
 String importoRataUnicaI = "";
 String importoRataUnicaD = "";
-String scadenzaRataUnica  = "";
+String scadenzaRataUnica  = "90";
 boolean isPresentiBollettini = false;
 if ("M".equals(modalita)) {
   RateizzazionePPModel primaRata = (RateizzazionePPModel)listaRateizzazioni.elementAt(0);
@@ -400,167 +396,162 @@ else
   </table>
 
 
-<% if (isPresentiBollettini) { %>
+<%
+if (isPresentiBollettini) {
+%>
 <br>
-  <table width="90%">
-    <tr>
-      <td class="L"><font style="color:red">Attenzione. Sono gia stati emessi dei bollettini. La modifica comportera' la concellazione degli stessi.</font></td>
+<table width="90%">
+	<tr>
+     	<td class="L"><font style="color:red">Attenzione. Sono gia stati emessi dei bollettini. La modifica comportera' la concellazione degli stessi.</font></td>
     </tr>
-  </table>
+</table>
 <br>
-<% } %>
-
-  <table width="90%">
+<%
+}
+%>
+<table width="90%">
     <tr>
-      <td class="Titolo" >Tipo Rateizzazione</td>
-    </tr>
-
+      	<td class="Titolo" >Tipo Rateizzazione</td>
+	</tr>
     <tr>
-       <td class="c">
-         Unica Soluzione &nbsp;<input type="radio" name="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>" id="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>"
-         value="U" checked  onClick="radioTipoPagamento();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         Pagamento Rateizzato  &nbsp; <input type="radio" name="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>" id="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>"
-         value="R"  onClick="radioTipoPagamento();">
-       </td>
+       	<td class="c">
+	         Unica Soluzione &nbsp;<input type="radio" name="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>" id="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>"
+	         value="U" checked  onClick="radioTipoPagamento();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	         Pagamento Rateizzato  &nbsp; <input type="radio" name="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>" id="<%=ICostantiRateizzazionePP.CAMPO_TIPO_RATEIZZAZIONE%>"
+	         value="R"  onClick="radioTipoPagamento();">
+       	</td>
     </tr>
-  </table>
-
+</table>
 <br>
-
-  <table width="90%">
+<table width="90%">
     <tr>
-      <td class="Titolo" colspan="4">Pagamento Unica Soluzione</td>
+      	<td class="Titolo" colspan="4">Pagamento Unica Soluzione</td>
     </tr>
     <tr>
-      <td class="L" >
-        <font class="label">Importo</font>
-      </td>
-      <td class="l">
-        <input type="text" title="Importo Intero" maxlength="10" size="10" style="text-align:right;"
-               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>" 
-               value="<%=importoRataUnicaI%>"
-               onkeypress="return TicTabNumField(this,event)">
-        ,
-        <input type="text" title="Importo Decimale" maxlength="2" size="2"
-               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>"
-               value="<%=importoRataUnicaD%>"
-               onkeypress="return TicTabNumField(this,event)" > &nbsp;&euro;
-      </td>
-      <td class="L">
-        <font class="label">termine di pagamento fissato entro</font>&nbsp;
-        <input type="text" title="giorni" maxlength="4" size="4" 
-               name="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI_RATA_UNICA%>" 
-               value="<%=scadenzaRataUnica%>"               
-               onkeypress="return TicTabNumField(this,event)">&nbsp;
-        giorni dalla notifica dell'avviso di pagamento        
-      </td>
-    </tr>
-  </table>
-  
+      	<td class="L" >
+        	<font class="label">Importo</font>
+      	</td>
+      	<td class="l">
+	        <input type="text" title="Importo Intero" maxlength="10" size="10" style="text-align:right;"
+	               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_I%>" 
+	               value="<%=importoRataUnicaI%>"
+	               onkeypress="return TicTabNumField(this,event)">
+	        ,
+	        <input type="text" title="Importo Decimale" maxlength="2" size="2"
+	               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_UNICA_D%>"
+	               value="<%=importoRataUnicaD%>"
+	               onkeypress="return TicTabNumField(this,event)" > &nbsp;&euro;
+      	</td>
+      	<td class="L">
+	        <font class="label">termine di pagamento fissato entro</font>&nbsp;
+	        <input type="text" title="giorni" maxlength="4" size="4" readonly="readonly"
+	               name="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI_RATA_UNICA%>" 
+	               value="<%=scadenzaRataUnica%>"               
+	               onkeypress="return TicTabNumField(this,event)">&nbsp;
+	        giorni dalla notifica dell'avviso di pagamento        
+		</td>
+	</tr>
+</table>
 <br>  
-  
-  <table width="90%">
-    <tr>
-      <td class="Titolo" colspan="3">Pagamento Rateizzato </td>
+<table width="90%">
+	<tr>
+		<td class="Titolo" colspan="3">Pagamento Rateizzato</td>
     </tr>
-    <%
-    for (int i=0;i<maxNumRate;i++) {
-      String nRate = "";
-      String importoI = "";
-      String importoD = "";
-      String scadenza = "";
-      
-      String disabled = "";
-      if (i>0) disabled = "disabled";
-      
-      String display = "";
-      if (i==0) display = "block";
-      
-      if (i>0) display = "none";
-      
-      if (tipoRateizzazione.equals("R")) {
-        if (i<numRateDaModificare){
-          RateizzazionePPModel rata = (RateizzazionePPModel) listaRateizzazioni.elementAt(i);
-          nRate    = StringUtils.toStringJSP(rata.getNumeroRate(),"");
-          importoI = StringUtils.getParteIntera   (rata.getImportoRata());
-          importoD = StringUtils.getParteDecimale (rata.getImportoRata());
-          scadenza = StringUtils.toStringJSP(rata.getScadenzaGiorni(),"");
-          
-          disabled = "";
-          display = "block";
-        }
-      }
-
-    %>
-    
-    <tr style="display:<%=display%>" id="rata_<%=i%>">
-      <td class="L">
-        <font class="label">N.ro rate</font>
-        <input type="text" title="Numero rate" maxlength="2" size="10" <%=disabled%>
-               name="<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_<%=i%>" 
-               id="<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_<%=i%>"
-               value="<%=StringUtils.toStringJSP(nRate,"")%>"
-               onkeypress="return TicTabNumField(this,event)">      
-      </td>
-      <td class="L">
-        <font class="label">Importo ciascuna rata</font>
-        <input type="text" title="Importo Intero" maxlength="10" size="10" <%=disabled%> style="text-align:right;"
-               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_<%=i%>" 
-               id="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_<%=i%>" 
-               value="<%=StringUtils.toStringJSP(importoI,"")%>"
-               onkeypress="return TicTabNumField(this,event)">
-        ,
-        <input type="text" title="Importo Decimale" maxlength="2" size="2" <%=disabled%>
-               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_<%=i%>"
-               id="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_<%=i%>"
-               value="<%=StringUtils.toStringJSP(importoD,"")%>"
-               onkeypress="return TicTabNumField(this,event)" >      
-      </td>
-      
-      <% if (i==0)  { %>
-      <td class="L" nowrap>
-        <font class="label">termine di pagamento della prima rata fissato entro</font>
-          <input type="text" title="giorni" maxlength="4" size="4" <%=disabled%>
-                 name="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_<%=i%>"   
-                 id="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_<%=i%>"        
-                 value="<%=StringUtils.toStringJSP(scadenza,"")%>"           
-                 onkeypress="return TicTabNumField(this,event)">
-          giorni dalla notifica dell'avviso di pagamento
-      </td>
-      <% } else { %>
-      <td valign="middle" class="c" id="tdCancella_<%=i%>" width="15px">&nbsp;</td>
-      <% } %>
-    </tr>
-    <% } %>
-  </table>
-  
-
-  
-  <table width="90%" id="tabAggiungi">
-    <tr>
-      <td class="l" colspan="100%">
-        <a href="Javascript:addUlterioreRata();" >
-          Aggiungi ulteriore rata
-        </a>
-      </td>
-    </tr>
-  </table>
-  
+<%
+for (int i = 0; i < maxNumRate; i++) {
+	String nRate = "";
+	String importoI = "";
+	String importoD = "";
+	String scadenza = "30";
+	
+	String disabled = "";
+	if (i>0) disabled = "disabled";
+	
+	String display = "";
+	if (i==0) display = "block";
+	
+	if (i>0) display = "none";
+	
+	if (tipoRateizzazione.equals("R")) {
+		if (i<numRateDaModificare) {
+		    RateizzazionePPModel rata = (RateizzazionePPModel) listaRateizzazioni.elementAt(i);
+		    nRate    = StringUtils.toStringJSP(rata.getNumeroRate(),"");
+		    importoI = StringUtils.getParteIntera   (rata.getImportoRata());
+		    importoD = StringUtils.getParteDecimale (rata.getImportoRata());
+		    scadenza = StringUtils.toStringJSP(rata.getScadenzaGiorni(),"");
+		    disabled = "";
+		    display = "block";
+	    }
+	}
+%>
+	<tr style="display:<%=display%>" id="rata_<%=i%>">
+		<td class="L">
+	        <font class="label">N.ro rate</font>
+	        <input type="text" title="Numero rate" maxlength="2" size="10" <%=disabled%>
+	               name="<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_<%=i%>" 
+	               id="<%=ICostantiRateizzazionePP.CAMPO_NUM_RATE%>_<%=i%>"
+	               value="<%=StringUtils.toStringJSP(nRate,"")%>"
+	               onkeypress="return TicTabNumField(this,event)">      
+      	</td>
+      	<td class="L">
+	        <font class="label">Importo ciascuna rata</font>
+	        <input type="text" title="Importo Intero" maxlength="10" size="10" <%=disabled%> style="text-align:right;"
+	               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_<%=i%>" 
+	               id="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_I%>_<%=i%>" 
+	               value="<%=StringUtils.toStringJSP(importoI,"")%>"
+	               onkeypress="return TicTabNumField(this,event)">
+	        ,
+	        <input type="text" title="Importo Decimale" maxlength="2" size="2" <%=disabled%>
+	               name="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_<%=i%>"
+	               id="<%=ICostantiRateizzazionePP.CAMPO_VALORE_RATA_D%>_<%=i%>"
+	               value="<%=StringUtils.toStringJSP(importoD,"")%>"
+	               onkeypress="return TicTabNumField(this,event)">      
+		</td>
+<%
+	if (i == 0) {
+%>
+		<td class="L" nowrap>
+	        <font class="label">termine di pagamento della prima rata fissato entro</font>
+	          <input type="text" title="giorni" maxlength="4" size="4" <%=disabled%>
+	                 name="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_<%=i%>"
+	                 id="<%=ICostantiRateizzazionePP.CAMPO_SCADENZA_GIORNI%>_<%=i%>"
+	                 value="<%=StringUtils.toStringJSP(scadenza,"")%>" readonly="readonly"
+	                 onkeypress="return TicTabNumField(this,event)">
+	          giorni dalla notifica dell'avviso di pagamento
+		</td>
+<%
+	} else {
+%>
+		<td valign="middle" class="c" id="tdCancella_<%=i%>" width="15px">&nbsp;</td>
+<%
+	}
+%>
+	</tr>
+<%
+}
+%>
+</table>
+<table width="90%" id="tabAggiungi">
+	<tr>
+		<td class="l" colspan="100%">
+        	<a href="Javascript:addUlterioreRata();">Aggiungi ulteriore rata</a>
+      	</td>
+	</tr>
+</table>
 <br> 
- 
-  <table cellspacing="2" cellpadding="2" width="90%">
-    <tr>
-      <td colspan="2">
-        <input class="bottone" type="submit" name="INSERISCI" value="Conferma">
-      </td>
+<table cellspacing="2" cellpadding="2" width="90%">
+	<tr>
+      	<td colspan="2">
+        	<input class="bottone" type="submit" name="INSERISCI" value="Conferma">
+      	</td>
     </tr>
-  </table>
+</table>
 </form>
 
 <script language="JavaScript" type="text/javascript">
-  var frmvalidator = new Validator("LoadInserisciRateizzazionePP");
+var frmvalidator = new Validator("LoadInserisciRateizzazionePP");
 
-  frmvalidator.setAddnlValidationFunction("Verify");
+frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>
 </html>
