@@ -13,6 +13,7 @@ import java.util.Date;
 
 import f3b.model.GenericModel;
 import f3b.util.StringUtils;
+import siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva;
 
 public class SanzioneSostitutivaModel extends GenericModel {
 
@@ -42,8 +43,14 @@ public class SanzioneSostitutivaModel extends GenericModel {
 	private String mStringaSanzione;
 	private String mPeriodoSanzione;
 	private BigDecimal mSanzionePecuniariaAmmenda;
+	
+	// MEV_2023-13 - Serve per distinguere tra SS e le nuove Pene sostitutive Pene Detentive Brevi
+	// il dato è recuperato dalla RV_ABBREVIATION della CG
+	private String mDescrCategoriaSanzione;
 
-	// COSTRUTTORE DI DEFAULT
+
+
+    // COSTRUTTORE DI DEFAULT
 	public SanzioneSostitutivaModel() {
 		this.mIdSanzioneSostitutiva = null;
 		this.mCodTipoSanzione = null;
@@ -65,7 +72,8 @@ public class SanzioneSostitutivaModel extends GenericModel {
 		this.mPenComIdPenaComplessiva = null;
 		this.mStringaSanzione = null;
 		this.mSanzionePecuniariaAmmenda = null;
-
+		
+		this.mDescrCategoriaSanzione = null; // MEV_2023-13
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -89,6 +97,8 @@ public class SanzioneSostitutivaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aModel.mDescrUfficioAggiornamento;
 		this.mPenComIdPenaComplessiva = aModel.mPenComIdPenaComplessiva;
 		this.mSanzionePecuniariaAmmenda = aModel.mSanzionePecuniariaAmmenda;
+		
+		this.mDescrCategoriaSanzione = aModel.mDescrCategoriaSanzione;// MEV_2023-13
 	}
 
 	// COSTRUTTORE MODEL
@@ -98,7 +108,9 @@ public class SanzioneSostitutivaModel extends GenericModel {
 			String aCodOperatoreInserimento, Date aDataInserimento, String aCodUfficioInserimento,
 			String aDescrUfficioInserimento, String aCodOperatoreAggiornamento, Date aDataAggiornamento,
 			String aCodUfficioAggiornamento, String aDescrUfficioAggiornamento,
-			BigDecimal aPenComIdPenaComplessiva, BigDecimal aSanzionePecuniariaAmmenda) {
+			BigDecimal aPenComIdPenaComplessiva, BigDecimal aSanzionePecuniariaAmmenda
+			, String aDescrCategoriaSanzione
+	        ) {
 		this.mIdSanzioneSostitutiva = aIdSanzioneSostitutiva;
 		this.mCodTipoSanzione = aCodTipoSanzione;
 		this.mDescrTipoSanzione = aDescrTipoSanzione;
@@ -118,6 +130,8 @@ public class SanzioneSostitutivaModel extends GenericModel {
 		this.mDescrUfficioAggiornamento = aDescrUfficioAggiornamento;
 		this.mPenComIdPenaComplessiva = aPenComIdPenaComplessiva;
 		this.mSanzionePecuniariaAmmenda = aSanzionePecuniariaAmmenda;
+		
+		this.mDescrCategoriaSanzione = aDescrCategoriaSanzione;// MEV_2023-13
 	}
 
 	//
@@ -208,6 +222,12 @@ public class SanzioneSostitutivaModel extends GenericModel {
 		return mSanzionePecuniariaAmmenda;
 	}
 
+	// MEV_2023-13 
+	public String getDescrCategoriaSanzione() {
+        return mDescrCategoriaSanzione;
+    }
+	// MEV_2023-13 - FINE
+
 	//
 	// METODI SET()
 	//
@@ -296,6 +316,11 @@ public class SanzioneSostitutivaModel extends GenericModel {
 		mSanzionePecuniariaAmmenda = aValore;
 	}
 
+	// MEV_2023-13
+    public void setDescrCategoriaSanzione(String mDescrCategoriaSanzione) {
+        this.mDescrCategoriaSanzione = mDescrCategoriaSanzione;
+    }
+    // MEV_2023-13 - FINE
 	/*****************************************************************************
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/
@@ -317,10 +342,11 @@ public class SanzioneSostitutivaModel extends GenericModel {
 				+ "[ mCodOperatoreAggiornamento = " + mCodOperatoreAggiornamento + " ]\n"
 				+ "[ mDataAggiornamento         = " + mDataAggiornamento + " ]\n"
 				+ "[ mCodUfficioAggiornamento   = " + mCodUfficioAggiornamento + " ]\n"
+				+ "[ mDescrCategoriaSanzione     = " + mDescrCategoriaSanzione + " ]\n"
 				+ "[ mSanzionePecuniariaAmmenda   = " + mSanzionePecuniariaAmmenda + " ]";
 		return lStr;
 	}
-
+	
 	public String toString2() {
 		String lStr = new String();
 
@@ -401,5 +427,19 @@ public class SanzioneSostitutivaModel extends GenericModel {
 		else
 			this.mPeriodoSanzione = null;
 	}
+	
+	
+	/**
+	 * Ritorna true se ilcodice appartiene alle nuove "Pene sostitutive Pene Detentive Brevi"
+	 * @return
+	 * @since MEV_2023-13
+	 */
+	public boolean isPenaSostitutiva () {
+	    if (ICostantiSanzioneSostitutiva.TIPO_PENA_SOSTITUTIVA_PS.equals(mDescrCategoriaSanzione))
+	        return true;
+	    else
+	        return false;
+	}
+	
 
 }

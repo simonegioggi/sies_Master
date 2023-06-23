@@ -341,7 +341,7 @@ public class InserisciPeriodoAltraMisuraModificaEMS extends ActionSiap implement
 				// Scrive la Data Fine dello Scadenzario Secondario
 				if (IPAMMod.getDataScadenza() != null) {
 					lScadenzarioSiusModSecond.setDataFineScadenza(IPAMMod.getDataScadenza());
-				} else // Se non trova la Data Scadenza del Periodo Altra Misura inserisce la Data Temine
+				} else // Se non trova la Data Scadenza del Periodo Altra Misura inserisce la Data Termine
 						// Attuale dell'Esec. Misura Sicurezza
 				{
 					lScadenzarioSiusModSecond.setDataFineScadenza(lEmsM.getDataTermineAttuale());

@@ -60,6 +60,8 @@ import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.notifica.dao.NotificaEventoSqlDAO;
 import siap.siep.notifica.dao.NotificaSqlDAO;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.pagoPA.dao.CivilmenteObbligatoSqlDAO;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneDAO;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.penaresidua.dao.PenaResiduaDAO;
@@ -983,6 +985,9 @@ public class EventoController extends SiapController implements IEvento {
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 		MagistratoSqlDAO lMagDAO = null;
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
+		
+		// MEV_2023-13 
+		CivilmenteObbligatoSqlDAO lCivilmenteObbSqlDao = null;
 
 		try {
 			lEveDao = new EventoSqlDAO(lConn);
@@ -990,6 +995,9 @@ public class EventoController extends SiapController implements IEvento {
 			lIstDao = new IstitutoDetenzioneSqlDAO(lConn);
 			lCampoNotaSqlDao = new CampoNotaSqlDAO(lConn);
 			lMagDAO = new MagistratoSqlDAO(lConn);
+			
+		    // MEV_2023-13 
+	        lCivilmenteObbSqlDao = new CivilmenteObbligatoSqlDAO (lConn);
 
 			lEveDao.ricercaEventoByKey(aEventoKey);
 
@@ -1094,6 +1102,28 @@ public class EventoController extends SiapController implements IEvento {
 					// Aggiunge l'AvvocatoSigeModel al model di Notifica
 					lEve.getNotifiche()[count].setAvvSige(lAvvSige);
 				}
+				
+	            // MEV_2023-13 - Preleva i Civilmente Obbligati
+				if (lEve.getNotifiche()[count].getIdCivilmenteObbligato() != null) {
+				    lCivilmenteObbSqlDao = new CivilmenteObbligatoSqlDAO (lConn);				    
+				    lCivilmenteObbSqlDao.ricercaCivilmenteObbligatoByKey (lEve.getNotifiche()[count].getIdCivilmenteObbligato());				    
+				    CivilmenteObbligatoModel lObblogatoModel = (CivilmenteObbligatoModel) lCivilmenteObbSqlDao.getModelByKey();
+				    
+				    lEve.getNotifiche()[count].setCivilmenteObbligato(lObblogatoModel);
+				}
+				
+                // Autorita Esterne Delegata
+                if (lEve.getNotifiche()[count].getAutEstIdAutoritaEstDeleg() != null) {
+                    lAutoritaSqlDao.ricercaAutoritaEsternaByKey(
+                            lEve.getNotifiche()[count].getAutEstIdAutoritaEstDeleg());
+                    AutoritaEsternaModel lAutorita = (AutoritaEsternaModel) lAutoritaSqlDao.getModelByKey();
+                    // Inserisce l'occorenza nel model delle notifiche.
+                    lEve.getNotifiche()[count].setAutoritaEsternaDelegata(lAutorita);
+                    lAutoritaSqlDao.stop();
+                }				
+				// MEV_2023-13 - FINE
+	            
+				
 				count++;
 			}
 
@@ -1132,6 +1162,8 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lCampoNotaSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lAvvSigeDao);
+			
+			cleanup(lCivilmenteObbSqlDao); //MEV_2023-13 
 		}
 		return lEve;
 	}

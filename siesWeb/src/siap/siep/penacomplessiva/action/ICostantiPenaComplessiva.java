@@ -65,6 +65,10 @@ public interface ICostantiPenaComplessiva
   public static final String CAMPO_VALUTA_IMPORTO_MULTA = "valutaImportoMulta";
   public static final String CAMPO_VALUTA_IMPORTO_AMMENDA = "valutaImportoAmmenda";
 
+  // MEV_2023-13
+  public static final String CAMPO_FLAG_PENA_SOSTITUTIVA = "FlagPenaSostitutiva";
+  // MEV_2023-13 - FINE
+  
   public static final String PG_LOAD_RICERCAPENACOMPLESSIVA   = IWebConstants.ROOT_DIR + "files/siap/siep/penacomplessiva/LoadRicercaPenaComplessiva.jsp";
   public static final String PG_LOAD_DETTAGLIOPENACOMPLESSIVA = IWebConstants.ROOT_DIR + "files/siap/siep/penacomplessiva/DettaglioPenaComplessiva.jsp";
   public static final String PG_RICERCAPENACOMPLESSIVA	      = IWebConstants.ROOT_DIR + "files/siap/siep/penacomplessiva/RicercaPenaComplessiva.jsp";

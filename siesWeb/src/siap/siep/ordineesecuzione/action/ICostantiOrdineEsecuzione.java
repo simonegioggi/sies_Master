@@ -56,7 +56,8 @@ public interface ICostantiOrdineEsecuzione
   public static final String TEMPLATE_NUOVA_PENA = "OE7";
   public static final String FOGLIO_COMPLEMENTARE = "foglio";
   public static final String ABILITA_NOTIFICA = "abilitanotifica";
-
+  public static final String ABILITA_CANCELLA = "abilitaCancella";
+  
   public static final String PG_LOAD_DETTAGLIO_OE_CONDANNATO_LIBERO = IWebConstants.ROOT_DIR + "files/siap/siep/ordineesecuzione/DettaglioOECondannatoLibero.jsp";
   public static final String PG_LOAD_DETTAGLIO_OE_CONDANNATO_LIBERO_SAN_SOS = IWebConstants.ROOT_DIR + "files/siap/siep/ordineesecuzione/DettaglioOECondannatoLiberoSanSos.jsp";
   public static final String PG_LOAD_DETTAGLIO_OE_ARRESTI_DOMICILIARI = IWebConstants.ROOT_DIR + "files/siap/siep/ordineesecuzione/DettaglioOEArrestiDomiciliari.jsp";

@@ -22,12 +22,6 @@
       // Funzione di caricamento dei Titoli Esecutivi selezionati
       function caricaTitoliEsecutivi()
       {
-    	  
-      	<%-- Ticket#202303020115 --%>
-    	var lTitoliEsecutivi = document.getElementsByName("lTitoliEsecutivi");
-    	var lDescSentenza = document.getElementsByName("lDescSentenza");
-    	<%-- Ticket#202303020115 - FINE --%>
-    	
         if (typeof (lTitoliEsecutivi.length) == "undefined")
         {
           if (lTitoliEsecutivi.checked)
@@ -61,11 +55,6 @@
 
       function selezionaDeselezionaTutti()
       {
-       	<%-- Ticket#202303020115 --%>
-       	var lTitoliEsecutivi = document.getElementsByName("lTitoliEsecutivi");
-       	var flagTutti = document.getElementsByName("flagTutti")[0];
-       	<%-- Ticket#202303020115 - FINE --%>
-        	
     	  if( flagTutti.checked == true ){
     		  if (typeof (lTitoliEsecutivi.length) == "undefined")
     	      {

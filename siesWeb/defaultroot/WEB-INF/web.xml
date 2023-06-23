@@ -127,6 +127,14 @@
     </servlet>
     <!-- FINE INTERVENTO PER SEGNALAZIONE m_dg.DOG07.06-08-2018.0025591.U -->
    
+   <!-- Servlet per istanziare Quartz -->
+  <servlet>
+       <servlet-name>QuartzInit</servlet-name>
+       <servlet-class>siap.siep.pagoPA.util.QuartzInit</servlet-class>
+       <load-on-startup>20</load-on-startup>
+  </servlet>
+   <!-- Servlet per istanziare Quartz FINE -->
+  
    
 	<!-- Inizio Blocco servelet-mapping AXIS -->
 	<servlet-mapping>
