@@ -18,6 +18,7 @@ import siap.sico.ufficio.model.UfficioModel;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.avvocato.model.AvvocatoSiepModel;
 import siap.siep.istitutodetenzione.model.IstitutoDetenzioneModel;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.rinnovo.model.RinnovoModel;
 import siap.sige.avvocato.model.AvvocatoSigeModel;
 import siap.sige.udienzaparti.model.AnagraficaPartiUdienzaModel;
@@ -59,8 +60,13 @@ public class NotificaModel extends GenericModel {
 	private BigDecimal mSollecito;
 	private BigDecimal mCssIdCssa;
 	private BigDecimal mAutEstIdAutoritaEstDeleg;
+	
+	// MEV_2023-13 
+	private BigDecimal mIdCivilmenteObbligato;	
+	private CivilmenteObbligatoModel mCivilmenteObbligato; 
+	// MEV_2023-13 - FINE
 
-	private AutoritaEsternaModel mAutoritaEsternaDelegata;
+    private AutoritaEsternaModel mAutoritaEsternaDelegata;
 
 	// PM - 20030609
 	private String mDescrUfficioDestinatario;
@@ -140,6 +146,8 @@ public class NotificaModel extends GenericModel {
 		this.mAvvParteUdienza = null;
 		this.mFlagDomicilioDifensore = null;
 		this.mPartiUdienza = null;
+		this.mIdCivilmenteObbligato = null; //MEV_2023-13 
+		this.mCivilmenteObbligato = null; //MEV_2023-13 
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -196,6 +204,9 @@ public class NotificaModel extends GenericModel {
 		this.mAvvParteUdienza = aModel.mAvvParteUdienza;
 		this.mFlagDomicilioDifensore = aModel.mFlagDomicilioDifensore;
 		this.mPartiUdienza = aModel.mPartiUdienza;
+		
+		this.mIdCivilmenteObbligato = aModel.mIdCivilmenteObbligato; //MEV_2023-13 
+		this.mCivilmenteObbligato = aModel.mCivilmenteObbligato; //MEV_2023-13 
 	}
 
 	// COSTRUTTORE MODEL
@@ -211,7 +222,9 @@ public class NotificaModel extends GenericModel {
 			BigDecimal aCssIdCssa, AutoritaEsternaModel aAutorita,
 			// modifica relativa al tipo istituto
 			String aIstDetIdIstitutoDetenzione, IstitutoDetenzioneModel aIstitutoDetenzione,
-			BigDecimal aCurIdCuratore, BigDecimal aFlagNotificaViaFax, BigDecimal aIdParteUdienza)
+			BigDecimal aCurIdCuratore, BigDecimal aFlagNotificaViaFax, BigDecimal aIdParteUdienza
+			, BigDecimal aIdCivilmenteObbligato  //MEV_2023-13 
+	)
 
 	{
 		this.mIdNotifica = aIdNotifica;
@@ -260,6 +273,9 @@ public class NotificaModel extends GenericModel {
 		this.mFlagNotificaViaFax = aFlagNotificaViaFax;
 		this.mIdParteUdienza = aIdParteUdienza;
 		this.mAvvParteUdienza = null;
+		
+		this.mIdCivilmenteObbligato = aIdCivilmenteObbligato; //MEV_2023-13 
+		this.mCivilmenteObbligato = null; //MEV_2023-13 
 	}
 
 	//
@@ -463,6 +479,16 @@ public class NotificaModel extends GenericModel {
 	public AnagraficaPartiUdienzaModel getPartiUdienza() {
 		return mPartiUdienza;
 	}
+	
+	// MEV_2023-13 
+    public BigDecimal getIdCivilmenteObbligato() {
+        return mIdCivilmenteObbligato;
+    }
+    public CivilmenteObbligatoModel getCivilmenteObbligato() {
+        return mCivilmenteObbligato;
+    }
+    // MEV_2023-13 - FINE
+
 
 	//
 	// METODI SET()
@@ -666,6 +692,15 @@ public class NotificaModel extends GenericModel {
 		this.mPartiUdienza = aValore;
 	}
 
+	// MEV_2023-13
+    public void setIdCivilmenteObbligato (BigDecimal aValore) {
+        this.mIdCivilmenteObbligato = aValore;
+    }
+    public void setCivilmenteObbligato(CivilmenteObbligatoModel mCivilmenteObbligato) {
+        this.mCivilmenteObbligato = mCivilmenteObbligato;
+    }
+    // MEV_2023-13 - FINE
+    
 	/*****************************************************************************
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/
@@ -704,7 +739,8 @@ public class NotificaModel extends GenericModel {
 				+ "[ mAvvIdAvvocatoFascicoloSius   = " + mAvvIdAvvocatoFascicoloSius + " ]\n"
 				+ "[ mAvvIdAvvocatoFascicoloSige   = " + mAvvIdAvvocatoFascicoloSige + " ]\n"
 				+ "[ mAutEstIdAutoritaEstDeleg     = " + mAutEstIdAutoritaEstDeleg + " ]\n"
-				+ "[ mCurIdCuratore						    = " + mCurIdCuratore + " ]\n";
+				+ "[ mIdCivilmenteObbligato        = " + mIdCivilmenteObbligato + " ]\n"
+				+ "[ mCurIdCuratore				   = " + mCurIdCuratore + " ]\n";
 
 		if (mAutoritaEsterna != null)
 			lStr += "mAutoritaEsterna: " + mAutoritaEsterna.toString() + "\n";

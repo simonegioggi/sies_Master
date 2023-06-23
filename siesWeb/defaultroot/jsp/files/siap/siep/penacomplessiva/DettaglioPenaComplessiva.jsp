@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Iterator"%>
+<%@ page import="java.math.BigDecimal"%>
 
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -18,12 +19,12 @@
 <%@ page import="siap.siep.fascicolo.model.FascicoloSiepModel" %>
 
 
-<jsp:useBean id="dettaglioPenaComplessiva" 	scope="request" class="siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel"/>
-<jsp:useBean id="lTipoFunzione"       		scope="request" class="java.lang.String"/>
-<jsp:useBean id="modo"       				scope="request" class="java.lang.String"/>
-<jsp:useBean id="TornaQui"     				scope="request" class="java.lang.String"/>
-<jsp:useBean id="penaSigeModificabile"      scope="request" class="java.lang.String"/>
-<jsp:useBean id="lPenaResMod"    	 	  	scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
+<jsp:useBean id="dettaglioPenaComplessiva"  scope="request" class="siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel"/>
+<jsp:useBean id="lTipoFunzione"             scope="request" class="java.lang.String"/>
+<jsp:useBean id="modo"                       scope="request" class="java.lang.String"/>
+<jsp:useBean id="TornaQui"                   scope="request" class="java.lang.String"/>
+<jsp:useBean id="penaSigeModificabile"       scope="request" class="java.lang.String"/>
+<jsp:useBean id="lPenaResMod"                scope="request" class="siap.siep.penaresidua.model.PenaResiduaModel"/>
 
 <%
 // Gestione funzione SIGE
@@ -136,10 +137,17 @@ var aForm=null;
         <font class="l">Mesi&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lPenCom.getNumMesiReclusione(), "0")%>&nbsp;</font>
         <font class="l">Giorni&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lPenCom.getNumGiorniReclusione(), "0")%></font>
       </td>
+    <% } else { %>
+      <td class="l">&nbsp;</td>
+      <td class="l">&nbsp;</td>
     <% } %>
-    <% if (lPenCom.getImportoMulta() != null) {%>
+    
+    <% if (lPenCom.getImportoMulta() != null && lPenCom.getImportoMulta().compareTo(new BigDecimal(0))>0) {%>
       <td class="l">Multa</td>
       <td class="l"><font class="campo"><%=StringUtils.toEuroFormat(lPenCom.getImportoMulta())%></font>&nbsp;<font class="l">Euro</font></td>
+    <% } else { %>
+      <td class="l">&nbsp;</td>
+      <td class="l">&nbsp;</td>
     <% } %>
     </tr>
     <tr>
@@ -152,11 +160,18 @@ var aForm=null;
          <font class="l">Mesi&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lPenCom.getNumMesiArresto(), "0")%>&nbsp;</font>
          <font class="l">Giorni&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lPenCom.getNumGiorniArresto(), "0")%></font>
       </td>
-   <% } %>
-   <% if (lPenCom.getImportoAmmenda() != null) {%>
+    <% } else { %>
+      <td class="l">&nbsp;</td>
+      <td class="l">&nbsp;</td>
+    <% } %>
+    
+    <% if (lPenCom.getImportoAmmenda() != null && lPenCom.getImportoAmmenda().compareTo(new BigDecimal(0))>0) {%>
       <td class="l">Ammenda</td>
       <td class="l"><font class="campo"><%=StringUtils.toEuroFormat(lPenCom.getImportoAmmenda())%></font>&nbsp;<font class="l">Euro</font></td>
-   <% } %>
+    <% } else { %>
+      <td class="l">&nbsp;</td>
+      <td class="l">&nbsp;</td>
+    <% } %>
     </tr>
 <% 
 		if (   (lPenCom.getDescrTipoPenaDetentivaDB() != null) 
@@ -227,21 +242,42 @@ var aForm=null;
 		} 
 %>
    </tr>
-   <% if ((lSanSos.getDescrTipoSanzione() != null) || (lSanSos.getNumAnni() != null) ||
-      (lSanSos.getNumMesi() != null) || (lSanSos.getNumGiorni() != null) ||
-      (lSanSos.getSanzionePecuniariaMulta() != null)  ||
-      (lSanSos.getSanzionePecuniariaAmmenda() != null)) { %>
-    <tr><td class="Titolo" colspan=4>Sanzione Sostitutiva</td></tr>
+   
+   
+   
+   <% if (   lSanSos.getDescrTipoSanzione() != null
+          || lSanSos.getNumAnni() != null
+          || lSanSos.getNumMesi() != null
+          || lSanSos.getNumGiorni() != null
+          || lSanSos.getSanzionePecuniariaMulta() != null
+          || lSanSos.getSanzionePecuniariaAmmenda() != null
+         ) 
+  {   
+    String titolo = "Sanzione Sostitutiva";
+    String descTipoSanzione = "Tipo Sanzione Sostitutiva";
+    String durataLabel = "Durata Sanzione Sostitutiva";
+    String descPenaPecuniariaMulta = "Pena Pecuniaria Sostitutiva Multa";
+    
+    if (lSanSos.isPenaSostitutiva ()) {
+      titolo                  = "Pene sostitutive Pene Detentive Brevi";
+      descTipoSanzione        = "Tipo Pena Sostitutiva";
+      durataLabel             = "Durata Pena Sostitutiva";
+      descPenaPecuniariaMulta = "Pena Pecuniaria Sostitutiva";
+    }
+  %>
+  
+    <tr><td class="Titolo" colspan="4"><%=titolo%></td></tr>
+    
     <% if (lSanSos.getDescrTipoSanzione() != null) { %>
     <tr>
-      <td class="l">Tipo Sanzione Sostitutiva</td>
+      <td class="l"><%=descTipoSanzione%></td>
       <td class="l" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%></font>&nbsp;</td>
     </tr>
    <% } %>
-   <% if ((lSanSos.getNumAnni() != null) ||
-      (lSanSos.getNumMesi() != null) || (lSanSos.getNumGiorni() != null)) { %>
+   
+   <% if ( lSanSos.getNumAnni() != null || lSanSos.getNumMesi() != null || lSanSos.getNumGiorni() != null) { %>
     <tr>
-      <td class="l">Durata Sanzione Sostitutiva</td>
+      <td class="l"><%=durataLabel%></td>
       <td class="l" colspan="3">
         <font class="l">Anni&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getNumAnni(), "0")%>&nbsp;</font>
         <font class="l">Mesi&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getNumMesi(), "0")%>&nbsp;</font>
@@ -249,20 +285,26 @@ var aForm=null;
       </td>
     </tr>
   <% } %>
+  
   <% if (lSanSos.getSanzionePecuniariaMulta() != null) { %>
     <tr>
-      <td class="l" colspan="2">Pena Pecuniaria Sostitutiva Multa</td>
-      <td class="l" colspan="2"><font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%></font>&nbsp;<font class="l">Euro</font></td>
+      <td class="l" ><%=descPenaPecuniariaMulta%></td>
+      <td class="l" colspan="3"><font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%></font>&nbsp;<font class="l">Euro</font></td>
     </tr>
   <% } %>
-   <% if (lSanSos.getSanzionePecuniariaAmmenda() != null) { %>
+  
+  <% if (lSanSos.getSanzionePecuniariaAmmenda() != null) { %>
     <tr>
-      <td class="l" colspan="2">Pena Pecuniaria Sostitutiva Ammenda</td>
-      <td class="l" colspan="2"><font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaAmmenda())%></font>&nbsp;<font class="l">Euro</font></td>
+      <td class="l">Pena Pecuniaria Sostitutiva Ammenda</td>
+      <td class="l" colspan="3"><font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaAmmenda())%></font>&nbsp;<font class="l">Euro</font></td>
     </tr>
   <% } %>
+  
 <% } %>
   </table>
+  
+  
+  
 <%
       if (lListCont.size() != 0)
       {

@@ -435,7 +435,7 @@ public class InserisciPeriodoAltraSanzioneModificaESS extends ActionSiap impleme
 				// Scrive la Data Fine dello Scadenzario Secondario
 				if (IPASMod.getDataScadenza() != null) {
 					lScadenzarioSiusModSecond.setDataFineScadenza(IPASMod.getDataScadenza());
-				} else // Se non trova la Data Scadenza del Periodo Altra Sanzione inserisce la Data Temine
+				} else // Se non trova la Data Scadenza del Periodo Altra Sanzione inserisce la Data Termine
 						// Attuale dell'Esec. Sanz. Sostit.
 				{
 					lScadenzarioSiusModSecond.setDataFineScadenza(lEssM.getDataTermineAttuale());

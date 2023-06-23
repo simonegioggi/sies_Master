@@ -108,6 +108,7 @@ import siap.siep.penasospesa.model.AnnmanReatoModel;
 import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.reato.dao.ReatoDAO;
 import siap.siep.rinnovo.dao.RinnovoSqlDAO;
 import siap.siep.rinnovo.model.RinnovoModel;
@@ -747,7 +748,9 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		SanzioneSostitutivaDAO sanzioneSostDAO = null;
 		// Ticket#202301250123 - FINE
 		
-
+		//MEV_2023-13
+		RateizzazionePPDAO rateizzazioneDAO = null;
+		
 		Vector lAnnVect = null;
 		Vector eventi = null;
 		Vector lPosizioni = null;
@@ -1298,6 +1301,14 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lScaDAO.delete();
 			lScaDAO.stop();
 
+			// MEV_2023-13 - Sgancio le rate dall'evento
+			rateizzazioneDAO = new RateizzazionePPDAO(lConn);
+			rateizzazioneDAO.setEveIdEvento(null);
+			rateizzazioneDAO.selCondizioneByIdEvento (lEveRet.getIdEvento());
+			rateizzazioneDAO.update();
+			rateizzazioneDAO.stop();
+			// MEV_2023-13 - FINE
+			
 			// ========================================================================
 			// Annullo l'evento
 			// ========================================================================

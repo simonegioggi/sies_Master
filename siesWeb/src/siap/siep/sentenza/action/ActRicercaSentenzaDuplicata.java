@@ -24,7 +24,7 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.web.ISIAPCostantiWeb;
 
 public class ActRicercaSentenzaDuplicata extends ActionSiap implements ICostantiSentenza {
-	@SuppressWarnings("rawtypes")
+
 	public String processRequest() throws Exception {
 
 		SentenzaModel lSdup = new SentenzaModel();

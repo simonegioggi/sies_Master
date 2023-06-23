@@ -6,25 +6,15 @@ import java.util.Date;
 import f3b.model.GenericModel;
 
 /**
- * <p>
  * Title: ResidenzaModel
- * </p>
- * <p>
  * Description: Classe Model che rappresenta il Residenza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 public class ResidenzaModel extends GenericModel {
 
 	/**
-	 * 
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -478622976384235458L;
 
@@ -52,13 +42,12 @@ public class ResidenzaModel extends GenericModel {
 	private String mFlgDomAvv;
 	private BigDecimal mIdParteUdienza;
 	private String mFlgDomicilioDifensore;
-
-	/*
-	 * private BigDecimal mFasSieIdFascicoloSiep; private BigDecimal mFasSiuIdFascicoloSius;
-	 */
+	// MEV_2023-13: aggiunta variabile nel modello e gestita ovunque
+	private BigDecimal mIdCivilmenteObbligato;
 
 	// COSTRUTTORE DI DEFAULT
 	public ResidenzaModel() {
+
 		this.mIdResidenza = null;
 		this.mCodStato = "";
 		this.mDescrStato = "";
@@ -83,14 +72,12 @@ public class ResidenzaModel extends GenericModel {
 		this.mFlgDomAvv = "";
 		this.mIdParteUdienza = null;
 		this.mFlgDomicilioDifensore = "";
-
-		/*
-		 * this.mFasSieIdFascicoloSiep = null; this.mFasSiuIdFascicoloSius = null;
-		 */
+		this.mIdCivilmenteObbligato = null;
 	}
 
 	// COSTRUTTORE DI COPIA
 	public ResidenzaModel(ResidenzaModel aModel) {
+
 		this.mIdResidenza = aModel.mIdResidenza;
 		this.mCodStato = aModel.mCodStato;
 		this.mDescrStato = aModel.mDescrStato;
@@ -115,11 +102,7 @@ public class ResidenzaModel extends GenericModel {
 		this.mFlgDomAvv = aModel.mFlgDomAvv;
 		this.mIdParteUdienza = aModel.mIdParteUdienza;
 		this.mFlgDomicilioDifensore = aModel.mFlgDomicilioDifensore;
-
-		/*
-		 * this.mFasSieIdFascicoloSiep = aModel.mFasSieIdFascicoloSiep; this.mFasSieIdFascicoloSiep =
-		 * aModel.mFasSiuIdFascicoloSius;
-		 */
+		this.mIdCivilmenteObbligato = aModel.mIdCivilmenteObbligato;
 	}
 
 	// COSTRUTTORE MODEL
@@ -129,7 +112,8 @@ public class ResidenzaModel extends GenericModel {
 			Date aDataInserimento, String aCodUfficioInserimento, String aDescrUfficioInserimento,
 			String aCodOperatoreAggiornamento, Date aDataAggiornamento, String aCodUfficioAggiornamento,
 			String aDescrUfficioAggiornamento, BigDecimal aSogIdSoggetto, String aFlgDomAvv,
-			BigDecimal aIdParteUdienza, String aFlgDomicilioDifensore) {
+			BigDecimal aIdParteUdienza, String aFlgDomicilioDifensore, BigDecimal aIdCivilmenteObbligato) {
+
 		this.mIdResidenza = aIdResidenza;
 		this.mCodStato = aCodStato;
 		this.mDescrStato = aDescrStato;
@@ -153,16 +137,12 @@ public class ResidenzaModel extends GenericModel {
 		this.mFlgDomAvv = aFlgDomAvv;
 		this.mIdParteUdienza = aIdParteUdienza;
 		this.mFlgDomicilioDifensore = aFlgDomicilioDifensore;
-
-		/*
-		 * this.mFasSieIdFascicoloSiep = null; this.mFasSiuIdFascicoloSius = null;
-		 */
+		this.mIdCivilmenteObbligato = aIdCivilmenteObbligato;
 	}
 
 	//
 	// METODI GET()
 	//
-
 	public BigDecimal getIdResidenza() {
 		return mIdResidenza;
 	}
@@ -255,17 +235,16 @@ public class ResidenzaModel extends GenericModel {
 		return mIdParteUdienza;
 	}
 
-	public String getFlgDomicilioDifensore() {
-		return mFlgDomicilioDifensore;
-	}
-
-	/*
-	 * public BigDecimal getFasSieIdFascicoloSiep() { return mFasSieIdFascicoloSiep; } public BigDecimal
-	 * getFasSiuIdFascicoloSius() { return mFasSiuIdFascicoloSius; }
-	 */
 	//
 	// METODI SET()
 	//
+	public BigDecimal getIdCivilmenteObbligato() {
+		return mIdCivilmenteObbligato;
+	}
+
+	public void setIdCivilmenteObbligato(BigDecimal mIdCivilmenteObbligato) {
+		this.mIdCivilmenteObbligato = mIdCivilmenteObbligato;
+	}
 
 	public void setIdResidenza(BigDecimal aValore) {
 		mIdResidenza = aValore;
@@ -363,14 +342,13 @@ public class ResidenzaModel extends GenericModel {
 		mFlgDomicilioDifensore = aValore;
 	}
 
-	/*
-	 * public void setFasSieIdFascicoloSiep(BigDecimal aValore) { mFasSieIdFascicoloSiep = aValore; } public
-	 * void setFasSiuIdFascicoloSius(BigDecimal aValore) { mFasSiuIdFascicoloSius = aValore; }
-	 */
+	public String getFlgDomicilioDifensore() {
+		return mFlgDomicilioDifensore;
+	}
 
 	public String toString() {
-		String lStr = new String();
 
+		String lStr = new String();
 		lStr = "" + mIdResidenza + " - " + mCodStato + " - " + mDescrStato + " - " + mCodProvincia + " - "
 				+ mDescrProvincia + " - " + mCodComune + " - " + mDescrComune + " - " + mCap + " - "
 				+ mIndirizzo + " - " + mCodTipoResidenza + " - " + mDescrTipoResidenza + " - "
@@ -378,7 +356,7 @@ public class ResidenzaModel extends GenericModel {
 				+ mDescrUfficioInserimento + " - " + mCodOperatoreAggiornamento + " - " + mDataAggiornamento
 				+ " - " + mCodUfficioAggiornamento + " - " + mDescrUfficioAggiornamento + " - "
 				+ mDescComuneEstero + " - " + mSogIdSoggetto + " - " + mFlgDomAvv + " - " + mIdParteUdienza
-				+ " - " + mFlgDomicilioDifensore;
+				+ " - " + mFlgDomicilioDifensore + " - " + mIdCivilmenteObbligato;
 
 		return lStr;
 	}
@@ -387,6 +365,7 @@ public class ResidenzaModel extends GenericModel {
 	 * Compone una stringa residenza con i parametri valorizzati del Model
 	 */
 	public String toStringaResidenza() {
+
 		String lTempString = "";
 
 		if (this.mDescrComune != null && this.mDescrComune.compareTo("-") != 0)
@@ -404,7 +383,6 @@ public class ResidenzaModel extends GenericModel {
 			lTempString += this.mIndirizzo + " ";
 
 		return lTempString;
-
 	}
 
 }

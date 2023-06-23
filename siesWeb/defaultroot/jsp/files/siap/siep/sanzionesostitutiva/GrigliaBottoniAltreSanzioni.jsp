@@ -113,9 +113,22 @@
           <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.penapecuniaria.action.ActGestioneConversione">Conversione Pene Pecuniarie</a>
         </td>        
       </tr>
+    </table>
 
-      <tr><td>&nbsp;</td></tr>
+<br>
 
+    <table cellpadding="5" cellspacing="5" width="95%" onMouseover="over_effect(event,'outset')" onMouseout="over_effect(event,'solid')" onMousedown="over_effect(event,'inset')" onMouseup="over_effect(event,'outset')">
+      <tr>
+        <td colspan="2" class="Titolonocap">Pene Pecuniarie / Pene Sostitutive Brevi</td>
+      </tr>
+      <tr>
+		<td width="48%" class="menulines" nowrap>
+		  <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">Riscossione Pene Pecuniarie</a>
+		</td>        
+        <td width="48%" class="menulines" nowrap>
+          <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">Esecuzione Pene Sostitutive Brevi</a>
+        </td>        
+      </tr>            
     </table>
 </body>
 </html>
