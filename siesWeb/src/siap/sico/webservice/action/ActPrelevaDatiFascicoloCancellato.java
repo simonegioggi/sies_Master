@@ -138,7 +138,7 @@ public class ActPrelevaDatiFascicoloCancellato extends ActWsBase {
 		DatiUtente.setNOMEUTENTE(lUteMod.getNome());
 		DatiUtente.setIPADDRESSSERVER(getRequest().getServerName() + ":" + getRequest().getServerPort());
 		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione per variabile UserAdn
-		// DatiUtente.setUSERNAMEADN(lUteMod.getUserAdn());
+		DatiUtente.setUSERNAMEADN(lUteMod.getUserAdn());
 
 		/*******************************************************************************/
 		/* Element DATI_CHIAMATA_TRASFERIMENTO - CHIAVI */
