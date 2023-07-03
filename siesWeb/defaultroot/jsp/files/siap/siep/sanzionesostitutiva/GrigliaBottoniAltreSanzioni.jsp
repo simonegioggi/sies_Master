@@ -114,7 +114,7 @@ if (!fascicoloNotInSession.equals("S")) {
 		</td>
       	<td width="48%" class="menulines" nowrap>
 <%--         	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">Esecuzione Pene Sostitutive Brevi</a> --%>
-			<%-- Ticket#20230628013 - 12.5.0.0 correzione su voce "Esecuzione Pene Sostitutive Brevi" --%>
+			<%-- Ticket#20230628013 - 12.5.1.0 correzione su voce "Esecuzione Pene Sostitutive Brevi" --%>
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Esecuzione Pene Sostitutive Brevi</a>
     	</td>
   	</tr>
