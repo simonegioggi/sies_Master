@@ -30,8 +30,11 @@ import siap.sico.stampa.controller.StampaSSController;
 import siap.sico.template.controller.TemplateManager;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
+import siap.siep.SIEPException;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
+import siap.siep.fascicolo.dao.FascicoloSiepOnViewSqlDAO;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.nomeprovvedimento.dao.NomeProvvedimentoDAO;
 import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.notifica.dao.NotificaEventoSqlDAO;
@@ -49,6 +52,7 @@ import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.dao.RicercaStatoPagamentiSqlDao;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaDAO;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaSqlDAO;
@@ -3057,6 +3061,74 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
+	}
+	
+	
+	
+	/**
+	 * MEV_2023-33
+	 * Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento 
+	 */
+	public BigDecimal ExGetCountRicercaFascicoliPerStatoPagamento(FascicoloSiepModel aFascicolo, String aTipoRicerca) throws F3BException {
+
+		BigDecimal lCount = new BigDecimal(0);
+		Connection lConn = null;
+
+		RicercaStatoPagamentiSqlDao ricercaStatoPagamentiSqlDao = null;
+		try {
+			lConn = getDBConnection();
+			
+			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao(lConn);
+			
+			ricercaStatoPagamentiSqlDao.getCountRicercaFascicoliPerStatoPagamento(aFascicolo,aTipoRicerca);
+			ricercaStatoPagamentiSqlDao.start();
+			ricercaStatoPagamentiSqlDao.next();
+			lCount = ricercaStatoPagamentiSqlDao.getBigDecimal("HowManyRecords");
+			ricercaStatoPagamentiSqlDao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.error(daoEx.getLocalizedMessage());
+			throw new SIEPException(SIEPException.USER_MESSAGE,
+					"SanzioneSostitutivaController.ExGetCountRicercaFascicoliPerStatoPagamento: errore " + daoEx);
+		} finally {
+			cleanup(ricercaStatoPagamentiSqlDao);
+			cleanup(lConn);
+		}
+		return lCount;
+	}	
+	
+	/**
+	 * MEV_2023-33
+	 * Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento 
+	 */
+	public Vector ExRicercaFascicoliPerStatoPagamentoPaged (FascicoloSiepModel aFasMod, int aPagina, String aTipoRicera)
+			throws F3BException
+	{
+		siesLogger.debug("ExRicercaFascicoloStatoPagamentoPaged");
+		Connection lConn = null;
+		RicercaStatoPagamentiSqlDao ricercaStatoPagamentiSqlDao = null;
+		Vector elencoFascicoli = new Vector();
+
+		try {
+			lConn = getDBConnection();
+			
+			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao (lConn);
+			
+			ricercaStatoPagamentiSqlDao.ricercaFascicoliPerStatoPagamento(aFasMod, aPagina, aTipoRicera);
+			
+			elencoFascicoli = new Vector(ricercaStatoPagamentiSqlDao.getModels());
+			
+
+		} catch (DAOException ex) {
+			throw new F3BException("SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
+		} catch (Exception ex) {
+			throw new F3BException("SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
+		} finally {
+			cleanup(ricercaStatoPagamentiSqlDao);
+			
+			cleanup(lConn);
+		}	
+		
+		return elencoFascicoli;
 	}
 
 }

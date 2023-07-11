@@ -10,6 +10,7 @@ import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.utente.model.UtenteModel;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
@@ -204,4 +205,7 @@ public interface ISanzioneSostitutiva {
    public void exAggiornaNotificheOrdineIngiunzione (EventoModel aEvento, Vector <NotificaModel> listaNotDaAggiornare ) throws F3BException;
    public EventoNotificaModel exModificaOrdineIngiunzione (EventoNotificaModel aEvNotModel, String[] lArrayIdRate) throws F3BException;
    
+   // MEV_2023-33
+   public BigDecimal ExGetCountRicercaFascicoliPerStatoPagamento(FascicoloSiepModel aFasMod, String aTipoRicerca) throws F3BException;
+   public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina, String aTipoRicera) throws F3BException;
 }

@@ -83,7 +83,10 @@ if (!fascicoloNotInSession.equals("S")) {
 	</tr>
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Scadenzari</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaScadenzari">Scadenzari</a>
+    	</td>
+  		<td width="32%" class="menulines" nowrap>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadRicercaStatoPagamenti">Ricerca Stato Pagamenti</a>
     	</td>
 	</tr>
 </table>

@@ -99,6 +99,17 @@ public interface ICostantiSanzioneSostitutiva {
 			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRinnovoRicerche.jsp";
 	public static final String PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE= IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadSelezionaOrdineIngiunzione.jsp";	
+	public static final String PG_LOAD_GRIGLIA_SCADENZARI= IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/GrigliaScadenzariPP.jsp";
+	public static final String PG_LOAD_RICERCA_STATO_PAGAMENTI= IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadRicercaStatoPagamenti.jsp";
+	public static final String PG_ESITO_RICERCA_STATO_PAGAMENTI= IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/EsitoRicercaStatoPagamenti.jsp";
+	
+	public static final String CAMPO_TIPO_RICERCA_STATO_PAGAMENTO = "TipoRicercaStatoPagamento";
+	public static final String CAMPO_TIPO_RICERCA_INTERAMENTE_PAGATO = "InteramentePagato";
+	public static final String CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO = "RateizzatoNonPagato";
+	public static final String CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO = "UnicaRataNonPagato";
 	// MEV_2023-33 - FINE
 	
 
