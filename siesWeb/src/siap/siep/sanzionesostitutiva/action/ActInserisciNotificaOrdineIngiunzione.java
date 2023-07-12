@@ -25,10 +25,11 @@ import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13: aggiunta classe Title: ActGrigliaNotifiche Description: Classe Action per la load ricerca di
- * Omesse Notifica
+ * Title: ActGrigliaNotifiche 
+ * Description: Classe Action per l'inserimento notifiche per OEIP
  *
  * @author sgioggi
+ * @since MEV_2023-13
  * @version 1.0
  */
 public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
@@ -127,7 +128,7 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 
 			listaNotDaAggiornare.add(lNotMod);
 
-			// Cancela ??
+			// Cancella ??
 			/*
 			 * if (!isRequestParameterNullEmptyObj(ICostantiOrdineEsecuzione.ABILITA_CANCELLA + "_" +
 			 * lNotificaModel.getIdNotifica())) { NotificaModel lNotMod = new NotificaModel();

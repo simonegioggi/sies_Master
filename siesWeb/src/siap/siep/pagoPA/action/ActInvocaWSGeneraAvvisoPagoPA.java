@@ -130,15 +130,34 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo,
 				"");
-		// DATI PER RICHIESTA PAGAMENTO
+		// DATI PER RICHIESTA PAGAMENTO TELEMATICO
 		RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil.caricaDatiRichiestaPagamentoTelematico(ufm);
 		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
 		AnagraficaSoggetto asp = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
 		rpt.setSoggettoPagatore(asp);
-		// DATI VERSAMENTO
+
+		// MEV_33: aggiungo recupero numero dei Bollettini da generare
+		String numBollettini = "";
+		if (!isRequestParameterNullObj("numBollettini"))
+			numBollettini = getRequestStringParameter("numBollettini");
+		boolean soloPrimaRata = false, rateSuccessivePrima = false;
+		if (bpms.size() > 1) {
+			if (Utils.isPresent(numBollettini)) {
+				if ("P".equals(numBollettini))
+					soloPrimaRata = true;
+				else if ("S".equals(numBollettini))
+					rateSuccessivePrima = true;
+			}
+		}
+
 		Iterator<BollettinoPagopaModel> iter = bpms.iterator();
 		while (iter.hasNext()) {
 			BollettinoPagopaModel bpm = iter.next();
+			if (rateSuccessivePrima) {
+				bpm = iter.next();
+				rateSuccessivePrima = false;
+			}
+			// DATI VERSAMENTO
 			DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, bpm);
 			rpt.setDatiVersamento(dv);
 			Calendar c = Calendar.getInstance();
@@ -188,6 +207,8 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			String iuv = Utils.isPresent(ega.getNumeroAvviso()) ? ega.getNumeroAvviso().substring(1) : "";
 			bpm.setIuv(iuv);
 			ibp.ExModificaBollettinoPagopa(bpm);
+			if (soloPrimaRata)
+				break;
 		}
 		setRequestAttribute("idFascicolo", idFascicolo.toString());
 

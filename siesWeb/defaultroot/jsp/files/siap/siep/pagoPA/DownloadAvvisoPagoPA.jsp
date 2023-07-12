@@ -4,6 +4,8 @@
 
 <jsp:useBean id="tipoFascicolo" scope="request" class="java.lang.String"/>
 <jsp:useBean id="idEvento" 		scope="request" class="java.lang.Object"/>
+<%-- MEV_33: aggiungo recupero numero dei Bollettini da generare --%>
+<jsp:useBean id="numBollettini"	scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -21,6 +23,7 @@ function downloadAvviso() {
 <input type="hidden" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActInvocaWSGeneraAvvisoPagoPA"/>
 <input type="hidden" name="tipoFascicolo" value="<%=tipoFascicolo%>"/>
 <input type="hidden" name="idEvento" value="<%=idEvento%>"/>
+<input type="hidden" name="numBollettini" value="<%=numBollettini%>"/>
 	
 <div align=center id="richCert" style="visibility:visible;position:absolute;top:200px;left:200px">
 <table bgcolor="#EEEEEE">

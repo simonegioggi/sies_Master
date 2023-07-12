@@ -82,7 +82,9 @@ public interface ICostantiPagoPA {
 	public static final String PG_INOLTRA_DOWNLOAD_AVVISO_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/InoltraDownloadAvvisoPagoPA.jsp";
 
-	// MEV_2023-33: aggiunta pagina
+	// MEV_2023-33: aggiunta pagina, costante
 	public static final String PG_AVVISO_BATCH_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/AvvisoBatchPagoPA.jsp";
+	public static final String RADIO_NUMERO_BOLLETTINI = "NumBollettini";
+	// FINE MEV_33
 }

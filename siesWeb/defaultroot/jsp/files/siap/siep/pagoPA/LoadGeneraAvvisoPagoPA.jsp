@@ -8,6 +8,7 @@
 <%@ page import="java.util.Iterator"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
+<%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 <%@ page import="siap.siep.pagoPA.model.BollettinoPagopaModel"%>
 
 <jsp:useBean id="elencoStatoPagamenti" 	scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
@@ -33,7 +34,7 @@ function tornaIndietro(action) {
 			</a>
 		</td>
     	<td class="LBG">
-    		<font class="label">Funzione:</font>&nbsp;&nbsp;<font class="campo">Stato Bolletini per Pagamento Pena Pecuniaria</font>
+    		<font class="label">Funzione:</font>&nbsp;&nbsp;<font class="campo">Stato Bollettini per Pagamento Pena Pecuniaria</font>
     	</td>
     	<td class="LBG"><!-- Tasto indietro -->
         	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA')">
@@ -59,15 +60,29 @@ if (elencoStatoPagamenti.size() == 0) {
     </tr>
 <%
 } else {
+	// MEV_33: aggiungo gestione numero dei Bollettini da generare
+	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+	boolean isFirstElement = true;
+	while (itx.hasNext()) {
+		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
+		 if (isFirstElement) {
 %>
 	<tr>
 		<td class="l" colspan="6">
-			Elenco Bollettini Generati da PagoPA per Richiesta del 
-			<%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataRichiesta(), "dd-MM-yyyy"))%> relativa a
-			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
+			Elenco Bollettini da richiedere a PagoPA, relativi all'<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%>
 			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=evento.getIdEvento()%>">
+		</td>
+	</tr>
+<%
+			if ("R".equals(bpm.getTipoRateizzazione())) {
+%>
+	<tr>
+		<td class="l" colspan="6">
+			Numero Bollettini da generare:&nbsp;Tutti&nbsp;<input type="radio" name="<%=ICostantiPagoPA.RADIO_NUMERO_BOLLETTINI%>" value="T" checked>
+			&nbsp;&nbsp;&nbsp;Solo Bollettino Prima Rata&nbsp;<input type="radio" name="<%=ICostantiPagoPA.RADIO_NUMERO_BOLLETTINI%>" value="P">
+			&nbsp;&nbsp;&nbsp;Solo Bollettini Rate Successive alla Prima&nbsp;<input type="radio" name="<%=ICostantiPagoPA.RADIO_NUMERO_BOLLETTINI%>" value="S">
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -80,9 +95,9 @@ if (elencoStatoPagamenti.size() == 0) {
 		<td class="int">Stato</td>
 	</tr>
 <%
-	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
-	while (itx.hasNext()) {
-		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
+			}
+		}
+		isFirstElement = false;
 %>
 	<tr>
 		<td class="c"><%=StringUtils.toStringJSP(bpm.getProgRata())%></td>
@@ -95,7 +110,7 @@ if (elencoStatoPagamenti.size() == 0) {
       	<td class="c"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
 	</tr>
 <%
-	} // end while su iterator sugli eventi
+	} // end while dell'iterator sui bollettini
 } // end else
 if (Utils.isNullObj(evento.getDataTrasmissioneAtti()) && Utils.isNullObj(evento.getDataRicezioneAtti())) {
 %>

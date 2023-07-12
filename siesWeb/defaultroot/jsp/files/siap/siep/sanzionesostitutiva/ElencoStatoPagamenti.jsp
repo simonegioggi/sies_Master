@@ -20,6 +20,8 @@
 <jsp:useBean id="modalitaPagamento" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoPagato" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
+<%-- MEV_33: aggiunto useBean --%>
+<jsp:useBean id="dataAvvenutaNotifica" 	scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -89,7 +91,10 @@ if (elencoStatoPagamenti.size() == 0) {
 		<td class="l" colspan="9">
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
-			<font class="cViola"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+			<%-- MEV_33: aggiunta frase di notifica --%>
+			&nbsp;notificato&nbsp;il:&nbsp;
+			<font class="campo"><%=dataAvvenutaNotifica%></font>
 		</td>
 	</tr>
 	<tr>

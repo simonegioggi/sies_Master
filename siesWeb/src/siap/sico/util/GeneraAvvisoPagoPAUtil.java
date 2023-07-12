@@ -1,6 +1,7 @@
 package siap.sico.util;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -152,8 +153,9 @@ public class GeneraAvvisoPagoPAUtil {
 		return as;
 	}
 
+	// MEV_33: cambiata firma del metodo con la data Emissione OEIP
 	public static BollettinoPagopaModel popolaBollettino(RateizzazionePPModel rata, String codUtente,
-			String codUfficio, String statoPagamento, int cont) {
+			String codUfficio, String statoPagamento, int cont, Date dataEmissioneOI) {
 
 		BollettinoPagopaModel bpm = new BollettinoPagopaModel();
 		bpm.setCodOperatoreInserimento(codUtente);
@@ -161,7 +163,13 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setDataInserimento(DateUtils.getSysDate());
 		// bpm.setDataAvvPagamento(null);
 		// bpm.setDataScadenza(null);
-		bpm.setDataScadenzaRich(DateUtils.getDate("31/12/2049", "dd/MM/yyyy"));
+		// bpm.setDataScadenzaRich(DateUtils.getDate("31/12/2049", "dd/MM/yyyy"));
+		if ("R".equals(rata.getTipoRateizzazione()))
+			bpm.setDataScadenzaRich(
+					DateUtils.moveDateTo(dataEmissioneOI, java.util.Calendar.DAY_OF_MONTH, 60));
+		else
+			bpm.setDataScadenzaRich(
+					DateUtils.moveDateTo(dataEmissioneOI, java.util.Calendar.DAY_OF_MONTH, 120));
 		bpm.setFasSieIdFascicolSiep(rata.getFasSieIdFascicoloSiep());
 		// bpm.setImportoPagato(null);
 		// bpm.setIuv(null);

@@ -7,7 +7,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.util.GeneraAvvisoPagoPAUtil;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -43,8 +43,8 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		codUtente = getCodUtenteConnesso();
 		codUfficio = getCodUfficioUtenteConnesso();
 
-		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-		siesLogger.debug("ID_EVENTO = " + idEvento);
+		// BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		// siesLogger.debug("ID_EVENTO = " + idEvento);
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);
@@ -60,7 +60,8 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();
-			setRequestAttribute("evento", listaRichiestaBollettini.firstElement().getEvento());
+			EventoModel em = listaRichiestaBollettini.firstElement().getEvento();
+			setRequestAttribute("evento", em);
 			if (isElencoEmpty) {
 				int progressivoRata = 1;
 				// dalle rateizzazioni creo i bollettini
@@ -68,8 +69,9 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 				while (iter.hasNext()) {
 					RateizzazionePPModel rata = iter.next();
 					for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
-						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata,
-								codUtente, codUfficio, "PN", progressivoRata);
+						// MEV_33: cambiata firma del metodo con la data Emissione OEIP
+						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata, codUtente,
+								codUfficio, "PN", progressivoRata, em.getDataEmissione());
 						ibp.ExInserisciBollettinoPagopa(bpm);
 						progressivoRata++;
 					}
