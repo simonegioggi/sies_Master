@@ -112,7 +112,12 @@ public class ActInserisciRigetto extends ActMisuraAlternativa implements ICostan
 				case 46: // LIBERO in Sospensione
 				case 47: // LIBERO in Sospensione
 				{
-					lEveNot.getEvento().setCodMotivo("0217");
+					// Ticket#20230717016 - SIEP - Validazione provvedimento
+					// il codice 0217 èì già in uso dalla "Sospensioni/Interruzioni del PM - Revoca Sospensioni"
+					// si sostituisce con il nuovo codice 1099
+					//lEveNot.getEvento().setCodMotivo("0217");
+					lEveNot.getEvento().setCodMotivo("1099");
+					// Ticket#20230717016 - FINE
 					break;
 				}
 				default: {
@@ -159,7 +164,12 @@ public class ActInserisciRigetto extends ActMisuraAlternativa implements ICostan
 				case 46: // LIBERO in Sospensione
 				case 47: // LIBERO in Sospensione
 				{
-					lEve.getEvento().setCodMotivo("0217");
+					// Ticket#20230717016 - SIEP - Validazione provvedimento
+					// il codice 0217 èì già in uso dalla "Sospensioni/Interruzioni del PM - Revoca Sospensioni"
+					// si sostituisce con il nuovo codice 1099
+					//lEveNot.getEvento().setCodMotivo("0217");					
+					lEve.getEvento().setCodMotivo("1099");
+					// Ticket#20230717016 - fine
 					break;
 				}
 				default: {

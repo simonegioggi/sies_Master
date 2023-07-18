@@ -202,7 +202,11 @@ public class ActGestisciButtonsProvvedimento
 
 //									rigetto misura alternativa
 									//if (lMotivoProvvedimento.equals("9000") || lMotivoProvvedimento.equals("9001"))
-									if (lMotivoProvvedimento.equals("0217") || lMotivoProvvedimento.equals("0218"))
+									// Ticket#20230717016 - SIEP - Validazione provvedimento
+									// il codice 0217 èì già in uso dalla "Sospensioni/Interruzioni del PM - Revoca Sospensioni"
+									// si sostituisce con il nuovo codice 1099									
+									//if (lMotivoProvvedimento.equals("0217") || lMotivoProvvedimento.equals("0218"))
+									if (lMotivoProvvedimento.equals("1099") || lMotivoProvvedimento.equals("0218"))
 										lAction = "siap.siep.misuraalternativa.action.ActDettaglioMARigetto";
 
 //									detenzione domiciliare a termine
@@ -675,7 +679,11 @@ public class ActGestisciButtonsProvvedimento
 
 //									rigetto misura alternativa
 									//if (lMotivoProvvedimento.equals("9000") || lMotivoProvvedimento.equals("9001"))
-									if (lMotivoProvvedimento.equals("0217") || lMotivoProvvedimento.equals("0218"))
+									// Ticket#20230717016 - SIEP - Validazione provvedimento
+									// il codice 0217 èì già in uso dalla "Sospensioni/Interruzioni del PM - Revoca Sospensioni"
+									// si sostituisce con il nuovo codice 1099									
+									//if (lMotivoProvvedimento.equals("0217") || lMotivoProvvedimento.equals("0218"))
+									if (lMotivoProvvedimento.equals("1099") || lMotivoProvvedimento.equals("0218"))
 										lAction = "siap.siep.misuraalternativa.action.ActDettaglioMARigetto";
 
 //									detenzione domiciliare a termine
