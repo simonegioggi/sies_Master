@@ -1,20 +1,12 @@
-BRANCH SIES VERSIONE 12.5.3.0
-Nasce dal branch 12.5.2.0-MEV_2023_38 in data 19/07/2023
-Questa release verrà rilasciata il 28/07/2023 (Patch di Luglio 2023)
+Ticket#202307180127 - richiede di inserimento posizioni giuridiche Sospensione cautelativa 51 ter (Esecuzione presso domicilio della pena detentiva)
 
-Comprende i seguenti Ticket MAC:
 
-1)	Ticket#20230717016 - SIEP - Validazione provvedimento
-	Errore in validazione/dettaglio dovuto al fatto che il codice evento 0217 veniva usato da 2 provvedimenti distinti:
-	- Sospensioni/Interruzioni del PM - Revoca Sospensioni
-	- Decisioni Sorveglianza - Rigetto Misure Alternative
-	Sulla tabella DETTAGLIO_PROVVEDIMENTO è censito il primo evento. Quindi quando si inserisce una revoca senza validarla subito e
-	si rientra dal dettaglio del fascicolo o elenco provvedimento del PM veniva agganciato dettaglio e validazione errato 
-	(quello della sospensione) ed andava in errore.
-	E' stato modificato il codice per il rigetto MA aggiungendo il NUOVO codice 1099 e modificate le classi per gestirlo:
-	- siap.siep.misuraalternativa.action.ActInserisciRigetto.java
-	- siap.sico.evento.action.ActGestisciButtonsProvvedimento.java
-	Rilasciati anche script per:
-	- Inserimento nuovo codice 1099 sulla CG_REF_CODES
-	- Inserimento nuovo record sulla DETTAGLIO_PROVVEDIMENTO per codice 1099
-	- Inserimento nuovo record sulla STATO_ESECUZIONE_PROCEDIMENTO (statistiche) per codice 1099
+La PG 51 era classificata sul DB come EA (Espiazione in altre posizioni).
+Aggiornato il DB CG_REF_CODES per classificarlo EI (Espiazione in Istituto)
+
+Modificata la jsp in quanto in assenza del campo COD_MASCHERA su POSIZIONE_GIURIDICA classificava da codice
+la 51 sempre in EA
+"/jsp/files/siap/siep/posizione/LoadInserisciPosizioneGiuridica.jsp
+
+
+
