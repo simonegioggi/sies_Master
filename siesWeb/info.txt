@@ -1,7 +1,9 @@
-BRANCH SIES VERSIONE 12.5.4.0
-Nasce dal branch 12.5.3.0 in data 31/07/2023
-Questa release verrà rilasciata il 22/09/2023 (Patch mesi di Agosto e Settembre 2023)
+Ticket#202307240122 - Visualizzazione maschera errata
 
-Comprende i seguenti Ticket MAC:
+In fase di apertura della seconda form della funzione "Cessazione/Cessazione su Reclamo 51 Bis"
+andava in errore js e si interrompeva il precaricamento della sezione dei "destinatari" che rimaneva nascosta.
+Inoltre si perdeva il campo della data ingresso in istituto se si modificave il radio buttun
 
-1)	
+Corretta jsp
+siap/siep/misuraalternativa/LoadInserisciCessazioneMAAffProva.jsp
+
