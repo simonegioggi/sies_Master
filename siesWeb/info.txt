@@ -1,13 +1,15 @@
-Ticket#20230718019 - SIEP Non si può dare corso alla misura alternativa
+BRANCH SIES VERSIONE 12.5.4.0
+Nasce dal branch 12.5.3.0 in data 31/07/2023
+Questa release verrà rilasciata il 22/09/2023 (Patch mesi di Agosto e Settembre 2023)
 
+Comprende i seguenti Ticket MAC:
 
-Quando si annullava il verbale si sottoscrizione agli obblighi, la funzione di cancellazione annullava
-anche l'ordinanza puntata dal verbale. Quindi il porvveidmento di esecuzione che puntava la stessa ordinanza
-si ritrovava a puntare un evento annullato ed inoltre non era più possibile reinserire il verbale perchè 
-non trovava più l'ordinanza.
-
-Classe modificva
-siap.siep.ordineesecuzione.action.ActCancellaProvvedimento
-
-E' stato escluso il verbale dal caso in cui l'annullamento
-di un evento SIEP annulla anche ilprovvedimento SIUS puntato.
+1)	Ticket#20230718019 - SIEP Non si può dare corso alla misura alternativa
+	Quando si annullava il verbale si sottoscrizione agli obblighi, la funzione di cancellazione annullava
+	anche l'ordinanza puntata dal verbale. Quindi il porvveidmento di esecuzione che puntava la stessa 
+	ordinanza si ritrovava a puntare un evento annullato ed inoltre non era più possibile reinserire il 
+	verbale perchè non trovava più l'ordinanza.
+	E' stato escluso il verbale dal caso in cui l'annullamento di un evento SIEP annulla anche il 
+	provvedimento SIUS puntato.
+	Classe modificva
+	-	siap.siep.ordineesecuzione.action.ActCancellaProvvedimento.java
