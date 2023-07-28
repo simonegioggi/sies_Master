@@ -16,20 +16,8 @@ import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
 
 /**
- * <p>
  * Title: ActModificaDefinizioneProcedimento
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2007
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
+ *
  * @version 1.0
  */
 public class ActModificaDefinizioneProcedimento extends ActionSige implements ICostantiFascicoloSige {
@@ -39,9 +27,11 @@ public class ActModificaDefinizioneProcedimento extends ActionSige implements IC
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		gestioneRitorno();
 
 		String lRetPage = PG_LOAD_DEFINIZIONE_PROCEDIMENTO; // pagina di input
@@ -55,8 +45,8 @@ public class ActModificaDefinizioneProcedimento extends ActionSige implements IC
 		Vector lVect = null;
 		ProvvedimentoSigeEventoModel provvSigeEveMod = null;
 		IProvvedimentoSige mCtrl = SIGELookupRemote.getProvvedimentoRemote();
-		String lTipiProvv = "'" + ICostantiProvvedimentoSige.COD_ANNOTAZIONE + "'"; // CODICE
-																					// PROVVEDIMENTO_SIGE.
+		// CODICE PROVVEDIMENTO_SIGE
+		String lTipiProvv = "'" + ICostantiProvvedimentoSige.COD_ANNOTAZIONE + "'";
 		lVect = mCtrl.ExRicercaProvvSigePerIdFasSigeTipiProvv(lFascicolo.getIdFascicoloSige(), lTipiProvv);
 		if (lVect != null && lVect.size() > 0) {
 			provvSigeEveMod = (ProvvedimentoSigeEventoModel) lVect.firstElement();
@@ -65,13 +55,13 @@ public class ActModificaDefinizioneProcedimento extends ActionSige implements IC
 
 		// Costruzione dell'Option filtrata dal Codice tipo Ufficio (UDS o TDS)
 		Option lOption = new Option(DecodificheUtils.getDecodificheFiltrateByCodAlt(
-				DecodificheManager.getInstance().getTipoDefinzioneSiepe(),
+				DecodificheManager.getInstance().getTipoDefinizione(),
 				getUfficioUtenteConnesso().getCodTipoUfficio()));
 		lOption.setSelected(lFascicolo.getCodTipoDefinizione());
 
 		// Valorizzazione dei dati nella request
-		setRequestAttribute("FlagFasSiepe", "SI"); // Imposta il flag per abilitare la visualizzazione dei
-													// dati di sintesi SIEPE
+		// Imposta il flag per abilitare la visualizzazione dei dati di sintesi SIEPE
+		setRequestAttribute("FlagFasSiepe", "SI");
 		setRequestAttribute("TipoDefinizione", "" + lOption);
 		setRequestAttribute("modalita", lmodalita);
 		setRequestAttribute("descrizione", lFascicolo.getDescrDefinizione());
