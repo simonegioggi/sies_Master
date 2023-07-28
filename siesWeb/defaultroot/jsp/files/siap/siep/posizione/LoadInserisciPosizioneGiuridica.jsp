@@ -202,7 +202,7 @@
                   case 44:
                   case 45:
                   case 50:
-                  case 51:
+                 // case 51: Ticket#202307180127 si sposta in EI
                   case 52:
                   case 53:
                   case 54:
@@ -240,6 +240,7 @@
                   case 39:
                   case 40:
                   case 49:
+                  case 51: // Ticket#202307180127 si classifica in EI
                   case 55:
                   case 62:
                   case 63:
