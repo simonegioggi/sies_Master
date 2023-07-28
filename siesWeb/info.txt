@@ -13,3 +13,10 @@ Comprende i seguenti Ticket MAC:
 	provvedimento SIUS puntato.
 	Classe modificva
 	-	siap.siep.ordineesecuzione.action.ActCancellaProvvedimento.java
+
+2)	Ticket#202307240122 - Visualizzazione maschera errata
+	In fase di apertura della seconda form della funzione "Cessazione/Cessazione su Reclamo 51 Bis" andava 
+	in errore js e si interrompeva il precaricamento della sezione dei "destinatari" che rimaneva nascosta.
+	Inoltre si perdeva il campo della data ingresso in istituto se si modificava il radio button.
+	Corretta jsp:
+	-	siap/siep/misuraalternativa/LoadInserisciCessazioneMAAffProva.jsp
