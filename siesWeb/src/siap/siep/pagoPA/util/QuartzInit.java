@@ -27,7 +27,7 @@ public class QuartzInit extends HttpServlet {
 
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
-	public void initMEM() {
+	public void init() {
 
 		pagoPaLogger.info(getClass().getName() + ".init()");
 		pagoPaLogger.info("");
@@ -106,7 +106,7 @@ public class QuartzInit extends HttpServlet {
 	 * Versione dell'init per attivare la persistenza sul DB dei job 
 	 */
     //public void initQuartzPersistance() {
-    public void init() {    
+    public void initDB() {    
         pagoPaLogger.info(getClass().getName() + ".init()");
         pagoPaLogger.info("");
         pagoPaLogger.info("===================================================");
