@@ -63,6 +63,7 @@ import siap.siep.ordinescarcerazione.controller.IOrdineScarcerazione;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.pagoPaBatch.controller.IBatchPagopa;
+import siap.siep.pagoPaBatch.controller.IInvocazionePagopa;
 import siap.siep.parametro.controller.IParametro;
 import siap.siep.penaaccessoria.controller.IPenaAccessoria;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
@@ -1054,4 +1055,14 @@ public class SIEPLookupRemote extends LookupClass {
     }
 	// ***** FINE INTERVENTO MEV_2023-13 *****//
 
+   // MEV_2023-33
+   public static IInvocazionePagopa getInvocazionePagopaRemote() throws F3BException {
+       Object lRef;
+       IInvocazionePagopa lRemote;
+
+       lRef = lookup("siap.siep.pagoPaBatch.controller.InvocazionePagopaController");
+       lRemote = (IInvocazionePagopa) lRef;
+
+       return lRemote;
+   }
 }

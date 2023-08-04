@@ -18,4 +18,6 @@ public interface ServiziConsultazionePagamentiTelematici extends java.rmi.Remote
     public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaPagamenti getPagamentoByDate(java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, boolean senzaRicevuta, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException;
     public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRendicontazione ricercaFlussiRendicontazioneScaricati(java.util.Calendar dataScaricoDa, java.util.Calendar dataScaricoA, boolean crsErrore, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException;
     public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaPagaNoVerify ricercaPagamentiNonVerificati(java.util.Calendar dataControlloDa, java.util.Calendar dataControlloA, java.lang.String idFlusso, java.util.Calendar dataRicevutaDa, java.util.Calendar dataRicevutaA, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException;
+
+    public org.apache.axis.client.Call getLastCall();
 }

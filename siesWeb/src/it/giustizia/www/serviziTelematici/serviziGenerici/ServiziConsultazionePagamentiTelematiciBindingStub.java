@@ -898,4 +898,9 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
 }
     }
 
+    public org.apache.axis.client.Call getLastCall() {
+        org.apache.axis.client.Call lastCall = super._getCall();
+        return lastCall;
+    }
+
 }

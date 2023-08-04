@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 
 /**
  * Batch per PagoPA
@@ -122,7 +123,19 @@ public class BatchPagopaModel extends GenericModel {
 	public void setErroreEsecuzione(String mErroreEsecuzione) {
 		this.mErroreEsecuzione = mErroreEsecuzione;
 	}
-
+	
+	/*
+	 * Restituisce la durata del batch in formato hh:mm:ss,mmm
+	 */
+	public String getDurataAsString() {
+	    String durataStr = "n.d.";
+	    if (mDataInizioEsecuzione!=null && mDataFineEsecuzione!=null) {
+	        durataStr = DateUtils.getTempoEsecuzione(mDataInizioEsecuzione,mDataFineEsecuzione);
+	    }
+	        
+	    return durataStr;
+	}
+	
 	public String toString() {
 		String lStr = new String();
 

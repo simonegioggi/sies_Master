@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="f3b.web.IWebConstants" %>
+<%@ page import="f3b.util.StringUtils" %>
+<%@ page import="f3b.util.DateUtils" %>
+<%@ page import="java.util.Vector" %>
+
+<%@ page import="siap.sico.utente.action.ICostantiUtente" %>
+<%@ page import="siap.siep.pagoPaBatch.model.BatchPagopaModel" %>
+<%@ page import="siap.siep.pagoPaBatch.action.ICostantiBatchPagoPa" %>
+<%@ page import="siap.siep.pagoPaBatch.model.InvocazionePagopaModel" %>
+<%@ page import="siap.siep.pagoPA.model.BollettinoPagopaModel"%>
+<%@ page import="siap.siep.pagoPaBatch.action.ICostantiInvocazionePagopa"%>
+
+
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+
+<jsp:useBean id="BatchModel" scope="request" class="siap.siep.pagoPaBatch.model.BatchPagopaModel" />
+<jsp:useBean id="ListaInvocazioni" scope="request" class="java.util.Vector" />
+
+
+<html>
+<head>
+  <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
+  <title> [S.I.E.S.] - Esecuzione Batch PagoPa - </title>
+
+  <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
+  <script language="JavaScript" src="/html/gestisciUploadStampa2.js"></script>
+  
+  <script language="JavaScript">
+    function visualizzaDettaglio(idVis)
+    {
+    	if (document.getElementById(idVis).style.display == "block")
+       		document.getElementById(idVis).style.display = "none";
+    	else
+        	document.getElementById(idVis).style.display = "block";
+    }
+    
+    function stampaSiep(lAzione)
+    {
+       var  hrefStampa = lAzione;
+       var lIndice = hrefStampa.indexOf("?");
+
+      //alert (lAzione);
+       var parametri = hrefStampa.substring(lIndice+1,lAzione.length);
+      // alert (ciccio);
+       stampa2("/jsp/files/Stampa.jsp",  parametri);
+    }
+    
+  </script>
+  
+  <style>
+    td.int,td.c {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  </style>
+</head>
+
+<body class="corpo">
+  <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="dettagllioInvocazione">
+    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="[da definire]">
+
+    <table>
+      <tr>
+        <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
+        <td class="LBG"><font class="label">Funzione :</font> <font class="campo">Dettaglio Esecuzione Batch PagoPa</font></td>
+      </tr>
+    </table>
+
+<br>
+
+ 	<table style="max-width: 80%;">
+	    <tr>
+	    	<td class="int" colspan="2">Dettaglio esecuzione del batch</td>
+		</tr>  
+	    <tr>
+	    	<td class="l">Avviato</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(DateUtils.getDateToString(BatchModel.getDataInizioEsecuzione(),"dd-MM-yyyy - HH:mm:ss") ,"")%></td>
+		</tr>
+	    <tr>
+	    	<td class="l">Terminato</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(DateUtils.getDateToString(BatchModel.getDataFineEsecuzione(),"dd-MM-yyyy - HH:mm:ss") ,"")%></td>
+		</tr>  
+		<tr>
+	    	<td class="l" nowrap>Tempo di Esecuzione (hh:mm:ss)&nbsp;&nbsp;</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getDurataAsString(),"")%></td>
+		</tr> 
+		<tr>
+	    	<td class="l">Posizioni Verificate</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getNumPosDebitorieVerificate(),"n.d.")%></td>
+		</tr>
+		<tr>
+	    	<td class="l">Bollettini Aggiornati</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getNumBollettiniAggiornati(),"n.d.")%></td>
+		</tr> 	
+		<tr>
+	    	<td class="l">Numero Richieste in Errore</td>
+	    	<td class="l">0</td>
+		</tr> 		
+		<tr>
+	    	<td class="l">Esito</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getEsitoEsecuzione().replaceAll("\\n", "<br>"),"n.d.")%></td>
+		</tr>
+		<tr>
+	    	<td class="l">Errori</td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getErroreEsecuzione(),"&nbsp;")%></td>
+		</tr> 
+	</table>	
+
+<br>
+<jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
+<br>
+
+    <table cellspacing="2" cellpadding="2" style="width:80%;">
+      <tr>
+        <td class="int">Data Richiesta</td>
+        <td class="int">Codice Fiscale Controllato</td>
+        <!--  
+        <td class="int">IUV Controllato</td>
+        -->
+        <td class="int">XML - Richiesta</td>
+        <td class="int">XML - Risposta</td>
+        <td class="int">Errore Richiesta</td>
+        <td class="int">Dettaglio Bollettini</td>
+      </tr>
+    <% 
+      // Scorrere la lista delle chiamate
+      for (int i = 0; i< ListaInvocazioni.size(); i++) 
+      { 
+    	InvocazionePagopaModel invocaModel = (InvocazionePagopaModel) ListaInvocazioni.elementAt(i);
+        Vector <BollettinoPagopaModel> listaBollettini = invocaModel.getListaBollettini();
+        
+        String linkXmlRichiesta = ICostantiInvocazionePagopa.CAMPO_ID_INVOCAZIONE_PAGOPA+"="+invocaModel.getIdInvocazionePagopa()+"&"+ICostantiInvocazionePagopa.CAMPO_TIPO_XML+"="+ICostantiInvocazionePagopa.CAMPO_XML_RICHIESTA;
+        String linkXmlRisposta  = ICostantiInvocazionePagopa.CAMPO_ID_INVOCAZIONE_PAGOPA+"="+invocaModel.getIdInvocazionePagopa()+"&"+ICostantiInvocazionePagopa.CAMPO_TIPO_XML+"="+ICostantiInvocazionePagopa.CAMPO_XML_RISPOSTA;
+	  %> 
+		<tr>
+	        <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(invocaModel.getDataInvocazione(),"dd-MM-yyyy - HH:mm:ss"),"")%></td>
+	        <td class="c"><%=StringUtils.toStringJSP(invocaModel.getCodiceFiscale(),"&nbsp;")%></td>
+	        <!--
+	        <td class="c"><%=StringUtils.toStringJSP(invocaModel.getIuv(),"&nbsp;")%></td>
+	        -->
+	        <td class="c">
+	          <table>
+	        	<tr>
+	        	  <td class="c" style="border-style:none;">
+			        <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa&<%=linkXmlRichiesta%>">
+			          <img  alt="Scarica XML Richiesta" src="<%=IWebConstants.IMAGES_DIR%>download.png" border="0" style="width:25px;"></a>
+	         	  </td>
+	         	  <td class="c" style="border-style:none;">
+	          		<a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa&<%=linkXmlRichiesta%>">Scarica XML Richiesta</a>
+	        	  </td></tr></table>
+	        </td>
+	        <td class="c">
+	          <table>
+	            <tr>
+	        	  <td class="c" style="border-style:none;">
+	          		<a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa&<%=linkXmlRisposta%>">
+	            	  <img  alt="Scarica XML Risposta" src="<%=IWebConstants.IMAGES_DIR%>download.png" border="0" style="width:25px;"></a>&nbsp;
+	         	  </td>
+	         	  <td class="c" style="border-style:none;">
+	         	  	<a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa&<%=linkXmlRisposta%>">Scarica XML Risposta</a>
+	         	  </td></tr></table>
+	        </td>
+	        <td class="c"><%=StringUtils.toStringJSP(invocaModel.getErrore(),"&nbsp;")%></td>
+	        <td class="c"><a href="#" onclick="visualizzaDettaglio(<%=invocaModel.getIdInvocazionePagopa()%>);">Visualizza Bollettini</a></td>
+		</tr>
+    
+    <% if (listaBollettini.size()>0) {%>
+     <tr style="display:none;" id="<%=invocaModel.getIdInvocazionePagopa()%>">
+      <td class="c" colspan="6">
+        <table>
+        	<tr>
+            <td class="int">N.ro Ordine</td>
+            <td class="int">Tipo Pagamento</td>
+            <td class="int">IUV</td>
+            <td class="int">Importo</td>
+            <td class="int">Importo Pagato</td>
+            <td class="int">Data Pagamento</td>
+            <td class="int">Data Scadenza</td>
+            <td class="int">Stato</td>
+          </tr>    
+    
+	  <% 
+      for (int j = 0; j< listaBollettini.size(); j++) 
+      { 
+        BollettinoPagopaModel bollettino = listaBollettini.elementAt(j);
+     %>
+        	<tr>
+            <td class="c"><%=StringUtils.toStringJSP(bollettino.getProgRata())%></td>
+            <td class="c">Tipo Pagamento</td>
+            <td class="c"><%=StringUtils.toStringJSP(bollettino.getIuv(), "-")%></td>
+            <td class="c"><%=StringUtils.toEuroFormat(bollettino.getImportoRata())%></td>
+            <td class="c"><%=StringUtils.toEuroFormat(bollettino.getImportoPagato())%></td>
+            <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bollettino.getDataAvvPagamento(), "dd/MM/yyyy"), "-")%></td>
+            <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(bollettino.getDataScadenza(), "dd/MM/yyyy"), "-")%></td>
+            <td class="c"><%=StringUtils.toStringJSP(bollettino.getDescrStatoPagamento())%></td>
+          </tr>
+    <% } // end for %>
+     
+     
+          </table>
+        </td>
+      </tr>
+    <% 
+	  } // end if 
+    } // end for
+	  %>
+    </table>
+    
+    
+    <br><br>
+    
+  </form>
+
+ <script language="JavaScript" type="text/javascript">
+
+  var frmvalidator  = new Validator("dettagllioInvocazione");
+  
+  frmvalidator.setAddnlValidationFunction("Verify");
+  </script>
+
+</body>
+
+</html>
+

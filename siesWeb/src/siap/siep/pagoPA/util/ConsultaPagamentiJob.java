@@ -22,7 +22,10 @@ import siap.siep.pagoPA.action.ICostantiPagoPA;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.pagoPaBatch.controller.IBatchPagopa;
+import siap.siep.pagoPaBatch.controller.IInvocazionePagopa;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+import siap.siep.pagoPaBatch.model.BollettinoBatchPagopaModel;
+import siap.siep.pagoPaBatch.model.InvocazionePagopaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
@@ -46,6 +49,10 @@ public class ConsultaPagamentiJob implements Job {
 
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
+	// Lo scheduler ad ogni lancio crea una nuova istanza della classe invocamdo il costruttore senza parametri
+	// MEV_2023-33
+	public ConsultaPagamentiJob() {}
+	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 		MDC.put("utente", "BATCH_PAGOPA");
@@ -119,9 +126,13 @@ public class ConsultaPagamentiJob implements Job {
 					.ExRicercaDebitoriConPosizioniAperteInScadenza(istg, cdg, gdg, cpg);
 			pagoPaLogger.debug("Debitori trovati = " + lElencoDebitori.size());
 
+			IInvocazionePagopa lCtrlInvocazione = SIEPLookupRemote.getInvocazionePagopaRemote();
 			// Ricerca per debitore
 			for (int i = 0; i < lElencoDebitori.size(); i++) {
 				BollettinoPagopaModel lDebitore = lElencoDebitori.elementAt(i);
+				
+				InvocazionePagopaModel lInvocazioneModel = new InvocazionePagopaModel();
+				
 				try {
 					pagoPaLogger.debug(
 							" Inizio richiesta a pagoPa per il Debitore = " + lDebitore.getCodiceFiscale()
@@ -145,7 +156,7 @@ public class ConsultaPagamentiJob implements Job {
 
 					// L'elemento stato contiene l'indicazione dello stato del pagamento nel contesto del PST
 					// e può assumere uno dei seguenti valori
-					// - GENERATA - Valore ottenuto ni test dopo la generazione del bollettino
+					// - GENERATA - Valore ottenuto in test dopo la generazione del bollettino
 					// - CARRELLO - indica che la richiesta è nel carrello (non pagato)
 					// - DISPONIBILE - Il valore indica che è presente una Ricevuta Telematica con esito
 					// positivo
@@ -159,6 +170,17 @@ public class ConsultaPagamentiJob implements Job {
 					int dimensionePagina = 0;
 					int numeroPagina = 0;
 
+					// MEV_2023-33 - Si tiene traccia di ogni invocazione al WS
+					lInvocazioneModel.setCodiceFiscale(codiceFiscale);
+					lInvocazioneModel.setDataInvocazione(new Date());
+					lInvocazioneModel.setFkIdBatch(lBatchModel.getIdBatchPagopa());
+					lInvocazioneModel.setCodOperatoreInserimento("");
+					lInvocazioneModel.setDataInserimento(new Date());
+					
+					lInvocazioneModel = lCtrlInvocazione.ExInserisciInvocazionePagopa(lInvocazioneModel);
+					//MEV_2023-33
+					
+					
 					Object[] pagamenti = null;
 					// SOLO PER TEST
 					if ("true".equals(F3BProperties.getProperty("PagoPaTest"))) {
@@ -170,14 +192,27 @@ public class ConsultaPagamentiJob implements Job {
 						RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
 								codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
 								dimensionePagina, numeroPagina);
+						// MEV_2023-33 Si registrano i dati scambiati: XML
+						org.apache.axis.client.Call _call = scpt.getLastCall();
+						String requestXML = _call.getMessageContext().getRequestMessage().getSOAPPartAsString();
+						String responseXML = _call.getMessageContext().getResponseMessage().getSOAPPartAsString();
+						pagoPaLogger.debug("requestXML \n"+requestXML);
+						pagoPaLogger.debug("responseXML \n"+responseXML);
+						
+						lInvocazioneModel.setXmlRichiesta(requestXML);
+						lInvocazioneModel.setXmlRisposta(responseXML);
+						
+						// Verificare il caso di errore
+						if (1==1)
+							lInvocazioneModel.setErrore(null);
+						
+						lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
+						// MEV_2023-33 fine
 
 						pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
-						pagoPaLogger.debug(
-								"RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
-						pagoPaLogger
-								.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
-						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
-								+ (rr.getItems() != null ? rr.getItems().length : null));
+						pagoPaLogger.debug("RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
+						pagoPaLogger.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
+						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = " + (rr.getItems() != null ? rr.getItems().length : null));
 						pagamenti = rr.getItems();
 					}
 
@@ -198,14 +233,15 @@ public class ConsultaPagamentiJob implements Job {
 								if (pagamenti[progPagamento] instanceof StatoRichiestaPagamento) {
 									statoRichiesta = (StatoRichiestaPagamento) pagamenti[progPagamento];
 									pagoPaLogger.debug("statoRichiesta " + statoRichiesta.toString1());
-									// Devo verificrae se il pagamento restituito è tra quelli pending e in
+									// Devo verificare se il pagamento restituito è tra quelli pending e in
 									// caso aggiornare lo stato
 									// Recupero il pagamento per numero di avviso (NON CRS)
 									String iuv = statoRichiesta.getNumeroAvviso().substring(1);
 									bollettinoSIES = lCtrlBollettini.ExRicercaBollettinoPagopaByIUV(iuv);
 									if (bollettinoSIES != null) {
 										if (ICostantiPagoPA.SIES_STATO_NON_PAGATO
-												.equals(bollettinoSIES.getStatoPagamento())) {
+												.equals(bollettinoSIES.getStatoPagamento())) 
+										{
 											bollettinoSIES.setDataUltimoControllo(DateUtils.getSysDate());
 											bollettinoSIES.setCodOperatoreAggiornamento("BATCH");
 											bollettinoSIES.setCodUfficioAggiornamento("BATCH");
@@ -214,6 +250,23 @@ public class ConsultaPagamentiJob implements Job {
 											// Loggo comunque lo stato
 											bollettinoSIES.setStatoPagopa(statoRichiesta.getStato());
 
+											// MEV_2023-33 si storicizza l'esito ricevuto
+											try 
+											{
+												BollettinoBatchPagopaModel lBollBatchModel = new BollettinoBatchPagopaModel();
+												lBollBatchModel.setFkIdInvocazionePagopa(lInvocazioneModel.getIdInvocazionePagopa());
+												lBollBatchModel.setFkIdBollettinoPagopa(bollettinoSIES.getIdBollettinoPagopa());
+												lBollBatchModel.setFkIdBatchPagopa(lBatchModel.getIdBatchPagopa());
+												lBollBatchModel.setStatoPagopa(statoRichiesta.getStato());
+												
+												lCtrlInvocazione.ExInserisciBollettinoBatchPagopa(lBollBatchModel);
+											}
+											catch (Exception e) {
+												// Trattandosi di tracciatura non si blocca l'aggiornamento
+												pagoPaLogger.error("Errore in fase di inserimento sulla tabella di tracciatura BOLLETTINO_BATCH_PAGOPA",e);
+											}
+											// MEV_2023-33 
+											
 											if (statoRichiesta.getStato()
 													.equals(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE)) {
 												// Il bollettino è stato pagato. Aggiorno opportunamente il

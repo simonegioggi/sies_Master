@@ -135,6 +135,11 @@ public class BatchPagopaDAO extends SIAPTableDAO {
 		setErroreEsecuzione(aModel.getErroreEsecuzione());
 	}
 
+	public void setCondizioneByKey(BigDecimal IdBatchPagopa) {
+
+		setCondition(" ID_BATCH_PAGOPA = " + IdBatchPagopa);
+	}
+	
 	public void setCondizioneUpdate(BigDecimal IdBatchPagopa) {
 
 		setCondition(" ID_BATCH_PAGOPA = " + IdBatchPagopa);

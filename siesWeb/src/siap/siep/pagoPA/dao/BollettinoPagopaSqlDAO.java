@@ -264,5 +264,44 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		// info per il log
 		siesLogger.info("Query >>>>>>>>> " + s);
 	}
+	
+	
+	public void ricercaBollettiniPagopaByIdInvocazione (BigDecimal idInvocazione) throws DAOException {
+
+		String lStatement = new String("");
+
+		lStatement += "SELECT BP.ID_BOLLETTINO_PAGOPA, BP.PROG_RATA, BP.NUMERO_RATE,"
+				+ " BP.TIPO_RATEIZZAZIONE, BP.IUV, BP.IMPORTO_RATA, BP.IMPORTO_PAGATO,"
+				+ " BP.DATA_AVV_PAGAMENTO, BP.DATA_SCADENZA, BP.DATA_SCADENZA_RICH,"
+				+ " BP.STATO_PAGAMENTO, BP.COD_OPERATORE_INSERIMENTO,"
+				+ " BP.DATA_INSERIMENTO, BP.COD_UFFICIO_INSERIMENTO,"
+				+ " BP.COD_OPERATORE_AGGIORNAMENTO, BP.DATA_AGGIORNAMENTO,"
+				+ " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
+				+ " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO"
+				// Sostituiso lo STATO_PAGOPA ultimo memorizzato sul bollettino con il dato storicizzato sulla BOLLETTINO_BATCH_PAGOPA
+				+ ", BOLLETTINO_BATCH_PAGOPA.STATO_PAGOPA, "
+				+ " BP.ERRORE_PAGOPA,"
+				+ " BP.DATA_GENERAZIONE_BOLLETTINO, "
+				+ " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO ";
+		
+		lStatement +=  " FROM BOLLETTINO_PAGOPA BP"
+				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE "
+				+ " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE') "
+				+ " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE "
+				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO') " 
+				+ " , BOLLETTINO_BATCH_PAGOPA ";
+		
+		lStatement += " WHERE 1 = 1";
+		lStatement +=   " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_BOLLETTINO_PAGOPA = BP.ID_BOLLETTINO_PAGOPA ";
+		lStatement +=   " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_INVOCAZIONE_PAGOPA = "+idInvocazione; 
+
+		lStatement +=   " ORDER BY BP.PROG_RATA ";
+		
+		setStatement(lStatement);
+
+		// info per il log
+		//pagoPaLogger.info("Query >>>>>>>>> " + lStatement);
+	}
+	
 
 }

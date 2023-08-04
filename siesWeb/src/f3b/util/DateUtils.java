@@ -991,4 +991,24 @@ public class DateUtils {
 	       return ultimoDelMeseSucc;
 	   }
 
+	   
+	    public static String getTempoEsecuzione (Date aDataDal, Date aDataAl) {
+	        String lTempoEsecuzione = "";
+	        
+	        long lDifferenzaMs = aDataAl.getTime() - aDataDal.getTime();
+	        
+	        long millis = lDifferenzaMs % 1000;
+	        long x = lDifferenzaMs / 1000;
+	        long seconds = x % 60;
+	        x /= 60;
+	        long minutes = x % 60;
+	        x /= 60;
+	        long hours = x % 24;
+
+	        //lTempoEsecuzione = String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, millis);
+	        lTempoEsecuzione = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	        
+	        return lTempoEsecuzione;
+	    }
+	   
 }

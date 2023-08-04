@@ -104,5 +104,11 @@ public class ServiziConsultazionePagamentiTelematiciProxy implements it.giustizi
     return serviziConsultazionePagamentiTelematici.ricercaPagamentiNonVerificati(dataControlloDa, dataControlloA, idFlusso, dataRicevutaDa, dataRicevutaA, dimensionePagina, numeroPagina);
   }
   
-  
+  /**
+   * 2023.03.30 DF Da verificare l'implementazione
+   */
+  public org.apache.axis.client.Call getLastCall() {
+      org.apache.axis.client.Call lastCall = null; //super._getCall();
+      return lastCall;
+  }
 }
