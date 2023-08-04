@@ -38,4 +38,6 @@ public interface ICostantiBatchPagoPa {
     public static final String PG_LOAD_DETTAGLIO_ESECUZIONE_BATCH = IWebConstants.ROOT_DIR
             + "files/siap/siep/pagoPABatch/LoadDettaglioEsecuzioneBatchPagoPA.jsp";
     
+    public static final String PG_LOAD_DETTAGLIO_SCHEDULAZIONE_BATCH_PAGOPA = IWebConstants.ROOT_DIR
+            + "files/siap/siep/pagoPABatch/LoadDettaglioSchedulazioneBatchPagoPA.jsp";
 }

@@ -108,7 +108,7 @@ public class ActConfiguraDemoneConsultazionePagoPa extends ActionSiap implements
         setRequestAttribute("PagoPaCronDebugEnabled", lPagoPaCronDebugEnabled);
         
         String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-                + "=siap.siep.pagoPaBatch.action.ActVisualizzaBatchPagoPa";
+                + "=siap.siep.pagoPaBatch.action.ActVisualizzaSchedulazioneBatchPagoPa";
     
         return lPage;
     }

@@ -69,6 +69,7 @@ public class ConsultaPagamentiJob implements Job {
 		//
 		int contaNumPosBebitorieVerificate = 0;
 		int contaNumBollettiniAggiornati = 0;
+		int contaNumBollettiniInErrore = 0;
 
 		IBatchPagopa lCtrlBatch = null;
 
@@ -328,6 +329,7 @@ public class ConsultaPagamentiJob implements Job {
 						}
 					}
 				} catch (Exception e) {
+					contaNumBollettiniInErrore++;
 					pagoPaLogger.error(
 							" Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
 									+ lDebitore.getCodiceFiscale(),
@@ -335,6 +337,9 @@ public class ConsultaPagamentiJob implements Job {
 					erroriEsecuzione = appendString(erroriEsecuzione,
 							"\nErrore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
 									+ lDebitore.getCodiceFiscale());
+					lInvocazioneModel.setErrore(e.getMessage());
+					lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
+					//asdasd
 				}
 			}
 		} catch (Exception e) {
@@ -348,6 +353,7 @@ public class ConsultaPagamentiJob implements Job {
 				lBatchModel.setEsitoEsecuzione("Batch terminato");
 				lBatchModel.setNumPosDebitorieVerificate(new BigDecimal(contaNumPosBebitorieVerificate));
 				lBatchModel.setNumBollettiniAggiornati(new BigDecimal(contaNumBollettiniAggiornati));
+				//lBatchModel.setNumBollettiniInErrore(new BigDecimal(contaNumBollettiniInErrore));
 
 				lBatchModel.setEsitoEsecuzione(esitoEsecuzione);
 				lBatchModel.setErroreEsecuzione(erroriEsecuzione);

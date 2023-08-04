@@ -34,7 +34,8 @@ public class QuartzProperties {
         FileInputStream lFis = null;
         try {
             mProps = new Properties();
-            lFis = new FileInputStream(mFileProps.equals("") ? "./quartzDF.properties" : mFileProps);
+//            lFis = new FileInputStream(mFileProps.equals("") ? "./quartzDF.properties" : mFileProps);
+            lFis = new FileInputStream(mFileProps.equals("") ? "./quartz.properties" : mFileProps);
             this.mProps.load(lFis);
         } catch (IOException ioex) {
             throw new F3BException("Errore nella fase di load del file di properties di quartz");

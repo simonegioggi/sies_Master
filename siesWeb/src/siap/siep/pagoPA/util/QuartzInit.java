@@ -27,9 +27,26 @@ public class QuartzInit extends HttpServlet {
 
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
+	
 	public void init() {
+		String lCronPersistanceType = "MEM";
+		
+		try {
+			lCronPersistanceType = F3BProperties.getProperty("CronPersistanceType");
+			pagoPaLogger.info("lCronPersistanceType = " + lCronPersistanceType);
+		}
+		catch (Exception e) {}
+		
+		if ("DB".equals(lCronPersistanceType))
+			initDBPersistance();
+		else
+			initInMemory();
+	}
+	
+	
+	public void initInMemory() {
 
-		pagoPaLogger.info(getClass().getName() + ".init()");
+		pagoPaLogger.info(getClass().getName() + ".initInMemory()");
 		pagoPaLogger.info("");
 		pagoPaLogger.info("===================================================");
 		pagoPaLogger.info("Inizializzazione schedulazione batch pagoPA  MEM ");
@@ -104,10 +121,12 @@ public class QuartzInit extends HttpServlet {
 	
 	/**
 	 * Versione dell'init per attivare la persistenza sul DB dei job 
+	 * Per utilizzare questo metodo dev essere presente il file quart.properties nella cartella config
+	 * con i parametri per l'accesso al DB
 	 */
     //public void initQuartzPersistance() {
-    public void initDB() {    
-        pagoPaLogger.info(getClass().getName() + ".init()");
+    public void initDBPersistance() {    
+        pagoPaLogger.info(getClass().getName() + ".initDBPersistance()");
         pagoPaLogger.info("");
         pagoPaLogger.info("===================================================");
         pagoPaLogger.info("Inizializzazione schedulazione batch pagoPA DB ");

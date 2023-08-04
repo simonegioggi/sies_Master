@@ -37,7 +37,7 @@ public class ActArrestaDemoneConsultazionePagoPa extends ActionSiap implements I
         }        
         
         String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-                + "=siap.siep.pagoPaBatch.action.ActVisualizzaBatchPagoPa";
+                + "=siap.siep.pagoPaBatch.action.ActVisualizzaSchedulazioneBatchPagoPa";
 
         return lPage;
     }

@@ -93,17 +93,19 @@
 	    	<td class="l">Bollettini Aggiornati</td>
 	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getNumBollettiniAggiornati(),"n.d.")%></td>
 		</tr> 	
+		<%-- 
 		<tr>
 	    	<td class="l">Numero Richieste in Errore</td>
 	    	<td class="l">0</td>
-		</tr> 		
+		</tr> 	
+		--%>	
 		<tr>
 	    	<td class="l">Esito</td>
-	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getEsitoEsecuzione().replaceAll("\\n", "<br>"),"n.d.")%></td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getEsitoEsecuzione()!=null ? BatchModel.getEsitoEsecuzione().replaceAll("\\n", "<br>") : null,"n.d.")%></td>
 		</tr>
 		<tr>
 	    	<td class="l">Errori</td>
-	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getErroreEsecuzione(),"&nbsp;")%></td>
+	    	<td class="l"><%=StringUtils.toStringJSP(BatchModel.getErroreEsecuzione()!=null ? BatchModel.getErroreEsecuzione().replaceFirst("\\n", "").replaceAll("\\n", "<br>") : null,"&nbsp;")%></td>
 		</tr> 
 	</table>	
 
@@ -140,6 +142,7 @@
 	        <td class="c"><%=StringUtils.toStringJSP(invocaModel.getIuv(),"&nbsp;")%></td>
 	        -->
 	        <td class="c">
+	       	  <% if (invocaModel.getXmlRichiesta()!=null && invocaModel.getXmlRichiesta().length()>0) { %>
 	          <table>
 	        	<tr>
 	        	  <td class="c" style="border-style:none;">
@@ -148,9 +151,15 @@
 	         	  </td>
 	         	  <td class="c" style="border-style:none;">
 	          		<a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa&<%=linkXmlRichiesta%>">Scarica XML Richiesta</a>
-	        	  </td></tr></table>
+	        	  </td>
+	        	  </tr>
+	        	</table>
+        	<% } else { %>
+         	  	  XML Richiesta non disponibile
+       	  	<% } %>
 	        </td>
 	        <td class="c">
+	         <% if (invocaModel.getXmlRisposta()!=null && invocaModel.getXmlRisposta().length()>0) { %>
 	          <table>
 	            <tr>
 	        	  <td class="c" style="border-style:none;">
@@ -160,9 +169,16 @@
 	         	  <td class="c" style="border-style:none;">
 	         	  	<a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActDownloadXMLInvocazionePagoPa&<%=linkXmlRisposta%>">Scarica XML Risposta</a>
 	         	  </td></tr></table>
+        	<% } else { %>
+         	  	  XML Risposta non disponibile
+       	  	<% } %>	         	  
 	        </td>
 	        <td class="c"><%=StringUtils.toStringJSP(invocaModel.getErrore(),"&nbsp;")%></td>
-	        <td class="c"><a href="#" onclick="visualizzaDettaglio(<%=invocaModel.getIdInvocazionePagopa()%>);">Visualizza Bollettini</a></td>
+	        <td class="c">
+	        <% if (listaBollettini.size()>0) {%>
+	        	<a onclick="visualizzaDettaglio(<%=invocaModel.getIdInvocazionePagopa()%>);">Visualizza Bollettini</a>
+	        <% } %>&nbsp;
+	        </td>
 		</tr>
     
     <% if (listaBollettini.size()>0) {%>
