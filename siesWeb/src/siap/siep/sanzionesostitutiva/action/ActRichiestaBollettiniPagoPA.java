@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
@@ -16,6 +17,8 @@ import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
@@ -63,6 +66,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 				.exRicercaEventoRateizzazionePP(idFascicolo);
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
+
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();
@@ -99,6 +103,41 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 			}
 			setRequestAttribute("modalitaPagamento", testo);
 		}
+
+		// MEV_33: aggiunte impostazioni di attributo
+		boolean isSoloPrimaRata = false;
+		boolean areRateGiaGenerate = false;
+		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
+		// Ricerca lo stato dei pagamenti per id fascicolo
+		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+		boolean isUnico = !elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() == 1
+				&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+		setRequestAttribute("isRateale", !isUnico);
+		if (!isUnico) {
+			Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+			int contaIUV = 0;
+			while (itx.hasNext()) {
+				BollettinoPagopaModel bpm = itx.next();
+				if (Utils.isPresent(bpm.getIuv()))
+					contaIUV++;
+			}
+			if (contaIUV == 1)
+				isSoloPrimaRata = true;
+			BollettinoPagopaModel primaRata = elencoStatoPagamenti.get(0);
+			BollettinoPagopaModel rataSuccessiva = elencoStatoPagamenti.get(1);
+			if (!Utils.isNullObj(primaRata.getDataGenerazioneBollettino())
+					&& !Utils.isNullObj(rataSuccessiva.getDataGenerazioneBollettino())
+					&& !DateUtils.isEqualsLocalDateTime(primaRata.getDataGenerazioneBollettino(),
+							rataSuccessiva.getDataGenerazioneBollettino())) {
+				isSoloPrimaRata = true;
+				areRateGiaGenerate = true;
+			} else if (contaIUV != 1)
+				isSoloPrimaRata = false;
+		}
+		// imposto l'attributo nella request
+		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
+		setRequestAttribute("areRateGiaGenerate", areRateGiaGenerate);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");

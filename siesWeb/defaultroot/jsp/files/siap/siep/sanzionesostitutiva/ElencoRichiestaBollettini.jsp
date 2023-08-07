@@ -16,6 +16,10 @@
 <jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
 <jsp:useBean id="modalitaPagamento" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
+<%-- MEV_33: aggiunti useBean --%>
+<jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="isRateale"					scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="areRateGiaGenerate"		scope="request" class="java.lang.Boolean"/>
 
 <html>
 <head>
@@ -55,7 +59,24 @@ function tornaIndietro(action) {
       	</td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
+<%
+// MEV_33: aggiungo gestione numero dei Bollettini da generare
+if (isRateale) {
+	if (isSoloPrimaRata) {
+%>
+    		<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria Rimanenti Rate</font>
+<%
+	} else {
+%>
+			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
+<%
+	}
+} else {
+%>
 			<font class="campo">Richiesta a PagoPA Generazione Primo Bollettino Pagamento Pena Pecuniaria</font>
+<%
+}
+%>
       	</td>
       	<td class="LBG"><!-- Tasto indietro alla Griglia dei dati analitici -->
         	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
@@ -111,7 +132,9 @@ if (listaRichiestaBollettini.size() == 0) {
 			<%=modalitaPagamento%>
 		</td>
 <%
-if (Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti())) {
+// MEV_33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate
+if ((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti()))
+		|| (isSoloPrimaRata && !areRateGiaGenerate)) {
 %>
       	<td class="c">
       		<a href="javascript:eseguiAzione('Inoltra', <%=em.getIdEvento()%>)">

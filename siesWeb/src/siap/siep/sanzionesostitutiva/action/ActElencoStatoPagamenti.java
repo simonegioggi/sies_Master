@@ -26,7 +26,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Title: ActElencoStatoPagamenti
+ * Title: ActElencoStatoPagamenti 
  * Description: Classe che mostra elenco stato pagamento bollettini PagoPA
  *
  * @author sgioggi
@@ -123,6 +123,20 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 			}
 			setRequestAttribute("modalitaPagamento", testo);
 		}
+
+		// MEV_33: aggiunta impostazione di attributo nella request per differenziare gestione rate
+		boolean isSoloPrimaRata = false;
+		if (!elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() > 1) {
+			BollettinoPagopaModel primaRata = elencoStatoPagamenti.get(0);
+			BollettinoPagopaModel rataSuccessiva = elencoStatoPagamenti.get(1);
+			if (!Utils.isNullObj(primaRata.getDataGenerazioneBollettino())
+					&& !Utils.isNullObj(rataSuccessiva.getDataGenerazioneBollettino())
+					&& !DateUtils.isEqualsLocalDateTime(primaRata.getDataGenerazioneBollettino(),
+							rataSuccessiva.getDataGenerazioneBollettino()))
+				isSoloPrimaRata = true;
+		}
+		// imposto l'attributo nella request
+		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");

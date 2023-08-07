@@ -7,10 +7,16 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.Utils;
+import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.GeneraAvvisoPagoPAUtil;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -53,7 +59,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
 				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
 		boolean isElencoEmpty = elencoStatoPagamenti.isEmpty();
-		// Ricerca i pagamenti per id evento
+		// Ricerca i pagamenti per idFascicolo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 				.exRicercaEventoRateizzazionePP(idFascicolo);
@@ -62,6 +68,19 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 					.getListaRateizzazioniPP();
 			EventoModel em = listaRichiestaBollettini.firstElement().getEvento();
 			setRequestAttribute("evento", em);
+			// MEV_33: controllo notifica al condannato
+			IEvento ie = SICOLookupRemote.getEventoRemote();
+			EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(em.getIdEvento());
+			NotificaModel[] nms = enm.getNotifiche();
+			String dataNotificaCondannato = "";
+			for (int i = 0; i < nms.length; i++) {
+				// NOTIFICA AL CONDANNATO
+				if (nms[i].getAvvIdAvvocatoFascicoloSiep() == null
+						&& nms[i].getIdCivilmenteObbligato() == null)
+					dataNotificaCondannato = DateUtils.getDateToString(nms[i].getDataAvvenutaNotifica(), "dd/MM/yyyy");
+			}
+			setRequestAttribute("dataNotificaCondannato", dataNotificaCondannato);
+
 			if (isElencoEmpty) {
 				int progressivoRata = 1;
 				// dalle rateizzazioni creo i bollettini
@@ -82,6 +101,32 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 
 		// poi li imposto nella pagina
 		setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
+		// MEV_33: aggiunte impostazioni di attributo
+		boolean isUnico = !elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() == 1
+				&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+		setRequestAttribute("isRateale", !isUnico);
+		boolean isSoloPrimaRata = false;
+		if (!isUnico) {
+			Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+			int contaIUV = 0;
+			while (itx.hasNext()) {
+				BollettinoPagopaModel bpm = itx.next();
+				if (Utils.isPresent(bpm.getIuv()))
+					contaIUV++;
+			}
+			if (contaIUV == 1)
+				isSoloPrimaRata = true;
+			BollettinoPagopaModel primaRata = elencoStatoPagamenti.get(0);
+			BollettinoPagopaModel rataSuccessiva = elencoStatoPagamenti.get(1);
+			if (!Utils.isNullObj(primaRata.getDataGenerazioneBollettino())
+					&& !Utils.isNullObj(rataSuccessiva.getDataGenerazioneBollettino())
+					&& !DateUtils.isEqualsLocalDateTime(primaRata.getDataGenerazioneBollettino(),
+							rataSuccessiva.getDataGenerazioneBollettino()))
+				isSoloPrimaRata = true;
+			else if (contaIUV != 1)
+				isSoloPrimaRata = false;
+		}
+		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");

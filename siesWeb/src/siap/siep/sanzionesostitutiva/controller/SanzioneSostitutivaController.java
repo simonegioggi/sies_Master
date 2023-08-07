@@ -33,7 +33,6 @@ import siap.sico.util.SICOLookupRemote;
 import siap.siep.SIEPException;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
-import siap.siep.fascicolo.dao.FascicoloSiepOnViewSqlDAO;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.nomeprovvedimento.dao.NomeProvvedimentoDAO;
 import siap.siep.notifica.dao.NotificaDAO;
@@ -70,7 +69,8 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: SanzioneSostitutivaController Description: Controller della SanzioniSostitutive
+ * Title: SanzioneSostitutivaController 
+ * Description: Controller della Sanzioni Sostitutive
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
@@ -2702,11 +2702,9 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		return lEveRet;
 	}
 
-	/**
-	 *
-	 */
 	public void exAggiornaNotificheOrdineIngiunzione(EventoModel aEvento,
 			Vector<NotificaModel> aListaNotDaAggiornare) throws F3BException {
+
 		Connection lConn = null;
 
 		NotificaDAO lNotDAO = null;
@@ -2904,7 +2902,6 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 								lBollDao.update();
 							}
 						}
-
 					}
 				}
 			}
@@ -2939,6 +2936,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	 */
 	public EventoNotificaModel exModificaOrdineIngiunzione(EventoNotificaModel aEvNotModel,
 			String[] lArrayIdRate) throws F3BException {
+
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
@@ -3062,14 +3060,12 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return lEveRet;
 	}
-	
-	
-	
+
 	/**
-	 * MEV_2023-33
-	 * Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento 
+	 * MEV_2023-33 Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento
 	 */
-	public BigDecimal ExGetCountRicercaFascicoliPerStatoPagamento(FascicoloSiepModel aFascicolo, String aTipoRicerca) throws F3BException {
+	public BigDecimal ExGetCountRicercaFascicoliPerStatoPagamento(FascicoloSiepModel aFascicolo,
+			String aTipoRicerca) throws F3BException {
 
 		BigDecimal lCount = new BigDecimal(0);
 		Connection lConn = null;
@@ -3077,10 +3073,10 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		RicercaStatoPagamentiSqlDao ricercaStatoPagamentiSqlDao = null;
 		try {
 			lConn = getDBConnection();
-			
+
 			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao(lConn);
-			
-			ricercaStatoPagamentiSqlDao.getCountRicercaFascicoliPerStatoPagamento(aFascicolo,aTipoRicerca);
+
+			ricercaStatoPagamentiSqlDao.getCountRicercaFascicoliPerStatoPagamento(aFascicolo, aTipoRicerca);
 			ricercaStatoPagamentiSqlDao.start();
 			ricercaStatoPagamentiSqlDao.next();
 			lCount = ricercaStatoPagamentiSqlDao.getBigDecimal("HowManyRecords");
@@ -3088,21 +3084,21 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		} catch (DAOException daoEx) {
 			siesLogger.error(daoEx.getLocalizedMessage());
 			throw new SIEPException(SIEPException.USER_MESSAGE,
-					"SanzioneSostitutivaController.ExGetCountRicercaFascicoliPerStatoPagamento: errore " + daoEx);
+					"SanzioneSostitutivaController.ExGetCountRicercaFascicoliPerStatoPagamento: errore "
+							+ daoEx);
 		} finally {
 			cleanup(ricercaStatoPagamentiSqlDao);
 			cleanup(lConn);
 		}
 		return lCount;
-	}	
-	
+	}
+
 	/**
-	 * MEV_2023-33
-	 * Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento 
+	 * MEV_2023-33 Metodo per la ricerca (paginata) dei fascicoli SIEP dell'ufficio per stato pagamento
 	 */
-	public Vector ExRicercaFascicoliPerStatoPagamentoPaged (FascicoloSiepModel aFasMod, int aPagina, String aTipoRicera)
-			throws F3BException
-	{
+	public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina,
+			String aTipoRicera) throws F3BException {
+
 		siesLogger.debug("ExRicercaFascicoloStatoPagamentoPaged");
 		Connection lConn = null;
 		RicercaStatoPagamentiSqlDao ricercaStatoPagamentiSqlDao = null;
@@ -3110,24 +3106,25 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		try {
 			lConn = getDBConnection();
-			
-			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao (lConn);
-			
+
+			ricercaStatoPagamentiSqlDao = new RicercaStatoPagamentiSqlDao(lConn);
+
 			ricercaStatoPagamentiSqlDao.ricercaFascicoliPerStatoPagamento(aFasMod, aPagina, aTipoRicera);
-			
+
 			elencoFascicoli = new Vector(ricercaStatoPagamentiSqlDao.getModels());
-			
 
 		} catch (DAOException ex) {
-			throw new F3BException("SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
 		} catch (Exception ex) {
-			throw new F3BException("SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
+			throw new F3BException(
+					"SanzioneSostitutivaController.ExRicercaFascicoliPerStatoPagamentoPaged: " + ex);
 		} finally {
 			cleanup(ricercaStatoPagamentiSqlDao);
-			
+
 			cleanup(lConn);
-		}	
-		
+		}
+
 		return elencoFascicoli;
 	}
 

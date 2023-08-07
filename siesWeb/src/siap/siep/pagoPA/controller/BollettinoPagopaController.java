@@ -25,12 +25,14 @@ import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
 /**
- * Title: BollettinoPagopaController Description: Classe Controller per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaController 
+ * Description: Classe Controller per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
  * @version 1.0
  */
+@SuppressWarnings("unchecked")
 public class BollettinoPagopaController extends SiapController implements IBollettinoPagopa {
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
@@ -298,7 +300,6 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		return coms;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void ExAggiornaStatoPagamentoBollettinoPagopa(BollettinoPagopaModel aBollettinoModel)
 			throws F3BException {
 
