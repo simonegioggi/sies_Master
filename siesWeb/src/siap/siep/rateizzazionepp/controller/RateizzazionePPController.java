@@ -12,9 +12,12 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.controller.SiapController;
+import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.siep.pagoPA.dao.BollettinoPagopaDAO;
 import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
@@ -79,12 +82,12 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 		BollettinoPagopaSqlDAO lBollettinoSqlDAO = null;
-		
+
 		try {
 			lConn = getDBConnection();
 
-			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO (lConn);
-			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO (lConn);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(lConn);
 
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFasSIEP(aIdFasc);
 
@@ -94,12 +97,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			}
 			lRateizzazioneSqlDao.stop();
 
-			for (RateizzazionePPModel lRata:  lListaRate) {
-			    lBollettinoSqlDAO.ricercaBollettinoPagopaByReteizzazione (lRata.getIdRateizzazionePP()); 
-			    Vector <BollettinoPagopaModel> lListaBollettini = new Vector <BollettinoPagopaModel> (lBollettinoSqlDAO.getModels());
-			    lRata.setListaBollettini (lListaBollettini);
+			for (RateizzazionePPModel lRata : lListaRate) {
+				lBollettinoSqlDAO.ricercaBollettinoPagopaByReteizzazione(lRata.getIdRateizzazionePP());
+				Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
+						lBollettinoSqlDAO.getModels());
+				lRata.setListaBollettini(lListaBollettini);
 			}
-			
+
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
@@ -123,26 +127,39 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		Connection lConn = null;
 
 		RateizzazionePPDAO lRateizzazioneDao = null;
-        RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
+		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 		BollettinoPagopaDAO lBollettiniDao = null;
-		
+
 		try {
 			lConn = getDBConnection();
-			
+
 			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
 			lRateizzazioneDao = new RateizzazionePPDAO(lConn);
-			lBollettiniDao = new BollettinoPagopaDAO (lConn);
-			
-			
+			lBollettiniDao = new BollettinoPagopaDAO(lConn);
+
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(aIdFasc);
-			Vector <RateizzazionePPModel> lListaRate = new Vector <RateizzazionePPModel> (lRateizzazioneSqlDao.getModels());
-			for (RateizzazionePPModel lrata : lListaRate)
-			{
-	            lBollettiniDao.selCondizioneDeleteByIdRata (lrata.getIdRateizzazionePP());
-	            lBollettiniDao.delete();
-	            
-	            lRateizzazioneDao.selCondizioneUpdate(lrata.getIdRateizzazionePP());
-	            lRateizzazioneDao.delete();
+			Vector<RateizzazionePPModel> lListaRate = new Vector<RateizzazionePPModel>(
+					lRateizzazioneSqlDao.getModels());
+			// MEV_2023-33: aggiunta gestione storicizzazione rate e bollettini
+			if (!lListaRate.isEmpty()) {
+				Iterator<RateizzazionePPModel> iterRPPM = lListaRate.iterator();
+				while (iterRPPM.hasNext()) {
+					RateizzazionePPModel rppm = iterRPPM.next();
+					BigDecimal idEvento = rppm.getEveIdEvento();
+					if (!Utils.isNullObj(idEvento)) {
+						IEvento ie = SICOLookupRemote.getEventoRemote();
+						EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+						if ("A".equals(em.getFlagDocumentoRegistrato()))
+							iterRPPM.remove();
+					}
+				}
+			}
+			// FINE MEV_2023-33
+			for (RateizzazionePPModel lrata : lListaRate) {
+				lBollettiniDao.selCondizioneDeleteByIdRata(lrata.getIdRateizzazionePP());
+				lBollettiniDao.delete();
+				lRateizzazioneDao.selCondizioneUpdate(lrata.getIdRateizzazionePP());
+				lRateizzazioneDao.delete();
 			}
 
 			commit(lConn);
@@ -158,7 +175,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			cleanup(lRateizzazioneDao);
 			cleanup(lBollettiniDao);
 			cleanup(lRateizzazioneSqlDao);
-			
+
 			cleanup(lConn);
 		}
 	}
@@ -168,29 +185,43 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		Connection lConn = null;
 
-        RateizzazionePPDAO lRateizzazioneDao = null;
-        RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
-        BollettinoPagopaDAO lBollettiniDao = null;
-        
+		RateizzazionePPDAO lRateizzazioneDao = null;
+		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
+		BollettinoPagopaDAO lBollettiniDao = null;
+
 		try {
 			lConn = getDBTransaction();
 
-            lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
-            lRateizzazioneDao = new RateizzazionePPDAO(lConn);
-            lBollettiniDao = new BollettinoPagopaDAO (lConn);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lRateizzazioneDao = new RateizzazionePPDAO(lConn);
+			lBollettiniDao = new BollettinoPagopaDAO(lConn);
 
 			siesLogger.debug("Cancello le precedenti rate.");
-            lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(aIdFasc);
-            Vector <RateizzazionePPModel> lListaRate = new Vector <RateizzazionePPModel> (lRateizzazioneSqlDao.getModels());
-            for (RateizzazionePPModel lrata : lListaRate)
-            {
-                lBollettiniDao.selCondizioneDeleteByIdRata (lrata.getIdRateizzazionePP());
-                lBollettiniDao.delete();
-                
-                lRateizzazioneDao.selCondizioneUpdate(lrata.getIdRateizzazionePP());
-                lRateizzazioneDao.delete();
-            }
-            
+			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(aIdFasc);
+			Vector<RateizzazionePPModel> lListaRate = new Vector<RateizzazionePPModel>(
+					lRateizzazioneSqlDao.getModels());
+			// MEV_2023-33: aggiunta gestione storicizzazione rate e bollettini
+			if (!lListaRate.isEmpty()) {
+				Iterator<RateizzazionePPModel> iterRPPM = lListaRate.iterator();
+				while (iterRPPM.hasNext()) {
+					RateizzazionePPModel rppm = iterRPPM.next();
+					BigDecimal idEvento = rppm.getEveIdEvento();
+					if (!Utils.isNullObj(idEvento)) {
+						IEvento ie = SICOLookupRemote.getEventoRemote();
+						EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+						if ("A".equals(em.getFlagDocumentoRegistrato()))
+							iterRPPM.remove();
+					}
+				}
+			}
+			// FINE MEV_2023-33
+			for (RateizzazionePPModel lrata : lListaRate) {
+				lBollettiniDao.selCondizioneDeleteByIdRata(lrata.getIdRateizzazionePP());
+				lBollettiniDao.delete();
+				lRateizzazioneDao.selCondizioneUpdate(lrata.getIdRateizzazionePP());
+				lRateizzazioneDao.delete();
+			}
+
 			siesLogger.debug("Ciclo caricamento rate. Num rate = " + aListaRate.size());
 			for (int i = 0; i < aListaRate.size(); i++) {
 				RateizzazionePPModel lRataModel = aListaRate.elementAt(i);
@@ -208,9 +239,9 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			rollback(lConn);
 			throw new F3BException("RateizzazionePPController.exModificaRateizzazioni: " + ex);
 		} finally {
-            cleanup(lRateizzazioneDao);
-            cleanup(lBollettiniDao);
-            cleanup(lRateizzazioneSqlDao);
+			cleanup(lRateizzazioneDao);
+			cleanup(lBollettiniDao);
+			cleanup(lRateizzazioneSqlDao);
 
 			cleanup(lConn);
 		}

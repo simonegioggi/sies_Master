@@ -27,23 +27,22 @@ public class QuartzInit extends HttpServlet {
 
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
-	
 	public void init() {
+
 		String lCronPersistanceType = "MEM";
-		
+
 		try {
 			lCronPersistanceType = F3BProperties.getProperty("CronPersistanceType");
 			pagoPaLogger.info("lCronPersistanceType = " + lCronPersistanceType);
+		} catch (Exception e) {
 		}
-		catch (Exception e) {}
-		
+
 		if ("DB".equals(lCronPersistanceType))
 			initDBPersistance();
 		else
 			initInMemory();
 	}
-	
-	
+
 	public void initInMemory() {
 
 		pagoPaLogger.info(getClass().getName() + ".initInMemory()");
@@ -118,102 +117,97 @@ public class QuartzInit extends HttpServlet {
 		// siesLogger.error("Errore in fase di inizializzazione di quartz: ",e);
 		// }
 	}
-	
+
 	/**
-	 * Versione dell'init per attivare la persistenza sul DB dei job 
-	 * Per utilizzare questo metodo dev essere presente il file quart.properties nella cartella config
-	 * con i parametri per l'accesso al DB
+	 * Versione dell'init per attivare la persistenza sul DB dei job Per utilizzare questo metodo dev essere
+	 * presente il file quart.properties nella cartella config con i parametri per l'accesso al DB
 	 */
-    //public void initQuartzPersistance() {
-    public void initDBPersistance() {    
-        pagoPaLogger.info(getClass().getName() + ".initDBPersistance()");
-        pagoPaLogger.info("");
-        pagoPaLogger.info("===================================================");
-        pagoPaLogger.info("Inizializzazione schedulazione batch pagoPA DB ");
-       
-        
-        try {
-            Properties qrtzProp = QuartzProperties.getInstance().getProps();
-            
-            pagoPaLogger.info("qrtzProp = "+qrtzProp);
-            pagoPaLogger.info("instanceName = "+qrtzProp.getProperty("org.quartz.scheduler.instanceName"));
-            
-            String lPagoPaSchedulerEnabled = F3BProperties.getProperty("PagoPaSchedulerEnabled");
-            pagoPaLogger.info("PagoPaSchedulerEnabled = "+lPagoPaSchedulerEnabled); 
-            
-            if ("true".equals(lPagoPaSchedulerEnabled)) {
-                pagoPaLogger.info("Procedo ad attivare la schedulazione"+lPagoPaSchedulerEnabled); 
-            
-                //SchedulerFactory sf = new StdSchedulerFactory();
-                SchedulerFactory sf = new StdSchedulerFactory(qrtzProp);
-                //SchedulerFactory sf = new StdSchedulerFactory("D:\\SIES_2020\\config\\quartzDF.properties");
-                
-                Scheduler scheduler = sf.getScheduler();
-                //Scheduler scheduler = sf.getScheduler("SIESScheduler"); // NON FUNZIONE
-                
-                Collection <Scheduler> listaScheduler = sf.getAllSchedulers();
-                for (Scheduler sch : listaScheduler) {
-                    pagoPaLogger.info("getSchedulerName = "+sch.getSchedulerName());
-                }
-                
-                pagoPaLogger.info("getSchedulerName = "+scheduler.getSchedulerName());
-                
-                JobKey keyCheckBollettini = new JobKey (ConsultaPagamentiJob.JOB_NAME,ConsultaPagamentiJob.JOB_GROUP);
-                
-                // verifico se il job è già stato schedulato 
-                boolean esisteCheckBollettini = scheduler.checkExists(keyCheckBollettini);
-                pagoPaLogger.info("esisteCheckBollettini = "+esisteCheckBollettini);
-                if(!esisteCheckBollettini) 
-                {
-                    pagoPaLogger.info("Demone delle chiamate a PagoPa non ancora creato, lo creo adesso");
-                    JobDataMap dataMap = new JobDataMap();
-                    dataMap.put("DescCol", ConsultaPagamentiJob.JOB_DESC_COL);
-                    // aggiungere al dataMap eventuali parametri di inizializzazione del JOB 
-                    
-                    JobDetail job = JobBuilder.newJob(ConsultaPagamentiJob.class)
-                                              .withIdentity (keyCheckBollettini)
-                                              .withDescription (ConsultaPagamentiJob.JOB_DESC)
-                                              .usingJobData(dataMap)
-                                              .storeDurably() // indica allo scheduler di non rimuover il job se non ha trigger associati
-                                              .build();                
-                    
-                    String lPagoPaCronExpression = F3BProperties.getInstance().getProperty("PagoPaCronExpression");
-                    pagoPaLogger.info("F3b.properties: PagoPaCronExpression = "+lPagoPaCronExpression);
-    
-                    // Creo un nuovo trigger
-                    TriggerKey trigKey = new TriggerKey("Default_Trigger_Name","Default_Trigger_Group");
-                    Trigger trigger = TriggerBuilder.newTrigger()
-                                                    .withIdentity(trigKey)
-                                                    .withSchedule(CronScheduleBuilder.cronSchedule(lPagoPaCronExpression)
-                                                            .withMisfireHandlingInstructionDoNothing())
-                                                    .build();
-                    
-                    scheduler.scheduleJob(job,trigger);
-                    
-                    //Blocco la schedulazione nel caso in cui al primo avvio la voglio configurare da interfaccia grafica
-                    //scheduler.unscheduleJob(trigKey);
-                }
-                else {
-                    pagoPaLogger.info("JOB PagoPa già presente");
-                }   
-                
-                
-                getServletContext().setAttribute("quartzScheduler",scheduler);
-                
-                pagoPaLogger.info(" Avvio dello schedulatore...");
-                scheduler.start();
-                pagoPaLogger.info(" Schedulatore avviato");
-                pagoPaLogger.info("");
-                pagoPaLogger.info("===================================================");
-            
-            }
-            else {
-                pagoPaLogger.warn("Schedulazione PagoPaSchedulerEnabled non attiva.");  
-                pagoPaLogger.info("===================================================");
-            }
-        } catch (Exception e) {
-            pagoPaLogger.error("Errore in fase di inizializzazione di quartz: ",e);
-        }
-    }    	
+	// public void initQuartzPersistance() {
+	public void initDBPersistance() {
+		pagoPaLogger.info(getClass().getName() + ".initDBPersistance()");
+		pagoPaLogger.info("");
+		pagoPaLogger.info("===================================================");
+		pagoPaLogger.info("Inizializzazione schedulazione batch pagoPA DB ");
+
+		try {
+			Properties qrtzProp = QuartzProperties.getInstance().getProps();
+
+			pagoPaLogger.info("qrtzProp = " + qrtzProp);
+			pagoPaLogger.info("instanceName = " + qrtzProp.getProperty("org.quartz.scheduler.instanceName"));
+
+			String lPagoPaSchedulerEnabled = F3BProperties.getProperty("PagoPaSchedulerEnabled");
+			pagoPaLogger.info("PagoPaSchedulerEnabled = " + lPagoPaSchedulerEnabled);
+
+			if ("true".equals(lPagoPaSchedulerEnabled)) {
+				pagoPaLogger.info("Procedo ad attivare la schedulazione" + lPagoPaSchedulerEnabled);
+
+				// SchedulerFactory sf = new StdSchedulerFactory();
+				SchedulerFactory sf = new StdSchedulerFactory(qrtzProp);
+				// SchedulerFactory sf = new
+				// StdSchedulerFactory("D:\\SIES_2020\\config\\quartzDF.properties");
+
+				Scheduler scheduler = sf.getScheduler();
+				// Scheduler scheduler = sf.getScheduler("SIESScheduler"); // NON FUNZIONE
+
+				Collection<Scheduler> listaScheduler = sf.getAllSchedulers();
+				for (Scheduler sch : listaScheduler) {
+					pagoPaLogger.info("getSchedulerName = " + sch.getSchedulerName());
+				}
+
+				pagoPaLogger.info("getSchedulerName = " + scheduler.getSchedulerName());
+
+				JobKey keyCheckBollettini = new JobKey(ConsultaPagamentiJob.JOB_NAME,
+						ConsultaPagamentiJob.JOB_GROUP);
+
+				// verifico se il job è già stato schedulato
+				boolean esisteCheckBollettini = scheduler.checkExists(keyCheckBollettini);
+				pagoPaLogger.info("esisteCheckBollettini = " + esisteCheckBollettini);
+				if (!esisteCheckBollettini) {
+					pagoPaLogger.info("Demone delle chiamate a PagoPa non ancora creato, lo creo adesso");
+					JobDataMap dataMap = new JobDataMap();
+					dataMap.put("DescCol", ConsultaPagamentiJob.JOB_DESC_COL);
+					// aggiungere al dataMap eventuali parametri di inizializzazione del JOB
+
+					JobDetail job = JobBuilder.newJob(ConsultaPagamentiJob.class)
+							.withIdentity(keyCheckBollettini).withDescription(ConsultaPagamentiJob.JOB_DESC)
+							.usingJobData(dataMap).storeDurably() // indica allo scheduler di non rimuover il
+																	// job se non ha trigger associati
+							.build();
+
+					String lPagoPaCronExpression = F3BProperties.getProperty("PagoPaCronExpression");
+					pagoPaLogger.info("F3b.properties: PagoPaCronExpression = " + lPagoPaCronExpression);
+
+					// Creo un nuovo trigger
+					TriggerKey trigKey = new TriggerKey("Default_Trigger_Name", "Default_Trigger_Group");
+					Trigger trigger = TriggerBuilder.newTrigger().withIdentity(trigKey)
+							.withSchedule(CronScheduleBuilder.cronSchedule(lPagoPaCronExpression)
+									.withMisfireHandlingInstructionDoNothing())
+							.build();
+
+					scheduler.scheduleJob(job, trigger);
+
+					// Blocco la schedulazione nel caso in cui al primo avvio la voglio configurare da
+					// interfaccia grafica
+					// scheduler.unscheduleJob(trigKey);
+				} else {
+					pagoPaLogger.info("JOB PagoPa già presente");
+				}
+
+				getServletContext().setAttribute("quartzScheduler", scheduler);
+
+				pagoPaLogger.info(" Avvio dello schedulatore...");
+				scheduler.start();
+				pagoPaLogger.info(" Schedulatore avviato");
+				pagoPaLogger.info("");
+				pagoPaLogger.info("===================================================");
+
+			} else {
+				pagoPaLogger.warn("Schedulazione PagoPaSchedulerEnabled non attiva.");
+				pagoPaLogger.info("===================================================");
+			}
+		} catch (Exception e) {
+			pagoPaLogger.error("Errore in fase di inizializzazione di quartz: ", e);
+		}
+	}
 
 }

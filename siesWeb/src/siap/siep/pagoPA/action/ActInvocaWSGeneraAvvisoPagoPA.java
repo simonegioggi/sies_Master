@@ -128,15 +128,14 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo,
-				"");
+		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		// DATI PER RICHIESTA PAGAMENTO TELEMATICO
 		RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil.caricaDatiRichiestaPagamentoTelematico(ufm);
 		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
 		AnagraficaSoggetto asp = GeneraAvvisoPagoPAUtil.caricaDatiAnagraficaSoggetto(sm);
 		rpt.setSoggettoPagatore(asp);
 
-		// MEV_33: aggiungo recupero numero dei Bollettini da generare
+		// MEV_2023-33: aggiungo recupero numero dei Bollettini da generare
 		String numBollettini = "";
 		if (!isRequestParameterNullObj("numBollettini"))
 			numBollettini = getRequestStringParameter("numBollettini");

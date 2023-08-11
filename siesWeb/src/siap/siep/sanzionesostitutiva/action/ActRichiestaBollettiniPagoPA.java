@@ -67,6 +67,8 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 				.exRicercaEventoRateizzazionePP(idFascicolo);
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 
+		boolean isUnico = false;
+
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();
@@ -85,7 +87,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 					testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + ""
 							+ StringUtils.toEuroFormat(rata.getImportoRata());
 					if (!Utils.isNullObj(rata.getScadenzaGiorni()) && cont == 0)
-						// MEV_33: cambiata frase
+						// MEV_2023-33: cambiata frase
 						testo += ", termine di pagamento della prima rata fissato entro "
 								+ rata.getScadenzaGiorni().toString()
 								+ " giorni dalla Notifica dell'Avviso di Pagamento" + "</li>";
@@ -98,23 +100,26 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 					if (!Utils.isNullObj(rata.getScadenzaGiorni()))
 						testo += ", termine di pagamento fissato entro " + rata.getScadenzaGiorni().toString()
 								+ " giorni dalla Notifica dell'Avviso di Pagamento";
+					isUnico = true;
 				}
 				cont++;
 			}
 			setRequestAttribute("modalitaPagamento", testo);
 		}
 
-		// MEV_33: aggiunte impostazioni di attributo
+		// MEV_2023-33: aggiunte impostazioni di attributo
 		boolean isSoloPrimaRata = false;
 		boolean areRateGiaGenerate = false;
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
-		boolean isUnico = !elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() == 1
-				&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+		if (!elencoStatoPagamenti.isEmpty() && listaRichiestaBollettini.isEmpty()) {
+			isUnico = elencoStatoPagamenti.size() == 1
+					&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+		}
 		setRequestAttribute("isRateale", !isUnico);
-		if (!isUnico) {
+		if (!elencoStatoPagamenti.isEmpty() && !isUnico && elencoStatoPagamenti.size() > 1) {
 			Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
 			int contaIUV = 0;
 			while (itx.hasNext()) {

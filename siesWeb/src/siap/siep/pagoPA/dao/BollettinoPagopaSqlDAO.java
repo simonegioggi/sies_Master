@@ -48,7 +48,12 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE"
 				+ " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE')"
 				+ " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE"
-				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO')" + " WHERE 1 = 1";
+				// MEV_2023-33: aggiunte condizioni per storicizzazione eventi
+				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO'), RATEIZZAZIONE_PP R, EVENTO E"
+				+ " WHERE 1 = 1"
+				+ "	AND BP.RAT_ID_RATEIZZAZIONE_PP = R.ID_RATEIZZAZIONE_PP"
+				+ "	AND R.EVE_ID_EVENTO = E.ID_EVENTO"
+				+ "	AND E.FLAG_DOCUMENTO_REGISTRATO <> 'A'";
 
 		// valore di ritorno
 		return s;

@@ -86,5 +86,5 @@ public interface ICostantiPagoPA {
 	public static final String PG_AVVISO_BATCH_PAGOPA = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/pagoPA/AvvisoBatchPagoPA.jsp";
 	public static final String RADIO_NUMERO_BOLLETTINI = "NumBollettini";
-	// FINE MEV_33
+	// FINE MEV_2023-33
 }

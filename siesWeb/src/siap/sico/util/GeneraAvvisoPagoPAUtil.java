@@ -153,7 +153,7 @@ public class GeneraAvvisoPagoPAUtil {
 		return as;
 	}
 
-	// MEV_33: cambiata firma del metodo con la data Emissione OEIP
+	// MEV_2023-33: cambiata firma del metodo con la data Emissione OEIP
 	public static BollettinoPagopaModel popolaBollettino(RateizzazionePPModel rata, String codUtente,
 			String codUfficio, String statoPagamento, int cont, Date dataEmissioneOI) {
 

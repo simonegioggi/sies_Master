@@ -16,7 +16,7 @@
 <jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
 <jsp:useBean id="modalitaPagamento" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
-<%-- MEV_33: aggiunti useBean --%>
+<%-- MEV_2023-33: aggiunti useBean --%>
 <jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="isRateale"					scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="areRateGiaGenerate"		scope="request" class="java.lang.Boolean"/>
@@ -60,7 +60,7 @@ function tornaIndietro(action) {
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
 <%
-// MEV_33: aggiungo gestione numero dei Bollettini da generare
+// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 if (isRateale) {
 	if (isSoloPrimaRata) {
 %>
@@ -132,7 +132,7 @@ if (listaRichiestaBollettini.size() == 0) {
 			<%=modalitaPagamento%>
 		</td>
 <%
-// MEV_33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate
+// MEV_2023-33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate
 if ((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti()))
 		|| (isSoloPrimaRata && !areRateGiaGenerate)) {
 %>

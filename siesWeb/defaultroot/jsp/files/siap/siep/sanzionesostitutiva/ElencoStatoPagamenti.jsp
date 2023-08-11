@@ -20,7 +20,7 @@
 <jsp:useBean id="modalitaPagamento" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoPagato" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
-<%-- MEV_33: aggiunti useBean --%>
+<%-- MEV_2023-33: aggiunti useBean --%>
 <jsp:useBean id="dataAvvenutaNotifica" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="isSoloPrimaRata"		scope="request" class="java.lang.Boolean"/>
 
@@ -93,7 +93,7 @@ if (elencoStatoPagamenti.size() == 0) {
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
-			<%-- MEV_33: aggiunta frase di notifica --%>
+			<%-- MEV_2023-33: aggiunta frase di notifica --%>
 			&nbsp;notificato&nbsp;il:&nbsp;
 			<font class="campo"><%=dataAvvenutaNotifica%></font>
 		</td>
@@ -126,7 +126,7 @@ if (elencoStatoPagamenti.size() == 0) {
 	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
 	while (itx.hasNext()) {
 		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
-		// MEV_33: aggiungo gestione numero dei Bollettini da generare
+		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 		if ("U".equals(bpm.getTipoRateizzazione())
 				|| "R".equals(bpm.getTipoRateizzazione())
 				&& (isSoloPrimaRata && bpm.getProgRata() > 1)
@@ -164,7 +164,7 @@ if (elencoStatoPagamenti.size() == 0) {
           	</a>&nbsp;&nbsp;&nbsp;
           	--%>
 <%
-		// MEV_33: aggiungo gestione numero dei Bollettini da generare
+		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 		if (!Utils.isNullObj(bpm.getIuv())) {
 %>
       		<a href="javascript:eseguiAzione('Stampa', <%=bpm.getIdBollettinoPagopa()%>)">

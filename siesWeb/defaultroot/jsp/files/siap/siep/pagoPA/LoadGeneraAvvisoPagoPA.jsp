@@ -13,7 +13,7 @@
 
 <jsp:useBean id="elencoStatoPagamenti" 		scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
 <jsp:useBean id="evento"    				scope="request" class="siap.sico.evento.model.EventoModel"/>
-<%-- MEV_33: aggiunti useBean --%>
+<%-- MEV_2023-33: aggiunti useBean --%>
 <jsp:useBean id="isRateale"					scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="dataNotificaCondannato" 	scope="request" class="java.lang.String"/>
@@ -28,7 +28,7 @@ function tornaIndietro(action) {
 	document.LoadGeneraAvvisoPagoPA.submit();
 }
 
-<%-- MEV_33: aggiunta funzione di controllo --%>
+<%-- MEV_2023-33: aggiunta funzione di controllo --%>
 <%
 if (isRateale) {
 %>
@@ -69,7 +69,7 @@ function Verify() {
     	<td class="LBG">
     		<font class="label">Funzione:</font>&nbsp;&nbsp;
 <%
-// MEV_33: aggiungo gestione numero dei Bollettini da generare
+// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 if (isRateale) {
 	if (isSoloPrimaRata) {
 %>
@@ -111,7 +111,7 @@ if (elencoStatoPagamenti.size() == 0) {
     </tr>
 <%
 } else {
-	// MEV_33: aggiungo gestione numero dei Bollettini da generare
+	// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 	final String testoRateSuccessive = ", per le rate successive alla prima";
 %>
 	<tr>
@@ -130,7 +130,7 @@ if (elencoStatoPagamenti.size() == 0) {
 		</td>
 	</tr>
 <%
-			// MEV_33: aggiungo gestione numero dei Bollettini da generare
+			// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 			if (isRateale && !isSoloPrimaRata) {
 %>
 	<tr>
@@ -156,7 +156,7 @@ if (elencoStatoPagamenti.size() == 0) {
 	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
 	while (itx.hasNext()) {
 		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
-		// MEV_33: aggiungo gestione numero dei Bollettini da generare
+		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
 		if (!(isRateale && isSoloPrimaRata && bpm.getProgRata() == 1)) {
 %>
 	<tr>
@@ -173,7 +173,7 @@ if (elencoStatoPagamenti.size() == 0) {
 		}
 	} // end while iterator bollettini
 } // end else
-// MEV_33 aggiunta or condition
+// MEV_2023-33 aggiunta or condition
 if ((Utils.isNullObj(evento.getDataTrasmissioneAtti()) && Utils.isNullObj(evento.getDataRicezioneAtti())) || isSoloPrimaRata) {
 %>
    	<tr>

@@ -108,7 +108,6 @@ import siap.siep.penasospesa.model.AnnmanReatoModel;
 import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
-import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.reato.dao.ReatoDAO;
 import siap.siep.rinnovo.dao.RinnovoSqlDAO;
 import siap.siep.rinnovo.model.RinnovoModel;
@@ -126,20 +125,8 @@ import siap.siep.util.SIEPLookupRemote;
 import siap.sius.documentoallegato.dao.DocumentoAllegatoDAO;
 
 /**
- * <p>
  * Title: OrdineEsecuzioneController
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company:
- * </p>
  *
- * @author not attributable
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -734,23 +721,23 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		// 15-12-2014 Misure Sicurezza
 		MisuraSicurezzaSqlDAO lMisSicSqlDao = null;
 		MisuraSicurezzaDAO lMisSicDao = null;
-		
-		// Ticket#202301250123 
+
+		// Ticket#202301250123
 		AnnmanReatoDAO annmanReatoDAO = null;
 		AnnmanReatoSqlDAO annmanReatoSqlDAO = null;
-		
+
 		AnnmanPenacomplDAO annmanPenacomplDAO = null;
-		AnnmanPenacomplSqlDAO annmanPenacomplSqlDAO	= null;
-		
+		AnnmanPenacomplSqlDAO annmanPenacomplSqlDAO = null;
+
 		ReatoDAO reatoDAO = null;
 		PenaComplessivaDAO penaComplessivaDAO = null;
-		
+
 		SanzioneSostitutivaDAO sanzioneSostDAO = null;
 		// Ticket#202301250123 - FINE
-		
-		//MEV_2023-13
-		RateizzazionePPDAO rateizzazioneDAO = null;
-		
+
+		// MEV_2023-13
+		// RateizzazionePPDAO rateizzazioneDAO = null;
+
 		Vector lAnnVect = null;
 		Vector eventi = null;
 		Vector lPosizioni = null;
@@ -888,18 +875,12 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lMisSqlDao.ricercaMisuraAlternativaByIdFascicolo(EventoPrec.getFasSieIdFascicoloSiep());
 					MisuraAlternativaModel lMisMod = (MisuraAlternativaModel) lMisSqlDao.getModelByKey();
 
-					// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto
-					// di mLog
-					// siesLogger.debug("lMisMod prima -->" + lMisMod.getIdMisuraAlternativa());
-
 					// Paolo Cherubini 13/02/2012 b2/rr/008 su segnalazione di Pina Marchese non funziona
-					// l'annullamento
-					// del verbale sottoscrizione obblighi dopo concessione detenzione domiciliare a termine
-					// x cui sposto il controllo nell'if successivo. Il caso segnalato e' fatto da detenuto
-					// poi
-					// concessione DDT poi libero con differimento provvisorio e di nuovo DDT + verbale SO
-					if (lMisMod != null) // && !"0011".equals(lMisMod.getCodTipoMisura()) )
-					{
+					// l'annullamento del verbale sottoscrizione obblighi dopo concessione detenzione
+					// domiciliare a termine x cui sposto il controllo nell'if successivo. Il caso segnalato
+					// e' fatto da detenuto poi concessione DDT poi libero con differimento provvisorio e di
+					// nuovo DDT + verbale SO
+					if (lMisMod != null) {
 						if (lPenPrecMod == null || lPenPrecMod.getDataInizio() == null) {
 							lMisMod.setDataInizioMisura(null);
 							lMisMod.setDataFineMisura(null);
@@ -951,7 +932,6 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lStatoDao.insert();
 					lStatoDao.stop();
 				} else {
-
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
 					siesLogger.debug("L'evento da annullare non e' l'ultimo evento in ordine cronologico "
@@ -1301,14 +1281,15 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lScaDAO.delete();
 			lScaDAO.stop();
 
+			// MEV_2023-33: storicizzazione dei bollettini
 			// MEV_2023-13 - Sgancio le rate dall'evento
-			rateizzazioneDAO = new RateizzazionePPDAO(lConn);
-			rateizzazioneDAO.setEveIdEvento(null);
-			rateizzazioneDAO.selCondizioneByIdEvento (lEveRet.getIdEvento());
-			rateizzazioneDAO.update();
-			rateizzazioneDAO.stop();
+			// rateizzazioneDAO = new RateizzazionePPDAO(lConn);
+			// rateizzazioneDAO.setEveIdEvento(null);
+			// rateizzazioneDAO.selCondizioneByIdEvento(lEveRet.getIdEvento());
+			// rateizzazioneDAO.update();
+			// rateizzazioneDAO.stop();
 			// MEV_2023-13 - FINE
-			
+
 			// ========================================================================
 			// Annullo l'evento
 			// ========================================================================
@@ -1588,60 +1569,69 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lAnnDAO.update();
 					lAnnDAO.stop();
 
-					
-					// Ticket#202301250123 - Prima di eliminare le annotazoni vanno eliminati eventuali record 
+					// Ticket#202301250123 - Prima di eliminare le annotazoni vanno eliminati eventuali record
 					// - ANNMAN_PENACOMPL, PENA_COMPLESSIVA
 					// - ANNMAN_REATO, REATO
-					siesLogger.debug("Procedo alla cancellazione eventuali ANNMAN_REATO collegati all'annotazione con id = "+lAnnMod.getIdAnnotazioneManuale());
-					annmanReatoSqlDAO = new AnnmanReatoSqlDAO (lConn);
-					annmanReatoDAO = new AnnmanReatoDAO(lConn);	
-					reatoDAO = new ReatoDAO (lConn);
-					
-					AnnmanReatoModel annReatoModel = new AnnmanReatoModel (null,lAnnMod.getIdAnnotazioneManuale(),null);
-					annmanReatoSqlDAO.ricercaAnnmanReato (annReatoModel);
-					Vector <AnnmanReatoModel>listaAnnReati = new Vector<AnnmanReatoModel>(annmanReatoSqlDAO.getModels());
+					siesLogger.debug(
+							"Procedo alla cancellazione eventuali ANNMAN_REATO collegati all'annotazione con id = "
+									+ lAnnMod.getIdAnnotazioneManuale());
+					annmanReatoSqlDAO = new AnnmanReatoSqlDAO(lConn);
+					annmanReatoDAO = new AnnmanReatoDAO(lConn);
+					reatoDAO = new ReatoDAO(lConn);
+
+					AnnmanReatoModel annReatoModel = new AnnmanReatoModel(null,
+							lAnnMod.getIdAnnotazioneManuale(), null);
+					annmanReatoSqlDAO.ricercaAnnmanReato(annReatoModel);
+					Vector<AnnmanReatoModel> listaAnnReati = new Vector<AnnmanReatoModel>(
+							annmanReatoSqlDAO.getModels());
 					for (AnnmanReatoModel annRea : listaAnnReati) {
-						siesLogger.debug("AnnmanReatoModel id = "+annRea.getIdAnnmanReato());
+						siesLogger.debug("AnnmanReatoModel id = " + annRea.getIdAnnmanReato());
 
-						siesLogger.debug("AnnmanReatoModel Cancello annmareato = "+annRea.getIdAnnmanReato());
+						siesLogger
+								.debug("AnnmanReatoModel Cancello annmareato = " + annRea.getIdAnnmanReato());
 						annmanReatoDAO.setCondizioneUpdate(annRea.getIdAnnmanReato());
-						annmanReatoDAO.delete();						
+						annmanReatoDAO.delete();
 
-						siesLogger.debug("AnnmanReatoModel Cancello il reato con id = "+annRea.getReatoId());
+						siesLogger
+								.debug("AnnmanReatoModel Cancello il reato con id = " + annRea.getReatoId());
 						reatoDAO.setCondizioneUpdate(annRea.getReatoId());
 						reatoDAO.delete();
 					}
-						
-					//annmanReatoDAO.setCondizioneUpdateByIdAnn(lAnnMod.getIdAnnotazioneManuale());
-					//annmanReatoDAO.delete();
-					annmanPenacomplSqlDAO = new AnnmanPenacomplSqlDAO (lConn);
-					annmanPenacomplDAO = new AnnmanPenacomplDAO (lConn);		
-					penaComplessivaDAO = new PenaComplessivaDAO (lConn);
-					sanzioneSostDAO = new SanzioneSostitutivaDAO (lConn);
-					AnnmanPenacomplModel annmaPenMod = new AnnmanPenacomplModel (null,lAnnMod.getIdAnnotazioneManuale(),null);
-					annmanPenacomplSqlDAO.ricercaAnnmanPenacompl (annmaPenMod);
-					Vector <AnnmanPenacomplModel> listaAnnPenaComp = new Vector<AnnmanPenacomplModel>(annmanPenacomplSqlDAO.getModels());
+
+					// annmanReatoDAO.setCondizioneUpdateByIdAnn(lAnnMod.getIdAnnotazioneManuale());
+					// annmanReatoDAO.delete();
+					annmanPenacomplSqlDAO = new AnnmanPenacomplSqlDAO(lConn);
+					annmanPenacomplDAO = new AnnmanPenacomplDAO(lConn);
+					penaComplessivaDAO = new PenaComplessivaDAO(lConn);
+					sanzioneSostDAO = new SanzioneSostitutivaDAO(lConn);
+					AnnmanPenacomplModel annmaPenMod = new AnnmanPenacomplModel(null,
+							lAnnMod.getIdAnnotazioneManuale(), null);
+					annmanPenacomplSqlDAO.ricercaAnnmanPenacompl(annmaPenMod);
+					Vector<AnnmanPenacomplModel> listaAnnPenaComp = new Vector<AnnmanPenacomplModel>(
+							annmanPenacomplSqlDAO.getModels());
 					for (AnnmanPenacomplModel annPena : listaAnnPenaComp) {
-						siesLogger.debug("AnnmanPenacomplModel = "+annPena.getIdAnnmanPenacompl());
-						
+						siesLogger.debug("AnnmanPenacomplModel = " + annPena.getIdAnnmanPenacompl());
+
 						// cancello prima eventuale SANZIONE_SOSTITUTIVA che punta la pena complessiva
 						sanzioneSostDAO.setCondizioneByIdPenaComplessiva(annPena.getPenacomplessivaId());
 						sanzioneSostDAO.delete();
-						
-						siesLogger.debug("AnnmanReatoModel Cancello annmaPenacomp = "+annPena.getIdAnnmanPenacompl());
-						annmanPenacomplDAO.setCondizioneUpdate(annPena.getIdAnnmanPenacompl());
-						annmanPenacomplDAO.delete();						
 
-						siesLogger.debug("AnnmanPenacomplModel Cancello la pena complessiva collegata con id = "+annPena.getPenacomplessivaId());
+						siesLogger.debug("AnnmanReatoModel Cancello annmaPenacomp = "
+								+ annPena.getIdAnnmanPenacompl());
+						annmanPenacomplDAO.setCondizioneUpdate(annPena.getIdAnnmanPenacompl());
+						annmanPenacomplDAO.delete();
+
+						siesLogger
+								.debug("AnnmanPenacomplModel Cancello la pena complessiva collegata con id = "
+										+ annPena.getPenacomplessivaId());
 						penaComplessivaDAO.setCondizioneUpdate(annPena.getPenacomplessivaId());
 						penaComplessivaDAO.delete();
 					}
-									
-					//annmanPenacomplDAO.setCondizioneUpdateByIdAnn(lAnnMod.getIdAnnotazioneManuale());
-					//annmanReatoDAO.delete();					
+
+					// annmanPenacomplDAO.setCondizioneUpdateByIdAnn(lAnnMod.getIdAnnotazioneManuale());
+					// annmanReatoDAO.delete();
 					// Ticket#202301250123 - FINE
 
-					
 					// Cancello l'annotazione corrente
 					lAnnDAO = new AnnotazioneManualeDAO(lConn);
 					lAnnDAO.setDAOFromModelForUpdate(lAnnMod);
@@ -2040,21 +2030,20 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lEventoProc03);
 			cleanup(lDatiFinaliCumSqlDao);
-			
+
 			// Ticket#202301250123 -
-			cleanup (annmanReatoDAO);
-			cleanup (annmanPenacomplDAO);
-			
-			cleanup (annmanReatoSqlDAO);
-			cleanup (annmanPenacomplSqlDAO);
-			
-			cleanup (reatoDAO);
-			cleanup (penaComplessivaDAO);
-			
-			cleanup (sanzioneSostDAO);
-			
+			cleanup(annmanReatoDAO);
+			cleanup(annmanPenacomplDAO);
+
+			cleanup(annmanReatoSqlDAO);
+			cleanup(annmanPenacomplSqlDAO);
+
+			cleanup(reatoDAO);
+			cleanup(penaComplessivaDAO);
+
+			cleanup(sanzioneSostDAO);
+
 			// Ticket#202301250123 - FINE
-			
 
 			cleanup(lConn);
 		}
@@ -9007,8 +8996,11 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 	} // Chiude ExInserisciOENotificaMisSis
 
 	/*
-	 * ISSUE MEV : aggiunto metodo di inserimento OE differimento con notifiche Numero MEV : 39 Autore :
-	 * Gioggi Data : 07/mar/2017 Branch : MEV_39
+	 * ISSUE MEV : aggiunto metodo di inserimento OE differimento con notifiche 
+	 * Numero MEV : 39 
+	 * Autore : Gioggi 
+	 * Data : 07/mar/2017 
+	 * Branch : MEV_39
 	 */
 	public EventoNotificaModel ExInserisciOLDifferimentoConNotifiche(EventoNotificaModel enm,
 			PenaResiduaModel prm, MisuraAlternativaModel mam) throws F3BException {
@@ -9025,13 +9017,9 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		MisuraAlternativaDAO misAltDAO = null;
 		// altri update
 		PenaResiduaDAO penaResiduaDAO = null;
-		// DepositoOrdinanzaPcDAO depositoOrdinanzaPcDAO = null;
-		// DepositoOrdinanzaPcSqlDAO depositoOrdinanzaPcSqlDAO = null;
 		// recupero dati
 		EventoSqlDAO eventoSqlDAO = null;
-
 		EventoNotificaModel enmRet = new EventoNotificaModel(enm);
-		// DepositoOrdinanzaPcModel depositoOrdinanzaPcModel = null;
 
 		try {
 			connection = getDBTransaction();

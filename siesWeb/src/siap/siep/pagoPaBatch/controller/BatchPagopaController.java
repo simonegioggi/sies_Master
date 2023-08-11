@@ -21,150 +21,148 @@ import siap.siep.pagoPaBatch.model.BatchPagopaModel;
  * @since MEV_2023-13
  * @version 1.0
  */
-public class BatchPagopaController extends SiapController  implements IBatchPagopa {
+public class BatchPagopaController extends SiapController implements IBatchPagopa {
 
-    private static Logger siesLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
-    public BatchPagopaModel ExInserisciLancioBatchPagopa(BatchPagopaModel batchModel) throws F3BException {
+	public BatchPagopaModel ExInserisciLancioBatchPagopa(BatchPagopaModel batchModel) throws F3BException {
 
-        BatchPagopaModel batchModelRet = null;
-        BatchPagopaDAO batchDao = null;
-        Connection c = null;
+		BatchPagopaModel batchModelRet = null;
+		BatchPagopaDAO batchDao = null;
+		Connection c = null;
 
-        try {
-            c = getDBConnection();
+		try {
+			c = getDBConnection();
 
-            batchModelRet = new BatchPagopaModel(batchModel);
-            
-            batchDao = new BatchPagopaDAO(c);
+			batchModelRet = new BatchPagopaModel(batchModel);
 
-            // Inserimento Esito lancio
-            batchDao.setDAOFromModel(batchModelRet);
+			batchDao = new BatchPagopaDAO(c);
 
-            BigDecimal id = batchDao.insert();
-            batchModelRet.setIdBatchPagopa(id);
+			// Inserimento Esito lancio
+			batchDao.setDAOFromModel(batchModelRet);
 
-            commit(c);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(c);
-            throw new F3BException("BatchPagopaController.ExInserisciLancioBatchPagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(c);
-            throw new F3BException("BatchPagopaController.ExInserisciLancioBatchPagopa : " + e);
-        } finally {
-            cleanup(batchDao);
-            cleanup(c);
-        }
+			BigDecimal id = batchDao.insert();
+			batchModelRet.setIdBatchPagopa(id);
 
-        return batchModelRet;
-    }
-    
-    
-    public BatchPagopaModel ExAggiornaLancioBatchPagopa (BatchPagopaModel batchModel) throws F3BException {
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("BatchPagopaController.ExInserisciLancioBatchPagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(c);
+			throw new F3BException("BatchPagopaController.ExInserisciLancioBatchPagopa : " + e);
+		} finally {
+			cleanup(batchDao);
+			cleanup(c);
+		}
 
-        BatchPagopaModel batchModelRet = null;
-        BatchPagopaDAO batchDao = null;
-        Connection c = null;
+		return batchModelRet;
+	}
 
-        try {
-            c = getDBConnection();
-            
-            batchModelRet = new BatchPagopaModel(batchModel);
-            
-            batchDao = new BatchPagopaDAO(c);
+	public BatchPagopaModel ExAggiornaLancioBatchPagopa(BatchPagopaModel batchModel) throws F3BException {
 
-            siesLogger.debug("batchModelRet = "+batchModelRet);
+		BatchPagopaModel batchModelRet = null;
+		BatchPagopaDAO batchDao = null;
+		Connection c = null;
 
-            // Aggiornamento esito lancio batch
-            batchDao.setDAOFromModelForUpdate(batchModelRet);
-            batchDao.setCondizioneUpdate (batchModel.getIdBatchPagopa());
-            batchDao.update();
-            
-            commit(c);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(c);
-            throw new F3BException("BatchPagopaController.ExAggiornaLancioBatchPagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(c);
-            throw new F3BException("BatchPagopaController.ExAggiornaLancioBatchPagopa : " + e);
-        } finally {
-            cleanup(batchDao);
-            cleanup(c);
-        }
+		try {
+			c = getDBConnection();
 
-        return batchModelRet;
-    }
-    
-    
-    public BatchPagopaModel ExRicercaBatchPagopaByKey(BigDecimal aIdBatch) throws F3BException {
-        BatchPagopaModel lBatchModel = null;
-        BatchPagopaSqlDAO lBatchSqlDao = null;
-        Connection conn = null;
+			batchModelRet = new BatchPagopaModel(batchModel);
 
-        try {
-            conn = getDBConnection();           
-            
-            lBatchSqlDao = new BatchPagopaSqlDAO(conn);
+			batchDao = new BatchPagopaDAO(c);
 
-            lBatchSqlDao.ricercaBatchByKey(aIdBatch);
+			siesLogger.debug("batchModelRet = " + batchModelRet);
 
-            lBatchModel = (BatchPagopaModel) lBatchSqlDao.getModelByKey();
-            
-            commit(conn);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(conn);
-            throw new F3BException("BatchPagopaController.ExRicercaBatchPagopaByKey : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(conn);
-            throw new F3BException("BatchPagopaController.ExRicercaBatchPagopaByKey : " + e);
-        } finally {
-            cleanup(lBatchSqlDao);
-            cleanup(conn);
-        }
+			// Aggiornamento esito lancio batch
+			batchDao.setDAOFromModelForUpdate(batchModelRet);
+			batchDao.setCondizioneUpdate(batchModel.getIdBatchPagopa());
+			batchDao.update();
 
-        return lBatchModel;    	
-    }
-    
-    
-    public Vector <BatchPagopaModel> ExRecuperaLancioBatchPagopa (BatchPagopaModel aBatchModel, int aPage) throws F3BException {
-        Vector <BatchPagopaModel> listaLanci = null;
-        BatchPagopaSqlDAO batchSqlDao = null;
-        Connection conn = null;
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("BatchPagopaController.ExAggiornaLancioBatchPagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(c);
+			throw new F3BException("BatchPagopaController.ExAggiornaLancioBatchPagopa : " + e);
+		} finally {
+			cleanup(batchDao);
+			cleanup(c);
+		}
 
-        try {
-            conn = getDBConnection();           
-            
-            batchSqlDao = new BatchPagopaSqlDAO(conn);
+		return batchModelRet;
+	}
 
-            batchSqlDao.ricercaEsecuzioneBatch (aBatchModel);
-            
-            batchSqlDao.ricercaEsecuzioneBatchPaged(aBatchModel, aPage);
+	public BatchPagopaModel ExRicercaBatchPagopaByKey(BigDecimal aIdBatch) throws F3BException {
+		BatchPagopaModel lBatchModel = null;
+		BatchPagopaSqlDAO lBatchSqlDao = null;
+		Connection conn = null;
 
-            listaLanci = new Vector <BatchPagopaModel> (batchSqlDao.getModels());
-            
-            commit(conn);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(conn);
-            throw new F3BException("BatchPagopaController.ExRecuperaLancioBatchPagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(conn);
-            throw new F3BException("BatchPagopaController.ExRecuperaLancioBatchPagopa : " + e);
-        } finally {
-            cleanup(batchSqlDao);
-            cleanup(conn);
-        }
+		try {
+			conn = getDBConnection();
 
-        return listaLanci;
-    }
+			lBatchSqlDao = new BatchPagopaSqlDAO(conn);
 
-    
-	
+			lBatchSqlDao.ricercaBatchByKey(aIdBatch);
+
+			lBatchModel = (BatchPagopaModel) lBatchSqlDao.getModelByKey();
+
+			commit(conn);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(conn);
+			throw new F3BException("BatchPagopaController.ExRicercaBatchPagopaByKey : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(conn);
+			throw new F3BException("BatchPagopaController.ExRicercaBatchPagopaByKey : " + e);
+		} finally {
+			cleanup(lBatchSqlDao);
+			cleanup(conn);
+		}
+
+		return lBatchModel;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Vector<BatchPagopaModel> ExRecuperaLancioBatchPagopa(BatchPagopaModel aBatchModel, int aPage)
+			throws F3BException {
+
+		Vector<BatchPagopaModel> listaLanci = null;
+		BatchPagopaSqlDAO batchSqlDao = null;
+		Connection conn = null;
+
+		try {
+			conn = getDBConnection();
+
+			batchSqlDao = new BatchPagopaSqlDAO(conn);
+
+			batchSqlDao.ricercaEsecuzioneBatch(aBatchModel);
+
+			batchSqlDao.ricercaEsecuzioneBatchPaged(aBatchModel, aPage);
+
+			listaLanci = new Vector<BatchPagopaModel>(batchSqlDao.getModels());
+
+			commit(conn);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(conn);
+			throw new F3BException("BatchPagopaController.ExRecuperaLancioBatchPagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(conn);
+			throw new F3BException("BatchPagopaController.ExRecuperaLancioBatchPagopa : " + e);
+		} finally {
+			cleanup(batchSqlDao);
+			cleanup(conn);
+		}
+
+		return listaLanci;
+	}
+
 }

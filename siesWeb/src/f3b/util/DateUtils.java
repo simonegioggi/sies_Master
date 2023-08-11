@@ -952,7 +952,7 @@ public class DateUtils {
 		return ultimoDelMeseSucc;
 	}
 
-	// MEV_33: aggiunto metodo di controllo
+	// MEV_2023-33: aggiunto metodo di controllo
 	public static boolean isEqualsLocalDateTime(Date dataPrimaRata, Date dataRimanentiRate)
 			throws ParseException {
 
@@ -986,6 +986,6 @@ public class DateUtils {
 
 		return lTempoEsecuzione;
 	}
-	// FINE MEV_33
+	// FINE MEV_2023-33
 
 }

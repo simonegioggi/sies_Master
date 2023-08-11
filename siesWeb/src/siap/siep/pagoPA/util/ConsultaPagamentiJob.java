@@ -49,10 +49,12 @@ public class ConsultaPagamentiJob implements Job {
 
 	private static Logger pagoPaLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
 
-	// Lo scheduler ad ogni lancio crea una nuova istanza della classe invocamdo il costruttore senza parametri
+	// Lo scheduler ad ogni lancio crea una nuova istanza della classe invocamdo il costruttore senza
+	// parametri
 	// MEV_2023-33
-	public ConsultaPagamentiJob() {}
-	
+	public ConsultaPagamentiJob() {
+	}
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 		MDC.put("utente", "BATCH_PAGOPA");
@@ -66,7 +68,7 @@ public class ConsultaPagamentiJob implements Job {
 		String esitoEsecuzione = "Batch avviato";
 		String erroriEsecuzione = "";
 		BatchPagopaModel lBatchModel = null;
-		//
+
 		int contaNumPosBebitorieVerificate = 0;
 		int contaNumBollettiniAggiornati = 0;
 		int contaNumBollettiniInErrore = 0;
@@ -100,10 +102,10 @@ public class ConsultaPagamentiJob implements Job {
 			String inScadenzaTraGiorni = F3BProperties.getProperty("INSCADENZATRAGIORNI");
 			String generatiDaGiorni = F3BProperties.getProperty("GENERATIDAGIORNI");
 			String controllarePerGiorni = F3BProperties.getProperty("CONTROLLAREPERGIORNI");
-			pagoPaLogger.debug(" Ricerca debitori con posizioni aperte: inScadenzaTraGiorni = "
-					+ inScadenzaTraGiorni + ", controllateDaGiorni = " + controllateDaGiorni
-					+ ", generatiDaGiorni = " + generatiDaGiorni
-					+ ", controllarePerGiorni = " + controllarePerGiorni);
+			pagoPaLogger.debug(
+					" Ricerca debitori con posizioni aperte: inScadenzaTraGiorni = " + inScadenzaTraGiorni
+							+ ", controllateDaGiorni = " + controllateDaGiorni + ", generatiDaGiorni = "
+							+ generatiDaGiorni + ", controllarePerGiorni = " + controllarePerGiorni);
 
 			int cdg = 0;
 			int istg = 0;
@@ -131,9 +133,9 @@ public class ConsultaPagamentiJob implements Job {
 			// Ricerca per debitore
 			for (int i = 0; i < lElencoDebitori.size(); i++) {
 				BollettinoPagopaModel lDebitore = lElencoDebitori.elementAt(i);
-				
+
 				InvocazionePagopaModel lInvocazioneModel = new InvocazionePagopaModel();
-				
+
 				try {
 					pagoPaLogger.debug(
 							" Inizio richiesta a pagoPa per il Debitore = " + lDebitore.getCodiceFiscale()
@@ -177,11 +179,10 @@ public class ConsultaPagamentiJob implements Job {
 					lInvocazioneModel.setFkIdBatch(lBatchModel.getIdBatchPagopa());
 					lInvocazioneModel.setCodOperatoreInserimento("");
 					lInvocazioneModel.setDataInserimento(new Date());
-					
+
 					lInvocazioneModel = lCtrlInvocazione.ExInserisciInvocazionePagopa(lInvocazioneModel);
-					//MEV_2023-33
-					
-					
+					// MEV_2023-33
+
 					Object[] pagamenti = null;
 					// SOLO PER TEST
 					if ("true".equals(F3BProperties.getProperty("PagoPaTest"))) {
@@ -195,25 +196,29 @@ public class ConsultaPagamentiJob implements Job {
 								dimensionePagina, numeroPagina);
 						// MEV_2023-33 Si registrano i dati scambiati: XML
 						org.apache.axis.client.Call _call = scpt.getLastCall();
-						String requestXML = _call.getMessageContext().getRequestMessage().getSOAPPartAsString();
-						String responseXML = _call.getMessageContext().getResponseMessage().getSOAPPartAsString();
-						pagoPaLogger.debug("requestXML \n"+requestXML);
-						pagoPaLogger.debug("responseXML \n"+responseXML);
-						
+						String requestXML = _call.getMessageContext().getRequestMessage()
+								.getSOAPPartAsString();
+						String responseXML = _call.getMessageContext().getResponseMessage()
+								.getSOAPPartAsString();
+						pagoPaLogger.debug("requestXML \n" + requestXML);
+						pagoPaLogger.debug("responseXML \n" + responseXML);
+
 						lInvocazioneModel.setXmlRichiesta(requestXML);
 						lInvocazioneModel.setXmlRisposta(responseXML);
-						
+
 						// Verificare il caso di errore
-						if (1==1)
-							lInvocazioneModel.setErrore(null);
-						
+						// if (1 == 1)
+						lInvocazioneModel.setErrore(null);
 						lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
 						// MEV_2023-33 fine
 
 						pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
-						pagoPaLogger.debug("RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
-						pagoPaLogger.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
-						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = " + (rr.getItems() != null ? rr.getItems().length : null));
+						pagoPaLogger.debug(
+								"RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
+						pagoPaLogger
+								.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
+						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
+								+ (rr.getItems() != null ? rr.getItems().length : null));
 						pagamenti = rr.getItems();
 					}
 
@@ -241,8 +246,7 @@ public class ConsultaPagamentiJob implements Job {
 									bollettinoSIES = lCtrlBollettini.ExRicercaBollettinoPagopaByIUV(iuv);
 									if (bollettinoSIES != null) {
 										if (ICostantiPagoPA.SIES_STATO_NON_PAGATO
-												.equals(bollettinoSIES.getStatoPagamento())) 
-										{
+												.equals(bollettinoSIES.getStatoPagamento())) {
 											bollettinoSIES.setDataUltimoControllo(DateUtils.getSysDate());
 											bollettinoSIES.setCodOperatoreAggiornamento("BATCH");
 											bollettinoSIES.setCodUfficioAggiornamento("BATCH");
@@ -252,22 +256,26 @@ public class ConsultaPagamentiJob implements Job {
 											bollettinoSIES.setStatoPagopa(statoRichiesta.getStato());
 
 											// MEV_2023-33 si storicizza l'esito ricevuto
-											try 
-											{
+											try {
 												BollettinoBatchPagopaModel lBollBatchModel = new BollettinoBatchPagopaModel();
-												lBollBatchModel.setFkIdInvocazionePagopa(lInvocazioneModel.getIdInvocazionePagopa());
-												lBollBatchModel.setFkIdBollettinoPagopa(bollettinoSIES.getIdBollettinoPagopa());
-												lBollBatchModel.setFkIdBatchPagopa(lBatchModel.getIdBatchPagopa());
+												lBollBatchModel.setFkIdInvocazionePagopa(
+														lInvocazioneModel.getIdInvocazionePagopa());
+												lBollBatchModel.setFkIdBollettinoPagopa(
+														bollettinoSIES.getIdBollettinoPagopa());
+												lBollBatchModel
+														.setFkIdBatchPagopa(lBatchModel.getIdBatchPagopa());
 												lBollBatchModel.setStatoPagopa(statoRichiesta.getStato());
-												
-												lCtrlInvocazione.ExInserisciBollettinoBatchPagopa(lBollBatchModel);
-											}
-											catch (Exception e) {
+
+												lCtrlInvocazione
+														.ExInserisciBollettinoBatchPagopa(lBollBatchModel);
+											} catch (Exception e) {
 												// Trattandosi di tracciatura non si blocca l'aggiornamento
-												pagoPaLogger.error("Errore in fase di inserimento sulla tabella di tracciatura BOLLETTINO_BATCH_PAGOPA",e);
+												pagoPaLogger.error(
+														"Errore in fase di inserimento sulla tabella di tracciatura BOLLETTINO_BATCH_PAGOPA",
+														e);
 											}
-											// MEV_2023-33 
-											
+											// MEV_2023-33
+
 											if (statoRichiesta.getStato()
 													.equals(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE)) {
 												// Il bollettino è stato pagato. Aggiorno opportunamente il
@@ -334,12 +342,12 @@ public class ConsultaPagamentiJob implements Job {
 							" Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
 									+ lDebitore.getCodiceFiscale(),
 							e);
+					pagoPaLogger.error("Numero Bollettini ERRATI = " + contaNumBollettiniInErrore);
 					erroriEsecuzione = appendString(erroriEsecuzione,
 							"\nErrore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
 									+ lDebitore.getCodiceFiscale());
 					lInvocazioneModel.setErrore(e.getMessage());
 					lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
-					//asdasd
 				}
 			}
 		} catch (Exception e) {
@@ -353,7 +361,7 @@ public class ConsultaPagamentiJob implements Job {
 				lBatchModel.setEsitoEsecuzione("Batch terminato");
 				lBatchModel.setNumPosDebitorieVerificate(new BigDecimal(contaNumPosBebitorieVerificate));
 				lBatchModel.setNumBollettiniAggiornati(new BigDecimal(contaNumBollettiniAggiornati));
-				//lBatchModel.setNumBollettiniInErrore(new BigDecimal(contaNumBollettiniInErrore));
+				// lBatchModel.setNumBollettiniInErrore(new BigDecimal(contaNumBollettiniInErrore));
 
 				lBatchModel.setEsitoEsecuzione(esitoEsecuzione);
 				lBatchModel.setErroreEsecuzione(erroriEsecuzione);

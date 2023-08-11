@@ -8,8 +8,7 @@ import f3b.util.F3BException;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * Title: IBollettinoPagopa 
- * Description: Interfaccia per la gestione del Bollettino PagoPA
+ * Title: IBollettinoPagopa Description: Interfaccia per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -27,7 +26,7 @@ public interface IBollettinoPagopa {
 	public void ExModificaBollettinoPagopa(BollettinoPagopaModel com) throws F3BException;
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
-			BigDecimal fasSieIdFascicolSiep, String chiamante) throws F3BException;
+			BigDecimal fasSieIdFascicolSiep) throws F3BException;
 
 	ByteArrayOutputStream ExGetBollettino(BigDecimal idBollettinoPagopa) throws F3BException;
 
@@ -38,11 +37,12 @@ public interface IBollettinoPagopa {
 
 	public void ExAggiornaStatoPagamentoBollettinoPagopa(BollettinoPagopaModel com) throws F3BException;
 
-	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte(int dayOffset, int generatiDaGiorni)
-			throws F3BException;
+	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperte(int dayOffset,
+			int generatiDaGiorni) throws F3BException;
 
 	public Vector<BollettinoPagopaModel> ExRicercaDebitoriConPosizioniAperteInScadenza(
-			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni) throws F3BException;
+			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni)
+			throws F3BException;
 
 	public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
 

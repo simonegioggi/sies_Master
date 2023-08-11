@@ -39,7 +39,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
-			BigDecimal fasSieIdFascicoloSiep, String chiamante) throws F3BException {
+			BigDecimal fasSieIdFascicoloSiep) throws F3BException {
 
 		Connection c = null;
 		Vector<BollettinoPagopaModel> bpms = new Vector<>();

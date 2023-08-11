@@ -50,7 +50,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		BigDecimal importoPagato = new BigDecimal(0);
 		BigDecimal importoDaPagare = new BigDecimal(0);
@@ -65,7 +65,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		setRequestAttribute("importoDaPagare", importoDaPagare.toString());
 		setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
 
-		// MEV_33: aggiunte le notifiche all'evento
+		// MEV_2023-33: aggiunte le notifiche all'evento
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		Date dataAvvenutaNotifica = null;
@@ -124,7 +124,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 			setRequestAttribute("modalitaPagamento", testo);
 		}
 
-		// MEV_33: aggiunta impostazione di attributo nella request per differenziare gestione rate
+		// MEV_2023-33: aggiunta impostazione di attributo nella request per differenziare gestione rate
 		boolean isSoloPrimaRata = false;
 		if (!elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() > 1) {
 			BollettinoPagopaModel primaRata = elencoStatoPagamenti.get(0);

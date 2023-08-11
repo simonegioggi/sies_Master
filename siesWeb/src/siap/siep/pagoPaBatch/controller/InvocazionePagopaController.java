@@ -18,179 +18,186 @@ import siap.siep.pagoPaBatch.dao.InvocazionePagopaSqlDAO;
 import siap.siep.pagoPaBatch.model.BollettinoBatchPagopaModel;
 import siap.siep.pagoPaBatch.model.InvocazionePagopaModel;
 
-public class InvocazionePagopaController extends SiapController  implements IInvocazionePagopa {
+public class InvocazionePagopaController extends SiapController implements IInvocazionePagopa {
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.PAGO_PA_LOG);
-	
-	public InvocazionePagopaModel ExInserisciInvocazionePagopa(InvocazionePagopaModel aInvocazioneModel)  throws F3BException {
+
+	public InvocazionePagopaModel ExInserisciInvocazionePagopa(InvocazionePagopaModel aInvocazioneModel)
+			throws F3BException {
 
 		InvocazionePagopaDAO lInvocazioneDao = null;
-        Connection lConn = null;
+		Connection lConn = null;
 
-        try {
-        	lConn = getDBConnection();
-        	
-            lInvocazioneDao = new InvocazionePagopaDAO(lConn);
+		try {
+			lConn = getDBConnection();
 
-            // Inserimento Esito lancio
-            lInvocazioneDao.setDAOFromModel(aInvocazioneModel);
+			lInvocazioneDao = new InvocazionePagopaDAO(lConn);
 
-            BigDecimal id = lInvocazioneDao.insert();
-            aInvocazioneModel.setIdInvocazionePagopa(id);
+			// Inserimento Esito lancio
+			lInvocazioneDao.setDAOFromModel(aInvocazioneModel);
 
-            commit(lConn);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(lConn);
-            throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(lConn);
-            throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + e);
-        } finally {
-            cleanup(lInvocazioneDao);
-            cleanup(lConn);
-        }
+			BigDecimal id = lInvocazioneDao.insert();
+			aInvocazioneModel.setIdInvocazionePagopa(id);
 
-        return aInvocazioneModel;
-    }
-	
-	public InvocazionePagopaModel ExAggiornaInvocazionePagopa (InvocazionePagopaModel aInvocazioneModel)  throws F3BException {
+			commit(lConn);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(lConn);
+			throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(lConn);
+			throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + e);
+		} finally {
+			cleanup(lInvocazioneDao);
+			cleanup(lConn);
+		}
+
+		return aInvocazioneModel;
+	}
+
+	public InvocazionePagopaModel ExAggiornaInvocazionePagopa(InvocazionePagopaModel aInvocazioneModel)
+			throws F3BException {
 
 		InvocazionePagopaDAO lInvocazioneDao = null;
-        Connection lConn = null;
+		Connection lConn = null;
 
-        try {
-        	lConn = getDBConnection();
-        	
-            lInvocazioneDao = new InvocazionePagopaDAO(lConn);
+		try {
+			lConn = getDBConnection();
 
-            // Aggiornamento 
-            lInvocazioneDao.setDAOFromModelForUpdate(aInvocazioneModel);
-            lInvocazioneDao.setCondizioneUpdate(aInvocazioneModel.getIdInvocazionePagopa());
+			lInvocazioneDao = new InvocazionePagopaDAO(lConn);
 
-            lInvocazioneDao.update();
+			// Aggiornamento
+			lInvocazioneDao.setDAOFromModelForUpdate(aInvocazioneModel);
+			lInvocazioneDao.setCondizioneUpdate(aInvocazioneModel.getIdInvocazionePagopa());
 
-            commit(lConn);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(lConn);
-            throw new F3BException("InvocazionePagopaController.ExAggiornaInvocazionePagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(lConn);
-            throw new F3BException("InvocazionePagopaController.ExAggiornaInvocazionePagopa : " + e);
-        } finally {
-            cleanup(lInvocazioneDao);
-            cleanup(lConn);
-        }
+			lInvocazioneDao.update();
 
-        return aInvocazioneModel;
-    }
-	
-	public Vector <InvocazionePagopaModel> ExRicercaInvocazioniByIdBatchPagopa(BigDecimal aIdBatchPagopa, int aPage) throws F3BException {
-        Vector <InvocazionePagopaModel> listaInvocazioni = null;
-        InvocazionePagopaSqlDAO lInvocazioneSqlDao = null;
-        BollettinoPagopaSqlDAO lBollettinoSqlDao = null;
-        
-        Connection conn = null;
+			commit(lConn);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(lConn);
+			throw new F3BException("InvocazionePagopaController.ExAggiornaInvocazionePagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(lConn);
+			throw new F3BException("InvocazionePagopaController.ExAggiornaInvocazionePagopa : " + e);
+		} finally {
+			cleanup(lInvocazioneDao);
+			cleanup(lConn);
+		}
 
-        try {
-            conn = getDBConnection();           
-            
-            lInvocazioneSqlDao = new InvocazionePagopaSqlDAO(conn);
+		return aInvocazioneModel;
+	}
 
-            lInvocazioneSqlDao.ricercaInvocazioniByIdBatchPaged(aIdBatchPagopa, aPage);
+	@SuppressWarnings("unchecked")
+	public Vector<InvocazionePagopaModel> ExRicercaInvocazioniByIdBatchPagopa(BigDecimal aIdBatchPagopa,
+			int aPage) throws F3BException {
+		Vector<InvocazionePagopaModel> listaInvocazioni = null;
+		InvocazionePagopaSqlDAO lInvocazioneSqlDao = null;
+		BollettinoPagopaSqlDAO lBollettinoSqlDao = null;
 
-            listaInvocazioni = new Vector <InvocazionePagopaModel> (lInvocazioneSqlDao.getModels());
-            
-            lBollettinoSqlDao = new BollettinoPagopaSqlDAO(conn);
-            for (int i = 0; i<listaInvocazioni.size(); i++) {
-            	InvocazionePagopaModel invocazioneModel = listaInvocazioni.elementAt(i);
-            	
-            	lBollettinoSqlDao.ricercaBollettiniPagopaByIdInvocazione (invocazioneModel.getIdInvocazionePagopa());
-            	Vector <BollettinoPagopaModel> listaBollettini = new Vector <BollettinoPagopaModel> (lBollettinoSqlDao.getModels());
-            	
-            	invocazioneModel.setListaBollettini(listaBollettini);
-            	lBollettinoSqlDao.stop();
-            }
- 
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            throw new F3BException("BatchPagopaController.ExRicercaInvocazioniByIdBatchPagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            throw new F3BException("BatchPagopaController.ExRicercaInvocazioniByIdBatchPagopa : " + e);
-        } finally {
-            cleanup(lInvocazioneSqlDao);
-            cleanup(lBollettinoSqlDao);
-            
-            cleanup(conn);
-        }
+		Connection conn = null;
 
-        return listaInvocazioni;
-    }
-	
-	public BollettinoBatchPagopaModel ExInserisciBollettinoBatchPagopa(BollettinoBatchPagopaModel aBollettinoBatchModel)  throws F3BException {
+		try {
+			conn = getDBConnection();
+
+			lInvocazioneSqlDao = new InvocazionePagopaSqlDAO(conn);
+
+			lInvocazioneSqlDao.ricercaInvocazioniByIdBatchPaged(aIdBatchPagopa, aPage);
+
+			listaInvocazioni = new Vector<InvocazionePagopaModel>(lInvocazioneSqlDao.getModels());
+
+			lBollettinoSqlDao = new BollettinoPagopaSqlDAO(conn);
+			for (int i = 0; i < listaInvocazioni.size(); i++) {
+				InvocazionePagopaModel invocazioneModel = listaInvocazioni.elementAt(i);
+
+				lBollettinoSqlDao
+						.ricercaBollettiniPagopaByIdInvocazione(invocazioneModel.getIdInvocazionePagopa());
+				Vector<BollettinoPagopaModel> listaBollettini = new Vector<BollettinoPagopaModel>(
+						lBollettinoSqlDao.getModels());
+
+				invocazioneModel.setListaBollettini(listaBollettini);
+				lBollettinoSqlDao.stop();
+			}
+
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			throw new F3BException("BatchPagopaController.ExRicercaInvocazioniByIdBatchPagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			throw new F3BException("BatchPagopaController.ExRicercaInvocazioniByIdBatchPagopa : " + e);
+		} finally {
+			cleanup(lInvocazioneSqlDao);
+			cleanup(lBollettinoSqlDao);
+
+			cleanup(conn);
+		}
+
+		return listaInvocazioni;
+	}
+
+	public BollettinoBatchPagopaModel ExInserisciBollettinoBatchPagopa(
+			BollettinoBatchPagopaModel aBollettinoBatchModel) throws F3BException {
 
 		BollettinoBatchPagopaDAO lBollettinoBatchDao = null;
-        Connection lConn = null;
+		Connection lConn = null;
 
-        try {
-        	lConn = getDBConnection();
-        	
-        	lBollettinoBatchDao = new BollettinoBatchPagopaDAO(lConn);
+		try {
+			lConn = getDBConnection();
 
-            // Inserimento Esito lancio
-        	lBollettinoBatchDao.setDAOFromModel(aBollettinoBatchModel);
+			lBollettinoBatchDao = new BollettinoBatchPagopaDAO(lConn);
 
-            lBollettinoBatchDao.insert();
+			// Inserimento Esito lancio
+			lBollettinoBatchDao.setDAOFromModel(aBollettinoBatchModel);
 
-            commit(lConn);
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            rollback(lConn);
-            throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            rollback(lConn);
-            throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + e);
-        } finally {
-            cleanup(lBollettinoBatchDao);
-            cleanup(lConn);
-        }
+			lBollettinoBatchDao.insert();
 
-        return aBollettinoBatchModel;
-    }
-	
-	public InvocazionePagopaModel ExRicercaInvocazioneById (BigDecimal aIdInvocazione) throws F3BException
-	{
-        InvocazionePagopaModel lInvocazioneModel = null;
-        InvocazionePagopaSqlDAO lInvocazioneSqlDao = null;
-        
-        Connection conn = null;
+			commit(lConn);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(lConn);
+			throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			rollback(lConn);
+			throw new F3BException("InvocazionePagopaController.ExInserisciInvocazionePagopa : " + e);
+		} finally {
+			cleanup(lBollettinoBatchDao);
+			cleanup(lConn);
+		}
 
-        try {
-            conn = getDBConnection();           
-            
-            lInvocazioneSqlDao = new InvocazionePagopaSqlDAO(conn);
-
-            lInvocazioneSqlDao.ricercaInvocazioniById(aIdInvocazione);
-
-            lInvocazioneModel = (InvocazionePagopaModel) lInvocazioneSqlDao.getModelByKey();
-
-        } catch (DAOException ex) {
-            siesLogger.error("DAOException",ex);
-            throw new F3BException("BatchPagopaController.ExRicercaInvocazioneById : " + ex);
-        } catch (Exception e) {
-            siesLogger.error("Exception",e);
-            throw new F3BException("BatchPagopaController.ExRicercaInvocazioneById : " + e);
-        } finally {
-            cleanup(lInvocazioneSqlDao);
-            
-            cleanup(conn);
-        }
-
-        return lInvocazioneModel;
+		return aBollettinoBatchModel;
 	}
-	
+
+	public InvocazionePagopaModel ExRicercaInvocazioneById(BigDecimal aIdInvocazione) throws F3BException {
+		InvocazionePagopaModel lInvocazioneModel = null;
+		InvocazionePagopaSqlDAO lInvocazioneSqlDao = null;
+
+		Connection conn = null;
+
+		try {
+			conn = getDBConnection();
+
+			lInvocazioneSqlDao = new InvocazionePagopaSqlDAO(conn);
+
+			lInvocazioneSqlDao.ricercaInvocazioniById(aIdInvocazione);
+
+			lInvocazioneModel = (InvocazionePagopaModel) lInvocazioneSqlDao.getModelByKey();
+
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			throw new F3BException("BatchPagopaController.ExRicercaInvocazioneById : " + ex);
+		} catch (Exception e) {
+			siesLogger.error("Exception", e);
+			throw new F3BException("BatchPagopaController.ExRicercaInvocazioneById : " + e);
+		} finally {
+			cleanup(lInvocazioneSqlDao);
+
+			cleanup(conn);
+		}
+
+		return lInvocazioneModel;
+	}
+
 }

@@ -4,7 +4,7 @@
 
 <jsp:useBean id="tipoFascicolo" scope="request" class="java.lang.String"/>
 <jsp:useBean id="idEvento" 		scope="request" class="java.lang.Object"/>
-<%-- MEV_33: aggiungo recupero numero dei Bollettini da generare --%>
+<%-- MEV_2023-33: aggiungo recupero numero dei Bollettini da generare --%>
 <jsp:useBean id="numBollettini"	scope="request" class="java.lang.String"/>
 
 <html>

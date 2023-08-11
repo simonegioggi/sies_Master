@@ -50,7 +50,7 @@ public class ActStampaMassivaBollettini extends ActionSiap {
 
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		ByteArrayOutputStream baosSingolo = null;
 		List<byte[]> listaByteArray = new ArrayList<byte[]>(elencoStatoPagamenti.size());

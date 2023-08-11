@@ -57,7 +57,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		boolean isElencoEmpty = elencoStatoPagamenti.isEmpty();
 		// Ricerca i pagamenti per idFascicolo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -68,7 +68,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 					.getListaRateizzazioniPP();
 			EventoModel em = listaRichiestaBollettini.firstElement().getEvento();
 			setRequestAttribute("evento", em);
-			// MEV_33: controllo notifica al condannato
+			// MEV_2023-33: controllo notifica al condannato
 			IEvento ie = SICOLookupRemote.getEventoRemote();
 			EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(em.getIdEvento());
 			NotificaModel[] nms = enm.getNotifiche();
@@ -88,20 +88,20 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 				while (iter.hasNext()) {
 					RateizzazionePPModel rata = iter.next();
 					for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
-						// MEV_33: cambiata firma del metodo con la data Emissione OEIP
+						// MEV_2023-33: cambiata firma del metodo con la data Emissione OEIP
 						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata, codUtente,
 								codUfficio, "PN", progressivoRata, em.getDataEmissione());
 						ibp.ExInserisciBollettinoPagopa(bpm);
 						progressivoRata++;
 					}
 				}
-				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo, "");
+				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 			}
 		}
 
 		// poi li imposto nella pagina
 		setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
-		// MEV_33: aggiunte impostazioni di attributo
+		// MEV_2023-33: aggiunte impostazioni di attributo
 		boolean isUnico = !elencoStatoPagamenti.isEmpty() && elencoStatoPagamenti.size() == 1
 				&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
 		setRequestAttribute("isRateale", !isUnico);

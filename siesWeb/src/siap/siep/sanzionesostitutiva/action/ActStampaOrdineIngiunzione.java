@@ -40,6 +40,7 @@ public class ActStampaOrdineIngiunzione extends ActionSiap {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	@SuppressWarnings("unchecked")
 	public String processRequest() throws F3BException {
 
     	// info per il log
