@@ -1,5 +1,5 @@
-BRANCH SIES VERSIONE 12.5.4.0
-Nasce dal branch 12.5.3.0 in data 31/07/2023
+BRANCH SIES VERSIONE 12.5.3.0
+Nasce dal branch 12.5.2.0 in data 31/07/2023
 Questa release verrà rilasciata il 22/09/2023 (Patch mesi di Agosto e Settembre 2023)
 
 Comprende i seguenti Ticket MAC:
