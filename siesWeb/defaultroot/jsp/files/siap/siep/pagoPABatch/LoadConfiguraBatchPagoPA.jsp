@@ -81,29 +81,25 @@
     
     <br><br>
     
-    <%
-    if (1==1)
-    //if ("true".equals(PagoPaCronDebugEnabled)) 
-    {
-    %>
-    <table>
-      <tr>
-        <td class="Titolo" colspan="3"><font style="color:red;">Modalita' debug attiva</font></td>
-      </tr>
-      <tr>
-        <td class="L">
-          <input type="checkbox" name="<%=ICostantiBatchPagoPa.CAMPO_CHECK_CRON_EXPR%>"
-                 onClick="">QuartzCronExpression
-        </td>
-        <td class="L">
-       		<input type="text" Title="" size="20" 
-                 name="<%=ICostantiBatchPagoPa.CAMPO_CRON_EXPR%>"  
-                 value="<%=StringUtils.toStringJSP(ConsultaPagamentiJob.getCronExpression(), "-")%>" 
-                 >
-        </td>
-      </tr>
-    </table>
-    <% } %>
+<%
+// if ("true".equals(PagoPaCronDebugEnabled)) {
+%>
+<table>
+	<tr>
+		<td class="Titolo" colspan="3"><font style="color:red;">Modalita' debug attiva</font></td>
+	</tr>
+	<tr>
+		<td class="L">
+			<input type="checkbox" name="<%=ICostantiBatchPagoPa.CAMPO_CHECK_CRON_EXPR%>" onClick="">QuartzCronExpression
+		</td>
+		<td class="L">
+			<input type="text" Title="" size="20" name="<%=ICostantiBatchPagoPa.CAMPO_CRON_EXPR%>" value="<%=StringUtils.toStringJSP(ConsultaPagamentiJob.getCronExpression(), "-")%>">
+		</td>
+	</tr>
+</table>
+<%
+// }
+%>
     
     <table>
       <tr>

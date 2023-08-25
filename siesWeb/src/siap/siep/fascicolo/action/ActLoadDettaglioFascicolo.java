@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.jms.ICostantiJMS;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -39,6 +40,8 @@ import siap.siep.istruttoriacumulo.action.ICostantiIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.controller.IIstruttoriaCumulo;
 import siap.siep.istruttoriacumulo.model.IstruttoriaCumuloModel;
 import siap.siep.misurasicurezza.controller.IMisuraSicurezza;
+import siap.siep.pagoPA.controller.ICivilmenteObbligato;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.parametro.controller.IParametro;
 import siap.siep.parametro.model.ParametroModel;
 import siap.siep.penacumulo.controller.IPenaCumulo;
@@ -928,11 +931,11 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 					if (ICostantiJMS.RESTITUITO.equals(lAnnotaModel.getCodEsito())) {
 						// Niente da visualizzare. La trasmissione è di fatto annullata
 						lLastEveTrasm = null;
-					// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
+						// Ticket#202210130113 - Aggiunta gestione el codice di RIGETTO
 					} else if (ICostantiJMS.RIGETTATO.equals(lAnnotaModel.getCodEsito())) {
-							// Niente da visualizzare. La trasmissione è di fatto annullata
+						// Niente da visualizzare. La trasmissione è di fatto annullata
 						lLastEveTrasm = null;
-					// Ticket#202210130113 - FINE
+						// Ticket#202210130113 - FINE
 					} else if ("1040".equals(lLastEveTrasm.getCodMotivo())
 							&& ICostantiJMS.ASSORBITO_IN_CUMULO.equals(lAnnotaModel.getCodEsito())) {
 						// Niente da visualizzare. Archiviazione automatica stesso ufficio
@@ -1046,8 +1049,11 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		setRequestAttribute("vediLinkSorv", vediLinkFasSorv);
 
 		/*
-		 * ISSUE MEV : inserimento data comunicazione scadenza per provv. classe IV Numero MEV : 39 Autore :
-		 * Gioggi Data : 12/mag/2017 Branch : MEV_39
+		 * ISSUE MEV : inserimento data comunicazione scadenza per provv. classe IV 
+		 * Numero MEV : 39 
+		 * Autore : Gioggi 
+		 * Data : 12/mag/2017 
+		 * Branch : MEV_39
 		 */
 		if (NumFasc >= 40000 && NumFasc < 50000) {
 			IScadenzario is = SIEPLookupRemote.getScadenzarioRemote();
@@ -1147,6 +1153,31 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 			setRequestAttribute("misuresicurezza", lListMis);
 		}
 		// ***** FINE INTERVENTO MEV_39 *****//
+
+		/*
+		 * ISSUE MEV : aggiunta ricerca del Civilmente Obbligato ed elenco stato pagamenti 
+		 * Numero MEV : 2023-33 
+		 * Autore : sgioggi 
+		 * Data : 24 ago 2023 
+		 * Branch : MEV_2023-33
+		 */
+		ICivilmenteObbligato ico = SIEPLookupRemote.getCivilmenteObbligatoRemote();
+		Vector<CivilmenteObbligatoModel> coms = ico.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(aId);
+		setRequestAttribute("existCivilmenteObbligato", !coms.isEmpty());
+
+		BigDecimal idEventoStatoPagamenti = new BigDecimal(0);
+		EventoModel emRic = new EventoModel();
+		emRic.setCodTipoEvento("01");
+		emRic.setCodTipoProvvedimento("06");
+		emRic.setCodMotivo("0622");
+		emRic.setFasSieIdFascicoloSiep(aId);
+		emRic.setFlagDocumentoRegistrato("S");
+		EventoModel em = lEventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(emRic);
+		if (!Utils.isNullObj(em))
+			idEventoStatoPagamenti = em.getIdEvento();
+
+		setRequestAttribute("idEventoStatoPagamenti", idEventoStatoPagamenti);
+		// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 		return PG_DETTAGLIO_FASCICOLO_SIEP;
 	}

@@ -53,10 +53,11 @@
              <input class=bottone name="I" type="submit" value="Prosegui">
         </td>
       </tr>
-      <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.iscrizioneprocedimento.action.ActLoadIscrProcedimentoDaSiep">
-      <input type="HIDDEN" name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>" value="<%=Messaggio.getIdMessaggio()%>">
       <tr align="left" >
-        <td colspan="2"  class="tabhead"></td>
+        <td colspan="2"  class="tabhead">
+            <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.sius.iscrizioneprocedimento.action.ActLoadIscrProcedimentoDaSiep">
+      		<input type="HIDDEN" name="<%=ICostantiMessaggio.CAMPO_ID_MESSAGGIO%>" value="<%=Messaggio.getIdMessaggio()%>">
+        </td>
       </tr>
 
     </table>

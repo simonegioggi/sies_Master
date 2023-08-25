@@ -540,21 +540,17 @@
  <table cellspacing="2" cellpadding="2"> 
  	<tr>
 		<div id="divdata1" style="visibility:hidden; position:relative; width:100%;">  
-
-
 	      	<td class="l">&lt;Data1&gt;</td>
 	      	<td class="l">
 <%
-		        String lStrGGInizio = StringUtils.toStringJSP( lReato.getGiornoInizio());
-		        if (lStrGGInizio.length() == 1)
-		          lStrGGInizio = "0"+lStrGGInizio;
-		
-		        String lStrMMInizio = StringUtils.toStringJSP( lReato.getMeseInizio());
-		        if (lStrMMInizio.length() == 1)
-		          lStrMMInizio = "0"+lStrMMInizio;
-		
-		        String lStrAAInizio = StringUtils.toStringJSP( lReato.getAnnoInizio());
-		%>
+String lStrGGInizio = StringUtils.toStringJSP(lReato.getGiornoInizio());
+if (lStrGGInizio.length() == 1)
+	lStrGGInizio = "0" + lStrGGInizio;
+String lStrMMInizio = StringUtils.toStringJSP(lReato.getMeseInizio());
+if (lStrMMInizio.length() == 1)
+  	lStrMMInizio = "0" + lStrMMInizio;
+String lStrAAInizio = StringUtils.toStringJSP(lReato.getAnnoInizio());
+%>
 		        <input size="2" maxlength="2" value="<%=lStrGGInizio%>" type="text" size="2" maxlength="2" 
 		        	name="<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>" onFocus="javascript:textboxSelect(this)" 
 		        	onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
@@ -570,20 +566,17 @@
 		        <font class="ob">(ammessa data parziale)</font>
       		</td>
 		</div>
-
 		<div id="divdata2" style="visibility:hidden; position:relative; width:100%;">  
       		<td class="l">&lt;Data2&gt;</td>
       		<td class="l">
 <%
-		        String lStrGGFine = StringUtils.toStringJSP( lReato.getGiornoFine());
-		        if (lStrGGFine.length() == 1)
-		          lStrGGFine = "0"+lStrGGFine;
-		
-		        String lStrMMFine = StringUtils.toStringJSP( lReato.getMeseFine());
-		        if (lStrMMFine.length() == 1)
-		          lStrMMFine = "0"+lStrMMFine;
-		
-		        String lStrAAFine = StringUtils.toStringJSP( lReato.getAnnoFine());
+String lStrGGFine = StringUtils.toStringJSP(lReato.getGiornoFine());
+if (lStrGGFine.length() == 1)
+	lStrGGFine = "0" + lStrGGFine;
+String lStrMMFine = StringUtils.toStringJSP(lReato.getMeseFine());
+if (lStrMMFine.length() == 1)
+	lStrMMFine = "0" + lStrMMFine;
+String lStrAAFine = StringUtils.toStringJSP(lReato.getAnnoFine());
 %>
 		        <input size="2" maxlength="2" value="<%=lStrGGFine%>" type="text" size="2" maxlength="2" 
 		        	   name="<%= ICostantiReato.CAMPO_GIORNO_DATA_FINE%>" onFocus="javascript:textboxSelect(this)" 
@@ -600,91 +593,84 @@
 		        <font class="ob">(ammessa data parziale)</font>
       		</td>
     	</div>
-
-    </tr>
-  </table>
-
-
-  
-  <table cellspacing="2" cellpadding="2">
-    <tr>
-				<td class="l">Note</td>
-				<td class="l"><TextArea cols="80" rows="5" name="<%= ICostantiReato.CAMPO_NOTE %>"><%=StringUtils.toStringJSP(lReato.getNote()) %></textarea></td>
-		</tr>
-    <tr>
-      <td colspan="2">
-        <input type="submit" value="Conferma" class="bottone" >
-      </td>
-		</tr>
+	</tr>
 </table>
-  <input value="" type="Hidden" name="cablati">
-  <input value="" type="Hidden" name="cablati2">
-  <input type="HIDDEN" name="<%= ICostantiReato.CAMPO_ID_REATO%>" value="<%=lReato.getIdReato()%>">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
-  <input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
-  <input type="HIDDEN" name="<%= ICostantiReato.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP_DA_COPIA%>" value="">
-  <input type="HIDDEN" name="<%= ICostantiReato.CAMPO_NUM_REATO_DA_COPIA%>" value="">
-  <input type="HIDDEN" name="<%= ICostantiReato.CAMPO_NUM_REATI_N %>" value="">	
-		
+
+<table cellspacing="2" cellpadding="2">
+    <tr>
+		<td class="l">Note</td>
+		<td class="l"><TextArea cols="80" rows="5" name="<%= ICostantiReato.CAMPO_NOTE %>"><%=StringUtils.toStringJSP(lReato.getNote()) %></textarea></td>
+	</tr>
+    <tr>
+      	<td colspan="2">
+        	<input type="submit" value="Conferma" class="bottone" >
+      	</td>
+	</tr>
+</table>
+<input value="" type="Hidden" name="cablati">
+<input value="" type="Hidden" name="cablati2">
+<input type="HIDDEN" name="<%= ICostantiReato.CAMPO_ID_REATO%>" value="<%=lReato.getIdReato()%>">
+<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=lAzione%>">
+<input type="HIDDEN" name="lTipoFunzione" value="<%=lTipoFunzione%>">
+<input type="HIDDEN" name="<%= ICostantiReato.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP_DA_COPIA%>" value="">
+<input type="HIDDEN" name="<%= ICostantiReato.CAMPO_NUM_REATO_DA_COPIA%>" value="">
+<input type="HIDDEN" name="<%= ICostantiReato.CAMPO_NUM_REATI_N %>" value="">	
 </form>
 
 <script language="JavaScript" type="text/javascript">
+var frmvalidator = new Validator("LoadInserisciReato");
 
-	var frmvalidator = new Validator("LoadInserisciReato");
-	
 <%
-	for(int i=0; i<5; i++)
-	{
+for (int i = 0; i < 5; i++) {
 %>
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_ANNO_FONTE%>","<%=i%>","num");
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_ANNO_FONTE%>","<%=i%>","minlength=4");
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_ANNO_FONTE%>","<%=i%>","num");
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_ANNO_FONTE%>","<%=i%>","minlength=4");
 
-		// *************************************
-		// Federica - a9-rr-078
-		// il campo articolo diviene numerico 
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_ARTICOLO%>","<%=i%>","numeric");
-		// fine modifica
-		// *************************************
-		
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_NUMERO_FONTE%>","<%=i%>","alphanumeric");
-		
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_COMMA%>","<%=i%>","alphanumeric");
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_LETTERA%>","<%=i%>","alphanumeric");
-		frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_NUMERO%>","<%=i%>","alphanumeric");
+// *************************************
+// Federica - a9-rr-078
+// il campo articolo diviene numerico 
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_ARTICOLO%>","<%=i%>","numeric");
+// fine modifica
+// *************************************
+
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_NUMERO_FONTE%>","<%=i%>","alphanumeric");
+
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_COMMA%>","<%=i%>","alphanumeric");
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_LETTERA%>","<%=i%>","alphanumeric");
+frmvalidator.addValidationWithIdx("<%=ICostantiReato.CAMPO_NUMERO%>","<%=i%>","alphanumeric");
 <%
-	}
+}
 %>
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>","gt=1");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>","lt=31");
-	
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_INIZIO%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_INIZIO%>","gt=1");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_INIZIO%>","lt=12");
-	
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","lt=3000");
-	
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","gt=1");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","lt=31");
-	
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_FINE%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_FINE%>","gt=1");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_FINE%>","lt=12");
-	
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","numeric");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","gt=1900");
-	frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","lt=3000");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>","gt=1");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_INIZIO%>","lt=31");
 
-	// *******************************************************************
-	// Federica - a9-rr-078
-	// aggiunta funzione di controllo dei campi 
-	frmvalidator.setAddnlValidationFunction("ControlloObbligatorieta");
-	// fine modifica
-	// *******************************************************************
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_INIZIO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_INIZIO%>","gt=1");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_INIZIO%>","lt=12");
+
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","numeric");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_INIZIO%>","lt=3000");
 	
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","gt=1");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_GIORNO_DATA_FINE%>","lt=31");
+
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_FINE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_FINE%>","gt=1");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_MESE_DATA_FINE%>","lt=12");
+
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","numeric");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","gt=1900");
+frmvalidator.addValidation("<%=ICostantiReato.CAMPO_ANNO_DATA_FINE%>","lt=3000");
+
+// *******************************************************************
+// Federica - a9-rr-078
+// aggiunta funzione di controllo dei campi 
+frmvalidator.setAddnlValidationFunction("ControlloObbligatorieta");
+// fine modifica
+// *******************************************************************
 </script>
 </body>
 </html>

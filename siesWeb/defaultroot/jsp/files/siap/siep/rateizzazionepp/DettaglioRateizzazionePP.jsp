@@ -249,5 +249,22 @@ while (IteRate.hasNext()) {
 }
 %>
 </table>
+<%-- MEV_2023-33: aggiunto pulsante per chiamata action --%>
+<br> 
+<table cellspacing="2" cellpadding="2" width="90%">
+	<tr>
+      	<td colspan="2">
+        	<input class="bottone" type="submit" name="RideterminazionePP" value="Rideterminazione Pena Pecuniaria" onclick="javascript:chiamaAction();">
+      	</td>
+    </tr>
+</table>
+<script language="JavaScript" type="text/javascript">
+function chiamaAction() {
+	var lAzione = "siap.siep.rateizzazionepp.action.ActLoadInserisciRideterminazionePP";
+	document.RateizzazionePP.Action.value = lAzione;
+	document.RateizzazionePP.submit();
+}
+</script>
+<%-- FINE MEV_2023-33 --%>
 </body>
 </html>

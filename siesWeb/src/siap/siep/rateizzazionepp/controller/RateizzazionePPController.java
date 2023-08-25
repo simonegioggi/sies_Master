@@ -15,9 +15,14 @@ import f3b.util.F3BException;
 import f3b.util.Utils;
 import siap.controller.SiapController;
 import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
+import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
+import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
+import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.pagoPA.dao.BollettinoPagopaDAO;
 import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
@@ -40,13 +45,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 	public void exInserisciRateizzazioni(Vector<RateizzazionePPModel> aListaRate) throws F3BException {
 
-		Connection lConn = null;
+		Connection c = null;
 
 		RateizzazionePPDAO lRateizzazioneDao = null;
 		try {
-			lConn = getDBTransaction();
+			c = getDBTransaction();
 
-			lRateizzazioneDao = new RateizzazionePPDAO(lConn);
+			lRateizzazioneDao = new RateizzazionePPDAO(c);
 
 			siesLogger.debug("Ciclo caricamento rate. Num rate = " + aListaRate.size());
 			for (int i = 0; i < aListaRate.size(); i++) {
@@ -55,19 +60,19 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				lRateizzazioneDao.insert();
 			}
 
-			commit(lConn);
+			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exInserisciRateizzazioni: " + daoEx);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exInserisciRateizzazioni: " + ex);
 		} finally {
 			cleanup(lRateizzazioneDao);
 
-			cleanup(lConn);
+			cleanup(c);
 		}
 
 		return;
@@ -78,16 +83,16 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		Vector<RateizzazionePPModel> lListaRate = new Vector<>();
 
-		Connection lConn = null;
+		Connection c = null;
 
 		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 		BollettinoPagopaSqlDAO lBollettinoSqlDAO = null;
 
 		try {
-			lConn = getDBConnection();
+			c = getDBConnection();
 
-			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
-			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(lConn);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
+			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(c);
 
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFasSIEP(aIdFasc);
 
@@ -104,19 +109,19 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				lRata.setListaBollettini(lListaBollettini);
 			}
 
-			commit(lConn);
+			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + daoEx);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + ex);
 		} finally {
 			cleanup(lRateizzazioneSqlDao);
 
-			cleanup(lConn);
+			cleanup(c);
 		}
 
 		return lListaRate;
@@ -124,18 +129,18 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 	public void exCancellaRateizzazioniByIdFasc(BigDecimal aIdFasc) throws F3BException {
 
-		Connection lConn = null;
+		Connection c = null;
 
 		RateizzazionePPDAO lRateizzazioneDao = null;
 		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 		BollettinoPagopaDAO lBollettiniDao = null;
 
 		try {
-			lConn = getDBConnection();
+			c = getDBConnection();
 
-			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
-			lRateizzazioneDao = new RateizzazionePPDAO(lConn);
-			lBollettiniDao = new BollettinoPagopaDAO(lConn);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
+			lRateizzazioneDao = new RateizzazionePPDAO(c);
+			lBollettiniDao = new BollettinoPagopaDAO(c);
 
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(aIdFasc);
 			Vector<RateizzazionePPModel> lListaRate = new Vector<RateizzazionePPModel>(
@@ -162,39 +167,39 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				lRateizzazioneDao.delete();
 			}
 
-			commit(lConn);
+			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exCancellaRateizzazioniByIdFasc: " + daoEx);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exCancellaRateizzazioniByIdFasc: " + ex);
 		} finally {
 			cleanup(lRateizzazioneDao);
 			cleanup(lBollettiniDao);
 			cleanup(lRateizzazioneSqlDao);
 
-			cleanup(lConn);
+			cleanup(c);
 		}
 	}
 
 	public void exModificaRateizzazioni(Vector<RateizzazionePPModel> aListaRate, BigDecimal aIdFasc)
 			throws F3BException {
 
-		Connection lConn = null;
+		Connection c = null;
 
 		RateizzazionePPDAO lRateizzazioneDao = null;
 		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 		BollettinoPagopaDAO lBollettiniDao = null;
 
 		try {
-			lConn = getDBTransaction();
+			c = getDBTransaction();
 
-			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
-			lRateizzazioneDao = new RateizzazionePPDAO(lConn);
-			lBollettiniDao = new BollettinoPagopaDAO(lConn);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
+			lRateizzazioneDao = new RateizzazionePPDAO(c);
+			lBollettiniDao = new BollettinoPagopaDAO(c);
 
 			siesLogger.debug("Cancello le precedenti rate.");
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFascicoloSiep(aIdFasc);
@@ -229,21 +234,21 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				lRateizzazioneDao.insert();
 			}
 
-			commit(lConn);
+			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exModificaRateizzazioni: " + daoEx);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exModificaRateizzazioni: " + ex);
 		} finally {
 			cleanup(lRateizzazioneDao);
 			cleanup(lBollettiniDao);
 			cleanup(lRateizzazioneSqlDao);
 
-			cleanup(lConn);
+			cleanup(c);
 		}
 
 		return;
@@ -254,13 +259,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		Vector<RateizzazionePPModel> lListaRate = new Vector<>();
 
-		Connection lConn = null;
+		Connection c = null;
 
 		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
 		try {
-			lConn = getDBConnection();
+			c = getDBConnection();
 
-			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
 
 			lRateizzazioneSqlDao.ricercaRateizzazionePPByEveIdEvento(aIdEvento);
 
@@ -270,19 +275,19 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			}
 			lRateizzazioneSqlDao.stop();
 
-			commit(lConn);
+			commit(c);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdEvento: " + daoEx);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
-			rollback(lConn);
+			rollback(c);
 			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdEvento: " + ex);
 		} finally {
 			cleanup(lRateizzazioneSqlDao);
 
-			cleanup(lConn);
+			cleanup(c);
 		}
 
 		return lListaRate;
@@ -339,6 +344,113 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		}
 
 		return listaEventoRateizzazioniPP;
+	}
+
+	@Override
+	/**
+	 * @since MEV_2023-33
+	 */
+	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate)
+			throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+
+		try {
+			c = getDBConnection();
+
+			// =========================================
+			// Inserisco l'OE
+			// =========================================
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModel(enm.getEvento());
+			BigDecimal idEvento = eDAO.insert();
+			eDAO.stop();
+			siesLogger.debug("idEvento = " + idEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(
+									enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug("Ins Aut Est = "
+										+ enm.getNotifiche()[count].getAutoritaEsterna());
+								aeDAO.setDAOFromModel(
+										enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+
+			cleanup(c);
+		}
 	}
 
 }

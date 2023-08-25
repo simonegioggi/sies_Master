@@ -178,10 +178,11 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setRatIdRateizzazionePP(rata.getIdRateizzazionePP());
 		bpm.setStatoPagamento(statoPagamento);
 		bpm.setTipoRateizzazione(rata.getTipoRateizzazione());
-		if ("U".equals(rata.getTipoRateizzazione()))
-			bpm.setImportoRata(rata.getImportoDaPagare());
-		else
-			bpm.setImportoRata(rata.getImportoRata());
+		// MEV_2023-33: metto sempre importo rata poichè si può inserire un importo diverso dal totale da pagare
+		// if ("U".equals(rata.getTipoRateizzazione()))
+		// bpm.setImportoRata(rata.getImportoDaPagare());
+		// else
+		bpm.setImportoRata(rata.getImportoRata());
 
 		// valore di ritorno
 		return bpm;

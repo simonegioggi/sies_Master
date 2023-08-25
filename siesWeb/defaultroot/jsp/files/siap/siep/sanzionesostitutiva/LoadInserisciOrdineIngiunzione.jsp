@@ -670,35 +670,35 @@ else
                        id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
                  <%=autoritaEsternaN%>
                </select>
-           </td>
-         </tr>
-         <tr>
-           <td class="l">Sede </td>
-           <td class="L">
-            <input title="Sede Foro Avvocato" type="text" maxlength="35" size="35"
-                   name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" 
-                   id="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" 
-                   >
+	  	</td>
+	</tr>
+	<tr>
+		<td class="l">Sede </td>
+		<td class="L">
+            <input title="Sede Foro Avvocato" type="text" maxlength="35" size="35" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" 
+                   id="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
             <% if( lNumAvvocati < 2 ) { %>
-              <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+			<a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
             <% } else {%>
-              <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+             <a href="Javascript:ListaComuni('LoadInserisciOrdineIngiunzione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+				<img src="/images/filefolder.gif" border="0">
+			</a>
             <% } %>
-              <img src="/images/filefolder.gif" border="0">
-            </a>
-          </td>
-           <td class="l">Note</td>
-           <td class="L">
-              <textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>"  
-                        id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" 
-                        cols="35"></textarea>
-           </td>
-        </tr>
-        <tr><td>&nbsp;</td></tr>
-      </table>
+		</td>
+		<td class="l">Note</td>
+		<td class="L">
+			<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" cols="35"
+					id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
+			</textarea>
+		</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+</table>
 <%
-    lIdxAvv++;
-  }
+	lIdxAvv++;
+}
 %>    
 
 <%

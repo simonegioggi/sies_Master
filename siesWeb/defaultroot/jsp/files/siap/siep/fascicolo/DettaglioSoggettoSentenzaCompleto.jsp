@@ -73,6 +73,9 @@
 <jsp:useBean id="AnnotazioneEsitoCumulo"  	scope="request" class="siap.siep.annotazioneesitotrasmissione.model.AnnotazioneEsitoTrasmissioneModel"/>
 <jsp:useBean id="CompetenzaCumulo"        	scope="request" class="siap.siep.competenza.model.CompetenzaModel"/>
 <jsp:useBean id="FascCompetenteCumulo"    	scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
+<%-- MEV_2023-33: aggiunti useBean x gestione Civilmente Obbligato ed elenco stato pagamenti --%>
+<jsp:useBean id="existCivilmenteObbligato"	scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="idEventoStatoPagamenti"	scope="request" class="java.math.BigDecimal"/>
 
 <%
 SoggettoModel soggetto = fascicolo.getSoggetto();
@@ -1021,6 +1024,24 @@ function blinkForo() {
 }
 %>
 </script>
+
+<%-- MEV_2023-33: aggiunto link cliccabile --%>
+<%
+if (existCivilmenteObbligato) {
+%>
+	<tr>
+		<td class="L">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActDettaglioCivilmenteObbligato&IdFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>"
+					title="Civilmente Obbligati al Pagamento Pena Pecuniaria">
+				Civilmente Obbligati al Pagamento Pena Pecuniaria
+			</a>
+		</td>
+	</tr>
+<%
+}
+%>
+<%-- FINE MEV_2023-33 --%>
+
 <%
 //==============================================================================
 // PENA IRROGATA IN SENTENZA (solo se non cumulante)
@@ -1413,15 +1434,19 @@ if (lPenComSanSost != null) {
 	if (lSanSos != null && lSanSos.getIdSanzioneSostitutiva() != null) {
 %>
 	<tr>
-		<% // MEV_2023-13  %>
-	    <% if (lSanSos.isPenaSostitutiva ()) { %>
-		<td class="L"><font class="label">Pena sostitutiva applicata: </font>
-		<% } else { %>
-        <td class="L"><font class="label">Sanzione Sostitutiva applicata: </font>
-		<% } %>
-		
 <%
-		if ((lSanSos.getNumAnni() != null && lSanSos.getNumAnni().compareTo(new BigDecimal(0)) != 0)
+// MEV_2023-13
+if (lSanSos.isPenaSostitutiva ()) {
+%>
+		<td class="L">
+			<font class="label">Pena sostitutiva applicata: </font>
+<%
+} else {
+%>
+		<td class="L"><font class="label">Sanzione Sostitutiva applicata: </font>
+<%
+}
+if ((lSanSos.getNumAnni() != null && lSanSos.getNumAnni().compareTo(new BigDecimal(0)) != 0)
 				|| (lSanSos.getNumMesi() != null && lSanSos.getNumMesi().compareTo(new BigDecimal(0)) != 0)
 				|| (lSanSos.getNumGiorni() != null && lSanSos.getNumGiorni().compareTo(new BigDecimal(0)) != 0)) {
 			lEsisteSanSost = true;
@@ -1441,15 +1466,26 @@ if (lPenComSanSost != null) {
 		}
 
 		if (lSanSos.getSanzionePecuniariaMulta() != null && lSanSos.getSanzionePecuniariaMulta().intValue() != 0) {
+			// MEV_2023-33: aggiunto link cliccabile per multa o ammenda
 %>
-			<font class="label"> <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%> Multa&nbsp;</font>
+<%-- 			<font class="label"> <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%> Multa&nbsp;</font> --%>
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione"
+					title="Pena Pecuniaria Sostitutiva">
+				<%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%>
+			</a>
+			<font class="label">&nbsp;Multa&nbsp;</font>
 			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>&nbsp;</font>&euro;&nbsp;&nbsp;&nbsp;
 <%
 		}
 		
 		if (lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniariaAmmenda().intValue() != 0) {
 %>
-			<font class="label"> <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%> Ammenda&nbsp;</font>
+<%-- 			<font class="label"> <%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%> Ammenda&nbsp;</font> --%>
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione"
+					title="Pena Pecuniaria Sostitutiva">
+				<%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%>
+			</a>
+			<font class="label">&nbsp;Ammenda&nbsp;</font>
 			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaAmmenda())%>&nbsp;</font>&euro;
 <%
 		}
@@ -2393,6 +2429,22 @@ if (fascicolo.getNote() != null) {
 	</tr>
 <%
 }
+%>
+
+	<%-- MEV_2023-33: aggiunto link cliccabile --%>
+	<tr><td>&nbsp;</td></tr>
+	<tr>
+		<td class="L">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=idEventoStatoPagamenti%>"
+					title="Verifica Stato Pagamenti">
+				Verifica Stato Pagamenti
+			</a>
+		</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+	<%-- FINE MEV_2023-33 --%>
+
+<%
 //==============================================================================
 //  ULTIMI EVENTI
 //==============================================================================

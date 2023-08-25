@@ -44,18 +44,16 @@ public class ActDettaglioNotificaOrdineIngiunzione extends ActionSiap
 		// MEV_2023-33 - Possono essere presenti più Eventi
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaEventoByKey(idEvento);
-		
-//		EventoModel lEveRicerca = new EventoModel();
-//		lEveRicerca.setCodTipoEvento("01");
-//		lEveRicerca.setCodTipoProvvedimento("06");
-//		lEveRicerca.setCodMotivo("0622");
-//
-//		lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-//		lEveRicerca.setFlagDocumentoRegistrato("S");
-//		
-//		EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
+
+		// EventoModel lEveRicerca = new EventoModel();
+		// lEveRicerca.setCodTipoEvento("01");
+		// lEveRicerca.setCodTipoProvvedimento("06");
+		// lEveRicerca.setCodMotivo("0622");
+		// lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		// lEveRicerca.setFlagDocumentoRegistrato("S");
+		// EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca);
 		// MEV_2023-33 - FINE
-		
+
 		if (lOrdineIngiunzione == null || lOrdineIngiunzione.getIdEvento() == null) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);

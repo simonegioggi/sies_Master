@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Vector;
 
 import f3b.util.F3BException;
+import siap.sico.evento.model.EventoNotificaModel;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
@@ -30,6 +31,10 @@ public interface IRateizzazionePP {
 			throws F3BException;
 
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo)
+			throws F3BException;
+
+	// MEV_2023-33: aggiunto metodo di inserimento
+	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate)
 			throws F3BException;
 
 }

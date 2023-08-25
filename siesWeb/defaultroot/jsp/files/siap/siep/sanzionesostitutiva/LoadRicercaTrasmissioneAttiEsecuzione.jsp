@@ -162,11 +162,10 @@
 	    <td class="Titolo" colspan="6"> Selezione del Fascicolo SIEP Inviato</td>
   	</tr>
       <tr>
-        <td class="l">Numero SIEP(Anno/Progressivo)</font></td>
+        <td class="l">Numero SIEP(Anno/Progressivo)</td>
         <td class="l" colspan ='2'>
           <input Title="Anno SIEP "  type="text" name="<%= ICostantiSiepJMS.CHIAVE_ANNO_SIEP %>" maxlength="4" size="4">
           /<input Title="Numero SIEP " type="text" name="<%= ICostantiSiepJMS.CHIAVE_PROGR_SIEP %>" maxlength="14" size="14">
-        </td>
         </td>
       </tr>
   </table>
@@ -188,7 +187,7 @@
             <table cellspacing=2 cellpadding=2>
 	      <tr>
 		<td class="label" >
-		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_ESITO%>" value=0 CHECKED ></td>
+		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_ESITO%>" value=0 CHECKED>
 		</td>
 		<td class="label" >
 		  Tutti
@@ -197,7 +196,7 @@
 
 	      <tr>
 		<td class="label" >
-		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_ESITO%>" value=1></td>
+		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_ESITO%>" value=1>
 		</td>
 		<td class="label" >
 		  In attesa di risposta&nbsp;
@@ -206,7 +205,7 @@
 
 	      <tr>
 		<td class="label" >
-		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_ESITO%>" value=2></td>
+		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_ESITO%>" value=2>
 		</td>
 		<td class="label" >
 		  Esito Positivo
@@ -230,7 +229,7 @@
             <table cellspacing=2 cellpadding=2>
 	      <tr>
 		<td class="label" >
-		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_UTENTE%>" value=0 ></td>
+		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_UTENTE%>" value=0>
 		</td>
 		<td class="label" >
 		  Tutti
@@ -239,7 +238,7 @@
 
 	      <tr>
 		<td class="label" >
-		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_UTENTE%>" value=1 CHECKED ></td>
+		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_UTENTE%>" value=1 CHECKED>
 		</td>
 		<td class="label" >
 		  Utente Collegato
@@ -248,7 +247,7 @@
 
 	      <tr>
 		<td class="label" >
-		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_UTENTE%>" value=2></td>
+		  <input type=radio name="<%=ICostantiSicoJMS.CAMPO_TIPO_UTENTE%>" value=2>
 		</td>
 		<td class="label" >
 		  Utente con codice :&nbsp;&nbsp;&nbsp;&nbsp;

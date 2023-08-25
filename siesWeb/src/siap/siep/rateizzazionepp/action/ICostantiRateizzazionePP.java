@@ -39,4 +39,16 @@ public interface ICostantiRateizzazionePP {
 	public static final String PG_LOAD_DETTAGLIO_RATEIZZAZIONE_PP = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/DettaglioRateizzazionePP.jsp";
 
+	// MEV_2023-33: aggiunte costanti
+	public static final String PG_LOAD_INSERISCI_RIDETERMINAZIONE_PP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadInserisciRideterminazionePP.jsp";
+	public static final String CAMPO_GIORNO_DATA_EMISSIONE = "GiornoEmissioneProvvedimento";
+	public static final String CAMPO_MESE_DATA_EMISSIONE = "MeseEmissioneProvvedimento";
+	public static final String CAMPO_ANNO_DATA_EMISSIONE = "AnnoEmissioneProvvedimento";
+	public static final String CAMPO_ANNO_PROVVEDIMENTO = "AnnoProvvedimento";
+	public static final String CAMPO_NUMERO_PROVVEDIMENTO = "NumeroProvvedimento";
+	public static final String CAMPO_COD_TIPO_PROVVEDIMENTO = "CodiceTipoProvvedimento";
+	public static final String CAMPO_SEDE_AUTORITA_PROVVEDIMENTO = "SedeAutoritaProvvedimento";
+	public static final String CAMPO_COD_AUTORITA_PROVVEDIMENTO = "CodiceAutoritaProvvedimento";
+
 }
