@@ -17,6 +17,7 @@ import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
 import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
@@ -44,13 +45,16 @@ public class ActDettaglioRideterminazionePP extends ActionSiap implements ICosta
 
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
+		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		BigDecimal idFascicoloSiep = fsm.getIdFascicoloSiep();
+
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("eventonotifica", enm);
 
 		// Annotazione Manuale
 		IAnnotazioneManuale iam = SIEPLookupRemote.getAnnotazioneManualeRemote();
-		AnnotazioneManualeModel amm = iam.ExRicercaAnnotazioniManualiByIdEvento(idEvento);
+		AnnotazioneManualeModel amm = iam.ExRicercaAnnotazioneManualeByIdEventoIdFascicolo(idEvento, idFascicoloSiep);
 		setRequestAttribute("annotazioneManuale", amm);
 
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();

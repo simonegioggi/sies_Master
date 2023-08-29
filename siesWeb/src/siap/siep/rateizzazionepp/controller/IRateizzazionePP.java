@@ -35,7 +35,7 @@ public interface IRateizzazionePP {
 			throws F3BException;
 
 	// MEV_2023-33: aggiunto metodo di inserimento
-	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
 
 }

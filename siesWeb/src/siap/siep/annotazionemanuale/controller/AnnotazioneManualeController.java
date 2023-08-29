@@ -3848,4 +3848,38 @@ public class AnnotazioneManualeController extends SiapController implements IAnn
 		}
 	}
 
+	@Override
+	/**
+	 * Aggiunto metodo di ricerca puntuale
+	 *
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 */
+	public AnnotazioneManualeModel ExRicercaAnnotazioneManualeByIdEventoIdFascicolo(BigDecimal idEvento,
+			BigDecimal idFascicoloSiep) throws F3BException {
+
+		Connection c = null;
+		AnnotazioneManualeSqlDAO amsDAO = null;
+		AnnotazioneManualeModel amm;
+
+		try {
+			c = getDBConnection();
+
+			amsDAO = new AnnotazioneManualeSqlDAO(c);
+			amsDAO.ricercaAnnotazioneManualeByIdEventoIdFascicolo(idEvento, idFascicoloSiep);
+			amm = (AnnotazioneManualeModel) amsDAO.getModelByKey();
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException(
+					"AnnotazioneManualeController.ExRicercaAnnotazioneManualeByIdEventoIdFascicolo: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(amsDAO);
+			cleanup(c);
+		}
+
+		return amm;
+	}
+
 }

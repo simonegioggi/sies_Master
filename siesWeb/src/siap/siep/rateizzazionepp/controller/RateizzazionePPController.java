@@ -352,7 +352,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	/**
 	 * @since MEV_2023-33
 	 */
-	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException {
 
 		Connection c = null;
@@ -363,6 +363,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		RateizzazionePPDAO rPPDAO = null;
 		AnnotazioneManualeDAO amDAO = null;
 
+		BigDecimal idEvento = null;
+
 		try {
 			c = getDBConnection();
 
@@ -371,7 +373,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			// =========================================
 			eDAO = new EventoDAO(c);
 			eDAO.setDAOFromModel(enm.getEvento());
-			BigDecimal idEvento = eDAO.insert();
+			idEvento = eDAO.insert();
 			eDAO.stop();
 			siesLogger.debug("idEvento = " + idEvento);
 
@@ -460,6 +462,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 			cleanup(c);
 		}
+		return idEvento;
 	}
 
 }

@@ -66,7 +66,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		AnnotazioneManualeModel amm = getAnnotazioneManuale(idFascicoloSiep);
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		irpp.exInserisciRideterminazionePP(enm, arrayIdRate, amm);
+		BigDecimal idEvento = irpp.exInserisciRideterminazionePP(enm, arrayIdRate, amm);
 
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
@@ -74,7 +74,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		// valore di ritorno
 		return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.rateizzazionepp.action.ActDettaglioRideterminazionePP&"
-				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enm.getEvento().getIdEvento();
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + idEvento;
 	}
 
 	private AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {

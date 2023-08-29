@@ -71,26 +71,24 @@ if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null
 		|| "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 %>   
 		<td class="LBG">
-		  	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadModificaOrdineIngiunzione&IdEvento=<%=eventonotifica.getEvento().getIdEvento()%>">
+		  	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadModificaRideterminazionePP&IdEvento=<%=eventonotifica.getEvento().getIdEvento()%>">
 				<img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Ordine Ingiunzione" width="24" height="24" border="0">
 		  	</a>
 		</td>
 		<jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-			<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaOrdineIngiunzione&IdEvento="+eventonotifica.getEvento().getIdEvento()%>"/>
+			<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.rateizzazionepp.action.ActStampaRideterminazionePP&IdEvento="+eventonotifica.getEvento().getIdEvento()%>"/>
 		</jsp:include>
 <%
 }
 %>
 	</tr>
 </table>
-  
 <br>
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
-
-<table>
+<table cellspacing=0 cellpadding=0 width=95%>
   	<tr>
-    	<td class="l">Posizione Giuridica </td>
+    	<td class="l" width="20%">Posizione Giuridica</td>
     	<td class="L" colspan=5>
       		<font class="campo">
 <%
@@ -111,7 +109,7 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 		</td>
   	</tr>
 </table>
-
+<br>
 <%
 if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 	// Se l'evento non e'annullato faccio vedere i dati della rate agganciate
@@ -119,7 +117,7 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 	String lTipoRateizzazione = primarata.getTipoRateizzazione();
 	BigDecimal lImportoDaPagare = primarata.getImportoDaPagare();
 %>
-<table>
+<table cellspacing=0 cellpadding=0 width=95%>
   	<tr>
     	<td class="L">
 			<font class="label">Importo da pagare</font>
@@ -128,8 +126,7 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
     	</td>
   	</tr>
 </table>
-
-<table>
+<table cellspacing=0 cellpadding=0 width=95%>
   	<tr>
 <%
 	if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
@@ -188,8 +185,8 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 <%
 }
 %>
-
-<table>
+<br>
+<table cellspacing=0 cellpadding=0 width=95%>
 	<tr>
 	  	<td class="Titolo" colspan="2">Dati Provvedimento di Rideterminazione Pena</td>
 	</tr>
@@ -220,13 +217,13 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 		</td>
   	</tr>
 </table>
-
-<table>
+<br>
+<table cellspacing=0 cellpadding=0 width=95%>
   	<tr>
 <%
 if (eventonotifica.getEvento().getDataEmissione() != null) {
 %>
-		<td class="l">Data Emissione</td>
+		<td class="l" width="20%">Data Emissione</td>
 		<td class="L">
   			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getEvento().getDataEmissione(), "dd-MM-yyyy"))%></font>
 		</td>
@@ -236,7 +233,7 @@ if (eventonotifica.getEvento().getDataEmissione() != null) {
 // SE NON ESISTE NESSUNA NOTIFICA FALLISCE
 if (eventonotifica.getNotifiche()[0].getDataInvio() != null) {
 %>
-		<td class="l">Data Trasmissione</td>
+		<td class="l" width="20%">Data Trasmissione</td>
 		<td class="L">
 		  	<font class="campo"> <%=StringUtils.toStringJSP(DateUtils.getDateToString(eventonotifica.getNotifiche()[0].getDataInvio(), "dd-MM-yyyy"))%></font>
 		</td>
@@ -244,30 +241,36 @@ if (eventonotifica.getNotifiche()[0].getDataInvio() != null) {
 }
 %>
 	</tr>
+</table>
 <%
 if (magistrato != null) {
 %>
+<br>
+<table cellspacing=0 cellpadding=0 width=95%>
 	<tr>
-		<td class="Titolo" colspan="3"> Magistrato </td>
+		<td class="Titolo" colspan="2"> Magistrato </td>
 	</tr>    
 	<tr>
-		<td class="l">Magistrato Assegnatario
+		<td class="l" width="20%">Magistrato Assegnatario
 		<td class="L">
 			<font class="campo"><%=StringUtils.toStringJSP(magistrato.getCognome())%></font>
 			<font class="campo"><%=StringUtils.toStringJSP(magistrato.getNome())%></font>
 		</td>
 	</tr>
+</table>
 <%
 }
 %>
+<br>
+<table cellspacing=0 cellpadding=0 width=95%>
 	<tr>
-		<td class="Titolo" colspan="3"> Notifica al condannato </td>
+		<td class="Titolo" colspan="2"> Notifica al condannato </td>
 	</tr>
 <%
 if (notificaAlCondannato.getAutoritaEsterna() != null) {
 %>
 	<tr>
-		<td class="l">Autorita' Destinazione</td>
+		<td class="l" width="20%">Autorita' Destinazione</td>
 		<td class="L" colspan=2>
 			<font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getAutoritaEsterna().getDescrTipoAutorita())%></font>
 			&nbsp;di&nbsp;
@@ -279,7 +282,7 @@ if (notificaAlCondannato.getAutoritaEsterna() != null) {
 %>
 	<tr>
 		<td class="l">Indirizzo</td>
-		<td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font>&nbsp;</td>
+		<td class="L"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font>&nbsp;</td>
 	</tr>
 <%
 	}
@@ -293,7 +296,7 @@ if (notificaAlCondannato.getIstitutoDetenzione() != null) {
 %>
 	<tr>
 		<td class="L">Istituto Notifica</td>
-		<td class="L" colspan="2">
+		<td class="L">
 			<font class="campo"><%=StringUtils.toStringJSP(lNotificaIstituto)%></font>
 		</td>
 	</tr>
@@ -301,7 +304,7 @@ if (notificaAlCondannato.getIstitutoDetenzione() != null) {
 }
 %>
 	<tr>
-		<td class="Titolo" colspan="3"> Notifica al Difensore </td>
+		<td class="Titolo" colspan="2"> Notifica al Difensore </td>
 	</tr>
 <%
 // Avvocati Siep
@@ -313,7 +316,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 %>
 	<tr>
 		<td class="l">Avvocato per Notifica</td>
-		<td class="L" colspan="2">
+		<td class="L">
 			<font class="campo"><%=StringUtils.toStringJSP(lAvvocatoSiep.getAvvSiep().getAvvocato().getCognome()) +" "+ StringUtils.toStringJSP(lAvvocatoSiep.getAvvSiep().getAvvocato().getNome())%></font>
 			&nbsp;Foro di&nbsp;
 			<font class="campo">
@@ -332,7 +335,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 %>
 	<tr>
 		<td class="l">Autorita Notifica</td>
-		<td class="L" colspan=2>
+		<td class="L">
     		<font class="campo"><%=StringUtils.toStringJSP(lAvvocatoSiep.getAutoritaEsterna().getDescrTipoAutorita())%></font>
 			&nbsp;di&nbsp;
 			<font class="campo"><%=StringUtils.toStringJSP(lAvvocatoSiep.getAutoritaEsterna().getDescrSede())%></font>
@@ -340,7 +343,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 	</tr>
 	<tr>
 		<td class="l">Note</td>
-		<td class="L" colspan="2">
+		<td class="L">
 			<font class="campo"><%=StringUtils.toStringJSP(lAvvocatoSiep.getNote())%></font>
 		</td>
 	</tr>
@@ -349,7 +352,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 if (lListaNotObbligati.size() > 0) {
 %>
 	<tr>
-		<td class="Titolo" colspan="3"> Civilmente Obbligati </td>
+		<td class="Titolo" colspan="2"> Civilmente Obbligati </td>
 	</tr>
 <%
 }
@@ -363,7 +366,7 @@ for (int i = 0; i < lListaNotObbligati.size(); i++) {
 %>
 	<tr>
 		<td class="l">Civilmente Obbligato</td>
-		<td class="L" colspan="2">
+		<td class="L">
 			<font class="campo"><%=lObbligatoModel.getCognome()%></font>&nbsp;
 			<font class="campo"><%=lObbligatoModel.getNome()%></font>&nbsp;
 			<font class="label">nato a</font>&nbsp;<font class="campo"><%=lObbligatoModel.getDescComuneNascita()%></font>&nbsp;
@@ -385,7 +388,7 @@ for (int i = 0; i < lListaNotObbligati.size(); i++) {
 %>
 	<tr>
 	  	<td class="l">Autorita Notifica</td>
-	  	<td class="L" colspan=2>
+	  	<td class="L">
 	    	<font class="campo"><%=StringUtils.toStringJSP( lNotificaObbligato.getAutoritaEsterna().getDescrTipoAutorita())%></font>
 			&nbsp;di&nbsp;
 			<font class="campo"><%=StringUtils.toStringJSP( lNotificaObbligato.getAutoritaEsterna().getDescrSede())%></font>
@@ -405,7 +408,7 @@ if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 <table>
 	<tr>
 	  	<td class="L">
-	    	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione">Visualizza stato notifiche</a>
+	    	<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadNotificheRideterminazionePP">Visualizza stato notifiche</a>
 	  	</td>
 	</tr>
 </table>
@@ -420,9 +423,9 @@ if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
 	<tr>
   		<td class="L">
 			<input class=bottone  type="submit" value="Conferma">
-			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActUploadOrdineIngiunzione">
+			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActUploadRideterminazionePP">
 			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento()%>">
-			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione">
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.siep.rateizzazionepp.action.ActDettaglioRideterminazionePP">
 		</td>
 	</tr>
 </table>
