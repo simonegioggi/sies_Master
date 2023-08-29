@@ -1,0 +1,45 @@
+package siap.siep.sanzionesostitutiva.action;
+
+import java.math.BigDecimal;
+
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.web.ActionSiap;
+import siap.siep.notifica.action.ICostantiNotifica;
+import siap.siep.notifica.controller.INotifica;
+import siap.siep.notifica.model.NotificaModel;
+import siap.siep.rinnovo.action.ICostantiRinnovo;
+import siap.siep.rinnovo.controller.IRinnovo;
+import siap.siep.rinnovo.model.RinnovoModel;
+import siap.siep.util.SIEPLookupRemote;
+
+/**
+ * Funzione di cancellazione del rinnovo se non validato 
+ * @author d.fiorletta
+ * @since MAV_2023-33
+ */
+public class ActCancellaRinnovoRicercheOIPP extends ActionSiap implements ICostantiNotifica {
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
+	public String processRequest() throws F3BException
+	{
+		BigDecimal lId = getRequestBigDecimalParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
+
+		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
+		RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey (lId);
+    
+	    lCtrl.ExCancellaRinnovo(lRinModel);
+
+	    // Recupero l'OI
+	    INotifica lNotCtrl = SIEPLookupRemote.getNotificaRemote();
+	    NotificaModel lNotificaModel = lNotCtrl.ExRicercaNotificaByKey(lRinModel.getNotIdNotifica());
+	    
+		String lPage = "";
+		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+lNotificaModel.getEveIdEvento();
+		return lPage;
+	}
+}

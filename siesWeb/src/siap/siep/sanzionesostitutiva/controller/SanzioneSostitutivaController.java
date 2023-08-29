@@ -2779,9 +2779,11 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 				siesLogger.debug("lNotModel.getCodTipoNotifica() = " + lNotModel.getCodTipoNotifica());
 				if ("E".equals(lNotModel.getCodTipoNotifica())) {
 					siesLogger.debug("Notifica al condannato. Attivo/Cancello lo scadenzario");
-
+					
+					Date dataScadenzaPrimaRata = null;
+					
 					if (lNotModel.getDataAvvenutaNotifica() == null) {
-						siesLogger.debug("Notifica al condannato Rimossa Cancello lo scadenzario");
+						siesLogger.debug("Notifica al condannato Rimossa, Cancello lo scadenzario");
 						lScaSqlDao = new ScadenzarioSqlDAO(lConn);
 						lScaSqlDao.ricercaScadenzarioByIdEvento(aEvento.getIdEvento());
 						ScadenzarioModel lScadenzarioAttuale = (ScadenzarioModel) lScaSqlDao.getModelByKey();
@@ -2817,7 +2819,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							}
 						}
 
-						Date dataScadenza = DateUtils.moveDateTo(lNotModel.getDataAvvenutaNotifica(),
+						dataScadenzaPrimaRata = DateUtils.moveDateTo(lNotModel.getDataAvvenutaNotifica(),
 								Calendar.DAY_OF_MONTH, primaRata.getScadenzaGiorni().intValue());
 
 						if (lScadenzarioAttuale == null) {
@@ -2828,7 +2830,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 							lScadModel.setCodTipoScadenzario("30");
 							lScadModel.setDataInizioScadenza(lNotModel.getDataAvvenutaNotifica());
-							lScadModel.setDataFineScadenza(dataScadenza);
+							lScadModel.setDataFineScadenza(dataScadenzaPrimaRata);
 
 							lScadModel
 									.setCodOperatoreInserimento(lNotModel.getCodiceOperatoreAggiornamento());
@@ -2848,7 +2850,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							siesLogger.debug(
 									"Notifica al condannato: scadenzario gia' attivo ma con data differente lo aggiorno");
 							lScaDao.setDataInizioScadenza(lNotModel.getDataAvvenutaNotifica());
-							lScaDao.setDataFineScadenza(dataScadenza);
+							lScaDao.setDataFineScadenza(dataScadenzaPrimaRata);
 
 							lScaDao.setCodOperatoreAggiornamento(lNotModel.getCodiceOperatoreAggiornamento());
 							lScaDao.setCodUfficioAggiornamento(lNotModel.getCodUfficioAggiornamento());
@@ -2858,14 +2860,37 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							lScaDao.update();
 							lScaDao.stop();
 						}
+					}
+					
+					// MEV_2023-33: le date di scadenza delle rate successive vanno subito calcolate in fase di 
+					//              registrazione della notifica e non a seguito dall'avvenuto pagamento della 
+					//              prima rata
+					// Data scadenza ulteriori rata = ultimo del mese successivo alla scadenza della rata precedente
+					// Se presenti i bollettini aggiorno la data di scadenza
+					lBollSqlDao = new BollettinoPagopaSqlDAO(lConn);
+					// lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(aEvento.getFasSieIdFascicoloSiep(), null);
+					lBollSqlDao.ricercaBollettinoPagopaByIdEvento(aEvento.getIdEvento());
+					Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(lBollSqlDao.getModels());
 
-						// Se presenti i bollettini aggiorno la data di scadenza
-						lBollSqlDao = new BollettinoPagopaSqlDAO(lConn);
-						lBollSqlDao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(
-								aEvento.getFasSieIdFascicoloSiep(), null);
+					lBollDao = new BollettinoPagopaDAO(lConn);
+					if (lListaBollettini.size() > 0) {
+						// n.b. per ora si procede all'aggiornamento delle scadenze indipendentemente se il 
+						//      bollettino sia stato generato o meno o già pagato
+						Date dataScadenzaRataSuccessiva = dataScadenzaPrimaRata;
+						for (BollettinoPagopaModel lBoll : lListaBollettini) {
+							siesLogger.debug("ProgRata = " + lBoll.getProgRata() + ", dataScadenza "
+									+ dataScadenzaRataSuccessiva);
+							
+							lBollDao.setDataScadenza(dataScadenzaRataSuccessiva);
+							lBollDao.setCondizioneUpdate(lBoll.getIdBollettinoPagopa());
+							lBollDao.update();
 
-						Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
-								lBollSqlDao.getModels());
+							if (dataScadenzaRataSuccessiva!=null)
+								dataScadenzaRataSuccessiva = DateUtils.calcolaUtimoDelProxMese(dataScadenzaRataSuccessiva);
+						}					
+					}
+						
+						/*
 						if (lListaBollettini.size() > 0) {
 							boolean isBollettiniGenerati = false;
 							boolean isBollettiniPagati = false;
@@ -2880,10 +2905,11 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							}
 
 							if (isBollettiniGenerati) {
-								if (!isBollettiniPagati /* && !isDataScadenzaCalcolata */) {
+								//if (!isBollettiniPagati && !isDataScadenzaCalcolata) {
+								if (!isBollettiniPagati ) {
 									// Calcolo la data scadenza e la aggiornao
 									lBollDao = new BollettinoPagopaDAO(lConn);
-									lBollDao.setDataScadenza(dataScadenza);
+									lBollDao.setDataScadenza(dataScadenzaPrimaRata);
 									lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 									lBollDao.update();
 								} else {
@@ -2897,12 +2923,13 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 							} else {
 								// la potrei aggiornare comunque
 								lBollDao = new BollettinoPagopaDAO(lConn);
-								lBollDao.setDataScadenza(dataScadenza);
+								lBollDao.setDataScadenza(dataScadenzaPrimaRata);
 								lBollDao.selCondizioneByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 								lBollDao.update();
 							}
 						}
-					}
+						*/
+					
 				}
 			}
 

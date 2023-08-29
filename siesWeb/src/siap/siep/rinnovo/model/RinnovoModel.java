@@ -45,6 +45,8 @@ public class RinnovoModel extends GenericModel {
 	private String mFlagDocumentoRegistrato;
 	private String mTemIdTemplate;
 	private String mNuovoLuogoNotifica;
+	// MEV_2023-33
+	private String mEsito; 
 
 	// COSTRUTTORE DI DEFAULT
 	public RinnovoModel() {
@@ -71,6 +73,8 @@ public class RinnovoModel extends GenericModel {
 		this.mTemIdTemplate = "";
 		this.mFlagDocumentoRegistrato = "";
 		this.mNuovoLuogoNotifica = "";
+		// MEV_2023-33
+		this.mEsito = "";
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -98,6 +102,8 @@ public class RinnovoModel extends GenericModel {
 		this.mTemIdTemplate = aModel.mTemIdTemplate;
 		this.mFlagDocumentoRegistrato = aModel.mTemIdTemplate;
 		this.mNuovoLuogoNotifica = aModel.mNuovoLuogoNotifica;
+		// MEV_2023-33
+		this.mEsito = aModel.mEsito;
 	}
 
 	// COSTRUTTORE MODEL
@@ -109,7 +115,10 @@ public class RinnovoModel extends GenericModel {
 			String aDescrUfficioInserimento, String aCodOperatoreAggiornamento, Date aDataAggiornamento,
 			String aCodUfficioAggiornamento, String aDescrUfficioAggiornamento, BigDecimal aNotIdNotifica,
 			BigDecimal aVerIdVerbale, String aFlagDocumentoRegistrato, String aTemIdTemplate,
-			String aNuovoLuogoNotifica) {
+			String aNuovoLuogoNotifica
+			// MEV_2023-33
+			, String aEsito
+			) {
 		this.mIdRinnovo = aIdRinnovo;
 		this.mCodTipoRinnovo = aCodTipoRinnovo;
 		this.mDescrTipoRinnovo = aDescrTipoRinnovo;
@@ -133,6 +142,8 @@ public class RinnovoModel extends GenericModel {
 		this.mTemIdTemplate = aTemIdTemplate;
 		this.mFlagDocumentoRegistrato = aFlagDocumentoRegistrato;
 		this.mNuovoLuogoNotifica = aNuovoLuogoNotifica;
+		// MEV_2023-33
+		this.mEsito = aEsito;
 	}
 
 	//
@@ -236,6 +247,11 @@ public class RinnovoModel extends GenericModel {
 		return mNuovoLuogoNotifica;
 	}
 
+	// MEV_2023-33
+	public String getEsito() {
+		return mEsito;
+	}	
+	
 	//
 	// METODI SET()
 	//
@@ -336,6 +352,12 @@ public class RinnovoModel extends GenericModel {
 	public void setNuovoLuogoNotifica(String aValore) {
 		mNuovoLuogoNotifica = aValore;
 	}
+	
+	// MEV_2023-33
+	public void setEsito (String aValore) {
+		mEsito = aValore;
+	}
+	
 
 	@Override
 	public String toString() {
@@ -349,7 +371,7 @@ public class RinnovoModel extends GenericModel {
 				+ mDescrUfficioInserimento + " - " + mCodOperatoreAggiornamento + " - " + mDataAggiornamento
 				+ " - " + mCodUfficioAggiornamento + " - " + mDescrUfficioAggiornamento + " - "
 				+ mNotIdNotifica + " - " + mVerIdVerbale + " - " + mFlagDocumentoRegistrato + " - "
-				+ mTemIdTemplate + " - " + mNuovoLuogoNotifica;
+				+ mTemIdTemplate + " - " + mNuovoLuogoNotifica + " - "+ mEsito ;
 
 		return lStr;
 	}

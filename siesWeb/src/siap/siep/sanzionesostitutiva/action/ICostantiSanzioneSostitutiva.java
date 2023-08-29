@@ -96,9 +96,12 @@ public interface ICostantiSanzioneSostitutiva {
 
 	// MEV_2023-33
 	public static final String PG_LOAD_INSERISCI_RINNOVO_RICERCHE = IWebConstants.ROOT_DIR
-			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRinnovoRicerche.jsp";
+			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRinnovoRicercheOIPP.jsp";
 	public static final String PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadSelezionaOrdineIngiunzione.jsp";
+	public static final String PG_DETTAGLIO_OMESSA_NOTIFICA_OIPP = IWebConstants.ROOT_DIR
+			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioRinnovoRicercheOIPP.jsp";
+
 	public static final String PG_LOAD_GRIGLIA_SCADENZARI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/GrigliaScadenzariPP.jsp";
 	public static final String PG_LOAD_RICERCA_STATO_PAGAMENTI = IWebConstants.ROOT_DIR

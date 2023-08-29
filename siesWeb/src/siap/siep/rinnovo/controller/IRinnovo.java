@@ -74,4 +74,12 @@ public interface IRinnovo {
 	 */
 	public ByteArrayOutputStream ExGetDocumento(RinnovoModel aRinnovo) throws F3BException;
 
+	// MEV_2023-33
+	public Vector ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(BigDecimal aIdNotifica, String[] aTipoRinnovo, String aStato)
+			throws F3BException;
+	public void ExCancellaRinnovoPP (RinnovoModel aRinnovo) throws F3BException;
+	public RinnovoModel ExUpdateValidaRinnovoPP (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+			throws F3BException;
+	// MEV_2023-33
+	
 }
