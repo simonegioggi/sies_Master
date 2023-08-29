@@ -83,15 +83,49 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
-	// Aggiungere i controlli
-  	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length==1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value='0'+document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length==1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value='0'+document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
+	// Data Emissione Provvedimento obbligatoria
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value;
+
+	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+
+	if (!ControllaData(data_to_verify)) {
+		alert('Data Emissione Provvedimento non valida');
+		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		return false;
+	}
+
+	// Tipo Provvedimento
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.value == "-") {
+		alert("Campo Tipo Provvedimento obbligatorio!");
+    	document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.focus();
+    	return false;
+	}
+
+	// Sede Autorita' Emittente Obbligatoria
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.value == "") {
+		alert("Selezionare la sede dell'Autorita' Emittente per il Provvedimento di Rideterminazione Pena!");
+		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.focus();
+		return false; 
+	}
+
+	// Data Emissione
+  	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
 
 	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value
-		+'/'+ document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
-		+'/'+ document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di emissione non valida');
@@ -100,14 +134,16 @@ function Verify() {
 	}
 
 	// Data Trasmissione
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length==1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value='0'+document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length==1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value='0'+document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
+		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
+		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
+	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length == 1)
+		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value = '0' +
+		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
 
 	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value
-		+'/'+ document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
-		+'/'+ document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
+		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
+		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di Trasmissione non valida');
@@ -117,7 +153,7 @@ function Verify() {
 
 	// Autorita x la Notifica
 	if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") {
-  		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value=="-") {
+  		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value == "-") {
 			alert("Selezionare l'autorita' per la notifica al condannato");
 			document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
 			return false; 
@@ -133,7 +169,7 @@ function Verify() {
 			document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
 			return false; 
   		}
-	} else if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %> !== "undefined") {
+	} else if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
 		if (document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
 			alert("Selezionare l'istituto di detenzione per la notifica al condannato");
 			document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
@@ -184,7 +220,7 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 }
 %>
 			</font>
-			<input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>"  maxlength="6" size="6" >
+			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
 		</td>
 	</tr>
 </table>
@@ -345,7 +381,7 @@ if (contaLibere == 0) {
 	  	<td class="Titolo" colspan="4">Dati Provvedimento di Rideterminazione Pena</td>
 	</tr>
 	<tr>
-		<td class="L" width="20%">Data Emissione Provvedimento <font class="ob">(*)</font></td>
+		<td class="L" width="20%" nowrap>Data Emissione Provvedimento <font class="ob">(*)</font></td>
 		<td class="L">
     		<input type="text" Title="Giorno emissione provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
 			/
@@ -357,13 +393,13 @@ if (contaLibere == 0) {
 		<td class="L">
 			<input type="text" Title="Anno Provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_PROVVEDIMENTO%>" size=4 maxlength=4>
 			/
-			<input type="text" Title="Numero Provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_NUMERO_PROVVEDIMENTO%>" size=6 maxlength=6>&nbsp;&nbsp;
+			<input type="text" Title="Numero Provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_NUMERO_PROVVEDIMENTO%>" size=6 maxlength=6>
   		</td>
 	</tr>
 	<tr>
   		<td class="l">Tipo provvedimento <font class="ob">(*)</font></td>
   		<td class="l" colspan="3">
-    		<select Title="Tipo Provvedimento" name="<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>">
+    		<select title="Tipo Provvedimento" name="<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>">
 				<%=tipoprovvedimento%>
     		</select>
   		</td>
@@ -371,7 +407,7 @@ if (contaLibere == 0) {
 	<tr>
 	  	<td class="l">Autorità Emittente <font class="ob">(*)</font></td>
 	  	<td class="l">
-			<select Title="Autorità Emittente" name="<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>">
+			<select title="Autorità Emittente" name="<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>">
         		<%=autorita%>
 			</select>
 	    </td>
@@ -419,7 +455,7 @@ if (contaLibere == 0) {
 			<a href="Javascript:ListaMagistrati('LoadInserisciRideterminazionePP');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
-			<input type="HIDDEN" title="Codice Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCodMagistrato())%>" type="text" name="<%=ICostantiEvento.CAMPO_COD_MAGISTRATO%>" maxlength="35" size="35">
+			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCodMagistrato())%>" name="<%=ICostantiEvento.CAMPO_COD_MAGISTRATO%>">
 		</td>
 	</tr>
 </table>
@@ -464,7 +500,7 @@ if (contaLibere == 0) {
 		</td>
       	<td class="L" width="20%">Indirizzo</td>
       	<td class="L">
-        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30" ></textarea>
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30"></textarea>
       	</td>
 	</tr>
 <%
@@ -478,10 +514,10 @@ if (contaLibere == 0) {
 					&& posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione() != null) {
 %>
 		<td class="l">
-        	<input readonly Title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrComune())%>" size=50>
-        	<input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
+        	<input readonly title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getAltraCausa().getIstitutoDetenzione().getDescrComune())%>" size=50>
+        	<input type="hidden" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
-               		value="<%=posizioneluogoaltra.getAltraCausa().getIstDetIdIstitutoDetenzione()%>" size="50">
+               		value="<%=posizioneluogoaltra.getAltraCausa().getIstDetIdIstitutoDetenzione()%>">
        		<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -490,8 +526,8 @@ if (contaLibere == 0) {
 			} else {
 %>
 		<td class="l">
-			<input readonly Title="Istituto" name="Comune" id="descIstituto"  value="" size="50">
-          	<input type="hidden"  Title="Istituto" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
+			<input readonly title="Istituto" name="Comune" id="descIstituto" value="" size="50">
+          	<input type="hidden" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
           	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
@@ -502,7 +538,7 @@ if (contaLibere == 0) {
 %>
       	<td class="l" width="20%">Note</td>
       	<td class="L">
-        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols="35"></textarea>
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="35"></textarea>
       	</td>
 	</tr>
 <%
@@ -554,7 +590,7 @@ if (contaLibere == 0) {
      	</td>
       	<td class="l" width="20%">Indirizzo</td>
       	<td class="L">
-			<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30" ></textarea>
+			<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30"></textarea>
       	</td>
 	</tr>
 <%
@@ -563,8 +599,8 @@ if (contaLibere == 0) {
     		if (lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null) {
 %>
 		<td class="l">
-        	<input readonly Title="Istituto" name="Comune" id="descIstituto"  value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
-        	<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
+        	<input readonly title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
+        	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
                		value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>">
         	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
@@ -576,8 +612,8 @@ if (contaLibere == 0) {
 			} else {
 %>
 		<td class="l">
-        	<input readonly Title="Istituto" name="Comune" id="descIstituto"  value="" size="50">
-        	<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
+        	<input readonly title="Istituto" name="Comune" id="descIstituto"  value="" size="50">
+        	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
         	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
@@ -632,7 +668,7 @@ if (contaLibere == 0) {
 			<font class="campo">
 	  			<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
 			</font>
-			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
+			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" name="<%= ICostantiAvvocato.CAMPO_ID_AVVOCATO %>">
 	  	</td>
 	</tr>        
 	<tr>
@@ -653,7 +689,7 @@ if (contaLibere == 0) {
 <%
 		if (lNumAvvocati < 2) {
 %>
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>');">
+			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>');">
 				<img src="/images/filefolder.gif" border="0">
 	  		</a>
 <%
@@ -666,11 +702,9 @@ if (contaLibere == 0) {
 		}
 %>
 		</td>
-	 	<td class="l" width="20%">Note</td>
+	 	<td class="l" width="20%">Indirizzo</td>
 	 	<td class="L">
-	    	<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>"  
-				id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" cols="35">
-			</textarea>
+	    	<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" cols="35"></textarea>
 	   </td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -732,9 +766,7 @@ if (contaLibere == 0) {
 		</td>
 		<td class="L" width="20%">Indirizzo</td>
 		<td class="L">
-	  		<TEXTAREA title="Note" cols="30" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
-				name="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>">
-			</textarea>
+	  		<TEXTAREA title="Note" cols="30" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"></textarea>
 		</td>
 	</tr>
 </table>

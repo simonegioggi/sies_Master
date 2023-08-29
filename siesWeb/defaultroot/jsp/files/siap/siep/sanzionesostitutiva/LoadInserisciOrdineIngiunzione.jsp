@@ -501,7 +501,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
       </td>
       <td class="L">Indirizzo</td>
       <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30" ></textarea>
+        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30"></textarea>
       </td>
     </tr>
   <%} else {%>
@@ -532,7 +532,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
 
       <td class="l">Note</td>
       <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols="35"></textarea>
+        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="35"></textarea>
       </td>
    </tr>
   <%}%>
@@ -587,7 +587,7 @@ else
       </td>
       <td class="l">Indirizzo</td>
       <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30" ></textarea>
+        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30"></textarea>
       </td>
     </tr>
   <%
@@ -616,7 +616,7 @@ else
 	<tr>
       <td class="l">Note</td>
       <td class="L">
-        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>"  cols=35></textarea>
+        <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols=35></textarea>
       </td>
     </tr>
     <tr><td>&nbsp;</td></tr>
@@ -689,9 +689,7 @@ else
 		</td>
 		<td class="l">Note</td>
 		<td class="L">
-			<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" cols="35"
-					id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
-			</textarea>
+			<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" cols="35" id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>"></textarea>
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -752,9 +750,7 @@ while (itx1.hasNext()) {
     </td>
     <td class="L">Indirizzo</td>
     <td class="L">
-      <TEXTAREA title="Note"   cols="30" 
-                id="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
-                name="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"></textarea>
+      <TEXTAREA title="Note" cols="30" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"></textarea>
     </td>
   </tr>  
 </table>  

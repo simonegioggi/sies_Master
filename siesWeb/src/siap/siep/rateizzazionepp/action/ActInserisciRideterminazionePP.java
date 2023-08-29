@@ -18,6 +18,7 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.altracausa.action.ICostantiAltraCausa;
+import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.avvocato.action.ICostantiAvvocato;
@@ -47,8 +48,11 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
+		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		BigDecimal idFascicoloSiep = fsm.getIdFascicoloSiep();
+
 		EventoNotificaModel enm = new EventoNotificaModel();
-		EventoModel em = getEventoRideterminazionePP();
+		EventoModel em = getEventoRideterminazionePP(idFascicoloSiep);
 		// Recupero le notifiche
 		NotificaModel[] nmArray = getNotificheRideterminazionePP();
 
@@ -58,8 +62,11 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		// recupero le rateizzazioni da collegare all'evento
 		String[] arrayIdRate = getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
 
+		// annotazione Manuale
+		AnnotazioneManualeModel amm = getAnnotazioneManuale(idFascicoloSiep);
+
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		irpp.exInserisciRideterminazionePP(enm, arrayIdRate);
+		irpp.exInserisciRideterminazionePP(enm, arrayIdRate, amm);
 
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
@@ -70,15 +77,46 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enm.getEvento().getIdEvento();
 	}
 
-	protected EventoModel getEventoRideterminazionePP() throws F3BException {
+	private AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {
+
+		// info per il log
+		siesLogger.info("getAnnotazioneManuale(): inizio");
+
+		String codUtenteConnesso = getCodUtenteConnesso();
+		String codUfficioUtenteConnesso = getCodUfficioUtenteConnesso();
+
+		AnnotazioneManualeModel amm = new AnnotazioneManualeModel();
+
+		amm.setDataIscrizioneSiep(getRequestDateParameter(CAMPO_ANNO_DATA_EMISSIONE,
+				CAMPO_MESE_DATA_EMISSIONE, CAMPO_GIORNO_DATA_EMISSIONE));
+		amm.setAnnoSiep(getRequestBigDecimalParameter(CAMPO_ANNO_PROVVEDIMENTO));
+		amm.setNumeroSiep(getRequestStringParameter(CAMPO_NUMERO_PROVVEDIMENTO));
+		String codLuogoUfficioSiep = getCodComuneByDescr(
+				getRequestStringParameter(CAMPO_SEDE_AUTORITA_PROVVEDIMENTO)).getCodComune();
+		amm.setCodLuogoUfficioSiep(codLuogoUfficioSiep);
+		amm.setCodTipoUfficioSiep(getRequestStringParameter(CAMPO_COD_AUTORITA_PROVVEDIMENTO));
+		amm.setCodTipoAnnotazione(getRequestStringParameter(CAMPO_COD_TIPO_PROVVEDIMENTO));
+		amm.setFasSieIdFascicoloSiep(idFascicoloSiep);
+		amm.setCodUfficioInserimento(codUfficioUtenteConnesso);
+		amm.setCodOperatoreInserimento(codUtenteConnesso);
+		amm.setDataInserimento(DateUtils.getSysDate());
+		amm.setFlagValidato("N");
+
+		// info per il log
+		siesLogger.info("getAnnotazioneManuale(): fine");
+
+		// modello di ritorno
+		return amm;
+	}
+
+	private EventoModel getEventoRideterminazionePP(BigDecimal idFascicoloSiep) throws F3BException {
 
 		// info per il log
 		siesLogger.info("getEventoRideterminazionePP(): inizio");
 
-		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		EventoModel em = new EventoModel();
 
-		em.setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
+		em.setFasSieIdFascicoloSiep(idFascicoloSiep);
 
 		em.setCodTipoEvento("01"); // Tipo Evento = PROVVEDIMENTO
 		em.setCodTipoProvvedimento("04"); // Tipo Provvedimento = PROVVEDIMENTO
@@ -119,7 +157,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 	 * @return
 	 * @throws F3BException
 	 */
-	protected NotificaModel[] getNotificheRideterminazionePP() throws F3BException {
+	private NotificaModel[] getNotificheRideterminazionePP() throws F3BException {
 
 		// info per il log
 		siesLogger.info("getNotificheRideterminazionePP(): inizio");
@@ -275,8 +313,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 					AutoritaEsternaModel aem = new AutoritaEsternaModel();
 
 					aem.setCodTipoAutorita(tipoAutorita_E_CO);
-					ComuneModel cm = new ComuneModel(
-							getCodComuneByDescrFlagVal(sedeDestinatario_E_CO));
+					ComuneModel cm = new ComuneModel(getCodComuneByDescrFlagVal(sedeDestinatario_E_CO));
 					aem.setCodSede(cm.getCodComune());
 					aem.setCodOperatoreInserimento(codiceOperatore);
 					aem.setCodUfficioInserimento(codiceUfficio);

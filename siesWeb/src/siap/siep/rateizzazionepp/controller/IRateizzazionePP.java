@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import f3b.util.F3BException;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
@@ -34,7 +35,7 @@ public interface IRateizzazionePP {
 			throws F3BException;
 
 	// MEV_2023-33: aggiunto metodo di inserimento
-	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate)
-			throws F3BException;
+	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException;
 
 }

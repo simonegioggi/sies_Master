@@ -20,6 +20,8 @@ import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
+import siap.siep.annotazionemanuale.dao.AnnotazioneManualeDAO;
+import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.notifica.dao.NotificaDAO;
@@ -350,8 +352,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	/**
 	 * @since MEV_2023-33
 	 */
-	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate)
-			throws F3BException {
+	public void exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
 
 		Connection c = null;
 
@@ -359,12 +361,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		NotificaDAO nDAO = null;
 		AutoritaEsternaDAO aeDAO = null;
 		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
 
 		try {
 			c = getDBConnection();
 
 			// =========================================
-			// Inserisco l'OE
+			// Inserisco l'Evento
 			// =========================================
 			eDAO = new EventoDAO(c);
 			eDAO.setDAOFromModel(enm.getEvento());
@@ -393,15 +396,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
 							// già l'autorità esterna specificata nella form (dalla form ho solo
 							// codice e sede)
-							aeDAO.setRicercaByAutSede(
-									enm.getNotifiche()[count].getAutoritaEsterna());
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
 							AutoritaEsternaModel aem = new AutoritaEsternaModel();
 							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
 							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
-								siesLogger.debug("Ins Aut Est = "
-										+ enm.getNotifiche()[count].getAutoritaEsterna());
-								aeDAO.setDAOFromModel(
-										enm.getNotifiche()[count].getAutoritaEsterna());
+								siesLogger.debug(
+										"Ins Aut Est = " + enm.getNotifiche()[count].getAutoritaEsterna());
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
 								idAutorita = aeDAO.insert();
 								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
 							} else {
@@ -434,6 +435,14 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
 				rPPDAO.update();
 			}
+
+			// inserisco l'annotazione manuale
+			amm.setEveIdEvento(idEvento);
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModel(amm);
+			BigDecimal idAnnotazioneManuale = amDAO.insert();
+			amDAO.stop();
+			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
 
 			commit(c);
 		} catch (DAOException ex) {

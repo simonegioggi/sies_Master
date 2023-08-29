@@ -1,13 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%-- MEV_2023-13: aggiunta pagina --%>
+<%-- MEV_2023-33: aggiunta pagina --%>
 <%@ page import="f3b.web.IWebConstants"%>
 
-<jsp:useBean id="strFunzione" scope="request" class="java.lang.String"/>
 <jsp:useBean id="fascicoloNotInSession" scope="request" class="java.lang.String"/>
 
 <html>
 <head>
-<title>[S.I.E.S.] - <%=strFunzione%></title>
+<title>[S.I.E.S.] - Ordine Ingiunzione / Altri Pagamenti</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 <script language="JavaScript1.2">
@@ -55,7 +54,7 @@ function over_effect(e, state) {
 	<tr>
       	<td class="LBG">
 	        <font class="label">Funzione :</font>&nbsp;
-	        <font class="campo"><%=strFunzione%></font>
+	        <font class="campo">Ordine Ingiunzione / Altri Pagamenti</font>
       	</td>
 	</tr>
 </table>
@@ -72,21 +71,29 @@ if (!fascicoloNotInSession.equals("S")) {
 <table cellpadding="5" cellspacing="5" width="95%" onMouseover="over_effect(event,'outset')" onMouseout="over_effect(event,'solid')" onMousedown="over_effect(event,'inset')" onMouseup="over_effect(event,'outset')">
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriPagamenti">Ordine Ingiunzione / Altri Pagamenti</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciOrdineIngiunzione">Ordine Ingiunzione</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione">Gestione Ordine Ingiunzione</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Nota Trasmissione Bollettini Rate Successive alla Prima</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA">Gestione Bollettini PagoPA</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciRideterminazionePP">Rideterminazione della Pena Pecuniaria</a>
   		</td>
 	</tr>
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaScadenzari">Scadenzari</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Avviso Mancato Pagamento</a>
     	</td>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadRicercaStatoPagamenti">Ricerca Stato Pagamenti</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Provvedimento Estinzione della Pena</a>
+    	</td>
+  		<td width="32%" class="menulines" nowrap>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Trasmissione Atti per la Conversione</a>
+    	</td>
+	</tr>
+	<tr>
+  		<td width="32%" class="menulines" nowrap>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Definizione Procedimento</a>
     	</td>
 	</tr>
 </table>
