@@ -357,7 +357,7 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
 <table>
   <tr>
     <td class="L">
-      <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione">Visualizza stato notifiche</a>
+      <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">Visualizza stato notifiche</a>
     </td>
   </tr>
 </table>

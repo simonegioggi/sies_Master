@@ -86,7 +86,7 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
 		lSql += "      , statoPagamenti.importoPagato";
 		lSql += "      , ultimaScadenza.dataUltimaScadenza ";
 		lSql += "   FROM FASCICOLO_SIEP, SOGGETTO ";
-		lSql += "      , (SELECT SUM(IMPORTO_RATA) importoDaPagare, FAS_SIE_ID_FASCICOLO_SIEP, TIPO_RATEIZZAZIONE ";
+		lSql += "      , (SELECT SUM(IMPORTO_RATA*NUMERO_RATE) importoDaPagare, FAS_SIE_ID_FASCICOLO_SIEP, TIPO_RATEIZZAZIONE ";
 		lSql += "           FROM RATEIZZAZIONE_PP ";
 		lSql += "       GROUP BY FAS_SIE_ID_FASCICOLO_SIEP, TIPO_RATEIZZAZIONE) rateizzazione ";
 		lSql += "      , (SELECT NVL(SUM(IMPORTO_PAGATO),0) importoPagato, FAS_SIE_ID_FASCICOLO_SIEP ";
@@ -95,6 +95,16 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
 		lSql += "      , (SELECT MAX(DATA_SCADENZA) dataUltimaScadenza, FAS_SIE_ID_FASCICOLO_SIEP ";
 		lSql += "           FROM BOLLETTINO_PAGOPA ";
 		lSql += "       GROUP BY FAS_SIE_ID_FASCICOLO_SIEP ) ultimaScadenza ";
+		// In caso di ricerca di bollettini non pagati sono interessato solo ai bollettini scaduti al momento della ricerca
+	    if (   aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO)
+	    	|| aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO)	
+   		   ) {
+			lSql += "        , (SELECT DISTINCT FAS_SIE_ID_FASCICOLO_SIEP ";
+			lSql += "                FROM BOLLETTINO_PAGOPA ";
+			lSql += "               WHERE BOLLETTINO_PAGOPA.IMPORTO_PAGATO < BOLLETTINO_PAGOPA.IMPORTO_RATA "; // non interamente pagato
+			lSql += "                 AND BOLLETTINO_PAGOPA.DATA_SCADENZA < sysdate ) scaduti ";	
+	    }
+		
 		lSql += "  WHERE 1=1 ";
 		lSql += "    AND FASCICOLO_SIEP.SOG_ID_SOGGETTO = SOGGETTO.ID_SOGGETTO ";
 		lSql += "    AND rateizzazione.FAS_SIE_ID_FASCICOLO_SIEP = FASCICOLO_SIEP.ID_FASCICOLO_SIEP ";
@@ -148,24 +158,28 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
 				.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO)) {
 			lSql += " AND rateizzazione.TIPO_RATEIZZAZIONE = 'R' ";
 			lSql += " AND importoPagato < importoDaPagare ";
+			lSql += " AND scaduti.FAS_SIE_ID_FASCICOLO_SIEP = FASCICOLO_SIEP.ID_FASCICOLO_SIEP ";
 			// TODO Aggiungere filtro sugli eventi
 			// codMotivo = "'0045'"; // codice di test
 		} else if (aTipoRicera
 				.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO)) {
 			lSql += " AND rateizzazione.TIPO_RATEIZZAZIONE = 'U' ";
 			lSql += " AND importoPagato < importoDaPagare ";
+			lSql += " AND scaduti.FAS_SIE_ID_FASCICOLO_SIEP = FASCICOLO_SIEP.ID_FASCICOLO_SIEP ";
 			// TODO Aggiungere filtro sugli eventi
 			// codMotivo = "'0045'"; // codice di test
 		}
 
-		// TODO Da decommentare quando si avranni i codici degli evento su cui applicare il filtro
+		// TODO Da decommentare quando si avranno i codici degli eventi su cui applicare il filtro
 		/*
-		 * lSql += " AND NOT EXISTS (SELECT 1 "; lSql += "                   FROM EVENTO "; lSql +=
-		 * "                  WHERE EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = FASCICOLO_SIEP.ID_FASCICOLO_SIEP ";
-		 * //lSql += "                    AND EVENTO.COD_TIPO_EVENTO = '' "; //lSql +=
-		 * "                    AND EVENTO.COD_TIPO_PROVVEDIMENTO = ''"; lSql +=
-		 * "                    AND EVENTO.COD_MOTIVO IN ("+codMotivo+")"; lSql +=
-		 * "                    AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' "; lSql += " ) ";
+		 * lSql += " AND NOT EXISTS (SELECT 1 "; 
+		 * lSql += "                   FROM EVENTO "; 
+		 * lSql += "                  WHERE EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = FASCICOLO_SIEP.ID_FASCICOLO_SIEP ";
+		 * //lSql += "                    AND EVENTO.COD_TIPO_EVENTO = '' "; 
+		 * //lSql += "                    AND EVENTO.COD_TIPO_PROVVEDIMENTO = ''"; 
+		 * lSql += "                    AND EVENTO.COD_MOTIVO IN ("+codMotivo+")"; 
+		 * lSql += "                    AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' "; 
+		 * lSql += " ) ";
 		 */
 
 		return lSql;

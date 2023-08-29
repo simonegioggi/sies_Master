@@ -83,7 +83,7 @@
     while (iter.hasNext()) {
       RateizzazionePPModel rata = iter.next();
       if (cont == 0)
-        modalitaPagamento = "Importo da Pagare: <font style=\"color:red\">" + StringUtils.toEuroFormat(rata.getImportoDaPagare()) + " &euro;</font>";
+        modalitaPagamento = "Importo da Pagare: <font style=\"color:red\">" + StringUtils.toEuroFormat(rata.getImportoDaPagare()) + " &euro;</font>&nbsp;";
       
       if ("R".equals(rata.getTipoRateizzazione())) { // RATE
         if (cont == 0) {

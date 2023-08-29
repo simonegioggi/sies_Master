@@ -349,5 +349,13 @@ else
 }
 %>  
 </table>
+
+<table>
+  <tr>
+    <td class="L">
+      <a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA">Richiesta Generazione Bollettini</a>
+    </td>
+  </tr>
+</table>
 </body>
 </html>

@@ -70,7 +70,12 @@ public interface ICostantiRinnovo
      public static final String CAMPO_COD_TIPO_AUTORITA_RINNOVO_UG = "CodTipoAutoritaRinnovoUg";
 		 public static final String CAMPO_COD_LUOGO_RINNOVO_UG = "CodLuogoRinnovoUg";
 		 public static final String CAMPO_COD_LUOGO_RINNOVO_UG_AR = "CodLuogoRinnovoUgAr";
-
+		 
+		 // MEV_2023-33
+		 public static final String CAMPO_ESITO = "Esito";
+		 public static final String VAL_CAMPO_ESITO_POSITIVO = "P";
+		 public static final String VAL_CAMPO_ESITO_NEGATIVO = "N";
+		// MEV_2023-33 - FINE
 
 
 		 public static final String PG_LOAD_RICERCARINNOVO	= IWebConstants.ROOT_DIR + "files/siap/siep/refertoscarcerazione/LoadRicercaRinnovo.jsp";

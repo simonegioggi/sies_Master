@@ -98,11 +98,24 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		return aModel;
 	}
 
+	
+	public void ricercaBollettinoPagopaByIdEvento(BigDecimal aIdEvento) throws DAOException {
+		String s = getSqlQuery();
+		s += " AND R.EVE_ID_EVENTO = " + aIdEvento;
+		s += " ORDER BY BP.PROG_RATA ";
+		setStatement(s);
+	}
+	
 	public void ricercaBollettinoPagopaByFasSieIdFascicoloSiep(BigDecimal fasSieIdFascicoloSiep, String chiamante)
 			throws DAOException {
 
 		String s = getSqlQuery();
 		s += setCondizioniByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
+		
+		// MEV_2023-33: si cambia l'ordinamento
+		// s += " ORDER BY BP.ID_BOLLETTINO_PAGOPA";
+		s += " ORDER BY BP.PROG_RATA ";
+		// MEV_2023-33: FINE
 		setStatement(s);
 
 		if ("batch".equalsIgnoreCase(chiamante))
@@ -117,9 +130,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 
 		String condizioni = new String();
 		condizioni += " AND BP.FAS_SIE_ID_FASCICOLO_SIEP = " + fasSieIdFascicoloSiep;
-		condizioni += " ORDER BY BP.ID_BOLLETTINO_PAGOPA";
 
-		// valore di ritorno
 		return condizioni;
 	}
 

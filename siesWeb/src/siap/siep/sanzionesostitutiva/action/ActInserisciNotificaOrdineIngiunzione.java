@@ -25,8 +25,8 @@ import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Title: ActGrigliaNotifiche 
- * Description: Classe Action per l'inserimento notifiche per OEIP
+ * Title: ActInserisciNotificaOrdineIngiunzione 
+ * Description: Classe Action per l'inserimento/modifica notifiche per OEIP
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -44,7 +44,7 @@ public class ActInserisciNotificaOrdineIngiunzione extends ActionSiap
 
 		// Effettuo l'inserimento della notifica e ricarico la form delle notifiche
 		/*
-		 * SOLO Se ho inserito la notifica la condannato allora viene attivato lo scadenzario
+		 * SOLO Se ho inserito la notifica al condannato allora viene attivato lo scadenzario
 		 *
 		 */
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);

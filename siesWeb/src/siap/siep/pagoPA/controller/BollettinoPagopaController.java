@@ -336,6 +336,9 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			lBollDao.update();
 			lBollDao.stop();
 
+			// MEV_2023-33: si commenta l'aggiornamento della data scadenza in quanto tale operazione
+			//              è stata spostata nella funzione di registrazione della notifica
+/*			
 			// Aggiornamento della Data Scadenza su Unico o prima Rata
 			if (ICostantiPagoPA.SIES_STATO_PAGATO.equals(aBollettinoModel.getStatoPagamento())) {
 				siesLogger.debug("Bollettino Pagato verifico se è il primo");
@@ -361,7 +364,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 					siesLogger.debug("E' il primo bollettino pagato per il fascicolo "
 							+ aBollettinoModel.getFasSieIdFascicolSiep());
 
-					// E' il primo bollettino pagato, recupera i termini d
+					// E' il primo bollettino pagato, recupero i termini d
 					lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
 					lRateSqlDao.ricercaRateizzazionePPByKey(aBollettinoModel.getRatIdRateizzazionePP());
 					RateizzazionePPModel lRata = (RateizzazionePPModel) lRateSqlDao.getModelByKey();
@@ -415,7 +418,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 					}
 				}
 			}
-
+			MEV_2023-333: FINE
+*/
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException: ", daoEx);
