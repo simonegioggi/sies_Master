@@ -44,6 +44,12 @@ public interface ICostantiRateizzazionePP {
 			+ "files/siap/siep/rateizzazionepp/LoadInserisciRideterminazionePP.jsp";
 	public static final String PG_DETTAGLIO_RIDETERMINAZIONE_PP = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/DettaglioRideterminazionePP.jsp";
+	// TODO
+	public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_RPP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadInserisciNotificheRideterminazionePP.jsp";
+	public static final String PG_LOAD_SELEZIONA_RIDETERMINAZIONE_PP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadSelezionaRideterminazionePP.jsp";
+	// FIXME
 	public static final String CAMPO_GIORNO_DATA_EMISSIONE = "GiornoEmissioneProvvedimento";
 	public static final String CAMPO_MESE_DATA_EMISSIONE = "MeseEmissioneProvvedimento";
 	public static final String CAMPO_ANNO_DATA_EMISSIONE = "AnnoEmissioneProvvedimento";

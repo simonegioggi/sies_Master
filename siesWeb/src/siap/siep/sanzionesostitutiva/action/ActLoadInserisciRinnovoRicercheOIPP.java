@@ -17,7 +17,6 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
-import siap.siep.SIEPException;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
@@ -41,6 +40,7 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
+	@SuppressWarnings("unchecked")
 	public String processRequest() throws Exception {
 
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
@@ -93,7 +93,7 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			// Ho selezionato l'evento dalla lista, carico la pagina
 			// Verifica per ogni destinatario se già registrate l'avvenuta notifica
 			BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-			siesLogger.debug("ID_EVENTO = "+idEvento);
+			siesLogger.debug("ID_EVENTO = " + idEvento);
 
 			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
 			EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(idEvento);
@@ -105,54 +105,54 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			lEveVerbale.setCodTipoEvento("07");
 			lEveVerbale.setCodTipoProvvedimento("17");
 			lEveVerbale.setCodMotivo("0313");
-			Vector <EventoModel> listaEventiVerbali = new Vector <EventoModel>();
+			Vector<EventoModel> listaEventiVerbali = new Vector<>();
 			try {
 				listaEventiVerbali = lCtrlEvento.ExRicercaEventoTipoEveTipoProvMot(lEveVerbale, "S");
 			} catch (F3BException e) {
-				if (F3BException.USER_MESSAGE==e.getErrorCode())
-					throw new F3BException(F3BException.USER_MESSAGE, "Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
+				if (F3BException.USER_MESSAGE == e.getErrorCode())
+					throw new F3BException(F3BException.USER_MESSAGE,
+							"Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
 			}
-			
+
 			EventoModel verbaleVR = null;
 			for (EventoModel eveVerbale : listaEventiVerbali) {
-				if (eveVerbale.getEveIdEvento().compareTo(lEveNotMod.getEvento().getIdEvento())==0) {
+				if (eveVerbale.getEveIdEvento().compareTo(lEveNotMod.getEvento().getIdEvento()) == 0) {
 					verbaleVR = eveVerbale;
 					break;
 				}
 			}
-			
 
-			// Recupero il Verbale vane ricerche per la visualizzazione 
-		    IVerbale lCtrlVer = SIEPLookupRemote.getVerbaleRemote();
-		    VerbaleModel lVermod = new VerbaleModel();
-		    if (verbaleVR!=null)
-		    	lVermod = lCtrlVer.ExRicercaVerbaleByCodTipoIdEvento( verbaleVR.getIdEvento(), "02" );
+			// Recupero il Verbale vane ricerche per la visualizzazione
+			IVerbale lCtrlVer = SIEPLookupRemote.getVerbaleRemote();
+			VerbaleModel lVermod = new VerbaleModel();
+			if (verbaleVR != null)
+				lVermod = lCtrlVer.ExRicercaVerbaleByCodTipoIdEvento(verbaleVR.getIdEvento(), "02");
 
-		    //
-		    NotificaModel lNotificaEsecuzione = null;
-		    for(int i=0;i<lEveNotMod.getNotifiche().length;i++)
-		    {
-		      NotificaModel lNotMod = lEveNotMod.getNotifiche()[i];
-		      if(lNotMod.getCodTipoNotifica().equals("E"))
-		      {
-		    	  lNotificaEsecuzione = lNotMod;
-		      }
-		    }
+			//
+			NotificaModel lNotificaEsecuzione = null;
+			for (int i = 0; i < lEveNotMod.getNotifiche().length; i++) {
+				NotificaModel lNotMod = lEveNotMod.getNotifiche()[i];
+				if (lNotMod.getCodTipoNotifica().equals("E")) {
+					lNotificaEsecuzione = lNotMod;
+				}
+			}
 
-			// Recupero eventuali RINNOVI già inseriti da visualizzare in elenco e collegati alla notifica per l'esecuzione
-			Vector <RinnovoModel> lListaRinnovi = new Vector <RinnovoModel> ();
+			// Recupero eventuali RINNOVI già inseriti da visualizzare in elenco e collegati alla notifica per
+			// l'esecuzione
+			Vector<RinnovoModel> lListaRinnovi = new Vector<>();
 			String[] lTipoRinno = { "R", "N", "A" };
 			IRinnovo lCtrlRinnovi = SIEPLookupRemote.getRinnovoRemote();
-			lListaRinnovi = lCtrlRinnovi.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(lNotificaEsecuzione.getIdNotifica(), lTipoRinno, null);
+			lListaRinnovi = lCtrlRinnovi.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(
+					lNotificaEsecuzione.getIdNotifica(), lTipoRinno, null);
 
-			// 
-		    Option lOptionAutoritaAltra = new Option(DecodificheManager.getInstance().getTipoAutorita());
-		    
-		    setRequestAttribute("notifica", lNotificaEsecuzione);
-		    setRequestAttribute("verbale", lVermod);
-		    setRequestAttribute("listaRinnovi", lListaRinnovi);
-		    setRequestAttribute("tipoAutoritaAltra", lOptionAutoritaAltra.toString() );
-		    
+			//
+			Option lOptionAutoritaAltra = new Option(DecodificheManager.getInstance().getTipoAutorita());
+
+			setRequestAttribute("notifica", lNotificaEsecuzione);
+			setRequestAttribute("verbale", lVermod);
+			setRequestAttribute("listaRinnovi", lListaRinnovi);
+			setRequestAttribute("tipoAutoritaAltra", lOptionAutoritaAltra.toString());
+
 			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 			IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 			lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
@@ -172,7 +172,7 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 		// Recupero la lista degli eventi e i dati da visualizzare
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep());
+				.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
 
 		if (listaOrdiniIngiunzione.isEmpty()) {
 			// non ho trovato ordini di ingiunzione esco con errore

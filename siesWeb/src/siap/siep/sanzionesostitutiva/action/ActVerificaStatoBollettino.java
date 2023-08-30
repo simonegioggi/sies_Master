@@ -47,7 +47,7 @@ public class ActVerificaStatoBollettino extends ActionSiap implements ICostantiS
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo);
+				.exRicercaEventoRateizzazionePP(idFascicolo, "");
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 		if (!listaRichiestaBollettini.isEmpty()) {
 			EventoModel em = listaRichiestaBollettini.firstElement().getEvento();

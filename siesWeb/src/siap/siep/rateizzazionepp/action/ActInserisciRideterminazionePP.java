@@ -62,7 +62,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		// recupero le rateizzazioni da collegare all'evento
 		String[] arrayIdRate = getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
 
-		// annotazione Manuale
+		// Annotazione Manuale
 		AnnotazioneManualeModel amm = getAnnotazioneManuale(idFascicoloSiep);
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -77,7 +77,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + idEvento;
 	}
 
-	private AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {
+	protected AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {
 
 		// info per il log
 		siesLogger.info("getAnnotazioneManuale(): inizio");
@@ -109,7 +109,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		return amm;
 	}
 
-	private EventoModel getEventoRideterminazionePP(BigDecimal idFascicoloSiep) throws F3BException {
+	protected EventoModel getEventoRideterminazionePP(BigDecimal idFascicoloSiep) throws F3BException {
 
 		// info per il log
 		siesLogger.info("getEventoRideterminazionePP(): inizio");
@@ -157,7 +157,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 	 * @return
 	 * @throws F3BException
 	 */
-	private NotificaModel[] getNotificheRideterminazionePP() throws F3BException {
+	protected NotificaModel[] getNotificheRideterminazionePP() throws F3BException {
 
 		// info per il log
 		siesLogger.info("getNotificheRideterminazionePP(): inizio");

@@ -208,6 +208,8 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 				"CAPSM", "DIBM", "GIPM", "GP" });
 		setRequestAttribute("autorita", "" + lOptionAE);
 
+		setRequestAttribute("modalita", "I");
+
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 

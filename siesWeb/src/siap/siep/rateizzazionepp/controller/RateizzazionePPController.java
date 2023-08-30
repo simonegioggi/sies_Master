@@ -296,8 +296,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	@Override
-	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo)
-			throws F3BException {
+	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
+			String motivo) throws F3BException {
 
 		Connection c = null;
 
@@ -308,8 +308,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		EventoModel em = new EventoModel();
 		em.setFlagDocumentoRegistrato("S");
 		em.setFasSieIdFascicoloSiep(idFascicolo);
-		em.setCodMotivo("0622");
-		em.setCodTipoProvvedimento("06");
+		if ("rpp".equals(motivo)) {
+			em.setCodMotivo("1307");
+			em.setCodTipoProvvedimento("04");
+		} else {
+			em.setCodMotivo("0622");
+			em.setCodTipoProvvedimento("06");
+		}
 		em.setCodTipoEvento("01");
 
 		Vector<EventoRateizzazionePPModel> listaEventoRateizzazioniPP = new Vector<>();
@@ -348,10 +353,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return listaEventoRateizzazioniPP;
 	}
 
-	@Override
-	/**
-	 * @since MEV_2023-33
+	/*
+	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
+	 * ago 2023 Branch : MEV_2023-33
 	 */
+	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException {
 
@@ -464,5 +470,17 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		}
 		return idEvento;
 	}
+
+	@Override
+	public void exUploadRideterminazionePP(EventoModel em) throws F3BException {
+
+	}
+
+	@Override
+	public void exModificaRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
+
+	}
+	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 }

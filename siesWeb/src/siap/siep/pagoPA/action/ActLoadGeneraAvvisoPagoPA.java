@@ -62,7 +62,7 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		// Ricerca i pagamenti per idFascicolo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo);
+				.exRicercaEventoRateizzazionePP(idFascicolo, "");
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();
