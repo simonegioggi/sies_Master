@@ -72,7 +72,7 @@ if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null
 %>   
 		<td class="LBG">
 		  	<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadModificaRideterminazionePP&IdEvento=<%=eventonotifica.getEvento().getIdEvento()%>">
-				<img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Ordine Ingiunzione" width="24" height="24" border="0">
+				<img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Rideterminazione Pena Pecuniaria" width="24" height="24" border="0">
 		  	</a>
 		</td>
 		<jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">

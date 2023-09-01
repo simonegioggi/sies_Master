@@ -18,28 +18,38 @@ import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Funzione di cancellazione del rinnovo se non validato 
+ * Funzione di cancellazione del rinnovo se non validato
+ *
  * @author d.fiorletta
  * @since MAV_2023-33
  */
 public class ActCancellaRinnovoRicercheOIPP extends ActionSiap implements ICostantiNotifica {
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	public String processRequest() throws F3BException
-	{
+	public String processRequest() throws F3BException {
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		BigDecimal lId = getRequestBigDecimalParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
 
 		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
-		RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey (lId);
-    
-	    lCtrl.ExCancellaRinnovo(lRinModel);
+		RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey(lId);
 
-	    // Recupero l'OI
-	    INotifica lNotCtrl = SIEPLookupRemote.getNotificaRemote();
-	    NotificaModel lNotificaModel = lNotCtrl.ExRicercaNotificaByKey(lRinModel.getNotIdNotifica());
-	    
+		lCtrl.ExCancellaRinnovo(lRinModel);
+
+		// Recupero l'OI
+		INotifica lNotCtrl = SIEPLookupRemote.getNotificaRemote();
+		NotificaModel lNotificaModel = lNotCtrl.ExRicercaNotificaByKey(lRinModel.getNotIdNotifica());
+
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+
 		String lPage = "";
-		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD + "=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+lNotificaModel.getEveIdEvento();
+		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+				+ "=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP&"
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lNotificaModel.getEveIdEvento();
 		return lPage;
 	}
 }

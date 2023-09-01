@@ -56,7 +56,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		BigDecimal importoDaPagare = new BigDecimal(0);
 		while (iterBPM.hasNext()) {
 			BollettinoPagopaModel bpm = iterBPM.next();
-			if ("PA".equals(bpm.getStatoPagamento()))
+			if ("PA".equals(bpm.getStatoPagamento()) || "PP".equals(bpm.getStatoPagamento()))
 				importoPagato = importoPagato.add(bpm.getImportoPagato());
 			else
 				importoDaPagare = importoDaPagare.add(bpm.getImportoRata());
@@ -83,7 +83,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo);
+				.exRicercaEventoRateizzazionePP(idFascicolo, "");
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
 					.getListaRateizzazioniPP();

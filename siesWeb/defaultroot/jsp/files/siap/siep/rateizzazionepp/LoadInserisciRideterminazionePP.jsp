@@ -3,7 +3,6 @@
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.Iterator"%>
-<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -42,6 +41,7 @@
 <jsp:useBean id="tipoprovvedimento" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="autorita" 					scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -181,10 +181,77 @@ function Verify() {
  	}
 	return true;
 }
+
+<%
+if ("M".equals(modalita)) {
+%>
+function caricaNotifiche () {
+<%
+	NotificaModel[] nmArray = eventonotifica.getNotifiche();
+	for (int i = 0; i < nmArray.length; i++) {
+    	NotificaModel nm = nmArray[i];
+		String codTipoAutorita = "";
+		String sedeAutorita = "";
+		String indirizzoAutorita = "";
+		String descIstituto = "";
+		String idIstituto = "";
+    	if (nm.getAutoritaEsterna() != null) {
+			codTipoAutorita = nm.getAutoritaEsterna().getCodTipoAutorita();
+			sedeAutorita    = StringUtils.toStringJSP(nm.getAutoritaEsterna().getDescrSede(),"");
+			indirizzoAutorita = StringUtils.toStringJSP(nm.getNote(),"");
+      		if ("-".equals(sedeAutorita))
+      			sedeAutorita = "";
+    	} else if (nm.getIstDetIdIstitutoDetenzione() != null) {
+	        descIstituto = nm.getIstitutoDetenzione().getDescrTipoIstituto()+" di "+nm.getIstitutoDetenzione().getDescrComune();
+	        idIstituto   = nm.getIstitutoDetenzione().getIdIstitutoDetenzione();
+    	}
+		if (nm.getIdCivilmenteObbligato() == null && nm.getAvvIdAvvocatoFascicoloSiep() == null) {
+			if (nm.getAutoritaEsterna() != null) {
+%>
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>').val('<%=sedeAutorita%>');
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>').val('<%=indirizzoAutorita%>');
+<%
+			} else {
+%>
+	$('#descIstituto').val('<%=descIstituto%>');
+	$('#<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>').val('<%=idIstituto%>');
+<%
+			}
+		}
+		if (nm.getIdCivilmenteObbligato() != null) {
+%>
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=nm.getIdCivilmenteObbligato()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=nm.getIdCivilmenteObbligato()%>').val('<%=sedeAutorita%>');
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=nm.getIdCivilmenteObbligato()%>').val('<%=indirizzoAutorita%>');
+<%
+		}
+		if (nm.getAvvIdAvvocatoFascicoloSiep() != null) {
+%>
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=sedeAutorita%>');
+	$('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=indirizzoAutorita%>');
+<%
+		}
+	}
+%>
+}
+<%
+}
+%>
 </script>
 </head>
-  
+<%
+if ("M".equals(modalita)) {
+%>
 <body class="corpo" onLoad="caricaNotifiche();">
+<%
+} else {
+%>
+<body class="corpo">
+<%
+}
+%>
 <table>
 	<tr>
 		<td class="LBG">
@@ -194,7 +261,17 @@ function Verify() {
 		</td>
 		<td class="LBG">
 		  	<font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Provvedimento Rideterminazione della Pena Pecuniaria</font>
+<%
+if ("I".equals(modalita)) {
+%>
+			<font class="campo">Inserimento Provvedimento Rideterminazione della Pena Pecuniaria</font>
+<%
+} else if ("M".equals(modalita)) {
+%>
+			<font class="campo">Modifica Provvedimento Rideterminazione della Pena Pecuniaria</font>
+<%
+}
+%>
 		</td>
 	</tr>
 </table>
@@ -243,7 +320,18 @@ while (iterLR.hasNext()) {
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
       	<td class="L">
-      		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActInserisciRideterminazionePP">
+<%
+if ("I".equals(modalita)) {
+%>
+    		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActInserisciRideterminazionePP">
+<%
+} else if ("M".equals(modalita)) {
+%>
+			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActModificaRideterminazionePP">
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%= eventonotifica.getEvento().getIdEvento()%>">
+<%
+}
+%>
 	        <font class="label">Importo da pagare</font>
 	        <font class="campo"><%=StringUtils.toEuroFormat(lImportoDaPagare)%> &euro;</font>
 	        <font class="label">con le seguenti modalita'</font>
@@ -273,7 +361,7 @@ while (IteRate.hasNext()) {
 	RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
 	storia = rata.isStoricizzato() ? " Storicizzato" : "";
   	conta++;
-	if (Utils.isNullObj(rata.getEveIdEvento()))
+	if (rata.getEveIdEvento() == null)
     	contaLibere++;
   	if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)
   			|| ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA.equals(rata.getTipoRateizzazione())) {
@@ -284,9 +372,10 @@ while (IteRate.hasNext()) {
 		<td class="c" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
 		<td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
 <%
-		if (!Utils.isNullObj(rata.getEveIdEvento())) {
-%> 
-        <td class="c" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione<%=storia%></font></td>
+		if ((rata.getEveIdEvento() != null && "I".equals(modalita))
+				|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
+%>
+        <td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento di Rideterminazione Pena<%=storia%></font></td>
 <%
 		} else {
 %>
@@ -317,7 +406,8 @@ while (IteRate.hasNext()) {
 		<td class="c" colspan="3">&nbsp;</td>
 <%
 		}
-        if (!Utils.isNullObj(rata.getEveIdEvento())) {
+        if ((rata.getEveIdEvento() != null && "I".equals(modalita))
+        		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
 %>
 		<td class="c" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione<%=storia%></font></td>
 <%
@@ -330,7 +420,8 @@ while (IteRate.hasNext()) {
 	</tr>
 <%
 	}
-    if (Utils.isNullObj(rata.getEveIdEvento())) {
+    if (rata.getEveIdEvento() == null
+    		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) == 0)) {
 %>
 	<tr><td><input type="HIDDEN" name="<%=ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO%>" value="<%=rata.getIdRateizzazionePP()%>"></td></tr>
 <%
@@ -340,7 +431,7 @@ while (IteRate.hasNext()) {
 </table>
 <br>
 <%
-if (contaLibere == 0) {
+if ("I".equals(modalita) && contaLibere == 0) {
 %>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>

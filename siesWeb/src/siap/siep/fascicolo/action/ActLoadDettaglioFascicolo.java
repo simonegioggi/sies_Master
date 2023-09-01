@@ -1173,10 +1173,14 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		emRic.setFasSieIdFascicoloSiep(aId);
 		emRic.setFlagDocumentoRegistrato("S");
 		EventoModel em = lEventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(emRic);
-		if (!Utils.isNullObj(em))
+		boolean existPagamenti = false;
+		if (!Utils.isNullObj(em)) {
 			idEventoStatoPagamenti = em.getIdEvento();
+			existPagamenti = true;
+		}
 
 		setRequestAttribute("idEventoStatoPagamenti", idEventoStatoPagamenti);
+		setRequestAttribute("existPagamenti", existPagamenti);
 		// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 		return PG_DETTAGLIO_FASCICOLO_SIEP;

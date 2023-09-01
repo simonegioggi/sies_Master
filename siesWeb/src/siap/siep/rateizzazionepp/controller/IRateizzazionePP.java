@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Vector;
 
 import f3b.util.F3BException;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
@@ -31,11 +32,16 @@ public interface IRateizzazionePP {
 	public Vector<RateizzazionePPModel> exRicercaRateizzazioniByIdEvento(BigDecimal aIdEvento)
 			throws F3BException;
 
-	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo)
-			throws F3BException;
+	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
+			String motivo) throws F3BException;
 
-	// MEV_2023-33: aggiunto metodo di inserimento
+	// MEV_2023-33: aggiunti metodi di inserimento, modifica e stampa
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException;
+
+	public void exUploadRideterminazionePP(EventoModel em) throws F3BException;
+
+	public void exModificaRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
 
 }
