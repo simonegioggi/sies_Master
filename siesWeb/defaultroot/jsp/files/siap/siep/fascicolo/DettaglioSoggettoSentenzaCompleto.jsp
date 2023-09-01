@@ -75,6 +75,7 @@
 <jsp:useBean id="FascCompetenteCumulo"    	scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
 <%-- MEV_2023-33: aggiunti useBean x gestione Civilmente Obbligato ed elenco stato pagamenti --%>
 <jsp:useBean id="existCivilmenteObbligato"	scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="existPagamenti"			scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="idEventoStatoPagamenti"	scope="request" class="java.math.BigDecimal"/>
 
 <%
@@ -2431,7 +2432,10 @@ if (fascicolo.getNote() != null) {
 }
 %>
 
-	<%-- MEV_2023-33: aggiunto link cliccabile --%>
+	<%-- MEV_2023-33: aggiunto link cliccabile se presenti --%>
+<%
+if (existPagamenti) {
+%>
 	<tr><td>&nbsp;</td></tr>
 	<tr>
 		<td class="L">
@@ -2442,6 +2446,9 @@ if (fascicolo.getNote() != null) {
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
+<%
+}
+%>
 	<%-- FINE MEV_2023-33 --%>
 
 <%

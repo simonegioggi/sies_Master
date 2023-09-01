@@ -60,9 +60,9 @@ public class ActLoadNotificheRideterminazionePP extends ActionSiap implements IC
 			em = ie.ExRicercaEventoByKey(idEvento);
 		}
 
-		// Recupero l'ordine di ingiunzione
+		// Recupero l'evento di rideterminazione della pena
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(em.getIdEvento());
-		setRequestAttribute("RideterminazionePP", enm);
+		setRequestAttribute("eventonotifica", enm);
 
 		// Verifica per ogni destinatario se già registrate l'avvenuta notifica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
@@ -112,7 +112,7 @@ public class ActLoadNotificheRideterminazionePP extends ActionSiap implements IC
 
 		if (contaAvvenute > 0 && isRequestParameterNullEmptyObj("modifica"))
 			return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-					+ "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaRideterminazionePP" + "&"
+					+ "=siap.siep.rateizzazionepp.action.ActDettaglioNotificaRideterminazionePP" + "&"
 					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + em.getIdEvento();
 
 		// info per il log
@@ -134,7 +134,7 @@ public class ActLoadNotificheRideterminazionePP extends ActionSiap implements IC
 				.exRicercaEventoRateizzazionePP(fsm.getIdFascicoloSiep(), "rpp");
 
 		if (listaRideterminazioniPP.isEmpty()) {
-			// non ho trovato ordini di ingiunzione esco con errore
+			// non ho trovato rideterminazioni pena: esco con errore
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,

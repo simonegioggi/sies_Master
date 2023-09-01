@@ -152,7 +152,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 	}
 
 	/**
-	 * Imposta le notifiche per l'ordine di ingiunzione
+	 * Imposta le notifiche per la rideterminazione della pena
 	 *
 	 * @return
 	 * @throws F3BException

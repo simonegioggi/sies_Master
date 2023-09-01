@@ -55,17 +55,13 @@ public class ActModificaRideterminazionePP extends ActInserisciRideterminazioneP
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		irpp.exModificaRideterminazionePP(enm, arrayIdRate, amm);
 
-		String lPage = null;
-
-		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioRideterminazionePP&"
-				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enm.getEvento().getIdEvento();
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 
-		return lPage;
+		return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+				+ "=siap.siep.rateizzazionepp.action.ActDettaglioRideterminazionePP&"
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enm.getEvento().getIdEvento();
 	}
 
 }

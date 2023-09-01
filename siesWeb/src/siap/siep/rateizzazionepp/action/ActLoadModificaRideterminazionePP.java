@@ -171,14 +171,25 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		Option autoritaEsternaCivilObb = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
 		setRequestAttribute("autoritaEsternaCivilObb", "" + autoritaEsternaCivilObb);
 
-		// info per il log
-		siesLogger.debug(getClass().getName() + ".processRequest: fine");
+		// carico il tipo provvedimento
+		Option tipoProvvedimenti = new Option(DecodificheManager.getInstance().getTipoProvvedimenti());
+		tipoProvvedimenti.setFilter(new String[] { "-", "02", "03" }); // DECRETO o ORDINANZA
+		tipoProvvedimenti.setSelected("-");
+		setRequestAttribute("tipoprovvedimento", "" + tipoProvvedimenti);
+
+		// carico AUTORITA' EMITTENTE
+		Option tipoUfficio = new Option(DecodificheManager.getInstance().getTipoUfficio());
+		tipoUfficio.setFilter(new String[] { "CAP", "DIB", "GUP", "GIP", "CAS", "CASAP", "TRIBSD", "GUPM",
+				"CAPSM", "DIBM", "GIPM", "GP" });
+		setRequestAttribute("autorita", "" + tipoUfficio);
+
+		setRequestAttribute("modalita", "M");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 
-		setRequestAttribute("modalita", "M");
+		// pagina di ritorno
 		return PG_LOAD_INSERISCI_RIDETERMINAZIONE_PP;
 	}
 
