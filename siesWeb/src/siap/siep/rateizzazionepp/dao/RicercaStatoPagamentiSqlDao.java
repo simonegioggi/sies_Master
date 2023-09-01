@@ -180,7 +180,7 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
 		 * //lSql += "                    AND EVENTO.COD_TIPO_PROVVEDIMENTO = ''"; 
 		 * lSql += "                    AND EVENTO.COD_MOTIVO IN ("+codMotivo+")"; 
 		 * lSql += "                    AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' "; 
-		 * lSql += " ) ";
+		 * lSql += " ) ";  
 		 */
 
 		return lSql;
