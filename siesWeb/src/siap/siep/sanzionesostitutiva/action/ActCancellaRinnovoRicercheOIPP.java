@@ -37,7 +37,7 @@ public class ActCancellaRinnovoRicercheOIPP extends ActionSiap implements ICosta
 		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
 		RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey(lId);
 
-		lCtrl.ExCancellaRinnovo(lRinModel);
+    lCtrl.ExCancellaRinnovoPP(lRinModel);
 
 		// Recupero l'OI
 		INotifica lNotCtrl = SIEPLookupRemote.getNotificaRemote();

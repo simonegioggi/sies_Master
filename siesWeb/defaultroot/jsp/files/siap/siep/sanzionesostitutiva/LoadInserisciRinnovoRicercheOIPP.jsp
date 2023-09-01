@@ -197,22 +197,23 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       }
       
       var lastRadioEsitoVal="";
-      function radioEsito() {
-    	radio = document.getElementsByName('<%=ICostantiRinnovo.CAMPO_ESITO%>'); 
-    	
-    	for (i = 0; i < radio.length; i++) {
-    		if (radio[i].checked) {
-    			if (radio[i].value==lastRadioEsitoVal) {
-    				radio[i].checked = false;
-    				lastRadioEsitoVal="";
-    			}
-    			else 
-    				lastRadioEsitoVal = radio[i].value;
-    		}
-    	}
+      function radioEsito() {    
+    	  /* Si incarta IE sugli altri radio
+	    	radio = document.getElementsByName('<%=ICostantiRinnovo.CAMPO_ESITO%>'); 
+	    	for (i = 0; i < radio.length; i++) {
+	    		if (radio[i].checked) {
+	    			if (radio[i].value==lastRadioEsitoVal) {
+	    				radio[i].checked = false;
+	    				lastRadioEsitoVal="";
+	    			}
+	    			else 
+	    				lastRadioEsitoVal = radio[i].value;
+	    		}
+	    	}
+	    	*/
       }
       
-      function downloadStampaRinnovo(idRinnovo)
+      function downloadStampaRinnovo (idRinnovo)
       {
         var lAzione = "<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadDocumentoRinnovoRicercheOIPP";
         var parametri = lAzione+"&<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>="+idRinnovo;
@@ -365,6 +366,10 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <font class="label">Funzione :</font>&nbsp;&nbsp;
         <font class="campo">Rinnovo Ricerche per Omesse Notifiche</font>
       </td>
+      <td class="LBG">
+        <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP">
+          <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+      </td>         
     </tr>
   </table>
   <br>
@@ -488,11 +493,6 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   </div>
   <br>
 
-<%
-//=======================================================================
-//                     Aggiungere il codice specifico
-//=======================================================================
-%>
   <table  width=100%>
     <tr>
       <td class="c">Omessa Notifica Forza di Polizia &nbsp;<input type="radio" name="Notifica" value="FP" checked  onClick="radio();">

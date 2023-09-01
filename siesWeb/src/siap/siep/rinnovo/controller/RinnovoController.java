@@ -164,7 +164,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 		} catch (DAOException ex) {
 			rollback(lConn);
-			throw new F3BException("RinnovoController.ExInserisci: Non posso inserire: " + ex);
+			throw new F3BException("RinnovoController.ExInserisciRinnovo: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lConn);
@@ -275,7 +275,7 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			lRinDao.ricercaRinnovoByKey(aKey);
 			lRinMod = (RinnovoModel) lRinDao.getModelByKey();
 		} catch (DAOException daoEx) {
-			throw new F3BException("RinnovoController.ExRicercaRinnovo: Non posso leggere : " + daoEx);
+			throw new F3BException("RinnovoController.ExRicercaRinnovoByKey: Non posso leggere : " + daoEx);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lConn);
@@ -958,9 +958,12 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			}
 
 			commit(lConn);
-		} catch (DAOException daoEx) {
-			rollback (lConn);
-			throw new F3BException("RinnovoController.ExCancellaRinnovo: Non posso leggere : " + daoEx);
+//		} catch (DAOException daoEx) {
+//			rollback (lConn);
+//			throw new F3BException("RinnovoController.ExCancellaRinnovoPP: Non posso leggere : " + daoEx);
+	  } catch (Exception ex) {
+	      rollback (lConn);
+	      throw new F3BException("RinnovoController.ExCancellaRinnovoPP: Non posso leggere : " + ex);
 		} finally {
 			cleanup(lRinDao);
 			cleanup(lRinSqlDao);
@@ -1050,4 +1053,57 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		return aRinnovo;
 	}	
 
+	 public RinnovoModel ExUpdateValidaRichiestaComma5 (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+	      throws F3BException 
+	  {
+	    Connection lConn = null;
+
+	    RinnovoSqlDAO lRinSqlDao = null;
+	    RinnovoDAO lRinDaoBlob = null;
+	    //ScadenzarioDAO lScaDao = null;
+
+	    RinnovoModel lRinMod = null;
+
+	    try {
+	      lConn = getDBTransaction();
+
+	      lRinSqlDao = new RinnovoSqlDAO(lConn);
+	      lRinDaoBlob = new RinnovoDAO(lConn);
+	      //lScaDao = new ScadenzarioDAO(lConn);
+
+	      //lRinSqlDao.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+	      //lRinMod = (RinnovoModel) lRinSqlDao.getModelByKey();
+
+	      // Stato procedimento
+	      //InserimentoCancellazioneStatoProcedimento(lConn, aFasc.getIdFascicoloSiep(), lRinMod, "0113");
+
+
+        lRinDaoBlob.setDAOFromModelForUpdateBlob(aRinnovo);
+
+        lRinDaoBlob.setCondizioneUpdate(aRinnovo.getIdRinnovo());
+        lRinDaoBlob.update();
+        lRinDaoBlob.stop();
+
+	      // Ricalcola lo stato dello scadenzario Simeone
+	      //aggiornaStatoNotificaScadenzarioSimeone(lConn, lScaDao, lRinMod, aFasc.getIdFascicoloSiep());
+
+	      commit(lConn);
+	    } catch (DAOException daoEx) {
+	      rollback(lConn);
+	      daoEx.printStackTrace();
+	      throw new F3BException("RinnovoController.ExUpdateValidaRich8Bis : " + daoEx);
+	    } catch (Exception ex) {
+	      rollback(lConn);
+	      ex.printStackTrace();
+	      throw new F3BException("RinnovoController.ExUpdateValidaRich8Bis : " + ex);
+	    } finally {
+	      cleanup(lRinSqlDao);
+	      cleanup(lRinDaoBlob);
+	      //cleanup(lScaDao);
+
+	      cleanup(lConn);
+	    }
+
+	    return lRinMod;
+	  } 
 }

@@ -14,6 +14,11 @@ import siap.siep.rinnovo.controller.IRinnovo;
 import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * 
+ * @author d.fiorletta
+ * @since MEV_2023-33
+ */
 public class ActUploadRinnovoRicercheOIPP extends ActionSiap implements ICostantiNotifica {
 	public String processRequest() throws Exception
 	{	

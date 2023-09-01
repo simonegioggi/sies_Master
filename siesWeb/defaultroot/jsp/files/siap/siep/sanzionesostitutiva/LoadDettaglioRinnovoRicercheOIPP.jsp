@@ -5,9 +5,12 @@
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
+<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
 <%@ page import="siap.siep.rinnovo.action.ICostantiRinnovo" %>
 <%@ page import="siap.siep.notifica.action.ICostantiNotifica"%>
+
+<jsp:useBean id="ordineIngiunzione" scope="request" class="siap.sico.evento.model.EventoNotificaModel"  />
 
 <jsp:useBean id="verbale" scope="request" class="siap.siep.verbale.model.VerbaleModel"  />
 <jsp:useBean id="rinnovo" scope="request" class="siap.siep.rinnovo.model.RinnovoModel"  />
@@ -43,6 +46,10 @@
           <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaRinnovoRicercheOIPP&idrinnovo="+rinnovo.getIdRinnovo()%>"/>
         </jsp:include>
         <%}%>
+        <td class="LBG">
+          <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=ordineIngiunzione.getEvento().getIdEvento()%>">
+            <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+        </td>
       </tr>
     </table>
 </form>
@@ -50,6 +57,21 @@
   <br>
     <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
   <br>
+
+<table>
+  <tr>
+    <td class="L" colspan="5">
+      <font class="campo">
+            <%=ordineIngiunzione.getEvento().getDescrTipoProvvedimento()%>
+            &nbsp;
+            <%=ordineIngiunzione.getEvento().getDescrMotivo()%>
+            &nbsp;emesso in data&nbsp;
+            <%=DateUtils.getDateToString(ordineIngiunzione.getEvento().getDataEmissione(), "dd-MM-yyyy")%>
+      </font>
+    </td>
+  </tr>
+</table>
+
 
 <table>
   <% if("R".equals(rinnovo.getCodTipoRinnovo())) {%>

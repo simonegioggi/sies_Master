@@ -80,6 +80,8 @@ public interface IRinnovo {
 	public void ExCancellaRinnovoPP (RinnovoModel aRinnovo) throws F3BException;
 	public RinnovoModel ExUpdateValidaRinnovoPP (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
 			throws F3BException;
+	 public RinnovoModel ExUpdateValidaRichiestaComma5 (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+       throws F3BException;
 	// MEV_2023-33
 	
 }

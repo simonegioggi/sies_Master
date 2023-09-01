@@ -6,7 +6,12 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.notifica.controller.INotifica;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.rinnovo.action.ICostantiRinnovo;
 import siap.siep.rinnovo.controller.IRinnovo;
 import siap.siep.rinnovo.model.RinnovoModel;
@@ -37,6 +42,9 @@ public class ActLoadDettaglioRinnovoRicercheOIPP extends ActionSiap implements I
 		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
 		lRinMod = lCtrl.ExRicercaRinnovoByKey(new BigDecimal(lIdRinnovo));
 
+	    INotifica lCtrlNotifica = SIEPLookupRemote.getNotificaRemote();
+	    NotificaModel lNotifica = lCtrlNotifica.ExRicercaNotificaByKey(lRinMod.getNotIdNotifica());
+	    
 		VerbaleModel lVerMod = new VerbaleModel();
 		IVerbale lCtrlVer = SIEPLookupRemote.getVerbaleRemote();
 
@@ -44,6 +52,11 @@ public class ActLoadDettaglioRinnovoRicercheOIPP extends ActionSiap implements I
 			lVerMod = lCtrlVer.ExRicercaVerbaleByKey(lRinMod.getVerIdVerbale());
 		}
 
+	    IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+	    EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lNotifica.getEveIdEvento());
+	    setRequestAttribute("ordineIngiunzione", lEveNotMod);
+	    
+	    
 		setRequestAttribute("verbale", lVerMod);
 		setRequestAttribute("rinnovo", lRinMod);
 
