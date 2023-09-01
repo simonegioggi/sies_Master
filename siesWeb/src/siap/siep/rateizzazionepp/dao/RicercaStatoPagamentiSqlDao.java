@@ -101,7 +101,8 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
    		   ) {
 			lSql += "        , (SELECT DISTINCT FAS_SIE_ID_FASCICOLO_SIEP ";
 			lSql += "                FROM BOLLETTINO_PAGOPA ";
-			lSql += "               WHERE BOLLETTINO_PAGOPA.IMPORTO_PAGATO < BOLLETTINO_PAGOPA.IMPORTO_RATA "; // non interamente pagato
+			lSql += "               WHERE (   NVL(BOLLETTINO_PAGOPA.IMPORTO_PAGATO,0) = 0 ";
+			lSql += "                      OR BOLLETTINO_PAGOPA.IMPORTO_PAGATO < BOLLETTINO_PAGOPA.IMPORTO_RATA) "; // non interamente pagato
 			lSql += "                 AND BOLLETTINO_PAGOPA.DATA_SCADENZA < sysdate ) scaduti ";	
 	    }
 		
