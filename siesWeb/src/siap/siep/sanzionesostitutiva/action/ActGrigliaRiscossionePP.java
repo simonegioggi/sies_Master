@@ -14,10 +14,13 @@ public class ActGrigliaRiscossionePP extends ActionSiap implements ICostantiSanz
 
 	public String processRequest() throws F3BException {
 
-		if (this.isSessionAttributeNullObj("fascicolo")) {
-			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
-		}
-
+//		if (this.isSessionAttributeNullObj("fascicolo")) {
+//			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
+//		}
+	  
+    if (isSessionAttributeNullObj("fascicolo"))
+      setRequestAttribute("fascicoloNotInSession", "S");
+    
 		setRequestAttribute("strFunzione", "Gestione Riscossione Pene Pecuniarie");
 
 		return ICostantiSanzioneSostitutiva.PG_GRIGLIA_RISCOSSIONE_PP;

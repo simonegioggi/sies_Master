@@ -2,6 +2,7 @@ package siap.siep.sanzionesostitutiva.action;
 
 import f3b.util.F3BException;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 
 /**
  * Title: ActGrigliaOrdineIngiunzioneAltriPagamenti 
@@ -17,6 +18,10 @@ public class ActGrigliaOrdineIngiunzioneAltriPagamenti extends ActionSiap
 
 	public String processRequest() throws F3BException {
 
+    if (this.isSessionAttributeNullObj("fascicolo")) {
+      return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
+    }
+	  
 		if (isSessionAttributeNullObj("fascicolo"))
 			setRequestAttribute("fascicoloNotInSession", "S");
 
