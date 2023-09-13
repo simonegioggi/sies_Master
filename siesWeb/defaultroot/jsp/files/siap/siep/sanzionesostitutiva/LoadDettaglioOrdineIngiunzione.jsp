@@ -119,7 +119,8 @@
   </table>
 
 <%
-if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
+//if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
+if (listaRateizzazioni.size()>0 )
 {
   // Se l'evento non e'annullato faccio vedere i dati della rate agganciate
   RateizzazionePPModel primarata = (RateizzazionePPModel) listaRateizzazioni.elementAt(0);
@@ -180,7 +181,9 @@ if (!"A".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato()) )
         <% } %>
       <% } // end while %>
     </table>
-<% } %>
+<% 
+} 
+%>
 
   <table>
     <tr>
