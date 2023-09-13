@@ -119,6 +119,11 @@ public interface ICostantiSanzioneSostitutiva {
 			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciRichComma5.jsp";	
 	public static final String PG_DETTAGLIO_RICH_COMMA5 = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioRichComma5.jsp";
+	// Rinnovazione 
+	 public static final String PG_LOAD_INSERISCI_RINNOVAZIONE_RICERCHE = IWebConstants.ROOT_DIR
+	      + "/files/siap/siep/sanzionesostitutiva/LoadInserisciRinnovazioneOIPP.jsp";
+	 public static final String PG_DETTAGLIO_RINNOVAZIONE_NOTIFICA = IWebConstants.ROOT_DIR
+        + "/files/siap/siep/sanzionesostitutiva/LoadDettaglioRinnovazioneOIPP.jsp";
 	// MEV_2023-33 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR
