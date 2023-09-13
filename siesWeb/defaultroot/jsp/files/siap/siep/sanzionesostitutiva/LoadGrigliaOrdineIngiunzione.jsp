@@ -53,6 +53,10 @@ function over_effect(e, state) {
 	        <font class="label">Funzione :</font>&nbsp;
 	        <font class="campo">Gestione Ordine di Ingiunzione</font>
       	</td>
+        <td class="LBG">
+          <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">
+            <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+      </td>       	
 	</tr>
 </table>
 <br>
@@ -72,7 +76,7 @@ function over_effect(e, state) {
  	</tr>
 	<tr>
 		<td width="32%" class="menulines" nowrap>
-			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Rinnovazione Notifica successiva alla Richiesta Informazioni</a>
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovazioneOIPP">Rinnovazione Notifica successiva alla Richiesta Informazioni</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
 	  		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Solleciti</a>

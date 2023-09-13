@@ -214,6 +214,10 @@ if ("I".equals(modalita)) {
 }
 %>
 		</td>
+			<td class="LBG">
+			  <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriPagamenti">
+			    <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
+			</td> 		
 	</tr>
 </table>
   
@@ -573,9 +577,7 @@ else
         <%=autoritaEsternaE%>
        </select>
       </td>
-    </tr>
-    
-    <tr>
+
       <td class="l">Sede <font class=ob>(*)</font></td>
       <td class="L">
         <input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
@@ -589,30 +591,30 @@ else
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_E%>" id="<%=ICostantiNotifica.CAMPO_NOTE_E%>" cols="30"></textarea>
       </td>
-    </tr>
   <%
   } 
   else 
   {
     // Detenuto    
     if(lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null){%>
-      <tr><td class="l">
+    <td class="l">
         <input readonly Title="Istituto" name="Comune" id="descIstituto"  value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
         <input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
                id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
                value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>">
         <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineIngiunzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           <img src="/images/filefolder.gif" border=0></a>
-      </td></tr>
+    </td>
     <%}else {%>
-      <tr><td class="l">
+    <td class="l">
         <input readonly Title="Istituto" name="Comune" id="descIstituto"  value="" size="50">
         <input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
                id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="" >
         <a href="Javascript:ListaIstitutoDetenzione('LoadInserisciOrdineIngiunzione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           <img src="/images/filefolder.gif" border=0></a>
-      </td></tr>
+    </td>
     <%}%>
+  </tr>
 	<tr>
       <td class="l">Note</td>
       <td class="L">
