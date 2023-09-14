@@ -19,33 +19,42 @@ import siap.siep.rinnovo.controller.IRinnovo;
 import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.util.SIEPLookupRemote;
 
-public class ActLoadDettaglioRichInfoComma5 extends ActionSiap implements ICostantiSanzioneSostitutiva  {
+public class ActLoadDettaglioRichInfoComma5 extends ActionSiap implements ICostantiSanzioneSostitutiva {
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
+
 	public String processRequest() throws F3BException {
 
-		String lIdRinnovo = this.getRequestStringParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
-		
-    RinnovoModel lRinMod = new RinnovoModel();
-    IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
-    lRinMod = lCtrl.ExRicercaRinnovoByKey(new BigDecimal(lIdRinnovo));
-    setRequestAttribute("rinnovo",lRinMod);
-        
-    
-    INotifica lCtrlNotifica = SIEPLookupRemote.getNotificaRemote();
-    NotificaModel lNotifica = lCtrlNotifica.ExRicercaNotificaByKey(lRinMod.getNotIdNotifica());
-    
-    IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-    EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lNotifica.getEveIdEvento());
-    setRequestAttribute("ordineIngiunzione", lEveNotMod);
-   
-    if ("D".equals(lRinMod.getCodTipoRinnovo())){
-    	// Recupera l'avvocato
-	    IAvvocato lCtrlAvv = SIEPLookupRemote.getAvvocatoRemote();
-    	AvvocatoSiepModel lAvvFascModel = lCtrlAvv.ExRicercaAvvocatoByKeyAvvocatoFasSiep(lNotifica.getAvvIdAvvocatoFascicoloSiep());
-    	setRequestAttribute("avvocato",lAvvFascModel.getAvvocato());
-    }
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
-    return PG_DETTAGLIO_RICH_COMMA5;
+		String lIdRinnovo = this.getRequestStringParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
+
+		RinnovoModel lRinMod = new RinnovoModel();
+		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
+		lRinMod = lCtrl.ExRicercaRinnovoByKey(new BigDecimal(lIdRinnovo));
+		setRequestAttribute("rinnovo", lRinMod);
+
+		INotifica lCtrlNotifica = SIEPLookupRemote.getNotificaRemote();
+		NotificaModel lNotifica = lCtrlNotifica.ExRicercaNotificaByKey(lRinMod.getNotIdNotifica());
+
+		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+		EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lNotifica.getEveIdEvento());
+		setRequestAttribute("ordineIngiunzione", lEveNotMod);
+
+		if ("D".equals(lRinMod.getCodTipoRinnovo())) {
+			// Recupera l'avvocato
+			IAvvocato lCtrlAvv = SIEPLookupRemote.getAvvocatoRemote();
+			AvvocatoSiepModel lAvvFascModel = lCtrlAvv
+					.ExRicercaAvvocatoByKeyAvvocatoFasSiep(lNotifica.getAvvIdAvvocatoFascicoloSiep());
+			setRequestAttribute("avvocato", lAvvFascModel.getAvvocato());
+		}
+
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		// pagina di ritorno
+		return PG_DETTAGLIO_RICH_COMMA5;
 	}
+
 }

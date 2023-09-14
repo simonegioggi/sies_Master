@@ -28,11 +28,14 @@ import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.util.SIEPLookupRemote;
 
 public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICostantiSanzioneSostitutiva {
+
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws Exception {
 
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
+
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		// Controlli preliminari all'inserimento di un nuovo evento
@@ -64,7 +67,7 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 		}
 
 		this.isEventoNonValidato();
-		
+
 		// Verifico se presenti più Ordini di Ingiunzione
 		// se assenti - errore
 		// se presente solo uno lo seleziono
@@ -85,9 +88,9 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 			EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(idEvento);
 			setRequestAttribute("ordineIngiunzione", lEveNotMod);
 
-			
-			// Recupero eventuali RINNOVI già inseriti da visualizzare in elenco e collegati alla notifica per l'esecuzione
-			
+			// Recupero eventuali RINNOVI già inseriti da visualizzare in elenco e collegati alla notifica per
+			// l'esecuzione
+
 			String[] lTipoRinno = { "D", "I" };
 			IRinnovo lCtrlRinnovi = SIEPLookupRemote.getRinnovoRemote();
 
@@ -96,16 +99,17 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 			for (int i = 0; i < lEveNotMod.getNotifiche().length; i++) {
 				NotificaModel lNotMod = new NotificaModel();
 				lNotMod = lEveNotMod.getNotifiche()[i];
-				
-				Vector <RinnovoModel> lListaRinnovi = lCtrlRinnovi.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(lNotMod.getIdNotifica(), lTipoRinno, null);
+
+				Vector<RinnovoModel> lListaRinnovi = lCtrlRinnovi
+						.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(lNotMod.getIdNotifica(), lTipoRinno,
+								null);
 				lNotMod.setListaRinnovi(lListaRinnovi);
-				
-				// Recupero eventuali rinnovi già presenti 
-				if (lNotMod.getCodTipoNotifica().equals("N") 
-					&& lNotMod.getAvvIdAvvocatoFascicoloSiep() != null
-					&& lNotMod.getAvvSiep() != null
-					&& lNotMod.getAvvSiep().getAvvocatoFascicoloSiepModel() != null
-					&& lNotMod.getAvvSiep().getAvvocatoFascicoloSiepModel().getDataFineValidita() == null) {
+
+				// Recupero eventuali rinnovi già presenti
+				if (lNotMod.getCodTipoNotifica().equals("N")
+						&& lNotMod.getAvvIdAvvocatoFascicoloSiep() != null && lNotMod.getAvvSiep() != null
+						&& lNotMod.getAvvSiep().getAvvocatoFascicoloSiepModel() != null && lNotMod
+								.getAvvSiep().getAvvocatoFascicoloSiepModel().getDataFineValidita() == null) {
 					lNotAvvVect.add(lNotMod);
 				}
 			}
@@ -115,19 +119,20 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 				throw new SIEPException(SIEPException.USER_MESSAGE,
 						"L'Avvocato non è più associato al fascicolo.");
 			}
-			
+
 			setRequestAttribute("notificheAvvocati", lNotAvvVect);
 			setRequestAttribute("ordineIngiunzione", lEveNotMod);
 
-			Option lOptionAutoritaAltra = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
-			setRequestAttribute("tipoAutorita", "" + lOptionAutoritaAltra);			
-		    
+			Option lOptionAutoritaAltra = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+					"22");
+			setRequestAttribute("tipoAutorita", "" + lOptionAutoritaAltra);
+
 			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 			IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 			lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 					lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
 			setRequestAttribute("posizioneluogoaltra", lPos);
-			
+
 		}
 
 		return PG_LOAD_INSERISCI_RICH_COMMA5;
@@ -142,7 +147,7 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 		// Recupero la lista degli eventi e i dati da visualizzare
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(),"");
+				.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
 
 		if (listaOrdiniIngiunzione.isEmpty()) {
 			// non ho trovato ordini di ingiunzione esco con errore
@@ -162,5 +167,6 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 		}
 
 		return returnPage;
-	}		
+	}
+
 }

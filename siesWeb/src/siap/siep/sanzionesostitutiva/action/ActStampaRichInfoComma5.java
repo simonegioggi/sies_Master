@@ -23,48 +23,59 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * Funzione di stampa per le richieste comma 5 per le notifiche deglio ordini di ingiunzione al pagamento
+ *
  * @author d.fiorletta
  * @since MEV_2023-33
  */
 public class ActStampaRichInfoComma5 extends ActionSiap {
-  private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-  public String processRequest() throws F3BException {
-    UtenteModel lUtenteMod = this.getUtenteConnesso();
-    UfficioModel lUff = this.getUfficioUtenteConnesso();
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-    String lId = getRequestStringParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
+	public String processRequest() throws F3BException {
 
-    IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
-    RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey(new BigDecimal(lId));
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
-    lRinModel.setDataAggiornamento(DateUtils.getSysDate());
-    lRinModel.setCodUfficioAggiornamento(lUff.getCodUfficio());
-    lRinModel.setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
-    
-    lRinModel.setFlagDocumentoRegistrato("N");
+		UtenteModel lUtenteMod = this.getUtenteConnesso();
+		UfficioModel lUff = this.getUfficioUtenteConnesso();
 
-    String flagTemplate = null;
-    String lCodMotivo = "0280";
+		String lId = getRequestStringParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
 
-    if (lRinModel.getCodTipoRinnovo().equals("D")) {
-      flagTemplate = "0";
-    } else {
-      flagTemplate = "1";
-    }
+		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
+		RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey(new BigDecimal(lId));
 
-    ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
-    TemplateModel lTemMod = new TemplateModel();
-    lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(null, null, lCodMotivo, flagTemplate);
-    if (lTemMod != null) {
-      lRinModel.setTemIdTemplate(lTemMod.getIdTemplate());
-    }
+		lRinModel.setDataAggiornamento(DateUtils.getSysDate());
+		lRinModel.setCodUfficioAggiornamento(lUff.getCodUfficio());
+		lRinModel.setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
 
-    IRinnovoStampa lCtrlStampa = SIEPLookupRemote.getRinnovoStampaRemote();
-    ByteArrayOutputStream lReport = lCtrlStampa.ExStampaDocumento(lRinModel, lUtenteMod); 
+		lRinModel.setFlagDocumentoRegistrato("N");
 
-    setRequestAttribute("report", lReport);
+		String flagTemplate = null;
+		String lCodMotivo = "0280";
 
-    return IWebConstants.PG_DOWNLOAD;
-  }
+		if (lRinModel.getCodTipoRinnovo().equals("D")) {
+			flagTemplate = "0";
+		} else {
+			flagTemplate = "1";
+		}
+
+		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
+		TemplateModel lTemMod = new TemplateModel();
+		lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(null, null, lCodMotivo,
+				flagTemplate);
+		if (lTemMod != null) {
+			lRinModel.setTemIdTemplate(lTemMod.getIdTemplate());
+		}
+
+		IRinnovoStampa lCtrlStampa = SIEPLookupRemote.getRinnovoStampaRemote();
+		ByteArrayOutputStream lReport = lCtrlStampa.ExStampaDocumento(lRinModel, lUtenteMod);
+
+		setRequestAttribute("report", lReport);
+
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		return IWebConstants.PG_DOWNLOAD;
+	}
+
 }
