@@ -77,7 +77,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + idEvento;
 	}
 
-	protected AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {
+	private AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {
 
 		// info per il log
 		siesLogger.info("getAnnotazioneManuale(): inizio");
@@ -109,7 +109,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		return amm;
 	}
 
-	protected EventoModel getEventoRideterminazionePP(BigDecimal idFascicoloSiep) throws F3BException {
+	private EventoModel getEventoRideterminazionePP(BigDecimal idFascicoloSiep) throws F3BException {
 
 		// info per il log
 		siesLogger.info("getEventoRideterminazionePP(): inizio");
@@ -157,7 +157,7 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 	 * @return
 	 * @throws F3BException
 	 */
-	protected NotificaModel[] getNotificheRideterminazionePP() throws F3BException {
+	private NotificaModel[] getNotificheRideterminazionePP() throws F3BException {
 
 		// info per il log
 		siesLogger.info("getNotificheRideterminazionePP(): inizio");

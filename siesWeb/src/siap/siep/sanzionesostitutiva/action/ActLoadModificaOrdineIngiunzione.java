@@ -170,14 +170,13 @@ public class ActLoadModificaOrdineIngiunzione extends ActionSiap implements ICos
 		Option lOptCivilObb = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
 		setRequestAttribute("autoritaEsternaCivilObb", "" + lOptCivilObb);
 
-		// info per il log
-		siesLogger.debug(getClass().getName() + ".processRequest: fine");
-
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 
 		setRequestAttribute("modalita", "M");
+
+		// pagina di ritorno
 		return PG_LOAD_INSERISCI_ORDINE_INGIUNZIONE;
 	}
 

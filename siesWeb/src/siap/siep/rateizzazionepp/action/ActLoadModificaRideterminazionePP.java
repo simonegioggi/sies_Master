@@ -18,6 +18,8 @@ import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
+import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -92,6 +94,12 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. Impossibile procedere");
 		}
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+
+		// Annotazione Manuale
+		IAnnotazioneManuale iam = SIEPLookupRemote.getAnnotazioneManualeRemote();
+		AnnotazioneManualeModel amm = iam.ExRicercaAnnotazioneManualeByIdEventoIdFascicolo(idEvento,
+				fsm.getIdFascicoloSiep());
+		setRequestAttribute("annotazioneManuale", amm);
 
 		// Posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
@@ -174,13 +182,14 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		// carico il tipo provvedimento
 		Option tipoProvvedimenti = new Option(DecodificheManager.getInstance().getTipoProvvedimenti());
 		tipoProvvedimenti.setFilter(new String[] { "-", "02", "03" }); // DECRETO o ORDINANZA
-		tipoProvvedimenti.setSelected("-");
+		tipoProvvedimenti.setSelected(amm.getCodTipoAnnotazione());
 		setRequestAttribute("tipoprovvedimento", "" + tipoProvvedimenti);
 
 		// carico AUTORITA' EMITTENTE
 		Option tipoUfficio = new Option(DecodificheManager.getInstance().getTipoUfficio());
 		tipoUfficio.setFilter(new String[] { "CAP", "DIB", "GUP", "GIP", "CAS", "CASAP", "TRIBSD", "GUPM",
 				"CAPSM", "DIBM", "GIPM", "GP" });
+		tipoUfficio.setSelected(amm.getCodTipoUfficioSiep());
 		setRequestAttribute("autorita", "" + tipoUfficio);
 
 		setRequestAttribute("modalita", "M");

@@ -41,7 +41,7 @@ public interface IRateizzazionePP {
 
 	public void exUploadRideterminazionePP(EventoModel em) throws F3BException;
 
-	public void exModificaRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
+	public EventoNotificaModel exModificaRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
 
 }

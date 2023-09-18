@@ -42,6 +42,7 @@
 <jsp:useBean id="autorita" 					scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
+<jsp:useBean id="annotazioneManuale"   		scope="request" class="siap.siep.annotazionemanuale.model.AnnotazioneManualeModel"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -83,6 +84,7 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
+	alert("inizio Verify!!!");
 	// Data Emissione Provvedimento obbligatoria
 	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
 		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
@@ -179,14 +181,13 @@ function Verify() {
 	    alert("destinatario sconosciuto");
 	    return false;
  	}
+	alert("fine Verify!!!");
 	return true;
 }
 
+function caricaNotifiche() {
 <%
 if ("M".equals(modalita)) {
-%>
-function caricaNotifiche () {
-<%
 	NotificaModel[] nmArray = eventonotifica.getNotifiche();
 	for (int i = 0; i < nmArray.length; i++) {
     	NotificaModel nm = nmArray[i];
@@ -234,24 +235,12 @@ function caricaNotifiche () {
 <%
 		}
 	}
-%>
-}
-<%
 }
 %>
+}
 </script>
 </head>
-<%
-if ("M".equals(modalita)) {
-%>
 <body class="corpo" onLoad="caricaNotifiche();">
-<%
-} else {
-%>
-<body class="corpo">
-<%
-}
-%>
 <table>
 	<tr>
 		<td class="LBG">
@@ -316,7 +305,7 @@ while (iterLR.hasNext()) {
 	}
 }
 %>
-<FORM method="POST" name="LoadInserisciRideterminazionePP" action="<%= IWebConstants.PG_MAIN%>">
+<FORM method="POST" name="LoadInserisciRideterminazionePP" action="<%=IWebConstants.PG_MAIN%>">
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
       	<td class="L">
@@ -328,7 +317,7 @@ if ("I".equals(modalita)) {
 } else if ("M".equals(modalita)) {
 %>
 			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActModificaRideterminazionePP">
-			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%= eventonotifica.getEvento().getIdEvento()%>">
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento()%>">
 <%
 }
 %>
@@ -409,7 +398,7 @@ while (IteRate.hasNext()) {
         if ((rata.getEveIdEvento() != null && "I".equals(modalita))
         		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
 %>
-		<td class="c" nowrap><font class="label" style="color:red;">Emesso ordine di ingiunzione<%=storia%></font></td>
+		<td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento Rideterminazione Pena Pecuniaria<%=storia%></font></td>
 <%
 		} else {
 %>
@@ -436,7 +425,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 	    <td class="L" width="20%">Attenzione</td>
-	    <td class="L"><font class="label">E' gia' stato emesso Ordine di Ingiunzione per tutte le rate previste</font></td>
+	    <td class="L"><font class="label">E' gia' stato emesso Provvedimento Rideterminazione Pena Pecuniaria per tutte le rate previste</font></td>
   	</tr>
 </table>
 <%
@@ -474,17 +463,17 @@ if ("I".equals(modalita) && contaLibere == 0) {
 	<tr>
 		<td class="L" width="20%" nowrap>Data Emissione Provvedimento <font class="ob">(*)</font></td>
 		<td class="L">
-    		<input type="text" Title="Giorno emissione provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+    		<input type="text" Title="Giorno emissione provvedimento" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(annotazioneManuale.getDataIscrizioneSiep(), "dd"), "")%>" name="<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
 			/
-			<input type="text" Title="Mese emissione provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
+			<input type="text" Title="Mese emissione provvedimento" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(annotazioneManuale.getDataIscrizioneSiep(), "MM"), "")%>" name="<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
 			/
-			<input type="text" Title="Anno emissione provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input type="text" Title="Anno emissione provvedimento" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(annotazioneManuale.getDataIscrizioneSiep(), "yyyy"), "")%>" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
 		</td>
 		<td class="L" width="20%">Anno / Numero provvedimento</td>
 		<td class="L">
-			<input type="text" Title="Anno Provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_PROVVEDIMENTO%>" size=4 maxlength=4>
+			<input type="text" Title="Anno Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getAnnoSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_PROVVEDIMENTO%>" size="4" maxlength="4">
 			/
-			<input type="text" Title="Numero Provvedimento" value="" name="<%=ICostantiRateizzazionePP.CAMPO_NUMERO_PROVVEDIMENTO%>" size=6 maxlength=6>
+			<input type="text" Title="Numero Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getNumeroSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_NUMERO_PROVVEDIMENTO%>" size="6" maxlength="6">
   		</td>
 	</tr>
 	<tr>
@@ -504,7 +493,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
 	    </td>
 	    <td class="l" colspan="2">
 			Sede <font class="ob">(*)</font>&nbsp;
-			<input title="Sede Autorita" type="text" name="<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>" maxlength="35" size="35">
+			<input type="text" title="Sede Autorita" value="<%=StringUtils.toStringJSP(annotazioneManuale.getDescrLuogoUfficioSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>" maxlength="35" size="35">
 			<a href="Javascript:ListaUfficiPerTipo('LoadInserisciRideterminazionePP','<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>',document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>[document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>.selectedIndex].value);">
 				<img src="/images/filefolder.gif" border="0">
        		</a>
