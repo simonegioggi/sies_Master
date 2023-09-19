@@ -39,7 +39,7 @@ public interface IRateizzazionePP {
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
 
-	public void exUploadRideterminazionePP(EventoModel em) throws F3BException;
+	public void exUpdateRideterminazionePP(EventoModel em) throws F3BException;
 
 	public EventoNotificaModel exModificaRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;

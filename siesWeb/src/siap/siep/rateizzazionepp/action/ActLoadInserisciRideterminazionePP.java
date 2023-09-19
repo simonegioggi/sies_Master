@@ -2,6 +2,7 @@ package siap.siep.rateizzazionepp.action;
 
 import java.math.BigDecimal;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -22,7 +23,9 @@ import siap.siep.SIEPException;
 import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
@@ -53,8 +56,8 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		if (fsm.getFlagValidato().equalsIgnoreCase("N")) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno()
-					+ "/" + fsm.getChiaveProgr()
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno() + "/"
+					+ fsm.getChiaveProgr()
 					+ " non è stato Validato. Impossibile inserire una Rideterminzaione Pena Pecuniaria!");
 			rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
@@ -68,9 +71,8 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		if (fsm.getDescrStatoFascicolo().equalsIgnoreCase("ARCHIVIATO/DEFINITO")) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Il Procedimento N." + fsm.getChiaveAnno() + "/" + fsm.getChiaveProgr()
-							+ " Il fascicolo risulta Definito. Impossibile procedere!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno() + "/"
+					+ fsm.getChiaveProgr() + " Il fascicolo risulta Definito. Impossibile procedere!");
 			rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -85,13 +87,25 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
 
-		if (listaRateizzazioni.size() == 0) {
+		if (listaRateizzazioni.size() == 0)
 			throw new F3BException(F3BException.USER_MESSAGE,
 					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione."
 							+ " Impossibile procedere!");
-		}
 
+		// controllo se esiste un OI validato
 		IEvento ie = SICOLookupRemote.getEventoRemote();
+		// EventoModel em = new EventoModel();
+		// em.setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
+		// em.setCodMotivo("0622");
+		// em.setCodTipoEvento("01");
+		// em.setCodTipoProvvedimento("06");
+		// try {
+		// ie.ExRicercaEventoTipoEveTipoProvMot(em, "S");
+		// } catch (Exception e) {
+		// throw new F3BException(F3BException.USER_MESSAGE,
+		// "Non e' stato inserito un ordine di ingiunzione validato." + " Impossibile procedere!");
+		// }
+
 		Hashtable<BigDecimal, EventoNotificaModel> listaRideterminazioniPena = new Hashtable<>();
 		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
 		for (RateizzazionePPModel rata : listaRateizzazioni) {
@@ -109,6 +123,33 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
+		// importo da pagare
+		BigDecimal importoDaPagare = null;
+		Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
+		while (iterLR.hasNext()) {
+			RateizzazionePPModel rata = (RateizzazionePPModel) iterLR.next();
+			if (!rata.isStoricizzato()) {
+				importoDaPagare = rata.getImportoDaPagare();
+				break;
+			}
+		}
+		// Ricerca lo stato dei pagamenti per id fascicolo
+		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
+		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
+		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
+		BigDecimal importoPagato = new BigDecimal(0);
+		while (iterBPM.hasNext()) {
+			BollettinoPagopaModel bpm = iterBPM.next();
+			if ("PA".equals(bpm.getStatoPagamento())) {
+				importoPagato.add(bpm.getImportoPagato());
+			}
+		}
+		boolean isImportoPagatoMinore = false;
+		if (importoPagato.compareTo(importoDaPagare) <= 0)
+			isImportoPagatoMinore = true;
+		setRequestAttribute("isImportoPagatoMinore", isImportoPagatoMinore);
+
 		// Posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 		IPosizioneGiuridica ipg = SIEPLookupRemote.getPosizioneGiuridicaRemote();
@@ -117,8 +158,8 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		if (pgldacm == null || pgldacm.getPosizioneGiuridica() == null) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno()
-					+ "/" + fsm.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno() + "/"
+					+ fsm.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
 			rt.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -148,8 +189,8 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 			// nessun avvocato trovato
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno()
-					+ "/" + fsm.getChiaveProgr() + " non è stato associato alcun avvocato.");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno() + "/"
+					+ fsm.getChiaveProgr() + " non è stato associato alcun avvocato.");
 			rt.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -162,14 +203,16 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		// Verifico se sovrescrivere l'auturità esterna
 		if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 			// modifica relativa al tipo istituto
-			if (pgldacm.getAltraCausa() != null && (pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("23")
-					|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("78")
-					|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("79")
-					|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("80")
-					|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
+			if (pgldacm.getAltraCausa() != null
+					&& (pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("23")
+							|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("78")
+							|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("79")
+							|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("80")
+							|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
 				tipoAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
 			} else {
-				if (pgldacm.getAltraCausa() != null && pgldacm.getAltraCausa().getIstitutoDetenzione() != null)
+				if (pgldacm.getAltraCausa() != null
+						&& pgldacm.getAltraCausa().getIstitutoDetenzione() != null)
 					tipoAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(),
 							pgldacm.getAltraCausa().getIstitutoDetenzione().getCodTipoIstituto());
 			}

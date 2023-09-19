@@ -32,6 +32,8 @@ import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
+import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
+import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 
 /**
  * Classe controller per la gestione delle rateizzazioni
@@ -476,8 +478,80 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	@Override
-	public void exUploadRideterminazionePP(EventoModel em) throws F3BException {
+	public void exUpdateRideterminazionePP(EventoModel em) throws F3BException {
 
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		EventoSqlDAO esDAO = null;
+		StatoProcedimentoDAO spDAO = null;
+		EventoDAO eDAOBlob = null;
+
+		try {
+			c = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			esDAO = new EventoSqlDAO(c);
+			esDAO.ricercaEventoByKey(em.getIdEvento());
+			EventoModel emRic = (EventoModel) esDAO.getModelByKey();
+			esDAO.stop();
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel spm = new StatoProcedimentoModel();
+			spm.setProgressivo(new BigDecimal(1));
+			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
+			spm.setData(emRic.getDataEmissione());
+			spm.setCodStatoProcedimento("0336");
+			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
+			spm.setDataInserimento(em.getDataAggiornamento());
+			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
+			spDAO = new StatoProcedimentoDAO(c);
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
+			spDAO.delete();
+			// - Inserisce
+			spDAO.setDAOFromModel(spm);
+			spDAO.insert();
+			spDAO.stop();
+			siesLogger.debug("FINE Aggiornamento stato procedimento");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			eDAOBlob = new EventoDAO(c);
+			eDAOBlob.setDAOFromModelForUpdateBlob(em);
+			eDAOBlob.selCondizioneUpdate(em.getIdEvento());
+			eDAOBlob.update();
+			eDAOBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(esDAO);
+			cleanup(spDAO);
+			cleanup(eDAOBlob);
+
+			cleanup(c);
+		}
 	}
 
 	@Override

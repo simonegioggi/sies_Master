@@ -188,8 +188,8 @@ for (int i = 0; i < lNotifiche.length; i++) {
 			indirizzoAutorita = StringUtils.toStringJSP(lNotifica.getAutoritaEsternaDelegata().getDescrizione(), "");
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_<%=lNotifica.getIdNotifica()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_<%=lNotifica.getIdNotifica()%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotifica.getIdNotifica()%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_<%=lNotifica.getIdNotifica()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotifica.getIdNotifica()%>').val("<%=indirizzoAutorita%>");
 	document.getElementById("<%=ICostantiOrdineEsecuzione.ABILITA_NOTIFICA%>_"+<%=lNotifica.getIdNotifica()%>).checked = true;
 <%
 		} else {

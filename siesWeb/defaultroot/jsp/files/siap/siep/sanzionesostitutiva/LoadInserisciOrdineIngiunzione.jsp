@@ -161,28 +161,28 @@ if ("M".equals(modalita)) {
 			if (lNotifica.getAutoritaEsterna() != null) {
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>').val("<%=indirizzoAutorita%>");
 <%
 			} else {
 %>
-	$('#descIstituto').val('<%=descIstituto%>');
-	$('#<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>').val('<%=idIstituto%>');
+	$('#descIstituto').val("<%=descIstituto%>");
+	$('#<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>').val("<%=idIstituto%>");
 <%
 			}
 		}
 		if (lNotifica.getIdCivilmenteObbligato() != null) {
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=lNotifica.getIdCivilmenteObbligato()%>').val("<%=indirizzoAutorita%>");
 <%
 		}
 		if (lNotifica.getAvvIdAvvocatoFascicoloSiep() != null) {
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lNotifica.getAvvIdAvvocatoFascicoloSiep()%>').val("<%=indirizzoAutorita%>");
 <%
 		}
 	}
@@ -215,7 +215,7 @@ if ("I".equals(modalita)) {
 %>
 		</td>
 			<td class="LBG">
-			  <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriPagamenti">
+			  <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti">
 			    <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
 			</td> 		
 	</tr>

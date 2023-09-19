@@ -6,7 +6,7 @@
 
 <html>
 <head>
-<title>[S.I.E.S.] - Ordine Ingiunzione / Altri Pagamenti</title>
+<title>[S.I.E.S.] - Ordine Ingiunzione / Altri Provvedimenti</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 <script language="JavaScript1.2">
@@ -54,7 +54,7 @@ function over_effect(e, state) {
 	<tr>
       	<td class="LBG">
 	        <font class="label">Funzione :</font>&nbsp;
-	        <font class="campo">Ordine Ingiunzione / Altri Pagamenti</font>
+	        <font class="campo">Ordine Ingiunzione / Altri Provvedimenti</font>
       	</td>
       	<td class="LBG">
   <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">

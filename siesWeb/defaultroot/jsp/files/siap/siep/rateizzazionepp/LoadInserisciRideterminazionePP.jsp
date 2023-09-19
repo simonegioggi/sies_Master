@@ -43,6 +43,7 @@
 <jsp:useBean id="filtroMinorenni" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
 <jsp:useBean id="annotazioneManuale"   		scope="request" class="siap.siep.annotazionemanuale.model.AnnotazioneManualeModel"/>
+<jsp:useBean id="isImportoPagatoMinore" 	scope="request" class="java.lang.Boolean"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -84,7 +85,6 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
-	alert("inizio Verify!!!");
 	// Data Emissione Provvedimento obbligatoria
 	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
 		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
@@ -181,7 +181,6 @@ function Verify() {
 	    alert("destinatario sconosciuto");
 	    return false;
  	}
-	alert("fine Verify!!!");
 	return true;
 }
 
@@ -203,35 +202,35 @@ if ("M".equals(modalita)) {
       		if ("-".equals(sedeAutorita))
       			sedeAutorita = "";
     	} else if (nm.getIstDetIdIstitutoDetenzione() != null) {
-	        descIstituto = nm.getIstitutoDetenzione().getDescrTipoIstituto()+" di "+nm.getIstitutoDetenzione().getDescrComune();
+	        descIstituto = nm.getIstitutoDetenzione().getDescrTipoIstituto() + " di " + nm.getIstitutoDetenzione().getDescrComune();
 	        idIstituto   = nm.getIstitutoDetenzione().getIdIstitutoDetenzione();
     	}
 		if (nm.getIdCivilmenteObbligato() == null && nm.getAvvIdAvvocatoFascicoloSiep() == null) {
 			if (nm.getAutoritaEsterna() != null) {
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>').val("<%=indirizzoAutorita%>");
 <%
 			} else {
 %>
-	$('#descIstituto').val('<%=descIstituto%>');
-	$('#<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>').val('<%=idIstituto%>');
+	$('#descIstituto').val("<%=descIstituto%>");
+	$('#<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>').val("<%=idIstituto%>");
 <%
 			}
 		}
 		if (nm.getIdCivilmenteObbligato() != null) {
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>_CO_<%=nm.getIdCivilmenteObbligato()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=nm.getIdCivilmenteObbligato()%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=nm.getIdCivilmenteObbligato()%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=nm.getIdCivilmenteObbligato()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>_CO_<%=nm.getIdCivilmenteObbligato()%>').val("<%=indirizzoAutorita%>");
 <%
 		}
 		if (nm.getAvvIdAvvocatoFascicoloSiep() != null) {
 %>
 	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
-	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=sedeAutorita%>');
-	$('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val('<%=indirizzoAutorita%>');
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val("<%=indirizzoAutorita%>");
 <%
 		}
 	}
@@ -294,13 +293,13 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 // Sezione con l'importo da pagare a la rateizzazione
 // controllo per storicizzazione evento OIP
 Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
-String lTipoRateizzazione = "";
-BigDecimal lImportoDaPagare = null;
+String tipoRateizzazione = "";
+BigDecimal importoDaPagare = null;
 while (iterLR.hasNext()) {
 	RateizzazionePPModel rata = (RateizzazionePPModel) iterLR.next();
 	if (!rata.isStoricizzato()) {
-		lTipoRateizzazione = rata.getTipoRateizzazione();
-		lImportoDaPagare = rata.getImportoDaPagare();
+		tipoRateizzazione = rata.getTipoRateizzazione();
+		importoDaPagare = rata.getImportoDaPagare();
 		break;
 	}
 }
@@ -322,7 +321,7 @@ if ("I".equals(modalita)) {
 }
 %>
 	        <font class="label">Importo da pagare</font>
-	        <font class="campo"><%=StringUtils.toEuroFormat(lImportoDaPagare)%> &euro;</font>
+	        <font class="campo"><%=StringUtils.toEuroFormat(importoDaPagare)%> &euro;</font>
 	        <font class="label">con le seguenti modalita'</font>
       	</td>
     </tr>
@@ -330,11 +329,11 @@ if ("I".equals(modalita)) {
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 <%
-if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
+if (tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
 %>
 		<td class="Titolo" colspan="5"> Pagamento in una Unica Soluzione </td>
 <%
-} else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) {
+} else if (tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) {
 %>
        	<td class="Titolo" colspan="5"> Pagamento Rateizzato </td>
 <%
@@ -352,8 +351,9 @@ while (IteRate.hasNext()) {
   	conta++;
 	if (rata.getEveIdEvento() == null)
     	contaLibere++;
-  	if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)
-  			|| ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA.equals(rata.getTipoRateizzazione())) {
+  	if ((tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)
+  			|| ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA.equals(rata.getTipoRateizzazione()))
+  			&& "".equals(storia)) {
 %>
 	<tr>
 		<td class="c" nowrap><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
@@ -374,8 +374,9 @@ while (IteRate.hasNext()) {
 %>         
 	</tr>
 <%
-	} else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)
-    		  || ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE.equals(rata.getTipoRateizzazione())) {
+	} else if ((tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)
+    		  || ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE.equals(rata.getTipoRateizzazione()))
+			&& "".equals(storia)) {
 %>
 	<tr>
 		<td class="c" nowrap>
@@ -420,7 +421,7 @@ while (IteRate.hasNext()) {
 </table>
 <br>
 <%
-if ("I".equals(modalita) && contaLibere == 0) {
+if ("I".equals(modalita) && contaLibere == 0 && isImportoPagatoMinore) {
 %>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>

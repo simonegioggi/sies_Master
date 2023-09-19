@@ -76,7 +76,7 @@ if (!fascicoloNotInSession.equals("S")) {
 <table cellpadding="5" cellspacing="5" width="95%" onMouseover="over_effect(event,'outset')" onMouseout="over_effect(event,'solid')" onMousedown="over_effect(event,'inset')" onMouseup="over_effect(event,'outset')">
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriPagamenti">Ordine Ingiunzione / Altri Pagamenti</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti">Ordine Ingiunzione / Altri Provvedimenti</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione">Gestione Ordine Ingiunzione</a>

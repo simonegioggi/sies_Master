@@ -5,15 +5,15 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 
 /**
- * Title: ActGrigliaOrdineIngiunzioneAltriPagamenti 
+ * Title: ActGrigliaOrdineIngiunzioneAltriProvvedimenti 
  * Description: Classe Action per il caricamento della griglia per la gestione dell'Ordine di Ingiunzione
- * 				ed Altri Pagamenti
+ * 				ed Altri Provvedimenti
  *
  * @author sgioggi
  * @since MEV_2023-33
  * @version 1.0
  */
-public class ActGrigliaOrdineIngiunzioneAltriPagamenti extends ActionSiap
+public class ActGrigliaOrdineIngiunzioneAltriProvvedimenti extends ActionSiap
 		implements ICostantiSanzioneSostitutiva {
 
 	public String processRequest() throws F3BException {

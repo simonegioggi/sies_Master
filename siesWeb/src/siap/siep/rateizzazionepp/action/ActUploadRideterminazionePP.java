@@ -61,7 +61,7 @@ public class ActUploadRideterminazionePP extends ActionSiap implements ICostanti
 			em.setFlagDocumentoRegistrato("S");
 
 			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-			irpp.exUploadRideterminazionePP(em);
+			irpp.exUpdateRideterminazionePP(em);
 		} else { // aggiorno solo il blob
 			em.setFlagDocumentoRegistrato("N");
 			IEvento ie = SICOLookupRemote.getEventoRemote();
