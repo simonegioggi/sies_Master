@@ -44,6 +44,10 @@
 <jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
 <jsp:useBean id="annotazioneManuale"   		scope="request" class="siap.siep.annotazionemanuale.model.AnnotazioneManualeModel"/>
 <jsp:useBean id="isImportoPagatoMinore" 	scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="importoDaPagare"			scope="request" class="java.math.BigDecimal"/>
+<jsp:useBean id="tipoRateizzazione"			scope="request" class="java.lang.String"/>
+<jsp:useBean id="descrMotivo"				scope="request" class="java.lang.String"/>
+<jsp:useBean id="isProvvedimentoEmissibile" scope="request" class="java.lang.Boolean"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -289,21 +293,6 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 		</td>
 	</tr>
 </table>
-<%
-// Sezione con l'importo da pagare a la rateizzazione
-// controllo per storicizzazione evento OIP
-Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
-String tipoRateizzazione = "";
-BigDecimal importoDaPagare = null;
-while (iterLR.hasNext()) {
-	RateizzazionePPModel rata = (RateizzazionePPModel) iterLR.next();
-	if (!rata.isStoricizzato()) {
-		tipoRateizzazione = rata.getTipoRateizzazione();
-		importoDaPagare = rata.getImportoDaPagare();
-		break;
-	}
-}
-%>
 <FORM method="POST" name="LoadInserisciRideterminazionePP" action="<%=IWebConstants.PG_MAIN%>">
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
@@ -364,7 +353,7 @@ while (IteRate.hasNext()) {
 		if ((rata.getEveIdEvento() != null && "I".equals(modalita))
 				|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
 %>
-        <td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento di Rideterminazione Pena<%=storia%></font></td>
+        <td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento <%=descrMotivo%><%=storia%></font></td>
 <%
 		} else {
 %>
@@ -399,7 +388,7 @@ while (IteRate.hasNext()) {
         if ((rata.getEveIdEvento() != null && "I".equals(modalita))
         		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
 %>
-		<td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento Rideterminazione Pena Pecuniaria<%=storia%></font></td>
+		<td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento <%=descrMotivo%><%=storia%></font></td>
 <%
 		} else {
 %>
@@ -410,8 +399,9 @@ while (IteRate.hasNext()) {
 	</tr>
 <%
 	}
-    if (rata.getEveIdEvento() == null
-    		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) == 0)) {
+    if ((rata.getEveIdEvento() == null
+    		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) == 0))
+    		|| isImportoPagatoMinore) {
 %>
 	<tr><td><input type="HIDDEN" name="<%=ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO%>" value="<%=rata.getIdRateizzazionePP()%>"></td></tr>
 <%
@@ -421,7 +411,7 @@ while (IteRate.hasNext()) {
 </table>
 <br>
 <%
-if ("I".equals(modalita) && contaLibere == 0 && isImportoPagatoMinore) {
+if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isProvvedimentoEmissibile)) {
 %>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
@@ -852,7 +842,7 @@ if ("I".equals(modalita) && contaLibere == 0 && isImportoPagatoMinore) {
 	</tr>
 </table>
 <%
-	} // END while (itx1.hasNext()) {
+	} // END while (itx1.hasNext())
 %>
 <%
 //=======================================================================

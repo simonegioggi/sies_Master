@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
@@ -86,6 +87,14 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		boolean isProvvedimentoEmissibile = false;
+		for (RateizzazionePPModel rata : listaRateizzazioni) {
+			if (Utils.isNullObj(rata.getEveIdEvento())) {
+				isProvvedimentoEmissibile = true;
+				break;
+			}
+		}
+		setRequestAttribute("isProvvedimentoEmissibile", isProvvedimentoEmissibile);
 
 		if (listaRateizzazioni.size() == 0)
 			throw new F3BException(F3BException.USER_MESSAGE,
@@ -123,16 +132,24 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
-		// importo da pagare
-		BigDecimal importoDaPagare = null;
+		// Sezione con l'importo da pagare a la rateizzazione
+		// controllo per storicizzazione evento RPP
 		Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
+		String tipoRateizzazione = "";
+		BigDecimal importoDaPagare = new BigDecimal(0);
 		while (iterLR.hasNext()) {
-			RateizzazionePPModel rata = (RateizzazionePPModel) iterLR.next();
+			RateizzazionePPModel rata = iterLR.next();
 			if (!rata.isStoricizzato()) {
+				tipoRateizzazione = rata.getTipoRateizzazione();
 				importoDaPagare = rata.getImportoDaPagare();
 				break;
+			} else {
+				importoDaPagare = importoDaPagare.add(rata.getImportoDaPagare());
 			}
 		}
+		setRequestAttribute("importoDaPagare", importoDaPagare);
+		setRequestAttribute("tipoRateizzazione", tipoRateizzazione);
+
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp

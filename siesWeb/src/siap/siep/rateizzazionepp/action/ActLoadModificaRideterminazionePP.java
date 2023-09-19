@@ -1,12 +1,13 @@
 package siap.siep.rateizzazionepp.action;
 
 import java.math.BigDecimal;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
@@ -89,11 +90,44 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
 
-		if (listaRateizzazioni.size() == 0) {
-			throw new F3BException(F3BException.USER_MESSAGE,
-					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. Impossibile procedere");
+		// if (listaRateizzazioni.size() == 0) {
+		// throw new F3BException(F3BException.USER_MESSAGE,
+		// "Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione."
+		// + " Impossibile procedere");
+		// }
+
+		Hashtable<BigDecimal, EventoNotificaModel> listaRideterminazioniPena = new Hashtable<>();
+		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
+		for (RateizzazionePPModel rata : listaRateizzazioni) {
+			if (rata.getEveIdEvento() != null) {
+				EventoNotificaModel enmRPP = ie.ExRicercaEventoNotificaByKey(rata.getEveIdEvento());
+				if (listaRideterminazioniPena.get(rata.getEveIdEvento()) != null) {
+					rata.setOrdineIngiunzione(listaRideterminazioniPena.get(rata.getEveIdEvento()));
+				} else {
+					rata.setOrdineIngiunzione(enmRPP);
+					listaRideterminazioniPena.put(enmRPP.getEvento().getIdEvento(), enmRPP);
+				}
+				rata.setStoricizzato("A".equals(enmRPP.getEvento().getFlagDocumentoRegistrato()));
+			}
 		}
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+
+		// Sezione con l'importo da pagare a la rateizzazione
+		// controllo per storicizzazione evento RPP
+		Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
+		String tipoRateizzazione = "";
+		BigDecimal importoDaPagare = null;
+		while (iterLR.hasNext()) {
+			RateizzazionePPModel rata = iterLR.next();
+			if (!rata.isStoricizzato()) {
+				tipoRateizzazione = rata.getTipoRateizzazione();
+				importoDaPagare = rata.getImportoDaPagare();
+				break;
+			}
+		}
+		setRequestAttribute("importoDaPagare", importoDaPagare);
+		setRequestAttribute("tipoRateizzazione", tipoRateizzazione);
+		setRequestAttribute("isImportoPagatoMinore", true);
 
 		// Annotazione Manuale
 		IAnnotazioneManuale iam = SIEPLookupRemote.getAnnotazioneManualeRemote();
