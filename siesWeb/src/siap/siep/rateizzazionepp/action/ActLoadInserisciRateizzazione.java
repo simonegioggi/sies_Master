@@ -38,11 +38,38 @@ public class ActLoadInserisciRateizzazione extends ActionSiap implements ICostan
 				.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(fsm.getIdFascicoloSiep());
 		setRequestAttribute("dettaglioPenaComplessiva", lDettMod);
 
+		// 2023.09.19 - Vado in inserimento SOLO se non ci sono rate Libere
+		//
+		if (!isRequestParameterNullEmptyObj("inserimento") && getRequestStringParameter("inserimento").equals("true")) {
+		  // Provengo dal dettaglio tasto aggiungi
+      setRequestAttribute("modalita", "I");
+      return PG_LOAD_INSERISCI_RATEIZZAZIONE_PP;
+		}
+		else {
+		  // Provengo dal Menu. In presenza di rate vado sempre sul dettaglio 
+		  IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+		  
+		  //Vector<RateizzazionePPModel> rateizzazioniLibere = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
+		  Vector<RateizzazionePPModel> rateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		  if (!rateizzazioni.isEmpty()) {
+	      String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+	          + "=siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione";
+	      return lPage;    
+		  }
+		  else {
+        setRequestAttribute("modalita", "I");
+        return PG_LOAD_INSERISCI_RATEIZZAZIONE_PP;
+		  }		  
+		}
+		
+		
+/*	
 		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
 		// Ricerca i pagamenti per id Facicolo
 		Vector<RateizzazionePPModel> rateizzazioni = new Vector<>();
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		rateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+    
 		boolean isEventoRateizzazioneAnnullato = false;
 		if (!rateizzazioni.isEmpty()) {
 			Iterator<RateizzazionePPModel> iterRPPM = rateizzazioni.iterator();
@@ -83,6 +110,8 @@ public class ActLoadInserisciRateizzazione extends ActionSiap implements ICostan
 				return PG_LOAD_INSERISCI_RATEIZZAZIONE_PP;
 			}
 		}
+		
+		*/
 	}
 
 }

@@ -82,7 +82,10 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+		//2023.09.19 Si visualizzano solo quelle "Libere"
+//		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+    listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniLibereByIdFasc(lFascMod.getIdFascicoloSiep());
+    //2023.09.19 - FINE
 
 		if (listaRateizzazioni.size() == 0) {
 			throw new F3BException(F3BException.USER_MESSAGE,

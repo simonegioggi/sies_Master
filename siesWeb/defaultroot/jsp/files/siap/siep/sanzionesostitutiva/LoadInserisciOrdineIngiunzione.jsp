@@ -470,7 +470,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
 %>
 <table width="100%">
 	<tr>
-		<td class="Titolo" colspan=6>Notifica al Condannato</td>
+		<td class="Titolo" colspan="8">Notifica al Condannato</td>
 	</tr>
 <%
 	if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {

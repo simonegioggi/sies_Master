@@ -85,8 +85,11 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
-		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();		
+    //2023.09.19 Si visualizzano solo quelle "Libere"
+		//  listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		listaRateizzazioni = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
+		//2023.09.19 - FINE		
 		boolean isProvvedimentoEmissibile = false;
 		for (RateizzazionePPModel rata : listaRateizzazioni) {
 			if (Utils.isNullObj(rata.getEveIdEvento())) {

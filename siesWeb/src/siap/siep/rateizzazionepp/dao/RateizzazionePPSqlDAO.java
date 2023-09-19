@@ -145,6 +145,25 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
+	 * MEV-33
+	 * @param aIdFasSIEP
+	 * @throws DAOException
+	 */
+	 public void ricercaRateizzazionePPByIdFasSIEPLibero(BigDecimal aIdFasSIEP) throws DAOException {
+
+	    // Recupera la select...from
+	    String lSql = getSqlQuery();
+
+	    lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
+      lSql += " AND EVE_ID_EVENTO is null ";
+	    // MEV_2023-33: aggiunta condizione di order by
+	    lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP ";
+
+	    // Imposta lo statement da eseguire
+	    setStatement(lSql);
+	  }
+	
+	/**
 	 *
 	 * @param aIdEvento
 	 * @throws DAOException
