@@ -88,7 +88,8 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		// listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
 
 		// if (listaRateizzazioni.size() == 0) {
 		// throw new F3BException(F3BException.USER_MESSAGE,
@@ -116,7 +117,7 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		// controllo per storicizzazione evento RPP
 		Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
 		String tipoRateizzazione = "";
-		BigDecimal importoDaPagare = null;
+		BigDecimal importoDaPagare = new BigDecimal(0);
 		while (iterLR.hasNext()) {
 			RateizzazionePPModel rata = iterLR.next();
 			if (!rata.isStoricizzato()) {
@@ -130,6 +131,7 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		setRequestAttribute("importoDaPagare", importoDaPagare);
 		setRequestAttribute("tipoRateizzazione", tipoRateizzazione);
 		setRequestAttribute("isImportoPagatoMinore", true);
+		setRequestAttribute("isProvvedimentoEmissibile", true);
 
 		// Annotazione Manuale
 		IAnnotazioneManuale iam = SIEPLookupRemote.getAnnotazioneManualeRemote();

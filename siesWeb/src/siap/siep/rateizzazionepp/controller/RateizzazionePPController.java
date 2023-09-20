@@ -14,12 +14,10 @@ import f3b.log.LogF3B;
 import f3b.util.F3BException;
 import f3b.util.Utils;
 import siap.controller.SiapController;
-import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.siep.annotazionemanuale.dao.AnnotazioneManualeDAO;
 import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
@@ -156,15 +154,14 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 					RateizzazionePPModel rppm = iterRPPM.next();
 					BigDecimal idEvento = rppm.getEveIdEvento();
 					if (!Utils.isNullObj(idEvento)) {
-	           // 2023.09.19 - posso cancellare solo le rate non collegati ad eventi
-            iterRPPM.remove();
-            /*
-						IEvento ie = SICOLookupRemote.getEventoRemote();
-						EventoModel em = ie.ExRicercaEventoByKey(idEvento);
-						if ("A".equals(em.getFlagDocumentoRegistrato()))
-							iterRPPM.remove();
-						*/
-            // 2023.09.19 - FINE
+						// 2023.09.19 - posso cancellare solo le rate non collegati ad eventi
+						iterRPPM.remove();
+						/*
+						 * IEvento ie = SICOLookupRemote.getEventoRemote(); EventoModel em =
+						 * ie.ExRicercaEventoByKey(idEvento); if ("A".equals(em.getFlagDocumentoRegistrato()))
+						 * iterRPPM.remove();
+						 */
+						// 2023.09.19 - FINE
 					}
 				}
 			}
@@ -221,15 +218,14 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 					RateizzazionePPModel rppm = iterRPPM.next();
 					BigDecimal idEvento = rppm.getEveIdEvento();
 					if (!Utils.isNullObj(idEvento)) {
-					  // 2023.09.19 - posso cancellare solo le rate non collegati ad eventi
-            iterRPPM.remove();
-            /*
-						IEvento ie = SICOLookupRemote.getEventoRemote();
-						EventoModel em = ie.ExRicercaEventoByKey(idEvento);
-						if ("A".equals(em.getFlagDocumentoRegistrato()))
-							iterRPPM.remove();
-						*/
-            // 2023.09.19 - FINE
+						// 2023.09.19 - posso cancellare solo le rate non collegati ad eventi
+						iterRPPM.remove();
+						/*
+						 * IEvento ie = SICOLookupRemote.getEventoRemote(); EventoModel em =
+						 * ie.ExRicercaEventoByKey(idEvento); if ("A".equals(em.getFlagDocumentoRegistrato()))
+						 * iterRPPM.remove();
+						 */
+						// 2023.09.19 - FINE
 					}
 				}
 			}
@@ -307,17 +303,16 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return lListaRate;
 	}
 
-	
 	/**
-   * Override del metodo per esporre la chiamata consentendo si specificare anche se se non si \E8 interessati agli eventi non validati
-   */
-  @Override 
-  public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
-        String motivo) throws F3BException {
-    return this.exRicercaEventoRateizzazionePP(idFascicolo, motivo, "S");
-  }
-	
-	
+	 * Override del metodo per esporre la chiamata consentendo si specificare anche se se non si \E8
+	 * interessati agli eventi non validati
+	 */
+	@Override
+	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
+			String motivo) throws F3BException {
+		return this.exRicercaEventoRateizzazionePP(idFascicolo, motivo, "S");
+	}
+
 	@Override
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
 			String motivo, String validato) throws F3BException {
@@ -329,11 +324,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		// Ricerca gli eventi per id Fascicolo
 		EventoModel em = new EventoModel();
-    // 2023.09.19
-		//em.setFlagDocumentoRegistrato("S");
-    if ("S".equals(validato))
-      em.setFlagDocumentoRegistrato("S");
-    // 2023.09.19    
+		// 2023.09.19
+		// em.setFlagDocumentoRegistrato("S");
+		if ("S".equals(validato))
+			em.setFlagDocumentoRegistrato("S");
+		// 2023.09.19
 		em.setFasSieIdFascicoloSiep(idFascicolo);
 		if ("rpp".equals(motivo)) {
 			em.setCodMotivo("1307");
@@ -699,62 +694,63 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return enmRet;
 	}
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
-	
-  /**
-   * Ricerca i record reatizzazione collegati al fascicolo ma non ad alcun evento, per le queli pu\F2 essere emessu un 
-   * OI
-   * @param aIdFasc
-   * @return
-   * @throws F3BException
-   * @since MEV_2023-33
-   */
-   public Vector<RateizzazionePPModel> exRicercaRateizzazioniLibereByIdFasc(BigDecimal aIdFasc)
-        throws F3BException {
 
-      Vector<RateizzazionePPModel> lListaRate = new Vector<>();
+	/**
+	 * Ricerca i record reatizzazione collegati al fascicolo ma non ad alcun evento, per le queli pu\F2 essere
+	 * emessu un OI
+	 *
+	 * @param aIdFasc
+	 * @return
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	public Vector<RateizzazionePPModel> exRicercaRateizzazioniLibereByIdFasc(BigDecimal aIdFasc)
+			throws F3BException {
 
-      Connection c = null;
+		Vector<RateizzazionePPModel> lListaRate = new Vector<>();
 
-      RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
-      BollettinoPagopaSqlDAO lBollettinoSqlDAO = null;
+		Connection c = null;
 
-      try {
-        c = getDBConnection();
+		RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
+		BollettinoPagopaSqlDAO lBollettinoSqlDAO = null;
 
-        lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
-        lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(c);
+		try {
+			c = getDBConnection();
 
-        lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFasSIEPLibero(aIdFasc);
+			lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
+			lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(c);
 
-        lRateizzazioneSqlDao.start();
-        while (lRateizzazioneSqlDao.next()) {
-          lListaRate.add((RateizzazionePPModel) lRateizzazioneSqlDao.getModel());
-        }
-        lRateizzazioneSqlDao.stop();
+			lRateizzazioneSqlDao.ricercaRateizzazionePPByIdFasSIEPLibero(aIdFasc);
 
-        for (RateizzazionePPModel lRata : lListaRate) {
-          lBollettinoSqlDAO.ricercaBollettinoPagopaByReteizzazione(lRata.getIdRateizzazionePP());
-          Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
-              lBollettinoSqlDAO.getModels());
-          lRata.setListaBollettini(lListaBollettini);
-        }
+			lRateizzazioneSqlDao.start();
+			while (lRateizzazioneSqlDao.next()) {
+				lListaRate.add((RateizzazionePPModel) lRateizzazioneSqlDao.getModel());
+			}
+			lRateizzazioneSqlDao.stop();
 
-        commit(c);
-      } catch (DAOException daoEx) {
-        siesLogger.error("DAOException", daoEx);
-        rollback(c);
-        throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + daoEx);
-      } catch (Exception ex) {
-        siesLogger.error("Exception", ex);
-        rollback(c);
-        throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + ex);
-      } finally {
-        cleanup(lRateizzazioneSqlDao);
+			for (RateizzazionePPModel lRata : lListaRate) {
+				lBollettinoSqlDAO.ricercaBollettinoPagopaByReteizzazione(lRata.getIdRateizzazionePP());
+				Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
+						lBollettinoSqlDAO.getModels());
+				lRata.setListaBollettini(lListaBollettini);
+			}
 
-        cleanup(c);
-      }
+			commit(c);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(c);
+			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + ex);
+		} finally {
+			cleanup(lRateizzazioneSqlDao);
 
-      return lListaRate;
-    }
-  
+			cleanup(c);
+		}
+
+		return lListaRate;
+	}
+
 }

@@ -85,11 +85,11 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
-		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();		
-    //2023.09.19 Si visualizzano solo quelle "Libere"
-		//  listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+		// 2023.09.19 Si visualizzano solo quelle "Libere"
+		// listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
 		listaRateizzazioni = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
-		//2023.09.19 - FINE		
+		// 2023.09.19 - FINE
 		boolean isProvvedimentoEmissibile = false;
 		for (RateizzazionePPModel rata : listaRateizzazioni) {
 			if (Utils.isNullObj(rata.getEveIdEvento())) {
@@ -134,7 +134,7 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		}
 
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-		
+
 		// Sezione con l'importo da pagare a la rateizzazione
 		// controllo per storicizzazione evento RPP
 		Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
@@ -148,7 +148,7 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 				break;
 			} else {
 				importoDaPagare = importoDaPagare.add(rata.getImportoDaPagare());
-				
+
 			}
 		}
 		setRequestAttribute("importoDaPagare", importoDaPagare);

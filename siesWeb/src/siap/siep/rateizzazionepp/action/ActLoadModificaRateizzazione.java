@@ -48,7 +48,7 @@ public class ActLoadModificaRateizzazione extends ActionSiap implements ICostant
 		// 2023.09.19 - sono modifcabili solo le rate non agganciate ad eventi
 		// listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
 		listaRateizzazioni = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
-	  // 2023.09.19 - fine
+		// 2023.09.19 - fine
 		if (!listaRateizzazioni.isEmpty()) {
 			Iterator<RateizzazionePPModel> iterRPPM = listaRateizzazioni.iterator();
 			while (iterRPPM.hasNext()) {
