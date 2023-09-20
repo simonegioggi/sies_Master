@@ -131,7 +131,7 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		}
 
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-
+		
 		// Sezione con l'importo da pagare a la rateizzazione
 		// controllo per storicizzazione evento RPP
 		Iterator<RateizzazionePPModel> iterLR = listaRateizzazioni.iterator();
@@ -140,11 +140,12 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 		while (iterLR.hasNext()) {
 			RateizzazionePPModel rata = iterLR.next();
 			if (!rata.isStoricizzato()) {
-				tipoRateizzazione = rata.getTipoRateizzazione();
 				importoDaPagare = rata.getImportoDaPagare();
+				tipoRateizzazione = rata.getTipoRateizzazione();
 				break;
 			} else {
 				importoDaPagare = importoDaPagare.add(rata.getImportoDaPagare());
+				
 			}
 		}
 		setRequestAttribute("importoDaPagare", importoDaPagare);

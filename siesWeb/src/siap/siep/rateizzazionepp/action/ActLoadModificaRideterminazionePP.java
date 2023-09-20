@@ -120,9 +120,11 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		while (iterLR.hasNext()) {
 			RateizzazionePPModel rata = iterLR.next();
 			if (!rata.isStoricizzato()) {
-				tipoRateizzazione = rata.getTipoRateizzazione();
 				importoDaPagare = rata.getImportoDaPagare();
+				tipoRateizzazione = rata.getTipoRateizzazione();
 				break;
+			} else {
+				importoDaPagare = importoDaPagare.add(rata.getImportoDaPagare());
 			}
 		}
 		setRequestAttribute("importoDaPagare", importoDaPagare);

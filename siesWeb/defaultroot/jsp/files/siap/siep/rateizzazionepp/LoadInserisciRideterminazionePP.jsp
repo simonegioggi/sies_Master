@@ -8,7 +8,10 @@
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
+<%@ page import="siap.sico.evento.controller.IEvento"%>
+<%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
+<%@ page import="siap.sico.util.SICOLookupRemote"%>
 <%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
 <%@ page import="siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
@@ -46,7 +49,6 @@
 <jsp:useBean id="isImportoPagatoMinore" 	scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="importoDaPagare"			scope="request" class="java.math.BigDecimal"/>
 <jsp:useBean id="tipoRateizzazione"			scope="request" class="java.lang.String"/>
-<jsp:useBean id="descrMotivo"				scope="request" class="java.lang.String"/>
 <jsp:useBean id="isProvvedimentoEmissibile" scope="request" class="java.lang.Boolean"/>
 
 <%
@@ -265,6 +267,11 @@ if ("I".equals(modalita)) {
 }
 %>
 		</td>
+		<td class="LBG">
+			<a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti">
+				<img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+			</a>      
+		</td>
 	</tr>
 </table>
   
@@ -334,12 +341,18 @@ Iterator<RateizzazionePPModel> IteRate = listaRateizzazioni.iterator();
 int conta = 0;
 int contaLibere = 0;
 String storia = "";
+String descrMotivo = "";
 while (IteRate.hasNext()) {
 	RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
 	storia = rata.isStoricizzato() ? " Storicizzato" : "";
   	conta++;
 	if (rata.getEveIdEvento() == null)
     	contaLibere++;
+	else {
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = ie.ExRicercaEventoByKey(rata.getEveIdEvento());
+		descrMotivo = em.getDescrMotivo();
+	}
   	if ((tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)
   			|| ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA.equals(rata.getTipoRateizzazione()))
   			&& "".equals(storia)) {

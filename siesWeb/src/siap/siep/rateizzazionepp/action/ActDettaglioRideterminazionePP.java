@@ -67,7 +67,7 @@ public class ActDettaglioRideterminazionePP extends ActionSiap implements ICosta
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
 		listaRateizzazioni = lRateCTRL
-				.exRicercaRateizzazioniByIdFasc(enm.getEvento().getFasSieIdFascicoloSiep());
+				.exRicercaRateizzazioniByIdEvento(idEvento);
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
 		// MAGISTRATO
