@@ -574,7 +574,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
     </tr>
 	<tr>
       	<td class="L">Sede <font class="ob">(*)</font></td>
-      	<td class="L">
+      	<td class="L" width="30%">
         	<input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
                 	name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>" 
                   	id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>">
@@ -664,7 +664,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 	</tr>
     <tr>
       	<td class="l" width="20%">Sede <font class=ob>(*)</font></td>
-      	<td class="L">
+      	<td class="L" width="30%">
         	<input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
         			name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>" 
                  	id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>">
@@ -765,8 +765,8 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 		</td>
 	</tr>
 	<tr>
-	  	<td class="l">Sede</td>
-	  	<td class="L">
+	  	<td class="l" width="20%">Sede</td>
+	  	<td class="L" width="30%">
 	   		<input title="Sede Foro Avvocato" type="text" maxlength="35" size="35"
 				name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" 
 				id="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
@@ -786,7 +786,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 		}
 %>
 		</td>
-	 	<td class="l" width="20%">Indirizzo</td>
+	 	<td class="l" width="20%">Note</td>
 	 	<td class="L">
 	    	<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>" cols="35"></textarea>
 	   </td>
@@ -839,8 +839,8 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 		</td>
 	</tr>
 	<tr>
-	  	<td class="L">Sede</td>
-	  	<td class="L">
+	  	<td class="L" width="20%">Sede</td>
+	  	<td class="L" width="30%">
 	    	<input type="text" maxlength="35" size="35" title="Sede Autorita Esterna"
 					id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
 					name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>">

@@ -344,7 +344,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 	<tr>
 		<td class="l">Note</td>
 		<td class="L">
-			<font class="campo"><%=StringUtils.toStringJSP(lAvvocatoSiep.getNote())%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(lAvvocatoSiep.getNote(), "-")%></font>
 		</td>
 	</tr>
 <%
@@ -396,7 +396,7 @@ for (int i = 0; i < lListaNotObbligati.size(); i++) {
 	</tr>
 	<tr>
 	  	<td class="l">Note</td>
-	  	<td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(lNotificaObbligato.getNote())%></font></td>
+	  	<td class="L" colspan="2"><font class="campo"><%=StringUtils.toStringJSP(lNotificaObbligato.getNote(), "-")%></font></td>
 	</tr>
 <%
 } // end ciclo for
