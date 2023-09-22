@@ -158,7 +158,21 @@ public class ActCancellaProvvedimento extends ActionSiap implements ICostantiOrd
 								|| "03".equals(em.getCodTipoProvvedimento()))
 						&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
 						&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
-						&& em.getCodOperatoreInserimento().equals(lEveModRic.getCodOperatoreInserimento())) {
+						&& em.getCodOperatoreInserimento().equals(lEveModRic.getCodOperatoreInserimento())
+						// Ticket#20230718019 - In caso di Annullamento di un verbale di sottoscrizione non si annulla 
+						//                      anche l'ordinanza in quanto puntata anche dalla richiesta del verbale
+						//                       
+						&& !(   lEveModRic.getCodTipoEvento().equals("07")   // 07-Verbale
+							 && (   lEveModRic.getCodTipoProvvedimento().equals("16") // 16-Verbale
+							     || lEveModRic.getCodTipoProvvedimento().equals("18") // 18-Verbale obblighi
+							    )
+							 && (   lEveModRic.getCodMotivo().equals("0314") // 0314-sottoscrizione obblighi
+								 || lEveModRic.getCodMotivo().equals("0312") // 0312-verbale
+								)
+							)
+						// Ticket#20230718019 - FINE
+					) 
+				{
 					em.setFlagDocumentoRegistrato("A");
 					lCtrl.ExAggiornaEventoInserisciCampoNota(em, lCampoMod);
 				}
