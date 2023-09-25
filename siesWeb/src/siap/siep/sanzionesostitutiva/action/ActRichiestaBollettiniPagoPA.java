@@ -64,7 +64,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo, "");
+				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL");
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 
 		boolean isUnico = false;

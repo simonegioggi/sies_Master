@@ -310,7 +310,64 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	@Override
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
 			String motivo) throws F3BException {
-		return this.exRicercaEventoRateizzazionePP(idFascicolo, motivo, "S");
+
+		if ("ALL".equals(motivo)) {
+			return exRicercaEventiRateizzazionePP(idFascicolo);
+		}
+		return exRicercaEventoRateizzazionePP(idFascicolo, motivo, "S");
+	}
+
+	private Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo)
+			throws F3BException {
+
+		Connection c = null;
+
+		RateizzazionePPSqlDAO rppsdao = null;
+		EventoSqlDAO esdao = null;
+
+		// Ricerca gli eventi per id Fascicolo
+		EventoModel em = new EventoModel();
+		em.setFlagDocumentoRegistrato("S");
+		em.setFasSieIdFascicoloSiep(idFascicolo);
+		String[] motivi = new String[] { "0622", "1307", "1308" };
+		// String[] tipi = new String[] { "04", "06" };
+		em.setCodTipoEvento("01");
+
+		// Ricerca gli eventi per id Fascicolo
+		Vector<EventoRateizzazionePPModel> listaEventoRateizzazioniPP = new Vector<>();
+
+		try {
+			c = getDBConnection();
+			esdao = new EventoSqlDAO(c);
+			esdao.ricercaEventoPerMotivoOrderDesc(motivi, em);
+			List<EventoModel> listaEventi = new ArrayList(esdao.getModels());
+			esdao.stop();
+
+			Iterator<EventoModel> iter = listaEventi.iterator();
+			while (iter.hasNext()) {
+				EventoModel evm = iter.next();
+				Vector<RateizzazionePPModel> listaRateizzazionePP = exRicercaRateizzazioniByIdEvento(
+						evm.getIdEvento());
+				// Aggiungo l'evento
+				EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
+				erppm.setEvento(evm);
+				erppm.setListaRateizzazioniPP(listaRateizzazionePP);
+				listaEventoRateizzazioniPP.add(erppm);
+			}
+		} catch (DAOException daoEx) {
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
+			siesLogger.error("DAOException: ", daoEx);
+			throw new F3BException(
+					"LicenzaLibanticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
+							+ daoEx);
+		} finally {
+			cleanup(rppsdao);
+			cleanup(esdao);
+			cleanup(c);
+		}
+
+		return listaEventoRateizzazioniPP;
 	}
 
 	@Override
@@ -325,7 +382,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		// Ricerca gli eventi per id Fascicolo
 		EventoModel em = new EventoModel();
 		// 2023.09.19
-		// em.setFlagDocumentoRegistrato("S");
 		if ("S".equals(validato))
 			em.setFlagDocumentoRegistrato("S");
 		// 2023.09.19
@@ -376,11 +432,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print 
-	 * Numero MEV : 2023-33 
-	 * Autore : sgioggi 
-	 * Data : 29 ago 2023 
-	 * Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
+	 * ago 2023 Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
