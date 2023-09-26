@@ -463,9 +463,16 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         String lActCancella = "siap.siep.sanzionesostitutiva.action.ActCancellaRinnovoRicercheOIPP";
         lActCancella += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
         String lActStampa = "";
+        
+        String descRinnovo = "";
+        if ("A".equals(lRinnovo.getCodTipoRinnovo()))
+          descRinnovo = "Rinnovo Notifica Ufficiali Giudiziari - "+lRinnovo.getDescrTipoRinnovo();          
+        else 
+          descRinnovo = lRinnovo.getDescrTipoRinnovo();
+          
       %>
       <tr>
-        <td class="c"><%=StringUtils.toStringJSP(lRinnovo.getDescrTipoRinnovo())%></td>
+        <td class="c"><%=StringUtils.toStringJSP(descRinnovo)%></td>
         <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lRinnovo.getDataRinnovo(),"dd-MM-yyyy"),"")%></td>
         <td class="c"><%=StringUtils.toStringJSP(lRinnovo.getDescrTipoAutoritaRinnovo())%> di <%=StringUtils.toStringJSP(lRinnovo.getDescrLuogoRinnovo())%></td>
         <td class="c">

@@ -146,8 +146,13 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 
 		// Recupero la lista degli eventi e i dati da visualizzare
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
+    // 2023.09.26 - si includono nella ricerca anche i codici
+    //Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+    //    .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
+    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
+    // 2023.09.26 - FINE
+
 
 		if (listaOrdiniIngiunzione.isEmpty()) {
 			// non ho trovato ordini di ingiunzione esco con errore
