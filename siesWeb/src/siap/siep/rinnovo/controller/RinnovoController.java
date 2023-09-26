@@ -915,7 +915,12 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		}
 	}
 
-	// MEV_2023-33
+
+	/**
+	 * Funzione di cancellazione dei rinnovi per gli ordini di ingiunzione al pagamento
+	 * 
+	 * @since MEV-2023_33
+	 */
 	public void ExCancellaRinnovoPP(RinnovoModel aRinnovo) throws F3BException {
 
 		Connection lConn = null;
@@ -1032,7 +1037,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			siesLogger.error("RinnovoController.ExUpdateValidaRinnovoPP", daoEx);
-			// daoEx.printStackTrace();
 			throw new F3BException("RinnovoController.ExUpdateValidaRinnovoPP : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
@@ -1096,12 +1100,12 @@ public class RinnovoController extends SiapController implements IRinnovo {
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
-			daoEx.printStackTrace();
-			throw new F3BException("RinnovoController.ExUpdateValidaRich8Bis : " + daoEx);
+			siesLogger.error("Errore in fase di validazione della Richieste comma 5 OI", daoEx);
+			throw new F3BException("RinnovoController.ExUpdateValidaRichiestaComma5 : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
-			ex.printStackTrace();
-			throw new F3BException("RinnovoController.ExUpdateValidaRich8Bis : " + ex);
+      siesLogger.error("Errore in fase di validazione della Richieste comma 5 OI", ex);
+			throw new F3BException("RinnovoController.ExUpdateValidaRichiestaComma5 : " + ex);
 		} finally {
 			cleanup(lRinSqlDao);
 			cleanup(lRinDaoBlob);
@@ -1158,7 +1162,6 @@ public class RinnovoController extends SiapController implements IRinnovo {
 		} catch (DAOException daoEx) {
 			rollback(lConn);
 			siesLogger.error("Errore in fase di validazione della Rinnovazione OI", daoEx);
-			daoEx.printStackTrace();
 			throw new F3BException("RinnovoController.ExUpdateValidaRinnovazioneNotifichePP : " + daoEx);
 		} catch (Exception ex) {
 			rollback(lConn);
@@ -1173,5 +1176,64 @@ public class RinnovoController extends SiapController implements IRinnovo {
 
 		return aRinnovo;
 	}
+	
+	/**
+   * Funzione di validazione dei SOlleciti degli Ordini di ingiunzione al pagamento
+   *
+   * n.b. per ora si omettono attività sugli scadenzari e il cambio stato procedimento
+   * 
+	 * @since MEV-2023_33
+	 */
+	 public RinnovoModel ExUpdateValidaSollecitiPP (FascicoloSiepModel aFasc, RinnovoModel aRinnovo)
+	      throws F3BException {
+
+	    Connection lConn = null;
+
+	    RinnovoDAO lRinDaoBlob = null;
+	    RinnovoSqlDAO lRinSql = null;
+
+	    try {
+	      lConn = getDBTransaction();
+
+	      lRinSql = new RinnovoSqlDAO(lConn);
+
+	      // ricerca rinnovo
+	      RinnovoModel lRinMod = new RinnovoModel();
+	      lRinSql.ricercaRinnovoByKey(aRinnovo.getIdRinnovo());
+	      lRinMod = (RinnovoModel) lRinSql.getModelByKey();
+
+	      // Stato procedimento
+	      aRinnovo.setDataRinnovo(lRinMod.getDataRinnovo());
+	      //FIXME - Verificare lo stato precedimento
+	      InserimentoCancellazioneStatoProcedimento(lConn, aFasc.getIdFascicoloSiep(), aRinnovo, "0116");
+
+	      lRinDaoBlob = new RinnovoDAO(lConn);
+	      lRinDaoBlob.setDAOFromModelForUpdateBlob(aRinnovo);
+
+	      lRinDaoBlob.setCondizioneUpdate(aRinnovo.getIdRinnovo());
+	      lRinDaoBlob.update();
+	      lRinDaoBlob.stop();
+
+	      // Ricalcola lo stato dello scadenzario Simeone
+	      //aggiornaStatoNotificaScadenzarioSimeone(lConn, lScaDao, lRinMod, aFasc.getIdFascicoloSiep());
+
+	      commit(lConn);
+	    } catch (DAOException daoEx) {
+	      siesLogger.error("Errore in fase di validazione dei Solleciti OIPP", daoEx);
+	      rollback(lConn);
+	      throw new F3BException("RinnovoController.ExUpdateValidaSollecitiPP : " + daoEx);
+	    } catch (Exception ex) {
+	      siesLogger.error("Errore in fase di validazione dei Solleciti OIPP", ex);
+	      rollback(lConn);
+	      throw new F3BException("RinnovoController.ExUpdateValidaSolleciti : " + ex);
+	    } finally {
+	      cleanup(lRinDaoBlob);
+	      cleanup(lRinSql);
+
+	      cleanup(lConn);
+	    }
+
+	    return aRinnovo;
+	  }
 
 }

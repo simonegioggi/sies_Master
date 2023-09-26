@@ -44,7 +44,7 @@ public class ActLoadInserisciRichInfoComma5 extends ActionSiap implements ICosta
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 					"Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
-							+ " non e' stato Validato. Impossibile inserire il Rinnovo Ricerche!");
+							+ " non e' stato Validato. Impossibile inserire la Richiesta!");
 			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
