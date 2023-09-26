@@ -25,7 +25,7 @@
 
 <jsp:useBean id="ordineIngiunzione" scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 <jsp:useBean id="notifica"          scope="request" class="siap.siep.notifica.model.NotificaModel"  />
-<jsp:useBean id="listaRinnovi"      scope="request" class="java.util.Vector"  />
+<jsp:useBean id="listaSolleciti"      scope="request" class="java.util.Vector"  />
 
 <jsp:useBean id="tipoAutoritaAltra" scope="request" class="java.lang.String"  />
 
@@ -51,22 +51,22 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }    
     
-      function ListaRinnovi(){
-        var nodeListaRinnovi = document.getElementById('divListaRinnovi');
-        if ( nodeListaRinnovi.style.display=='block')
-          nodeListaRinnovi.style.display='none';
+      function ListaSolleciti(){
+        var nodeListaSolleciti = document.getElementById('divListaSolleciti');
+        if ( nodeListaSolleciti.style.display=='block')
+          nodeListaSolleciti.style.display='none';
         else
-          nodeListaRinnovi.style.display='block';
+          nodeListaSolleciti.style.display='block';
       }
     
-      function CancellaRinnovo(idRinnovo){
-        if (window.confirm("Confermi l'eliminazione del Rinnovo?")) {
-          document.cancellaRinnovo.<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>.value = idRinnovo;
-          document.cancellaRinnovo.submit();
+      function CancellaSollecito(idRinnovo){
+        if (window.confirm("Confermi l'eliminazione del Sollecito?")) {
+          document.cancellaSollecito.<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>.value = idRinnovo;
+          document.cancellaSollecito.submit();
         }
       }
       
-      function downloadStampaRinnovo (idRinnovo)
+      function downloadStampaSollecito (idRinnovo)
       {
         var lAzione = "<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadDocumentoRinnovoRicercheOIPP";
         var parametri = lAzione+"&<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>="+idRinnovo;
@@ -75,29 +75,29 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       
       function Verify()
       {
-        if (document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value.length==1)
-          document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value='0'+document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value;
-        if (document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value.length==1)
-          document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value='0'+document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value;
+        if (document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value.length==1)
+          document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value='0'+document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value;
+        if (document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value.length==1)
+          document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value='0'+document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value;
 
-        var data_to_verify = document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value+'-'+document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value+'-'+document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>.value;
+        var data_to_verify = document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.value+'-'+document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value+'-'+document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>.value;
 
         if (!ControllaData(data_to_verify) )
         {
-          alert('Data Rinnovo non valida');
-          document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.focus();
+          alert('Data Sollecito non valida');
+          document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.focus();
           return false;
         }
 
-        if (document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.value=='-') {
-          alert("Indicare l'autorità delegata alla notifica");
-          document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.focus();
+        if (document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.value=='-') {
+          alert("Indicare l'Organo da sollecitare");
+          document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.focus();
           return false; 
         }
 
-        if (document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.value.length==0) {
-          alert("Indicare la sede dell'autorità delegata alla notifica");
-          document.LoadInserisciRinnovazioneOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.focus();
+        if (document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.value.length==0) {
+          alert("Indicare il luogo");
+          document.LoadInserisciSollecitiOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.focus();
           return false; 
         }
 
@@ -116,10 +116,10 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       </td>
       <td class="LBG">
         <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <font class="campo">Rinnovazione Notifiche Comma 8 bis</font>
+        <font class="campo">Solleciti&nbsp;</font>
       </td>
       <td class="LBG">
-        <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovazioneOIPP">
+        <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciSollecitiOIPP">
           <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
       </td>         
     </tr>
@@ -129,13 +129,13 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   <br>
 
 
-<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="cancellaRinnovo">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActCancellaRinnovazioneOIPP">
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="cancellaSollecito">
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActCancellaSollecitiOIPP">
   <input type="HIDDEN" name="<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>" value="">
 </form>
 
-<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadInserisciRinnovazioneOIPP">
-  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActInserisciRinnovazioneOIPP">
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadInserisciSollecitiOIPP">
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActInserisciSollecitiOIPP">
   <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=ordineIngiunzione.getEvento().getIdEvento()%>">
   <input type="hidden" name="<%=ICostantiNotifica.CAMPO_ID_NOTIFICA%>" value="<%=notifica.getIdNotifica()%>">
 
@@ -175,11 +175,11 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
 <br>
   <% 
-     int contaRinnovi = listaRinnovi.size();
+     int contaRinnovi = listaSolleciti.size();
      int contaDaValidare = 0;
-     for (int i = 0; i < listaRinnovi.size(); i++) 
+     for (int i = 0; i < listaSolleciti.size(); i++) 
      {
-       RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
+       RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
        if (lRinnovo.getFlagDocumentoRegistrato()==null 
             || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
          contaDaValidare++; 
@@ -192,28 +192,27 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   <table>
     <tr>
       <td class="LGB">
-        <a href="Javascript:ListaRinnovi();">Elenco Notifiche Precedenti (<%=contaRinnovi%>)<%=strDaValidare%></a>
+        <a href="Javascript:ListaSolleciti();">Elenco Solleciti Precedenti (<%=contaRinnovi%>)<%=strDaValidare%></a>
       </td>
     </tr>
   </table>
   
-  <div id="divListaRinnovi" style="width: 100%; display:none;" >
+  <div id="divListaSolleciti" style="width: 100%; display:none;" >
     <table width="100%">
       <tr>
-        <td class="int">Tipo Rinnovo</td>
-        <td class="int">Risposta Pervenuta in data</td>
-        <td class="int">Autorita' delegata alla notifica</td>
-        <td class="int">Luogo Nuova Notifica</td>
+        <td class="int">Tipo Sollecito</td>
+        <td class="int">Data Sollecito</td>
+        <td class="int">Organo da Sollecitare </td>
         <td class="int">Validato</td>
         <td class="int" style="width:50px;">Azioni</td>
       </tr>
       <% 
-      for (int i = 0; i < listaRinnovi.size(); i++) 
+      for (int i = 0; i < listaSolleciti.size(); i++) 
       {
-        RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
-        String lActDettaglio = "siap.siep.sanzionesostitutiva.action.ActLoadDettaglioRinnovazioneOIPP";
+        RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
+        String lActDettaglio = "siap.siep.sanzionesostitutiva.action.ActLoadDettaglioSollecitiOIPP";
         lActDettaglio += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
-        String lActCancella = "siap.siep.sanzionesostitutiva.action.ActCancellaRinnovoRicercheOIPP";
+        String lActCancella = "siap.siep.sanzionesostitutiva.action.ActCancellaSollecitiOIPP";
         lActCancella += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
         String lActStampa = "";
       %>
@@ -221,7 +220,6 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <td class="c"><%=StringUtils.toStringJSP(lRinnovo.getDescrTipoRinnovo())%></td>
         <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(lRinnovo.getDataRinnovo(),"dd-MM-yyyy"),"")%></td>
         <td class="c"><%=StringUtils.toStringJSP(lRinnovo.getDescrTipoAutoritaRinnovo())%> di <%=StringUtils.toStringJSP(lRinnovo.getDescrLuogoRinnovo())%></td>
-        <td class="c"><%=StringUtils.toStringJSP(lRinnovo.getNuovoLuogoNotifica(),"&nbsp;")%></td>
         <td class="c">
         <% if ("S".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
           <img  alt="Validato" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0"></a>
@@ -231,11 +229,11 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         </td>
         <td class="r" nowrap>
           <% if (!"S".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
-          <a href="Javascript:CancellaRinnovo('<%=lRinnovo.getIdRinnovo()%>')">
+          <a href="Javascript:CancellaSollecito('<%=lRinnovo.getIdRinnovo()%>')">
             <img  alt="Cancella" src="<%=IWebConstants.IMAGES_DIR%>delete.gif" border="0"></a>
           <% } %>
           <% if ("S".equals(lRinnovo.getFlagDocumentoRegistrato()) || "N".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
-          <a href="Javascript:downloadStampaRinnovo('<%=lRinnovo.getIdRinnovo()%>')">
+          <a href="Javascript:downloadStampaSollecito('<%=lRinnovo.getIdRinnovo()%>')">
             <img  alt="Stampa" src="<%=IWebConstants.IMAGES_DIR%>print.gif" border="0"></a>
           <% } %>
           <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lActDettaglio%>">
@@ -249,8 +247,8 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
   <table  width=100%>
     <tr>
-      <td class="c">A mezzo Ufficiali Giudiziari &nbsp;<input type="radio" name="Notifica" value="U" checked >
-                    A mezzo Autorità di Polizia &nbsp; <input type="radio" name="Notifica" value="P">
+      <td class="c">Sollecito Autorità di Polizia &nbsp;<input type="radio" name="TipoSollecito" value="SP" checked >
+                    Sollecito Ufficiali Giudiziari &nbsp; <input type="radio" name="TipoSollecito" value="SU">
       </td>
     </tr>
   </table>
@@ -263,7 +261,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 %>
   <table width="100%">
     <tr>
-      <td class="l">Risposta Pervenuta in Data <font class="ob">(*)</font></td>
+      <td class="l">Data Sollecito <font class="ob">(*)</font></td>
       <td class="l" colspan="3">
         <input type="text" size="2" maxlength="2" title="Giorno Risposta"
                value="<%=DateUtils.getSysDate("dd")%>"
@@ -283,7 +281,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
     </tr>
     
     <tr>
-      <td class="l">Autorità delegata alla notifica <font class="ob">(*)</font></td>
+      <td class="l">Organo da Sollecitare <font class="ob">(*)</font></td>
       <td class="l" colspan="3">
         <select title="TipoAutorita" name="<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>">
           <%=tipoAutoritaAltra%>
@@ -294,19 +292,12 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       <td class="l">Luogo <font class="ob">(*)</font></td>
       <td class="L">
         <input title="Luogo" type="text" name="<%=  ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>"  maxlength="35" size="35">
-        <a href="Javascript:ListaComuni('LoadInserisciRinnovazioneOIPP','<%= ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO %>');">
+        <a href="Javascript:ListaComuni('LoadInserisciSollecitiOIPP','<%= ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO %>');">
           <img src="/images/filefolder.gif" border=0></a>
       </td>
       <td class="l">Indirizzo</td>
       <td class="L">
         <TEXTAREA title="Note" name="<%=ICostantiRinnovo.CAMPO_NOTE%>" cols=30></textarea>
-      </td>
-    </tr>
-
-    <tr>
-      <td class="l">Luogo Nuova Notifica</td>
-      <td class="L" colspan="3">
-        <input title="Luogo" type="text" name="<%= ICostantiRinnovo.CAMPO_LUOGO_NUOVA_NOTIFICA%>"  maxlength="35" size="35">
       </td>
     </tr>
   </table>
@@ -324,7 +315,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
 
   <script language="JavaScript" type="text/javascript">
-    var frmvalidator = new Validator("LoadInserisciRinnovazioneOIPP");  
+    var frmvalidator = new Validator("LoadInserisciSollecitiOIPP");  
     frmvalidator.setAddnlValidationFunction("Verify");
   </script>
 </body>

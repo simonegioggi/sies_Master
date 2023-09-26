@@ -62,6 +62,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         if(document.LoadRichiestaInfoComma5.Notifica[0].checked)
         {
           nodeAltri.style.display='none';
+          document.LoadRichiestaInfoComma5.altri.value="N";
 
           nodeDivUno.style.display='block';
           document.LoadRichiestaInfoComma5.primoAvvocato.value="S";
@@ -70,7 +71,6 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
           {
             nodeDivDue.style.display='block';
             document.LoadRichiestaInfoComma5.secondoAvvocato.value="S";
-            document.LoadRichiestaInfoComma5.altri.value="N";
           }
           else
           {

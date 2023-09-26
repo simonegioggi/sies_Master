@@ -79,7 +79,7 @@ function over_effect(e, state) {
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovazioneOIPP">Rinnovazione Notifica successiva alla Richiesta Informazioni</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-	  		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Solleciti</a>
+	  		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciSollecitiOIPP">Solleciti</a>
 		</td>
 	</tr>
 </table>
