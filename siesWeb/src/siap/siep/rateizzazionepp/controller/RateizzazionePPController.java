@@ -432,8 +432,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
-	 * ago 2023 Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print 
+	 * Numero MEV : 2023-33 
+	 * Autore : sgioggi 
+	 * Data : 29 ago 2023 
+	 * Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
