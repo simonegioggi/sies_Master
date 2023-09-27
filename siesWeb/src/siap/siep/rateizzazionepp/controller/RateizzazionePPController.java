@@ -375,9 +375,9 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 	private List<EventoModel> reverseList(List<EventoModel> listaEventi) {
 
-		List<EventoModel> reverse = new ArrayList<EventoModel>(listaEventi);
-        Collections.reverse(reverse);
-        return reverse;
+		List<EventoModel> reverse = new ArrayList<>(listaEventi);
+		Collections.reverse(reverse);
+		return reverse;
 	}
 
 	@Override
@@ -759,10 +759,9 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		return enmRet;
 	}
-	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 	/**
-	 * Ricerca i record reatizzazione collegati al fascicolo ma non ad alcun evento, per le queli pu\F2 essere
+	 * Ricerca i record reatizzazione collegati al fascicolo ma non ad alcun evento, per le quali puo' essere
 	 * emessu un OI
 	 *
 	 * @param aIdFasc
@@ -818,5 +817,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		return lListaRate;
 	}
+	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 }

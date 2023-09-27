@@ -134,13 +134,15 @@ if (elencoStatoPagamenti.size() == 0) {
 	</tr>
 <%
 	} // end while su iterator sugli eventi
-} // end else
 %>
 	<tr>
 		<td class="lNoBord">
        		<br><INPUT class="bottone" type="submit" name="I" value="Inoltra">
        	</td>
    	</tr>
+<%
+} // end else
+%>
 </table>
 </FORM>
 </body>

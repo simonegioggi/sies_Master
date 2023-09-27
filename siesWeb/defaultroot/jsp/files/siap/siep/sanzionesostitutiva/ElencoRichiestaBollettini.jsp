@@ -14,7 +14,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <jsp:useBean id="listaRichiestaBollettini" 	scope="request" class="java.util.Vector<EventoRateizzazionePPModel>"/>
-<jsp:useBean id="modalitaPagamento" 		scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalitaPagamento" 		scope="request" class="java.util.ArrayList<String>"/>
 <jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
 <%-- MEV_2023-33: aggiunti useBean --%>
 <jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.lang.Boolean"/>
@@ -131,7 +131,7 @@ if (listaRichiestaBollettini.size() == 0) {
 			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
 		</td>
 		<td class="l">
-			<%=modalitaPagamento%>
+			<%=modalitaPagamento.get(cont)%>
 		</td>
 <%
 // MEV_2023-33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate

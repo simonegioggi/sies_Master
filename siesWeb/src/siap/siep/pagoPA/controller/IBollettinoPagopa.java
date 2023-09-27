@@ -26,7 +26,7 @@ public interface IBollettinoPagopa {
 	public void ExModificaBollettinoPagopa(BollettinoPagopaModel com) throws F3BException;
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
-			BigDecimal fasSieIdFascicolSiep) throws F3BException;
+			BigDecimal idFascicoloSiep) throws F3BException;
 
 	ByteArrayOutputStream ExGetBollettino(BigDecimal idBollettinoPagopa) throws F3BException;
 
@@ -45,5 +45,9 @@ public interface IBollettinoPagopa {
 			throws F3BException;
 
 	public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
+
+	// MEV_2023-33
+	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(
+			BigDecimal idFascicoloSiep, BigDecimal idEvento) throws F3BException;
 
 }

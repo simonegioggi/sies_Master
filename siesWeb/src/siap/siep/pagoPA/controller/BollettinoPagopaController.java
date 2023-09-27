@@ -31,7 +31,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(
-			BigDecimal fasSieIdFascicoloSiep) throws F3BException {
+			BigDecimal idFascicoloSiep) throws F3BException {
 
 		Connection c = null;
 		Vector<BollettinoPagopaModel> bpms = new Vector<>();
@@ -41,7 +41,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		try {
 			c = getDBConnection();
 			bpsdao = new BollettinoPagopaSqlDAO(c);
-			bpsdao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep, "");
+			bpsdao.ricercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicoloSiep, "");
 			bpsdao.start();
 
 			while (bpsdao.next()) {
@@ -527,6 +527,47 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		}
 
 		return com;
+	}
+
+	/**
+	 * matodo per ricerca puntuale per evento
+	 * 
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 */
+	@Override
+	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(
+			BigDecimal idFascicoloSiep, BigDecimal idEvento) throws F3BException {
+
+		Connection c = null;
+		Vector<BollettinoPagopaModel> bpms = new Vector<>();
+
+		BollettinoPagopaSqlDAO bpsdao = null;
+
+		try {
+			c = getDBConnection();
+			bpsdao = new BollettinoPagopaSqlDAO(c);
+			bpsdao.ricercaBollettinoPagopaByidFascicoloSiepIdEvento(idFascicoloSiep, idEvento);
+			bpsdao.start();
+
+			while (bpsdao.next()) {
+				BollettinoPagopaModel bpm = (BollettinoPagopaModel) bpsdao.getModel();
+				bpms.add(bpm);
+			}
+			bpsdao.stop();
+		} catch (DAOException daoEx) {
+			throw new F3BException(
+					"BollettinoPagopaController.ExricercaBollettinoPagopaByFasSieIdFascicoloSiep: Non posso leggere : "
+							+ daoEx);
+		} catch (Exception e) {
+			throw new F3BException(
+					"BollettinoPagopaController.ExricercaBollettinoPagopaByFasSieIdFascicoloSiep: " + e);
+		} finally {
+			cleanup(bpsdao);
+			cleanup(c);
+		}
+
+		return bpms;
 	}
 
 }

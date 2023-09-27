@@ -26,8 +26,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Title: ActElencoStatoPagamenti 
- * Description: Classe che mostra elenco stato pagamento bollettini PagoPA
+ * Title: ActElencoStatoPagamenti Description: Classe che mostra elenco stato pagamento bollettini PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -50,7 +49,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
 		Iterator<BollettinoPagopaModel> iterBPM = elencoStatoPagamenti.iterator();
 		BigDecimal importoPagato = new BigDecimal(0);
 		BigDecimal importoDaPagare = new BigDecimal(0);
@@ -82,46 +81,55 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 				: DateUtils.getDateToString(dataAvvenutaNotifica, "dd-MM-yyyy"));
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo, "");
+		Vector<RateizzazionePPModel> listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
+		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = new Vector<>();
+		EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
+		erppm.setEvento(enm.getEvento());
+		erppm.setListaRateizzazioniPP(listaRateizzazioni);
+		listaRichiestaBollettini.add(erppm);
+
 		if (!listaRichiestaBollettini.isEmpty()) {
-			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
-					.getListaRateizzazioniPP();
-			// EventoModel e = listaRichiestaBollettini.firstElement().getEvento();
-			setRequestAttribute("evento", enm.getEvento());
-			Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
-			String testo = "";
-			int cont = 0;
-			while (iter.hasNext()) {
-				RateizzazionePPModel rata = iter.next();
-				if (cont == 0)
-					testo = "Importo da Pagare:  <font class='cRosso'>"
-							+ StringUtils.toEuroFormat(rata.getImportoDaPagare()) + "</font> ";
-				if ("R".equals(rata.getTipoRateizzazione())) { // RATE
-					if (cont == 0) {
-						testo += " con le seguenti modalit&agrave:";
-						testo += "<ul>";
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			while (iterERPPM.hasNext()) {
+				erppm = iterERPPM.next();
+				Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
+				// EventoModel em = erppm.getEvento();
+				setRequestAttribute("evento", enm.getEvento());
+				Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
+				String testo = "";
+				int cont = 0;
+				while (iter.hasNext()) {
+					RateizzazionePPModel rata = iter.next();
+					if (cont == 0)
+						testo = "Importo da Pagare:  <font class='cRosso'>"
+								+ StringUtils.toEuroFormat(rata.getImportoDaPagare()) + "</font> ";
+					if ("R".equals(rata.getTipoRateizzazione())) { // RATE
+						if (cont == 0) {
+							testo += " con le seguenti modalit&agrave:";
+							testo += "<ul>";
+						}
+						testo += "<li><font class='cViola'>" + "" + rata.getNumeroRate() + "</font> rate da "
+								+ "<font class='cViola'>" + StringUtils.toEuroFormat(rata.getImportoRata())
+								+ "</font>";
+						if (!Utils.isNullObj(rata.getScadenzaGiorni()) /* && cont == 0 */)
+							testo += ", con scadenza pagamento entro n.ro giorni <font class='cViola'>"
+									+ rata.getScadenzaGiorni().toString()
+									+ "</font> dalla Notifica dell'Ingiunzione" + "</li>";
+						else
+							testo += "</li>";
+						if (cont == rateizzazioni.size() - 1)
+							testo += "</ul>";
+					} else { // UNICA SOLUZIONE
+						testo += " in un'unica soluzione";
+						if (!Utils.isNullObj(rata.getScadenzaGiorni()))
+							testo += ", termine di pagamento fissato entro "
+									+ rata.getScadenzaGiorni().toString()
+									+ " giorni dalla Notifica dell'Avviso di Pagamento";
 					}
-					testo += "<li><font class='cViola'>" + "" + rata.getNumeroRate() + "</font> rate da "
-							+ "<font class='cViola'>" + StringUtils.toEuroFormat(rata.getImportoRata())
-							+ "</font>";
-					if (!Utils.isNullObj(rata.getScadenzaGiorni()) /* && cont == 0 */)
-						testo += ", con scadenza pagamento entro n.ro giorni <font class='cViola'>"
-								+ rata.getScadenzaGiorni().toString()
-								+ "</font> dalla Notifica dell'Ingiunzione" + "</li>";
-					else
-						testo += "</li>";
-					if (cont == rateizzazioni.size() - 1)
-						testo += "</ul>";
-				} else { // UNICA SOLUZIONE
-					testo += " in un'unica soluzione";
-					if (!Utils.isNullObj(rata.getScadenzaGiorni()))
-						testo += ", termine di pagamento fissato entro " + rata.getScadenzaGiorni().toString()
-								+ " giorni dalla Notifica dell'Avviso di Pagamento";
+					cont++;
 				}
-				cont++;
+				setRequestAttribute("modalitaPagamento", testo);
 			}
-			setRequestAttribute("modalitaPagamento", testo);
 		}
 
 		// MEV_2023-33: aggiunta impostazione di attributo nella request per differenziare gestione rate

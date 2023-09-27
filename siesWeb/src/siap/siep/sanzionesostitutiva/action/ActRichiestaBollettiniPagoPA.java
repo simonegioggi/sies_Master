@@ -1,7 +1,9 @@
 package siap.siep.sanzionesostitutiva.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -65,47 +67,58 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL");
+		// imposto nella request
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 
 		boolean isUnico = false;
+		List<String> testi = new ArrayList<String>();
 
 		if (!listaRichiestaBollettini.isEmpty()) {
-			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
-					.getListaRateizzazioniPP();
-			Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
-			String testo = "";
-			int cont = 0;
-			while (iter.hasNext()) {
-				RateizzazionePPModel rata = iter.next();
-				if (cont == 0)
-					testo = "Importo da Pagare: " + StringUtils.toEuroFormat(rata.getImportoDaPagare()) + " ";
-				if ("R".equals(rata.getTipoRateizzazione())) { // RATE
-					if (cont == 0) {
-						testo += "in:";
-						testo += "<ul>";
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			while (iterERPPM.hasNext()) {
+				EventoRateizzazionePPModel erppm = iterERPPM.next();
+				Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
+				Iterator<RateizzazionePPModel> iterRPP = rateizzazioni.iterator();
+				String testo = "";
+				int cont = 0;
+				while (iterRPP.hasNext()) {
+					RateizzazionePPModel rata = iterRPP.next();
+					if (cont == 0)
+						testo = "Importo da Pagare: " + StringUtils.toEuroFormat(rata.getImportoDaPagare())
+								+ " ";
+					if ("R".equals(rata.getTipoRateizzazione())) { // RATE
+						if (cont == 0) {
+							testo += "in:";
+							testo += "<ul>";
+						}
+						testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + ""
+								+ StringUtils.toEuroFormat(rata.getImportoRata());
+						if (!Utils.isNullObj(rata.getScadenzaGiorni()) && cont == 0)
+							// MEV_2023-33: cambiata frase
+							testo += ", termine di pagamento della prima rata fissato entro "
+									+ rata.getScadenzaGiorni().toString()
+									+ " giorni dalla Notifica dell'Avviso di Pagamento" + "</li>";
+						else
+							testo += "</li>";
+						if (cont == rateizzazioni.size() - 1)
+							testo += "</ul>";
+					} else { // UNICA SOLUZIONE
+						testo += " in un'unica soluzione";
+						if (!Utils.isNullObj(rata.getScadenzaGiorni()))
+							testo += ", termine di pagamento fissato entro "
+									+ rata.getScadenzaGiorni().toString()
+									+ " giorni dalla Notifica dell'Avviso di Pagamento";
+						isUnico = true;
 					}
-					testo += "<li>" + "" + rata.getNumeroRate() + " rate da " + ""
-							+ StringUtils.toEuroFormat(rata.getImportoRata());
-					if (!Utils.isNullObj(rata.getScadenzaGiorni()) && cont == 0)
-						// MEV_2023-33: cambiata frase
-						testo += ", termine di pagamento della prima rata fissato entro "
-								+ rata.getScadenzaGiorni().toString()
-								+ " giorni dalla Notifica dell'Avviso di Pagamento" + "</li>";
-					else
-						testo += "</li>";
-					if (cont == rateizzazioni.size() - 1)
-						testo += "</ul>";
-				} else { // UNICA SOLUZIONE
-					testo += " in un'unica soluzione";
-					if (!Utils.isNullObj(rata.getScadenzaGiorni()))
-						testo += ", termine di pagamento fissato entro " + rata.getScadenzaGiorni().toString()
-								+ " giorni dalla Notifica dell'Avviso di Pagamento";
-					isUnico = true;
+					cont++;
 				}
-				cont++;
+				// aggiungo alla lista
+				testi.add(testo);
 			}
-			setRequestAttribute("modalitaPagamento", testo);
 		}
+
+		// imposto nella request
+		setRequestAttribute("modalitaPagamento", testi);
 
 		// MEV_2023-33: aggiunte impostazioni di attributo
 		boolean isSoloPrimaRata = false;

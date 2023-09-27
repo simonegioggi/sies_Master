@@ -12,8 +12,7 @@ import siap.dao.SIAPSqlDAO;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 
 /**
- * Title: BollettinoPagopaSqlDAO 
- * Description: Classe SqlDAO per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaSqlDAO Description: Classe SqlDAO per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -41,19 +40,16 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " BP.COD_OPERATORE_AGGIORNAMENTO, BP.DATA_AGGIORNAMENTO,"
 				+ " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
 				+ " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO, BP.STATO_PAGOPA,"
-				+ " BP.ERRORE_PAGOPA,"
-				+ " BP.DATA_GENERAZIONE_BOLLETTINO, "
+				+ " BP.ERRORE_PAGOPA," + " BP.DATA_GENERAZIONE_BOLLETTINO, "
 				+ " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO"
 				+ " FROM BOLLETTINO_PAGOPA BP"
 				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE"
 				+ " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE')"
 				+ " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE"
 				// MEV_2023-33: aggiunte condizioni per storicizzazione eventi
-				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO'), RATEIZZAZIONE_PP R, EVENTO E"
-				+ " WHERE 1 = 1"
+				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO'), RATEIZZAZIONE_PP R, EVENTO E" + " WHERE 1 = 1"
 				+ "	AND BP.RAT_ID_RATEIZZAZIONE_PP = R.ID_RATEIZZAZIONE_PP"
-				+ "	AND R.EVE_ID_EVENTO = E.ID_EVENTO"
-				+ "	AND E.FLAG_DOCUMENTO_REGISTRATO <> 'A'";
+				+ "	AND R.EVE_ID_EVENTO = E.ID_EVENTO" + "	AND E.FLAG_DOCUMENTO_REGISTRATO <> 'A'";
 
 		// valore di ritorno
 		return s;
@@ -98,23 +94,22 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		return aModel;
 	}
 
-	
 	public void ricercaBollettinoPagopaByIdEvento(BigDecimal aIdEvento) throws DAOException {
 		String s = getSqlQuery();
 		s += " AND R.EVE_ID_EVENTO = " + aIdEvento;
-		s += " ORDER BY BP.PROG_RATA ";
+		s += " ORDER BY BP.PROG_RATA";
 		setStatement(s);
 	}
-	
-	public void ricercaBollettinoPagopaByFasSieIdFascicoloSiep(BigDecimal fasSieIdFascicoloSiep, String chiamante)
-			throws DAOException {
+
+	public void ricercaBollettinoPagopaByFasSieIdFascicoloSiep(BigDecimal fasSieIdFascicoloSiep,
+			String chiamante) throws DAOException {
 
 		String s = getSqlQuery();
 		s += setCondizioniByFasSieIdFascicoloSiep(fasSieIdFascicoloSiep);
-		
+
 		// MEV_2023-33: si cambia l'ordinamento
 		// s += " ORDER BY BP.ID_BOLLETTINO_PAGOPA";
-		s += " ORDER BY BP.PROG_RATA ";
+		s += " ORDER BY BP.PROG_RATA";
 		// MEV_2023-33: FINE
 		setStatement(s);
 
@@ -208,16 +203,15 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inScadenzaTraGiorni
 	 * @param controllateDaGiorni
 	 * @param generatiDaGiorni
 	 * @param controllarePerGiorni
 	 * @throws DAOException
 	 */
-	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni
-			, int generatiDaGiorni, int controllarePerGiorni)
-			throws DAOException {
+	public void ricercaDebitoriConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni,
+			int generatiDaGiorni, int controllarePerGiorni) throws DAOException {
 
 		String s = "SELECT DISTINCT CODICE_FISCALE, CODICE_DISTRETTO FROM BOLLETTINO_PAGOPA" + " WHERE 1 = 1";
 		s += " AND CODICE_FISCALE IS NOT NULL"; // Codice fiscale Valorizzato
@@ -226,23 +220,24 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 
 		if (inScadenzaTraGiorni > 0) {
 			s += " AND (    DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
-			s +=      " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
+			s += " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
 			if (generatiDaGiorni > 0 && controllarePerGiorni > 0) {
-				s +=      " OR (    DATA_SCADENZA IS NULL ";
-				s +=          " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+") ";
-				s +=          " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+" + "+controllarePerGiorni+" ) ";
-				s +=	     " )";
+				s += " OR (    DATA_SCADENZA IS NULL ";
+				s += " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + ") ";
+				s += " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + " + "
+						+ controllarePerGiorni + " ) ";
+				s += " )";
 			}
-			s +=	  ")";
-		}
-		else if (inScadenzaTraGiorni==0 && generatiDaGiorni > 0 && controllarePerGiorni > 0) {
-			// In assenza del vincolo sulla data scadenza posso usare comunque il vincolo 
+			s += ")";
+		} else if (inScadenzaTraGiorni == 0 && generatiDaGiorni > 0 && controllarePerGiorni > 0) {
+			// In assenza del vincolo sulla data scadenza posso usare comunque il vincolo
 			// sulla DATA_GENERAZIONE_BOLLETTINO.
 			// n.b. anche in presenza della data scadenza sul bollettino.
-			s += " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+") ";
-			s += " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + "+generatiDaGiorni+" + "+controllarePerGiorni+" ) ";
+			s += " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + ") ";
+			s += " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + " + "
+					+ controllarePerGiorni + " ) ";
 		}
-		
+
 		if (controllateDaGiorni > 0) {
 			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")";
 		}
@@ -280,9 +275,8 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		// info per il log
 		siesLogger.info("Query >>>>>>>>> " + s);
 	}
-	
-	
-	public void ricercaBollettiniPagopaByIdInvocazione (BigDecimal idInvocazione) throws DAOException {
+
+	public void ricercaBollettiniPagopaByIdInvocazione(BigDecimal idInvocazione) throws DAOException {
 
 		String lStatement = new String("");
 
@@ -294,30 +288,35 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " BP.COD_OPERATORE_AGGIORNAMENTO, BP.DATA_AGGIORNAMENTO,"
 				+ " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
 				+ " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO"
-				// Sostituiso lo STATO_PAGOPA ultimo memorizzato sul bollettino con il dato storicizzato sulla BOLLETTINO_BATCH_PAGOPA
-				+ ", BOLLETTINO_BATCH_PAGOPA.STATO_PAGOPA, "
-				+ " BP.ERRORE_PAGOPA,"
+				// Sostituiso lo STATO_PAGOPA ultimo memorizzato sul bollettino con il dato storicizzato sulla
+				// BOLLETTINO_BATCH_PAGOPA
+				+ ", BOLLETTINO_BATCH_PAGOPA.STATO_PAGOPA, " + " BP.ERRORE_PAGOPA,"
 				+ " BP.DATA_GENERAZIONE_BOLLETTINO, "
 				+ " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO ";
-		
-		lStatement +=  " FROM BOLLETTINO_PAGOPA BP"
+
+		lStatement += " FROM BOLLETTINO_PAGOPA BP"
 				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE "
 				+ " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE') "
 				+ " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE "
-				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO') " 
-				+ " , BOLLETTINO_BATCH_PAGOPA ";
-		
+				+ " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO') " + " , BOLLETTINO_BATCH_PAGOPA ";
+
 		lStatement += " WHERE 1 = 1";
-		lStatement +=   " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_BOLLETTINO_PAGOPA = BP.ID_BOLLETTINO_PAGOPA ";
-		lStatement +=   " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_INVOCAZIONE_PAGOPA = "+idInvocazione; 
+		lStatement += " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_BOLLETTINO_PAGOPA = BP.ID_BOLLETTINO_PAGOPA ";
+		lStatement += " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_INVOCAZIONE_PAGOPA = " + idInvocazione;
 
-		lStatement +=   " ORDER BY BP.PROG_RATA ";
-		
+		lStatement += " ORDER BY BP.PROG_RATA";
+
 		setStatement(lStatement);
-
-		// info per il log
-		//pagoPaLogger.info("Query >>>>>>>>> " + lStatement);
 	}
-	
+
+	public void ricercaBollettinoPagopaByidFascicoloSiepIdEvento(BigDecimal idFascicoloSiep,
+			BigDecimal idEvento) {
+
+		String s = getSqlQuery();
+		s += setCondizioniByFasSieIdFascicoloSiep(idFascicoloSiep);
+		s += " AND R.EVE_ID_EVENTO = " + idEvento;
+		s += " ORDER BY BP.PROG_RATA";
+		setStatement(s);
+	}
 
 }
