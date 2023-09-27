@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
+import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -49,15 +50,15 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		codUtente = getCodUtenteConnesso();
 		codUfficio = getCodUfficioUtenteConnesso();
 
-		// BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-		// siesLogger.debug("ID_EVENTO = " + idEvento);
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);
+		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		siesLogger.debug("ID_EVENTO = " + idEvento);
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		// Ricerca lo stato dei pagamenti per id fascicolo
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
 		boolean isElencoEmpty = elencoStatoPagamenti.isEmpty();
 		// Ricerca i pagamenti per idFascicolo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -77,7 +78,8 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 				// NOTIFICA AL CONDANNATO
 				if (nms[i].getAvvIdAvvocatoFascicoloSiep() == null
 						&& nms[i].getIdCivilmenteObbligato() == null)
-					dataNotificaCondannato = DateUtils.getDateToString(nms[i].getDataAvvenutaNotifica(), "dd/MM/yyyy");
+					dataNotificaCondannato = DateUtils.getDateToString(nms[i].getDataAvvenutaNotifica(),
+							"dd/MM/yyyy");
 			}
 			setRequestAttribute("dataNotificaCondannato", dataNotificaCondannato);
 
@@ -95,7 +97,8 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 						progressivoRata++;
 					}
 				}
-				elencoStatoPagamenti = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				elencoStatoPagamenti = ibp
+						.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
 			}
 		}
 

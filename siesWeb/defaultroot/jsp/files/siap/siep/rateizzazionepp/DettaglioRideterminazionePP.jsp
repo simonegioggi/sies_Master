@@ -402,6 +402,19 @@ for (int i = 0; i < lListaNotObbligati.size(); i++) {
 } // end ciclo for
 %>
 </table>
+<%
+if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
+%>   
+<table>
+	<tr>
+    	<td class="L">
+      		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">Visualizza stato notifiche</a>
+    	</td>
+	</tr>
+</table>
+<%
+}
+%>
 <br>
 <div align=left style="visibility:hidden" id="upld">
 <FORM name="comandi" enctype="multipart/form-data" method="post" onSubmit="return controllaUpload();">
