@@ -21,10 +21,17 @@
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
+  <script type="text/javascript">
+  function CancellaRinnovo(idRinnovo){
+      if (window.confirm("Confermi l'eliminazione del Rinnovo?")) {
+        document.cancellaRinnovo.<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>.value = idRinnovo;
+        document.cancellaRinnovo.submit();
+      }
+  }
+  </script>
 </head>
 
 <body class="corpo">
-  <form name="LoadOmessaNotifica" method="POST" action="/jsp/Main.jsp">
     <table>
       <tr>
         <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
@@ -41,10 +48,13 @@
               || "N".equals(rinnovo.getFlagDocumentoRegistrato())
              )
         {%>
-        <!-- BOTTONE DI STAMPA -->
         <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
           <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaRinnovoRicercheOIPP&idrinnovo="+rinnovo.getIdRinnovo()%>"/>
         </jsp:include>
+        <td class="LBG">
+          <a href="Javascript:CancellaRinnovo('<%=rinnovo.getIdRinnovo()%>')">
+            <img align="middle" src="/images/delete24.gif" alt="cancella" width="24" height="24" border="0"></a>      
+        </td>        
         <%}%>
         <td class="LBG">
           <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovoRicercheOIPP&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=ordineIngiunzione.getEvento().getIdEvento()%>">
@@ -52,6 +62,10 @@
         </td>
       </tr>
     </table>
+    
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="cancellaRinnovo">
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActCancellaRinnovoRicercheOIPP">
+  <input type="HIDDEN" name="<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>" value="">
 </form>
 
   <br>

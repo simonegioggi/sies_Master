@@ -441,6 +441,62 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return listaEventoRateizzazioniPP;
 	}
 
+  /**
+   * 2023.09.27 
+   * @param idFascicolo
+   * @return
+   * @throws F3BException
+   */
+  public Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo, String[] motivi, boolean soloValidati)
+        throws F3BException {
+
+      Connection c = null;
+
+      RateizzazionePPSqlDAO rppsdao = null;
+      EventoSqlDAO esdao = null;
+
+      // Ricerca gli eventi per id Fascicolo
+      EventoModel em = new EventoModel();
+      if (soloValidati)
+        em.setFlagDocumentoRegistrato("S");
+      em.setFasSieIdFascicoloSiep(idFascicolo);
+      //String[] motivi = new String[] { "0622", "1307", "1308" };
+      // String[] tipi = new String[] { "04", "06" };
+      em.setCodTipoEvento("01");
+
+      // Ricerca gli eventi per id Fascicolo
+      Vector<EventoRateizzazionePPModel> listaEventoRateizzazioniPP = new Vector<>();
+
+      try {
+        c = getDBConnection();
+        esdao = new EventoSqlDAO(c);
+        esdao.ricercaEventoPerMotivoOrderDesc(motivi, em);
+        List<EventoModel> listaEventi = new ArrayList(esdao.getModels());
+        esdao.stop();
+
+        Iterator<EventoModel> iter = listaEventi.iterator();
+        while (iter.hasNext()) {
+          EventoModel evm = iter.next();
+          Vector<RateizzazionePPModel> listaRateizzazionePP = exRicercaRateizzazioniByIdEvento(
+              evm.getIdEvento());
+          // Aggiungo l'evento
+          EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
+          erppm.setEvento(evm);
+          erppm.setListaRateizzazioniPP(listaRateizzazionePP);
+          listaEventoRateizzazioniPP.add(erppm);
+        }
+      } catch (DAOException daoEx) {
+        siesLogger.error("DAOException: ", daoEx);
+        throw new F3BException("RateizzazionePPController.exRicercaEventiRateizzazionePP: " + daoEx);
+      } finally {
+        cleanup(rppsdao);
+        cleanup(esdao);
+        cleanup(c);
+      }
+
+      return listaEventoRateizzazioniPP;
+    }	
+	
 	/*
 	 * ISSUE MEV : aggiunti metodi per insert, update, print 
 	 * Numero MEV : 2023-33 

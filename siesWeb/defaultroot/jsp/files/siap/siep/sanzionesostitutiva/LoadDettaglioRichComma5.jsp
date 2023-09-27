@@ -33,8 +33,12 @@
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
   <script language="JavaScript">
-
-
+    function CancellaRichiesta(idRinnovo){
+      if (window.confirm("Confermi l'eliminazione della Richiesta?")) {
+        document.cancellaRichiesta.<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>.value = idRinnovo;
+        document.cancellaRichiesta.submit();
+      }
+    }
   </script>
 </head>
 
@@ -48,13 +52,17 @@
       </td>
       <td class="LBG">
         <font class="label">Funzione :</font>&nbsp;
-        <font class="campo">Dettaglio Richiesta Informazioni Comma 5</font>
+        <font class="campo">Dettaglio Richiesta Informazioni Comma 5 &nbsp;</font>
       </td>
       
       <%if ( "N".equals(rinnovo.getFlagDocumentoRegistrato()) || rinnovo.getFlagDocumentoRegistrato()==null ) { %>
          <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
            <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaRichInfoComma5&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+rinnovo.getIdRinnovo()%>"/>
          </jsp:include>
+        <td class="LBG">
+          <a href="Javascript:CancellaRichiesta('<%=rinnovo.getIdRinnovo()%>')">
+            <img align="middle" src="/images/delete24.gif" alt="cancella" width="24" height="24" border="0"></a>      
+        </td>           
       <%}%>
       <td class="LBG">
         <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRichInfoComma5&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=ordineIngiunzione.getEvento().getIdEvento()%>">
@@ -67,6 +75,11 @@
     <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
 
+  <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="cancellaRichiesta">
+    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActCancellaRichInfoComma5">
+    <input type="HIDDEN" name="<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>" value="">
+  </form>
+  
 <table>
   <tr>
     <td class="L" colspan="5">

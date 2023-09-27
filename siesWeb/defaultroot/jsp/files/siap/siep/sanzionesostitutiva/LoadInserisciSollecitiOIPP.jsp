@@ -36,6 +36,21 @@ PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica()
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 %>
 
+<% 
+   int contaRinnovi = listaSolleciti.size();
+   int contaDaValidare = 0;
+   for (int i = 0; i < listaSolleciti.size(); i++) 
+   {
+     RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
+     if (lRinnovo.getFlagDocumentoRegistrato()==null 
+          || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
+       contaDaValidare++; 
+   }
+   String strDaValidare = "";
+   if (contaDaValidare > 0)
+     strDaValidare = " (da validare "+contaDaValidare+")";
+%>
+
 <html>
   <head>
     <title>[S.I.E.S.] - Gestione Ordine Ingiunzione </title>
@@ -102,11 +117,20 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         }
 
         return true;
-      }      
+      }
+      
+      function gestisciCampi(){
+    	  <% if (contaDaValidare>0) { %>
+    	  $('#divInserimento').find("input, select, textarea").attr('disabled','disabled');
+    	  $('#divInserimento').find("img").hide();
+    	  <% } %>
+      }
+      
+      
     </script>
   </head>
   
-<body class="corpo" onLoad="radio();">
+<body class="corpo" onLoad="gestisciCampi();">
   <table>
     <tr>
       <td class="LBG">
@@ -174,21 +198,9 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   </table>
 
 <br>
-  <% 
-     int contaRinnovi = listaSolleciti.size();
-     int contaDaValidare = 0;
-     for (int i = 0; i < listaSolleciti.size(); i++) 
-     {
-       RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
-       if (lRinnovo.getFlagDocumentoRegistrato()==null 
-            || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
-         contaDaValidare++; 
-     }
-     String strDaValidare = "";
-     if (contaDaValidare > 0)
-       strDaValidare = " (da validare "+contaDaValidare+")";
-  %>
 
+
+<!--  
   <table>
     <tr>
       <td class="LGB">
@@ -196,8 +208,21 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       </td>
     </tr>
   </table>
+-->
+
+<% if (contaDaValidare > 0) {  %>
+  <table>
+    <tr>
+      <td class="l" style="color:red;">
+        Attenzione, esiste un sollecito ancora da validare
+      </td>
+    </tr>
+  </table>
+<% } %>  
+
+
   
-  <div id="divListaSolleciti" style="width: 100%; display:none;" >
+  <div id="divListaSolleciti" style="width: 100%; display:block;" >
     <table width="100%">
       <tr>
         <td class="int">Tipo Sollecito</td>
@@ -206,15 +231,18 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <td class="int">Validato</td>
         <td class="int" style="width:50px;">Azioni</td>
       </tr>
+      <% if (contaRinnovi == 0) {  %>
+      <tr>
+        <td class="L" colspan="5">Nessun Sollecito presente per il provvedimento selezionato</td>
+      </tr>
+      <% } %>       
+      
       <% 
       for (int i = 0; i < listaSolleciti.size(); i++) 
       {
         RinnovoModel lRinnovo = (RinnovoModel) listaSolleciti.elementAt(i);
         String lActDettaglio = "siap.siep.sanzionesostitutiva.action.ActLoadDettaglioSollecitiOIPP";
         lActDettaglio += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
-        String lActCancella = "siap.siep.sanzionesostitutiva.action.ActCancellaSollecitiOIPP";
-        lActCancella += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
-        String lActStampa = "";
       %>
       <tr>
         <td class="c"><%=StringUtils.toStringJSP(lRinnovo.getDescrTipoRinnovo())%></td>
@@ -224,7 +252,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <% if ("S".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
           <img  alt="Validato" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0"></a>
         <% } else { %>
-        &nbsp;
+        &nbsp;<font style="color:red;">(da validare)</font>
         <% } %>
         </td>
         <td class="r" nowrap>
@@ -237,14 +265,17 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
             <img  alt="Stampa" src="<%=IWebConstants.IMAGES_DIR%>print.gif" border="0"></a>
           <% } %>
           <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lActDettaglio%>">
-            <img  alt="Dattaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>
+            <img  alt="Dettaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>
         </td>
       </tr>
       <% } %>
     </table>
   </div>
+  
   <br>
 
+
+<div id="divInserimento">
   <table  width=100%>
     <tr>
       <td class="c">Sollecito Autorità di Polizia &nbsp;<input type="radio" name="TipoSollecito" value="SP" checked >
@@ -306,11 +337,11 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   <table>
     <tr>
       <td>
-        <input class="bottone" type="submit" name="INSERISCI" value="Conferma" >
+        <input class="bottone" type="submit" name="INSERISCI" value="Conferma">
       </td>
     </tr>
   </table>
-
+</div>  
 </form>
 
 

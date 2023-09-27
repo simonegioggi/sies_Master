@@ -8,6 +8,7 @@
 <%@ page import="java.util.Vector"%>
 
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
+<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
 <%@ page import="siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP"%>
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
@@ -36,7 +37,7 @@
 
 function cancellaRate() {
   var lAzione = "siap.siep.rateizzazionepp.action.ActCancellaRateizzazione";
-  var msgConfirm = "Si vuole procedere con la cancellazione di tutte le rate?"; 
+  var msgConfirm = "Si vuole procedere alla cancellazione della Modalità di pagamento non collegata ad alcun provvedimento?"; 
   msgConfirm = msgConfirm + " Gli eventuali bollettini gia' emessi verranno cancellati."
   
   if (window.confirm(msgConfirm)) {
@@ -168,14 +169,17 @@ while (IteRate.hasNext()) {
   conta++;
   RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
   String spunta = "V";
-  String annullato = "";
   if ("A".equals(em.getFlagDocumentoRegistrato())) {
     spunta = "TickRed";
-    annullato = " (annullato)";
   }
-  else if (!"S".equals(em.getFlagDocumentoRegistrato())) {
-    annullato = " (in compilazione)";
-  }
+  
+  String actDettaglio = "";
+  if ("0622".equals(em.getCodMotivo()))
+    actDettaglio = "siap.siep.sanzionesostitutiva.action.ActLoadDettaglioOrdineIngiunzione";
+  else if ("1307".equals(em.getCodMotivo()))
+    actDettaglio = "siap.siep.rateizzazionepp.action.ActDettaglioRideterminazionePP";
+  else if ("1308".equals(em.getCodMotivo()))
+    actDettaglio = "siap.siep.rateizzazionepp.action.????";
 %>
   
 <%  if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {%>
@@ -192,22 +196,18 @@ while (IteRate.hasNext()) {
     <% } %> 
 
     <% if ( em.getFlagDocumentoRegistrato()==null ) { %>
-    <td class="C" nowrap> In Inserimento</td>
+    <td class="C" nowrap><a href="<%=IWebConstants.PG_MAIN %>?<%=IWebConstants.ACTION_FIELD%>=<%=actDettaglio%>&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=em.getIdEvento()%>">
+     <img  alt="Dettaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"><br>In Inserimento</a></td>
     <% } else if ("S".equals(em.getFlagDocumentoRegistrato())) { %>
     <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
     <% } else if ("A".equals(em.getFlagDocumentoRegistrato())) { %>
-    <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>TickRed.gif"> (annullato)</td>
+    <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>TickRed.gif"><br>(annullato)</td>
     <% } %>      
   </tr>
 <%
   } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) {
 %>
   <tr>
-  <!--  
-    <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
-    <td class="L" nowrap><font class="label"> rate da </font></td>
-    <td class="R" nowrap><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>   
-  -->  
     <td class="L">
       <font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font>
       <font class="label"> rate da </font>
@@ -228,11 +228,12 @@ while (IteRate.hasNext()) {
     <% } %> 
 
     <% if ( em.getFlagDocumentoRegistrato()==null ) { %>
-    <td class="C" nowrap> In Inserimento</td>
+    <td class="C" nowrap><a href="<%=IWebConstants.PG_MAIN %>?<%=IWebConstants.ACTION_FIELD%>=<%=actDettaglio%>&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=em.getIdEvento()%>">
+     <img  alt="Dettaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"><br>In Inserimento</a></td>
     <% } else if ("S".equals(em.getFlagDocumentoRegistrato())) { %>
     <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>V.gif"></td>
     <% } else if ("A".equals(em.getFlagDocumentoRegistrato())) { %>
-    <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>TickRed.gif"> (annullato)</td>
+    <td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%>TickRed.gif"><br>(annullato)</td>
     <% } %>
   </tr>    
 <%
@@ -310,11 +311,6 @@ while (IteRate.hasNext()) {
   } else if (lTipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) {
 %>
   <tr>
-    <!--  
-    <td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font></td>
-    <td class="L" nowrap><font class="label"> rate da </font></td>
-    <td class="R" nowrap><font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>   
-    -->
     <td class="L">
       <font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font>
       <font class="label"> rate da </font>

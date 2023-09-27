@@ -34,8 +34,19 @@
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
 PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
-// LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+%>
+
+<% 
+   int contaRinnovi = listaRinnovi.size();
+   int contaDaValidare = 0;
+   for (int i = 0; i < listaRinnovi.size(); i++) 
+   {
+     RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
+     if (lRinnovo.getFlagDocumentoRegistrato()==null 
+          || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
+       contaDaValidare++; 
+   }
 %>
 
 <html>
@@ -74,6 +85,19 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
         var lverbale = <%=verbale.getIdVerbale()%>;
 
+        if(lverbale == null && verbaleVVR=='0') {
+            if (window.confirm("Non Esiste Nessun Verbale Vane Ricerche Associato all'Ordine di Ingiunzione.\n\t Vuoi andare al Verbale Vane Ricerche ?"))
+            {
+               var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
+               window.location.href=str;
+            }
+            else {
+            	document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked=true;
+            	//document.LoadInserisciRinnovoRicercheOIPP.Notifica[0].disabled=true;
+              verbaleVVR='1';
+            }
+        }
+        
         if(document.LoadInserisciRinnovoRicercheOIPP.Notifica[0].checked)
         {
           <%-- Omessa Notifica Forza di Polizia --%>
@@ -83,10 +107,24 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 
           nodeFor.style.display = "block";
           
+          if(lverbale == null) {
+              if (window.confirm("Non Esiste Nessun Verbale Vane Ricerche Associato all'Ordine di Ingiunzione. Non è possibile registrare 'Omessa Notifica Forza di Polizia'\n\t Vuoi andare al Verbale Vane Ricerche ?"))
+              {
+                 var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
+                 window.location.href=str;
+              }
+              else {
+                document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked=true;
+                radio();
+                //document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].fireEvent("onchange");
+                return;
+              }
+          }
+                    
           if(document.LoadInserisciRinnovoRicercheOIPP.Rinnovo[0].checked)
           {
             nodeDel.style.display = 'none';
-            
+
             document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>.disabled = false;
             document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.disabled = false;
             document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>.disabled = false;
@@ -118,17 +156,6 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
             document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>.value = "";
             document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>.value = "";
           }
-
-          if(lverbale == null && verbaleVVR=='0') {
-             if (window.confirm("Non Esiste Nessun Verbale Vane Ricerche Associato all'Ordine di Ingiunzione.\n\t Vuoi andare al Verbale Vane Ricerche ?"))
-             {
-                var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
-                window.location.href=str;
-             }
-             else
-            	 verbaleVVR='1';
-          }
-          
         } else {
           <%-- Omessa Notifica Ufficiali Giudiziari --%>
           document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RELATA%>.value = giorno;
@@ -221,6 +248,8 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       }
       
       function Verify() {        
+    	  var lverbale = <%=verbale.getIdVerbale()%>;
+    	  
         if(document.LoadInserisciRinnovoRicercheOIPP.Notifica[0].checked)
         {
           if(document.LoadInserisciRinnovoRicercheOIPP.Rinnovo[0].checked)
@@ -351,10 +380,17 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         
         return true;   
       }
+      
+      function gestisciCampi(){
+          <% if (contaDaValidare>0) { %>
+          $('#divInserimento').find("input, select, textarea").attr('disabled','disabled');
+          $('#divInserimento').find("img").hide();
+          <% } %>
+      }      
     </script>
   </head>
   
-<body class="corpo" onLoad="radio();">
+<body class="corpo" onLoad="radio();gestisciCampi();">
   <table>
     <tr>
       <td class="LBG">
@@ -422,30 +458,18 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   </table>
 
 <br>
-  <% 
-     int contaRinnovi = listaRinnovi.size();
-     int contaDaValidare = 0;
-     for (int i = 0; i < listaRinnovi.size(); i++) 
-     {
-       RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
-       if (lRinnovo.getFlagDocumentoRegistrato()==null 
-            || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
-         contaDaValidare++; 
-     }
-     String strDaValidare = "";
-     if (contaDaValidare > 0)
-       strDaValidare = " (da validare "+contaDaValidare+")";
-  %>
 
+<% if (contaDaValidare > 0) {  %>
   <table>
     <tr>
-      <td class="LGB">
-        <a href="Javascript:ListaRinnovi();">Elenco Notifiche Precedenti (<%=contaRinnovi%>)<%=strDaValidare%></a>
+      <td class="l" style="color:red;">
+        Attenzione, esiste un rinnovo ancora da validare
       </td>
     </tr>
   </table>
+<% } %>  
   
-  <div id="divListaRinnovi" style="width: 100%; display:none;" >
+  <div id="divListaRinnovi" style="width: 100%; display:block;" >
     <table width="100%">
       <tr>
         <td class="int">Tipo Rinnovo</td>
@@ -454,15 +478,19 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <td class="int">Validato</td>
         <td class="int" style="width:50px;">Azioni</td>
       </tr>
+      
+      <% if (contaRinnovi == 0) {  %>
+      <tr>
+        <td class="L" colspan="5">Nessun Sollecito presente per il provvedimento selezionato</td>
+      </tr>
+      <% } %>
+            
       <% 
       for (int i = 0; i < listaRinnovi.size(); i++) 
       {
         RinnovoModel lRinnovo = (RinnovoModel) listaRinnovi.elementAt(i);
         String lActDettaglio = "siap.siep.sanzionesostitutiva.action.ActLoadDettaglioRinnovoRicercheOIPP";
         lActDettaglio += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
-        String lActCancella = "siap.siep.sanzionesostitutiva.action.ActCancellaRinnovoRicercheOIPP";
-        lActCancella += "&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+lRinnovo.getIdRinnovo();
-        String lActStampa = "";
         
         String descRinnovo = "";
         if ("A".equals(lRinnovo.getCodTipoRinnovo()))
@@ -479,7 +507,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <% if ("S".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
           <img  alt="Validato" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0"></a>
         <% } else { %>
-        &nbsp;
+        &nbsp;<font style="color:red;">(da validare)</font>
         <% } %>
         </td>
         <td class="r" nowrap>
@@ -492,7 +520,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
             <img  alt="Stampa" src="<%=IWebConstants.IMAGES_DIR%>print.gif" border="0"></a>
           <% } %>
           <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lActDettaglio%>">
-            <img  alt="Dattaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>
+            <img  alt="Dettaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>
         </td>
       </tr>
       <% } %>
@@ -500,6 +528,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   </div>
   <br>
 
+<div id="divInserimento">
   <table  width=100%>
     <tr>
       <td class="c">Omessa Notifica Forza di Polizia &nbsp;<input type="radio" name="Notifica" value="FP" checked  onClick="radio();">
@@ -725,33 +754,10 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   </table>
 </div>
 
-</form>
-
-<%
-// ==============================================================
-//
-// ==============================================================
-%>
-<div id="divNotifica" style="width: 100%; display:none; " >
-  <table width="100%">
-    <tr>
-       <td class="l">Ufficiali Giudiziari delegati in</td>
-       <td class="L">
-          <input title="Luogo" type="text" name="<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO_UG%>"  maxlength="35" size="35">
-          <a href="Javascript:ListaComuni('LoadInserisciRinnovoRicercheOIPP','<%= ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO_UG%>');">
-          <img src="/images/filefolder.gif" border=0>
-          </a>
-       </td>
-    </tr>
-    <tr>
-       <td class="l">Luogo Nuova Notifica</td>
-       <td class="L">
-          <input title="Luogo" type="text" name="<%= ICostantiRinnovo.CAMPO_LUOGO_NUOVA_NOTIFICA%>"  maxlength="35" size="35">
-       </td>
-    </tr>
-  </table>
 </div>
 </form>
+
+
 
   <script language="JavaScript" type="text/javascript">
     var frmvalidator = new Validator("LoadInserisciRinnovoRicercheOIPP");  

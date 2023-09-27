@@ -50,4 +50,6 @@ public interface IRateizzazionePP {
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
 			String motivo, String validato) throws F3BException;
 
+  public Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo, String[] motivi, boolean soloValidati)
+      throws F3BException;
 }

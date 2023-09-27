@@ -50,9 +50,12 @@ public class ActLoadDettagloRateizzazione extends ActionSiap implements ICostant
 		// 2023.09.19 - Si modifca la logica. Vanno recuperati gli OI e le rate raggruppate per OI + le rate ancora libere
 		// se non ci sono dati  e provengo dalla combo del dettaglio giro al chiamata alla Act di inserimento
     IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+//    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+//        .exRicercaEventoRateizzazionePP(fsm.getIdFascicoloSiep(), "",null);
+    String[] listaCodici = new String[] { "0622", "1307", "1308" };
     Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-        .exRicercaEventoRateizzazionePP(fsm.getIdFascicoloSiep(), "",null);
-	
+        .exRicercaEventiRateizzazionePP(fsm.getIdFascicoloSiep(), listaCodici ,false);
+    
     // Inverto l'ordine degli OI
     Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzioneOrder = new Vector<EventoRateizzazionePPModel> ();
     for (EventoRateizzazionePPModel modelOI : listaOrdiniIngiunzione) {

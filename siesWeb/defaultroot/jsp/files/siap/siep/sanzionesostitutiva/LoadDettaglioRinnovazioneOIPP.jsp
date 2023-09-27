@@ -20,9 +20,23 @@
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
+  <script language="JavaScript">
+    function CancellaRinnovo(idRinnovo){
+      if (window.confirm("Confermi l'eliminazione della Rinnovazione?")) {
+        document.cancellaRinnovo.<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>.value = idRinnovo;
+        document.cancellaRinnovo.submit();
+      }
+    }
+  </script>
 </head>
 
 <body class="corpo">
+
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="cancellaRinnovo">
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActCancellaRinnovazioneOIPP">
+  <input type="HIDDEN" name="<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>" value="">
+</form>
+
   <form name="LoadOmessaNotifica" method="POST" action="/jsp/Main.jsp">
     <table>
       <tr>
@@ -36,9 +50,13 @@
           <%}%>
         </td>
         <%if ("N".equals(rinnovo.getFlagDocumentoRegistrato()) || rinnovo.getFlagDocumentoRegistrato()==null ) {%>
-         <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
+        <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
            <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaRinnovazioneOIPP&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+rinnovo.getIdRinnovo()%>"/>
-         </jsp:include>
+        </jsp:include>
+        <td class="LBG">
+          <a href="Javascript:CancellaRinnovo('<%=rinnovo.getIdRinnovo()%>')">
+            <img align="middle" src="/images/delete24.gif" alt="cancella" width="24" height="24" border="0"></a>      
+        </td>           
         <%}%>
         <td class="LBG">
 	        <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovazioneOIPP&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=ordineIngiunzione.getEvento().getIdEvento()%>">
@@ -77,19 +95,14 @@
         </td>
       </tr>     
      
-      <%if(rinnovo.getNote() != null){%>
       <tr>
         <td class="l">Indirizzo</td>
-        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(rinnovo.getNote())%></font> </td>
+        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(rinnovo.getNote(),"&nbsp;")%></font> </td>
       </tr>
-      <%}%>
-      
-      <%if(rinnovo.getNuovoLuogoNotifica() != null) {%>
       <tr>
         <td class="l">Luogo Nuova Notifica</td>
-        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(rinnovo.getNuovoLuogoNotifica())%></font> </td>
+        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(rinnovo.getNuovoLuogoNotifica(),"&nbsp;")%></font> </td>
       </tr>
-      <% } %>
     </table>
   </form>
 

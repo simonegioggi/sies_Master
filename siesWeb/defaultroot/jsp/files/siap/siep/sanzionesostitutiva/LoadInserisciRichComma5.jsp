@@ -35,6 +35,25 @@ PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica()
 AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 %>
 
+<% 
+   int contaRinnovi = 0;  
+   int contaDaValidare = 0;   
+   for (int i = 0; i < ordineIngiunzione.getNotifiche().length; i++) {
+     NotificaModel lNotMod = ordineIngiunzione.getNotifiche()[i];
+ 
+     Vector lListaRinnovi = lNotMod.getListaRinnovi();
+     
+     Iterator <RinnovoModel> iterRinnovi = lListaRinnovi.iterator();
+     while (iterRinnovi.hasNext()){
+       contaRinnovi++;
+       RinnovoModel lRinnovo = iterRinnovi.next();   
+       if (lRinnovo.getFlagDocumentoRegistrato()==null 
+           || lRinnovo.getFlagDocumentoRegistrato().equals("N") )
+        contaDaValidare++;       
+     }
+   }
+%>
+
 <html>
   <head>
     <title>[S.I.E.S.] - Richiesta Informazioni Comma 5</title>
@@ -44,7 +63,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
     <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
     <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
     <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
-      
+    <script language="JavaScript" src="<%=IWebConstants.JS_JQUERY%>"></script>  
     <script language="JavaScript">
     
       var desktop;
@@ -169,10 +188,17 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         
         return true;
       }
+      
+      function gestisciCampi(){
+          <% if (contaDaValidare>0) { %>
+          $('#divInserimento').find("input, select, textarea").attr('disabled','disabled');
+          $('#divInserimento').find("img").hide();
+          <% } %>
+      }      
     </script>
   </head>
 
-<body class="corpo" onLoad="radio();">
+<body class="corpo" onLoad="radio();gestisciCampi();">
   <table>
     <tr>
       <td class="LBG">
@@ -233,6 +259,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   
 <br>
 
+<!-- 
   <table>
     <tr>
       <td class="LGB">
@@ -240,7 +267,18 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       </td>
     </tr>
   </table>
-  
+-->
+   
+  <% if (contaDaValidare > 0) {  %>
+  <table>
+    <tr>
+      <td class="l" style="color:red;">
+        Attenzione, esiste una richiesta ancora da validare
+      </td>
+    </tr>
+  </table>
+  <% } %>    
+
   <div id="divListaRicerche" style="width: 100%; display:block;" >
     <table width="90%">
       <tr>
@@ -251,7 +289,11 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <td class="int">Validato</td>
         <td class="int">Azioni</td>
       </tr>
-      
+      <% if (contaRinnovi == 0) {  %>
+      <tr>
+        <td class="L" colspan="6">Nessuna richiesta presente per il provvedimento selezionato</td>
+      </tr>
+      <% } %>  
   <% 
       for (int i = 0; i < ordineIngiunzione.getNotifiche().length; i++) {
         NotificaModel lNotMod = ordineIngiunzione.getNotifiche()[i];
@@ -283,10 +325,10 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         <% if ("S".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
           <img  alt="Validato" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0"></a>
         <% } else { %>
-        &nbsp;
+        &nbsp;<font style="color:red;">(da validare)</font>
         <% } %>
         </td>
-        <td class="r" nowrap style="padding-right:40px;">
+        <td class="r" nowrap>
           <% if (!"S".equals(lRinnovo.getFlagDocumentoRegistrato())) { %>
           <a href="Javascript:CancellaRichiesta('<%=lRinnovo.getIdRinnovo()%>')">
             <img  alt="Cancella" src="<%=IWebConstants.IMAGES_DIR%>delete.gif" border="0"></a>
@@ -296,7 +338,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
             <img  alt="Stampa" src="<%=IWebConstants.IMAGES_DIR%>print.gif" border="0"></a>
           <% } %>
           <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=<%=lActDettaglio%>">
-            <img  alt="Dattaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>&nbsp;
+            <img  alt="Dettaglio" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>&nbsp;
         </td>
       </tr>
       <% } %>
@@ -307,6 +349,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   
   
   <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="LoadRichiestaInfoComma5">
+  <div id="divInserimento">
     <table width="90%">
       <tr>
         <td class="c">Richiesta Informazioni al Difensore &nbsp;<input type="radio" name="Notifica" value="FP" checked  onClick="radio();">
@@ -539,7 +582,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         </tr>
       </table>
     </div>
-
+</div>
   </form>
 
 

@@ -107,9 +107,11 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			try {
 				listaEventiVerbali = lCtrlEvento.ExRicercaEventoTipoEveTipoProvMot(lEveVerbale, "S");
 			} catch (F3BException e) {
-				if (F3BException.USER_MESSAGE == e.getErrorCode())
-					throw new F3BException(F3BException.USER_MESSAGE,
-							"Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
+				if (F3BException.USER_MESSAGE == e.getErrorCode()) {
+				  siesLogger.warn("Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
+					/*throw new F3BException(F3BException.USER_MESSAGE,
+							"Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");*/
+				}
 			}
 
 			EventoModel verbaleVR = null;

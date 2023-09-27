@@ -131,7 +131,7 @@
         <td class="c"><%=StringUtils.toStringJSP(errore,"&nbsp;")%></td>
         <td class="c">
           <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActLoadDettaglioEsecuzioneBatchPagoPa&<%=ICostantiBatchPagoPa.CAMPO_ID_BATCH_PAGOPA%>=<%=batchModel.getIdBatchPagopa()%>">
-            <img  alt="Dattaglio Esecuzione" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>
+            <img  alt="Dettaglio Esecuzione" src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" border="0"></a>
         </td>
       </tr>
       <% }

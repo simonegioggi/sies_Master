@@ -21,9 +21,23 @@
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
+  <script language="JavaScript">
+        function CancellaSollecito(idRinnovo){
+        if (window.confirm("Confermi l'eliminazione del Sollecito?")) {
+          document.cancellaSollecito.<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>.value = idRinnovo;
+          document.cancellaSollecito.submit();
+        }
+      }
+  </script>
 </head>
 
 <body class="corpo">
+
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="cancellaSollecito">
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActCancellaSollecitiOIPP">
+  <input type="HIDDEN" name="<%=ICostantiRinnovo.CAMPO_ID_RINNOVO%>" value="">
+</form>
+
   <form name="LoadOmessaNotifica" method="POST" action="/jsp/Main.jsp">
     <table>
       <tr>
@@ -40,6 +54,10 @@
          <jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
            <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaSollecitiOIPP&"+ICostantiRinnovo.CAMPO_ID_RINNOVO+"="+sollecito.getIdRinnovo()%>"/>
          </jsp:include>
+        <td class="LBG">
+          <a href="Javascript:CancellaSollecito('<%=sollecito.getIdRinnovo()%>')">
+            <img align="middle" src="/images/delete24.gif" alt="cancella" width="24" height="24" border="0"></a>      
+        </td>         
         <%}%>
         <td class="LBG">
           <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciSollecitiOIPP&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=ordineIngiunzione.getEvento().getIdEvento()%>">
@@ -78,12 +96,10 @@
         </td>
       </tr>     
      
-      <%if(sollecito.getNote() != null){%>
       <tr>
         <td class="l">Indirizzo</td>
-        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(sollecito.getNote())%></font> </td>
+        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(sollecito.getNote(),"&nbsp;")%></font> </td>
       </tr>
-      <%}%>
     </table>
   </form>
 
