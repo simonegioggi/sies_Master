@@ -3,6 +3,7 @@ package siap.siep.rateizzazionepp.controller;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -339,9 +340,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		try {
 			c = getDBConnection();
 			esdao = new EventoSqlDAO(c);
-			esdao.ricercaEventoPerMotivoOrderDesc(motivi, em);
+			esdao.ricercaEventoPerMotivo(motivi, em);
 			List<EventoModel> listaEventi = new ArrayList(esdao.getModels());
 			esdao.stop();
+			if (!listaEventi.isEmpty() && listaEventi.size() > 1)
+				listaEventi = reverseList(listaEventi);
 
 			Iterator<EventoModel> iter = listaEventi.iterator();
 			while (iter.hasNext()) {
@@ -368,6 +371,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		}
 
 		return listaEventoRateizzazioniPP;
+	}
+
+	private List<EventoModel> reverseList(List<EventoModel> listaEventi) {
+
+		List<EventoModel> reverse = new ArrayList<EventoModel>(listaEventi);
+        Collections.reverse(reverse);
+        return reverse;
 	}
 
 	@Override

@@ -118,6 +118,8 @@ if (listaRichiestaBollettini.size() == 0) {
 	</tr>
 <%
 	Iterator<EventoRateizzazionePPModel> itx = listaRichiestaBollettini.iterator();
+	int cont = 0;
+	final int size = listaRichiestaBollettini.size();
 	while (itx.hasNext()) {
 		EventoRateizzazionePPModel erppm = (EventoRateizzazionePPModel) itx.next();
 		EventoModel em = erppm.getEvento();
@@ -133,8 +135,8 @@ if (listaRichiestaBollettini.size() == 0) {
 		</td>
 <%
 // MEV_2023-33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate
-if ((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti()))
-		|| (isSoloPrimaRata && !areRateGiaGenerate)) {
+if (((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti()))
+		|| (isSoloPrimaRata && !areRateGiaGenerate)) && cont == size-1) {
 %>
       	<td class="c">
       		<a href="javascript:eseguiAzione('Inoltra', <%=em.getIdEvento()%>)">
@@ -157,6 +159,7 @@ if ((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getData
       	</td>
 	</tr>
 <%
+		cont++;
 	} // end while su iterator sugli eventi
 } // end else
 %>
