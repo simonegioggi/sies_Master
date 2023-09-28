@@ -77,7 +77,6 @@ public class ActVerificaStatoElencoBollettini extends ActionSiap implements ICos
 			while (iterERPPM.hasNext()) {
 				erppm = iterERPPM.next();
 				Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
-				// EventoModel em = erppm.getEvento();
 				setRequestAttribute("evento", em);
 				Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
 				String testo = "";

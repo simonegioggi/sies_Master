@@ -60,45 +60,54 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
 				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
 		boolean isElencoEmpty = elencoStatoPagamenti.isEmpty();
+
 		// Ricerca i pagamenti per idFascicolo
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo, "");
-		if (!listaRichiestaBollettini.isEmpty()) {
-			Vector<RateizzazionePPModel> rateizzazioni = listaRichiestaBollettini.firstElement()
-					.getListaRateizzazioniPP();
-			EventoModel em = listaRichiestaBollettini.firstElement().getEvento();
-			setRequestAttribute("evento", em);
-			// MEV_2023-33: controllo notifica al condannato
-			IEvento ie = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(em.getIdEvento());
-			NotificaModel[] nms = enm.getNotifiche();
-			String dataNotificaCondannato = "";
-			for (int i = 0; i < nms.length; i++) {
-				// NOTIFICA AL CONDANNATO
-				if (nms[i].getAvvIdAvvocatoFascicoloSiep() == null
-						&& nms[i].getIdCivilmenteObbligato() == null)
-					dataNotificaCondannato = DateUtils.getDateToString(nms[i].getDataAvvenutaNotifica(),
-							"dd/MM/yyyy");
-			}
-			setRequestAttribute("dataNotificaCondannato", dataNotificaCondannato);
+		Vector<RateizzazionePPModel> listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
+		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = new Vector<>();
+		EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+		erppm.setEvento(em);
+		erppm.setListaRateizzazioniPP(listaRateizzazioni);
+		listaRichiestaBollettini.add(erppm);
 
-			if (isElencoEmpty) {
-				int progressivoRata = 1;
-				// dalle rateizzazioni creo i bollettini
-				Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
-				while (iter.hasNext()) {
-					RateizzazionePPModel rata = iter.next();
-					for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
-						// MEV_2023-33: cambiata firma del metodo con la data Emissione OEIP
-						BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata, codUtente,
-								codUfficio, "PN", progressivoRata, em.getDataEmissione());
-						ibp.ExInserisciBollettinoPagopa(bpm);
-						progressivoRata++;
-					}
+		if (!listaRichiestaBollettini.isEmpty()) {
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			while (iterERPPM.hasNext()) {
+				erppm = iterERPPM.next();
+				Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
+				setRequestAttribute("evento", em);
+				// MEV_2023-33: controllo notifica al condannato
+				EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
+				NotificaModel[] nms = enm.getNotifiche();
+				String dataNotificaCondannato = "";
+				for (int i = 0; i < nms.length; i++) {
+					// NOTIFICA AL CONDANNATO
+					if (nms[i].getAvvIdAvvocatoFascicoloSiep() == null
+							&& nms[i].getIdCivilmenteObbligato() == null)
+						dataNotificaCondannato = DateUtils.getDateToString(nms[i].getDataAvvenutaNotifica(),
+								"dd/MM/yyyy");
 				}
-				elencoStatoPagamenti = ibp
-						.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
+				setRequestAttribute("dataNotificaCondannato", dataNotificaCondannato);
+
+				if (isElencoEmpty) {
+					int progressivoRata = 1;
+					// dalle rateizzazioni creo i bollettini
+					Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
+					while (iter.hasNext()) {
+						RateizzazionePPModel rata = iter.next();
+						for (int i = 0; i < rata.getNumeroRate().intValue(); i++) {
+							// MEV_2023-33: cambiata firma del metodo con la data Emissione OEIP
+							BollettinoPagopaModel bpm = GeneraAvvisoPagoPAUtil.popolaBollettino(rata,
+									codUtente, codUfficio, "PN", progressivoRata, em.getDataEmissione());
+							ibp.ExInserisciBollettinoPagopa(bpm);
+							progressivoRata++;
+						}
+					}
+					elencoStatoPagamenti = ibp
+							.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
+				}
 			}
 		}
 
