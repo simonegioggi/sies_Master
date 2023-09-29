@@ -76,7 +76,6 @@
 <%-- MEV_2023-33: aggiunti useBean x gestione Civilmente Obbligato ed elenco stato pagamenti --%>
 <jsp:useBean id="existCivilmenteObbligato"	scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="existPagamenti"			scope="request" class="java.lang.Boolean"/>
-<jsp:useBean id="idEventoStatoPagamenti"	scope="request" class="java.math.BigDecimal"/>
 
 <%
 SoggettoModel soggetto = fascicolo.getSoggetto();
@@ -2439,8 +2438,7 @@ if (existPagamenti) {
 	<tr><td>&nbsp;</td></tr>
 	<tr>
 		<td class="L">
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=idEventoStatoPagamenti%>"
-					title="Verifica Stato Pagamenti">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti" title="Verifica Stato Pagamenti">
 				Verifica Stato Pagamenti
 			</a>
 		</td>

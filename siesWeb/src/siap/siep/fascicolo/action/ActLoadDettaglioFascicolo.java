@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
-import f3b.util.Utils;
 import siap.jms.ICostantiJMS;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -48,6 +47,8 @@ import siap.siep.penacumulo.controller.IPenaCumulo;
 import siap.siep.penacumulo.model.PenaCumuloModel;
 import siap.siep.penapecuniaria.controller.IRichiestaConversione;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
+import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.reato.controller.ReatoContinuazioneController;
 import siap.siep.reato.model.ReatoCircostanzaModel;
 import siap.siep.reato.model.ReatoModel;
@@ -1165,21 +1166,13 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 		Vector<CivilmenteObbligatoModel> coms = ico.ExRicercaCivilmenteObbligatiByFasSieIdFascicoloSiep(aId);
 		setRequestAttribute("existCivilmenteObbligato", !coms.isEmpty());
 
-		BigDecimal idEventoStatoPagamenti = new BigDecimal(0);
-		EventoModel emRic = new EventoModel();
-		emRic.setCodTipoEvento("01");
-		emRic.setCodTipoProvvedimento("06");
-		emRic.setCodMotivo("0622");
-		emRic.setFasSieIdFascicoloSiep(aId);
-		emRic.setFlagDocumentoRegistrato("S");
-		EventoModel em = lEventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(emRic);
+		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp.exRicercaEventoRateizzazionePP(aId,
+				"ALL");
 		boolean existPagamenti = false;
-		if (!Utils.isNullObj(em)) {
-			idEventoStatoPagamenti = em.getIdEvento();
+		if (!listaRichiestaBollettini.isEmpty())
 			existPagamenti = true;
-		}
 
-		setRequestAttribute("idEventoStatoPagamenti", idEventoStatoPagamenti);
 		setRequestAttribute("existPagamenti", existPagamenti);
 		// ***** FINE INTERVENTO MEV_2023-33 *****//
 
