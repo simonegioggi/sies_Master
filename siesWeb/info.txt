@@ -1,6 +1,6 @@
-<<<<<<< HEAD
 Branch MEV_2023-33: nato dal branch release_12.5.0.0 in data 05/06/2023
 				   merge del branch release_12.5.1.0 in data 21/06/2023
+				   merge del branch release_12.5.3.0 in data 25/09/2023
 Richiesta scheda 2023-33 - SIES - interventi Cartabia e pagoPA fase 2
 Requisiti funzionali lato SIEP:
 Completamento della versione Riscossione Pene Pecuniarie
@@ -27,27 +27,3 @@ Il sistema consegnato con la scheda 2023-13 va integrato con le seguenti modific
 	-	Annotazione notifiche
 	-	Generazione template
 	-	Emissione ordine ingiunzione di pagamento (prima notifica)
-=======
-BRANCH SIES VERSIONE 12.5.3.0
-Nasce dal branch 12.5.2.0 in data 31/07/2023
-Questa release verrà rilasciata il 22/09/2023 (Patch mesi di Agosto e Settembre 2023)
-
-Comprende i seguenti Ticket MAC:
-
-1)	Ticket#20230718019 - SIEP Non si può dare corso alla misura alternativa
-	Quando si annullava il verbale si sottoscrizione agli obblighi, la funzione di cancellazione annullava
-	anche l'ordinanza puntata dal verbale. Quindi il provvedimento di esecuzione che puntava la stessa 
-	ordinanza si ritrovava a puntare un evento annullato ed inoltre non era più possibile reinserire il 
-	verbale perchè non trovava più l'ordinanza.
-	E' stato escluso il verbale dal caso in cui l'annullamento di un evento SIEP annulla anche il 
-	provvedimento SIUS puntato.
-	Classe modificata:
-	-	siap.siep.ordineesecuzione.action.ActCancellaProvvedimento.java
-
-2)	Ticket#202307240122 - Visualizzazione maschera errata
-	In fase di apertura della seconda form della funzione "Cessazione/Cessazione su Reclamo 51 Bis" andava 
-	in errore js e si interrompeva il precaricamento della sezione dei "destinatari" che rimaneva nascosta.
-	Inoltre si perdeva il campo della data ingresso in istituto se si modificava il radio button.
-	Pagina modificata:
-	-	siap/siep/misuraalternativa/LoadInserisciCessazioneMAAffProva.jsp
->>>>>>> origin/release_12.5.3.0
