@@ -54,6 +54,11 @@ public class QuartzInit extends HttpServlet {
 			String lPagoPaSchedulerEnabled = F3BProperties.getProperty("PagoPaSchedulerEnabled");
 			pagoPaLogger.info("PagoPaSchedulerEnabled = " + lPagoPaSchedulerEnabled);
 
+			// Si trimma per sicurezza. Pare che su linux non trimmi in automatica le properties
+			// Su windows legge invece fino al primo spazio (che trimma)
+			if (lPagoPaSchedulerEnabled!=null) 
+				lPagoPaSchedulerEnabled = lPagoPaSchedulerEnabled.trim();
+			
 			if ("true".equals(lPagoPaSchedulerEnabled)) {
 				pagoPaLogger.info("Procedo ad attivare la schedulazione" + lPagoPaSchedulerEnabled);
 
