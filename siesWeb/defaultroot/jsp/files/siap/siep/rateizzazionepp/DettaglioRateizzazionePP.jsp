@@ -157,7 +157,7 @@ SanzioneSostitutivaModel lSanSos = (dettaglioPenaComplessiva != null && dettagli
         <td class="Titolo" colspan="6"> Pagamento Rateizzato </td>
     <% } %>
     <td class="Titolo" colspan="1">Emessi bollettini</td>
-    <td class="Titolo" colspan="1">Emesso ordine di ingiunzione</td>
+    <td class="Titolo" colspan="1">Emesso Provvedimento</td>
   </tr>
   
 <%
@@ -276,7 +276,7 @@ if (listaRateizzazioniLibere.size()>0)
         <td class="Titolo" colspan="6"> Pagamento Rateizzato </td>
     <% } %>
     <td class="Titolo" colspan="1">Emessi bollettini</td>
-    <td class="Titolo" colspan="1">Emesso ordine di ingiunzione</td>
+    <td class="Titolo" colspan="1">Emesso Provvedimento</td>
   </tr>
 
 <%
