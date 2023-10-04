@@ -129,6 +129,12 @@ public interface ICostantiSanzioneSostitutiva {
         + "/files/siap/siep/sanzionesostitutiva/LoadInserisciSollecitiOIPP.jsp";
   public static final String PG_DETTAGLIO_SOLLECITI_OIPP = IWebConstants.ROOT_DIR
         + "/files/siap/siep/sanzionesostitutiva/LoadDettaglioSollecitiOIPP.jsp";
+  
+  // Nota trasmissione
+  public static final String PG_LOAD_INSERISCI_NOTA_TRASNISSIONE = IWebConstants.ROOT_DIR
+      + "/files/siap/siep/sanzionesostitutiva/LoadInserisciNotaTrasmissione.jsp";
+  public static final String PG_DETTAGLIO_NOTA_TRASNISSIONE = IWebConstants.ROOT_DIR
+      + "/files/siap/siep/sanzionesostitutiva/LoadDettaglioNotaTrasmissione.jsp";
 	// MEV_2023-33 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR

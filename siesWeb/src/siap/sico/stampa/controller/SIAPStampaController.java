@@ -78,6 +78,7 @@ import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
 import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.modulocumulo.dao.PenaRideterminataCumuloSqlDAO;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.siep.penacomplessiva.dao.PenaComplessivaSqlDAO;
@@ -91,6 +92,8 @@ import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.reato.controller.IReato;
 import siap.siep.reato.controller.ReatoContinuazioneController;
 import siap.siep.reato.dao.ReatoSqlDAO;
@@ -1862,4 +1865,81 @@ public class SIAPStampaController extends SiapController {
 		return lTreeSenMod;
 	}
 
+	
+	/**
+	 * Preleva la struttura dell'evento Ordine di ingiunzione: evento, magistrato, notifiche e rateizzazzionei
+	 * <Evento>
+	 *   <Notifica>
+	 *     <AutoritaEsterna>
+	 *     <Avvocato>
+	 *   </Notifica>
+	 *   <Rateizzazione></Rateizzazione>
+	 *   <Magistrato></Magistrato>
+	 * </Evento>
+	 * @param aKeyFascicolo
+	 * @param aCodMotivo
+	 * @return TreeModel dell'evento
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	 protected TreeModel getTreeEventoOrdineIngiunzione(BigDecimal aIdEvento, Connection aConn)
+	      throws F3BException {
+
+	    Connection lConn = null;
+
+	    RateizzazionePPSqlDAO lRateSqlDao = null;
+
+	    TreeModel lEveNotCollegatoTree = null;
+
+	    try {
+	      if (aConn!=null) 
+	        lConn = aConn;
+	      else
+	        lConn = getDBConnection();
+
+        IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+        EventoNotificaModel lEveNotCollegatoMod = lCtrlEvento.ExRicercaEventoNotificaByKey(aIdEvento, lConn);
+        lEveNotCollegatoTree = new TreeModel(lEveNotCollegatoMod.getEvento());
+        
+        for (NotificaModel notifica : lEveNotCollegatoMod.getNotifiche()) {
+          siesLogger.debug("Aggiungo le notifiche al tree collegato");
+          
+          TreeModel lNotificaTree = new TreeModel(notifica);
+          if (notifica.getAutoritaEsterna()!=null)
+            lNotificaTree.add(new TreeModel(notifica.getAutoritaEsterna()));
+          
+          if (notifica.getAvvocato()!=null)
+            lNotificaTree.add(new TreeModel(notifica.getAvvocato()));
+          
+          lEveNotCollegatoTree.add(lNotificaTree);
+        }
+        
+        siesLogger.debug("Aggiungo il magistrato...");
+        if (lEveNotCollegatoMod.getMagistrato()!=null)
+          lEveNotCollegatoTree.add(new TreeModel(lEveNotCollegatoMod.getMagistrato()));
+        
+        // Recupero le rateizzazioni
+        siesLogger.debug("Recupero le rateizzazioni del collegato...");
+        lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
+        lRateSqlDao.ricercaRateizzazionePPByEveIdEvento (lEveNotCollegatoMod.getEvento().getIdEvento());
+        Vector <RateizzazionePPModel> listaRateCollegato = new Vector <RateizzazionePPModel> (lRateSqlDao.getModels());
+        for (RateizzazionePPModel rata: listaRateCollegato) {
+          siesLogger.debug("add rata");
+          lEveNotCollegatoTree.add(new TreeModel(rata));
+        }
+        
+	    } catch (DAOException daoEx) {
+	      siesLogger.error("DAOException: " + daoEx);
+	      throw new F3BException("SIAPStampaController.getTreeEventoOrdineIngiunzione: " + daoEx);
+	    } finally {
+	      cleanup(lRateSqlDao);
+
+	      if (aConn==null)
+	        cleanup(lConn);
+	    }
+
+	    return lEveNotCollegatoTree;
+	  }
+
+	
 }

@@ -2123,4 +2123,54 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
+
+	/**
+	 * Recupera le rateizzazioni collegata a un evento e i relativi bollettini se presenti
+	 * @param aIdEvento
+	 * @return
+	 * @throws F3BException
+	 */
+	 public Vector<RateizzazionePPModel> exRicercaRateizzazioniBollettiniByIdEvento(BigDecimal aIdEvento)
+	      throws F3BException {
+
+	    Vector<RateizzazionePPModel> lListaRate = new Vector<>();
+
+	    Connection c = null;
+
+	    RateizzazionePPSqlDAO lRateizzazioneSqlDao = null;
+	    BollettinoPagopaSqlDAO lBollettinoSqlDAO = null;
+	    
+	    try {
+	      c = getDBConnection();
+
+	      lRateizzazioneSqlDao = new RateizzazionePPSqlDAO(c);
+	      lRateizzazioneSqlDao.ricercaRateizzazionePPByEveIdEvento(aIdEvento);
+	      lListaRate = new Vector<RateizzazionePPModel>(lRateizzazioneSqlDao.getModels());
+        lRateizzazioneSqlDao.stop();
+
+        lBollettinoSqlDAO = new BollettinoPagopaSqlDAO(c);
+        
+        for (RateizzazionePPModel lRata : lListaRate) {
+          lBollettinoSqlDAO.ricercaBollettinoPagopaByReteizzazione(lRata.getIdRateizzazionePP());
+          Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>(
+              lBollettinoSqlDAO.getModels());
+          lRata.setListaBollettini(lListaBollettini);
+        }
+
+	    } catch (DAOException daoEx) {
+	      siesLogger.error("DAOException", daoEx);
+	      throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniBollettiniByIdEvento: " + daoEx);
+	    } catch (Exception ex) {
+	      siesLogger.error("Exception", ex);
+	      throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniBollettiniByIdEvento: " + ex);
+	    } finally {
+	      cleanup(lRateizzazioneSqlDao);
+	      cleanup(lBollettinoSqlDAO);
+
+	      cleanup(c);
+	    }
+
+	    return lListaRate;
+	  }
+	
 }

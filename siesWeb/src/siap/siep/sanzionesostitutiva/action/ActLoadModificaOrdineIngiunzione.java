@@ -88,7 +88,10 @@ public class ActLoadModificaOrdineIngiunzione extends ActionSiap implements ICos
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+    // 2023.09.19 Si visualizzano solo quelle legate all'evento
+		// listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+    listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdEvento(lId);
+    // 2023.09.19 - FINE
 
 		if (listaRateizzazioni.size() == 0) {
 			throw new F3BException(F3BException.USER_MESSAGE,
