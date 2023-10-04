@@ -208,4 +208,7 @@ public interface ISanzioneSostitutiva {
 	public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina,
 			String aTipoRicera) throws F3BException;
 
+  public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
+  public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
+  public EventoModel exUpdateNotaTrasmissione (EventoModel aEvento) throws F3BException;
 }

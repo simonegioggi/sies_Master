@@ -971,6 +971,19 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			    lTreeEveMod.add(new TreeModel(rata));
 			}   
 			// MEV_2023-13 - FINE 
+
+		  // MEV_2023-33
+			// In caso di nota di trasmissione recupera i dati dell'evento collegato
+      if (   "1306".equals(aEveModel.getEvento().getCodMotivo())
+          && aEveModel.getEvento().getEveIdEvento()!=null
+         ) 
+      {
+        TreeModel lEveNotCollegatoTree = super.getTreeEventoOrdineIngiunzione(aEveModel.getEvento().getEveIdEvento(), lConn);
+
+        lTreeEveMod.add(lEveNotCollegatoTree);
+		  }			
+      // MEV_2023-33 - FINE
+			
 			
 			lTreeRoot.add(lTreeEveMod);
 
