@@ -288,7 +288,7 @@ if (notificaAlCondannato.getAutoritaEsterna() != null) {
 %>
 	<tr>
 		<td class="L">Indirizzo</td>
-        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font>&nbsp;</td>
+        <td class="L" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(notificaAlCondannato.getNote())%></font></td>
 	</tr>
 <%
 	}
@@ -367,9 +367,7 @@ if (notificaAlCondannato.getIstitutoDetenzione() != null) {
 		</td>
     	<td class="l">Indirizzo</td>
     	<td class="L">
-      		<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" 
-				name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" cols="30">
-			</TEXTAREA>
+      		<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=notificaAlCondannato.getIdNotifica()%>" cols="30"></TEXTAREA>
 		</td>
   	</tr>
 <%
@@ -480,10 +478,7 @@ for (int i = 0; i < listaNotAvvSiep.size(); i++) {
 		</td>
 	    <td class="l">Indirizzo</td>
 	    <td class="L">
-      		<TEXTAREA title="Indirizzo" cols="30"
-                id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>"
-                name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>">
-			</TEXTAREA>
+      		<TEXTAREA title="Indirizzo" cols="30" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaDifensore.getIdNotifica()%>"></TEXTAREA>
 		</td>
 	</tr>
 <%
@@ -597,9 +592,7 @@ if (lListaNotObbligati.size() > 0) {
     	</td>
     	<td class="l">Indirizzo</td>
     	<td class="L">
-			<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" 
-				name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" cols="30">
-			</TEXTAREA>
+			<TEXTAREA title="Indirizzo" id="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" name="<%=ICostantiAutoritaEsterna.CAMPO_DESCRIZIONE%>_<%=lNotificaObbligato.getIdNotifica()%>" cols="30"></TEXTAREA>
     	</td>
   	</tr>
 <%
