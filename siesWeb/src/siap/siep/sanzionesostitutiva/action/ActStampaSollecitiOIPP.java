@@ -28,45 +28,50 @@ import siap.siep.util.SIEPLookupRemote;
  * @since MAV_2023-33
  */
 public class ActStampaSollecitiOIPP extends ActionSiap implements ICostantiRinnovo {
-  private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-  @SuppressWarnings("unchecked")
-  public String processRequest() throws F3BException {
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-    UtenteModel lUtenteMod = this.getUtenteConnesso();
-    UfficioModel lUff = this.getUfficioUtenteConnesso();
+	public String processRequest() throws F3BException {
 
-    BigDecimal lIdRinnovo = getRequestBigDecimalParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
+		// info per il log
+		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
-    IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
-    RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey(lIdRinnovo);
+		UtenteModel lUtenteMod = this.getUtenteConnesso();
+		UfficioModel lUff = this.getUfficioUtenteConnesso();
 
-    lRinModel.setDataAggiornamento         (DateUtils.getSysDate());
-    lRinModel.setCodUfficioAggiornamento   (lUff.getCodUfficio());
-    lRinModel.setCodOperatoreAggiornamento (this.getCodUtenteConnesso());
-    lRinModel.setFlagDocumentoRegistrato("N");
+		BigDecimal lIdRinnovo = getRequestBigDecimalParameter(ICostantiRinnovo.CAMPO_ID_RINNOVO);
 
-    String flagTemplate = null;
-    String lCodMotivo = "0283"; //FIXME 
+		IRinnovo lCtrl = SIEPLookupRemote.getRinnovoRemote();
+		RinnovoModel lRinModel = lCtrl.ExRicercaRinnovoByKey(lIdRinnovo);
 
-    if ("SP".equals(lRinModel.getCodTipoRinnovo())) {
-      flagTemplate = "1";
-    } else if ("SU".equals(lRinModel.getCodTipoRinnovo())) {
-      flagTemplate = "0";
-    }
+		lRinModel.setDataAggiornamento(DateUtils.getSysDate());
+		lRinModel.setCodUfficioAggiornamento(lUff.getCodUfficio());
+		lRinModel.setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+		lRinModel.setFlagDocumentoRegistrato("N");
 
-    ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
-    TemplateModel lTemMod = new TemplateModel();
-    lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(null, null, lCodMotivo, flagTemplate);
-    if (lTemMod != null) {
-      lRinModel.setTemIdTemplate(lTemMod.getIdTemplate());
-    }
+		String flagTemplate = null;
+		String lCodMotivo = "0283"; // FIXME
 
-    IRinnovoStampa lCtrlStampa = SIEPLookupRemote.getRinnovoStampaRemote();
-    ByteArrayOutputStream lReport = lCtrlStampa.ExStampaDocumento(lRinModel, lUtenteMod); 
+		if ("SP".equals(lRinModel.getCodTipoRinnovo())) {
+			flagTemplate = "1";
+		} else if ("SU".equals(lRinModel.getCodTipoRinnovo())) {
+			flagTemplate = "0";
+		}
 
-    setRequestAttribute("report", lReport);
+		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
+		TemplateModel lTemMod = new TemplateModel();
+		lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(null, null, lCodMotivo,
+				flagTemplate);
+		if (lTemMod != null) {
+			lRinModel.setTemIdTemplate(lTemMod.getIdTemplate());
+		}
 
-    return IWebConstants.PG_DOWNLOAD;
-  }
+		IRinnovoStampa lCtrlStampa = SIEPLookupRemote.getRinnovoStampaRemote();
+		ByteArrayOutputStream lReport = lCtrlStampa.ExStampaDocumento(lRinModel, lUtenteMod);
+
+		setRequestAttribute("report", lReport);
+
+		return IWebConstants.PG_DOWNLOAD;
+	}
+
 }

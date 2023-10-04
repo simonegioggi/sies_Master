@@ -873,6 +873,1254 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		return lListaRate;
 	}
+
+	@Override
+	public BigDecimal exInserisciAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		BigDecimal idEvento = null;
+
+		try {
+			c = getDBConnection();
+
+			// =========================================
+			// Inserisco l'Evento
+			// =========================================
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModel(enm.getEvento());
+			idEvento = eDAO.insert();
+			eDAO.stop();
+			siesLogger.debug("idEvento = " + idEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug(
+										"Ins Aut Est = " + enm.getNotifiche()[count].getAutoritaEsterna());
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// inserisco l'annotazione manuale
+			amm.setEveIdEvento(idEvento);
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModel(amm);
+			BigDecimal idAnnotazioneManuale = amDAO.insert();
+			amDAO.stop();
+			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+		return idEvento;
+	}
+
+	@Override
+	public void exUpdateAvvisoMancatoPagamento(EventoModel em) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		EventoSqlDAO esDAO = null;
+		StatoProcedimentoDAO spDAO = null;
+		EventoDAO eDAOBlob = null;
+
+		try {
+			c = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			esDAO = new EventoSqlDAO(c);
+			esDAO.ricercaEventoByKey(em.getIdEvento());
+			EventoModel emRic = (EventoModel) esDAO.getModelByKey();
+			esDAO.stop();
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel spm = new StatoProcedimentoModel();
+			spm.setProgressivo(new BigDecimal(1));
+			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
+			spm.setData(emRic.getDataEmissione());
+			spm.setCodStatoProcedimento("0336");
+			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
+			spm.setDataInserimento(em.getDataAggiornamento());
+			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
+			spDAO = new StatoProcedimentoDAO(c);
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
+			spDAO.delete();
+			// - Inserisce
+			spDAO.setDAOFromModel(spm);
+			spDAO.insert();
+			spDAO.stop();
+			siesLogger.debug("FINE Aggiornamento stato procedimento");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			eDAOBlob = new EventoDAO(c);
+			eDAOBlob.setDAOFromModelForUpdateBlob(em);
+			eDAOBlob.selCondizioneUpdate(em.getIdEvento());
+			eDAOBlob.update();
+			eDAOBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(esDAO);
+			cleanup(spDAO);
+			cleanup(eDAOBlob);
+
+			cleanup(c);
+		}
+	}
+
+	@Override
+	public EventoNotificaModel exModificaAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		EventoNotificaModel enmRet = new EventoNotificaModel(enm);
+
+		try {
+			c = getDBConnection();
+
+			BigDecimal idEvento = enm.getEvento().getIdEvento();
+
+			// Cancello preventivamente tutti i dati
+			// Sgancio le rate dall'evento
+			rPPDAO = new RateizzazionePPDAO(c);
+			rPPDAO.setEveIdEvento(null);
+			rPPDAO.selCondizioneByIdEvento(enm.getEvento().getIdEvento());
+			rPPDAO.update();
+
+			nDAO = new NotificaDAO(c);
+			nDAO.setCondizioneEvento(idEvento);
+			nDAO.delete();
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal keyAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								keyAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							} else {
+								keyAutorita = lAutMod.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal keyNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + keyNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// aggiorrno l'annotazione manuale
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModelForUpdate(amm);
+			amDAO.update();
+			amDAO.stop();
+
+			// aggiorrno l'evento
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModelForUpdate(enm.getEvento());
+			eDAO.update();
+			eDAO.stop();
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+
+		return enmRet;
+	}
+
+	@Override
+	public BigDecimal exInserisciProvvedimentoEstinzionePP(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		BigDecimal idEvento = null;
+
+		try {
+			c = getDBConnection();
+
+			// =========================================
+			// Inserisco l'Evento
+			// =========================================
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModel(enm.getEvento());
+			idEvento = eDAO.insert();
+			eDAO.stop();
+			siesLogger.debug("idEvento = " + idEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug(
+										"Ins Aut Est = " + enm.getNotifiche()[count].getAutoritaEsterna());
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// inserisco l'annotazione manuale
+			amm.setEveIdEvento(idEvento);
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModel(amm);
+			BigDecimal idAnnotazioneManuale = amDAO.insert();
+			amDAO.stop();
+			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+		return idEvento;
+	}
+
+	@Override
+	public void exUpdateProvvedimentoEstinzionePP(EventoModel em) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		EventoSqlDAO esDAO = null;
+		StatoProcedimentoDAO spDAO = null;
+		EventoDAO eDAOBlob = null;
+
+		try {
+			c = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			esDAO = new EventoSqlDAO(c);
+			esDAO.ricercaEventoByKey(em.getIdEvento());
+			EventoModel emRic = (EventoModel) esDAO.getModelByKey();
+			esDAO.stop();
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel spm = new StatoProcedimentoModel();
+			spm.setProgressivo(new BigDecimal(1));
+			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
+			spm.setData(emRic.getDataEmissione());
+			spm.setCodStatoProcedimento("0336");
+			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
+			spm.setDataInserimento(em.getDataAggiornamento());
+			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
+			spDAO = new StatoProcedimentoDAO(c);
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
+			spDAO.delete();
+			// - Inserisce
+			spDAO.setDAOFromModel(spm);
+			spDAO.insert();
+			spDAO.stop();
+			siesLogger.debug("FINE Aggiornamento stato procedimento");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			eDAOBlob = new EventoDAO(c);
+			eDAOBlob.setDAOFromModelForUpdateBlob(em);
+			eDAOBlob.selCondizioneUpdate(em.getIdEvento());
+			eDAOBlob.update();
+			eDAOBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(esDAO);
+			cleanup(spDAO);
+			cleanup(eDAOBlob);
+
+			cleanup(c);
+		}
+	}
+
+	@Override
+	public EventoNotificaModel exModificaProvvedimentoEstinzionePP(EventoNotificaModel enm,
+			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		EventoNotificaModel enmRet = new EventoNotificaModel(enm);
+
+		try {
+			c = getDBConnection();
+
+			BigDecimal idEvento = enm.getEvento().getIdEvento();
+
+			// Cancello preventivamente tutti i dati
+			// Sgancio le rate dall'evento
+			rPPDAO = new RateizzazionePPDAO(c);
+			rPPDAO.setEveIdEvento(null);
+			rPPDAO.selCondizioneByIdEvento(enm.getEvento().getIdEvento());
+			rPPDAO.update();
+
+			nDAO = new NotificaDAO(c);
+			nDAO.setCondizioneEvento(idEvento);
+			nDAO.delete();
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal keyAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								keyAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							} else {
+								keyAutorita = lAutMod.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal keyNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + keyNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// aggiorrno l'annotazione manuale
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModelForUpdate(amm);
+			amDAO.update();
+			amDAO.stop();
+
+			// aggiorrno l'evento
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModelForUpdate(enm.getEvento());
+			eDAO.update();
+			eDAO.stop();
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+
+		return enmRet;
+	}
+
+	@Override
+	public BigDecimal exInserisciTrasmissioneAttiConversione(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		BigDecimal idEvento = null;
+
+		try {
+			c = getDBConnection();
+
+			// =========================================
+			// Inserisco l'Evento
+			// =========================================
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModel(enm.getEvento());
+			idEvento = eDAO.insert();
+			eDAO.stop();
+			siesLogger.debug("idEvento = " + idEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug(
+										"Ins Aut Est = " + enm.getNotifiche()[count].getAutoritaEsterna());
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// inserisco l'annotazione manuale
+			amm.setEveIdEvento(idEvento);
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModel(amm);
+			BigDecimal idAnnotazioneManuale = amDAO.insert();
+			amDAO.stop();
+			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+		return idEvento;
+	}
+
+	@Override
+	public void exUpdateTrasmissioneAttiConversione(EventoModel em) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		EventoSqlDAO esDAO = null;
+		StatoProcedimentoDAO spDAO = null;
+		EventoDAO eDAOBlob = null;
+
+		try {
+			c = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			esDAO = new EventoSqlDAO(c);
+			esDAO.ricercaEventoByKey(em.getIdEvento());
+			EventoModel emRic = (EventoModel) esDAO.getModelByKey();
+			esDAO.stop();
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel spm = new StatoProcedimentoModel();
+			spm.setProgressivo(new BigDecimal(1));
+			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
+			spm.setData(emRic.getDataEmissione());
+			spm.setCodStatoProcedimento("0336");
+			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
+			spm.setDataInserimento(em.getDataAggiornamento());
+			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
+			spDAO = new StatoProcedimentoDAO(c);
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
+			spDAO.delete();
+			// - Inserisce
+			spDAO.setDAOFromModel(spm);
+			spDAO.insert();
+			spDAO.stop();
+			siesLogger.debug("FINE Aggiornamento stato procedimento");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			eDAOBlob = new EventoDAO(c);
+			eDAOBlob.setDAOFromModelForUpdateBlob(em);
+			eDAOBlob.selCondizioneUpdate(em.getIdEvento());
+			eDAOBlob.update();
+			eDAOBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(esDAO);
+			cleanup(spDAO);
+			cleanup(eDAOBlob);
+
+			cleanup(c);
+		}
+	}
+
+	@Override
+	public EventoNotificaModel exModificaTrasmissioneAttiConversione(EventoNotificaModel enm,
+			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		EventoNotificaModel enmRet = new EventoNotificaModel(enm);
+
+		try {
+			c = getDBConnection();
+
+			BigDecimal idEvento = enm.getEvento().getIdEvento();
+
+			// Cancello preventivamente tutti i dati
+			// Sgancio le rate dall'evento
+			rPPDAO = new RateizzazionePPDAO(c);
+			rPPDAO.setEveIdEvento(null);
+			rPPDAO.selCondizioneByIdEvento(enm.getEvento().getIdEvento());
+			rPPDAO.update();
+
+			nDAO = new NotificaDAO(c);
+			nDAO.setCondizioneEvento(idEvento);
+			nDAO.delete();
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal keyAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								keyAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							} else {
+								keyAutorita = lAutMod.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal keyNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + keyNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// aggiorrno l'annotazione manuale
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModelForUpdate(amm);
+			amDAO.update();
+			amDAO.stop();
+
+			// aggiorrno l'evento
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModelForUpdate(enm.getEvento());
+			eDAO.update();
+			eDAO.stop();
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+
+		return enmRet;
+	}
+
+	@Override
+	public BigDecimal exInserisciDefinizioneProcedimentoPP(EventoNotificaModel enm, String[] arrayIdRate,
+			AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		BigDecimal idEvento = null;
+
+		try {
+			c = getDBConnection();
+
+			// =========================================
+			// Inserisco l'Evento
+			// =========================================
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModel(enm.getEvento());
+			idEvento = eDAO.insert();
+			eDAO.stop();
+			siesLogger.debug("idEvento = " + idEvento);
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								siesLogger.debug(
+										"Ins Aut Est = " + enm.getNotifiche()[count].getAutoritaEsterna());
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// inserisco l'annotazione manuale
+			amm.setEveIdEvento(idEvento);
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModel(amm);
+			BigDecimal idAnnotazioneManuale = amDAO.insert();
+			amDAO.stop();
+			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+		return idEvento;
+	}
+
+	@Override
+	public void exUpdateDefinizioneProcedimentoPP(EventoModel em) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		EventoSqlDAO esDAO = null;
+		StatoProcedimentoDAO spDAO = null;
+		EventoDAO eDAOBlob = null;
+
+		try {
+			c = getDBConnection();
+
+			// ========================================================================
+			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
+			// aggiornare
+			// ========================================================================
+			esDAO = new EventoSqlDAO(c);
+			esDAO.ricercaEventoByKey(em.getIdEvento());
+			EventoModel emRic = (EventoModel) esDAO.getModelByKey();
+			esDAO.stop();
+
+			// ====================================
+			// Modifico lo stato del procedimento
+			// ====================================
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
+			StatoProcedimentoModel spm = new StatoProcedimentoModel();
+			spm.setProgressivo(new BigDecimal(1));
+			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
+			spm.setData(emRic.getDataEmissione());
+			spm.setCodStatoProcedimento("0336");
+			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
+			spm.setDataInserimento(em.getDataAggiornamento());
+			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
+			spDAO = new StatoProcedimentoDAO(c);
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
+			spDAO.delete();
+			// - Inserisce
+			spDAO.setDAOFromModel(spm);
+			spDAO.insert();
+			spDAO.stop();
+			siesLogger.debug("FINE Aggiornamento stato procedimento");
+
+			// ========================================================================
+			// Aggiorno il blob sull'evento
+			// ========================================================================
+			siesLogger.debug("Aggiornamento Blob");
+			eDAOBlob = new EventoDAO(c);
+			eDAOBlob.setDAOFromModelForUpdateBlob(em);
+			eDAOBlob.selCondizioneUpdate(em.getIdEvento());
+			eDAOBlob.update();
+			eDAOBlob.stop();
+			siesLogger.debug("Blob Aggiornato");
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("DAOException", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(esDAO);
+			cleanup(spDAO);
+			cleanup(eDAOBlob);
+
+			cleanup(c);
+		}
+	}
+
+	@Override
+	public EventoNotificaModel exModificaDefinizioneProcedimentoPP(EventoNotificaModel enm,
+			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO eDAO = null;
+		NotificaDAO nDAO = null;
+		AutoritaEsternaDAO aeDAO = null;
+		RateizzazionePPDAO rPPDAO = null;
+		AnnotazioneManualeDAO amDAO = null;
+
+		EventoNotificaModel enmRet = new EventoNotificaModel(enm);
+
+		try {
+			c = getDBConnection();
+
+			BigDecimal idEvento = enm.getEvento().getIdEvento();
+
+			// Cancello preventivamente tutti i dati
+			// Sgancio le rate dall'evento
+			rPPDAO = new RateizzazionePPDAO(c);
+			rPPDAO.setEveIdEvento(null);
+			rPPDAO.selCondizioneByIdEvento(enm.getEvento().getIdEvento());
+			rPPDAO.update();
+
+			nDAO = new NotificaDAO(c);
+			nDAO.setCondizioneEvento(idEvento);
+			nDAO.delete();
+
+			// =========================================================
+			// Inserisco le Notifiche collegate all'evento se presenti
+			// =========================================================
+			int count = 0;
+			aeDAO = new AutoritaEsternaDAO(c);
+			BigDecimal keyAutorita = null;
+
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) aeDAO.getModelByKey();
+							if (lAutMod == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
+								keyAutorita = aeDAO.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							} else {
+								keyAutorita = lAutMod.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(keyAutorita);
+							}
+						}
+
+						// ===========================================
+						enm.getNotifiche()[count].setEveIdEvento(idEvento);
+						nDAO = new NotificaDAO(c);
+						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal keyNotifica = nDAO.insert();
+						nDAO.stop();
+						siesLogger.debug("Inserita Notifica " + keyNotifica);
+					}
+					count++;
+				}
+			}
+
+			// =========================================================
+			// Aggiorno le rate collegandole all'evento
+			// =========================================================
+			rPPDAO = new RateizzazionePPDAO(c);
+			for (int i = 0; i < arrayIdRate.length; i++) {
+				String idRata = arrayIdRate[i];
+				siesLogger.debug("idRata = " + idRata);
+				rPPDAO.setEveIdEvento(idEvento);
+				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
+				rPPDAO.update();
+			}
+
+			// aggiorrno l'annotazione manuale
+			amDAO = new AnnotazioneManualeDAO(c);
+			amDAO.setDAOFromModelForUpdate(amm);
+			amDAO.update();
+			amDAO.stop();
+
+			// aggiorrno l'evento
+			eDAO = new EventoDAO(c);
+			eDAO.setDAOFromModelForUpdate(enm.getEvento());
+			eDAO.update();
+			eDAO.stop();
+
+			commit(c);
+		} catch (DAOException ex) {
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("Eccezione Generica", ex);
+			rollback(c);
+			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+		} finally {
+			cleanup(eDAO);
+			cleanup(nDAO);
+			cleanup(aeDAO);
+			cleanup(rPPDAO);
+			cleanup(amDAO);
+
+			cleanup(c);
+		}
+
+		return enmRet;
+	}
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 }

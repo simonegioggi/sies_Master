@@ -44,12 +44,23 @@ public interface ICostantiRateizzazionePP {
 			+ "files/siap/siep/rateizzazionepp/LoadInserisciRideterminazionePP.jsp";
 	public static final String PG_DETTAGLIO_RIDETERMINAZIONE_PP = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/DettaglioRideterminazionePP.jsp";
-	// TODO
-	public static final String PG_LOAD_INSERIMENTO_NOTIFICHE_RPP = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/rateizzazionepp/LoadInserisciNotificheRideterminazionePP.jsp";
-	public static final String PG_LOAD_SELEZIONA_RIDETERMINAZIONE_PP = IWebConstants.ROOT_DIR
-			+ "files/siap/siep/rateizzazionepp/LoadSelezionaRideterminazionePP.jsp";
-	// FIXME
+	public static final String PG_LOAD_INSERISCI_AVVISO_MANCATO_PAGAMENTO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadInserisciAvvisoMancatoPagamento.jsp";
+	public static final String PG_DETTAGLIO_AVVISO_MANCATO_PAGAMENTO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/DettaglioAvvisoMancatoPagamento.jsp";
+	public static final String PG_LOAD_INSERISCI_PROVVEDIMENTO_ESTINZIONE_PP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadInserisciProvvedimentoEstinzionePP.jsp";
+	public static final String PG_DETTAGLIO_PROVVEDIMENTO_ESTINZIONE_PP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/DettaglioProvvedimentoEstinzionePP.jsp";
+	public static final String PG_LOAD_INSERISCI_TRASMISSIONE_ATTI_CONVERSIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadInserisciTrasmissioneAttiConversione.jsp";
+	public static final String PG_DETTAGLIO_TRASMISSIONE_ATTI_CONVERSIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/DettaglioTrasmissioneAttiConversione.jsp";
+	public static final String PG_LOAD_INSERISCI_DEFINIZIONE_PROCEDIMENTO_PP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadInserisciDefinizioneProcedimentoPP.jsp";
+	public static final String PG_DETTAGLIO_DEFINIZIONE_PROCEDIMENTO_PP = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/DettaglioDefinizioneProcedimentoPP.jsp";
+
 	public static final String CAMPO_GIORNO_DATA_EMISSIONE = "GiornoEmissioneProvvedimento";
 	public static final String CAMPO_MESE_DATA_EMISSIONE = "MeseEmissioneProvvedimento";
 	public static final String CAMPO_ANNO_DATA_EMISSIONE = "AnnoEmissioneProvvedimento";

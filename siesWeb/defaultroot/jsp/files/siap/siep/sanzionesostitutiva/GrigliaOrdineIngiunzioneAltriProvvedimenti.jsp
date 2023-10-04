@@ -86,18 +86,18 @@ if (!fascicoloNotInSession.equals("S")) {
 	</tr>
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Avviso Mancato Pagamento</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciAvvisoMancatoPagamento">Avviso Mancato Pagamento</a>
     	</td>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Provvedimento Estinzione della Pena</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciProvvedimentoEstinzionePP">Provvedimento Estinzione della Pena</a>
     	</td>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Trasmissione Atti per la Conversione</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciTrasmissioneAttiConversione">Trasmissione Atti per la Conversione</a>
     	</td>
 	</tr>
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Definizione Procedimento</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciDefinizioneProcedimentoPP">Definizione Procedimento</a>
     	</td>
 	</tr>
 </table>

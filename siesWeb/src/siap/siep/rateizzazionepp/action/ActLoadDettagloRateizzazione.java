@@ -1,18 +1,12 @@
 package siap.siep.rateizzazionepp.action;
 
-import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
-import f3b.util.Utils;
 import f3b.web.IWebConstants;
-import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
-import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
@@ -20,12 +14,11 @@ import siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
-import siap.siep.rinnovo.action.ICostantiRinnovo;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
  * Classe per il caricamento del dettaglio rateizzazioni
- * 
+ *
  * @since MEV_2023-13
  * @version 1.0
  */
@@ -46,63 +39,52 @@ public class ActLoadDettagloRateizzazione extends ActionSiap implements ICostant
 				.ExRicercaPenaCompSanzioneSostContinuazioniByIdFascicolo(fsm.getIdFascicoloSiep());
 		setRequestAttribute("dettaglioPenaComplessiva", dpcm);
 
-		
-		// 2023.09.19 - Si modifca la logica. Vanno recuperati gli OI e le rate raggruppate per OI + le rate ancora libere
-		// se non ci sono dati  e provengo dalla combo del dettaglio giro al chiamata alla Act di inserimento
-    IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-//    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-//        .exRicercaEventoRateizzazionePP(fsm.getIdFascicoloSiep(), "",null);
-    String[] listaCodici = new String[] { "0622", "1307", "1308" };
-    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-        .exRicercaEventiRateizzazionePP(fsm.getIdFascicoloSiep(), listaCodici ,false);
-    
-    // Inverto l'ordine degli OI
-    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzioneOrder = new Vector<EventoRateizzazionePPModel> ();
-    for (EventoRateizzazionePPModel modelOI : listaOrdiniIngiunzione) {
-      listaOrdiniIngiunzioneOrder.add(0, modelOI);
-    }
-    
-    Vector<RateizzazionePPModel> listaRateizzazioniLibere = new Vector<>();
-    listaRateizzazioniLibere = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
-
-    if (listaOrdiniIngiunzione.isEmpty() && listaRateizzazioniLibere.isEmpty()) {
-      String lPage = "";
-      lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-          + "=siap.siep.rateizzazionepp.action.ActLoadInserisciRateizzazione";
-      return lPage;      
-    }
-    
-    
-    setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzioneOrder);
-    setRequestAttribute("listaRateizzazioniLibere", listaRateizzazioniLibere);
-    
-/*		
-		// Ricerca i pagamenti per id Facicolo
-		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
+		// 2023.09.19 - Si modifca la logica. Vanno recuperati gli OI e le rate raggruppate per OI + le rate
+		// ancora libere
+		// se non ci sono dati e provengo dalla combo del dettaglio giro al chiamata alla Act di inserimento
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
-		
-		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
-		// Ricerca i pagamenti per id Fascicolo
-		boolean isEventoRateizzazioneAnnullato = false;
-		if (!listaRateizzazioni.isEmpty()) {
-			Iterator<RateizzazionePPModel> iterRPPM = listaRateizzazioni.iterator();
-			while (iterRPPM.hasNext()) {
-				RateizzazionePPModel rppm = iterRPPM.next();
-				BigDecimal idEvento = rppm.getEveIdEvento();
-				if (!Utils.isNullObj(idEvento)) {
-					IEvento ie = SICOLookupRemote.getEventoRemote();
-					EventoModel em = ie.ExRicercaEventoByKey(idEvento);
-					rppm.setStoricizzato("A".equals(em.getFlagDocumentoRegistrato()));
-					isEventoRateizzazioneAnnullato = "A".equals(em.getFlagDocumentoRegistrato());
-				} else
-					isEventoRateizzazioneAnnullato = false;
-			}
+		// Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+		// .exRicercaEventoRateizzazionePP(fsm.getIdFascicoloSiep(), "",null);
+		String[] listaCodici = new String[] { "0622", "1307", "1308" };
+		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+				.exRicercaEventiRateizzazionePP(fsm.getIdFascicoloSiep(), listaCodici, false);
+
+		// Inverto l'ordine degli OI
+		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzioneOrder = new Vector<>();
+		for (EventoRateizzazionePPModel modelOI : listaOrdiniIngiunzione) {
+			listaOrdiniIngiunzioneOrder.add(0, modelOI);
 		}
 
-		setRequestAttribute("isEventoRateizzazioneAnnullato", "" + isEventoRateizzazioneAnnullato);
-		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-*/
+		Vector<RateizzazionePPModel> listaRateizzazioniLibere = new Vector<>();
+		listaRateizzazioniLibere = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
+
+		if (listaOrdiniIngiunzione.isEmpty() && listaRateizzazioniLibere.isEmpty()) {
+			String lPage = "";
+			lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+					+ "=siap.siep.rateizzazionepp.action.ActLoadInserisciRateizzazione";
+			return lPage;
+		}
+
+		setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzioneOrder);
+		setRequestAttribute("listaRateizzazioniLibere", listaRateizzazioniLibere);
+
+		/*
+		 * // Ricerca i pagamenti per id Facicolo Vector<RateizzazionePPModel> listaRateizzazioni = new
+		 * Vector<>(); IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote(); listaRateizzazioni
+		 * = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
+		 * 
+		 * // MEV_2023-33: aggiunto controllo per storicizzazione evento OIP // Ricerca i pagamenti per id
+		 * Fascicolo boolean isEventoRateizzazioneAnnullato = false; if (!listaRateizzazioni.isEmpty()) {
+		 * Iterator<RateizzazionePPModel> iterRPPM = listaRateizzazioni.iterator(); while (iterRPPM.hasNext())
+		 * { RateizzazionePPModel rppm = iterRPPM.next(); BigDecimal idEvento = rppm.getEveIdEvento(); if
+		 * (!Utils.isNullObj(idEvento)) { IEvento ie = SICOLookupRemote.getEventoRemote(); EventoModel em =
+		 * ie.ExRicercaEventoByKey(idEvento);
+		 * rppm.setStoricizzato("A".equals(em.getFlagDocumentoRegistrato())); isEventoRateizzazioneAnnullato =
+		 * "A".equals(em.getFlagDocumentoRegistrato()); } else isEventoRateizzazioneAnnullato = false; } }
+		 * 
+		 * setRequestAttribute("isEventoRateizzazioneAnnullato", "" + isEventoRateizzazioneAnnullato);
+		 * setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+		 */
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
