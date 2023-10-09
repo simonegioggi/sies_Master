@@ -1,7 +1,16 @@
-BRANCH SIES VERSIONE 12.5.4.0
-Nasce dal branch 12.5.3.0 in data 25/09/2023
-Questa release verrà rilasciata il 27/10/2023 (Patch mese di Ottobre 2023)
+Ticket#20231003017 - 432/2021 SIEP Procura di Foggia
 
-Comprende i seguenti Ticket MAC:
+Il modulo di annullamento di un provvedimento andava in errore quando l'unica posizione giuridica a sistema era quella collegata 
+al provvedimento oggetto della cancellazione.
+La funzione cancella la PG collegata all'evento e tenta di ripristinare quella precedente. In assenza di una PG precedente va 
+in errore in quanto non ne testa l'effettiva presenza.
 
-1)	
+Corretto modulo 
+siap.siep.ordineesecuzione.controller.OrdineEsecuzioneController
+metodo 
+ExAggiornaEventoInserisciCampoNota
+
+
+
+
+
