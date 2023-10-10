@@ -93,6 +93,7 @@ import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.reato.controller.IReato;
 import siap.siep.reato.controller.ReatoContinuazioneController;
@@ -1889,6 +1890,7 @@ public class SIAPStampaController extends SiapController {
 
 	    RateizzazionePPSqlDAO lRateSqlDao = null;
 
+	    TreeModel lEveRatModel = null;
 	    TreeModel lEveNotCollegatoTree = null;
 
 	    try {
@@ -1897,9 +1899,15 @@ public class SIAPStampaController extends SiapController {
 	      else
 	        lConn = getDBConnection();
 
+	      
+	      EventoRateizzazionePPModel eveRat = new EventoRateizzazionePPModel();
+	      
         IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
         EventoNotificaModel lEveNotCollegatoMod = lCtrlEvento.ExRicercaEventoNotificaByKey(aIdEvento, lConn);
         lEveNotCollegatoTree = new TreeModel(lEveNotCollegatoMod.getEvento());
+        
+        lEveRatModel = new TreeModel(eveRat);
+        lEveRatModel.add(lEveNotCollegatoTree);
         
         for (NotificaModel notifica : lEveNotCollegatoMod.getNotifiche()) {
           siesLogger.debug("Aggiungo le notifiche al tree collegato");
@@ -1923,6 +1931,9 @@ public class SIAPStampaController extends SiapController {
         lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
         lRateSqlDao.ricercaRateizzazionePPByEveIdEvento (lEveNotCollegatoMod.getEvento().getIdEvento());
         Vector <RateizzazionePPModel> listaRateCollegato = new Vector <RateizzazionePPModel> (lRateSqlDao.getModels());
+        
+        eveRat.setListaRateizzazioniPP(listaRateCollegato);
+        
         for (RateizzazionePPModel rata: listaRateCollegato) {
           siesLogger.debug("add rata");
           lEveNotCollegatoTree.add(new TreeModel(rata));
@@ -1938,7 +1949,8 @@ public class SIAPStampaController extends SiapController {
 	        cleanup(lConn);
 	    }
 
-	    return lEveNotCollegatoTree;
+	    return lEveRatModel;
+	    //return lEveNotCollegatoTree;
 	  }
 
 	
