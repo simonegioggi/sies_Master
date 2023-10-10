@@ -53,8 +53,8 @@ public interface IRateizzazionePP {
 	public Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo,
 			String[] motivi, boolean soloValidati) throws F3BException;
 
-	  public Vector<RateizzazionePPModel> exRicercaRateizzazioniBollettiniByIdEvento(BigDecimal aIdEvento)
-		      throws F3BException ;
+	public Vector<RateizzazionePPModel> exRicercaRateizzazioniBollettiniByIdEvento(BigDecimal aIdEvento)
+			throws F3BException;
 
 	public BigDecimal exInserisciAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
@@ -69,23 +69,23 @@ public interface IRateizzazionePP {
 
 	public void exUpdateProvvedimentoEstinzionePP(EventoModel em) throws F3BException;
 
-	public EventoNotificaModel exModificaProvvedimentoEstinzionePP(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException;
+	public EventoNotificaModel exModificaProvvedimentoEstinzionePP(EventoNotificaModel enm,
+			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
 
 	public BigDecimal exInserisciTrasmissioneAttiConversione(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
 
 	public void exUpdateTrasmissioneAttiConversione(EventoModel em) throws F3BException;
 
-	public EventoNotificaModel exModificaTrasmissioneAttiConversione(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException;
+	public EventoNotificaModel exModificaTrasmissioneAttiConversione(EventoNotificaModel enm,
+			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
 
 	public BigDecimal exInserisciDefinizioneProcedimentoPP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;
 
 	public void exUpdateDefinizioneProcedimentoPP(EventoModel em) throws F3BException;
 
-	public EventoNotificaModel exModificaDefinizioneProcedimentoPP(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException;
+	public EventoNotificaModel exModificaDefinizioneProcedimentoPP(EventoNotificaModel enm,
+			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
 
 }
