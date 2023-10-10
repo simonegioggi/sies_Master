@@ -71,7 +71,7 @@ public class ActElencoStatoPagamenti extends ActionSiap implements ICostantiSanz
 		if (Utils.isPresent(enm.getNotifiche())) {
 			for (int i = 0; i < enm.getNotifiche().length; i++) {
 				NotificaModel nm = enm.getNotifiche()[i];
-				if ("03".equals(nm.getCodEsito())) {
+				if (!Utils.isNullObj(nm.getDataAvvenutaNotifica()) && "E".equals(nm.getCodTipoNotifica())) {
 					dataAvvenutaNotifica = nm.getDataAvvenutaNotifica();
 					break;
 				}
