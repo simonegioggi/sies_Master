@@ -44,6 +44,8 @@ public interface ICostantiRateizzazionePP {
 			+ "files/siap/siep/rateizzazionepp/LoadInserisciRideterminazionePP.jsp";
 	public static final String PG_DETTAGLIO_RIDETERMINAZIONE_PP = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/DettaglioRideterminazionePP.jsp";
+	public static final String PG_PRE_LOAD_INSERISCI_AVVISO_MANCATO_PAGAMENTO = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/PreLoadInserisciAvvisoMancatoPagamento.jsp";
 	public static final String PG_LOAD_INSERISCI_AVVISO_MANCATO_PAGAMENTO = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/LoadInserisciAvvisoMancatoPagamento.jsp";
 	public static final String PG_DETTAGLIO_AVVISO_MANCATO_PAGAMENTO = IWebConstants.ROOT_DIR

@@ -88,4 +88,7 @@ public interface IRateizzazionePP {
 	public EventoNotificaModel exModificaDefinizioneProcedimentoPP(EventoNotificaModel enm,
 			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
 
+	public Vector<EventoRateizzazionePPModel> exRicercaAvvisoMancatoPagamento(BigDecimal idFascicolo)
+			throws F3BException;
+
 }

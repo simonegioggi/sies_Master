@@ -707,12 +707,11 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	// 26/03/2019 MEV70 - Esclusione dei CodMotivo nella lista.
 	// Ticket#202101270113 - si adeguano le condizioni della count alle condizioni della select
-	//                       impostando il filtro sull'ufficio + accorpati
+	// impostando il filtro sull'ufficio + accorpati
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
 			// String aCodUfficioUtenteConnesso
-			UfficioModel aUfficioUtenteConnesso
-			, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
-			throws DAOException
+			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
+			String[] aCodMotivo) throws DAOException
 
 	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
@@ -729,7 +728,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 			// Fine Ticket#202101270113
 		} else {
 			lStatement += ", FASCICOLO_SIEP fasc";
-			//lStatement += " WHERE CHIAVE_UFFICIO ='" + aCodUfficioUtenteConnesso + "'";
+			// lStatement += " WHERE CHIAVE_UFFICIO ='" + aCodUfficioUtenteConnesso + "'";
 			lStatement += " WHERE CHIAVE_UFFICIO ='" + aUfficioUtenteConnesso.getCodUfficio() + "'";
 			lStatement += " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = fasc.ID_FASCICOLO_SIEP";
 			lStatement += " AND (FLAG_DOCUMENTO_REGISTRATO = 'N' OR FLAG_DOCUMENTO_REGISTRATO IS NULL) ";
@@ -999,7 +998,9 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
 		// Ticket#20220712011 si aggiungono alla ricerca anche i codice delle sospensini in cumulo
-		//lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
+		// lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0062','0117','0105','0104','0063', '0364',
+		// '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531',
+		// '5532'))";
 		// Si aggiungono i codici '0661','0635','0642','0637'
 		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0661','0635','0642','0637','0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
 		// Ticket#20220712011 - FINE
@@ -1792,6 +1793,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	 * @throws DAOException
 	 */
 	protected String getSqlQuery() throws DAOException {
+
 		String lStatement = new String("");
 
 		lStatement += " SELECT ID_EVENTO, ";
@@ -2616,7 +2618,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		if (aModel.getFasSieIdFascicoloSiep() != null) {
 			lCondizioni += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aModel.getFasSieIdFascicoloSiep();
 		}
-		
+
 		// Ticket#20200708017: ripristinata condizione del ticket sottostante
 		// 12/12/2019 - Ticket 201911260116 - Impostazione della condizione per EVE_ID_EVENTO.
 		if (aModel.getEveIdEvento() != null) {
@@ -3488,6 +3490,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	// Vengono estratti dalla tabella Evento, tutti gli eventi legati al Fascicolo Siep,
 	// che hanno COD_MOTIVO legati al cumulo
 	public void ricercaEventoCumulo(BigDecimal aIdFascicoloSiep) throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aIdFascicoloSiep;
@@ -3502,6 +3505,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public String setCondizioneEventoCumulo(BigDecimal aIdFascicoloSiep) {
+
 		String lCondizioni = new String();
 
 		lCondizioni = " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aIdFascicoloSiep;
@@ -3512,5 +3516,97 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		return lCondizioni;
 	}
+
+	/*
+	 * ISSUE MEV : aggiunto metodo di ricerca Avviso Mancato Pagamento 
+	 * Numero MEV : 2023-33 
+	 * Autore : sgioggi
+	 * Data : 11 ott 2023 
+	 * Branch : MEV_2023-33
+	 */
+	public void ricercaAvvisoMancatoPagamento(String[] motivi, EventoModel em) throws DAOException {
+
+		String s = new String("");
+		s += "SELECT distinct ID_EVENTO, COD_TIPO_EVENTO, CODEVE.RV_MEANING COD_EVE, COD_TIPO_PROVVEDIMENTO,"
+				+ " CODTIPPRO.RV_MEANING COD_PRO, CODMOV.RV_ABBREVIATION COD_ABBR, COD_MOTIVO,"
+				+ " CODMOV.RV_MEANING COD_MOV, COD_UFFICIO_EMITTENTE,"
+				+ " UFF_TIPO_EMI.RV_MEANING DESC_UFF_EMITTENTE, COD_LUOGO_EMITTENTE,"
+				+ " LUOEMI.DESCRIZIONE LUO_EMI, UFF_TIPO_EMI.RV_LOW_VALUE COD_TIPO_UFFICIO_EMITTENTE,"
+				+ " NOME_SOGGETTO_PRESENTANTE, COGNOME_SOGGETTO_PRESENTANTE, DATA_EMISSIONE, COD_ESITO,"
+				+ " CODESI.RV_MEANING  COD_ESI, FLAG_PIU_MENO, DATA_TRASMISSIONE_ATTI, DATA_RICEZIONE_ATTI,"
+				+ " COD_UFFICIO_DESTINATARIO, COD_LUOGO_DESTINATARIO,"
+				+ " LUODES.DESCRIZIONE LUO_DES, ANNO_PROTOCOLLO, PROGR_PROTOCOLLO,"
+				+ " EVENTO.COD_OPERATORE_INSERIMENTO, EVENTO.DATA_INSERIMENTO,"
+				+ " EVENTO.COD_UFFICIO_INSERIMENTO, EVENTO.COD_OPERATORE_AGGIORNAMENTO,"
+				+ " EVENTO.DATA_AGGIORNAMENTO, EVENTO.COD_UFFICIO_AGGIORNAMENTO,"
+				+ " EVENTO.FAS_SIE_ID_FASCICOLO_SIEP, FAS_SIU_ID_FASCICOLO_SIUS,"
+				+ " UFF_TIPO_DES.RV_MEANING  DESC_UFF_DESTINATARIO, FLAG_DOCUMENTO_REGISTRATO, COD_MAGISTRATO,"
+				+ " COD_TIPO_UFFICIO_DESTINATARIO, FAS_SIU_ID_FASCICOLO_SIUS_DEST,"
+				+ " TEM_ID_TEMPLATE, FLAG_STAMPA_SIEP, FLAG_STAMPA_SIUS,"
+				+ " FLAG_VIDEO_SIEP, FLAG_VIDEO_SIUS, DEC_ID_DECRETO_ORDINANZA_SIEP, PEN_ACC_ID_PENA_ACCESSORIA,"
+				+ " EVENTO.EVE_ID_EVENTO, EVE_ID_EVENTO_REVOCA, ANN_ID_ANNOTAZIONE_MANUALE, PEN_ID_PENA_RESIDUA,"
+				+ " DATA_ESPULSIONE_SANZ_SOST, DATA_RICHIESTA,"
+				+ " ISTR_ID_ISTRUTTORIA_CUMULO, ESTREMI_SOGG_RICH_ISTR, KEY_ESEC_NSC, DATA_INVIO_ATTI,"
+				+ " UFF_EMI.COD_TIPO_UFFICIO as TIPO_COD_UFFICIO_EMITTENTE,"
+				+ " TIPOLOGIA_INVIO_ATTI  FROM EVENTO, cg_ref_codes CODESI,"
+				+ " cg_ref_codes CODMOV, UFFICIO UFF_EMI, CG_REF_CODES UFF_TIPO_EMI, CG_REF_CODES CODTIPPRO,"
+				+ " CG_REF_CODES CODEVE, COMUNE LUOEMI, COMUNE LUODES, CG_REF_CODES UFF_TIPO_DES,"
+				+ " rateizzazione_pp rpp, bollettino_pagopa b"
+				+ " WHERE EVENTO.COD_TIPO_EVENTO = CODEVE.RV_LOW_VALUE"
+				+ " AND CODEVE.RV_DOMAIN = 'TIPO_EVENTO'"
+				+ " AND EVENTO.COD_TIPO_PROVVEDIMENTO = CODTIPPRO.RV_LOW_VALUE"
+				+ " AND CODTIPPRO.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'"
+				+ " AND ((nvl(EVENTO.COD_MOTIVO, '-') = CODMOV.RV_LOW_VALUE AND"
+				+ " CODMOV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO') OR"
+				+ " (EVENTO.COD_MOTIVO = CODMOV.RV_LOW_VALUE AND"
+				+ " CODMOV.RV_DOMAIN = 'OGGETTO_PROCEDIMENTO'))"
+				+ " AND EVENTO.COD_ESITO = CODESI.RV_LOW_VALUE"
+				+ " AND (CODESI.RV_DOMAIN = 'ESITO_PROVVEDIMENTO' OR"
+				+ " (CODESI.RV_DOMAIN = 'TENORE_DECISIONE_RICORSO_SIGE' AND CODESI.RV_LOW_VALUE <> '-'))"
+				+ " AND EVENTO.COD_LUOGO_EMITTENTE = LUOEMI.COD_COMUNE"
+				+ " AND EVENTO.COD_LUOGO_DESTINATARIO = LUODES.COD_COMUNE"
+				+ " AND UFF_EMI.COD_UFFICIO = COD_UFFICIO_EMITTENTE"
+				+ " AND UFF_TIPO_EMI.RV_DOMAIN = 'TIPO_UFFICIO'"
+				+ " AND UFF_TIPO_EMI.RV_LOW_VALUE = UFF_EMI.COD_TIPO_UFFICIO"
+				+ " AND UFF_TIPO_DES.RV_LOW_VALUE = EVENTO.COD_TIPO_UFFICIO_DESTINATARIO"
+				+ " AND UFF_TIPO_DES.RV_DOMAIN = 'TIPO_UFFICIO'"
+				+ " and rpp.eve_id_evento = ID_EVENTO and rpp.tipo_rateizzazione = 'R'"
+				+ " and b.fas_sie_id_fascicolo_siep = rpp.fas_sie_id_fascicolo_siep"
+				+ " and b.rat_id_rateizzazione_pp = rpp.id_rateizzazione_pp"
+				+ " and b.stato_pagamento = 'PN' and b.iuv is not null";
+
+		if (em.getFasSieIdFascicoloSiep() != null) {
+			s += " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP=" + em.getFasSieIdFascicoloSiep();
+		}
+
+		if (em.getCodTipoEvento() != null) {
+			if (em.getCodTipoEvento().compareTo("") != 0)
+				s += " AND COD_TIPO_EVENTO ='" + em.getCodTipoEvento() + "'";
+		}
+
+		if (em.getCodTipoProvvedimento() != null) {
+			if (em.getCodTipoProvvedimento().compareTo("") != 0)
+				s += " AND COD_TIPO_PROVVEDIMENTO ='" + em.getCodTipoProvvedimento() + "'";
+		}
+
+		if (motivi.length > 0) {
+			s += " AND COD_MOTIVO IN (";
+			for (int i = 0; i < motivi.length; i++) {
+				s += "'" + motivi[i] + "'";
+				if (motivi.length > 1 && i < motivi.length - 1)
+					s += ",";
+			}
+			s += ")";
+		}
+
+		if (em.getFlagDocumentoRegistrato() != null) {
+			if (em.getFlagDocumentoRegistrato().compareTo("") != 0)
+				s += " AND FLAG_DOCUMENTO_REGISTRATO ='" + em.getFlagDocumentoRegistrato() + "'";
+		}
+
+		s += " ORDER BY DATA_INSERIMENTO DESC";
+		setStatement(s);
+	}
+	// ***** FINE INTERVENTO MEV_2023-33 *****//
 
 } // Chiude DAO

@@ -422,15 +422,15 @@ if (listaRateizzazioniLibere.size() > 0) {
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td width="30%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
 		<td width="15%" class="menulines">
     		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadInserisciOrdineIngiunzione">Ordine Ingiunzione</a>
 		</td>
 		<td width="5%">&nbsp;</td>
-		<td width="20%" class="menulines">
+		<td width="30%" class="menulines">
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciRideterminazionePP">Rideterminazione della Pena Pecuniaria</a>
   		</td>
-  		<td width="30%">&nbsp;</td>
+  		<td width="25%">&nbsp;</td>
 	</tr>
 <%
 } // END if (listaRateizzazioniLibere.size() > 0)

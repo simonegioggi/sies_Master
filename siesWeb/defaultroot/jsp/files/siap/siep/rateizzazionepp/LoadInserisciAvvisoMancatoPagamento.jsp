@@ -32,7 +32,6 @@
 <%@ page import="siap.siep.notifica.model.NotificaModel"%>
 <%@ page import="siap.siep.istitutodetenzione.action.ICostantiIstitutoDetenzione"%>
 
-<jsp:useBean id="listaRateizzazioni"        scope="request" class="java.util.Vector<RateizzazionePPModel>"/>
 <jsp:useBean id="civilmenteObbligati"       scope="request" class="java.util.Vector<CivilmenteObbligatoModel>"/>
 <jsp:useBean id="magistrato"         		scope="request" class="siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel"/>
 <jsp:useBean id="posizioneluogoaltra" 		scope="request" class="siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel"/>
@@ -43,13 +42,11 @@
 <jsp:useBean id="eventonotifica"   			scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 <jsp:useBean id="tipoprovvedimento" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="autorita" 					scope="request" class="java.lang.String"/>
-<jsp:useBean id="filtroMinorenni" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
 <jsp:useBean id="annotazioneManuale"   		scope="request" class="siap.siep.annotazionemanuale.model.AnnotazioneManualeModel"/>
-<jsp:useBean id="isImportoPagatoMinore" 	scope="request" class="java.lang.Boolean"/>
-<jsp:useBean id="importoDaPagare"			scope="request" class="java.math.BigDecimal"/>
+<jsp:useBean id="importoPagato" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="importoDaPagare" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoRateizzazione"			scope="request" class="java.lang.String"/>
-<jsp:useBean id="isProvvedimentoEmissibile" scope="request" class="java.lang.Boolean"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -68,7 +65,7 @@ if (eventonotifica.getEvento().getIdEvento() != null) {
 %>
 <html>
 <head>
-<title>[S.I.E.S.] - Gestione Provvedimento Rideterminazione Pena Pecuniaria </title>
+<title>[S.I.E.S.] - Gestione Provvedimento Avviso Mancato Pagamento </title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -92,95 +89,95 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 
 function Verify() {
 	// Data Emissione Provvedimento obbligatoria
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value;
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value;
 
-	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+	var data_to_verify = document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data Emissione Provvedimento non valida');
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 		return false;
 	}
 
 	// Tipo Provvedimento
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.value == "-") {
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.value == "-") {
 		alert("Campo Tipo Provvedimento obbligatorio!");
-    	document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.focus();
+    	document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.focus();
     	return false;
 	}
 
 	// Sede Autorita' Emittente Obbligatoria
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.value == "") {
-		alert("Selezionare la sede dell'Autorita' Emittente per il Provvedimento di Rideterminazione Pena!");
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.focus();
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.value == "") {
+		alert("Selezionare la sede dell'Autorita' Emittente per il Provvedimento di Avviso Mancato Pagamento!");
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.focus();
 		return false; 
 	}
 
 	// Data Emissione
-  	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
+  	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
 
-	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+	var data_to_verify = document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di emissione non valida');
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 		return false;
 	}
 
 	// Data Trasmissione
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length == 1)
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value = '0' +
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
 
-	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
+	var data_to_verify = document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value
+		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
+		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di Trasmissione non valida');
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
 		return false;
 	}
 
 	// Autorita x la Notifica
-	if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") {
-  		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value == "-") {
+	if (typeof document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") {
+  		if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value == "-") {
 			alert("Selezionare l'autorita' per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
+			document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
 			return false; 
 		}
-		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value == "") {
+		if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value == "") {
 			alert("Selezionare la sede dell'autorita' per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
+			document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
 			return false; 
   		}
-	} else if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
-		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
+	} else if (typeof document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
+		if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
 			alert("Selezionare l'istituto di detenzione per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
+			document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
 			return false; 
   		}
-	} else if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
-		if (document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
+	} else if (typeof document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
+		if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
 			alert("Selezionare l'istituto di detenzione per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
+			document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
 			return false; 
     	}          
  	} else {
@@ -258,11 +255,11 @@ if ("M".equals(modalita)) {
 <%
 if ("I".equals(modalita)) {
 %>
-			<font class="campo">Inserimento Provvedimento Rideterminazione della Pena Pecuniaria</font>
+			<font class="campo">Inserimento Provvedimento Avviso Mancato Pagamento</font>
 <%
 } else if ("M".equals(modalita)) {
 %>
-			<font class="campo">Modifica Provvedimento Rideterminazione della Pena Pecuniaria</font>
+			<font class="campo">Modifica Provvedimento Avviso Mancato Pagamento</font>
 <%
 }
 %>
@@ -300,25 +297,34 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 		</td>
 	</tr>
 </table>
-<FORM method="POST" name="LoadInserisciRideterminazionePP" action="<%=IWebConstants.PG_MAIN%>">
+<FORM method="POST" name="LoadInserisciAvvisoMancatoPagamento" action="<%=IWebConstants.PG_MAIN%>">
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
       	<td class="L">
 <%
 if ("I".equals(modalita)) {
 %>
-    		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActInserisciRideterminazionePP">
+    		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActInserisciAvvisoMancatoPagamento">
 <%
 } else if ("M".equals(modalita)) {
 %>
-			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActModificaRideterminazionePP">
+			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActModificaAvvisoMancatoPagamento">
 			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento()%>">
 <%
 }
 %>
+	        <font class="label">Importo pagato</font>
+	        <font class="cVerde"><%=importoPagato%> &euro;</font>&nbsp;&nbsp;&nbsp;
 	        <font class="label">Importo da pagare</font>
-	        <font class="campo"><%=StringUtils.toEuroFormat(importoDaPagare)%> &euro;</font>
-	        <font class="label">con le seguenti modalita'</font>
+	        <font class="cRosso"><%=importoDaPagare%> &euro;</font>&nbsp;&nbsp;&nbsp;
+	        <font class="label">in unica soluzione</font>
+      	</td>
+	</tr>
+	<tr>
+      	<td class="L">
+      		<font class="label">termine di pagamento fissato entro</font>
+      		<font class="cViola"> 60 </font>
+      		<font class="label">giorni dalla notifica del presente avviso</font>
       	</td>
     </tr>
 </table>
@@ -336,173 +342,31 @@ if (tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA))
 }
 %>
 	</tr>
-<%
-Iterator<RateizzazionePPModel> IteRate = listaRateizzazioni.iterator();
-int conta = 0;
-int contaLibere = 0;
-String storia = "";
-String descrMotivo = "";
-while (IteRate.hasNext()) {
-	RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
-	storia = rata.isStoricizzato() ? " Storicizzato" : "";
-  	conta++;
-	if (rata.getEveIdEvento() == null)
-    	contaLibere++;
-	else {
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoModel em = ie.ExRicercaEventoByKey(rata.getEveIdEvento());
-		descrMotivo = em.getDescrMotivo();
-	}
-  	if ((tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)
-  			|| ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA.equals(rata.getTipoRateizzazione()))
-  			&& "".equals(storia)) {
-%>
-	<tr>
-		<td class="c" nowrap><font class="label">Rata unica da</font>&nbsp;<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font></td>      
-		<td class="c" nowrap><font class="label">termine di pagamento fissato entro </font></td>
-		<td class="c" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-		<td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
-<%
-		if ((rata.getEveIdEvento() != null && "I".equals(modalita))
-				|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
-%>
-        <td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento <%=descrMotivo%><%=storia%></font></td>
-<%
-		} else {
-%>
-		<td class="c">&nbsp;</td>
-<%
-		}
-%>         
-	</tr>
-<%
-	} else if ((tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)
-    		  || ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE.equals(rata.getTipoRateizzazione()))
-			&& "".equals(storia)) {
-%>
-	<tr>
-		<td class="c" nowrap>
-			<font class="campo"><%=StringUtils.toStringJSP(rata.getNumeroRate(),"&nbsp;")%></font>
-			<font class="label"> rate da </font>
-			<font class="campo"><%=StringUtils.toEuroFormat(rata.getImportoRata())%> &euro;</font>
-		</td>      
-<%
-		if (conta == 1 || ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE.equals(rata.getTipoRateizzazione())) {
-%>
-		<td class="c" nowrap><font class="label">termine di pagamento della prima rata fissato entro </font></td>
-		<td class="c" nowrap><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
-		<td class="L" nowrap><font class="label">giorni dalla notifica dell'avviso di pagamento </font></td>
-<%
-		} else {
-%>
-		<td class="c" colspan="3">&nbsp;</td>
-<%
-		}
-        if ((rata.getEveIdEvento() != null && "I".equals(modalita))
-        		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) != 0)) {
-%>
-		<td class="c" nowrap><font class="label" style="color:red;">Emesso Provvedimento <%=descrMotivo%><%=storia%></font></td>
-<%
-		} else {
-%>
-		<td class="c">&nbsp;</td>
-<%
-		}
-%>       
-	</tr>
-<%
-	}
-    if ((rata.getEveIdEvento() == null
-    		|| ("M".equals(modalita) && eventonotifica.getEvento().getIdEvento().compareTo(rata.getEveIdEvento()) == 0))
-    		|| isImportoPagatoMinore) {
-%>
-	<tr><td><input type="HIDDEN" name="<%=ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO%>" value="<%=rata.getIdRateizzazionePP()%>"></td></tr>
-<%
-	}
-}
-%>
 </table>
 <br>
-<%
-if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isProvvedimentoEmissibile)) {
-%>
-<table cellspacing="0" cellpadding="0" width="95%">
-	<tr>
-	    <td class="L" width="20%">Attenzione</td>
-	    <td class="L"><font class="label">E' gia' stato emesso Provvedimento Rideterminazione Pena Pecuniaria per tutte le rate previste</font></td>
-  	</tr>
-</table>
-<%
-} else {
-%>
 <table cellspacing="0" cellpadding="0" width="95%">
 <%
-	Iterator<CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
-	while (itx.hasNext()) {
-		CivilmenteObbligatoModel com = (CivilmenteObbligatoModel) itx.next();
+Iterator<CivilmenteObbligatoModel> itx = civilmenteObbligati.iterator();
+while (itx.hasNext()) {
+	CivilmenteObbligatoModel com = (CivilmenteObbligatoModel) itx.next();
 %>
 	<tr>
 		<td class="l" width="20%">Civilmente Obbligato:</td>
 		<td class="l">
 			<font class="campo"><%=com.getCognome()%></font>&nbsp;<font class="campo"><%=com.getNome()%></font>
 <%
-		if ("G".equals(com.getCodPersona())) {
+	if ("G".equals(com.getCodPersona())) {
 %>
 			<font class="label"> in qualita' di Legale Rappresentante di </font>
 			<font class="campo"><%=com.getDenominazione()%></font>
 <%
-		}
+	}
 %>
 		</td>
 	</tr>
 <%
-	}
+}
 %>
-</table>
-<br> <%-- Dati Provvedimento di Rideterminazione Pena --%>
-<table cellspacing="0" cellpadding="0" width="95%">
-	<tr>
-	  	<td class="Titolo" colspan="4">Dati Provvedimento di Rideterminazione Pena</td>
-	</tr>
-	<tr>
-		<td class="L" width="20%" nowrap>Data Emissione Provvedimento <font class="ob">(*)</font></td>
-		<td class="L">
-    		<input type="text" Title="Giorno emissione provvedimento" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(annotazioneManuale.getDataIscrizioneSiep(), "dd"), "")%>" name="<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-			/
-			<input type="text" Title="Mese emissione provvedimento" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(annotazioneManuale.getDataIscrizioneSiep(), "MM"), "")%>" name="<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>" maxlength="2" size="2" <%=IWebConstants.UTIL_DATA%>>
-			/
-			<input type="text" Title="Anno emissione provvedimento" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(annotazioneManuale.getDataIscrizioneSiep(), "yyyy"), "")%>" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>" maxlength="4" size="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
-		</td>
-		<td class="L" width="20%">Anno / Numero provvedimento</td>
-		<td class="L">
-			<input type="text" Title="Anno Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getAnnoSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_PROVVEDIMENTO%>" size="4" maxlength="4">
-			/
-			<input type="text" Title="Numero Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getNumeroSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_NUMERO_PROVVEDIMENTO%>" size="6" maxlength="6">
-  		</td>
-	</tr>
-	<tr>
-  		<td class="l">Tipo provvedimento <font class="ob">(*)</font></td>
-  		<td class="l" colspan="3">
-    		<select title="Tipo Provvedimento" name="<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>">
-				<%=tipoprovvedimento%>
-    		</select>
-  		</td>
-	</tr>
-	<tr>
-	  	<td class="l">Autorità Emittente <font class="ob">(*)</font></td>
-	  	<td class="l">
-			<select title="Autorità Emittente" name="<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>">
-        		<%=autorita%>
-			</select>
-	    </td>
-	    <td class="l" colspan="2">
-			Sede <font class="ob">(*)</font>&nbsp;
-			<input type="text" title="Sede Autorita" value="<%=StringUtils.toStringJSP(annotazioneManuale.getDescrLuogoUfficioSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>" maxlength="35" size="35">
-			<a href="Javascript:ListaUfficiPerTipo('LoadInserisciRideterminazionePP','<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>',document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>[document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>.selectedIndex].value);">
-				<img src="/images/filefolder.gif" border="0">
-       		</a>
-	  	</td>
-	</tr>
 </table>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
@@ -536,7 +400,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 		<td class="L">
 			<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCognome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" maxlength="35" size="25">
 			<input readonly title= "Nome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getNome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" maxlength="35" size="25">
-			<a href="Javascript:ListaMagistrati('LoadInserisciRideterminazionePP');">
+			<a href="Javascript:ListaMagistrati('LoadInserisciAvvisoMancatoPagamento');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
 			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCodMagistrato())%>" name="<%=ICostantiEvento.CAMPO_COD_MAGISTRATO%>">
@@ -578,7 +442,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
                 	name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>" 
                   	id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>">
-       		<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
+       		<a href="Javascript:ListaComuni('LoadInserisciAvvisoMancatoPagamento','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
          		<img src="/images/filefolder.gif" border=0>
         	</a>
 		</td>
@@ -602,7 +466,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input type="hidden" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
                		value="<%=posizioneluogoaltra.getAltraCausa().getIstDetIdIstitutoDetenzione()%>">
-       		<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+       		<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciAvvisoMancatoPagamento','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -613,7 +477,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 			<input readonly title="Istituto" name="Comune" id="descIstituto" value="" size="50">
           	<input type="hidden" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
-          	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+          	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciAvvisoMancatoPagamento','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -668,7 +532,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
         			name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>" 
                  	id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>">
-        	<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
+        	<a href="Javascript:ListaComuni('LoadInserisciAvvisoMancatoPagamento','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
           		<img src="/images/filefolder.gif" border=0>
        		</a>
      	</td>
@@ -687,7 +551,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
                		value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>">
-        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciAvvisoMancatoPagamento','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -699,7 +563,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input readonly title="Istituto" name="Comune" id="descIstituto"  value="" size="50">
         	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
-        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciAvvisoMancatoPagamento','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -773,13 +637,13 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 <%
 		if (lNumAvvocati < 2) {
 %>
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>');">
+			<a href="Javascript:ListaComuni('LoadInserisciAvvisoMancatoPagamento','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>');">
 				<img src="/images/filefolder.gif" border="0">
 	  		</a>
 <%
 		} else {
 %>
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+			<a href="Javascript:ListaComuni('LoadInserisciAvvisoMancatoPagamento','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
 				<img src="/images/filefolder.gif" border="0">
 	  		</a>
 <%
@@ -844,7 +708,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 	    	<input type="text" maxlength="35" size="35" title="Sede Autorita Esterna"
 					id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
 					name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>">
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>');">
+			<a href="Javascript:ListaComuni('LoadInserisciAvvisoMancatoPagamento','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>');">
 				<img src="/images/filefolder.gif" border="0">
 			</a>
 		</td>
@@ -873,12 +737,9 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
     	<td class="lNoBord"><INPUT class="bottone" type="submit" value="Conferma"></td>
   	</tr>
 </table>
-<%
-} // end ContaLibere != 0
-%>
 </form>
 <script language="JavaScript" type="text/javascript">
-var frmvalidator = new Validator("LoadInserisciRideterminazionePP");  
+var frmvalidator = new Validator("LoadInserisciAvvisoMancatoPagamento");  
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>
