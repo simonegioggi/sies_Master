@@ -1,17 +1,12 @@
-BRANCH SIES VERSIONE 12.5.4.0
-Nasce dal branch 12.5.3.0 in data 25/09/2023
-Questa release verrà rilasciata il 27/10/2023 (Patch mese di Ottobre 2023)
+Ticket#202310110114 — SIEP - conversione pena pecuniaria
 
-Comprende i seguenti Ticket MAC:
+La funzione Sospensioni/Interruzioni del PM - Ripristino Interruzioni non riportava sulla pena rideterminata
+gli importi della pena pecuniaria (multa e ammenda) oltra a non valorizzara la DATA_FINE_PRESUNTA
 
-1)	Ticket#20231010019 - SIEP - Fascicolo trasmesso per errore
-	Il problema era legato al fatto che su un fascicolo di altra BDI preso in carico andando su elenco
-	provvediment del PM e selezionando il dettaglio del provvedimento di trasmissione atti erano
-	visibili i tasti di:
-	- trasmissione atti
-	- Annotazione Esito
-	- Seguito Atti 
-	anche se il fascicolo non era di competenza dell'ufficio.
-	Per la risoluzione della problematica sono stati resi visibili solo se procedimento di competenza.
-	Classi modificate:
-	-	/siesWeb/defaultroot/jsp/files/siap/siep/richiesta/DettaglioTrasmissioneCompetenza.jsp
+
+Modulo corretto
+
+siap.siep.decretoordinanza.controller.DecretoOrdinanzaSiepController
+ExInserisciDecretoOrdinanzaSiepRipristino
+
+
