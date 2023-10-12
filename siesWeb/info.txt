@@ -1,16 +1,14 @@
-Ticket#20231003017 - 432/2021 SIEP Procura di Foggia
+Ticket#20231010019 — SIEP - Fascicolo trasmesso per errore
 
-Il modulo di annullamento di un provvedimento andava in errore quando l'unica posizione giuridica a sistema era quella collegata 
-al provvedimento oggetto della cancellazione.
-La funzione cancella la PG collegata all'evento e tenta di ripristinare quella precedente. In assenza di una PG precedente va 
-in errore in quanto non ne testa l'effettiva presenza.
+Su un fascicolo di altra BDI preso in carico  andando su elenco provvediment del
+PM e selezionando il dettaglio del provvedimento di trasmissione atti erano visibili
+i tasti di:
+- trasmissione atti
+- Annotazione Esito
+- Seguito Atti 
 
-Corretto modulo 
-siap.siep.ordineesecuzione.controller.OrdineEsecuzioneController
-metodo 
-ExAggiornaEventoInserisciCampoNota
+Anche se il fascicolo non era di competenza dell'ufficio.
 
-
-
+Resi visibili solo se procedimento di competenza.
 
 
