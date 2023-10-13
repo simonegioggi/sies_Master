@@ -5554,9 +5554,31 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(aKey);
 			lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
-			if ("S".equals(lRevocaCalcolo)) {
-				lPenResMod.setEveIdEvento(null);
+			// Ticket#202310100111 ed altri
+			// Questa istruzione forza il codice a sganciare la PR dall'evento puntato ed agganciarlo all'evento corrente.
+			// !!Non andrebbe MAI fatto!!. Non si può sottrarre la PR ad un evento. Si deve andare sempre in copia. 
+			// Se l'evento corrente viene annullato o cancellato verrà cancellata anche la PR per cui si perde traccia
+			// di tale Pena che era quella dell'evento originario che non ha più la PR e nemmeno il fascicolo.
+			// Si commenta il codice e si effettua una verifica esplicita su EveIdEvent
+//			if ("S".equals(lRevocaCalcolo)) {
+//				lPenResMod.setEveIdEvento(null);
+//			}			
+			if (lPenResMod.getEveIdEvento()!=null) {
+				// La pena già punta un evento. Potrebbe essere l'evento corrente
+				if (lPenResMod.getEveIdEvento().compareTo(lEveModel.getIdEvento())==0) {
+					// Punta proprio l'evento corrente forzo l'id a null per andare in update (lo riaggancia)
+					lPenResMod.setEveIdEvento(null);
+				}
+				else {
+					// Punta un altro evento. Devo andare per forza in copia
+				} 
 			}
+			else {
+				// non punta alcun evento vado un update e la aggancio
+			}
+			// Ticket#202310100111 - FINE
+			
+
 			
 			// ticket#202012020116 [D.F.] A seguito dei test ci si è accorti che questa parte di codice
 			// va spostata dopo la insert/updeta altrimenti l'istruzione lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
@@ -5570,7 +5592,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			//lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
 			// end ticket#202007070114 
 			
-			siesLogger.debug("lPenResMod: " + lPenResMod.toString());
+			// siesLogger.debug("lPenResMod: " + lPenResMod.toString());
 			
 			if (lPenResMod.getEveIdEvento() == null) {
 				siesLogger.debug("lPenResMod eveIdevento null vado in update "+lPenResMod.getEveIdEvento());
