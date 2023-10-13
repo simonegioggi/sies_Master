@@ -56,13 +56,12 @@ public interface IRateizzazionePP {
 	public Vector<RateizzazionePPModel> exRicercaRateizzazioniBollettiniByIdEvento(BigDecimal aIdEvento)
 			throws F3BException;
 
-	public BigDecimal exInserisciAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException;
+	public BigDecimal exInserisciAvvisoMancatoPagamento(EventoNotificaModel enm, RateizzazionePPModel rppm)
+			throws F3BException;
 
 	public void exUpdateAvvisoMancatoPagamento(EventoModel em) throws F3BException;
 
-	public EventoNotificaModel exModificaAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException;
+	public EventoNotificaModel exModificaAvvisoMancatoPagamento(EventoNotificaModel enm) throws F3BException;
 
 	public BigDecimal exInserisciProvvedimentoEstinzionePP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;

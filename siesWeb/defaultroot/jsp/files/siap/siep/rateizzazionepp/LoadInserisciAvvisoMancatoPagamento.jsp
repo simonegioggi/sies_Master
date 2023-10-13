@@ -1,6 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-33: aggiunta pagina --%>
-<%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Date"%>
 <%@ page import="java.util.Iterator"%>
 
@@ -8,17 +7,11 @@
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
 
-<%@ page import="siap.sico.evento.controller.IEvento"%>
-<%@ page import="siap.sico.evento.model.EventoModel"%>
-<%@ page import="siap.sico.ufficio.action.ICostantiUfficio"%>
-<%@ page import="siap.sico.util.SICOLookupRemote"%>
-<%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
 <%@ page import="siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.siep.notifica.action.ICostantiNotifica"%>
 <%@ page import="siap.siep.avvocato.model.AvvocatoSiepModel"%>
 <%@ page import="siap.siep.avvocato.action.ICostantiAvvocato"%>
-<%@ page import="siap.siep.notifica.action.ICostantiNotifica"%>
 <%@ page import="siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna"%>
 <%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
 <%@ page import="siap.siep.altracausa.action.ICostantiAltraCausa"%>
@@ -40,32 +33,26 @@
 <jsp:useBean id="autoritaEsternaE"   		scope="request" class="java.lang.String"/>
 <jsp:useBean id="autoritaEsternaCivilObb"   scope="request" class="java.lang.String"/>
 <jsp:useBean id="eventonotifica"   			scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
-<jsp:useBean id="tipoprovvedimento" 		scope="request" class="java.lang.String"/>
-<jsp:useBean id="autorita" 					scope="request" class="java.lang.String"/>
 <jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
-<jsp:useBean id="annotazioneManuale"   		scope="request" class="siap.siep.annotazionemanuale.model.AnnotazioneManualeModel"/>
 <jsp:useBean id="importoPagato" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 			scope="request" class="java.lang.String"/>
-<jsp:useBean id="tipoRateizzazione"			scope="request" class="java.lang.String"/>
 
 <%
-FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
-PosizioneGiuridicaModel lPosizione = posizioneluogoaltra.getPosizioneGiuridica();
-LuogoDetenzioneModel lLuogoDetenzione = posizioneluogoaltra.getLuogoDetenzione();
-AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
+FascicoloSiepModel fsm = (FascicoloSiepModel) session.getAttribute("fascicolo");
+PosizioneGiuridicaModel pgm = posizioneluogoaltra.getPosizioneGiuridica();
+LuogoDetenzioneModel ldm = posizioneluogoaltra.getLuogoDetenzione();
+AltraCausaModel acm = posizioneluogoaltra.getAltraCausa();
 
 Date dataEmissione    = DateUtils.getSysDate();
 Date dataTrasmissione = DateUtils.getSysDate();
-BigDecimal idEventoNotifica = new BigDecimal(0);
 if (eventonotifica.getEvento().getIdEvento() != null) {
 	dataEmissione    = eventonotifica.getEvento().getDataEmissione();
 	dataTrasmissione = eventonotifica.getNotifiche()[0].getDataInvio();
-	idEventoNotifica = eventonotifica.getEvento().getIdEvento();
 }
 %>
 <html>
 <head>
-<title>[S.I.E.S.] - Gestione Provvedimento Avviso Mancato Pagamento </title>
+<title>[S.I.E.S.] - Gestione Provvedimento Avviso Mancato Pagamento</title>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
@@ -73,10 +60,6 @@ if (eventonotifica.getEvento().getIdEvento() != null) {
 <script language="JavaScript">
 function ListaComuni(a_formname,a_fieldname) {
 	var desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
-}
-
-function ListaUfficiPerTipo(a_formname, a_fieldname, codTipoUfficio) {
-	var desktop = window.open("<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.ufficio.action.ActLoadListaUfficiPerTipo&formname="+a_formname+"&fieldname="+a_fieldname+"&<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>="+codTipoUfficio , "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=170,left=90,width=300,height=500");
 }
 
 function ListaMagistrati(a_formname) {
@@ -88,40 +71,9 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
-	// Data Emissione Provvedimento obbligatoria
-	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
-	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value;
-
-	var data_to_verify = document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>.value;
-
-	if (!ControllaData(data_to_verify)) {
-		alert('Data Emissione Provvedimento non valida');
-		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
-		return false;
-	}
-
-	// Tipo Provvedimento
-	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.value == "-") {
-		alert("Campo Tipo Provvedimento obbligatorio!");
-    	document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.focus();
-    	return false;
-	}
-
-	// Sede Autorita' Emittente Obbligatoria
-	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.value == "") {
-		alert("Selezionare la sede dell'Autorita' Emittente per il Provvedimento di Avviso Mancato Pagamento!");
-		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.focus();
-		return false; 
-	}
-
-	// Data Emissione
-  	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
+	var dataOdierna = "<%=DateUtils.getSysDate("dd")%>-<%=DateUtils.getSysDate("MM")%>-<%=DateUtils.getSysDate("yyyy")%>";
+	// Data Emissione obbligatoria
+	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
 		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
 		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
 	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
@@ -133,12 +85,17 @@ function Verify() {
 		+ '/' + document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 
 	if (!ControllaData(data_to_verify)) {
-		alert('Data di emissione non valida');
+		alert('Data Emissione Provvedimento non valida');
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		return false;
+	}
+	if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data Emissione non può essere superiore alla data odierna');
 		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 		return false;
 	}
 
-	// Data Trasmissione
+	// Data Trasmissione obbligatoria
 	if (document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
 		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
 		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
@@ -152,6 +109,11 @@ function Verify() {
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di Trasmissione non valida');
+		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+		return false;
+	}
+	if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data di Trasmissione non può essere superiore alla data odierna');
 		document.LoadInserisciAvvisoMancatoPagamento.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
 		return false;
 	}
@@ -271,29 +233,27 @@ if ("I".equals(modalita)) {
 		</td>
 	</tr>
 </table>
-  
 <br>
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
-  
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 		<td class="l" width="20%">Posizione Giuridica</td>
 		<td class="L">
 		  	<font class="campo">
 <%
-if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 %>
-				DETENUTO PER ALTRA CAUSA - <%=lAltraCausa.getDescrTipoPosGiuridica()%>
+				DETENUTO PER ALTRA CAUSA - <%=acm.getDescrTipoPosGiuridica()%>
 <%
 } else {
 %>
-				<%=lPosizione.getDescrPosizioneGiuridica()%>
+				<%=pgm.getDescrPosizioneGiuridica()%>
 <%
 }
 %>
 			</font>
-			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
+			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(pgm.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
 		</td>
 	</tr>
 </table>
@@ -305,6 +265,7 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 if ("I".equals(modalita)) {
 %>
     		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActInserisciAvvisoMancatoPagamento">
+    		<input type="HIDDEN" name="importoDaPagare" value="<%=importoDaPagare%>">
 <%
 } else if ("M".equals(modalita)) {
 %>
@@ -312,9 +273,13 @@ if ("I".equals(modalita)) {
 			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento()%>">
 <%
 }
+if ("I".equals(modalita)) {
 %>
 	        <font class="label">Importo pagato</font>
 	        <font class="cVerde"><%=importoPagato%> &euro;</font>&nbsp;&nbsp;&nbsp;
+<%
+}
+%>
 	        <font class="label">Importo da pagare</font>
 	        <font class="cRosso"><%=importoDaPagare%> &euro;</font>&nbsp;&nbsp;&nbsp;
 	        <font class="label">in unica soluzione</font>
@@ -327,21 +292,6 @@ if ("I".equals(modalita)) {
       		<font class="label">giorni dalla notifica del presente avviso</font>
       	</td>
     </tr>
-</table>
-<table cellspacing="0" cellpadding="0" width="95%">
-	<tr>
-<%
-if (tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_UNICA)) {
-%>
-		<td class="Titolo" colspan="5"> Pagamento in una Unica Soluzione </td>
-<%
-} else if (tipoRateizzazione.equals(ICostantiRateizzazionePP.TIPO_RATEIZZAZIONE_RATEALE)) {
-%>
-       	<td class="Titolo" colspan="5"> Pagamento Rateizzato </td>
-<%
-}
-%>
-	</tr>
 </table>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
@@ -418,7 +368,7 @@ while (itx.hasNext()) {
 		<td class="Titolo" colspan="4">Notifica al Condannato</td>
 	</tr>
 <%
-	if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFlagAltraCausa().equals("S")) {
+	if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
   		// Se detenuto altra causa in Custodia Cautelare
   		if (posizioneluogoaltra.getAltraCausa() != null
   				&& (posizioneluogoaltra.getAltraCausa().getCodTipoPosGiuridica().equals("23") // Custodia Cautelare in Regime di Arresti Domiciliari
@@ -497,9 +447,9 @@ while (itx.hasNext()) {
 		// Espiazione pena per Altra Causa in Misura Sicurezza Detentiva (Internato)
 		// Custodia Cautelare per Altra Causa in Regime di Detenzione
 		// Espiazione pena per Altra Causa in Misura di Sicurezza Applicata in Via Provvisoria
-		if (lPosizione.getCodPosizioneGiuridica().equals("74") || lPosizione.getCodPosizioneGiuridica().equals("75")
-				|| lPosizione.getCodPosizioneGiuridica().equals("76")
-				|| lPosizione.getCodPosizioneGiuridica().equals("77")) {
+		if (pgm.getCodPosizioneGiuridica().equals("74") || pgm.getCodPosizioneGiuridica().equals("75")
+				|| pgm.getCodPosizioneGiuridica().equals("76")
+				|| pgm.getCodPosizioneGiuridica().equals("77")) {
 %>
 	<tr>
 		<td class="l" width="20%">Istituto di Detenzione <font class=ob>(*)</font></td>
@@ -510,14 +460,14 @@ while (itx.hasNext()) {
      	<td class="l" width="20%">Autorita' Destinazione <font class=ob>(*)</font></td>
 <%
 		}
-		if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10") 
-				|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")
-				|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") 
-				|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")   
-				|| lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
-				|| lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
-				|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
-				|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+		if (pgm.getCodPosizioneGiuridica().equals("07") || pgm.getCodPosizioneGiuridica().equals("10") 
+				|| pgm.getCodPosizioneGiuridica().equals("02") || pgm.getCodPosizioneGiuridica().equals("04")
+				|| pgm.getCodPosizioneGiuridica().equals("16") || pgm.getCodPosizioneGiuridica().equals("20") 
+				|| pgm.getCodPosizioneGiuridica().equals("46") || pgm.getCodPosizioneGiuridica().equals("47")   
+				|| pgm.getCodPosizioneGiuridica().equals("78") || pgm.getCodPosizioneGiuridica().equals("79") 
+				|| pgm.getCodPosizioneGiuridica().equals("80") || pgm.getCodPosizioneGiuridica().equals("81")
+				|| pgm.getCodPosizioneGiuridica().equals("70") || pgm.getCodPosizioneGiuridica().equals("71")
+				|| pgm.getCodPosizioneGiuridica().equals("72")) {
 %>
 		<td class="L" colspan="3">
        	<select title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>" 
@@ -544,13 +494,13 @@ while (itx.hasNext()) {
 <%
 		} else {
 			// Detenuto    
-    		if (lLuogoDetenzione != null && lLuogoDetenzione.getIstitutoDetenzione() != null) {
+    		if (ldm != null && ldm.getIstitutoDetenzione() != null) {
 %>
 		<td class="l">
-        	<input readonly title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
+        	<input readonly title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrComune())%>" size=50>
         	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
-               		value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>">
+               		value="<%=ldm.getIstDetIdIstitutoDetenzione()%>">
         	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciAvvisoMancatoPagamento','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>

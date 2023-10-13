@@ -20,8 +20,6 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.altracausa.action.ICostantiAltraCausa;
-import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
-import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.avvocato.action.ICostantiAvvocato;
@@ -77,14 +75,8 @@ public class ActModificaAvvisoMancatoPagamento extends ActionSiap implements ICo
 		enm.setEvento(em);
 		enm.setNotifiche(nmArray);
 
-		// recupero le rateizzazioni da collegare all'evento
-		String[] arrayIdRate = getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
-
-		// Annotazione Manuale
-		AnnotazioneManualeModel amm = getAnnotazioneManuale(fsm.getIdFascicoloSiep(), idEvento);
-
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		EventoNotificaModel enmRet = irpp.exModificaAvvisoMancatoPagamento(enm, arrayIdRate, amm);
+		EventoNotificaModel enmRet = irpp.exModificaAvvisoMancatoPagamento(enm);
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
@@ -93,40 +85,6 @@ public class ActModificaAvvisoMancatoPagamento extends ActionSiap implements ICo
 		return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.rateizzazionepp.action.ActDettaglioAvvisoMancatoPagamento&"
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enmRet.getEvento().getIdEvento();
-	}
-
-	private AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep, BigDecimal idEvento)
-			throws F3BException {
-
-		// info per il log
-		siesLogger.info("getAnnotazioneManuale(): inizio");
-
-		String codUtenteConnesso = getCodUtenteConnesso();
-		String codUfficioUtenteConnesso = getCodUfficioUtenteConnesso();
-
-		IAnnotazioneManuale iam = SIEPLookupRemote.getAnnotazioneManualeRemote();
-		AnnotazioneManualeModel amm = iam.ExRicercaAnnotazioneManualeByIdEventoIdFascicolo(idEvento,
-				idFascicoloSiep);
-		amm.setDataIscrizioneSiep(getRequestDateParameter(CAMPO_ANNO_DATA_EMISSIONE,
-				CAMPO_MESE_DATA_EMISSIONE, CAMPO_GIORNO_DATA_EMISSIONE));
-		amm.setAnnoSiep(getRequestBigDecimalParameter(CAMPO_ANNO_PROVVEDIMENTO));
-		amm.setNumeroSiep(getRequestStringParameter(CAMPO_NUMERO_PROVVEDIMENTO));
-		String codLuogoUfficioSiep = getCodComuneByDescr(
-				getRequestStringParameter(CAMPO_SEDE_AUTORITA_PROVVEDIMENTO)).getCodComune();
-		amm.setCodLuogoUfficioSiep(codLuogoUfficioSiep);
-		amm.setCodTipoUfficioSiep(getRequestStringParameter(CAMPO_COD_AUTORITA_PROVVEDIMENTO));
-		amm.setCodTipoAnnotazione(getRequestStringParameter(CAMPO_COD_TIPO_PROVVEDIMENTO));
-		amm.setCodUfficioAggiornamento(codUfficioUtenteConnesso);
-		amm.setCodOperatoreAggiornamento(codUtenteConnesso);
-		amm.setDataAggiornamento(DateUtils.getSysDate());
-		amm.setEveIdEvento(idEvento);
-		amm.setFasSieIdFascicoloSiep(idFascicoloSiep);
-
-		// info per il log
-		siesLogger.info("getAnnotazioneManuale(): fine");
-
-		// modello di ritorno
-		return amm;
 	}
 
 	/**

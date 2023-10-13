@@ -15,9 +15,6 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
-import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
-import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
-import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
@@ -27,7 +24,7 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * Classe Action per il dettaglio dell'Avviso Mancato Pagamento
- * 
+ *
  * @author sgioggi
  * @since MEV_2023-33
  * @version 1.0
@@ -39,67 +36,58 @@ public class ActDettaglioAvvisoMancatoPagamento extends ActionSiap implements IC
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
 
-    	// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
-		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		BigDecimal idFascicoloSiep = fsm.getIdFascicoloSiep();
-
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("eventonotifica", enm);
 
-		// Annotazione Manuale
-		IAnnotazioneManuale iam = SIEPLookupRemote.getAnnotazioneManualeRemote();
-		AnnotazioneManualeModel amm = iam.ExRicercaAnnotazioneManualeByIdEventoIdFascicolo(idEvento, idFascicoloSiep);
-		setRequestAttribute("annotazioneManuale", amm);
-
-		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
-		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica ipg = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		pgldacm = ipg.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 				enm.getEvento().getFasSieIdFascicoloSiep());
-		setRequestAttribute("posizioneluogoaltra", lPos);
+		setRequestAttribute("posizioneluogoaltra", pgldacm);
 
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
-		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-		listaRateizzazioni = lRateCTRL
-				.exRicercaRateizzazioniByIdEvento(idEvento);
+		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
 		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
 
 		// MAGISTRATO
-		MagistratoModel lMag = enm.getMagistrato();
-		setRequestAttribute("magistrato", lMag);
+		MagistratoModel mm = enm.getMagistrato();
+		setRequestAttribute("magistrato", mm);
 
 		// NOTIFICHE
-		NotificaModel[] lNotifiche = enm.getNotifiche();
-		List lListAvvocatiSiep = new ArrayList();
-		List lListaObbligati = new ArrayList();
+		NotificaModel[] nmArray = enm.getNotifiche();
+		List listaNotificheAvvocatiSiep = new ArrayList();
+		List listaNotificheCivilmenteObbligati = new ArrayList();
 
-		for (int i = 0; i < lNotifiche.length; i++) {
+		for (int i = 0; i < nmArray.length; i++) {
 			// Autorita Esterne
-			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() == null
-					&& lNotifiche[i].getIdCivilmenteObbligato() == null) {
-				setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
+			if (nmArray[i].getAvvIdAvvocatoFascicoloSiep() == null
+					&& nmArray[i].getIdCivilmenteObbligato() == null) {
+				setRequestAttribute("notificaAlCondannato", nmArray[i]);
 			}
 
 			// Avvocati Siep
-			if (lNotifiche[i].getAvvIdAvvocatoFascicoloSiep() != null) {
-				lListAvvocatiSiep.add(lNotifiche[i]);
+			if (nmArray[i].getAvvIdAvvocatoFascicoloSiep() != null) {
+				listaNotificheAvvocatiSiep.add(nmArray[i]);
 			}
 
 			// Civilmente Obbligati
-			if (lNotifiche[i].getIdCivilmenteObbligato() != null) {
-				lListaObbligati.add(lNotifiche[i]);
+			if (nmArray[i].getIdCivilmenteObbligato() != null) {
+				listaNotificheCivilmenteObbligati.add(nmArray[i]);
 			}
 		}
-		setRequestAttribute("listaNotAvvSiep", lListAvvocatiSiep);
-		setRequestAttribute("lListaNotObbligati", lListaObbligati);
+		setRequestAttribute("listaNotAvvSiep", listaNotificheAvvocatiSiep);
+		setRequestAttribute("listaNotObbligati", listaNotificheCivilmenteObbligati);
 
-    	// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 

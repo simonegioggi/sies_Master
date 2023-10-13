@@ -18,7 +18,6 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.web.ActionSiap;
 import siap.siep.altracausa.action.ICostantiAltraCausa;
-import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.avvocato.action.ICostantiAvvocato;
@@ -29,6 +28,7 @@ import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
@@ -59,14 +59,20 @@ public class ActInserisciAvvisoMancatoPagamento extends ActionSiap implements IC
 		enm.setEvento(em);
 		enm.setNotifiche(nmArray);
 
-		// recupero le rateizzazioni da collegare all'evento
-		String[] arrayIdRate = getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
-
-		// Annotazione Manuale
-		AnnotazioneManualeModel amm = getAnnotazioneManuale(idFascicoloSiep);
-
+		// modello la rata unica
+		RateizzazionePPModel rppm = new RateizzazionePPModel();
+		rppm.setCodOperatoreInserimento(getCodUtenteConnesso());
+		rppm.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
+		rppm.setDataInserimento(DateUtils.getSysDate());
+		rppm.setFasSieIdFascicoloSiep(idFascicoloSiep);
+		rppm.setImportoDaPagare(new BigDecimal(getRequestStringParameter("importoDaPagare")));
+		rppm.setImportoRata(new BigDecimal(getRequestStringParameter("importoDaPagare")));
+		rppm.setNumeroRate(new BigDecimal(1));
+		rppm.setProgressivoRata(new BigDecimal(1));
+		rppm.setScadenzaGiorni(new BigDecimal(60));
+		rppm.setTipoRateizzazione("U");
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		BigDecimal idEvento = irpp.exInserisciAvvisoMancatoPagamento(enm, arrayIdRate, amm);
+		BigDecimal idEvento = irpp.exInserisciAvvisoMancatoPagamento(enm, rppm);
 
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
@@ -75,38 +81,6 @@ public class ActInserisciAvvisoMancatoPagamento extends ActionSiap implements IC
 		return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.rateizzazionepp.action.ActDettaglioAvvisoMancatoPagamento&"
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + idEvento;
-	}
-
-	private AnnotazioneManualeModel getAnnotazioneManuale(BigDecimal idFascicoloSiep) throws F3BException {
-
-		// info per il log
-		siesLogger.info("getAnnotazioneManuale(): inizio");
-
-		String codUtenteConnesso = getCodUtenteConnesso();
-		String codUfficioUtenteConnesso = getCodUfficioUtenteConnesso();
-
-		AnnotazioneManualeModel amm = new AnnotazioneManualeModel();
-
-		amm.setDataIscrizioneSiep(getRequestDateParameter(CAMPO_ANNO_DATA_EMISSIONE,
-				CAMPO_MESE_DATA_EMISSIONE, CAMPO_GIORNO_DATA_EMISSIONE));
-		amm.setAnnoSiep(getRequestBigDecimalParameter(CAMPO_ANNO_PROVVEDIMENTO));
-		amm.setNumeroSiep(getRequestStringParameter(CAMPO_NUMERO_PROVVEDIMENTO));
-		String codLuogoUfficioSiep = getCodComuneByDescr(
-				getRequestStringParameter(CAMPO_SEDE_AUTORITA_PROVVEDIMENTO)).getCodComune();
-		amm.setCodLuogoUfficioSiep(codLuogoUfficioSiep);
-		amm.setCodTipoUfficioSiep(getRequestStringParameter(CAMPO_COD_AUTORITA_PROVVEDIMENTO));
-		amm.setCodTipoAnnotazione(getRequestStringParameter(CAMPO_COD_TIPO_PROVVEDIMENTO));
-		amm.setFasSieIdFascicoloSiep(idFascicoloSiep);
-		amm.setCodUfficioInserimento(codUfficioUtenteConnesso);
-		amm.setCodOperatoreInserimento(codUtenteConnesso);
-		amm.setDataInserimento(DateUtils.getSysDate());
-		amm.setFlagValidato("N");
-
-		// info per il log
-		siesLogger.info("getAnnotazioneManuale(): fine");
-
-		// modello di ritorno
-		return amm;
 	}
 
 	private EventoModel getEventoAvvisoMancatoPagamento(BigDecimal idFascicoloSiep) throws F3BException {

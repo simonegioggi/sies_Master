@@ -68,8 +68,8 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno()
-						+ "/" + fsm.getChiaveProgr()
-						+ " non è stato Validato. Impossibile inserire una Rideterminzaione Pena Pecuniaria!");
+						+ "/" + fsm.getChiaveProgr() + " non è stato Validato."
+						+ " Impossibile inserire un provvedimento di Avviso Mancato Pagamento!");
 				rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -255,7 +255,6 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			}
 			setRequestAttribute("importoPagato", importoPagato.toString());
 			setRequestAttribute("importoDaPagare", importoDaPagare.toString());
-			setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
 
 			// Posizione giuridica
 			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
@@ -344,18 +343,6 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			// Autorita Notifica Civilmente Obbligati
 			Option tipoAutoritaEsternaCO = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
 			setRequestAttribute("autoritaEsternaCivilObb", "" + tipoAutoritaEsternaCO);
-
-			// carico il tipo provvedimento
-			Option tipoProvvedimenti = new Option(DecodificheManager.getInstance().getTipoProvvedimenti());
-			tipoProvvedimenti.setFilter(new String[] { "-", "02", "03" }); // DECRETO o ORDINANZA
-			tipoProvvedimenti.setSelected("-");
-			setRequestAttribute("tipoprovvedimento", "" + tipoProvvedimenti);
-
-			// carico AUTORITA' EMITTENTE
-			Option tipoUfficio = new Option(DecodificheManager.getInstance().getTipoUfficio());
-			tipoUfficio.setFilter(new String[] { "CAP", "DIB", "GUP", "GIP", "CAS", "CASAP", "TRIBSD", "GUPM",
-					"CAPSM", "DIBM", "GIPM", "GP" });
-			setRequestAttribute("autorita", "" + tipoUfficio);
 
 			setRequestAttribute("modalita", "I");
 

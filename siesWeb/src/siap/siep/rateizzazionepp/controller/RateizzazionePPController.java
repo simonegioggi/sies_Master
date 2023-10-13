@@ -361,9 +361,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
-							+ daoEx);
+			throw new F3BException("RateizzazionePPController.exRicercaEventiRateizzazionePP: " + daoEx);
 		} finally {
 			cleanup(rppsdao);
 			cleanup(esdao);
@@ -429,9 +427,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
-							+ daoEx);
+			throw new F3BException("RateizzazionePPController.exRicercaEventoRateizzazionePP: " + daoEx);
 		} finally {
 			cleanup(rppsdao);
 			cleanup(esdao);
@@ -499,8 +495,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
-	 * ago 2023 Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print 
+	 * Numero MEV : 2023-33 
+	 * Autore : sgioggi 
+	 * Data : 29 ago 2023 
+	 * Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
@@ -600,11 +599,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciRideterminazionePP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciRideterminazionePP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -679,11 +678,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateRideterminazionePP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateRideterminazionePP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(esDAO);
@@ -796,11 +795,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaRideterminazionePP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaRideterminazionePP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -858,11 +857,12 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (DAOException daoEx) {
 			siesLogger.error("DAOException", daoEx);
 			rollback(c);
-			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + daoEx);
+			throw new F3BException(
+					"RateizzazionePPController.exRicercaRateizzazioniLibereByIdFasc: " + daoEx);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + ex);
+			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniLibereByIdFasc: " + ex);
 		} finally {
 			cleanup(lRateizzazioneSqlDao);
 
@@ -873,8 +873,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	@Override
-	public BigDecimal exInserisciAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException {
+	public BigDecimal exInserisciAvvisoMancatoPagamento(EventoNotificaModel enm, RateizzazionePPModel rppm)
+			throws F3BException {
 
 		Connection c = null;
 
@@ -882,7 +882,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		NotificaDAO nDAO = null;
 		AutoritaEsternaDAO aeDAO = null;
 		RateizzazionePPDAO rPPDAO = null;
-		AnnotazioneManualeDAO amDAO = null;
 
 		BigDecimal idEvento = null;
 
@@ -948,39 +947,27 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			}
 
 			// =========================================================
-			// Aggiorno le rate collegandole all'evento
+			// Inserisco la rata unica collegandola all'evento
 			// =========================================================
 			rPPDAO = new RateizzazionePPDAO(c);
-			for (int i = 0; i < arrayIdRate.length; i++) {
-				String idRata = arrayIdRate[i];
-				siesLogger.debug("idRata = " + idRata);
-				rPPDAO.setEveIdEvento(idEvento);
-				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
-				rPPDAO.update();
-			}
-
-			// inserisco l'annotazione manuale
-			amm.setEveIdEvento(idEvento);
-			amDAO = new AnnotazioneManualeDAO(c);
-			amDAO.setDAOFromModel(amm);
-			BigDecimal idAnnotazioneManuale = amDAO.insert();
-			amDAO.stop();
-			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
+			rppm.setEveIdEvento(idEvento);
+			rPPDAO.setDAOFromModel(rppm);
+			BigDecimal idRata = rPPDAO.insert();
+			siesLogger.debug("INSERITA RATEIZZAZIONE_PP con idRata = " + idRata);
 
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciAvvisoMancatoPagamento: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciAvvisoMancatoPagamento: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
 			cleanup(aeDAO);
 			cleanup(rPPDAO);
-			cleanup(amDAO);
 
 			cleanup(c);
 		}
@@ -1049,11 +1036,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateAvvisoMancatoPagamento: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateAvvisoMancatoPagamento: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(esDAO);
@@ -1065,16 +1052,13 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	@Override
-	public EventoNotificaModel exModificaAvvisoMancatoPagamento(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException {
+	public EventoNotificaModel exModificaAvvisoMancatoPagamento(EventoNotificaModel enm) throws F3BException {
 
 		Connection c = null;
 
 		EventoDAO eDAO = null;
 		NotificaDAO nDAO = null;
 		AutoritaEsternaDAO aeDAO = null;
-		RateizzazionePPDAO rPPDAO = null;
-		AnnotazioneManualeDAO amDAO = null;
 
 		EventoNotificaModel enmRet = new EventoNotificaModel(enm);
 
@@ -1083,13 +1067,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 			BigDecimal idEvento = enm.getEvento().getIdEvento();
 
-			// Cancello preventivamente tutti i dati
-			// Sgancio le rate dall'evento
-			rPPDAO = new RateizzazionePPDAO(c);
-			rPPDAO.setEveIdEvento(null);
-			rPPDAO.selCondizioneByIdEvento(enm.getEvento().getIdEvento());
-			rPPDAO.update();
-
+			// Cancello preventivamente tutte le notifiche
 			nDAO = new NotificaDAO(c);
 			nDAO.setCondizioneEvento(idEvento);
 			nDAO.delete();
@@ -1139,24 +1117,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 				}
 			}
 
-			// =========================================================
-			// Aggiorno le rate collegandole all'evento
-			// =========================================================
-			rPPDAO = new RateizzazionePPDAO(c);
-			for (int i = 0; i < arrayIdRate.length; i++) {
-				String idRata = arrayIdRate[i];
-				siesLogger.debug("idRata = " + idRata);
-				rPPDAO.setEveIdEvento(idEvento);
-				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
-				rPPDAO.update();
-			}
-
-			// aggiorrno l'annotazione manuale
-			amDAO = new AnnotazioneManualeDAO(c);
-			amDAO.setDAOFromModelForUpdate(amm);
-			amDAO.update();
-			amDAO.stop();
-
 			// aggiorrno l'evento
 			eDAO = new EventoDAO(c);
 			eDAO.setDAOFromModelForUpdate(enm.getEvento());
@@ -1166,17 +1126,15 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaAvvisoMancatoPagamento: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaAvvisoMancatoPagamento: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
 			cleanup(aeDAO);
-			cleanup(rPPDAO);
-			cleanup(amDAO);
 
 			cleanup(c);
 		}
@@ -1282,11 +1240,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciProvvedimentoEstinzionePP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciProvvedimentoEstinzionePP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -1361,11 +1319,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateProvvedimentoEstinzionePP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateProvvedimentoEstinzionePP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(esDAO);
@@ -1478,11 +1436,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaProvvedimentoEstinzionePP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaProvvedimentoEstinzionePP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -1594,11 +1552,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciTrasmissioneAttiConversione: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciTrasmissioneAttiConversione: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -1673,11 +1631,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateTrasmissioneAttiConversione: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateTrasmissioneAttiConversione: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(esDAO);
@@ -1790,11 +1748,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaTrasmissioneAttiConversione: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaTrasmissioneAttiConversione: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -1906,11 +1864,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciDefinizioneProcedimentoPP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exInserisciOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exInserisciDefinizioneProcedimentoPP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -1985,11 +1943,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateDefinizioneProcedimentoPP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exUpdateOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exUpdateDefinizioneProcedimentoPP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(esDAO);
@@ -2102,11 +2060,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			commit(c);
 		} catch (DAOException ex) {
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaDefinizioneProcedimentoPP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Eccezione Generica", ex);
 			rollback(c);
-			throw new F3BException("SanzioneSostitutivaController.exModificaOrdineIngiunzione: " + ex);
+			throw new F3BException("RateizzazionePPController.exModificaDefinizioneProcedimentoPP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
@@ -2214,9 +2172,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: ", daoEx);
-			throw new F3BException(
-					"LicenzaLibanticipataController.ExRicercaRimediRisarcitoriConcessiDepositatiByIdFascicoloSIEP: "
-							+ daoEx);
+			throw new F3BException("RateizzazionePPController.exRicercaAvvisoMancatoPagamento: " + daoEx);
 		} finally {
 			cleanup(rppsdao);
 			cleanup(esdao);
