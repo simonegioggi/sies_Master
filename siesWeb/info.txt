@@ -15,13 +15,3 @@ Comprende i seguenti Ticket MAC:
 	Per la risoluzione della problematica sono stati resi visibili solo se procedimento di competenza.
 	Classi modificate:
 	-	/siap/siep/richiesta/DettaglioTrasmissioneCompetenza.jsp
-
-2)	Ticket#202310110114 - SIEP - conversione pena pecuniaria
-	Il problema era legato al fatto che la funzione Sospensioni/Interruzioni del PM - Ripristino
-	Interruzioni non riportava sulla pena rideterminata gli importi della pena pecuniaria
-	(multa e ammenda) oltre a non valorizzare la "DATA_FINE_PRESUNTA".
-	Per la risoluzione della problematica è stato corretto il modulo che rideterminava la pena in fase
-	di ripristino esecuzione, valorizzando i campi multa e ammenda.
-	Classi modificate:
-	-	siap.siep.decretoordinanza.controller.DecretoOrdinanzaSiepController.java
-		(metodo ExInserisciDecretoOrdinanzaSiepRipristino)
