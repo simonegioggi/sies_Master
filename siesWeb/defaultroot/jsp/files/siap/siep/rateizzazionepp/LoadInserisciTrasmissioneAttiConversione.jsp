@@ -91,96 +91,75 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
-	// Data Emissione Provvedimento obbligatoria
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value;
-
-	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_MESE_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_ANNO_DATA_EMISSIONE%>.value;
-
-	if (!ControllaData(data_to_verify)) {
-		alert('Data Emissione Provvedimento non valida');
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
-		return false;
-	}
-
-	// Tipo Provvedimento
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.value == "-") {
-		alert("Campo Tipo Provvedimento obbligatorio!");
-    	document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_TIPO_PROVVEDIMENTO%>.focus();
-    	return false;
-	}
-
-	// Sede Autorita' Emittente Obbligatoria
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.value == "") {
-		alert("Selezionare la sede dell'Autorita' Emittente per il Provvedimento di Rideterminazione Pena!");
-		document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>.focus();
-		return false; 
-	}
-
+	var dataOdierna = "<%=DateUtils.getSysDate("dd")%>-<%=DateUtils.getSysDate("MM")%>-<%=DateUtils.getSysDate("yyyy")%>";
 	// Data Emissione
-  	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
+  	if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
+	if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length == 1)
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value = '0' +
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value;
 
-	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
+	var data_to_verify = document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value
+		+ '/' + document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di emissione non valida');
-		document.LoadInserisciRideterminazionePP.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		return false;
+	}
+	if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data Emissione non può essere superiore alla data odierna');
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 		return false;
 	}
 
 	// Data Trasmissione
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
-	if (document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length == 1)
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value = '0' +
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
+	if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value.length == 1)
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value = '0' +
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value;
+	if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value.length == 1)
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value = '0' +
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value;
 
-	var data_to_verify = document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
-		+ '/' + document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
+	var data_to_verify = document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.value
+		+ '/' + document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>.value
+		+ '/' + document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>.value;
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di Trasmissione non valida');
-		document.LoadInserisciRideterminazionePP.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+		return false;
+	}
+	if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data di Trasmissione non può essere superiore alla data odierna');
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
 		return false;
 	}
 
 	// Autorita x la Notifica
-	if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") {
-  		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value == "-") {
+	if (typeof document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") {
+  		if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value == "-") {
 			alert("Selezionare l'autorita' per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
+			document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.focus();
 			return false; 
 		}
-		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value == "") {
+		if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.value == "") {
 			alert("Selezionare la sede dell'autorita' per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
+			document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
 			return false; 
   		}
-	} else if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
-		if (document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
+	} else if (typeof document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
+		if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
 			alert("Selezionare l'istituto di detenzione per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
+			document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
 			return false; 
   		}
-	} else if (typeof document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
-		if (document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
+	} else if (typeof document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
+		if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
 			alert("Selezionare l'istituto di detenzione per la notifica al condannato");
-			document.LoadInserisciRideterminazionePP.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
+			document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
 			return false; 
     	}          
  	} else {
@@ -300,7 +279,7 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 		</td>
 	</tr>
 </table>
-<FORM method="POST" name="LoadInserisciRideterminazionePP" action="<%=IWebConstants.PG_MAIN%>">
+<FORM method="POST" name="LoadInserisciTrasmissioneAttiConversione" action="<%=IWebConstants.PG_MAIN%>">
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
       	<td class="L">
@@ -498,7 +477,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 	    <td class="l" colspan="2">
 			Sede <font class="ob">(*)</font>&nbsp;
 			<input type="text" title="Sede Autorita" value="<%=StringUtils.toStringJSP(annotazioneManuale.getDescrLuogoUfficioSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>" maxlength="35" size="35">
-			<a href="Javascript:ListaUfficiPerTipo('LoadInserisciRideterminazionePP','<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>',document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>[document.LoadInserisciRideterminazionePP.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>.selectedIndex].value);">
+			<a href="Javascript:ListaUfficiPerTipo('LoadInserisciTrasmissioneAttiConversione','<%=ICostantiRateizzazionePP.CAMPO_SEDE_AUTORITA_PROVVEDIMENTO%>',document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>[document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiRateizzazionePP.CAMPO_COD_AUTORITA_PROVVEDIMENTO%>.selectedIndex].value);">
 				<img src="/images/filefolder.gif" border="0">
        		</a>
 	  	</td>
@@ -536,7 +515,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 		<td class="L">
 			<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCognome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" maxlength="35" size="25">
 			<input readonly title= "Nome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getNome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" maxlength="35" size="25">
-			<a href="Javascript:ListaMagistrati('LoadInserisciRideterminazionePP');">
+			<a href="Javascript:ListaMagistrati('LoadInserisciTrasmissioneAttiConversione');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
 			<input type="HIDDEN" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCodMagistrato())%>" name="<%=ICostantiEvento.CAMPO_COD_MAGISTRATO%>">
@@ -578,7 +557,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
                 	name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>" 
                   	id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>">
-       		<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
+       		<a href="Javascript:ListaComuni('LoadInserisciTrasmissioneAttiConversione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
          		<img src="/images/filefolder.gif" border=0>
         	</a>
 		</td>
@@ -602,7 +581,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input type="hidden" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
                		value="<%=posizioneluogoaltra.getAltraCausa().getIstDetIdIstitutoDetenzione()%>">
-       		<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+       		<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciTrasmissioneAttiConversione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -613,7 +592,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 			<input readonly title="Istituto" name="Comune" id="descIstituto" value="" size="50">
           	<input type="hidden" name="<%=ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
-          	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+          	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciTrasmissioneAttiConversione','<%= ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -668,7 +647,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input title="Sede Autorita Esterna" value="" type="text" maxlength="35" size="35"
         			name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>" 
                  	id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>">
-        	<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
+        	<a href="Javascript:ListaComuni('LoadInserisciTrasmissioneAttiConversione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>');">
           		<img src="/images/filefolder.gif" border=0>
        		</a>
      	</td>
@@ -687,7 +666,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>"
                		value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>">
-        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciTrasmissioneAttiConversione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -699,7 +678,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
         	<input readonly title="Istituto" name="Comune" id="descIstituto"  value="" size="50">
         	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" 
 					id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
-        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciRideterminazionePP','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
+        	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciTrasmissioneAttiConversione','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
 		</td>
@@ -773,13 +752,13 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 <%
 		if (lNumAvvocati < 2) {
 %>
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>');">
+			<a href="Javascript:ListaComuni('LoadInserisciTrasmissioneAttiConversione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>');">
 				<img src="/images/filefolder.gif" border="0">
 	  		</a>
 <%
 		} else {
 %>
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+			<a href="Javascript:ListaComuni('LoadInserisciTrasmissioneAttiConversione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
 				<img src="/images/filefolder.gif" border="0">
 	  		</a>
 <%
@@ -844,7 +823,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 	    	<input type="text" maxlength="35" size="35" title="Sede Autorita Esterna"
 					id="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>"
 					name="<%= ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>">
-			<a href="Javascript:ListaComuni('LoadInserisciRideterminazionePP','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>');">
+			<a href="Javascript:ListaComuni('LoadInserisciTrasmissioneAttiConversione','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>_CO_<%=lObbligatoModel.getIdCivilmenteObbligato()%>');">
 				<img src="/images/filefolder.gif" border="0">
 			</a>
 		</td>
@@ -878,7 +857,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 %>
 </form>
 <script language="JavaScript" type="text/javascript">
-var frmvalidator = new Validator("LoadInserisciRideterminazionePP");  
+var frmvalidator = new Validator("LoadInserisciTrasmissioneAttiConversione");  
 frmvalidator.setAddnlValidationFunction("Verify");
 </script>
 </body>

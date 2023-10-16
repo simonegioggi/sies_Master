@@ -73,6 +73,7 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function Verify() {
+	var dataOdierna = "<%=DateUtils.getSysDate("dd")%>-<%=DateUtils.getSysDate("MM")%>-<%=DateUtils.getSysDate("yyyy")%>";
 	// Aggiungere i controlli
   	if (document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length==1)
 		document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value='0'+document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
@@ -85,6 +86,11 @@ function Verify() {
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di emissione non valida');
+		document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		return false;
+	}
+	if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data Emissione non può essere superiore alla data odierna');
 		document.LoadInserisciOrdineIngiunzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
 		return false;
 	}
@@ -101,6 +107,11 @@ function Verify() {
 
 	if (!ControllaData(data_to_verify)) {
 		alert('Data di Trasmissione non valida');
+		document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+		return false;
+	}
+	if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data di Trasmissione non può essere superiore alla data odierna');
 		document.LoadInserisciOrdineIngiunzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
 		return false;
 	}
