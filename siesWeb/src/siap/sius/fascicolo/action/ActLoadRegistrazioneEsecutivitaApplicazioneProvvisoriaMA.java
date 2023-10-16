@@ -21,7 +21,7 @@ import siap.jms.util.ParserMessageRec;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoDepositoModel;
 import siap.sico.lock.controller.LockController;
 import siap.sico.lock.model.LockModel;
 import siap.sico.ufficio.model.UfficioModel;
@@ -146,13 +146,13 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 				null);
 		boolean existOrdinanzaApplicazioneProvvisoria = false;
 		for (int i = 0; i < v.size(); i++) {
-			EventoModel em = (EventoModel) v.elementAt(i);
-			if ("0270".equals(em.getCodEsito()) && "S".equals(em.getFlagDocumentoRegistrato())
-					&& em.getNumAllValidati() > 0) {
+			EventoDepositoModel edm = (EventoDepositoModel) v.elementAt(i);
+			if ("0270".equals(edm.getCodEsito()) && "S".equals(edm.getFlagDocumentoRegistrato())
+					&& edm.getNumAllValidati() > 0) {
 				existOrdinanzaApplicazioneProvvisoria = true;
-				setRequestAttribute("eventoModel", em);
+				setRequestAttribute("eventoDepositoModel", edm);
 				INotifica in = SIEPLookupRemote.getNotificaRemote();
-				Date maxDataAvvenutaNotifica = in.ExRicercaDataNotifica(em.getIdEvento());
+				Date maxDataAvvenutaNotifica = in.ExRicercaDataNotifica(edm.getIdEvento());
 				String mdan = "";
 				if (maxDataAvvenutaNotifica != null)
 					mdan = DateUtils.getDateToString(maxDataAvvenutaNotifica, "dd/MM/yyyy");

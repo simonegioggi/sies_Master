@@ -13,7 +13,7 @@
 
 <jsp:useBean id="fascicoloSiusGP" 			scope="session" class="siap.sius.fascicolo.model.FascicoloGPModel"/>
 <jsp:useBean id="TornaQui"     				scope="request" class="java.lang.String"/>
-<jsp:useBean id="eventoModel"				scope="request" class="siap.sico.evento.model.EventoModel"/>
+<jsp:useBean id="eventoDepositoModel"		scope="request" class="siap.sico.evento.model.EventoDepositoModel"/>
 <jsp:useBean id="maxDataAvvenutaNotifica"	scope="request" class="java.lang.String"/>
 <jsp:useBean id="dataEsecutivita"			scope="request" class="java.lang.String"/>
 <jsp:useBean id="noteDataEsecutivita"		scope="request" class="java.lang.String"/>
@@ -60,6 +60,7 @@ String action = "siap.sius.fascicolo.action.ActRegistrazioneEsecutivitaApplicazi
 function Verifica() {
 	var data_minima = '<%=data1%>';
 	var data_sistema = '<%=DateUtils.getSysDate("dd/MM/yyyy")%>';
+	var data_deposito_ordinanza = '<%=DateUtils.getDateToString(eventoDepositoModel.getDataDeposito(), "dd/MM/yyyy")%>'
 	var data_esecutivita = document.LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.<%=ICostantiFascicoloSius.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value+'/'+document.LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.<%=ICostantiFascicoloSius.CAMPO_MESE_DATA_ESECUTIVITA%>.value+'/'+document.LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.<%=ICostantiFascicoloSius.CAMPO_ANNO_DATA_ESECUTIVITA%>.value;
     // Controllo della data di Esecutivita&#768;
     if (!ControllaData(data_esecutivita)) {
@@ -72,6 +73,9 @@ function Verifica() {
 		return false;
     } else if (!CompareDate(data_minima, data_esecutivita)) {
 		alert("Data Esecutività non può precedere: " + data_minima);
+		return false;
+   	} else if (!CompareDate(data_deposito_ordinanza, data_esecutivita)) { // Controllo Data Esecutivita&#768 >= data_deposito_ordinanza
+		alert("Data Esecutività non può precedere la data di deposito ordinanza: " + data_deposito_ordinanza);
 		return false;
    	}
     var max_data_avvenutaNotifica = '<%=maxDataAvvenutaNotifica%>';
@@ -121,10 +125,10 @@ function Verifica() {
 	<tr>
 		<td class="c"><font class="label"><%=StringUtils.toStringJSP(fascicoloSiusGP.getGeneraleProcedimentoModel().getDescrOggettoProcedimento(), "-")%></font></td>
         <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicoloSiusGP.getGeneraleProcedimentoModel().getDataCameraConsiglio(), "dd-MM-yyyy"), "-")%></font></td>
-        <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoModel.getDescrTipoProvvedimento(), "-")%></font></td>
-        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoModel.getDataEmissione(), "dd-MM-yyyy"), "-")%></font></td>
-        <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoModel.getDescrMotivo(), "-")%></font></td>
-        <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoModel.getDescrEsito(), "-")%></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoDepositoModel.getDescrTipoProvvedimento(), "-")%></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(eventoDepositoModel.getDataEmissione(), "dd-MM-yyyy"), "-")%></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoDepositoModel.getDescrMotivo(), "-")%></font></td>
+        <td class="c"><font class="label"><%=StringUtils.toStringJSP(eventoDepositoModel.getDescrEsito(), "-")%></font></td>
 	</tr>
 </table>
 <br>
@@ -184,7 +188,7 @@ if (provenienza.equals("modifica")) {
 </table>
 <input type="HIDDEN" name="<%=IWebConstants.LINK_RITORNO%>" value="<%=TornaQui%>">
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="<%=action%>">
-<input type="HIDDEN" name="IdEvento" value="<%=eventoModel.getIdEvento()%>">
+<input type="HIDDEN" name="IdEvento" value="<%=eventoDepositoModel.getIdEvento()%>">
 <input type="HIDDEN" name="provenienza" value="<%=provenienza%>">
 </FORM>
 <script language="JavaScript" type="text/javascript">
