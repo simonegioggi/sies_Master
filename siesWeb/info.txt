@@ -17,4 +17,8 @@ Comprende i seguenti Ticket MAC:
 	-	/siap/siep/richiesta/DettaglioTrasmissioneCompetenza.jsp
 
 2)	Ticket#202211110114 - Estrazione dati Sige
+	Il problema era legato al fatto che il sistema riportava il valore "Emesso Provvedimento" nella colonna
+	riservata "Motivo Altra Definizione Opposizione/Ricorso" della statistica "Procedimento SIGE per Estremi Atto".
+	Per la risoluzione della problematica sono stati riportati solo i valori dello "STATO_FASCICOLO" per i valori
+	('05', '06', '14', '15', '16', '17', '18', '19', '21').
 	-	/siesWeb/src/siap/sige/fascicolo/dao/FascicoloSigeSqlDAO.java
