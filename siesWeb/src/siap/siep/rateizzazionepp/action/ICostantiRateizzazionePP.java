@@ -71,5 +71,6 @@ public interface ICostantiRateizzazionePP {
 	public static final String CAMPO_COD_TIPO_PROVVEDIMENTO = "CodiceTipoProvvedimento";
 	public static final String CAMPO_SEDE_AUTORITA_PROVVEDIMENTO = "SedeAutoritaProvvedimento";
 	public static final String CAMPO_COD_AUTORITA_PROVVEDIMENTO = "CodiceAutoritaProvvedimento";
+	public static final String CAMPO_COD_SEDE_UDS = "CodSedeUds";
 
 }
