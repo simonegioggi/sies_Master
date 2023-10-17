@@ -15,3 +15,6 @@ Comprende i seguenti Ticket MAC:
 	Per la risoluzione della problematica sono stati resi visibili solo se procedimento di competenza.
 	Classi modificate:
 	-	/siap/siep/richiesta/DettaglioTrasmissioneCompetenza.jsp
+
+2)	Ticket#202211110114 - Estrazione dati Sige
+	-	/siesWeb/src/siap/sige/fascicolo/dao/FascicoloSigeSqlDAO.java
