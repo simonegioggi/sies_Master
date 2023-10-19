@@ -9,12 +9,12 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.lock.model.LockModel;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.util.SICOLookupRemote;
@@ -22,7 +22,6 @@ import siap.sico.web.ActionSiap;
 import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
 import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.avvocato.controller.IAvvocato;
-import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
@@ -52,38 +51,19 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
+		// Controllo che non si stia lavorando su una entità in modifica ad altri
+		LockModel lm = lockIfNotLocked("evento", "" + idEvento, getCodUtenteConnesso());
+		if (lm != null) {
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"La " + lm.getEntity() + " è in gestione ad un altro utente! <BR>Riprovare più tardi!");
+			return IWebConstants.PG_MESSAGE;
+		}
+
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("eventonotifica", enm);
 
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-
-		// Controlli preliminari all'inserimento di un nuovo evento
-		if (fsm.getFlagValidato().equalsIgnoreCase("N")) {
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno() + "/"
-					+ fsm.getChiaveProgr()
-					+ " non è stato Validato. Impossibile inserire una Rideterminazione Pena Pecuniaria!");
-			rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
-					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			// pagina di ritorno
-			return IWebConstants.PG_MESSAGE;
-		}
-
-		isFascicoloSiepDiCompetenza();
-
-		if (fsm.getDescrStatoFascicolo().equalsIgnoreCase("ARCHIVIATO/DEFINITO")) {
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno() + "/"
-					+ fsm.getChiaveProgr() + " Il fascicolo risulta Definito. Impossibile procedere!");
-			rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloUnivoco&"
-					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			return IWebConstants.PG_MESSAGE;
-		}
 
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
@@ -91,14 +71,7 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		// listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
 		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
 
-		// if (listaRateizzazioni.size() == 0) {
-		// throw new F3BException(F3BException.USER_MESSAGE,
-		// "Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione."
-		// + " Impossibile procedere");
-		// }
-
 		Hashtable<BigDecimal, EventoNotificaModel> listaRideterminazioniPena = new Hashtable<>();
-		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
 		for (RateizzazionePPModel rata : listaRateizzazioni) {
 			if (rata.getEveIdEvento() != null) {
 				EventoNotificaModel enmRPP = ie.ExRicercaEventoNotificaByKey(rata.getEveIdEvento());
@@ -144,18 +117,6 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		IPosizioneGiuridica ipg = SIEPLookupRemote.getPosizioneGiuridicaRemote();
 		pgldacm = ipg.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 				fsm.getIdFascicoloSiep());
-		if (pgldacm == null || pgldacm.getPosizioneGiuridica() == null) {
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno() + "/"
-					+ fsm.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
-			rt.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
-					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			// pagina di ritorno
-			return IWebConstants.PG_MESSAGE;
-		}
-
 		// imposto valore nella request
 		setRequestAttribute("posizioneluogoaltra", pgldacm);
 

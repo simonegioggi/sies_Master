@@ -7,7 +7,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
@@ -82,15 +81,22 @@ public class ActLoadInserisciOrdineIngiunzione extends ActionSiap implements ICo
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP lRateCTRL = SIEPLookupRemote.getRateizzazionePPRemote();
-		//2023.09.19 Si visualizzano solo quelle "Libere"
-//		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
-    listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniLibereByIdFasc(lFascMod.getIdFascicoloSiep());
-    //2023.09.19 - FINE
+		// 2023.09.19 Si visualizzano solo quelle "Libere"
+		// listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniByIdFasc(lFascMod.getIdFascicoloSiep());
+		listaRateizzazioni = lRateCTRL.exRicercaRateizzazioniLibereByIdFasc(lFascMod.getIdFascicoloSiep());
+		// 2023.09.19 - FINE
 
 		if (listaRateizzazioni.size() == 0) {
-			throw new F3BException(F3BException.USER_MESSAGE,
-					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione."
-							+ " Impossibile procedere");
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. "
+							+ "Impossibile procedere! "
+							+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+			rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+			return IWebConstants.PG_MESSAGE;
 		}
 
 		IEvento lCtrl = SICOLookupRemote.getEventoRemote();

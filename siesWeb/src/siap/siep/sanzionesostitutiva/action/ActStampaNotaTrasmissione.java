@@ -21,78 +21,78 @@ import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 
-
 /**
  * Azione di stampa della nota di trasmissione
+ *
  * @author d.fiorletta
  * @since MEV_2023-33
  */
 public class ActStampaNotaTrasmissione extends ActionSiap {
 
-  private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-  @SuppressWarnings("unchecked")
-  public String processRequest() throws F3BException {
-    siesLogger.info(getClass().getName() + ".processRequest: inizio");
+	public String processRequest() throws F3BException {
 
-    FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
-    BigDecimal lIdEvento = this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
-    UtenteModel lUtenteMod = this.getUtenteConnesso();
-    UfficioModel lUff = this.getUfficioUtenteConnesso();
+		BigDecimal lIdEvento = this.getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
-    // ==========================================================================
-    // Recupero l'evento per il quale produrre la Stampa (comunicazione)
-    // ==========================================================================
-    IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-    EventoModel lEventoModel = lCtrl.ExRicercaEventoByKey(lIdEvento);    
-   
-    // ==========================================================================
-    // Recupero il template
-    // ==========================================================================
-    String flagTemplate = null;
-    ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
-    TemplateModel lTemMod = new TemplateModel();
-    lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
-        lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(),
-        lEventoModel.getCodMotivo(), flagTemplate);
+		UtenteModel lUtenteMod = this.getUtenteConnesso();
+		UfficioModel lUff = this.getUfficioUtenteConnesso();
 
-    siesLogger.debug("lTemMod = " + lTemMod);
+		// ==========================================================================
+		// Recupero l'evento per il quale produrre la Stampa (comunicazione)
+		// ==========================================================================
+		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
+		EventoModel lEventoModel = lCtrl.ExRicercaEventoByKey(lIdEvento);
 
-    // ==========================================================================
-    // Genero il model Evento da passare alla funzione di stampa
-    // ==========================================================================
-    EventoNotificaModel lEveNotMod = new EventoNotificaModel();
-    lEveNotMod.setNomeTemplate(lTemMod.getIdTemplate());
+		// ==========================================================================
+		// Recupero il template
+		// ==========================================================================
+		String flagTemplate = null;
+		ITemplate lCtrlTem = SICOLookupRemote.getTemplateRemote();
+		TemplateModel lTemMod = new TemplateModel();
+		lTemMod = lCtrlTem.ExRicercaTemplateByTipEveTipoProvCodMotivoFlagTemplate(
+				lEventoModel.getCodTipoEvento(), lEventoModel.getCodTipoProvvedimento(),
+				lEventoModel.getCodMotivo(), flagTemplate);
 
-    lEveNotMod.getEvento().setIdEvento(lIdEvento);
-    lEveNotMod.getEvento().setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
+		siesLogger.debug("lTemMod = " + lTemMod);
 
-    lEveNotMod.getEvento().setDescrLuogoEmittente(lUff.getDescrComune());
-    lEveNotMod.getEvento().setDescrUfficioEmittente(lUff.getDescrTipoUfficio());
+		// ==========================================================================
+		// Genero il model Evento da passare alla funzione di stampa
+		// ==========================================================================
+		EventoNotificaModel lEveNotMod = new EventoNotificaModel();
+		lEveNotMod.setNomeTemplate(lTemMod.getIdTemplate());
 
-    lEveNotMod.getEvento().setDataAggiornamento(DateUtils.getSysDate());
-    lEveNotMod.getEvento().setCodUfficioAggiornamento(lUff.getCodUfficio());
-    lEveNotMod.getEvento().setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
+		lEveNotMod.getEvento().setIdEvento(lIdEvento);
+		lEveNotMod.getEvento().setFasSieIdFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
 
-    lEveNotMod.getEvento().setFlagDocumentoRegistrato("N");
+		lEveNotMod.getEvento().setDescrLuogoEmittente(lUff.getDescrComune());
+		lEveNotMod.getEvento().setDescrUfficioEmittente(lUff.getDescrTipoUfficio());
 
-    // ==========================================================================
-    // Produce la stampa
-    // ==========================================================================
-    ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveNotMod, lUtenteMod);
+		lEveNotMod.getEvento().setDataAggiornamento(DateUtils.getSysDate());
+		lEveNotMod.getEvento().setCodUfficioAggiornamento(lUff.getCodUfficio());
+		lEveNotMod.getEvento().setCodOperatoreAggiornamento(this.getCodUtenteConnesso());
 
-    // ==============================================
-    // Setta il documento di stampa sulla response
-    // ==============================================
-    setRequestAttribute("report", lReport);
+		lEveNotMod.getEvento().setFlagDocumentoRegistrato("N");
 
-    // info per il log
-    siesLogger.info(getClass().getName() + ".processRequest: fine");
+		// ==========================================================================
+		// Produce la stampa
+		// ==========================================================================
+		ByteArrayOutputStream lReport = lCtrl.ExStampaDocumento(lEveNotMod, lUtenteMod);
 
-    // valore di ritorno
-    return IWebConstants.PG_DOWNLOAD;
-  }
+		// ==============================================
+		// Setta il documento di stampa sulla response
+		// ==============================================
+		setRequestAttribute("report", lReport);
+
+		// info per il log
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		// valore di ritorno
+		return IWebConstants.PG_DOWNLOAD;
+	}
 
 }

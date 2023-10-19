@@ -22,57 +22,58 @@ import siap.siep.util.SIEPLookupRemote;
 
 /**
  * Action per il caricamento della nota di trasmissione
- * 
+ *
  * @author d.fiorletta
  * @since MEV_2023-33
  */
 public class ActLoadDettaglioNotaTrasmissione extends ActionSiap implements ICostantiSanzioneSostitutiva {
 
-  private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public String processRequest() throws F3BException {
-    siesLogger.info(getClass().getName() + ".processRequest: inizio");
+	public String processRequest() throws F3BException {
 
-    BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
-    IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-    EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
-    setRequestAttribute("notaTrasmissione", lEveNotMod);
+		BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 
-    // Recupero l'OI da visualizzare puntato dalla nota di trasmissione e relative rate/bollettini
-    {
-      EventoNotificaModel lEveNotModOI = lCtrlEvento.ExRicercaEventoNotificaByKey(lEveNotMod.getEvento().getEveIdEvento());
-      setRequestAttribute("ordineIngiunzione", lEveNotModOI);
+		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+		EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(lIdEvento);
+		setRequestAttribute("notaTrasmissione", lEveNotMod);
 
-      // Recupero le rate
-      IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-      Vector<RateizzazionePPModel> listaRate = irpp.exRicercaRateizzazioniBollettiniByIdEvento(lEveNotMod.getEvento().getEveIdEvento());
-      setRequestAttribute("listaRateizzazioni", listaRate);
-    }
-    
-    // NOTIFICA per l'esecuzione
-    NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
-    for (int i = 0; i < lNotifiche.length; i++) {
-      if ("E".equals(lNotifiche[i].getCodTipoNotifica())) {
-        setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
-      }
-    }
-    
-    // MAGISTRATO
-    MagistratoModel lMag = lEveNotMod.getMagistrato();
-    setRequestAttribute("magistrato", lMag);
-    
-    
-    PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
-    IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-    lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
-        lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
-    setRequestAttribute("posizioneluogoaltra", lPos);
+		// Recupero l'OI da visualizzare puntato dalla nota di trasmissione e relative rate/bollettini
+		{
+			EventoNotificaModel lEveNotModOI = lCtrlEvento
+					.ExRicercaEventoNotificaByKey(lEveNotMod.getEvento().getEveIdEvento());
+			setRequestAttribute("ordineIngiunzione", lEveNotModOI);
 
-    siesLogger.info(getClass().getName() + ".processRequest: fine");
+			// Recupero le rate
+			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+			Vector<RateizzazionePPModel> listaRate = irpp
+					.exRicercaRateizzazioniBollettiniByIdEvento(lEveNotMod.getEvento().getEveIdEvento());
+			setRequestAttribute("listaRateizzazioni", listaRate);
+		}
 
-    return ICostantiSanzioneSostitutiva.PG_DETTAGLIO_NOTA_TRASNISSIONE;
-  }
+		// NOTIFICA per l'esecuzione
+		NotificaModel[] lNotifiche = lEveNotMod.getNotifiche();
+		for (int i = 0; i < lNotifiche.length; i++) {
+			if ("E".equals(lNotifiche[i].getCodTipoNotifica())) {
+				setRequestAttribute("notificaAlCondannato", lNotifiche[i]);
+			}
+		}
+
+		// MAGISTRATO
+		MagistratoModel lMag = lEveNotMod.getMagistrato();
+		setRequestAttribute("magistrato", lMag);
+
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+		setRequestAttribute("posizioneluogoaltra", lPos);
+
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		return ICostantiSanzioneSostitutiva.PG_DETTAGLIO_NOTA_TRASNISSIONE;
+	}
 
 }

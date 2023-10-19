@@ -14,6 +14,11 @@ import siap.sico.evento.model.EventoModel;
  */
 public class EventoRateizzazionePPModel extends GenericModel {
 
+	/**
+	 * generated serialVersionUID
+	 */
+	private static final long serialVersionUID = -1106846677812291796L;
+
 	private EventoModel em;
 	private Vector<RateizzazionePPModel> listaRateizzazioniPP;
 	
@@ -44,4 +49,5 @@ public class EventoRateizzazionePPModel extends GenericModel {
 	public void setListaRateizzazioniPP(Vector<RateizzazionePPModel> listaRateizzazioniPP) {
 		this.listaRateizzazioniPP = listaRateizzazioniPP;
 	}
+
 }
