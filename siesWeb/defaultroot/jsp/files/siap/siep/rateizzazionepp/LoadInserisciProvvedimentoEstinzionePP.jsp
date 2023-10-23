@@ -99,6 +99,8 @@ function collassa(idEvento){
 }
 
 function Verify() {
+	var dataOdierna = "<%=DateUtils.getSysDate("dd")%>-<%=DateUtils.getSysDate("MM")%>-<%=DateUtils.getSysDate("yyyy")%>";
+	
   if (document.LoadInserisciEstinzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length==1)
     document.LoadInserisciEstinzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value='0'+document.LoadInserisciEstinzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
   if (document.LoadInserisciEstinzione.<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>.value.length==1)
@@ -112,6 +114,12 @@ function Verify() {
     alert('Data di emissione non valida');
     document.LoadInserisciEstinzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
     return false;
+  }
+  
+  if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data Emissione non può essere superiore alla data odierna');
+    document.LoadInserisciEstinzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.focus();
+		return false;  
   }
 
   // Data Trasmissione
@@ -130,6 +138,12 @@ function Verify() {
     return false;
   }
 
+  if (!CompareDate(data_to_verify, dataOdierna)) {
+		alert('La Data Trasmissione non può essere superiore alla data odierna');
+    document.LoadInserisciEstinzione.<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>.focus();
+		return false;  
+	}
+  
   // Autorita x la Notifica
   if (typeof document.LoadInserisciEstinzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> !== "undefined") {
       if (document.LoadInserisciEstinzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>.value=="-") {

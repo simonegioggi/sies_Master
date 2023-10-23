@@ -11,6 +11,8 @@
 <%@ page import="siap.siep.fascicolo.model.FascicoloSiepModel"%>
 <%@ page import="siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva"%>
 <%@ page import="siap.siep.sanzionesostitutiva.model.RicercaStatoPagamentiModel"%>
+<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
+
 
 <jsp:useBean id="fascicoloNotInSession" scope="request" class="java.lang.String"/>
 <jsp:useBean id="criteriRicerca"  		scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
@@ -107,7 +109,7 @@ while (itx.hasNext()) {
 		<td class="r"><font class="label"><%=StringUtils.toEuroFormat(fascicolo.getImportoPagato())%></font></td>
 		<td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataUltimaScadenza(),"dd-MM-yyyy"),"&nbsp;")%></font></td>
 		<td class="c">
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=">
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti&<%=ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP%>=<%=fascicolo.getIdFascicoloSiep()%>">
 				<img src="<%=IWebConstants.IMAGES_DIR%>dettagli.gif" width="12" height="12" alt="Dettagli" border="0">
     		</a>
   		</td>

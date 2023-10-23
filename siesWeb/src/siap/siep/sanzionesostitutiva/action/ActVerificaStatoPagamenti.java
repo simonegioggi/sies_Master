@@ -13,6 +13,7 @@ import f3b.util.StringUtils;
 import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
@@ -37,9 +38,17 @@ public class ActVerificaStatoPagamenti extends ActionSiap implements ICostantiSa
 		setLinkRitorno();
 
 		BigDecimal idFascicolo = null;
-		if (!isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP))
+		if (!isRequestParameterNullEmptyObj(ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP)) {
 			idFascicolo = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_FAS_SIE_ID_FASCICOLO_SIEP);
-		else {
+		
+			// Carico il nuovo fascicolo in sessione
+			IFascicoloSiep lCtrlFasc = SIEPLookupRemote.getFascicoloSiepRemote();
+			FascicoloSiepModel lFascMod = lCtrlFasc.ExRicercaFascicoloByKey(idFascicolo);
+	
+			setSessionAttribute("fascicolo", lFascMod);
+			setSessionAttribute("soggetto", lFascMod.getSoggetto());
+			setSessionAttribute("sentenza", lFascMod.getSentenza());		
+		} else {
 			FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 			idFascicolo = fsm.getIdFascicoloSiep();
 		}
