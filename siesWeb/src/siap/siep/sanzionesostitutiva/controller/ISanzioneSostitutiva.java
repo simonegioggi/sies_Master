@@ -211,4 +211,6 @@ public interface ISanzioneSostitutiva {
   public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
   public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
   public EventoModel exUpdateNotaTrasmissione (EventoModel aEvento) throws F3BException;
+  public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel) throws F3BException;
+	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel) throws F3BException;
 }

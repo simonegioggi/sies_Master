@@ -270,6 +270,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 
 		String s = getSqlQuery();
 		s += " AND RAT_ID_RATEIZZAZIONE_PP = " + idRateizzazione;
+		s += " ORDER by PROG_RATA ";
 		setStatement(s);
 
 		// info per il log

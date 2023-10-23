@@ -9,6 +9,8 @@ import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.pagoPA.controller.IBollettinoPagopa;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.DettaglioPenaComplessivaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -55,6 +57,17 @@ public class ActLoadDettagloRateizzazione extends ActionSiap implements ICostant
 			listaOrdiniIngiunzioneOrder.add(0, modelOI);
 		}
 
+		// Si aggiungono i bollettini 
+		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
+		for (EventoRateizzazionePPModel evento : listaOrdiniIngiunzione) {
+			Vector <RateizzazionePPModel> listaRateizzazioni = evento.getListaRateizzazioniPP();
+			
+			for (RateizzazionePPModel rata : listaRateizzazioni) {
+				Vector <BollettinoPagopaModel> listaBollettini = lBollCtrl.ExRicercaBollettiniPagopaByIdRateizzazione(rata.getIdRateizzazionePP());
+				rata.setListaBollettini(listaBollettini);
+			}
+		}
+		
 		Vector<RateizzazionePPModel> listaRateizzazioniLibere = new Vector<>();
 		listaRateizzazioniLibere = irpp.exRicercaRateizzazioniLibereByIdFasc(fsm.getIdFascicoloSiep());
 

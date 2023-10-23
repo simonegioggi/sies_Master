@@ -1290,7 +1290,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setProgressivo(new BigDecimal(1));
 			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
 			spm.setData(emRic.getDataEmissione());
-			spm.setCodStatoProcedimento("0336");
+			spm.setCodStatoProcedimento("0366");
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());

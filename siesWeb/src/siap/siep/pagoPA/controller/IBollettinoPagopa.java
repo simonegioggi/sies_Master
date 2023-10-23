@@ -49,5 +49,8 @@ public interface IBollettinoPagopa {
 	// MEV_2023-33
 	public Vector<BollettinoPagopaModel> ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(
 			BigDecimal idFascicoloSiep, BigDecimal idEvento) throws F3BException;
+	
+	public Vector<BollettinoPagopaModel> ExRicercaBollettiniPagopaByIdRateizzazione (
+			BigDecimal idRateizzazione) throws F3BException;
 
 }

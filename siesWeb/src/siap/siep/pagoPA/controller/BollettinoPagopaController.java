@@ -570,4 +570,33 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		return bpms;
 	}
 
+	public Vector<BollettinoPagopaModel> ExRicercaBollettiniPagopaByIdRateizzazione (
+			BigDecimal aIdRateizzazione) throws F3BException
+	{
+		Connection c = null;
+		BollettinoPagopaSqlDAO bpsdao = null;
+
+		Vector<BollettinoPagopaModel> lListaBollettini = new Vector<BollettinoPagopaModel>();
+		
+		try {
+			c = getDBConnection();
+
+			bpsdao = new BollettinoPagopaSqlDAO(c);
+
+			bpsdao.ricercaBollettinoPagopaByReteizzazione(aIdRateizzazione);
+			lListaBollettini = new Vector<BollettinoPagopaModel> (bpsdao.getModels());
+
+			bpsdao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: ", daoEx);
+			throw new SIEPException(
+					"BollettinoPagopaController.ExRicercaBollettinoPagopaByIdRateizzazione: Non posso leggere : "
+							+ daoEx);
+		} finally {
+			cleanup(bpsdao);
+			cleanup(c);
+		}
+
+		return lListaBollettini;
+	}
 }
