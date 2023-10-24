@@ -21,43 +21,44 @@ import siap.siep.util.SIEPLookupRemote;
  * @since MEV_2023-33
  * @version 1.0
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
-public class ActModificaProvvedimentoEstinzionePP extends ActInserisciProvvedimentoEstinzionePP implements ICostantiRateizzazionePP {
+public class ActModificaProvvedimentoEstinzionePP extends ActInserisciProvvedimentoEstinzionePP
+		implements ICostantiRateizzazionePP {
 
-  private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
 
-  public String processRequest() throws Exception {
+	public String processRequest() throws Exception {
 
-    siesLogger.info(getClass().getName() + ".processRequest: inizio");
+		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
-    FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-    siesLogger.debug("ID_FASCICOLO = " + fsm.getIdFascicoloSiep());
-    
-    EventoNotificaModel lEveNot = new EventoNotificaModel();
-    EventoModel lEve = super.getEventoProvvedimentoEstinzione();
-    NotificaModel[] lNotifiche = super.getNotificheProvvedimentoEstinzione();
-    
-    BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-    lEve.setIdEvento(lIdEvento);
-    
-    lEveNot.setEvento(lEve);
-    lEveNot.setNotifiche(lNotifiche);
+		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		siesLogger.debug("ID_FASCICOLO = " + fsm.getIdFascicoloSiep());
 
-    // recupero le rateizzazioni da collegare all'evento
-    //String[] lArrayIdRate = this.getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
-    
-    ISanzioneSostitutiva lCtrlSS = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-    lCtrlSS.exModificaProvvedimentoEstinzione(lEveNot);
+		EventoNotificaModel lEveNot = new EventoNotificaModel();
+		EventoModel lEve = super.getEventoProvvedimentoEstinzione();
+		NotificaModel[] lNotifiche = super.getNotificheProvvedimentoEstinzione();
 
-    String lPage = null;
+		BigDecimal lIdEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		lEve.setIdEvento(lIdEvento);
 
-    lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-            + "=siap.siep.rateizzazionepp.action.ActDettaglioProvvedimentoEstinzionePP&"
-            + ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
+		lEveNot.setEvento(lEve);
+		lEveNot.setNotifiche(lNotifiche);
 
-    siesLogger.info(getClass().getName() + ".processRequest: fine");
+		// recupero le rateizzazioni da collegare all'evento
+		// String[] lArrayIdRate =
+		// this.getRequestStringParameters(ICostantiRateizzazionePP.CAMPO_EVE_ID_EVENTO);
 
-    return lPage;
-  }
+		ISanzioneSostitutiva lCtrlSS = SIEPLookupRemote.getSanzioneSostitutivaRemote();
+		lCtrlSS.exModificaProvvedimentoEstinzione(lEveNot);
+
+		String lPage = null;
+
+		lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+				+ "=siap.siep.rateizzazionepp.action.ActDettaglioProvvedimentoEstinzionePP&"
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNot.getEvento().getIdEvento();
+
+		siesLogger.info(getClass().getName() + ".processRequest: fine");
+
+		return lPage;
+	}
 
 }
