@@ -649,7 +649,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setProgressivo(new BigDecimal(1));
 			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
 			spm.setData(emRic.getDataEmissione());
-			spm.setCodStatoProcedimento("0336");
+			spm.setCodStatoProcedimento("0364");
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
@@ -1007,7 +1007,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setProgressivo(new BigDecimal(1));
 			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
 			spm.setData(emRic.getDataEmissione());
-			spm.setCodStatoProcedimento("0336");
+			spm.setCodStatoProcedimento("0365");
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
@@ -1602,7 +1602,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setProgressivo(new BigDecimal(1));
 			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
 			spm.setData(emRic.getDataEmissione());
-			spm.setCodStatoProcedimento("0336");
+			spm.setCodStatoProcedimento("0367");
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
@@ -1914,7 +1914,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setProgressivo(new BigDecimal(1));
 			spm.setFasSieIdFascicoloSiep(emRic.getFasSieIdFascicoloSiep());
 			spm.setData(emRic.getDataEmissione());
-			spm.setCodStatoProcedimento("0336");
+			spm.setCodStatoProcedimento("0368");
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());

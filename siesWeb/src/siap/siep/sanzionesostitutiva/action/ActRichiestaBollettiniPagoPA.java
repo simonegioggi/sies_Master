@@ -49,19 +49,27 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		// controllo obbligatorietà CF
 		ISoggetto is = SICOLookupRemote.getSoggettoRemote();
 		SoggettoModel sm = is.ExRicercaSoggettoByKey(fsm.getSoggetto().getIdSoggetto());
-		if (!Utils.isPresent(sm.getCodFiscale())) {
-			siesLogger
-					.info("Soggetto Privo di Codice Fiscale: reindirizzo alla pagina di modifica soggetto!");
+		if (!Utils.isPresent(sm.getCodFiscale()) && isRequestParameterNullObj("warning")) {
+			// MEV_2023-33: il msg da bloccante diventa warning
+			siesLogger.info("Soggetto Privo di Codice Fiscale: "
+					+ "reindirizzo alla pagina di modifica soggetto solo se lo desidera l'utente! "
+					+ "Altrimenti continuo con la Richiesta di Generazione Bollettini!");
 			// pagina di ritorno
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Impossibile generare la Richiesta "
-					+ "Bollettini poiché il condannato risulta privo di Codice Fiscale.");
+			// setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+			// "Attenzione! Impossibile generare la Richiesta. "
+			// + "Bollettini poiché il condannato risulta privo di Codice Fiscale.");
 			rt.setAction(
 					"siap.sico.soggetto.action.ActLoadModificaSoggetto&IdSoggetto=" + sm.getIdSoggetto());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			// return rt.toString();
-			return IWebConstants.PG_MESSAGE;
+			// // return rt.toString();
+			// return IWebConstants.PG_MESSAGE;
+			setRequestAttribute(IWebConstants.ACTION_FIELD, "" + getClass().getName());
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Attenzione! Il condannato risulta privo di Codice Fiscale. "
+							+ "Si vuole procedere comunque alla Richiesta di Generazione Bollettini?");
+			return IWebConstants.PG_WARNING;
 		}
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -71,7 +79,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 
 		boolean isUnico = false;
-		List<String> testi = new ArrayList<String>();
+		List<String> testi = new ArrayList<>();
 
 		if (!listaRichiestaBollettini.isEmpty()) {
 			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
