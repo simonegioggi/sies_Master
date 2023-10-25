@@ -40,7 +40,7 @@ import siap.siep.util.SIEPLookupRemote;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActInserisciProvvedimentoEstinzionePP extends ActionSiap implements ICostantiRateizzazionePP {
 
-    private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+    private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
     public String processRequest() throws Exception {
 

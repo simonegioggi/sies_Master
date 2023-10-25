@@ -26,7 +26,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActUploadProvvedimentoEstinzionePP extends ActionSiap implements ICostantiEvento {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public String processRequest() throws Exception {
 

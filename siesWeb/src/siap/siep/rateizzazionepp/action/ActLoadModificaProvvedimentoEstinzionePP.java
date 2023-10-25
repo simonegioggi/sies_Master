@@ -40,7 +40,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActLoadModificaProvvedimentoEstinzionePP extends ActionSiap implements ICostantiRateizzazionePP {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
@@ -90,7 +90,7 @@ public class ActLoadModificaProvvedimentoEstinzionePP extends ActionSiap impleme
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		String[] listaCodici = new String[] { "0622", "1307", "1308" };
 		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, false);
+				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, true); // solo validati
 
 		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
 		for (EventoRateizzazionePPModel evento : listaOrdiniIngiunzione) {
@@ -102,27 +102,11 @@ public class ActLoadModificaProvvedimentoEstinzionePP extends ActionSiap impleme
 			}
 		}
 		
-		setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
-		/*
-		// Recupera l'ultimo OI o Assimilabile e relative rate 
-		// Attenzione serve per controllare che tutte le rate siano state pagate o meglio che l'importo dovuto
-		// si stato pagato.
-		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		String[] listaCodici = new String[] { "0622", "1307", "1308" };
-		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, false);
-
-		Vector <RateizzazionePPModel> listaRateizzazioni = null;
-		if (listaOrdiniIngiunzione.size()>0) {
-			listaRateizzazioni = listaOrdiniIngiunzione.elementAt(0).getListaRateizzazioniPP();
-			setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-		}
-		*/
-
-		
-		
-		
-		
+		// Carico in form solo il più recente
+		EventoRateizzazionePPModel ultimoOI = listaOrdiniIngiunzione.elementAt(0);
+		Vector<EventoRateizzazionePPModel> listaForm = new Vector<EventoRateizzazionePPModel>();
+		listaForm.add(ultimoOI);
+		setRequestAttribute("listaOrdiniIngiunzione", listaForm);		
 		
 		// Posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
