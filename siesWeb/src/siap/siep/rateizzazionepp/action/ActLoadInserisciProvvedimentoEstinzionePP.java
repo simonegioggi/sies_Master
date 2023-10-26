@@ -1,14 +1,19 @@
 package siap.siep.rateizzazionepp.action;
 
+import java.math.BigDecimal;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
+import f3b.util.StringUtils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.util.SICOLookupRemote;
@@ -37,7 +42,7 @@ import siap.siep.util.SIEPLookupRemote;
  */
 public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implements ICostantiRateizzazionePP {
 
-	private static Logger siesLogger = Logger.getLogger(LogF3B.WS_PAGO_PA_LOG);
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
@@ -85,7 +90,7 @@ public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implem
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		String[] listaCodici = new String[] { "0622", "1307", "1308" };
 		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, false);
+				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, true); // True = Solo validati
 
 		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
 		for (EventoRateizzazionePPModel evento : listaOrdiniIngiunzione) {
@@ -97,41 +102,63 @@ public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implem
 			}
 		}
 		
-		setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+		//setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
 		
-		/*
+		EventoRateizzazionePPModel ultimoOI = null;
 		Vector <RateizzazionePPModel> listaRateizzazioni = null;
-		if (listaOrdiniIngiunzione.size()>0) {
+		if (listaOrdiniIngiunzione.size()>0) {			
 			// Prendo in considerazione l'ultimo OI o assimilabile
-			listaRateizzazioni = listaOrdiniIngiunzione.elementAt(0).getListaRateizzazioniPP();
-			setRequestAttribute("ultimoOI", listaOrdiniIngiunzione.elementAt(0));
-			setRequestAttribute("listaRateizzazioni", listaRateizzazioni);			
+			ultimoOI = listaOrdiniIngiunzione.elementAt(0);
 			
-			irpp.ExRicercaBollettinoPagopaByIdRateizzazione(listaOrdiniIngiunzione.elementAt(0).get)
+			// Carico in form solo il più recente
+			Vector<EventoRateizzazionePPModel> listaForm = new Vector<EventoRateizzazionePPModel>();
+			listaForm.add(ultimoOI);
+			setRequestAttribute("listaOrdiniIngiunzione", listaForm);
 			
-			
-			// Recupero i bollettini
-			IBollettinoPagopa lCtrlBollettino = SIEPLookupRemote.getBollettinoPagopaRemote();
-			Vector<BollettinoPagopaModel> listaBollettini = lCtrlBollettino.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento (lFascMod.getIdFascicoloSiep(), listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento());
-		  
-			BigDecimal importoRate = new BigDecimal(0);
-			BigDecimal importoPagato = new BigDecimal(0);
-			setRequestAttribute("listaBollettini", listaBollettini);
-			for (BollettinoPagopaModel bollettino: listaBollettini) {
-				importoRate   = importoRate.add(bollettino.getImportoRata());
-				importoPagato = importoPagato.add(bollettino.getImportoPagato()!=null ? bollettino.getImportoPagato(): new BigDecimal(0) );
+			listaRateizzazioni = ultimoOI.getListaRateizzazioniPP();
+
+			BigDecimal importoDaPagare = listaRateizzazioni.elementAt(0).getImportoDaPagare();
+			BigDecimal importoRate     = new BigDecimal(0);
+			BigDecimal importoPagato   = new BigDecimal(0);
+
+			for (RateizzazionePPModel rate: listaRateizzazioni) {		
+				Vector <BollettinoPagopaModel> listaBollettini = rate.getListaBollettini();
+				for (BollettinoPagopaModel bollettino: listaBollettini) {
+					importoRate   = importoRate.add(bollettino.getImportoRata());
+					importoPagato = importoPagato.add(bollettino.getImportoPagato()!=null ? bollettino.getImportoPagato(): new BigDecimal(0) );
+				}
 			}
 			
-			if (importoRate.compareTo(importoPagato)!=0) {
-				String warnImportoRate = "Attenzione. L'importo pagato "+StringUtils.toEuroFormat(importoPagato)+" non coincide con quanto richiesto "+StringUtils.toEuroFormat(importoRate);
-				setRequestAttribute("warnImportoRate", warnImportoRate);
+			if (importoDaPagare.compareTo(importoPagato)!=0) {
+				EventoModel  eve = ultimoOI.getEvento();
+				String pre = "l'";
+				if (eve.getCodTipoProvvedimento().equals("04")) pre = "il ";
+
+				String warnImportoRate = "Per "+pre+eve.getDescrTipoProvvedimento()+" "+eve.getDescrMotivo();
+				warnImportoRate += " del "+DateUtils.getDateToString(eve.getDataEmissione(),"dd/MM/yyyy")+"";
+				warnImportoRate += " l'importo pagato "+StringUtils.toEuroFormat(importoPagato)+" Euro";
+				warnImportoRate += " non corrisponde all'importo da pagare "+StringUtils.toEuroFormat(importoDaPagare)+" Euro.";
+				warnImportoRate += " Non è possibile procedere con l'emissione del provvedimento.";
+				
+				RedirectTo lRedirigi = new RedirectTo();
+				lRedirigi.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,warnImportoRate);
+
+				lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti&"
+						+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + eve.getIdEvento());
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+				return IWebConstants.PG_MESSAGE;
 			}
 		}
-		*/
-		//TODO verifico che l'importo sia stato interamente pagato
-		// COME?????????
-		// A rigore andrebbero recuperati tutti i bollettini collegati al fascicolo e sommare l'importo di 
-		// quelli pagati
+		else {
+			RedirectTo lRedirigi = new RedirectTo();
+			lRedirigi.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Nonrisulta emesso alcun ordine di ingiunzione. Impossibile procedere.");
+
+			lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti");
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+			return IWebConstants.PG_MESSAGE;			
+		}
 
 		
 		//TODO VERIFICARE
