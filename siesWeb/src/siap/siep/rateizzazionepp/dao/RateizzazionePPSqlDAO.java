@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
@@ -74,7 +75,7 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		if (!lCondizioni.trim().equals(""))
 			lStatement += " WHERE " + lCondizioni;
 
-		lStatement += " " + getOrderBy() + " ";
+		// lStatement += " " + getOrderBy() + " ";
 
 		String lPaginedStatement = "";
 		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
@@ -88,9 +89,10 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	 * Effettua la generica ricerca in base ai dati specificati nel model
 	 *
 	 * @param aModel
+	 * @param test
 	 * @throws DAOException
 	 */
-	public void ricercaRateizzazionePP(RateizzazionePPModel aModel) throws DAOException {
+	public void ricercaRateizzazionePP(RateizzazionePPModel aModel, String test) throws DAOException {
 
 		// Recupera la select...from
 		String lSql = getSqlQuery();
@@ -98,10 +100,13 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		// Recupero la where condition in base al model
 		String lCondizioni = setCondizioni(aModel);
 
-		if (!lCondizioni.trim().equals(""))
+		if (Utils.isPresent(lCondizioni.trim()))
 			lSql += " AND " + lCondizioni;
 
-		lSql += " " + getOrderBy() + " ";
+		if (Utils.isPresent(test))
+			lSql += " AND EVE_ID_EVENTO	" + test;
+
+		// lSql += " " + getOrderBy() + " ";
 
 		// Imposta lo statement da eseguire
 		setStatement(lSql);
@@ -146,23 +151,24 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * MEV-33
+	 *
 	 * @param aIdFasSIEP
 	 * @throws DAOException
 	 */
-	 public void ricercaRateizzazionePPByIdFasSIEPLibero(BigDecimal aIdFasSIEP) throws DAOException {
+	public void ricercaRateizzazionePPByIdFasSIEPLibero(BigDecimal aIdFasSIEP) throws DAOException {
 
-	    // Recupera la select...from
-	    String lSql = getSqlQuery();
+		// Recupera la select...from
+		String lSql = getSqlQuery();
 
-	    lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
-      lSql += " AND EVE_ID_EVENTO is null ";
-	    // MEV_2023-33: aggiunta condizione di order by
-	    lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP ";
+		lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
+		lSql += " AND EVE_ID_EVENTO is null ";
+		// MEV_2023-33: aggiunta condizione di order by
+		lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP ";
 
-	    // Imposta lo statement da eseguire
-	    setStatement(lSql);
-	  }
-	
+		// Imposta lo statement da eseguire
+		setStatement(lSql);
+	}
+
 	/**
 	 *
 	 * @param aIdEvento
@@ -310,12 +316,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	 *
 	 * @return
 	 */
-	protected String getOrderBy() {
-
-		String orderBy = new String("");
-		// orderBy = " ORDER BY xxxxx";
-		return orderBy;
-	}
+	// protected String getOrderBy() {
+	//
+	// String orderBy = new String("");
+	// // orderBy = " ORDER BY xxxxx";
+	// return orderBy;
+	// }
 
 	/**
 	 * Metodo che imposta la statement di ricerca per id Fascicolo Siep

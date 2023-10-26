@@ -123,6 +123,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniByIdFasc: " + ex);
 		} finally {
 			cleanup(lRateizzazioneSqlDao);
+			cleanup(lBollettinoSqlDAO);
 
 			cleanup(c);
 		}
@@ -495,11 +496,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print 
-	 * Numero MEV : 2023-33 
-	 * Autore : sgioggi 
-	 * Data : 29 ago 2023 
-	 * Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
+	 * ago 2023 Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
@@ -865,6 +863,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniLibereByIdFasc: " + ex);
 		} finally {
 			cleanup(lRateizzazioneSqlDao);
+			cleanup(lBollettinoSqlDAO);
 
 			cleanup(c);
 		}
@@ -2180,6 +2179,64 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		}
 
 		return listaEventoRateizzazioniPP;
+	}
+
+	@Override
+	public Vector<RateizzazionePPModel> exRicercaMancatiPagamentiUnicaSoluzione(BigDecimal idFascicoloSiep)
+			throws F3BException {
+
+		Vector<RateizzazionePPModel> rppVector = new Vector<>();
+
+		Connection c = null;
+
+		RateizzazionePPSqlDAO rppsDAO = null;
+		BollettinoPagopaSqlDAO bpsDAO = null;
+
+		// Ricerca le rateizzazioni per id Fascicolo
+		RateizzazionePPModel rppmRic = new RateizzazionePPModel();
+		rppmRic.setFasSieIdFascicoloSiep(idFascicoloSiep);
+		rppmRic.setTipoRateizzazione("U");
+		rppmRic.setNumeroRate(new BigDecimal(1));
+		rppmRic.setProgressivoRata(new BigDecimal(1));
+
+		try {
+			c = getDBConnection();
+
+			rppsDAO = new RateizzazionePPSqlDAO(c);
+			bpsDAO = new BollettinoPagopaSqlDAO(c);
+
+			rppsDAO.ricercaRateizzazionePP(rppmRic, "IS NOT NULL");
+
+			rppsDAO.start();
+			while (rppsDAO.next())
+				rppVector.add((RateizzazionePPModel) rppsDAO.getModel());
+			rppsDAO.stop();
+
+			for (RateizzazionePPModel rppm : rppVector) {
+				bpsDAO.ricercaBollettinoPagopaByReteizzazione(rppm.getIdRateizzazionePP());
+				Vector<BollettinoPagopaModel> bpmVector = new Vector<BollettinoPagopaModel>(
+						bpsDAO.getModels());
+				rppm.setListaBollettini(bpmVector);
+			}
+
+			commit(c);
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException", daoEx);
+			rollback(c);
+			throw new F3BException(
+					"RateizzazionePPController.exRicercaRateizzazioniLibereByIdFasc: " + daoEx);
+		} catch (Exception ex) {
+			siesLogger.error("Exception", ex);
+			rollback(c);
+			throw new F3BException("RateizzazionePPController.exRicercaRateizzazioniLibereByIdFasc: " + ex);
+		} finally {
+			cleanup(rppsDAO);
+			cleanup(bpsDAO);
+
+			cleanup(c);
+		}
+
+		return rppVector;
 	}
 	// ***** FINE INTERVENTO MEV_2023-33 *****//
 

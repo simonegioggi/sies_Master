@@ -90,4 +90,7 @@ public interface IRateizzazionePP {
 	public Vector<EventoRateizzazionePPModel> exRicercaAvvisoMancatoPagamento(BigDecimal idFascicolo)
 			throws F3BException;
 
+	public Vector<RateizzazionePPModel> exRicercaMancatiPagamentiUnicaSoluzione(BigDecimal idFascicoloSiep)
+			throws F3BException;
+
 }

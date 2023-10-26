@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-33: aggiunta pagina --%>
+<%@page import="f3b.util.Utils"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ page import="java.util.Date"%>
 
@@ -194,6 +195,9 @@ if ("I".equals(modalita)) {
       	</td>
     </tr>
 </table>
+<%
+if (Utils.isPresent(domicilio)) {
+%>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
@@ -202,10 +206,13 @@ if ("I".equals(modalita)) {
 	<tr>
 		<td class="L" width="20%">Residenza</td>
 		<td class="L">
-  			<font class="campo">Domicilio Imposto<%=domicilio%></font>
+  			<font class="campo">Domicilio Imposto in:&nbsp;<%=domicilio%></font>
 		</td>
 	</tr>
 </table>
+<%
+}
+%>
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
@@ -214,7 +221,7 @@ if ("I".equals(modalita)) {
 	<tr>
 	  	<td class="l" width="20%">Pena Pecuniaria Sostitutiva: Importo</td>
 	  	<td class="L">
-  			<font class="campo"><%=importoDaPagare%></font>
+  			<font class="campo"><%=StringUtils.toEuroFormat(importoDaPagare)%></font>
 		</td>
 	</tr>
 </table>
@@ -224,8 +231,8 @@ if ("I".equals(modalita)) {
 	  	<td class="Titolo" colspan="2">Magistrato Firmatario</td>
 	</tr>
 	<tr>
-      	<td class="l">Magistrato<font class="ob">(*)</font></td>
-      	<td class="L" colspan="4">
+      	<td class="l" width="20%">Magistrato<font class="ob">(*)</font></td>
+      	<td class="L">
         	<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCognome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" maxlength="35" size="25">
         	<input readonly title= "Nome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getNome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" maxlength="35" size="25">
        		<a href="Javascript:ListaMagistrati('LoadInserisciTrasmissioneAttiConversione');">
@@ -243,7 +250,7 @@ if ("I".equals(modalita)) {
 	  	<td class="Titolo" colspan="3">Destinatari</td>
 	</tr>
 	<tr>
-	  	<td class="l">Magistrato di Sorveglianza&nbsp;<font class="ob">(*)</font></td>
+	  	<td class="l" width="20%">Magistrato di Sorveglianza&nbsp;<font class="ob">(*)</font></td>
 		<td class="L">
 			<select Title="Magistrato di Sorveglianza" class="small" name="<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>">
 				<%=tipoUDS%>
