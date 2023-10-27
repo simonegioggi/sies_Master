@@ -66,4 +66,9 @@ public interface IArchiviazione {
 	 */
 	public void ExArchiviazioneSemplificataRES(FascicoloSiepModel aFascicolo) throws F3BException;
 
+	// MEV_2023-33
+	public ArchiviazioneModel ExInserisciArchiviazionePP (EventoNotificaModel aEveNotMod,
+      ArchiviazioneModel aArchiviazione) throws F3BException;
+	public ArchiviazioneModel ExModificaArchiviazionePP (EventoNotificaModel aEveNotMod,
+      ArchiviazioneModel aArchiviazione) throws F3BException;
 }

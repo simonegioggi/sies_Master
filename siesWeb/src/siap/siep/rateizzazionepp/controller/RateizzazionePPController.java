@@ -21,8 +21,11 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.siep.annotazionemanuale.dao.AnnotazioneManualeDAO;
 import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
+import siap.siep.archiviazione.dao.ArchiviazioneSqlDAO;
+import siap.siep.archiviazione.model.ArchiviazioneModel;
 import siap.siep.autoritaesterna.dao.AutoritaEsternaDAO;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
+import siap.siep.fascicolo.dao.FascicoloSiepDAO;
 import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.pagoPA.dao.BollettinoPagopaDAO;
 import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
@@ -31,6 +34,9 @@ import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
 import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
+import siap.siep.scadenzario.dao.ScadenzarioDAO;
+import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
+import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 
@@ -1821,24 +1827,36 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return idEvento;
 	}
 
+  /**
+   * Funzione di validazione del provvedimento di archiviazione per estinzione pena pecuniaria
+   * - Cancellazione scadenzari
+   * - Aggiorna lo stato procedimento
+   * - Aggiorna lo stato del fascicolo in archiviato
+   * - Valida l'evento
+   * 
+   */
 	@Override
 	public void exUpdateDefinizioneProcedimentoPP(EventoModel em) throws F3BException {
 
-		Connection c = null;
+		Connection lConn = null;
 
 		EventoDAO eDAO = null;
 		EventoSqlDAO esDAO = null;
 		StatoProcedimentoDAO spDAO = null;
 		EventoDAO eDAOBlob = null;
+		ArchiviazioneSqlDAO lArchSqlDao = null;
+		FascicoloSiepDAO lFascDao = null;
+		ScadenzarioSqlDAO lScaSqlDao = null;
+		ScadenzarioDAO lScaDao = null;
 
 		try {
-			c = getDBConnection();
+			lConn = getDBConnection();
 
 			// ========================================================================
 			// Recupero l'EVENTO completo, quello in input contiene solo i dati da
 			// aggiornare
 			// ========================================================================
-			esDAO = new EventoSqlDAO(c);
+			esDAO = new EventoSqlDAO(lConn);
 			esDAO.ricercaEventoByKey(em.getIdEvento());
 			EventoModel emRic = (EventoModel) esDAO.getModelByKey();
 			esDAO.stop();
@@ -1858,7 +1876,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spm.setCodOperatoreInserimento(em.getCodOperatoreAggiornamento());
 			spm.setDataInserimento(em.getDataAggiornamento());
 			spm.setCodUfficioInserimento(em.getCodUfficioAggiornamento());
-			spDAO = new StatoProcedimentoDAO(c);
+			
+			spDAO = new StatoProcedimentoDAO(lConn);
 			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
 			spDAO.setCondizioneByIdFascicolo(emRic.getFasSieIdFascicoloSiep());
 			spDAO.delete();
@@ -1868,33 +1887,78 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			spDAO.stop();
 			siesLogger.debug("FINE Aggiornamento stato procedimento");
 
+			// Cancellazione scadenzari
+			lScaSqlDao = new ScadenzarioSqlDAO(lConn);
+			lScaDao = new ScadenzarioDAO(lConn);
+
+			ScadenzarioModel lScaMod = null;
+			// fine pena
+			lScaSqlDao.ricercaScadenzarioByTipoScadenzarioIdFascicolo("02", emRic.getFasSieIdFascicoloSiep());
+			lScaMod = (ScadenzarioModel) lScaSqlDao.getModelByKey();
+			if (lScaMod != null && lScaMod.getIdScadenzario() != null) {
+				lScaDao.setCondizioneDelete(lScaMod.getIdScadenzario());
+				lScaDao.delete();
+				lScaDao.stop();
+			}		
+			// ===================================================================
+			// Cancella tutti gli scadenzari di tipo LEGGE SIMEONE ( Tipo = 01 )
+			// ===================================================================
+			lScaDao.setCondizioneByIdFascicoloSiepTipoScadenzario(emRic.getFasSieIdFascicoloSiep(), "01");
+			lScaDao.delete();
+			
+			lArchSqlDao = new ArchiviazioneSqlDAO(lConn);
+
+			ArchiviazioneModel lArchMod = new ArchiviazioneModel();
+			lArchSqlDao.ricercaArchiviazioneByIdEvento(em.getIdEvento());
+			lArchMod = (ArchiviazioneModel) lArchSqlDao.getModelByKey();			
+			
+			// Aggiorna il fascicolo con stato = "01" archiviato/definito
+			lFascDao = new FascicoloSiepDAO(lConn);
+
+			lFascDao.setCodMotivoArchiviazione("13"); // new MEV_2023-33 'Estinzione Pena Pecuniaria'
+			lFascDao.setCodStatoFascicolo("01");
+			lFascDao.setDataArchiviazione(lArchMod.getDataDefinizione());
+
+			lFascDao.setDataAggiornamento(em.getDataAggiornamento());
+			lFascDao.setCodUfficioAggiornamento(em.getCodUfficioAggiornamento());
+			lFascDao.setCodOperatoreAggiornamento(em.getCodOperatoreAggiornamento());
+
+			lFascDao.selCondizioneUpdate(emRic.getFasSieIdFascicoloSiep());
+			lFascDao.update();
+			lFascDao.stop();
+			
 			// ========================================================================
 			// Aggiorno il blob sull'evento
 			// ========================================================================
 			siesLogger.debug("Aggiornamento Blob");
-			eDAOBlob = new EventoDAO(c);
+			eDAOBlob = new EventoDAO(lConn);
 			eDAOBlob.setDAOFromModelForUpdateBlob(em);
 			eDAOBlob.selCondizioneUpdate(em.getIdEvento());
 			eDAOBlob.update();
 			eDAOBlob.stop();
 			siesLogger.debug("Blob Aggiornato");
 
-			commit(c);
+			commit(lConn);
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);
-			rollback(c);
+			rollback(lConn);
 			throw new F3BException("RateizzazionePPController.exUpdateDefinizioneProcedimentoPP: " + ex);
 		} catch (Exception ex) {
 			siesLogger.error("Exception", ex);
-			rollback(c);
+			rollback(lConn);
 			throw new F3BException("RateizzazionePPController.exUpdateDefinizioneProcedimentoPP: " + ex);
 		} finally {
 			cleanup(eDAO);
 			cleanup(esDAO);
 			cleanup(spDAO);
+			cleanup(lArchSqlDao);
+			cleanup(lFascDao);			
+			cleanup(lScaSqlDao);
+			cleanup(lScaDao);			
+			
 			cleanup(eDAOBlob);
 
-			cleanup(c);
+			cleanup(lConn);
 		}
 	}
 
