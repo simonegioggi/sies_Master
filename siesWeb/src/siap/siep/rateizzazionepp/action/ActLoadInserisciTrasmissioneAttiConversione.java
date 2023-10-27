@@ -19,6 +19,7 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -79,16 +80,43 @@ public class ActLoadInserisciTrasmissioneAttiConversione extends ActionSiap
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		listaRateizzazioni = irpp.exRicercaMancatiPagamentiUnicaSoluzione(fsm.getIdFascicoloSiep());
-		if (listaRateizzazioni.size() == 0) {
+		if (listaRateizzazioni.size() == 0
+				|| listaRateizzazioni.firstElement().getListaBollettini().size() == 0) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Non e' stato trovato alcun pagamento in unica rata. " + "Impossibile procedere! "
-							+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
-			rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
-					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+
+			if (listaRateizzazioni.size() == 0) {
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Non e' stato trovato alcun mancato pagamento in unica rata. "
+								+ "Impossibile procedere!"
+								+ " Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+				rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			} else {
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Non e' stato trovato alcun mancato pagamento in unica rata. "
+								+ "Impossibile procedere!"
+								+ " Si reindirizza alla pagina di Richiesta Generazione Bollettini.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA&"
+						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			}
+
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 			return IWebConstants.PG_MESSAGE;
+		} else {
+			BollettinoPagopaModel bpm = listaRateizzazioni.firstElement().getListaBollettini().firstElement();
+			if ("PA".equals(bpm.getStatoPagamento())) {
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Non e' stato trovato alcun mancato pagamento in unica rata. "
+								+ "Impossibile procedere!"
+								+ " Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+				rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				return IWebConstants.PG_MESSAGE;
+			}
 		}
 
 		// Sezione con l'importo da pagare

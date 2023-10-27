@@ -13,6 +13,7 @@ import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.sico.evento.model.EventoModel;
@@ -3524,7 +3525,8 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	 * Data : 11 ott 2023 
 	 * Branch : MEV_2023-33
 	 */
-	public void ricercaAvvisoMancatoPagamento(String[] motivi, EventoModel em) throws DAOException {
+	public void ricercaAvvisoMancatoPagamento(String[] motivi, EventoModel em, String test)
+			throws DAOException {
 
 		String s = new String("");
 		s += "SELECT distinct ID_EVENTO, COD_TIPO_EVENTO, CODEVE.RV_MEANING COD_EVE, COD_TIPO_PROVVEDIMENTO,"
@@ -3569,11 +3571,12 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 				+ " AND UFF_TIPO_EMI.RV_DOMAIN = 'TIPO_UFFICIO'"
 				+ " AND UFF_TIPO_EMI.RV_LOW_VALUE = UFF_EMI.COD_TIPO_UFFICIO"
 				+ " AND UFF_TIPO_DES.RV_LOW_VALUE = EVENTO.COD_TIPO_UFFICIO_DESTINATARIO"
-				+ " AND UFF_TIPO_DES.RV_DOMAIN = 'TIPO_UFFICIO'"
-				+ " and rpp.eve_id_evento = ID_EVENTO and rpp.tipo_rateizzazione = 'R'"
-				+ " and b.fas_sie_id_fascicolo_siep = rpp.fas_sie_id_fascicolo_siep"
+				+ " AND UFF_TIPO_DES.RV_DOMAIN = 'TIPO_UFFICIO'" + " and rpp.eve_id_evento = ID_EVENTO";
+		if (Utils.isPresent(test))
+			s += " and rpp.tipo_rateizzazione = 'R' and b.stato_pagamento = 'PN'";
+		s += " and b.fas_sie_id_fascicolo_siep = rpp.fas_sie_id_fascicolo_siep"
 				+ " and b.rat_id_rateizzazione_pp = rpp.id_rateizzazione_pp"
-				+ " and b.stato_pagamento = 'PN' and b.iuv is not null";
+				+ " and b.iuv is not null";
 
 		if (em.getFasSieIdFascicoloSiep() != null) {
 			s += " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP=" + em.getFasSieIdFascicoloSiep();

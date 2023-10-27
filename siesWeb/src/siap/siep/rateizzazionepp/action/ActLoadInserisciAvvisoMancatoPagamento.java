@@ -67,9 +67,10 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			if (fsm.getFlagValidato().equalsIgnoreCase("N")) {
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
-				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno()
-						+ "/" + fsm.getChiaveProgr() + " non è stato Validato."
-						+ " Impossibile inserire un provvedimento di Avviso Mancato Pagamento!");
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Il Procedimento N." + fsm.getChiaveAnno() + "/" + fsm.getChiaveProgr()
+								+ " non è stato Validato."
+								+ " Impossibile inserire un provvedimento di Avviso Mancato Pagamento!");
 				rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -97,7 +98,7 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			// Ricerca pagamento rateizzato della pena pecuniaria con rate non pagate
 			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 			Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-					.exRicercaAvvisoMancatoPagamento(idFascicolo);
+					.exRicercaAvvisoMancatoPagamento(idFascicolo, test);
 
 			BigDecimal idEvento = null;
 			if (listaRichiestaBollettini.isEmpty()) {
@@ -121,6 +122,19 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 					Iterator<RateizzazionePPModel> iterRPP = rateizzazioni.iterator();
 					while (iterRPP.hasNext()) {
 						RateizzazionePPModel rata = iterRPP.next();
+						if ("U".equals(rata.getTipoRateizzazione())) {
+							RedirectTo rt = new RedirectTo();
+							rt.setPage(IWebConstants.PG_MAIN);
+							setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+									"Avviso Mancato Pagamento non consentito su procedimento con pagamento "
+											+ "in unica soluzione! "
+											+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+							rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+									+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "="
+									+ getClass().getName());
+							setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+							return IWebConstants.PG_MESSAGE;
+						}
 						idEvento = rata.getEveIdEvento();
 						break;
 					}
@@ -140,6 +154,17 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 					importoPagato = importoPagato.add(bpm.getImportoPagato());
 				else
 					importoDaPagare = importoDaPagare.add(bpm.getImportoRata());
+			}
+			if (importoPagato.compareTo(importoDaPagare) == 0) {
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Avviso Mancato Pagamento non consentito: tutte le rate risultano pagate! "
+								+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+				rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				return IWebConstants.PG_MESSAGE;
 			}
 			setRequestAttribute("importoPagato", importoPagato.toString());
 			setRequestAttribute("importoDaPagare", importoDaPagare.toString());
@@ -222,7 +247,7 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			// Ricerca pagamento rateizzato della pena pecuniaria con rate non pagate
 			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 			Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-					.exRicercaAvvisoMancatoPagamento(idFascicolo);
+					.exRicercaAvvisoMancatoPagamento(idFascicolo, test);
 
 			BigDecimal idEvento = null;
 			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
@@ -259,12 +284,13 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			// Posizione giuridica
 			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 			IPosizioneGiuridica ipg = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-			pgldacm = ipg.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(idFascicolo);
+			pgldacm = ipg
+					.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(idFascicolo);
 			if (pgldacm == null || pgldacm.getPosizioneGiuridica() == null) {
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
-				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno() + "/"
-						+ fsm.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno()
+						+ "/" + fsm.getChiaveProgr() + " non è stata associata una Posizione Giuridica.");
 				rt.setAction("siap.siep.posizione.action.ActLoadInserisciPosizioneGiuridica&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -294,8 +320,8 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				// nessun avvocato trovato
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
-				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno() + "/"
-						+ fsm.getChiaveProgr() + " non è stato associato alcun avvocato.");
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Al Procedimento N." + fsm.getChiaveAnno()
+						+ "/" + fsm.getChiaveProgr() + " non è stato associato alcun avvocato.");
 				rt.setAction("siap.siep.avvocato.action.ActLoadInserisciAvvocato&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -314,7 +340,8 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 								|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("79")
 								|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("80")
 								|| pgldacm.getAltraCausa().getCodTipoPosGiuridica().equals("81"))) {
-					tipoAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+					tipoAutoritaEsternaE = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+							"-");
 				} else {
 					if (pgldacm.getAltraCausa() != null
 							&& pgldacm.getAltraCausa().getIstitutoDetenzione() != null)
@@ -337,11 +364,13 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			setRequestAttribute("autoritaEsternaE", "" + tipoAutoritaEsternaE);
 
 			// Autorita Notifica Avvocato
-			Option tipoAutoritaEsternaN = new Option(DecodificheManager.getInstance().getTipoAutorita(), "C0");
+			Option tipoAutoritaEsternaN = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+					"C0");
 			setRequestAttribute("autoritaEsternaN", "" + tipoAutoritaEsternaN);
 
 			// Autorita Notifica Civilmente Obbligati
-			Option tipoAutoritaEsternaCO = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+			Option tipoAutoritaEsternaCO = new Option(DecodificheManager.getInstance().getTipoAutorita(),
+					"-");
 			setRequestAttribute("autoritaEsternaCivilObb", "" + tipoAutoritaEsternaCO);
 
 			setRequestAttribute("modalita", "I");

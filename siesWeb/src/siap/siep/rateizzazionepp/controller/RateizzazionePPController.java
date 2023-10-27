@@ -496,8 +496,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi per insert, update, print Numero MEV : 2023-33 Autore : sgioggi Data : 29
-	 * ago 2023 Branch : MEV_2023-33
+	 * ISSUE MEV : aggiunti metodi per insert, update, print 
+	 * Numero MEV : 2023-33 
+	 * Autore : sgioggi 
+	 * Data : 29 ago 2023 
+	 * Branch : MEV_2023-33
 	 */
 	@Override
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
@@ -1454,16 +1457,12 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	@Override
-	public BigDecimal exInserisciTrasmissioneAttiConversione(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException {
+	public BigDecimal exInserisciTrasmissioneAttiConversione(EventoNotificaModel enm) throws F3BException {
 
 		Connection c = null;
 
 		EventoDAO eDAO = null;
 		NotificaDAO nDAO = null;
-		AutoritaEsternaDAO aeDAO = null;
-		RateizzazionePPDAO rPPDAO = null;
-		AnnotazioneManualeDAO amDAO = null;
 
 		BigDecimal idEvento = null;
 
@@ -1479,74 +1478,19 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 			eDAO.stop();
 			siesLogger.debug("idEvento = " + idEvento);
 
-			// =========================================================
-			// Inserisco le Notifiche collegate all'evento se presenti
-			// =========================================================
-			int count = 0;
-			aeDAO = new AutoritaEsternaDAO(c);
-			BigDecimal idAutorita = null;
-
+			// ============================================
+			// Inserisco la Notifica collegata all'evento
+			// ============================================
 			if (enm != null && enm.getNotifiche() != null) {
-				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
-				while (count < enm.getNotifiche().length) {
-					siesLogger.debug("count = " + count);
-					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
-
-					if (enm.getNotifiche()[count] != null) {
-						// Se è stata specificata anche l'autorità esterna per l'avvocato,
-						// recupero l'id da inserire nella notifica
-						// n.b. se autorità non presente la creo
-						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
-							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
-							// già l'autorità esterna specificata nella form (dalla form ho solo
-							// codice e sede)
-							aeDAO.setRicercaByAutSede(enm.getNotifiche()[count].getAutoritaEsterna());
-							AutoritaEsternaModel aem = new AutoritaEsternaModel();
-							aem = (AutoritaEsternaModel) aeDAO.getModelByKey();
-							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
-								siesLogger.debug(
-										"Ins Aut Est = " + enm.getNotifiche()[count].getAutoritaEsterna());
-								aeDAO.setDAOFromModel(enm.getNotifiche()[count].getAutoritaEsterna());
-								idAutorita = aeDAO.insert();
-								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
-							} else {
-								idAutorita = aem.getIdAutoritaEsterna();
-								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
-							}
-						}
-
-						// ===========================================
-						enm.getNotifiche()[count].setEveIdEvento(idEvento);
-
-						nDAO = new NotificaDAO(c);
-						nDAO.setDAOFromModel(enm.getNotifiche()[count]);
-						BigDecimal idNotifica = nDAO.insert();
-						nDAO.stop();
-						siesLogger.debug("Inserita Notifica " + idNotifica);
-					}
-					count++;
-				}
+				siesLogger.debug("Presente " + enm.getNotifiche().length + " notifica!");
+				siesLogger.debug("Notifica[0] = " + enm.getNotifiche()[0]);
+				enm.getNotifiche()[0].setEveIdEvento(idEvento);
+				nDAO = new NotificaDAO(c);
+				nDAO.setDAOFromModel(enm.getNotifiche()[0]);
+				BigDecimal idNotifica = nDAO.insert();
+				nDAO.stop();
+				siesLogger.debug("Inserita Notifica " + idNotifica);
 			}
-
-			// =========================================================
-			// Aggiorno le rate collegandole all'evento
-			// =========================================================
-			rPPDAO = new RateizzazionePPDAO(c);
-			for (int i = 0; i < arrayIdRate.length; i++) {
-				String idRata = arrayIdRate[i];
-				siesLogger.debug("idRata = " + idRata);
-				rPPDAO.setEveIdEvento(idEvento);
-				rPPDAO.selCondizioneUpdate(new BigDecimal(idRata));
-				rPPDAO.update();
-			}
-
-			// inserisco l'annotazione manuale
-			amm.setEveIdEvento(idEvento);
-			amDAO = new AnnotazioneManualeDAO(c);
-			amDAO.setDAOFromModel(amm);
-			BigDecimal idAnnotazioneManuale = amDAO.insert();
-			amDAO.stop();
-			siesLogger.debug("idAnnotazioneManuale = " + idAnnotazioneManuale);
 
 			commit(c);
 		} catch (DAOException ex) {
@@ -1559,9 +1503,6 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		} finally {
 			cleanup(eDAO);
 			cleanup(nDAO);
-			cleanup(aeDAO);
-			cleanup(rPPDAO);
-			cleanup(amDAO);
 
 			cleanup(c);
 		}
@@ -2129,8 +2070,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	}
 
 	@Override
-	public Vector<EventoRateizzazionePPModel> exRicercaAvvisoMancatoPagamento(BigDecimal idFascicolo)
-			throws F3BException {
+	public Vector<EventoRateizzazionePPModel> exRicercaAvvisoMancatoPagamento(BigDecimal idFascicolo,
+			String test) throws F3BException {
 
 		Connection c = null;
 
@@ -2150,7 +2091,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		try {
 			c = getDBConnection();
 			esdao = new EventoSqlDAO(c);
-			esdao.ricercaAvvisoMancatoPagamento(motivi, em);
+			esdao.ricercaAvvisoMancatoPagamento(motivi, em, test);
 			List<EventoModel> listaEventi = new ArrayList(esdao.getModels());
 			esdao.stop();
 			if (!listaEventi.isEmpty() && listaEventi.size() > 1)

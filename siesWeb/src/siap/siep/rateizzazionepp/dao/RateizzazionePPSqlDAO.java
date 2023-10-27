@@ -92,24 +92,24 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	 * @param test
 	 * @throws DAOException
 	 */
-	public void ricercaRateizzazionePP(RateizzazionePPModel aModel, String test) throws DAOException {
+	public void ricercaRateizzazionePP(RateizzazionePPModel rppm, String test) throws DAOException {
 
 		// Recupera la select...from
-		String lSql = getSqlQuery();
+		String sql = getSqlQuery();
 
 		// Recupero la where condition in base al model
-		String lCondizioni = setCondizioni(aModel);
+		String condizioni = setCondizioni(rppm);
 
-		if (Utils.isPresent(lCondizioni.trim()))
-			lSql += " AND " + lCondizioni;
+		if (Utils.isPresent(condizioni.trim()))
+			sql += " AND " + condizioni;
 
 		if (Utils.isPresent(test))
-			lSql += " AND EVE_ID_EVENTO	" + test;
+			sql += " AND EVE_ID_EVENTO	" + test;
 
 		// lSql += " " + getOrderBy() + " ";
 
 		// Imposta lo statement da eseguire
-		setStatement(lSql);
+		setStatement(sql);
 	}
 
 	/**
@@ -150,8 +150,9 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	}
 
 	/**
-	 * MEV-33
+	 * Metodo di ricerca rateizzazioni libere per idFascicolo
 	 *
+	 * @since MEV_2023-33
 	 * @param aIdFasSIEP
 	 * @throws DAOException
 	 */
@@ -162,7 +163,6 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 
 		lSql += setCondizioniByIdFasSIEP(aIdFasSIEP);
 		lSql += " AND EVE_ID_EVENTO is null ";
-		// MEV_2023-33: aggiunta condizione di order by
 		lSql += " order by PROGRESSIVO_RATA, ID_RATEIZZAZIONE_PP ";
 
 		// Imposta lo statement da eseguire

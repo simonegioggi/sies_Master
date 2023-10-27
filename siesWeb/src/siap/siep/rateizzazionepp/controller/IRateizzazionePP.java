@@ -71,8 +71,7 @@ public interface IRateizzazionePP {
 	public EventoNotificaModel exModificaProvvedimentoEstinzionePP(EventoNotificaModel enm,
 			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
 
-	public BigDecimal exInserisciTrasmissioneAttiConversione(EventoNotificaModel enm, String[] arrayIdRate,
-			AnnotazioneManualeModel amm) throws F3BException;
+	public BigDecimal exInserisciTrasmissioneAttiConversione(EventoNotificaModel enm) throws F3BException;
 
 	public void exUpdateTrasmissioneAttiConversione(EventoModel em) throws F3BException;
 
@@ -87,8 +86,8 @@ public interface IRateizzazionePP {
 	public EventoNotificaModel exModificaDefinizioneProcedimentoPP(EventoNotificaModel enm,
 			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
 
-	public Vector<EventoRateizzazionePPModel> exRicercaAvvisoMancatoPagamento(BigDecimal idFascicolo)
-			throws F3BException;
+	public Vector<EventoRateizzazionePPModel> exRicercaAvvisoMancatoPagamento(BigDecimal idFascicolo,
+			String test) throws F3BException;
 
 	public Vector<RateizzazionePPModel> exRicercaMancatiPagamentiUnicaSoluzione(BigDecimal idFascicoloSiep)
 			throws F3BException;
