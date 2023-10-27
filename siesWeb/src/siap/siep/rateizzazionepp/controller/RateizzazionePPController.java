@@ -2079,11 +2079,11 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		EventoSqlDAO esdao = null;
 
 		// Ricerca gli eventi per id Fascicolo
-		EventoModel em = new EventoModel();
-		em.setFlagDocumentoRegistrato("S");
-		em.setFasSieIdFascicoloSiep(idFascicolo);
+		EventoModel emRic = new EventoModel();
+		emRic.setFlagDocumentoRegistrato("S");
+		emRic.setFasSieIdFascicoloSiep(idFascicolo);
 		String[] motivi = new String[] { "0622", "1307", "1308" };
-		em.setCodTipoEvento("01");
+		emRic.setCodTipoEvento("01");
 
 		// Ricerca gli eventi per id Fascicolo
 		Vector<EventoRateizzazionePPModel> listaEventoRateizzazioniPP = new Vector<>();
@@ -2091,20 +2091,17 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		try {
 			c = getDBConnection();
 			esdao = new EventoSqlDAO(c);
-			esdao.ricercaAvvisoMancatoPagamento(motivi, em, test);
+			esdao.ricercaAvvisoMancatoPagamento(motivi, emRic, test);
 			List<EventoModel> listaEventi = new ArrayList(esdao.getModels());
 			esdao.stop();
-			if (!listaEventi.isEmpty() && listaEventi.size() > 1)
-				listaEventi = reverseList(listaEventi);
-
-			Iterator<EventoModel> iter = listaEventi.iterator();
-			while (iter.hasNext()) {
-				EventoModel evm = iter.next();
+			EventoModel em = new EventoModel();
+			if (!listaEventi.isEmpty()) {
+				em = listaEventi.get(0);
 				Vector<RateizzazionePPModel> listaRateizzazionePP = exRicercaRateizzazioniByIdEvento(
-						evm.getIdEvento());
+						em.getIdEvento());
 				// Aggiungo l'evento
 				EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
-				erppm.setEvento(evm);
+				erppm.setEvento(em);
 				erppm.setListaRateizzazioniPP(listaRateizzazionePP);
 				listaEventoRateizzazioniPP.add(erppm);
 			}

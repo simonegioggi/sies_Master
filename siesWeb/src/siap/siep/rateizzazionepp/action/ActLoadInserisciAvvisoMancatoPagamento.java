@@ -106,9 +106,9 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				rt.setPage(IWebConstants.PG_MAIN);
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 						"Non e' stato inserito un metodo di pagamento rateizzato con rate non pagate. "
-								+ "Impossibile procedere! "
-								+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
-				rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+								+ "Impossibile procedere! Si reindirizza alla pagina di Verifica Stato "
+								+ "Bollettini per Pagamento Pena Pecuniaria.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 				return IWebConstants.PG_MESSAGE;
@@ -127,9 +127,9 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 							rt.setPage(IWebConstants.PG_MAIN);
 							setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 									"Avviso Mancato Pagamento non consentito su procedimento con pagamento "
-											+ "in unica soluzione! "
-											+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
-							rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+											+ "in unica soluzione! Si reindirizza alla pagina di Verifica "
+											+ "Stato Bollettini per Pagamento Pena Pecuniaria.");
+							rt.setAction("siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti&"
 									+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "="
 									+ getClass().getName());
 							setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
@@ -159,9 +159,10 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				RedirectTo rt = new RedirectTo();
 				rt.setPage(IWebConstants.PG_MAIN);
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-						"Avviso Mancato Pagamento non consentito: tutte le rate risultano pagate! "
-								+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
-				rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
+						"Avviso Mancato Pagamento non consentito: tutte le rate risultano pagate! Si "
+								+ "reindirizza alla pagina di Verifica Stato Bollettini per Pagamento Pena "
+								+ "Pecuniaria.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 				return IWebConstants.PG_MESSAGE;

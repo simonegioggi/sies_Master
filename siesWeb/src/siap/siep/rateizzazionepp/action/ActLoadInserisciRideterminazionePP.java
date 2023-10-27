@@ -102,9 +102,8 @@ public class ActLoadInserisciRideterminazionePP extends ActionSiap implements IC
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
 			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Non e' stato inserito un metodo di pagamento: unica rata o rateizzazione. "
-							+ "Impossibile procedere! "
-							+ "Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
+					"Impossibile procedere! Bisogna inserire una nuova Modalità pagamento: unica rata o "
+							+ "rateizzazione. Si reindirizza alla pagina di Gestione Modalita' Pagamento.");
 			rt.setAction("siap.siep.rateizzazionepp.action.ActLoadDettagloRateizzazione&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
