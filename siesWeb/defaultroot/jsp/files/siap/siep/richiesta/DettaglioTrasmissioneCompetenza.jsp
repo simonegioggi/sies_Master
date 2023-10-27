@@ -31,6 +31,8 @@
 
 <jsp:useBean id="Messaggio" scope="request" class="siap.jms.messaggio.model.MessaggioModel"/>
 
+
+
 <%
   FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
 
@@ -68,6 +70,17 @@
 		  lTitolo +=" - Seguito Atti";
 	  }
   }
+
+  // Ticket#20231010019 — SIEP - Fascicolo trasmesso per errore - se fascicolo non di competenza vanno bloccati i tasti funzione
+  //                             sulla form di dettaglio
+  boolean isFascicoloDiCompetenza = false;
+  String lUffUtente = lUtenteMod.getUfficioUtente().getCodUfficio();
+
+  if (lUffUtente.equals(lFascicoloAssociato.getChiaveUfficio()))
+    isFascicoloDiCompetenza = true;  
+  // Ticket#20231010019 - FINE 
+  
+  
 %>
 <html>
 <head>
@@ -126,6 +139,7 @@
 
   <!-- TOOLBAR HEADER (per il tasto di TRASMISSIONE -->  
   <%
+if (isFascicoloDiCompetenza) { // Ticket#20231010019 — SIEP solo se di competenza  
   //if(eventonotifica.getEvento().getDataTrasmissioneAtti().equals(eventonotifica.getEvento().getDataEmissione())){
     if(eventonotifica.getEvento().getFlagDocumentoRegistrato()!=null && eventonotifica.getEvento().getFlagDocumentoRegistrato().equalsIgnoreCase("S")){
 	  String lModificabile = "NO";
@@ -139,6 +153,7 @@
 			</jsp:include>
 		</td>
 	<%} %>
+<%} %>	
 </tr>
 </table>
  <br>
@@ -476,12 +491,11 @@
 //==============================================================================
 %>
 <% 
+if (isFascicoloDiCompetenza) { // Ticket#20231010019 — SIEP solo se di competenza  
 EventoModel lEvento = eventonotifica.getEvento();
 if( (   "0340".equals(lEvento.getCodMotivo())
-     || "5403".equals(lEvento.getCodMotivo())
-     
-     || "0740".equals(lEvento.getCodMotivo())
-     
+     || "5403".equals(lEvento.getCodMotivo())     
+     || "0740".equals(lEvento.getCodMotivo())     
     )
    && "S".equals(lEvento.getFlagDocumentoRegistrato())
   )
@@ -511,7 +525,7 @@ if( (   "0340".equals(lEvento.getCodMotivo())
   </table>  
 </form>  
 <% } %>
-
+<% } %>
 <br>
   <div align=left style="visibility:hidden" id="upld"><%-- onSubmit="return controllaUpload();" --%>
     <FORM name="comandi" enctype="multipart/form-data" method="post">
