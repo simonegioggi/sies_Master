@@ -1,7 +1,41 @@
-BRANCH SIES VERSIONE 12.5.5.0
-Nasce dal branch 12.5.4.0 in data 30/10/2023
-Questa release verrà rilasciata il 24/11/2023 (Patch mese di Novembre 2023)
+Ticket#202310120117 - RITM0699801 - SIGE - problema che causa "Falsa pendenza"
 
-Comprende i seguenti Ticket MAC:
+In fase di 
+- Deposito Decreto
+- Deposito Ordinanza
+- xxxx
 
-1)	
+La funzione di ricerca che controlla se possibile inserire il deposito recuperando
+l'ultimo provvedimento da depositare, presentava un errore nella costruzione
+della stringa della query. In prartica mancano il + sull'ultima concatenazione
+si perdeva le prime due condizioni e poteve recuperare un provvedimento errato.
+
+private String setCondizioneDecretiDaDepositare(ProvvedimentoSigeModel aModel) {
+  String lCondizioni = new String();
+  lCondizioni = " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+  if (aModel.getCodTipoProvvedimento() != null)
+    lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO ='"
+        + aModel.getCodTipoProvvedimento() + "'";
+  
+  // Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
+  //lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
+  lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
+
+  return lCondizioni;
+}
+
+Metodi corretti 
+- setCondizioneDaDepositare
+- setCondizioneDecretiDaDepositare
+- setCondizioneOrdinanzeDaDepositare
+
+
+
+
+
+
+
+
+
+
+
