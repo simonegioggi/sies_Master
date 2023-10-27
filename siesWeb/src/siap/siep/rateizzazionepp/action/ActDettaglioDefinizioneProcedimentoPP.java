@@ -1,9 +1,6 @@
 package siap.siep.rateizzazionepp.action;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -14,33 +11,27 @@ import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.util.SICOLookupRemote;
-import siap.sico.web.ActionSiap;
-import siap.siep.annotazionemanuale.controller.IAnnotazioneManuale;
-import siap.siep.annotazionemanuale.model.AnnotazioneManualeModel;
 import siap.siep.archiviazione.controller.IArchiviazione;
 import siap.siep.archiviazione.model.ArchiviazioneModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
-import siap.siep.notifica.model.NotificaModel;
-import siap.siep.posizione.controller.IPosizioneGiuridica;
 import siap.siep.posizione.model.PosizioneGiuridicaLuogoDetenzioneAltraCausaModel;
-import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
-import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.web.ActSIESDettaglioProvvedimento;
 
 /**
  * Classe Action per il dettaglio della Definizione Procedimento Pena Pecuniaria
- * 
+ *
  * @author sgioggi
  * @since MEV_2023-33
  * @version 1.0
  */
-public class ActDettaglioDefinizioneProcedimentoPP extends ActSIESDettaglioProvvedimento implements ICostantiRateizzazionePP {
+public class ActDettaglioDefinizioneProcedimentoPP extends ActSIESDettaglioProvvedimento
+		implements ICostantiRateizzazionePP {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws F3BException {
+
 		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
@@ -52,13 +43,14 @@ public class ActDettaglioDefinizioneProcedimentoPP extends ActSIESDettaglioProvv
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("eventonotifica", enm);
 
-    IArchiviazione lCtrlArc = SIEPLookupRemote.getArchiviazioneRemote();
-    ArchiviazioneModel lArcMod = new ArchiviazioneModel();
-    lArcMod = lCtrlArc.ExRicercaArchiviazioneCssaIstitutoByIdEvento(idEvento);
-    setRequestAttribute("archiviazione", lArcMod);
-    
-    PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = this.getPosizioneGiuridicaLuogoDetenzioneAltraCausa(idEvento,idFascicoloSiep);
-    setRequestAttribute("posizioneluogoaltra", lPos);
+		IArchiviazione lCtrlArc = SIEPLookupRemote.getArchiviazioneRemote();
+		ArchiviazioneModel lArcMod = new ArchiviazioneModel();
+		lArcMod = lCtrlArc.ExRicercaArchiviazioneCssaIstitutoByIdEvento(idEvento);
+		setRequestAttribute("archiviazione", lArcMod);
+
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = this
+				.getPosizioneGiuridicaLuogoDetenzioneAltraCausa(idEvento, idFascicoloSiep);
+		setRequestAttribute("posizioneluogoaltra", lPos);
 
 		// MAGISTRATO
 		MagistratoModel lMag = enm.getMagistrato();

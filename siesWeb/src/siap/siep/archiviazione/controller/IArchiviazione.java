@@ -5,9 +5,9 @@ import java.sql.Connection;
 import java.util.Vector;
 
 import f3b.util.F3BException;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.siep.archiviazione.model.ArchiviazioneModel;
-import siap.sico.evento.model.EventoModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 
 /**
@@ -23,7 +23,7 @@ import siap.siep.fascicolo.model.FascicoloSiepModel;
  * <p>
  * Company: Bull
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
@@ -60,15 +60,17 @@ public interface IArchiviazione {
 	 * Effettua l'archiviazione semplificata dei fascicolo migrati RES. - Aggiorna il fascicolo SIEP -
 	 * Aggiorna la posizione giuridica in Libero - Aggiorna lo stato procedimento - Cancella eventuali
 	 * scadenzari - Azzera la pena residua e le date.
-	 * 
+	 *
 	 * @param aFascicolo
 	 * @throws F3BException
 	 */
 	public void ExArchiviazioneSemplificataRES(FascicoloSiepModel aFascicolo) throws F3BException;
 
 	// MEV_2023-33
-	public ArchiviazioneModel ExInserisciArchiviazionePP (EventoNotificaModel aEveNotMod,
-      ArchiviazioneModel aArchiviazione) throws F3BException;
-	public ArchiviazioneModel ExModificaArchiviazionePP (EventoNotificaModel aEveNotMod,
-      ArchiviazioneModel aArchiviazione) throws F3BException;
+	public ArchiviazioneModel ExInserisciArchiviazionePP(EventoNotificaModel aEveNotMod,
+			ArchiviazioneModel aArchiviazione) throws F3BException;
+
+	public ArchiviazioneModel ExModificaArchiviazionePP(EventoNotificaModel aEveNotMod,
+			ArchiviazioneModel aArchiviazione) throws F3BException;
+
 }

@@ -35,8 +35,8 @@ public class ActLoadModificaDefinizioneProcedimentoPP extends ActionSiap impleme
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	@SuppressWarnings("rawtypes")
 	public String processRequest() throws Exception {
+
 		siesLogger.info(getClass().getName() + ".processRequest: inizio");
 
 		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
@@ -44,20 +44,20 @@ public class ActLoadModificaDefinizioneProcedimentoPP extends ActionSiap impleme
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("eventonotifica", enm);
-		
+
 		IArchiviazione lCtrlArch = SIEPLookupRemote.getArchiviazioneRemote();
 		ArchiviazioneModel lArchModel = lCtrlArch.ExRicercaArchiviazioneByIdEvento(idEvento);
 		setRequestAttribute("archiviazione", lArchModel);
-		
-		
+
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
 		// Controlli preliminari all'inserimento di un nuovo evento
 		if (fsm.getFlagValidato().equalsIgnoreCase("N")) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + fsm.getChiaveAnno() + "/"
-					+ fsm.getChiaveProgr() + " non è stato Validato. "
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Il Procedimento N." + fsm.getChiaveAnno() + "/" + fsm.getChiaveProgr()
+							+ " non è stato Validato. "
 							+ "Impossibile modificare una Definizione Procedimento Pena Pecuniaria!");
 			rt.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
@@ -105,20 +105,19 @@ public class ActLoadModificaDefinizioneProcedimentoPP extends ActionSiap impleme
 		mcmm.setMagistrato(mm);
 		setRequestAttribute("magistrato", mcmm);
 
-		// 
-		String lAut = "-";
-		if (enm.getNotifiche()!=null && enm.getNotifiche().length>0){
-			lAut = enm.getNotifiche()[0].getAutoritaEsterna().getCodTipoAutorita();
-		}
-    Option lOptionAutorita = new Option(DecodificheManager.getInstance().getTipoAutorita());
-    lOptionAutorita.setSelected(lArchModel.getCodTipoAutoritaEmittente());
-    setRequestAttribute("codiceAutorita", "" + lOptionAutorita);
+		// String lAut = "-";
+		// if (enm.getNotifiche() != null && enm.getNotifiche().length > 0) {
+		// lAut = enm.getNotifiche()[0].getAutoritaEsterna().getCodTipoAutorita();
+		// }
+		Option lOptionAutorita = new Option(DecodificheManager.getInstance().getTipoAutorita());
+		lOptionAutorita.setSelected(lArchModel.getCodTipoAutoritaEmittente());
+		setRequestAttribute("codiceAutorita", "" + lOptionAutorita);
 
-    Option lOption = new Option(DecodificheManager.getInstance().getMotivoFineEspiazione());
-    lOption.setFilter("1311");
-    setRequestAttribute("oggettodefinzione", ""+lOption);  
+		Option lOption = new Option(DecodificheManager.getInstance().getMotivoFineEspiazione());
+		lOption.setFilter("1311");
+		setRequestAttribute("oggettodefinzione", "" + lOption);
 
-    setRequestAttribute("modalita", "M");
+		setRequestAttribute("modalita", "M");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()

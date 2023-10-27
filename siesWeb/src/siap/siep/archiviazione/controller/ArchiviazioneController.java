@@ -1195,190 +1195,197 @@ public class ArchiviazioneController extends SiapController implements IArchivia
 	/**
 	 * Mev_2023-33 inserimento Archiviazione per Estinzione Pena Pecuniaria
 	 * 
-	 * */
-  public ArchiviazioneModel ExInserisciArchiviazionePP (EventoNotificaModel aEveNotMod,
-      ArchiviazioneModel aArchiviazione) throws F3BException {
+	 */
+	public ArchiviazioneModel ExInserisciArchiviazionePP(EventoNotificaModel aEveNotMod,
+			ArchiviazioneModel aArchiviazione) throws F3BException {
 
-    Connection lConn = null;
+		Connection lConn = null;
 
-    EventoDAO lEveDao = null;
-    ArchiviazioneDAO lArcDao = null;
-    NotificaDAO lNotDao = null;
-    AutoritaEsternaDAO lAutDao = null;
+		EventoDAO lEveDao = null;
+		ArchiviazioneDAO lArcDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
 
-    EventoModel lEveMod = new EventoModel(aEveNotMod.getEvento());
-    ArchiviazioneModel lArchMod = new ArchiviazioneModel(aArchiviazione);
+		EventoModel lEveMod = new EventoModel(aEveNotMod.getEvento());
+		ArchiviazioneModel lArchMod = new ArchiviazioneModel(aArchiviazione);
 
-    try {
-      lConn = getDBTransaction();
+		try {
+			lConn = getDBTransaction();
 
-      lArcDao = new ArchiviazioneDAO(lConn);
-      lEveDao = new EventoDAO(lConn);
-      lNotDao = new NotificaDAO(lConn);
-      lAutDao = new AutoritaEsternaDAO(lConn);
+			lArcDao = new ArchiviazioneDAO(lConn);
+			lEveDao = new EventoDAO(lConn);
+			lNotDao = new NotificaDAO(lConn);
+			lAutDao = new AutoritaEsternaDAO(lConn);
 
-      // inserimento evento definizione procedimento
-      lEveDao.setDAOFromModel(lEveMod);
-      BigDecimal lIdEvento = lEveDao.insert();
-      lEveDao.stop();
+			// inserimento evento definizione procedimento
+			lEveDao.setDAOFromModel(lEveMod);
+			BigDecimal lIdEvento = lEveDao.insert();
+			lEveDao.stop();
 
-      // inserimento archiviazione
-      lArchMod.setEveIdEvento(lIdEvento);
-      lArcDao.setDAOFromModel(lArchMod);
-      BigDecimal lKeyArc = lArcDao.insert();
-      lArchMod.setIdArchiviazione(lKeyArc);
-      lArcDao.stop();
+			// inserimento archiviazione
+			lArchMod.setEveIdEvento(lIdEvento);
+			lArcDao.setDAOFromModel(lArchMod);
+			BigDecimal lKeyArc = lArcDao.insert();
+			lArchMod.setIdArchiviazione(lKeyArc);
+			lArcDao.stop();
 
-      // inserimento Notifiche Evento definizione procedimento
-      BigDecimal lKeyAutorita = null;
-      int count = 0;
-      if (aEveNotMod.getNotifiche() != null) {
-        while (count < aEveNotMod.getNotifiche().length) {
-          if (aEveNotMod.getNotifiche()[count] != null) {
-            if (aEveNotMod.getNotifiche()[count].getAutoritaEsterna() != null) {
-              lAutDao.setRicercaByAutSede(aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
-              AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-              lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+			// inserimento Notifiche Evento definizione procedimento
+			BigDecimal lKeyAutorita = null;
+			int count = 0;
+			if (aEveNotMod.getNotifiche() != null) {
+				while (count < aEveNotMod.getNotifiche().length) {
+					if (aEveNotMod.getNotifiche()[count] != null) {
+						if (aEveNotMod.getNotifiche()[count].getAutoritaEsterna() != null) {
+							lAutDao.setRicercaByAutSede(
+									aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
-              if (lAutMod == null) {
-                lAutDao.setDAOFromModel(aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
-                lKeyAutorita = lAutDao.insert();
-                aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-              } else {
-                lKeyAutorita = lAutMod.getIdAutoritaEsterna();
-                aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-              }
-            }
+							if (lAutMod == null) {
+								lAutDao.setDAOFromModel(
+										aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+						}
 
-            aEveNotMod.getNotifiche()[count].setEveIdEvento(lIdEvento);
+						aEveNotMod.getNotifiche()[count].setEveIdEvento(lIdEvento);
 
-            lNotDao.setDAOFromModel(aEveNotMod.getNotifiche()[count]);
-            lNotDao.insert();
-            lNotDao.stop();
-          }
-          count++;
-        }
-      }
-      commit(lConn);
-    } catch (DAOException ex) {
-      rollback(lConn);
-      siesLogger.error("Exception: ", ex);
-      throw new F3BException("ArchiviazioneController.ExInserisciArchiviazionePP: Non posso inserire: "+ ex);
-    } catch (Exception ex) {
-      rollback(lConn);
-      siesLogger.error("Exception: ", ex);
-      throw new F3BException("ArchiviazioneController.ExInserisciArchiviazionePP: Non posso inserire : "+ ex);
-    } finally {
-      cleanup(lArcDao);
-      cleanup(lEveDao);
-      cleanup(lNotDao);
-      cleanup(lAutDao);
+						lNotDao.setDAOFromModel(aEveNotMod.getNotifiche()[count]);
+						lNotDao.insert();
+						lNotDao.stop();
+					}
+					count++;
+				}
+			}
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException(
+					"ArchiviazioneController.ExInserisciArchiviazionePP: Non posso inserire: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException(
+					"ArchiviazioneController.ExInserisciArchiviazionePP: Non posso inserire : " + ex);
+		} finally {
+			cleanup(lArcDao);
+			cleanup(lEveDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
 
-      cleanup(lConn);
-    }
+			cleanup(lConn);
+		}
 
-    return lArchMod;
-  }	
-	
-  
+		return lArchMod;
+	}
+
 	/**
 	 * Mev_2023-33 Modifica Archiviazione per Estinzione Pena Pecuniaria
 	 * 
-	 * */
-  public ArchiviazioneModel ExModificaArchiviazionePP (EventoNotificaModel aEveNotMod,
-      ArchiviazioneModel aArchiviazione) throws F3BException {
+	 */
+	public ArchiviazioneModel ExModificaArchiviazionePP(EventoNotificaModel aEveNotMod,
+			ArchiviazioneModel aArchiviazione) throws F3BException {
 
-    Connection lConn = null;
+		Connection lConn = null;
 
-    EventoDAO lEveDao = null;
-    ArchiviazioneDAO lArcDao = null;
-    ArchiviazioneSqlDAO lArcSqlDao = null;
-    NotificaDAO lNotDao = null;
-    AutoritaEsternaDAO lAutDao = null;
+		EventoDAO lEveDao = null;
+		ArchiviazioneDAO lArcDao = null;
+		ArchiviazioneSqlDAO lArcSqlDao = null;
+		NotificaDAO lNotDao = null;
+		AutoritaEsternaDAO lAutDao = null;
 
-    EventoModel lEveMod = new EventoModel(aEveNotMod.getEvento());
-    ArchiviazioneModel lArchMod = new ArchiviazioneModel(aArchiviazione);
+		EventoModel lEveMod = new EventoModel(aEveNotMod.getEvento());
+		ArchiviazioneModel lArchMod = new ArchiviazioneModel(aArchiviazione);
 
-    try {
-      lConn = getDBTransaction();
+		try {
+			lConn = getDBTransaction();
 
-      lArcDao = new ArchiviazioneDAO(lConn);
-      lEveDao = new EventoDAO(lConn);
-      lNotDao = new NotificaDAO(lConn);
-      lAutDao = new AutoritaEsternaDAO(lConn);
-      lArcSqlDao = new ArchiviazioneSqlDAO(lConn);
-      
-      // inserimento evento definizione procedimento
-      lEveDao.setDAOFromModelForUpdate(lEveMod);
-      lEveDao.selCondizioneUpdate(lEveMod.getIdEvento());
-      lEveDao.update();
-      lEveDao.stop();
+			lArcDao = new ArchiviazioneDAO(lConn);
+			lEveDao = new EventoDAO(lConn);
+			lNotDao = new NotificaDAO(lConn);
+			lAutDao = new AutoritaEsternaDAO(lConn);
+			lArcSqlDao = new ArchiviazioneSqlDAO(lConn);
+
+			// inserimento evento definizione procedimento
+			lEveDao.setDAOFromModelForUpdate(lEveMod);
+			lEveDao.selCondizioneUpdate(lEveMod.getIdEvento());
+			lEveDao.update();
+			lEveDao.stop();
 
 			// aggiornamento archiviazione
-      lArcSqlDao.ricercaArchiviazioneByIdEvento(lEveMod.getIdEvento());
-      ArchiviazioneModel lArchiviazioneMod = (ArchiviazioneModel) lArcSqlDao.getModelByKey();
-      lArchMod.setIdArchiviazione(lArchiviazioneMod.getIdArchiviazione());
-      lArchMod.setEveIdEvento(lEveMod.getIdEvento());
-      lArcDao.setDAOFromModel(lArchMod);
-      lArcDao.selByKey();
-      lArcDao.update();
-      lArcDao.stop();
+			lArcSqlDao.ricercaArchiviazioneByIdEvento(lEveMod.getIdEvento());
+			ArchiviazioneModel lArchiviazioneMod = (ArchiviazioneModel) lArcSqlDao.getModelByKey();
+			lArchMod.setIdArchiviazione(lArchiviazioneMod.getIdArchiviazione());
+			lArchMod.setEveIdEvento(lEveMod.getIdEvento());
+			lArcDao.setDAOFromModel(lArchMod);
+			lArcDao.selByKey();
+			lArcDao.update();
+			lArcDao.stop();
 
-      
-      // Cancella le NOTIFICHE associate al EVENTO
+			// Cancella le NOTIFICHE associate al EVENTO
 			lNotDao.setCondizioneEvento(lEveMod.getIdEvento());
 			lNotDao.delete();
 			lNotDao.stop();
 
-      // inserimento Notifiche Evento definizione procedimento
-      BigDecimal lKeyAutorita = null;
-      int count = 0;
-      if (aEveNotMod.getNotifiche() != null) {
-        while (count < aEveNotMod.getNotifiche().length) {
-          if (aEveNotMod.getNotifiche()[count] != null) {
-            if (aEveNotMod.getNotifiche()[count].getAutoritaEsterna() != null) {
-              lAutDao.setRicercaByAutSede(aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
-              AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
-              lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
+			// inserimento Notifiche Evento definizione procedimento
+			BigDecimal lKeyAutorita = null;
+			int count = 0;
+			if (aEveNotMod.getNotifiche() != null) {
+				while (count < aEveNotMod.getNotifiche().length) {
+					if (aEveNotMod.getNotifiche()[count] != null) {
+						if (aEveNotMod.getNotifiche()[count].getAutoritaEsterna() != null) {
+							lAutDao.setRicercaByAutSede(
+									aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel lAutMod = new AutoritaEsternaModel();
+							lAutMod = (AutoritaEsternaModel) lAutDao.getModelByKey();
 
-              if (lAutMod == null) {
-                lAutDao.setDAOFromModel(aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
-                lKeyAutorita = lAutDao.insert();
-                aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-              } else {
-                lKeyAutorita = lAutMod.getIdAutoritaEsterna();
-                aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
-              }
-            }
+							if (lAutMod == null) {
+								lAutDao.setDAOFromModel(
+										aEveNotMod.getNotifiche()[count].getAutoritaEsterna());
+								lKeyAutorita = lAutDao.insert();
+								aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							} else {
+								lKeyAutorita = lAutMod.getIdAutoritaEsterna();
+								aEveNotMod.getNotifiche()[count].setAutEstIdAutoritaEsterna(lKeyAutorita);
+							}
+						}
 
-            aEveNotMod.getNotifiche()[count].setEveIdEvento(lEveMod.getIdEvento());
+						aEveNotMod.getNotifiche()[count].setEveIdEvento(lEveMod.getIdEvento());
 
-            lNotDao.setDAOFromModel(aEveNotMod.getNotifiche()[count]);
-            lNotDao.insert();
-            lNotDao.stop();
-          }
-          count++;
-        }
-      }
-      commit(lConn);
-    } catch (DAOException ex) {
-      rollback(lConn);
-      siesLogger.error("Exception: ", ex);
-      throw new F3BException("ArchiviazioneController.ExModificaArchiviazionePP: Non posso inserire: "+ ex);
-    } catch (Exception ex) {
-      rollback(lConn);
-      siesLogger.error("Exception: ", ex);
-      throw new F3BException("ArchiviazioneController.ExModificaArchiviazionePP: Non posso inserire : "+ ex);
-    } finally {
-      cleanup(lArcDao);
-      cleanup(lEveDao);
-      cleanup(lNotDao);
-      cleanup(lAutDao);
-      cleanup(lArcSqlDao);      
+						lNotDao.setDAOFromModel(aEveNotMod.getNotifiche()[count]);
+						lNotDao.insert();
+						lNotDao.stop();
+					}
+					count++;
+				}
+			}
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException(
+					"ArchiviazioneController.ExModificaArchiviazionePP: Non posso inserire: " + ex);
+		} catch (Exception ex) {
+			rollback(lConn);
+			siesLogger.error("Exception: ", ex);
+			throw new F3BException(
+					"ArchiviazioneController.ExModificaArchiviazionePP: Non posso inserire : " + ex);
+		} finally {
+			cleanup(lArcDao);
+			cleanup(lEveDao);
+			cleanup(lNotDao);
+			cleanup(lAutDao);
+			cleanup(lArcSqlDao);
 
-      cleanup(lConn);
-    }
+			cleanup(lConn);
+		}
 
-    return lArchMod;
-  }	
+		return lArchMod;
+	}
+
 }
