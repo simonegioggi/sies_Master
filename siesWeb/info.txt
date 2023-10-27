@@ -1,7 +1,22 @@
-BRANCH SIES VERSIONE 12.5.5.0
-Nasce dal branch 12.5.4.0 in data 30/10/2023
-Questa release verrà rilasciata il 24/11/2023 (Patch mese di Novembre 2023)
+Ticket#20231024011 — statistiche_sies_fazio
 
-Comprende i seguenti Ticket MAC:
+Intervento relativo anche ad altre segnalazioni di trasferimento per competenza
+(es Cumulo) in cui il messaggio ricevuto era privo di riferimenti al fascicolo
+trasmesso (anno, numero, ufficio) e ai dati del soggetto.
+Inoltre anche la BDI_destinataria coincideva con la BDI mittente che era di altro distretto.
 
-1)	
+Problema caudato dal modulo
+- siap.jms.SIAPSenderMQ
+
+metodo 
+- public void sendToTrueDestination(MessaggioModel aMessage) throws Exception
+
+Che scatta al nel caso di primo invio fallito. Viene recuperato dal db il MESSAGGIO 
+da spedire e ricreato il jmx message per scriverlo sulla coda di destinazione.
+Il metodo non era aggiornato e inviava solo una manciata di dati.
+
+Inoltre scriveva erroneamente nel campo BDI_DESTINAZIONE il codice delle BDI_MITTENTE
+
+Corretto il metodo
+
+

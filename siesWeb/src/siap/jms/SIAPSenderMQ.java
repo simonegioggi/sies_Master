@@ -651,8 +651,13 @@ public class SIAPSenderMQ implements ICostantiJMS {
 			siesLogger.info("[JMS]: II Step Messaggio da rispedire (lMessage) = " + lMessage);
 
 			// Setto le properties del Messaggio partendo dal MessaggioModel
-			lMessage.setStringProperty(BDI_DESTINATARIA, aMessage.getDescrBdiMittente());
-			lMessage.setStringProperty(COD_BDI_DESTINATARIA, aMessage.getCodBdiMittente());
+			// Ticket#20231024011 - scriveva erroneamente come BDI destinatari la BDI mittente
+      //lMessage.setStringProperty(BDI_DESTINATARIA, aMessage.getDescrBdiMittente());
+      //lMessage.setStringProperty(COD_BDI_DESTINATARIA, aMessage.getCodBdiMittente());
+      lMessage.setStringProperty(BDI_DESTINATARIA, aMessage.getDescrBdiDestinataria());
+      lMessage.setStringProperty(COD_BDI_DESTINATARIA, aMessage.getCodBdiDestinataria());
+      // Ticket#20231024011 - FINE
+      
 			lMessage.setStringProperty(BDI_MITTENTE, aMessage.getDescrBdiMittente());
 			lMessage.setStringProperty(COD_BDI_MITTENTE, aMessage.getCodBdiMittente());
 			lMessage.setStringProperty(TIPO_OPERAZIONE, aMessage.getCodTipoOperazione());
@@ -660,7 +665,79 @@ public class SIAPSenderMQ implements ICostantiJMS {
 			lMessage.setStringProperty(UFFICIO_DESTINATARIO, aMessage.getCodUfficioDestinatario());
 			lMessage.setStringProperty(UFFICIO_MITTENTE, aMessage.getCodUfficioMittente());
 			lMessage.setStringProperty(UTENTE_MITTENTE, aMessage.getCodiceUtenteMittente());
+			
+			//================================================================================================================
+			// Ticket#20231024011 - Vanno aggiunti anche gli altri campi della tabella messaggio
+			
+      // Identificatovo del fascicolo SIEP			
+      lMessage.setStringProperty(CHIAVE_ANNO_SIEP    ,StringUtils.toStringJSP(aMessage.getChiaveAnnoSiep(), ""));
+      lMessage.setStringProperty(CHIAVE_PROGR_SIEP   ,StringUtils.toStringJSP(aMessage.getChiaveProgrSiep(), ""));
+      lMessage.setStringProperty(CHIAVE_UFFICIO_SIEP ,StringUtils.toStringJSP(aMessage.getChiaveUfficioSiep(), ""));
 
+      // Identificatovo del fascicolo SIUS
+      lMessage.setStringProperty(CHIAVE_ANNO_SIUS,  StringUtils.toStringJSP(aMessage.getChiaveAnnoSius(), ""));
+      lMessage.setStringProperty(CHIAVE_PROGR_SIUS, StringUtils.toStringJSP(aMessage.getChiaveProgrSius(), ""));
+
+      // RESTITUZIONE TRASMISSIONE COMPETENZA
+      lMessage.setStringProperty(NOTE, StringUtils.toStringJSP(aMessage.getNote(), ""));
+      
+      // Identificatovo del fascicolo SIEP CUMULANTE
+      if (aMessage.getChiaveAnnoFasCumulante() != null)
+        lMessage.setStringProperty(CHIAVE_ANNO_FAS_CUMULANTE,StringUtils.toStringJSP(aMessage.getChiaveAnnoFasCumulante(), ""));
+      if (aMessage.getChiaveProgrFasCumulante() != null)
+        lMessage.setStringProperty(CHIAVE_PROGR_FAS_CUMULANTE,StringUtils.toStringJSP(aMessage.getChiaveProgrFasCumulante(), ""));
+      if (aMessage.getChiaveUfficioFasCumulante() != null)
+        lMessage.setStringProperty(CHIAVE_UFFICIO_FAS_CUMULANTE,StringUtils.toStringJSP(aMessage.getChiaveUfficioFasCumulante(), ""));
+      
+      // UEPE
+      if (aMessage.getChiaveAnnoSiepe() != null)
+        lMessage.setStringProperty(CHIAVE_ANNO_SIEPE,StringUtils.toStringJSP(aMessage.getChiaveAnnoSiepe(), ""));
+      if (aMessage.getChiaveProgrSiepe() != null)
+        lMessage.setStringProperty(CHIAVE_PROGR_SIEPE,StringUtils.toStringJSP(aMessage.getChiaveProgrSiepe(), ""));
+      
+      // SOGGETO
+      if (aMessage.getNomeSoggetto() != null)
+        lMessage.setStringProperty(NOME_SOGGETTO,StringUtils.toStringJSP(aMessage.getNomeSoggetto(), ""));
+      if (aMessage.getCognomeSoggetto() != null)
+        lMessage.setStringProperty(COGNOME_SOGGETTO,StringUtils.toStringJSP(aMessage.getCognomeSoggetto(), ""));
+      if (aMessage.getDataNascita() != null)
+        lMessage.setStringProperty(DATA_NASCITA,DateUtils.getDateToString(aMessage.getDataNascita(), "dd/MM/yyyy"));
+      if (aMessage.getCodStatoNascita() != null)
+        lMessage.setStringProperty(COD_STATO_NASCITA,StringUtils.toStringJSP(aMessage.getCodStatoNascita(), ""));
+      if (aMessage.getCodComuneNascita() != null)
+        lMessage.setStringProperty(COD_COMUNE_NASCITA,StringUtils.toStringJSP(aMessage.getCodComuneNascita(), ""));
+
+      // INOLTRO
+      if (aMessage.getCodUfficioInoltro() != null)
+        lMessage.setStringProperty(COD_UFFICIO_INOLTRO, aMessage.getCodUfficioInoltro());
+      if (aMessage.getCodBdiInoltro() != null)
+        lMessage.setStringProperty(COD_BDI_INOLTRO, aMessage.getCodBdiInoltro());
+      
+      // REPLY TO
+      if (aMessage.getCodUfficioReplyTo() != null)
+        lMessage.setStringProperty(COD_UFFICIO_REPLY_TO, aMessage.getCodUfficioReplyTo());
+      if (aMessage.getCodBdiReplyTo() != null)
+        lMessage.setStringProperty(COD_BDI_REPLY_TO, aMessage.getCodBdiReplyTo());
+      if (aMessage.getJmsCorrelationReplyTo() != null)
+        lMessage.setStringProperty(JMS_CORRELATION_REPLY_TO, aMessage.getJmsCorrelationReplyTo());
+
+      if (aMessage.getIdMessaggioSollecitato() != null)
+        lMessage.setStringProperty(ID_MESSAGGIO_SOLLECITATO, aMessage.getIdMessaggioSollecitato());
+
+      if (aMessage.getIdRichiesta() != null)
+        lMessage.setStringProperty(ID_RICHIESTA, aMessage.getIdRichiesta().toString());				
+      
+      if (aMessage.getCodEsito() != null && aMessage.getCodEsito().length() > 1)
+        lMessage.setStringProperty(COD_ESITO, aMessage.getCodEsito());
+      else
+        lMessage.setStringProperty(COD_ESITO, "-");
+      
+      // Verifico se è un caso di scambio tra stesse BDI
+      if (aMessage.getCodBdiMittente().compareTo(aMessage.getCodBdiDestinataria()) == 0)
+        lMessage.setBooleanProperty(STESSA_BDI, true);
+      
+      // Ticket#20231024011 - FINE =====================================================================================		
+			
 			lMessage.setStringProperty(CORRELATION_ID_MESSAGGIO, aMessage.getJmsCorrelationIdMessage());
 			// 2010-11-01 : da rimuovere... 2010-10-29 Aggiunta riga per valorizzare il correlation message (
 			// prova ... )
