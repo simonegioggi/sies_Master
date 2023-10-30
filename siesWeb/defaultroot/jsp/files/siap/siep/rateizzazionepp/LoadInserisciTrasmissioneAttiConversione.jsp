@@ -117,6 +117,20 @@ function Verify() {
 		return false;
 	}
 
+	//=============================================================
+	// controllo obbligatorieta' magistrato
+	//=============================================================
+	if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_COD_MAGISTRATO%>.value == ""
+			|| document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiEvento.CAMPO_COD_MAGISTRATO%>.value == "-") {
+		alert("Il Magistrato è obbligatorio");
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiMagistrato.CAMPO_COGNOME%>.focus();
+		return false;
+	}
+	if (document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiRateizzazionePP.CAMPO_COD_SEDE_UDS%>.value == "") {
+		alert("La sede del Magistrato di Sorveglianza è obbligatoria");
+		document.LoadInserisciTrasmissioneAttiConversione.<%=ICostantiRateizzazionePP.CAMPO_COD_SEDE_UDS%>.focus();
+		return false;
+ 	}
 	return true;
 }
 </script>
@@ -157,7 +171,7 @@ if ("I".equals(modalita)) {
   
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td class="l" width="20%">Posizione Giuridica</td>
+		<td class="l" width="25%">Posizione Giuridica</td>
 		<td class="L">
 		  	<font class="campo">
 <%
@@ -204,7 +218,7 @@ if (Utils.isPresent(domicilio)) {
 	  	<td class="Titolo" colspan="4">Dati Relativi alla Residenza del Soggetto</td>
 	</tr>
 	<tr>
-		<td class="L" width="20%">Residenza</td>
+		<td class="L" width="25%">Residenza</td>
 		<td class="L">
   			<font class="campo">Domicilio Imposto in:&nbsp;<%=domicilio%></font>
 		</td>
@@ -219,7 +233,7 @@ if (Utils.isPresent(domicilio)) {
 	  	<td class="Titolo" colspan="2">Dati Richiesta Conversione</td>
 	</tr>
 	<tr>
-	  	<td class="l" width="20%">Pena Pecuniaria Sostitutiva: Importo</td>
+	  	<td class="l" width="25%">Pena Pecuniaria Sostitutiva: Importo</td>
 	  	<td class="L">
   			<font class="campo"><%=StringUtils.toEuroFormat(importoDaPagare)%></font>
 		</td>
@@ -231,7 +245,7 @@ if (Utils.isPresent(domicilio)) {
 	  	<td class="Titolo" colspan="2">Magistrato Firmatario</td>
 	</tr>
 	<tr>
-      	<td class="l" width="20%">Magistrato<font class="ob">(*)</font></td>
+      	<td class="l" width="25%">Magistrato<font class="ob">(*)</font></td>
       	<td class="L">
         	<input readonly title="Cognome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getCognome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_COGNOME%>" maxlength="35" size="25">
         	<input readonly title= "Nome Magistrato" value="<%=StringUtils.toStringJSP(magistrato.getMagistrato().getNome())%>" type="text" name="<%=ICostantiMagistrato.CAMPO_NOME%>" maxlength="35" size="25">
@@ -250,7 +264,7 @@ if (Utils.isPresent(domicilio)) {
 	  	<td class="Titolo" colspan="3">Destinatari</td>
 	</tr>
 	<tr>
-	  	<td class="l" width="20%">Magistrato di Sorveglianza&nbsp;<font class="ob">(*)</font></td>
+	  	<td class="l" width="25%">Magistrato di Sorveglianza&nbsp;<font class="ob">(*)</font></td>
 		<td class="L">
 			<select Title="Magistrato di Sorveglianza" class="small" name="<%=ICostantiUfficio.CAMPO_TIPO_UFFICIO%>">
 				<%=tipoUDS%>
@@ -267,13 +281,13 @@ if (Utils.isPresent(domicilio)) {
 <br>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td class="L" width="20%">Data Emissione</td>
+		<td class="L" width="25%">Data Emissione</td>
 		<td class="L">
 			<input value="<%=DateUtils.getDateToString(dataEmissione, "dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
 			<input value="<%=DateUtils.getDateToString(dataEmissione, "MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
 			<input value="<%=DateUtils.getDateToString(dataEmissione, "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
 		</td>
-		<td class="L" width="20%">Data Trasmissione</td>
+		<td class="L" width="25%">Data Trasmissione</td>
 		<td class="L">
 			<input value="<%=DateUtils.getDateToString(dataTrasmissione, "dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -
 			<input value="<%=DateUtils.getDateToString(dataTrasmissione, "MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)"> -

@@ -55,10 +55,7 @@ public class ActLoadModificaTrasmissioneAttiConversione extends ActionSiap
 		// Ricerca i pagamenti per id Fascicolo
 		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		// listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(fsm.getIdFascicoloSiep());
-		listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
-		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-
+		listaRateizzazioni = irpp.exRicercaMancatiPagamentiUnicaSoluzione(fsm.getIdFascicoloSiep());
 		// Sezione con l'importo da pagare
 		BigDecimal importoDaPagare = listaRateizzazioni.firstElement().getImportoDaPagare();
 		setRequestAttribute("importoDaPagare", importoDaPagare);
@@ -107,11 +104,9 @@ public class ActLoadModificaTrasmissioneAttiConversione extends ActionSiap
 		// destinatari
 		Option o = new Option(DecodificheManager.getInstance().getTipoUfficioPerCodice());
 		o.setFilter(new String[] { "-", "UDS", "UDSM" });
-		o.setSelected(enm.getNotifiche()[0].getCodUffUdsUdsm());
+		o.setSelected(enm.getNotifiche()[0].getUfficio().getCodTipoUfficio());
 		setRequestAttribute("tipoUDS", "" + o);
-
 		setRequestAttribute("comuneUDS", enm.getNotifiche()[0].getUfficio().getDescrComune());
-
 		setRequestAttribute("modalita", "M");
 
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

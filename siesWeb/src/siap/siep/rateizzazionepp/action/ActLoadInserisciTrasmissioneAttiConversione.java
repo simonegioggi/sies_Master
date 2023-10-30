@@ -84,7 +84,6 @@ public class ActLoadInserisciTrasmissioneAttiConversione extends ActionSiap
 				|| listaRateizzazioni.firstElement().getListaBollettini().size() == 0) {
 			RedirectTo rt = new RedirectTo();
 			rt.setPage(IWebConstants.PG_MAIN);
-
 			if (listaRateizzazioni.size() == 0) {
 				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 						"Non e' stato trovato alcun mancato pagamento in unica rata. "
@@ -100,7 +99,6 @@ public class ActLoadInserisciTrasmissioneAttiConversione extends ActionSiap
 				rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA&"
 						+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			}
-
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 			return IWebConstants.PG_MESSAGE;
 		} else {

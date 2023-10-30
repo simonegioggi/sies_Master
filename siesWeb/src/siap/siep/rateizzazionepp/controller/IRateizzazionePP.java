@@ -75,8 +75,8 @@ public interface IRateizzazionePP {
 
 	public void exUpdateTrasmissioneAttiConversione(EventoModel em) throws F3BException;
 
-	public EventoNotificaModel exModificaTrasmissioneAttiConversione(EventoNotificaModel enm,
-			String[] arrayIdRate, AnnotazioneManualeModel amm) throws F3BException;
+	public EventoNotificaModel exModificaTrasmissioneAttiConversione(EventoNotificaModel enm)
+			throws F3BException;
 
 	public BigDecimal exInserisciDefinizioneProcedimentoPP(EventoNotificaModel enm, String[] arrayIdRate,
 			AnnotazioneManualeModel amm) throws F3BException;

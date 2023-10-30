@@ -75,8 +75,6 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		if (!lCondizioni.trim().equals(""))
 			lStatement += " WHERE " + lCondizioni;
 
-		// lStatement += " " + getOrderBy() + " ";
-
 		String lPaginedStatement = "";
 		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lStatement
 				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
@@ -103,10 +101,10 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		if (Utils.isPresent(condizioni.trim()))
 			sql += " AND " + condizioni;
 
-		if (Utils.isPresent(test))
+		if (Utils.isPresent(test)) {
 			sql += " AND EVE_ID_EVENTO	" + test;
-
-		// lSql += " " + getOrderBy() + " ";
+			sql += " " + getOrderBy() + " ";
+		}
 
 		// Imposta lo statement da eseguire
 		setStatement(sql);
@@ -316,12 +314,12 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 	 *
 	 * @return
 	 */
-	// protected String getOrderBy() {
-	//
-	// String orderBy = new String("");
-	// // orderBy = " ORDER BY xxxxx";
-	// return orderBy;
-	// }
+	protected String getOrderBy() {
+
+		String orderBy = new String("");
+		orderBy = " ORDER BY DATA_INSERIMENTO DESC";
+		return orderBy;
+	}
 
 	/**
 	 * Metodo che imposta la statement di ricerca per id Fascicolo Siep
