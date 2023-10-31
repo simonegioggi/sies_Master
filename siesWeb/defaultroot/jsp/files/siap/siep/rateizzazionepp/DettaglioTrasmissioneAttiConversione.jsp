@@ -68,6 +68,13 @@ if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null
 <%
 }
 %>
+		<td class="LBG">
+			<jsp:include page="<%=ICostantiEvento.PG_TOOLBAR_HEADER%>">
+				<jsp:param name="CampoIdEntita" value="<%=ICostantiEvento.CAMPO_ID_EVENTO%>"/>
+				<jsp:param name="ValoreIdEntita" value="<%=eventonotifica.getEvento().getIdEvento()%>"/>
+				<jsp:param name="FlagDocumentoRegistrato" value="<%=eventonotifica.getEvento().getFlagDocumentoRegistrato()%>"/>
+			</jsp:include>
+		</td>
 	</tr>
 </table>
 <br>

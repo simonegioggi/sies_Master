@@ -58,6 +58,8 @@ public interface ICostantiRateizzazionePP {
 			+ "files/siap/siep/rateizzazionepp/LoadInserisciTrasmissioneAttiConversione.jsp";
 	public static final String PG_DETTAGLIO_TRASMISSIONE_ATTI_CONVERSIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/DettaglioTrasmissioneAttiConversione.jsp";
+	public static final String PG_LOAD_TRASFERISCI_ATTI_CONVERSIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/rateizzazionepp/LoadTrasferisciAttiConversione.jsp";
 	public static final String PG_LOAD_INSERISCI_DEFINIZIONE_PROCEDIMENTO_PP = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/rateizzazionepp/LoadInserisciDefinizioneProcedimentoPP.jsp";
 	public static final String PG_DETTAGLIO_DEFINIZIONE_PROCEDIMENTO_PP = IWebConstants.ROOT_DIR
