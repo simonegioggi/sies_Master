@@ -91,7 +91,15 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
     lSql += "           FROM RATEIZZAZIONE_PP, EVENTO ";
     lSql += "          WHERE RATEIZZAZIONE_PP.EVE_ID_EVENTO = EVENTO.ID_EVENTO ";
     lSql += "            AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-    // Fine
+    // 12.09.2023 - Fine
+    // 27.10.2023 si filtrano solo rateizzazioni e bollettini collegati all'ultimo evento (data emissione) di tipo ...
+    lSql += "            AND EVENTO.COD_MOTIVO IN ('0622','1307','1308') ";
+    lSql += "            AND (EVENTO.DATA_EMISSIONE, ID_EVENTO) = ( SELECT MAX(DATA_EMISSIONE), max(ID_EVENTO) ";
+    lSql += "                                                         FROM EVENTO ";
+    lSql += "                                                        WHERE FAS_SIE_ID_FASCICOLO_SIEP = RATEIZZAZIONE_PP.FAS_SIE_ID_FASCICOLO_SIEP ";
+    lSql += "                                                          AND COD_MOTIVO IN ('0622','1307','1308') ";
+    lSql += "                                                          AND FLAG_DOCUMENTO_REGISTRATO = 'S') ";
+    // 27.10.2023 - FINE
     lSql += "       GROUP BY RATEIZZAZIONE_PP.FAS_SIE_ID_FASCICOLO_SIEP, TIPO_RATEIZZAZIONE) rateizzazione ";
     lSql += "      , (SELECT NVL(SUM(IMPORTO_PAGATO),0) importoPagato, BOLLETTINO_PAGOPA.FAS_SIE_ID_FASCICOLO_SIEP ";
     // 12.09.2023 si filtrano solo i bollettini collegati ad eventi validati
@@ -99,7 +107,15 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
     lSql += "          WHERE BOLLETTINO_PAGOPA.RAT_ID_RATEIZZAZIONE_PP = RATEIZZAZIONE_PP.ID_RATEIZZAZIONE_PP ";
     lSql += "            AND RATEIZZAZIONE_PP.EVE_ID_EVENTO = EVENTO.ID_EVENTO ";
     lSql += "            AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-    // Fine
+    // 12.09.2023 - Fine
+    // 27.10.2023 si filtrano solo rateizzazioni e bollettini collegati all'ultimo evento (data emissione) di tipo ...
+    lSql += "            AND EVENTO.COD_MOTIVO IN ('0622','1307','1308') ";
+    lSql += "            AND (EVENTO.DATA_EMISSIONE, ID_EVENTO) = ( SELECT MAX(DATA_EMISSIONE), max(ID_EVENTO) ";
+    lSql += "                                                         FROM EVENTO ";
+    lSql += "                                                        WHERE FAS_SIE_ID_FASCICOLO_SIEP = RATEIZZAZIONE_PP.FAS_SIE_ID_FASCICOLO_SIEP ";
+    lSql += "                                                          AND COD_MOTIVO IN ('0622','1307','1308') ";
+    lSql += "                                                          AND FLAG_DOCUMENTO_REGISTRATO = 'S') ";
+    // 27.10.2023 - FINE
     lSql += "       GROUP BY BOLLETTINO_PAGOPA.FAS_SIE_ID_FASCICOLO_SIEP) statoPagamenti ";
     lSql += "      , (SELECT MAX(DATA_SCADENZA) dataUltimaScadenza, BOLLETTINO_PAGOPA.FAS_SIE_ID_FASCICOLO_SIEP ";
     // 12.09.2023 si filtrano solo i bollettini collegati ad eventi validati
@@ -107,7 +123,15 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
     lSql += "          WHERE BOLLETTINO_PAGOPA.RAT_ID_RATEIZZAZIONE_PP = RATEIZZAZIONE_PP.ID_RATEIZZAZIONE_PP ";
     lSql += "            AND RATEIZZAZIONE_PP.EVE_ID_EVENTO = EVENTO.ID_EVENTO ";
     lSql += "            AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
-    // Fine
+    // 12.09.2023 - Fine
+    // 27.10.2023 si filtrano solo rateizzazioni e bollettini collegati all'ultimo evento (data emissione) di tipo ...
+    lSql += "            AND EVENTO.COD_MOTIVO IN ('0622','1307','1308') ";
+    lSql += "            AND (EVENTO.DATA_EMISSIONE, ID_EVENTO) = ( SELECT MAX(DATA_EMISSIONE), max(ID_EVENTO) ";
+    lSql += "                                                         FROM EVENTO ";
+    lSql += "                                                        WHERE FAS_SIE_ID_FASCICOLO_SIEP = RATEIZZAZIONE_PP.FAS_SIE_ID_FASCICOLO_SIEP ";
+    lSql += "                                                          AND COD_MOTIVO IN ('0622','1307','1308') ";
+    lSql += "                                                          AND FLAG_DOCUMENTO_REGISTRATO = 'S') ";
+    // 27.10.2023 - FINE    
     lSql += "       GROUP BY BOLLETTINO_PAGOPA.FAS_SIE_ID_FASCICOLO_SIEP ) ultimaScadenza ";
     // In caso di ricerca di bollettini non pagati sono interessato solo ai bollettini scaduti al momento della ricerca
     if (   aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO)

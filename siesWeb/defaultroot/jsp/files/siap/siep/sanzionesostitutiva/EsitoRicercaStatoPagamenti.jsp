@@ -14,7 +14,6 @@
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 
 
-<jsp:useBean id="fascicoloNotInSession" scope="request" class="java.lang.String"/>
 <jsp:useBean id="criteriRicerca"  		scope="request" class="siap.siep.fascicolo.model.FascicoloSiepModel"/>
 <jsp:useBean id="descTipoRicerca" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="elencoFascicoli" 		scope="request" class="java.util.Vector"/>
@@ -41,13 +40,6 @@
 	</tr>
 </table>
 <br>
-<%
-if (!fascicoloNotInSession.equals("S")) {
-%>
-<jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
-<%
-}
-%>
 <br>
 
 <table>

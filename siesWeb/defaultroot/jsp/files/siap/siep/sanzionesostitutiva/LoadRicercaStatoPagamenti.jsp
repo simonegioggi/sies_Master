@@ -6,8 +6,6 @@
 <%@ page import="siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva" %>
 
 
-<jsp:useBean id="fascicoloNotInSession" scope="request" class="java.lang.String"/>
-
 <html>
 <head>
   <title>[S.I.E.S.] - Ricerca Stato Pagamenti</title>
@@ -108,9 +106,6 @@
   </table>
 
   <br>
-  <%  if (!fascicoloNotInSession.equals("S")) { %>
-  <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
-  <% } %>
   <br>
 
   <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="RicercaStatoPagamenti" >
