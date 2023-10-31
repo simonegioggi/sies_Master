@@ -72,6 +72,7 @@
 		<td class="int" style="padding-left:5px;padding-right:5px;">Data Iscrizione</td>
 		<td class="int" style="padding-left:5px;padding-right:5px;">Cognome</td>
 		<td class="int" style="padding-left:5px;padding-right:5px;">Nome</td>
+		<td class="int" style="padding-left:5px;padding-right:5px;">Tipo Pagamento</td>
 		<td class="int" style="padding-left:5px;padding-right:5px;">Importo da Pagare</td>
 		<td class="int" style="padding-left:5px;padding-right:5px;">Importo Pagato</td>
 		<td class="int" style="padding-left:5px;padding-right:5px;">Data Ultima Scadenza</td>
@@ -84,9 +85,9 @@ while (itx.hasNext()) {
 	RicercaStatoPagamentiModel fascicolo = (RicercaStatoPagamentiModel) itx.next();
 	String tipoRat = "";
 	if ("U".equals(fascicolo.getTipoRateizzazione())) 
-		tipoRat = " (U.S.)";
+		tipoRat = "Unica Soluzione";
 	else if ("R".equals(fascicolo.getTipoRateizzazione())) 
-		tipoRat = " (Rat.)";
+		tipoRat = "Rateizzato";
 %>
 	<tr>
   		<td class="c">
@@ -97,7 +98,8 @@ while (itx.hasNext()) {
 		<td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataIscrizione(),"dd-MM-yyyy"))%></font></td>
 		<td class="c"><font class="label"><%=StringUtils.toStringJSP(fascicolo.getCognome())%></font></td>
 		<td class="c"><font class="label"><%=StringUtils.toStringJSP(fascicolo.getNome())%></font></td>
-		<td class="r"><font class="label"><%=StringUtils.toEuroFormat(fascicolo.getImportoDaPagare())+tipoRat%></font></td>
+		<td class="c"><font class="label"><%=StringUtils.toStringJSP(tipoRat)%></font></td>
+		<td class="r"><font class="label"><%=StringUtils.toEuroFormat(fascicolo.getImportoDaPagare())%></font></td>
 		<td class="r"><font class="label"><%=StringUtils.toEuroFormat(fascicolo.getImportoPagato())%></font></td>
 		<td class="c"><font class="label"><%=StringUtils.toStringJSP(DateUtils.getDateToString(fascicolo.getDataUltimaScadenza(),"dd-MM-yyyy"),"&nbsp;")%></font></td>
 		<td class="c">
