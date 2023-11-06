@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -128,7 +127,8 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+		Vector<BollettinoPagopaModel> bpms = ibp
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		// DATI PER RICHIESTA PAGAMENTO TELEMATICO
 		RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil.caricaDatiRichiestaPagamentoTelematico(ufm);
 		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
@@ -159,11 +159,12 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			// DATI VERSAMENTO
 			DatiVersamento dv = GeneraAvvisoPagoPAUtil.caricaDatiVersamento(sm, bpm);
 			rpt.setDatiVersamento(dv);
-			Calendar c = Calendar.getInstance();
-			Date dataScadenza = Utils.isNullObj(bpm.getDataScadenza()) ? bpm.getDataScadenzaRich()
-					: bpm.getDataScadenza();
-			c.setTime(dataScadenza);
-			rpt.setDataScadenza(c);
+			if (!Utils.isNullObj(bpm.getDataScadenza())) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(bpm.getDataScadenza());
+				rpt.setDataScadenza(c);
+			} else
+				rpt.setDataScadenza(null);
 
 			EsitoGeneraAvviso ega = null;
 			try {
