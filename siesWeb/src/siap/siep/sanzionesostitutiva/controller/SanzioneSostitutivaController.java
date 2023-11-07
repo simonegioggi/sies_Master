@@ -13,7 +13,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -81,7 +80,8 @@ import siap.siep.verbale.dao.VerbaleDAO;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: SanzioneSostitutivaController Description: Controller della Sanzioni Sostitutive
+ * Title: SanzioneSostitutivaController 
+ * Description: Controller della Sanzioni Sostitutive
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SanzioneSostitutivaController extends SiapController implements ISanzioneSostitutiva {
@@ -3386,34 +3386,34 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			siesLogger.debug("ID_EVENTO = " + idEvento);
 			lEveSqlDAO.stop();
 
-      // ========================================================================
-      // Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
-      // ========================================================================
-      siesLogger.debug("Aggiornamento stato procedimento");
+			// ========================================================================
+			// Aggiorna lo stato del PROCEDIMENTO cancellando i record precedenti
+			// ========================================================================
+			siesLogger.debug("Aggiornamento stato procedimento");
 
-      StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
+			StatoProcedimentoModel lStatoProcMod = new StatoProcedimentoModel();
 
-      lStatoProcMod.setProgressivo(new BigDecimal(1));
-      lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelRich.getFasSieIdFascicoloSiep());
+			lStatoProcMod.setProgressivo(new BigDecimal(1));
+			lStatoProcMod.setFasSieIdFascicoloSiep(lEveModelRich.getFasSieIdFascicoloSiep());
 
-      lStatoProcMod.setData(lEveModelRich.getDataEmissione());
-      lStatoProcMod.setCodStatoProcedimento("0363");
+			lStatoProcMod.setData(lEveModelRich.getDataEmissione());
+			lStatoProcMod.setCodStatoProcedimento("0363");
 
-      lStatoProcMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
-      lStatoProcMod.setDataInserimento(aEvento.getDataAggiornamento());
-      lStatoProcMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
+			lStatoProcMod.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
+			lStatoProcMod.setDataInserimento(aEvento.getDataAggiornamento());
+			lStatoProcMod.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
 
-      lStatoDao = new StatoProcedimentoDAO(lConn);
+			lStatoDao = new StatoProcedimentoDAO(lConn);
 
-      // - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
-      lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
-      lStatoDao.delete();
-      siesLogger.debug("Cancellato old stato");
-      // - Inserisce
-      lStatoDao.setDAOFromModel(lStatoProcMod);
-      lStatoDao.insert();
-      lStatoDao.stop();
-      siesLogger.debug("Inserito nuovo stato");
+			// - Cancella eventuali record prima di inserire un nuovo STATO_PROCEDIMENTO
+			lStatoDao.setCondizioneByIdFascicolo(lEveModelRich.getFasSieIdFascicoloSiep());
+			lStatoDao.delete();
+			siesLogger.debug("Cancellato old stato");
+			// - Inserisce
+			lStatoDao.setDAOFromModel(lStatoProcMod);
+			lStatoDao.insert();
+			lStatoDao.stop();
+			siesLogger.debug("Inserito nuovo stato");
 			// ========================================================================
 			// Aggiorno il blob sull'evento
 			// ========================================================================
@@ -3450,23 +3450,24 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return lEveRet;
 	}
-	
-  /**
-   * 
-   * @param aEvNotModel
-   * @param lArrayIdRate
-   * @return
-   * @throws F3BException
-   * @since MEV_2023-33
-   */
-	public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel) throws F3BException {
+
+	/**
+	 * 
+	 * @param aEvNotModel
+	 * @param lArrayIdRate
+	 * @return
+	 * @throws F3BException
+	 * @since MEV_2023-33
+	 */
+	public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
 		Connection lConn = null;
 
 		EventoDAO lEventoDao = null;
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
 
-  	EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
+		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
 
 		try {
 			lConn = getDBConnection();
@@ -3555,15 +3556,17 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return lEveRet;
 	}
-	
+
 	/**
 	 * Metodo per la modifica del provvedimento di Estinzione della Pena Pecuniaria
+	 *
 	 * @param aEvNotModel
 	 * @return
 	 * @throws F3BException
 	 * @since MEV_2023-33
 	 */
-	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel) throws F3BException {
+	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException {
 
 		Connection lConn = null;
 
@@ -3646,7 +3649,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 					count++;
 				}
 			}
-			
+
 			commit(lConn);
 		} catch (DAOException ex) {
 			rollback(lConn);
@@ -3665,27 +3668,27 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return lEveRet;
 	}
-	
+
 	/**
-	 * Metodo per la stampa Excel del risutato delle ricerche Stato Pagamento
-	 * >
-	 * */
-	public void ExCreateExcelStatoPagamenti (Vector <RicercaStatoPagamentiModel> listaStatoPagamenti, HSSFWorkbook wb, UfficioModel ufficio
-			, FascicoloSiepModel aFasMod, String aTipoRicera) throws F3BException{
-		
+	 * Metodo per la stampa Excel del risutato delle ricerche Stato Pagamento >
+	 */
+	public void ExCreateExcelStatoPagamenti(Vector<RicercaStatoPagamentiModel> listaStatoPagamenti,
+			HSSFWorkbook wb, UfficioModel ufficio, FascicoloSiepModel aFasMod, String aTipoRicera)
+			throws F3BException {
+
 		HSSFCellStyle csNull = wb.createCellStyle();
 
 		// Create a new font and alter it.
 		HSSFFont fontBold = wb.createFont();
-		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); 
-		
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
 		// stile per celle col bordo
 		HSSFCellStyle cs = wb.createCellStyle();
 		cs = getBordo4Lati(wb);
-		
+
 		HSSFCellStyle csNullBold = wb.createCellStyle();
 		csNullBold.setFont(fontBold);
-		
+
 		// stile per celle col bordo con carattere grassetto
 		HSSFCellStyle csBold = wb.createCellStyle();
 		csBold = getBordo4Lati(wb);
@@ -3694,30 +3697,30 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		HSSFCellStyle csCenter = wb.createCellStyle();
 		csCenter = getBordo4Lati(wb);
 		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		
+
 		HSSFCellStyle csRight = wb.createCellStyle();
 		csRight = getBordo4Lati(wb);
 		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		
+
 		HSSFCellStyle csBoldCenter = wb.createCellStyle();
 		csBoldCenter = getBordo4Lati(wb);
 		csBoldCenter.setFont(fontBold);
 		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
 		HSSFCellStyle csEuroFormat = wb.createCellStyle();
-		//HSSFDataFormat dataFormat = wb.createDataFormat();
-		//csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
-		short builtinFormatIndex = 4; //4: "#,##0.00"
+		// HSSFDataFormat dataFormat = wb.createDataFormat();
+		// csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
+		short builtinFormatIndex = 4; // 4: "#,##0.00"
 		csEuroFormat.setDataFormat(builtinFormatIndex);
 		csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
+
 		// primo foglio
 		HSSFSheet sheet = wb.createSheet("Stato Pagamenti");
 		sheet.setColumnWidth(0, (40 * 256));
-		
+
 		int numCol = 0;
 		int sizeCol = 21;
 		sheet.setColumnWidth(numCol++, (sizeCol * 256));
@@ -3730,50 +3733,56 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		sheet.setColumnWidth(numCol++, (sizeCol * 256));
 
 		int nRow = 0;
-	
+
 		// Intestazione del foglio excel
 		// Prima Riga
 		HSSFRow row = sheet.createRow(nRow++);
-		String value = (ufficio.getDescrTipoUfficio().toUpperCase() + " DI " + ufficio.getDescrComune().toUpperCase());
+		String value = (ufficio.getDescrTipoUfficio().toUpperCase() + " DI "
+				+ ufficio.getDescrComune().toUpperCase());
 		setCell(row, 0, value, csNull);
 
-		// Seconda Riga 
-		value = "Tel. " + StringUtils.toStringJSP(ufficio.getTelefono()) + " - Fax "	+ StringUtils.toStringJSP(ufficio.getFax());
+		// Seconda Riga
+		value = "Tel. " + StringUtils.toStringJSP(ufficio.getTelefono()) + " - Fax "
+				+ StringUtils.toStringJSP(ufficio.getFax());
 		row = sheet.createRow(nRow++);
 		setCell(row, 0, value, csNull);
 
 		nRow++;
 		nRow++;
-		
+
 		value = "Elenco Procedimenti Pene Pecuniarie In Base a Stato Pagamenti ";
 		row = sheet.createRow(nRow++);
 		setCell(row, 0, value, csNull);
-		
+
 		nRow++;
-		
-		//===========================
+
+		// ===========================
 		// Criteri di ricerca
-	  //===========================
+		// ===========================
 		// Anno e Numero
 		row = sheet.createRow(nRow++);
 		setCell(row, 0, "Anno/Numero Iniziale ", csNullBold);
-		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoIniziale(),"____") + " / "	+ StringUtils.toStringJSP(aFasMod.getChiaveProgrIniziale(),"______");
+		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoIniziale(), "____") + " / "
+				+ StringUtils.toStringJSP(aFasMod.getChiaveProgrIniziale(), "______");
 		setCell(row, 1, value, csNull);
 
 		setCell(row, 2, "Anno/Numero Finale ", csNullBold);
-		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoFinale(),"____") + " / "	+ StringUtils.toStringJSP(aFasMod.getChiaveProgrFinale(),"______");
+		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoFinale(), "____") + " / "
+				+ StringUtils.toStringJSP(aFasMod.getChiaveProgrFinale(), "______");
 		setCell(row, 3, value, csNull);
-		
+
 		// Data Iscrizione
 		row = sheet.createRow(nRow++);
 		setCell(row, 0, "Data Iscrizione Iniziale ", csNullBold);
-		value = StringUtils.toStringJSP(DateUtils.getDateToString(aFasMod.getDataIscrizioneIniziale(),"dd.MM.yyyy")," ");
+		value = StringUtils.toStringJSP(
+				DateUtils.getDateToString(aFasMod.getDataIscrizioneIniziale(), "dd.MM.yyyy"), " ");
 		setCell(row, 1, value, csNull);
-		
+
 		setCell(row, 2, "Data Iscrizione Finale ", csNullBold);
-		value = StringUtils.toStringJSP(DateUtils.getDateToString(aFasMod.getDataIscrizioneFinale(),"dd.MM.yyyy")," ");
+		value = StringUtils
+				.toStringJSP(DateUtils.getDateToString(aFasMod.getDataIscrizioneFinale(), "dd.MM.yyyy"), " ");
 		setCell(row, 3, value, csNull);
-		
+
 		// Tipologia Statistica
 		String descTipoRicerca = "";
 		if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_INTERAMENTE_PAGATO))
@@ -3781,13 +3790,14 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		else if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO))
 			descTipoRicerca = "Procedimenti con pagamento rateizzato con rate non pagate";
 		else if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO))
-			descTipoRicerca = "Procedimenti con pagamento in unica soluzione non pagata";		
+			descTipoRicerca = "Procedimenti con pagamento in unica soluzione non pagata";
 		row = sheet.createRow(nRow++);
 		setCell(row, 0, "Tipologia Statistica ", csNullBold);
-		setCell(row, 1, StringUtils.toStringJSP(descTipoRicerca," "), csNull);
-		
-		nRow++;nRow++;
-		
+		setCell(row, 1, StringUtils.toStringJSP(descTipoRicerca, " "), csNull);
+
+		nRow++;
+		nRow++;
+
 		// Intestazione tabella RIsultati
 		row = sheet.createRow(nRow++);
 		setCell(row, 0, "Numero SIEP", csBoldCenter);
@@ -3798,30 +3808,40 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		setCell(row, 5, "Importo da Pagare", csBoldCenter);
 		setCell(row, 6, "Importo Pagato", csBoldCenter);
 		setCell(row, 7, "Data Ultima Scadenza", csBoldCenter);
-		
+
 		// Ciclo sui record
 		for (RicercaStatoPagamentiModel record : listaStatoPagamenti) {
-		  String tipoRat = "";
-		  if ("U".equals(record.getTipoRateizzazione())) 
-		    tipoRat = "Unica Soluzione";
-		  else if ("R".equals(record.getTipoRateizzazione())) 
-		    tipoRat = "Rateizzato";
-			
+			String tipoRat = "";
+			if ("U".equals(record.getTipoRateizzazione()))
+				tipoRat = "Unica Soluzione";
+			else if ("R".equals(record.getTipoRateizzazione()))
+				tipoRat = "Rateizzato";
+
 			row = sheet.createRow(nRow++);
-			
-			setCell(row, 0, StringUtils.toStringJSP(record.getChiaveAnno()) + " / " + StringUtils.toStringJSP(record.getChiaveProgr()), cs);
-			setCell(row, 1, StringUtils.toStringJSP(DateUtils.getDateToString(record.getDataIscrizione(),"dd-MM-yyyy")), csCenter);
+
+			setCell(row, 0, StringUtils.toStringJSP(record.getChiaveAnno()) + " / "
+					+ StringUtils.toStringJSP(record.getChiaveProgr()), cs);
+			setCell(row, 1, StringUtils.toStringJSP(
+					DateUtils.getDateToString(record.getDataIscrizione(), "dd-MM-yyyy")), csCenter);
 			setCell(row, 2, StringUtils.toStringJSP(record.getCognome()), cs);
 			setCell(row, 3, StringUtils.toStringJSP(record.getNome()), cs);
 			setCell(row, 4, StringUtils.toStringJSP(tipoRat), csCenter);
-			//setCell(row, 5, StringUtils.toEuroFormat(record.getImportoDaPagare()), csEuroFormat);csEuroFormat
-			//setCell(row, 6, StringUtils.toEuroFormat(record.getImportoPagato()), csEuroFormat);
-			setNumericCell(row, 5, record.getImportoDaPagare()!=null ? record.getImportoDaPagare().doubleValue() : null, csEuroFormat);
-			setNumericCell(row, 6, record.getImportoPagato()!=null ? record.getImportoPagato().doubleValue() : null, csEuroFormat);
-			setCell(row, 7, StringUtils.toStringJSP(DateUtils.getDateToString(record.getDataUltimaScadenza(),"dd-MM-yyyy")," "), csCenter);			
+			// setCell(row, 5, StringUtils.toEuroFormat(record.getImportoDaPagare()),
+			// csEuroFormat);csEuroFormat
+			// setCell(row, 6, StringUtils.toEuroFormat(record.getImportoPagato()), csEuroFormat);
+			setNumericCell(row, 5,
+					record.getImportoDaPagare() != null ? record.getImportoDaPagare().doubleValue() : null,
+					csEuroFormat);
+			setNumericCell(row, 6,
+					record.getImportoPagato() != null ? record.getImportoPagato().doubleValue() : null,
+					csEuroFormat);
+			setCell(row, 7,
+					StringUtils.toStringJSP(
+							DateUtils.getDateToString(record.getDataUltimaScadenza(), "dd-MM-yyyy"), " "),
+					csCenter);
 		}
 	}
-	
+
 	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
 
 		HSSFCellStyle cs = wb.createCellStyle();
@@ -3832,7 +3852,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return cs;
 	}
-	
+
 	private HSSFCell setCell(HSSFRow row, int nCol, String value, HSSFCellStyle cs) {
 
 		HSSFCell cell = row.createCell(nCol);
@@ -3841,7 +3861,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return cell;
 	}
-	
+
 	private HSSFCell setNumericCell(HSSFRow row, int nCol, Double value, HSSFCellStyle cs) {
 
 		HSSFCell cell = row.createCell(nCol);
@@ -3850,4 +3870,5 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 
 		return cell;
 	}
+
 }

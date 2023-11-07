@@ -85,9 +85,9 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			// Recupero la lista degli eventi e i dati da visualizzare
 			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 
-	    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-	        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");			
-			
+			Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+					.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
+
 			if (listaOrdiniIngiunzione.isEmpty()) {
 				// non ho trovato ordini di ingiunzione esco con errore
 				RedirectTo rt = new RedirectTo();
@@ -103,129 +103,127 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 				setRequestAttribute("azioneChiamante", this.getClass().getName());
 
 				return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
-			}
-			else {
+			} else {
 				idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
-			}			
+			}
 		} else {
 			// Ho selezionato l'evento dalla lista, carico la pagina
 			// Verifica per ogni destinatario se già registrate l'avvenuta notifica
 			idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		}
-		
-			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-			EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(idEvento);
-			setRequestAttribute("ordineIngiunzione", lEveNotMod);
 
-			// Verifica se presente il Verbale vane ricerche che punta l'ordine di ingiunzione
-			EventoModel lEveVerbale = new EventoModel();
-			lEveVerbale.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-			lEveVerbale.setCodTipoEvento("07");
-			lEveVerbale.setCodTipoProvvedimento("17");
-			lEveVerbale.setCodMotivo("0313");
-			Vector <EventoModel> listaEventiVerbali = new Vector <EventoModel>();
-			try {
-				listaEventiVerbali = lCtrlEvento.ExRicercaEventoTipoEveTipoProvMot(lEveVerbale, "S");
-			} catch (F3BException e) {
-				if (F3BException.USER_MESSAGE == e.getErrorCode()) {
-				  siesLogger.warn("Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
-					/*throw new F3BException(F3BException.USER_MESSAGE,
-							"Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");*/
-				}
+		IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+		EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(idEvento);
+		setRequestAttribute("ordineIngiunzione", lEveNotMod);
+
+		// Verifica se presente il Verbale vane ricerche che punta l'ordine di ingiunzione
+		EventoModel lEveVerbale = new EventoModel();
+		lEveVerbale.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
+		lEveVerbale.setCodTipoEvento("07");
+		lEveVerbale.setCodTipoProvvedimento("17");
+		lEveVerbale.setCodMotivo("0313");
+		Vector<EventoModel> listaEventiVerbali = new Vector<>();
+		try {
+			listaEventiVerbali = lCtrlEvento.ExRicercaEventoTipoEveTipoProvMot(lEveVerbale, "S");
+		} catch (F3BException e) {
+			if (F3BException.USER_MESSAGE == e.getErrorCode()) {
+				siesLogger.warn(
+						"Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
+				/*
+				 * throw new F3BException(F3BException.USER_MESSAGE,
+				 * "Nessun Verbale Vane Ricerche Registrato per l'ordine di Ingiunzione selezionato");
+				 */
 			}
+		}
 
-			EventoModel verbaleVR = null;
-			for (EventoModel eveVerbale : listaEventiVerbali) {
-				if (eveVerbale.getEveIdEvento().compareTo(lEveNotMod.getEvento().getIdEvento()) == 0) {
-					verbaleVR = eveVerbale;
-					break;
-				}
+		EventoModel verbaleVR = null;
+		for (EventoModel eveVerbale : listaEventiVerbali) {
+			if (eveVerbale.getEveIdEvento().compareTo(lEveNotMod.getEvento().getIdEvento()) == 0) {
+				verbaleVR = eveVerbale;
+				break;
 			}
+		}
 
-			// Recupero il Verbale vane ricerche per la visualizzazione
-			IVerbale lCtrlVer = SIEPLookupRemote.getVerbaleRemote();
-			VerbaleModel lVermod = new VerbaleModel();
-			if (verbaleVR != null)
-				lVermod = lCtrlVer.ExRicercaVerbaleByCodTipoIdEvento(verbaleVR.getIdEvento(), "02");
+		// Recupero il Verbale vane ricerche per la visualizzazione
+		IVerbale lCtrlVer = SIEPLookupRemote.getVerbaleRemote();
+		VerbaleModel lVermod = new VerbaleModel();
+		if (verbaleVR != null)
+			lVermod = lCtrlVer.ExRicercaVerbaleByCodTipoIdEvento(verbaleVR.getIdEvento(), "02");
 
-			//
-			NotificaModel lNotificaEsecuzione = null;
-			for (int i = 0; i < lEveNotMod.getNotifiche().length; i++) {
-				NotificaModel lNotMod = lEveNotMod.getNotifiche()[i];
-				if (lNotMod.getCodTipoNotifica().equals("E")) {
-					lNotificaEsecuzione = lNotMod;
-				}
+		//
+		NotificaModel lNotificaEsecuzione = null;
+		for (int i = 0; i < lEveNotMod.getNotifiche().length; i++) {
+			NotificaModel lNotMod = lEveNotMod.getNotifiche()[i];
+			if (lNotMod.getCodTipoNotifica().equals("E")) {
+				lNotificaEsecuzione = lNotMod;
 			}
+		}
 
-			// Recupero eventuali RINNOVI già inseriti da visualizzare in elenco e collegati alla notifica per
-			// l'esecuzione
-			Vector<RinnovoModel> lListaRinnovi = new Vector<RinnovoModel>();
-			String[] lTipoRinno = { "R", "N", "A" };
-			IRinnovo lCtrlRinnovi = SIEPLookupRemote.getRinnovoRemote();
-			lListaRinnovi = lCtrlRinnovi.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(
-					lNotificaEsecuzione.getIdNotifica(), lTipoRinno, null);
+		// Recupero eventuali RINNOVI già inseriti da visualizzare in elenco e collegati alla notifica per
+		// l'esecuzione
+		Vector<RinnovoModel> lListaRinnovi = new Vector<>();
+		String[] lTipoRinno = { "R", "N", "A" };
+		IRinnovo lCtrlRinnovi = SIEPLookupRemote.getRinnovoRemote();
+		lListaRinnovi = lCtrlRinnovi.ExRicercaRinnovoIdNotificaCodTipoRinnovoStato(
+				lNotificaEsecuzione.getIdNotifica(), lTipoRinno, null);
 
-			//
-			Option lOptionAutoritaAltra = new Option(DecodificheManager.getInstance().getTipoAutorita());
+		//
+		Option lOptionAutoritaAltra = new Option(DecodificheManager.getInstance().getTipoAutorita());
 
-			setRequestAttribute("notifica", lNotificaEsecuzione);
-			setRequestAttribute("verbale", lVermod);
-			setRequestAttribute("listaRinnovi", lListaRinnovi);
-			setRequestAttribute("tipoAutoritaAltra", lOptionAutoritaAltra.toString());
+		setRequestAttribute("notifica", lNotificaEsecuzione);
+		setRequestAttribute("verbale", lVermod);
+		setRequestAttribute("listaRinnovi", lListaRinnovi);
+		setRequestAttribute("tipoAutoritaAltra", lOptionAutoritaAltra.toString());
 
-			PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
-			IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-			lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
-					lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
-			setRequestAttribute("posizioneluogoaltra", lPos);
-		
+		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
+		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
+		setRequestAttribute("posizioneluogoaltra", lPos);
 
 		return PG_LOAD_INSERISCI_RINNOVO_RICERCHE;
 	}
 
 	/**
-	 * 
 	 * @deprecated
 	 */
-	private String checkEventi(BigDecimal idEvento) throws Exception {
-
-		String returnPage = null;
-
-		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-
-		// Recupero la lista degli eventi e i dati da visualizzare
-		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-		
-		// 2023.09.26 - si includono nella ricerca anche i codici
-		//Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-		//		.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
-    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
-    // 2023.09.26 - FINE
-			
-		
-		if (listaOrdiniIngiunzione.isEmpty()) {
-			// non ho trovato ordini di ingiunzione esco con errore
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
-			rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			return IWebConstants.PG_MESSAGE;
-		} else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
-			// Carico la pagina con la scelta degli OI
-			setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
-			setRequestAttribute("azioneChiamante", this.getClass().getName());
-
-			return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
-		}
-		else {
-			idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
-			siesLogger.debug("idEvento = "+idEvento);
-		}
-		
-		return returnPage;
-	}
+	// private String checkEventi(BigDecimal idEvento) throws Exception {
+	//
+	// String returnPage = null;
+	//
+	// FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+	//
+	// // Recupero la lista degli eventi e i dati da visualizzare
+	// IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+	//
+	// // 2023.09.26 - si includono nella ricerca anche i codici
+	// // Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+	// // .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
+	// Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+	// .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
+	// // 2023.09.26 - FINE
+	//
+	// if (listaOrdiniIngiunzione.isEmpty()) {
+	// // non ho trovato ordini di ingiunzione esco con errore
+	// RedirectTo rt = new RedirectTo();
+	// rt.setPage(IWebConstants.PG_MAIN);
+	// setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+	// "Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
+	// rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
+	// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+	// return IWebConstants.PG_MESSAGE;
+	// } else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
+	// // Carico la pagina con la scelta degli OI
+	// setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+	// setRequestAttribute("azioneChiamante", this.getClass().getName());
+	//
+	// return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
+	// } else {
+	// idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
+	// siesLogger.debug("idEvento = " + idEvento);
+	// }
+	//
+	// return returnPage;
+	// }
 
 }

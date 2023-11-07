@@ -1,7 +1,6 @@
 package siap.siep.sanzionesostitutiva.action;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Vector;
 
@@ -29,7 +28,7 @@ public class ActRicercaStatoPagamenti extends ActionSiap
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws Exception {
 
 		siesLogger.debug("ActRicercaStatoPagamenti....");
@@ -82,22 +81,22 @@ public class ActRicercaStatoPagamenti extends ActionSiap
 		lFasMod.setChiaveUfficio(chiaveUfficio);
 
 		ISanzioneSostitutiva lCtrlSanzSost = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-	  //==================================================================================================================
+		// ==================================================================================================================
 		// Stampo excel
-		if (!isRequestParameterNullObj("tipoRicerca") && "stampaExcel".equals(getRequestStringParameter("tipoRicerca"))) {
+		if (!isRequestParameterNullObj("tipoRicerca")
+				&& "stampaExcel".equals(getRequestStringParameter("tipoRicerca"))) {
 			// Richiesta stampa Excel, effettuo la ricerca non paginata
-			Vector <RicercaStatoPagamentiModel> lVect = lCtrlSanzSost.ExRicercaFascicoliPerStatoPagamentoPaged(lFasMod,
-					Integer.parseInt("0"), tipoRicerca);
-			
+			Vector<RicercaStatoPagamentiModel> lVect = lCtrlSanzSost
+					.ExRicercaFascicoliPerStatoPagamentoPaged(lFasMod, Integer.parseInt("0"), tipoRicerca);
+
 			return stampaExcel(lVect, lFasMod, tipoRicerca);
-	  }
-		// FINE STAMPA		
-	  //==================================================================================================================
-		
+		}
+		// FINE STAMPA
+		// ==================================================================================================================
+
 		String lPagina = "1";
 		if (!isRequestParameterNullObj(IWebConstants.NUM_PAGE))
 			lPagina = getRequestStringParameter(IWebConstants.NUM_PAGE);
-
 
 		Vector lVect = lCtrlSanzSost.ExRicercaFascicoliPerStatoPagamentoPaged(lFasMod,
 				Integer.parseInt(lPagina), tipoRicerca);
@@ -127,32 +126,34 @@ public class ActRicercaStatoPagamenti extends ActionSiap
 
 		// Lancio la ricerca
 		return PG_ESITO_RICERCA_STATO_PAGAMENTI;
-		
+
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * */
-	private String stampaExcel (Vector <RicercaStatoPagamentiModel> listaStatoPagamenti,FascicoloSiepModel lFasMod, String tipoRicerca) throws Exception {
+	private String stampaExcel(Vector<RicercaStatoPagamentiModel> listaStatoPagamenti,
+			FascicoloSiepModel lFasMod, String tipoRicerca) throws Exception {
 		siesLogger.debug("stampaExcel....");
 		HSSFWorkbook wb = new HSSFWorkbook();
 		ISanzioneSostitutiva lCtrlSanzSost = SIEPLookupRemote.getSanzioneSostitutivaRemote();
-		lCtrlSanzSost.ExCreateExcelStatoPagamenti (listaStatoPagamenti, wb, this.getUfficioUtenteConnesso(), lFasMod, tipoRicerca);
-	
+		lCtrlSanzSost.ExCreateExcelStatoPagamenti(listaStatoPagamenti, wb, this.getUfficioUtenteConnesso(),
+				lFasMod, tipoRicerca);
+
 		// Generazione file xls
 		ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
 		try {
 			wb.write(fileOut);
-		// } catch (IOException ioe) {
+			// } catch (IOException ioe) {
 		} catch (Exception ioe) {
-			siesLogger.error("Exception",ioe);
+			siesLogger.error("Exception", ioe);
 			throw new F3BException("ActRicercaStatoPagamenti.stampaExcel: " + ioe);
 		}
-	
+
 		setRequestAttribute("report", fileOut);
 		setRequestAttribute(IWebConstants.DISPOSITION_FIELD, IWebConstants.ATTACHMENT_DISPOSITION_FILE);
-	
+
 		return IWebConstants.PG_DOWNLOAD_DOCUMENT;
 	}
 }

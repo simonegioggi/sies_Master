@@ -70,7 +70,7 @@ public class ConsultaPagamentiJob implements Job {
 		BatchPagopaModel lBatchModel = null;
 
 		int contaNumPosDebitorieVerificate = 0;
-		int contaNumIUVVerificati = 0;  // 2023.11.02 nuovo contatore per i bollettini provi di CF
+		int contaNumIUVVerificati = 0; // 2023.11.02 nuovo contatore per i bollettini provi di CF
 		int contaNumBollettiniAggiornati = 0;
 		int contaNumBollettiniInErrore = 0;
 
@@ -130,35 +130,33 @@ public class ConsultaPagamentiJob implements Job {
 					.ExRicercaDebitoriConPosizioniAperteInScadenza(istg, cdg, gdg, cpg);
 			pagoPaLogger.debug("Debitori trovati = " + lElencoDebitori.size());
 
-			
-			// 2023.11.02 - Si aggiunge la gestione dei bollettini privi di CF a seguito del venir meno dell'obbligatorietà
-			//              per SNT del CF
+			// 2023.11.02 - Si aggiunge la gestione dei bollettini privi di CF a seguito del venir meno
+			// dell'obbligatorietà
+			// per SNT del CF
 			Vector<BollettinoPagopaModel> lElencoBollettiniNoCF = lCtrlBollettini
 					.ExRicercaBollettiniSenzaCFConPosizioniAperte(istg, cdg, gdg, cpg);
 			pagoPaLogger.debug("Bollettini privi di CF trovati = " + lElencoBollettiniNoCF.size());
 			lElencoDebitori.addAll(lElencoBollettiniNoCF);
 			// 2023.11.02 - FINE
-			
+
 			IInvocazionePagopa lCtrlInvocazione = SIEPLookupRemote.getInvocazionePagopaRemote();
 			// Ricerca per debitore
 			for (int i = 0; i < lElencoDebitori.size(); i++) {
 				BollettinoPagopaModel lDebitore = lElencoDebitori.elementAt(i);
-				String erroreInvocazione = "";  
+				String erroreInvocazione = "";
 				InvocazionePagopaModel lInvocazioneModel = new InvocazionePagopaModel();
 
 				try {
-					if (lDebitore.getIuv()!=null && lDebitore.getIuv().length()>0){
-		        pagoPaLogger.debug(
-		              " Inizio richiesta a pagoPa per lo IUV = " + lDebitore.getIuv()
-		                  + ", codice distretto = " + lDebitore.getCodiceDistretto());
-					  contaNumIUVVerificati++;
-				  }
-				  else {
-	          pagoPaLogger.debug(
-	              " Inizio richiesta a pagoPa per il Debitore = " + lDebitore.getCodiceFiscale()
-	                  + ", codice distretto = " + lDebitore.getCodiceDistretto());				    
-				 	  contaNumPosDebitorieVerificate++;
-				  }
+					if (lDebitore.getIuv() != null && lDebitore.getIuv().length() > 0) {
+						pagoPaLogger.debug(" Inizio richiesta a pagoPa per lo IUV = " + lDebitore.getIuv()
+								+ ", codice distretto = " + lDebitore.getCodiceDistretto());
+						contaNumIUVVerificati++;
+					} else {
+						pagoPaLogger.debug(
+								" Inizio richiesta a pagoPa per il Debitore = " + lDebitore.getCodiceFiscale()
+										+ ", codice distretto = " + lDebitore.getCodiceDistretto());
+						contaNumPosDebitorieVerificate++;
+					}
 					// n.b. la ricerca per codiceCRS vuole comunque il codice fiscale obblgatorio altrimenti
 					// non trova nulla
 					// String codiceCRS = null; // "30091047213734917"; // solo per ricerca puntuale n.b
@@ -196,14 +194,14 @@ public class ConsultaPagamentiJob implements Job {
 					lInvocazioneModel.setFkIdBatch(lBatchModel.getIdBatchPagopa());
 					lInvocazioneModel.setCodOperatoreInserimento("BATCH_PAGOPA");
 					lInvocazioneModel.setDataInserimento(new Date());
-					
-				  // 2023.11.02 - Aggiungo lo IUV se presente
+
+					// 2023.11.02 - Aggiungo lo IUV se presente
 					lInvocazioneModel.setIuv(lDebitore.getIuv());
-				  // 2023.11.02 - FINE
-					
+					// 2023.11.02 - FINE
+
 					lInvocazioneModel = lCtrlInvocazione.ExInserisciInvocazionePagopa(lInvocazioneModel);
 					// MEV_2023-33
-					
+
 					Object[] pagamenti = null;
 					// SOLO PER TEST
 					if ("true".equals(F3BProperties.getProperty("PagoPaTest"))) {
@@ -212,47 +210,57 @@ public class ConsultaPagamentiJob implements Job {
 						pagamenti[0] = getBollettinoTest();
 					} else {
 						// Nota: per lo stesso soggetto (CF) potrebbero essere presenti più fascicoli
-					  
-					  // 2023.11.02 - Se sto elaborando un Bollettini privo di CF allora aggiungo alla chiamata lo IUV (codiceCRS)
-					  if (lDebitore.getIuv()!=null && lDebitore.getIuv().length()>0) {
-					    pagoPaLogger.debug("Bollettini privo di CF aggiungo lo IUV alla chiamata 3"+lDebitore.getIuv());
-					    codiceCRS = "3" + lDebitore.getIuv();
-					  }
-					  // 2023.11.02 
-					  
+
+						// 2023.11.02 - Se sto elaborando un Bollettini privo di CF allora aggiungo alla
+						// chiamata lo IUV (codiceCRS)
+						if (lDebitore.getIuv() != null && lDebitore.getIuv().length() > 0) {
+							pagoPaLogger.debug("Bollettini privo di CF aggiungo lo IUV alla chiamata 3"
+									+ lDebitore.getIuv());
+							codiceCRS = "3" + lDebitore.getIuv();
+						}
+						// 2023.11.02
+
 						RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
 								codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
 								dimensionePagina, numeroPagina);
 						// MEV_2023-33 Si registrano i dati scambiati: XML
 						org.apache.axis.client.Call _call = scpt.getLastCall();
-						String requestXML  = _call.getMessageContext().getRequestMessage().getSOAPPartAsString();
-						String responseXML = _call.getMessageContext().getResponseMessage().getSOAPPartAsString();
+						String requestXML = _call.getMessageContext().getRequestMessage()
+								.getSOAPPartAsString();
+						String responseXML = _call.getMessageContext().getResponseMessage()
+								.getSOAPPartAsString();
 						pagoPaLogger.debug("requestXML \n" + requestXML);
 						pagoPaLogger.debug("responseXML \n" + responseXML);
 
 						lInvocazioneModel.setXmlRichiesta(requestXML);
 						lInvocazioneModel.setXmlRisposta(responseXML);
 
-
 						lInvocazioneModel.setErrore(null);
 						lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
 						// MEV_2023-33 fine
 
 						pagoPaLogger.debug("RisultatoRicerca.getCount()            = " + rr.getCount());
-						pagoPaLogger.debug("RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
-						pagoPaLogger.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
-						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = " + (rr.getItems() != null ? rr.getItems().length : null));
+						pagoPaLogger.debug(
+								"RisultatoRicerca.getDimensionePagina() = " + rr.getDimensionePagina());
+						pagoPaLogger
+								.debug("RisultatoRicerca.getNumeroPagina()     = " + rr.getNumeroPagina());
+						pagoPaLogger.debug("RisultatoRicerca.getItems().length     = "
+								+ (rr.getItems() != null ? rr.getItems().length : null));
 						pagamenti = rr.getItems();
 					}
 
 					if (pagamenti == null || pagamenti.length == 0) {
-					  if (lDebitore.getIuv()!=null && lDebitore.getIuv().length()>0) {
-	            pagoPaLogger.warn("Nessuna StatoRichiesta restituito per lo IUV " + lDebitore.getIuv());
-	            esitoEsecuzione = appendString(esitoEsecuzione,"\nNessuna StatoRichiesta restituita per lo IUV " + lDebitore.getIuv());
-					  } else {
-	            pagoPaLogger.warn("Nessuna StatoRichiesta restituito per il debitore " + codiceFiscale);
-	            esitoEsecuzione = appendString(esitoEsecuzione,"\nNessuna StatoRichiesta restituita per il debitore " + codiceFiscale);
-					  }					  
+						if (lDebitore.getIuv() != null && lDebitore.getIuv().length() > 0) {
+							pagoPaLogger.warn(
+									"Nessuna StatoRichiesta restituito per lo IUV " + lDebitore.getIuv());
+							esitoEsecuzione = appendString(esitoEsecuzione,
+									"\nNessuna StatoRichiesta restituita per lo IUV " + lDebitore.getIuv());
+						} else {
+							pagoPaLogger.warn(
+									"Nessuna StatoRichiesta restituito per il debitore " + codiceFiscale);
+							esitoEsecuzione = appendString(esitoEsecuzione,
+									"\nNessuna StatoRichiesta restituita per il debitore " + codiceFiscale);
+						}
 					} else {
 						// recupero in una sola transazione tutti i bollettini a carico del CF per poterli
 						// confrontare con quelli restituiti del WS
@@ -268,10 +276,11 @@ public class ConsultaPagamentiJob implements Job {
 									// caso aggiornare lo stato
 									// Recupero il pagamento per numero di avviso (NON CRS)
 									// tolgo il primo carattere (3)
-									String iuv = statoRichiesta.getNumeroAvviso().substring(1); 
+									String iuv = statoRichiesta.getNumeroAvviso().substring(1);
 									bollettinoSIES = lCtrlBollettini.ExRicercaBollettinoPagopaByIUV(iuv);
 									if (bollettinoSIES != null) {
-										if (ICostantiPagoPA.SIES_STATO_NON_PAGATO.equals(bollettinoSIES.getStatoPagamento())) {
+										if (ICostantiPagoPA.SIES_STATO_NON_PAGATO
+												.equals(bollettinoSIES.getStatoPagamento())) {
 											bollettinoSIES.setDataUltimoControllo(DateUtils.getSysDate());
 											bollettinoSIES.setCodOperatoreAggiornamento("BATCH");
 											bollettinoSIES.setCodUfficioAggiornamento("BATCH");
@@ -283,12 +292,16 @@ public class ConsultaPagamentiJob implements Job {
 											// MEV_2023-33 si storicizza l'esito ricevuto
 											try {
 												BollettinoBatchPagopaModel lBollBatchModel = new BollettinoBatchPagopaModel();
-												lBollBatchModel.setFkIdInvocazionePagopa(lInvocazioneModel.getIdInvocazionePagopa());
-												lBollBatchModel.setFkIdBollettinoPagopa(bollettinoSIES.getIdBollettinoPagopa());
-												lBollBatchModel.setFkIdBatchPagopa(lBatchModel.getIdBatchPagopa());
+												lBollBatchModel.setFkIdInvocazionePagopa(
+														lInvocazioneModel.getIdInvocazionePagopa());
+												lBollBatchModel.setFkIdBollettinoPagopa(
+														bollettinoSIES.getIdBollettinoPagopa());
+												lBollBatchModel
+														.setFkIdBatchPagopa(lBatchModel.getIdBatchPagopa());
 												lBollBatchModel.setStatoPagopa(statoRichiesta.getStato());
 
-												lCtrlInvocazione.ExInserisciBollettinoBatchPagopa(lBollBatchModel);
+												lCtrlInvocazione
+														.ExInserisciBollettinoBatchPagopa(lBollBatchModel);
 											} catch (Exception e) {
 												// Trattandosi di tracciatura non si blocca l'aggiornamento
 												pagoPaLogger.error(
@@ -297,13 +310,17 @@ public class ConsultaPagamentiJob implements Job {
 											}
 											// MEV_2023-33
 
-											if (statoRichiesta.getStato().equals(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE)) {
+											if (statoRichiesta.getStato()
+													.equals(ICostantiPagoPA.PAGOPA_STATO_DISPONIBILE)) {
 												// Il bollettino è stato pagato. Aggiorno opportunamente il
 												// campo; PA = Pagato
-												bollettinoSIES.setStatoPagamento(ICostantiPagoPA.SIES_STATO_PAGATO);
-												bollettinoSIES.setDataAvvPagamento(DateUtils.getDate(statoRichiesta.getDataRicevuta()));
+												bollettinoSIES
+														.setStatoPagamento(ICostantiPagoPA.SIES_STATO_PAGATO);
+												bollettinoSIES.setDataAvvPagamento(
+														DateUtils.getDate(statoRichiesta.getDataRicevuta()));
 												// verificare che sia l'importo veramente pagato
-												bollettinoSIES.setImportoPagato(BigDecimal.valueOf(statoRichiesta.getImporto()));
+												bollettinoSIES.setImportoPagato(
+														BigDecimal.valueOf(statoRichiesta.getImporto()));
 												contaNumBollettiniAggiornati++;
 											}
 											// else if
@@ -318,18 +335,22 @@ public class ConsultaPagamentiJob implements Job {
 											}
 
 											// Aggiorno il DB
-											pagoPaLogger.debug(" Aggiornamento stato pagamento con esito  "+ bollettinoSIES.getStatoPagamento());
-											lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(bollettinoSIES);
+											pagoPaLogger.debug(" Aggiornamento stato pagamento con esito  "
+													+ bollettinoSIES.getStatoPagamento());
+											lCtrlBollettini
+													.ExAggiornaStatoPagamentoBollettinoPagopa(bollettinoSIES);
 											pagoPaLogger.debug(" Aggiornamento effettuato");
 										}
 									} else {
-									  pagoPaLogger.warn("IUV non trovato = " + erroreInvocazione.length());
-									  erroreInvocazione += ((erroreInvocazione.length()>0 ? "\n" : "")+"warn iuv " + iuv + " non presente in banca dati");
-									  pagoPaLogger.warn("IUV non trovato erroreInvocazione " + erroreInvocazione);
+										pagoPaLogger.warn("IUV non trovato = " + erroreInvocazione.length());
+										erroreInvocazione += ((erroreInvocazione.length() > 0 ? "\n" : "")
+												+ "warn iuv " + iuv + " non presente in banca dati");
+										pagoPaLogger.warn(
+												"IUV non trovato erroreInvocazione " + erroreInvocazione);
 										pagoPaLogger.warn("Per il numero di avviso " + iuv
 												+ " non esiste alcuna posizione sulla tabella dei bollettini");
-										//esitoEsecuzione = appendString(esitoEsecuzione,
-										//		"\nwarn iuv " + iuv + " non presente in banca dati");
+										// esitoEsecuzione = appendString(esitoEsecuzione,
+										// "\nwarn iuv " + iuv + " non presente in banca dati");
 									}
 								} else {
 									pagoPaLogger.warn(
@@ -337,7 +358,7 @@ public class ConsultaPagamentiJob implements Job {
 								}
 							} catch (Exception e) {
 								pagoPaLogger.error("Exception", e);
-								//erroriEsecuzione = appendString(erroriEsecuzione, "\n" + e.getMessage());
+								// erroriEsecuzione = appendString(erroriEsecuzione, "\n" + e.getMessage());
 								// Errore sul singolo bollettino
 								if (bollettinoSIES != null) {
 									bollettinoSIES.setDataUltimoControllo(DateUtils.getSysDate());
@@ -346,7 +367,8 @@ public class ConsultaPagamentiJob implements Job {
 									bollettinoSIES.setCodUfficioAggiornamento("BATCH");
 									bollettinoSIES.setDataAggiornamento(DateUtils.getSysDate());
 
-									bollettinoSIES.setErrorePagopa("Errore in fase di verifica: " + e.getMessage());
+									bollettinoSIES
+											.setErrorePagopa("Errore in fase di verifica: " + e.getMessage());
 
 									lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(bollettinoSIES);
 								}
@@ -356,36 +378,38 @@ public class ConsultaPagamentiJob implements Job {
 				} catch (Exception e) {
 					contaNumBollettiniInErrore++;
 					String errore = "";
-					if (lDebitore.getIuv()!=null && lDebitore.getIuv().length()>0){
-		         pagoPaLogger.error(
-		              " Errore in fase di invocazine del WS PagoPA.elencoPagamenti per lo IUV = "
-		                  + lDebitore.getIuv(), e);
-		         errore = "Errore in fase di invocazine del WS PagoPA.elencoPagamenti per IUV = "
-		                  + lDebitore.getIuv();		         
+					if (lDebitore.getIuv() != null && lDebitore.getIuv().length() > 0) {
+						pagoPaLogger.error(
+								" Errore in fase di invocazine del WS PagoPA.elencoPagamenti per lo IUV = "
+										+ lDebitore.getIuv(),
+								e);
+						errore = "Errore in fase di invocazine del WS PagoPA.elencoPagamenti per IUV = "
+								+ lDebitore.getIuv();
 					} else {
-	          pagoPaLogger.error(
-	              " Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
-	                  + lDebitore.getCodiceFiscale(), e);
-	          errore = "Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
-	                  + lDebitore.getCodiceFiscale();
+						pagoPaLogger.error(
+								" Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
+										+ lDebitore.getCodiceFiscale(),
+								e);
+						errore = "Errore in fase di invocazine del WS PagoPA.elencoPagamenti per il Debitore: CF = "
+								+ lDebitore.getCodiceFiscale();
 					}
-					errore+="\n"+e.getMessage();
+					errore += "\n" + e.getMessage();
 					pagoPaLogger.error("Numero Bollettini in ERRORE = " + contaNumBollettiniInErrore);
+					pagoPaLogger.error("ERRORE = " + errore);
 
 					lInvocazioneModel.setErrore(e.getMessage());
 					lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
-				}
-				finally {
-				  if (erroreInvocazione.length()>0) {
-            lInvocazioneModel.setErrore(erroreInvocazione);
-            lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
-				  }
+				} finally {
+					if (erroreInvocazione.length() > 0) {
+						lInvocazioneModel.setErrore(erroreInvocazione);
+						lInvocazioneModel = lCtrlInvocazione.ExAggiornaInvocazionePagopa(lInvocazioneModel);
+					}
 				}
 			}
-			
-      esitoEsecuzione = "Batch terminato";
+
+			esitoEsecuzione = "Batch terminato";
 		} catch (Exception e) {
-		  esitoEsecuzione = "Batch terminato con ";
+			esitoEsecuzione = "Batch terminato con ";
 			pagoPaLogger.error("Errore in fase di esecuzione del job di consultazionePagamenti", e);
 			erroriEsecuzione = appendString(erroriEsecuzione,
 					"\nErrore in fase di esecuzione del job di consultazionePagamenti");
@@ -398,10 +422,10 @@ public class ConsultaPagamentiJob implements Job {
 				lBatchModel.setNumBollettiniAggiornati(new BigDecimal(contaNumBollettiniAggiornati));
 				lBatchModel.setNumErroriInvocazione(new BigDecimal(contaNumBollettiniInErrore));
 
-				if (contaNumBollettiniInErrore>0) {
-				  esitoEsecuzione = "Batch terminato con segnalazioni";
+				if (contaNumBollettiniInErrore > 0) {
+					esitoEsecuzione = "Batch terminato con segnalazioni";
 				}
-				
+
 				lBatchModel.setEsitoEsecuzione(esitoEsecuzione);
 				lBatchModel.setErroreEsecuzione(erroriEsecuzione);
 
@@ -419,77 +443,68 @@ public class ConsultaPagamentiJob implements Job {
 	/**
 	 *
 	 */
-/*	
-  private void checkBollettiniByIUV() {
-    
-    try {
-      int dayOffset = 0;
-
-      IBollettinoPagopa lCtrlBollettini = SIEPLookupRemote.getBollettinoPagopaRemote();
-
-      //Attenzione solo i bollettino con data scadenza passata
-      pagoPaLogger.debug(" Ricerca bollettini non pagati con offset = "+dayOffset);
-      Vector <BollettinoPagopaModel> lElencoBollettini = lCtrlBollettini.ExRicercaBollettinoPagopaNonPagati(dayOffset);
-      pagoPaLogger.debug(" Bollettini trovati = "+lElencoBollettini.size());
-
-      String endpointAddressSCPT = F3BProperties.getProperty("EAPPA_SCPT");
-      ServiziConsultazionePagamentiTelematiciBeanServiceLocator scptbsl = new ServiziConsultazionePagamentiTelematiciBeanServiceLocator();
-      scptbsl.setServiziConsultazionePagamentiTelematiciSOAPPortEndpointAddress(endpointAddressSCPT);
-      ServiziConsultazionePagamentiTelematici scpt = scptbsl.getServiziConsultazionePagamentiTelematiciSOAPPort();
-
-      for (int i=0;i<lElencoBollettini.size();i++) {
-        BollettinoPagopaModel lBollettino = lElencoBollettini.elementAt(i);
-
-        try {
-          pagoPaLogger.debug(" Inizio richiesta a pagaPa per il bollettino = "+lBollettino.getIdBollettinoPagopa()+" (IUV = "+lBollettino.getIuv()+")");
-
-          StatoRichiestaPagamento statoRichiesta = null;
-          statoRichiesta = scpt.getPagamentoByCRS(lBollettino.getIuv()); //NOOOOO
-
-          // Controllo lo stato
-          String statoPagamento = statoRichiesta.getStato();
-
-          // Quando entra la prima rata (da capire quale sarebbe) va registrata la data di pagamento, ma anche
-          // calcolata la data di scadenza delle successive rate collegate alla prima che scadono l'ultimo del
-          // mese a partir dal mese successivo alla data del pagamento della prima rata
-
-          // Se il bollettino risulta pagato devo registrare la data di pagamento del bollettino e calcolare
-          // la data di scadenza della rate successive
-
-          lBollettino.setStatoPagamento("NP");
-          lBollettino.setImportoPagato(null);
-          //lBollettino.set
-
-          //lBollettino.setDataUltimoControllo(DateUtils.getSysDate());
-
-          lBollettino.setCodOperatoreAggiornamento("BATCH");
-          lBollettino.setCodUfficioAggiornamento("");
-          lBollettino.setDataAggiornamento (DateUtils.getSysDate());
-
-          pagoPaLogger.debug(" Aggiornamento stato pagamento con esito "+lBollettino.getStatoPagamento());
-          lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(lBollettino);
-          pagoPaLogger.debug(" Aggiornamento effettuato");
-        }
-        catch (Exception e) {
-          pagoPaLogger.error(" Errore in fase di invocazine del WS PagoPA per il bollettino: id = "+lBollettino.getIdBollettinoPagopa()+" (IUV = "+lBollettino.getIuv()+")" );
-          lBollettino.setStatoPagamento("NP");
-          lBollettino.setDataUltimoControllo(DateUtils.getSysDate());
-
-          lBollettino.setCodOperatoreAggiornamento("BATCH");
-          lBollettino.setCodUfficioAggiornamento("");
-          lBollettino.setDataAggiornamento (DateUtils.getSysDate());
-          // Prevedere un campo per l'errore (esito)
-
-          lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(lBollettino);
-        }
-      } // end for
-    }
-    catch (Exception e) {
-      pagoPaLogger.error("Errore in fase di esecuzione del job di consultazionePagamenti",e);
-    }
-
-  }
-*/
+	/*
+	 * private void checkBollettiniByIUV() {
+	 * 
+	 * try { int dayOffset = 0;
+	 * 
+	 * IBollettinoPagopa lCtrlBollettini = SIEPLookupRemote.getBollettinoPagopaRemote();
+	 * 
+	 * //Attenzione solo i bollettino con data scadenza passata
+	 * pagoPaLogger.debug(" Ricerca bollettini non pagati con offset = "+dayOffset); Vector
+	 * <BollettinoPagopaModel> lElencoBollettini =
+	 * lCtrlBollettini.ExRicercaBollettinoPagopaNonPagati(dayOffset);
+	 * pagoPaLogger.debug(" Bollettini trovati = "+lElencoBollettini.size());
+	 * 
+	 * String endpointAddressSCPT = F3BProperties.getProperty("EAPPA_SCPT");
+	 * ServiziConsultazionePagamentiTelematiciBeanServiceLocator scptbsl = new
+	 * ServiziConsultazionePagamentiTelematiciBeanServiceLocator();
+	 * scptbsl.setServiziConsultazionePagamentiTelematiciSOAPPortEndpointAddress(endpointAddressSCPT);
+	 * ServiziConsultazionePagamentiTelematici scpt =
+	 * scptbsl.getServiziConsultazionePagamentiTelematiciSOAPPort();
+	 * 
+	 * for (int i=0;i<lElencoBollettini.size();i++) { BollettinoPagopaModel lBollettino =
+	 * lElencoBollettini.elementAt(i);
+	 * 
+	 * try {
+	 * pagoPaLogger.debug(" Inizio richiesta a pagaPa per il bollettino = "+lBollettino.getIdBollettinoPagopa(
+	 * )+" (IUV = "+lBollettino.getIuv()+")");
+	 * 
+	 * StatoRichiestaPagamento statoRichiesta = null; statoRichiesta =
+	 * scpt.getPagamentoByCRS(lBollettino.getIuv()); //NOOOOO
+	 * 
+	 * // Controllo lo stato String statoPagamento = statoRichiesta.getStato();
+	 * 
+	 * // Quando entra la prima rata (da capire quale sarebbe) va registrata la data di pagamento, ma anche //
+	 * calcolata la data di scadenza delle successive rate collegate alla prima che scadono l'ultimo del //
+	 * mese a partir dal mese successivo alla data del pagamento della prima rata
+	 * 
+	 * // Se il bollettino risulta pagato devo registrare la data di pagamento del bollettino e calcolare //
+	 * la data di scadenza della rate successive
+	 * 
+	 * lBollettino.setStatoPagamento("NP"); lBollettino.setImportoPagato(null); //lBollettino.set
+	 * 
+	 * //lBollettino.setDataUltimoControllo(DateUtils.getSysDate());
+	 * 
+	 * lBollettino.setCodOperatoreAggiornamento("BATCH"); lBollettino.setCodUfficioAggiornamento("");
+	 * lBollettino.setDataAggiornamento (DateUtils.getSysDate());
+	 * 
+	 * pagoPaLogger.debug(" Aggiornamento stato pagamento con esito "+lBollettino.getStatoPagamento());
+	 * lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(lBollettino);
+	 * pagoPaLogger.debug(" Aggiornamento effettuato"); } catch (Exception e) {
+	 * pagoPaLogger.error(" Errore in fase di invocazine del WS PagoPA per il bollettino: id = "+lBollettino.
+	 * getIdBollettinoPagopa()+" (IUV = "+lBollettino.getIuv()+")" ); lBollettino.setStatoPagamento("NP");
+	 * lBollettino.setDataUltimoControllo(DateUtils.getSysDate());
+	 * 
+	 * lBollettino.setCodOperatoreAggiornamento("BATCH"); lBollettino.setCodUfficioAggiornamento("");
+	 * lBollettino.setDataAggiornamento (DateUtils.getSysDate()); // Prevedere un campo per l'errore (esito)
+	 * 
+	 * lCtrlBollettini.ExAggiornaStatoPagamentoBollettinoPagopa(lBollettino); } } // end for } catch
+	 * (Exception e) { pagoPaLogger.error("Errore in fase di esecuzione del job di consultazionePagamenti",e);
+	 * }
+	 * 
+	 * }
+	 */
 	private String appendString(String stringa, String strToAppend) {
 
 		int maxLength = 2000;
