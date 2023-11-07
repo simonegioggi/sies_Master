@@ -41,6 +41,7 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
 				+ " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO, BP.STATO_PAGOPA,"
 				+ " BP.ERRORE_PAGOPA," + " BP.DATA_GENERAZIONE_BOLLETTINO, "
+				+ " '' as ID_INVOCAZIONE_PAGOPA, "
 				+ " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO"
 				+ " FROM BOLLETTINO_PAGOPA BP"
 				+ " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE"
@@ -91,6 +92,9 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		aModel.setCodiceDistretto(getString("CODICE_DISTRETTO"));
 		aModel.setDataGenerazioneBollettino(getDate("DATA_GENERAZIONE_BOLLETTINO"));
 
+		aModel.setIdInvocazionePagopa(getBigDecimal("ID_INVOCAZIONE_PAGOPA"));
+		
+		
 		return aModel;
 	}
 
@@ -291,7 +295,8 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 				+ " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO"
 				// Sostituiso lo STATO_PAGOPA ultimo memorizzato sul bollettino con il dato storicizzato sulla
 				// BOLLETTINO_BATCH_PAGOPA
-				+ ", BOLLETTINO_BATCH_PAGOPA.STATO_PAGOPA, " + " BP.ERRORE_PAGOPA,"
+				+ ", BOLLETTINO_BATCH_PAGOPA.STATO_PAGOPA, " + " BP.ERRORE_PAGOPA," 
+				+ " '' as ID_INVOCAZIONE_PAGOPA, "
 				+ " BP.DATA_GENERAZIONE_BOLLETTINO, "
 				+ " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO ";
 
@@ -320,4 +325,89 @@ public class BollettinoPagopaSqlDAO extends SIAPSqlDAO {
 		setStatement(s);
 	}
 
+	
+	public void ricercaBollettiniSenzaCFConPosizioniAperte(int inScadenzaTraGiorni, int controllateDaGiorni,
+			int generatiDaGiorni, int controllarePerGiorni) throws DAOException {
+
+    String s = "SELECT BP.ID_BOLLETTINO_PAGOPA, BP.PROG_RATA, BP.NUMERO_RATE,"
+        + " BP.TIPO_RATEIZZAZIONE, BP.IUV, BP.IMPORTO_RATA, BP.IMPORTO_PAGATO,"
+        + " BP.DATA_AVV_PAGAMENTO, BP.DATA_SCADENZA, BP.DATA_SCADENZA_RICH,"
+        + " BP.STATO_PAGAMENTO, BP.COD_OPERATORE_INSERIMENTO,"
+        + " BP.DATA_INSERIMENTO, BP.COD_UFFICIO_INSERIMENTO,"
+        + " BP.COD_OPERATORE_AGGIORNAMENTO, BP.DATA_AGGIORNAMENTO,"
+        + " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
+        + " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO, BP.STATO_PAGOPA,"
+        + " BP.ERRORE_PAGOPA, BP.DATA_GENERAZIONE_BOLLETTINO, "
+        + " '' as DESCR_TIPO_RATEIZZAZIONE, '' as ID_INVOCAZIONE_PAGOPA, "
+        + " '' as DESCR_STATO_PAGAMENTO "
+        + " FROM BOLLETTINO_PAGOPA BP" ;
+	  s += " WHERE 1 = 1 ";
+		s += " AND CODICE_FISCALE IS NULL "; // Solo i Bollettini provi di Codice Fiscale
+		s += " AND IUV IS NOT NULL "; // Bollettino generato
+		s += " AND STATO_PAGAMENTO = 'PN' "; // PN = NON PAGATO
+
+		if (inScadenzaTraGiorni > 0) {
+			s += " AND (    DATA_SCADENZA BETWEEN (SYSDATE - " + inScadenzaTraGiorni + ")";
+			s += " AND (SYSDATE + " + inScadenzaTraGiorni + ")";
+			if (generatiDaGiorni > 0 && controllarePerGiorni > 0) {
+				s += " OR (    DATA_SCADENZA IS NULL ";
+				s += " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + ") ";
+				s += " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + " + "
+						+ controllarePerGiorni + " ) ";
+				s += " )";
+			}
+			s += ")";
+		} else if (inScadenzaTraGiorni == 0 && generatiDaGiorni > 0 && controllarePerGiorni > 0) {
+			// In assenza del vincolo sulla data scadenza posso usare comunque il vincolo
+			// sulla DATA_GENERAZIONE_BOLLETTINO.
+			// n.b. anche in presenza della data scadenza sul bollettino.
+			s += " AND SYSDATE >= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + ") ";
+			s += " AND SYSDATE <= (DATA_GENERAZIONE_BOLLETTINO + " + generatiDaGiorni + " + "
+					+ controllarePerGiorni + " ) ";
+		}
+
+		if (controllateDaGiorni > 0) {
+			s += " AND DATA_ULTIMO_CONTROLLO < (SYSDATE-" + controllateDaGiorni + ")";
+		}
+		setStatement(s);
+
+		// info per il log
+		pagoPaLogger.info("Query >>>>>>>>> " + s);
+	}
+	
+  public void ricercaBollettiniPagopaByIdBatch(BigDecimal idBatch) throws DAOException {
+
+    String lStatement = new String("");
+
+    lStatement += "SELECT BP.ID_BOLLETTINO_PAGOPA, BP.PROG_RATA, BP.NUMERO_RATE,"
+        + " BP.TIPO_RATEIZZAZIONE, BP.IUV, BP.IMPORTO_RATA, BP.IMPORTO_PAGATO,"
+        + " BP.DATA_AVV_PAGAMENTO, BP.DATA_SCADENZA, BP.DATA_SCADENZA_RICH,"
+        + " BP.STATO_PAGAMENTO, BP.COD_OPERATORE_INSERIMENTO,"
+        + " BP.DATA_INSERIMENTO, BP.COD_UFFICIO_INSERIMENTO,"
+        + " BP.COD_OPERATORE_AGGIORNAMENTO, BP.DATA_AGGIORNAMENTO,"
+        + " BP.COD_UFFICIO_AGGIORNAMENTO, BP.FAS_SIE_ID_FASCICOLO_SIEP, BP.RAT_ID_RATEIZZAZIONE_PP,"
+        + " BP.CODICE_DISTRETTO, BP.CODICE_FISCALE, BP.DATA_ULTIMO_CONTROLLO"
+        // Sostituiso lo STATO_PAGOPA ultimo memorizzato sul bollettino con il dato storicizzato sulla
+        // BOLLETTINO_BATCH_PAGOPA
+        + ", BOLLETTINO_BATCH_PAGOPA.STATO_PAGOPA, " + " BP.ERRORE_PAGOPA,"
+        + " BP.DATA_GENERAZIONE_BOLLETTINO, "
+        + " INVOCAZIONE_PAGOPA.ID_INVOCAZIONE_PAGOPA, "
+        + " TR.RV_MEANING DESCR_TIPO_RATEIZZAZIONE, SP.RV_MEANING DESCR_STATO_PAGAMENTO ";
+
+    lStatement += " FROM BOLLETTINO_PAGOPA BP"
+        + " LEFT OUTER JOIN CG_REF_CODES TR ON (BP.TIPO_RATEIZZAZIONE = TR.RV_LOW_VALUE "
+        + " AND TR.RV_DOMAIN = 'TIPO_RATEIZZAZIONE') "
+        + " LEFT OUTER JOIN CG_REF_CODES SP ON (BP.STATO_PAGAMENTO = SP.RV_LOW_VALUE "
+        + " AND SP.RV_DOMAIN = 'STATO_PAGAMENTO') " + " , BOLLETTINO_BATCH_PAGOPA,  INVOCAZIONE_PAGOPA  ";
+
+    lStatement += " WHERE 1 = 1";
+    lStatement += " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_BOLLETTINO_PAGOPA = BP.ID_BOLLETTINO_PAGOPA ";
+    lStatement += " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_INVOCAZIONE_PAGOPA = INVOCAZIONE_PAGOPA.ID_INVOCAZIONE_PAGOPA ";
+    //lStatement += " AND BOLLETTINO_BATCH_PAGOPA.FK_ID_INVOCAZIONE_PAGOPA = " + idInvocazione;
+    lStatement += " AND INVOCAZIONE_PAGOPA.FK_ID_BATCH = " + idBatch;
+
+    lStatement += " ORDER BY INVOCAZIONE_PAGOPA.ID_INVOCAZIONE_PAGOPA, BP.PROG_RATA ";
+
+    setStatement(lStatement);
+  }	
 }

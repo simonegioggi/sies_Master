@@ -607,4 +607,52 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 		return lListaBollettini;
 	}
 
+	/**
+	 * Recupera i debitori che hanno almeno un bollettino in scadenza indicando il numero di giorni rimanenti
+	 * alla scadenza
+	 *
+	 * @param inScadenzaTraGiorni
+	 *            - numero di giorni alla acdenza. Se 0 nessun controllo sulla scadenza
+	 * @param controllateDaGiorni
+	 *            - il numero di gg passatoi dall'ultimo controllo. Se 0 nessun vincolo.
+	 * @return
+	 * @throws F3BException
+	 */
+	public Vector<BollettinoPagopaModel> ExRicercaBollettiniSenzaCFConPosizioniAperte (
+			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni)
+			throws F3BException {
+		Connection c = null;
+		Vector<BollettinoPagopaModel> coms = new Vector<>();
+
+		BollettinoPagopaSqlDAO bppaSqldao = null;
+
+		try {
+			c = getDBConnection();
+			bppaSqldao = new BollettinoPagopaSqlDAO(c);
+
+			bppaSqldao.ricercaBollettiniSenzaCFConPosizioniAperte(inScadenzaTraGiorni, controllateDaGiorni,
+					generatiDaGiorni, controllarePerGiorni);
+
+			bppaSqldao.start();
+
+			while (bppaSqldao.next()) {
+				BollettinoPagopaModel com = (BollettinoPagopaModel) bppaSqldao.getModel();
+				coms.add(com);
+			}
+			bppaSqldao.stop();
+		} catch (DAOException daoEx) {
+			siesLogger.error("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte:", daoEx);
+			throw new F3BException(
+					"BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte: Non posso leggere : "
+							+ daoEx);
+		} catch (Exception e) {
+			siesLogger.error("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte:", e);
+			throw new F3BException("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte: " + e);
+		} finally {
+			cleanup(bppaSqldao);
+			cleanup(c);
+		}
+
+		return coms;
+	}
 }

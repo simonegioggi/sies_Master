@@ -2,12 +2,16 @@ package siap.siep.pagoPaBatch.dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Calendar;
+import java.util.Date;
 
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
+import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
 import siap.dao.SIAPSqlDAO;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+import siap.siep.pagoPaBatch.model.CriteriRicercaBatchPagopaModel;
 
 public class BatchPagopaSqlDAO extends SIAPSqlDAO {
     public BatchPagopaSqlDAO(Connection con) {
@@ -19,7 +23,7 @@ public class BatchPagopaSqlDAO extends SIAPSqlDAO {
 
         lStatement += " SELECT ID_BATCH_PAGOPA, "
                            + " DATA_INIZIO_ESECUZIONE, DATA_FINE_ESECUZIONE, "
-                           + " NUM_POS_DEBITORIE_VERIFICATE, NUM_BOLLETTINI_AGGIORNATI, "
+                           + " NUM_POS_DEBITORIE_VERIFICATE, NUM_IUV_VERIFICATI, NUM_BOLLETTINI_AGGIORNATI, NUM_ERRORI_INVOCAZIONE, "
                            + " ESITO_ESECUZIONE, ERRORE_ESECUZIONE "; 
         lStatement += " FROM BATCH_PAGOPA";
         lStatement += " WHERE 1=1 ";
@@ -38,7 +42,9 @@ public class BatchPagopaSqlDAO extends SIAPSqlDAO {
         aModel.setDataInizioEsecuzione      (getDate("DATA_INIZIO_ESECUZIONE"));
         aModel.setDataFineEsecuzione        (getDate("DATA_FINE_ESECUZIONE"));
         aModel.setNumPosDebitorieVerificate (getBigDecimal("NUM_POS_DEBITORIE_VERIFICATE"));
+        aModel.setNumIUVVerificati          (getBigDecimal("NUM_IUV_VERIFICATI"));
         aModel.setNumBollettiniAggiornati   (getBigDecimal("NUM_BOLLETTINI_AGGIORNATI"));
+        aModel.setNumErroriInvocazione      (getBigDecimal("NUM_ERRORI_INVOCAZIONE"));
         aModel.setEsitoEsecuzione           (getString("ESITO_ESECUZIONE"));
         aModel.setErroreEsecuzione          (getString("ERRORE_ESECUZIONE"));
 
@@ -54,8 +60,13 @@ public class BatchPagopaSqlDAO extends SIAPSqlDAO {
     }
     
     
-    public void ricercaEsecuzioneBatchPaged (BatchPagopaModel aModel, int aPage) throws DAOException {
+    public void ricercaEsecuzioneBatchPaged (CriteriRicercaBatchPagopaModel aCriteriModel, int aPage) throws DAOException {
         String lSql = getSqlQuery();
+        
+        if(aCriteriModel.getDataInizioEsecuzioneDal()!=null)
+          lSql += " AND DATA_INIZIO_ESECUZIONE >= TO_DATE ('"+DateUtils.getDateToString(aCriteriModel.getDataInizioEsecuzioneDal(),"dd/MM/yyyy")+" 00:00:00','dd/MM/yyyy hh24:mi:ss') ";
+        if(aCriteriModel.getDataInizioEsecuzioneAl()!=null)
+          lSql += " AND DATA_INIZIO_ESECUZIONE <= TO_DATE ('"+DateUtils.getDateToString(aCriteriModel.getDataInizioEsecuzioneAl(),"dd/MM/yyyy")+" 23:59:59','dd/MM/yyyy hh24:mi:ss') ";
         
         lSql += " ORDER BY ID_BATCH_PAGOPA DESC";
         

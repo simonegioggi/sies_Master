@@ -109,6 +109,24 @@ public class InvocazionePagopaController extends SiapController implements IInvo
 			listaInvocazioni = new Vector<InvocazionePagopaModel>(lInvocazioneSqlDao.getModels());
 
 			lBollettinoSqlDao = new BollettinoPagopaSqlDAO(conn);
+			// TEST
+			lBollettinoSqlDao.ricercaBollettiniPagopaByIdBatch(aIdBatchPagopa);
+      Vector<BollettinoPagopaModel> listaBollettini = new Vector<BollettinoPagopaModel>(
+          lBollettinoSqlDao.getModels());
+			
+      for (int i = 0; i < listaInvocazioni.size(); i++) {
+        InvocazionePagopaModel invocazioneModel = listaInvocazioni.elementAt(i);
+        Vector<BollettinoPagopaModel> listaBollettiniInv = new Vector<BollettinoPagopaModel>();
+        for (BollettinoPagopaModel bollettino : listaBollettini) {
+          if (bollettino.getIdInvocazionePagopa().compareTo(invocazioneModel.getIdInvocazionePagopa())==0)
+            listaBollettiniInv.add(bollettino);          
+        }
+        invocazioneModel.setListaBollettini(listaBollettiniInv);
+      }
+      
+
+			
+      /*
 			for (int i = 0; i < listaInvocazioni.size(); i++) {
 				InvocazionePagopaModel invocazioneModel = listaInvocazioni.elementAt(i);
 
@@ -120,6 +138,7 @@ public class InvocazionePagopaController extends SiapController implements IInvo
 				invocazioneModel.setListaBollettini(listaBollettini);
 				lBollettinoSqlDao.stop();
 			}
+			*/
 
 		} catch (DAOException ex) {
 			siesLogger.error("DAOException", ex);

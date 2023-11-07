@@ -29,6 +29,15 @@ public interface ICostantiBatchPagoPa {
     public static final String STATO_SCHEDULATO = "Schedulato";
     public static final String STATO_ERRORE     = "Errore";
     
+    public static final String CAMPO_GIORNO_ESECUZIONE_INIZIALE = "GiornoEsecuzioneIniziale";
+    public static final String CAMPO_MESE_ESECUZIONE_INIZIALE = "MeseEsecuzioneIniziale";
+    public static final String CAMPO_ANNO_ESECUZIONE_INIZIALE = "AnnoEsecuzioneIniziale";
+
+    public static final String CAMPO_GIORNO_ESECUZIONE_FINALE = "GiornoEsecuzioneFinale";
+    public static final String CAMPO_MESE_ESECUZIONE_FINALE = "MeseEsecuzioneFinale";
+    public static final String CAMPO_ANNO_ESECUZIONE_FINALE = "AnnoEsecuzioneFinale";    
+    
+    
     public static final String PG_LOAD_DETTAGLIO_BATCH_PAGOPA = IWebConstants.ROOT_DIR
             + "files/siap/siep/pagoPABatch/LoadDettaglioBatchPagoPA.jsp";
     

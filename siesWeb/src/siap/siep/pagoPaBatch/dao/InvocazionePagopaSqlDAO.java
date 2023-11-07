@@ -76,7 +76,7 @@ public class InvocazionePagopaSqlDAO extends SIAPSqlDAO {
         
         lSql += " AND FK_ID_BATCH = "+aIdBatch;
         
-        lSql += " ORDER BY FK_ID_BATCH";
+        lSql += " ORDER BY ID_INVOCAZIONE_PAGOPA ";
 
         
 		if (aPage > 0) {

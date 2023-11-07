@@ -13,6 +13,7 @@ import siap.controller.SiapController;
 import siap.siep.pagoPaBatch.dao.BatchPagopaDAO;
 import siap.siep.pagoPaBatch.dao.BatchPagopaSqlDAO;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+import siap.siep.pagoPaBatch.model.CriteriRicercaBatchPagopaModel;
 
 /**
  * Batch per PagoPA
@@ -130,7 +131,7 @@ public class BatchPagopaController extends SiapController implements IBatchPagop
 	}
 
 	@SuppressWarnings("unchecked")
-	public Vector<BatchPagopaModel> ExRecuperaLancioBatchPagopa(BatchPagopaModel aBatchModel, int aPage)
+	public Vector<BatchPagopaModel> ExRecuperaLancioBatchPagopa(CriteriRicercaBatchPagopaModel criteriModel, int aPage)
 			throws F3BException {
 
 		Vector<BatchPagopaModel> listaLanci = null;
@@ -142,9 +143,7 @@ public class BatchPagopaController extends SiapController implements IBatchPagop
 
 			batchSqlDao = new BatchPagopaSqlDAO(conn);
 
-			batchSqlDao.ricercaEsecuzioneBatch(aBatchModel);
-
-			batchSqlDao.ricercaEsecuzioneBatchPaged(aBatchModel, aPage);
+			batchSqlDao.ricercaEsecuzioneBatchPaged(criteriModel, aPage);
 
 			listaLanci = new Vector<BatchPagopaModel>(batchSqlDao.getModels());
 

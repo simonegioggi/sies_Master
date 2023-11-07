@@ -12,6 +12,7 @@
 <jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
 
 <jsp:useBean id="listaLanciJob"        scope="request" class="java.util.Vector" />
+<jsp:useBean id="CriteriRicerca"       scope="request" class="siap.siep.pagoPaBatch.model.CriteriRicercaBatchPagopaModel" />
 <jsp:useBean id="ConsultaPagamentiJob" scope="request" class="siap.siep.pagoPaBatch.model.QuartzJobModel" />
 
 
@@ -23,10 +24,38 @@
   <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
   <script language="JavaScript" src="/html/ControllaData.js"></script>
   <script language="JavaScript">
-    function Verify()
+  function Verify()
+  {
+    // validazione delle date
+    var data_inizio = document.dettaglioBatchPagoPa.<%=ICostantiBatchPagoPa.CAMPO_GIORNO_ESECUZIONE_INIZIALE%>.value
+                +'/'+ document.dettaglioBatchPagoPa.<%=ICostantiBatchPagoPa.CAMPO_MESE_ESECUZIONE_INIZIALE%>.value
+                +'/'+ document.dettaglioBatchPagoPa.<%=ICostantiBatchPagoPa.CAMPO_ANNO_ESECUZIONE_INIZIALE%>.value;
+    var data_fine = document.dettaglioBatchPagoPa.<%=ICostantiBatchPagoPa.CAMPO_GIORNO_ESECUZIONE_FINALE%>.value
+              +'/'+ document.dettaglioBatchPagoPa.<%=ICostantiBatchPagoPa.CAMPO_MESE_ESECUZIONE_FINALE%>.value
+              +'/'+ document.dettaglioBatchPagoPa.<%=ICostantiBatchPagoPa.CAMPO_ANNO_ESECUZIONE_FINALE%>.value;
+    
+    if (!ControllaDataPassaVuota(data_inizio))
     {
-      return true;
-    }
+      alert('Data Esecuzione iniziale non valida');
+      return false;
+    }      
+    
+    if (!ControllaDataPassaVuota(data_fine))
+    {
+      alert('Data Esecuzione Finale non valida');
+      return false;
+    }  
+
+    if (   data_inizio != '//' && data_fine != '//' 
+        && !CompareDate(data_inizio, data_fine) 
+       )
+    {
+      alert("La Data di fine non puo' essere inferiore alla data di inizio");
+      return false;
+    }   
+    
+    return true;
+  }
     
   </script>
   <style>
@@ -39,8 +68,8 @@
 
 <body class="corpo">
 
-  <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="dettagllioBatchPagoPa">
-    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="[da definire]">
+  <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="dettaglioBatchPagoPa">
+    <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPaBatch.action.ActVisualizzaBatchPagoPa">
 
     <table>
       <tr>
@@ -81,6 +110,50 @@
       </tr>
     </table>
 <% } %>  
+
+    <br>
+    <table width="50%">
+      <tr>
+        <td class="l" >
+          Data Esecuzione Iniziale:&nbsp;&nbsp;
+          <font class="l">
+            <input type="text" maxlength="2" size="2"  title="Giorno Esecuzione Iniziale"                    
+                   name="<%=ICostantiBatchPagoPa.CAMPO_GIORNO_ESECUZIONE_INIZIALE%>" 
+                   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInizioEsecuzioneDal(),"dd"),"")%>"
+                   onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            /
+            <input type="text" maxlength="2" size="2" title="Mese Esecuzione Iniziale"             
+                   name="<%=ICostantiBatchPagoPa.CAMPO_MESE_ESECUZIONE_INIZIALE%>" 
+                   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInizioEsecuzioneDal(),"MM"),"")%>"
+                   onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            /
+            <input type="text" maxlength="4" size="4"  title="Anno Esecuzione Iniziale" 
+                   name="<%=ICostantiBatchPagoPa.CAMPO_ANNO_ESECUZIONE_INIZIALE%>" 
+                   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInizioEsecuzioneDal(),"yyyy"),"")%>"
+                   onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
+          </font>
+          Data Esecuzione Finale:&nbsp;&nbsp;
+          <font class="l">
+            <input type="text" maxlength="2" size="2" title="Giorno Esecuzione Finale" 
+                   name="<%=ICostantiBatchPagoPa.CAMPO_GIORNO_ESECUZIONE_FINALE%>"  
+                   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInizioEsecuzioneAl(),"dd"),"")%>"
+                   onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            /
+            <input type="text" maxlength="2" size="2" title="Mese Esecuzione Finale" 
+                   name="<%=ICostantiBatchPagoPa.CAMPO_MESE_ESECUZIONE_FINALE%>" 
+                   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInizioEsecuzioneAl(),"MM"),"")%>"
+                   onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)">
+            /
+            <input type="text" maxlength="4" size="4" title="Anno Esecuzione Finale" 
+                   name="<%=ICostantiBatchPagoPa.CAMPO_ANNO_ESECUZIONE_FINALE%>"
+                   value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInizioEsecuzioneAl(),"yyyy"),"")%>"
+                   onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)">
+          </font>
+          &nbsp;&nbsp;<input type="submit" class="bottone"  name="RICERCA" value="Ricerca">
+        </td>
+      </tr>
+    </table>        
+    
     
     <br>        
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
@@ -95,8 +168,10 @@
         <td class="int">Avviato</td>
         <td class="int">Terminato</td>
         <td class="int">Tempo di Esecuzione<br>hh:mm:ss</td>
-        <td class="int">Posizioni Verificate</td>
-        <td class="int">Bollettini Aggiornati</td>
+        <td class="int" title="Interrogazioni per Codice Fiscale">Posizioni Verificate</td>
+        <td class="int" title="Interrogazioni per IUV per i Bollettini privi di Codice Fiscale">IUV Verificati</td>
+        <td class="int" title="Bollettini aggiornati in stato Pagato">Bollettini Pagati</td>
+        <td class="int">Errori Invocazione</td>
         <td class="int">Esito</td>
         <td class="int">Errori</td>
         <td class="int">Azioni</td>
@@ -120,14 +195,20 @@
         String errore = batchModel.getErroreEsecuzione();
         if (errore!=null && errore.length()>maxLength)
           errore = errore.substring(0,maxLength);
+        
+        String colorErr= "";
+        if (batchModel.getNumErroriInvocazione()!=null && batchModel.getNumErroriInvocazione().intValue()>0)
+          colorErr = " style='color:red;' ";
       %>
       <tr <%=test %> >
         <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(batchModel.getDataInizioEsecuzione(),"dd-MM-yyyy - HH:mm:ss"),"")%></td>
         <td class="c"><%=StringUtils.toStringJSP(DateUtils.getDateToString(batchModel.getDataFineEsecuzione(),"dd-MM-yyyy - HH:mm:ss") ,"")%></td>
         <td class="c"><%=StringUtils.toStringJSP(batchModel.getDurataAsString(),"")%></td>
         <td class="c"><%=StringUtils.toStringJSP(batchModel.getNumPosDebitorieVerificate(),"n.d.")%></td>
+        <td class="c"><%=StringUtils.toStringJSP(batchModel.getNumIUVVerificati(),"n.d.")%></td>
         <td class="c"><%=StringUtils.toStringJSP(batchModel.getNumBollettiniAggiornati(),"n.d.")%></td>
-        <td class="c"><%=StringUtils.toStringJSP(esito,"&nbsp;")%></td>
+        <td class="c" <%=colorErr%> ><%=StringUtils.toStringJSP(batchModel.getNumErroriInvocazione(),"n.d.")%></td>
+        <td class="c" <%=colorErr%> ><%=StringUtils.toStringJSP(esito,"&nbsp;")%></td>
         <td class="c"><%=StringUtils.toStringJSP(errore,"&nbsp;")%></td>
         <td class="c">
           <a  href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPaBatch.action.ActLoadDettaglioEsecuzioneBatchPagoPa&<%=ICostantiBatchPagoPa.CAMPO_ID_BATCH_PAGOPA%>=<%=batchModel.getIdBatchPagopa()%>">
@@ -145,7 +226,7 @@
 
  <script language="JavaScript" type="text/javascript">
 
-  var frmvalidator  = new Validator("dettagllioBatchPagoPa");
+  var frmvalidator  = new Validator("dettaglioBatchPagoPa");
   
   frmvalidator.setAddnlValidationFunction("Verify");
   </script>

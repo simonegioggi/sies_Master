@@ -44,6 +44,10 @@ public interface IBollettinoPagopa {
 			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni)
 			throws F3BException;
 
+	public Vector<BollettinoPagopaModel> ExRicercaBollettiniSenzaCFConPosizioniAperte (
+			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni)
+			throws F3BException;	
+	
 	public BollettinoPagopaModel ExRicercaBollettinoPagopaByIUV(String codiceCRS) throws F3BException;
 
 	// MEV_2023-33

@@ -24,7 +24,9 @@ public class BatchPagopaModel extends GenericModel {
 	private Date mDataInizioEsecuzione;
 	private Date mDataFineEsecuzione;
 	private BigDecimal mNumPosDebitorieVerificate;
+	private BigDecimal mNumIUVVerificati;
 	private BigDecimal mNumBollettiniAggiornati;
+	private BigDecimal mNumErroriInvocazione;
 
 	private String mEsitoEsecuzione;
 	private String mErroreEsecuzione;
@@ -35,7 +37,9 @@ public class BatchPagopaModel extends GenericModel {
 		this.mDataInizioEsecuzione = null;
 		this.mDataFineEsecuzione = null;
 		this.mNumPosDebitorieVerificate = null;
+		this.mNumIUVVerificati = null;
 		this.mNumBollettiniAggiornati = null;
+		this.mNumErroriInvocazione = null;
 		this.mEsitoEsecuzione = null;
 		this.mErroreEsecuzione = null;
 	}
@@ -47,7 +51,9 @@ public class BatchPagopaModel extends GenericModel {
 		this.mDataInizioEsecuzione = aModel.mDataInizioEsecuzione;
 		this.mDataFineEsecuzione = aModel.mDataFineEsecuzione;
 		this.mNumPosDebitorieVerificate = aModel.mNumPosDebitorieVerificate;
+		this.mNumIUVVerificati = aModel.mNumIUVVerificati;
 		this.mNumBollettiniAggiornati = aModel.mNumBollettiniAggiornati;
+		this.mNumErroriInvocazione = aModel.mNumErroriInvocazione;
 		this.mEsitoEsecuzione = aModel.mEsitoEsecuzione;
 		this.mErroreEsecuzione = aModel.mErroreEsecuzione;
 	}
@@ -82,10 +88,18 @@ public class BatchPagopaModel extends GenericModel {
 	public BigDecimal getNumPosDebitorieVerificate() {
 		return mNumPosDebitorieVerificate;
 	}
-
+	
+  public BigDecimal getNumIUVVerificati() {
+    return mNumIUVVerificati;
+  }
+  
 	public BigDecimal getNumBollettiniAggiornati() {
 		return mNumBollettiniAggiornati;
 	}
+	
+	public BigDecimal getNumErroriInvocazione() {
+	    return mNumErroriInvocazione;
+	}	
 
 	public String getEsitoEsecuzione() {
 		return mEsitoEsecuzione;
@@ -111,11 +125,19 @@ public class BatchPagopaModel extends GenericModel {
 	public void setNumPosDebitorieVerificate(BigDecimal mNumPosDebitorieVerificate) {
 		this.mNumPosDebitorieVerificate = mNumPosDebitorieVerificate;
 	}
-
+	
+  public void setNumIUVVerificati(BigDecimal mNumIUVVerificati) {
+    this.mNumIUVVerificati = mNumIUVVerificati;
+  }
+  
 	public void setNumBollettiniAggiornati(BigDecimal mNumBollettiniAggiornati) {
 		this.mNumBollettiniAggiornati = mNumBollettiniAggiornati;
 	}
 
+	public void setNumErroriInvocazione (BigDecimal mNumErroriInvocazione) {
+	  this.mNumErroriInvocazione = mNumErroriInvocazione;
+  } 
+	 
 	public void setEsitoEsecuzione(String mEsitoEsecuzione) {
 		this.mEsitoEsecuzione = mEsitoEsecuzione;
 	}
@@ -143,7 +165,9 @@ public class BatchPagopaModel extends GenericModel {
 				+ "[ mDataInizioEsecuzione      = " + mDataInizioEsecuzione + " ]\n"
 				+ "[ mDataFineEsecuzione        = " + mDataFineEsecuzione + " ]\n"
 				+ "[ mNumPosDebitorieVerificate = " + mNumPosDebitorieVerificate + " ]\n"
-				+ "[ mNumBollettiniAggiornati   = " + mNumBollettiniAggiornati + " ]\n"
+				+ "[ mNumIUVVerificati          = " + mNumIUVVerificati + " ]\n"
+				+ "[ mNumBollettiniAggiornati   = " + mNumBollettiniAggiornati + " ]\n"   
+				+ "[ mNumErroriInvocazione      = " + mNumErroriInvocazione + " ]\n"  
 				+ "[ mEsitoEsecuzione           = " + mEsitoEsecuzione + " ]\n"
 				+ "[ mErroreEsecuzione          = " + mErroreEsecuzione + " ]";
 

@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import f3b.util.F3BException;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+import siap.siep.pagoPaBatch.model.CriteriRicercaBatchPagopaModel;
 
 /**
  * Batch per PagoPA
@@ -21,5 +22,5 @@ public interface IBatchPagopa {
 	
 	BatchPagopaModel ExRicercaBatchPagopaByKey(BigDecimal aIdBatch) throws F3BException;
 
-	public Vector <BatchPagopaModel> ExRecuperaLancioBatchPagopa(BatchPagopaModel batchModel, int aPage) throws F3BException;
+	public Vector <BatchPagopaModel> ExRecuperaLancioBatchPagopa(CriteriRicercaBatchPagopaModel criteriModel, int aPage) throws F3BException;
 }
