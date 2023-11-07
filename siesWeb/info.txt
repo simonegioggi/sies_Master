@@ -1,5 +1,15 @@
 MEV_9: 07/10/2020
 
+Le specifiche di intervento sono realizzate nell'ambito del sistema SIES al fine di soddisfare i requisiti
+espressi dall'Amministrazione in relazione alla richiesta di adeguamento normativo del Sistema, nella sua
+interezza, al D.lgs. 123/2018 ed al D.lgs. 121/2018.
+L'intervento è stato richiesto con comunicazione m_dg.DOG07AR.08082019.0000017.U.
+Gli interventi sono attinenti alle funzioni da prevedere nel sistema in base alle novità normative del
+decreto D.lgs.123/18 (maggiorenni e minorenni).
+Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
+
 1)	nato dal branch "RELEASE_12.4.3.0"
 
 2)	in data 11/11/2022 eseguito merge con "RELEASE_12.4.24.0"
+
+3)	in data 07/11/2023 eseguito merge con "RELEASE_12.5.4.0"
