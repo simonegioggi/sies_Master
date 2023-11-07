@@ -90,6 +90,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
             {
                var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
                window.location.href=str;
+               return;
             }
             else {
             	document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked=true;
@@ -112,6 +113,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
               {
                  var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
                  window.location.href=str;
+                 return;
               }
               else {
                 document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked=true;

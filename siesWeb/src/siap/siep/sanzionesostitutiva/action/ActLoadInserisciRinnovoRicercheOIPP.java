@@ -80,19 +80,39 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 		// se assenti - errore
 		// se presente solo uno lo seleziono
 		// se presente più di uno restituisco la pagina di scelta
+		BigDecimal idEvento = new BigDecimal(0);
 		if (isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
+			// Recupero la lista degli eventi e i dati da visualizzare
+			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 
-			String esitoCheck = checkEventi();
+	    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+	        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");			
+			
+			if (listaOrdiniIngiunzione.isEmpty()) {
+				// non ho trovato ordini di ingiunzione esco con errore
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				return IWebConstants.PG_MESSAGE;
+			} else if (listaOrdiniIngiunzione.size() > 0) { // n.b per test deve essere >1
+				// Carico la pagina con la scelta degli OI
+				setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+				setRequestAttribute("azioneChiamante", this.getClass().getName());
 
-			if (esitoCheck != null)
-				return esitoCheck;
-			// else se presente un solo OI carico direttamente la pagina?
-
+				return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
+			}
+			else {
+				idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
+			}			
 		} else {
 			// Ho selezionato l'evento dalla lista, carico la pagina
 			// Verifica per ogni destinatario se già registrate l'avvenuta notifica
-			BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-
+			idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		}
+		
 			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
 			EventoNotificaModel lEveNotMod = lCtrlEvento.ExRicercaEventoNotificaByKey(idEvento);
 			setRequestAttribute("ordineIngiunzione", lEveNotMod);
@@ -158,12 +178,16 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
 					lEveNotMod.getEvento().getFasSieIdFascicoloSiep());
 			setRequestAttribute("posizioneluogoaltra", lPos);
-		}
+		
 
 		return PG_LOAD_INSERISCI_RINNOVO_RICERCHE;
 	}
 
-	private String checkEventi() throws Exception {
+	/**
+	 * 
+	 * @deprecated
+	 */
+	private String checkEventi(BigDecimal idEvento) throws Exception {
 
 		String returnPage = null;
 
@@ -178,7 +202,7 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
     Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
         .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
     // 2023.09.26 - FINE
-		
+			
 		
 		if (listaOrdiniIngiunzione.isEmpty()) {
 			// non ho trovato ordini di ingiunzione esco con errore
@@ -189,14 +213,18 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 			return IWebConstants.PG_MESSAGE;
-		} else if (listaOrdiniIngiunzione.size() > 0) { // n.b per test deve essere >1
+		} else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
 			// Carico la pagina con la scelta degli OI
 			setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
 			setRequestAttribute("azioneChiamante", this.getClass().getName());
 
 			return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
 		}
-
+		else {
+			idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
+			siesLogger.debug("idEvento = "+idEvento);
+		}
+		
 		return returnPage;
 	}
 
