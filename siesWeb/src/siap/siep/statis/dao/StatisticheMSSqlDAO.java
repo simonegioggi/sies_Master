@@ -341,7 +341,11 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 			s += magCondition;
 		s += "AND (v.Data_Iscr < TO_DATE('" + dataIniziale + "', 'dd/MM/yyyy')) "
 				+ " and (V.Data_Arch is null  OR (V.COD_STATO_FASCICOLO <> '01' and  V.Data_Arch  is not null)"
-				+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>to_char('" + anni[0]
+				// Ticket#202302280124 - Si correggela condizione sulla data archiviazione in >=
+				//                      Venivano esclusi dai pendenti inizio periodo i procedimenti archiviati nel periodo
+				+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>=to_char('" + anni[0]
+				//+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>to_char('" + anni[0]
+				// FINE - Ticket#202302280124
 				+ "')))) ";
 
 		s += "UNION ";
@@ -930,6 +934,10 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "'Pendenti Inizio' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
 						+ "FROM " + from1 + " V where V.Cod_Uff_Ins = '" + ufficioConnesso
 						+ "' and (v.Data_Arch is null "
+						// Ticket#202302280124 - Come per il riepilogo sono considerati pendenti anche gli archiviati 
+						//                      purchè a partire dall'anno di riferimento
+						+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>=to_char('"+array[i]+"')) "
+						// Ticket#202302280124 - FINE						
 						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') < TO_DATE('"
 						+ dataInizialePendenti + "', 'dd/MM/yyyy') ";				
@@ -982,7 +990,12 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ array[i] + "' Anno " + "from " + from3 + " V WHERE V.Cod_Uff_Ins = '"
 						+ ufficioConnesso + "' "
 						+ "and v.Data_Arch is not null and v.mot_archiviazione is not null "
-						+ "and v.cod_stato_fascicolo = '01' "
+						// Ticket#202302280124 - Si commenta la condizione sullo stato attuale del fascicolo
+						// E' considerato (conteggiato) tra gli archiviati un fascicolo che ha la data archiviazione 
+						// valorizzata. Se poi riaperto verrà conteggiato anche tra i riaperti
+						// n.b. condizione commentata anche nella vista
+						//+ "and v.cod_stato_fascicolo = '01' "
+						// Ticket#202302280124 - FINE
 						+ "AND TO_DATE(TO_CHAR(v.Data_Arch, 'dd/MM/yyyy'), 'dd/MM/yyyy') between "
 						+ "TO_DATE('" + dataInizialePendenti + "', 'dd/MM/yyyy') and TO_DATE('"
 						+ dataFinalePendenti + "', 'dd/MM/yyyy') "
@@ -1030,6 +1043,10 @@ public class StatisticheMSSqlDAO extends SqlDAO {
 						+ "'Pendenti Fine' || ' - ' || v.DESC_MS Nome_Stat, '" + array[i] + "' Anno "
 						+ "FROM " + from1 + " V WHERE V.Cod_Uff_Ins = '" + ufficioConnesso
 						+ "' and (v.Data_Arch is null "
+						// Ticket#202302280124 - Gli archiviati dopo il fine periodo devono essere conteggati
+						//                      tra i pendenti fine epriodo
+						+ " or (V.cod_stato_fascicolo='01' and to_char(V.Data_Arch,'yyyy')>to_char('"+ array[i] +"')) "
+						// Ticket#202302280124 - FINE						
 						+ "OR (v.cod_stato_fascicolo <> '01' and v.Data_Arch is not null)) "
 						+ "AND TO_DATE(TO_CHAR(v.Data_Iscr, 'dd/MM/yyyy'), 'dd/MM/yyyy') <= TO_DATE('"
 						+ dataFinalePendenti + "', 'dd/MM/yyyy') ";				

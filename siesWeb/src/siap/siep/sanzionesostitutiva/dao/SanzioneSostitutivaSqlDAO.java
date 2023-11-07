@@ -66,6 +66,9 @@ public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 				+ "COD_OPERATORE_INSERIMENTO, " + "DATA_INSERIMENTO, " + "COD_UFFICIO_INSERIMENTO, "
 				+ "COD_OPERATORE_AGGIORNAMENTO, " + "DATA_AGGIORNAMENTO, " + "COD_UFFICIO_AGGIORNAMENTO, "
 				+ "PEN_COM_ID_PENA_COMPLESSIVA, " + "SANZIONE_PECUNIARIA_AMMENDA ";
+		// MEV_2023-13
+		lStatement += " , TIPO_SANZIONE.RV_ABBREVIATION DESCR_CATEGORIA_SANZIONE";
+		// MEV_2023-13 - FINE
 		lStatement += " FROM SANZIONE_SOSTITUTIVA, CG_REF_CODES TIPO_SANZIONE";
 		lStatement += " WHERE (TIPO_SANZIONE.RV_DOMAIN = 'TIPO_SANZIONE_SOSTITUTIVA' AND SANZIONE_SOSTITUTIVA.COD_TIPO_SANZIONE = TIPO_SANZIONE.RV_LOW_VALUE)";
 
@@ -98,6 +101,10 @@ public class SanzioneSostitutivaSqlDAO extends SIAPSqlDAO {
 		// aModel.setDescrUfficioAggiornamento(getString("") );
 		aModel.setPenComIdPenaComplessiva(getBigDecimal("PEN_COM_ID_PENA_COMPLESSIVA"));
 		aModel.setSanzionePecuniariaAmmenda(getBigDecimal("SANZIONE_PECUNIARIA_AMMENDA"));
+		
+		// MEV_2023-13
+		aModel.setDescrCategoriaSanzione(getString("DESCR_CATEGORIA_SANZIONE"));
+		// MEV_2023-13 - FINE
 
 		return aModel;
 	}

@@ -219,29 +219,29 @@
          <%if(lLuogoDetenzione.getIstDetIdIstitutoDetenzione() == null || lLuogoDetenzione.getIstDetIdIstitutoDetenzione().equals("") || lLuogoDetenzione.getIstDetIdIstitutoDetenzione().equals("-"))
            {%>
               	<td class="l">
-              		<input readonly  Title="Istituto" name="Comune" value="" size=50>
-              		<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
+              		<%-- Ticket#202212280114 si aggiunge id per problemi con Edge --%>
+              		<input readonly  Title="Istituto" name="Comune" id="Comune" value="" size=50>
+              		<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="" size=50>
 <%
             if( modalita.equals("I") )
               {%>
 	              	<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciDetenzioneFasSige','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-	              		<img src="/images/filefolder.gif" border=0>
-	              	</a>
-	              	<%-- MERGE v10 COLLAUDO: aggiunto tasto di cancellazione --%>
-	              	<a href="Javascript:pulisciIstitutoId('Comune','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>');"><img src="/images/delete.gif" border=0></a>
+	              		<img src="/images/filefolder.gif" border=0></a>
+	                <%-- MERGE v10 COLLAUDO: aggiunto tasto di cancellazione --%>
+					<a href="Javascript:pulisciIstitutoId('Comune','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>');"><img src="/images/delete.gif" border=0></a>
             <%}%>
                	</td>
          <%}else{%>
 				<td class="l">
 <%
 					if (lLuogoDetenzione.getIstitutoDetenzione()!= null) {
-%>
-              		<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
+%>                  <%-- Ticket#202212280114 si aggiunge id per problemi con Edge --%>
+              		<input readonly Title="Istituto" name="Comune" id="Comune" value="<%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(lLuogoDetenzione.getIstitutoDetenzione().getDescrComune())%>" size=50>
 <%}%>
-              		<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>" size=50>
+                    <%-- Ticket#202212280114 si aggiunge id per problemi con Edge --%>
+              		<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=lLuogoDetenzione.getIstDetIdIstitutoDetenzione()%>" size=50>
              		<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciDetenzioneFasSige','<%= ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
-              			<img src="/images/filefolder.gif" border=0>
-              		</a>
+              			<img src="/images/filefolder.gif" border=0></a>
               		<%-- MERGE v10 COLLAUDO: aggiunto tasto di cancellazione --%>
 	              	<a href="Javascript:pulisciIstitutoId('Comune','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>');"><img src="/images/delete.gif" border=0></a>
 				</td>

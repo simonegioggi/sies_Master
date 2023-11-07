@@ -6,19 +6,8 @@ import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 
 /**
- * <p>
  * Title: TestModel
- * </p>
- * <p>
  * Description: Model del Test del sistema
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
- * not attributable 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TestModel extends GenericModel {
@@ -53,6 +42,9 @@ public class TestModel extends GenericModel {
 	private String mTestWSTrasferisciFoglioComplementare;
 	private String mTestWSRichiestaCertificato;
 	private String mTestWebServer;
+	// MEV_2023-33 aggiunte due variabili per endpoint address PagoPA-PST (con get&set)
+	private String mTestWSServiziInvioPagamentiTelematici;
+	private String mTestWSServiziConsultazionePagamentiTelematici;
 
 	// protected static StringManager sm = StringManager.getManager("org.apache.catalina.servlets");
 
@@ -143,19 +135,19 @@ public class TestModel extends GenericModel {
 
 	public String getSequence() {
 		return mSequence;
-	};
+	}
 
 	public String getCurrentVersion() {
 		return mCurrentVersion;
-	};
+	}
 
 	public String getErroreProgressivo() {
 		return mErroreProgressivo;
-	};
+	}
 
 	public String getJVMTotalMemory() {
 		return mJVMTotalMemory;
-	};
+	}
 
 	public void setTestJMS(String aValore) {
 		mTestJMS = aValore;
@@ -243,6 +235,23 @@ public class TestModel extends GenericModel {
 
 	public void setTestWSRichiestaCertificato(String mTestWSRichiestaCertificato) {
 		this.mTestWSRichiestaCertificato = mTestWSRichiestaCertificato;
+	}
+
+	public String getTestWSServiziInvioPagamentiTelematici() {
+		return mTestWSServiziInvioPagamentiTelematici;
+	}
+
+	public void setTestWSServiziInvioPagamentiTelematici(String mTestWSServiziInvioPagamentiTelematici) {
+		this.mTestWSServiziInvioPagamentiTelematici = mTestWSServiziInvioPagamentiTelematici;
+	}
+
+	public String getTestWSServiziConsultazionePagamentiTelematici() {
+		return mTestWSServiziConsultazionePagamentiTelematici;
+	}
+
+	public void setTestWSServiziConsultazionePagamentiTelematici(
+			String mTestWSServiziConsultazionePagamentiTelematici) {
+		this.mTestWSServiziConsultazionePagamentiTelematici = mTestWSServiziConsultazionePagamentiTelematici;
 	}
 
 }

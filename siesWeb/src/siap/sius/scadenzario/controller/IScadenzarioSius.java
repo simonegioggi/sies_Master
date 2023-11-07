@@ -35,8 +35,12 @@ public interface IScadenzarioSius {
 
 	public Vector ExRicercaScadenzarioSius(Date aData1, Date aData2) throws F3BException;
 
-	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2)
+	// Ticket#202305250112 - aggiunto filtro per codice ufficio 
+	//public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2)
+	// 		throws F3BException;
+	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2, String aCodUfficio)
 			throws F3BException;
+	// Ticket#202305250112 - FINE
 
 	public ScadenzarioSiusModel ExModificaScadenzarioSius(ScadenzarioSiusModel aScadenzarioSius)
 			throws F3BException;

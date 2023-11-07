@@ -1,29 +1,21 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.Collection" %>
-<%@ page import="java.util.Iterator" %>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils" %>
-<%@ page import="f3b.security.model.FunctionModel" %>
-<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
-<%@ page import="siap.sico.security.model.FunzioneModel" %>
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sige.fascicolo.action.ICostantiFascicoloSige"%>
 <%@ page import="siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel"%>
-<%@ page import="siap.sige.provvedimento.action.ICostantiProvvedimentoSige" %>
 <%@ page import="siap.sius.documentoallegato.action.ICostantiDocumentoAllegato" %>
 <%@ page import="siap.sige.fogliocomplementare.action.ICostantiFoglioComp" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
+<%@ page import="siap.sico.template.action.ICostantiTemplate" %>
 
 <jsp:useBean id="documentoAllegato"     scope="request" class="siap.sige.documentoallegato.model.DocumentoAllegatoModel"/>
 <jsp:useBean id="evento" 				scope="request" class="siap.sico.evento.model.EventoModel"/>
-<jsp:useBean id="UtenteConnesso"        scope="session" class="siap.sico.utente.model.UtenteModel" />
 <jsp:useBean id="modalita" 			 	scope="request" class="java.lang.String" />
-<jsp:useBean id="motivoNonInvio"        scope="request" class="java.lang.String"/>
-<jsp:useBean id="FascicoloSigeEsteso" 	scope="session" class="siap.sige.fascicolo.model.FascicoloSigeEstesoModel" />
 <jsp:useBean id="provvSige"             scope="request" class="siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel"/>
+
 <%
 String annoDataCompilazione=StringUtils.toStringJSP(DateUtils.getDateToString(documentoAllegato.getDataEmissione(),"yyyy"));
 String meseDataCompilazione=StringUtils.toStringJSP(DateUtils.getDateToString(documentoAllegato.getDataEmissione(),"MM"));
@@ -34,7 +26,6 @@ String meseDataInsManuale=StringUtils.toStringJSP(DateUtils.getDateToString(docu
 String giornoDataInsManuale=StringUtils.toStringJSP(DateUtils.getDateToString(documentoAllegato.getDataInsMan() ,"dd"));
 %>
 
-<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
 
 <html>
 	<head>
@@ -43,6 +34,7 @@ String giornoDataInsManuale=StringUtils.toStringJSP(DateUtils.getDateToString(do
 
   	<script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
   	<script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+	<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
 
 <%
 String lAzione = "siap.sige.fogliocomplementare.action.ActInserisciCompFoglioComp";
@@ -54,9 +46,9 @@ String descrizioneProvvedimento="";
  
   if (provvSige != null && provvSige.getProvvedimento() != null){ 
 	if(provvSige.getProvvedimento().getCodTipoProvvedimentoSige() != null && provvSige.getProvvedimento().getCodTipoProvvedimentoSige().equals("02")){
-		descrizioneProvvedimento="DECRETO n°";
+		descrizioneProvvedimento="DECRETO n° ";
 	} else if (provvSige.getProvvedimento().getCodTipoProvvedimentoSige() != null && provvSige.getProvvedimento().getCodTipoProvvedimentoSige().equals("03")){
-		descrizioneProvvedimento="ORDINANZA n°";
+		descrizioneProvvedimento="ORDINANZA n° ";
 	}
 }	
 
@@ -81,6 +73,14 @@ String descrizioneProvvedimento="";
                           document.LoadInserisciCompFoglioComp.<%=ICostantiFoglioComp.CAMPO_MESE_DATA_TRASMISSIONE%>.value +'/'+
                           document.LoadInserisciCompFoglioComp.<%=ICostantiFoglioComp.CAMPO_ANNO_DATA_TRASMISSIONE%>.value;
 
+    <%-- Ticket Ticket#20230202011 --%>
+    if (dataCompilTrasm=="//")
+    {
+        alert('Data Compilazione/Trasmissione obbligatoria!');
+        return false;
+    }
+    <%-- Ticket Ticket#20230202011 - FINE --%>
+    
     if (! ControllaData(dataCompilTrasm))
     {
       alert('Data Compilazione/Trasmissione non valida!');
@@ -114,8 +114,19 @@ String descrizioneProvvedimento="";
     	<td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
         <td class="LBG">
            <font class="label">Funzione :</font>&nbsp;
+           <% if (modalita.equalsIgnoreCase("M")) { %>
+           <font class="campo">Modifica Foglio Complementare</font>
+           <% } else {%>
            <font class="campo">Inserimento Foglio Complementare</font>
+           <% } %>
         </td>
+        <% if (modalita.equalsIgnoreCase("M")) { %>
+	      <td class="LBG">
+	      	<a href="Javascript:stampa2( '<%=ISIAPCostantiWeb.PG_STAMPA%>', '<%=IWebConstants.ACTION_FIELD%>=siap.sige.avvocato.action.ActStampaFoglioComplementare&<%=ICostantiTemplate.CAMPO_ID_TEMPLATE%>=<%="SIGE_ST_006"%> ')">
+	        	<img id="generaStampa" align="middle" src="/images/print24.gif" alt="Generazione Stampa" width="24" height="24" border="0">
+	      	</a>
+	      </td>        
+        <% } %>
   		<!-- BOTTONE DI RITORNO -->
     	<jsp:include page="<%=IWebConstants.PG_RETURN_BUTTON%>"/>
     </tr>

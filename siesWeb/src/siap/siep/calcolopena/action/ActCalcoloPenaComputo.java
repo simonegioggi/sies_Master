@@ -1191,7 +1191,6 @@ public class ActCalcoloPenaComputo extends ActionSiap implements ICostantiAnnota
 				setRequestAttribute("lIsSoloImporti", new Boolean(false));
 			}
 
-			// setRequestAttribute("lIsCalcoloPenaAbInitio", new Boolean(true)); // da eliminare
 			setRequestAttribute("lIsCalcoloPenaAbInitio", new Boolean(true)); // da eliminare
 
 			setRequestAttribute("lCalcoloPenaModel", lCalcoloPenaModel);

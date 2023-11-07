@@ -117,6 +117,7 @@ public class NotificaEventoSqlDAO extends SIAPSqlDAO
     " NOTI.COD_UFF_UDS_UDSM," +
     " NOTI.COD_UFF_TDS_TDSM," +
     " NOTI.AUT_EST_ID_AUTORITA_EST_DELEG" +
+    " , NOTI.ID_CIVILMENTE_OBBLIGATO " + //MEV_2023-13 
     " FROM NOTIFICA NOTI, CG_REF_CODES COD_NOT, CG_REF_CODES COD_ESI" +
     " WHERE COD_NOT.RV_DOMAIN = 'TIPO_NOTIFICA' AND COD_NOT.RV_LOW_VALUE = COD_TIPO_NOTIFICA" +
     " AND COD_ESI.RV_DOMAIN = 'ESITO_NOTIFICA' AND COD_ESI.RV_LOW_VALUE = COD_ESITO";
@@ -170,6 +171,9 @@ public class NotificaEventoSqlDAO extends SIAPSqlDAO
     aModel.setCodUffUepeUssmSS(getString("COD_UFF_UEPE_USSM_SS"));
     aModel.setCodUffUdsUdsm(getString("COD_UFF_UDS_UDSM"));
     aModel.setCodUffTdsTdsm(getString("COD_UFF_TDS_TDSM"));
+    
+    // MEV_2023-13 
+    aModel.setIdCivilmenteObbligato (getBigDecimal("ID_CIVILMENTE_OBBLIGATO"));
 
     return aModel;
   }

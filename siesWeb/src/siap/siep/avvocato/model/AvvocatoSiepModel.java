@@ -62,9 +62,9 @@ public class AvvocatoSiepModel extends GenericModel {
 	public String toString() {
 		String lStr = new String();
 
-		lStr = "AvvocatoModel:\n" + mAvvocato.toString();
-		lStr = "\n";
-		lStr = "AvvocatoFascicoloSiepModel:\n" + mAvvFascSiep.toString2();
+		lStr += "AvvocatoModel:\n" + mAvvocato.toString();
+		lStr += "\n";
+		lStr += "AvvocatoFascicoloSiepModel:\n" + mAvvFascSiep.toString2();
 		return lStr;
 	}
 

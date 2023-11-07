@@ -390,8 +390,12 @@ public class UdienzaSigeSqlDAO extends SIAPSqlDAO {
 	 */
 	public void countMagUdiCodMagistrato(String aCodMagistrato, String codUfficioAppartenenza) {
 		String lStatement = "SELECT COUNT(*) AS COUNT FROM UDIENZA_SIGE WHERE";
-		lStatement += " COD_PROCURATORE = '" + aCodMagistrato + "'";
-		lStatement += " OR COD_GIUDICE = '" + aCodMagistrato + "'";
+		// Ticket#20230427016 - la condizione in OR va tra parentesi
+		//lStatement += " COD_PROCURATORE = '" + aCodMagistrato + "'";
+		//lStatement += " OR COD_GIUDICE = '" + aCodMagistrato + "'";
+		lStatement += " (COD_PROCURATORE = '" + aCodMagistrato + "'";
+		lStatement += " OR COD_GIUDICE = '" + aCodMagistrato + "')";
+		// Ticket#20230427016 - FINE
 		// 20170918: [SG] aggiunta and condition poichè il magistrato può essere inserito da un ufficio
 		// differente da quello in cui ha delle udienze poichè trasferito
 		lStatement += " AND cod_ufficio_appartenenza = '" + codUfficioAppartenenza + "'";
