@@ -6,14 +6,18 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import f3b.util.F3BException;
 import siap.sico.camponota.model.CampoNotaModel;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.sanzionesostitutiva.model.RicercaStatoPagamentiModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.verbale.model.VerbaleModel;
@@ -207,6 +211,9 @@ public interface ISanzioneSostitutiva {
 
 	public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina,
 			String aTipoRicera) throws F3BException;
+
+	public void ExCreateExcelStatoPagamenti (Vector <RicercaStatoPagamentiModel> listaStatoPagamenti, HSSFWorkbook wb, UfficioModel ufficio
+			, FascicoloSiepModel aFasMod, String aTipoRicera) throws F3BException;
 
   public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
   public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;

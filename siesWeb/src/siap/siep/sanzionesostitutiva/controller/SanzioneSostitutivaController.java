@@ -11,11 +11,19 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.StringUtils;
 import f3b.util.Utils;
 import f3b.util.report.ReportGenerator;
 import f3b.util.xml.TreeModel;
@@ -29,6 +37,7 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.stampa.controller.StampaSSController;
 import siap.sico.template.controller.TemplateManager;
+import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.SIEPException;
@@ -54,8 +63,10 @@ import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
 import siap.siep.rateizzazionepp.dao.RicercaStatoPagamentiSqlDao;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
+import siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaDAO;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaSqlDAO;
+import siap.siep.sanzionesostitutiva.model.RicercaStatoPagamentiModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
@@ -3653,5 +3664,190 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		}
 
 		return lEveRet;
+	}
+	
+	/**
+	 * Metodo per la stampa Excel del risutato delle ricerche Stato Pagamento
+	 * >
+	 * */
+	public void ExCreateExcelStatoPagamenti (Vector <RicercaStatoPagamentiModel> listaStatoPagamenti, HSSFWorkbook wb, UfficioModel ufficio
+			, FascicoloSiepModel aFasMod, String aTipoRicera) throws F3BException{
+		
+		HSSFCellStyle csNull = wb.createCellStyle();
+
+		// Create a new font and alter it.
+		HSSFFont fontBold = wb.createFont();
+		fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD); 
+		
+		// stile per celle col bordo
+		HSSFCellStyle cs = wb.createCellStyle();
+		cs = getBordo4Lati(wb);
+		
+		HSSFCellStyle csNullBold = wb.createCellStyle();
+		csNullBold.setFont(fontBold);
+		
+		// stile per celle col bordo con carattere grassetto
+		HSSFCellStyle csBold = wb.createCellStyle();
+		csBold = getBordo4Lati(wb);
+		csBold.setFont(fontBold);
+
+		HSSFCellStyle csCenter = wb.createCellStyle();
+		csCenter = getBordo4Lati(wb);
+		csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		
+		HSSFCellStyle csRight = wb.createCellStyle();
+		csRight = getBordo4Lati(wb);
+		csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		
+		HSSFCellStyle csBoldCenter = wb.createCellStyle();
+		csBoldCenter = getBordo4Lati(wb);
+		csBoldCenter.setFont(fontBold);
+		csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		HSSFCellStyle csEuroFormat = wb.createCellStyle();
+		//HSSFDataFormat dataFormat = wb.createDataFormat();
+		//csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
+		short builtinFormatIndex = 4; //4: "#,##0.00"
+		csEuroFormat.setDataFormat(builtinFormatIndex);
+		csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		// primo foglio
+		HSSFSheet sheet = wb.createSheet("Stato Pagamenti");
+		sheet.setColumnWidth(0, (40 * 256));
+		
+		int numCol = 0;
+		int sizeCol = 21;
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+		sheet.setColumnWidth(numCol++, (sizeCol * 256));
+
+		int nRow = 0;
+	
+		// Intestazione del foglio excel
+		// Prima Riga
+		HSSFRow row = sheet.createRow(nRow++);
+		String value = (ufficio.getDescrTipoUfficio().toUpperCase() + " DI " + ufficio.getDescrComune().toUpperCase());
+		setCell(row, 0, value, csNull);
+
+		// Seconda Riga 
+		value = "Tel. " + StringUtils.toStringJSP(ufficio.getTelefono()) + " - Fax "	+ StringUtils.toStringJSP(ufficio.getFax());
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, value, csNull);
+
+		nRow++;
+		nRow++;
+		
+		value = "Elenco Procedimenti Pene Pecuniarie In Base a Stato Pagamenti ";
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, value, csNull);
+		
+		nRow++;
+		
+		//===========================
+		// Criteri di ricerca
+	  //===========================
+		// Anno e Numero
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Anno/Numero Iniziale ", csNullBold);
+		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoIniziale(),"____") + " / "	+ StringUtils.toStringJSP(aFasMod.getChiaveProgrIniziale(),"______");
+		setCell(row, 1, value, csNull);
+
+		setCell(row, 2, "Anno/Numero Finale ", csNullBold);
+		value = StringUtils.toStringJSP(aFasMod.getChiaveAnnoFinale(),"____") + " / "	+ StringUtils.toStringJSP(aFasMod.getChiaveProgrFinale(),"______");
+		setCell(row, 3, value, csNull);
+		
+		// Data Iscrizione
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Data Iscrizione Iniziale ", csNullBold);
+		value = StringUtils.toStringJSP(DateUtils.getDateToString(aFasMod.getDataIscrizioneIniziale(),"dd.MM.yyyy")," ");
+		setCell(row, 1, value, csNull);
+		
+		setCell(row, 2, "Data Iscrizione Finale ", csNullBold);
+		value = StringUtils.toStringJSP(DateUtils.getDateToString(aFasMod.getDataIscrizioneFinale(),"dd.MM.yyyy")," ");
+		setCell(row, 3, value, csNull);
+		
+		// Tipologia Statistica
+		String descTipoRicerca = "";
+		if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_INTERAMENTE_PAGATO))
+			descTipoRicerca = "Procedimenti con pena pecuniaria totalmente pagata";
+		else if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_RETEIZZATO_NON_PAGATO))
+			descTipoRicerca = "Procedimenti con pagamento rateizzato con rate non pagate";
+		else if (aTipoRicera.equals(ICostantiSanzioneSostitutiva.CAMPO_TIPO_RICERCA_UNICA_RATA_NON_PAGATO))
+			descTipoRicerca = "Procedimenti con pagamento in unica soluzione non pagata";		
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Tipologia Statistica ", csNullBold);
+		setCell(row, 1, StringUtils.toStringJSP(descTipoRicerca," "), csNull);
+		
+		nRow++;nRow++;
+		
+		// Intestazione tabella RIsultati
+		row = sheet.createRow(nRow++);
+		setCell(row, 0, "Numero SIEP", csBoldCenter);
+		setCell(row, 1, "Data Iscrizione", csBoldCenter);
+		setCell(row, 2, "Cognome", csBoldCenter);
+		setCell(row, 3, "Nome", csBoldCenter);
+		setCell(row, 4, "Tipo Pagamento", csBoldCenter);
+		setCell(row, 5, "Importo da Pagare", csBoldCenter);
+		setCell(row, 6, "Importo Pagato", csBoldCenter);
+		setCell(row, 7, "Data Ultima Scadenza", csBoldCenter);
+		
+		// Ciclo sui record
+		for (RicercaStatoPagamentiModel record : listaStatoPagamenti) {
+		  String tipoRat = "";
+		  if ("U".equals(record.getTipoRateizzazione())) 
+		    tipoRat = "Unica Soluzione";
+		  else if ("R".equals(record.getTipoRateizzazione())) 
+		    tipoRat = "Rateizzato";
+			
+			row = sheet.createRow(nRow++);
+			
+			setCell(row, 0, StringUtils.toStringJSP(record.getChiaveAnno()) + " / " + StringUtils.toStringJSP(record.getChiaveProgr()), cs);
+			setCell(row, 1, StringUtils.toStringJSP(DateUtils.getDateToString(record.getDataIscrizione(),"dd-MM-yyyy")), csCenter);
+			setCell(row, 2, StringUtils.toStringJSP(record.getCognome()), cs);
+			setCell(row, 3, StringUtils.toStringJSP(record.getNome()), cs);
+			setCell(row, 4, StringUtils.toStringJSP(tipoRat), csCenter);
+			//setCell(row, 5, StringUtils.toEuroFormat(record.getImportoDaPagare()), csEuroFormat);csEuroFormat
+			//setCell(row, 6, StringUtils.toEuroFormat(record.getImportoPagato()), csEuroFormat);
+			setNumericCell(row, 5, record.getImportoDaPagare()!=null ? record.getImportoDaPagare().doubleValue() : null, csEuroFormat);
+			setNumericCell(row, 6, record.getImportoPagato()!=null ? record.getImportoPagato().doubleValue() : null, csEuroFormat);
+			setCell(row, 7, StringUtils.toStringJSP(DateUtils.getDateToString(record.getDataUltimaScadenza(),"dd-MM-yyyy")," "), csCenter);			
+		}
+	}
+	
+	private HSSFCellStyle getBordo4Lati(HSSFWorkbook wb) {
+
+		HSSFCellStyle cs = wb.createCellStyle();
+		cs.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		cs.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+		return cs;
+	}
+	
+	private HSSFCell setCell(HSSFRow row, int nCol, String value, HSSFCellStyle cs) {
+
+		HSSFCell cell = row.createCell(nCol);
+		cell.setCellValue(value);
+		cell.setCellStyle(cs);
+
+		return cell;
+	}
+	
+	private HSSFCell setNumericCell(HSSFRow row, int nCol, Double value, HSSFCellStyle cs) {
+
+		HSSFCell cell = row.createCell(nCol);
+		cell.setCellValue(value);
+		cell.setCellStyle(cs);
+
+		return cell;
 	}
 }

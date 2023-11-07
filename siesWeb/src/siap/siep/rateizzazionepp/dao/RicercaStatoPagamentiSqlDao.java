@@ -67,9 +67,12 @@ public class RicercaStatoPagamentiSqlDao extends SIAPSqlDAO {
 		lSql += "  ORDER BY FASCICOLO_SIEP.CHIAVE_ANNO,FASCICOLO_SIEP.CHIAVE_PROGR  ";
 
 		String lPaginedStatement = "";
-		lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
-				+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
-				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+		if (aPage==0)
+			lPaginedStatement = lSql;
+		else
+			lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
+					+ "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+					+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 
 		setStatement(lPaginedStatement);
 	}
