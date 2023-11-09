@@ -1168,7 +1168,7 @@ public class ActLoadDettaglioFascicolo extends ActionSiap implements ICostantiFa
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp.exRicercaEventoRateizzazionePP(aId,
-				"ALL");
+				"ALL","S");
 		boolean existPagamenti = false;
 		if (!listaRichiestaBollettini.isEmpty())
 			existPagamenti = true;

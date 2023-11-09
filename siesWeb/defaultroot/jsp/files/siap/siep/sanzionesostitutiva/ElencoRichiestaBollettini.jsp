@@ -123,12 +123,16 @@ if (listaRichiestaBollettini.size() == 0) {
 	while (itx.hasNext()) {
 		EventoRateizzazionePPModel erppm = (EventoRateizzazionePPModel) itx.next();
 		EventoModel em = erppm.getEvento();
+		
+		String annullato = "";
+		if ("A".equals(em.getFlagDocumentoRegistrato()))
+		  annullato = "<br><font style='color:red'>(Annullato)</font>";
 %>
 	<tr>
 		<td class="c">
 			<%=StringUtils.toStringJSP(em.getDescrTipoProvvedimento()) 
 			+ " " + StringUtils.toStringJSP(em.getDescrMotivo())%>
-			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%>
+			&nbsp;del&nbsp;<%=StringUtils.toStringJSP(DateUtils.getDateToString(em.getDataEmissione(), "dd/MM/yyyy"))%><%=annullato%>
 		</td>
 		<td class="l">
 			<%=modalitaPagamento.get(cont)%>
@@ -139,8 +143,12 @@ if (((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDat
 		|| (isSoloPrimaRata && !areRateGiaGenerate)) && cont == size-1) {
 %>
       	<td class="c">
+      	<% if ("S".equals(em.getFlagDocumentoRegistrato())) { %>
       		<a href="javascript:eseguiAzione('Inoltra', <%=em.getIdEvento()%>)">
 				<img src="/images/esegui.gif" alt="Genera Avviso PagoPA" width="12" height="12" border="0">
+        <% } else { %>	
+        &nbsp;			
+        <% } %>
 			</a>
 		</td>
 <%

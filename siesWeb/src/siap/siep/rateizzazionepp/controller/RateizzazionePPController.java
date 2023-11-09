@@ -314,18 +314,20 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 	/**
 	 * Override del metodo per esporre la chiamata consentendo si specificare anche se se non si \E8
 	 * interessati agli eventi non validati
+	 * 
+	 * @param motivo indica i codici motivo dei provvedimenti da ricercare (ALL = tutti)
 	 */
 	@Override
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
-			String motivo) throws F3BException {
+			String motivo, String flagValidato) throws F3BException {
 
 		if ("ALL".equals(motivo)) {
-			return exRicercaEventiRateizzazionePP(idFascicolo);
+			return exRicercaEventiRateizzazionePP(idFascicolo, flagValidato);
 		}
 		return exRicercaEventoRateizzazionePP(idFascicolo, motivo, "S");
 	}
 
-	private Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo)
+	private Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo, String flagValidato)
 			throws F3BException {
 
 		Connection c = null;
@@ -335,7 +337,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		// Ricerca gli eventi per id Fascicolo
 		EventoModel em = new EventoModel();
-		em.setFlagDocumentoRegistrato("S");
+		if ("S".equals(flagValidato))
+		  em.setFlagDocumentoRegistrato("S");
 		em.setFasSieIdFascicoloSiep(idFascicolo);
 		String[] motivi = new String[] { "0622", "1307", "1308" };
 		// String[] tipi = new String[] { "04", "06" };
@@ -385,6 +388,8 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 		return reverse;
 	}
 
+	/*
+	 * 2023.11.09 si commeta il metodo non più richiamato da nessuna action
 	@Override
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
 			String motivo, String validato) throws F3BException {
@@ -443,7 +448,7 @@ public class RateizzazionePPController extends SiapController implements IRateiz
 
 		return listaEventoRateizzazioniPP;
 	}
-
+	 */
 	/**
 	 * 2023.09.27
 	 *

@@ -140,7 +140,7 @@ public class ActLoadInserisciRinnovazioneOIPP extends ActionSiap implements ICos
     //Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
     //    .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
     Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
+        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL","S");
     // 2023.09.26 - FINE
 
 		if (listaOrdiniIngiunzione.isEmpty()) {

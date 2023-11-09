@@ -73,6 +73,9 @@ if (elencoStatoPagamenti.size() == 0) {
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<font class="cViola"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+		  <% if ("A".equals(evento.getFlagDocumentoRegistrato())) { %>
+      <font style="color:red"> &nbsp;&nbsp;&nbsp;&nbsp;(Annullato)</font>
+      <% } %>	
 		</td>
 	</tr>
 	<tr>
@@ -129,17 +132,25 @@ if (elencoStatoPagamenti.size() == 0) {
 %>
       	<td class="<%=coloreClasse%>"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
       	<td class="c">
+      	<%if ("S".equals(evento.getFlagDocumentoRegistrato())) { %>
       		<input type="checkbox" name="idBollettinoPagopa" value="<%=StringUtils.toStringJSP(bpm.getIdBollettinoPagopa(), "")%>">
+      	<% } else { %>
+      	&nbsp;
+      	<% }  %>
       	</td>
 	</tr>
 <%
 	} // end while su iterator sugli eventi
 %>
+
+<% if ("S".equals(evento.getFlagDocumentoRegistrato())) { %>
 	<tr>
 		<td class="lNoBord">
        		<br><INPUT class="bottone" type="submit" name="I" value="Inoltra">
        	</td>
    	</tr>
+<% } %>
+   	
 <%
 } // end else
 %>

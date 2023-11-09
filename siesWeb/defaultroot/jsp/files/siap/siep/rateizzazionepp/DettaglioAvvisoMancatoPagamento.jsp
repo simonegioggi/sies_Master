@@ -50,6 +50,29 @@ if (acm == null)
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
+
+<STYLE>
+	.menulines {
+	  border:2.5px solid #BEC6FC;
+	  text-align : center;
+	  font-family: 'Tahoma';
+	  color : Navy;
+	  font-size : 13px;
+	  text-decoration : none;
+	  height:100%;
+	}
+	
+	.menulines a {
+	  text-align : center;
+	  text-decoration:none;
+	  color:black;
+	  font-family: 'Tahoma';
+	  color : Navy;
+	  font-size : 13px;
+	  width:100%;
+	  height:100%;
+	}
+</STYLE>
 </head>
   
 <body class="corpo">
@@ -368,19 +391,21 @@ for (int i = 0; i < listaNotObbligati.size(); i++) {
 } // end ciclo for
 %>
 </table>
-<%
-if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) {
-%>   
-<table>
-	<tr>
-    	<td class="L">
-      		<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">Visualizza stato notifiche</a>
-    	</td>
-	</tr>
+
+<% if ("S".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())) { %> 
+<br>  
+<table cellspacing=2 cellpadding=2 >    
+  <tr>
+    <td width="32%" class="menulines" nowrap>
+      <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadNotificheOrdineIngiunzione&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">Visualizza stato notifiche</a>
+    </td>      
+    <td width="32%" class="menulines" nowrap>
+      <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA">Richiesta Bollettini</a>
+    </td>
+  </tr>
 </table>
-<%
-}
-%>
+<% } %>
+
 <br>
 <div align=left style="visibility:hidden" id="upld">
 <FORM name="comandi" enctype="multipart/form-data" method="post" onSubmit="return controllaUpload();">

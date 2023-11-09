@@ -1473,7 +1473,7 @@ if ((lSanSos.getNumAnni() != null && lSanSos.getNumAnni().compareTo(new BigDecim
 					title="Pena Pecuniaria Sostitutiva">
 				<%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%>
 			</a>
-			<font class="label">&nbsp;Multa&nbsp;</font>
+			<font class="label">&nbsp;Importo&nbsp;</font>
 			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>&nbsp;</font>&euro;&nbsp;&nbsp;&nbsp;
 <%
 		}
@@ -2438,7 +2438,7 @@ if (existPagamenti) {
 	<tr><td>&nbsp;</td></tr>
 	<tr>
 		<td class="L">
-			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActVerificaStatoPagamenti" title="Verifica Stato Pagamenti">
+			<a class="cliccabile" href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActVerificaStatoBollettino" title="Verifica Stato Pagamenti">
 				Verifica Stato Pagamenti
 			</a>
 		</td>

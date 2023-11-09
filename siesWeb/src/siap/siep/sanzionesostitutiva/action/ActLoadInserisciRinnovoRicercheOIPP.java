@@ -86,7 +86,7 @@ public class ActLoadInserisciRinnovoRicercheOIPP extends ActionSiap implements I
 			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 
 			Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-					.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
+					.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL","S");
 
 			if (listaOrdiniIngiunzione.isEmpty()) {
 				// non ho trovato ordini di ingiunzione esco con errore

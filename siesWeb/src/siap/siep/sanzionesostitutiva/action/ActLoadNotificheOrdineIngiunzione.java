@@ -47,48 +47,46 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
+		
 		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 
+		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
+		
 		// MEV_2023-33
 		IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
 		EventoModel lOrdineIngiunzione = null;
+		BigDecimal idEvento = new BigDecimal(0);
 		if (isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
-			String esitoCheck = checkEventi();
-			if (esitoCheck != null)
-				return esitoCheck;
-			// else se presente un solo OI carico direttamente la pagina?
+	    IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+	    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+	        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL","S");
+
+	    if (listaOrdiniIngiunzione.isEmpty()) {
+	      // non ho trovato ordini di ingiunzione esco con errore
+	      RedirectTo rt = new RedirectTo();
+	      rt.setPage(IWebConstants.PG_MAIN);
+	      setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+	          "Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
+	      rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
+	      setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+	      return IWebConstants.PG_MESSAGE;
+	    } else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
+	      // Carico la pagina con la scelta degli OI
+	      setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+	      setRequestAttribute("azioneChiamante", this.getClass().getName());
+
+	      return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
+      } else {
+        idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
+      }
 		} else {
-			BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
-			lOrdineIngiunzione = eventoCtrl.ExRicercaEventoByKey(idEvento);
+			idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		}
 		// MEV_2023-33 - FINE
 
-		/*
-		 * // Verifico esistenza Ordine di ingiunzione IEvento eventoCtrl =
-		 * SICOLookupRemote.getEventoRemote();
-		 * 
-		 * EventoModel lEveRicerca = new EventoModel(); lEveRicerca.setCodTipoEvento("01");
-		 * lEveRicerca.setCodTipoProvvedimento("06"); lEveRicerca.setCodMotivo("0622");
-		 * 
-		 * lEveRicerca.setFasSieIdFascicoloSiep(lFascMod.getIdFascicoloSiep());
-		 * lEveRicerca.setFlagDocumentoRegistrato("S");
-		 * 
-		 * EventoModel lOrdineIngiunzione = eventoCtrl.ExRicercaUltimoTipoEventoByIdFascicolo(lEveRicerca); if
-		 * (lOrdineIngiunzione == null || lOrdineIngiunzione.getIdEvento() == null) { RedirectTo lRedirigi =
-		 * new RedirectTo(); lRedirigi.setPage(IWebConstants.PG_MAIN);
-		 * setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Sul Procedimento N." + lFascMod.getChiaveAnno() +
-		 * "/" + lFascMod.getChiaveProgr() +
-		 * " non è presente alcun ordine di ingiunzione valido. Impossibile procedere.");
-		 * lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione&" +
-		 * ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
-		 * setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-		 * 
-		 * return IWebConstants.PG_MESSAGE; }
-		 */
 		// Recupero l'ordine di ingiunzione
-		EventoNotificaModel lEveNotMod = eventoCtrl
-				.ExRicercaEventoNotificaByKey(lOrdineIngiunzione.getIdEvento());
+		EventoNotificaModel lEveNotMod = eventoCtrl.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("ordineIngiunzione", lEveNotMod);
 
 		// Verifica per ogni destinatario se già registrate l'avvenuta notifica
@@ -169,44 +167,4 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		// valore di ritorno
 		return PG_LOAD_INSERIMENTO_NOTIFICHE_OI;
 	}
-
-	/**
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	private String checkEventi() throws F3BException {
-		String returnPage = null;
-
-		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-
-		// Recupero la lista degli eventi e i dati da visualizzare
-		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-    // 2023.09.26 - si includono nella ricerca anche i codici
-    //Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-    //    .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "");
-    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL");
-    // 2023.09.26 - FINE
-
-		if (listaOrdiniIngiunzione.isEmpty()) {
-			// non ho trovato ordini di ingiunzione esco con errore
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
-			rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			return IWebConstants.PG_MESSAGE;
-		} else if (listaOrdiniIngiunzione.size() > 0) { // n.b per test deve essere >1
-			// Carico la pagina con la scelta degli OI
-			setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
-			setRequestAttribute("azioneChiamante", this.getClass().getName());
-
-			return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
-		}
-
-		return returnPage;
-	}
-
 }

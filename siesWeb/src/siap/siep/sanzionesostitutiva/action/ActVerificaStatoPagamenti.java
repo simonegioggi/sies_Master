@@ -55,7 +55,7 @@ public class ActVerificaStatoPagamenti extends ActionSiap implements ICostantiSa
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL");
+				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL", null);
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 
 		List<String> testi = new ArrayList<>();

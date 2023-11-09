@@ -33,7 +33,7 @@ public interface IRateizzazionePP {
 			throws F3BException;
 
 	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
-			String motivo) throws F3BException;
+			String motivo, String falgValidato) throws F3BException;
 
 	// MEV_2023-33: aggiunti metodi di inserimento, modifica, ricerca
 	public BigDecimal exInserisciRideterminazionePP(EventoNotificaModel enm, String[] arrayIdRate,
@@ -46,9 +46,9 @@ public interface IRateizzazionePP {
 
 	public Vector<RateizzazionePPModel> exRicercaRateizzazioniLibereByIdFasc(BigDecimal aIdFasc)
 			throws F3BException;
-
-	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
-			String motivo, String validato) throws F3BException;
+//2023.11.09 metodo non più richiamato
+//	public Vector<EventoRateizzazionePPModel> exRicercaEventoRateizzazionePP(BigDecimal idFascicolo,
+//			String motivo, String validato) throws F3BException;
 
 	public Vector<EventoRateizzazionePPModel> exRicercaEventiRateizzazionePP(BigDecimal idFascicolo,
 			String[] motivi, boolean soloValidati) throws F3BException;
