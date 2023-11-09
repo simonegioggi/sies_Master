@@ -76,7 +76,8 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		Vector<BollettinoPagopaModel> bpms = ibp.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+		Vector<BollettinoPagopaModel> bpms = ibp
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
 		Iterator<BollettinoPagopaModel> iter = bpms.iterator();
 
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
@@ -97,13 +98,14 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
 					// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
 					// dimensionePagina, int numeroPagina
+					String cf = Utils.isPresent(bpm.getCodiceFiscale()) ? bpm.getCodiceFiscale() : "ANONIMO";
 					siesLogger.debug("Parametri di passaggio: codiceCRS = " + "3" + bpm.getIuv()
-							+ "; tipologia = 'PENPE'; " + "codiceFiscale = " + bpm.getCodiceFiscale()
-							+ "; codiceDistretto = " + bpm.getCodiceDistretto()
+							+ "; tipologia = 'PENPE'; " + "codiceFiscale = " + cf + "; codiceDistretto = "
+							+ bpm.getCodiceDistretto()
 							+ "; causale, stato, dataRichiestaDa, dataRichiestaA = NULL"
 							+ "; dimensionePagina, numeroPagina = 0;");
-					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", bpm.getCodiceFiscale(),
-							bpm.getCodiceDistretto(), null, null, null, null, 0, 0);
+					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", cf, bpm.getCodiceDistretto(), null,
+							null, null, null, 0, 0);
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
 					siesLogger.error(ioe.getMessage());
@@ -127,7 +129,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					siesLogger.error(e.getMessage());
 					throw new F3BException(getClass().getName() + ".processRequest: " + e);
 				}
-				
+
 				// info per il log
 				if (rr != null && rr.getCount() > 0) {
 					if (text.contains("!"))
@@ -197,9 +199,9 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 		// STATO_PAGAMENTO PA PAGATO
 		// STATO_PAGAMENTO PP PAGATO PARZIALMENTE
 		String sp = "DISPONIBILE".equals(srp.getStato()) ? "PA" : "PN";
-		bpm.setStatoPagamento(sp);		
-		
-		// 02.05.2023 - Aggiorno i dati del pagamento Importo e Data solo se lo stato è PAGATO 
+		bpm.setStatoPagamento(sp);
+
+		// 02.05.2023 - Aggiorno i dati del pagamento Importo e Data solo se lo stato è PAGATO
 		if ("DISPONIBILE".equals(srp.getStato())) {
 			if (Utils.isPresent(dataRicevuta))
 				bpm.setDataAvvPagamento(DateUtils.getDate(dataRicevuta, "dd/MM/yyyy"));
@@ -209,7 +211,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 			bpm.setImportoPagato(importoPagato);
 		}
 		// 02.05.2023 - FINE
-		
+
 		ibp.ExModificaBollettinoPagopa(bpm);
 	}
 

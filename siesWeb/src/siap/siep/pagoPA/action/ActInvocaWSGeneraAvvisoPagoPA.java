@@ -152,7 +152,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		Iterator<BollettinoPagopaModel> iter = bpms.iterator();
 		while (iter.hasNext()) {
 			BollettinoPagopaModel bpm = iter.next();
-			if (rateSuccessivePrima) {
+			if (rateSuccessivePrima || Utils.isPresent(bpm.getIuv())) {
 				bpm = iter.next();
 				rateSuccessivePrima = false;
 			}
