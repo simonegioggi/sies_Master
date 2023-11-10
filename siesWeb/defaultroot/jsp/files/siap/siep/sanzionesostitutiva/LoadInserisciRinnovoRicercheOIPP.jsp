@@ -65,7 +65,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         desktop = window.open("/jsp/Main.jsp?<%=IWebConstants.ACTION_FIELD%>=siap.sico.decodifiche.action.ActLoadRicercaComune&formname="+a_formname+"&fieldname="+a_fieldname, "Ricerca_Comune","toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=500");
       }    
 
-      function radio()
+      function radio(tipo)
       {
         var nodeFor = document.getElementById('divForz');
         var nodeDel = document.getElementById('divdelegato');
@@ -86,17 +86,22 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
         var lverbale = <%=verbale.getIdVerbale()%>;
 
         if(lverbale == null && verbaleVVR=='0') {
-            if (window.confirm("Non Esiste Nessun Verbale Vane Ricerche Associato all'Ordine di Ingiunzione.\n\t Vuoi andare al Verbale Vane Ricerche ?"))
-            {
-               var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
-               window.location.href=str;
-               return;
-            }
-            else {
-            	document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked=true;
-            	//document.LoadInserisciRinnovoRicercheOIPP.Notifica[0].disabled=true;
-              verbaleVVR='1';
-            }
+        	  if (tipo==2) {
+	            if (window.confirm("Non Esiste Nessun Verbale Vane Ricerche Associato all'Ordine di Ingiunzione.\n\t Vuoi andare al Verbale Vane Ricerche ?"))
+	            {
+                 var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&idEventoOIPP="+<%=ordineIngiunzione.getEvento().getIdEvento()%>;
+	               window.location.href=str;
+	               return;
+	            }
+	            else {
+	            	document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked=true;
+	            	//document.LoadInserisciRinnovoRicercheOIPP.Notifica[0].disabled=true;
+	              verbaleVVR='1';
+	            }
+        	  }
+        	  else {
+        		  document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].checked = true;
+        	  }
         }
         
         if(document.LoadInserisciRinnovoRicercheOIPP.Notifica[0].checked)
@@ -109,9 +114,10 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
           nodeFor.style.display = "block";
           
           if(lverbale == null) {
+        	  if (tipo==2) {
               if (window.confirm("Non Esiste Nessun Verbale Vane Ricerche Associato all'Ordine di Ingiunzione. Non è possibile registrare 'Omessa Notifica Forza di Polizia'\n\t Vuoi andare al Verbale Vane Ricerche ?"))
-              {
-                 var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&FlagOmesseOIPP=S";
+              { 
+                 var str = "/jsp/Main.jsp?Action=siap.siep.verbale.action.ActLoadInserisciVerbaleVaneRicerche&idEventoOIPP="+<%=ordineIngiunzione.getEvento().getIdEvento()%>;
                  window.location.href=str;
                  return;
               }
@@ -121,6 +127,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
                 //document.LoadInserisciRinnovoRicercheOIPP.Notifica[1].fireEvent("onchange");
                 return;
               }
+        	  }
           }
                     
           if(document.LoadInserisciRinnovoRicercheOIPP.Rinnovo[0].checked)
@@ -392,7 +399,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
     </script>
   </head>
   
-<body class="corpo" onLoad="radio();gestisciCampi();">
+<body class="corpo" onLoad="radio(1);gestisciCampi();">
   <table>
     <tr>
       <td class="LBG">
@@ -533,8 +540,8 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
 <div id="divInserimento">
   <table  width=100%>
     <tr>
-      <td class="c">Omessa Notifica Forza di Polizia &nbsp;<input type="radio" name="Notifica" value="FP" checked  onClick="radio();">
-                    Omessa Notifica Ufficiali Giudiziari  &nbsp; <input type="radio" name="Notifica" value="UG"  onClick="radio();">
+      <td class="c">Omessa Notifica Forza di Polizia &nbsp;<input type="radio" name="Notifica" value="FP" checked  onClick="radio(2);">
+                    Omessa Notifica Ufficiali Giudiziari  &nbsp; <input type="radio" name="Notifica" value="UG"  onClick="radio(2);">
       </td>
     </tr>
   </table>
@@ -574,12 +581,12 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       <td colspan="2">
         <table width="100%">
           <tr>
-            <td class="l" >Rinnovo stessa autorità in data &nbsp;<input type="radio" name="Rinnovo" value="RS" checked  onClick="radio();">
+            <td class="l" >Rinnovo stessa autorità in data &nbsp;<input type="radio" name="Rinnovo" value="RS" checked  onClick="radio(2);">
               <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
               <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
               <input value="" type="text" size="4" maxlength="4" name="<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
             </td>
-            <td class="l">Rinnovo altra autorità in data &nbsp;<input type="radio" name="Rinnovo" value="RA" checked  onClick="radio();">
+            <td class="l">Rinnovo altra autorità in data &nbsp;<input type="radio" name="Rinnovo" value="RA" checked  onClick="radio(2);">
               <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO_RA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
               <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO_RA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
               <input value="" type="text" size="4" maxlength="4" name="<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
@@ -667,12 +674,12 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
   
   <table width="100%">
     <tr>
-      <td class="l" >Rinnovo notifica in data &nbsp;<input type="radio" name="Ufficiali" value="RN" checked  onClick="radio();">
+      <td class="l" >Rinnovo notifica in data &nbsp;<input type="radio" name="Ufficiali" value="RN" checked  onClick="radio(2);">
         <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO_RN%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
         <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO_RN%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
         <input value="" type="text" size="4" maxlength="4" name="<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_RN%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">
       </td>
-      <td class="l">Attivazione ricerca in data &nbsp;<input type="radio" name="Ufficiali" value="AR" checked  onClick="radio();">
+      <td class="l">Attivazione ricerca in data &nbsp;<input type="radio" name="Ufficiali" value="AR" checked  onClick="radio(2);">
         <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_GIORNO_DATA_RINNOVO_AR%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
         <input value="" type="text" size="2" maxlength="2" name="<%= ICostantiRinnovo.CAMPO_MESE_DATA_RINNOVO_AR%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillDM(value)"> -
         <input value="" type="text" size="4" maxlength="4" name="<%= ICostantiRinnovo.CAMPO_ANNO_DATA_RINNOVO_AR%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)">

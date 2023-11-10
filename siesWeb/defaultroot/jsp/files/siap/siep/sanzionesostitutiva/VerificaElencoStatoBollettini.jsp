@@ -132,24 +132,19 @@ if (elencoStatoPagamenti.size() == 0) {
 %>
       	<td class="<%=coloreClasse%>"><%=StringUtils.toStringJSP(bpm.getDescrStatoPagamento())%></td>
       	<td class="c">
-      	<%if ("S".equals(evento.getFlagDocumentoRegistrato())) { %>
-      		<input type="checkbox" name="idBollettinoPagopa" value="<%=StringUtils.toStringJSP(bpm.getIdBollettinoPagopa(), "")%>">
-      	<% } else { %>
-      	&nbsp;
-      	<% }  %>
+          <input type="checkbox" name="idBollettinoPagopa" value="<%=StringUtils.toStringJSP(bpm.getIdBollettinoPagopa(), "")%>">
       	</td>
 	</tr>
 <%
 	} // end while su iterator sugli eventi
 %>
 
-<% if ("S".equals(evento.getFlagDocumentoRegistrato())) { %>
 	<tr>
 		<td class="lNoBord">
        		<br><INPUT class="bottone" type="submit" name="I" value="Inoltra">
        	</td>
    	</tr>
-<% } %>
+
    	
 <%
 } // end else

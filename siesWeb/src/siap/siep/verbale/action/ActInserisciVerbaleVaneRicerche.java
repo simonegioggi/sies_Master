@@ -103,6 +103,13 @@ public String processRequest() throws F3BException
 		if(!this.isRequestParameterNullObj("FlagOmesse"))
 			setRequestAttribute("FlagOmesse", this.getRequestStringParameter("FlagOmesse"));      
       
+		
+    // MEV_2023-33 se proviene dalla maschera di omesse notifiche
+    if(!this.isRequestParameterNullObj("idEventoOIPP")) {
+      setRequestAttribute("idEventoOIPP", this.getRequestStringParameter("idEventoOIPP")); 
+    }
+    // MEV_2023-33 FINE
+		
       
 		  //Prepara la pagina di destinazione
 		 String lPage = "";

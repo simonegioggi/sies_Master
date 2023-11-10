@@ -1,13 +1,13 @@
 package siap.siep.verbale.action;
 
-import siap.sico.decodifiche.controller.DecodificheManager;
-import siap.sico.web.ActionSiap;
-import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
-import siap.siep.fascicolo.model.FascicoloSiepModel;
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
+import siap.siep.fascicolo.model.FascicoloSiepModel;
 
 /**
  * <p>Title: ActLoadInserisciVerbale</p>
@@ -68,7 +68,11 @@ public class ActLoadInserisciVerbaleVaneRicerche extends ActionSiap implements I
 		if(!this.isRequestParameterNullObj("FlagOmesse"))
 			setRequestAttribute("FlagOmesse", this.getRequestStringParameter("FlagOmesse"));			
 		
-		
+		// MEV_2023-33 se proviene dalla maschera di omesse notifiche
+    if(!this.isRequestParameterNullObj("idEventoOIPP")) {
+      setRequestAttribute("idEventoOIPP", this.getRequestStringParameter("idEventoOIPP")); 
+	  }
+    // MEV_2023-33 FINE
 		
 		/*// ho inserito il controllo su segnalazione di Pina Marchese se era stato notificato
 		 * il' OE con sospensione all'avvocato l'ho tolto su indicazione di Nunzia forse va
