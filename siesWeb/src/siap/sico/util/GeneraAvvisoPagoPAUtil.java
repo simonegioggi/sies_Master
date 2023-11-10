@@ -140,8 +140,9 @@ public class GeneraAvvisoPagoPAUtil {
 		AnagraficaSoggetto as = new AnagraficaSoggetto();
 		as.setCap(null);
 		as.setCivico(null);
-		// C.F. or P.I. (OBBLIGATORIO)
-		as.setCodiceIdentificativoUnivoco(sm.getCodFiscale());
+		// C.F. or P.I. (NON OBBLIGATORIO --> se nullo passo "ANONIMO")
+		String cf = Utils.isPresent(sm.getCodFiscale()) ? sm.getCodFiscale() : "ANONIMO";
+		as.setCodiceIdentificativoUnivoco(cf);
 		as.setEmail(null);
 		as.setIndirizzo(null);
 		as.setLocalita(null);
@@ -178,7 +179,8 @@ public class GeneraAvvisoPagoPAUtil {
 		bpm.setRatIdRateizzazionePP(rata.getIdRateizzazionePP());
 		bpm.setStatoPagamento(statoPagamento);
 		bpm.setTipoRateizzazione(rata.getTipoRateizzazione());
-		// MEV_2023-33: metto sempre importo rata poichè si può inserire un importo diverso dal totale da pagare
+		// MEV_2023-33: metto sempre importo rata poichè si può inserire un importo diverso dal totale da
+		// pagare
 		// if ("U".equals(rata.getTipoRateizzazione()))
 		// bpm.setImportoRata(rata.getImportoDaPagare());
 		// else

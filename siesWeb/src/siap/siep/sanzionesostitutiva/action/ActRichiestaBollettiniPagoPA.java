@@ -9,7 +9,6 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
-import f3b.util.DateUtils;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
@@ -74,7 +73,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
-				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL","S");
+				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL", "S");
 		// imposto nella request
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
 
@@ -150,16 +149,8 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 			}
 			if (contaIUV == 1)
 				isSoloPrimaRata = true;
-			BollettinoPagopaModel primaRata = elencoStatoPagamenti.get(0);
-			BollettinoPagopaModel rataSuccessiva = elencoStatoPagamenti.get(1);
-			if (!Utils.isNullObj(primaRata.getDataGenerazioneBollettino())
-					&& !Utils.isNullObj(rataSuccessiva.getDataGenerazioneBollettino())
-					&& !DateUtils.isEqualsLocalDateTime(primaRata.getDataGenerazioneBollettino(),
-							rataSuccessiva.getDataGenerazioneBollettino())) {
-				isSoloPrimaRata = true;
+			else if (contaIUV > 1)
 				areRateGiaGenerate = true;
-			} else if (contaIUV != 1)
-				isSoloPrimaRata = false;
 		}
 		// imposto l'attributo nella request
 		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);

@@ -61,20 +61,22 @@ function tornaIndietro(action) {
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
 <%
 // MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
-if (isRateale) {
-	if (isSoloPrimaRata) {
-%>
-    		<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria Rimanenti Rate</font>
-<%
-	} else {
+if (areRateGiaGenerate || !isRateale) {
 %>
 			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
 <%
-	}
 } else {
+	if (isRateale) {
+		if (isSoloPrimaRata) {
+%>
+    		<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria Rimanenti Rate</font>
+<%
+		} else {
 %>
 			<font class="campo">Richiesta a PagoPA Generazione Primo Bollettino Pagamento Pena Pecuniaria</font>
 <%
+		}
+	}
 }
 %>
       	</td>

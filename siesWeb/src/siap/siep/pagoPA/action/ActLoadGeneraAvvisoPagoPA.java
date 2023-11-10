@@ -128,15 +128,6 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 			}
 			if (contaIUV == 1)
 				isSoloPrimaRata = true;
-			BollettinoPagopaModel primaRata = elencoStatoPagamenti.get(0);
-			BollettinoPagopaModel rataSuccessiva = elencoStatoPagamenti.get(1);
-			if (!Utils.isNullObj(primaRata.getDataGenerazioneBollettino())
-					&& !Utils.isNullObj(rataSuccessiva.getDataGenerazioneBollettino())
-					&& !DateUtils.isEqualsLocalDateTime(primaRata.getDataGenerazioneBollettino(),
-							rataSuccessiva.getDataGenerazioneBollettino()))
-				isSoloPrimaRata = true;
-			else if (contaIUV != 1)
-				isSoloPrimaRata = false;
 		}
 		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
 

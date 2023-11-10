@@ -98,6 +98,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
 					// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
 					// dimensionePagina, int numeroPagina
+					// C.F. or P.I. (NON OBBLIGATORIO --> se nullo passo "ANONIMO")
 					String cf = Utils.isPresent(bpm.getCodiceFiscale()) ? bpm.getCodiceFiscale() : "ANONIMO";
 					siesLogger.debug("Parametri di passaggio: codiceCRS = " + "3" + bpm.getIuv()
 							+ "; tipologia = 'PENPE'; " + "codiceFiscale = " + cf + "; codiceDistretto = "

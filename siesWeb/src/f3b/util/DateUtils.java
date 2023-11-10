@@ -2,16 +2,13 @@ package f3b.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
- * Title: DateUtils 
- * Description: Classe di utilità per gestione delle date
+ * Title: DateUtils Description: Classe di utilità per gestione delle date
  */
 public class DateUtils {
 
@@ -953,20 +950,20 @@ public class DateUtils {
 	}
 
 	// MEV_2023-33: aggiunto metodo di controllo
-	public static boolean isEqualsLocalDateTime(Date dataPrimaRata, Date dataRimanentiRate)
-			throws ParseException {
-
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-		LocalDateTime date1 = LocalDateTime.parse(getDateToString(dataPrimaRata, "yyyy-MM-dd HH:mm:ss"), dtf);
-		LocalDateTime date2 = LocalDateTime.parse(getDateToString(dataRimanentiRate, "yyyy-MM-dd HH:mm:ss"),
-				dtf);
-
-		if (date1.isEqual(date2))
-			return true;
-
-		return false;
-	}
+	// public static boolean isEqualsLocalDateTime(Date dataPrimaRata, Date dataRimanentiRate)
+	// throws ParseException {
+	//
+	// DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	//
+	// LocalDateTime date1 = LocalDateTime.parse(getDateToString(dataPrimaRata, "yyyy-MM-dd HH:mm:ss"), dtf);
+	// LocalDateTime date2 = LocalDateTime.parse(getDateToString(dataRimanentiRate, "yyyy-MM-dd HH:mm:ss"),
+	// dtf);
+	//
+	// if (date1.isEqual(date2))
+	// return true;
+	//
+	// return false;
+	// }
 
 	public static String getTempoEsecuzione(Date aDataDal, Date aDataAl) {
 		String lTempoEsecuzione = "";

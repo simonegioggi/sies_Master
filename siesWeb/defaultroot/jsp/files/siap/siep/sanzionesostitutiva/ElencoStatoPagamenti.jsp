@@ -22,7 +22,7 @@
 <jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
 <%-- MEV_2023-33: aggiunti useBean --%>
 <jsp:useBean id="dataAvvenutaNotifica" 	scope="request" class="java.lang.String"/>
-<jsp:useBean id="isSoloPrimaRata"		scope="request" class="java.lang.Boolean"/>
+<%-- <jsp:useBean id="isSoloPrimaRata"		scope="request" class="java.lang.Boolean"/> --%>
 
 <html>
 <head>
@@ -129,11 +129,11 @@ if (elencoStatoPagamenti.size() == 0) {
 	Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
 	while (itx.hasNext()) {
 		BollettinoPagopaModel bpm = (BollettinoPagopaModel) itx.next();
-		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
-		if ("U".equals(bpm.getTipoRateizzazione())
-				|| "R".equals(bpm.getTipoRateizzazione())
-				&& (isSoloPrimaRata && bpm.getProgRata() > 1)
-				|| !isSoloPrimaRata) {
+// 		// MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
+// 		if ("U".equals(bpm.getTipoRateizzazione())
+// 				|| "R".equals(bpm.getTipoRateizzazione())
+// 				&& (isSoloPrimaRata && bpm.getProgRata() > 1)
+// 				|| !isSoloPrimaRata) {
 %>
 	<tr>
 		<td class="c"><%=StringUtils.toStringJSP(bpm.getProgRata())%></td>
@@ -183,7 +183,7 @@ if (elencoStatoPagamenti.size() == 0) {
       	</td>
 	</tr>
 <%
-		}
+// 		}
 	} // end while su iterator sugli eventi
 } // end else
 %>
