@@ -131,4 +131,10 @@ public interface ICostantiScadenzario {
 			+ "files/siap/siep/scadenzario/LoadAggiornaScadenzaMisuraSicurezza.jsp";
 	// ***** FINE INTERVENTO MEV_39 *****//
 
+	// MEV_2023-33
+	 public static final String PG_LOAD_RICERCA_SCADENZARI_PP = IWebConstants.ROOT_DIR
+       + "/files/siap/siep/scadenzario/LoadRicercaScadenzarioPP.jsp";
+   public static final String PG_RICERCA_SCADENZARI_PP = IWebConstants.ROOT_DIR
+       + "/files/siap/siep/scadenzario/RicercaScadenzarioPP.jsp";
+	 // MEV_2023-33 - FINE
 }

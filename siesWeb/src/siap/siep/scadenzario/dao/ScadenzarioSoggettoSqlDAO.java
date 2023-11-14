@@ -12,6 +12,7 @@ import f3b.web.IWebConstants;
 import siap.sico.soggetto.model.SoggettoModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misurasicurezza.model.FascMsToFascSiepModel;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.scadenzario.model.ScadenzarioModel;
 
 /**
@@ -857,4 +858,175 @@ public class ScadenzarioSoggettoSqlDAO extends SqlDAO {
 	}
 	// ***** FINE INTERVENTO MEV_39 *****//
 
+	// MEV_2023-33
+	private String getSqlQueryScadenzarioPP () {
+	  String sqlQuery = "";
+	  sqlQuery  += "SELECT SCA.ID_SCADENZARIO_SIEP, SCA.EVE_ID_EVENTO, SCA.NOT_ID_NOTIFICA ";
+	  sqlQuery  += "     , SOG.ID_SOGGETTO, SOG.NOME, SOG.COGNOME, TIPCOM.DESCRIZIONE COMUNE_NASCITA, SOG.DATA_NASCITA ";
+	  sqlQuery  += "     , FAS.ID_FASCICOLO_SIEP, FAS.CHIAVE_ANNO, FAS.CHIAVE_PROGR ";
+	  sqlQuery  += "     , SCA.DATA_INIZIO_SCADENZA, SCA.DATA_FINE_SCADENZA ";
+	  sqlQuery  += "     , BOL.IMPORTO_RATA, BOL.PROG_RATA, BOL.NUMERO_RATE, BOL.DATA_SCADENZA, BOL.STATO_PAGAMENTO, BOL.IMPORTO_PAGATO ";
+	  sqlQuery  += "     , BOL.RAT_ID_RATEIZZAZIONE_PP, BOL.DATA_AVV_PAGAMENTO, BOL.TIPO_RATEIZZAZIONE ";
+	  sqlQuery  += "     , TIPSCA.RV_MEANING, SCA.COD_STATO_NOTIFICA, SCA.FLAG_VISTO ";
+	  sqlQuery  += "     , (BOL.DATA_SCADENZA-TO_DATE(TO_CHAR(SYSDATE,'DD/MM/YYYY'),'DD/MM/YYYY')) RESIDUO  ";
+	  sqlQuery  += "  FROM SOGGETTO SOG, SCADENZARIO_SIEP SCA, FASCICOLO_SIEP FAS, BOLLETTINO_PAGOPA BOL ";
+	  sqlQuery  += "     , CG_REF_CODES TIPSCA, COMUNE TIPCOM ";
+	  sqlQuery  += "     , RATEIZZAZIONE_PP RAT  ";
+	  sqlQuery  += "     , EVENTO EVE  ";
+	  sqlQuery  += " WHERE SCA.FAS_SIE_ID_FASCICOLO_SIEP = FAS.ID_FASCICOLO_SIEP  ";
+	  sqlQuery  += "   AND FAS.SOG_ID_SOGGETTO = SOG.ID_SOGGETTO  ";
+	  sqlQuery  += "   AND TIPSCA.RV_DOMAIN = 'TIPO_SCADENZARIO'  ";
+	  sqlQuery  += "   AND TIPSCA.RV_LOW_VALUE = SCA.COD_TIPO_SCADENZARIO  ";
+	  sqlQuery  += "   AND TIPCOM.COD_COMUNE = SOG.COD_COMUNE_NASCITA  ";
+	  sqlQuery  += "   AND BOL.RAT_ID_RATEIZZAZIONE_PP = RAT.ID_RATEIZZAZIONE_PP ";
+	  sqlQuery  += "   AND RAT.EVE_ID_EVENTO = SCA.EVE_ID_EVENTO ";	  
+	  sqlQuery  += "   AND BOL.STATO_PAGAMENTO = 'PN' "; //solo i non pagati
+	  // 
+	  sqlQuery  += "   AND BOL.IUV IS NOT null ";
+	  sqlQuery  += "   AND BOL.DATA_SCADENZA IS NOT null ";
+	  sqlQuery  += "   AND RAT.EVE_ID_EVENTO = EVE.ID_EVENTO ";
+	  sqlQuery  += "   AND EVE.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+	  //sqlQuery  += "   AND BOL.PROG_RATA=1 ";
+	  
+	  
+	  return sqlQuery;
+	}
+	
+	
+	public void getCountScadenzariPP(ScadenzarioModel aModel) throws DAOException {
+    String lStatement = "SELECT COUNT(*) HowManyRecords ";
+    lStatement += " from ("+getSqlQueryScadenzarioPP();
+    lStatement += " " + setCondizionePP(aModel);
+    lStatement += ")";
+
+    setStatement(lStatement);
+	}
+	 
+  public void ricercaScadenzarioPagedPPCompleta(ScadenzarioModel aModel, int aPage) throws DAOException {
+    String lSql = new String("");
+    lSql = getSqlQueryScadenzarioPP();
+
+    String lPaginedStatement = new String("");
+
+    lSql += " " + setCondizionePP(aModel);
+    
+    lSql += " order by BOL.DATA_SCADENZA ASC ";
+    // lSql += " " + setOrderByResiduo();
+
+    lPaginedStatement = "SELECT * FROM (SELECT INNER.* , Rownum rn FROM (" + lSql
+        + "  ) INNER ) WHERE rn between  " + ((aPage - 1) * IWebConstants.RESULT_PER_PAGE + 1)
+        + " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
+
+    setStatement(lPaginedStatement);
+  }
+  
+  public GenericModel getModelScadePP() throws DAOException {
+
+    ScadenzarioModel aModel = new ScadenzarioModel();
+    FascicoloSiepModel lFascicolo = new FascicoloSiepModel();
+    SoggettoModel lSoggMod = new SoggettoModel();
+    BollettinoPagopaModel lBollettino = new BollettinoPagopaModel();
+
+    lSoggMod.setIdSoggetto(getBigDecimal("ID_SOGGETTO"));
+    lSoggMod.setNome(getString("NOME"));
+    lSoggMod.setCognome(getString("COGNOME"));
+    lSoggMod.setDescrComuneNascita(getString("COMUNE_NASCITA"));
+    lSoggMod.setDataNascita(getDate("DATA_NASCITA"));
+
+    lFascicolo.setIdFascicoloSiep(getBigDecimal("ID_FASCICOLO_SIEP"));
+    lFascicolo.setChiaveAnno(getBigDecimal("CHIAVE_ANNO"));
+    lFascicolo.setChiaveProgr(getBigDecimal("CHIAVE_PROGR"));
+    lFascicolo.setSoggetto(lSoggMod);
+    lFascicolo.setSogIdSoggetto(lSoggMod.getIdSoggetto());
+    
+    lBollettino.setProgRata(getInt("PROG_RATA"));
+    lBollettino.setNumeroRate(getInt("NUMERO_RATE"));
+    lBollettino.setImportoRata(getBigDecimal("IMPORTO_RATA"));
+    lBollettino.setImportoPagato(getBigDecimal("IMPORTO_PAGATO"));
+    lBollettino.setDataScadenza(getDate("DATA_SCADENZA"));
+    lBollettino.setStatoPagamento(getString("STATO_PAGAMENTO"));
+    lBollettino.setTipoRateizzazione(getString("TIPO_RATEIZZAZIONE"));
+
+    aModel.setIdScadenzario(getBigDecimal("ID_SCADENZARIO_SIEP"));
+    aModel.setDataInizioScadenza(getDate("DATA_INIZIO_SCADENZA"));
+    aModel.setDataFineScadenza(getDate("DATA_FINE_SCADENZA"));
+    aModel.setTipoRic(getString("RV_MEANING"));
+    aModel.setGiorniResidui(getBigDecimal("RESIDUO"));
+    aModel.setFascicoloModel(lFascicolo);
+    aModel.setFasSieIdFascicoloSiep(lFascicolo.getIdFascicoloSiep());
+    aModel.setCodStatoNotifica(getString("COD_STATO_NOTIFICA"));
+    aModel.setFlagVisto(getString("FLAG_VISTO"));
+
+    aModel.setBollettinoModel(lBollettino);
+    
+    return aModel;
+  }
+  
+  private String setCondizionePP (ScadenzarioModel aModel) {
+    String lCondizioni = new String();
+
+    String ldata1 = new String();
+    String ldata2 = new String();
+
+    if (aModel.getDataInizioScadenza() != null)
+      ldata1 = DateUtils.getDateToString(aModel.getDataInizioScadenza(), "dd/MM/yyyy");
+
+    if (aModel.getDataFineScadenza() != null)
+      ldata2 = DateUtils.getDateToString(aModel.getDataFineScadenza(), "dd/MM/yyyy");
+
+    if (aModel.getCodTipoScadenzario() != null) {
+      lCondizioni += " AND SCA.COD_TIPO_SCADENZARIO = '" + aModel.getCodTipoScadenzario() + "'";
+    }
+
+    if (aModel.getFasSieIdFascicoloSiep() != null
+        && aModel.getFasSieIdFascicoloSiep().compareTo(new BigDecimal(0)) != 0) {
+      lCondizioni += " AND SCA.FAS_SIE_ID_FASCICOLO_SIEP = " + aModel.getFasSieIdFascicoloSiep();
+    }
+
+    if (aModel.getTipoRic().equals("sette")) {
+        lCondizioni += " AND BOL.DATA_SCADENZA BETWEEN TO_DATE('" + ldata1
+            + "','DD/MM/YYYY') AND TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+    }
+    else if (aModel.getTipoRic().equals("scaduto")) {
+        lCondizioni += " AND BOL.DATA_SCADENZA < TO_DATE('" + ldata1 + "','DD/MM/YYYY')";
+    }
+    else if (aModel.getTipoRic().equals("oggi")) {
+        lCondizioni += " AND BOL.DATA_SCADENZA = TO_DATE('" + ldata2 + "','DD/MM/YYYY')";
+    }
+
+    // PER UFFICIO
+    if (aModel.getCodUfficioInserimento() != null && !aModel.getCodUfficioInserimento().equals("")) {
+      lCondizioni += " AND SCA.COD_UFFICIO_INSERIMENTO = '" + aModel.getCodUfficioInserimento() + "'";
+    }
+
+    // Cerca i fascicoli a partire da una coppia Progressivo/Anno
+    if (   aModel.getChiaveAnnoIniziale() != null  && aModel.getChiaveAnnoIniziale().intValue() >= 0
+        && aModel.getChiaveProgrIniziale() != null && aModel.getChiaveProgrIniziale().intValue() >= 0) 
+    {
+      lCondizioni += " AND (   (FAS.CHIAVE_ANNO > " + aModel.getChiaveAnnoIniziale() + ")";
+      lCondizioni += "      OR (    FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoIniziale();
+      lCondizioni += "          AND FAS.CHIAVE_PROGR >= " + aModel.getChiaveProgrIniziale() + "))";
+    }
+
+    // Cerca i fascicoli fino ad una coppia Progressivo/Anno
+    if (   aModel.getChiaveAnnoFinale() != null  && aModel.getChiaveAnnoFinale().intValue() >= 0
+        && aModel.getChiaveProgrFinale() != null && aModel.getChiaveProgrFinale().intValue() >= 0) 
+    {
+      if (   (aModel.getChiaveAnnoIniziale() == null)
+          || (aModel.getChiaveAnnoIniziale().intValue() <= 0)
+          && (aModel.getChiaveProgrIniziale() == null)
+          || (aModel.getChiaveProgrIniziale().intValue() <= 0)) 
+      {
+        lCondizioni += " AND (   (FAS.CHIAVE_ANNO > " + aModel.getChiaveAnnoFinale() + ")";
+        lCondizioni += "      OR (    FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale();
+        lCondizioni += "          AND FAS.CHIAVE_PROGR >= 1))";
+      }
+
+      lCondizioni += " AND (   (FAS.CHIAVE_ANNO < " + aModel.getChiaveAnnoFinale() + ")";
+      lCondizioni += "      OR (    FAS.CHIAVE_ANNO = " + aModel.getChiaveAnnoFinale();
+      lCondizioni += "          AND FAS.CHIAVE_PROGR <= " + aModel.getChiaveProgrFinale() + "))";
+    }
+
+    return lCondizioni;
+  }  
 }
