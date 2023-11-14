@@ -55,7 +55,6 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		
 		// MEV_2023-33
 		IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
-		EventoModel lOrdineIngiunzione = null;
 		BigDecimal idEvento = new BigDecimal(0);
 		if (isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
 	    IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
@@ -139,7 +138,7 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		if (contaAvvenute > 0 && isRequestParameterNullEmptyObj("modifica"))
 			return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 					+ "=siap.siep.sanzionesostitutiva.action.ActDettaglioNotificaOrdineIngiunzione" + "&"
-					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lOrdineIngiunzione.getIdEvento();
+					+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + lEveNotMod.getEvento().getIdEvento();
 
 		// 2023/05/02 - a seguito collaudo si richiede il blocco della registrazione delle notifiche in caso
 		// in cui
