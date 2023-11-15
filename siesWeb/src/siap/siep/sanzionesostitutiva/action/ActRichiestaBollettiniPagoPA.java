@@ -140,6 +140,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		}
 		setRequestAttribute("isRateale", !isUnico);
 		if (!elencoStatoPagamenti.isEmpty() && !isUnico && elencoStatoPagamenti.size() > 1) {
+			// PAGAMENTO RATEALE
 			Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
 			int contaIUV = 0;
 			while (itx.hasNext()) {
@@ -151,6 +152,11 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 				isSoloPrimaRata = true;
 			else if (contaIUV > 1)
 				areRateGiaGenerate = true;
+		} else if (!elencoStatoPagamenti.isEmpty() && isUnico) {
+			// PAGAMENTO UNICO
+			BollettinoPagopaModel bpm = elencoStatoPagamenti.firstElement();
+			if (Utils.isPresent(bpm.getIuv()))
+				areRateGiaGenerate = true;
 		}
 		// imposto l'attributo nella request
 		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
@@ -159,6 +165,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
+		// pagina di ritorno
 		return PG_ELENCO_RICHIESTA_BOLLETTINI;
 	}
 

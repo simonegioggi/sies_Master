@@ -15,7 +15,6 @@ import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
-import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
@@ -29,12 +28,11 @@ import siap.siep.rateizzazionepp.model.EventoRateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * MEV_2023-13: aggiunta classe
- *
  * Classe per la load della form di inserimento e mnodifica delle notifiche
  *
  *
- * @author sgioggi
+ * @author 	sgioggi
+ * @since 	MEV_2023-13
  * @version 1.0
  */
 public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
@@ -47,38 +45,37 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
-		
 		if (isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		
+
 		// MEV_2023-33
 		IEvento eventoCtrl = SICOLookupRemote.getEventoRemote();
 		BigDecimal idEvento = new BigDecimal(0);
 		if (isRequestParameterNullObj(ICostantiEvento.CAMPO_ID_EVENTO)) {
-	    IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
-	    Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-	        .exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL","S");
+			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
+			Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
+					.exRicercaEventoRateizzazionePP(lFascMod.getIdFascicoloSiep(), "ALL", "S");
 
-	    if (listaOrdiniIngiunzione.isEmpty()) {
-	      // non ho trovato ordini di ingiunzione esco con errore
-	      RedirectTo rt = new RedirectTo();
-	      rt.setPage(IWebConstants.PG_MAIN);
-	      setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-	          "Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
-	      rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
-	      setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-	      return IWebConstants.PG_MESSAGE;
-	    } else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
-	      // Carico la pagina con la scelta degli OI
-	      setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
-	      setRequestAttribute("azioneChiamante", this.getClass().getName());
+			if (listaOrdiniIngiunzione.isEmpty()) {
+				// non ho trovato ordini di ingiunzione esco con errore
+				RedirectTo rt = new RedirectTo();
+				rt.setPage(IWebConstants.PG_MAIN);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+						"Attenzione! Non sono presenti ordini di ingiunzione per questo fascicolo.");
+				rt.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione");
+				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+				return IWebConstants.PG_MESSAGE;
+			} else if (listaOrdiniIngiunzione.size() > 1) { // n.b per test deve essere >1
+				// Carico la pagina con la scelta degli OI
+				setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+				setRequestAttribute("azioneChiamante", this.getClass().getName());
 
-	      return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
-      } else {
-        idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
-      }
+				return PG_LOAD_SELEZIONA_ORDINE_INGIUNZIONE;
+			} else {
+				idEvento = listaOrdiniIngiunzione.elementAt(0).getEvento().getIdEvento();
+			}
 		} else {
 			idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
 		}
@@ -166,4 +163,5 @@ public class ActLoadNotificheOrdineIngiunzione extends ActionSiap implements ICo
 		// valore di ritorno
 		return PG_LOAD_INSERIMENTO_NOTIFICHE_OI;
 	}
+
 }
