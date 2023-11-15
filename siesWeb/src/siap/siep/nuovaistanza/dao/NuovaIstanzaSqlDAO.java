@@ -368,9 +368,14 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 		// Aggiunge le where condition per chiave
 		lSql += " AND NUOVA_ISTANZA.FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
+		
+		// Ticket#202311090129 — SIUS - Presa in carico da altra BDI (Urgente)
+		// Si recuperano solo le istanza collegate ad eventi Validati
 		// Aggiunge le where condition per evento non annullato
-		lSql += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO <> 'A' ";
-
+		//lSql += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO <> 'A' ";
+		lSql += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+		// Ticket#202311090129 - FINE
+		
 		// Imposta lo statement da eseguire
 		setStatement(lSql);
 	}
