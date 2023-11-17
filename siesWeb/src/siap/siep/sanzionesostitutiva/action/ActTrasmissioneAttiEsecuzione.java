@@ -84,7 +84,6 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 				tipoUfficio = getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_COD_UDS_TIPO);
 			String codUfficio = getCodUfficioByCodTipoUfficioDescrComune(tipoUfficio,
 					getRequestStringParameter(ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO));
-
 			nm.setCodEsito("-");
 			nm.setCodOperatoreInserimento(getCodUtenteConnesso());
 			nm.setDataInserimento(DateUtils.getSysDate());
