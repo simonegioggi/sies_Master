@@ -128,18 +128,20 @@ public interface ICostantiSanzioneSostitutiva {
 			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciSollecitiOIPP.jsp";
 	public static final String PG_DETTAGLIO_SOLLECITI_OIPP = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioSollecitiOIPP.jsp";
-
 	// Nota trasmissione
 	public static final String PG_LOAD_INSERISCI_NOTA_TRASNISSIONE = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadInserisciNotaTrasmissione.jsp";
 	public static final String PG_DETTAGLIO_NOTA_TRASNISSIONE = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/LoadDettaglioNotaTrasmissione.jsp";
-
-	
+	// Esecuzione Pene Sostitutive Brevi
 	public static final String PG_GRIGLIA_ESECUZIONE_PENE_SOSTITUTIVE_BREVI = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/GrigliaEsecuzionePeneSostitutiveBrevi.jsp";
 	public static final String PG_GRIGLIA_SEMILIBERTA_DETENZIONE_DOMICILIARE = IWebConstants.ROOT_DIR
 			+ "/files/siap/siep/sanzionesostitutiva/GrigliaSemilibertaDetenzioneDomiciliare.jsp";
+	public static final String PG_LOAD_TRASMISSIONE_ATTI_ESECUZIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/LoadTrasmissioneAttiEsecuzione.jsp";
+	public static final String PG_LOAD_DETTAGLIO_TRASMISSIONE_ATTI_ESECUZIONE = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/LoadDettaglioTrasmissioneAttiEsecuzione.jsp";
 	// MEV_2023-33 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR

@@ -128,39 +128,51 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		setRequestAttribute("modalitaPagamento", testi);
 
 		// MEV_2023-33: aggiunte impostazioni di attributo
-		boolean isSoloPrimaRata = false;
-		boolean areRateGiaGenerate = false;
-		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
-		// Ricerca lo stato dei pagamenti per id fascicolo
-		Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
-		if (!elencoStatoPagamenti.isEmpty() && listaRichiestaBollettini.isEmpty()) {
-			isUnico = elencoStatoPagamenti.size() == 1
-					&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
-		}
-		setRequestAttribute("isRateale", !isUnico);
-		if (!elencoStatoPagamenti.isEmpty() && !isUnico && elencoStatoPagamenti.size() > 1) {
-			// PAGAMENTO RATEALE
-			Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
-			int contaIUV = 0;
-			while (itx.hasNext()) {
-				BollettinoPagopaModel bpm = itx.next();
-				if (Utils.isPresent(bpm.getIuv()))
-					contaIUV++;
+		List<Boolean> isSoloPrimaRataList = new ArrayList<>();
+		List<Boolean> areRateGiaGenerateList = new ArrayList<>();
+		if (!listaRichiestaBollettini.isEmpty()) {
+			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
+			IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
+			while (iterERPPM.hasNext()) {
+				boolean isSoloPrimaRata = false;
+				boolean areRateGiaGenerate = false;
+				// Ricerca lo stato dei pagamenti per id fascicolo ed id evento
+				EventoRateizzazionePPModel erppm = iterERPPM.next();
+				BigDecimal idEvento = erppm.getEvento().getIdEvento();
+				Vector<BollettinoPagopaModel> elencoStatoPagamenti = ibp
+						.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
+				if (!elencoStatoPagamenti.isEmpty()) {
+					isUnico = elencoStatoPagamenti.size() == 1
+							&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
+				}
+				setRequestAttribute("isRateale", !isUnico);
+				if (!elencoStatoPagamenti.isEmpty() && !isUnico && elencoStatoPagamenti.size() > 1) {
+					// PAGAMENTO RATEALE
+					Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
+					int contaIUV = 0;
+					while (itx.hasNext()) {
+						BollettinoPagopaModel bpm = itx.next();
+						if (Utils.isPresent(bpm.getIuv()))
+							contaIUV++;
+					}
+					if (contaIUV == 1)
+						isSoloPrimaRata = true;
+					else if (contaIUV > 1)
+						areRateGiaGenerate = true;
+				} else if (!elencoStatoPagamenti.isEmpty() && isUnico) {
+					// PAGAMENTO UNICO
+					BollettinoPagopaModel bpm = elencoStatoPagamenti.firstElement();
+					if (Utils.isPresent(bpm.getIuv()))
+						areRateGiaGenerate = true;
+				}
+				isSoloPrimaRataList.add(isSoloPrimaRata);
+				areRateGiaGenerateList.add(areRateGiaGenerate);
 			}
-			if (contaIUV == 1)
-				isSoloPrimaRata = true;
-			else if (contaIUV > 1)
-				areRateGiaGenerate = true;
-		} else if (!elencoStatoPagamenti.isEmpty() && isUnico) {
-			// PAGAMENTO UNICO
-			BollettinoPagopaModel bpm = elencoStatoPagamenti.firstElement();
-			if (Utils.isPresent(bpm.getIuv()))
-				areRateGiaGenerate = true;
 		}
+
 		// imposto l'attributo nella request
-		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRata);
-		setRequestAttribute("areRateGiaGenerate", areRateGiaGenerate);
+		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRataList);
+		setRequestAttribute("areRateGiaGenerate", areRateGiaGenerateList);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");

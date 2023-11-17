@@ -75,10 +75,10 @@ if (!fascicoloNotInSession.equals("S")) {
 <table cellpadding="5" cellspacing="5" width="95%" onMouseover="over_effect(event,'outset')" onMouseout="over_effect(event,'solid')" onMousedown="over_effect(event,'inset')" onMouseup="over_effect(event,'outset')">
 	<tr>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActTrasmissioneAttiEsecuzione">Trasmissione Atti per Esecuzione</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadTrasmissioneAttiEsecuzione">Trasmissione Atti per Esecuzione</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
-  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActRiscontroTrasmissioneAttiEsecuzione">Riscontro Trasmissione Atti per Esecuzione</a>
+  			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadRiscontroTrasmissioneAttiEsecuzione">Riscontro Trasmissione Atti per Esecuzione</a>
 		</td>
 		<td width="32%" class="menulines" nowrap>
   			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sico.web.ActionUnderConstruction">Annotazione Provvedimento Pena Sostitutiva</a>

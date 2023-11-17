@@ -1,20 +1,24 @@
 package siap.siep.sanzionesostitutiva.action;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.DateUtils;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
+import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.controller.IRateizzazionePP;
@@ -23,8 +27,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Title: ActVerificaStatoElencoBollettini Description: Classe che mostra elenco stato pagamento bollettini
- * PagoPA
+ * Classe Action che mostra elenco stato pagamento bollettini PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -62,12 +65,27 @@ public class ActVerificaStatoElencoBollettini extends ActionSiap implements ICos
 		setRequestAttribute("importoDaPagare", importoDaPagare.toString());
 		setRequestAttribute("elencoStatoPagamenti", elencoStatoPagamenti);
 
+		// MEV_2023-33: aggiunte le notifiche all'evento
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
+		EventoModel em = enm.getEvento();
+		Date dataAvvenutaNotifica = null;
+		if (Utils.isPresent(enm.getNotifiche())) {
+			for (int i = 0; i < enm.getNotifiche().length; i++) {
+				NotificaModel nm = enm.getNotifiche()[i];
+				if (!Utils.isNullObj(nm.getDataAvvenutaNotifica()) && "E".equals(nm.getCodTipoNotifica())) {
+					dataAvvenutaNotifica = nm.getDataAvvenutaNotifica();
+					break;
+				}
+			}
+		}
+		setRequestAttribute("dataAvvenutaNotifica", Utils.isNullObj(dataAvvenutaNotifica) ? "-"
+				: DateUtils.getDateToString(dataAvvenutaNotifica, "dd-MM-yyyy"));
+
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<RateizzazionePPModel> listaRateizzazioni = irpp.exRicercaRateizzazioniByIdEvento(idEvento);
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = new Vector<>();
 		EventoRateizzazionePPModel erppm = new EventoRateizzazionePPModel();
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
 		erppm.setEvento(em);
 		erppm.setListaRateizzazioniPP(listaRateizzazioni);
 		listaRichiestaBollettini.add(erppm);

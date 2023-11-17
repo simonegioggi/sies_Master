@@ -125,10 +125,19 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// System.setProperty("javax.net.ssl.trustStorePassword", "testsies");
 		// String pathkeystore = pathProp + keystore;
 
+		BigDecimal idEvento = null;
+		if (!isRequestParameterNullObj("idEvento"))
+			idEvento = getRequestBigDecimalParameter("idEvento");
+		else {
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"ATTENZIONE! Nessun Evento associato al Fascicolo!");
+			return IWebConstants.PG_MESSAGE;
+		}
+
 		// recupero il/i bollettino/i
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		Vector<BollettinoPagopaModel> bpms = ibp
-				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiep(idFascicolo);
+				.ExRicercaBollettinoPagopaByFasSieIdFascicoloSiepIdEvento(idFascicolo, idEvento);
 		// DATI PER RICHIESTA PAGAMENTO TELEMATICO
 		RichiestaPagamentoTelematico rpt = GeneraAvvisoPagoPAUtil.caricaDatiRichiestaPagamentoTelematico(ufm);
 		// SOGGETTO PAGATORE (è il soggetto debitore nei confronti della PA)
@@ -212,26 +221,20 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		}
 		setRequestAttribute("idFascicolo", idFascicolo.toString());
 
-		// aggiorna l'evento di ingiunzione
-		BigDecimal idEvento = null;
-		EventoModel em = null;
-		if (!isRequestParameterNullObj("idEvento")) {
-			idEvento = getRequestBigDecimalParameter("idEvento");
-			IEvento ie = SICOLookupRemote.getEventoRemote();
-			em = ie.ExRicercaEventoByKey(idEvento);
-			// info per il log
-			siesLogger.debug(em.getIdEvento() + " " + em.getDescrProvvedimento() + " " + em.getDescrEsito()
-					+ " " + em.getDescrMotivo() + " " + em.getDescrTipoEvento() + " "
-					+ em.getDescrTipoProvvedimento());
-			em.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
-			em.setCodOperatoreAggiornamento(utm.getUserId());
-			em.setDataAggiornamento(DateUtils.getSysDate());
-			em.setDataRicezioneAtti(DateUtils.getSysDate());
-			em.setDataTrasmissioneAtti(DateUtils.getSysDate());
-			ie.ExModificaEvento(em);
-			siesLogger.debug("EVENTO MODIFICATO con data ricezione e trasmissione atti = "
-					+ DateUtils.getSysDateAsDate("dd/MM/yyyy"));
-		}
+		// aggiorna l'evento interessato
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+		// info per il log
+		siesLogger.debug(em.getIdEvento() + " " + em.getDescrProvvedimento() + " " + em.getDescrEsito() + " "
+				+ em.getDescrMotivo() + " " + em.getDescrTipoEvento() + " " + em.getDescrTipoProvvedimento());
+		em.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
+		em.setCodOperatoreAggiornamento(utm.getUserId());
+		em.setDataAggiornamento(DateUtils.getSysDate());
+		em.setDataRicezioneAtti(DateUtils.getSysDate());
+		em.setDataTrasmissioneAtti(DateUtils.getSysDate());
+		ie.ExModificaEvento(em);
+		siesLogger.debug("EVENTO MODIFICATO con data ricezione e trasmissione atti = "
+				+ DateUtils.getSysDateAsDate("dd/MM/yyyy"));
 
 		// // inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
 		// String endpointAddressSCPT = F3BProperties.getProperty("EAPPA_SCPT");
@@ -293,7 +296,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		rt.setPage(IWebConstants.PG_MAIN);
 		setRequestAttribute(IWebConstants.MESSAGE_TEXT,
 				"La Generazione dell'Avviso PagoPA è andata a buon fine!");
-		rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA");
+		rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA&warning=BYPASS");
 		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 		// return rt.toString();
 		return IWebConstants.PG_MESSAGE;

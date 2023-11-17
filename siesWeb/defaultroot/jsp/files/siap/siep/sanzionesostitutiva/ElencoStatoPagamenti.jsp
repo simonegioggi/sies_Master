@@ -96,9 +96,13 @@ if (elencoStatoPagamenti.size() == 0) {
 			<%-- MEV_2023-33: aggiunta frase di notifica --%>
 			&nbsp;notificato&nbsp;il:&nbsp;
 			<font class="campo"><%=dataAvvenutaNotifica%></font>
-			<% if ("A".equals(evento.getFlagDocumentoRegistrato())) { %>
+<%
+	if ("A".equals(evento.getFlagDocumentoRegistrato())) {
+%>
 			<font style="color:red"> (Annullato)</font>
-			<% } %>
+<%
+	}
+%>
 		</td>
 	</tr>
 	<tr>

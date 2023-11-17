@@ -17,6 +17,8 @@
 <jsp:useBean id="modalitaPagamento" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoPagato" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 		scope="request" class="java.lang.String"/>
+<%-- MEV_2023-33: aggiunti useBean --%>
+<jsp:useBean id="dataAvvenutaNotifica" 	scope="request" class="java.lang.String"/>
 
 <html>
 <head>
@@ -40,7 +42,7 @@ function tornaIndietro(action) {
       	</td>
       	<td class="LBG">
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
-			<font class="campo">Verifica Stato Pagamento Bollettini per PagoPA</font>
+			<font class="campo">Verifica Stato Pagamento Bollettini su PagoPA</font>
       	</td>
       	<td class="LBG">
 			<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
@@ -73,9 +75,16 @@ if (elencoStatoPagamenti.size() == 0) {
 			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<font class="cViola"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
-		  <% if ("A".equals(evento.getFlagDocumentoRegistrato())) { %>
-      <font style="color:red"> &nbsp;&nbsp;&nbsp;&nbsp;(Annullato)</font>
-      <% } %>	
+			<%-- MEV_2023-33: aggiunta frase di notifica --%>
+			&nbsp;notificato&nbsp;il:&nbsp;
+			<font class="campo"><%=dataAvvenutaNotifica%></font>
+<%
+	if ("A".equals(evento.getFlagDocumentoRegistrato())) {
+%>
+      		<font style="color:red"> &nbsp;&nbsp;&nbsp;&nbsp;(Annullato)</font>
+<%
+	}
+%>	
 		</td>
 	</tr>
 	<tr>

@@ -116,7 +116,7 @@ if (elencoStatoPagamenti.size() == 0) {
 %>
 	<tr>
 		<td class="l" colspan="6">
-			Elenco Bollettini da richiedere a PagoPA, relativi all'<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
+			Elenco Bollettini da richiedere a PagoPA, relativi a <%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
 			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
 			<%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%>
 <%

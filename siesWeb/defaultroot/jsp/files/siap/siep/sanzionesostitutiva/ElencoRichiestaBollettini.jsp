@@ -17,9 +17,9 @@
 <jsp:useBean id="modalitaPagamento" 		scope="request" class="java.util.ArrayList<String>"/>
 <jsp:useBean id="TornaQui"    				scope="request" class="java.lang.String"/>
 <%-- MEV_2023-33: aggiunti useBean --%>
-<jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.util.ArrayList<java.lang.Boolean>"/>
 <jsp:useBean id="isRateale"					scope="request" class="java.lang.Boolean"/>
-<jsp:useBean id="areRateGiaGenerate"		scope="request" class="java.lang.Boolean"/>
+<jsp:useBean id="areRateGiaGenerate"		scope="request" class="java.util.ArrayList<java.lang.Boolean>"/>
 
 <html>
 <head>
@@ -61,13 +61,13 @@ function tornaIndietro(action) {
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
 <%
 // MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
-if (areRateGiaGenerate || !isRateale) {
+if (areRateGiaGenerate.get(areRateGiaGenerate.size()-1) || !isRateale) {
 %>
 			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
 <%
 } else {
 	if (isRateale) {
-		if (isSoloPrimaRata) {
+		if (isSoloPrimaRata.get(isSoloPrimaRata.size()-1)) {
 %>
     		<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria Rimanenti Rate</font>
 <%
@@ -142,7 +142,7 @@ if (listaRichiestaBollettini.size() == 0) {
 <%
 // MEV_2023-33: posso inoltrare anche se il pagamento è rateale ed ho emesso solo la prima delle n rate
 if (((Utils.isNullObj(em.getDataTrasmissioneAtti()) && Utils.isNullObj(em.getDataRicezioneAtti()))
-		|| (isSoloPrimaRata && !areRateGiaGenerate)) && cont == size-1) {
+		|| (isSoloPrimaRata.get(cont) && !areRateGiaGenerate.get(cont))) && cont == size-1) {
 %>
       	<td class="c">
       	<% if ("S".equals(em.getFlagDocumentoRegistrato())) { %>
