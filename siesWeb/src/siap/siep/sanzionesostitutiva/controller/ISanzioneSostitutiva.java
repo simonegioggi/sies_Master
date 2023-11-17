@@ -24,8 +24,7 @@ import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: ISanzioneSostitutiva
- * Description: Classe Controller per Le Sanzioni Sostitutive
+ * Classe Controller per Le Sanzioni Sostitutive
  *
  * @version 1.0
  */
@@ -213,14 +212,25 @@ public interface ISanzioneSostitutiva {
 	public Vector ExRicercaFascicoliPerStatoPagamentoPaged(FascicoloSiepModel aFasMod, int aPagina,
 			String aTipoRicera) throws F3BException;
 
-	public void ExCreateExcelStatoPagamenti (Vector <RicercaStatoPagamentiModel> listaStatoPagamenti, HSSFWorkbook wb, UfficioModel ufficio
-			, FascicoloSiepModel aFasMod, String aTipoRicera) throws F3BException;
-  public void ExCreateExcelScadenzariPP (Vector<ScadenzarioModel> listaScadenzari, HSSFWorkbook wb, UfficioModel ufficio
-      , ScadenzarioModel aScadMod) throws F3BException;
-	
-  public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
-  public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
-  public EventoModel exUpdateNotaTrasmissione (EventoModel aEvento) throws F3BException;
-  public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel) throws F3BException;
-	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel) throws F3BException;
+	public void ExCreateExcelStatoPagamenti(Vector<RicercaStatoPagamentiModel> listaStatoPagamenti,
+			HSSFWorkbook wb, UfficioModel ufficio, FascicoloSiepModel aFasMod, String aTipoRicera)
+			throws F3BException;
+
+	public void ExCreateExcelScadenzariPP(Vector<ScadenzarioModel> listaScadenzari, HSSFWorkbook wb,
+			UfficioModel ufficio, ScadenzarioModel aScadMod) throws F3BException;
+
+	public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
+	public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
+	public EventoModel exUpdateNotaTrasmissione(EventoModel aEvento) throws F3BException;
+
+	public EventoNotificaModel exInserisciProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
+	public EventoNotificaModel exModificaProvvedimentoEstinzione(EventoNotificaModel aEvNotModel)
+			throws F3BException;
+
 }
