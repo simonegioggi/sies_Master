@@ -22,18 +22,27 @@
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 
 
-<jsp:useBean id="tipo" scope="request" class="java.lang.String"/>
+<jsp:useBean id="tipo"   scope="request" class="java.lang.String"/>
 <jsp:useBean id="titolo" scope="request" class="java.lang.String"/>
+
+<jsp:useBean id="criteriRicerca" scope="request" class="siap.siep.scadenzario.model.ScadenzarioModel"/>
+<jsp:useBean id="AnniScadenza"   scope="request" class="java.lang.String"/>
+<jsp:useBean id="MesiScadenza"   scope="request" class="java.lang.String"/>
+<jsp:useBean id="GiorniScadenza" scope="request" class="java.lang.String"/>
 
 <html>
   <head>
     <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
     <title>[S.I.E.S.] - Consultazione Scadenzario Fine Pena</title>
     <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
+    <script language="JavaScript">
+    function stampa() {
+      document.RicercaScadenzarioPP.submit();    
+    }
+    </script>    
   </head>
 
-  <BODY class="corpo">
-  <FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>">
+<BODY class="corpo">
     <table>
       <tr>
         <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
@@ -41,50 +50,67 @@
           <font class="campo">Consultazione Scadenzario Stato Pagamenti Pena Pecuniaria - <%=titolo%>&nbsp;</font>
         </td>
 		    <td class="LBG">
+		      <a class="cliccabile" href="javascript:stampa()"><img src="<%=IWebConstants.IMAGES_DIR%>printexcel.gif" alt="Stampa Excel" width="24" height="24" border="0"></a>
+		    </td>         
+		    <td class="LBG">
 		       <a href="javascript:history.go(-1)">
 		         <img align="middle" src="/images/arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0"></a>      
 		    </td>        
       </tr>
     </table>
     
+    
+ <form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="RicercaScadenzarioPP" >
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.scadenzario.action.ActRicercaScadenzarioStatoPagamentiPP">
+  <input type="HIDDEN" name="tipoRicerca" value="stampaExcel">
+  
+  <input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_ANNO%>"  value="<%=StringUtils.toStringJSP(criteriRicerca.getChiaveAnnoIniziale(),"")%>" />
+  <input type="hidden" name="<%=ICostantiFascicoloSiep.CAMPO_CHIAVE_PROGR%>" value="<%=StringUtils.toStringJSP(criteriRicerca.getChiaveProgrIniziale(),"")%>" />
+  
+  <input type="hidden" name="tipo" value="<%=tipo%>" />
+  
+  <input type="hidden" name="<%=ICostantiScadenzario.CAMPO_ANNI_SCADENZA%>"   value="<%=StringUtils.toStringJSP(criteriRicerca.getNumAnni(),"")%>" />
+  <input type="hidden" name="<%=ICostantiScadenzario.CAMPO_MESI_SCADENZA%>"   value="<%=StringUtils.toStringJSP(criteriRicerca.getNumMesi(),"")%>" />
+  <input type="hidden" name="<%=ICostantiScadenzario.CAMPO_GIORNI_SCADENZA%>" value="<%=StringUtils.toStringJSP(criteriRicerca.getNumGiorni(),"")%>" />
+</form>
+ 
+ 
+<FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>">    
     <br>
     <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
     <br>
-    <br>
-    
-    <table cellpadding=2 cellspacing=2>
-<%
-      List scadenzario =(List) request.getAttribute("scadenzario");
-      if(tipo.equals("Tutti"))
-      {
-%>
+ 
+<% if (tipo.equals("Tutti"))  { %>
+      <table cellpadding=2 cellspacing=2>
         <tr>
           <td>&nbsp;<td>
           <td>&nbsp;<td>
-          <td align="right"><img src="/images/QuadratinoVerde.gif"></td><td class="campo">In Scadenza</td>
+          <td align="right"><img src="/images/QuadratinoVerde.gif"></td><td class="campo">In Scadenza (entro 7 giorni)</td>
           <td align="right"><img src="/images/QuadratinoRosso.gif"></td><td class="campo">In Scadenza Oggi</td>
           <td align="right"><img src="/images/QuadratinoGrigio.gif"></td><td class="campo">Scaduto</td>
         </tr>
-<%
-      }
-%>
+      </table>
+      <br>
+<% } %>
+    
+    <table cellpadding=2 cellspacing=2>
       <tr>
-        <td class="int">N° SIEP</td>
-        <td class="int">Cognome</td>
-        <td class="int">Nome</td>
-        <td class="int">Luogo Nascita</td>
-        <td class="int">Data Nascita</td>
-        <td class="int">Data Notifica</td>
-        <td class="int">Data Scadenza<br>richiesta retizzazione</td>
-        <td class="int">Data Scadenza<br>primo pagamento</td>
-        <td class="int">N.ro<br>giorni</td>
-        <td class="int">Importo rate o unica<br>soluzione</td>
-        <td class="int">Rata</td>
-        <td class="int">Stato<br>pagamento</td>
-        <td class="int">Visto</td>
-        <td class="int">Azioni</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">N° SIEP</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Cognome</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Nome</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Luogo Nascita</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Data Nascita</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Data Notifica</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Data Scadenza<br>richiesta retizzazione</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Data Scadenza<br>primo pagamento</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">N.ro<br>giorni</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Importo rate o unica<br>soluzione</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Rata</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Stato<br>pagamento</td>
+        <td class="int" style="padding-left:5px;padding-right:5px;">Azioni</td>
      </tr>
 <%
+    List scadenzario =(List) request.getAttribute("scadenzario");
     Iterator itx = scadenzario.iterator();
     while ( itx.hasNext())
     {
@@ -151,13 +177,6 @@
       <td class=<%=tdClass%>>Non Pagato</td>
       <% } else { %>
       <td class=<%=tdClass%>>Pagato</td>
-      <% } %>
-
-
-      <% if ("S".equals(lSca.getFlagVisto()) ){ %>
-      <td class="C"><img src="/images/TickRed.gif"> </td>
-      <% } else { %>
-      <td class="C"> &nbsp;</td>
       <% } %>
 
 	    <td class="c">

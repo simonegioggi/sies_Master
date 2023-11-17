@@ -19,6 +19,7 @@ import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.sanzionesostitutiva.model.RicercaStatoPagamentiModel;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
+import siap.siep.scadenzario.model.ScadenzarioModel;
 import siap.siep.sospensione.model.SospensioneModel;
 import siap.siep.verbale.model.VerbaleModel;
 
@@ -214,7 +215,9 @@ public interface ISanzioneSostitutiva {
 
 	public void ExCreateExcelStatoPagamenti (Vector <RicercaStatoPagamentiModel> listaStatoPagamenti, HSSFWorkbook wb, UfficioModel ufficio
 			, FascicoloSiepModel aFasMod, String aTipoRicera) throws F3BException;
-
+  public void ExCreateExcelScadenzariPP (Vector<ScadenzarioModel> listaScadenzari, HSSFWorkbook wb, UfficioModel ufficio
+      , ScadenzarioModel aScadMod) throws F3BException;
+	
   public EventoNotificaModel exInserisciNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
   public EventoNotificaModel exModificaNotaTrasmissione(EventoNotificaModel aEvNotModel) throws F3BException;
   public EventoModel exUpdateNotaTrasmissione (EventoModel aEvento) throws F3BException;

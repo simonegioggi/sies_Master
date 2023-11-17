@@ -34,6 +34,7 @@ import siap.sico.evento.dao.EventoDAO;
 import siap.sico.evento.dao.EventoSqlDAO;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
+import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.stampa.controller.StampaSSController;
 import siap.sico.template.controller.TemplateManager;
 import siap.sico.ufficio.model.UfficioModel;
@@ -70,6 +71,7 @@ import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
+import siap.siep.scadenzario.util.ScadenzarioUtils;
 import siap.siep.sospensione.dao.SospensioneDAO;
 import siap.siep.sospensione.dao.SospensioneSqlDAO;
 import siap.siep.sospensione.model.SospensioneModel;
@@ -3670,7 +3672,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 	}
 
 	/**
-	 * Metodo per la stampa Excel del risutato delle ricerche Stato Pagamento >
+	 * Metodo per la stampa Excel del risutato delle ricerche Stato Pagamento 
 	 */
 	public void ExCreateExcelStatoPagamenti(Vector<RicercaStatoPagamentiModel> listaStatoPagamenti,
 			HSSFWorkbook wb, UfficioModel ufficio, FascicoloSiepModel aFasMod, String aTipoRicera)
@@ -3871,4 +3873,232 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		return cell;
 	}
 
+	
+	 /**
+   * Metodo per la stampa Excel del risutato delle ricerche "Scadenzario Stato Pagamenti Pena Pecuniaria"
+   */
+	public void ExCreateExcelScadenzariPP (Vector<ScadenzarioModel> listaScadenzari, HSSFWorkbook wb, UfficioModel ufficio
+      , ScadenzarioModel aScadMod) throws F3BException {
+
+    HSSFCellStyle csNull = wb.createCellStyle();
+
+    // Create a new font and alter it.
+    HSSFFont fontBold = wb.createFont();
+    fontBold.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+
+    // stile per celle col bordo
+    HSSFCellStyle cs = wb.createCellStyle();
+    cs = getBordo4Lati(wb);
+
+    HSSFCellStyle csNullBold = wb.createCellStyle();
+    csNullBold.setFont(fontBold);
+
+    // stile per celle col bordo con carattere grassetto
+    HSSFCellStyle csBold = wb.createCellStyle();
+    csBold = getBordo4Lati(wb);
+    csBold.setFont(fontBold);
+
+    HSSFCellStyle csCenter = wb.createCellStyle();
+    csCenter = getBordo4Lati(wb);
+    csCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+    HSSFCellStyle csRight = wb.createCellStyle();
+    csRight = getBordo4Lati(wb);
+    csRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+
+    HSSFCellStyle csBoldCenter = wb.createCellStyle();
+    csBoldCenter = getBordo4Lati(wb);
+    csBoldCenter.setFont(fontBold);
+    csBoldCenter.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+    csBoldCenter.setWrapText(true);
+    csBoldCenter.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+
+    HSSFCellStyle csBoldRight = wb.createCellStyle();
+    //csBoldRight = getBordo4Lati(wb);
+    csBoldRight.setFont(fontBold);
+    csBoldRight.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+    
+    HSSFCellStyle csEuroFormat = wb.createCellStyle();
+    // HSSFDataFormat dataFormat = wb.createDataFormat();
+    // csEuroFormat.setDataFormat(dataFormat.getFormat("0.00"));
+    short builtinFormatIndex = 4; // 4: "#,##0.00"
+    csEuroFormat.setDataFormat(builtinFormatIndex);
+    csEuroFormat.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+    csEuroFormat.setBorderTop(HSSFCellStyle.BORDER_THIN);
+    csEuroFormat.setBorderRight(HSSFCellStyle.BORDER_THIN);
+    csEuroFormat.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+    // primo foglio
+    HSSFSheet sheet = wb.createSheet("Scadenzario Pagamenti");
+    sheet.setColumnWidth(0, (40 * 256));
+
+    int numCol = 0;
+    int sizeCol = 21;
+    sheet.setColumnWidth(numCol++, (15 * 256)); // N° SIEP
+    sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Cognome
+    sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Nome
+    sheet.setColumnWidth(numCol++, (sizeCol * 256)); // Luogo Nascita
+    sheet.setColumnWidth(numCol++, (15 * 256)); // Data Nascita
+    sheet.setColumnWidth(numCol++, (15 * 256)); // Data Notifica
+    sheet.setColumnWidth(numCol++, (21 * 256)); // Data Scadenza richiesta retizzazione
+    sheet.setColumnWidth(numCol++, (17 * 256)); // Data Scadenza primo pagamento
+    sheet.setColumnWidth(numCol++, (23 * 256)); // N.ro giorni
+    sheet.setColumnWidth(numCol++, (18 * 256)); // Importo rate o unica soluzione
+    sheet.setColumnWidth(numCol++, (10 * 256)); // Rata
+    sheet.setColumnWidth(numCol++, (20 * 256)); // Stato pagamento
+    sheet.setColumnWidth(numCol++, (25 * 256)); // Stato scadenza
+    
+    
+    int nRow = 0;
+
+    // Intestazione del foglio excel
+    // Prima Riga
+    HSSFRow row = sheet.createRow(nRow++);
+    String value = (ufficio.getDescrTipoUfficio().toUpperCase() + " DI "
+        + ufficio.getDescrComune().toUpperCase());
+    setCell(row, 0, value, csNull);
+
+    // Seconda Riga
+    value = "Tel. " + StringUtils.toStringJSP(ufficio.getTelefono()) + " - Fax "
+        + StringUtils.toStringJSP(ufficio.getFax());
+    row = sheet.createRow(nRow++);
+    setCell(row, 0, value, csNull);
+
+    nRow++;
+    nRow++;
+
+    value = "Elenco Procedimenti Pene Pecuniarie In Base alla scadenza rate";
+    row = sheet.createRow(nRow++);
+    setCell(row, 0, value, csNullBold);  
+
+    nRow++;
+    
+
+    row = sheet.createRow(nRow++);
+    setCell(row, 0, "Data Estrazione ", csNullBold);
+    setCell(row, 1, DateUtils.getDateToString(new Date(), "dd-MM-yyyy"), csBoldRight);
+
+    // ===========================
+    // Criteri di ricerca
+    // ===========================
+    // Anno e Numero
+    row = sheet.createRow(nRow++);
+    
+    
+    setCell(row, 0, "Fascicolo ", csNullBold);
+    value = StringUtils.toStringJSP(aScadMod.getChiaveAnnoIniziale(), "____") + " / "
+        + StringUtils.toStringJSP(aScadMod.getChiaveProgrIniziale(), "______");
+    setCell(row, 1, value, csBoldRight);
+
+
+    // Tipo estrazione
+    String descTipoEstrazione = "";
+    
+    siesLogger.debug("aScadMod.getTipoRic() = "+aScadMod.getTipoRic());
+    if ("Tutti".equals(aScadMod.getTipoRic())) {
+      descTipoEstrazione += "tutti";
+    }
+    else if ("sette".equals(aScadMod.getTipoRic())) {
+      descTipoEstrazione += "in scadenza entro";
+      if (aScadMod.getNumAnni()!=null && aScadMod.getNumAnni().intValue()>0)
+        descTipoEstrazione += " Anni "+aScadMod.getNumAnni().intValue();
+      if (aScadMod.getNumMesi()!=null && aScadMod.getNumMesi().intValue()>0)
+        descTipoEstrazione += " Mesi "+aScadMod.getNumMesi().intValue();
+      if (aScadMod.getNumGiorni()!=null && aScadMod.getNumGiorni().intValue()>0)
+        descTipoEstrazione += " Giorni "+aScadMod.getNumGiorni().intValue();
+    }
+    else if ("oggi".equals(aScadMod.getTipoRic())) {
+      descTipoEstrazione += "In Scadenza Oggi";
+    }
+    else if ("scaduto".equals(aScadMod.getTipoRic())) {
+      descTipoEstrazione += "Scaduti";
+    }
+
+    
+    row = sheet.createRow(nRow++);
+    setCell(row, 0, "Tipo Estrazione ", csNullBold);
+    setCell(row, 1, StringUtils.toStringJSP(descTipoEstrazione, " "), csBoldRight);
+    
+    nRow++;
+    nRow++;
+
+    // Intestazione tabella RIsultati
+    row = sheet.createRow(nRow++);
+    setCell(row, 0, "Numero SIEP", csBoldCenter);
+    setCell(row, 1, "Cognome", csBoldCenter);
+    setCell(row, 2, "Nome", csBoldCenter);
+    setCell(row, 3, "Luogo Nascita", csBoldCenter);
+    setCell(row, 4, "Data Nascita", csBoldCenter);
+    setCell(row, 5, "Data Notifica", csBoldCenter);
+    setCell(row, 6, "Data Scadenza richiesta retizzazione", csBoldCenter);
+    setCell(row, 7, "Data Scadenza primo pagamento", csBoldCenter);    
+    setCell(row, 8, "N.ro giorni", csBoldCenter);
+    setCell(row, 9, "Importo rate o unica soluzione", csBoldCenter);
+    setCell(row, 10, "Rata", csBoldCenter);
+    setCell(row, 11, "Stato pagamento", csBoldCenter);
+    setCell(row, 12, "Stato Scadenza", csBoldCenter);
+    
+    csCenter.setWrapText(true);
+    // Ciclo sui record
+    for (ScadenzarioModel lSca : listaScadenzari) {
+      FascicoloSiepModel lFas = lSca.getFascicoloModel();
+      SoggettoModel lSog = lFas.getSoggetto();
+      BollettinoPagopaModel lBollettino = lSca.getBollettinoModel();
+      
+      String dataScadRateizzazione = "";
+      if ("U".equals(lBollettino.getTipoRateizzazione())) {
+        dataScadRateizzazione = DateUtils.getDateToString (DateUtils.moveDateTo(lSca.getDataInizioScadenza(),Calendar.DAY_OF_MONTH,20),"dd/MM/yyyy");
+      }
+      
+      String giorniStr = "";
+      if (lBollettino.getDataScadenza()!=null) {
+        if (DateUtils.isGreater(lBollettino.getDataScadenza(),DateUtils.getSysDate())) 
+          giorniStr = ScadenzarioUtils.getDifferenza(lBollettino.getDataScadenza(), DateUtils.getSysDate());
+        else
+          giorniStr = ScadenzarioUtils.getDifferenza(DateUtils.getSysDate(), lBollettino.getDataScadenza());
+      }
+
+      
+      String statoScadenza = "";
+      //if ("Tutti".equals(aScadMod.getTipoRic())) {
+        if(  lSca.getGiorniResidui() != null && lSca.getGiorniResidui().intValue()== 0)
+          statoScadenza = "In scadenza Oggi";
+        else if( lSca.getGiorniResidui() != null&& lSca.getGiorniResidui().intValue() <= 7 && lSca.getGiorniResidui().intValue() > 0)
+          statoScadenza = "In scadenza entro 7 giorni";
+        else if( lSca.getGiorniResidui() != null && lSca.getGiorniResidui().intValue() < 0)
+          statoScadenza = "Scaduto";
+        else
+          statoScadenza = "";
+      //}
+      
+      row = sheet.createRow(nRow++);
+      
+      setCell(row, 0, StringUtils.toStringJSP(lFas.getChiaveAnno()) + " / " + StringUtils.toStringJSP(lFas.getChiaveProgr()), cs);
+      setCell(row, 1, StringUtils.toStringJSP(lSog.getCognome()), cs);
+      setCell(row, 2, StringUtils.toStringJSP(lSog.getNome()), cs);
+      setCell(row, 3, StringUtils.toStringJSP(lSog.getDescrComuneNascita()), csCenter);
+      
+      setCell(row, 4, StringUtils.toStringJSP(DateUtils.getDateToString(lSog.getDataNascita(), "dd-MM-yyyy")), csCenter);
+      setCell(row, 5, StringUtils.toStringJSP(DateUtils.getDateToString(lSca.getDataInizioScadenza(), "dd-MM-yyyy")), csCenter);
+      setCell(row, 6, StringUtils.toStringJSP(dataScadRateizzazione), csCenter);
+      setCell(row, 7, StringUtils.toStringJSP(DateUtils.getDateToString(lBollettino.getDataScadenza(), "dd-MM-yyyy")), csCenter);
+      
+      setCell(row, 8, StringUtils.toStringJSP(giorniStr), csCenter);
+      
+      setNumericCell(row, 9,
+          lBollettino.getImportoRata() != null ? lBollettino.getImportoRata().doubleValue() : null,
+          csEuroFormat);
+      
+      setCell(row, 10, StringUtils.toStringJSP(lBollettino.getProgRata(),"")+"/"+StringUtils.toStringJSP(lBollettino.getNumeroRate(),""), csCenter);
+      
+      if ("PN".equals(lBollettino.getStatoPagamento()))
+        setCell(row, 11, StringUtils.toStringJSP("Non Pagato"), csCenter);
+      else
+        setCell(row, 11, StringUtils.toStringJSP("Pagato"), csCenter);    
+      
+      // statoScadenza
+      setCell(row, 12, StringUtils.toStringJSP(statoScadenza), cs);  
+      
+    }
+  }
 }
