@@ -1,8 +1,3 @@
-Ticket#202311090129 — SIUS - Presa in carico da altra BDI (Urgente)
-
-Pazza a colori per evitare di trasferire record NUOVA_ISTANZA senza il relativo 
-evento nei casi in cui tale evento non risulti validato.
-
-n.b. l'evento nuova istanza viene di solito inserito Validato
-per sicurezza si impone la condizione 
-AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S'
+BRANCH SIES VERSIONE 12.5.5.0
+Nasce dal branch 12.5.4.0 in data 30/10/2023
+Questa release verrà rilasciata il 24/11/2023 (Patch mese di Novembre 2023)

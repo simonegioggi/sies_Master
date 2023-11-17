@@ -3,35 +3,24 @@ package siap.siep.nuovaistanza.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
-import siap.dao.SIAPSqlDAO;
-import siap.sico.soggetto.model.SoggettoModel;
-import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 import f3b.dao.DAOException;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
+import siap.dao.SIAPSqlDAO;
+import siap.sico.soggetto.model.SoggettoModel;
+import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
 
 /**
- * <p>
- * Title: NuovaIstanzaSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella NuovaIstanza
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Classe SqlDAO che rappresenta la tabella NuovaIstanza
+ *
  * @version 1.0
  */
 public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Costruttore
-	 * 
+	 *
 	 * @param con
 	 ****************************************************************************/
 	public NuovaIstanzaSqlDAO(Connection con) {
@@ -41,11 +30,12 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
 	 * model utilizzato per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 ****************************************************************************/
 	public void getCountNuovaIstanza(NuovaIstanzaModel aModel) throws DAOException {
+
 		// Costruisce lo statement da eseguire
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM NUOVA_ISTANZA WHERE";
 
@@ -66,12 +56,13 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
 	 * model utilizzato per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 ****************************************************************************/
 	public void getCountNuoveIstanzeByAnnoProgr(NuovaIstanzaModel aModel, int annoIni, int progrIni,
 			int annoFine, int progrFine) throws DAOException {
+
 		// Costruisce lo statement da eseguire
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM NUOVA_ISTANZA WHERE";
 
@@ -92,7 +83,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
 	 * model utilizzato per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -118,7 +109,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagfina
 	 * passata in input
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @throws DAOException
@@ -167,8 +158,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 		String lStatement = new String("");
 		lStatement = "SELECT evento.id_evento EVE_ID, evento.flag_documento_registrato VAL_FLAG from evento, nuova_istanza "
 				+ "where nuova_istanza.eve_id_evento=evento.eve_id_evento and "
-				+ "evento.cod_motivo='1001'and evento.eve_id_evento = "
-				+ aId
+				+ "evento.cod_motivo='1001'and evento.eve_id_evento = " + aId
 				+ " and evento.id_evento = (SELECT max(evento.id_evento) "
 				+ "from evento where evento.cod_motivo='1001'and evento.eve_id_evento = " + aId + ")";
 		setStatement(lStatement);
@@ -180,11 +170,10 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 		String lStatement = new String("");
 		lStatement = "SELECT evento.id_evento EVE_ID, evento.flag_documento_registrato VAL_FLAG from evento, nuova_istanza "
 				+ "where nuova_istanza.eve_id_evento=evento.eve_id_evento and "
-				+ "evento.cod_motivo='1002'and evento.eve_id_evento = "
-				+ aId
+				+ "evento.cod_motivo='1002'and evento.eve_id_evento = " + aId
 				+ " and evento.id_evento = (SELECT max(evento.id_evento) "
 				+ "from evento where evento.cod_motivo='1002'and evento.eve_id_evento = " + aId + ")";
-		;
+
 		setStatement(lStatement);
 	}
 
@@ -205,7 +194,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagina
 	 * passata in input
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @throws DAOException
@@ -235,7 +224,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagina
 	 * passata in input
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @throws DAOException
@@ -264,7 +253,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Effettua la generica ricerca in base ai dati specificati nel model
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -286,7 +275,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta la statement di ricerca per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -301,7 +290,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta la statement di ricerca per l'Evento
-	 * 
+	 *
 	 * @param aIdEvento
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -317,7 +306,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 	/*****************************************************************************
 	 * Metodo che imposta la statement di ricerca per chiave dell'ultima nuova istanza iscritta per il
 	 * fascicolo
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -341,7 +330,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta la statement di ricerca per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -358,7 +347,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta la statement di ricerca per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -368,58 +357,45 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 		// Aggiunge le where condition per chiave
 		lSql += " AND NUOVA_ISTANZA.FAS_SIE_ID_FASCICOLO_SIEP = " + aIdFascicolo;
-		
+
 		// Ticket#202311090129 — SIUS - Presa in carico da altra BDI (Urgente)
 		// Si recuperano solo le istanza collegate ad eventi Validati
 		// Aggiunge le where condition per evento non annullato
-		//lSql += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO <> 'A' ";
+		// lSql += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO <> 'A' ";
 		lSql += " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
 		// Ticket#202311090129 - FINE
-		
+
 		// Imposta lo statement da eseguire
 		setStatement(lSql);
 	}
 
 	/*****************************************************************************
 	 * Metodo per la costruzione della sql query
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getSqlQuery() {
 		String lStatement = new String("");
 
-		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO,"
-				+ " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
-				+ " DATA_ISTANZA, NOTE, "
-				+ " FLAG_PRESDEP, "
-				+ " SOGG_PRESENTANTE, "
+		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO," + " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
+				+ " DATA_ISTANZA, NOTE, " + " FLAG_PRESDEP, " + " SOGG_PRESENTANTE, "
 				+ " SOGG_PRESENTANTE_IDENTIFICATO, AVV_ID_AVVOCATO_PRESENTANTE, COD_AUTORITA_MITTENTE,"
-				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE,"
-				+ " COD_SEDE_MITTENTE,"
+				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE," + " COD_SEDE_MITTENTE,"
 				+ " CODSEDEMITTENTE.DESCRIZIONE DESC_SEDE_MITTENTE, DESCR_MITTENTE,"
-				+ " AVV_ID_AVVOCATO, COD_ESITO,"
-				+ " CODESITO.RV_MEANING DESC_ESITO,"
+				+ " AVV_ID_AVVOCATO, COD_ESITO," + " CODESITO.RV_MEANING DESC_ESITO,"
 				+ " ANNO_REGISTRO, PROGR_REGISTRO, COD_TIPO_UFFICIO_DESTINATARIO,"
 				+ " CODTIPOUFFICIODESTINATARIO.RV_MEANING DESC_TIPO_UFFICIO_DESTINATARIO,"
-				+ " COD_LUOGO_DESTINATARIO,"
-				+ " CODLUOGODESTINATARIO.DESCRIZIONE DESC_LUOGO_DESTINATARIO,"
+				+ " COD_LUOGO_DESTINATARIO," + " CODLUOGODESTINATARIO.DESCRIZIONE DESC_LUOGO_DESTINATARIO,"
 				+ " COD_UFFICIO_DESTINATARIO, COD_STATO_ISTANZA,"
-				+ " CODSTATOISTANZA.RV_MEANING DESC_STATO_ISTANZA,"
-				+ " COD_OPERATORE_INSERIMENTO, "
+				+ " CODSTATOISTANZA.RV_MEANING DESC_STATO_ISTANZA," + " COD_OPERATORE_INSERIMENTO, "
 				+ " DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, "
 				+ " COD_UFFICIO_AGGIORNAMENTO, FAS_SIE_ID_FASCICOLO_SIEP, EVE_ID_EVENTO,  "
 				+ " DATA_NOTIFICA_AVVOCATO, TIPO_AVVOCATO, TIPOAVVOCATO.RV_MEANING DESC_TIPO_AVVOCATO, "
-				+ " NUOVA_ISTANZA.DATA_INOLTRO_PM "
-				+ " FROM NUOVA_ISTANZA "
-				+ ", CG_REF_CODES CODCONTENUTO"
-				+ " ,CG_REF_CODES CODAUTORITAMITTENTE"
-				+ " ,  CG_REF_CODES CODESITO,"
-				+ "   CG_REF_CODES CODSTATOISTANZA,"
-				+ "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
-				+ "   CG_REF_CODES TIPOAVVOCATO,"
-				+ "	COMUNE CODSEDEMITTENTE,"
-				+ "	COMUNE CODLUOGODESTINATARIO"
-				+ " WHERE "
+				+ " NUOVA_ISTANZA.DATA_INOLTRO_PM " + " FROM NUOVA_ISTANZA " + ", CG_REF_CODES CODCONTENUTO"
+				+ " ,CG_REF_CODES CODAUTORITAMITTENTE" + " ,  CG_REF_CODES CODESITO,"
+				+ "   CG_REF_CODES CODSTATOISTANZA," + "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
+				+ "   CG_REF_CODES TIPOAVVOCATO," + "	COMUNE CODSEDEMITTENTE,"
+				+ "	COMUNE CODLUOGODESTINATARIO" + " WHERE "
 				+ " (NUOVA_ISTANZA.COD_CONTENUTO = CODCONTENUTO.RV_LOW_VALUE AND CODCONTENUTO.RV_DOMAIN = 'CONTENUTO_ISTANZA' )"
 				+ " AND (NUOVA_ISTANZA.COD_AUTORITA_MITTENTE = CODAUTORITAMITTENTE.RV_LOW_VALUE AND CODAUTORITAMITTENTE.RV_DOMAIN = 'MITTENTE_ISTANZA' ) "
 				+ " AND (NUOVA_ISTANZA.COD_SEDE_MITTENTE = CODSEDEMITTENTE.COD_COMUNE) "
@@ -428,53 +404,38 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 				+ " AND (NUOVA_ISTANZA.COD_LUOGO_DESTINATARIO = CODLUOGODESTINATARIO.COD_COMUNE ) "
 				+ " AND (NUOVA_ISTANZA.COD_STATO_ISTANZA = CODSTATOISTANZA.RV_LOW_VALUE AND CODSTATOISTANZA.RV_DOMAIN = 'STATO_NUOVA_ISTANZA' )  "
 				+ " AND (TIPOAVVOCATO.RV_DOMAIN='TIPO_AVVOCATO' AND NUOVA_ISTANZA.TIPO_AVVOCATO = TIPOAVVOCATO.RV_LOW_VALUE)";
-		;
 
 		return lStatement;
 	}
 
 	/*****************************************************************************
 	 * Metodo per la costruzione della sql query
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getSqlQueryBySoggetto() {
 		String lStatement = new String("");
 
-		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO,"
-				+ " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
-				+ " DATA_ISTANZA, NUOVA_ISTANZA.NOTE, "
-				+ " FLAG_PRESDEP, "
-				+ " SOGG_PRESENTANTE, "
+		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO," + " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
+				+ " DATA_ISTANZA, NUOVA_ISTANZA.NOTE, " + " FLAG_PRESDEP, " + " SOGG_PRESENTANTE, "
 				+ " SOGG_PRESENTANTE_IDENTIFICATO, AVV_ID_AVVOCATO_PRESENTANTE, COD_AUTORITA_MITTENTE,"
-				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE,"
-				+ " COD_SEDE_MITTENTE,"
+				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE," + " COD_SEDE_MITTENTE,"
 				+ " CODSEDEMITTENTE.DESCRIZIONE DESC_SEDE_MITTENTE, DESCR_MITTENTE,"
-				+ " AVV_ID_AVVOCATO, COD_ESITO,"
-				+ " CODESITO.RV_MEANING DESC_ESITO,"
+				+ " AVV_ID_AVVOCATO, COD_ESITO," + " CODESITO.RV_MEANING DESC_ESITO,"
 				+ " ANNO_REGISTRO, PROGR_REGISTRO, COD_TIPO_UFFICIO_DESTINATARIO,"
 				+ " CODTIPOUFFICIODESTINATARIO.RV_MEANING DESC_TIPO_UFFICIO_DESTINATARIO,"
-				+ " COD_LUOGO_DESTINATARIO,"
-				+ " CODLUOGODESTINATARIO.DESCRIZIONE DESC_LUOGO_DESTINATARIO,"
+				+ " COD_LUOGO_DESTINATARIO," + " CODLUOGODESTINATARIO.DESCRIZIONE DESC_LUOGO_DESTINATARIO,"
 				+ " COD_UFFICIO_DESTINATARIO, COD_STATO_ISTANZA,"
 				+ " CODSTATOISTANZA.RV_MEANING DESC_STATO_ISTANZA,"
 				+ " NUOVA_ISTANZA.COD_OPERATORE_INSERIMENTO, "
 				+ " NUOVA_ISTANZA.DATA_INSERIMENTO, NUOVA_ISTANZA.COD_UFFICIO_INSERIMENTO, NUOVA_ISTANZA.COD_OPERATORE_AGGIORNAMENTO, NUOVA_ISTANZA.DATA_AGGIORNAMENTO, "
 				+ " NUOVA_ISTANZA.COD_UFFICIO_AGGIORNAMENTO, NUOVA_ISTANZA.FAS_SIE_ID_FASCICOLO_SIEP, EVE_ID_EVENTO,  "
 				+ " DATA_NOTIFICA_AVVOCATO, TIPO_AVVOCATO, TIPOAVVOCATO.RV_MEANING DESC_TIPO_AVVOCATO, "
-				+ " NUOVA_ISTANZA.DATA_INOLTRO_PM "
-				+ " FROM NUOVA_ISTANZA "
-				+ ", FASCICOLO_SIEP"
-				+ ", SOGGETTO"
-				+ ", CG_REF_CODES CODCONTENUTO"
-				+ " ,CG_REF_CODES CODAUTORITAMITTENTE"
-				+ " ,  CG_REF_CODES CODESITO,"
-				+ "   CG_REF_CODES CODSTATOISTANZA,"
-				+ "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
-				+ "   CG_REF_CODES TIPOAVVOCATO,"
-				+ "	COMUNE CODSEDEMITTENTE,"
-				+ "	COMUNE CODLUOGODESTINATARIO"
-				+ " WHERE "
+				+ " NUOVA_ISTANZA.DATA_INOLTRO_PM " + " FROM NUOVA_ISTANZA " + ", FASCICOLO_SIEP"
+				+ ", SOGGETTO" + ", CG_REF_CODES CODCONTENUTO" + " ,CG_REF_CODES CODAUTORITAMITTENTE"
+				+ " ,  CG_REF_CODES CODESITO," + "   CG_REF_CODES CODSTATOISTANZA,"
+				+ "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO," + "   CG_REF_CODES TIPOAVVOCATO,"
+				+ "	COMUNE CODSEDEMITTENTE," + "	COMUNE CODLUOGODESTINATARIO" + " WHERE "
 				+ " (NUOVA_ISTANZA.COD_CONTENUTO = CODCONTENUTO.RV_LOW_VALUE AND CODCONTENUTO.RV_DOMAIN = 'CONTENUTO_ISTANZA' )"
 				+ " AND (NUOVA_ISTANZA.COD_AUTORITA_MITTENTE = CODAUTORITAMITTENTE.RV_LOW_VALUE AND CODAUTORITAMITTENTE.RV_DOMAIN = 'MITTENTE_ISTANZA' ) "
 				+ " AND (NUOVA_ISTANZA.COD_SEDE_MITTENTE = CODSEDEMITTENTE.COD_COMUNE) "
@@ -485,51 +446,37 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 				+ " AND (TIPOAVVOCATO.RV_DOMAIN='TIPO_AVVOCATO' AND NUOVA_ISTANZA.TIPO_AVVOCATO = TIPOAVVOCATO.RV_LOW_VALUE) "
 				+ " AND (FASCICOLO_SIEP.ID_FASCICOLO_SIEP = NUOVA_ISTANZA.FAS_SIE_ID_FASCICOLO_SIEP) "
 				+ " AND (SOGGETTO.ID_SOGGETTO = FASCICOLO_SIEP.SOG_ID_SOGGETTO) ";
-		;
 
 		return lStatement;
 	}
 
 	/*****************************************************************************
 	 * Metodo per la costruzione della sql query
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getSqlQueryProva() {
 		String lStatement = new String("");
 
-		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO,"
-				+ " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
-				+ " DATA_ISTANZA, NOTE, "
-				+ " FLAG_PRESDEP, "
-				+ " SOGG_PRESENTANTE, "
+		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO," + " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
+				+ " DATA_ISTANZA, NOTE, " + " FLAG_PRESDEP, " + " SOGG_PRESENTANTE, "
 				+ " SOGG_PRESENTANTE_IDENTIFICATO, AVV_ID_AVVOCATO_PRESENTANTE, COD_AUTORITA_MITTENTE,"
-				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE,"
-				+ " COD_SEDE_MITTENTE,"
+				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE," + " COD_SEDE_MITTENTE,"
 				+ " CODSEDEMITTENTE.DESCRIZIONE DESC_SEDE_MITTENTE, DESCR_MITTENTE,"
-				+ " AVV_ID_AVVOCATO, COD_ESITO,"
-				+ " CODESITO.RV_MEANING DESC_ESITO,"
+				+ " AVV_ID_AVVOCATO, COD_ESITO," + " CODESITO.RV_MEANING DESC_ESITO,"
 				+ " ANNO_REGISTRO, PROGR_REGISTRO, COD_TIPO_UFFICIO_DESTINATARIO,"
 				+ " CODTIPOUFFICIODESTINATARIO.RV_MEANING DESC_TIPO_UFFICIO_DESTINATARIO,"
-				+ " COD_LUOGO_DESTINATARIO,"
-				+ " CODLUOGODESTINATARIO.DESCRIZIONE DESC_LUOGO_DESTINATARIO,"
+				+ " COD_LUOGO_DESTINATARIO," + " CODLUOGODESTINATARIO.DESCRIZIONE DESC_LUOGO_DESTINATARIO,"
 				+ " COD_UFFICIO_DESTINATARIO, COD_STATO_ISTANZA,"
-				+ " CODSTATOISTANZA.RV_MEANING DESC_STATO_ISTANZA,"
-				+ " COD_OPERATORE_INSERIMENTO, "
+				+ " CODSTATOISTANZA.RV_MEANING DESC_STATO_ISTANZA," + " COD_OPERATORE_INSERIMENTO, "
 				+ " DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO, COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, "
 				+ " COD_UFFICIO_AGGIORNAMENTO, FAS_SIE_ID_FASCICOLO_SIEP, EVE_ID_EVENTO,  "
 				+ " DATA_NOTIFICA_AVVOCATO, TIPO_AVVOCATO, TIPOAVVOCATO.RV_MEANING DESC_TIPO_AVVOCATO, "
-				+ " DATA_INOLTRO_PM "
-				+ " FROM NUOVA_ISTANZA "
-				+ ", CG_REF_CODES CODCONTENUTO"
-				+ " ,CG_REF_CODES CODAUTORITAMITTENTE"
-				+ " ,  CG_REF_CODES CODESITO,"
-				+ "   CG_REF_CODES CODSTATOISTANZA,"
-				+ "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
-				+ "   CG_REF_CODES TIPOAVVOCATO,"
-				+ "	COMUNE CODSEDEMITTENTE,"
-				+ "	COMUNE CODLUOGODESTINATARIO"
-				+ " WHERE "
+				+ " DATA_INOLTRO_PM " + " FROM NUOVA_ISTANZA " + ", CG_REF_CODES CODCONTENUTO"
+				+ " ,CG_REF_CODES CODAUTORITAMITTENTE" + " ,  CG_REF_CODES CODESITO,"
+				+ "   CG_REF_CODES CODSTATOISTANZA," + "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
+				+ "   CG_REF_CODES TIPOAVVOCATO," + "	COMUNE CODSEDEMITTENTE,"
+				+ "	COMUNE CODLUOGODESTINATARIO" + " WHERE "
 				+ " (NUOVA_ISTANZA.COD_CONTENUTO = CODCONTENUTO.RV_LOW_VALUE AND CODCONTENUTO.RV_DOMAIN = 'CONTENUTO_ISTANZA' )"
 				+ " AND (NUOVA_ISTANZA.COD_AUTORITA_MITTENTE = CODAUTORITAMITTENTE.RV_LOW_VALUE AND CODAUTORITAMITTENTE.RV_DOMAIN = 'MITTENTE_ISTANZA' ) "
 				+ " AND (NUOVA_ISTANZA.COD_SEDE_MITTENTE = CODSEDEMITTENTE.COD_COMUNE) "
@@ -538,13 +485,13 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 				+ " AND (NUOVA_ISTANZA.COD_LUOGO_DESTINATARIO = CODLUOGODESTINATARIO.COD_COMUNE ) "
 				+ " AND (NUOVA_ISTANZA.COD_STATO_ISTANZA = CODSTATOISTANZA.RV_LOW_VALUE AND CODSTATOISTANZA.RV_DOMAIN = 'STATO_NUOVA_ISTANZA' )  "
 				+ " AND (TIPOAVVOCATO.RV_DOMAIN='TIPO_AVVOCATO' AND NUOVA_ISTANZA.TIPO_AVVOCATO = TIPOAVVOCATO.RV_LOW_VALUE)";
-		;
+
 		return lStatement;
 	}
 
 	/*****************************************************************************
 	 * Metodo che carica il record del result set nel model
-	 * 
+	 *
 	 * @return
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -600,7 +547,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di where per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 ****************************************************************************/
@@ -702,12 +649,13 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di where per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 ****************************************************************************/
 	public String setCondizioniByAnnoProgr(NuovaIstanzaModel aModel, int annoIni, int progrIni, int annoFine,
 			int progrFine) {
+
 		String lCondizioni = new String();
 
 		if (aModel.getCodUfficioInserimento() != null && aModel.getCodUfficioInserimento().length() > 0) {
@@ -744,11 +692,12 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di where per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 ****************************************************************************/
 	public String setCondizioniBySoggetto(NuovaIstanzaModel aModel, SoggettoModel aSogMod) {
+
 		String lCondizioni = new String();
 
 		if (aModel.getFlagPresdep() != null && aModel.getFlagPresdep().length() > 0) {
@@ -777,11 +726,12 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di where per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 ****************************************************************************/
 	public String setCondizioniBySoggettoFasc(NuovaIstanzaModel aModel, SoggettoModel aSogMod) {
+
 		String lCondizioni = new String();
 
 		if (aModel.getCodUfficioInserimento() != null && aModel.getCodUfficioInserimento().length() > 0) {
@@ -817,7 +767,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di select per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 ****************************************************************************/
@@ -836,7 +786,7 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodi per la costruzione della sezione order by
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getOrderBy() {
@@ -859,23 +809,18 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 
 	/*****************************************************************************
 	 * Metodo per la costruzione della sql query
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getSqlQueryConEvento() {
-		String lStatement = new String("");
 
-		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO,"
-				+ " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
-				+ " DATA_ISTANZA, NOTE, "
-				+ " FLAG_PRESDEP, "
-				+ " SOGG_PRESENTANTE, "
+		String lStatement = new String("");
+		lStatement += " SELECT ID_NUOVA_ISTANZA, COD_CONTENUTO," + " CODCONTENUTO.RV_MEANING DESC_CONTENUTO,"
+				+ " DATA_ISTANZA, NOTE, " + " FLAG_PRESDEP, " + " SOGG_PRESENTANTE, "
 				+ " SOGG_PRESENTANTE_IDENTIFICATO, AVV_ID_AVVOCATO_PRESENTANTE, COD_AUTORITA_MITTENTE,"
-				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE,"
-				+ " COD_SEDE_MITTENTE,"
+				+ " CODAUTORITAMITTENTE.RV_MEANING DESC_AUTORITA_MITTENTE," + " COD_SEDE_MITTENTE,"
 				+ " CODSEDEMITTENTE.DESCRIZIONE DESC_SEDE_MITTENTE, DESCR_MITTENTE,"
-				+ " AVV_ID_AVVOCATO, NUOVA_ISTANZA.COD_ESITO,"
-				+ " CODESITO.RV_MEANING DESC_ESITO,"
+				+ " AVV_ID_AVVOCATO, NUOVA_ISTANZA.COD_ESITO," + " CODESITO.RV_MEANING DESC_ESITO,"
 				+ " ANNO_REGISTRO, PROGR_REGISTRO, NUOVA_ISTANZA.COD_TIPO_UFFICIO_DESTINATARIO,"
 				+ " CODTIPOUFFICIODESTINATARIO.RV_MEANING DESC_TIPO_UFFICIO_DESTINATARIO,"
 				+ " NUOVA_ISTANZA.COD_LUOGO_DESTINATARIO,"
@@ -886,17 +831,11 @@ public class NuovaIstanzaSqlDAO extends SIAPSqlDAO {
 				+ " NUOVA_ISTANZA.DATA_INSERIMENTO, NUOVA_ISTANZA.COD_UFFICIO_INSERIMENTO, NUOVA_ISTANZA.COD_OPERATORE_AGGIORNAMENTO, NUOVA_ISTANZA.DATA_AGGIORNAMENTO, "
 				+ " NUOVA_ISTANZA.COD_UFFICIO_AGGIORNAMENTO, NUOVA_ISTANZA.FAS_SIE_ID_FASCICOLO_SIEP, NUOVA_ISTANZA.EVE_ID_EVENTO,  "
 				+ " DATA_NOTIFICA_AVVOCATO, TIPO_AVVOCATO, TIPOAVVOCATO.RV_MEANING DESC_TIPO_AVVOCATO, "
-				+ " DATA_INOLTRO_PM "
-				+ " FROM NUOVA_ISTANZA, EVENTO "
-				+ ", CG_REF_CODES CODCONTENUTO"
-				+ " ,CG_REF_CODES CODAUTORITAMITTENTE"
-				+ " ,  CG_REF_CODES CODESITO,"
-				+ "   CG_REF_CODES CODSTATOISTANZA,"
-				+ "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
-				+ "   CG_REF_CODES TIPOAVVOCATO,"
-				+ "	COMUNE CODSEDEMITTENTE,"
-				+ "	COMUNE CODLUOGODESTINATARIO"
-				+ " WHERE "
+				+ " DATA_INOLTRO_PM " + " FROM NUOVA_ISTANZA, EVENTO " + ", CG_REF_CODES CODCONTENUTO"
+				+ " ,CG_REF_CODES CODAUTORITAMITTENTE" + " ,  CG_REF_CODES CODESITO,"
+				+ "   CG_REF_CODES CODSTATOISTANZA," + "	CG_REF_CODES CODTIPOUFFICIODESTINATARIO,"
+				+ "   CG_REF_CODES TIPOAVVOCATO," + "	COMUNE CODSEDEMITTENTE,"
+				+ "	COMUNE CODLUOGODESTINATARIO" + " WHERE "
 				+ " (NUOVA_ISTANZA.EVE_ID_EVENTO = EVENTO.ID_EVENTO) "
 				+ " AND (NUOVA_ISTANZA.COD_CONTENUTO = CODCONTENUTO.RV_LOW_VALUE AND CODCONTENUTO.RV_DOMAIN = 'CONTENUTO_ISTANZA' )"
 				+ " AND (NUOVA_ISTANZA.COD_AUTORITA_MITTENTE = CODAUTORITAMITTENTE.RV_LOW_VALUE AND CODAUTORITAMITTENTE.RV_DOMAIN = 'MITTENTE_ISTANZA' ) "
