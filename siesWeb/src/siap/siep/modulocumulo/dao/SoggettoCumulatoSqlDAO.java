@@ -3,40 +3,23 @@ package siap.siep.modulocumulo.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
-
-import siap.siep.modulocumulo.model.SoggettoCumulatoModel;
 import f3b.dao.DAOException;
 import f3b.dao.SqlDAO;
-import f3b.log.LogF3B;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
 import f3b.web.IWebConstants;
+import siap.siep.modulocumulo.model.SoggettoCumulatoModel;
 
 /**
- * <p>
- * Title: SoggettoCumulatoSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella SoggettoCumulato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * Title: SoggettoCumulatoSqlDAO Description: Classe SqlDAO che rappresenta la tabella SoggettoCumulato
+ *
  * @version 1.0
  */
 public class SoggettoCumulatoSqlDAO extends SqlDAO {
 
-	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
-	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-
 	/*****************************************************************************
 	 * Costruttore
-	 * 
+	 *
 	 * @param con
 	 ****************************************************************************/
 	public SoggettoCumulatoSqlDAO(Connection con) {
@@ -46,7 +29,7 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 	/*****************************************************************************
 	 * Restituisce il numero di record dell'operazione di ricerca costruendo la clausola where con lo stesso
 	 * model utilizzato per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -67,7 +50,7 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 	/*****************************************************************************
 	 * Effettua la ricerca e restituisce solo i risultati nel range di record che vanno inseriti nella pagfina
 	 * passata in input
-	 * 
+	 *
 	 * @param aModel
 	 * @param aPage
 	 * @throws DAOException
@@ -91,14 +74,11 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 				+ " AND " + (aPage) * IWebConstants.RESULT_PER_PAGE;
 
 		setStatement(lPaginedStatement);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("lPaginedStatement = " + lPaginedStatement);
 	}
 
 	/*****************************************************************************
 	 * Effettua la generica ricerca in base ai dati specificati nel model
-	 * 
+	 *
 	 * @param aModel
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -116,14 +96,11 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 
 		// Imposta lo statement da eseguire
 		setStatement(lSql);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("lSql = " + lSql);
 	}
 
 	/*****************************************************************************
 	 * Metodo che imposta la statement di ricerca per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -139,14 +116,11 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 
 		// Imposta lo statement da eseguire
 		setStatement(lSql);
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("lSql = " + lSql);
 	}
 
 	/*****************************************************************************
 	 * Metodo per la costruzione della sql query
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getSqlQuery() {
@@ -157,11 +131,10 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 				+ "COD_COMUNE_NASCITA, CODCOMUNENASCITA.DESCRIZIONE DESC_COMUNE_NASCITA, "
 				+ "COD_PROVINCIA_NASCITA, "
 				+ "COD_STATO_NASCITA, STATO_NASCITA.RV_MEANING as DESC_STATO_NASCITA, "
-				+ "DESC_COMUNE_NASCITA_ESTERO, "
-				+ "NAZIONALITA, NAZIONALITA.RV_MEANING as DESC_NAZIONALITA, " + "PATERNITA, "
-				+ "COGNOME_MADRE, " + "NOME_MADRE, " + "COD_FISCALE, " + "ATTO_NASCITA, " + "COD_AFIS, "
-				+ "COD_COMUNE_CASELLARIO, " + "NOTE, " + "KEY_SOGG_NSC, " + "TIT_ID_TITOLO_CUMULATO, "
-				+ "FLAG_STATO, " + "MOTIVO_MODIFICA, "
+				+ "DESC_COMUNE_NASCITA_ESTERO, " + "NAZIONALITA, NAZIONALITA.RV_MEANING as DESC_NAZIONALITA, "
+				+ "PATERNITA, " + "COGNOME_MADRE, " + "NOME_MADRE, " + "COD_FISCALE, " + "ATTO_NASCITA, "
+				+ "COD_AFIS, " + "COD_COMUNE_CASELLARIO, " + "NOTE, " + "KEY_SOGG_NSC, "
+				+ "TIT_ID_TITOLO_CUMULATO, " + "FLAG_STATO, " + "MOTIVO_MODIFICA, "
 				+ "COD_OPERATORE_INSERIMENTO, DATA_INSERIMENTO, COD_UFFICIO_INSERIMENTO, "
 				+ "COD_OPERATORE_AGGIORNAMENTO, DATA_AGGIORNAMENTO, COD_UFFICIO_AGGIORNAMENTO ";
 		// aggiungere qui gli eventuali campi descrizioni
@@ -176,17 +149,20 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 		lStatement += " AND (NVL (SOGGETTO_CUMULATO.COD_STATO_NASCITA, '-') = STATO_NASCITA.RV_LOW_VALUE AND STATO_NASCITA.RV_DOMAIN = 'NAZIONE') ";
 		lStatement += " AND (NVL (SOGGETTO_CUMULATO.NAZIONALITA, '-') = NAZIONALITA.RV_LOW_VALUE AND NAZIONALITA.RV_DOMAIN = 'NAZIONE') ";
 		// lStatement +=
-		// " AND ( nvl(SOGGETTO_CUMULATO.COD_PROVINCIA_NASCITA,'-') = CODPROVINCIANASCITA.RV_LOW_VALUE AND CODPROVINCIANASCITA.RV_DOMAIN = 'PROVINCIA_NASCITA' ) ";
+		// " AND ( nvl(SOGGETTO_CUMULATO.COD_PROVINCIA_NASCITA,'-') = CODPROVINCIANASCITA.RV_LOW_VALUE AND
+		// CODPROVINCIANASCITA.RV_DOMAIN = 'PROVINCIA_NASCITA' ) ";
 		// lStatement +=
-		// " AND ( nvl(SOGGETTO_CUMULATO.COD_STATO_NASCITA,'-') = CODSTATONASCITA.RV_LOW_VALUE AND CODSTATONASCITA.RV_DOMAIN = 'STATO_NASCITA' ) ";
+		// " AND ( nvl(SOGGETTO_CUMULATO.COD_STATO_NASCITA,'-') = CODSTATONASCITA.RV_LOW_VALUE AND
+		// CODSTATONASCITA.RV_DOMAIN = 'STATO_NASCITA' ) ";
 		// lStatement +=
-		// " AND ( nvl(SOGGETTO_CUMULATO.COD_COMUNE_CASELLARIO,'-') = CODCOMUNECASELLARIO.RV_LOW_VALUE AND CODCOMUNECASELLARIO.RV_DOMAIN = 'COMUNE_CASELLARIO' ) ";
+		// " AND ( nvl(SOGGETTO_CUMULATO.COD_COMUNE_CASELLARIO,'-') = CODCOMUNECASELLARIO.RV_LOW_VALUE AND
+		// CODCOMUNECASELLARIO.RV_DOMAIN = 'COMUNE_CASELLARIO' ) ";
 		return lStatement;
 	}
 
 	/*****************************************************************************
 	 * Metodo che carica il record del result set nel model
-	 * 
+	 *
 	 * @return
 	 * @throws DAOException
 	 ****************************************************************************/
@@ -236,7 +212,7 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di where per la ricerca
-	 * 
+	 *
 	 * @param aModel
 	 * @return
 	 ****************************************************************************/
@@ -346,21 +322,19 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 			lCondizioni = lCondizioni.substring(4);
 		}
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("lCondizioni = " + lCondizioni);
+		// valore di ritorno
 		return lCondizioni;
 	}
 
 	/*****************************************************************************
 	 * Metodo che imposta le condizioni di select per chiave
-	 * 
+	 *
 	 * @param aKey
 	 * @return
 	 ****************************************************************************/
 	public String setCondizioniByKey(BigDecimal aIdSoggettoCumulato) {
-		String lCondizioni = new String();
 
+		String lCondizioni = new String();
 		lCondizioni += " and ID_SOGGETTO_CUMULATO = " + aIdSoggettoCumulato;
 
 		// Elimino il primo and
@@ -368,16 +342,13 @@ public class SoggettoCumulatoSqlDAO extends SqlDAO {
 			lCondizioni = lCondizioni.substring(4);
 		}
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.debug("lCondizioni = " + lCondizioni);
-
+		// valore di ritorno
 		return lCondizioni;
 	}
 
 	/*****************************************************************************
 	 * Metodo per la costruzione della sezione order by
-	 * 
+	 *
 	 * @return
 	 ****************************************************************************/
 	protected String getOrderBy() {

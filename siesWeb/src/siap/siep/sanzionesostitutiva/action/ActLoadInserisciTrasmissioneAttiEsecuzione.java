@@ -1,15 +1,5 @@
 package siap.siep.sanzionesostitutiva.action;
 
-/**
- * <p>Title: ActLoadInserisciTrasmissioneAttiEsecuzione</p>
- * <p>Description: Azione Load della Trasmissione atti esecuzione
- *    nel caso di Cumulo</p>
- * <p>Copyright: Copyright (c) 2007</p>
- * <p>Company: Eutelia</p>
- * @author DB
- * @version 1.0
- */
-
 import java.util.Vector;
 
 import f3b.util.F3BException;
@@ -33,16 +23,23 @@ import siap.siep.sanzionesostitutiva.controller.ISanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
 
+/**
+ * Title: ActLoadInserisciTrasmissioneAttiEsecuzione
+ * Description: Azione Load della Trasmissione atti esecuzione nel caso di Cumulo
+ *
+ * @version 1.0
+ */
 public class ActLoadInserisciTrasmissioneAttiEsecuzione extends ActionSiap
 		implements ICostantiSanzioneSostitutiva {
 	/**
 	 * Azione di caricamento della form d'inserimento della trasmissione atti esecuzione
-	 * 
+	 *
 	 * @return Nome della pagina JSP su cui posizionarsi al termine dell'elaborazione
 	 * @throws F3BException
 	 */
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
+
 		if (this.isSessionAttributeNullObj("fascicolo")) {
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 		}
@@ -76,7 +73,6 @@ public class ActLoadInserisciTrasmissioneAttiEsecuzione extends ActionSiap
 
 		if (notEsistePosizioneGiuridica(lPos))
 			return IWebConstants.PG_MESSAGE;
-		;
 
 		setRequestAttribute("posizioneluogoaltra", lPos);
 
@@ -128,4 +124,5 @@ public class ActLoadInserisciTrasmissioneAttiEsecuzione extends ActionSiap
 
 		return PG_LOAD_INSERISCI_TRASMISSIONE_ATTI_ESECUZIONE;
 	}
+
 }

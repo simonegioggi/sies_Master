@@ -6,13 +6,18 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.html.Option;
+import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.magistratocompetente.controller.IMagistratoCompetente;
 import siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel;
 import siap.sico.residenza.controller.IResidenza;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.avvocato.controller.IAvvocato;
 import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misuracautelare.controller.IMisuraCautelare;
@@ -89,8 +94,6 @@ public class ActLoadTrasmissioneAttiEsecuzione extends ActionSiap implements ICo
 		if (notEsistePenaResiduaCorrenteByFascicoloSiep(prm))
 			return IWebConstants.PG_MESSAGE;
 
-		setRequestAttribute("penaresidua", prm);
-
 		// ricerco le sanzione sostitutive
 		ISanzioneSostitutiva iss = SIEPLookupRemote.getSanzioneSostitutivaRemote();
 		SanzioneSostResiduaModel ssrm = iss.getUltimaSSResidua(fsm.getIdFascicoloSiep(), "S");
@@ -99,17 +102,46 @@ public class ActLoadTrasmissioneAttiEsecuzione extends ActionSiap implements ICo
 			ssrm = iss.getUltimaSSResidua(fsm.getIdFascicoloSiep(), "N");
 		prm.setSanzSostResidua(ssrm);
 
+		setRequestAttribute("penaresidua", prm);
+
 		// solo se provengo da annotazione provvedimento
 		if (!isRequestParameterNullObj("lAnnotazione")) {
 			setRequestAttribute("lAnnotazione", getRequestStringParameter("lAnnotazione"));
 			setRequestAttribute("lSedeUfficio", getRequestStringParameter("lSedeUfficio"));
 		}
 
+		// DESTINATARI
+		Option option = new Option(DecodificheManager.getInstance().getTipoAutoritaPolizia(), "-");
+		setRequestAttribute("tipoAutoritaPolizia", "" + option);
+		// AVVOCATO
+		IAvvocato ia = SIEPLookupRemote.getAvvocatoRemote();
+		Vector avvocati = ia.ExRicercaAvvocatiByFascicolo(fsm.getIdFascicoloSiep());
+		setRequestAttribute("avvocati", avvocati);
+		// Autorita Notifica Avvocato
+		option = new Option(DecodificheManager.getInstance().getTipoAutorita(), "C0");
+		setRequestAttribute("tipoAutoritaC0", "" + option);
+		// Altro destinatario: tutti i records TIPO_AUTORITA
+		option = new Option(DecodificheManager.getInstance().getTipoAutorita(), "-");
+		setRequestAttribute("tipoAutoritaAll", "" + option);
+
 		// ricerca penacomplessiva e sanzione sostitutiva
 		IPenaComplessiva ipc = SIEPLookupRemote.getPenaComplessivaRemote();
 		PenaComplessivaSanzioneSostitutivaModel pcssm = ipc
-				.ExRicercaPenaComplessivaSanzioneSostitutivaByIdFascicoloSiep(fsm.getIdFascicoloSiep());
-		setRequestAttribute("lPenComSanSost", pcssm);
+				.ExRicercaPenaComplessivaPenaSostitutivaByIdFascicoloSiep(fsm.getIdFascicoloSiep(),
+						"('G', 'H')"); // (Semiliberta', Detenzione Domiciliare)
+		if (Utils.isNullObj(pcssm) || Utils.isNullObj(pcssm.getSanzioneSostitutiva())
+				|| Utils.isNullObj(pcssm.getSanzioneSostitutiva().getIdSanzioneSostitutiva())) {
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Procedimento N." + fsm.getChiaveAnno() + "/" + fsm.getChiaveProgr()
+							+ " privo di Semilibert&agrave; o Detenzione Domiciliare Sostitutiva!");
+			rt.setAction("siap.siep.sanzionesostitutiva.action.ActGestioneAltreSanzioni&"
+					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+			return IWebConstants.PG_MESSAGE;
+		}
+		setRequestAttribute("penaCompPenaSost", pcssm);
 
 		// misure cautelari
 		IMisuraCautelare imc = SIEPLookupRemote.getMisuraCautelareRemote();

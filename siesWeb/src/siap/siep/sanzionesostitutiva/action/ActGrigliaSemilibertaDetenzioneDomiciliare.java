@@ -17,7 +17,7 @@ public class ActGrigliaSemilibertaDetenzioneDomiciliare extends ActionSiap imple
 		if (isSessionAttributeNullObj("fascicolo"))
 			setRequestAttribute("fascicoloNotInSession", "S");
 
-		setRequestAttribute("strFunzione", "Gestione Semiliberta'/Detenzione Domiciliare");
+		setRequestAttribute("strFunzione", "Gestione Pene Sostitutive: Semilibert&agrave;/Detenzione Domiciliare");
 
 		return PG_GRIGLIA_SEMILIBERTA_DETENZIONE_DOMICILIARE;
 	}
