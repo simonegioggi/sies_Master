@@ -1,4 +1,4 @@
 BRANCH MASTER
-In data 27/10/2023 eseguito merge col:
-BRANCH SIES VERSIONE 12.5.4.0
-[Release rilasciata il 27/10/2023 (Patch mese di Ottobre 2023)]
+In data 24/11/2023 eseguito merge col:
+BRANCH SIES VERSIONE 12.5.5.0
+[Release rilasciata il 24/11/2023 (Patch mese di Novembre 2023)]
