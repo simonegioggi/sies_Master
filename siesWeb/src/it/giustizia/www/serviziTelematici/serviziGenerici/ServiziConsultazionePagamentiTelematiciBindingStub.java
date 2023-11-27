@@ -16,13 +16,28 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[10];
+        _operations = new org.apache.axis.description.OperationDesc[13];
         _initOperationDesc1();
+        _initOperationDesc2();
     }
 
     private static void _initOperationDesc1(){
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("downloadPDFRicevuta");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "idPagamento"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "bollo"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), boolean.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        oper.setReturnClass(java.lang.String.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[0] = oper;
+
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("downloadRicevuta");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "codiceCRS"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
@@ -35,7 +50,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "content"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[0] = oper;
+        _operations[1] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("downloadRichiesta");
@@ -47,7 +62,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "content"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[1] = oper;
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("elencoPagamenti");
@@ -79,12 +94,18 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroPagina"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
         oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "dataRicevutaDa"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"), java.util.Calendar.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "dataRicevutaA"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"), java.util.Calendar.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "risultatoRicerca"));
         oper.setReturnClass(it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[2] = oper;
+        _operations[3] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("elencoPagamentiRevocati");
@@ -103,7 +124,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[3] = oper;
+        _operations[4] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getAPAinKO");
@@ -128,7 +149,49 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[4] = oper;
+        _operations[5] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getInfoPagamentoRendicontato");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "iuv"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "codiceUfficio"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "InfoPagamentoRendicontato"));
+        oper.setReturnClass(it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[6] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getPagamentiByFlusso");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "codUffNep"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "idFlusso"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "dataOraFlusso"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"), java.util.Calendar.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "idPSP"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "risultatoRicercaRiversamenti"));
+        oper.setReturnClass(it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        oper.addFault(new org.apache.axis.description.FaultDesc(
+                      new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "ServiziPagamentiException"),
+                      "it.giustizia.www.serviziTelematici.serviziGenerici.ServiziPagamentiException",
+                      new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "ServiziPagamentiException"), 
+                      true
+                     ));
+        _operations[7] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getPagamentiRevocati");
@@ -153,7 +216,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[5] = oper;
+        _operations[8] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getPagamentoByCRS");
@@ -165,8 +228,13 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[6] = oper;
+        _operations[9] = oper;
 
+    }
+
+    private static void _initOperationDesc2(){
+        org.apache.axis.description.OperationDesc oper;
+        org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getPagamentoByDate");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "dataRichiestaDa"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"), java.util.Calendar.class, false, false);
@@ -186,7 +254,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[7] = oper;
+        _operations[10] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("ricercaFlussiRendicontazioneScaricati");
@@ -207,7 +275,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[8] = oper;
+        _operations[11] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("ricercaPagamentiNonVerificati");
@@ -235,7 +303,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[9] = oper;
+        _operations[12] = oper;
 
     }
 
@@ -278,6 +346,27 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "datiContesto");
             cachedSerQNames.add(qName);
             cls = it.giustizia.www.serviziTelematici.serviziGenerici.DatiContesto.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "DettaglioCrsPagamento");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.DettaglioCrsPagamento.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "downloadPDFRicevuta");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.DownloadPDFRicevuta.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "downloadPDFRicevutaResponse");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.DownloadPDFRicevutaResponse.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -338,6 +427,15 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "FlussiList");
+            cachedSerQNames.add(qName);
+            cls = java.lang.String[].class;
+            cachedSerClasses.add(cls);
+            qName = new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string");
+            qName2 = new javax.xml.namespace.QName("", "idFlusso");
+            cachedSerFactories.add(new org.apache.axis.encoding.ser.ArraySerializerFactory(qName, qName2));
+            cachedDeserFactories.add(new org.apache.axis.encoding.ser.ArrayDeserializerFactory());
+
             qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "flussoRendicontazione");
             cachedSerQNames.add(qName);
             cls = it.giustizia.www.serviziTelematici.serviziGenerici.FlussoRendicontazione.class;
@@ -355,6 +453,34 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getAPAinKOResponse");
             cachedSerQNames.add(qName);
             cls = it.giustizia.www.serviziTelematici.serviziGenerici.GetAPAinKOResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getInfoPagamentoRendicontato");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.GetInfoPagamentoRendicontato.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getInfoPagamentoRendicontatoResponse");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.GetInfoPagamentoRendicontatoResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getPagamentiByFlusso");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.GetPagamentiByFlusso.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getPagamentiByFlussoResponse");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.GetPagamentiByFlussoResponse.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -401,9 +527,23 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "InfoPagamentoRendicontato");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "pagamentoNonVerificato");
             cachedSerQNames.add(qName);
             cls = it.giustizia.www.serviziTelematici.serviziGenerici.PagamentoNonVerificato.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "pagamentoRes");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.PagamentoRes.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -485,6 +625,20 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "risultatoRicercaRiversamenti");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "ServiziPagamentiException");
+            cachedSerQNames.add(qName);
+            cls = it.giustizia.www.serviziTelematici.serviziGenerici.ServiziPagamentiException.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "statoRichiestaPagamento");
             cachedSerQNames.add(qName);
             cls = it.giustizia.www.serviziTelematici.serviziGenerici.StatoRichiestaPagamento.class;
@@ -558,12 +712,46 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
         }
     }
 
-    public byte[] downloadRicevuta(java.lang.String codiceCRS, boolean originale) throws java.rmi.RemoteException {
+    public java.lang.String downloadPDFRicevuta(java.lang.String idPagamento, boolean bollo) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[0]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "downloadPDFRicevuta"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {idPagamento, new java.lang.Boolean(bollo)});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (java.lang.String) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (java.lang.String) org.apache.axis.utils.JavaUtils.convert(_resp, java.lang.String.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public byte[] downloadRicevuta(java.lang.String codiceCRS, boolean originale) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[1]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -597,7 +785,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[1]);
+        _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -626,12 +814,12 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
 }
     }
 
-    public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca elencoPagamenti(java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale, java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato, java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException {
+    public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca elencoPagamenti(java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale, java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato, java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int dimensionePagina, int numeroPagina, java.util.Calendar dataRicevutaDa, java.util.Calendar dataRicevutaA) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
+        _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -642,7 +830,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codiceCRS, tipologia, codiceFiscale, codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA, new java.lang.Integer(dimensionePagina), new java.lang.Integer(numeroPagina)});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codiceCRS, tipologia, codiceFiscale, codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA, new java.lang.Integer(dimensionePagina), new java.lang.Integer(numeroPagina), dataRicevutaDa, dataRicevutaA});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -665,7 +853,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
+        _call.setOperation(_operations[4]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -699,7 +887,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[4]);
+        _call.setOperation(_operations[5]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -728,12 +916,88 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
 }
     }
 
+    public it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato getInfoPagamentoRendicontato(java.lang.String iuv, java.lang.String codiceUfficio) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[6]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getInfoPagamentoRendicontato"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {iuv, codiceUfficio});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato) org.apache.axis.utils.JavaUtils.convert(_resp, it.giustizia.www.serviziTelematici.serviziGenerici.InfoPagamentoRendicontato.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti getPagamentiByFlusso(java.lang.String codUffNep, java.lang.String idFlusso, java.util.Calendar dataOraFlusso, java.lang.String idPSP) throws java.rmi.RemoteException, it.giustizia.www.serviziTelematici.serviziGenerici.ServiziPagamentiException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[7]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://www.giustizia.it/serviziTelematici/serviziGenerici", "getPagamentiByFlusso"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codUffNep, idFlusso, dataOraFlusso, idPSP});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti) org.apache.axis.utils.JavaUtils.convert(_resp, it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRiversamenti.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+    if (axisFaultException.detail != null) {
+        if (axisFaultException.detail instanceof java.rmi.RemoteException) {
+              throw (java.rmi.RemoteException) axisFaultException.detail;
+         }
+        if (axisFaultException.detail instanceof it.giustizia.www.serviziTelematici.serviziGenerici.ServiziPagamentiException) {
+              throw (it.giustizia.www.serviziTelematici.serviziGenerici.ServiziPagamentiException) axisFaultException.detail;
+         }
+   }
+  throw axisFaultException;
+}
+    }
+
     public it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicercaRevocati getPagamentiRevocati(java.util.Calendar dataRicevutaRevocataDa, java.util.Calendar dataRicevutaRevocataA, java.util.Calendar dataRevocataDa, java.util.Calendar dataRevocataA, int dimensionePagina, int numeroPagina) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[5]);
+        _call.setOperation(_operations[8]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -767,7 +1031,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[6]);
+        _call.setOperation(_operations[9]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -801,7 +1065,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[7]);
+        _call.setOperation(_operations[10]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -835,7 +1099,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[8]);
+        _call.setOperation(_operations[11]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -869,7 +1133,7 @@ public class ServiziConsultazionePagamentiTelematiciBindingStub extends org.apac
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[9]);
+        _call.setOperation(_operations[12]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);

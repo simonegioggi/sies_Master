@@ -187,6 +187,8 @@ public class ConsultaPagamentiJob implements Job {
 					Calendar dataRichiestaA = null;
 					int dimensionePagina = 0;
 					int numeroPagina = 0;
+					Calendar dataRicevutaDa = null;
+					Calendar dataRicevutaA = null;
 
 					// MEV_2023-33 - Si tiene traccia di ogni invocazione al WS
 					lInvocazioneModel.setCodiceFiscale(codiceFiscale);
@@ -222,7 +224,7 @@ public class ConsultaPagamentiJob implements Job {
 
 						RisultatoRicerca rr = scpt.elencoPagamenti(codiceCRS, tipologia, codiceFiscale,
 								codiceDistretto, causale, stato, dataRichiestaDa, dataRichiestaA,
-								dimensionePagina, numeroPagina);
+								dimensionePagina, numeroPagina, dataRicevutaDa, dataRicevutaA);
 						// MEV_2023-33 Si registrano i dati scambiati: XML
 						org.apache.axis.client.Call _call = scpt.getLastCall();
 						String requestXML = _call.getMessageContext().getRequestMessage()

@@ -59,7 +59,6 @@ public class GeneraAvvisoPagoPAUtil {
 		siesLogger.debug(GeneraAvvisoPagoPAUtil.class.getName() + ".caricaDatiVersamento");
 
 		DatiVersamento dv = new DatiVersamento();
-		dv.setBicAddebito(null);
 		// DatiSingoloVersamento[] dsv = caricaDatiSingoloVersamento(sm, bpm);
 		DatiSingoloVersamento[] dsvs = new DatiSingoloVersamento[1];
 		// dati singolo versamento
@@ -76,7 +75,6 @@ public class GeneraAvvisoPagoPAUtil {
 		// dv.setDatiSingoloVersamento(i, dsv[i]); // da 1 a 5 occorrenze
 		// IbanAddebito: da non valorizzare nel caso in cui il file debba essere usato in generaAvviso()
 		dv.setImportoTotale(dsvs[0].getImporto());
-		dv.setIbanAddebito(null);
 		return dv;
 	}
 

@@ -97,16 +97,17 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					// java.lang.String codiceCRS, java.lang.String tipologia, java.lang.String codiceFiscale,
 					// java.lang.String codiceDistretto, java.lang.String causale, java.lang.String stato,
 					// java.util.Calendar dataRichiestaDa, java.util.Calendar dataRichiestaA, int
-					// dimensionePagina, int numeroPagina
+					// dimensionePagina, int numeroPagina, java.util.Calendar dataRicevutaDa,
+					// java.util.Calendar dataRicevutaA
 					// C.F. or P.I. (NON OBBLIGATORIO --> se nullo passo "ANONIMO")
 					String cf = Utils.isPresent(bpm.getCodiceFiscale()) ? bpm.getCodiceFiscale() : "ANONIMO";
 					siesLogger.debug("Parametri di passaggio: codiceCRS = " + "3" + bpm.getIuv()
 							+ "; tipologia = 'PENPE'; " + "codiceFiscale = " + cf + "; codiceDistretto = "
 							+ bpm.getCodiceDistretto()
 							+ "; causale, stato, dataRichiestaDa, dataRichiestaA = NULL"
-							+ "; dimensionePagina, numeroPagina = 0;");
+							+ "; dimensionePagina, numeroPagina = 0; dataRicevutaDa, dataRicevutaA = NULL");
 					rr = scpt.elencoPagamenti("3" + bpm.getIuv(), "PENPE", cf, bpm.getCodiceDistretto(), null,
-							null, null, null, 0, 0);
+							null, null, null, 0, 0, null, null);
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
 					siesLogger.error(ioe.getMessage());
