@@ -61,13 +61,13 @@ function tornaIndietro(action) {
       		<font class="label">Funzione :</font>&nbsp;&nbsp;
 <%
 // MEV_2023-33: aggiungo gestione numero dei Bollettini da generare
-if (areRateGiaGenerate.get(areRateGiaGenerate.size()-1) || !isRateale) {
+if ((!areRateGiaGenerate.isEmpty() && areRateGiaGenerate.get(areRateGiaGenerate.size()-1)) || !isRateale) {
 %>
 			<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria</font>
 <%
 } else {
 	if (isRateale) {
-		if (isSoloPrimaRata.get(isSoloPrimaRata.size()-1)) {
+		if (!isSoloPrimaRata.isEmpty() && isSoloPrimaRata.get(isSoloPrimaRata.size()-1)) {
 %>
     		<font class="campo">Richiesta a PagoPA Generazione Bollettini Pagamento Pena Pecuniaria Rimanenti Rate</font>
 <%

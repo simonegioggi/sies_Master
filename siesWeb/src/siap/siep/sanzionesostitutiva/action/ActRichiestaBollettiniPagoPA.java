@@ -71,13 +71,20 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 			return IWebConstants.PG_WARNING;
 		}
 
+		boolean isUnico = false;
+
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 				.exRicercaEventoRateizzazionePP(idFascicolo, "ALL", "S");
 		// imposto nella request
 		setRequestAttribute("listaRichiestaBollettini", listaRichiestaBollettini);
+		Vector<RateizzazionePPModel> listaRateizzazioni = new Vector<>();
+		if (listaRichiestaBollettini.isEmpty()) {
+			listaRateizzazioni = irpp.exRicercaRateizzazioniByIdFasc(idFascicolo);
+			isUnico = !listaRateizzazioni.isEmpty() && listaRateizzazioni.size() == 1
+					&& "U".equals(listaRateizzazioni.get(0).getTipoRateizzazione());
+		}
 
-		boolean isUnico = false;
 		List<String> testi = new ArrayList<>();
 
 		if (!listaRichiestaBollettini.isEmpty()) {
@@ -145,7 +152,6 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 					isUnico = elencoStatoPagamenti.size() == 1
 							&& "U".equals(elencoStatoPagamenti.get(0).getTipoRateizzazione());
 				}
-				setRequestAttribute("isRateale", !isUnico);
 				if (!elencoStatoPagamenti.isEmpty() && !isUnico && elencoStatoPagamenti.size() > 1) {
 					// PAGAMENTO RATEALE
 					Iterator<BollettinoPagopaModel> itx = elencoStatoPagamenti.iterator();
@@ -171,6 +177,7 @@ public class ActRichiestaBollettiniPagoPA extends ActionSiap implements ICostant
 		}
 
 		// imposto l'attributo nella request
+		setRequestAttribute("isRateale", !isUnico);
 		setRequestAttribute("isSoloPrimaRata", isSoloPrimaRataList);
 		setRequestAttribute("areRateGiaGenerate", areRateGiaGenerateList);
 
