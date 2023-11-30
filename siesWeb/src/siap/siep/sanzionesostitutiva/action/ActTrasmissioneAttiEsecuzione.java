@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
@@ -53,7 +54,7 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 		enm.getEvento().setCodTipoProvvedimento("31");
 
 		if (isRequestChecked("ritrasmissione"))
-			enm.getEvento().setCodMotivo("0941");
+			enm.getEvento().setCodMotivo("1313");
 		else
 			enm.getEvento().setCodMotivo("1312");
 
@@ -132,11 +133,10 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 			numAvvNotifiche -= 1;
 
 		// ===================================================
-		// Notifica per l'esecuzione
+		// Notifica al condannato
 		// ===================================================
 		{
 			String sedeDestinatario_E = null;
-			String destinatario_E = null;
 			String destinatario_EAE = null;
 			String note_E = null;
 
@@ -146,31 +146,19 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 				sedeDestinatario_E = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E);
 			}
 
-			if (!isRequestParameterNullObj(ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
-				destinatario_E = getRequestStringParameter(
-						ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-
-			if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
-				destinatario_E = getRequestStringParameter(
-						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
-
 			if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_E))
 				note_E = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_E);
 
-			NotificaModel nm = new NotificaModel();
-			nm.setCodTipoNotifica("E");
-			nm.setDataInvio(dataTrasmissione);
-			nm.setCodEsito("-");
-			nm.setCodOperatoreInserimento(codUtenteConnesso);
-			nm.setDataInserimento(DateUtils.getSysDate());
-			nm.setCodUfficioInserimento(codUfficioUtenteConnesso);
-			nm.setNote(note_E);
+			if (!Utils.isNullObj(destinatario_EAE) && !"-".equals(destinatario_EAE)) {
+				NotificaModel nm = new NotificaModel();
+				nm.setCodTipoNotifica("NC");
+				nm.setDataInvio(dataTrasmissione);
+				nm.setCodEsito("-");
+				nm.setCodOperatoreInserimento(codUtenteConnesso);
+				nm.setDataInserimento(DateUtils.getSysDate());
+				nm.setCodUfficioInserimento(codUfficioUtenteConnesso);
+				nm.setNote(note_E);
 
-			// Prima notifica esecuzione
-			if (destinatario_E != null)
-				nm.setIstDetIdIstitutoDetenzione(destinatario_E);
-
-			if (destinatario_EAE != null) {
 				AutoritaEsternaModel aem = new AutoritaEsternaModel();
 				aem.setCodTipoAutorita(destinatario_EAE);
 				ComuneModel cm = new ComuneModel(getCodComuneByDescrFlagVal(sedeDestinatario_E));
@@ -180,9 +168,82 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 				aem.setDataInserimento(DateUtils.getSysDate());
 				nm.setIstDetIdIstitutoDetenzione("");
 				nm.setAutoritaEsterna(aem);
-			}
 
-			nmArray.add(nm);
+				nmArray.add(nm);
+			}
+		}
+
+		// ===================================================
+		// Notifica ad Istituto Detenzione
+		// ===================================================
+		{
+			String destinatario_IST = null;
+			String note_IST = null;
+			if (!isRequestParameterNullObj(ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
+				destinatario_IST = getRequestStringParameter(
+						ICostantiAltraCausa.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+
+			if (!isRequestParameterNullObj(ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE))
+				destinatario_IST = getRequestStringParameter(
+						ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE);
+
+			if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_IST))
+				note_IST = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_IST);
+
+			if (!Utils.isNullObj(destinatario_IST) && !"-".equals(destinatario_IST)) {
+				NotificaModel nm = new NotificaModel();
+				nm.setCodTipoNotifica("E");
+				nm.setDataInvio(dataTrasmissione);
+				nm.setCodEsito("-");
+				nm.setCodOperatoreInserimento(codUtenteConnesso);
+				nm.setDataInserimento(DateUtils.getSysDate());
+				nm.setCodUfficioInserimento(codUfficioUtenteConnesso);
+				nm.setNote(note_IST);
+				nm.setIstDetIdIstitutoDetenzione(destinatario_IST);
+
+				nmArray.add(nm);
+			}
+		}
+
+		// ===================================================
+		// Notifica altro destinatario
+		// ===================================================
+		{
+			String sedeDestinatario_C = null;
+			String destinatario_AEC = null;
+			String note_C = null;
+
+			if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C)) {
+				destinatario_AEC = getRequestStringParameter(
+						ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C);
+				sedeDestinatario_C = getRequestStringParameter(ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C);
+			}
+			// indirizzo
+			if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE_C))
+				note_C = getRequestStringParameter(ICostantiNotifica.CAMPO_NOTE_C);
+
+			if (!Utils.isNullObj(destinatario_AEC) && !"-".equals(destinatario_AEC)) {
+				NotificaModel nm = new NotificaModel();
+				nm.setCodTipoNotifica("AA");
+				nm.setDataInvio(dataTrasmissione);
+				nm.setCodEsito("-");
+				nm.setCodOperatoreInserimento(codUtenteConnesso);
+				nm.setDataInserimento(DateUtils.getSysDate());
+				nm.setCodUfficioInserimento(codUfficioUtenteConnesso);
+				nm.setNote(note_C);
+
+				AutoritaEsternaModel aem = new AutoritaEsternaModel();
+				aem.setCodTipoAutorita(destinatario_AEC);
+				ComuneModel cm = new ComuneModel(getCodComuneByDescrFlagVal(sedeDestinatario_C));
+				aem.setCodSede(cm.getCodComune());
+				aem.setCodOperatoreInserimento(codUtenteConnesso);
+				aem.setCodUfficioInserimento(codUfficioUtenteConnesso);
+				aem.setDataInserimento(DateUtils.getSysDate());
+				nm.setIstDetIdIstitutoDetenzione("");
+				nm.setAutoritaEsterna(aem);
+
+				nmArray.add(nm);
+			}
 		}
 
 		// ===================================================
@@ -191,7 +252,7 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 		// Notifiche all'avvocato
 		while (contNotifiche < numAvvNotifiche) {
 			NotificaModel nm = new NotificaModel();
-			nm.setCodTipoNotifica("N");
+			nm.setCodTipoNotifica("ND");
 			nm.setAvvIdAvvocatoFascicoloSiep(new BigDecimal(avvocati[contNotifiche]));
 			nm.setNote(arrayNote[contNotifiche]);
 			nm.setDataInvio(dataTrasmissione);
@@ -216,6 +277,7 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 			nmArray.add(nm);
 		}
 
+		// Notifica UDS
 		NotificaModel nm = new NotificaModel();
 		if (!isRequestParameterNullObj(ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO)
 				&& getRequestStringParameter(ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO) != null
@@ -231,9 +293,8 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 			nm.setCodOperatoreInserimento(getCodUtenteConnesso());
 			nm.setDataInserimento(DateUtils.getSysDate());
 			nm.setCodUfficioInserimento(getCodUfficioUtenteConnesso());
-			nm.setCodTipoNotifica("E");
-			nm.setDataInvio(getRequestDateParameter(ICostantiNotifica.CAMPO_ANNO_DATA_INVIO,
-					ICostantiNotifica.CAMPO_MESE_DATA_INVIO, ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO));
+			nm.setCodTipoNotifica("UDS".equals(tipoUfficio) ? "MS" : "MM");
+			nm.setDataInvio(dataTrasmissione);
 			nm.setUffCodUfficio(codUfficio);
 		}
 		nmArray.add(nm);

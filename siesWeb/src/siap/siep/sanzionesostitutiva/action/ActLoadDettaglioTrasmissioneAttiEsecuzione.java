@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
 import f3b.util.F3BException;
+import f3b.util.Utils;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoNotificaModel;
@@ -17,6 +18,7 @@ import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.misuracautelare.controller.IMisuraCautelare;
+import siap.siep.notifica.model.NotificaModel;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
@@ -53,6 +55,18 @@ public class ActLoadDettaglioTrasmissioneAttiEsecuzione extends ActSIESDettaglio
 		EventoNotificaModel enm = ie.ExRicercaEventoNotificaByKey(idEvento);
 		setRequestAttribute("evento", enm);
 
+		NotificaModel nm = new NotificaModel();
+		if (!Utils.isNullObj(enm) && !Utils.isNullObj(enm.getNotifiche())) {
+			for (int i = 0; i < enm.getNotifiche().length; i++) {
+				NotificaModel nmfor = enm.getNotifiche()[i];
+				if (Utils.isPresent(nmfor.getUffCodUfficio())) {
+					nm = nmfor;
+					break;
+				}
+			}
+		}
+		setRequestAttribute("notificaUDS", nm);
+
 		// Posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel pgldacm = getPosizioneGiuridicaLuogoDetenzioneAltraCausa(
 				idEvento, fsm.getIdFascicoloSiep());
@@ -81,8 +95,9 @@ public class ActLoadDettaglioTrasmissioneAttiEsecuzione extends ActSIESDettaglio
 		// ricerca penacomplessiva e sanzione sostitutiva
 		IPenaComplessiva ipc = SIEPLookupRemote.getPenaComplessivaRemote();
 		PenaComplessivaSanzioneSostitutivaModel pcssm = ipc
-				.ExRicercaPenaComplessivaSanzioneSostitutivaByIdFascicoloSiep(fsm.getIdFascicoloSiep());
-		setRequestAttribute("lPenComSanSost", pcssm);
+				.ExRicercaPenaComplessivaPenaSostitutivaByIdFascicoloSiep(fsm.getIdFascicoloSiep(),
+						"('G', 'H')"); // (Semiliberta', Detenzione Domiciliare)
+		setRequestAttribute("penaCompPenaSost", pcssm);
 
 		// misure cautelari
 		IMisuraCautelare imc = SIEPLookupRemote.getMisuraCautelareRemote();
@@ -98,7 +113,7 @@ public class ActLoadDettaglioTrasmissioneAttiEsecuzione extends ActSIESDettaglio
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		// pagina di ritorno
-		return PG_DETTAGLIO_TRASMISSIONE_ATTI_ESECUZIONE;
+		return PG_LOAD_DETTAGLIO_TRASMISSIONE_ATTI_ESECUZIONE;
 	}
 
 }

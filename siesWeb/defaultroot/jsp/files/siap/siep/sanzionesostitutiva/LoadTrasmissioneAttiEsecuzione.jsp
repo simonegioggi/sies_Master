@@ -101,7 +101,8 @@ function ListaIstitutoDetenzione(a_formname, a_fieldname, a_field2) {
 
 function Verify() {
 	var dataOdierna = "<%=DateUtils.getSysDate("dd")%>-<%=DateUtils.getSysDate("MM")%>-<%=DateUtils.getSysDate("yyyy")%>";
-	// Aggiungere i controlli
+
+	// Data Emissione
   	if (document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value.length == 1)
 		document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value = '0'
 		+ document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>.value;
@@ -159,21 +160,24 @@ function Verify() {
 			document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>.focus();
 			return false; 
   		}
-	} else if (typeof document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %> !== "undefined") {
+	} else if (typeof document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%> !== "undefined") {
 		if (document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.value == "") {
 			alert("Selezionare l'istituto di detenzione per la notifica al condannato");
 			document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>.focus();
 			return false; 
     	}          
- 	} else {
+ 	} /*else {
 	    alert("destinatario sconosciuto");
 	    return false;
- 	}
+ 	}*/
+
+	// SEDE UFFICIO
 	if (document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO%>.value == '') {
 		alert("Il Campo Sede è obbligatorio");
 		document.LoadTrasmissioneAttiEsecuzione.<%=ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO%>.focus();
 		return false;
    	}
+	return true;
 }
 </script>
 </head>
@@ -183,7 +187,7 @@ function Verify() {
 	<tr>
    		<td class="LBG">
    			<a href="Javascript:window.print();">
-   				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0>
+   				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border="0">
    			</a>
    		</td>
    		<td class="LBG">
@@ -196,10 +200,10 @@ function Verify() {
 <br>
 <FORM method="POST" name="LoadTrasmissioneAttiEsecuzione" action="<%=IWebConstants.PG_MAIN%>">
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActTrasmissioneAttiEsecuzione">
-<table>
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td class="l">Posizione Giuridica </td>
-		<td class="L" colspan=5>
+		<td class="l" width="20%">Posizione Giuridica</td>
+		<td class="L" colspan="5">
    			<font class="campo">
 <%
 if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
@@ -229,14 +233,14 @@ if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 %>
 	<tr>
 	  	<td class="l">Detenuto presso </td>
-	  	<td class="L" colspan=5><font class="campo"><%=acm.getIstitutoDetenzione().getDescrTipoIstituto()%></font></td>
+	  	<td class="L" colspan="5"><font class="campo"><%=acm.getIstitutoDetenzione().getDescrTipoIstituto()%></font></td>
 	</tr>
 <%
 		if (acm.getAltroLuogo() != null) {
 %>
 	<tr>
-		<td class="l">Altro Luogo </td >
-		<td class="L" colspan=5><font class="campo"><%=StringUtils.toStringJSP(acm.getAltroLuogo())%></font></td>
+		<td class="l">Altro Luogo</td >
+		<td class="L" colspan="5"><font class="campo"><%=StringUtils.toStringJSP(acm.getAltroLuogo())%></font></td>
 	</tr>
 <%
 		}
@@ -245,7 +249,7 @@ if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 %>
 	<tr>
 	 	<td class="l">Detenuto presso </td>
-	 	<td class="L" colspan=5>
+	 	<td class="L" colspan="5">
 	  		<font class="campo"><%=ldm.getIstitutoDetenzione().getDescrTipoIstituto()%></font>
 			&nbsp;di&nbsp;<font class="campo"><%=ldm.getIstitutoDetenzione().getDescrComune()%></font>
   		</td>
@@ -258,7 +262,7 @@ if (codPosizioneGiuridica != null && (codPosizioneGiuridica.equals("02") || codP
 %>
 	<tr>
 		<td class="l">Indirizzo</td>
-		<td class="L" colspan=5>
+		<td class="L" colspan="5">
 			<font class="campo"><%=StringUtils.toStringJSP(ldm.getAltroLuogo())%></font>
 		</td>
 	</tr>
@@ -341,34 +345,34 @@ if (lPenCompMod != null) {
 <%
 }
 if (pcssm != null) {
-	SanzioneSostitutivaModel lSanSos = pcssm.getSanzioneSostitutiva();
-	if (lSanSos != null && lSanSos.getIdSanzioneSostitutiva() != null) {
+	SanzioneSostitutivaModel ssm = pcssm.getSanzioneSostitutiva();
+	if (ssm != null && ssm.getIdSanzioneSostitutiva() != null) {
 %>
 	<tr>
 		<td class="L"><font class="label">Pena Sostitutiva applicata:</font></td>
 		<td class="L" colspan="5">
 <%
-		if ((lSanSos.getNumAnni() != null && lSanSos.getNumAnni().compareTo(new BigDecimal(0)) != 0)
-				|| (lSanSos.getNumMesi() != null && lSanSos.getNumMesi().compareTo(new BigDecimal(0)) != 0)
-				|| (lSanSos.getNumGiorni() != null && lSanSos.getNumGiorni().compareTo(new BigDecimal(0)) != 0)) {
+		if ((ssm.getNumAnni() != null && ssm.getNumAnni().compareTo(new BigDecimal(0)) != 0)
+				|| (ssm.getNumMesi() != null && ssm.getNumMesi().compareTo(new BigDecimal(0)) != 0)
+				|| (ssm.getNumGiorni() != null && ssm.getNumGiorni().compareTo(new BigDecimal(0)) != 0)) {
 %>
-			<font class="campo"><%=StringUtils.toStringJSP(lSanSos.getDescrTipoSanzione())%>&nbsp;</font>
-			<font class="label">Anni:&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getNumAnni(), "0")%>&nbsp;</font>
-			<font class="label">Mesi:&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getNumMesi(), "0")%>&nbsp;</font>
-			<font class="label">Giorni:&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(lSanSos.getNumGiorni(), "0")%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(ssm.getDescrTipoSanzione())%>&nbsp;</font>
+			<font class="label">Anni:&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(ssm.getNumAnni(), "0")%>&nbsp;</font>
+			<font class="label">Mesi:&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(ssm.getNumMesi(), "0")%>&nbsp;</font>
+			<font class="label">Giorni:&nbsp;</font><font class="campo"><%=StringUtils.toStringJSP(ssm.getNumGiorni(), "0")%></font>
 <%
 		}
-		if (lSanSos.getSanzionePecuniariaMulta() != null && lSanSos.getSanzionePecuniariaMulta().intValue() != 0) {
+		if (ssm.getSanzionePecuniariaMulta() != null && ssm.getSanzionePecuniariaMulta().intValue() != 0) {
 %>
-			<font class="label">&nbsp;Sanz.&nbsp;Pec.&nbsp;Multa&nbsp;</font>
-			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaMulta())%>&nbsp;</font>&euro;
+			<font class="label">&nbsp;Pena&nbsp;Pec.&nbsp;Multa&nbsp;</font>
+			<font class="campo"><%=StringUtils.toEuroFormat(ssm.getSanzionePecuniariaMulta())%>&nbsp;</font>&euro;
 			<br>
 <%
 		}
-		if (lSanSos.getSanzionePecuniariaAmmenda() != null && lSanSos.getSanzionePecuniariaAmmenda().intValue() != 0) {
+		if (ssm.getSanzionePecuniariaAmmenda() != null && ssm.getSanzionePecuniariaAmmenda().intValue() != 0) {
 %>
-			<font class="label">&nbsp;Sanz.&nbsp;Pec.&nbsp;Ammenda&nbsp;</font>
-			<font class="campo"><%=StringUtils.toEuroFormat(lSanSos.getSanzionePecuniariaAmmenda())%>&nbsp;</font>&euro;
+			<font class="label">&nbsp;Pena&nbsp;Pec.&nbsp;Ammenda&nbsp;</font>
+			<font class="campo"><%=StringUtils.toEuroFormat(ssm.getSanzionePecuniariaAmmenda())%>&nbsp;</font>&euro;
 <%
 		}
 %>
@@ -456,7 +460,7 @@ if (penaresidua.getIdPenaResidua() != null) {
 	</tr>
 <%
 }
-if (penaresidua != null && penaresidua.getFlagSanzioneSostitutiva() != null) {
+if (penaresidua != null && penaresidua.getFlagSanzioneSostitutiva() != null && "S".equals(penaresidua.getFlagSanzioneSostitutiva())) {
 %>
 	<tr>
 		<td class="l">Pena sostitutiva da espiare:</td>  
@@ -490,9 +494,9 @@ if (penaresidua != null && penaresidua.getFlagSanzioneSostitutiva() != null) {
 %>
 </table>
 <br>
-<table width='100%'>
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td class="l">Data Emissione</td>
+		<td class="l" width="20%">Data Emissione</td>
         <td class="L">
 			<input title = "Giorno Data Emissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title = "Mese Data Emissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
@@ -534,6 +538,25 @@ if (lAnnotazione != null && lAnnotazione.equals("S")) {
 %>
 		</td>
     </tr>
+    <tr><td>&nbsp;</td></tr>
+   	<tr>
+		<td class="l">Destinatario</td>
+      	<td class="l" colspan="3">
+			<%=MinorMask.comboMagistrato("true", MinorMask.SorveglianzaUfficio)%>
+       	</td>
+	</tr>
+    <tr>
+		<td class="l">Sede</td>
+      	<td class="l" colspan="3">
+        	<font class="campo">
+          		<input Title="Luogo Ufficio Sorveglianza" value="<%=lSedeUfficio%>" name="<%=ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO%>" size=35 type="text">
+          		<a href="Javascript: sceltaLista();">
+            		<img src="/images/filefolder.gif" border=0>
+          		</a>
+        	</font>
+      	</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
 <%-- SEZIONE DESTINATARI:
 LIBERO: 7, 10, 16, 17, 46, 47, 89, 90 											--> ufficio di sorveglianza + Avvocato + Altro destinatario
 CONDANNATO IN ARRESTI DOMICILIARI PER QUESTA CAUSA: 2, 23, 70, 71, 72 			--> ufficio di sorveglianza + Avvocato + Altro destinatario + Forze di polizia per notifica condannato
@@ -554,24 +577,6 @@ if (libero.contains(codPosizioneGiuridica)
 		|| ccacrdad.contains(codPosizioneGiuridica)
 		|| ccacird.contains(codPosizioneGiuridica)) {
 %>
-	<tr>
-		<td class="l">Destinatario</td>
-      	<td class="l" colspan="3">
-			<%=MinorMask.comboMagistrato("true", MinorMask.SorveglianzaUfficio)%>
-       	</td>
-	</tr>
-    <tr>
-		<td class="l">Sede</td>
-      	<td class="l" colspan="3">
-        	<font class="campo">
-          		<input Title="Luogo Ufficio Sorveglianza" value="<%=lSedeUfficio%>" name="<%=ICostantiSanzioneSostitutiva.CAMPO_SEDE_UFFICIO%>" size=35 type="text">
-          		<a href="Javascript: sceltaLista();">
-            		<img src="/images/filefolder.gif" border=0>
-          		</a>
-        	</font>
-      	</td>
-	</tr>
-	<tr><td>&nbsp;</td></tr>
 	<tr>
     	<td class="Titolo" colspan="6">Notifica al Difensore</td>
   	</tr>
@@ -697,13 +702,13 @@ while (iter.hasNext()) {
 %>
 	<tr><td>&nbsp;</td></tr>
 	<tr>
-      	<td class="l" width="20%">Autorita' Destinazione <font class=ob>(*)</font></td>
+      	<td class="l" width="20%">Istituto Detenzione <font class=ob>(*)</font></td>
 <%
 		if (ldm != null && ldm.getIstitutoDetenzione() != null) {
 %>
 		<td class="l">
-       		<input readonly Title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrComune())%>" size=50>
-        	<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="<%=ldm.getIstDetIdIstitutoDetenzione()%>" size="50">
+       		<input readonly Title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrComune())%>" size="60">
+        	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="<%=ldm.getIstDetIdIstitutoDetenzione()%>">
        		<a href="Javascript:ListaIstitutoDetenzione('LoadTrasmissioneAttiEsecuzione','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -712,8 +717,8 @@ while (iter.hasNext()) {
 		} else {
 %>
 		<td class="l">
-          	<input readonly Title="Istituto" name="Comune" id="descIstituto" value="" size="50">
-          	<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
+          	<input readonly Title="Istituto" name="Comune" id="descIstituto" value="" size="60">
+          	<input type="hidden" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" id="<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>" value="">
           	<a href="Javascript:ListaIstitutoDetenzione('LoadTrasmissioneAttiEsecuzione','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>','Comune');">
           		<img src="/images/filefolder.gif" border=0>
           	</a>
@@ -723,7 +728,7 @@ while (iter.hasNext()) {
 %>
 		<td class="l">Note</td>
       	<td class="L">
-        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_IST%>" cols="35"></textarea>
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_IST%>" cols="35" readonly="readonly"></textarea>
       	</td>
    </tr>
 <%
@@ -739,7 +744,7 @@ while (iter.hasNext()) {
 </form>
 <script language="JavaScript" type="text/javascript">
 var frmvalidator = new Validator("LoadTrasmissioneAttiEsecuzione");
-
+// Controlli Data Emissione
 frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","req","Il campo Giorno Emissione dell'Atto è obbligatorio");
 frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","numeric");
 frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>","gt=1");
@@ -754,7 +759,7 @@ frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","req
 frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","numeric");
 frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","gt=1900");
   
-//Controlli Data Trasmissione
+// Controlli Data Trasmissione
 frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","numeric");
 frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","gt=1");
 frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","lt=31");
