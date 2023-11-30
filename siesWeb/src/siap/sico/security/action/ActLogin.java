@@ -4,18 +4,21 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
-import siap.sico.security.ICostantiFunzioni;
-//import siap.sico.security.controller.SecurityController;
-import siap.sico.security.controller.ISecurity;
-import siap.sico.utente.model.UtenteModel;
-import siap.sico.util.SICOLookupRemote;
-import siap.sico.web.ActionSiap;
 import f3b.log.LogF3B;
 import f3b.security.model.FunctionModel;
 import f3b.util.F3BException;
 import f3b.util.StringUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
+import siap.sico.security.ICostantiFunzioni;
+//import siap.sico.security.controller.SecurityController;
+import siap.sico.security.controller.ISecurity;
+import siap.sico.utente.model.UtenteModel;
+import siap.sico.util.SICOLookupRemote;
+import siap.sico.web.ActionSiap;
+import siap.siep.pagoPaBatch.controller.IBatchPagopa;
+import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+import siap.siep.util.SIEPLookupRemote;
 
 public class ActLogin extends ActionSiap implements ICostantiSecurity {
 
@@ -84,6 +87,27 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		FunctionModel lFunRadiceMenuSceltaRapida = lSctrl.ExLoadFunzioniMenuSceltaRapida(
 				lUtente.getUserProfile(), lFunRadMenuSceltaRapida);
 
+		
+		// MEV_2023-33 - Se amministratore di sistema verifico l'ultima esecuzione del batch
+		if (lUtente.getUserProfile().getProfileId().intValue() == 99) {
+		  try {
+  		  IBatchPagopa lCtrlBatch = SIEPLookupRemote.getBatchPagopaPagopaRemote();
+  		  BatchPagopaModel lancioBatch = lCtrlBatch.getLastEsecuzioneBatch();
+  		  siesLogger.debug("Ultimo lancio "+lancioBatch);
+  		  
+  		  if (   (lancioBatch.getErroreEsecuzione()!=null && lancioBatch.getErroreEsecuzione().length()>0)
+  		      || (lancioBatch.getNumErroriInvocazione()!=null && lancioBatch.getNumErroriInvocazione().intValue()>0) ){
+  		    setSessionAttribute("ErroreBatchPagoPa", "S");
+  		    setSessionAttribute("BatchPagoPa",lancioBatch);
+  		  }
+		  } catch (Exception e) {
+		    siesLogger.error("Errore in fase di verifica dell'ultimo run del batch pagopas",e);
+		  }  
+		}
+	  // MEV_2023-33 - FINE
+		
+		
+		
 		// Disponibile per tutta la durata della sessione utente
 		setSessionAttribute(SESSION_UTENTE_CONNESSO, lUtente);
 		setSessionAttribute(FUN_RADICE_MENU_VRT, lFunRadiceMenu);

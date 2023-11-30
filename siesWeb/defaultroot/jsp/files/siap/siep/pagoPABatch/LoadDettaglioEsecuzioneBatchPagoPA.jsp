@@ -25,6 +25,7 @@
 
   <script language="JavaScript" src="/html/gen_validatorv2.js"></script>
   <script language="JavaScript" src="/html/gestisciUploadStampa2.js"></script>
+
   
   <script language="JavaScript">
     function visualizzaDettaglio(idVis)
@@ -37,13 +38,18 @@
     
     function stampaSiep(lAzione)
     {
-       var  hrefStampa = lAzione;
+       var hrefStampa = lAzione;
        var lIndice = hrefStampa.indexOf("?");
 
       //alert (lAzione);
        var parametri = hrefStampa.substring(lIndice+1,lAzione.length);
       // alert (ciccio);
        stampa2("/jsp/files/Stampa.jsp",  parametri);
+    }
+    
+    function lancioBatch() {
+    	document.getElementById("waitDiv").style.display = "block";
+    	return true;
     }
     
   </script>
@@ -120,6 +126,30 @@ if (BatchModel.getNumErroriInvocazione()!=null && BatchModel.getNumErroriInvocaz
     </tr> 
   </table>  
 
+<% if (BatchModel.getErroreEsecuzione()!=null || 1==1) { %>
+<form method="POST" action="<%= IWebConstants.PG_MAIN%>" name="ActLancioBatch">
+  <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.pagoPA.action.ActAvvioManualeBatch">
+  <INPUT class="bottone" type="submit" name="Lancia Batch" value="Lancio Manuale Batch">
+</form>
+<div align="center" id="waitDiv" style="display:none;width:80%;">
+   <table bgcolor="#EEEEEE">
+     <tr>
+       <td>
+         <img src="<%=IWebConstants.IMAGES_DIR%>rotelle3.gif" style="width:100px;">
+       </td>
+       <td>
+         <font size="+1" color1=navy>
+           Attendere... Batch in esecuzione.
+         </font>
+       </td>
+     </tr>
+   </table>
+ </div>
+
+
+<% } %>
+
+
 <br>
 <jsp:include page="<%=IWebConstants.PAGINAZIONE_RICERCA%>"></jsp:include>
 <br>
@@ -132,7 +162,7 @@ if (BatchModel.getNumErroriInvocazione()!=null && BatchModel.getNumErroriInvocaz
         <td class="int">XML - Richiesta</td>
         <td class="int">XML - Risposta</td>
         <td class="int">Errore Richiesta</td>
-        <td class="int">Dettaglio Bollettini</td>
+        <td class="int">Dettaglio Bollettini Aggiornati</td>
       </tr>
       <% 
       // Scorrere la lista delle chiamate
@@ -185,7 +215,7 @@ if (BatchModel.getNumErroriInvocazione()!=null && BatchModel.getNumErroriInvocaz
           <td class="c"><%=StringUtils.toStringJSP(invocaModel.getErrore(),"&nbsp;").replaceAll("\n","<br>")%></td>
           <td class="c">
           <% if (listaBollettini.size()>0) {%>
-            <a onclick="visualizzaDettaglio(<%=invocaModel.getIdInvocazionePagopa()%>);">Visualizza Bollettini Aggiornati</a>
+            <a href="#" onclick="visualizzaDettaglio(<%=invocaModel.getIdInvocazionePagopa()%>);">Visualizza Bollettini Aggiornati</a>
           <% } %>&nbsp;
           </td>
     </tr>
@@ -212,7 +242,7 @@ if (BatchModel.getNumErroriInvocazione()!=null && BatchModel.getNumErroriInvocaz
      %>
           <tr>
             <td class="c"><%=StringUtils.toStringJSP(bollettino.getProgRata())%></td>
-            <td class="c">Tipo Pagamento</td>
+            <td class="c"><%=StringUtils.toStringJSP(bollettino.getDescrTipoRateizzazione())%></td>
             <td class="c"><%=StringUtils.toStringJSP(bollettino.getIuv(), "-")%></td>
             <td class="c"><%=StringUtils.toEuroFormat(bollettino.getImportoRata())%></td>
             <td class="c"><%=StringUtils.toEuroFormat(bollettino.getImportoPagato())%></td>
@@ -236,6 +266,10 @@ if (BatchModel.getNumErroriInvocazione()!=null && BatchModel.getNumErroriInvocaz
     <br><br>
     
   </form>
+   <script language="JavaScript" type="text/javascript">
+   var frmvalidator  = new Validator("ActLancioBatch");
+   frmvalidator.setAddnlValidationFunction("lancioBatch");
+ </script>
 </body>
 </html>
 

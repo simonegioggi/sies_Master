@@ -98,7 +98,9 @@ public class QuartzInit extends HttpServlet {
 					// info per il log
 					pagoPaLogger.info("JOB PagoPa già presente");
 				}
-
+				
+				getServletContext().setAttribute("quartzScheduler", scheduler);
+				
 				// info per il log
 				pagoPaLogger.info(" Avvio dello schedulatore...");
 				scheduler.start();

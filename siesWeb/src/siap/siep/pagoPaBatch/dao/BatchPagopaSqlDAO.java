@@ -93,5 +93,14 @@ public class BatchPagopaSqlDAO extends SIAPSqlDAO {
 		lSql += " " + setCondizioniByKey(aIdbatch);
 		setStatement(lSql);
 	}
+	
+	 public void ricercaUltimaEsecuzioneBatch() throws DAOException {
+
+	    String lSql = getSqlQuery();
+
+	    lSql += " AND ID_BATCH_PAGOPA = (SELECT max(ID_BATCH_PAGOPA) FROM BATCH_PAGOPA) ";
+
+	    setStatement(lSql);
+	  }
 
 }

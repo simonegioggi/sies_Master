@@ -2,6 +2,9 @@
 <%-- MEV_2023-33_ aggiunta pagina di Avviso Batch PagoPA --%>
 <%@ page import="f3b.web.IWebConstants"%>
 
+
+<jsp:useBean id="BatchPagoPa" scope="request" class="siap.siep.pagoPaBatch.model.BatchPagopaModel" />
+
 <html>
 <head>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
@@ -25,18 +28,18 @@
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td>&nbsp;</td></tr>
-	<tr>
-		<td>
-			<center>
-				<font size=+1 color=navy>E' possibile controllare l'esito dell'ultima esecuzione cliccando sull'icona sottostante!</font>
-				<br><br><br>
-				<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.sanzionesostitutiva.action.ActVerificaStatoBollettino"%>">
-					<img src="/images/esegui.gif" alt="" width="32" height="32" border="0" align="middle" title="Verifica Batch PagoPA">
-					<font class=label>Verifica Batch PagoPA</font>
-				</a>
-			</center>
-		</td>
-	</tr>
+  <tr>
+    <td>
+      <center>
+        <font size=+1 color=navy>E' possibile controllare l'esito dell'ultima esecuzione cliccando sull'icona sottostante!</font>
+        <br><br><br>
+        <a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.pagoPaBatch.action.ActLoadDettaglioEsecuzioneBatchPagoPa&IdBatchPagoPa="+BatchPagoPa.getIdBatchPagopa()%>">
+          <img src="/images/esegui.gif" alt="" width="32" height="32" border="0" align="middle" title="Verifica Batch PagoPA">
+          <font class=label>Verifica Batch PagoPA</font>
+        </a>
+      </center>
+    </td>
+  </tr>	
 </table>
 </div>
 </FORM>

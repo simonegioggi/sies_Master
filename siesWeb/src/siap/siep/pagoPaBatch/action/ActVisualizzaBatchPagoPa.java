@@ -14,6 +14,8 @@ import siap.sico.web.ActionSiap;
 import siap.siep.pagoPaBatch.controller.IBatchPagopa;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
 import siap.siep.pagoPaBatch.model.CriteriRicercaBatchPagopaModel;
+import siap.siep.pagoPaBatch.model.QuartzJobModel;
+import siap.siep.pagoPaBatch.utils.BatchUtils;
 import siap.siep.util.SIEPLookupRemote;
 
 public class ActVisualizzaBatchPagoPa extends ActionSiap implements ICostantiBatchPagoPa {
@@ -89,11 +91,6 @@ public class ActVisualizzaBatchPagoPa extends ActionSiap implements ICostantiBat
 		setRequestAttribute("CountRisultati", lCountRisultati);
 		setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
 		setRequestAttribute(IWebConstants.REQUEST_FOR_PAGING, getCompleteRequestURL());
-
-		/*
-		 * BatchUtils batchUtils = new BatchUtils(); QuartzJobModel quartzModel =batchUtils.getJobInformation
-		 * (getServletContext()); setRequestAttribute("ConsultaPagamentiJob", quartzModel);
-		 */
 
 		return PG_LOAD_DETTAGLIO_BATCH_PAGOPA;
 	}

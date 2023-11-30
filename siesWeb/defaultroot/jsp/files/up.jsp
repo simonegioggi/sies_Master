@@ -10,6 +10,9 @@
 <jsp:useBean id="FunRadiceMenuSceltaRapida" scope="session" class="f3b.security.model.FunctionModel" />
 <jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
 
+<jsp:useBean id="ErroreBatchPagoPa" scope="session" class="java.lang.String" />
+<jsp:useBean id="BatchPagoPa" scope="session" class="siap.siep.pagoPaBatch.model.BatchPagopaModel" />
+
 <html>
 <head>
 <META http-equiv=Content-Type content="text/html; charset=windows-1252">
@@ -88,10 +91,24 @@ while (lIter.hasNext()) {
 	}
 }
 %>
-			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.pagoPA.action.ActLoadAvvisoBatchPagoPA"%>" target="body">
+
+<%-- 
+MEV_2023-33 
+Se Amministratore di Sistema (99) e sono presenti errori o segnalazioni nell'ultimo 
+lancio del batchPagopa si visualizza l'icona di alert
+--%>
+<% 
+if (   UtenteConnesso.getUserProfile().getProfileId().intValue() == 99
+    && "S".equals(ErroreBatchPagoPa)
+   ) 
+{%>
+			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.pagoPA.action.ActLoadAvvisoBatchPagoPA&IdBatchPagoPa="+BatchPagoPa.getIdBatchPagopa()%>" target="body">
   				<img src="/images/attenzione.jpg" alt="" width="32" height="32" border="0" align="middle" title="Avviso Batch PagoPA">
  				<font class=label>Avviso Batch PagoPA</font>
  			</a>
+<% } %>
+<%-- MEV_2023-33 - FINE --%>
+
 			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.sico.utente.action.ActLoadModificaPassword"%>" target="body">
 				<img src="/images/Personal.gif" alt="" width="32" height="32" border="0" align="middle">
 				<font class=label>Cambio Password</font>
