@@ -16,7 +16,7 @@
 
 <html>
 <head>
-  <title>[S.I.E.S.] - Rinnovazione Notifica comma 8 bis</title>
+  <title>[S.I.E.S.] - Rinnovazione Notifica comma 5</title>
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
@@ -44,9 +44,9 @@
         <td class="LBG">
           <font class="label">Funzione :</font>&nbsp;
           <%if(rinnovo.getCodTipoRinnovo().equals("P")) {%>
-            <font class="campo">Dettaglio Rinnovazione Notifica comma 8 bis Forza di Polizia</font>
+            <font class="campo">Dettaglio Rinnovazione Notifica comma 5 Forza di Polizia</font>
           <%}else if(rinnovo.getCodTipoRinnovo().equals("U")){%>
-            <font class="campo">Dettaglio Rinnovazione Notifica comma 8 bis Ufficiali Giudiziari</font>
+            <font class="campo">Dettaglio Rinnovazione Notifica comma 5 Ufficiali Giudiziari</font>
           <%}%>
         </td>
         <%if ("N".equals(rinnovo.getFlagDocumentoRegistrato()) || rinnovo.getFlagDocumentoRegistrato()==null ) {%>

@@ -135,7 +135,7 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
       </td>
       <td class="LBG">
         <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <font class="campo">Rinnovazione Notifiche Comma 8 bis &nbsp;</font>
+        <font class="campo">Rinnovazione Notifiche Comma 5 &nbsp;</font>
       </td>
       <td class="LBG">
         <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActLoadInserisciRinnovazioneOIPP">

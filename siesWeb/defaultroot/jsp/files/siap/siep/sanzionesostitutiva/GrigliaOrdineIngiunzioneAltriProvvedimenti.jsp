@@ -89,7 +89,7 @@ if (!fascicoloNotInSession.equals("S")) {
     		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciAvvisoMancatoPagamento">Avviso Mancato Pagamento</a>
     	</td>
   		<td width="32%" class="menulines" nowrap>
-    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciProvvedimentoEstinzionePP">Provvedimento Estinzione della Pena</a>
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciProvvedimentoEstinzionePP">Provvedimento Avvenuto Pagamento</a>
     	</td>
   		<td width="32%" class="menulines" nowrap>
     		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.rateizzazionepp.action.ActLoadInserisciTrasmissioneAttiConversione">Trasmissione Atti per la Conversione</a>
