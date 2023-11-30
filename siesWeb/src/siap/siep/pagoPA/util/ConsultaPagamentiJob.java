@@ -1,10 +1,5 @@
 package siap.siep.pagoPA.util;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.quartz.Job;
@@ -12,21 +7,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import f3b.log.LogF3B;
-import f3b.util.DateUtils;
-import f3b.util.F3BProperties;
-import it.giustizia.www.serviziTelematici.serviziGenerici.RisultatoRicerca;
-import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziConsultazionePagamentiTelematici;
-import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziConsultazionePagamentiTelematiciBeanServiceLocator;
-import it.giustizia.www.serviziTelematici.serviziGenerici.StatoRichiestaPagamento;
 import siap.sico.utente.model.UtenteModel;
-import siap.siep.pagoPA.action.ICostantiPagoPA;
-import siap.siep.pagoPA.controller.IBollettinoPagopa;
-import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.pagoPaBatch.controller.IBatchPagopa;
-import siap.siep.pagoPaBatch.controller.IInvocazionePagopa;
-import siap.siep.pagoPaBatch.model.BatchPagopaModel;
-import siap.siep.pagoPaBatch.model.BollettinoBatchPagopaModel;
-import siap.siep.pagoPaBatch.model.InvocazionePagopaModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
@@ -56,30 +38,31 @@ public class ConsultaPagamentiJob implements Job {
 	public ConsultaPagamentiJob() {
 	}
 
-	 public void execute(JobExecutionContext arg0) throws JobExecutionException {
+	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
-	    MDC.put("utente", "BATCH_PAGOPA");
-	    MDC.put("ufficio", "DISTRETTUALE");
+		MDC.put("utente", "BATCH_PAGOPA");
+		MDC.put("ufficio", "DISTRETTUALE");
 
-	    pagoPaLogger.debug("===================================================");
-	    pagoPaLogger.debug(" Avvio job di PagoPA - ConsultazionePagamenti      ");
-	    pagoPaLogger.debug("===================================================");
-	    pagoPaLogger.debug("");
-	    
-	    IBatchPagopa lCtrlBatch = null;
+		pagoPaLogger.debug("===================================================");
+		pagoPaLogger.debug(" Avvio job di PagoPA - ConsultazionePagamenti      ");
+		pagoPaLogger.debug("===================================================");
+		pagoPaLogger.debug("");
 
-	    try {
-	      UtenteModel lUtente = new UtenteModel();
-	      lUtente.setUserId("BATCH");
-	      lCtrlBatch = SIEPLookupRemote.getBatchPagopaPagopaRemote();
-	      lCtrlBatch.ExLancioBatchPagopa(lUtente);
-	    } catch (Exception e) {
-	      pagoPaLogger.error("Eccezione in fase di lancio del job ",e);
-	    } finally {
-	      pagoPaLogger.debug("===================================================");
-	      pagoPaLogger.debug(" job di PagoPA Terminato                           ");
-	      pagoPaLogger.debug("===================================================");
-	      pagoPaLogger.debug("");	      
-	    }   
-	 }
+		IBatchPagopa lCtrlBatch = null;
+
+		try {
+			UtenteModel lUtente = new UtenteModel();
+			lUtente.setUserId("BATCH");
+			lCtrlBatch = SIEPLookupRemote.getBatchPagopaPagopaRemote();
+			lCtrlBatch.ExLancioBatchPagopa(lUtente);
+		} catch (Exception e) {
+			pagoPaLogger.error("Eccezione in fase di lancio del job ", e);
+		} finally {
+			pagoPaLogger.debug("===================================================");
+			pagoPaLogger.debug(" job di PagoPA Terminato                           ");
+			pagoPaLogger.debug("===================================================");
+			pagoPaLogger.debug("");
+		}
+	}
+
 }

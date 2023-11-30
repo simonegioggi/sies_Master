@@ -14,8 +14,6 @@ import siap.sico.web.ActionSiap;
 import siap.siep.pagoPaBatch.controller.IBatchPagopa;
 import siap.siep.pagoPaBatch.model.BatchPagopaModel;
 import siap.siep.pagoPaBatch.model.CriteriRicercaBatchPagopaModel;
-import siap.siep.pagoPaBatch.model.QuartzJobModel;
-import siap.siep.pagoPaBatch.utils.BatchUtils;
 import siap.siep.util.SIEPLookupRemote;
 
 public class ActVisualizzaBatchPagoPa extends ActionSiap implements ICostantiBatchPagoPa {
@@ -27,39 +25,32 @@ public class ActVisualizzaBatchPagoPa extends ActionSiap implements ICostantiBat
 		siesLogger.debug("ActVisualizzaBatchPagoPa...");
 
 		// recupero i dati dell'esecuzione degli ultimi 10 lanci del batch (BATCH_PAGOPA)
-
 		CriteriRicercaBatchPagopaModel lCriteriRicerca = new CriteriRicercaBatchPagopaModel();
 
-    // Data iscrizione Iniziale
-    if (!isRequestParameterNullObj(CAMPO_GIORNO_ESECUZIONE_INIZIALE)
-        && !isRequestParameterNullObj(CAMPO_MESE_ESECUZIONE_INIZIALE)
-        && !isRequestParameterNullObj(CAMPO_ANNO_ESECUZIONE_INIZIALE)) {
-      lCriteriRicerca.setDataInizioEsecuzioneDal(
-          getRequestDateParameter(CAMPO_ANNO_ESECUZIONE_INIZIALE,
-              CAMPO_MESE_ESECUZIONE_INIZIALE,
-              CAMPO_GIORNO_ESECUZIONE_INIZIALE));
+		// Data iscrizione Iniziale
+		if (!isRequestParameterNullObj(CAMPO_GIORNO_ESECUZIONE_INIZIALE)
+				&& !isRequestParameterNullObj(CAMPO_MESE_ESECUZIONE_INIZIALE)
+				&& !isRequestParameterNullObj(CAMPO_ANNO_ESECUZIONE_INIZIALE)) {
+			lCriteriRicerca.setDataInizioEsecuzioneDal(getRequestDateParameter(CAMPO_ANNO_ESECUZIONE_INIZIALE,
+					CAMPO_MESE_ESECUZIONE_INIZIALE, CAMPO_GIORNO_ESECUZIONE_INIZIALE));
 
-    }
+		}
 
-    // Data iscrizione Finale
-    if (!isRequestParameterNullObj(CAMPO_GIORNO_ESECUZIONE_FINALE)
-        && !isRequestParameterNullObj(CAMPO_MESE_ESECUZIONE_FINALE)
-        && !isRequestParameterNullObj(CAMPO_ANNO_ESECUZIONE_FINALE)) {
-      lCriteriRicerca.setDataInizioEsecuzioneAl(
-          getRequestDateParameter(CAMPO_ANNO_ESECUZIONE_FINALE,
-              CAMPO_MESE_ESECUZIONE_FINALE,
-              CAMPO_GIORNO_ESECUZIONE_FINALE));
-    }		
-		
-		
-    if (isRequestParameterNullObj(CAMPO_GIORNO_ESECUZIONE_INIZIALE)) {
-      // Provengo dal menu. Imposto la data Inizio a 2 mesi
-      Date dataDal = new Date();
-      dataDal = DateUtils.moveDateTo(dataDal,Calendar.MONTH,-2);
-      lCriteriRicerca.setDataInizioEsecuzioneDal(dataDal);
-    }
+		// Data iscrizione Finale
+		if (!isRequestParameterNullObj(CAMPO_GIORNO_ESECUZIONE_FINALE)
+				&& !isRequestParameterNullObj(CAMPO_MESE_ESECUZIONE_FINALE)
+				&& !isRequestParameterNullObj(CAMPO_ANNO_ESECUZIONE_FINALE)) {
+			lCriteriRicerca.setDataInizioEsecuzioneAl(getRequestDateParameter(CAMPO_ANNO_ESECUZIONE_FINALE,
+					CAMPO_MESE_ESECUZIONE_FINALE, CAMPO_GIORNO_ESECUZIONE_FINALE));
+		}
 
-		
+		if (isRequestParameterNullObj(CAMPO_GIORNO_ESECUZIONE_INIZIALE)) {
+			// Provengo dal menu. Imposto la data Inizio a 2 mesi
+			Date dataDal = new Date();
+			dataDal = DateUtils.moveDateTo(dataDal, Calendar.MONTH, -2);
+			lCriteriRicerca.setDataInizioEsecuzioneDal(dataDal);
+		}
+
 		// Gestire i criteri di ricerca. Per ora non previsti. Il Batch gira una volta al giorn
 		// e nella form vengono caricati 20 record ogni pagina per cui si ha la situazione degli ultimi 20
 		// giorni
@@ -85,8 +76,7 @@ public class ActVisualizzaBatchPagoPa extends ActionSiap implements ICostantiBat
 		setRequestAttribute("listaLanciJob", listaLanci);
 
 		setRequestAttribute("CriteriRicerca", lCriteriRicerca);
-		
-		
+
 		// Passo i dati per gestire la paginazione
 		setRequestAttribute("CountRisultati", lCountRisultati);
 		setRequestAttribute(IWebConstants.NUM_PAGE, lPagina);
