@@ -432,7 +432,8 @@ public class EventoController extends SiapController implements IEvento {
 	 * query n.b. se non trava corrispondenza viene rilanciata una eccezione con error code
 	 * F3BException.USER_MESSAGE = 'Nessun elemento trovato'
 	 *
-	 * @param aEvento - Model di ricerca
+	 * @param aEvento
+	 *            - Model di ricerca
 	 * @return vettore di EventoModel
 	 * @throws F3BException
 	 */
@@ -1839,7 +1840,8 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca Provvedimenti SIUS comprensivi del numero di documenti allegati e della data di Deposito.
 	 *
-	 * @param aEvento : contiene le condizioni di filtro della Ricerca
+	 * @param aEvento
+	 *            : contiene le condizioni di filtro della Ricerca
 	 * @return Vector lEventi : elenco di EventoDepositoModel.
 	 * @throws F3BException
 	 */
@@ -2440,6 +2442,10 @@ public class EventoController extends SiapController implements IEvento {
 				}
 			}
 
+			// MEV_2023-33: aggiunto ricalcolo della pena
+			if ("1312".equals(lEveModel.getCodMotivo()) || "1313".equals(lEveModel.getCodMotivo()))
+				ricalcoloPena(lConn, lEveModel.getFasSieIdFascicoloSiep());
+
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
@@ -2453,6 +2459,35 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lConn);
 		}
 		return lEveMod;
+	}
+
+	/**
+	 * @author sgioggi
+	 * @since MEV_2023-33
+	 * 
+	 * Metodo privato che esegue il ricalcolo della pena solo per:
+	 * 1312 Al Mds per l'esecuzione di pene sostitutive
+	 * 1313 Al Mds per l'esecuzione di pene sostitutive a seguito restituzione
+	 * 
+	 * @param lConn
+	 * @param idFascicoloSiep
+	 * @throws Exception
+	 */
+	private void ricalcoloPena(Connection lConn, BigDecimal idFascicoloSiep)
+			throws Exception {
+
+		PenaResiduaSqlDAO prsdao = null;
+
+		PenaResiduaModel prm = null;
+
+		try {
+			prsdao = new PenaResiduaSqlDAO(lConn);
+			prsdao.ricercaPenaResiduaByIdFascicoloDataDesc(idFascicoloSiep);
+			prm = (PenaResiduaModel) prsdao.getModelByKey();
+			prsdao.inserisciOModificaPenaResidua(prm);
+		} finally {
+			cleanup(prsdao);
+		}
 	}
 
 	/**
@@ -3031,8 +3066,9 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca l'evento per Id evento
 	 *
-	 * @param aKey	id dell'evento
-	 * @return 		Model dell'evento
+	 * @param aKey
+	 *            id dell'evento
+	 * @return Model dell'evento
 	 */
 	public EventoModel ExRicercaEventoByKey(BigDecimal aKey) throws F3BException {
 
@@ -3059,8 +3095,9 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca l'evento per Id evento X conversione pene pec
 	 *
-	 * @param aKey	id dell'evento
-	 * @return 		Model dell'evento
+	 * @param aKey
+	 *            id dell'evento
+	 * @return Model dell'evento
 	 */
 	public EventoModel ExRicercaEventoByKeyTenore(BigDecimal aKey) throws F3BException {
 
@@ -3888,9 +3925,12 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Modifica l'evento e cancella lo scadenzario (01 = SIMEONE) passato come parametro
 	 *
-	 * @param EventoModel			aEvento
-	 * @param FascicoloSiepModel	aFas
-	 * @param String				aTipoScadenzario
+	 * @param EventoModel
+	 *            aEvento
+	 * @param FascicoloSiepModel
+	 *            aFas
+	 * @param String
+	 *            aTipoScadenzario
 	 *
 	 * @throws F3BException
 	 */
@@ -4943,8 +4983,9 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * Ricerca Provvedimenti SIUS comprensivi del numero di documenti allegati e della data di Deposito.
 	 *
-	 * @param aEvento			: contiene le condizioni di filtro della Ricerca
-	 * @return Vector lEventi 	: elenco di EventoDepositoModel
+	 * @param aEvento
+	 *            : contiene le condizioni di filtro della Ricerca
+	 * @return Vector lEventi : elenco di EventoDepositoModel
 	 * @throws F3BException
 	 */
 	public Vector ExRicercaProvvedimentiConDataDeposito(EventoModel aEvento) throws F3BException {

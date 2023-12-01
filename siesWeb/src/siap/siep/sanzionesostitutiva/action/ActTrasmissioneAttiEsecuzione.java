@@ -119,17 +119,24 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 
 		ArrayList<NotificaModel> nmArray = new ArrayList<>();
 
-		String[] arrayDestinatari = getRequestStringParameters(
-				ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
-		String[] arraySedeDestinatari = getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
-		String[] arrayNote = getRequestStringParameters(ICostantiNotifica.CAMPO_NOTE);
-		String[] avvocati = getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
+		String[] arrayDestinatari = null;
+		String[] arraySedeDestinatari = null;
+		String[] arrayNote = null;
+		String[] avvocati = null;
+		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA))
+			arrayDestinatari = getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA);
+		if (!isRequestParameterNullObj(ICostantiAutoritaEsterna.CAMPO_COD_SEDE))
+			arraySedeDestinatari = getRequestStringParameters(ICostantiAutoritaEsterna.CAMPO_COD_SEDE);
+		if (!isRequestParameterNullObj(ICostantiNotifica.CAMPO_NOTE))
+			arrayNote = getRequestStringParameters(ICostantiNotifica.CAMPO_NOTE);
+		if (!isRequestParameterNullObj(ICostantiAvvocato.CAMPO_ID_AVVOCATO))
+			avvocati = getRequestStringParameters(ICostantiAvvocato.CAMPO_ID_AVVOCATO);
 
 		// Dimensione dell'Array di Notifiche...
 		// Gli Avvocati più Una Notifica di Esecuzione
 		int contNotifiche = 0;
-		int numAvvNotifiche = avvocati.length;
-		if (arrayDestinatari[0].compareTo("-") == 0)
+		int numAvvNotifiche = Utils.isPresent(avvocati) ? avvocati.length : 0;
+		if (arrayDestinatari != null && arrayDestinatari[0].compareTo("-") == 0)
 			numAvvNotifiche -= 1;
 
 		// ===================================================
