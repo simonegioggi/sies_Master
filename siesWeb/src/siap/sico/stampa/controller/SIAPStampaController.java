@@ -213,6 +213,12 @@ public class SIAPStampaController extends SiapController {
 			PenaComplessivaModel lPenMod = (PenaComplessivaModel) lPenDao.getModelByKey();
 
 			if (lPenMod != null) {
+			  // MEV_2023-33
+			  BigDecimal lImportoTotale = new BigDecimal(0);
+			  lImportoTotale = lImportoTotale.add(lPenMod.getImportoMulta());
+			  lImportoTotale = lImportoTotale.add(lPenMod.getImportoAmmenda());
+			  // MEV_2023-33 - FINE
+			  
 				lSanDao = new SanzioneSostitutivaSqlDAO(lConn);
 				lSanDao.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenMod.getIdPenaComplessiva());
 				SanzioneSostitutivaModel lSanMod = (SanzioneSostitutivaModel) lSanDao.getModelByKey();
@@ -220,8 +226,13 @@ public class SIAPStampaController extends SiapController {
 				if (lSanMod != null) {
 					lSanMod.calcolaStringaSanzione();
 					lSanMod.calcolaPeriodoSanzione();
+					
+					// MEV_2023-33
+					lImportoTotale = lImportoTotale.add(lSanMod.getSanzionePecuniariaMulta());
 				}
-
+				// MEV_2023-33
+				lPenMod.setImportoTotale(lImportoTotale);
+				
 				lPenSanMod = new PenaComplessivaSanzioneSostitutivaModel(lPenMod, lSanMod);
 
 				// Stringa Arresto - Reclusione
