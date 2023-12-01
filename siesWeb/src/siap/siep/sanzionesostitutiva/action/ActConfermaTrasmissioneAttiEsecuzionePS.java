@@ -86,7 +86,7 @@ public class ActConfermaTrasmissioneAttiEsecuzionePS extends ActionSiap implemen
 		mm.setCodUfficioDestinatario(codUfficio);
 		mm.setCodUfficioMittente(getCodUfficioUtenteConnesso());
 		mm.setCodTipoMessaggio(RICHIESTA);
-		mm.setCodTipoOperazione(TRASFERIMENTO_SANZIONE_SOSTITUTIVA);
+		mm.setCodTipoOperazione(TRASFERIMENTO_PENA_SOSTITUTIVA);
 		mm.setCodiceUtenteMittente(getCodUtenteConnesso());
 		mm.setDataInvio(DateUtils.getSysDate());
 		// SETTA RIFERIMENTI FASCICOLO SIEP

@@ -143,6 +143,10 @@ public interface ICostantiSanzioneSostitutiva {
 	public static final String PG_LOAD_DETTAGLIO_TRASMISSIONE_ATTI_ESECUZIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/sanzionesostitutiva/LoadDettaglioTrasmissioneAttiEsecuzione.jsp";
 	public static final String CAMPO_COD_DESTINATARIO = "CodDestinatario";
+	public static final String PG_LOAD_RICERCA_TRASMISSIONE_ATTI_ESECUZIONE_PS = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/LoadRicercaTrasmissioneAttiEsecuzionePS.jsp";
+	public static final String PG_RICERCA_TRASMISSIONE_ATTI_ESECUZIONE_PS = IWebConstants.ROOT_DIR
+			+ "files/siap/siep/sanzionesostitutiva/RicercaTrasmissioneAttiEsecuzionePS.jsp";
 	// MEV_2023-33 - FINE
 
 	public static final String PG_LOAD_RICERCASANZIONESOSTITUTIVA = IWebConstants.ROOT_DIR

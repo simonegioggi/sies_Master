@@ -85,7 +85,7 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 		IEvento ie = SICOLookupRemote.getEventoRemote();
 		EventoNotificaModel enmRet = ie.ExInserisciEventoNotifica(enm);
 
-		String lPage = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+		String page = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
 				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioTrasmissioneAttiEsecuzione&"
 				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enmRet.getEvento().getIdEvento() + "&modalita=I";
 
@@ -93,7 +93,7 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		// pagina di ritorno
-		return lPage;
+		return page;
 	}
 
 	/**

@@ -235,7 +235,8 @@ public interface ICostantiJMS {
 	public static final String ERRORE_DEPLOY = "11111";
 	public static final String ESITO_DI_ERRORE = "01110";
 
-	// MEV_2023-33: aggiunto codice
+	// MEV_2023-33: aggiunto codice x PENA SOSTITUTIVA
 	public static final String TRASFERIMENTO_PENA_SOSTITUTIVA = "00034";
+	public static final String ESITO_TRASFERIMENTO_PENA_SOSTITUTIVA = "00035";
 
 }

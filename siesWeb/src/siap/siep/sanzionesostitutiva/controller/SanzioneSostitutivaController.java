@@ -1818,7 +1818,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 		NotificaDAO lNotDao = null;
 		AutoritaEsternaDAO lAutDao = null;
 		PenaResiduaDAO lPenResDao = null;
-		PenaResiduaSqlDAO lPenResSqlDao = null;
+		// PenaResiduaSqlDAO lPenResSqlDao = null;
 
 		EventoNotificaModel lEveRet = new EventoNotificaModel(aEvNotModel);
 
@@ -1987,7 +1987,7 @@ public class SanzioneSostitutivaController extends SiapController implements ISa
 			cleanup(lNotDao);
 			cleanup(lAutDao);
 			cleanup(lPenResDao);
-			cleanup(lPenResSqlDao);
+			// cleanup(lPenResSqlDao);
 
 			cleanup(lConn);
 		}
