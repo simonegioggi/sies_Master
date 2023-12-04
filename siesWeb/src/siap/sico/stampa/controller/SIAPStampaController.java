@@ -114,8 +114,9 @@ import siap.sius.rifasiep.model.RiferimentoFascicoloSiepModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * Title:SIAPStampaController Description: Classe padre della stampa. Riunisce tutti i metodi comuni alle
- * varie classi specializzate di stampa Copyright: Copyright (c) 2004 Company: Bull Italia S.p.A.
+ * Classe padre della stampa: riunisce tutti i metodi comuni alle varie classi specializzate di stampa
+ * 
+ * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SIAPStampaController extends SiapController {
@@ -126,6 +127,7 @@ public class SIAPStampaController extends SiapController {
 	protected StampaEventoUtils mEventoUtils = new StampaEventoUtils();
 
 	protected XModel createRoot(EventoNotificaModel aEveModel) throws F3BException {
+
 		return createRoot(aEveModel, null);
 	}
 
@@ -213,12 +215,12 @@ public class SIAPStampaController extends SiapController {
 			PenaComplessivaModel lPenMod = (PenaComplessivaModel) lPenDao.getModelByKey();
 
 			if (lPenMod != null) {
-			  // MEV_2023-33
-			  BigDecimal lImportoTotale = new BigDecimal(0);
-			  lImportoTotale = lImportoTotale.add(lPenMod.getImportoMulta());
-			  lImportoTotale = lImportoTotale.add(lPenMod.getImportoAmmenda());
-			  // MEV_2023-33 - FINE
-			  
+				// MEV_2023-33
+				BigDecimal lImportoTotale = new BigDecimal(0);
+				lImportoTotale = lImportoTotale.add(lPenMod.getImportoMulta());
+				lImportoTotale = lImportoTotale.add(lPenMod.getImportoAmmenda());
+				// MEV_2023-33 - FINE
+
 				lSanDao = new SanzioneSostitutivaSqlDAO(lConn);
 				lSanDao.ricercaSanzioneSostitutivaByIdPenaComplessiva(lPenMod.getIdPenaComplessiva());
 				SanzioneSostitutivaModel lSanMod = (SanzioneSostitutivaModel) lSanDao.getModelByKey();
@@ -226,13 +228,14 @@ public class SIAPStampaController extends SiapController {
 				if (lSanMod != null) {
 					lSanMod.calcolaStringaSanzione();
 					lSanMod.calcolaPeriodoSanzione();
-					
+
 					// MEV_2023-33
-					lImportoTotale = lImportoTotale.add(lSanMod.getSanzionePecuniariaMulta());
+					if (!Utils.isNullObj(lSanMod.getSanzionePecuniariaMulta()))
+						lImportoTotale = lImportoTotale.add(lSanMod.getSanzionePecuniariaMulta());
 				}
 				// MEV_2023-33
 				lPenMod.setImportoTotale(lImportoTotale);
-				
+
 				lPenSanMod = new PenaComplessivaSanzioneSostitutivaModel(lPenMod, lSanMod);
 
 				// Stringa Arresto - Reclusione
@@ -1877,92 +1880,86 @@ public class SIAPStampaController extends SiapController {
 		return lTreeSenMod;
 	}
 
-	
 	/**
 	 * Preleva la struttura dell'evento Ordine di ingiunzione: evento, magistrato, notifiche e rateizzazzionei
-	 * <Evento>
-	 *   <Notifica>
-	 *     <AutoritaEsterna>
-	 *     <Avvocato>
-	 *   </Notifica>
-	 *   <Rateizzazione></Rateizzazione>
-	 *   <Magistrato></Magistrato>
-	 * </Evento>
+	 * <Evento> <Notifica> <AutoritaEsterna> <Avvocato> </Notifica> <Rateizzazione></Rateizzazione>
+	 * <Magistrato></Magistrato> </Evento>
+	 *
 	 * @param aKeyFascicolo
 	 * @param aCodMotivo
 	 * @return TreeModel dell'evento
 	 * @throws F3BException
 	 * @since MEV_2023-33
 	 */
-	 protected TreeModel getTreeEventoOrdineIngiunzione(BigDecimal aIdEvento, Connection aConn)
-	      throws F3BException {
+	protected TreeModel getTreeEventoOrdineIngiunzione(BigDecimal aIdEvento, Connection aConn)
+			throws F3BException {
 
-	    Connection lConn = null;
+		Connection lConn = null;
 
-	    RateizzazionePPSqlDAO lRateSqlDao = null;
+		RateizzazionePPSqlDAO lRateSqlDao = null;
 
-	    TreeModel lEveRatModel = null;
-	    TreeModel lEveNotCollegatoTree = null;
+		TreeModel lEveRatModel = null;
+		TreeModel lEveNotCollegatoTree = null;
 
-	    try {
-	      if (aConn!=null) 
-	        lConn = aConn;
-	      else
-	        lConn = getDBConnection();
+		try {
+			if (aConn != null)
+				lConn = aConn;
+			else
+				lConn = getDBConnection();
 
-	      
-	      EventoRateizzazionePPModel eveRat = new EventoRateizzazionePPModel();
-	      
-        IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
-        EventoNotificaModel lEveNotCollegatoMod = lCtrlEvento.ExRicercaEventoNotificaByKey(aIdEvento, lConn);
-        lEveNotCollegatoTree = new TreeModel(lEveNotCollegatoMod.getEvento());
-        
-        lEveRatModel = new TreeModel(eveRat);
-        lEveRatModel.add(lEveNotCollegatoTree);
-        
-        for (NotificaModel notifica : lEveNotCollegatoMod.getNotifiche()) {
-          siesLogger.debug("Aggiungo le notifiche al tree collegato");
-          
-          TreeModel lNotificaTree = new TreeModel(notifica);
-          if (notifica.getAutoritaEsterna()!=null)
-            lNotificaTree.add(new TreeModel(notifica.getAutoritaEsterna()));
-          
-          if (notifica.getAvvocato()!=null)
-            lNotificaTree.add(new TreeModel(notifica.getAvvocato()));
-          
-          lEveNotCollegatoTree.add(lNotificaTree);
-        }
-        
-        siesLogger.debug("Aggiungo il magistrato...");
-        if (lEveNotCollegatoMod.getMagistrato()!=null)
-          lEveNotCollegatoTree.add(new TreeModel(lEveNotCollegatoMod.getMagistrato()));
-        
-        // Recupero le rateizzazioni
-        siesLogger.debug("Recupero le rateizzazioni del collegato...");
-        lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
-        lRateSqlDao.ricercaRateizzazionePPByEveIdEvento (lEveNotCollegatoMod.getEvento().getIdEvento());
-        Vector <RateizzazionePPModel> listaRateCollegato = new Vector <RateizzazionePPModel> (lRateSqlDao.getModels());
-        
-        eveRat.setListaRateizzazioniPP(listaRateCollegato);
-        
-        for (RateizzazionePPModel rata: listaRateCollegato) {
-          siesLogger.debug("add rata");
-          lEveNotCollegatoTree.add(new TreeModel(rata));
-        }
-        
-	    } catch (DAOException daoEx) {
-	      siesLogger.error("DAOException: " + daoEx);
-	      throw new F3BException("SIAPStampaController.getTreeEventoOrdineIngiunzione: " + daoEx);
-	    } finally {
-	      cleanup(lRateSqlDao);
+			EventoRateizzazionePPModel eveRat = new EventoRateizzazionePPModel();
 
-	      if (aConn==null)
-	        cleanup(lConn);
-	    }
+			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoNotificaModel lEveNotCollegatoMod = lCtrlEvento.ExRicercaEventoNotificaByKey(aIdEvento,
+					lConn);
+			lEveNotCollegatoTree = new TreeModel(lEveNotCollegatoMod.getEvento());
 
-	    return lEveRatModel;
-	    //return lEveNotCollegatoTree;
-	  }
+			lEveRatModel = new TreeModel(eveRat);
+			lEveRatModel.add(lEveNotCollegatoTree);
 
-	
+			for (NotificaModel notifica : lEveNotCollegatoMod.getNotifiche()) {
+				siesLogger.debug("Aggiungo le notifiche al tree collegato");
+
+				TreeModel lNotificaTree = new TreeModel(notifica);
+				if (notifica.getAutoritaEsterna() != null)
+					lNotificaTree.add(new TreeModel(notifica.getAutoritaEsterna()));
+
+				if (notifica.getAvvocato() != null)
+					lNotificaTree.add(new TreeModel(notifica.getAvvocato()));
+
+				lEveNotCollegatoTree.add(lNotificaTree);
+			}
+
+			siesLogger.debug("Aggiungo il magistrato...");
+			if (lEveNotCollegatoMod.getMagistrato() != null)
+				lEveNotCollegatoTree.add(new TreeModel(lEveNotCollegatoMod.getMagistrato()));
+
+			// Recupero le rateizzazioni
+			siesLogger.debug("Recupero le rateizzazioni del collegato...");
+			lRateSqlDao = new RateizzazionePPSqlDAO(lConn);
+			lRateSqlDao.ricercaRateizzazionePPByEveIdEvento(lEveNotCollegatoMod.getEvento().getIdEvento());
+			Vector<RateizzazionePPModel> listaRateCollegato = new Vector<RateizzazionePPModel>(
+					lRateSqlDao.getModels());
+
+			eveRat.setListaRateizzazioniPP(listaRateCollegato);
+
+			for (RateizzazionePPModel rata : listaRateCollegato) {
+				siesLogger.debug("add rata");
+				lEveNotCollegatoTree.add(new TreeModel(rata));
+			}
+
+		} catch (DAOException daoEx) {
+			siesLogger.error("DAOException: " + daoEx);
+			throw new F3BException("SIAPStampaController.getTreeEventoOrdineIngiunzione: " + daoEx);
+		} finally {
+			cleanup(lRateSqlDao);
+
+			if (aConn == null)
+				cleanup(lConn);
+		}
+
+		return lEveRatModel;
+		// return lEveNotCollegatoTree;
+	}
+
 }
