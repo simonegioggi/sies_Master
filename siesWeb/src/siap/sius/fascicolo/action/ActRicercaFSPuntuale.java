@@ -9,6 +9,7 @@ import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
 import f3b.util.Utils;
+import f3b.web.IWebConstants;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.security.action.ICostantiSecurity;
@@ -30,9 +31,12 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
-	protected FascicoloGPModel mFasGPMod = null;// occorre ereditarlo
-	// 07/06/2004 Aggiunto attributo per parametrizzare il controllo dello stato fascicolo (=false evita i
-	// controlli per filtrare le operazioni sui procedimenti).
+
+	// occorre ereditarlo
+	protected FascicoloGPModel mFasGPMod = null;
+
+	// 07/06/2004 Aggiunto attributo per parametrizzare il controllo dello stato fascicolo (se false evita i
+	// controlli per filtrare le operazioni sui procedimenti)
 	protected boolean mControl = true;
 
 	public String processRequest() throws Exception {
@@ -124,11 +128,20 @@ public class ActRicercaFSPuntuale extends ActionSius implements ICostantiFascico
 				DepositoOrdinanzaPcModel dopcm = idopc
 						.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
 				if (!Utils.isNullObj(dopcm)) {
-					if (Utils.isNullObj(dopcm.getDataEsecutivita()) && !isFissazione)
-						throw new SIUSException(SIUSException.USER_MESSAGE,
-								"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!"
-										+ " Impossibile prefissare l'Udienza!");
-					else
+					// 20231206: trasformo in warning su osservazione di Luigi G.
+					if (Utils.isNullObj(dopcm.getDataEsecutivita()) && !isFissazione
+							&& isRequestParameterNullObj("warning")) {
+						// throw new SIUSException(SIUSException.USER_MESSAGE,
+						// "L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!"
+						// + " Impossibile prefissare l'Udienza!");
+						setRequestAttribute(IWebConstants.ACTION_FIELD,
+								"siap.sius.fascicolo.action.ActRicercaFSPuntuale");
+						setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+								"L'Ordinanza di Applicazione Provvisoria &egrave; priva della Data Esecutivit&agrave;."
+										+ " Si vuole procedere con la prefissazione Udienza?");
+						// pagina di ritorno
+						return IWebConstants.PG_WARNING;
+					} else
 						setRequestAttribute("dataEsecutivitaStr",
 								DateUtils.getDateToString(dopcm.getDataEsecutivita(), "dd/MM/yyyy"));
 				}

@@ -55,7 +55,8 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		// info per il log
 		siesLogger.debug("ActLoadInserisciConfermaDecisioneMagistratoRelatore: inizio!");
 		setLinkRitorno();
-		if (isRequestParameterNullObj("ritorno"))
+		// 20231206: trasformo in warning su osservazione di Luigi G.
+		if (isRequestParameterNullObj("ritorno") && isRequestParameterNullObj("warning"))
 			// Invoca la process Request della superclasse se si proviene dal menu'
 			super.processRequest();
 
@@ -98,9 +99,18 @@ public class ActLoadInserisciConfermaDecisioneMagistratoRelatore extends ActRice
 		// DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 		// fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
 		DepositoOrdinanzaPcModel dopcm = idopc.ExRicercaDepositoOrdinanzaPcByEvento(idEventoOrdinanza);
-		if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita()))
-			throw new SIUSException(SIUSException.USER_MESSAGE,
-					"L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!");
+		// 20231206: trasformo in warning su osservazione di Luigi G.
+		if (!Utils.isNullObj(dopcm) && Utils.isNullObj(dopcm.getDataEsecutivita())
+				&& isRequestParameterNullObj("warning")) {
+			// throw new SIUSException(SIUSException.USER_MESSAGE,
+			// "L'Ordinanza di Applicazione Provvisoria è priva della Data Esecutività!");
+			setRequestAttribute(IWebConstants.ACTION_FIELD, "" + getClass().getName());
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"L'Ordinanza di Applicazione Provvisoria &egrave; priva della Data Esecutivit&agrave;."
+							+ " Si vuole procedere con la Ratifica?");
+			// pagina di ritorno
+			return IWebConstants.PG_WARNING;
+		}
 
 		UdienzaModel um = null;
 		if (Utils.isNullObj(fgpm.getGeneraleProcedimentoModel().getUdiIdUdienza()))

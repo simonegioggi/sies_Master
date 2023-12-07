@@ -248,11 +248,9 @@ public interface ICostantiFascicoloSius {
 	public static final String COD_DEFINITO = "01";
 	public static final String COD_ISCRITTO = "02";
 	public static final String COD_UNIFICATO = "05";
-	public static final String COD_EMESSO_PROVVEDIMENTOO = "07";
+	public static final String COD_EMESSO_PROVVEDIMENTO = "07";
 	public static final String COD_RINVIATO_NUOVO_RUOLO = "10";
-	//INIZIO: MEV_9 (D.lgs. 123/2018)
-	public static final String COD_RESTITUITI_ATTI_AL_PRESIDENTE = "23";  //Restituiti Atti al Presidente 
-	//FINE: MEV_9 
+
 	public static final String PG_SINTESIPROCEDIMENTOORIGINESIUS = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/fascicolo/SintesiProcedimentoOrigineSius.jsp";
 	public static final String PG_LOAD_DETTAGLIOPROCEDIMENTOCOLLEGATO = IWebConstants.ROOT_DIR
@@ -292,6 +290,7 @@ public interface ICostantiFascicoloSius {
 	public static final String CAMPO_ANNO_DATA_RESTITUZIONE = "AnnoDataRestituzione";
 	public static final String COD_EMESSO_DECRETO_DESIGNAZIONE = "22";
 	public static final String COD_ATTI_RESTITUITI_PRESIDENTE = "23";
+	public static final String COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA = "24";
 	public static final String PG_LOAD_ESECUTIVITA_ORDINANZA_APPLICAZIONE_PROVVISORIA_MA = IWebConstants.ROOT_DIR
 			+ "files/siap/sius/fascicolo/LoadEsecutivitaOrdinanzaApplicazioneProvvisoriaMA.jsp";
 	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";

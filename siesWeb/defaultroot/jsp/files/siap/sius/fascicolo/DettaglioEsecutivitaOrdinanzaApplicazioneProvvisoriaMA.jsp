@@ -62,6 +62,13 @@ if ("false".equals(existConfermaDecisioneMR)) {
             	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>delete24.gif" alt="Cancella" width="24" height="24" border="0">
           	</a>
      	</td>
+		<%-- 20231206: aggiunto trasferimento su osservazione di Luigi G. --%>
+		<!-- BOTTONE DI TRASFERIMENTO -->
+		<td class="LBG">
+    		<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.sius.depositoordinanzapc.action.ActLoadTrasferisciOrdinanza&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventoModel.getIdEvento()%>">
+      			<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>net24.gif" alt="Trasferisci" width="24" height="24" border="0">
+      		</a>
+   		</td>
 <%
 }
 %>

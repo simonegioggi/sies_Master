@@ -100,6 +100,7 @@ import siap.sius.documentoallegato.dao.DocumentoAllegatoDAO;
 import siap.sius.documentoallegato.dao.DocumentoAllegatoSqlDAO;
 import siap.sius.documentoallegato.model.DocumentoAllegatoModel;
 import siap.sius.esecuzionemisurasicurezza.dao.EsecuzioneMisuraSicurezzaDAO;
+import siap.sius.fascicolo.action.ICostantiFascicoloSius;
 import siap.sius.fascicolo.dao.FascicoloSiusDAO;
 import siap.sius.fascicolo.dao.FascicoloSiusSqlDAO;
 import siap.sius.fascicolo.model.FascicoloSiusModel;
@@ -114,8 +115,7 @@ import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
 
 /**
- * Title: EventoController 
- * Description: Classe Controller per Evento
+ * Title: EventoController Description: Classe Controller per Evento
  *
  * @version 1.0
  */
@@ -3566,30 +3566,37 @@ public class EventoController extends SiapController implements IEvento {
 				fssDAO.ricercaFascicoloByKey(lEve.getFasSiuIdFascicoloSius());
 				FascicoloSiusModel fsm = (FascicoloSiusModel) fssDAO.getModelByKey();
 				String codStatoFascicolo = fsm.getCodStatoFascicolo();
-				if ("07".equals(codStatoFascicolo) || "13".equals(codStatoFascicolo)
-						|| "22".equals(codStatoFascicolo)
+				if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo)
+						|| "13".equals(codStatoFascicolo)
+						|| ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE.equals(codStatoFascicolo)
 						// d.f.
-						|| "24".equals(codStatoFascicolo)) {
+						|| ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
+								.equals(codStatoFascicolo)) {
 					FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
-					lFasSiusDao.setCodStatoFascicolo("02");
+					lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
 					lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
 					lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 					lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-					if ("07".equals(codStatoFascicolo))
+					if (ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO.equals(codStatoFascicolo))
 						// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 07
-						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "07");
+						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
+								ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
 					else if ("13".equals(codStatoFascicolo))
 						// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe'
 						// sospeso)
 						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "13");
-					else if ("24".equals(codStatoFascicolo)) { // d.f
+					else if (ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA
+							.equals(codStatoFascicolo)) { // d.f
 						// Aggiorno il fascicolo a stato_fascicolo = 22 se lo stato attuale e' 24
-						lFasSiusDao.setCodStatoFascicolo("22");
-						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "24");
+						lFasSiusDao
+								.setCodStatoFascicolo(ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
+						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
+								ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA);
 					} else
 						// Aggiorno il fascicolo a stato_fascicolo = "02" (iscritto) se lo stato attuale e'
 						// "22"
-						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "22");
+						lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
+								ICostantiFascicoloSius.COD_EMESSO_DECRETO_DESIGNAZIONE);
 					lFasSiusDao.update();
 					lFasSiusDao.stop();
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -3603,12 +3610,14 @@ public class EventoController extends SiapController implements IEvento {
 			// applicazione provvisoria di MA
 			if ("0271".equals(lEve.getCodEsito())) {
 				FascicoloSiusDAO fsdao = new FascicoloSiusDAO(lConn);
-				fsdao.setCodStatoFascicolo("24");
+				fsdao.setCodStatoFascicolo(
+						ICostantiFascicoloSius.COD_EMESSA_ORDINANZA_APPLICAZIONE_PROVVISORIA);
 				fsdao.setDataAggiornamento(aCampoNota.getDataInserimento());
 				fsdao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 				fsdao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
 				// Aggiorno il fascicolo a stato_fascicolo = "24" se lo stato attuale e' "07"
-				fsdao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "07");
+				fsdao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
+						ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
 				fsdao.update();
 				fsdao.stop();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -4446,11 +4455,12 @@ public class EventoController extends SiapController implements IEvento {
 			if (lNumProv < 1) {
 				// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 07
 				FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
-				lFasSiusDao.setCodStatoFascicolo("02");
+				lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
 				lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
 				lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 				lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-				lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(), "07");
+				lFasSiusDao.setCondizioneUpdateStatoFascicolo(lEve.getFasSiuIdFascicoloSius(),
+						ICostantiFascicoloSius.COD_EMESSO_PROVVEDIMENTO);
 				lFasSiusDao.update();
 				lFasSiusDao.stop();
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -4461,7 +4471,7 @@ public class EventoController extends SiapController implements IEvento {
 			if (lNumProv < 1) {
 				// Aggiorno il fascicolo a stato_fascicolo = 02 se lo stato attuale e' 13 (cioe' sospeso)
 				FascicoloSiusDAO lFasSiusDao = new FascicoloSiusDAO(lConn);
-				lFasSiusDao.setCodStatoFascicolo("02");
+				lFasSiusDao.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ISCRITTO);
 				lFasSiusDao.setDataAggiornamento(aCampoNota.getDataInserimento());
 				lFasSiusDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
 				lFasSiusDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());

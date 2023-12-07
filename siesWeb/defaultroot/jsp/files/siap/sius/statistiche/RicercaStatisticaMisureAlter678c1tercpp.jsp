@@ -135,7 +135,7 @@ if (ricercaProcedimenti != null) {
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 1) {
 %>
 	<tr>
-	 	<td class="lVerdeNB">Ordinanze Non Emesse</td>
+	 	<td class="lVerdeNB">Procedimenti con Magistrato Designato - Ordinanze Non Emesse</td>
 	</tr>
 <%
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 2) {
@@ -147,7 +147,7 @@ if (ricercaProcedimenti != null) {
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 3) {
 %>
 	<tr>
-	 	<td class="lVerdeNB">Ordinanze Applicazione Provvisoria Emesse ma prive di Decisione del Collegio</td>
+	 	<td class="lVerdeNB">Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio</td>
 	</tr>
 <%
 	} else if (ricercaProcedimenti.getStatoProcedimento() == 4) {

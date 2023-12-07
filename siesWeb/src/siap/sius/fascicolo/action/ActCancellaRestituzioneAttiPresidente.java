@@ -48,7 +48,7 @@ public class ActCancellaRestituzioneAttiPresidente extends ActionSius implements
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento Unificato!");
 
-		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO))
+		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTO))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento con Provvedimento!");
 

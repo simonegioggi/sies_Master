@@ -773,9 +773,9 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 			/*
 			 * ISSUE MEV : aggiunto codice per gestione oggetto C029 
 			 * Numero MEV : 39 
-			 * Autore : Gioggi 
-			 * Data : 19/giu/2017 
-			 * Branch : MEV_39
+			 * Autore : Gioggi
+			 *  Data : 19/giu/2017 
+			 *  Branch : MEV_39
 			 */
 			if (codOggettoProcedimento.equalsIgnoreCase(OGG_ORD_APPELLO_CONTRO_PROVV_MS)) {
 				TenoreModel tenori[] = lOrdEveTenGP.getTenori();
@@ -1913,7 +1913,7 @@ public class ActInserisciOrdinanzaUDS extends ActionSius implements ICostantiDep
 
 		// Fascicolo SIUS
 		fascicoloGPModel.getFascicoloSiusModel()
-				.setCodStatoFascicolo(ICostantiFascicoloSius.COD_RESTITUITI_ATTI_AL_PRESIDENTE);
+				.setCodStatoFascicolo(ICostantiFascicoloSius.COD_ATTI_RESTITUITI_PRESIDENTE);
 
 		fascicoloGPModel.getFascicoloSiusModel().setCodOperatoreAggiornamento(mCodiceOperatore);
 		fascicoloGPModel.getFascicoloSiusModel().setCodUfficioAggiornamento(mCodiceUfficio);

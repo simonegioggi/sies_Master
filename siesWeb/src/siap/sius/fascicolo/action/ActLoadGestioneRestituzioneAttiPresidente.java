@@ -128,7 +128,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 
 	/**
 	 * La funzione analizza il Fascicolo SIUS ed in base allo stato prepara la form da presentare. I casi
-	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTOO : viene lanciata un'eccezione, l'operazione
+	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTO : viene lanciata un'eccezione, l'operazione
 	 * non può essere eseguita. 2) STATO = COD_DEFINITO : il fascicolo è già in stato definito, viene
 	 * visualizzato il dettaglio della definizione. 3) Negli altri casi viene preparata la form di input per
 	 * la Gestione Restituzione atti al Presidente del procedimento.
@@ -155,7 +155,7 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento Unificato!");
 
-		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO)
+		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTO)
 				&& Utils.isNullObj(dataRestituzione))
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento con Provvedimento!");
@@ -174,8 +174,9 @@ public class ActLoadGestioneRestituzioneAttiPresidente extends ActionSius implem
 					"Il " + lm.getEntity() + " è in gestione ad un altro utente!<BR>Riprovare più tardi!");
 
 		if (!(COD_ATTI_RESTITUITI_PRESIDENTE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())
-				|| COD_EMESSO_DECRETO_DESIGNAZIONE
-						.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
+				|| COD_EMESSO_DECRETO_DESIGNAZIONE.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo())
+				// 20231206: aggiunto anche stato iscritto su osservazione di Luigi G.
+				|| COD_ISCRITTO.equals(fgpm.getFascicoloSiusModel().getCodStatoFascicolo()))
 				&& !Utils.isNullObj(dataRestituzione))
 			isReadOnly = true;
 

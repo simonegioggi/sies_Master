@@ -122,7 +122,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 
 	/**
 	 * La funzione analizza il Fascicolo SIUS ed in base allo stato prepara la form da presentare. I casi
-	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTOO : viene lanciata un'eccezione, l'operazione
+	 * sono: 1) STATO = COD_UNIFICATO, COD_EMESSO_PROVVEDIMENTO : viene lanciata un'eccezione, l'operazione
 	 * non può essere eseguita. 2) STATO = COD_DEFINITO : il fascicolo è già in stato definito, viene
 	 * visualizzato il dettaglio della definizione. 3) Negli altri casi viene preparata la form di input per
 	 * la Esecutivita' Ordinanza Applicazione Provvisoria M.A. del procedimento.
@@ -171,7 +171,7 @@ public class ActLoadRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Ac
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento Unificato!");
 
-		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTOO)
+		if (fgpm.getFascicoloSiusModel().getCodStatoFascicolo().equalsIgnoreCase(COD_EMESSO_PROVVEDIMENTO)
 				&& !existOrdinanzaApplicazioneProvvisoria)
 			throw new SIUSException(SIUSException.USER_MESSAGE,
 					"Operazione non consentita su Procedimento con Provvedimento!");

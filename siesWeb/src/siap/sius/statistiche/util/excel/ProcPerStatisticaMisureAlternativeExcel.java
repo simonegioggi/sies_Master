@@ -71,13 +71,13 @@ public class ProcPerStatisticaMisureAlternativeExcel extends SIAPExcelProducer {
 				buffer = "Ordinanze Non Emesse - Atti al Presidente";
 				break;
 			case 1:
-				buffer = "Ordinanze Non Emesse";
+				buffer = "Procedimenti con Magistrato Designato - Ordinanze Non Emesse";
 				break;
 			case 2:
 				buffer = "Ordinanze Applicazione Provvisoria Emesse ma prive di Data di Esecutività";
 				break;
 			case 3:
-				buffer = "Ordinanze Applicazione Provvisoria Emesse ma prive di Decisione del Collegio";
+				buffer = "Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio";
 				break;
 			case 4:
 				buffer = "Procedimenti Privi di Provvedimenti";

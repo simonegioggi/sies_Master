@@ -102,7 +102,7 @@ function Verify() {
 	</tr>
  	<tr>
         <td class="l">
-      		Ordinanze Non Emesse
+      		Procedimenti con Magistrato Designato - Ordinanze Non emesse
 		</td>
 		<td class="l">
         	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_NON_EMESSE%>"/>
@@ -118,7 +118,7 @@ function Verify() {
 	</tr>
  	<tr>
 		<td class="l">
-			Ordinanze Applicazione Provvisoria Emesse ma prive di Decisione del Collegio
+			Ordinanze Emesse con Data Esecutività Inserita ma Prive di Decisione del Collegio
 		</td>
 		<td class="l">
         	<input type="radio" name="<%=ICostantiStatistiche.RADIO_RICERCA_STATISTICA_MA%>" value="<%=ICostantiStatistiche.VALUE_RICERCA_ORD_APPLICAZIONE_PROVVISORIA_EMESSE_NO_DECISIONE_COLLEGIO%>"/>
