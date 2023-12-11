@@ -79,6 +79,8 @@ import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.modulocumulo.dao.PenaRideterminataCumuloSqlDAO;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.pagoPA.dao.CivilmenteObbligatoSqlDAO;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.siep.penacomplessiva.dao.PenaComplessivaSqlDAO;
@@ -204,6 +206,10 @@ public class SIAPStampaController extends SiapController {
 		ContinuazioneSqlDAO lContSqlDAO = null;
 		EventoSqlDAO lEveSqlDAO = null;
 
+		// MEV_2023-33
+		RateizzazionePPSqlDAO lRateSqlDAO = null;
+		CivilmenteObbligatoSqlDAO lCivilObbligatoSqlDao = null;
+		
 		PenaComplessivaSanzioneSostitutivaModel lPenSanMod = null;
 		Vector lContinuazioni = null;
 
@@ -251,6 +257,32 @@ public class SIAPStampaController extends SiapController {
 				lContinuazioni = new Vector(lContSqlDAO.getModels());
 			}
 
+			//==============================================================================================
+		  // MEV_2023-33 - Aggiungo al nodo del Fascicolo anche le rateizzazioni e i civilmente obbligati
+			//               Quelle legate all'ultimo evento validato o quelle legata al fascicolo
+			// 			
+			lRateSqlDAO = new RateizzazionePPSqlDAO(lConn);
+			lRateSqlDAO.ricercaRateizzazionePPUltimoEventoValidatoByIdFasc(lKeyFascicolo);
+			Vector <RateizzazionePPModel> lListaRate = new Vector(lRateSqlDAO.getModels());
+			if (lListaRate.size()==0) {
+			  // Cerco quelle 'libere' sul fascicolo
+			  lRateSqlDAO.ricercaRateizzazionePPByIdFasSIEPLibero (lKeyFascicolo);
+			  lListaRate = new Vector(lRateSqlDAO.getModels());
+			}
+			for (RateizzazionePPModel lRata : lListaRate){
+			  aTreeFasMod.add(new TreeModel(lRata));
+			}
+			
+			// Ricerco il civilmente obbligato
+			lCivilObbligatoSqlDao = new CivilmenteObbligatoSqlDAO (lConn);
+			lCivilObbligatoSqlDao.ricercaCivilmenteObbligatiByFasSieIdFascicoloSiep (lKeyFascicolo);
+			Vector <CivilmenteObbligatoModel> lListaObbligati = new Vector(lCivilObbligatoSqlDao.getModels());
+	    for (CivilmenteObbligatoModel lObbligato : lListaObbligati){
+	        aTreeFasMod.add(new TreeModel(lObbligato));
+	     }
+		  // MEV_2023-33 
+	    //==============================================================================================
+	    
 			// Pena Accessoria
 			lPenAccDao = new PenaAccessoriaSqlDAO(lConn);
 			lPenAccDao.ricercaPenaAccessoriaByFascicolo(lKeyFascicolo);
@@ -865,6 +897,11 @@ public class SIAPStampaController extends SiapController {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lContSqlDAO);
 			cleanup(lEveSqlDAO);
+			
+			// MEV_2023-33
+			cleanup(lRateSqlDAO );
+			cleanup(lCivilObbligatoSqlDao );
+			
 		}
 	}
 

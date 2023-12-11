@@ -365,4 +365,23 @@ public class RateizzazionePPSqlDAO extends SIAPSqlDAO {
 		return lStatement;
 	}
 
+	 public void ricercaRateizzazionePPUltimoEventoValidatoByIdFasc(BigDecimal aIdFascicoloSIEP) throws DAOException {
+
+	    String lStatement = new String("");
+
+	    lStatement += getSqlQuery();
+
+	    // 
+	    lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = "+aIdFascicoloSIEP;
+	    lStatement += " AND EVE_ID_EVENTO = (SELECT MAX(EVENTO.ID_EVENTO) ";
+	    lStatement +=                        " FROM RATEIZZAZIONE_PP, EVENTO ";
+	    lStatement +=                       " WHERE 1=1 ";
+	    lStatement +=                         " AND RATEIZZAZIONE_PP.EVE_ID_EVENTO = EVENTO.ID_EVENTO ";
+	    lStatement +=                         " AND EVENTO.FLAG_DOCUMENTO_REGISTRATO = 'S' ";
+	    lStatement +=                         " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = "+aIdFascicoloSIEP;
+	    lStatement +=                      " ) ";
+
+
+	    setStatement(lStatement);
+	  }
 }
