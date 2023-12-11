@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.tree.TreeNode;
+
 import org.apache.log4j.Logger;
 
 import siap.controller.SiapController;
@@ -741,8 +743,15 @@ public class StampaEventoUtils extends SiapController {
 
 				// MEV_2023-13 - Si aggiunge il model del civilmente obbligato
 				if (aEveModel.getNotifiche()[count].getIdCivilmenteObbligato() != null) {
-				    if (aEveModel.getNotifiche()[count].getCivilmenteObbligato()!=null)
-				        lTreeNot.add(new TreeModel(aEveModel.getNotifiche()[count].getCivilmenteObbligato()));   
+				    if (aEveModel.getNotifiche()[count].getCivilmenteObbligato()!=null) {
+				      // 2023.12.11 si aggiunge anche la residenza
+              //lTreeNot.add(new TreeModel(aEveModel.getNotifiche()[count].getCivilmenteObbligato()));
+				      TreeModel lNodoCivilmente = new TreeModel(aEveModel.getNotifiche()[count].getCivilmenteObbligato());
+				      lTreeNot.add (lNodoCivilmente);
+				      if (aEveModel.getNotifiche()[count].getCivilmenteObbligato().getResidenza()!=null)
+				        lNodoCivilmente.add(new TreeModel(aEveModel.getNotifiche()[count].getCivilmenteObbligato().getResidenza()));
+				      // 2023.12.11
+				    }
 				    else 
 				        siesLogger.warn("... ma manca il model ");
 				}

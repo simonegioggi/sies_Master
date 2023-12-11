@@ -37,6 +37,8 @@ import siap.sico.libertaanticipata.dao.LicenzaLibanticipataDAO;
 import siap.sico.magistrato.dao.MagistratoSqlDAO;
 import siap.sico.magistrato.model.MagistratoModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaAggregatoModel;
+import siap.sico.residenza.dao.ResidenzaSqlDAO;
+import siap.sico.residenza.model.ResidenzaModel;
 import siap.sico.stampa.controller.IStampa;
 import siap.sico.template.controller.TemplateManager;
 import siap.sico.template.dao.TemplateSqlDAO;
@@ -982,6 +984,7 @@ public class EventoController extends SiapController implements IEvento {
 
 		// MEV_2023-13
 		CivilmenteObbligatoSqlDAO lCivilmenteObbSqlDao = null;
+		ResidenzaSqlDAO lResidenzaSqlDao = null;
 
 		try {
 			lEveDao = new EventoSqlDAO(lConn);
@@ -1102,10 +1105,19 @@ public class EventoController extends SiapController implements IEvento {
 					lCivilmenteObbSqlDao = new CivilmenteObbligatoSqlDAO(lConn);
 					lCivilmenteObbSqlDao.ricercaCivilmenteObbligatoByKey(
 							lEve.getNotifiche()[count].getIdCivilmenteObbligato());
-					CivilmenteObbligatoModel lObblogatoModel = (CivilmenteObbligatoModel) lCivilmenteObbSqlDao
+					CivilmenteObbligatoModel lObbligatoModel = (CivilmenteObbligatoModel) lCivilmenteObbSqlDao
 							.getModelByKey();
 
-					lEve.getNotifiche()[count].setCivilmenteObbligato(lObblogatoModel);
+					lEve.getNotifiche()[count].setCivilmenteObbligato(lObbligatoModel);
+					
+					// 2023.12.11 Aggiungo la residenza
+					if (lObbligatoModel!=null){
+  					lResidenzaSqlDao = new ResidenzaSqlDAO (lConn);
+            lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato (lObbligatoModel.getIdCivilmenteObbligato());
+            ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
+            if (lResidenza!=null)
+              lObbligatoModel.setResidenza(lResidenza);
+					}
 				}
 
 				// Autorita Esterne Delegata
@@ -1159,6 +1171,7 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lAvvSigeDao);
 
 			cleanup(lCivilmenteObbSqlDao); // MEV_2023-13
+			cleanup(lResidenzaSqlDao);
 		}
 		return lEve;
 	}

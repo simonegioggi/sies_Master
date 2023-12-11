@@ -209,6 +209,7 @@ public class SIAPStampaController extends SiapController {
 		// MEV_2023-33
 		RateizzazionePPSqlDAO lRateSqlDAO = null;
 		CivilmenteObbligatoSqlDAO lCivilObbligatoSqlDao = null;
+		ResidenzaSqlDAO lResidenzaSqlDao = null;
 		
 		PenaComplessivaSanzioneSostitutivaModel lPenSanMod = null;
 		Vector lContinuazioni = null;
@@ -276,10 +277,20 @@ public class SIAPStampaController extends SiapController {
 			// Ricerco il civilmente obbligato
 			lCivilObbligatoSqlDao = new CivilmenteObbligatoSqlDAO (lConn);
 			lCivilObbligatoSqlDao.ricercaCivilmenteObbligatiByFasSieIdFascicoloSiep (lKeyFascicolo);
+			lResidenzaSqlDao = new ResidenzaSqlDAO (lConn);
+			
 			Vector <CivilmenteObbligatoModel> lListaObbligati = new Vector(lCivilObbligatoSqlDao.getModels());
 	    for (CivilmenteObbligatoModel lObbligato : lListaObbligati){
-	        aTreeFasMod.add(new TreeModel(lObbligato));
-	     }
+	        TreeModel lCivilmenteTree = new TreeModel(lObbligato);
+	        aTreeFasMod.add(lCivilmenteTree);
+	        // Ricerco se presente la residenza
+	        lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato (lObbligato.getIdCivilmenteObbligato());
+	        ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
+	        if (lResidenza!=null)
+	          lCivilmenteTree.add (new TreeModel(lResidenza));
+        
+	        lResidenzaSqlDao.stop();
+	    }
 		  // MEV_2023-33 
 	    //==============================================================================================
 	    
@@ -901,7 +912,7 @@ public class SIAPStampaController extends SiapController {
 			// MEV_2023-33
 			cleanup(lRateSqlDAO );
 			cleanup(lCivilObbligatoSqlDao );
-			
+			cleanup(lResidenzaSqlDao );
 		}
 	}
 
