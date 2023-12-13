@@ -358,4 +358,7 @@ public interface IEvento {
 	// depositati)
 	public Vector ExRicercaProvvedimentiConDataDeposito(EventoModel aEvento) throws F3BException;
 
+	// MEV_2023-33: aggiunto metodo di modifica
+	public void ExModificaEventoNotifiche(EventoNotificaModel enm) throws F3BException;
+
 }

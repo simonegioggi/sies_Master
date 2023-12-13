@@ -79,9 +79,15 @@ if (Utils.isNullObj(enm.getEvento().getFlagDocumentoRegistrato())
 		|| (!Utils.isNullObj(enm.getEvento().getFlagDocumentoRegistrato())
 		&& enm.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)) {
 %>
+		<!-- BOTTONE DI MODIFICA -->
+     	<td class="LBG">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActLoadModificaTrasmissioneAttiEsecuzione&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=enm.getEvento().getIdEvento()%>">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
+			</a>
+		</td>
 		<!-- BOTTONE DI STAMPA -->
 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-			<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaTrasmissioneAttiEsecuzionePS&IdEvento="+enm.getEvento().getIdEvento()%>"/>
+			<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaTrasmissioneAttiEsecuzionePS&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+enm.getEvento().getIdEvento()%>"/>
 		</jsp:include>
 <%
 }

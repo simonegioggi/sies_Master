@@ -51,7 +51,7 @@ function over_effect(e, state) {
 	<tr>
 		<td class="LBG">
 	        <font class="label">Funzione :</font>&nbsp;
-	        <font class="campo">Gestione Ordine di Ingiunzione</font>
+	        <font class="campo">Gestione Notifiche</font>
       	</td>
         <td class="LBG">
           <a href="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActGrigliaRiscossionePP">

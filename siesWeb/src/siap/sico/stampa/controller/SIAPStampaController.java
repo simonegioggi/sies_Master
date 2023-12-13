@@ -117,7 +117,7 @@ import siap.sius.util.SIUSLookupRemote;
 
 /**
  * Classe padre della stampa: riunisce tutti i metodi comuni alle varie classi specializzate di stampa
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -210,7 +210,7 @@ public class SIAPStampaController extends SiapController {
 		RateizzazionePPSqlDAO lRateSqlDAO = null;
 		CivilmenteObbligatoSqlDAO lCivilObbligatoSqlDao = null;
 		ResidenzaSqlDAO lResidenzaSqlDao = null;
-		
+
 		PenaComplessivaSanzioneSostitutivaModel lPenSanMod = null;
 		Vector lContinuazioni = null;
 
@@ -258,42 +258,43 @@ public class SIAPStampaController extends SiapController {
 				lContinuazioni = new Vector(lContSqlDAO.getModels());
 			}
 
-			//==============================================================================================
-		  // MEV_2023-33 - Aggiungo al nodo del Fascicolo anche le rateizzazioni e i civilmente obbligati
-			//               Quelle legate all'ultimo evento validato o quelle legata al fascicolo
-			// 			
+			// ==============================================================================================
+			// MEV_2023-33 - Aggiungo al nodo del Fascicolo anche le rateizzazioni e i civilmente obbligati
+			// Quelle legate all'ultimo evento validato o quelle legata al fascicolo
+			//
 			lRateSqlDAO = new RateizzazionePPSqlDAO(lConn);
 			lRateSqlDAO.ricercaRateizzazionePPUltimoEventoValidatoByIdFasc(lKeyFascicolo);
-			Vector <RateizzazionePPModel> lListaRate = new Vector(lRateSqlDAO.getModels());
-			if (lListaRate.size()==0) {
-			  // Cerco quelle 'libere' sul fascicolo
-			  lRateSqlDAO.ricercaRateizzazionePPByIdFasSIEPLibero (lKeyFascicolo);
-			  lListaRate = new Vector(lRateSqlDAO.getModels());
+			Vector<RateizzazionePPModel> lListaRate = new Vector(lRateSqlDAO.getModels());
+			if (lListaRate.size() == 0) {
+				// Cerco quelle 'libere' sul fascicolo
+				lRateSqlDAO.ricercaRateizzazionePPByIdFasSIEPLibero(lKeyFascicolo);
+				lListaRate = new Vector(lRateSqlDAO.getModels());
 			}
-			for (RateizzazionePPModel lRata : lListaRate){
-			  aTreeFasMod.add(new TreeModel(lRata));
+			for (RateizzazionePPModel lRata : lListaRate) {
+				aTreeFasMod.add(new TreeModel(lRata));
 			}
-			
+
 			// Ricerco il civilmente obbligato
-			lCivilObbligatoSqlDao = new CivilmenteObbligatoSqlDAO (lConn);
-			lCivilObbligatoSqlDao.ricercaCivilmenteObbligatiByFasSieIdFascicoloSiep (lKeyFascicolo);
-			lResidenzaSqlDao = new ResidenzaSqlDAO (lConn);
-			
-			Vector <CivilmenteObbligatoModel> lListaObbligati = new Vector(lCivilObbligatoSqlDao.getModels());
-	    for (CivilmenteObbligatoModel lObbligato : lListaObbligati){
-	        TreeModel lCivilmenteTree = new TreeModel(lObbligato);
-	        aTreeFasMod.add(lCivilmenteTree);
-	        // Ricerco se presente la residenza
-	        lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato (lObbligato.getIdCivilmenteObbligato());
-	        ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
-	        if (lResidenza!=null)
-	          lCivilmenteTree.add (new TreeModel(lResidenza));
-        
-	        lResidenzaSqlDao.stop();
-	    }
-		  // MEV_2023-33 
-	    //==============================================================================================
-	    
+			lCivilObbligatoSqlDao = new CivilmenteObbligatoSqlDAO(lConn);
+			lCivilObbligatoSqlDao.ricercaCivilmenteObbligatiByFasSieIdFascicoloSiep(lKeyFascicolo);
+			lResidenzaSqlDao = new ResidenzaSqlDAO(lConn);
+
+			Vector<CivilmenteObbligatoModel> lListaObbligati = new Vector(lCivilObbligatoSqlDao.getModels());
+			for (CivilmenteObbligatoModel lObbligato : lListaObbligati) {
+				TreeModel lCivilmenteTree = new TreeModel(lObbligato);
+				aTreeFasMod.add(lCivilmenteTree);
+				// Ricerco se presente la residenza
+				lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato(
+						lObbligato.getIdCivilmenteObbligato());
+				ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
+				if (lResidenza != null)
+					lCivilmenteTree.add(new TreeModel(lResidenza));
+
+				lResidenzaSqlDao.stop();
+			}
+			// MEV_2023-33
+			// ==============================================================================================
+
 			// Pena Accessoria
 			lPenAccDao = new PenaAccessoriaSqlDAO(lConn);
 			lPenAccDao.ricercaPenaAccessoriaByFascicolo(lKeyFascicolo);
@@ -908,11 +909,11 @@ public class SIAPStampaController extends SiapController {
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lContSqlDAO);
 			cleanup(lEveSqlDAO);
-			
+
 			// MEV_2023-33
-			cleanup(lRateSqlDAO );
-			cleanup(lCivilObbligatoSqlDao );
-			cleanup(lResidenzaSqlDao );
+			cleanup(lRateSqlDAO);
+			cleanup(lCivilObbligatoSqlDao);
+			cleanup(lResidenzaSqlDao);
 		}
 	}
 
@@ -963,8 +964,11 @@ public class SIAPStampaController extends SiapController {
 
 								/*
 								 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice
-								 * commentato Numero MEV : SIES v10 Autore : gioggi Data : 15/feb/2016 Branch
-								 * : MEV_SIES v10
+								 * commentato 
+								 * Numero MEV : SIES v10 
+								 * Autore : gioggi 
+								 * Data : 15/feb/2016 
+								 * Branch : MEV_SIES v10
 								 */
 								// IReato lReaCtr =
 								// SIEPLookupRemote.getReatoRemote();

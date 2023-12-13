@@ -21,7 +21,7 @@
 
 <html>
 <head>
-	<title>[S.I.E.S.] - Gestione Ordine Esecuzione Ingiunzione al Pagamento</title>
+	<title>[S.I.E.S.] - Gestione Notifiche</title>
 	<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 	<script language="JavaScript">	
 		function eseguiAzione(id) {
@@ -44,7 +44,7 @@
       <td class="LBG"><a href="Javascript:window.print();"><img src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
       <td class="LBG">
         <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <font class="campo">Gestione Ordine Esecuzione Ingiunzione al Pagamento</font>
+        <font class="campo">Gestione Notifiche</font>
       </td>
       <td class="LBG"><!-- Tasto indietro alla Griglia dei dati analitici -->
         <a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzione')">

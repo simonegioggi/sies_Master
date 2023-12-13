@@ -1109,14 +1109,15 @@ public class EventoController extends SiapController implements IEvento {
 							.getModelByKey();
 
 					lEve.getNotifiche()[count].setCivilmenteObbligato(lObbligatoModel);
-					
+
 					// 2023.12.11 Aggiungo la residenza
-					if (lObbligatoModel!=null){
-  					lResidenzaSqlDao = new ResidenzaSqlDAO (lConn);
-            lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato (lObbligatoModel.getIdCivilmenteObbligato());
-            ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
-            if (lResidenza!=null)
-              lObbligatoModel.setResidenza(lResidenza);
+					if (lObbligatoModel != null) {
+						lResidenzaSqlDao = new ResidenzaSqlDAO(lConn);
+						lResidenzaSqlDao.ricercaDomicilioCorrenteByIdCivilmenteObbligato(
+								lObbligatoModel.getIdCivilmenteObbligato());
+						ResidenzaModel lResidenza = (ResidenzaModel) lResidenzaSqlDao.getModelByKey();
+						if (lResidenza != null)
+							lObbligatoModel.setResidenza(lResidenza);
 					}
 				}
 
@@ -2477,17 +2478,15 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 * @author sgioggi
 	 * @since MEV_2023-33
-	 * 
-	 * Metodo privato che esegue il ricalcolo della pena solo per:
-	 * 1312 Al Mds per l'esecuzione di pene sostitutive
-	 * 1313 Al Mds per l'esecuzione di pene sostitutive a seguito restituzione
-	 * 
+	 *
+	 *        Metodo privato che esegue il ricalcolo della pena solo per: 1312 Al Mds per l'esecuzione di pene
+	 *        sostitutive 1313 Al Mds per l'esecuzione di pene sostitutive a seguito restituzione
+	 *
 	 * @param lConn
 	 * @param idFascicoloSiep
 	 * @throws Exception
 	 */
-	private void ricalcoloPena(Connection lConn, BigDecimal idFascicoloSiep)
-			throws Exception {
+	private void ricalcoloPena(Connection lConn, BigDecimal idFascicoloSiep) throws Exception {
 
 		PenaResiduaSqlDAO prsdao = null;
 
@@ -5049,6 +5048,95 @@ public class EventoController extends SiapController implements IEvento {
 		} finally {
 			cleanup(lEveDao);
 			cleanup(lConn);
+		}
+	}
+
+	/**
+	 * Aggiunto metodo di modifica evento e notifiche
+	 * 
+	 * @author 	sgioggi
+	 * @since	MEV_2023-33
+	 */
+	@Override
+	public void ExModificaEventoNotifiche(EventoNotificaModel enm) throws F3BException {
+
+		Connection c = null;
+
+		EventoDAO edao = null;
+		NotificaDAO ndao = null;
+		AutoritaEsternaDAO aedao = null;
+
+		try {
+			c = getDBConnection();
+
+			// aggiorno l'evento
+			edao = new EventoDAO(c);
+			edao.setDAOFromModelForUpdate(enm.getEvento());
+			edao.update();
+
+			// prima cancello le notifiche e poi le inserisco nuovamente
+			ndao = new NotificaDAO(c);
+			ndao.setCondizioneEvento(enm.getEvento().getIdEvento());
+			ndao.delete();
+			// ============================================
+			// Inserisco le Notifiche collegate all'evento
+			// ============================================
+			int count = 0;
+			aedao = new AutoritaEsternaDAO(c);
+			BigDecimal idAutorita = null;
+			if (enm != null && enm.getNotifiche() != null) {
+				siesLogger.debug("Presenti " + enm.getNotifiche().length + " notifiche");
+				while (count < enm.getNotifiche().length) {
+					siesLogger.debug("count = " + count);
+					siesLogger.debug("Notifica[" + count + "] = " + enm.getNotifiche()[count]);
+					if (enm.getNotifiche()[count] != null) {
+						// Se è stata specificata anche l'autorità esterna per l'avvocato,
+						// recupero l'id da inserire nella notifica
+						// n.b. se autorità non presente la creo
+						if (enm.getNotifiche()[count].getAutoritaEsterna() != null) {
+							// Provo a verificare se a sistema (tab AUTORITA_ESTERNA) esiste
+							// già l'autorità esterna specificata nella form (dalla form ho solo
+							// codice e sede)
+							aedao.setRicercaByAutSede(
+									enm.getNotifiche()[count].getAutoritaEsterna());
+							AutoritaEsternaModel aem = new AutoritaEsternaModel();
+							aem = (AutoritaEsternaModel) aedao.getModelByKey();
+							if (aem == null) { // non esiste, la inserisco (n.b. ho solo tipo e sede)
+								aedao.setDAOFromModel(
+										enm.getNotifiche()[count].getAutoritaEsterna());
+								idAutorita = aedao.insert();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							} else {
+								idAutorita = aem.getIdAutoritaEsterna();
+								enm.getNotifiche()[count].setAutEstIdAutoritaEsterna(idAutorita);
+							}
+						}
+						enm.getNotifiche()[count].setEveIdEvento(enm.getEvento().getIdEvento());
+						ndao = new NotificaDAO(c);
+						ndao.setDAOFromModel(enm.getNotifiche()[count]);
+						BigDecimal idNotifica = ndao.insert();
+						ndao.stop();
+						siesLogger.debug("Inserita Notifica con ID = " + idNotifica);
+					}
+					count++;
+				}
+			}
+
+			commit(c);
+		} catch (DAOException ex) {
+			siesLogger.error("EventoController.ExModificaEventoNotifiche --> Eccezione DAO: ", ex);
+			rollback(c);
+			throw new F3BException("EventoController.ExModificaEventoNotifiche: " + ex);
+		} catch (Exception ex) {
+			siesLogger.error("EventoController.ExModificaEventoNotifiche --> Eccezione Generica: ", ex);
+			rollback(c);
+			throw new F3BException("EventoController.ExModificaEventoNotifiche: " + ex);
+		} finally {
+			cleanup(edao);
+			cleanup(ndao);
+			cleanup(aedao);
+
+			cleanup(c);
 		}
 	}
 

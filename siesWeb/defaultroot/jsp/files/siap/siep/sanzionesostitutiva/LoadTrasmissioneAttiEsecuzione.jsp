@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%-- MEV_2023-33: aggiunta pagina per Gestione Trasmissione Atti per l'Esecuzione (pena sostitutiva) --%>
 <%@ page import="java.math.BigDecimal"%>
+<%@ page import="java.util.Date"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.Arrays"%>
 <%@ page import="java.util.List"%>
@@ -8,6 +9,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sico.magistrato.action.ICostantiMagistrato"%>
@@ -26,7 +28,9 @@
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel"%>
 <%@ page import="siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel"%>
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
+<%@ page import="siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa"%>
 <%@ page import="siap.siep.misuracautelare.model.MisuraCautelareModel"%>
+<%@ page import="siap.siep.notifica.model.NotificaModel"%>
 <%@ page import="siap.siep.util.MinorMask"%>
 
 <jsp:useBean id="magistratocompetente" 	scope="request" class="siap.sico.magistratocompetente.model.MagistratoCompetenteMagistratoModel"/>
@@ -41,6 +45,8 @@
 <jsp:useBean id="avvocati"           	scope="request" class="java.util.Vector"/>
 <jsp:useBean id="tipoAutoritaC0"   		scope="request" class="java.lang.String"/>
 <jsp:useBean id="tipoAutoritaAll"  		scope="request" class="java.lang.String"/>
+<jsp:useBean id="modalita"         		scope="request" class="java.lang.String"/>
+<jsp:useBean id="eventonotifica"   		scope="request" class="siap.sico.evento.model.EventoNotificaModel"/>
 
 <%
 FascicoloSiepModel fsm = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -62,6 +68,18 @@ if (acm == null)
 	acm = new AltraCausaModel();
 
 PenaComplessivaSanzioneSostitutivaModel pcssm = penaCompPenaSost;
+
+Date dataEmissione    = DateUtils.getSysDate();
+Date dataTrasmissione = DateUtils.getSysDate();
+
+if (eventonotifica.getEvento().getIdEvento() != null) {
+	dataEmissione    = eventonotifica.getEvento().getDataEmissione();
+	dataTrasmissione = eventonotifica.getNotifiche()[0].getDataInvio();
+}
+
+if (Utils.isPresent(eventonotifica.getMagistrato().getCodMagistrato())) {
+	magistratocompetente.setMagistrato(eventonotifica.getMagistrato());
+}
 %>
 
 <html>
@@ -70,6 +88,7 @@ PenaComplessivaSanzioneSostitutivaModel pcssm = penaCompPenaSost;
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 <script language="JavaScript" src="<%=IWebConstants.JS_VALIDATOR%>"></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
+<script language="JavaScript" src="<%=IWebConstants.JS_JQUERY%>"></script>
 <script language="JavaScript">
 var desktop;
 function ListaUDS(a_formname, a_fieldname) {
@@ -179,10 +198,72 @@ function Verify() {
    	}
 	return true;
 }
+
+function caricaNotifiche() {
+<%
+if ("M".equals(modalita)) {
+	NotificaModel[] nmArray = eventonotifica.getNotifiche();
+	for (int i = 0; i < nmArray.length; i++) {
+    	NotificaModel nm = nmArray[i];
+		String codTipoAutorita = "";
+		String sedeAutorita = "";
+		String indirizzoAutorita = "";
+		String descIstituto = "";
+		String idIstituto = "";
+		String noteIstituto = "";
+    	if (nm.getAutoritaEsterna() != null) {
+			codTipoAutorita = nm.getAutoritaEsterna().getCodTipoAutorita();
+			sedeAutorita    = StringUtils.toStringJSP(nm.getAutoritaEsterna().getDescrSede(), "");
+			indirizzoAutorita = StringUtils.toStringJSP(nm.getNote(), "");
+      		if ("-".equals(sedeAutorita))
+      			sedeAutorita = "";
+    	} else if (nm.getIstDetIdIstitutoDetenzione() != null) {
+	        descIstituto = nm.getIstitutoDetenzione().getDescrTipoIstituto() + " di " + nm.getIstitutoDetenzione().getDescrComune();
+	        idIstituto   = nm.getIstitutoDetenzione().getIdIstitutoDetenzione();
+	        noteIstituto = StringUtils.toStringJSP(nm.getIstitutoDetenzione().getNote());
+    	}
+		if (nm.getAvvIdAvvocatoFascicoloSiep() == null) {
+			if (nm.getAutoritaEsterna() != null) {
+%>
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_C%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_C%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_C%>').val("<%=indirizzoAutorita%>");
+<%
+			} else if (nm.getIstDetIdIstitutoDetenzione() != null) {
+%>
+	$('#descIstituto').val("<%=descIstituto%>");
+	$('#<%=ICostantiIstitutoDetenzione.CAMPO_ID_ISTITUTO_DETENZIONE%>').val("<%=idIstituto%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_IST%>').val("<%=noteIstituto%>");
+<%
+			}
+		}
+		if (nm.getAvvIdAvvocatoFascicoloSiep() != null) {
+%>
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=nm.getAvvIdAvvocatoFascicoloSiep()%>').val("<%=indirizzoAutorita%>");
+<%
+		}
+		if ("MS".equals(nm.getCodTipoNotifica()) || "MM".equals(nm.getCodTipoNotifica())) {
+			String tipoSorv = "MS".equals(nm.getCodTipoNotifica()) ? "UDS" : "UDSM";
+%>
+		$('#comboMagistratoMinor option[value="<%=tipoSorv%>"]').attr("selected", "selected");
+<%
+		} else if ("NC".equals(nm.getCodTipoNotifica())) {
+%>
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%> option[value="<%=codTipoAutorita%>"]').attr("selected", "selected");
+	$('#<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE_E%>').val("<%=sedeAutorita%>");
+	$('#<%=ICostantiNotifica.CAMPO_NOTE_E%>').val("<%=indirizzoAutorita%>");
+<%
+		}
+	}
+}
+%>
+}
 </script>
 </head>
 
-<body class="corpo">
+<body class="corpo" onLoad="caricaNotifiche();">
 <table>
 	<tr>
    		<td class="LBG">
@@ -199,7 +280,24 @@ function Verify() {
 <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
 <br>
 <FORM method="POST" name="LoadTrasmissioneAttiEsecuzione" action="<%=IWebConstants.PG_MAIN%>">
-<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActTrasmissioneAttiEsecuzione">
+<table cellspacing="0" cellpadding="0" width="95%">
+	<tr>
+		<td>
+<%
+if (!Utils.isPresent(modalita)) {
+%>
+    		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActTrasmissioneAttiEsecuzione">
+<%
+} else {
+%>
+			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.sanzionesostitutiva.action.ActModificaTrasmissioneAttiEsecuzione">
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento()%>">
+<%
+}
+%>
+		</td>
+	</tr>
+</table>
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 		<td class="l" width="20%">Posizione Giuridica</td>
@@ -269,72 +367,72 @@ if (codPosizioneGiuridica != null && (codPosizioneGiuridica.equals("02") || codP
 <%
 	}
 }
-PenaComplessivaModel lPenCompMod = pcssm.getPenaComplessiva();
-if (lPenCompMod != null) {
+PenaComplessivaModel pcm = pcssm.getPenaComplessiva();
+if (pcm != null) {
 %>
 	<tr>
 		<td class="L"><font class="label">Pena irrogata in sentenza:</font></td>
 		<td class="L" colspan="5">
 <%
-	if ((lPenCompMod.getNumAnniReclusione() != null && lPenCompMod.getNumAnniReclusione().compareTo(new BigDecimal(0)) != 0)
-			|| (lPenCompMod.getNumMesiReclusione() != null && lPenCompMod.getNumMesiReclusione().compareTo(new BigDecimal(0)) != 0)
-			|| (lPenCompMod.getNumGiorniReclusione() != null && lPenCompMod.getNumGiorniReclusione().compareTo(new BigDecimal(0)) != 0)) {
+	if ((pcm.getNumAnniReclusione() != null && pcm.getNumAnniReclusione().compareTo(new BigDecimal(0)) != 0)
+			|| (pcm.getNumMesiReclusione() != null && pcm.getNumMesiReclusione().compareTo(new BigDecimal(0)) != 0)
+			|| (pcm.getNumGiorniReclusione() != null && pcm.getNumGiorniReclusione().compareTo(new BigDecimal(0)) != 0)) {
 %>
 			<font class="campo">Reclusione</font>
 			<font class="label">Anni</font>
-			<font class="campo"><%=StringUtils.toStringJSP(lPenCompMod.getNumAnniReclusione(),"0")%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(pcm.getNumAnniReclusione(), "0")%></font>
 			<font class="label">Mesi</font>
-			<font class="campo"> <%=StringUtils.toStringJSP(lPenCompMod.getNumMesiReclusione(),"0")%></font>
+			<font class="campo"> <%=StringUtils.toStringJSP(pcm.getNumMesiReclusione(), "0")%></font>
 			<font class="label">Giorni</font>
-			<font class="campo"> <%=StringUtils.toStringJSP(lPenCompMod.getNumGiorniReclusione(),"0")%></font>&nbsp;&nbsp;
+			<font class="campo"> <%=StringUtils.toStringJSP(pcm.getNumGiorniReclusione(), "0")%></font>&nbsp;&nbsp;
 <%
 	}
-	if (lPenCompMod.getImportoMulta() != null && lPenCompMod.getImportoMulta().compareTo(new BigDecimal(0)) != 0) {
+	if (pcm.getImportoMulta() != null && pcm.getImportoMulta().compareTo(new BigDecimal(0)) != 0) {
 %>
           	<font class="label">Multa </font>
-          	<font class="campo"><%=StringUtils.toEuroFormat(lPenCompMod.getImportoMulta())%></font>&nbsp;&euro;&nbsp;
+          	<font class="campo"><%=StringUtils.toEuroFormat(pcm.getImportoMulta())%></font>&nbsp;&euro;&nbsp;
 <%
 	}
-	if ((lPenCompMod.getNumAnniArresto() != null && lPenCompMod.getNumAnniArresto().compareTo(new BigDecimal(0)) != 0)
-			|| (lPenCompMod.getNumMesiArresto() != null && lPenCompMod.getNumMesiArresto().compareTo(new BigDecimal(0)) != 0)
-			|| (lPenCompMod.getNumGiorniArresto() != null && lPenCompMod.getNumGiorniArresto().compareTo(new BigDecimal(0)) != 0)) {
+	if ((pcm.getNumAnniArresto() != null && pcm.getNumAnniArresto().compareTo(new BigDecimal(0)) != 0)
+			|| (pcm.getNumMesiArresto() != null && pcm.getNumMesiArresto().compareTo(new BigDecimal(0)) != 0)
+			|| (pcm.getNumGiorniArresto() != null && pcm.getNumGiorniArresto().compareTo(new BigDecimal(0)) != 0)) {
 %>
 			<font class="campo">Arresto</font>
 			<font class="label">Anni</font>
-			<font class="campo"><%=StringUtils.toStringJSP(lPenCompMod.getNumAnniArresto(),"0")%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(pcm.getNumAnniArresto(),"0")%></font>
 			<font class="label">Mesi</font>
-			<font class="campo"> <%=StringUtils.toStringJSP(lPenCompMod.getNumMesiArresto(),"0")%></font>
+			<font class="campo"> <%=StringUtils.toStringJSP(pcm.getNumMesiArresto(),"0")%></font>
 			<font class="label">Giorni</font>
-			<font class="campo"> <%=StringUtils.toStringJSP(lPenCompMod.getNumGiorniArresto(),"0")%></font>&nbsp;&nbsp;
+			<font class="campo"> <%=StringUtils.toStringJSP(pcm.getNumGiorniArresto(),"0")%></font>&nbsp;&nbsp;
 <%
 	}
-	if (lPenCompMod.getImportoAmmenda() != null && lPenCompMod.getImportoAmmenda().compareTo(new BigDecimal(0)) != 0) {
+	if (pcm.getImportoAmmenda() != null && pcm.getImportoAmmenda().compareTo(new BigDecimal(0)) != 0) {
 %>
           	<font class="label">Ammenda </font>
-          	<font class="campo"><%=StringUtils.toEuroFormat(lPenCompMod.getImportoAmmenda())%></font>&nbsp;&euro;&nbsp;
+          	<font class="campo"><%=StringUtils.toEuroFormat(pcm.getImportoAmmenda())%></font>&nbsp;&euro;&nbsp;
 <%
 	}
-	if (lPenCompMod.getCodTipoPenaDetentiva().equals("03") || lPenCompMod.getCodTipoPenaDetentiva().equals("04")) {
+	if (pcm.getCodTipoPenaDetentiva().equals("03") || pcm.getCodTipoPenaDetentiva().equals("04")) {
 %>
-          	<font class="campo"><%=StringUtils.toStringJSP(lPenCompMod.getDescrTipoPenaDetentiva())%></font>
+          	<font class="campo"><%=StringUtils.toStringJSP(pcm.getDescrTipoPenaDetentiva())%></font>
 <%
-		if (lPenCompMod.getCodTipoPenaDetentiva().equals("04")) {
-			if (lPenCompMod.getNumAnniIsolamentoDiurno() != null) {
+		if (pcm.getCodTipoPenaDetentiva().equals("04")) {
+			if (pcm.getNumAnniIsolamentoDiurno() != null) {
 %>
 			<font class="label">Anni</font>
-			<font class="campo"><%=StringUtils.toStringJSP(lPenCompMod.getNumAnniIsolamentoDiurno(),"0")%></font>
+			<font class="campo"><%=StringUtils.toStringJSP(pcm.getNumAnniIsolamentoDiurno(),"0")%></font>
 <%
 			}
-			if (lPenCompMod.getNumMesiIsolamentoDiurno() != null) {
+			if (pcm.getNumMesiIsolamentoDiurno() != null) {
 %>
 			<font class="label">Mesi</font>
-			<font class="campo"> <%=StringUtils.toStringJSP(lPenCompMod.getNumMesiIsolamentoDiurno(),"0")%></font>
+			<font class="campo"> <%=StringUtils.toStringJSP(pcm.getNumMesiIsolamentoDiurno(),"0")%></font>
 <%
 			}
-			if (lPenCompMod.getNumGiorniIsolamentoDiurno() != null) {
+			if (pcm.getNumGiorniIsolamentoDiurno() != null) {
 %>
 			<font class="label">Giorni</font>
-			<font class="campo"> <%=StringUtils.toStringJSP(lPenCompMod.getNumGiorniIsolamentoDiurno(),"0")%></font>
+			<font class="campo"> <%=StringUtils.toStringJSP(pcm.getNumGiorniIsolamentoDiurno(),"0")%></font>
 <%
 			}
 		}
@@ -498,15 +596,15 @@ if (penaresidua != null && penaresidua.getFlagSanzioneSostitutiva() != null && "
 	<tr>
 		<td class="l" width="20%">Data Emissione</td>
         <td class="L">
-			<input title = "Giorno Data Emissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title = "Mese Data Emissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title = "Anno Data Emissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Giorno Data Emissione" value="<%=DateUtils.getDateToString(dataEmissione, "dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Emissione" value="<%=DateUtils.getDateToString(dataEmissione, "MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Emissione" value="<%=DateUtils.getDateToString(dataEmissione, "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
         <td class="l">Data Trasmissione</td>
         <td class="L">
-			<input title = "Giorno Data Trasmissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title = "Mese Data Trasmissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
-			<input title = "Anno Data Trasmissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input title="Giorno Data Trasmissione" value="<%=DateUtils.getDateToString(dataTrasmissione, "dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Trasmissione" value="<%=DateUtils.getDateToString(dataTrasmissione, "MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Trasmissione" value="<%=DateUtils.getDateToString(dataTrasmissione, "yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
 	</tr>
    	<tr>
@@ -567,7 +665,7 @@ dove: Forze di polizia per notifica condannato --> select * from cg_ref_codes t 
 --%>
 <%
 List<String> libero = Arrays.asList("07", "10", "16", "17", "46", "47", "89", "90"); 	// UDS + AVV + AD
-List<String> ciadpqc = Arrays.asList("02", "23", "70", "71", "72");						// UDS + AVV + AD + FP
+List<String> ciadpqc = Arrays.asList("02", "23", "70", "71", "72");						// UDS + AVV + AD + FPNC
 List<String> ccpqcrdad = Arrays.asList("01", "22", "55", "73");							// UDS + AVV + AD + ID
 List<String> ccacrdad = Arrays.asList("78", "79", "80", "81");							// UDS + AVV + AD
 List<String> ccacird = Arrays.asList("75", "76", "77");									// UDS + AVV + AD
@@ -585,30 +683,30 @@ int cont = 0;
 int numAvvocati = avvocati.size();
 Iterator iter = avvocati.iterator();
 while (iter.hasNext()) {
-	AvvocatoSiepModel lAvv = (AvvocatoSiepModel) iter.next();
+	AvvocatoSiepModel asm = (AvvocatoSiepModel) iter.next();
 %>
 	<tr>
 		<td class="l" width="20%">Per Avvocato</td>
 		<td class="L" colspan="3">
 			<input type="hidden" name="indexAvvocati" value="<%=cont%>">
 			<font class="campo">
-				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
+				<%=StringUtils.toStringJSP(asm.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(asm.getAvvocato().getNome())%>
 			</font>
 			&nbsp;Foro di&nbsp;
 			<font class="campo">
-				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>
+				<%=StringUtils.toStringJSP(asm.getAvvocato().getForo())%>
 			</font>
 			&nbsp;Difensore di&nbsp;
 			<font class="campo">
-				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%>
+				<%=StringUtils.toStringJSP(asm.getAvvocato().getDescrTipo())%>
 			</font>
-            <input type="HIDDEN" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">
+            <input type="HIDDEN" value="<%=StringUtils.toStringJSP(asm.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO%>">
 		</td>
 	</tr>
     <tr>
       	<td class="l">Autorita' Destinazione</td>
       	<td class="L" colspan="3">
-         	<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
+         	<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>_AVV_<%=asm.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
            		<%=tipoAutoritaC0%>
            	</select>
 		</td>
@@ -617,7 +715,7 @@ while (iter.hasNext()) {
 		<td class="l">Sede </td>
 		<td class="L">
             <input title="Sede Foro Avvocato" type="text" maxlength="35" size="35" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" 
-                   id="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
+                   id="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>_AVV_<%=asm.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>">
 <%
 	if (numAvvocati < 2) {
 %>
@@ -636,7 +734,7 @@ while (iter.hasNext()) {
 		</td>
 		<td class="l">Note</td>
 		<td class="L">
-			<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" cols="35" id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>"></textarea>
+			<textarea title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE%>" cols="35" id="<%=ICostantiNotifica.CAMPO_NOTE%>_AVV_<%=asm.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep()%>"></textarea>
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
@@ -704,7 +802,7 @@ while (iter.hasNext()) {
 	<tr>
       	<td class="l" width="20%">Istituto Detenzione <font class=ob>(*)</font></td>
 <%
-		if (ldm != null && ldm.getIstitutoDetenzione() != null) {
+		if (!"M".equals(modalita) && ldm != null && ldm.getIstitutoDetenzione() != null) {
 %>
 		<td class="l">
        		<input readonly Title="Istituto" name="Comune" id="descIstituto" value="<%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(ldm.getIstitutoDetenzione().getDescrComune())%>" size="60">
@@ -728,7 +826,7 @@ while (iter.hasNext()) {
 %>
 		<td class="l">Note</td>
       	<td class="L">
-        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_IST%>" cols="35" readonly="readonly"></textarea>
+        	<TEXTAREA title="Note" name="<%=ICostantiNotifica.CAMPO_NOTE_IST%>" id="<%=ICostantiNotifica.CAMPO_NOTE_IST%>" cols="35" readonly="readonly"></textarea>
       	</td>
    </tr>
 <%

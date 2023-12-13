@@ -14,6 +14,7 @@ import f3b.web.IWebConstants;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.util.SICOLookupRemote;
@@ -22,20 +23,20 @@ import siap.siep.altracausa.action.ICostantiAltraCausa;
 import siap.siep.autoritaesterna.action.ICostantiAutoritaEsterna;
 import siap.siep.autoritaesterna.model.AutoritaEsternaModel;
 import siap.siep.avvocato.action.ICostantiAvvocato;
-import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.luogodetenzione.action.ICostantiLuogoDetenzione;
 import siap.siep.misuraalternativa.action.ICostantiMisuraAlternativa;
 import siap.siep.notifica.action.ICostantiNotifica;
 import siap.siep.notifica.model.NotificaModel;
 
 /**
- * Classe Action per la trasmissione atti per l'esecuzione
+ * Classe Action per la modifica della trasmissione atti per l'esecuzione
  *
  * @author sgioggi
  * @since MEV_2023-33
  * @version 1.0
  */
-public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostantiSanzioneSostitutiva {
+public class ActModificaTrasmissioneAttiEsecuzione extends ActionSiap
+		implements ICostantiSanzioneSostitutiva {
 
 	// info per il log
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
@@ -45,55 +46,43 @@ public class ActTrasmissioneAttiEsecuzione extends ActionSiap implements ICostan
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
+		// recupero l'ID Evento dalla form
+		BigDecimal idEvento = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		// instanzio nuovo modello
 		EventoNotificaModel enm = new EventoNotificaModel();
-
-		// Tipo Evento = Richiesta (poiché in sostanza l'evento che si trasmette corrisponde ad una Richiesta
-		// di applicazione Sanzione Sostitutiva
-		enm.getEvento().setCodTipoEvento("02");
-		// Tipo Provvedimento = Trasmissione Atti
-		enm.getEvento().setCodTipoProvvedimento("31");
+		IEvento ie = SICOLookupRemote.getEventoRemote();
+		EventoModel em = ie.ExRicercaEventoByKey(idEvento);
+		enm.setEvento(em);
 
 		if (isRequestChecked("ritrasmissione"))
 			enm.getEvento().setCodMotivo("1313");
 		else
 			enm.getEvento().setCodMotivo("1312");
 
-		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		enm.getEvento().setFasSieIdFascicoloSiep(fsm.getIdFascicoloSiep());
-
 		Date dataEmissione = getRequestDateParameter(ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE,
 				ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE, ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE);
 		enm.getEvento().setDataEmissione(dataEmissione);
 
 		UfficioModel um = getUfficioUtenteConnesso();
-		enm.getEvento().setCodOperatoreInserimento(getCodUtenteConnesso());
+		enm.getEvento().setIdEvento(idEvento);
+		enm.getEvento().setCodOperatoreAggiornamento(getCodUtenteConnesso());
 		enm.getEvento().setCodLuogoEmittente(um.getCodComune());
 		enm.getEvento().setCodUfficioEmittente(um.getCodUfficio());
-		enm.getEvento().setDataInserimento(DateUtils.getSysDate());
-		enm.getEvento().setCodUfficioInserimento(um.getCodUfficio());
-		enm.getEvento().setAnnoProtocollo(new BigDecimal(DateUtils.getSysDate("yyyy")));
-		enm.getEvento().setCodEsito("-");
-		enm.getEvento().setCodLuogoDestinatario("-");
-		enm.getEvento().setCodUfficioDestinatario("-");
-		enm.getEvento().setCodTipoUfficioDestinatario("-");
-		enm.getEvento().setFlagStampaSiep("S");
-		enm.getEvento().setFlagVideoSiep("S");
+		enm.getEvento().setDataAggiornamento(DateUtils.getSysDate());
+		enm.getEvento().setCodUfficioAggiornamento(um.getCodUfficio());
 		enm.getEvento().setCodMagistrato(calcolaMagistrato());
-
+		// recupero le notifiche
 		enm.setNotifiche(getNotifiche());
-
-		IEvento ie = SICOLookupRemote.getEventoRemote();
-		EventoNotificaModel enmRet = ie.ExInserisciEventoNotifica(enm);
-
-		String page = IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
-				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioTrasmissioneAttiEsecuzione&"
-				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + enmRet.getEvento().getIdEvento();
+		// eseguo la modifica
+		ie.ExModificaEventoNotifiche(enm);
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: fine");
 
 		// pagina di ritorno
-		return page;
+		return IWebConstants.PG_MAIN + "?" + IWebConstants.ACTION_FIELD
+				+ "=siap.siep.sanzionesostitutiva.action.ActLoadDettaglioTrasmissioneAttiEsecuzione&"
+				+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + idEvento;
 	}
 
 	/**
