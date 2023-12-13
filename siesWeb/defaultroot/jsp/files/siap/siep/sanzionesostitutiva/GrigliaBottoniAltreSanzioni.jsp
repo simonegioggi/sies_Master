@@ -118,6 +118,11 @@ if (!fascicoloNotInSession.equals("S")) {
 			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.sanzionesostitutiva.action.ActGrigliaEsecuzionePeneSostitutiveBrevi">Esecuzione Pene Sostitutive Brevi</a>
     	</td>
   	</tr>
+  <tr>
+    <td width="48%" class="menulines" nowrap>
+      <a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.pagoPA.action.ActVerificaErroriPagopa">Cruscotto Errori su PagoPa Pene Pecuniarie</a>
+    </td>
+  </tr>  
 </table>
 </body>
 </html>

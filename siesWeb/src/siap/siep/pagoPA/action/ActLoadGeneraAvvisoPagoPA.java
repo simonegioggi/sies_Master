@@ -16,6 +16,7 @@ import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.GeneraAvvisoPagoPAUtil;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
@@ -45,7 +46,20 @@ public class ActLoadGeneraAvvisoPagoPA extends ActionSiap implements ICostantiPa
 
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
-
+		
+    if (!isRequestParameterNullEmptyObj("fromListaErrori")){
+      // Provengo dalla lista errori PagoPa. Devo verificare che il fascicolo caricato in sessione coincida con quello 
+      // dell'evento 
+      BigDecimal idFascicoloSiep = getRequestBigDecimalParameter("idFascicoloSiep");
+      // Carico il nuovo fascicolo in sessione
+      IFascicoloSiep lCtrlFasc = SIEPLookupRemote.getFascicoloSiepRemote();
+      FascicoloSiepModel lFascMod = lCtrlFasc.ExRicercaFascicoloByKey(idFascicoloSiep);
+  
+      setSessionAttribute("fascicolo", lFascMod);
+      setSessionAttribute("soggetto", lFascMod.getSoggetto());
+      setSessionAttribute("sentenza", lFascMod.getSentenza());    
+    }
+    
 		// info utente ufficio collegato
 		codUtente = getCodUtenteConnesso();
 		codUfficio = getCodUfficioUtenteConnesso();

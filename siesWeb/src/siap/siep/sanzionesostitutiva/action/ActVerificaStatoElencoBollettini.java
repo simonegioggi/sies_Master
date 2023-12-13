@@ -17,6 +17,7 @@ import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
@@ -42,6 +43,20 @@ public class ActVerificaStatoElencoBollettini extends ActionSiap implements ICos
 		// info per il log
 		siesLogger.debug(getClass().getName() + ".processRequest: inizio");
 
+		if (!isRequestParameterNullEmptyObj("fromListaErrori")){
+		  // Provengo dalla lista errori PagoPa. Dve verificare che il fascicolo caricato in sessione coincida con quello 
+		  // dell'evento 
+		  BigDecimal idFascicoloSiep = getRequestBigDecimalParameter("idFascicoloSiep");
+      // Carico il nuovo fascicolo in sessione
+      IFascicoloSiep lCtrlFasc = SIEPLookupRemote.getFascicoloSiepRemote();
+      FascicoloSiepModel lFascMod = lCtrlFasc.ExRicercaFascicoloByKey(idFascicoloSiep);
+  
+      setSessionAttribute("fascicolo", lFascMod);
+      setSessionAttribute("soggetto", lFascMod.getSoggetto());
+      setSessionAttribute("sentenza", lFascMod.getSentenza());    
+		}
+		
+		
 		FascicoloSiepModel fsm = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 		BigDecimal idFascicolo = fsm.getIdFascicoloSiep();
 		siesLogger.debug("ID_FASCICOLO = " + idFascicolo);

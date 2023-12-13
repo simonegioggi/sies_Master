@@ -35,6 +35,8 @@ import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.model.BollettinoPagopaModel;
+import siap.siep.pagoPA.model.ErroriSiesPagopaModel;
+import siap.siep.pagoPA.util.RegistraErrorePagopaUtil;
 import siap.siep.util.SIEPLookupRemote;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 
@@ -182,6 +184,26 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 				siesLogger.error(ioe.getMessage());
+				
+				// Si aggiunge la tracciatura dell'errore
+		    {
+		      RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+		      ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+		      errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+		      errModel.setIdEvento (idEvento);
+		      //errModel.setAzioneContestoJava (getClass().getName());
+		      errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");
+		      errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
+		      errModel.setCodUtente (getCodUtenteConnesso());
+		      errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+		      errModel.setErroreEsecuzione (ioe.getMessage());
+		      errModel.setDataInserimento (DateUtils.getSysDate());
+		      
+		      //regErrUtil.registraErrore(fsm.getIdFascicoloSiep(), idEvento, getUtenteConnesso());
+		      regErrUtil.registraErrore(errModel);
+		    }				
+			  // Si aggiunge la tracciatura dell'errore
+				
 				if (Utils.isPresent(ioe.getMessage()) && ioe.getMessage().contains("UnknownHostException")) {
 					// pagina di ritorno
 					RedirectTo rt = new RedirectTo();
@@ -198,6 +220,24 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			} catch (Exception e) {
 				e.printStackTrace();
 				siesLogger.error(e.getMessage());
+        // Si aggiunge la tracciatura dell'errore
+        {
+          RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+          ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+          errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+          errModel.setIdEvento (idEvento);
+          // errModel.setAzioneContestoJava (getClass().getName());
+          errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");          
+          errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
+          errModel.setCodUtente (getCodUtenteConnesso());
+          errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+          errModel.setErroreEsecuzione (e.getMessage());
+          errModel.setDataInserimento (DateUtils.getSysDate());
+          
+          //regErrUtil.registraErrore(fsm.getIdFascicoloSiep(), idEvento, getUtenteConnesso());
+          regErrUtil.registraErrore(errModel);
+        }       
+        // Si aggiunge la tracciatura dell'errore				
 				throw new F3BException(getClass().getName() + ".processRequest: " + e);
 			}
 			// info per il log
@@ -219,6 +259,18 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			if (soloPrimaRata)
 				break;
 		}
+		
+    {
+      // Se presente rimuovo l'eventuale errore
+      siesLogger.debug("Se presente rimuovo l'eventuale errore");
+      RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+      ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+      errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+      errModel.setIdEvento (idEvento);
+      errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA"); 
+
+      regErrUtil.rimuoviErrore(errModel);
+    } 
 		setRequestAttribute("idFascicolo", idFascicolo.toString());
 
 		// aggiorna l'evento interessato

@@ -62,6 +62,7 @@ import siap.siep.ordineesecuzione.controller.IOrdineEsecuzioneAlfano;
 import siap.siep.ordinescarcerazione.controller.IOrdineScarcerazione;
 import siap.siep.pagoPA.controller.IBollettinoPagopa;
 import siap.siep.pagoPA.controller.ICivilmenteObbligato;
+import siap.siep.pagoPA.controller.IErroriSiesPagopa;
 import siap.siep.pagoPaBatch.controller.IBatchPagopa;
 import siap.siep.pagoPaBatch.controller.IInvocazionePagopa;
 import siap.siep.parametro.controller.IParametro;
@@ -1065,4 +1066,14 @@ public class SIEPLookupRemote extends LookupClass {
 
        return lRemote;
    }
+   
+   public static IErroriSiesPagopa getErroriSiesPagopaRemote() throws F3BException {
+     Object lRef;
+     IErroriSiesPagopa lRemote;
+
+     lRef = lookup("siap.siep.pagoPA.controller.ErroriSiesPagopaController");
+     lRemote = (IErroriSiesPagopa) lRef;
+
+     return lRemote;
+ }   
 }
