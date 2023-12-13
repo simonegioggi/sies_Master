@@ -24,8 +24,7 @@ import siap.sige.richiesta.model.RichiestaSigeModel;
 import siap.sige.udienzaprocedimento.model.UdienzaProcedimentoSigeModel;
 
 /**
- * Title: FascicoloSigeSqlDAO 
- * Description: Classe SqlDAO che rappresenta la tabella FascicoloSige
+ * Classe SqlDAO che rappresenta la tabella FascicoloSige
  *
  * @version 1.0
  */
@@ -101,7 +100,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 				+ "E.COGNOME||' '||E.NOME NOM_MAG, STATO_FASCICOLO.RV_MEANING DESCR_STATO_FASCICOLO, "
 				+ "NVL (SEZIONE.DESCRIZIONE,'-') DESCRIZIONE_SEZIONE, "
 				+ "F.ID_FASCICOLO_SIGE_ORIGINE, " + "SEN_ID_SENTENZA_CUMULO, ID_EVENTO_PROVV_CUMULO ";
-		lStatement += "FROM FASCICOLO_SIGE F, SOGGETTO S, RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, "
+		lStatement += " FROM FASCICOLO_SIGE F, SOGGETTO S, RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, "
 				+ "COMUNE C, MAGISTRATO_ASSEGNATARIO D, MAGISTRATO E, CG_REF_CODES STATO_FASCICOLO, SEZIONE";
 		// MEV_57: aggiunta vista ed alias "S."
 		if (StringUtils.checkValidValue(majorOffice))
@@ -133,24 +132,23 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		// [SG] 20190312: aggiunta distinct
 		lStatement += "SELECT distinct ID_FASCICOLO_SIGE, "
 				+ "SOG_ID_SOGGETTO, CHIAVE_ANNO, CHIAVE_UFFICIO, CHIAVE_PROGR, SEZ_ID_SEZIONE, "
-				+ "COD_STATO_FASCICOLO, "
-				+ "COD_TIPO_GIUDIZIO, DATA_ISCRIZIONE, DATA_DEFINIZIONE, RIC_ID_RICHIESTA_SIGE, "
-				+ "F.COD_OPERATORE_INSERIMENTO, F.COD_UFFICIO_INSERIMENTO, F.DATA_INSERIMENTO, "
-				+ "F.COD_OPERATORE_AGGIORNAMENTO, F.COD_UFFICIO_AGGIORNAMENTO, F.DATA_AGGIORNAMENTO, F.NOTE, "
-				+ "F.COD_POSIZIONE_GIURIDICA, F.DATA_FINE_PENA, "
-				+ "F.COD_TIPO_DEFINIZIONE, F.DESCR_DEFINIZIONE, "
-				+ "F.FAS_SIG_ID_FASCICOLO_SIGE, F.NUMERO_FASCICOLI_UNIFICATI, "
-				+ "NOME, COGNOME, DATA_NASCITA, " + "R.COD_TIPO_ATTO, TRS.RV_MEANING DESCR_TIPO_ATTO, "
-				+ "U.COD_TIPO_UFFICIO DESCR_TIPO_UFFICIO, C.DESCRIZIONE DESCR_COMUNE_UFFICIO, "
-				+ "F.ID_FASCICOLO_SIGE_ORIGINE, " + "SEN_ID_SENTENZA_CUMULO, ID_EVENTO_PROVV_CUMULO ";
-		lStatement += " FROM FASCICOLO_SIGE F, SOGGETTO S, RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U,"
-				+ " COMUNE C ";
+				+ "COD_STATO_FASCICOLO, COD_TIPO_GIUDIZIO, DATA_ISCRIZIONE, DATA_DEFINIZIONE, "
+				+ "RIC_ID_RICHIESTA_SIGE, F.COD_OPERATORE_INSERIMENTO, F.COD_UFFICIO_INSERIMENTO, "
+				+ "F.DATA_INSERIMENTO, F.COD_OPERATORE_AGGIORNAMENTO, F.COD_UFFICIO_AGGIORNAMENTO, "
+				+ "F.DATA_AGGIORNAMENTO, F.NOTE, F.COD_POSIZIONE_GIURIDICA, F.DATA_FINE_PENA, "
+				+ "F.COD_TIPO_DEFINIZIONE, F.DESCR_DEFINIZIONE, F.FAS_SIG_ID_FASCICOLO_SIGE, "
+				+ "F.NUMERO_FASCICOLI_UNIFICATI, NOME, COGNOME, DATA_NASCITA, R.COD_TIPO_ATTO, "
+				+ "TRS.RV_MEANING DESCR_TIPO_ATTO, U.COD_TIPO_UFFICIO DESCR_TIPO_UFFICIO, C.DESCRIZIONE "
+				+ "DESCR_COMUNE_UFFICIO, F.ID_FASCICOLO_SIGE_ORIGINE, SEN_ID_SENTENZA_CUMULO, "
+				+ "ID_EVENTO_PROVV_CUMULO ";
+		lStatement += "FROM FASCICOLO_SIGE F, SOGGETTO S, RICHIESTA_SIGE R, CG_REF_CODES TRS, UFFICIO U, "
+				+ "COMUNE C";
 		if (aRicercaFascModel.getCodMagistrato() != null && (aRicercaFascModel.getCodMagistrato().length() > 1
 				|| aRicercaFascModel.getCodMagistrato() == "9"))
-			lStatement += " ,MAGISTRATO_ASSEGNATARIO MA";
+			lStatement += ", MAGISTRATO_ASSEGNATARIO MA";
 		if (aRicercaFascModel.getCodOggettoSige() != null
 				&& aRicercaFascModel.getCodOggettoSige().length() > 1)
-			lStatement += " , TENORE_SIGE TS ";
+			lStatement += ", TENORE_SIGE TS";
 		lStatement += " WHERE SOG_ID_SOGGETTO = ID_SOGGETTO ";
 		if (aRicercaFascModel.getCodMagistrato() != null && (aRicercaFascModel.getCodMagistrato().length() > 1
 				|| aRicercaFascModel.getCodMagistrato() == "9")) {
@@ -159,7 +157,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		}
 		if (aRicercaFascModel.getCodMagistrato() != null && aRicercaFascModel.getCodMagistrato() == "0")
 			lStatement += " AND id_fascicolo_sige not in (select ma.fas_sige_id_fascicolo_sige from "
-					+ "magistrato_assegnatario ma where ma.data_fine IS NULL)";
+					+ "magistrato_assegnatario ma where ma.data_fine IS NULL )";
 		if (aRicercaFascModel.getCodOggettoSige() != null
 				&& aRicercaFascModel.getCodOggettoSige().length() > 1) {
 			lStatement += " AND TS.FAS_ID_FASCICOLO_SIGE = ID_FASCICOLO_SIGE ";
@@ -253,7 +251,7 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 		}
 		if (aRicercaFascModel.getCodMagistrato() != null && aRicercaFascModel.getCodMagistrato() == "0")
 			lStatement += " AND id_fascicolo_sige not in (select ma.fas_sige_id_fascicolo_sige from "
-					+ "magistrato_assegnatario ma where ma.data_fine IS NULL)";
+					+ "magistrato_assegnatario ma where ma.data_fine IS NULL )";
 
 		// if (aRicercaFascModel.getCodOggettoSige() != null
 		// && aRicercaFascModel.getCodOggettoSige().length() > 1) {
@@ -628,6 +626,11 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 
 		if (findColumn("ETA_PRESUNTA_MESI"))
 			sogModel.setEtaPresuntaMesi(getBigDecimal("ETA_PRESUNTA_MESI"));
+
+		// Ticket#202311060117 - Ricerca soggetti per procedimento Sige: ottimizzazione query
+		// aggiunta set di variabile; la count viene eseguita nella query di paginazione
+		if (findColumn("TOT"))
+			fasModel.setCountRisultati(getBigDecimal("TOT"));
 
 		fasEstesoModel.setFascicoloSige(fasModel);
 		fasEstesoModel.setSoggetto(sogModel);
@@ -1072,6 +1075,9 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 			String lCodDistretto, String majorOffice) {
 		String strQuery = "";
 
+		// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+		strQuery += "select a.*, count(*) over() tot from (";
+
 		// Costruzione della query parametrizzata
 		strQuery += getFascicoliBySoggettoSqlQuery(aModel, strCodUfficioUtenteConnesso, lCodDistretto,
 				majorOffice);
@@ -1088,6 +1094,9 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 
 		strQuery += setGroupSoggetto();
 		strQuery += setOrderCognome();
+
+		// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+		strQuery += ") a";
 
 		setStatement(strQuery);
 	}
@@ -1504,15 +1513,15 @@ public class FascicoloSigeSqlDAO extends SIAPSqlDAO {
 
 	private String setGroupByPerEstesa() {
 		String lGroup = new String();
-		lGroup += " group by " + " F.ID_FASCICOLO_SIGE, SOG_ID_SOGGETTO, CHIAVE_ANNO, CHIAVE_UFFICIO, "
-				+ " CHIAVE_PROGR, SEZ_ID_SEZIONE, COD_STATO_FASCICOLO, COD_TIPO_GIUDIZIO, "
-				+ " DATA_ISCRIZIONE, DATA_DEFINIZIONE, RIC_ID_RICHIESTA_SIGE, F.COD_OPERATORE_INSERIMENTO, "
-				+ " F.COD_UFFICIO_INSERIMENTO, F.DATA_INSERIMENTO, F.COD_OPERATORE_AGGIORNAMENTO, "
-				+ " F.COD_UFFICIO_AGGIORNAMENTO, F.DATA_AGGIORNAMENTO, F.NOTE, F.COD_POSIZIONE_GIURIDICA, "
-				+ " F.DATA_FINE_PENA, F.COD_TIPO_DEFINIZIONE, F.DESCR_DEFINIZIONE, F.FAS_SIG_ID_FASCICOLO_SIGE, "
-				+ " F.NUMERO_FASCICOLI_UNIFICATI, S.NOME, S.COGNOME, DATA_NASCITA, R.COD_TIPO_ATTO, "
-				+ " TRS.RV_MEANING, U.COD_TIPO_UFFICIO, C.DESCRIZIONE, E.COGNOME || ' ' || E.NOME, "
-				+ " STATO_FASCICOLO.RV_MEANING, NVL(SEZIONE.DESCRIZIONE, '-'), ID_FASCICOLO_SIGE_ORIGINE, "
+		lGroup += " group by F.ID_FASCICOLO_SIGE, SOG_ID_SOGGETTO, CHIAVE_ANNO, CHIAVE_UFFICIO, "
+				+ "CHIAVE_PROGR, SEZ_ID_SEZIONE, COD_STATO_FASCICOLO, COD_TIPO_GIUDIZIO, "
+				+ "DATA_ISCRIZIONE, DATA_DEFINIZIONE, RIC_ID_RICHIESTA_SIGE, F.COD_OPERATORE_INSERIMENTO, "
+				+ "F.COD_UFFICIO_INSERIMENTO, F.DATA_INSERIMENTO, F.COD_OPERATORE_AGGIORNAMENTO, "
+				+ "F.COD_UFFICIO_AGGIORNAMENTO, F.DATA_AGGIORNAMENTO, F.NOTE, F.COD_POSIZIONE_GIURIDICA, "
+				+ "F.DATA_FINE_PENA, F.COD_TIPO_DEFINIZIONE, F.DESCR_DEFINIZIONE, F.FAS_SIG_ID_FASCICOLO_SIGE, "
+				+ "F.NUMERO_FASCICOLI_UNIFICATI, S.NOME, S.COGNOME, DATA_NASCITA, R.COD_TIPO_ATTO, "
+				+ "TRS.RV_MEANING, U.COD_TIPO_UFFICIO, C.DESCRIZIONE, E.COGNOME || ' ' || E.NOME, "
+				+ "STATO_FASCICOLO.RV_MEANING, NVL(SEZIONE.DESCRIZIONE, '-'), ID_FASCICOLO_SIGE_ORIGINE, "
 				+ "SEN_ID_SENTENZA_CUMULO, ID_EVENTO_PROVV_CUMULO";
 		return lGroup;
 	}
