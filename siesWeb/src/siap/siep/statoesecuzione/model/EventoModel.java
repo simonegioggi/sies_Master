@@ -8,6 +8,7 @@ import f3b.model.GenericModel;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.siep.fungibilita.model.FungibilitaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
 /**
  * Model per lo Stato Esecuzione
@@ -66,6 +67,8 @@ public class EventoModel extends GenericModel {
 
 	private FungibilitaModel mFungibilita = null;
 
+	private Vector<RateizzazionePPModel> mListaRateizzazioni = null;
+	
 	/**
 	 * Attributo da utilizzare solo nel caso in cui si tratti di un'ordinanza/decreto SIUS senza alcun
 	 * provveidmento SIEP associato
@@ -301,7 +304,7 @@ public class EventoModel extends GenericModel {
 	public String getStringaRevocaDal() {
 		return mStringaRevocaDal;
 	}
-
+	
 	// Oggetti
 	public EventoSorveglianzaModel getEventoSorveglianza() {
 		return mEventoSorveglianzaModel;
@@ -331,6 +334,11 @@ public class EventoModel extends GenericModel {
 		return mDettagliLibAnticipate;
 	}
 
+  // MEV_2023-33
+	public Vector<RateizzazionePPModel> getListaRateizzazioni() {
+    return mListaRateizzazioni;
+  }
+	
 	public FungibilitaModel getFungibilita() {
 		return mFungibilita;
 	}
@@ -463,6 +471,11 @@ public class EventoModel extends GenericModel {
 		mDettagliLibAnticipate = aListaDettagli;
 	}
 
+	// MEV_2023-33
+	public void setListaRateizzazioni (Vector <RateizzazionePPModel> aListaRate) {
+	   mListaRateizzazioni = aListaRate;
+	}
+	
 	public void setFungibilita(FungibilitaModel aFungibilita) {
 		mFungibilita = aFungibilita;
 	}

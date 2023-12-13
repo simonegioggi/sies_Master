@@ -1,10 +1,12 @@
 package siap.siep.statoesecuzione.controller;
 
 import java.math.BigDecimal;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.statoesecuzione.model.EventoModel;
 import siap.siep.statoesecuzione.model.EventoSorveglianzaModel;
 import f3b.log.LogF3B;
@@ -148,7 +150,11 @@ public class StatoEsecuzioneProvv extends StatoEsecuzioneElement
 			if(lSorveglianza && lEvento.getCodMotivo().equals("0000"))
 				lEvento.setDescrTipoProvvedimento(lEvento.getDescrTipoProvvedimento() + " Provvedimento Indeterminato");
 
-
+			// MEV_2023-33
+			if (mHashRateizzazioni.containsKey(aEvento.getIdEvento())) {
+			  lEvento.setListaRateizzazioni( (Vector <RateizzazionePPModel>) mHashRateizzazioni.get(aEvento.getIdEvento()));
+			}
+		  // MEV_2023-33
 
 			this.mEventoStatoEsecuzione = lEvento;
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
