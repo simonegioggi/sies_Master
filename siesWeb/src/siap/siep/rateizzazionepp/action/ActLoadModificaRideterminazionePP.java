@@ -180,14 +180,14 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 
 		// carico il tipo provvedimento
 		Option tipoProvvedimenti = new Option(DecodificheManager.getInstance().getTipoProvvedimenti());
-		tipoProvvedimenti.setFilter(new String[] { "-", "02", "03" }); // DECRETO o ORDINANZA
+		tipoProvvedimenti.setFilter(new String[] { "-", "02", "03", "13" }); // DECRETO o ORDINANZA o CUMULO
 		tipoProvvedimenti.setSelected(amm.getCodTipoAnnotazione());
 		setRequestAttribute("tipoprovvedimento", "" + tipoProvvedimenti);
 
 		// carico AUTORITA' EMITTENTE
 		Option tipoUfficio = new Option(DecodificheManager.getInstance().getTipoUfficio());
 		tipoUfficio.setFilter(new String[] { "CAP", "DIB", "GUP", "GIP", "CAS", "CASAP", "TRIBSD", "GUPM",
-				"CAPSM", "DIBM", "GIPM", "GP" });
+				"CAPSM", "DIBM", "GIPM", "GP", "PM", "PMM", "PGCAP" });
 		tipoUfficio.setSelected(amm.getCodTipoUfficioSiep());
 		setRequestAttribute("autorita", "" + tipoUfficio);
 
