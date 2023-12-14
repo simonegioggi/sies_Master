@@ -1,5 +1,7 @@
 package siap.siep.pagoPA.action;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -10,6 +12,7 @@ import org.apache.log4j.Logger;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.F3BException;
+import f3b.util.F3BProperties;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
@@ -17,6 +20,8 @@ import it.giustizia.www.serviziTelematici.serviziGenerici.AnagraficaSoggetto;
 import it.giustizia.www.serviziTelematici.serviziGenerici.DatiVersamento;
 import it.giustizia.www.serviziTelematici.serviziGenerici.EsitoGeneraAvviso;
 import it.giustizia.www.serviziTelematici.serviziGenerici.RichiestaPagamentoTelematico;
+import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziInvioPagamentiTelematici;
+import it.giustizia.www.serviziTelematici.serviziGenerici.ServiziInvioPagamentiTelematiciBeanServiceLocator;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.security.action.ICostantiSecurity;
@@ -105,13 +110,12 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// System.setProperty("javax.net.ssl.keyStorePassword", "siescoll2014");
 		// System.setProperty("javax.net.debug", "ssl");
 		// inizio chiamata al servizio PST - EndpointAddressPagoPA_ServiziInvioPagamentiTelematici
-		// String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
-		// ServiziInvioPagamentiTelematiciBeanServiceLocator service = new
-		// ServiziInvioPagamentiTelematiciBeanServiceLocator();
-		// service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
-		// ServiziInvioPagamentiTelematici port = service.getServiziInvioPagamentiTelematiciSOAPPort();
+		String endpointAddress = F3BProperties.getProperty("EAPPA_SIPT");
+		ServiziInvioPagamentiTelematiciBeanServiceLocator service = new ServiziInvioPagamentiTelematiciBeanServiceLocator();
+		service.setServiziInvioPagamentiTelematiciSOAPPortEndpointAddress(endpointAddress);
+		ServiziInvioPagamentiTelematici port = service.getServiziInvioPagamentiTelematiciSOAPPort();
 		// info per il log
-		// siesLogger.debug("Chiamo generaAvviso(RichiestaPagamentoTelematico) su " + endpointAddress);
+		siesLogger.debug("Chiamo generaAvviso(RichiestaPagamentoTelematico) su " + endpointAddress);
 		// INVOCO WS: impostazioni per il certificato
 		// CONFIG = /var/SIES/CONFIG (pathProp)
 		// String pathProp = System.getProperty("path.properties");
@@ -176,78 +180,76 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			EsitoGeneraAvviso ega = null;
 			try {
 				siesLogger.debug(rpt);
-				ega = /* port.generaAvviso(rpt) */new EsitoGeneraAvviso();
-				ega.setNumeroAvviso(generaNumeroAvviso());
-				// } catch (IOException ioe) {
-				// ioe.printStackTrace();
-				// siesLogger.error(ioe.getMessage());
-				//
-				// // Si aggiunge la tracciatura dell'errore
-				// {
-				// RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
-				// ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
-				// errModel.setIdFascicoloSiep(fsm.getIdFascicoloSiep());
-				// errModel.setIdEvento(idEvento);
-				// // errModel.setAzioneContestoJava (getClass().getName());
-				// errModel.setAzioneContestoJava("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");
-				// errModel.setDescrizioneFunzione(ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
-				// errModel.setCodUtente(getCodUtenteConnesso());
-				// errModel.setCodUfficio(getCodUfficioUtenteConnesso());
-				// errModel.setErroreEsecuzione(ioe.getMessage());
-				// errModel.setDataInserimento(DateUtils.getSysDate());
-				//
-				// // regErrUtil.registraErrore(fsm.getIdFascicoloSiep(), idEvento, getUtenteConnesso());
-				// regErrUtil.registraErrore(errModel);
-				// }
-				// // Si aggiunge la tracciatura dell'errore
-				//
-				// if (Utils.isPresent(ioe.getMessage()) && ioe.getMessage().contains("UnknownHostException"))
-				// {
-				// // pagina di ritorno
-				// RedirectTo rt = new RedirectTo();
-				// rt.setPage(IWebConstants.PG_MAIN);
-				// int index = ioe.getMessage().lastIndexOf(": ");
-				// setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Collegamento col servizio: "
-				// + ioe.getMessage().substring(index + 1) + " non disponibile.");
-				// rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA");
-				// setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-				// // return rt.toString();
-				// return IWebConstants.PG_MESSAGE;
-				// }
-				// throw new F3BException(getClass().getName() + ".processRequest: " + ioe);
+				ega = port.generaAvviso(rpt);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				siesLogger.error(ioe.getMessage());
+				
+				// Si aggiunge la tracciatura dell'errore
+		    {
+		      RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+		      ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+		      errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+		      errModel.setIdEvento (idEvento);
+		      //errModel.setAzioneContestoJava (getClass().getName());
+		      errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");
+		      errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
+		      errModel.setCodUtente (getCodUtenteConnesso());
+		      errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+		      errModel.setErroreEsecuzione (ioe.getMessage());
+		      errModel.setDataInserimento (DateUtils.getSysDate());
+		      
+		      //regErrUtil.registraErrore(fsm.getIdFascicoloSiep(), idEvento, getUtenteConnesso());
+		      regErrUtil.registraErrore(errModel);
+		    }				
+			  // Si aggiunge la tracciatura dell'errore
+				
+				if (Utils.isPresent(ioe.getMessage()) && ioe.getMessage().contains("UnknownHostException")) {
+					// pagina di ritorno
+					RedirectTo rt = new RedirectTo();
+					rt.setPage(IWebConstants.PG_MAIN);
+					int index = ioe.getMessage().lastIndexOf(": ");
+					setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Attenzione! Collegamento col servizio: "
+							+ ioe.getMessage().substring(index + 1) + " non disponibile.");
+					rt.setAction("siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA");
+					setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+					// return rt.toString();
+					return IWebConstants.PG_MESSAGE;
+				}
+				throw new F3BException(getClass().getName() + ".processRequest: " + ioe);
 			} catch (Exception e) {
 				e.printStackTrace();
 				siesLogger.error(e.getMessage());
-				// Si aggiunge la tracciatura dell'errore
-				{
-					RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
-					ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
-					errModel.setIdFascicoloSiep(fsm.getIdFascicoloSiep());
-					errModel.setIdEvento(idEvento);
-					// errModel.setAzioneContestoJava (getClass().getName());
-					errModel.setAzioneContestoJava("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");
-					errModel.setDescrizioneFunzione(ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
-					errModel.setCodUtente(getCodUtenteConnesso());
-					errModel.setCodUfficio(getCodUfficioUtenteConnesso());
-					errModel.setErroreEsecuzione(e.getMessage());
-					errModel.setDataInserimento(DateUtils.getSysDate());
-
-					// regErrUtil.registraErrore(fsm.getIdFascicoloSiep(), idEvento, getUtenteConnesso());
-					regErrUtil.registraErrore(errModel);
-				}
-				// Si aggiunge la tracciatura dell'errore
+        // Si aggiunge la tracciatura dell'errore
+        {
+          RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+          ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+          errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+          errModel.setIdEvento (idEvento);
+          // errModel.setAzioneContestoJava (getClass().getName());
+          errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");          
+          errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
+          errModel.setCodUtente (getCodUtenteConnesso());
+          errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+          errModel.setErroreEsecuzione (e.getMessage());
+          errModel.setDataInserimento (DateUtils.getSysDate());
+          
+          //regErrUtil.registraErrore(fsm.getIdFascicoloSiep(), idEvento, getUtenteConnesso());
+          regErrUtil.registraErrore(errModel);
+        }       
+        // Si aggiunge la tracciatura dell'errore				
 				throw new F3BException(getClass().getName() + ".processRequest: " + e);
 			}
 			// info per il log
 			siesLogger.debug("EsitoGeneraAvviso: " + ega.getNumeroAvviso() + " # " + ega.getBollettino());
 
 			// Caricamento BOLLETTINO (Campo BLOB) nel Model
-			// ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
+			ByteArrayInputStream bais = new ByteArrayInputStream(ega.getBollettino());
 			// Salvare il bollettino sulla tabella BOLLETTINO_PAGOPA
 			bpm.setCodUfficioAggiornamento(utm.getUfficioUtente().getCodUfficio());
 			bpm.setCodOperatoreAggiornamento(utm.getUserId());
 			bpm.setDataAggiornamento(DateUtils.getSysDate());
-			bpm.setDocBollBlob(/* bais */null);
+			bpm.setDocBollBlob(bais);
 			bpm.setCodiceFiscale(sm.getCodFiscale());
 			bpm.setCodiceDistretto(rpt.getCodiceDistretto());
 			bpm.setDataGenerazioneBollettino(DateUtils.getSysDate());
@@ -257,18 +259,18 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 			if (soloPrimaRata)
 				break;
 		}
+		
+    {
+      // Se presente rimuovo l'eventuale errore
+      siesLogger.debug("Se presente rimuovo l'eventuale errore");
+      RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+      ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+      errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+      errModel.setIdEvento (idEvento);
+      errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA"); 
 
-		{
-			// Se presente rimuovo l'eventuale errore
-			siesLogger.debug("Se presente rimuovo l'eventuale errore");
-			RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
-			ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
-			errModel.setIdFascicoloSiep(fsm.getIdFascicoloSiep());
-			errModel.setIdEvento(idEvento);
-			errModel.setAzioneContestoJava("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");
-
-			regErrUtil.rimuoviErrore(errModel);
-		}
+      regErrUtil.rimuoviErrore(errModel);
+    } 
 		setRequestAttribute("idFascicolo", idFascicolo.toString());
 
 		// aggiorna l'evento interessato
@@ -350,17 +352,6 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
 		// return rt.toString();
 		return IWebConstants.PG_MESSAGE;
-	}
-
-	private String generaNumeroAvviso() {
-
-		// define the range
-		int max = 339999999;/* 330097291459582682 */
-		int min = 330000000;
-		int range = max - min + 1;
-		// generate random number within min to max
-		int rand = (int) (Math.random() * range) + min;
-		return "" + rand;
 	}
 
 }
