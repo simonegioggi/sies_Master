@@ -11,6 +11,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+
 <jsp:useBean id="elencoStatoPagamenti" 	scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
 <jsp:useBean id="TornaQui"    			scope="request" class="java.lang.String"/>
 <jsp:useBean id="evento"    			scope="request" class="siap.sico.evento.model.EventoModel"/>
@@ -45,9 +47,15 @@ function tornaIndietro(action) {
 			<font class="campo">Verifica Stato Pagamento Bollettini su PagoPA</font>
       	</td>
       	<td class="LBG">
-			<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
+          <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+          <a href="<%=IWebConstants.PG_MAIN%>?Action=siap.siep.pagoPA.action.ActVerificaErroriPagopa">
+              <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          </a>  
+          <% } else { %>
+			    <a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActGrigliaBollettiniPagoPA')">
           		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
         	</a>
+        	<% } %>
 		</td>
 	</tr>
 </table>

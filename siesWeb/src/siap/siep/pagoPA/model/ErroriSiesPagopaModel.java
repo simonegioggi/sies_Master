@@ -116,25 +116,25 @@ public class ErroriSiesPagopaModel extends GenericModel {
     String lStr = new String();
 
     lStr = "ErroriSiesPagopaModel: \n" ;
-    lStr = "[ mIdErroriSiesPagopa       = " + mIdErroriSiesPagopa + " ]\n";
-    lStr = "[ mIdFascicoloSiep          = " + mIdFascicoloSiep + " ]\n";
-    lStr = "[ mIdEvento                 = " + mIdEvento + " ]\n";
-    lStr = "[ mAzioneContestoJava       = " + mAzioneContestoJava + " ]\n";
-    lStr = "[ mDescrizioneFunzione      = " + mDescrizioneFunzione + " ]\n";
-    lStr = "[ mCodUtente                = " + mCodUtente + " ]\n";
-    lStr = "[ mCodUfficio               = " + mCodUfficio + " ]\n";
-    lStr = "[ mErroreEsecuzione         = " + mErroreEsecuzione + " ]\n";
-    lStr = "[ mDataInserimento          = " + mDataInserimento + " ]\n";
-    lStr = "[ mDataVisualizzazione      = " + mDataVisualizzazione + " ]\n";
-    lStr = "[ mCodUtenteVisualizzazione = " + mCodUtenteVisualizzazione + " ]\n";
+    lStr += "[ mIdErroriSiesPagopa       = " + mIdErroriSiesPagopa + " ]\n";
+    lStr += "[ mIdFascicoloSiep          = " + mIdFascicoloSiep + " ]\n";
+    lStr += "[ mIdEvento                 = " + mIdEvento + " ]\n";
+    lStr += "[ mAzioneContestoJava       = " + mAzioneContestoJava + " ]\n";
+    lStr += "[ mDescrizioneFunzione      = " + mDescrizioneFunzione + " ]\n";
+    lStr += "[ mCodUtente                = " + mCodUtente + " ]\n";
+    lStr += "[ mCodUfficio               = " + mCodUfficio + " ]\n";
+    lStr += "[ mErroreEsecuzione         = " + mErroreEsecuzione + " ]\n";
+    lStr += "[ mDataInserimento          = " + mDataInserimento + " ]\n";
+    lStr += "[ mDataVisualizzazione      = " + mDataVisualizzazione + " ]\n";
+    lStr += "[ mCodUtenteVisualizzazione = " + mCodUtenteVisualizzazione + " ]\n";
     // Campi aggiunti per esito ricerche
-    lStr = "[ mDataInserimentoAl        = " + mDataInserimentoAl + " ]\n";
-    lStr = "[ mChiaveAnno               = " + mChiaveAnno + " ]\n";
-    lStr = "[ mChiaveProgr              = " + mChiaveProgr + " ]\n";
-    lStr = "[ mCognome                  = " + mCognome + " ]\n";
-    lStr = "[ mNome                     = " + mNome + " ]\n";
-    lStr = "[ mDescMotivoEvento         = " + mDescMotivoEvento + " ]\n";
-    lStr = "[ mDataEmissione            = " + mDataEmissione + " ]";
+    lStr += "[ mDataInserimentoAl        = " + mDataInserimentoAl + " ]\n";
+    lStr += "[ mChiaveAnno               = " + mChiaveAnno + " ]\n";
+    lStr += "[ mChiaveProgr              = " + mChiaveProgr + " ]\n";
+    lStr += "[ mCognome                  = " + mCognome + " ]\n";
+    lStr += "[ mNome                     = " + mNome + " ]\n";
+    lStr += "[ mDescMotivoEvento         = " + mDescMotivoEvento + " ]\n";
+    lStr += "[ mDataEmissione            = " + mDataEmissione + " ]";
 
     return lStr;
   }

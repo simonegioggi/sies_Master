@@ -11,12 +11,16 @@
 <%@ page import="siap.siep.pagoPA.action.ICostantiPagoPA"%>
 <%@ page import="siap.siep.pagoPA.model.BollettinoPagopaModel"%>
 
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+
 <jsp:useBean id="elencoStatoPagamenti" 		scope="request" class="java.util.Vector<BollettinoPagopaModel>"/>
 <jsp:useBean id="evento"    				scope="request" class="siap.sico.evento.model.EventoModel"/>
 <%-- MEV_2023-33: aggiunti useBean --%>
 <jsp:useBean id="isRateale"					scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="isSoloPrimaRata"			scope="request" class="java.lang.Boolean"/>
 <jsp:useBean id="dataNotificaCondannato" 	scope="request" class="java.lang.String"/>
+
+
 
 <html>
 <head>
@@ -88,9 +92,15 @@ if (isRateale) {
 %>
     	</td>
     	<td class="LBG"><!-- Tasto indietro -->
-        	<a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA')">
-          		<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
-        	</a>
+    	    <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+          <a href="<%=IWebConstants.PG_MAIN%>?Action=siap.siep.pagoPA.action.ActVerificaErroriPagopa">
+              <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          </a> 
+        	<% } else { %>
+          <a href="javascript:tornaIndietro('siap.siep.sanzionesostitutiva.action.ActRichiestaBollettiniPagoPA')">
+              <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          </a>	
+        	<% } %>
 		</td>
 	</tr>
 </table>

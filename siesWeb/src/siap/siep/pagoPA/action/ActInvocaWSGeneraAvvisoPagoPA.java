@@ -192,7 +192,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		      errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
 		      errModel.setIdEvento (idEvento);
 		      //errModel.setAzioneContestoJava (getClass().getName());
-		      errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");
+		      errModel.setAzioneContestoJava (ICostantiErroriSiesPagopa.DESC_ACTION_RICHIESTA);
 		      errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
 		      errModel.setCodUtente (getCodUtenteConnesso());
 		      errModel.setCodUfficio (getCodUfficioUtenteConnesso());
@@ -227,7 +227,7 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
           errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
           errModel.setIdEvento (idEvento);
           // errModel.setAzioneContestoJava (getClass().getName());
-          errModel.setAzioneContestoJava ("siap.siep.pagoPA.action.ActLoadGeneraAvvisoPagoPA");          
+          errModel.setAzioneContestoJava (ICostantiErroriSiesPagopa.DESC_ACTION_RICHIESTA);
           errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_RICHIESTA);
           errModel.setCodUtente (getCodUtenteConnesso());
           errModel.setCodUfficio (getCodUfficioUtenteConnesso());
@@ -343,6 +343,18 @@ public class ActInvocaWSGeneraAvvisoPagoPA extends ActionSiap implements ICostan
 		// LogF3B.getLogger()
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 
+		if ("90".equals(utm.getUserProfile().getProfileId().toString())) {
+		  // Utente amministratore vado direttamente sulla maschera di dettaglio dell'evento
+	    RedirectTo rt = new RedirectTo();
+	    rt.setPage(IWebConstants.PG_MAIN);
+	    setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+	        "La Generazione dell'Avviso PagoPA è andata a buon fine!");
+	    rt.setAction("siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti&IdEvento="+idEvento);
+	    setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+	    // return rt.toString();
+	    return IWebConstants.PG_MESSAGE;		
+		}
+		
 		// pagina di ritorno
 		RedirectTo rt = new RedirectTo();
 		rt.setPage(IWebConstants.PG_MAIN);

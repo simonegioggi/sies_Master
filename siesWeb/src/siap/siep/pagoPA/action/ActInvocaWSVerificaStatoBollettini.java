@@ -117,8 +117,7 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 	          ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
 	          errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
 	          errModel.setIdEvento (getRequestBigDecimalParameter("IdEvento"));
-	          errModel.setAzioneContestoJava ("siap.siep.sanzionesostitutiva.action.ActVerificaStatoElencoBollettini"); 
-	          //errModel.setAzioneContestoJava (getClass().getName());
+	          errModel.setAzioneContestoJava (ICostantiErroriSiesPagopa.DESC_ACTION_VERIFICA); 
 	          errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_VERIFICA);
 	          errModel.setCodUtente (getCodUtenteConnesso());
 	          errModel.setCodUfficio (getCodUfficioUtenteConnesso());
@@ -146,6 +145,20 @@ public class ActInvocaWSVerificaStatoBollettini extends ActionSiap implements IC
 					}
 					throw new F3BException(getClass().getName() + ".processRequest: " + ioe);
 				} catch (Exception e) {
+          {
+            RegistraErrorePagopaUtil regErrUtil = new RegistraErrorePagopaUtil();
+            ErroriSiesPagopaModel errModel = new ErroriSiesPagopaModel();
+            errModel.setIdFascicoloSiep (fsm.getIdFascicoloSiep());
+            errModel.setIdEvento (getRequestBigDecimalParameter("IdEvento"));
+            errModel.setAzioneContestoJava (ICostantiErroriSiesPagopa.DESC_ACTION_VERIFICA); 
+            errModel.setDescrizioneFunzione (ICostantiErroriSiesPagopa.DESC_FUNZIONE_VERIFICA);
+            errModel.setCodUtente (getCodUtenteConnesso());
+            errModel.setCodUfficio (getCodUfficioUtenteConnesso());
+            errModel.setErroreEsecuzione (e.getMessage());
+            errModel.setDataInserimento (DateUtils.getSysDate());
+
+            regErrUtil.registraErrore(errModel);
+          } 
 					e.printStackTrace();
 					siesLogger.error(e.getMessage());
 					throw new F3BException(getClass().getName() + ".processRequest: " + e);

@@ -7,6 +7,7 @@
 
 
 <jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
+<jsp:useBean id="TipoEvento"     scope="request" class="java.lang.String" />
 
 <html>
 <head>
@@ -124,6 +125,14 @@
                  onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" >
         </td>
       </tr>
+      <tr>
+        <td class="label">Funzione in Errore &nbsp;</td>
+        <td class="label" colspan="3">      
+          <select Title="Tipo Evento" class1="small" name="<%=ICostantiErroriSiesPagopa.CAMPO_TIPO_EVENTO%>" >
+               <%=TipoEvento%> 
+          </select>
+        </td>
+      </tr>             
     </table>
 
     <br>

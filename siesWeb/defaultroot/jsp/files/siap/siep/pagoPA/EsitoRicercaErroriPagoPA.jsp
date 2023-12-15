@@ -14,7 +14,6 @@
 <jsp:useBean id="ListaErrori"          scope="request" class="java.util.Vector" />
 <jsp:useBean id="CriteriRicerca"       scope="request" class="siap.siep.pagoPA.model.ErroriSiesPagopaModel" />
 
-
 <html>
 <head>
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
@@ -24,9 +23,7 @@
   <script language="JavaScript" src="/html/ControllaData.js"></script>
   <script language="JavaScript">
   function Verify()
-  {
- 
-    
+  {    
     return true;
   }
   
@@ -54,6 +51,13 @@
       <tr>
         <td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
         <td class="LBG"><font class="label">Funzione :</font> <font class="campo">CRUSCOTTO ERRORI COLLEGAMENTI WEB SIES-PST</font>&nbsp;</td>
+        <% if ("90".equals(UtenteConnesso.getUserProfile().getProfileId().toString())) { %>
+        <td class="LBG">
+          <a href="<%= IWebConstants.PG_MAIN%>?Action=siap.siep.pagoPA.action.ActLoadVerificaErroriPagopa">
+              <img align="middle" src="<%=IWebConstants.IMAGES_DIR%>arrowleft24.gif" alt="ritorna su" width="24" height="24" border="0">
+          </a>
+        </td>  
+        <% } %>              
       </tr>
     </table>
 
@@ -69,7 +73,11 @@
         <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(CriteriRicerca.getDataInserimentoAl(),"dd-MM-yyyy"),"__-__-____")%></font></td>
       </tr>
       <tr>
-        <td class="L">Tipologia Utentu:</td>
+        <td class="L">Funzione in Errore:</td>
+        <td class="l"><font class="campo"><%=StringUtils.toStringJSP(CriteriRicerca.getDescrizioneFunzione())%></font></td>
+      </tr>
+      <tr>
+        <td class="L">Tipologia Utente:</td>
         <% if (CriteriRicerca.getCodUtente()!=null && CriteriRicerca.getCodUtente().length()>0 ) {%>
         <td class="l" colspan="3"><font class="campo"><%=StringUtils.toStringJSP(CriteriRicerca.getCodUtente())%></font></td>
         <% } else { %>
