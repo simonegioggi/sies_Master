@@ -87,6 +87,9 @@ public class EventoModel extends GenericModel {
 	private String mNotifica1;
 	private String mNotifica2;
 	private String mNotifica3;
+	// MEV_2023-33 Aggiornte altre 2 notificeh per i civilmente obbligati
+	private String mNotifica4;
+	private String mNotifica5;
 
 	private PenaResiduaModel mPenaResidua;
 	private MisuraAlternativaModel mMisuraAlternativa;
@@ -756,5 +759,19 @@ public class EventoModel extends GenericModel {
 	public void setNotifica3(String notifica3) {
 		mNotifica3 = notifica3;
 	}
-
+	
+	// MEV_2023-33
+	public String getNotifica4() {
+	  return mNotifica4;
+	}
+	public void setNotifica4(String notifica4) {
+	  mNotifica4 = notifica4;
+	}
+	public String getNotifica5() {
+	  return mNotifica5;
+	}
+	public void setNotifica5(String notifica5) {
+	  mNotifica5 = notifica5;
+	}
+	//MEV_2023-33
 }

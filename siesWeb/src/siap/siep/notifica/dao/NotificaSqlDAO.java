@@ -117,7 +117,9 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 				+ " N.AVV_ID_AVVOCATO_FASCICOLO_SIGE," + " N.SOLLECITO, N.CSS_ID_CSSA,"
 				+ " N.UFF_COD_UFFICIO," + " N.CUR_ID_CURATORE," +
 				// modifica relativa al tipo istituto
-				" N.IST_DET_ID_ISTITUTO_DETENZIONE," + " N.ID_PARTE_UDIENZA";
+				" N.IST_DET_ID_ISTITUTO_DETENZIONE," + " N.ID_PARTE_UDIENZA"
+				//MEV_2023-33
+				+ " , N.ID_CIVILMENTE_OBBLIGATO ";
 
 		return lStatement;
 	}
@@ -169,6 +171,8 @@ public class NotificaSqlDAO extends SIAPSqlDAO {
 		aModel.setCurIdCuratore(getBigDecimal("CUR_ID_CURATORE"));
 
 		aModel.setIdParteUdienza(getBigDecimal("ID_PARTE_UDIENZA"));
+		
+		aModel.setIdCivilmenteObbligato(getBigDecimal("ID_CIVILMENTE_OBBLIGATO"));
 
 		return aModel;
 	}

@@ -52,6 +52,9 @@ public class CreatorStatoEsecuzione {
 			lStatoEsec = new StatoEsecuzioneIndulto(lStatElement);
 		if (aTipoEvento.equals("RIDETERM"))
 			lStatoEsec = new StatoEsecuzioneRideterminazione(lStatElement);
+		// MEV_2023-33
+    if (aTipoEvento.equals("PENEPECUNIARIE"))
+      lStatoEsec = new StatoEsecuzionePP(lStatElement);
 
 		return lStatoEsec;
 	}
@@ -86,14 +89,18 @@ public class CreatorStatoEsecuzione {
 
 			if (lIntMotivo == 61 || lIntMotivo == 63 || lIntMotivo == 117 || lIntMotivo == 104)
 				return "SIMEONE";
-
+			
+			// MEV_2023-33
+	    if (lIntMotivo == 622 || lIntMotivo == 1307 || lIntMotivo == 1308 || lIntMotivo == 1309)
+	      return "PENEPECUNIARIE";
+			
 			if (isIndulto(lIntMotivo))
 				return "INDULTO";
 
 			if (aEvento.getCodTipoProvvedimento().equals("11")
 					|| aEvento.getCodTipoProvvedimento().equals("29")
 					|| aEvento.getCodTipoProvvedimento().equals("30")
-					|| (lIntMotivo > 319 && lIntMotivo < 353))
+ 				  || (lIntMotivo > 319 && lIntMotivo < 353))
 				return "RICH";
 
 			if (aEvento.getCodTipoProvvedimento().equals("16")
