@@ -12,7 +12,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
 /**
  * Model per lo Stato Esecuzione
- * 
+ *
  * @author Giselda De Vita
  *
  */
@@ -20,7 +20,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 public class EventoModel extends GenericModel {
 
 	/**
-	 * 
+	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -7646021410688812826L;
 
@@ -68,7 +68,7 @@ public class EventoModel extends GenericModel {
 	private FungibilitaModel mFungibilita = null;
 
 	private Vector<RateizzazionePPModel> mListaRateizzazioni = null;
-	
+
 	/**
 	 * Attributo da utilizzare solo nel caso in cui si tratti di un'ordinanza/decreto SIUS senza alcun
 	 * provveidmento SIEP associato
@@ -307,7 +307,7 @@ public class EventoModel extends GenericModel {
 	public String getStringaRevocaDal() {
 		return mStringaRevocaDal;
 	}
-	
+
 	// Oggetti
 	public EventoSorveglianzaModel getEventoSorveglianza() {
 		return mEventoSorveglianzaModel;
@@ -337,11 +337,11 @@ public class EventoModel extends GenericModel {
 		return mDettagliLibAnticipate;
 	}
 
-  // MEV_2023-33
+	// MEV_2023-33
 	public Vector<RateizzazionePPModel> getListaRateizzazioni() {
-    return mListaRateizzazioni;
-  }
-	
+		return mListaRateizzazioni;
+	}
+
 	public FungibilitaModel getFungibilita() {
 		return mFungibilita;
 	}
@@ -475,10 +475,10 @@ public class EventoModel extends GenericModel {
 	}
 
 	// MEV_2023-33
-	public void setListaRateizzazioni (Vector <RateizzazionePPModel> aListaRate) {
-	   mListaRateizzazioni = aListaRate;
+	public void setListaRateizzazioni(Vector<RateizzazionePPModel> aListaRate) {
+		mListaRateizzazioni = aListaRate;
 	}
-	
+
 	public void setFungibilita(FungibilitaModel aFungibilita) {
 		mFungibilita = aFungibilita;
 	}
@@ -759,19 +759,23 @@ public class EventoModel extends GenericModel {
 	public void setNotifica3(String notifica3) {
 		mNotifica3 = notifica3;
 	}
-	
+
 	// MEV_2023-33
 	public String getNotifica4() {
-	  return mNotifica4;
+		return mNotifica4;
 	}
+
 	public void setNotifica4(String notifica4) {
-	  mNotifica4 = notifica4;
+		mNotifica4 = notifica4;
 	}
+
 	public String getNotifica5() {
-	  return mNotifica5;
+		return mNotifica5;
 	}
+
 	public void setNotifica5(String notifica5) {
-	  mNotifica5 = notifica5;
+		mNotifica5 = notifica5;
 	}
-	//MEV_2023-33
+	// MEV_2023-33
+
 }
