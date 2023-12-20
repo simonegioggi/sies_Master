@@ -1004,6 +1004,21 @@ public class VerbaleController extends SiapController implements IVerbale {
 
 			}
 
+
+			// MEV_2023-33
+			String lCodMotivoEventoPP = "";
+			if (lEveNot.getEvento() != null) {
+				if (lEveModOELSRSCUM==null || lEveModOELSRSCUM.getIdEvento().compareTo(lEveNot.getEvento().getIdEvento())!=0) {
+					lEveDao.setIdEvento(lEveNot.getEvento().getIdEvento());
+					lEveDao.selByKey();
+					EventoModel lEventoPP = (EventoModel) lEveDao.getModelByKey();
+					lCodMotivoEventoPP = lEventoPP.getCodMotivo();
+					lDataPrelevata = lEventoPP.getDataEmissione();
+				}
+			}
+		  // MEV_2023-33 - FINE
+
+
 			// insert
 			lStaProDao = new StatoProcedimentoDAO(lConn);
 			StatoProcedimentoModel lStaProMod = new StatoProcedimentoModel();
@@ -1028,10 +1043,16 @@ public class VerbaleController extends SiapController implements IVerbale {
 					 * Branch : 12.1
 					 */
 					else if (lFlagCUMNEW.equals("S"))
-						lStaProMod.setCodStatoProcedimento("0001"); // Emesso Ordine di Esecuzione con Arresto
-																	// Il
+						lStaProMod.setCodStatoProcedimento("0001"); // Emesso Ordine di Esecuzione con Arresto Il
 					// ***** FINE INTERVENTO 20200220016 *****//
-
+					// MEV_2023-33
+					else if (lCodMotivoEventoPP.equals("0622"))
+						lStaProMod.setCodStatoProcedimento("0336"); // Emesso Ordine esecuzione di Ingiunzione al Pagamento della Pena Pecuniaria
+					else if (lCodMotivoEventoPP.equals("1307"))
+						lStaProMod.setCodStatoProcedimento("0364"); // Emesso Provvedimento Rideterminazione Pena Pecuniaria Sostitutiva
+					else if (lCodMotivoEventoPP.equals("1308"))
+						lStaProMod.setCodStatoProcedimento("0365"); // Emesso Provvedimento Avviso Mancato Pagamento
+				  // MEV_2023-33 - FINE
 					else
 						lStaProMod.setCodStatoProcedimento("0011"); // o.e.s.
 

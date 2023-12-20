@@ -4,9 +4,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.model.GenericModel;
+import f3b.util.StringUtils;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.siep.fungibilita.model.FungibilitaModel;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 
@@ -18,7 +23,7 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
  */
 @SuppressWarnings("rawtypes")
 public class EventoModel extends GenericModel {
-
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 	/**
 	 * serialVersionUID
 	 */
@@ -87,7 +92,7 @@ public class EventoModel extends GenericModel {
 	private String mNotifica1;
 	private String mNotifica2;
 	private String mNotifica3;
-	// MEV_2023-33 Aggiornte altre 2 notificeh per i civilmente obbligati
+	// MEV_2023-33 Aggiornte altre 2 notifiche per i civilmente obbligati
 	private String mNotifica4;
 	private String mNotifica5;
 
@@ -125,6 +130,7 @@ public class EventoModel extends GenericModel {
 	private String mStringPeriodoLiberazioneAnticipataLAInt = null;
 
 	private String mStringRisarcimentoDL92 = null;
+	
 
 	// COSTRUTTORE DI DEFAULT
 	public EventoModel() {
@@ -346,6 +352,55 @@ public class EventoModel extends GenericModel {
 		return mFungibilita;
 	}
 
+	public String getStringTotalePagatoPP () {
+		String lStringTotalePagatoPP = null;
+		BigDecimal lTotaleImportoPagato = new BigDecimal(0);
+		if (mListaRateizzazioni!=null) {
+			for (RateizzazionePPModel rata : mListaRateizzazioni) {
+				Vector<BollettinoPagopaModel> lListaBollettini = rata.getListaBollettini();
+				if (lListaBollettini!=null) {
+					for (BollettinoPagopaModel bollettino : lListaBollettini) {
+						if (bollettino.getImportoPagato()!=null)
+							lTotaleImportoPagato = lTotaleImportoPagato.add(bollettino.getImportoPagato());
+					}
+				}
+			}			
+		}
+		
+		lStringTotalePagatoPP = StringUtils.toEuroFormat(lTotaleImportoPagato);
+		
+		return lStringTotalePagatoPP;
+	}
+	
+	public String getStringTotaleDaPagarePP () {
+		String lStringTotaleDaPagarePP = null;
+		BigDecimal lTotaleImportoDaPagare = new BigDecimal(0);
+		BigDecimal lTotaleImportoPagato = new BigDecimal(0);
+		if (mListaRateizzazioni!=null) {
+			int i = 0;
+			for (RateizzazionePPModel rata : mListaRateizzazioni) {
+				i++;
+				if (i==1)
+					lTotaleImportoDaPagare = lTotaleImportoDaPagare.add(rata.getImportoDaPagare());
+				
+				Vector<BollettinoPagopaModel> lListaBollettini = rata.getListaBollettini();
+				if (lListaBollettini!=null) {
+					for (BollettinoPagopaModel bollettino : lListaBollettini) {
+						if (bollettino.getImportoPagato()!=null)
+							lTotaleImportoPagato = lTotaleImportoPagato.add(bollettino.getImportoPagato());
+					}
+				}
+			}			
+		}
+		
+
+		lTotaleImportoDaPagare = lTotaleImportoDaPagare.subtract(lTotaleImportoPagato); 
+		
+		lStringTotaleDaPagarePP = StringUtils.toEuroFormat(lTotaleImportoDaPagare);
+		
+		return lStringTotaleDaPagarePP;
+	}
+	
 	//
 	// METODI SET()
 	//
