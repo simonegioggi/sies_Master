@@ -81,14 +81,18 @@ public class ActInserisciVerbaleVaneRicerche extends ActionSiap implements ICost
 
 		// se proviene dalla maschera di omesse notifiche
 		EventoNotificaModel lEveNot = null;
-		if (!isRequestParameterNullObj("FlagOmesse")) {
+		// 2023.12.20 FlagOmesse è sempre presente come campo hidden nella jsp per cui il test era
+		//            SEMPRE true
+//	if (!isRequestParameterNullObj("FlagOmesse")) {
+		if (!isRequestParameterNullEmptyObj("FlagOmesse")) {	
+	  // 2023.12.20 - FINE	
 			setRequestAttribute("FlagOmesse", getRequestStringParameter("FlagOmesse"));
 			lEveNot = new EventoNotificaModel();
 			IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveNot = lCtrl.ExRicercaEventoNotificaByIdFascicoloDescrMotivo(lFascMod.getIdFascicoloSiep(),
 					"LS");
 		}
-
+		
 		// NEL CONTROLLER GESTISCE LO STATO PROCEDIMENTO
 		IVerbale lCtrl = SIEPLookupRemote.getVerbaleRemote();
 		VerbaleModel llVerModRet = lCtrl.ExInserisciVerbaleVaneRicerche(lFascMod.getIdFascicoloSiep(),
