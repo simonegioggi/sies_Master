@@ -178,12 +178,25 @@ if (elencoStatoPagamenti.size() == 0) {
 %>
 </table>
 <br> 
-<table cellspacing="2" cellpadding="2" width="90%">
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-      	<td colspan="2">
-        	<input class="bottone" type="submit" name="INSERISCI" value="Avviso Mancato Pagamento"
+<%
+BigDecimal importo = new BigDecimal(importoDaPagare);
+if (importo.compareTo(new BigDecimal("0")) == 0) {
+%>
+		<td class="c">
+        	ATTENZIONE! Emissione provvedimento non consentito, rate tutte pagate!
+        </td>
+<%
+} else { 
+%>
+		<td>
+			<input class="bottone" type="submit" name="INSERISCI" value="Avviso Mancato Pagamento"
         		onclick="javascript:eseguiAzione('Inserisci', 'test')">
-      	</td>
+        </td>
+<%
+}
+%>
     </tr>
 </table>
 </FORM>

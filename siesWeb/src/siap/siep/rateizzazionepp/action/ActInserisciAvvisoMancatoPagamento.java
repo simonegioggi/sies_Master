@@ -53,6 +53,11 @@ public class ActInserisciAvvisoMancatoPagamento extends ActionSiap implements IC
 
 		EventoNotificaModel enm = new EventoNotificaModel();
 		EventoModel em = getEventoAvvisoMancatoPagamento(idFascicoloSiep);
+
+		// Lego l'avviso di mancato pagamento all'OI
+		BigDecimal idEventoOI = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+		em.setEveIdEvento(idEventoOI);
+
 		// Recupero le notifiche
 		NotificaModel[] nmArray = getNotificheAvvisoMancatoPagamento();
 

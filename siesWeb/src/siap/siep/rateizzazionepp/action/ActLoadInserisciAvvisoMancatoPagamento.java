@@ -201,7 +201,6 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				while (iterERPPM.hasNext()) {
 					erppm = iterERPPM.next();
 					Vector<RateizzazionePPModel> rateizzazioni = erppm.getListaRateizzazioniPP();
-					// EventoModel em = erppm.getEvento();
 					setRequestAttribute("evento", enm.getEvento());
 					Iterator<RateizzazionePPModel> iter = rateizzazioni.iterator();
 					String testo = "";
@@ -249,7 +248,6 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 			IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 			Vector<EventoRateizzazionePPModel> listaRichiestaBollettini = irpp
 					.exRicercaAvvisoMancatoPagamento(idFascicolo, test);
-
 			BigDecimal idEvento = null;
 			Iterator<EventoRateizzazionePPModel> iterERPPM = listaRichiestaBollettini.iterator();
 			while (iterERPPM.hasNext()) {
@@ -261,6 +259,7 @@ public class ActLoadInserisciAvvisoMancatoPagamento extends ActionSiap implement
 				while (iterRPP.hasNext()) {
 					RateizzazionePPModel rata = iterRPP.next();
 					idEvento = rata.getEveIdEvento();
+					setRequestAttribute("evento", erppm.getEvento());
 					break;
 				}
 			}

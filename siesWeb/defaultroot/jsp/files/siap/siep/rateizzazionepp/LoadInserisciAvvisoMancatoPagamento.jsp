@@ -36,6 +36,7 @@
 <jsp:useBean id="modalita"         			scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoPagato" 			scope="request" class="java.lang.String"/>
 <jsp:useBean id="importoDaPagare" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="evento"    				scope="request" class="siap.sico.evento.model.EventoModel"/>
 
 <%
 FascicoloSiepModel fsm = (FascicoloSiepModel) session.getAttribute("fascicolo");
@@ -260,12 +261,20 @@ if (fsm.getFlagAltraCausa() != null && fsm.getFlagAltraCausa().equals("S")) {
 <FORM method="POST" name="LoadInserisciAvvisoMancatoPagamento" action="<%=IWebConstants.PG_MAIN%>">
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
+		<td class="l" colspan="9">
+			<%=StringUtils.toStringJSP(evento.getDescrTipoProvvedimento())%>&nbsp;
+			<%=StringUtils.toStringJSP(evento.getDescrMotivo())%>&nbsp;del&nbsp;
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(evento.getDataEmissione(), "dd-MM-yyyy"))%></font>
+		</td>
+	</tr>
+	<tr>
       	<td class="L">
 <%
 if ("I".equals(modalita)) {
 %>
     		<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.rateizzazionepp.action.ActInserisciAvvisoMancatoPagamento">
     		<input type="HIDDEN" name="importoDaPagare" value="<%=importoDaPagare%>">
+    		<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=evento.getIdEvento()%>">
 <%
 } else if ("M".equals(modalita)) {
 %>
