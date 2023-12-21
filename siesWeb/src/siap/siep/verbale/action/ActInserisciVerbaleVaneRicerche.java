@@ -18,8 +18,7 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * Title: ActInserisciVerbale
- * Description: Classe Action per l'inserimento di Verbale
+ * Title: ActInserisciVerbale Description: Classe Action per l'inserimento di Verbale
  *
  * @version 1.0
  */
@@ -82,17 +81,17 @@ public class ActInserisciVerbaleVaneRicerche extends ActionSiap implements ICost
 		// se proviene dalla maschera di omesse notifiche
 		EventoNotificaModel lEveNot = null;
 		// 2023.12.20 FlagOmesse è sempre presente come campo hidden nella jsp per cui il test era
-		//            SEMPRE true
-//	if (!isRequestParameterNullObj("FlagOmesse")) {
-		if (!isRequestParameterNullEmptyObj("FlagOmesse")) {	
-	  // 2023.12.20 - FINE	
+		// SEMPRE true
+		// if (!isRequestParameterNullObj("FlagOmesse")) {
+		if (!isRequestParameterNullEmptyObj("FlagOmesse")) {
+			// 2023.12.20 - FINE
 			setRequestAttribute("FlagOmesse", getRequestStringParameter("FlagOmesse"));
 			lEveNot = new EventoNotificaModel();
 			IEventoSimeone lCtrl = SICOLookupRemote.getEventoSimeoneRemote();
 			lEveNot = lCtrl.ExRicercaEventoNotificaByIdFascicoloDescrMotivo(lFascMod.getIdFascicoloSiep(),
 					"LS");
 		}
-		
+
 		// NEL CONTROLLER GESTISCE LO STATO PROCEDIMENTO
 		IVerbale lCtrl = SIEPLookupRemote.getVerbaleRemote();
 		VerbaleModel llVerModRet = lCtrl.ExInserisciVerbaleVaneRicerche(lFascMod.getIdFascicoloSiep(),
