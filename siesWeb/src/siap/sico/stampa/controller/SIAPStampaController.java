@@ -79,7 +79,9 @@ import siap.siep.misurasicurezza.model.MisuraSicurezzaModel;
 import siap.siep.modulocumulo.dao.PenaRideterminataCumuloSqlDAO;
 import siap.siep.modulocumulo.model.PenaRideterminataCumuloModel;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.pagoPA.dao.BollettinoPagopaSqlDAO;
 import siap.siep.pagoPA.dao.CivilmenteObbligatoSqlDAO;
+import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
@@ -1949,7 +1951,8 @@ public class SIAPStampaController extends SiapController {
 		Connection lConn = null;
 
 		RateizzazionePPSqlDAO lRateSqlDao = null;
-
+		BollettinoPagopaSqlDAO lBollettinoSqlDao = null;
+		
 		TreeModel lEveRatModel = null;
 		TreeModel lEveNotCollegatoTree = null;
 
@@ -1995,9 +1998,20 @@ public class SIAPStampaController extends SiapController {
 
 			eveRat.setListaRateizzazioniPP(listaRateCollegato);
 
+			lBollettinoSqlDao = new BollettinoPagopaSqlDAO(lConn);
 			for (RateizzazionePPModel rata : listaRateCollegato) {
 				siesLogger.debug("add rata");
-				lEveNotCollegatoTree.add(new TreeModel(rata));
+				TreeModel lTreeRata = new TreeModel(rata);
+				lEveNotCollegatoTree.add(lTreeRata);
+				
+				// recupero anche i bollettini collegati alla rata
+				lBollettinoSqlDao.ricercaBollettinoPagopaByReteizzazione(rata.getIdRateizzazionePP());
+				Vector<BollettinoPagopaModel> listaBollettini = new Vector<BollettinoPagopaModel>(
+						lBollettinoSqlDao.getModels());
+				for (BollettinoPagopaModel bollettini : listaBollettini) {
+					siesLogger.debug("add bollettino rata");
+					lTreeRata.add(new TreeModel(bollettini));
+				}
 			}
 
 		} catch (DAOException daoEx) {
@@ -2005,13 +2019,13 @@ public class SIAPStampaController extends SiapController {
 			throw new F3BException("SIAPStampaController.getTreeEventoOrdineIngiunzione: " + daoEx);
 		} finally {
 			cleanup(lRateSqlDao);
+			cleanup(lBollettinoSqlDao);			
 
 			if (aConn == null)
 				cleanup(lConn);
 		}
 
 		return lEveRatModel;
-		// return lEveNotCollegatoTree;
 	}
 
 }
