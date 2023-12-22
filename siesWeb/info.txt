@@ -1,4 +1,4 @@
 BRANCH DEVELOP
-In data 24/11/2023 eseguito merge col:
-BRANCH SIES VERSIONE 12.5.5.0
-[Release rilasciata il 24/11/2023 (Patch mese di Novembre 2023)]
+In data 22/12/2023 eseguito merge col:
+BRANCH SIES VERSIONE 12.5.6.0
+[Release rilasciata il 22/12/2023 (Patch mesi di Novembre e Dicembre 2023)]
