@@ -47,11 +47,4 @@ public interface ISecurity {
 	public FunctionModel ExLoadFunzioniMenuSceltaRapida(ProfileModel aProfiloUtente,
 			FunctionModel aFunzionePadre) throws F3BException;
 
-	// MEV INTEGRAZIONE SIES ADN: aggiunti metodi
-	public UtenteModel preLogin(UtenteModel um, boolean test) throws F3BException;
-
-	public void Utente_setOraLogin(String userId, String ip) throws F3BException;
-
-	public boolean getUtenteAssociato(String userId, String userAdn) throws F3BException;
-
 }

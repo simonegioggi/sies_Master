@@ -58,13 +58,11 @@ public class ActCollegamentoNscSsl extends ActWsBase implements ICostantiNsc {
 
 		lUtenteConnesso = getCodUtenteConnesso();
 		lHostAddress = getRequest().getServerName() + ":" + getRequest().getServerPort();
+
 		lCognomeUtente = lUteMod.getCognome();
 		lNomeUtente = lUteMod.getNome();
 		lDistretto = lUteMod.getUfficioUtente().getCodDistretto().substring(0, 6);
 		lSistema = "SIEP";
-		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di proprietà userAdn
-		// ed aggiunto nel SamlModel
-		String lUserAdn = lUteMod.getUserAdn();
 
 		// ============================================================
 		// carico dal file properties di Nsc indirizzo del server
@@ -87,10 +85,10 @@ public class ActCollegamentoNscSsl extends ActWsBase implements ICostantiNsc {
 
 		if (lUseSAML.equals("SI")) {
 			SamlModel lModel = new SamlModel(lCodiceCentrSedeUfficio, lCodiceCentrTipoUfficio,
-					lUtenteConnesso, lHostAddress, lCognomeUtente, lNomeUtente, lDistretto, lSistema,
-					lUserAdn);
+					lUtenteConnesso, lHostAddress, lCognomeUtente, lNomeUtente, lDistretto, lSistema);
 			SamlMaker lmaker = new SamlMaker();
 			lSamkCriptata = lmaker.createSamlAssertion(lModel);
+
 		}
 
 		setRequestAttribute("UseSAML", lUseSAML);

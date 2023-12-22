@@ -14,7 +14,7 @@
 <td valign="top" width=100%>
 <%
 SamlModel lModel = new SamlModel("0011223344", "PM", "A1234", "10.0.20.30",
-                    "Rossi", "Mario", "Torino", "SIEP", "nome.cognome");
+                    "Rossi", "Mario", "Torino", "SIEP");
 SamlMaker lmaker = new SamlMaker();
 String lSamkCriptata = lmaker.createSamlAssertion(lModel);
 %>

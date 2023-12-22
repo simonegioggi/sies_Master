@@ -220,7 +220,7 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-			Map<String, Long> parameters = new HashMap<String, Long>(2);
+			Map<String, Long> parameters = new HashMap<>(2);
 			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 			parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
 			int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);
@@ -475,7 +475,7 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-			Map<String, Long> parameters = new HashMap<String, Long>(2);
+			Map<String, Long> parameters = new HashMap<>(2);
 			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 			int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
 			logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
@@ -718,7 +718,7 @@ public class SiesDAO {
 		String codiceOggetto = codiceUnivoco.substring(0, 4);
 		String codiceMotivo = codiceUnivoco.substring(4, 8);
 		String codiceEsito = codiceUnivoco.substring(8, 12);
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, String> params = new HashMap<>();
 		params.put("codiceOggetto", codiceOggetto);
 		params.put("codiceMotivo", codiceMotivo);
 		params.put("codiceEsito", codiceEsito);
@@ -917,7 +917,7 @@ public class SiesDAO {
 		try {
 			session = getSession();
 
-			Map<String, Long> param = new HashMap<String, Long>(2);
+			Map<String, Long> param = new HashMap<>(2);
 			if (isForCumulo) {
 				param.put("idFascicoloSiep", new Long(idFascicoloSiep));
 				param.put("idEvento", new Long(idEvento));
@@ -1151,7 +1151,7 @@ public class SiesDAO {
 					datiPubblicoMinisteroList.add(0, dpm);
 				}
 			} else if (isAvvenutaEsecuzionePena) {
-				Map<String, Long> parameters = new HashMap<String, Long>(2);
+				Map<String, Long> parameters = new HashMap<>(2);
 				parameters.put("idFascicoloSiep", new Long(idFascicoloSiep));
 				parameters.put("idEvento", new Long(idEvento));
 				datiPubblicoMinisteroList = session
@@ -1232,7 +1232,7 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-			Map<String, Long> parameters = new HashMap<String, Long>(2);
+			Map<String, Long> parameters = new HashMap<>(2);
 			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 			int i = session.update("it.mig.sies.model.TitoloGiudiziario.deleteLogica", parameters);
 			logger.info("Update chiavi Titolo Principale: NSC[" + parameters.get("nsc") + "] SIES["
@@ -1308,7 +1308,7 @@ public class SiesDAO {
 		SqlSession session = null;
 		try {
 			session = getSession();
-			Map<String, Long> parameters = new HashMap<String, Long>(2);
+			Map<String, Long> parameters = new HashMap<>(2);
 			parameters.put("sies", new Long(chiaviProvvedimentoGiudiziario.getSies().longValue()));
 			parameters.put("nsc", new Long(chiaviProvvedimentoGiudiziario.getNsc().longValue()));
 			int i = session.update("it.mig.sies.model.TitoloGiudiziario.update", parameters);

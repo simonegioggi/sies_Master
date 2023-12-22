@@ -4,33 +4,26 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
-import f3b.log.LogF3B;
-import f3b.security.model.FunctionModel;
-import f3b.util.F3BException;
-import f3b.util.StringUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 import siap.sico.security.ICostantiFunzioni;
 //import siap.sico.security.controller.SecurityController;
 import siap.sico.security.controller.ISecurity;
 import siap.sico.utente.model.UtenteModel;
-import siap.sico.utenzaAdn.util.UtenzaAdnUtils;
 import siap.sico.util.SICOLookupRemote;
 import siap.sico.web.ActionSiap;
+import f3b.log.LogF3B;
+import f3b.security.model.FunctionModel;
+import f3b.util.F3BException;
+import f3b.util.StringUtils;
+import f3b.util.Utils;
+import f3b.web.IWebConstants;
 
-/**
- * MEV INTEGRAZIONE SIES ADN: nuova action di login
- *
- * @author sgioggi
- *
- */
 public class ActLogin extends ActionSiap implements ICostantiSecurity {
 
+	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
-
 		// Rimuove dalla sessione gli oggetti indicati eventualmente presenti
 		removeSessionAttribute("soggetto");
 		removeSessionAttribute("sentenza");
@@ -44,58 +37,70 @@ public class ActLogin extends ActionSiap implements ICostantiSecurity {
 		removeSessionAttribute(FUN_RADICE_MENU_SR);
 		removeSessionAttribute(FUN_ANTENATE);
 
+		// prepara il model dell'utente per la login
+		String lUserId = StringUtils.convertSqlString(getRequestStringParameter(CAMPO_USER_ID));
+		String lPassword = getRequestStringParameter(CAMPO_PASSWORD);
+
+		UtenteModel lModUte = new UtenteModel(lUserId, lPassword);
+		lModUte.setIP(getRequest().getRemoteAddr());
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("____________________________");
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug(lModUte.getIP());
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
+		siesLogger.debug("____________________________");
+		// prepara il model dell'ufficio per la login
+		/*
+		 * String lCodTipoUfficio = getRequestStringParameter(CAMPO_TIPO_UFFICIO); String lDescrComune =
+		 * getRequestStringParameter(CAMPO_COMUNE);
+		 * 
+		 * ComuneModel lComMod = new ComuneModel(); lComMod.setDescrizione( lDescrComune.toUpperCase());
+		 * IComune lComCtrl = SICOLookupRemote.getComuneRemote(); ComuneModel lComModRitorno = new
+		 * ComuneModel(lComCtrl.ExGetCodiceComune(lComMod));
+		 * 
+		 * UfficioModel lModUff = new UfficioModel(); lModUff.setCodTipoUfficio(lCodTipoUfficio);
+		 * lModUff.setCodComune(lComModRitorno.getCodComune());
+		 */
+
 		// chiama il controller
-		ISecurity is = SICOLookupRemote.getSecurityRemote();
-		String userId = StringUtils.convertSqlString(getRequestStringParameter(CAMPO_USER_ID));
-		String password = getRequestStringParameter(CAMPO_PASSWORD);
-		UtenteModel um = new UtenteModel(userId, password);
-		String ip = getRequest().getRemoteAddr();
-		um.setIP(ip);
-		um = UtenzaAdnUtils.preLogin(um, false);
+		// SecurityController lSctrl = new SecurityController();
+		ISecurity lSctrl = SICOLookupRemote.getSecurityRemote();
 
-		FunctionModel fm = new FunctionModel(ICostantiFunzioni.RADICE);
-		FunctionModel fmMenu = is.ExLoadFunzioniMenu(um.getUserProfile(), fm);
+		// UtenteModel lUtente = lSctrl.ExLogin(lModUte, lModUff);
+		UtenteModel lUtente = lSctrl.ExLogin(lModUte);
+		FunctionModel lFunRad = new FunctionModel(ICostantiFunzioni.RADICE);
+		FunctionModel lFunRadiceMenu = lSctrl.ExLoadFunzioniMenu(lUtente.getUserProfile(), lFunRad);
 
-		FunctionModel funzioneMenuSceltaRapida = null;
-		if (um.getUserProfile() != null && um.getUserProfile().isSige())
-			funzioneMenuSceltaRapida = new FunctionModel(ICostantiFunzioni.RADICE_SIGE);
-		else
-			funzioneMenuSceltaRapida = new FunctionModel(ICostantiFunzioni.RADICE);
-
-		FunctionModel funzioniMenuSceltaRapida = is.ExLoadFunzioniMenuSceltaRapida(um.getUserProfile(),
-				funzioneMenuSceltaRapida);
-
-		// metto in sessione anche la userAdn
-		String usernameADN = getRequestStringParameter("usernameDB");
-		um.setUserAdn(usernameADN);
-		boolean isUtenteAssociato = is.getUtenteAssociato(um.getUserId(), um.getUserAdn());
-		if (!isUtenteAssociato) {
-			RedirectTo rt = new RedirectTo();
-			rt.setPage(IWebConstants.PG_MAIN);
-			String thisServer = getRequest().getServerName();
-			int thisServerPort = getRequest().getServerPort();
-			String thisServerProtocol = getRequest().getScheme();
-			String s = thisServerProtocol + "://" + thisServer + ":" + thisServerPort + "/";
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Utenza SIES " + um.getUserId() + " non più associata all'utenza ADN " + um.getUserAdn());
-			rt.setAction(s);
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-			return IWebConstants.PG_MESSAGE;
+		FunctionModel lFunRadMenuSceltaRapida = null;
+		if (lUtente.getUserProfile() != null && lUtente.getUserProfile().isSige()) {
+			lFunRadMenuSceltaRapida = new FunctionModel(ICostantiFunzioni.RADICE_SIGE);
+		} else {
+			lFunRadMenuSceltaRapida = new FunctionModel(ICostantiFunzioni.RADICE);
 		}
 
+		FunctionModel lFunRadiceMenuSceltaRapida = lSctrl.ExLoadFunzioniMenuSceltaRapida(
+				lUtente.getUserProfile(), lFunRadMenuSceltaRapida);
+
 		// Disponibile per tutta la durata della sessione utente
-		setSessionAttribute(SESSION_UTENTE_CONNESSO, um);
-		setSessionAttribute(FUN_RADICE_MENU_VRT, fmMenu);
+		setSessionAttribute(SESSION_UTENTE_CONNESSO, lUtente);
+		setSessionAttribute(FUN_RADICE_MENU_VRT, lFunRadiceMenu);
 		setSessionAttribute(FUN_RADICE_MENU_ORZ, new FunctionModel());
-		setSessionAttribute(FUN_RADICE_MENU_SR, funzioniMenuSceltaRapida);
+		setSessionAttribute(FUN_RADICE_MENU_SR, lFunRadiceMenuSceltaRapida);
 		setSessionAttribute(FUN_ANTENATE, new LinkedList());
 
-		// Update Utente :set Time di ultimo Login
-		is.Utente_setOraLogin(um.getUserId(), ip);
+		// Verifico che la password sia diversa dalla username ...
+		if (Utils.cryptPassword(lUtente.getUserId()).equals(lUtente.getPwd()) || lUtente.getPwd() == null) {
+			// Se si...chiamo la maschera di cambio password obbligatoria
+			setRequestAttribute("msg", "Devi obbligatoriamente cambiare la password");
 
-		siesLogger.info("ENTRO IN SIES!");
-		// return IWebConstants.PG_FRAMESET;
-		return IWebConstants.PAGE_OPEN_FRAMESET;
+			return PG_CHANGE_PASSWORD;
+		} else {
+			// return IWebConstants.PG_FRAMESET;
+			return IWebConstants.PAGE_OPEN_FRAMESET;
+		}
 	}
 
 }

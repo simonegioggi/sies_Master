@@ -91,13 +91,10 @@ if (!lStrAction.equals("siap.sico.sessionstate.action.ActVediSessioneSIEP")) {
 
 String lPage = null;
 // Controllo sull'avvenuto accesso attraverso il login
-if (session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
-		&& (!lStrAction.equals("siap.sico.security.action.ActLogin"))
-		// MEV INTEGRAZIONE SIES ADN: nuove pagine di login
-		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActUtenzaAdn"))
-		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActAssocUtenteSiesAdn"))) {
-    session.invalidate();
-   	request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
+if (session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
+		&& !lStrAction.equals("siap.sico.security.action.ActLogin")) {
+	session.invalidate();
+    request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
     request.setAttribute("Messagge", "Sessione utente terminata, effettuare di nuovo il login...");
 %>
 <script language=Javascript>
@@ -109,7 +106,7 @@ top.document.location.href="<%=IWebConstants.PAGE_LOGOUT%>?Messagge=<%=response.
     //============================================================================
     // Codice per TEST MCD e NDC
     //============================================================================
-    UtenteModel lUteMod = (UtenteModel) session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+    UtenteModel lUteMod=(UtenteModel)session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
     UfficioModel lUffMod = null;
     String CodUff = "";
     String CodUte = "";
@@ -121,7 +118,7 @@ top.document.location.href="<%=IWebConstants.PAGE_LOGOUT%>?Messagge=<%=response.
     MDC.put("utente", CodUte);
     MDC.put("ufficio", CodUff);
     NDC.remove();
-   	NDC.push(session.getId());
+    NDC.push(session.getId());
     Action actionObj = action.get(lStrAction);
     actionObj.setReqSes(request, session);
     actionObj.init(); // 2010-12-26 per eventuali inizializzazioni.
@@ -134,9 +131,6 @@ top.document.location.href="<%=IWebConstants.PAGE_LOGOUT%>?Messagge=<%=response.
     // Per l'ActLogin e per l'ActLoadOrizontalMenu non vengono eseguiti controlli di abilitazione
     // sul profilo dell'utente perchè sono operazioni abilitate per qualsiasi utente
     if ((!lStrAction.equals("siap.sico.security.action.ActLogin")) // ogni utente puo effettuare il login
-    		// MEV INTEGRAZIONE SIES ADN: nuove pagine di login
-    		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActUtenzaAdn"))
-    		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActAssocUtenteSiesAdn"))
 			&& (!lStrAction.equals("siap.sico.security.action.ActLoadOrizontalMenu")) // supposto che il menu abbia almeno due livelli
 			&& (!lStrAction.equals("siap.siep.richiesta.action.ActLoadContaAttiCompetenzaRicevuti"))) { // cruscotto atti ricevuti: call automatica temporizzata
 		actionObj.setFunctionsAvailableToRequest(lStrAction);

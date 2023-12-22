@@ -1,9 +1,13 @@
 package it.mig.sies.servlet;
 
+import it.mig.sies.business.LoadService;
+import it.mig.sies.exception.ProfileException;
+import it.mig.sies.model.ResponseData;
+import it.mig.sies.util.ApplicationProperties;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,21 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
-import it.mig.sies.business.LoadService;
-import it.mig.sies.exception.ProfileException;
-import it.mig.sies.model.ResponseData;
-import it.mig.sies.util.ApplicationProperties;
-
 /**
  * SIES FASE 2 - Servlet che gestisce il caricamento delle informazioni relative all'attivit� effettuate sul
  * singolo provvedimento dell'esecuzione
- *
+ * 
  * @author Federico Paparoni
  */
 public class SearchDataServlet extends HttpServlet {
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 2683234170485164666L;
 
@@ -34,7 +33,7 @@ public class SearchDataServlet extends HttpServlet {
 
 	/**
 	 * Recupera lo storico delle operazioni effettuate su uno specifico idEvento
-	 *
+	 * 
 	 * @throws IOException,ServletException
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -44,14 +43,10 @@ public class SearchDataServlet extends HttpServlet {
 		String idEvento = request.getParameter("idEvento");
 		// MEV 35253
 		String idUtente = request.getParameter("idUtente");
-
-		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
-		String userAdn = request.getParameter("userAdn");
-
-		logger.info("Storico delle operazioni idEvento[" + idEvento + "] idUtente[" + idUtente + "] userAdn[" + userAdn + "]");
+		logger.info("Storico delle operazioni idEvento[" + idEvento + "] idUtente[" + idUtente + "]");
 		try {
 			// Viene caricata la lista di operazioni
-			LoadService loadService = new LoadService(idEvento, LoadService.LOCAL_SEARCH, idUtente, userAdn);
+			LoadService loadService = new LoadService(idEvento, LoadService.LOCAL_SEARCH, idUtente);
 			List<ResponseData> responseDataList = loadService.loadResponseList();
 
 			// MEV 42558 - Modificata label e gestione output
@@ -81,7 +76,7 @@ public class SearchDataServlet extends HttpServlet {
 
 	/**
 	 * Gestisce la chiamata HTTP GET
-	 *
+	 * 
 	 * @param request
 	 *            HttpServletRequest
 	 * @param response
@@ -95,7 +90,7 @@ public class SearchDataServlet extends HttpServlet {
 
 	/**
 	 * Gestisce la chiamata HTTP POST
-	 *
+	 * 
 	 * @param request
 	 *            HttpServletRequest
 	 * @param response

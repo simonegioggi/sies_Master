@@ -1,18 +1,5 @@
 package siap.sico.webservice.action;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlOptions;
-
-import f3b.log.LogF3B;
-import f3b.util.StringUtils;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
 import it.mig.sies.type.ArrayChiaviReatiDocument;
 import it.mig.sies.type.CHIAVIDocument;
 import it.mig.sies.type.DATICHIAMATATRASFERIMENTODocument;
@@ -24,6 +11,16 @@ import it.mig.sies.type.IscriviProvvedimentoProvvisorio_PortType;
 import it.mig.sies.type.IscriviProvvedimentoProvvisorio_ServiceLocator;
 import it.mig.sies.type.OPERAZIONEDocument;
 import it.mig.sies.type.TRASFERIMENTODocument;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlOptions;
+
 import siap.sico.codici_sies_nsc.model.CodiciSiesNscModel;
 import siap.sico.security.action.ICostantiSecurity;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -38,6 +35,10 @@ import siap.siep.reato.model.ReatoCircostanzaModel;
 import siap.siep.reato.model.ReatoModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.util.SIAPPathProperties;
+import f3b.log.LogF3B;
+import f3b.util.StringUtils;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
 
 @SuppressWarnings("rawtypes")
 public class ActPrelevaDatiFascicoloCancellato extends ActWsBase {
@@ -137,8 +138,6 @@ public class ActPrelevaDatiFascicoloCancellato extends ActWsBase {
 		DatiUtente.setCOGNOMEUTENTE(lUteMod.getCognome());
 		DatiUtente.setNOMEUTENTE(lUteMod.getNome());
 		DatiUtente.setIPADDRESSSERVER(getRequest().getServerName() + ":" + getRequest().getServerPort());
-		// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione per variabile UserAdn
-		DatiUtente.setUSERNAMEADN(lUteMod.getUserAdn());
 
 		/*******************************************************************************/
 		/* Element DATI_CHIAMATA_TRASFERIMENTO - CHIAVI */

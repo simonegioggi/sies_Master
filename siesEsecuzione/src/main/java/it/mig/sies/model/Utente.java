@@ -2,13 +2,13 @@ package it.mig.sies.model;
 
 /**
  * SIES FASE 2 - Classe model relativa all'utente che sta effettuando il trasferimento
- *
+ * 
  * @author Federico Paparoni
  */
 public class Utente extends BaseModel {
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1479133706548534297L;
 
@@ -20,8 +20,6 @@ public class Utente extends BaseModel {
 	private String cognome;
 	private String nome;
 	private String ipServer;
-	// MEV INTEGRAZIONE SIES ADN: aggiunta variabile
-	private String userAdn;
 
 	/**
 	 * @return the codiceTipoUfficio
@@ -141,14 +139,6 @@ public class Utente extends BaseModel {
 	 */
 	public void setIpServer(String ipServer) {
 		this.ipServer = ipServer;
-	}
-
-	public String getUserAdn() {
-		return userAdn;
-	}
-
-	public void setUserAdn(String userAdn) {
-		this.userAdn = userAdn;
 	}
 
 }

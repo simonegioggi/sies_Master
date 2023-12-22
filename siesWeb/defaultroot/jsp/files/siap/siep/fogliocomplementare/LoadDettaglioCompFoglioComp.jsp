@@ -46,8 +46,6 @@ else if(depositoDecreto != null && depositoDecreto.getIdDepositoDecreto() != nul
 else 
 	idEventoInterconnessione = evento.getIdEvento();
 String idUtente = UtenteConnesso.getUserId();
-// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
-String userAdn = UtenteConnesso.getUserAdn();
 %>
 
 <script type="text/javascript">
@@ -248,17 +246,17 @@ if (provenienza != null && provenienza.equals("InsertFC")) {
 		<!-- Gestione Foglio Complementare -->
 		<%-- MEV 16: aggiunti parametri di passaggio per INSERT, UPDATE e DELETE --%>
  		<td class="LBG">
-			<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');return(false);">
+			<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=INSERT&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');return(false);">
 				<img id="TrasmissioneFC" align="middle" src="/images/insertWS.png" alt="Trasmissione Foglio Complementare al SIC" width="24" height="24" border="0">
   			</a>
 		</td>
 		<td class="LBG">
- 			<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');return(false);" >
+ 			<a href="#" onClick="openPopup('/siesEsecuzione/index.jsp?action=UPDATE&idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&tipoWS=siepToNsc&idSoggetto=<%=fascicolo.getSoggetto().getIdSoggetto()%>&idSentenza=<%=fascicolo.getSenIdSentenza()%>&idFascicoloSiep=<%=fascicolo.getIdFascicoloSiep()%>');return(false);" >
 				<img id="ModificaFC" align="middle" src="/images/updateWS.png" alt="Modifica Foglio Complementare sul SIC" width="24" height="24" border="0">
   			</a>
 		</td>
 		<td class="LBG">
- 			<a href="#" onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>');return(false);">
+ 			<a href="#" onClick="openPopup('/siesEsecuzione/search?idEvento=<%=idEventoInterconnessione%>&idUtente=<%=idUtente%>');return(false);">
 				<img id="Storico" align="middle" src="/images/certificatoWS.png" alt="Storico invio trasmissioni al SIC" width="24" height="24" border="0">
   			</a>
 		</td>

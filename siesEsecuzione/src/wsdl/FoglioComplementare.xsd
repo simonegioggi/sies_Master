@@ -81,17 +81,6 @@
 					</xs:simpleType>
 				</xs:element>
 				<xs:element name="ipServer" type="xs:string" nillable="true"/>
-				<!-- MEV INTEGRAZIONE SIES ADN -->
-				<xs:element name="UserAdn">
-					<xs:annotation>
-						<xs:appinfo>Definisce lo username ADN con il quale l'utente viene riconosciuto dal sistema</xs:appinfo>
-					</xs:annotation>
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-							<xs:maxLength value="128"/>
-						</xs:restriction>
-					</xs:simpleType>
-				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

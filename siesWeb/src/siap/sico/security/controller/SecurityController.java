@@ -3,7 +3,6 @@ package siap.sico.security.controller;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,8 +22,6 @@ import siap.sico.ufficio.model.UfficioAccorpatoModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.sico.utente.dao.UtenteSqlDAO;
 import siap.sico.utente.model.UtenteModel;
-import siap.sico.utenzaAdn.controller.AssocUtenteSiesAdnController;
-import siap.sico.utenzaAdn.model.AssocUtenteSiesAdnModel;
 
 /**
  * <p>
@@ -67,12 +64,12 @@ public class SecurityController extends SiapController implements ISecurity {
 			throw new SecurityException(SecurityException.USER_MESSAGE, "Password errata");
 
 		// carica il profilo dell'utente
-		ProfileModel pm = getProfiloByCodiceUtente(lUtente.getUserId());
-		lUtente.setUserProfile(pm);
+		ProfileModel lProfiloUtente = getProfiloByCodiceUtente(lUtente.getUserId());
+		lUtente.setUserProfile(lProfiloUtente);
 
 		// carica l'ufficio di appartenenza dell'utente
-		UfficioModel ufficioUtente = getUfficioUtente(lUtente);
-		lUtente.setUfficioUtente(ufficioUtente);
+		UfficioModel lUfficioUtente = getUfficioUtente(lUtente);
+		lUtente.setUfficioUtente(lUfficioUtente);
 
 		// Update Utente :set Time di ultimo Login
 		Utente_setOraLogin(lUtente.getUserId(), aUtente.getIP());
@@ -110,12 +107,12 @@ public class SecurityController extends SiapController implements ISecurity {
 			throw new SecurityException(SecurityException.USER_MESSAGE, "Password errata");
 
 		// carica il profilo dell'utente
-		ProfileModel pm = getProfiloByCodiceUtente(lUtente.getUserId());
-		lUtente.setUserProfile(pm);
+		ProfileModel lProfiloUtente = getProfiloByCodiceUtente(lUtente.getUserId());
+		lUtente.setUserProfile(lProfiloUtente);
 
 		// carica l'ufficio di appartenenza dell'utente
-		UfficioModel ufficioUtente = getUfficioUtente(lUtente);
-		lUtente.setUfficioUtente(ufficioUtente);
+		UfficioModel lUfficioUtente = getUfficioUtente(lUtente);
+		lUtente.setUfficioUtente(lUfficioUtente);
 
 		// Update Utente :set Time di ultimo Login
 		Utente_setOraLogin(lUtente.getUserId(), aUtente.getIP());
@@ -437,7 +434,7 @@ public class SecurityController extends SiapController implements ISecurity {
 
 		Connection lConn = null;
 		SecuritySqlDAO lDao = null;
-		UfficioModel ufficioUtente = null;
+		UfficioModel lUfficioUtente = null;
 
 		UfficioSqlDAO lUffSqlDao = null;
 
@@ -447,7 +444,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			lDao.ricercaUfficioByCodiceUtente(aUtente.getUserId());
 			lDao.start();
 			if (lDao.next())
-				ufficioUtente = lDao.getUfficioModel();
+				lUfficioUtente = lDao.getUfficioModel();
 			else
 				throw new SecurityException(SecurityException.USER_MESSAGE,
 						"L'utente non appartiene a nessun ufficio");
@@ -461,7 +458,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			List lUfficiAccorpati = new ArrayList();
 
 			lUffSqlDao = new UfficioSqlDAO(lConn);
-			lUffSqlDao.listaUfficiAccorpati(null, ufficioUtente.getCodUfficio());
+			lUffSqlDao.listaUfficiAccorpati(null, lUfficioUtente.getCodUfficio());
 			lUffSqlDao.start();
 
 			while (lUffSqlDao.next()) {
@@ -472,7 +469,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			}
 			lUffSqlDao.stop();
 
-			ufficioUtente.setUfficiAccorpati(lUfficiAccorpati);
+			lUfficioUtente.setUfficiAccorpati(lUfficiAccorpati);
 
 		} catch (DAOException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -483,7 +480,7 @@ public class SecurityController extends SiapController implements ISecurity {
 			cleanup(lUffSqlDao);
 			cleanup(lConn);
 		}
-		return ufficioUtente;
+		return lUfficioUtente;
 	}
 
 	/**
@@ -551,55 +548,5 @@ public class SecurityController extends SiapController implements ISecurity {
 
 		return lUtente;
 	}
-
-	// MEV INTEGRAZIONE SIES ADN: aggiunto metodo che esegue i controlli preliminari all'accesso al sistema
-	public UtenteModel preLogin(UtenteModel um, boolean test) throws F3BException {
-
-		// info per il log
-		siesLogger.debug("SecurityController.preLogin: INIZIO");
-
-		// verifica che l'utente sia valido (definito per l'ufficio richiesto e in corso di validità)
-		UtenteModel utente = getUtenteValido(um);
-		if (test) {
-			// Verifica la password [** Controllare che la password non sia scaduta **]
-			String lPwdCrpt = Utils.cryptPassword(um.getPwd());
-			String lPswDB = utente.getPwd();
-			if (lPswDB == null)
-				lPswDB = Utils.cryptPassword("");
-
-			boolean lCmp = (lPswDB).equals(lPwdCrpt);
-			if (!lCmp)
-				throw new SecurityException(SecurityException.USER_MESSAGE, "Password errata");
-		}
-
-		// carica il profilo dell'utente
-		ProfileModel pm = getProfiloByCodiceUtente(utente.getUserId());
-		utente.setUserProfile(pm);
-
-		// carica l'ufficio di appartenenza dell'utente
-		UfficioModel ufficioUtente = getUfficioUtente(utente);
-		utente.setUfficioUtente(ufficioUtente);
-
-		// info per il log
-		siesLogger.debug("SecurityController.preLogin FINE");
-
-		// ritorna il dettaglio dell'utente da mettere in sessione
-		return utente;
-	}
-
-	// aggiunto metodo che esegue i controlli di consistenza utenza sies - adn
-	public boolean getUtenteAssociato(String codUtente, String userId) throws F3BException {
-
-		AssocUtenteSiesAdnController ausac = new AssocUtenteSiesAdnController();
-		List<AssocUtenteSiesAdnModel> l = ausac.verificaAssociazioneSiesAdn(userId);
-		Iterator<AssocUtenteSiesAdnModel> i = l.iterator();
-		while (i.hasNext()) {
-			AssocUtenteSiesAdnModel ausam = i.next();
-			if (ausam.getUteCodUtente().equals(codUtente))
-				return true;
-		}
-		return false;
-	}
-	// FINE MEV INTEGRAZIONE SIES ADN
 
 }

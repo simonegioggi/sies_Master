@@ -1,4 +1,3 @@
-
 package it.mig.sies.type.esecuzione_NEW;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,222 +6,170 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Classe Java per anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>Il seguente frammento di schema specifica il contenuto previsto contenuto in questa classe.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element ref="{http://it/mig/sies/type/esecuzione_NEW}Ufficio"/>
- *         &lt;element name="Username">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;maxLength value="128"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
- *         &lt;element name="Cognome">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;maxLength value="35"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
- *         &lt;element name="Nome">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;maxLength value="35"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
- *         &lt;element name="ipServer" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="UserAdn">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;maxLength value="128"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element ref=&quot;{http://it/mig/sies/type/esecuzione_NEW}Ufficio&quot;/&gt;
+ *         &lt;element name=&quot;Username&quot;&gt;
+ *           &lt;simpleType&gt;
+ *             &lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}string&quot;&gt;
+ *               &lt;maxLength value=&quot;128&quot;/&gt;
+ *             &lt;/restriction&gt;
+ *           &lt;/simpleType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name=&quot;Cognome&quot;&gt;
+ *           &lt;simpleType&gt;
+ *             &lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}string&quot;&gt;
+ *               &lt;maxLength value=&quot;35&quot;/&gt;
+ *             &lt;/restriction&gt;
+ *           &lt;/simpleType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name=&quot;Nome&quot;&gt;
+ *           &lt;simpleType&gt;
+ *             &lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}string&quot;&gt;
+ *               &lt;maxLength value=&quot;35&quot;/&gt;
+ *             &lt;/restriction&gt;
+ *           &lt;/simpleType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name=&quot;ipServer&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot;/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "ufficio",
-    "username",
-    "cognome",
-    "nome",
-    "ipServer",
-    "userAdn"
-})
+@XmlType(name = "", propOrder = { "ufficio", "username", "cognome", "nome",
+		"ipServer" })
 @XmlRootElement(name = "Utente")
 public class Utente {
 
-    @XmlElement(name = "Ufficio", required = true)
-    protected Ufficio ufficio;
-    @XmlElement(name = "Username", required = true)
-    protected String username;
-    @XmlElement(name = "Cognome", required = true)
-    protected String cognome;
-    @XmlElement(name = "Nome", required = true)
-    protected String nome;
-    @XmlElement(required = true, nillable = true)
-    protected String ipServer;
-    @XmlElement(name = "UserAdn", required = true)
-    protected String userAdn;
+	@XmlElement(name = "Ufficio", required = true)
+	protected Ufficio ufficio;
+	@XmlElement(name = "Username", required = true)
+	protected String username;
+	@XmlElement(name = "Cognome", required = true)
+	protected String cognome;
+	@XmlElement(name = "Nome", required = true)
+	protected String nome;
+	@XmlElement(required = true, nillable = true)
+	protected String ipServer;
 
-    /**
-     * Recupera il valore della propriet� ufficio.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Ufficio }
-     *     
-     */
-    public Ufficio getUfficio() {
-        return ufficio;
-    }
+	/**
+	 * Gets the value of the ufficio property.
+	 * 
+	 * @return possible object is {@link Ufficio }
+	 * 
+	 */
+	public Ufficio getUfficio() {
+		return ufficio;
+	}
 
-    /**
-     * Imposta il valore della propriet� ufficio.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Ufficio }
-     *     
-     */
-    public void setUfficio(Ufficio value) {
-        this.ufficio = value;
-    }
+	/**
+	 * Sets the value of the ufficio property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Ufficio }
+	 * 
+	 */
+	public void setUfficio(Ufficio value) {
+		this.ufficio = value;
+	}
 
-    /**
-     * Recupera il valore della propriet� username.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUsername() {
-        return username;
-    }
+	/**
+	 * Gets the value of the username property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getUsername() {
+		return username;
+	}
 
-    /**
-     * Imposta il valore della propriet� username.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setUsername(String value) {
-        this.username = value;
-    }
+	/**
+	 * Sets the value of the username property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setUsername(String value) {
+		this.username = value;
+	}
 
-    /**
-     * Recupera il valore della propriet� cognome.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCognome() {
-        return cognome;
-    }
+	/**
+	 * Gets the value of the cognome property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getCognome() {
+		return cognome;
+	}
 
-    /**
-     * Imposta il valore della propriet� cognome.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCognome(String value) {
-        this.cognome = value;
-    }
+	/**
+	 * Sets the value of the cognome property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setCognome(String value) {
+		this.cognome = value;
+	}
 
-    /**
-     * Recupera il valore della propriet� nome.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNome() {
-        return nome;
-    }
+	/**
+	 * Gets the value of the nome property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getNome() {
+		return nome;
+	}
 
-    /**
-     * Imposta il valore della propriet� nome.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNome(String value) {
-        this.nome = value;
-    }
+	/**
+	 * Sets the value of the nome property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setNome(String value) {
+		this.nome = value;
+	}
 
-    /**
-     * Recupera il valore della propriet� ipServer.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getIpServer() {
-        return ipServer;
-    }
+	/**
+	 * Gets the value of the ipServer property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getIpServer() {
+		return ipServer;
+	}
 
-    /**
-     * Imposta il valore della propriet� ipServer.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIpServer(String value) {
-        this.ipServer = value;
-    }
-
-    /**
-     * Recupera il valore della propriet� userAdn.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getUserAdn() {
-        return userAdn;
-    }
-
-    /**
-     * Imposta il valore della propriet� userAdn.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setUserAdn(String value) {
-        this.userAdn = value;
-    }
+	/**
+	 * Sets the value of the ipServer property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setIpServer(String value) {
+		this.ipServer = value;
+	}
 
 }
