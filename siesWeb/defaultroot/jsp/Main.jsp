@@ -19,7 +19,6 @@
 
 <%@ page language="java" session="true" errorPage="ErrorPage.jsp"%>
 
-<%-- // [FT] - 05/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog --%>
 <%
 final Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 %>
@@ -32,11 +31,10 @@ action.setServletContext(application);
 <jsp:useBean id="lockTable" class="java.util.Hashtable" scope="application"/>
 <%
 /**
-* Controllo sull'attivazione dei Cookies.
-* Il controllo viene fatto solo dala seconda volta in poi.
-* Per il momento da commentare !!!!!
-*/
-
+ * Controllo sull'attivazione dei Cookies.
+ * Il controllo viene fatto solo dala seconda volta in poi.
+ * Per il momento da commentare !!!!!
+ */
 //============================================================================
 // n.b. in alcuni casi, quando viene chiusa la finestra di IE con il doc di 
 //      stampa aperto 'inline', il browser invia delle request HTTP con metodo 
@@ -47,16 +45,15 @@ action.setServletContext(application);
 //============================================================================
 if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
 %>
-    <jsp:forward page="/html/blank.htm"/>
+<jsp:forward page="/html/blank.htm"/>
 <%
 }
-
 if ((request.getCookies() == null) || (request.getCookies().length == 0)) {
    	session.invalidate();
    	request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
    	request.setAttribute("Messagge", "Attivare i Cookies sul browser per utilizzare l'applicazione.");
 %>
-	<jsp:forward page="<%=IWebConstants.PG_SEND_TO%>"/>
+<jsp:forward page="<%=IWebConstants.PG_SEND_TO%>"/>
 <%
 }
 String lStrAction = null;
@@ -74,36 +71,36 @@ if (MultipartContent.isMultipartContent(request)) {
   	if (request.getParameter(IWebConstants.ACTION_FIELD) != null)
    		lStrAction = (String)request.getParameter(IWebConstants.ACTION_FIELD);
 }
-if (lStrAction == null)
-	throw new Exception("Parametro Action mancante!");
-
-/** Implementazione tabella di lock per le modifiche delle entità
- * 	1) Entrando nella main , unlock per default tutti i lock dell'utente
+if (lStrAction == null) {
+	// [SG] Ticket#20200818015 - errori JBWEB000236 su server.log e Debug.log
+	// throw new Exception("Parametro Action mancante!");
+	siesLogger.info("lStrAction == null --> java.lang.Exception: Parametro Action mancante!");
+	return; // esco invece di rilanciare l'eccezione
+}
+/** 
+ * Implementazione tabella di lock per le modifiche delle entità
+ * 1) Entrando nella main, unlock per default tutti i lock dell'utente
  */
 
 if (!lStrAction.equals("siap.sico.sessionstate.action.ActVediSessioneSIEP")) {
-//   if (lockTable==null)
-//       lockTable=new Hashtable();
-
-  // 1)
-  if (lockTable.containsKey(session.getId()))
-      lockTable.remove(session.getId());
+  	if (lockTable.containsKey(session.getId()))
+		lockTable.remove(session.getId());
 }
 
 String lPage = null;
 // Controllo sull'avvenuto accesso attraverso il login
-if (session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
+if (session.getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
 		&& (!lStrAction.equals("siap.sico.security.action.ActLogin"))
 		// MEV INTEGRAZIONE SIES ADN: nuove pagine di login
 		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActUtenzaAdn"))
 		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActAssocUtenteSiesAdn"))) {
-    session.invalidate();
-   	request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
+	session.invalidate();
+    request.setAttribute("LinkTo", IWebConstants.PG_LOGIN);
     request.setAttribute("Messagge", "Sessione utente terminata, effettuare di nuovo il login...");
 %>
-	<script language=Javascript>
-		top.document.location.href="<%=IWebConstants.PAGE_LOGOUT%>?Messagge=<%=response.encodeURL("Sessione utente terminata, effettuare di nuovo il login...")%>";
-	</script>
+<script language=Javascript>
+top.document.location.href="<%=IWebConstants.PAGE_LOGOUT%>?Messagge=<%=response.encodeURL("Sessione utente terminata, effettuare di nuovo il login...")%>";
+</script>
 <%
    	response.flushBuffer();
 } else {
@@ -126,17 +123,14 @@ if (session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
     Action actionObj = action.get(lStrAction);
     actionObj.setReqSes(request, session);
     actionObj.init(); // 2010-12-26 per eventuali inizializzazioni.
-    // Controllo che risolve i problemi di sessione
-    // nel caso un dettaglio di un evento venga richiamato da
+    // Controllo che risolve i problemi di sessione nel caso un dettaglio di un evento venga richiamato da
     // una delle funzioni di ricerca senza passare dal Dettaglio del fascicolo
     if (actionObj instanceof siap.siep.web.ActSIESDettaglioProvvedimento) { 
       	siap.siep.web.ActSIESDettaglioProvvedimento aActionDettaglio = (siap.siep.web.ActSIESDettaglioProvvedimento) actionObj;
       	aActionDettaglio.caricaFascicoloInSessione(request);
     }
-    // Per l'ActLogin e per l'ActLoadOrizontalMenu
-    // non vengono eseguiti controlli di abilitazione
-    // sul profilo dell'utente perchè
-    // sono operazioni abilitate per qualsiasi utente
+    // Per l'ActLogin e per l'ActLoadOrizontalMenu non vengono eseguiti controlli di abilitazione
+    // sul profilo dell'utente perchè sono operazioni abilitate per qualsiasi utente
     if ((!lStrAction.equals("siap.sico.security.action.ActLogin")) // ogni utente puo effettuare il login
     		// MEV INTEGRAZIONE SIES ADN: nuove pagine di login
     		&& (!lStrAction.equals("siap.sico.utenzaAdn.action.ActUtenzaAdn"))
@@ -168,7 +162,7 @@ if (session.getAttribute( ICostantiSecurity.SESSION_UTENTE_CONNESSO) == null
     response.setHeader("expires", "0");
 	try {
 %>
-    	<jsp:forward page="<%=lPage%>" />
+<jsp:forward page="<%=lPage%>"/>
 <%
     } catch(Exception ex) {
     	// 2019 [SG]: gestione degli errori (non errori) più ricorrenti
