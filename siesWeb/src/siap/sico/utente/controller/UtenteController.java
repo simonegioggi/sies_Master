@@ -20,7 +20,6 @@ import siap.sico.utente.dao.UtenteDAO;
 import siap.sico.utente.dao.UtenteSqlDAO;
 import siap.sico.utente.model.UtenteModel;
 import siap.sico.utente.model.UtenteViewModel;
-import siap.sico.utenzaAdn.dao.AssocUtenteSiesAdnDAO;
 
 /**
  * <p>
@@ -69,7 +68,7 @@ public class UtenteController extends SiapController implements IUtente {
 			throw new F3BException("UtenteController.ExInserisci: Non posso inserire: " + ex);
 		} finally {
 			cleanup(lUteDao);
-			cleanup(lUteSDao);
+			cleanup(lUteSDao);// sca
 			cleanup(lConn);
 		}
 		return lUteMod;
@@ -401,7 +400,7 @@ public class UtenteController extends SiapController implements IUtente {
 					"UtenteController.ExModificaUtente: Non posso inserire il soggetti : " + ex);
 		} finally {
 			cleanup(lUteDao);
-			cleanup(lUteSDao);
+			cleanup(lUteSDao); // sca
 
 			cleanup(lConn);
 		}
@@ -412,9 +411,8 @@ public class UtenteController extends SiapController implements IUtente {
 
 		Connection lConn = null;
 		UtenteDAO lUteDao = null;
+		// UtenteModel lUteMod = new UtenteModel(aUtente);
 		UtenteSqlDAO lUteSDao = null;
-		// MEV INTEGRAZIONE SIES ADN: aggiunta variabile
-		AssocUtenteSiesAdnDAO ausaDAO = null;
 
 		try {
 			lConn = getDBConnection();
@@ -422,13 +420,6 @@ public class UtenteController extends SiapController implements IUtente {
 			lUteDao.setPwd(Utils.cryptPassword(aUtente.getPwd()));
 			lUteDao.setCondizioneUpdate(aUtente.getUserId());
 			lUteDao.update();
-			// MEV INTEGRAZIONE SIES ADN: sia che provengo da forza cambio psw che da modifica psw,
-			// poichè imposto da amministratore di sistema o di ufficio, allora eseguo anche l'operazione
-			// di deassociazione utente_sies_adn
-			ausaDAO = new AssocUtenteSiesAdnDAO(lConn);
-			ausaDAO.setCondizioneByUteCodUtente(aUtente.getUserId());
-			ausaDAO.delete();
-			// FINE MEV INTEGRAZIONE SIES ADN
 			commit(lConn);
 		} catch (DAOException daoex) {
 			rollback(lConn);
@@ -439,7 +430,7 @@ public class UtenteController extends SiapController implements IUtente {
 					"UtenteController.ExModificaUtente: Non posso inserire il soggetti : " + ex);
 		} finally {
 			cleanup(lUteDao);
-			cleanup(lUteSDao);
+			cleanup(lUteSDao);// sca
 
 			cleanup(lConn);
 		}
@@ -467,7 +458,7 @@ public class UtenteController extends SiapController implements IUtente {
 			throw new F3BException("UtenteController.ExCancellaUtente: Non posso leggere  : " + ex);
 		} finally {
 			cleanup(lUteDao);
-			cleanup(lUteSDao);
+			cleanup(lUteSDao); // sca
 
 			cleanup(lConn);
 		}

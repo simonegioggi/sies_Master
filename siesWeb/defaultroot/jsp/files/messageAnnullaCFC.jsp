@@ -58,22 +58,20 @@
 	</SCRIPT>
 
 <%
-BigDecimal idEvento = (BigDecimal) request.getAttribute(ICostantiEvento.CAMPO_ID_EVENTO);
-String idUtente = UtenteConnesso.getUserId();
-// MEV 16: aggiunto recupero di attributi dalla request e passati come parametri alla popup
-String tipoWS 			= (String) request.getAttribute("tipoWS");
-String idSoggetto 		= (String) request.getAttribute("idSoggetto");
-String idSentenza 		= (String) request.getAttribute("idSentenza");
-String idFascicoloSiep 	= (String) request.getAttribute("idFascicoloSiep");
-// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
-String userAdn = UtenteConnesso.getUserAdn();
+	BigDecimal idEvento = (BigDecimal) request.getAttribute(ICostantiEvento.CAMPO_ID_EVENTO);
+  	String idUtente = UtenteConnesso.getUserId();
+  	// MEV 16: aggiunto recupero di attributi dalla request e passati come parametri alla popup
+  	String tipoWS 			= (String) request.getAttribute("tipoWS");
+  	String idSoggetto 		= (String) request.getAttribute("idSoggetto");
+  	String idSentenza 		= (String) request.getAttribute("idSentenza");
+  	String idFascicoloSiep 	= (String) request.getAttribute("idFascicoloSiep");
 %>
 
 		<link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
 	    <title>Messaggio</title>
 	</head>
 
-	<BODY class="corpo" onload="openPopup('/siesEsecuzione/cancellazioneContestuale.jsp?idEvento=<%=idEvento%>&idUtente=<%=idUtente%>&userAdn=<%=userAdn%>&tipoOperazione=ANNULLACFC&tipoWS=<%=tipoWS%>&idSoggetto=<%=idSoggetto%>&idSentenza=<%=idSentenza%>&idFascicoloSiep=<%=idFascicoloSiep%>');return(false);">
+	<BODY class="corpo" onload="openPopup('/siesEsecuzione/cancellazioneContestuale.jsp?idEvento=<%=idEvento%>&idUtente=<%=idUtente%>&tipoOperazione=ANNULLACFC&tipoWS=<%=tipoWS%>&idSoggetto=<%=idSoggetto%>&idSentenza=<%=idSentenza%>&idFascicoloSiep=<%=idFascicoloSiep%>');return(false);">
 		<% String message = (String) request.getAttribute(IWebConstants.MESSAGE_TEXT); %>
 	    <p>&nbsp;<p>&nbsp;<p>&nbsp;
 		<table width="300"  cellspacing="0" align="center" class="tab" border="1">

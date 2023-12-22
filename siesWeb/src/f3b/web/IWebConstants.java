@@ -122,7 +122,4 @@ public interface IWebConstants {
 	// 20190611 [SG]: aggiunta costante
 	public static final String PG_MAIN_ATTESA = ROOT_DIR + "MainAttesa.jsp";
 
-	// MEV INTEGRAZIONE SIES ADN: aggiunte costanti
-	public static final String PG_MESSAGE_ADN = ROOT_DIR + "files/messageAdn.jsp";
-	public static final String PG_LOGIN_SIES = "/loginSies.jsp";
 }

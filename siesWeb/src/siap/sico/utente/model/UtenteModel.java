@@ -2,14 +2,14 @@ package siap.sico.utente.model;
 
 import java.util.Date;
 
-import f3b.security.model.UserModel;
 import siap.sico.profilo.model.ProfiloModel;
 import siap.sico.ufficio.model.UfficioModel;
+import f3b.security.model.UserModel;
 
 public class UtenteModel extends UserModel {
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 5532027880026954541L;
 
@@ -28,8 +28,6 @@ public class UtenteModel extends UserModel {
 	private String mIP;
 	private String mUseridNSC;
 	private String mPwdNSC;
-	// MEV INTEGRAZIONE SIES ADN: aggiunta variabile
-	private String mUserAdn;
 
 	private UfficioModel mUfficioUtente;
 
@@ -53,7 +51,6 @@ public class UtenteModel extends UserModel {
 		mIP = null;
 		mUseridNSC = "";
 		mPwdNSC = "";
-		mUserAdn = "";
 	}
 
 	public UtenteModel(String aUserId, String aPassword) {
@@ -75,7 +72,6 @@ public class UtenteModel extends UserModel {
 		mIP = "";
 		mUseridNSC = "";
 		mPwdNSC = "";
-		mUserAdn = "";
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -99,7 +95,7 @@ public class UtenteModel extends UserModel {
 		mIP = aModel.mIP;
 		mUseridNSC = aModel.mUseridNSC;
 		mPwdNSC = aModel.mPwdNSC;
-		mUserAdn = aModel.mUserAdn;
+
 	}
 
 	// COSTRUTTORE MODEL
@@ -107,7 +103,7 @@ public class UtenteModel extends UserModel {
 			String aFax, String aEmail, Date aDataFineValidita, Date aDataOraConnessione,
 			String aCodOperatoreInserimento, Date aDataInserimento, String aCodOperatoreAggiornamento,
 			Date aDataAggiornamento, Date aDataUltimaModifcaPwd, String mIP, String aUseridNSC,
-			String aPwdNSC/* , String aUserAdn */) {
+			String aPwdNSC) {
 		super(aUserId, aPwd);
 
 		mCognome = aCognome;
@@ -126,7 +122,6 @@ public class UtenteModel extends UserModel {
 		mIP = "";
 		mUseridNSC = aUseridNSC;
 		mPwdNSC = aPwdNSC;
-		// mUserAdn = aUserAdn;
 	}
 
 	//
@@ -197,10 +192,6 @@ public class UtenteModel extends UserModel {
 		return mPwdNSC;
 	}
 
-	public String getUserAdn() {
-		return mUserAdn;
-	}
-
 	//
 	// METODI SET()
 	//
@@ -269,16 +260,12 @@ public class UtenteModel extends UserModel {
 		mPwdNSC = aValore;
 	}
 
-	public void setUserAdn(String aValore) {
-		this.mUserAdn = aValore;
-	}
-
 	public String toString() {
 		String lToString = super.toString() + " - " + mCognome + " - " + mNome + " - " + mTelefono + " - "
 				+ mFax + " - " + mEmail + " - " + mDataFineValidita + " - " + mDataOraConnessione + " - "
 				+ mCodOperatoreInserimento + " - " + mDataInserimento + " - " + mCodOperatoreAggiornamento
 				+ " - " + mDataAggiornamento + " - " + mDataUltimaModifcaPwd + " - " + mIP + " - "
-				+ mUseridNSC + " - " + mPwdNSC + " - " + mUserAdn;
+				+ mUseridNSC + " - " + mPwdNSC;
 
 		return lToString;
 	}
@@ -290,7 +277,7 @@ public class UtenteModel extends UserModel {
 	 * valorizzato ed è diverso dal valore 99 assegnato alla costante ProfiloModel.COD_PROFILO_SYS_ADMIN,
 	 * ritorna un <code>false</code>.
 	 * <p>
-	 *
+	 * 
 	 * @return boolean ritorna lo stato logico.
 	 */
 	public boolean isSysAdmin() {

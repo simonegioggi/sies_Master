@@ -28,8 +28,6 @@
                 var idUtente = $.getUrlVar('idUtente');
                 //MEV_06
                 var tipoOperazione = $.getUrlVar('tipoOperazione');
-             	// MEV INTEGRAZIONE SIES ADN: aggiunta impostazione di variabile userAdn
-                var userAdn = $.getUrlVar('userAdn');
                 
                 //Check sui parametri
                 //se non sono presenti si presenta pagina d'errore
@@ -49,9 +47,7 @@
     				var azioneTrasfCumulo	= $.getUrlVar('azioneTrasfCumulo');
     				if ('siepToNsc' == tipoWS) {
     					$.ajax({
-						    url: "trasferisciFoglioComplementareSIEP?action="+action+"&idEvento="+idEvento+"&idUtente="+idUtente+"&userAdn="+userAdn+
-						    		"&tipoOperazione="+tipoOperazione+"&idSoggetto="+idSoggetto+"&idSentenza="+idSentenza+"&idFascicoloSiep="+idFascicoloSiep+
-						    		"&idSinonimo="+idSinonimo+"&idSoggettoNSC="+idSoggettoNSC+"&azioneTrasfCumulo="+azioneTrasfCumulo,
+						    url: "trasferisciFoglioComplementareSIEP?action="+action+"&idEvento="+idEvento+"&idUtente="+idUtente+"&tipoOperazione="+tipoOperazione+"&idSoggetto="+idSoggetto+"&idSentenza="+idSentenza+"&idFascicoloSiep="+idFascicoloSiep+"&idSinonimo="+idSinonimo+"&idSoggettoNSC="+idSoggettoNSC+"&azioneTrasfCumulo="+azioneTrasfCumulo,
 						    cache: false,
 						    dataType: "html",
 						    success: function(data) {
@@ -65,7 +61,7 @@
     				} else {
 	 					//MEV 35253
 	 					$.ajax({
-						    url: "trasferimento?action="+action+"&idEvento="+idEvento+"&idUtente="+idUtente+"&userAdn="+userAdn+"&tipoOperazione="+tipoOperazione,
+						    url: "trasferimento?action="+action+"&idEvento="+idEvento+"&idUtente="+idUtente+"&tipoOperazione="+tipoOperazione,
 						    cache: false,
 						    dataType: "html",
 						    success: function(data) {
