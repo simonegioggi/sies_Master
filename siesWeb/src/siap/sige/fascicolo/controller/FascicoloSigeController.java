@@ -2396,6 +2396,20 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 				BigDecimal lSequence = lSogDao.insert();
 				aFSigeModel.setSogIdSoggetto(lSequence);
 			}
+			// Ticket#202312270110 - Se il soggetto è iscritto da altro ufficio non sarà poi più modificabile anche 
+			//                       se agganciato al fascicolo del proprio ufficio.
+			//                       Se decido di agganciarlo al fascicolo corrente lo devo marcare come di proprietà
+			else {
+			  lSogDao = new SoggettoDAO(lConn);
+			  
+			  lSogDao.setCodOperatoreInserimento(aFSigeModel.getCodOperatoreInserimento());
+			  lSogDao.setCodUfficioInserimento(aFSigeModel.getCodUfficioInserimento());
+			  lSogDao.setDataInserimento(DateUtils.getSysDate());  
+			  
+			  lSogDao.selCondizioneUpdate (aFSigeModel.getSogIdSoggetto());
+			  lSogDao.update();
+			}
+			// Ticket#202312270110 - FINE
 		} catch (DAOException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 			// siesLogger al posto di LogF3B.getLogger()
