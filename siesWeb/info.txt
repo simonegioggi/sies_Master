@@ -1,17 +1,7 @@
-Ticket#202312270110 - SIGE nnon fà modificare i dati
+BRANCH SIES VERSIONE 12.5.7.0
+Nasce dal branch 12.5.6.0 in data 22/12/2023
+Questa release verrà rilasciata il 26/01/2024 (Patch mese di Gennaio 2024)
 
+Comprende i seguenti Ticket MAC:
 
-In fase di inserimento di un fascicolo SIGE, provenendo da ricerca soggetto, 
-il sistema duplica il soggetto se agganciato ad altri fascicoli, altrimenti lo aggancia.
-
-Nell'agganciarlo non aggiornava i dati del cod ufficio inserimento per cui 
-risultava poi non modificabile.
-
-Modulo corretto
-siap.sige.fascicolo.controller.FascicoloSigeController
-
-metodo SuperSoggetto
-
-Se si decide di agganciare il soggetto al fascicolo si aggiorna anche cod ufficio 
-inserimente e cod operatore inserimento come se fosse stato inserito contestualmente
-al fasciolo.
+1)	Ticket#
