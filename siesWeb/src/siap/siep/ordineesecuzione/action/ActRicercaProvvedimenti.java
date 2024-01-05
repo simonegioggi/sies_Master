@@ -145,9 +145,22 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 		IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
 		lModel.setContesto("MOTIVO_PROVVEDIMENTO");
 		// lModel.setCodiceAlternativo("REVOCA");
-		Collection lColMotivo = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
-		setRequestAttribute("AllMotivi", lColMotivo);
-
+    // 2023.01.05 - Inverce di ricaricare tutta la tabella (1500 codici) ci si limita a quelli dei 2 domini
+    //              REVOCA e ESTINZIONE_REATO i soli di interesse per la jsp
+		// Collection lColMotivo = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+		// setRequestAttribute("AllMotivi", lColMotivo);
+		lModel.setContesto("MOTIVO_PROVVEDIMENTO");
+    lModel.setCodiceAlternativo("REVOCA");
+    Collection lColMotivoREVOCA = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+    lModel.setContesto("MOTIVO_PROVVEDIMENTO");
+    lModel.setCodiceAlternativo("ESTINZIONE_REATO");
+    Collection lColMotivoESTINZIONE = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+    Collection lColMotivo = new Vector();
+    lColMotivo.addAll(lColMotivoREVOCA);
+    lColMotivo.addAll(lColMotivoESTINZIONE);
+    setRequestAttribute("AllMotivi", lColMotivo);
+		// 2023.01.05 - FINE
+		
 		// MEV 15 - Revisione SIGE
 		// Aggiunto parametro per identificare la funzione che richiama la maschera
 		// di Elenco Provvedimenti PM da Iscrizione Manuale.
