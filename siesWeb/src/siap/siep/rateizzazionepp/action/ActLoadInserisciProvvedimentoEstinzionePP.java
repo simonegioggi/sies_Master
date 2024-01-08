@@ -34,13 +34,14 @@ import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * Classe action per il caricamento dell'inserimento del Provvedimento Estinzione pena pecunairia
+ * Classe action per il caricamento dell'inserimento del Provvedimento di AVVENUTO PAGAMENTO pena pecuniaria
  *
  * @author sgioggi
  * @since MEV_2023-33
  * @version 1.0
  */
-public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implements ICostantiRateizzazionePP {
+public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap
+		implements ICostantiRateizzazionePP {
 
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
@@ -56,9 +57,9 @@ public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implem
 		if (lFascMod.getFlagValidato().equalsIgnoreCase("N")) {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
-					"Il Procedimento N." + lFascMod.getChiaveAnno() + "/" + lFascMod.getChiaveProgr()
-							+ " non è stato Validato. Impossibile inserire il Provvedimento di Estinzione!");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Il Procedimento N." + lFascMod.getChiaveAnno()
+					+ "/" + lFascMod.getChiaveProgr()
+					+ " non è stato Validato. Impossibile inserire il Provvedimento di Avvenuto Pagamento!");
 			lRedirigi.setAction("siap.siep.fascicolo.action.ActLoadRicercaFascicoloPerValidazione&"
 					+ ICostantiFascicoloSiep.CAMPO_AZIONE_CHIAMANTE + "=" + getClass().getName());
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
@@ -83,104 +84,104 @@ public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implem
 		// controllo se evento non sia validato
 		isEventoNonValidato();
 
-		
 		// Gli OI o Assimilabile e relative rate e bollettini
 		// Attenzione serve per controllare che tutte le rate siano state pagate o meglio che l'importo dovuto
 		// si stato pagato.
 		IRateizzazionePP irpp = SIEPLookupRemote.getRateizzazionePPRemote();
 		String[] listaCodici = new String[] { "0622", "1307", "1308" };
+		// True = Solo validati
 		Vector<EventoRateizzazionePPModel> listaOrdiniIngiunzione = irpp
-				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, true); // True = Solo validati
+				.exRicercaEventiRateizzazionePP(lFascMod.getIdFascicoloSiep(), listaCodici, true);
 
 		IBollettinoPagopa lBollCtrl = SIEPLookupRemote.getBollettinoPagopaRemote();
 		for (EventoRateizzazionePPModel evento : listaOrdiniIngiunzione) {
-			Vector <RateizzazionePPModel> listaRateizzazioni = evento.getListaRateizzazioniPP();
-			
+			Vector<RateizzazionePPModel> listaRateizzazioni = evento.getListaRateizzazioniPP();
 			for (RateizzazionePPModel rata : listaRateizzazioni) {
-				Vector <BollettinoPagopaModel> listaBollettini = lBollCtrl.ExRicercaBollettiniPagopaByIdRateizzazione(rata.getIdRateizzazionePP());
+				Vector<BollettinoPagopaModel> listaBollettini = lBollCtrl
+						.ExRicercaBollettiniPagopaByIdRateizzazione(rata.getIdRateizzazionePP());
 				rata.setListaBollettini(listaBollettini);
 			}
 		}
-		
-		//setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
-		
+		// setRequestAttribute("listaOrdiniIngiunzione", listaOrdiniIngiunzione);
+
 		EventoRateizzazionePPModel ultimoOI = null;
-		Vector <RateizzazionePPModel> listaRateizzazioni = null;
-		if (listaOrdiniIngiunzione.size()>0) {			
+		Vector<RateizzazionePPModel> listaRateizzazioni = null;
+		if (listaOrdiniIngiunzione.size() > 0) {
 			// Prendo in considerazione l'ultimo OI o assimilabile
 			ultimoOI = listaOrdiniIngiunzione.elementAt(0);
-			
+
 			// Carico in form solo il più recente
-			Vector<EventoRateizzazionePPModel> listaForm = new Vector<EventoRateizzazionePPModel>();
+			Vector<EventoRateizzazionePPModel> listaForm = new Vector<>();
 			listaForm.add(ultimoOI);
 			setRequestAttribute("listaOrdiniIngiunzione", listaForm);
-			
+
 			listaRateizzazioni = ultimoOI.getListaRateizzazioniPP();
 
 			BigDecimal importoDaPagare = listaRateizzazioni.elementAt(0).getImportoDaPagare();
-			BigDecimal importoRate     = new BigDecimal(0);
-			BigDecimal importoPagato   = new BigDecimal(0);
+			BigDecimal importoRate = new BigDecimal(0);
+			BigDecimal importoPagato = new BigDecimal(0);
 
-			for (RateizzazionePPModel rate: listaRateizzazioni) {		
-				Vector <BollettinoPagopaModel> listaBollettini = rate.getListaBollettini();
-				for (BollettinoPagopaModel bollettino: listaBollettini) {
-					importoRate   = importoRate.add(bollettino.getImportoRata());
-					importoPagato = importoPagato.add(bollettino.getImportoPagato()!=null ? bollettino.getImportoPagato(): new BigDecimal(0) );
+			for (RateizzazionePPModel rate : listaRateizzazioni) {
+				Vector<BollettinoPagopaModel> listaBollettini = rate.getListaBollettini();
+				for (BollettinoPagopaModel bollettino : listaBollettini) {
+					importoRate = importoRate.add(bollettino.getImportoRata());
+					importoPagato = importoPagato
+							.add(bollettino.getImportoPagato() != null ? bollettino.getImportoPagato()
+									: new BigDecimal(0));
 				}
 			}
-			
-			if (importoDaPagare.compareTo(importoPagato)!=0) {
-				EventoModel  eve = ultimoOI.getEvento();
-				String pre = "l'";
-				if (eve.getCodTipoProvvedimento().equals("04")) pre = "il ";
 
-				String warnImportoRate = "Per "+pre+eve.getDescrTipoProvvedimento()+" "+eve.getDescrMotivo();
-				warnImportoRate += " del "+DateUtils.getDateToString(eve.getDataEmissione(),"dd/MM/yyyy")+"";
-				warnImportoRate += " l'importo pagato "+StringUtils.toEuroFormat(importoPagato)+" Euro";
-				warnImportoRate += " non corrisponde all'importo da pagare "+StringUtils.toEuroFormat(importoDaPagare)+" Euro.";
+			if (importoDaPagare.compareTo(importoPagato) != 0) {
+				EventoModel eve = ultimoOI.getEvento();
+				String pre = "l'";
+				if (eve.getCodTipoProvvedimento().equals("04"))
+					pre = "il ";
+
+				String warnImportoRate = "Per " + pre + eve.getDescrTipoProvvedimento() + " "
+						+ eve.getDescrMotivo();
+				warnImportoRate += " del " + DateUtils.getDateToString(eve.getDataEmissione(), "dd/MM/yyyy")
+						+ "";
+				warnImportoRate += " l'importo pagato " + StringUtils.toEuroFormat(importoPagato) + " Euro";
+				warnImportoRate += " non corrisponde all'importo da pagare "
+						+ StringUtils.toEuroFormat(importoDaPagare) + " Euro.";
 				warnImportoRate += " Non è possibile procedere con l'emissione del provvedimento.";
-				
+
 				RedirectTo lRedirigi = new RedirectTo();
 				lRedirigi.setPage(IWebConstants.PG_MAIN);
-				setRequestAttribute(IWebConstants.MESSAGE_TEXT,warnImportoRate);
+				setRequestAttribute(IWebConstants.MESSAGE_TEXT, warnImportoRate);
 
 				lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActElencoStatoPagamenti&"
 						+ ICostantiEvento.CAMPO_ID_EVENTO + "=" + eve.getIdEvento());
 				setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
 				return IWebConstants.PG_MESSAGE;
 			}
-		}
-		else {
+		} else {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Non risulta emesso alcun ordine di ingiunzione. Impossibile procedere.");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,
+					"Non risulta emesso alcun ordine di ingiunzione. Impossibile procedere.");
 
-			lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti");
+			lRedirigi.setAction(
+					"siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti");
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
-			return IWebConstants.PG_MESSAGE;			
+			return IWebConstants.PG_MESSAGE;
 		}
 
-		
-		//TODO VERIFICARE
+		// TODO VERIFICARE
 		/*
-		IEvento lCtrl = SICOLookupRemote.getEventoRemote();
-		Hashtable<BigDecimal, EventoNotificaModel> listaOrdiniIngiunzione = new Hashtable<>();
-		// MEV_2023-33: aggiunto controllo per storicizzazione evento OIP
-		for (RateizzazionePPModel rata : listaRateizzazioni) {
-			if (rata.getEveIdEvento() != null) {
-				EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey(rata.getEveIdEvento());
-				if (listaOrdiniIngiunzione.get(rata.getEveIdEvento()) != null) {
-					rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento()));
-				} else {
-					rata.setOrdineIngiunzione(lEveNotMod);
-					listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod);
-				}
-				rata.setStoricizzato("A".equals(lEveNotMod.getEvento().getFlagDocumentoRegistrato()));
-			}
-		}
+		 * IEvento lCtrl = SICOLookupRemote.getEventoRemote(); Hashtable<BigDecimal, EventoNotificaModel>
+		 * listaOrdiniIngiunzione = new Hashtable<>(); // MEV_2023-33: aggiunto controllo per storicizzazione
+		 * evento OIP for (RateizzazionePPModel rata : listaRateizzazioni) { if (rata.getEveIdEvento() !=
+		 * null) { EventoNotificaModel lEveNotMod = lCtrl.ExRicercaEventoNotificaByKey(rata.getEveIdEvento());
+		 * if (listaOrdiniIngiunzione.get(rata.getEveIdEvento()) != null) {
+		 * rata.setOrdineIngiunzione(listaOrdiniIngiunzione.get(rata.getEveIdEvento())); } else {
+		 * rata.setOrdineIngiunzione(lEveNotMod);
+		 * listaOrdiniIngiunzione.put(lEveNotMod.getEvento().getIdEvento(), lEveNotMod); }
+		 * rata.setStoricizzato("A".equals(lEveNotMod.getEvento().getFlagDocumentoRegistrato())); } }
+		 *
+		 * setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
+		 */
 
-		setRequestAttribute("listaRateizzazioni", listaRateizzazioni);
-*/
 		// Posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
