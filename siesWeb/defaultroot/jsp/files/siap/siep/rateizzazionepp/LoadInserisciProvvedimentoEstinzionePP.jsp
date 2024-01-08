@@ -248,11 +248,11 @@ if ("M".equals(modalita)) {
 <%
 if ("I".equals(modalita)) {
 %>
-      <font class="campo">Provvedimento Estinzione Pena Pecuniaria</font>
+      <font class="campo">Provvedimento Avvenuto Pagamento Pena Pecuniaria</font>
 <%
 } else if ("M".equals(modalita)) {
 %>
-      <font class="campo">Modifica Provvedimento Estinzione Pena Pecuniaria</font>
+      <font class="campo">Modifica Provvedimento Avvenuto Pagamento Pena Pecuniaria</font>
 <%
 }
 %>

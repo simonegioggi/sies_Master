@@ -153,7 +153,7 @@ public class ActLoadInserisciProvvedimentoEstinzionePP extends ActionSiap implem
 		else {
 			RedirectTo lRedirigi = new RedirectTo();
 			lRedirigi.setPage(IWebConstants.PG_MAIN);
-			setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Nonrisulta emesso alcun ordine di ingiunzione. Impossibile procedere.");
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT,"Non risulta emesso alcun ordine di ingiunzione. Impossibile procedere.");
 
 			lRedirigi.setAction("siap.siep.sanzionesostitutiva.action.ActGrigliaOrdineIngiunzioneAltriProvvedimenti");
 			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);

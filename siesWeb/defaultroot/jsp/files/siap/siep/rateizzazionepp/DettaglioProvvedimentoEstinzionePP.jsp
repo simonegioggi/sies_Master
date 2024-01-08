@@ -73,7 +73,7 @@
       </td>
       <td class="LBG">
         <font class="label">Funzione :</font>&nbsp;&nbsp;
-        <font class="campo">Dettaglio Provvedimento Estinzione Pena Pecuniaria</font>
+        <font class="campo">Dettaglio Provvedimento Avvenuto Pagamento Pena Pecuniaria</font>
       </td>
   
       <%
