@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.web.IWebConstants;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.soggetto.action.ICostantiSoggetto;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -12,8 +14,6 @@ import siap.sige.fascicolo.controller.IFascicoloSige;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
 import siap.sige.util.SIGELookupRemote;
 import siap.sige.web.ActionSige;
-import f3b.log.LogF3B;
-import f3b.web.IWebConstants;
 
 /**
  * <p>
@@ -54,10 +54,10 @@ public class ActRicercaSoggettiConProcSige extends ActionSige implements ICostan
 		// Si Riempie il model del Soggetto.
 		lSogMod.setCognome(getRequestStringParameter(ICostantiSoggetto.CAMPO_COGNOME));
 		lSogMod.setNome(getRequestStringParameter(ICostantiSoggetto.CAMPO_NOME));
-		if (!this.isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
+		if (!isRequestParameterNullObj(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)
 				&& getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA).length() > 1) {
-			ComuneModel lComMod = new ComuneModel(
-					getCodComuneByDescrFlagVal(getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
+			ComuneModel lComMod = new ComuneModel(getCodComuneByDescrFlagVal(
+					getRequestStringParameter(ICostantiSoggetto.CAMPO_COD_COMUNE_NASCITA)));
 			lSogMod.setCodComuneNascita(lComMod.getCodComune());
 		}
 
@@ -108,8 +108,11 @@ public class ActRicercaSoggettiConProcSige extends ActionSige implements ICostan
 		BigDecimal CountRisultati;
 		if (isRequestParameterNullObj("CountRisultati")) {
 			// MEV_57: aggiunto parametro di passaggio
-			CountRisultati = lFascSigeCtrl.ExGetNumRicercaFascicoliBySoggetto(lSogMod,
-					strCodUfficioUtenteConnesso, lCodDistretto, checkMinori());
+			// CountRisultati = lFascSigeCtrl.ExGetNumRicercaFascicoliBySoggetto(lSogMod,
+			// strCodUfficioUtenteConnesso, lCodDistretto, checkMinori());
+			// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+			CountRisultati = ((FascicoloSigeEstesoModel) lFascicoliSoggetti.get(0)).getFascicoloSige()
+					.getCountRisultati();
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 

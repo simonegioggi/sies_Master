@@ -392,7 +392,9 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO ='"
 					+ aModel.getCodTipoProvvedimento() + "'";
 
-		lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('55', '56', '01', '11') ";
+		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
+    //lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('55', '56', '01', '11') ";
+		lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('55', '56', '01', '11') ";
 
 		return lCondizioni;
 	}
@@ -403,8 +405,10 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 		if (aModel.getCodTipoProvvedimento() != null)
 			lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO ='"
 					+ aModel.getCodTipoProvvedimento() + "'";
-
-		lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
+		
+		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
+		//lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
+    lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52', '55', '56', '11', '03','14','18','07','06','04','10','15','16') ";
 
 		return lCondizioni;
 	}
@@ -416,7 +420,9 @@ public class ProvvedimentoSigeSqlDAO extends SIAPSqlDAO {
 			lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO ='"
 					+ aModel.getCodTipoProvvedimento() + "'";
 
-		lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52','55', '56', '01', '11','02','05','09','12','17','15','16') ";
+		// Ticket#202310120117 aggiunto += era presente solo = e si perdeva le 2 condizioni precedenti
+		//lCondizioni = " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52','55', '56', '01', '11','02','05','09','12','17','15','16') ";
+    lCondizioni += " AND PROVVEDIMENTO_SIGE.COD_TIPO_PROVVEDIMENTO_SIGE NOT IN ('52','55', '56', '01', '11','02','05','09','12','17','15','16') ";
 		return lCondizioni;
 	}
 
