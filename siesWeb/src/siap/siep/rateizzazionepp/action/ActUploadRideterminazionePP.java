@@ -70,12 +70,14 @@ public class ActUploadRideterminazionePP extends ActionSiap implements ICostanti
 
 		setRequestAttribute(IWebConstants.MESSAGE_TEXT, "Aggiornamento Documento Avvenuto Correttamente!");
 
-		RedirectTo rt = new RedirectTo();
-		rt.setPage(IWebConstants.PG_MAIN);
-		rt.setAction(getRequestStringParameter(ICostantiEvento.CAMPO_AZIONE_DETTAGLIO));
-		rt.setParameter(ICostantiEvento.CAMPO_ID_EVENTO, em.getIdEvento().toString());
-		setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
-
+		if (!isRequestParameterNullObj(CAMPO_AZIONE_DETTAGLIO))
+		{
+			RedirectTo rt = new RedirectTo();
+			rt.setPage(IWebConstants.PG_MAIN);
+			rt.setAction(getRequestStringParameter(ICostantiEvento.CAMPO_AZIONE_DETTAGLIO));
+			rt.setParameter(ICostantiEvento.CAMPO_ID_EVENTO, em.getIdEvento().toString());
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + rt);
+		}
 		// info per il log
 		siesLogger.info(getClass().getName() + ".processRequest: fine");
 

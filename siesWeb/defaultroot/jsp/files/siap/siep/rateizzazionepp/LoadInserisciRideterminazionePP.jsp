@@ -491,7 +491,7 @@ if ("I".equals(modalita) && contaLibere == 0 && (!isImportoPagatoMinore || !isPr
 		</td>
 		<td class="L" width="20%">Anno / Numero provvedimento</td>
 		<td class="L">
-			<input type="text" Title="Anno Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getAnnoSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_PROVVEDIMENTO%>" size="4" maxlength="4">
+			<input type="text" Title="Anno Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getAnnoSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_ANNO_PROVVEDIMENTO%>" size="4" maxlength="4" <%=IWebConstants.UTIL_DATA_ANNO%>>
 			/
 			<input type="text" Title="Numero Provvedimento" value="<%=StringUtils.toStringJSP(annotazioneManuale.getNumeroSiep())%>" name="<%=ICostantiRateizzazionePP.CAMPO_NUMERO_PROVVEDIMENTO%>" size="6" maxlength="6">
   		</td>
