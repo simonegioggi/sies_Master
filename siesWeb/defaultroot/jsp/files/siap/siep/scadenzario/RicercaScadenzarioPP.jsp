@@ -73,7 +73,55 @@
   <input type="hidden" name="<%=ICostantiScadenzario.CAMPO_MESI_SCADENZA%>"   value="<%=StringUtils.toStringJSP(criteriRicerca.getNumMesi(),"")%>" />
   <input type="hidden" name="<%=ICostantiScadenzario.CAMPO_GIORNI_SCADENZA%>" value="<%=StringUtils.toStringJSP(criteriRicerca.getNumGiorni(),"")%>" />
 </form>
- 
+
+
+<table style="width: 500px;">
+  <tr><td class="titolo" colspan="4">Criteri Selezionati</td></tr>
+  <tr>
+    <td class="L">Procedimento  (Anno/Numero)</td>
+    <td class="c"><font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getChiaveAnnoIniziale(),"____")%>/<%=StringUtils.toStringJSP(criteriRicerca.getChiaveProgrIniziale(),"______")%></font></td>
+  </tr>
+	<tr>
+	  <td class="l" width1="15%">Tutti</td>
+	  <td class="c" width1="15%">
+	  	<% if ("Tutti".equals(criteriRicerca.getTipoRic())) { %>
+	  	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0">
+	  	<% } else {%>&nbsp;<% } %>
+	  </td>
+	  <td class="l" width1="70%" colspan=2></td>
+	</tr>
+	<tr>
+	  <td class="l">In scadenza</td>
+	  <td class="c">
+	  	<% if ("sette".equals(criteriRicerca.getTipoRic())) { %>
+	  	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0">
+	  	<% } else {%>&nbsp;<% } %>
+	  </td>
+	  <td class="L" width1="10%">entro:
+	    Anni <font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getNumAnni(),"__")%></font>
+	    Mesi <font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getNumMesi(),"__")%></font>
+	    Giorni <font class="campo"><%=StringUtils.toStringJSP(criteriRicerca.getNumGiorni(),"__")%></font>
+	  </td>
+	</tr>
+	<tr>
+	  <td class="l">In scadenza Oggi</td>
+ 	  <td class="c">
+	  	<% if ("oggi".equals(criteriRicerca.getTipoRic())) { %>
+	  	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0">
+	  	<% } else {%>&nbsp;<% } %>
+		</td>
+	</tr>
+	<tr>
+	  <td class="l">Scaduti</td>
+ 	  <td class="c">
+	  	<% if ("scaduto".equals(criteriRicerca.getTipoRic())) { %>
+	  	<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>V.gif" border="0">
+	  	<% } else {%>&nbsp;<% } %>
+		</td>
+	</tr>  
+</table> 
+
+
  
 <FORM method="POST" name="elenco" action="<%=IWebConstants.PG_MAIN%>">    
     <br>
