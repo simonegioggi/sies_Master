@@ -4,6 +4,7 @@
 
 
 <jsp:useBean id="BatchPagoPa" scope="request" class="siap.siep.pagoPaBatch.model.BatchPagopaModel" />
+<jsp:useBean id="UtenteConnesso" scope="session" class="siap.sico.utente.model.UtenteModel" />
 
 <html>
 <head>
@@ -28,6 +29,7 @@
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td>&nbsp;</td></tr>
+	<% if (UtenteConnesso.getUserProfile().getProfileId().intValue() == 99 ) { %>
   <tr>
     <td>
       <center>
@@ -40,6 +42,15 @@
       </center>
     </td>
   </tr>	
+  <% } else { %>
+  <tr>
+    <td>
+      <center>
+        <font size=+1 color=navy>Avvisare l'Amministratore di sistema</font>
+      </center>
+    </td>
+  </tr>  
+  <% } %>
 </table>
 </div>
 </FORM>

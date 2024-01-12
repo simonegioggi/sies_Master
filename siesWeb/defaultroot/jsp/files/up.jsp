@@ -98,9 +98,14 @@ Se Amministratore di Sistema (99) e sono presenti errori o segnalazioni nell'ult
 lancio del batchPagopa si visualizza l'icona di alert
 --%>
 <% 
-if (   UtenteConnesso.getUserProfile().getProfileId().intValue() == 99
-    && "S".equals(ErroreBatchPagoPa)
-   ) 
+if ( "S".equals(ErroreBatchPagoPa)
+		&& (   UtenteConnesso.getUserProfile().getProfileId().intValue() == 99
+				|| UtenteConnesso.getUserProfile().getProfileId().intValue() == 90
+		    || UtenteConnesso.getUserProfile().getProfileId().intValue() == 4
+		    || UtenteConnesso.getUserProfile().getProfileId().intValue() == 40
+		    || UtenteConnesso.getUserProfile().getProfileId().intValue() == 50
+		   )
+   ) 	
 {%>
 			<a href="<%=IWebConstants.PG_MAIN+"?"+IWebConstants.ACTION_FIELD+"=siap.siep.pagoPA.action.ActLoadAvvisoBatchPagoPA&IdBatchPagoPa="+BatchPagoPa.getIdBatchPagopa()%>" target="body">
   				<img src="/images/attenzione.jpg" alt="" width="32" height="32" border="0" align="middle" title="Avviso Batch PagoPA">
