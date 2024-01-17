@@ -41,9 +41,10 @@ import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.sius.fascicolo.model.FascicoloSiusCertBlobModel;
 
 /**
+ * Classe che preleva i dati per la richiesta del Certificato
  * 
  * @author Engineering
- * 
+ * @version	1.0
  */
 @SuppressWarnings("rawtypes")
 public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICostantiSecurity {
@@ -382,9 +383,8 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		datiRichiesta.setANAGRAFICA(anagrafica);
 
 		// Richiesta Certificato in caso di Omonimia/Sinonimia
-		if (progAnagraficaNSC != null) {
+		if (progAnagraficaNSC != null)
 			datiRichiesta.setPROGANAGRAFICANSC(progAnagraficaNSC);
-		}
 
 		/*******************************************************************************/
 		/* Element SERVIZIO_CERTIFICATIVO */
@@ -398,6 +398,30 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 
 		DATIRISPOSTACERTIFICATO risposta = SippiHelper.richiestaCertificato(datiRichiesta,
 				datiAutenticazione);
+
+		RedirectTo lRedirigi = new RedirectTo();
+		lRedirigi.setPage(IWebConstants.PG_MAIN);
+
+		if (Utils.isNullObj(risposta)) {
+			String testo = "ATTENZIONE! Errore nella risposta del WebService esposto da NSC (Nuovo Sistema"
+					+ " informativo del Casellario giudiziale): l'oggetto 'DATIRISPOSTACERTIFICATO'"
+					+ " e' nullo! Contattare il servizio di Help Desk del Casellario!";
+			siesLogger.error(testo);
+			siesLogger.error(Utils.isNullObj(datiRichiesta.getPROGANAGRAFICANSC()) ? "PROGANAGRAFICANSC NULLO"
+					: datiRichiesta.getPROGANAGRAFICANSC());
+			siesLogger.error(datiRichiesta.getDATIUTENTE().getCOGNOMEUTENTE() + " "
+					+ datiRichiesta.getDATIUTENTE().getNOMEUTENTE() + " "
+					+ datiRichiesta.getDATIUTENTE().getUSERNAMESIPPI());
+			siesLogger.error(datiAutenticazione.getUsername());
+			setRequestAttribute(IWebConstants.MESSAGE_TEXT, testo);
+			if (tipoFascicolo.equals("SIEP")) {
+				lRedirigi.setAction("siap.siep.istruttoria.action.ActLoadInserisciCertificatoPenale");
+			} else {
+				lRedirigi.setAction("siap.sius.fascicolo.action.ActLoadRichiestaCertificatoPenale");
+			}
+			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lRedirigi);
+			return IWebConstants.PG_MESSAGE;
+		}
 
 		ActRispostaDatiRichiestaCertificato objRispostaNsc = new ActRispostaDatiRichiestaCertificato();
 
@@ -426,9 +450,6 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 		// LogF3B.getLogger()
 		siesLogger.info("-------------------------------------------------");
 
-		RedirectTo lRedirigi = new RedirectTo();
-		lRedirigi.setPage(IWebConstants.PG_MAIN);
-
 		// Non ci sono OMONIMI/SINONIMI
 		if (lListaOmonimi.size() == 0) {
 
@@ -456,9 +477,8 @@ public class ActPrelevaDatiRichiestaCertificato extends ActWsBase implements ICo
 				// Presenza errori o warning
 
 				// Se l'esito della richiesta è il seguente: "ERRORE: PASSWORD NON VALIDA"
-				// Bisogna cancellare i campi USERID_NSC e PWD_NSC presenti sulla
-				// tabella UTENTE, così da consentire all'utente di inserire le credenziali
-				// corrette.
+				// Bisogna cancellare i campi USERID_NSC e PWD_NSC presenti sulla tabella UTENTE,
+				// così da consentire all'utente di inserire le credenziali corrette
 				if (descEsitoRichiesta != null && !descEsitoRichiesta.equals("")
 						&& descEsitoRichiesta.contains("ERRORE: PASSWORD NON VALIDA")) {
 					IUtente lCtrl = SICOLookupRemote.getUtenteRemote();

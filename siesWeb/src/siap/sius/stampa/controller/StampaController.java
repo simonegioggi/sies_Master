@@ -42,8 +42,6 @@ import siap.sico.soggetto.model.SoggettoModel;
 import siap.sico.stampa.controller.IStampa;
 import siap.sico.stampa.controller.SIAPStampaController;
 import siap.sico.template.controller.TemplateManager;
-import siap.sico.template.dao.TemplateSqlDAO;
-import siap.sico.template.model.TemplateModel;
 import siap.sico.ufficio.controller.UfficioUtils;
 import siap.sico.ufficio.dao.UfficioSqlDAO;
 import siap.sico.ufficio.model.UfficioModel;
@@ -157,28 +155,10 @@ import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: StampaController
- * </p>
- * <p>
- * Description: Classe Controller per Stampe SIUS.
- * </p>
- * Classe centralizzata, pubblica una serie di metodi che gestiscono il prelievo dei dati per la generazione
- * base delle pagine XML per la gestione delle stampe in ambito SIUS.
- * </p>
- * <p>
- * Title: StampaController.java
- * </p>
- * <p>
- * Description:
- * <p>
- * Copyright: Bull Italia S.p.A. Copyright (c) 2003
- * </p>
- * <p>
- * Company: Bull Italia S.p.A.
- * </p>
+ * Description: Classe Controller per Stampe SIUS Classe centralizzata, pubblica una serie di metodi che
+ * gestiscono il prelievo dei dati per la generazione base delle pagine XML per la gestione delle stampe in
+ * ambito SIUS
  *
- * @author unascribed
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -370,35 +350,34 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// INIZIO: MEV_9 (D.lgs. 123/2018)
 			// Si aggiungono al treemodel tutti gli altri eventi e depositi sia decreti che ordinanza
-			//siesLogger.debug("============================================");
 			siesLogger.debug("Procedo alla ricerca precedenti eventi 02,03");
-			//siesLogger.debug("============================================");
 			IEvento mCtrl = SICOLookupRemote.getEventoRemote();
-			Vector <EventoModel> elencoEventi  = mCtrl.ExRicercaEventoByFascicoloSius(lEvento.getFasSiuIdFascicoloSius(), null);
+			Vector<EventoModel> elencoEventi = mCtrl
+					.ExRicercaEventoByFascicoloSius(lEvento.getFasSiuIdFascicoloSius(), null);
 			for (EventoModel ulterioreEvento : elencoEventi) {
-				siesLogger.debug("ulterioreEvento: "+ulterioreEvento.getIdEvento()+" - "+ulterioreEvento.getCodTipoEvento()+" - "+ulterioreEvento.getCodTipoProvvedimento()+" - "+ulterioreEvento.getCodMotivo());
-				if (ulterioreEvento.getIdEvento().compareTo(lEvento.getIdEvento())!=0) // scarto evento corrente
-				{
-					if ("02".equals(ulterioreEvento.getCodTipoProvvedimento())){
+				siesLogger.debug("ulterioreEvento: " + ulterioreEvento.getIdEvento() + " - "
+						+ ulterioreEvento.getCodTipoEvento() + " - "
+						+ ulterioreEvento.getCodTipoProvvedimento() + " - " + ulterioreEvento.getCodMotivo());
+				// scarto evento corrente
+				if (ulterioreEvento.getIdEvento().compareTo(lEvento.getIdEvento()) != 0) {
+					if ("02".equals(ulterioreEvento.getCodTipoProvvedimento())) {
 						siesLogger.debug("ulterioreEvento: ricerco dati deposito decreto");
-						TreeModel lTreeUlterioreDepositoDecreto = prelevaDatiDepositoDecreto(ulterioreEvento.getIdEvento(), lConn);
+						TreeModel lTreeUlterioreDepositoDecreto = prelevaDatiDepositoDecreto(
+								ulterioreEvento.getIdEvento(), lConn);
 						lTreeFasSIUS.add(lTreeUlterioreDepositoDecreto);
 						lTreeFasSIUS.add(new TreeModel(new EventoModel(ulterioreEvento)));
-					}
-					else if ("03".equals(ulterioreEvento.getCodTipoProvvedimento())){
+					} else if ("03".equals(ulterioreEvento.getCodTipoProvvedimento())) {
 						siesLogger.debug("ulterioreEvento: ricerco dati deposito ordinanza");
-						TreeModel lTreeUlterioreDepositoOrdinanza = prelevaDatiDepositoOrdinanzaPC(ulterioreEvento.getIdEvento(), lConn);
+						TreeModel lTreeUlterioreDepositoOrdinanza = prelevaDatiDepositoOrdinanzaPC(
+								ulterioreEvento.getIdEvento(), lConn);
 						lTreeFasSIUS.add(lTreeUlterioreDepositoOrdinanza);
 						lTreeFasSIUS.add(new TreeModel(new EventoModel(ulterioreEvento)));
-					}					
-				}
-				else 
-					siesLogger.debug("ulterioreEvento scartato: e' l'evento corrente"); 
+					}
+				} else
+					siesLogger.debug("ulterioreEvento scartato: e' l'evento corrente");
 			}
-			//siesLogger.debug("============================================");
-			//siesLogger.debug("============================================");
 			// FINE: MEV_9
-			
+
 			lRoot.add(lTreeFasSIUS);
 			lRoot.add(lTreeGenProc);
 			lRoot.add(lTreeFasSIEP);
@@ -883,7 +862,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		TreeModel lTreeSentenza = null;
 		TreeModel lTreeMisSic = null;
 
-		TemplateModel lTemplate = null;
+		// TemplateModel lTemplate = null;
 
 		Connection lConn = null;
 
@@ -907,7 +886,7 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 						"Fascicolo inesistente : " + aIdFascicoloSius);
 
 			// Ricerca Template di stampa
-			lTemplate = getTemplateByIdTemplate(aDAMod.getTemIdTemplate(), lConn);
+			// lTemplate = getTemplateByIdTemplate(aDAMod.getTemIdTemplate(), lConn);
 
 			// Ricerca dei dati di Evento-Notifiche
 			lTreeEvento = prelevaDatiEventoNotifiche(aDAMod.getEveIdEvento(), lConn);
@@ -964,9 +943,8 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 					lFasGP.getFascicoloSiusModel().getIdFascicoloSius(),
 					lFasGP.getFascicoloSiusModel().getNumeroFascicoliUnificati(), lConn);
 
-			// Riferimento Fascicolo SIEP.
-			lRoot = prelevaDatiRifasiep(lRoot, lFasGP.getFascicoloSiusModel().getIdFascicoloSius(), lConn); // STUB
-																											// 14/10/2004
+			// Riferimento Fascicolo SIEP // STUB 14/10/2004
+			lRoot = prelevaDatiRifasiep(lRoot, lFasGP.getFascicoloSiusModel().getIdFascicoloSius(), lConn);
 
 			// Dati della sentenza
 			lTreeSentenza = prelevaDatiSentenza(lFasGP.getFascicoloSiusModel().getFasSieIdFascicoloSiep(),
@@ -992,7 +970,9 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 
 			// lReport = new ReportGenerator();
 			lReport = new ReportGenerator(aUtenteModel.getUfficioUtente().getCodUfficio());
-			String lNomeTemplate = lTemplate.getPathRicerca() + lTemplate.getNomeTemplate();
+			// 20231218 [SG]: allineato al resto del codice; altrimenti non funziona in locale
+			String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aDAMod.getTemIdTemplate());
+			// String lNomeTemplate = lTemplate.getPathRicerca() + lTemplate.getNomeTemplate();
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
@@ -2826,35 +2806,36 @@ public class StampaController extends SIAPStampaController implements IStampaSiu
 		return lXMod;
 	}
 
-	private TemplateModel getTemplateByIdTemplate(String aIdTemplate, Connection aConn) throws F3BException {
-
-		TemplateSqlDAO lTemplateSqlDao = null;
-		TemplateModel lTemplateMod = null;
-
-		try {
-			lTemplateSqlDao = new TemplateSqlDAO(aConn);
-			lTemplateSqlDao.ricercaTemplateByKey(aIdTemplate);
-			lTemplateMod = (TemplateModel) lTemplateSqlDao.getModelByKey();
-
-			if (lTemplateMod == null)
-				throw new F3BException(F3BException.USER_MESSAGE,
-						"Template non trovato per l'IdTemplate richiesto " + aIdTemplate);
-		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("DAOException: " + daoEx);
-			throw new F3BException("StampaController.getTemplateByIdTemplate: " + daoEx);
-		} catch (Exception lEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-			// LogF3B.getLogger()
-			siesLogger.debug("Exception: " + lEx);
-			throw new F3BException("StampaController.getTemplateByIdTemplate: " + lEx);
-		} finally {
-			cleanup(lTemplateSqlDao);
-		}
-
-		return lTemplateMod;
-	}
+	// private TemplateModel getTemplateByIdTemplate(String aIdTemplate, Connection aConn) throws F3BException
+	// {
+	//
+	// TemplateSqlDAO lTemplateSqlDao = null;
+	// TemplateModel lTemplateMod = null;
+	//
+	// try {
+	// lTemplateSqlDao = new TemplateSqlDAO(aConn);
+	// lTemplateSqlDao.ricercaTemplateByKey(aIdTemplate);
+	// lTemplateMod = (TemplateModel) lTemplateSqlDao.getModelByKey();
+	//
+	// if (lTemplateMod == null)
+	// throw new F3BException(F3BException.USER_MESSAGE,
+	// "Template non trovato per l'IdTemplate richiesto " + aIdTemplate);
+	// } catch (DAOException daoEx) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("DAOException: " + daoEx);
+	// throw new F3BException("StampaController.getTemplateByIdTemplate: " + daoEx);
+	// } catch (Exception lEx) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+	// // LogF3B.getLogger()
+	// siesLogger.debug("Exception: " + lEx);
+	// throw new F3BException("StampaController.getTemplateByIdTemplate: " + lEx);
+	// } finally {
+	// cleanup(lTemplateSqlDao);
+	// }
+	//
+	// return lTemplateMod;
+	// }
 
 	/**
 	 * Esegue la ricerca di tenori per l'id del Generale procedimento.

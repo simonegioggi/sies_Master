@@ -1,4 +1,4 @@
-MEV_9: 07/10/2020
+MEV_9: 07/10/2020	-->	ID 09 SIES DLgs 123/18 e 121/18
 
 Le specifiche di intervento sono realizzate nell'ambito del sistema SIES al fine di soddisfare i requisiti
 espressi dall'Amministrazione in relazione alla richiesta di adeguamento normativo del Sistema, nella sua
@@ -13,3 +13,5 @@ Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
 2)	in data 11/11/2022 eseguito merge con "RELEASE_12.4.24.0"
 
 3)	in data 07/11/2023 eseguito merge con "RELEASE_12.5.4.0"
+
+4)	in data 16/01/2024 eseguito merge con "RELEASE_12.5.6.0"

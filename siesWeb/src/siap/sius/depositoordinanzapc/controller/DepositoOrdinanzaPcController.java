@@ -707,8 +707,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			BigDecimal lIdGenProc = aGProcOrdEveTenori.getGeneraleProcedimento().getIdGeneraleProcedimento();
 
 			/*
-			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE Numero
-			 * MEV : 9 Autore : sgioggi Data : 17 gen 2023 Branch : MEV_9
+			 * ISSUE MEV : aggiunta gestione per ORDINANZA di conferma decisione MAGISTRATO RELATORE 
+			 * Numero MEV : 9 
+			 * Autore : sgioggi 
+			 * Data : 17 gen 2023 
+			 * Branch : MEV_9
 			 */
 			if (!"CM".equals(lGProcOrdEveTenori.getOrdinanza().getCodTipoOrdinanza())) {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -970,7 +973,10 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lTenDao.setDAOForDeleteDepOrd(aDepOrd);
 			/*
 			 * ISSUE MEV : cancello tenore se cancello ordinanza di conferma decisione magistrato relatore
-			 * Numero MEV : 9 Autore : sgioggi Data : 18 gen 2023 Branch : MEV_9
+			 * Numero MEV : 9 
+			 * Autore : sgioggi 
+			 * Data : 18 gen 2023 
+			 * Branch : MEV_9
 			 */
 			if (!"CM".equals(aDepOrd.getCodTipoOrdinanza())) {
 				// update Tenori collegati
@@ -2247,8 +2253,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			DepositoOrdinanzaPcModel lDepOrdMod = new DepositoOrdinanzaPcModel();
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato 
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepOrdSqlDao.ricercaDepositoOrdinanzaPcByIdEveGenerato( aIdEvento );
 			lDepOrdSqlDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aIdEvento);
@@ -2491,8 +2500,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 			lDepDao = new DepositoOrdinanzaPcSqlDAO(lConn);
 
 			/*
-			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato Numero MEV : SIES
-			 * v10 Autore : gioggi Data : 27/gen/2016 Branch : MEV_SIES v10
+			 * ISSUE MEV : eseguito merge tra 15 MEV: interpretazione con codice commentato
+			 * Numero MEV : SIES v10 
+			 * Autore : gioggi 
+			 * Data : 27/gen/2016 
+			 * Branch : MEV_SIES v10
 			 */
 			// lDepDao.ricercaDepositoOrdinanzaPcByIdEveGenerato(aEveKey);
 			lDepDao.ricercaDepositoOrdinanzaCssaUssmPcByIdEveGenerato(aEveKey);
@@ -3617,7 +3629,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * 13-11-2014 Misre Sicurezza Fuori Sentenza Query usata nella Gestione MISURE SICUREZZA dalla parte SIEP.
-	 * Esegue la CONTA dei provvedimenti SIUS ordinanza per DATA; // MEV_39: aggiunto parametro di passaggio
+	 * Esegue la CONTA dei provvedimenti SIUS ordinanza per DATA; 
+	 * MEV_39: aggiunto parametro di passaggio
 	 *
 	 * @param aData_inizio
 	 * @param aData_fine
@@ -3657,7 +3670,8 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 
 	/**
 	 * 13-11-2014 Misre Sicurezza Fuori Sentenza Query usata nella Gestione MISURE SICUREZZA dalla parte SIEP.
-	 * Esegue la RICERCA dei provvedimenti SIUS ordinanza per DATA; // MEV_39: aggiunto parametro di passaggio
+	 * Esegue la RICERCA dei provvedimenti SIUS ordinanza per DATA;
+	 * MEV_39: aggiunto parametro di passaggio
 	 *
 	 * @param aData_inizio
 	 * @param aData_fine
@@ -3809,8 +3823,11 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 	}
 
 	/*
-	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS Numero MEV : 39 Autore : Gioggi
-	 * Data : 24/feb/2017 Branch : MEV_39
+	 * ISSUE MEV : aggiunti metodi di ricerca provvedimenti differimento SIUS 
+	 * Numero MEV : 39 
+	 * Autore : Gioggi
+	 * Data : 24/feb/2017 
+	 * Branch : MEV_39
 	 */
 	public Vector ExRicercaEventoProvvedimentiDifferimentoSIUSByFascicoloSiep(BigDecimal idFascicoloSiep)
 			throws F3BException {
