@@ -578,6 +578,7 @@ if ("I".equals(modalita) && contaLibere == 0) {
 			|| lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
 			|| lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
 			|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
+			|| lPosizione.getCodPosizioneGiuridica().equals("50")
 			|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
 %>
 		<td class="L" colspan="3">
