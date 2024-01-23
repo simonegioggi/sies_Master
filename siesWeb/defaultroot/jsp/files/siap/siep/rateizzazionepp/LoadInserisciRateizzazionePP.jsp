@@ -58,8 +58,8 @@ if ("M".equals(modalita)) {
 			isPresentiBollettini = true;
   	}
 } else {
-  importoDaPagareI = StringUtils.getParteIntera   (importoTotale);
-  importoDaPagareD = StringUtils.getParteDecimale (importoTotale);    
+  //importoDaPagareI = StringUtils.getParteIntera   (importoTotale);
+  //importoDaPagareD = StringUtils.getParteDecimale (importoTotale);    
 }
 %>
 
@@ -309,7 +309,7 @@ if (modalita.equals("I")) {
 <table width="50%">
 	<tr>
       	<td class="L">
-        	<font class="label">Pena Pecuniaria: </font>&nbsp;
+        	<font class="label">Pena Pecuniaria (in sentenza): </font>&nbsp;
 <%
 if (lPenCom.getImportoMulta() != null && lPenCom.getImportoMulta().compareTo(new BigDecimal(0)) > 0) {
 %>
@@ -335,7 +335,7 @@ if (lSanSos != null && lSanSos.getIdSanzioneSostitutiva() != null
 %>
 	<tr>
 		<td class="L">
-			<font class="label">Pena Pecuniaria Sostitutiva: </font>&nbsp;
+			<font class="label">Pena Pecuniaria Sostitutiva (in sentenza): </font>&nbsp;
 <%
 	if (lSanSos.getSanzionePecuniariaMulta() != null) {
 %>

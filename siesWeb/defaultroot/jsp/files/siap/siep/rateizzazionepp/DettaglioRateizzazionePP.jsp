@@ -135,7 +135,7 @@ SanzioneSostitutivaModel lSanSos = (dettaglioPenaComplessiva != null && dettagli
 <table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
 		<td class="L" width="20%">
-			<font class="label">Pena Pecuniaria:</font>
+			<font class="label">Pena Pecuniaria (in sentenza):</font>
 		</td>
 		<td class="L">
 			<font class="label">MULTA</font> <font class="campo"><%=StringUtils.toEuroFormat((lPenCom != null ? lPenCom.getImportoMulta() : null) )%></font>&nbsp;<font class="label">&euro;</font>
@@ -144,7 +144,7 @@ SanzioneSostitutivaModel lSanSos = (dettaglioPenaComplessiva != null && dettagli
 	</tr>
 	<tr>
 		<td class="L">
-			<font class="label">Pena Pecuniaria Sostitutiva:</font>
+			<font class="label">Pena Pecuniaria Sostitutiva (in sentenza):</font>
 		</td>
 		<td class="L">
 			<font class="label">Importo</font> <font class="campo"><%=StringUtils.toEuroFormat((lSanSos != null ? lSanSos.getSanzionePecuniariaMulta() : null))%></font>&nbsp;<font class="label">&euro;</font>
