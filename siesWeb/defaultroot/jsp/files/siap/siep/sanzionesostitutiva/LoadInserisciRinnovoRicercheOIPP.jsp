@@ -300,15 +300,14 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
               document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.focus();
               return false;
             }
-/*            
+            
             if (document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO%>.value!='22') {
                 if (document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.value=='') {
                   alert("Indicare la sede dell'Autorità di polizia delegata");
                   document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO%>.focus();
                   return false;
                 }              
-            }
-*/            
+            }            
           }
         } else {            
           if (document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_GIORNO_DATA_RELATA%>.value.length==1)
@@ -375,15 +374,14 @@ AltraCausaModel lAltraCausa = posizioneluogoaltra.getAltraCausa();
               return false;
             }
             
-/*
+
             if (document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_TIPO_AUTORITA_RINNOVO_UG%>.value!='22') {
               if (document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO_UG_AR%>.value=='') {
                 alert("Indicare la sede dell'Autorità di polizia delegata");
                 document.LoadInserisciRinnovoRicercheOIPP.<%=ICostantiRinnovo.CAMPO_COD_LUOGO_RINNOVO_UG_AR%>.focus();
                 return false;
               }              
-            }
-*/            
+            }            
           }
         }
         
