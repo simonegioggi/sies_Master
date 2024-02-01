@@ -113,6 +113,15 @@ public class ActModificaRideterminazionePP extends ActionSiap implements ICostan
 		amm.setNumeroSiep(getRequestStringParameter(CAMPO_NUMERO_PROVVEDIMENTO));
 		String codLuogoUfficioSiep = getCodComuneByDescr(
 				getRequestStringParameter(CAMPO_SEDE_AUTORITA_PROVVEDIMENTO)).getCodComune();
+		try {
+			getCodUfficioByCodTipoUfficioDescrComune(
+					getRequestStringParameter(CAMPO_COD_AUTORITA_PROVVEDIMENTO),
+					getRequestStringParameter(CAMPO_SEDE_AUTORITA_PROVVEDIMENTO));
+		} catch (Exception e) {
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Sede " + getRequestStringParameter(CAMPO_SEDE_AUTORITA_PROVVEDIMENTO).toUpperCase()
+							+ " inesistente per l'Autorità Emittente selezionata");
+		}
 		amm.setCodLuogoUfficioSiep(codLuogoUfficioSiep);
 		amm.setCodTipoUfficioSiep(getRequestStringParameter(CAMPO_COD_AUTORITA_PROVVEDIMENTO));
 		amm.setCodTipoAnnotazione(getRequestStringParameter(CAMPO_COD_TIPO_PROVVEDIMENTO));
