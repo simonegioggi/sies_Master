@@ -187,7 +187,7 @@ public class ActLoadModificaRideterminazionePP extends ActionSiap implements ICo
 		// carico AUTORITA' EMITTENTE
 		Option tipoUfficio = new Option(DecodificheManager.getInstance().getTipoUfficio());
 		tipoUfficio.setFilter(new String[] { "CAP", "DIB", "GUP", "GIP", "CAS", "CASAP", "TRIBSD", "GUPM",
-				"CAPSM", "DIBM", "GIPM", "GP", "PM", "PMM", "PGCAP" });
+				"CAPSM", "DIBM", "GIPM", "GP", "PM", "PMM", "PGCAP", "TDS", "TDSM", "UDS", "UDSM" });
 		tipoUfficio.setSelected(amm.getCodTipoUfficioSiep());
 		setRequestAttribute("autorita", "" + tipoUfficio);
 
