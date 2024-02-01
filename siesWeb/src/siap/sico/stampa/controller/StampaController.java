@@ -683,6 +683,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		RateizzazionePPSqlDAO lRateSqlDao = null;
 		CivilmenteObbligatoSqlDAO lCivilmenteObblSqlDao = null;
 
+		// MEV_2023-33 - Si aggiunge anche il ramo AnnotazioneManuale
+		AnnotazioneManualeSqlDAO lAnnoSqlDao = null;
+		
+		
 		SospensioneModel lSospMod = null;
 		TreeModel lSospTree = null;
 		StampaMAUtils lStampa = new StampaMAUtils();
@@ -868,6 +872,7 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			// - Pena Accessorie
 			// - CampoNota
 			// - CompetenzaModel
+			// - AnnotazioneManuale (new MEV_2023-33)
 			// ========================================================================
 			TreeModel lTreeEveMod = new TreeModel(aEveModel.getEvento());
 
@@ -976,6 +981,34 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			}
 			// MEV_2023-33 - FINE
 
+      // MEV_2023-33
+      // In caso di nota Rideterminazione si recuperano anche i dati
+			// dell'annutazione manuale
+			siesLogger.debug("annotazione");
+      if ("1307".equals(aEveModel.getEvento().getCodMotivo())) {
+        siesLogger.debug("Ricerco le annotazione");
+        
+        lAnnoSqlDao = new AnnotazioneManualeSqlDAO(lConn);
+        
+        // n.b. non utilizzare le sql standard di annotazionemanuale.
+        // RideterminazionePP scrive i dati in modo errato in tabella e le query join falliscono
+        // Va utilizzato il metodo custom
+        lAnnoSqlDao.ricercaAnnotazioneManualeByIdEventoIdFascicolo(aEveModel.getEvento().getIdEvento(),lKeyFascicolo);
+        AnnotazioneManualeModel lAnnotazione = (AnnotazioneManualeModel) lAnnoSqlDao.getModelByKey();
+        if (lAnnotazione!=null && lAnnotazione.getIdAnnotazioneManuale()!=null)
+          lTreeEveMod.add(new TreeModel(lAnnotazione));
+        
+//        lAnnoSqlDao.ricercaAnnotazioneManualeByIdEvento(aEveModel.getEvento().getIdEvento());
+//        Vector <AnnotazioneManualeModel> lListaAnnotazione = new Vector <AnnotazioneManualeModel> (lAnnoSqlDao.getModels());
+//        siesLogger.debug("lListaAnnotazione.size() = "+lListaAnnotazione.size());
+//        for (AnnotazioneManualeModel lAnnotazione : lListaAnnotazione) {
+//          lTreeEveMod.add(new TreeModel(lAnnotazione));
+//        }  
+        
+      }
+      // MEV_2023-33 - FINE			
+			
+			
 			lTreeRoot.add(lTreeEveMod);
 
 			// Competenza
