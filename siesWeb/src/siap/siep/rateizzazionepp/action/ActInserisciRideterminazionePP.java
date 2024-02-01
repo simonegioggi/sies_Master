@@ -110,6 +110,10 @@ public class ActInserisciRideterminazionePP extends ActionSiap implements ICosta
 		amm.setCodOperatoreInserimento(codUtenteConnesso);
 		amm.setDataInserimento(DateUtils.getSysDate());
 		amm.setFlagValidato("N");
+		amm.setCodFonte("-");
+		amm.setCodSottonumerazione("-");
+		amm.setCodCausaleComputo("-");
+		amm.setCodDpr("-");
 
 		// info per il log
 		siesLogger.info("getAnnotazioneManuale(): fine");

@@ -130,6 +130,10 @@ public class ActModificaRideterminazionePP extends ActionSiap implements ICostan
 		amm.setDataAggiornamento(DateUtils.getSysDate());
 		amm.setEveIdEvento(idEvento);
 		amm.setFasSieIdFascicoloSiep(idFascicoloSiep);
+		amm.setCodFonte("-");
+		amm.setCodSottonumerazione("-");
+		amm.setCodCausaleComputo("-");
+		amm.setCodDpr("-");
 
 		// info per il log
 		siesLogger.info("getAnnotazioneManuale(): fine");
