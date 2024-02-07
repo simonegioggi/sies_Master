@@ -571,15 +571,21 @@ if ("I".equals(modalita) && contaLibere == 0) {
      	<td class="l" width="20%">Autorita' Destinazione <font class=ob>(*)</font></td>
 <%
 	}
+
+
+if ("L".equals(lPosizione.getCodMascheraCG()) || "EA".equals(lPosizione.getCodMascheraCG()))
+{   
+    /*
 	if (lPosizione.getCodPosizioneGiuridica().equals("07") || lPosizione.getCodPosizioneGiuridica().equals("10")
 			|| lPosizione.getCodPosizioneGiuridica().equals("02") || lPosizione.getCodPosizioneGiuridica().equals("04")
-       		|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") 
-       		|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")   
+      		|| lPosizione.getCodPosizioneGiuridica().equals("16") || lPosizione.getCodPosizioneGiuridica().equals("20") 
+      		|| lPosizione.getCodPosizioneGiuridica().equals("46") || lPosizione.getCodPosizioneGiuridica().equals("47")   
 			|| lPosizione.getCodPosizioneGiuridica().equals("78") || lPosizione.getCodPosizioneGiuridica().equals("79") 
 			|| lPosizione.getCodPosizioneGiuridica().equals("80") || lPosizione.getCodPosizioneGiuridica().equals("81")
 			|| lPosizione.getCodPosizioneGiuridica().equals("70") || lPosizione.getCodPosizioneGiuridica().equals("71")
 			|| lPosizione.getCodPosizioneGiuridica().equals("50")
 			|| lPosizione.getCodPosizioneGiuridica().equals("72")) {
+	  */	
 %>
 		<td class="L" colspan="3">
 	       	<select title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>" id="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA_E%>">
