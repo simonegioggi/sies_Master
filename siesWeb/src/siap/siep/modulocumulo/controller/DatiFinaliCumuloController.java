@@ -1421,7 +1421,12 @@ public class DatiFinaliCumuloController extends SiapController implements IDatiF
 				lFascDao.setFlagAltraCausa(flagAltraCausa);
 			}
 			// FINE [Ticket#20210430011] - aggiorno eventualmente il flagAltraCausa
-
+			// Ticket#202402120123 - Se non presente sul cumulo va comunque rimosso il flag AC sul fascicolo
+			else {
+			  lFascDao.setFlagAltraCausa("N");
+			}
+		  // Ticket#202402120123 - FINE
+			
 			// INTERVENTO PER Ticket#20200220015 — Cumulo su procedimento archiviato
 			// se sto validanto un cumulo e lo stato in cui si trova il fascicolo è ARCHIVIATO, questo va
 			// settato a 03

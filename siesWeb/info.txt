@@ -1,7 +1,13 @@
-BRANCH SIES VERSIONE 12.5.7.0
-Nasce dal branch 12.5.6.0 in data 22/12/2023
-Questa release verrà rilasciata il 26/01/2024 (Patch mese di Gennaio 2024)
+Ticket#202402120123 — Siep - Minorenni - Validazione ammissione detenzione domiciliare
 
-Comprende i seguenti Ticket MAC:
 
-1)	Ticket#
+In fase di validazione del cumulo, se il fascicolo cumulante era inizialmente marcato AC, 
+il cumulo NON eliminava il fs.flag_altra_causa che restava a S.
+
+Modulo corretto 
+siap.siep.modulocumulo.controller.DatiFinaliCumuloController
+ExUpdateValidaProvvedimentoCumulo
+
+
+
+
