@@ -21,6 +21,7 @@ import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
 import f3b.log.LogF3B;
+import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisuraAlternativa {
@@ -122,7 +123,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 	 * @param aTipoMA
 	 * @return
 	 */
-	private String[] getCodTipoMisura(String aNaturaMA, String aTipoMA) {
+	private String[] getCodTipoMisura(String aNaturaMA, String aTipoMA) throws F3BException {
 
 		String[] lCodMotivi = new String[0];
 
@@ -178,8 +179,13 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecProvvMAAffPro());
 			} else if (aNaturaMA.equals(AMMISSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoAmmProvAffi());
+				// MEV_9 si differenzia per PM e PMM
+				//lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				if (isUfficoMonorenni())				
+					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				// MEV_9 - FINE
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) { // Prosecuzione
 																												// MDS+TDS
 																												// lCodMotivi
@@ -248,8 +254,14 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecProvvMADetDom());
 			} else if (aNaturaMA.equals(AMMISSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoAmmProvDetDom());
+				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+				// MEV_9 si differenzia per PM e PMM
+				//lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				if (isUfficoMonorenni())				
+					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+				// MEV_9 - FINE				
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMADetDomMDS51Bis());
@@ -550,7 +562,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				|| (aNaturaMA.equals(PERDITA_EFFICACIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS) && aTipoMA
 						.equals(DETENZIONE_DOMICILIARE))
-				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
+				// MEV_09|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				// || (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
 				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(PERDITA_EFFICACIA) && aTipoMA.equals(SEMILIBERTA))
@@ -567,21 +579,15 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(PROROGA_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE_TERMINE))
 				|| (aNaturaMA.equals(CONCESSIONE) && aTipoMA.equals(DIFFERIMENTO_PENA_PROV)) // Aggiunto da
-																								// diego
-																								// 30/08/2006
+																								// diego 30/08/2006
 				|| (aNaturaMA.equals(CONCESSIONE) && aTipoMA.equals(ESPULSIONE))) {
 			lCodTipoDecisione = new String[1];
 			lCodTipoDecisione[0] = "02";
 		} else if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE)
-				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA)) // 22/01/2014
-																										// DL
-																										// 146
-																										// Può
-																										// essere
-																										// concessa
-																										// anche
-																										// con
-																										// ordinanza
+			  // 22/01/2014 DL 146 Può essere concessa anche con ordinanza
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA)) 
+				// MEV_9 anche per la deetenzione domiciliare - ammissione provvisoria si prevedono sia decreti che ordinanze
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS)) // DL 146/20113
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) // DL 146/20113
 				|| (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) // DL 146/20113

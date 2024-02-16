@@ -139,7 +139,15 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 		setRequestAttribute("comboTipoProvvSorv", "" + lOptionTipoProvvSorv);
 
 		// setto il campo codice motivo
-		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+		// MEV_9
+		//Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+		Option lOption = null;
+		if (isUfficoMonorenni())
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
+		else 
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+		// MEV_9 - FINE
+		
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipomisura", "AFFIDAMENTO");

@@ -1,5 +1,9 @@
 package siap.siep.verbale.action;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import f3b.web.html.Option;
@@ -102,6 +106,11 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 			throw new SIEPException(SIEPException.USER_MESSAGE,
 					"Non esiste l'Ordinanza/Decreto del TDS/MDS.");
 
+		
+		// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+		Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
+		Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
+		
 		if (lEveMod != null && lEveMod.getCodTipoEvento() != null && lEveMod.getCodTipoProvvedimento() != null
 				&& lEveMod.getCodTipoEvento().equals("01") // Provvedimento
 				&& (lEveMod.getCodTipoProvvedimento().equals("03") // Ordinanza
@@ -114,15 +123,15 @@ public class ActLoadInserisciVerbaleSottoscrizione extends ActionSiap
 						|| lEveMod.getCodMotivo().equals("0013") // Detenzione
 						|| lEveMod.getCodMotivo().equals("0004") // Semilibertà
 						|| lEveMod.getCodMotivo().equals("2245") // Indultino
-						|| lEveMod.getCodMotivo().equals("2630") // Esecuzione presso domicilio della pena
-																	// detentiva ( UdS )
+						|| lEveMod.getCodMotivo().equals("2630") // Esecuzione presso domicilio della pena detentiva ( UdS )
 						|| lEveMod.getCodMotivo().equals("0011") // Detenzione a termine
-						|| lEveMod.getCodMotivo().equals("2005") // Ammissione provvisoria a detenzione
-																	// domiciliare
-						|| lEveMod.getCodMotivo().equals("2006") // Ammissione provvisoria ad Affidamento in
-																	// Prova - Affidamento Terapeutico
-						|| lEveMod.getCodMotivo().equals("2008") // Ammissione provvisoria ad Affidamento in
-																	// Prova - new DL146 2013
+						|| lEveMod.getCodMotivo().equals("2005") // Ammissione provvisoria a detenzione domiciliare
+						|| lEveMod.getCodMotivo().equals("2006") // Ammissione provvisoria ad Affidamento in Prova - Affidamento Terapeutico
+						|| lEveMod.getCodMotivo().equals("2008") // Ammissione provvisoria ad Affidamento in Prova - new DL146 2013
+						// MEV_9 Si gestiscono gli ulteriori codici AFFIDAMENTO
+						|| codiciAffidamentoSorvNew.contains(lEveMod.getCodMotivo())
+						// MEV_9 Si gestiscono gli ulteriori codici DETENZIONE DOMICILIARE
+						|| codiciDetenzioneSorvNew.contains(lEveMod.getCodMotivo())
 						// 20191120 [SG]: aggiunto codice per gestione ticket
 						// Ticket#20191114019 — SIES - mancata registrazione data inizio misura
 						// Esecuzione presso domicilio della pena detentiva ( TdS )

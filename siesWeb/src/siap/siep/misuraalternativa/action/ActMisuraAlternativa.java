@@ -1530,6 +1530,13 @@ public class ActMisuraAlternativa extends ActSIESDettaglioProvvedimento implemen
 		lMisMod.setDataInserimento(DateUtils.getSysDate());
 		lMisMod.setFlagUfficioInserimento("P");
 
+		
+		// MEV_9 - SI aggiunge la data Esecutività
+		lMisMod.setDataEsecutivita(getRequestDateParameter(
+				ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA,
+				ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA,
+				ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA));
+		
 		return lMisMod;
 	}
 

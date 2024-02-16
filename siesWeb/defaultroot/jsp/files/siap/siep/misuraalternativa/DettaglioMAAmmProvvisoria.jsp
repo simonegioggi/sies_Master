@@ -400,7 +400,11 @@ else if("03".equals(misuraalternativa.getCodTipoDecisione() )) {
    <td class="l">Data Emissione <%=lTipoProvvedimento %> </td>
    <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(),"dd-MM-yyyy"))%></font></td>
  </tr>
-<tr>
+
+ <tr>
+   <td class="l">Data Esecutivita'</td>
+   <td class="l"><font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataEsecutivita(),"dd-MM-yyyy"))%></font></td>
+ </tr>
 
  <%if(verbale.getDataEmissione()!= null) {%>
   <tr>

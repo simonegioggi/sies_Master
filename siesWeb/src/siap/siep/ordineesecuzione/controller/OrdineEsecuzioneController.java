@@ -2107,6 +2107,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// provvedimento che e' stato inserito contestualmente.
 			// n.b. lo annullo solo se e' stato inserito dallo stesso utente
 			// ========================================================================
+			lEveSqlDAO = new EventoSqlDAO(lConn);
 			if (aEvento.getCodTipoProvvedimento().equals("25")
 					&& (aEvento.getCodMotivo().equals("0948") || aEvento.getCodMotivo().equals("0949")
 							|| aEvento.getCodMotivo().equals("0950") || aEvento.getCodMotivo().equals("0951")
@@ -2123,7 +2124,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							|| aEvento.getCodMotivo().equals("0994") // Giudice di Sorveglianza
 							|| aEvento.getCodMotivo().equals("0999") // Giudice di Sorveglianza
 					) && aEvento.getEveIdEvento() != null) {
-				lEveSqlDAO = new EventoSqlDAO(lConn);
+				
 				lEveSqlDAO.ricercaEventoByKey(aEvento.getEveIdEvento());
 				EventoModel lEveAltraAut = (EventoModel) lEveSqlDAO.getModelByKey();
 				lEveSqlDAO.stop();
@@ -2172,7 +2173,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// Durante la concessione dell'affidamento in prova si può creare un SIUS manualmente
 			// Alla cancellazione del SIEP il SIUS rimane appeso
 			if (Utils.isPresent(lEveRet.getEveIdEvento())) {
-				lEveSqlDAO = new EventoSqlDAO(lConn);
+				//lEveSqlDAO = new EventoSqlDAO(lConn);
 				lEveSqlDAO.ricercaEventoByKey(lEveRet.getEveIdEvento());
 				EventoModel em = (EventoModel) lEveSqlDAO.getModelByKey();
 				lEveSqlDAO.stop();
@@ -2185,8 +2186,19 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 							&& "01".equals(em.getCodTipoEvento()) && em.getDataTrasmissioneAtti() != null
 							&& em.getDataTrasmissioneAtti().compareTo(em.getDataEmissione()) == 0
 							&& em.getCodOperatoreInserimento().equals(aEvento.getCodOperatoreInserimento())) {
-						lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
-						lEventoProc.execute();
+						
+						// 2024.02.14 posso cancellare il decreto/ordinanza solo se non puntato da altri eventi 
+						// Es ammissione prpovvisori ad affidamento o detenzione							
+						//lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
+						//lEventoProc.execute();
+						
+						lEveSqlDAO.ricercaEventoByEveIdEvento(em.getIdEvento());
+						Vector <EventoModel> listaEventiCollegati = new Vector <EventoModel>(lEveSqlDAO.getModels());
+						if (listaEventiCollegati.size()==0) {
+							lEventoProc.setIdEvento(lEveRet.getEveIdEvento());
+							lEventoProc.execute();
+						}
+					  // 2024.02.14 - FINE
 					}
 				}
 			}
@@ -2194,6 +2206,7 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			commit(lConn);
 		} catch (DAOException daoEx) {
 			rollback(lConn);
+			siesLogger.error("OrdineEsecuzioneController.ExCancellaEventoConStoreProcedure: ",daoEx);
 			throw new F3BException("OrdineEsecuzioneController.ExCancellaEventoConStoreProcedure: " + daoEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();

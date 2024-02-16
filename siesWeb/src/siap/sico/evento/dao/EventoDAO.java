@@ -300,7 +300,7 @@ public class EventoDAO extends SIAPTableDAO {
   
 	// MEV_9 (D.lgs. 123/2018)
 	public Date getDataRestituzioneAi() throws DAOException {
-		return getDate("DATA_RESTITUZIONE_AI ");
+		return getDate("DATA_RESTITUZIONE_AI");
 	}
 	
   //

@@ -116,8 +116,8 @@ public class MisuraAlternativaModel extends GenericModel {
   private BigDecimal mFlFormaMisura;
   private String mDescrizioneComunita;
   
-
-
+  //MEV_9
+  private Date mDataEsecutivita;
 
   //COSTRUTTORE DI DEFAULT
 	public MisuraAlternativaModel()
@@ -202,8 +202,8 @@ public class MisuraAlternativaModel extends GenericModel {
     this.mDescrChiaveUfficioFascicoloSiusMaAt="";
     this.mAnnoRegistroMaAt=null;
     this.mNumeroRegistroMaAt=null;   
-    
-
+    // MEV_9
+    this.mDataEsecutivita = null;
   }
 
   //COSTRUTTORE DI COPIA
@@ -294,6 +294,9 @@ public class MisuraAlternativaModel extends GenericModel {
     
     this.mFlFormaMisura=aModel.mFlFormaMisura;
     this.mDescrizioneComunita=aModel.mDescrizioneComunita;
+    
+    // MEV_9
+    this.mDataEsecutivita = aModel.mDataEsecutivita;
   }
 
   //COSTRUTTORE MODEL
@@ -368,7 +371,8 @@ public class MisuraAlternativaModel extends GenericModel {
                                  BigDecimal  aAnnoRegistroMaAt,
                                  BigDecimal  aNumeroRegistroMaAt,
                                  BigDecimal  flFormaMisura,
-                                 String descrizioneComunita
+                                 String descrizioneComunita,
+                                 Date	 aDataEsecutivita // MEV_9
                                 )
   {
     this.mIdMisuraAlternativa = aIdMisuraAlternativa;
@@ -444,8 +448,8 @@ public class MisuraAlternativaModel extends GenericModel {
     this.mDescrChiaveUfficioFascicoloSiusMaAt = aDescrChiaveUfficioFascicoloSiusMaAt;
     this.mAnnoRegistroMaAt                    = aAnnoRegistroMaAt;
     this.mNumeroRegistroMaAt                  = aNumeroRegistroMaAt;
-    
-    
+    // MEV_9
+    this.mDataEsecutivita = aDataEsecutivita;
   }
 
   //
@@ -542,8 +546,8 @@ public class MisuraAlternativaModel extends GenericModel {
   public BigDecimal  getNumeroRegistroMaAt()                  {return mNumeroRegistroMaAt ;}   
   
   public String      getIs51Bis()                             { return mIs51Bis; }
-
-
+  //MEV_9
+  public Date 			getDataEsecutivita() 			        { return mDataEsecutivita; }
 
   //
   // METODI SET()
@@ -645,6 +649,10 @@ public class MisuraAlternativaModel extends GenericModel {
   public void  setNumeroRegistroMaAt(BigDecimal aValore)              { mNumeroRegistroMaAt  = aValore;}
   
   public void  setIs51Bis(String aValore)                            { mIs51Bis = aValore; }
+  
+  // MEV_9
+  public void  setDataEsecutivita(Date aValore)                     { mDataEsecutivita  = aValore;}
+  
   
 	/**
 	 * calcolaStringaReclusione per la Stampa in cui serve la stringa
@@ -762,6 +770,7 @@ public class MisuraAlternativaModel extends GenericModel {
              "[ mProgrFascicoloSiusMaAt     = "+mChiaveProgrFascicoloSiusMaAt+" ]\n"+
              "[ mUfficioFascicoloSiusMaAt   = "+mChiaveUfficioFascicoloSiusMaAt+" ]\n"+             
              "[ mDescrUfficioFascicoloSiusMaAt = "+mDescrChiaveUfficioFascicoloSiusMaAt+" ]\n"+
+             "[ mDataEsecutivita            = "+mDataEsecutivita+" ]\n"+
              "[ mAnnoRegistroMaAt           = "+mAnnoRegistroMaAt+" ]\n"+
              "[ mNumeroRegistroMaAt         = "+mNumeroRegistroMaAt+" ]";
       

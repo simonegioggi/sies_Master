@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -1833,19 +1835,27 @@ public class MisuraAlternativaIndultinoController extends SiapController
 				lCodTipoPosGiuridicaAltraCausa = lPosAltra.getAltraCausa().getCodTipoPosGiuridica();
 			}
 
+			// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+			Set<String> codiciAffidamentoSorv = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
+			Set<String> codiciDetenzioneSorv  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
+
+			
 			// se la misura è eseguita da SORV cambio sempre la posizione giuridica
 			String lPosizioneDiArrivo = null;
 			boolean lCambioPos = false;
 			if (lMisModelOrder.getCodTipoUfficioScarcerazione().equals("SORV")) {
 				lCambioPos = true;
-				if ("2006".equals(lMisModelOrder.getCodTipoMisura())
-						|| "2008".equals(lMisModelOrder.getCodTipoMisura()) // dl 146 2013
-				) // Per Tipo Misura "AFFIDAMENTO"
+				// MEV_9 - Gestiti i nuovi codici
+//				if ("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura()) // dl 146 2013
+//				) // Per Tipo Misura "AFFIDAMENTO"
+				if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura()))
 				{
 					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
-				if ("2005".equals(lMisModelOrder.getCodTipoMisura())) // Per Tipo Misura "DETENZIONE"
+			  // MEV_9 - Gestiti i nuovi codici
+				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())) // Per Tipo Misura "DETENZIONE"
+				if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura()))
 				{
 					lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
 				}
@@ -1875,16 +1885,17 @@ public class MisuraAlternativaIndultinoController extends SiapController
 									|| lCodTipoPosGiuridicaAltraCausa.equals("76")
 									|| lCodTipoPosGiuridicaAltraCausa.equals("77"))))) {
 				lCambioPos = true;
-				if (("2006".equals(lMisModelOrder.getCodTipoMisura())
-						|| "2008".equals(lMisModelOrder.getCodTipoMisura()))
-						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo
-																				// Misura
-																				// "AFFIDAMENTO"
+				// MEV_9 - Gestiti i nuovi codici
+				//if (("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura()))
+				if (   codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())					
+						&& !"54".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "AFFIDAMENTO"
 				{
 					lPosizioneDiArrivo = "54"; // Affidamento in Prova Provvisorio - Cambio da 51 a 54
 				}
 
-				if ("2005".equals(lMisModelOrder.getCodTipoMisura())
+				// MEV_9 - Gestiti i nuovi codici
+				//if ("2005".equals(lMisModelOrder.getCodTipoMisura())
+				if (   codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())	
 						&& !"29".equals(lPosMod.getCodPosizioneGiuridica())) // Per Tipo Misura "DETENZIONE"
 				{
 					lPosizioneDiArrivo = "29"; // Detenzione Domiciliare Provvisoria
@@ -1913,21 +1924,51 @@ public class MisuraAlternativaIndultinoController extends SiapController
 			// SETTA LO STATO PROCEDIMENTO
 			String lStato = null;
 
-			if ("2006".equals(lMisModelOrder.getCodTipoMisura())
-					|| "2008".equals(lMisModelOrder.getCodTipoMisura())) {
+			// MEV_9 - si aggiungono gli ulteriori codici
+			//if ("2006".equals(lMisModelOrder.getCodTipoMisura()) || "2008".equals(lMisModelOrder.getCodTipoMisura())) {
+			if (codiciAffidamentoSorv.contains(lMisModelOrder.getCodTipoMisura())) {
 				// Per Tipo Misura "AFFIDAMENTO"
 				if (lEveModel.getCodMotivo().equals("5420"))
 					lStato = "0522"; // Richiesto Verbale per codice 2006 (affidamento Terapeutica)
 				else if (lEveModel.getCodMotivo().equals("5421"))
-					lStato = "0523"; // Richiesto Verbale per codice 2008 ()
+					lStato = "0523"; // Richiesto Verbale per codice 2008 ()				
+				// MEV_9 - nuovi codici		
+				else if (lEveModel.getCodMotivo().equals("0680"))
+					lStato = "0560"; 
+				else if (lEveModel.getCodMotivo().equals("0681"))
+					lStato = "0561"; 
+				else if (lEveModel.getCodMotivo().equals("0690"))
+					lStato = "0562";
+				else if (lEveModel.getCodMotivo().equals("0691"))
+					lStato = "0563";
+				else if (lEveModel.getCodMotivo().equals("0692"))
+					lStato = "0564";
+				// Nel caso di richiesta verbale
+				else if (lEveModel.getCodMotivo().equals("5422"))
+					lStato = "0565"; 
+				else if (lEveModel.getCodMotivo().equals("5423"))
+					lStato = "0566"; 
+				else if (lEveModel.getCodMotivo().equals("5424"))
+					lStato = "0567";
+				else if (lEveModel.getCodMotivo().equals("5425"))
+					lStato = "0568";
+				else if (lEveModel.getCodMotivo().equals("5426"))
+					lStato = "0569";				
+				// MEV_9 - FINE
 				else if ("2006".equals(lMisModelOrder.getCodTipoMisura()))
 					lStato = "0520"; // Tutti gli altri eventi
 				else if ("2008".equals(lMisModelOrder.getCodTipoMisura()))
 					lStato = "0521"; // Tutti gli altri eventi
 				// lStato = "0173";
-			} else if ("2005".equals(lMisModelOrder.getCodTipoMisura())) { // Per Tipo Misura "DETENZIONE"
-				lStato = "0068";
-			}
+			} else if (codiciDetenzioneSorv.contains(lMisModelOrder.getCodTipoMisura())) {	
+			//} else if ("2005".equals(lMisModelOrder.getCodTipoMisura())) { // Per Tipo Misura "DETENZIONE"
+				if ("2005".equals(lMisModelOrder.getCodTipoMisura())) 
+					lStato = "0068";
+				else if (lEveModel.getCodMotivo().equals("0682")) 
+					lStato = "0570";
+				else if (lEveModel.getCodMotivo().equals("0693")) 
+				  lStato = "0571";			
+		  }
 
 			InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lEveMod,
 					lStato);

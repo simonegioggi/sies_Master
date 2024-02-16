@@ -153,16 +153,17 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			// new! DL 146 L'AFFIDAMENTO uò essere concesso anche con Ordinanza per cui
 			// devo recuperare il tipo Provvedimento dalla FORM
 			String lTipoProvvedimento = "";
-			if (tipoMisura.equals("AFFIDAMENTO")) {
+			// MEV_9 anche per la DET DOM sui può emettere una ordinanza
+			//if (tipoMisura.equals("AFFIDAMENTO")) {
 				if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE)) {
 					lTipoProvvedimento = getRequestStringParameter(
 							ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE);
 				} else {
-					lTipoProvvedimento = "02";
+					lTipoProvvedimento = "02";   //????
 				}
-			} else {
-				lTipoProvvedimento = "02"; // Decreto
-			}
+			//} else {
+			//	lTipoProvvedimento = "02"; // Decreto
+			//}
 
 			// Popola l'EVENTO SIUS (decreto / ordinanza)
 			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(),
@@ -261,6 +262,18 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEveNot.getEvento().setCodMotivo("5420");
 				else if ("2008".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEveNot.getEvento().setCodMotivo("5421");
+				// MEV_9 si rimappano i nuovi codici SIUS in caso di richiesta verbale sottoscrizione agli obblighi
+				else if ("0680".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("5422");
+				else if ("0681".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("5423");
+				else if ("0690".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("5424");
+				else if ("0691".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("5425");
+				else if ("0692".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEveNot.getEvento().setCodMotivo("5426");
+				// MEV_9 - FINE				
 				else
 					lEveNot.getEvento()
 							.setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
@@ -390,6 +403,18 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					lEve.getEvento().setCodMotivo("5420");
 				else if ("2008".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
 					lEve.getEvento().setCodMotivo("5421");
+				// MEV_9 si rimappano i nuovi codici SIUS in caso di richiesta verbale sottoscrizione agli obblighi
+				else if ("0680".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEve.getEvento().setCodMotivo("5422");
+				else if ("0681".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEve.getEvento().setCodMotivo("5423");
+				else if ("0690".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEve.getEvento().setCodMotivo("5424");
+				else if ("0691".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEve.getEvento().setCodMotivo("5425");
+				else if ("0692".equals(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO)))
+					lEve.getEvento().setCodMotivo("5426");
+				// MEV_9 - FINE
 				else
 					lEve.getEvento().setCodMotivo(lMisAlModAMM.getCodTipoMisura());
 			} else {

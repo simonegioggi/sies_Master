@@ -275,7 +275,8 @@ if (!lPosizione.isLibero()
 			return false;
 		}
 <%
-if (tipomisura.equals("AFFIDAMENTO")) {
+// ??? come fa ad esser obbligatoria la sede e non l'ufficio???
+//if (tipomisura.equals("AFFIDAMENTO")) {
 %>
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA%>.value == "-") {
 			alert("Selezionare l'Ufficio Emittente");
@@ -283,7 +284,7 @@ if (tipomisura.equals("AFFIDAMENTO")) {
 			return false;
 		}
 <%
-}
+//}
 %>
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>.value == "") {
 			alert("La Sede dell'Ufficio Emittente è obbligatoria");
@@ -291,7 +292,8 @@ if (tipomisura.equals("AFFIDAMENTO")) {
 			return false;
 		}
 <%
-if (tipomisura.equals("AFFIDAMENTO")) {
+// MEV_9 diventa selezionabile anche per la detenzione il tipo di provvedimento
+//if (tipomisura.equals("AFFIDAMENTO")) {
 %>
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE%>.value == "-") {
 			alert("Selezionare il Tipo Provvedimento");
@@ -299,7 +301,7 @@ if (tipomisura.equals("AFFIDAMENTO")) {
 			return false;
 		}      
 <%
-}
+//}
 %>
 		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiEvento.CAMPO_COD_MOTIVO%>.value == "-") {
 			alert("Selezionare l'Oggetto della Decisione");
@@ -348,6 +350,7 @@ if ((tipomisura.equals("AFFIDAMENTO") || tipomisura.equals("DETENZIONE"))
     		return false;
   		}
 	}
+	
 	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>.value != ""
 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>.value != ""
 			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>.value != "") {
@@ -379,6 +382,31 @@ if ((tipomisura.equals("AFFIDAMENTO") || tipomisura.equals("DETENZIONE"))
 <%
 } // chiude AFFIDAMENTO o DETENZIONE
 %> 
+
+<%-- MEV_9 Si aggiunge la data di esecutività --%>
+if (   document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value != ""
+    || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value != ""
+    || document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value != "") 
+{
+  if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value.length == 1)
+    document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value = '0'
+    + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value;
+  
+  if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value.length == 1)
+    document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value = '0' 
+    + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value;
+  
+  var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value + '-' +
+                       document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value + '-' +
+                       document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value;
+  if (!ControllaDataPassaVuota(data_to_verify)) {
+    alert("La data esecutivita' è errata");
+    document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA %>.focus();
+    return false;
+  }
+}
+
+
 	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_COGNOME %>.value == ""
 			&& document.LoadInserisciMisuraAlternativa.<%=ICostantiMagistrato.CAMPO_NOME %>.value == "") {
 		alert("Il  Magistrato Firmatario è obbligatorio");
@@ -1286,6 +1314,9 @@ if ((!lPosizione.isLibero())
 %>
 <table width="100%">
 	<tr>
+	
+	<td class="Titolo" colspan='8'> Dati Del Provvedimento della Sorveglianza </td>
+	<%-- 
 <%
 if (tipomisura.equals("AFFIDAMENTO")) {
 %>
@@ -1297,6 +1328,7 @@ if (tipomisura.equals("AFFIDAMENTO")) {
 <%
 }
 %>
+--%>
 	</tr>
 <% 
 if (misuraalternativa.getIdMisuraAlternativa() != null) {
@@ -1442,6 +1474,10 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
         	/
         	<input Title="Numero Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>" type="text" size="6" maxlength="6" onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();">
       	</td>
+      	
+      	<% // MEV_) si prevede decreto e ordinanza anche per Detenzione domiciliare  %>
+      	<td class="l" style="text-align:right;"> Anno / Numero Provvedimento</td>
+<%-- 
 <%
 	if (tipomisura.equals("AFFIDAMENTO")) {
 %>
@@ -1453,6 +1489,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 <%
 	}
 %>
+--%>
 		<td class="l">
 	        <input Title="Anno"  name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>" type="text" size="4" maxlength="4" onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" onBlur="javascript:value=FillYear(value)">
 	        /
@@ -1499,6 +1536,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
        		</font>
       	</td>
     </tr>
+    <%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare
     <tr>
       	<td class="l">Tipo Provvedimento <font class=ob>(*)</font></td>
       	<td class="l" colspan="3">
@@ -1506,11 +1544,28 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
           		<%=comboTipoProvvSorv%>
        		</select>
       	</td>
-	</tr>    
+	</tr> 
+	--%>  
 <%
 	}
 %>
+
+<%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare --%>
     <tr>
+      <td class="l">Tipo Provvedimento <font class=ob>(*)</font></td>
+      <td class="l" colspan="3">
+        <select Title="Tipo Provvedimento" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE%>" onChange="pulisciId();">
+          <%=comboTipoProvvSorv%>
+        </select>
+      </td>
+    </tr>  
+<%-- MEV_9 FINE --%>
+
+    <tr>
+    
+    <%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare, si modifica etichetta--%>
+    <td class="l">Oggetto Decisione</td>
+    <%-- 
 <%
 	if (tipomisura.equals("AFFIDAMENTO")) {
 %>
@@ -1522,6 +1577,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 <%
 	}
 %>
+--%>
       	<td class="L" colspan="3">
         	<select Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" onChange="pulisciId();">
           		<option value="-">-
@@ -1530,6 +1586,9 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
      	</td>
 	</tr>
     <tr>
+ <%-- MEV_9 si prevede la scelta decreto/Ordinanza anche per Detenzione Domiciliare, si modifica etichetta--%>
+ <td class="l">Data Emissione</td>   
+ <%--
 <%
 	if (tipomisura.equals("AFFIDAMENTO")) {
 %>
@@ -1541,6 +1600,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 <%
 	}
 %>
+--%>
       	<td class="l" colspan="3">
         	<font class="campo">
 				<input value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> -
@@ -1549,6 +1609,20 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
         	</font>
       	</td>
     </tr>
+    
+<%-- MEV_9 si aggiunge la data esecutivita' --%>    
+<tr>
+  <td class="l">Data Esecutivita'</td>
+  <td class="l" colspan="3">
+    <font class="campo">
+      <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> -
+      <input value="" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillDM(value)" onChange="pulisciId();"> -
+      <input value="" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();">
+    </font>
+  </td>
+</tr>
+<%-- MEV_9 - FINE --%>   
+  
     <tr>
 <%
 	if (tipomisura.equals("DETENZIONE")) {

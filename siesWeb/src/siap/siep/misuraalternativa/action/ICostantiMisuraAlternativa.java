@@ -164,6 +164,11 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_ANNO_DATA_DECISIONE_MA_AT = "AnnoDataDecisioneMAAltroTitolo";
 
 	public static final String CAMPO_COD_LUOGO_EMITTENTE = "CodLuogoEmittente";
+	
+	// MEV_9
+	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
+	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
+	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
 	//
 
 	public static final String PG_LOAD_INSERISCI_MA_CONCESSIONE = IWebConstants.ROOT_DIR

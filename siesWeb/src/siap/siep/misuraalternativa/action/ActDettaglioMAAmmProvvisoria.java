@@ -1,7 +1,10 @@
 package siap.siep.misuraalternativa.action;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -182,7 +185,7 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 		// Ricerca Magistrato
 		IMagistrato lCtrlM = SICOLookupRemote.getMagistratoRemote();
 		MagistratoModel lMagi = lCtrlM.ExRicercaMagistratoByCod(lEveMod.getEvento().getCodMagistrato());
-		;
+		
 		setRequestAttribute("magistrato", lMagi);
 
 		// Sede Ufficio di Sorveglianza
@@ -197,6 +200,16 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 		 * setRequestAttribute("luogodetenzione", lLuoMod);
 		 */
 
+		// MEV_9 Si gestiscono i nuovi codici
+		Set<String> codiciAffidamento = new HashSet<String>(Arrays.asList(new String[]{"2006","2008","0680","0681","0690","0691","0692"}));
+		Set<String> codiciDetenzione  = new HashSet<String>(Arrays.asList(new String[]{"2005","0682","0693"}));
+		if (lDecreto != null) {
+			if (codiciAffidamento.contains(lDecreto.getCodTipoMisura()))
+				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
+			else if (codiciDetenzione.contains(lDecreto.getCodTipoMisura())) 
+				setRequestAttribute("tipoMisura", "DETENZIONE");
+		}
+		/*
 		if (lDecreto != null) {
 			if ("2005".equals(lDecreto.getCodTipoMisura()))
 				setRequestAttribute("tipoMisura", "DETENZIONE");
@@ -206,7 +219,8 @@ public class ActDettaglioMAAmmProvvisoria extends ActMisuraAlternativa implement
 																												// 2013
 			)
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
-		}
+		}*/
+		// MEV_9 - FINE
 		return PG_LOAD_DETTAGLIO_MA_AMM_PROVVISORIA;
 	}
 }

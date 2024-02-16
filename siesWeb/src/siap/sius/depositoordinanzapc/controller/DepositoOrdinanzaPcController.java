@@ -916,6 +916,48 @@ public class DepositoOrdinanzaPcController extends SiapController implements IDe
 		}
 		return lDepMod;
 	}
+	
+	/**
+	 * Aggiorna il Deposito e anche il record MA per consentire a SIEP di vedere l'ordinanza
+	 * MEV_9 02.2024
+	 */
+	public DepositoOrdinanzaPcModel ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(
+			DepositoOrdinanzaPcModel aDepositoOrdinanzaPc) throws F3BException {
+
+		Connection lConn = null;
+		DepositoOrdinanzaPcDAO lDepDao = null;
+		DepositoOrdinanzaPcModel lDepMod = new DepositoOrdinanzaPcModel(aDepositoOrdinanzaPc);
+
+		MisuraAlternativaDAO lMisAltDao = null;
+		
+		try {
+			lConn = getDBConnection();
+			
+			lDepDao = new DepositoOrdinanzaPcDAO(lConn);
+			lDepDao.setDAOFromModelForUpdate(aDepositoOrdinanzaPc);
+			lDepDao.update();
+
+			lMisAltDao = new MisuraAlternativaDAO(lConn);
+			if (aDepositoOrdinanzaPc.getIdEventoGenerato()!=null) {
+				lMisAltDao.setDataEsecutivita(aDepositoOrdinanzaPc.getDataEsecutivita());
+				
+				lMisAltDao.setCondizioneByIdEvento(aDepositoOrdinanzaPc.getIdEventoGenerato());
+				
+				lMisAltDao.update();
+			}
+			
+			commit(lConn);
+		} catch (DAOException ex) {
+			rollback(lConn);
+			siesLogger.error("DAOException: ", ex);
+			throw new F3BException("DepositoOrdinanzaPcController.ExAggiornaDataEsecutivitaDepositoOrdinanzaPc: Non posso inserire: " + ex);
+		} finally {
+			cleanup(lDepDao);
+			cleanup(lMisAltDao);
+			cleanup(lConn);
+		}
+		return lDepMod;
+	}
 
 	public void ExCancellaDepositoOrdinanza(DepositoOrdinanzaPcModel aDepOrd) throws F3BException {
 

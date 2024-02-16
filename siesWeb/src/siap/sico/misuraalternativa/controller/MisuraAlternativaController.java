@@ -5,8 +5,10 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -5490,6 +5492,12 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			while (lItx.hasNext()) {
 				MisuraAlternativaModel lMisMod = (MisuraAlternativaModel) lItx.next();
 
+				// MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo DATA_ESECUTIVITA
+				Set<String> mySet = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692","0682","0693"}));
+				if (lMisMod.getDataEsecutivita() == null && mySet.contains(lMisMod.getCodTipoMisura()))
+					continue;
+			  // MEV_9 - FINE
+				
 				lEveDao.ricercaEventoByKey(lMisMod.getEveIdEvento());
 				EventoModel lEvento = (EventoModel) lEveDao.getModelByKey();
 

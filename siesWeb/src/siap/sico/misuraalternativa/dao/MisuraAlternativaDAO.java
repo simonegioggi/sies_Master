@@ -99,6 +99,8 @@ public class MisuraAlternativaDAO extends TableDAO
     setField ("FL_FORMA_MISURA"      , BIG_DECIMAL);
     setField ("DESCRIZIONE_COMUNITA"      , STRING);
     
+    // MEV_9
+    setField ("DATA_ESECUTIVITA"       , DATE);
     
 	}
 
@@ -170,6 +172,9 @@ public class MisuraAlternativaDAO extends TableDAO
   public BigDecimal  getFlFormaMisura()                  throws DAOException {return getBigDecimal("FL_FORMA_MISURA") ;}
   public String      getDescrizioneComunita()                  throws DAOException {return getString("DESCRIZIONE_COMUNITA") ;}
   
+  // MEV_9
+  public Date 			getDataEsecutivita() 		throws DAOException	            { return getDate("DATA_ESECUTIVITA"); }
+  
   //
   // METODI SET()
   //
@@ -237,6 +242,9 @@ public class MisuraAlternativaDAO extends TableDAO
   public void  setNumeroRegistroMaAt(BigDecimal aValore)              { setBigDecimal("NUMERO_REGISTRO_MA_AT",aValore);}
   public void  setFlFormaMisura(BigDecimal aValore)                   { setBigDecimal("FL_FORMA_MISURA",aValore);}
   public void  setDescrizioneComunita (String aValore)                { setString("DESCRIZIONE_COMUNITA",aValore);}
+  
+  // MEV_9
+  public void setDataEsecutivita(Date aValore) 		{ setDate("DATA_ESECUTIVITA",aValore);}
   
   
 	public GenericModel getModel() throws DAOException
@@ -312,7 +320,8 @@ public class MisuraAlternativaDAO extends TableDAO
                                         getAnnoRegistroMaAt(),
                                         getNumeroRegistroMaAt(),
                                         this.getFlFormaMisura(),
-                                        this.getDescrizioneComunita()
+                                        this.getDescrizioneComunita(),
+                                        getDataEsecutivita() //MEV_9
                                       );
   }
 
@@ -382,6 +391,8 @@ public class MisuraAlternativaDAO extends TableDAO
     setNumeroRegistroMaAt             (aModel.getNumeroRegistroMaAt());
     setFlFormaMisura(aModel.getFlFormaMisura());
     setDescrizioneComunita (aModel.getDescrizioneComunita());
+    // MEV_9
+    setDataEsecutivita(aModel.getDataEsecutivita());    
   }
 
   public void setDAOFromModelForUpdate(MisuraAlternativaModel aModel) throws DAOException
@@ -445,6 +456,9 @@ public class MisuraAlternativaDAO extends TableDAO
     setChiaveUfficioFascicoloSiusMaAt (aModel.getChiaveUfficioFascicoloSiusMaAt());
     setAnnoRegistroMaAt               (aModel.getAnnoRegistroMaAt());
     setNumeroRegistroMaAt             (aModel.getNumeroRegistroMaAt());  
+    
+    // MEV_9
+    setDataEsecutivita(aModel.getDataEsecutivita());    
   }
 
   public void setCondizione(MisuraAlternativaModel aModel)

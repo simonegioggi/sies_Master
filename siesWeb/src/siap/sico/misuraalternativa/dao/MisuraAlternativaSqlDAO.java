@@ -477,7 +477,9 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		lStatement += "  MA.FLAG_UFFICIO_INSERIMENTO, ";
 		lStatement += "  MA.DATA_SCADENZA_PROROGA,MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, ";
 		lStatement += "  MA.FLAG_SITUAZIONE, ";
+		lStatement += "  MA.DATA_ESECUTIVITA, "; // MEV_9
 		lStatement += "  MA.FLAG_PERIODO_ESPIATO ";
+		
 		lStatement += "  FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT, CG_REF_CODES UFFSCA, ";
 		lStatement += "  CG_REF_CODES MPROV, CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
 		// DARIO
@@ -487,6 +489,7 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		lStatement += "  (SELECT U.COD_UFFICIO,UFF.RV_MEANING FROM CG_REF_CODES UFF, UFFICIO U WHERE UFF.RV_DOMAIN = 'TIPO_UFFICIO' AND UFF.RV_LOW_VALUE = U.COD_TIPO_UFFICIO) u1, ";
 		lStatement += "  (SELECT E.ID_EVENTO,MAX(E.DATA_INSERIMENTO) FROM EVENTO E WHERE E.COD_TIPO_PROVVEDIMENTO='03' AND E.FAS_SIE_ID_FASCICOLO_SIEP = "
 				+ aKey + "  GROUP BY E.ID_EVENTO) E1 ";
+		
 		lStatement += "  WHERE PROV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'  ";
 		lStatement += "  AND NAT.RV_DOMAIN = 'NATURA_DECISIONE'   ";
 		lStatement += "  AND MPROV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'   ";
@@ -589,6 +592,7 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 				+ ", MA.CHIAVE_UFF_FAS_SIUS_MA_AT, TIPO_UFF_AT.RV_MEANING descTipoUffMaAt " + // +descrizione
 				", MA.ANNO_REGISTRO_MA_AT " + ", MA.NUMERO_REGISTRO_MA_AT ";
 		lStatement += ", MA.FL_FORMA_MISURA ";
+		lStatement += ", MA.DATA_ESECUTIVITA "; // MEV_9
 		lStatement += ", MA.DESCRIZIONE_COMUNITA ";
 
 		lStatement += " FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT,CG_REF_CODES UFFSCA, ";
@@ -701,6 +705,7 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 				+ " MA.COD_LUOGO_ALTRO_TITOLO,  " + " MA.COD_AUTORITA_ALTRO_TITOLO,  "
 				+ " LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, "
 				+ " TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, "
+				+ " MA.DATA_ESECUTIVITA, "  // MEV_9
 				+ " MA.DATA_SCADENZA_PROROGA, MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, "
 				+ " MA.FLAG_SITUAZIONE, " + " MA.FLAG_UFFICIO_INSERIMENTO ";
 		lStatement += " FROM EVENTO EV,EVENTO EVESUCCESSIVO,MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT,CG_REF_CODES UFFSCA, ";
@@ -808,7 +813,9 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 
 		aModel.setDescTdsCompetente(getString("DESCUFFTDS"));
 		aModel.setDescSedeTdsCompetente(getString("DESCCOMTDS"));
-
+		
+		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA")); // MEV_9
+		
 		// DL146/2013
 		if (findColumn("COD_TIPO_DECISIONE_MA_AT")) {
 			aModel.setCodTipoDecisioneMaAt(getString("COD_TIPO_DECISIONE_MA_AT"));
@@ -883,7 +890,7 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		aModel.setFlagStampaSius(getString("FLAG_STAMPA_SIUS"));
 		aModel.setFlagVideoSiep(getString("FLAG_VIDEO_SIEP"));
 		aModel.setFlagVideoSius(getString("FLAG_VIDEO_SIUS"));
-
+		
 		return aModel;
 	}
 

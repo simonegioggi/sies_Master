@@ -78,7 +78,10 @@
                          mesiMisura,
                          anniMisura,
                          flagDecisioneTribunale,
-                         sedeTdsCompetente
+                         sedeTdsCompetente,
+                         giornoEsecutivita, <%-- MEV_9 --%>
+                         meseEsecutivita, <%-- MEV_9 --%>
+                         annoEsecutivita <%-- MEV_9 --%>
                          )
       {
 
@@ -154,6 +157,26 @@
         }
         catch(err){  }
                 
+        
+        // MEV_9 si aggiunge la data esecutivita
+        try {
+            if (giornoEsecutivita!='-')
+              window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value=giornoEsecutivita;
+            else
+              window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_ESECUTIVITA%>.value="";
+
+            if (meseEsecutivita!='-' )
+              window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value=meseEsecutivita;
+            else
+              window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_ESECUTIVITA%>.value="";
+
+            if (annoEsecutivita!='-')
+              window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value=annoEsecutivita;
+            else
+              window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_ESECUTIVITA%>.value="";
+            }
+        catch(err){  }   
+        
         // PP = PROSECUZIONE_PROVVISORIA
         // PC = PROSECUZIONE_PROVVISORIA_CUMULO
         if(natura!='-' && (natura == 'PP' || natura == 'PC' || natura == 'ED' || natura == 'EC') )
@@ -587,7 +610,11 @@
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumMesiMisura(),"-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getNumAnniMisura(),"-")%>',
                                          '<%=StringUtils.toStringJSP(misuraModel.getFlagDecisioneTribunale(),"-")%>',
-                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>'
+                                         '<%=StringUtils.cStrForJS(misuraModel.getDescSedeTdsCompetente())%>',
+                                         <%-- MEV_9 --%>
+                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(),"dd"),"-")%>',
+                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(),"MM"),"-")%>',
+                                         '<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraModel.getDataEsecutivita(),"yyyy"),"-")%>'
                                          );">
                
               <img align="middle" src="/images/fileselected.gif" border=0>

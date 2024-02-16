@@ -921,7 +921,7 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	public void listaMotivoProvvAmmProvvisoria(String aTipo) throws DAOException {
 		String lStatement = new String();
-
+/*
 		// 09/10/2009 lStatement =
 		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
 		// "
@@ -933,6 +933,18 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 			lStatement += " AND (RV_LOW_VALUE in ('2006','2008')) ";
 		// lStatement += " AND (RV_LOW_VALUE = '2006') "; //mod d.f.
 
+*/	
+		// MEV_9: si differenziano i codici per PM e PMM aggiungendo i nuovi codici
+		lStatement = " SELECT * FROM CG_REF_CODES WHERE " + " RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PM"))
+			lStatement += " AND (RV_LOW_VALUE in ('2005','0682')) ";
+		else if (aTipo.equals("AMMISSIONE_PROV_DET_DOM_PMM"))
+			lStatement += " AND (RV_LOW_VALUE in ('2005','0693')) ";
+		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PM"))
+			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0680','0681')) ";
+		else if (aTipo.equals("AMMISSIONE_PROV_AFFI_PMM"))
+			lStatement += " AND (RV_LOW_VALUE in ('2006','2008','0690','0691','0692')) ";	
+		
 		lStatement += " ORDER BY RV_ABBREVIATION ";
 
 		setStatement(lStatement);

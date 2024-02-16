@@ -158,8 +158,12 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 					dopm.setNoteDataEsecutivita(getRequestStringParameter(CAMPO_NOTE));
 				dopm.setDataEsecutivita(getRequestDateParameter(CAMPO_ANNO_DATA_ESECUTIVITA,
 						CAMPO_MESE_DATA_ESECUTIVITA, CAMPO_GIORNO_DATA_ESECUTIVITA));
-				idopc.ExModificaDepositoOrdinanzaPc(dopm);
-
+				
+				// MEV9 si aggiorna anche Misura Alternativa
+				//idopc.ExModificaDepositoOrdinanzaPc(dopm);				
+				idopc.ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(dopm);
+				// MEV9 - FINE
+				
 				INotifica in = SIEPLookupRemote.getNotificaRemote();
 				if ("modifica".equals(getRequestStringParameter("provenienza"))) {
 					Vector<NotificaModel> notifiche = leggiNotifiche(em);

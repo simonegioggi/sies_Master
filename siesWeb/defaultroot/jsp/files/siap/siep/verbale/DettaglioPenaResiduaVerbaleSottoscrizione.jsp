@@ -1,5 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.math.BigDecimal"%>
+<%@ page import="java.util.Arrays"%>
+<%@ page import="java.util.HashSet"%>
+<%@ page import="java.util.Set"%>
 
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
@@ -34,6 +37,13 @@
 <script language="JavaScript" src=<%=IWebConstants.JS_DATE_CONTROL%>></script>
 <script language="JavaScript" src=<%=IWebConstants.JS_VALIDATOR%>></script>
 <script language="JavaScript" src="/html/conferma.js"></script>
+
+<% 
+// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
+Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
+%>
+
 <script language="JavaScript">
   function Verify()
   {
@@ -86,13 +96,17 @@
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMASemiliberta&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
 <%
     }
-    else if(misuraalternativa.getCodTipoMisura().equals("2005"))
+		// MEV_9 si aggiungono i nuovi codici
+    //else if(misuraalternativa.getCodTipoMisura().equals("2005"))
+    else if(misuraalternativa.getCodTipoMisura().equals("2005") || codiciDetenzioneSorvNew.contains(misuraalternativa.getCodTipoMisura()))
     {
 %>
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvDetDom&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
 <%
     }
-    else if(misuraalternativa.getCodTipoMisura().equals("2006") || misuraalternativa.getCodTipoMisura().equals("2008"))
+		//MEV_9 si aggiungono i nuovi codici
+    // else if(misuraalternativa.getCodTipoMisura().equals("2006") || misuraalternativa.getCodTipoMisura().equals("2008"))
+    else if(misuraalternativa.getCodTipoMisura().equals("2006") || misuraalternativa.getCodTipoMisura().equals("2008") || codiciAffidamentoSorvNew.contains(misuraalternativa.getCodTipoMisura())  )
     {
 %>
       document.location.href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAmmProvAffi&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>";
@@ -192,6 +206,10 @@
        if(misuraalternativa.getCodTipoMisura().equals("0011"))
        {%>
          <td class="l" colspan=2>Concessione Detenzione Domiciliare a Termine</td>
+      <% } else if(codiciAffidamentoSorvNew.contains(misuraalternativa.getCodTipoMisura())) { %> <%--// MEV_9 --%>
+      <td class="l" colspan=2>Applicazione Provvisoria ad Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
+      <% } else if(codiciDetenzioneSorvNew.contains(misuraalternativa.getCodTipoMisura())) { %> <%--// MEV_9 --%>
+      <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>            
      <%}%>
     </tr>
 

@@ -3,6 +3,7 @@ package siap.sico.web;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1533,6 +1534,25 @@ public class ActionSiap extends Action {
 		// }
 
 		return ret;
+	}
+
+	// MEV_9 aggiunto metodo
+	protected boolean isUfficoMonorenni() throws F3BException {		
+		Set<String> ufficiMinori = new HashSet<String>();
+
+		ufficiMinori.add("PMM");
+		ufficiMinori.add("DIBM");
+		ufficiMinori.add("GIPM");
+		ufficiMinori.add("GUPM");
+		ufficiMinori.add("CAPSM");
+		ufficiMinori.add("TDSM");
+		ufficiMinori.add("UDSM");
+		
+		UfficioModel ufficioUtente = getUfficioUtenteConnesso();
+		if (ufficiMinori.contains(ufficioUtente.getCodTipoUfficio()))
+			return true;
+		else
+			return false;		
 	}
 
 	/**

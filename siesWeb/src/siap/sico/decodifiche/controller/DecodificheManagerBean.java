@@ -235,6 +235,11 @@ public class DecodificheManagerBean {
 	private Collection mMotivoProvvedimentoRipristinoDetDomSpec;
 	private Collection mMotivoProvvedimentoAmmProvDetDom;
 	private Collection mMotivoProvvedimentoAmmProvAffi;
+	// MEV_9
+	private Collection mMotivoProvvedimentoAmmProvDetDomPmm;
+	private Collection mMotivoProvvedimentoAmmProvAffiPmm;
+  // MEV_9 - FINE
+	
 	private Collection mMotivoProvvedimentoMADetDomTemp;
 	private Collection mMotivoProvvedimentoMADetDomTempProroga;
 	private Collection mMotivoProvvedimentoMADetDomTempProrogaProvvisoria;
@@ -1412,13 +1417,25 @@ public class DecodificheManagerBean {
 
 			mMotivoProvvedimentoRipristinoDetDomSpec = lDecodifiche
 					.ExListaMotivoProvvRipristinoDetDomSpeciale("RIPRISTINO_DET_DOM_SPEC");
-
+			
+			// MEV_9
+//			mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
+//					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
+//
+//			mMotivoProvvedimentoAmmProvAffi = lDecodifiche
+//					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI");
+			
 			mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
-
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM_PM");
+			mMotivoProvvedimentoAmmProvDetDomPmm = lDecodifiche
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM_PMM");
+			
 			mMotivoProvvedimentoAmmProvAffi = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI");
-
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PM");		
+			mMotivoProvvedimentoAmmProvAffiPmm = lDecodifiche
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PMM");
+			// MEV_9 - FINE
+			
 			mMotivoProvvedimentoMADetDomTemp = lDecodifiche
 					.ExListaMotivoProvvMADetDomTemp("AMMISSIONE_PROV_DET_DOM_TEMP");
 
@@ -2666,7 +2683,17 @@ public class DecodificheManagerBean {
 	public Collection getMotivoProvvedimentoAmmProvAffi() {
 		return mMotivoProvvedimentoAmmProvAffi;
 	}
+	
+	// MEV_9
+	public Collection getMotivoProvvedimentoAmmProvDetDomPmm() {
+		return mMotivoProvvedimentoAmmProvDetDomPmm;
+	}
 
+	public Collection getMotivoProvvedimentoAmmProvAffiPmm() {
+		return mMotivoProvvedimentoAmmProvAffiPmm;
+	}
+  //MEV_9 - FINE
+	
 	public Collection getMotivoProvvedimentoMADetDomTemp() {
 		return mMotivoProvvedimentoMADetDomTemp;
 	}

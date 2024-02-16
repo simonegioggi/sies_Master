@@ -8,6 +8,7 @@ import f3b.web.IWebConstants;
 import f3b.web.RedirectTo;
 import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
+import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.evento.controller.IEventoSimeone;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
@@ -99,10 +100,27 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		Option lOptionAutoritaE = new Option(DecodificheManager.getInstance().getTipoAutorita());
 		setRequestAttribute("codiceAutoritaE", "" + lOptionAutoritaE);
 
+		// MEV_9 - Si caricano i dati per la como decreto/ordinaza
+		Vector<DecodificheModel> lTipoProvvSorv = new Vector<>();
+		lTipoProvvSorv.add(new DecodificheModel("-", "-", "", "", "", "", "", "", ""));
+		lTipoProvvSorv.add(new DecodificheModel("02", "Decreto", "", "", "", "", "", "", ""));
+		lTipoProvvSorv.add(new DecodificheModel("03", "Ordinanza", "", "", "", "", "", "", ""));
+		Option lOptionTipoProvvSorv = new Option(lTipoProvvSorv);
+		lOptionTipoProvvSorv.setSelected("-");
+		setRequestAttribute("comboTipoProvvSorv", "" + lOptionTipoProvvSorv);
+		// MEV_9 - FINE
+		
 		// setto il campo codice motivo
-		Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+		// MEV_9
+		//Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+		Option lOption = null;
+		if (isUfficoMonorenni())
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
+		else 
+			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+		// MEV_9 - FINE		
 		setRequestAttribute("motivoProvv", "" + lOption);
-
+		
 		// Riempimento ComboBoX
 		Option lOptionAvv = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
 		setRequestAttribute("autoritaEsternaAvv", "" + lOptionAvv);

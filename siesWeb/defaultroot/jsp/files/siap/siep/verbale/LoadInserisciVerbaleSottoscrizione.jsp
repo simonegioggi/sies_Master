@@ -1,5 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@page import="siap.siep.util.MinorMask"%>
+<%@ page import="java.util.Arrays"%>
+<%@ page import="java.util.HashSet"%>
+<%@ page import="java.util.Set"%>
+
+<%@ page import="siap.siep.util.MinorMask"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
@@ -25,6 +29,12 @@
 <script language="JavaScript" src=<%=IWebConstants.JS_VALIDATOR%> ></script>
 <script language="JavaScript" src="<%=IWebConstants.JS_DATE_CONTROL%>"></script>
 
+<% 
+// MEV-9 si aggiungono gli ulteriori codici motivo (sorveglianza)
+Set<String> codiciAffidamentoSorvNew = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692"}));
+Set<String> codiciDetenzioneSorvNew  = new HashSet<String>(Arrays.asList(new String[]{"0682","0693"}));
+%>
+
 <script language="JavaScript">
 function Verifica() {
     if (document.LoadInserisciVerbaleSott.<%=ICostantiVerbale.CAMPO_GIORNO_DATA_PERVENIMENTO%>.value.length==1)
@@ -44,11 +54,13 @@ function Verifica() {
     var data_to_verify_em = document.LoadInserisciVerbaleSott.<%=ICostantiVerbale.CAMPO_GIORNO_DATA_EMISSIONE%>.value+'/'+document.LoadInserisciVerbaleSott.<%=ICostantiVerbale.CAMPO_MESE_DATA_EMISSIONE%>.value+'/'+document.LoadInserisciVerbaleSott.<%=ICostantiVerbale.CAMPO_ANNO_DATA_EMISSIONE%>.value;
     if (!ControllaDataPassaVuota(data_to_verify_em)) {
 <%
+
 if (evento.getCodMotivo().equals("0001")
              || evento.getCodMotivo().equals("0002") 
              || evento.getCodMotivo().equals("0003")
              || evento.getCodMotivo().equals("2006")
              || evento.getCodMotivo().equals("2008")
+             || codiciAffidamentoSorvNew.contains(evento.getCodMotivo()) // MEV_9
      	// 20191120 [SG]: aggiunto codice per gestione ticket
 		// Ticket#20191114019 - SIES - mancata registrazione data inizio misura
 		// Ticket#20191112019 - 2019/11 Ancona Procura Minori non fa caricare inizio misura
@@ -67,6 +79,7 @@ if (evento.getCodMotivo().equals("0005")
 		|| evento.getCodMotivo().equals("2630")
 		|| evento.getCodMotivo().equals("0011")
 		|| evento.getCodMotivo().equals("2005")
+		|| codiciDetenzioneSorvNew.contains(evento.getCodMotivo()) // MEV_9
           // || evento.getCodMotivo().equals("2006") 
           // || evento.getCodMotivo().equals("2008")
    		) {
@@ -91,6 +104,7 @@ if (evento.getCodMotivo().equals("0004")) {
              || evento.getCodMotivo().equals("0003")
              || evento.getCodMotivo().equals("2006")
              || evento.getCodMotivo().equals("2008")
+             || codiciAffidamentoSorvNew.contains(evento.getCodMotivo()) // MEV_9
           	// 20191120 [SG]: aggiunto codice per gestione ticket
 			// Ticket#20191114019 - SIES - mancata registrazione data inizio misura
 			// Ticket#20191112019 - 2019/11 Ancona Procura Minori non fa caricare inizio misura
@@ -106,6 +120,7 @@ if (evento.getCodMotivo().equals("0004")) {
          evento.getCodMotivo().equals("0013") || evento.getCodMotivo().equals("2245") || 
          evento.getCodMotivo().equals("2630") || 
          evento.getCodMotivo().equals("0011") || evento.getCodMotivo().equals("2005") 
+         || codiciDetenzioneSorvNew.contains(evento.getCodMotivo()) // MEV_9
          // || evento.getCodMotivo().equals("2006") 
          // || evento.getCodMotivo().equals("2008")
         )
@@ -128,6 +143,7 @@ if (evento.getCodMotivo().equals("0004")) {
          || evento.getCodMotivo().equals("0003")
          || evento.getCodMotivo().equals("2006")
          || evento.getCodMotivo().equals("2008")
+         || codiciAffidamentoSorvNew.contains(evento.getCodMotivo()) // MEV_9
    		// 20191120 [SG]: aggiunto codice per gestione ticket
 		// Ticket#20191114019 - SIES - mancata registrazione data inizio misura
 		// Ticket#20191112019 - 2019/11 Ancona Procura Minori non fa caricare inizio misura
@@ -147,6 +163,7 @@ if (evento.getCodMotivo().equals("0004")) {
           evento.getCodMotivo().equals("0013") || evento.getCodMotivo().equals("2245") ||
           evento.getCodMotivo().equals("2630") ||  // 27/09/2010 Espiazione Pena presso Domicilio.
           evento.getCodMotivo().equals("0011") || evento.getCodMotivo().equals("2005") 
+          || codiciDetenzioneSorvNew.contains(evento.getCodMotivo()) // MEV_9
           // || evento.getCodMotivo().equals("2006") 
           // || evento.getCodMotivo().equals("2008")
          )
@@ -310,6 +327,10 @@ if (evento.getCodMotivo().equals("0004")) {
       if(evento.getCodMotivo().equals("0610"))
        {%>
     <td class="l" colspan=2>Esecuzione presso domicilio della pena detentiva ( TdS )</td>
+      <% } else if(codiciAffidamentoSorvNew.contains(evento.getCodMotivo())) { %> <%--// MEV_9 --%>
+      <td class="l" colspan=2>Applicazione Provvisoria ad Affidamento in Prova - Art. 678 comma 1-ter c.p.p.</td>
+      <% } else if(codiciDetenzioneSorvNew.contains(evento.getCodMotivo())) { %> <%--// MEV_9 --%>
+      <td class="l" colspan=2>Applicazione Provvisoria a Detenzione Domiciliare - Art. 678 comma 1-ter c.p.p.</td>    
      <%}%>
      
     </tr>
@@ -332,6 +353,7 @@ if(evento.getCodMotivo() != null)
      || evento.getCodMotivo().equals("0003") // Concessione Affidamento
      || evento.getCodMotivo().equals("2006") // Concessione Ammissione Provvisoria Affidamento
      || evento.getCodMotivo().equals("2008") // Concessione Ammissione Provvisoria Affidamento
+     || codiciAffidamentoSorvNew.contains(evento.getCodMotivo())
 	// 20191120 [SG]: aggiunto codice per gestione ticket
 	// Ticket#20191114019 - SIES - mancata registrazione data inizio misura
 	// Ticket#20191112019 - 2019/11 Ancona Procura Minori non fa caricare inizio misura
@@ -379,6 +401,7 @@ if(evento.getCodMotivo() != null)
       || evento.getCodMotivo().equals("2630") // 27/09/2010 Espiazione Pena presso Domicilio
       || evento.getCodMotivo().equals("0011")
       || evento.getCodMotivo().equals("2005")
+      || codiciDetenzioneSorvNew.contains(evento.getCodMotivo())
       //|| evento.getCodMotivo().equals("2006")
       //|| evento.getCodMotivo().equals("2008") // 24/01/2014 DL 146 2013
     )
