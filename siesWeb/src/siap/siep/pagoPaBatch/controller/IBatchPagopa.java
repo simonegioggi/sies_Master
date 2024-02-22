@@ -1,0 +1,19 @@
+package siap.siep.pagoPaBatch.controller;
+
+import f3b.util.F3BException;
+import siap.siep.pagoPaBatch.model.BatchPagopaModel;
+
+/**
+ * Batch per PagoPA
+ *
+ * @author d.fiorletta
+ * @since MEV_2023-13
+ * @version 1.0
+ */
+public interface IBatchPagopa {
+
+	BatchPagopaModel ExInserisciLancioBatchPagopa(BatchPagopaModel batchModel) throws F3BException;
+
+	BatchPagopaModel ExAggiornaLancioBatchPagopa(BatchPagopaModel batchModel) throws F3BException;
+
+}

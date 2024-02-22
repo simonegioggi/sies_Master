@@ -1379,41 +1379,42 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 	 * @return BigDecimal n.ro di record
 	 * @throws F3BException
 	 */
-	public BigDecimal ExGetNumRicercaFascicoliBySoggetto(SoggettoModel aSogModel,
-			String lCodUfficioUtenteConnesso, String lCodDistretto, String majorOffice) throws F3BException {
-
-		Connection lConn = null;
-		FascicoloSigeSqlDAO lFasSqlDao = null;
-		BigDecimal lCont = new BigDecimal(0);
-
-		try {
-			lConn = getDBConnection();
-			lFasSqlDao = new FascicoloSigeSqlDAO(lConn);
-			// MEV_57: aggiunto parametro di passaggio
-			if (StringUtils.checkValidValue(majorOffice))
-				lFasSqlDao.ricercaFascicoliBySoggetto(aSogModel, lCodUfficioUtenteConnesso, lCodDistretto,
-						majorOffice);
-			else
-				lFasSqlDao.ricercaFascicoliBySoggetto(aSogModel, lCodUfficioUtenteConnesso, lCodDistretto,
-						"");
-			lCont = lFasSqlDao.getNumRowsSelected();
-		} catch (DAOException daoEx) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-			// siesLogger al posto di LogF3B.getLogger()
-			siesLogger.error("DAOException: " + daoEx);
-			throw new F3BException(F3BException.USER_MESSAGE,
-					"FascicoloSigeController.ExGetNumRicercaFascicoliBySoggetto: " + daoEx);
-		} catch (Exception e) {
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
-			// siesLogger al posto di LogF3B.getLogger()
-			siesLogger.error("Exception: " + e);
-			throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
-		} finally {
-			cleanup(lFasSqlDao);
-			cleanup(lConn);
-		}
-		return lCont;
-	}
+	// Ticket#202311060117 - Ricerca soggetti per procedimento Sige: ottimizzazione query
+	// public BigDecimal ExGetNumRicercaFascicoliBySoggetto(SoggettoModel aSogModel,
+	// String lCodUfficioUtenteConnesso, String lCodDistretto, String majorOffice) throws F3BException {
+	//
+	// Connection lConn = null;
+	// FascicoloSigeSqlDAO lFasSqlDao = null;
+	// BigDecimal lCont = new BigDecimal(0);
+	//
+	// try {
+	// lConn = getDBConnection();
+	// lFasSqlDao = new FascicoloSigeSqlDAO(lConn);
+	// // MEV_57: aggiunto parametro di passaggio
+	// if (StringUtils.checkValidValue(majorOffice))
+	// lFasSqlDao.ricercaFascicoliBySoggetto(aSogModel, lCodUfficioUtenteConnesso, lCodDistretto,
+	// majorOffice);
+	// else
+	// lFasSqlDao.ricercaFascicoliBySoggetto(aSogModel, lCodUfficioUtenteConnesso, lCodDistretto,
+	// "");
+	// lCont = lFasSqlDao.getNumRowsSelected();
+	// } catch (DAOException daoEx) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+	// // siesLogger al posto di LogF3B.getLogger()
+	// siesLogger.error("DAOException: " + daoEx);
+	// throw new F3BException(F3BException.USER_MESSAGE,
+	// "FascicoloSigeController.ExGetNumRicercaFascicoliBySoggetto: " + daoEx);
+	// } catch (Exception e) {
+	// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
+	// // siesLogger al posto di LogF3B.getLogger()
+	// siesLogger.error("Exception: " + e);
+	// throw new F3BException(F3BException.USER_MESSAGE, e.getMessage());
+	// } finally {
+	// cleanup(lFasSqlDao);
+	// cleanup(lConn);
+	// }
+	// return lCont;
+	// }
 
 	/**
 	 * Ricerca Fascicoli Sige di un Soggetto (Nel model aSogModel è valorizzato l'ID) in base ai parametri di
@@ -1472,7 +1473,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 		} catch (Exception e) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 			// siesLogger al posto di mLog
-			siesLogger.error("Exception: " , e);
+			siesLogger.error("Exception: ", e);
 			throw new F3BException("FascicoloSigeController.ExRicercaFascSigeDelSoggetto: " + e);
 		} finally {
 			cleanup(lFasSqlDao);
@@ -2395,6 +2396,20 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 				BigDecimal lSequence = lSogDao.insert();
 				aFSigeModel.setSogIdSoggetto(lSequence);
 			}
+			// Ticket#202312270110 - Se il soggetto è iscritto da altro ufficio non sarà poi più modificabile
+			// anche se agganciato al fascicolo del proprio ufficio.
+			// Se decido di agganciarlo al fascicolo corrente lo devo marcare come di proprietà.
+			else {
+				lSogDao = new SoggettoDAO(lConn);
+
+				lSogDao.setCodOperatoreInserimento(aFSigeModel.getCodOperatoreInserimento());
+				lSogDao.setCodUfficioInserimento(aFSigeModel.getCodUfficioInserimento());
+				lSogDao.setDataInserimento(DateUtils.getSysDate());
+
+				lSogDao.selCondizioneUpdate(aFSigeModel.getSogIdSoggetto());
+				lSogDao.update();
+			}
+			// Ticket#202312270110 - FINE
 		} catch (DAOException ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza
 			// siesLogger al posto di LogF3B.getLogger()
@@ -2904,12 +2919,12 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 			lFasSigeSqlDao.stop();
 
 			// Scorro il vettore per eliminare i doppioni ed aggregare le decrizioni
-			//siesLogger.debug("Record estratti dalla query: "+lFascicoliAppoggio.size());
+			// siesLogger.debug("Record estratti dalla query: "+lFascicoliAppoggio.size());
 			FascicoloSigeEstesoModel lastFascicoloEstaso = null;
 			String listaOggetti = "";
-			//siesLogger.debug("Inizio ciclo per eliminare aggregare i tenori.. ");
+			// siesLogger.debug("Inizio ciclo per eliminare aggregare i tenori.. ");
 			for (int i = 0; i < lFascicoliAppoggio.size(); i++) {
-				//siesLogger.debug("i = "+i+")");
+				// siesLogger.debug("i = "+i+")");
 				FascicoloSigeEstesoModel lFascicoloEsteso = lFascicoliAppoggio.elementAt(i);
 				if (i == 0) {
 					// siesLogger.debug("Primo record ");
@@ -2920,7 +2935,7 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 				} else if (lFascicoloEsteso.getFascicoloSige().getIdFascicoloSige()
 						.compareTo(lastFascicoloEstaso.getFascicoloSige().getIdFascicoloSige()) == 0) {
 					// Stesso fascicolo, concateno gli oggetti
-					//siesLogger.debug("Stesso fascicolo, concateno gli oggetti.. ");
+					// siesLogger.debug("Stesso fascicolo, concateno gli oggetti.. ");
 					if (lFascicoloEsteso.getFascicoloSige().getDescOggetto() != null)
 						listaOggetti = listaOggetti + "\n"
 								+ lFascicoloEsteso.getFascicoloSige().getDescOggetto() + ";";
@@ -2929,7 +2944,8 @@ public class FascicoloSigeController extends SiapController implements IFascicol
 				} else {
 					// Ho cambiato fascicolo, aggiungo precedente model al vettore di output
 					lFascicoli.add(lastFascicoloEstaso);
-					// Ticket#20220907012 — Se fascicolo senza oggetti riportava gli oggetti del fascicolo precedente
+					// Ticket#20220907012 — Se fascicolo senza oggetti riportava gli oggetti del fascicolo
+					// precedente
 					listaOggetti = "";
 					// Ticket#20220907012 — FINE
 

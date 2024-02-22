@@ -80,18 +80,8 @@ import siap.siep.statoprocedimento.dao.StatoProcedimentoDAO;
 import siap.siep.statoprocedimento.model.StatoProcedimentoModel;
 
 /**
- * <p>
  * Title: PenaAccessoriaController
- * </p>
- * <p>
  * Description: Classe Controller per PenaAccessoria
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -946,7 +936,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 					lannman_reato = (AnnmanReatoModel) ann_reati.elementAt(i);
 					// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 					// mLog
-					siesLogger.error("reato: " + lannman_reato);
+					siesLogger.debug("reato: " + lannman_reato);
 					lReaDao.ricercaReatoByKey(lannman_reato.getReatoId());
 					lRea = (ReatoModel) (lReaDao.getModelByKey());
 					lReati.add(lRea);
@@ -963,7 +953,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.error("size del vettore di reati: " + lReati.size());
+		siesLogger.debug("size del vettore di reati: " + lReati.size());
 		return lReati;
 	}
 
@@ -1024,7 +1014,7 @@ public class PenaSospesaController extends SiapController implements IPenaSospes
 			cleanup(lConn);
 		}
 		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
-		siesLogger.error("Pena complessiva: " + lPenSanMod);
+		siesLogger.debug("Pena complessiva: " + lPenSanMod);
 		return lPenSanMod;
 	}
 

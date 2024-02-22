@@ -72,18 +72,8 @@ import siap.sius.tenore.model.TenoreModel;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
  * Title: UnificazioneController
- * </p>
- * <p>
  * Description: Classe Controller per Unificazione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -182,7 +172,6 @@ public class UnificazioneController extends SiapController implements IUnificazi
 
 	/**
 	 * Verifica del Procedimento da Unificare.
-	 * <p>
 	 *
 	 * @param aAnnoDaUnif
 	 * @param aNumeroDaUnif
@@ -218,7 +207,7 @@ public class UnificazioneController extends SiapController implements IUnificazi
 
 			if (lFasDaUnif.getFascicoloSiusModel().getCodStatoFascicolo().equals("05"))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Procedimento da Unificare gia unificato ");
+						"Procedimento da Unificare gia unificato");
 
 			// 26/03/2007 Se Rinviato a nuovo ruolo, può essere unificato.
 			// 23/09/2009 Se Sospeso per rimessione atti, può essere unificato.
@@ -226,7 +215,12 @@ public class UnificazioneController extends SiapController implements IUnificazi
 					&& !lFasDaUnif.getFascicoloSiusModel().getCodStatoFascicolo().equals("10")
 					&& !lFasDaUnif.getFascicoloSiusModel().getCodStatoFascicolo().equals("13"))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Procedimento da Unificare archiviato :  Unificazione Impossibile");
+						// Ticket#202308070113 - Errore unificazione SIUS: cambio msg
+						// "Procedimento da Unificare archiviato : Unificazione Impossibile");
+						"Il Procedimento da Unificare si trova nello stato "
+								+ lFasDaUnif.getFascicoloSiusModel().getDescrStatoFascicolo()
+								+ " : Unificazione Impossibile (consentita solo per procedimento in stato"
+								+ " Iscritto, Rinviato a Nuovo Ruolo o Sospeso per Rimessione Atti)");
 
 			// 14.04.2011 Verifica presenza Magistrato Relatore in Fascicolo da Unificare
 			IMagistratoRelatore lCtrlM = SIUSLookupRemote.getMagistratoRelatoreRemote();
@@ -240,7 +234,7 @@ public class UnificazioneController extends SiapController implements IUnificazi
 			// STUB 17/09/2004.
 			if (lFasDaUnif.getGeneraleProcedimentoModel().getCodOggettoProcedimento().compareTo("U004") == 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Procedimento da Unificare di Esecuzione Misure Alternative :  Unificazione Impossibile");
+						"Procedimento da Unificare di Esecuzione Misure Alternative : Unificazione Impossibile");
 		} catch (SIUSException Se) {
 			rollback(lConn);
 			throw Se;
@@ -267,7 +261,6 @@ public class UnificazioneController extends SiapController implements IUnificazi
 
 	/**
 	 * Verifica del Procedimento Unificante.
-	 * <p>
 	 *
 	 * @param aAnnoUnificante
 	 * @param aNumeroUnificante
@@ -301,7 +294,7 @@ public class UnificazioneController extends SiapController implements IUnificazi
 					new BigDecimal(aNumeroUnificante), aUfficioUtenteConnesso);
 
 			if (lFasUnificante.getFascicoloSiusModel().getCodStatoFascicolo().equals("05"))
-				throw new SIUSException(SIUSException.USER_MESSAGE, "Procedimento Unificante gia unificato ");
+				throw new SIUSException(SIUSException.USER_MESSAGE, "Procedimento Unificante gia unificato");
 
 			// 26/03/2007 Se Rinviato a nuovo ruolo, può essere unificato.
 			// 23/09/2009 Se Sospeso per rimessione atti, può essere unificato.
@@ -309,13 +302,18 @@ public class UnificazioneController extends SiapController implements IUnificazi
 					&& !lFasUnificante.getFascicoloSiusModel().getCodStatoFascicolo().equals("10")
 					&& !lFasUnificante.getFascicoloSiusModel().getCodStatoFascicolo().equals("13"))
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Procedimento Unificante archiviato :  Unificazione Impossibile");
+						// Ticket#202308070113 - Errore unificazione SIUS: cambio msg
+						// "Procedimento Unificante archiviato : Unificazione Impossibile");
+						"Il Procedimento Unificante si trova nello stato "
+								+ lFasUnificante.getFascicoloSiusModel().getDescrStatoFascicolo()
+								+ " : Unificazione Impossibile (consentita solo per procedimento in stato"
+								+ " Iscritto, Rinviato a Nuovo Ruolo o Sospeso per Rimessione Atti)");
 
 			// STUB 17/09/2004.
 			if (lFasUnificante.getGeneraleProcedimentoModel().getCodOggettoProcedimento()
 					.compareTo("U004") == 0)
 				throw new SIUSException(SIUSException.USER_MESSAGE,
-						"Procedimento Unificante di Esecuzione Misure Alternative :  Unificazione Impossibile");
+						"Procedimento Unificante di Esecuzione Misure Alternative : Unificazione Impossibile");
 		} catch (SIUSException Se) {
 			rollback(lConn);
 			throw Se;
@@ -409,8 +407,9 @@ public class UnificazioneController extends SiapController implements IUnificazi
 						aIdSoggettoUnificante, lConn);
 				if (lVerifica.length() > 1)
 					throw new SIUSException(SIUSException.USER_MESSAGE,
-							"Il Procedimento del Soggetto da Unificare è di Esecuzione Misure Alternative</br> Prima di operare occorre unificare al soggetto tutti i singoli procedimenti di M.A. correlati.</br>"
-									+ lVerifica);
+							"Il Procedimento del Soggetto da Unificare è di Esecuzione Misure Alternative"
+									+ "</br>Prima di operare occorre unificare al soggetto tutti i singoli "
+									+ "procedimenti di M.A. correlati.</br>" + lVerifica);
 			}
 		} catch (SIUSException Se) {
 			rollback(lConn);
@@ -537,11 +536,7 @@ public class UnificazioneController extends SiapController implements IUnificazi
 		TreeModel lTree = this.prelevaDati(aEvento, lUfficio);
 
 		// Invoca il Report generator.
-		// ReportGenerator lReport = new ReportGenerator();
-
 		ReportGenerator lReport = new ReportGenerator(aUtenteModel.getUfficioUtente().getCodUfficio());
-
-		// String lNomeTemplate = TemplateManager.getInstance().getTemplateName(aEveNot.getNomeTemplate());
 
 		// Preleva dalla tabella Template il nome del template RTF.
 		IEvento lCtrlEve = SICOLookupRemote.getEventoRemote();
@@ -555,20 +550,12 @@ public class UnificazioneController extends SiapController implements IUnificazi
 
 		ByteArrayInputStream lByteArrayInput = new ByteArrayInputStream(lByteArrayOut.toByteArray());
 
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.warn(">>>>>> Generato il Documento .");
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
-		// LogF3B.getLogger()
-		siesLogger.warn("EVENTO >>> " + aEvento.toString());
-
 		// Si imposta il ByteArrayInput ovverro il doc generato nell'evento
 		// precisamente nel attributo DocBlobIn.
 		aEvento.setDocBlobIn(lByteArrayInput);
 
 		// Inserisce il documento generato nel model di ritorno
-		// In esso inserisce il Nome del template di ritorno
-		// e il documento generato.
+		// In esso inserisce il Nome del template di ritorno ed il documento generato
 		lEveNotifica = new EventoNotificaModel();
 		lEveNotifica.setNomeTemplate(lTemplateMod.getNomeTemplate());
 		lEveNotifica.getEvento().setDocBlobOut(lByteArrayOut);
@@ -814,7 +801,6 @@ public class UnificazioneController extends SiapController implements IUnificazi
 
 	/**
 	 * Unificazione di Soggetti riferiti a due Procedimenti Individuati.
-	 * <p>
 	 *
 	 * @param aFascicoloUnificante
 	 * @param aFascicoloDaUnificare
@@ -869,7 +855,7 @@ public class UnificazioneController extends SiapController implements IUnificazi
 			// riferiti).
 			boolean esisteFascicolo = lFasSqlDao
 					.ExistAltroFascicoloPerSoggetto(aFascicoloDaUnificare.getSogIdSoggetto());
-			if (esisteFascicolo == false) {
+			if (!esisteFascicolo) {
 				// Cancellazione delle Residenze.
 				this.delResidenzeSius(aFascicoloDaUnificare, lConn);
 
@@ -941,7 +927,6 @@ public class UnificazioneController extends SiapController implements IUnificazi
 	/**
 	 * Metodo di correzione delle RESIDENZA_FASCICOLO_SIUS a partire da aFasSiusUnificante e
 	 * aFasSiusUnificato, per effetto di modifica Soggetto.
-	 * <p>
 	 *
 	 * @param aFasGPModel
 	 * @param lConn
@@ -1281,7 +1266,6 @@ public class UnificazioneController extends SiapController implements IUnificazi
 	 * @param aEvento
 	 * @param lUfficio
 	 * @return lTreeRoot
-	 *         <p>
 	 * @throws F3BException
 	 */
 	private TreeModel prelevaDati(EventoModel aEvento, UfficioModel lUfficio) throws F3BException {
@@ -1580,14 +1564,11 @@ public class UnificazioneController extends SiapController implements IUnificazi
 
 	/**
 	 * Verifica della Unificabilità del Procedimento di EMA;
-	 * <p>
 	 *
 	 * @param aIdFascicoloSius
 	 * @return aResponse
 	 * @throws F3BException
 	 */
-	// private String ExVerificaUnificabilitaEMA (BigDecimal aAnnoDaUnif, BigDecimal aNumeroDaUnif, String
-	// aCodUffDaUnif, BigDecimal aIdSoggettoUnificante, Connection aConn )
 	private String ExVerificaUnificabilitaEMA(FascicoloGPModel lFascicolo, String aCodUffDaUnif,
 			BigDecimal aIdSoggettoUnificante, Connection aConn) throws Exception {
 

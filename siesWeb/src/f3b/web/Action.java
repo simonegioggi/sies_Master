@@ -235,7 +235,7 @@ public class Action {
     lParamValues = this.getParameterValues(aParamName);
 
     if (lParamValues == null)
-      throw new F3BException("Il parametro multiplo'" + aParamName + "' non esiste nella FORM");
+      throw new F3BException("Il parametro multiplo '" + aParamName + "' non esiste nella FORM");
 
     return lParamValues;
   }

@@ -1,16 +1,10 @@
 package siap.sige.fascicolo.model;
 
-/**
-* <p>Title: FascicoloSigeModel</p>
-* <p>Description: Classe Model che rappresenta il FascicoloSige</p>
-* <p>Copyright: Copyright (c) 2008</p>
-* <p>Company: Eutelia</p>
-* @version 5.0
-*/
-
 import java.math.BigDecimal;
 import java.util.Date;
 
+import f3b.model.GenericModel;
+import f3b.util.F3BException;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.util.DecodificheUtils;
 import siap.sico.ufficio.controller.UfficioUtils;
@@ -18,11 +12,13 @@ import siap.sico.ufficio.model.UfficioModel;
 import siap.sige.sezione.controller.ISezione;
 import siap.sige.sezione.model.SezioneModel;
 import siap.sige.util.SIGELookupRemote;
-import f3b.model.GenericModel;
-import f3b.util.F3BException;
 
-public class FascicoloSigeModel extends GenericModel 
-{
+/**
+ * Classe Model che rappresenta il FascicoloSige
+ *
+ * @version 5.0
+ */
+public class FascicoloSigeModel extends GenericModel {
 	
 	private static final long serialVersionUID = 6219799378226954633L;
 	private 	BigDecimal	mIdFascicoloSige;
@@ -89,9 +85,12 @@ public class FascicoloSigeModel extends GenericModel
     // "Ricerca Procedimenti per Estremi Atto"
 	private String mDescOggetto;
 	
+	// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+	private BigDecimal mCountRisultati;
+
 	//COSTRUTTORE DI DEFAULT 
-	public FascicoloSigeModel ()
-	{
+	public FascicoloSigeModel() {
+
 		mIdFascicoloSige = null;
 		mSogIdSoggetto = null;
 		mChiaveAnno = null;
@@ -127,25 +126,21 @@ public class FascicoloSigeModel extends GenericModel
 	    mTipologiaRito ="";
 	    mFasSigIdFascicoloSige = null; // 26/07/2010
 	    mNumeroFascicoliUnificati = new BigDecimal(0); // 26/07/2010
-
-	    this.mCodTipoUfficioInserimento = "";
-	    this.mDescrTipoUfficioInserimento = "";
-	    this.mDescrComuneUfficioInserimento = "";
-	    this.mChiaveProgrOrig = null;
-	    this.mFlagUfficioAccorpato = "";
-	    
-	    this.mIdFascicoloSigeOrigine = null;
-	    
+		mCodTipoUfficioInserimento = "";
+		mDescrTipoUfficioInserimento = "";
+		mDescrComuneUfficioInserimento = "";
+		mChiaveProgrOrig = null;
+		mFlagUfficioAccorpato = "";
+		mIdFascicoloSigeOrigine = null;
 	    mIdEventoProvvCumulo = null;
-	    
 	    mCodTenoreDecisione = "";
 	    mDescOggetto ="";
-
+		mCountRisultati = null;
 	}
 
 	//COSTRUTTORE DI COPIA 
-	public FascicoloSigeModel ( FascicoloSigeModel aModel )
-	{			 
+	public FascicoloSigeModel(FascicoloSigeModel aModel) {
+
 		mIdFascicoloSige = aModel.mIdFascicoloSige;
 		mSogIdSoggetto = aModel.mSogIdSoggetto;
 		mChiaveAnno = aModel.mChiaveAnno;
@@ -181,71 +176,36 @@ public class FascicoloSigeModel extends GenericModel
         mTipologiaRito = aModel.mTipologiaRito;
 	    mFasSigIdFascicoloSige = aModel.mFasSigIdFascicoloSige; // 26/07/2010
 	    mNumeroFascicoliUnificati = aModel.mNumeroFascicoliUnificati; // 26/07/2010
-
-	    this.mCodTipoUfficioInserimento = aModel.mCodTipoUfficioInserimento;
-	    this.mDescrTipoUfficioInserimento = aModel.mDescrTipoUfficioInserimento;
-	    this.mDescrComuneUfficioInserimento = aModel.mDescrComuneUfficioInserimento;
-	    this.mChiaveProgrOrig = aModel.mChiaveProgrOrig;
-	    this.mFlagUfficioAccorpato = aModel.mFlagUfficioAccorpato;
-	    
-	    this.mIdFascicoloSigeOrigine = aModel.mIdFascicoloSigeOrigine;
-	    
+		mCodTipoUfficioInserimento = aModel.mCodTipoUfficioInserimento;
+		mDescrTipoUfficioInserimento = aModel.mDescrTipoUfficioInserimento;
+		mDescrComuneUfficioInserimento = aModel.mDescrComuneUfficioInserimento;
+		mChiaveProgrOrig = aModel.mChiaveProgrOrig;
+		mFlagUfficioAccorpato = aModel.mFlagUfficioAccorpato;
+		mIdFascicoloSigeOrigine = aModel.mIdFascicoloSigeOrigine;
 	    mIdEventoProvvCumulo = aModel.mIdEventoProvvCumulo;
-	    
 	    mCodTenoreDecisione = aModel.mCodTenoreDecisione;
 	    mDescOggetto = aModel.mDescOggetto;
+		mCountRisultati = aModel.mCountRisultati;
 	}
 
 	//COSTRUTTORE MODEL 
-	public FascicoloSigeModel (
-		BigDecimal	 aIdFascicoloSige,
-		BigDecimal	 aSogIdSoggetto,
-		BigDecimal	 aChiaveAnno,
-		BigDecimal	 aChiaveAnnoIniziale,
-		BigDecimal	 aChiaveAnnoFinale,
-		String	     aChiaveUfficio,
-		String	     aDescrUfficio,
-		BigDecimal	 aChiaveProgr,
-		BigDecimal	 aChiaveProgrIniziale,
-		BigDecimal	 aChiaveProgrFinale,
-		BigDecimal   aSenIdSentenzaCumulo,
-		BigDecimal	 aIdSezione,
-		String	     aDescrSezione,
-		String	     aCodStatoFascicolo,
-		String	     aDescrStatoFascicolo,
-		String	     aCodTipoGiudizio,
-		String	     aDescrTipoGiudizio,
-		Date	     aDataIscrizione,
-		Date	 	 aDataIscrizioneIniziale,
-		Date	 	 aDataIscrizioneFinale,
-		Date	 	 aDataDefinizione,
-		BigDecimal	 aRicIdRichiestaSige,
-		String	 	 aCodOperatoreInserimento,
-		String	 	 aCodUfficioInserimento,
-		String	 	 aDescrUfficioInserimento,
-		Date	 	 aDataInserimento,
-		String	 	 aCodOperatoreAggiornamento,
-		String	 	 aCodUfficioAggiornamento,
-		String	 	 aDescrUfficioAggiornamento,
-		Date	 	 aDataAggiornamento,
-		String 		 aNote,
-	    String	 	 aCodPosizioneGiuridica,
-	    String	 	 aDescrPosizioneGiuridica,
-	    Date	 	 aDataFinePena,
-	    String 		 aCodTipoDefinizione,
-	    String 		 aDescrTipoDefinizione,
-	    String 		 aDescrDefinizione,
-	    String       aMotivoAltraDefinizione,
-	    String       aTipologiaRito,
-		BigDecimal	 aFasSigIdFascicoloSige,
-		BigDecimal	 aNumeroFascicoliUnificati,
-		BigDecimal   aChiaveProgrOrig,
-		BigDecimal   aIdFascicoloSigeOrigine,
-		BigDecimal   aIdEventoProvvCumulo,
-		String       aCodTenoreDecisione,
-		String       aDescOggetto)
+	public FascicoloSigeModel(BigDecimal aIdFascicoloSige, BigDecimal aSogIdSoggetto, BigDecimal aChiaveAnno,
+			BigDecimal aChiaveAnnoIniziale, BigDecimal aChiaveAnnoFinale, String aChiaveUfficio,
+			String aDescrUfficio, BigDecimal aChiaveProgr, BigDecimal aChiaveProgrIniziale,
+			BigDecimal aChiaveProgrFinale, BigDecimal aSenIdSentenzaCumulo, BigDecimal aIdSezione,
+			String aDescrSezione, String aCodStatoFascicolo, String aDescrStatoFascicolo,
+			String aCodTipoGiudizio, String aDescrTipoGiudizio, Date aDataIscrizione,
+			Date aDataIscrizioneIniziale, Date aDataIscrizioneFinale, Date aDataDefinizione,
+			BigDecimal aRicIdRichiestaSige, String aCodOperatoreInserimento, String aCodUfficioInserimento,
+			String aDescrUfficioInserimento, Date aDataInserimento, String aCodOperatoreAggiornamento,
+			String aCodUfficioAggiornamento, String aDescrUfficioAggiornamento, Date aDataAggiornamento,
+			String aNote, String aCodPosizioneGiuridica, String aDescrPosizioneGiuridica, Date aDataFinePena,
+			String aCodTipoDefinizione, String aDescrTipoDefinizione, String aDescrDefinizione,
+			String aMotivoAltraDefinizione, String aTipologiaRito, BigDecimal aFasSigIdFascicoloSige,
+			BigDecimal aNumeroFascicoliUnificati, BigDecimal aChiaveProgrOrig,
+			BigDecimal aIdFascicoloSigeOrigine, BigDecimal aIdEventoProvvCumulo, String aCodTenoreDecisione,
+			String aDescOggetto) {
 
-	{
 		mIdFascicoloSige = aIdFascicoloSige;
 		mSogIdSoggetto = aSogIdSoggetto;
 		mChiaveAnno = aChiaveAnno;
@@ -292,189 +252,477 @@ public class FascicoloSigeModel extends GenericModel
   // METODI GET()
   //
 
-	 public BigDecimal 	 	getIdFascicoloSige() 			{ return mIdFascicoloSige; } 
-	 public BigDecimal 	 	getSogIdSoggetto() 				{ return mSogIdSoggetto; } 
-	 public BigDecimal 	 	getChiaveAnno() 				{ return mChiaveAnno; } 
-	 public String 			getChiaveUfficio() 				{ return mChiaveUfficio; } 
-	 public String 			getDescrUfficio() 				{ return mDescrUfficio; } 
+	public BigDecimal getIdFascicoloSige() {
+		return mIdFascicoloSige;
+	}
 
-	 public BigDecimal 	 	getChiaveProgr() 				{ return mChiaveProgr; } 
-	 public BigDecimal 		getSenIdSentenzaCumulo() 		{ return mSenIdSentenzaCumulo; } 
-	 public BigDecimal 		getIdSezione() 					{ return mIdSezione; } 
-	 public String 			getDescrSezione() 				{ return mDescrSezione; } 
-	 public String 			getCodStatoFascicolo() 			{ return mCodStatoFascicolo; } 
-	 public String 			getDescrStatoFascicolo() 		{ return mDescrStatoFascicolo; } 
-	 public String 			getCodTipoGiudizio() 			{ return mCodTipoGiudizio; } 
-	 public String 			getDescrTipoGiudizio() 			{ return mDescrTipoGiudizio; } 
-	 public Date 			getDataIscrizione() 			{ return mDataIscrizione; } 
-	 public Date 			getDataDefinizione() 			{ return mDataDefinizione; } 
-	 public BigDecimal 	 	getRicIdRichiestaSige() 		{ return mRicIdRichiestaSige; } 
-	 public String 			getCodOperatoreInserimento() 	{ return mCodOperatoreInserimento; } 
-	 public String 			getCodUfficioInserimento() 		{ return mCodUfficioInserimento; } 
-	 public String 			getDescrUfficioInserimento() 	{ return mDescrUfficioInserimento; } 
-	 public Date 			getDataInserimento() 			{ return mDataInserimento; } 
-	 public String 			getCodOperatoreAggiornamento()  { return mCodOperatoreAggiornamento; } 
-	 public String 			getCodUfficioAggiornamento() 	{ return mCodUfficioAggiornamento; } 
-	 public String 			getDescrUfficioAggiornamento()  { return mDescrUfficioAggiornamento; } 
-	 public Date 			getDataAggiornamento() 			{ return mDataAggiornamento; } 
-	 public String 			getNote() 						{ return mNote; } 
-	 public String 			getCodPosizioneGiuridica() 		{ return mCodPosizioneGiuridica; } 
-	 public String 			getDescrPosizioneGiuridica() 	{ return mDescrPosizioneGiuridica; } 
-	 public Date 			getDataFinePena() 			 	{ return mDataFinePena; } 
-	 public String 			getCodTipoDefinizione() 		{ return mCodTipoDefinizione; } 
-	 public String 			getDescrTipoDefinizione() 		{ return mDescrTipoDefinizione; } 
-	 public String 			getDescrDefinizione() 			{ return mDescrDefinizione; } 
-	 public String 			getMotivoAltraDefinizione() 	{ return mMotivoAltraDefinizione; }
-	 public String 			getTipologiaRito() 			    { return mTipologiaRito; }
-	 public BigDecimal 	 	getFasSigIdFascicoloSige()		{ return mFasSigIdFascicoloSige; }  // 26/07/2010 
-	 public BigDecimal 	 	getNumeroFascicoliUnificati()   { return mNumeroFascicoliUnificati; }  // 26/07/2010 
+	public BigDecimal getSogIdSoggetto() {
+		return mSogIdSoggetto;
+	}
+
+	public BigDecimal getChiaveAnno() {
+		return mChiaveAnno;
+	}
+
+	public String getChiaveUfficio() {
+		return mChiaveUfficio;
+	}
+
+	public String getDescrUfficio() {
+		return mDescrUfficio;
+	}
+
+	public BigDecimal getChiaveProgr() {
+		return mChiaveProgr;
+	}
+
+	public BigDecimal getSenIdSentenzaCumulo() {
+		return mSenIdSentenzaCumulo;
+	}
+
+	public BigDecimal getIdSezione() {
+		return mIdSezione;
+	}
+
+	public String getDescrSezione() {
+		return mDescrSezione;
+	}
+
+	public String getCodStatoFascicolo() {
+		return mCodStatoFascicolo;
+	}
+
+	public String getDescrStatoFascicolo() {
+		return mDescrStatoFascicolo;
+	}
+
+	public String getCodTipoGiudizio() {
+		return mCodTipoGiudizio;
+	}
+
+	public String getDescrTipoGiudizio() {
+		return mDescrTipoGiudizio;
+	}
+
+	public Date getDataIscrizione() {
+		return mDataIscrizione;
+	}
+
+	public Date getDataDefinizione() {
+		return mDataDefinizione;
+	}
+
+	public BigDecimal getRicIdRichiestaSige() {
+		return mRicIdRichiestaSige;
+	}
+
+	public String getCodOperatoreInserimento() {
+		return mCodOperatoreInserimento;
+	}
+
+	public String getCodUfficioInserimento() {
+		return mCodUfficioInserimento;
+	}
+
+	public String getDescrUfficioInserimento() {
+		return mDescrUfficioInserimento;
+	}
+
+	public Date getDataInserimento() {
+		return mDataInserimento;
+	}
+
+	public String getCodOperatoreAggiornamento() {
+		return mCodOperatoreAggiornamento;
+	}
+
+	public String getCodUfficioAggiornamento() {
+		return mCodUfficioAggiornamento;
+	}
+
+	public String getDescrUfficioAggiornamento() {
+		return mDescrUfficioAggiornamento;
+	}
+
+	public Date getDataAggiornamento() {
+		return mDataAggiornamento;
+	}
+
+	public String getNote() {
+		return mNote;
+	}
+
+	public String getCodPosizioneGiuridica() {
+		return mCodPosizioneGiuridica;
+	}
+
+	public String getDescrPosizioneGiuridica() {
+		return mDescrPosizioneGiuridica;
+	}
+
+	public Date getDataFinePena() {
+		return mDataFinePena;
+	}
+
+	public String getCodTipoDefinizione() {
+		return mCodTipoDefinizione;
+	}
+
+	public String getDescrTipoDefinizione() {
+		return mDescrTipoDefinizione;
+	}
+
+	public String getDescrDefinizione() {
+		return mDescrDefinizione;
+	}
+
+	public String getMotivoAltraDefinizione() {
+		return mMotivoAltraDefinizione;
+	}
+
+	public String getTipologiaRito() {
+		return mTipologiaRito;
+	}
+
+	public BigDecimal getFasSigIdFascicoloSige() {
+		return mFasSigIdFascicoloSige;
+	} // 26/07/2010
+
+	public BigDecimal getNumeroFascicoliUnificati() {
+		return mNumeroFascicoliUnificati;
+	} // 26/07/2010
 	 
 	 //Modifica Accorpamento Uffici
-	 public String     		getCodTipoUfficioInserimento() 	  { return mCodTipoUfficioInserimento; }
-	 public String     		getDescrTipoUfficioInserimento()  { return mDescrTipoUfficioInserimento; }
-	 public String     		getDescrComuneUfficioInserimento(){ return mDescrComuneUfficioInserimento; }
-	 public BigDecimal 		getChiaveProgrOrig()              { return mChiaveProgrOrig; }
-	 public String     		getFlagUfficioAccorpato() 	      { return mFlagUfficioAccorpato; }
-	 
-	 public BigDecimal      getIdFascicoloSigeOrigine()       {	return mIdFascicoloSigeOrigine;	}
-	 
-	 public Date 			getDataDefinizioneOrigine() 	  { return mDataDefinizioneOrigine; } 
-	 public BigDecimal 	 	getIdEventoProvvCumulo()   		  { return mIdEventoProvvCumulo; }
+	public String getCodTipoUfficioInserimento() {
+		return mCodTipoUfficioInserimento;
+	}
 
-	 public String     		getCodTenoreDecisione() 	      { return mCodTenoreDecisione; }
-	 
-	 public String 			getDescOggetto() 			      { return mDescOggetto; }
+	public String getDescrTipoUfficioInserimento() {
+		return mDescrTipoUfficioInserimento;
+	}
 
-	 public String 			getNomeCognomeMagistrato()                         { return nomeCognomeMagistrato; }
-	 public Date 			getDataPrimaUdienza() 						       { return mDataPrimaUdienza; }
-	 public Date 			getDataUltimaUdienza()						   	   { return mDataUltimaUdienza; }
-	 public BigDecimal		getNumGiorniIntercorsiTraIscrizioneEDeposito() 	   { return mNumGiorniIntercorsiTraIscrizioneEDeposito;	}
-	 public BigDecimal 		getNumGiorniIntercorsiTraIscrizioneEDepositoAnno() { return mNumGiorniIntercorsiTraIscrizioneEDepositoAnno;	}
+	public String getDescrComuneUfficioInserimento() {
+		return mDescrComuneUfficioInserimento;
+	}
+
+	public BigDecimal getChiaveProgrOrig() {
+		return mChiaveProgrOrig;
+	}
+
+	public String getFlagUfficioAccorpato() {
+		return mFlagUfficioAccorpato;
+	}
+
+	public BigDecimal getIdFascicoloSigeOrigine() {
+		return mIdFascicoloSigeOrigine;
+	}
+
+	public Date getDataDefinizioneOrigine() {
+		return mDataDefinizioneOrigine;
+	}
+
+	public BigDecimal getIdEventoProvvCumulo() {
+		return mIdEventoProvvCumulo;
+	}
+
+	public String getCodTenoreDecisione() {
+		return mCodTenoreDecisione;
+	}
+
+	public String getDescOggetto() {
+		return mDescOggetto;
+	}
+
+	public String getNomeCognomeMagistrato() {
+		return nomeCognomeMagistrato;
+	}
+
+	public Date getDataPrimaUdienza() {
+		return mDataPrimaUdienza;
+	}
+
+	public Date getDataUltimaUdienza() {
+		return mDataUltimaUdienza;
+	}
+
+	public BigDecimal getNumGiorniIntercorsiTraIscrizioneEDeposito() {
+		return mNumGiorniIntercorsiTraIscrizioneEDeposito;
+	}
+
+	public BigDecimal getNumGiorniIntercorsiTraIscrizioneEDepositoAnno() {
+		return mNumGiorniIntercorsiTraIscrizioneEDepositoAnno;
+	}
+
+	public BigDecimal getCountRisultati() {
+		return mCountRisultati;
+	}
 
 	 //
 	 // METODI SET()
 	 //
-	 public void	setIdFascicoloSige(BigDecimal aValore ) 		{ mIdFascicoloSige = aValore; } 
-	 public void	setSogIdSoggetto(BigDecimal aValore ) 			{ mSogIdSoggetto = aValore; } 
-	 public void	setChiaveAnno(BigDecimal aValore ) 				{ mChiaveAnno = aValore; } 
-	 public void	setChiaveUfficio(String aValore ) 				{ mChiaveUfficio = aValore; } 
-	 public void	setDescrUfficio(String aValore ) 				{ mDescrUfficio = aValore; } 
-	 public void	setChiaveProgr(BigDecimal aValore ) 			{ mChiaveProgr = aValore; } 
-	 public void	setSenIdSentenzaCumulo(BigDecimal aValore ) 	{ mSenIdSentenzaCumulo = aValore; } 
-	 public void	setIdSezione(BigDecimal aValore ) 				{ mIdSezione = aValore; } 
-	 public void	setDescrSezione(String aValore ) 				{ mDescrSezione = aValore; } 
-	 public void	setCodStatoFascicolo(String aValore ) 			{ mCodStatoFascicolo = aValore; } 
-	 public void	setDescrStatoFascicolo(String aValore ) 		{ mDescrStatoFascicolo = aValore; } 
-	 public void	setCodTipoGiudizio(String aValore ) 			{ mCodTipoGiudizio = aValore; } 
-	 public void	setDescrTipoGiudizio(String aValore ) 			{ mDescrTipoGiudizio = aValore; } 
-	 public void	setDataIscrizione(Date aValore ) 				{ mDataIscrizione = aValore; } 
-	 public void	setDataDefinizione(Date aValore ) 				{ mDataDefinizione = aValore; } 
-	 public void	setRicIdRichiestaSige(BigDecimal aValore )		{ mRicIdRichiestaSige = aValore; } 
-	 public void	setCodOperatoreInserimento(String aValore ) 	{ mCodOperatoreInserimento = aValore; } 
-	 public void	setCodUfficioInserimento(String aValore ) 		{ mCodUfficioInserimento = aValore; } 
-	 public void	setDescrUfficioInserimento(String aValore ) 	{ mDescrUfficioInserimento = aValore; } 
-	 public void	setDataInserimento(Date aValore ) 			 	{ mDataInserimento = aValore; } 
-	 public void	setCodOperatoreAggiornamento(String aValore)	{ mCodOperatoreAggiornamento = aValore; } 
-	 public void	setCodUfficioAggiornamento(String aValore ) 	{ mCodUfficioAggiornamento = aValore; } 
-	 public void	setDescrUfficioAggiornamento(String aValore)	{ mDescrUfficioAggiornamento = aValore; } 
-	 public void	setDataAggiornamento(Date aValore ) 			{ mDataAggiornamento = aValore; } 
-	 public void	setNote(String aValore) 						{ mNote = aValore;}
-	 public void	setCodPosizioneGiuridica(String aValore ) 		{ mCodPosizioneGiuridica = aValore; } 
-	 public void	setDescrPosizioneGiuridica(String aValore ) 	{ mDescrPosizioneGiuridica = aValore; } 
-	 public void	setDataFinePena(Date aValore ) 			 		{ mDataFinePena = aValore; } 
-	 public void	setCodTipoDefinizione(String aValore ) 			{ mCodTipoDefinizione = aValore; } 
-	 public void	setDescrTipoDefinizione(String aValore ) 		{ mDescrTipoDefinizione = aValore; } 
-	 public void	setDescrDefinizione(String aValore ) 			{ mDescrDefinizione = aValore; } 
-	 public void	setMotivoAltraDefinizione(String aValore ) 		{ mMotivoAltraDefinizione = aValore; } 
-	 public void	setTipologiaRito(String aValore ) 		        { mTipologiaRito = aValore; }
-	 public void	setFasSigIdFascicoloSige(BigDecimal aValore)	{ mFasSigIdFascicoloSige = aValore; }   // 26/07/2010
-	 public void	setNumeroFascicoliUnificati(BigDecimal aValore) { mNumeroFascicoliUnificati = aValore; }   // 26/07/2010
+	public void setIdFascicoloSige(BigDecimal aValore) {
+		mIdFascicoloSige = aValore;
+	}
+
+	public void setSogIdSoggetto(BigDecimal aValore) {
+		mSogIdSoggetto = aValore;
+	}
+
+	public void setChiaveAnno(BigDecimal aValore) {
+		mChiaveAnno = aValore;
+	}
+
+	public void setChiaveUfficio(String aValore) {
+		mChiaveUfficio = aValore;
+	}
+
+	public void setDescrUfficio(String aValore) {
+		mDescrUfficio = aValore;
+	}
+
+	public void setChiaveProgr(BigDecimal aValore) {
+		mChiaveProgr = aValore;
+	}
+
+	public void setSenIdSentenzaCumulo(BigDecimal aValore) {
+		mSenIdSentenzaCumulo = aValore;
+	}
+
+	public void setIdSezione(BigDecimal aValore) {
+		mIdSezione = aValore;
+	}
+
+	public void setDescrSezione(String aValore) {
+		mDescrSezione = aValore;
+	}
+
+	public void setCodStatoFascicolo(String aValore) {
+		mCodStatoFascicolo = aValore;
+	}
+
+	public void setDescrStatoFascicolo(String aValore) {
+		mDescrStatoFascicolo = aValore;
+	}
+
+	public void setCodTipoGiudizio(String aValore) {
+		mCodTipoGiudizio = aValore;
+	}
+
+	public void setDescrTipoGiudizio(String aValore) {
+		mDescrTipoGiudizio = aValore;
+	}
+
+	public void setDataIscrizione(Date aValore) {
+		mDataIscrizione = aValore;
+	}
+
+	public void setDataDefinizione(Date aValore) {
+		mDataDefinizione = aValore;
+	}
+
+	public void setRicIdRichiestaSige(BigDecimal aValore) {
+		mRicIdRichiestaSige = aValore;
+	}
+
+	public void setCodOperatoreInserimento(String aValore) {
+		mCodOperatoreInserimento = aValore;
+	}
+
+	public void setCodUfficioInserimento(String aValore) {
+		mCodUfficioInserimento = aValore;
+	}
+
+	public void setDescrUfficioInserimento(String aValore) {
+		mDescrUfficioInserimento = aValore;
+	}
+
+	public void setDataInserimento(Date aValore) {
+		mDataInserimento = aValore;
+	}
+
+	public void setCodOperatoreAggiornamento(String aValore) {
+		mCodOperatoreAggiornamento = aValore;
+	}
+
+	public void setCodUfficioAggiornamento(String aValore) {
+		mCodUfficioAggiornamento = aValore;
+	}
+
+	public void setDescrUfficioAggiornamento(String aValore) {
+		mDescrUfficioAggiornamento = aValore;
+	}
+
+	public void setDataAggiornamento(Date aValore) {
+		mDataAggiornamento = aValore;
+	}
+
+	public void setNote(String aValore) {
+		mNote = aValore;
+	}
+
+	public void setCodPosizioneGiuridica(String aValore) {
+		mCodPosizioneGiuridica = aValore;
+	}
+
+	public void setDescrPosizioneGiuridica(String aValore) {
+		mDescrPosizioneGiuridica = aValore;
+	}
+
+	public void setDataFinePena(Date aValore) {
+		mDataFinePena = aValore;
+	}
+
+	public void setCodTipoDefinizione(String aValore) {
+		mCodTipoDefinizione = aValore;
+	}
+
+	public void setDescrTipoDefinizione(String aValore) {
+		mDescrTipoDefinizione = aValore;
+	}
+
+	public void setDescrDefinizione(String aValore) {
+		mDescrDefinizione = aValore;
+	}
+
+	public void setMotivoAltraDefinizione(String aValore) {
+		mMotivoAltraDefinizione = aValore;
+	}
+
+	public void setTipologiaRito(String aValore) {
+		mTipologiaRito = aValore;
+	}
+
+	public void setFasSigIdFascicoloSige(BigDecimal aValore) {
+		mFasSigIdFascicoloSige = aValore;
+	} // 26/07/2010
+
+	public void setNumeroFascicoliUnificati(BigDecimal aValore) {
+		mNumeroFascicoliUnificati = aValore;
+	} // 26/07/2010
 
 	//Modifica Accorpamento Uffici 
-	 public void	setChiaveProgrOrig(BigDecimal aValore) 			{ mChiaveProgrOrig = aValore; }
-	 public void 	setCodTipoUfficioInserimento(String aValore) 	{ mCodTipoUfficioInserimento = aValore; }
-	 public void 	setDescrTipoUfficioInserimento(String aValore) 	{ mDescrTipoUfficioInserimento = aValore; }
-	 public void 	setDescrComuneUfficioInserimento(String aValore){ mDescrComuneUfficioInserimento = aValore; }
-	 public void 	setFlagUfficioAccorpato(String aValore)         { mFlagUfficioAccorpato = aValore; }
+	public void setChiaveProgrOrig(BigDecimal aValore) {
+		mChiaveProgrOrig = aValore;
+	}
 
-	 public void    setIdFascicoloSigeOrigine(BigDecimal aValore)   { mIdFascicoloSigeOrigine = aValore; }
-	 
-	 public void	setDataDefinizioneOrigine(Date aValore ) 		{ mDataDefinizioneOrigine = aValore; }
-	 
-	 public void    setIdEventoProvvCumulo(BigDecimal aValore)   	{ mIdEventoProvvCumulo = aValore; }
-	 
-	 public void 	setCodTenoreDecisione(String aValore) 			{ mCodTenoreDecisione = aValore; }
-	 
-	 public void	setDescOggetto(String aValore ) 		        { mDescOggetto = aValore; }
+	public void setCodTipoUfficioInserimento(String aValore) {
+		mCodTipoUfficioInserimento = aValore;
+	}
 
-	 public void 	setNomeCognomeMagistrato(String aValore) 							 { nomeCognomeMagistrato = aValore;	}
-	 public void 	setDataPrimaUdienza(Date aValore)     								 { mDataPrimaUdienza = aValore; }
-	 public void 	setDataUltimaUdienza(Date aValore)      							 { mDataUltimaUdienza = aValore; }
-	 public void 	setNumGiorniIntercorsiTraIscrizioneEDeposito(BigDecimal aValore) 	 { mNumGiorniIntercorsiTraIscrizioneEDeposito = aValore; }
-	 public void 	setNumGiorniIntercorsiTraIscrizioneEDepositoAnno(BigDecimal aValore) { mNumGiorniIntercorsiTraIscrizioneEDepositoAnno = aValore; }
+	public void setDescrTipoUfficioInserimento(String aValore) {
+		mDescrTipoUfficioInserimento = aValore;
+	}
+
+	public void setDescrComuneUfficioInserimento(String aValore) {
+		mDescrComuneUfficioInserimento = aValore;
+	}
+
+	public void setFlagUfficioAccorpato(String aValore) {
+		mFlagUfficioAccorpato = aValore;
+	}
+
+	public void setIdFascicoloSigeOrigine(BigDecimal aValore) {
+		mIdFascicoloSigeOrigine = aValore;
+	}
+
+	public void setDataDefinizioneOrigine(Date aValore) {
+		mDataDefinizioneOrigine = aValore;
+	}
+
+	public void setIdEventoProvvCumulo(BigDecimal aValore) {
+		mIdEventoProvvCumulo = aValore;
+	}
+
+	public void setCodTenoreDecisione(String aValore) {
+		mCodTenoreDecisione = aValore;
+	}
+
+	public void setDescOggetto(String aValore) {
+		mDescOggetto = aValore;
+	}
+
+	public void setNomeCognomeMagistrato(String aValore) {
+		nomeCognomeMagistrato = aValore;
+	}
+
+	public void setDataPrimaUdienza(Date aValore) {
+		mDataPrimaUdienza = aValore;
+	}
+	 
+	public void setDataUltimaUdienza(Date aValore) {
+		mDataUltimaUdienza = aValore;
+	}
+	 
+	public void setNumGiorniIntercorsiTraIscrizioneEDeposito(BigDecimal aValore) {
+		mNumGiorniIntercorsiTraIscrizioneEDeposito = aValore;
+	}
+	 
+	public void setNumGiorniIntercorsiTraIscrizioneEDepositoAnno(BigDecimal aValore) {
+		mNumGiorniIntercorsiTraIscrizioneEDepositoAnno = aValore;
+	}
+	 
+	public void setCountRisultati(BigDecimal aValore) {
+		mCountRisultati = aValore;
+	}
+
 	 /**
 	  * Il metodo effettua la decodifica di quegli attributi del Model che contengono dei campi codificati.
 	  * 
 	  * La decodifica del campo interessato viene memorizzata nell'attributo di descrizione ad esso relativo.
 	  * Gli attributi codificati ed i relativi attributi di decodifica interessati a questa operazione sono:
-	  * mCodStatoFascicolo -> mDescrStatoFascicolo,
-	  * mCodTipoGiudizio -> mDescrTipoGiudizio,
-	  * mChiaveUfficio -> mDescrUfficio.
+	 * mCodStatoFascicolo -> mDescrStatoFascicolo, mCodTipoGiudizio -> mDescrTipoGiudizio, mChiaveUfficio ->
+	 * mDescrUfficio.
 	  * 
 	  * @throws F3BException
 	  */
-	 public FascicoloSigeModel decodifica() throws F3BException 
-	 {
-		 try
-		 {
+	public FascicoloSigeModel decodifica() throws F3BException {
+
+		try {
 		 // Decodifica Stato Fascicolo
 		  if (mCodStatoFascicolo != null && mCodStatoFascicolo.trim().length() > 0)
-			  setDescrStatoFascicolo(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getStatoFascicolo(), mCodStatoFascicolo));
+				setDescrStatoFascicolo(DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getStatoFascicolo(), mCodStatoFascicolo));
 		  
 			 // Decodifica Tipo Giudizio
 		  if (mCodTipoGiudizio != null && mCodTipoGiudizio.trim().length() > 0)
-			  setDescrTipoGiudizio(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoGiudizioSige()  , mCodTipoGiudizio));
+				setDescrTipoGiudizio(DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getTipoGiudizioSige(), mCodTipoGiudizio));
 	    
 		    // Decodifica Chiave Ufficio
-		  if (mChiaveUfficio != null && mChiaveUfficio.trim().length() > 0)
-		  {
+			if (mChiaveUfficio != null && mChiaveUfficio.trim().length() > 0) {
 		      UfficioModel lUff = UfficioUtils.getUfficioByCodUfficio(mChiaveUfficio);
 		      setDescrUfficio(lUff.getDescrTipoUfficio() + " " +  lUff.getDescrComune());
 		  }
 		  // Decodifica Sezione
-		  if (mIdSezione != null)
-		  {
+			if (mIdSezione != null) {
 			  SezioneModel lSezione = getSezioneById(mIdSezione);
 			  if (lSezione != null)
 				  setDescrSezione(lSezione.getDescrizione());
-		  }
-		  else
+			} else
 			  setDescrSezione("-");
 		  
 			 // Decodifica Tipo Definizione 
 		  if (mCodTipoDefinizione != null && mCodTipoDefinizione.trim().length() > 0)
-			  setDescrTipoDefinizione(DecodificheUtils.getDescbyCode(DecodificheManager.getInstance().getTipoDefinizione()  , mCodTipoDefinizione));
+				setDescrTipoDefinizione(DecodificheUtils.getDescbyCode(
+						DecodificheManager.getInstance().getTipoDefinizione(), mCodTipoDefinizione));
 
-		  
-		 }
-		 catch (Exception e)
-	     {
-	    	 throw new F3BException(F3BException.EX_OPERATION_FAILED, "Errore nella trascodifica codice ( " + getClass().getPackage().getName() + ".decodifica()) -> "+ e.getMessage());
+		} catch (Exception e) {
+			throw new F3BException(F3BException.EX_OPERATION_FAILED, "Errore nella trascodifica codice ( "
+					+ getClass().getPackage().getName() + ".decodifica()) -> " + e.getMessage());
 	     }
 		 return this;
 	 }
 	 
 	/**
 	 * STUB : Funzione da spostare in sezione.utils
+	 *
 	 * @param aIdSezione
 	 * @return
 	 * @throws F3BException
 	 */
-	 public SezioneModel getSezioneById(BigDecimal aIdSezione) 
-	  throws F3BException
-	 {
+	public SezioneModel getSezioneById(BigDecimal aIdSezione) throws F3BException {
+
 		 SezioneModel lSezione = null;
-		
 		 ISezione lCtrl = SIGELookupRemote.getSezioneRemote(); 
 		 lSezione = lCtrl.ExRicercaSezioneByKey(aIdSezione);
 		 return lSezione;    

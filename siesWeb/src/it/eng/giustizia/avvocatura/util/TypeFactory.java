@@ -180,7 +180,8 @@ public class TypeFactory {
 
 		data = (java.util.Date) attributes[DATA_AVVENUTA_NOTIFICA];
 		if (data != null) {
-			notifica.setMDataInvio(createDataType((java.util.Date) attributes[DATA_AVVENUTA_NOTIFICA]));
+			// Ticket#202305050125 - richiesta pervenuta da Santa Maria Capua Vetere
+			notifica.setMDataAvvenutaNotifica(createDataType((java.util.Date) attributes[DATA_AVVENUTA_NOTIFICA]));
 		}
 
 		return notifica;
@@ -1031,7 +1032,7 @@ public class TypeFactory {
 		// GIOR_ARRESTO NUMBER(4),
 		// IMPO_MULTA NUMBER(16,2),
 		// IMPO_AMMENDA NUMBER(16,2),
-		// DESC_PENA_DETENTIVA VARCHAR2(30),
+		// DESC_PENA_DETENTIVA VARCHAR2(100),
 		// CODI_PENA_DETENTIVA VARCHAR2(3)
 
 		final int DATA_INIZIO_PENA = 0;

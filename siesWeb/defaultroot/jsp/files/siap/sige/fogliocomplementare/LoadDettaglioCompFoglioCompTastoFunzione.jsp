@@ -1,43 +1,20 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.Collection" %>
-<%@ page import="java.util.Iterator" %>
-
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils" %>
-<%@ page import="f3b.security.model.FunctionModel" %>
 <%@ page import="siap.web.ISIAPCostantiWeb"%>
-<%@ page import="siap.sico.security.action.ICostantiSecurity" %>
-<%@ page import="siap.sico.security.model.FunzioneModel" %>
-<%@ page import="siap.sico.evento.model.EventoModel"%>
-<%@ page import="siap.sico.evento.action.ICostantiEvento"%>
-<%@ page import="siap.sige.fogliocomplementare.action.ICostantiFoglioComp" %>
 <%@ page import="siap.sige.fascicolo.action.ICostantiFascicoloSige"%>
-<%@ page import="siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel"%>
-<%@ page import="siap.sige.provvedimento.action.ICostantiProvvedimentoSige" %>
-<%@ page import="siap.sico.soggetto.model.SoggettoModel" %>
-<%@ page import="siap.sius.documentoallegato.action.ICostantiDocumentoAllegato" %>
-<%@ page import="siap.sico.utente.model.UtenteModel" %>
-
-<%@ page import="java.math.BigDecimal"%>
 <%@ page import="siap.sico.template.action.ICostantiTemplate" %>
 
 <jsp:useBean id="documentoAllegato"     scope="request" class="siap.sige.documentoallegato.model.DocumentoAllegatoModel"/>
-<jsp:useBean id="FascicoloSigeEsteso" 	scope="session" class="siap.sige.fascicolo.model.FascicoloSigeEstesoModel" />
-<jsp:useBean id="evento"                scope="request" class="siap.sico.evento.model.EventoModel"/>
-<jsp:useBean id="UtenteConnesso"        scope="session" class="siap.sico.utente.model.UtenteModel" />
-<jsp:useBean id="provenienza"           scope="request" class="java.lang.String"/>
-<jsp:useBean id="motivoNonInvio"        scope="request" class="java.lang.String"/>
 <jsp:useBean id="provvSige"             scope="request" class="siap.sige.provvedimento.model.ProvvedimentoSigeEventoModel"/>
-
-	
-<script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
-<script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 
 <html>
 <head>
   <title>[S.I.E.S.] - Dettaglio Foglio Complementare</title>
   <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">  
+  <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
+  <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
 </head>
 
   <body class="corpo">
@@ -70,6 +47,28 @@
 <br />
    
 <table>
+    <tr>
+      <td class="Titolo" colspan="2">Estremi Provvedimento</td>
+    </tr>
+    
+<% if (provvSige != null && provvSige.getProvvedimento() != null){ %>
+    <tr>
+      <td class="l" colspan="2">
+		<%	if(provvSige.getProvvedimento().getCodTipoProvvedimentoSige() != null && provvSige.getProvvedimento().getCodTipoProvvedimentoSige().equals("02")){ %>			
+					DECRETO n°
+		<%	} else if (provvSige.getProvvedimento().getCodTipoProvvedimentoSige() != null && provvSige.getProvvedimento().getCodTipoProvvedimentoSige().equals("03")){%>      
+		      		ORDINANZA n°
+		<% } else { %>
+					- 
+		<% } %>      		
+	      <font class="campo"><%=StringUtils.toStringJSP(provvSige.getProvvedimento().getChiaveAnno())%></font>
+	      <font class="l">/</font>
+	      <font class="campo"><%=StringUtils.toStringJSP(provvSige.getProvvedimento().getChiaveProgr())%></font>
+	      <font class="l">del</font>
+	      <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(provvSige.getProvvedimento().getDataEmissione(),"dd-MM-yyyy"))%></font>
+   	  </td>
+    </tr>
+<% } %>
 
     <!-- Sono nel Dettaglio Foglio Complementare -->
     <tr>
@@ -79,6 +78,8 @@
       </td>
     </tr>
 
+    <%--  Ticket#20230202011 - si elimina dal dettaglio il riferimento alla motivazione non invio non più prevista --%>
+	<% if (documentoAllegato.getDescrMotivazioneNonInvio()!=null && documentoAllegato.getDescrMotivazioneNonInvio().length()>0) { %>
     <tr>
       <td class="l">Motivazione non Inviato </td>
       <td class="L">
@@ -89,7 +90,9 @@
           <font class="campo"><%=StringUtils.toStringJSP(documentoAllegato.getDescrizioneNonInvio())%></font>&nbsp;
       </td>
     </tr>
-
+	<% } %>
+	<%-- Ticket#20230202011 - FINE --%>
+	
     <tr>
       <td class="l">Data Inserimento Manuale </td>
       <td class="L">

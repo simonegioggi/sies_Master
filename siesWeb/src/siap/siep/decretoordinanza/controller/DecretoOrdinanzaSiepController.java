@@ -864,7 +864,10 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 				lPenaResiduaNuova.setNumMesiArresto(lSospMod.getNumMesiPenaResiduaArres());
 				lPenaResiduaNuova.setNumGiorniArresto(lSospMod.getNumGiorniPenaResiduaArres());
 
-				lPenaResiduaNuova.setDiesAQuo("N");
+				// Ticket#202310110114
+				// lPenaResiduaNuova.setDiesAQuo("N");
+				lPenaResiduaNuova.setDiesAQuo("S");
+				// Ticket#202310110114 - FINE
 				lPenaResiduaNuova.setFasSieIdFascicoloSiep(aDecretoOrdinanzaSiep.getFasSieIdFascicoloSiep());
 				if (lPenMod.getCodTipoPenaDetentiva().equals("03")) {
 					lPenaResiduaNuova.setFlagErgastolo("S");
@@ -875,8 +878,15 @@ public class DecretoOrdinanzaSiepController extends SiapController implements ID
 				}
 				lPenaResiduaNuova.setFlagValidato("N");
 				// lPenaResiduaNuova.setFlagPenaSospesa("I");
-				lPenaResiduaNuova.setImportoAmmenda(new BigDecimal(0));
-				lPenaResiduaNuova.setImportoMulta(new BigDecimal(0));
+				// Ticket#202310110114 — SIEP - conversione pena pecuniaria è una mac.
+				// Va ripristinata anche la parte pecuniaria
+				// lPenaResiduaNuova.setImportoAmmenda(new BigDecimal(0));
+				// lPenaResiduaNuova.setImportoMulta(new BigDecimal(0));
+				lPenaResiduaNuova.setImportoMulta(lSospMod.getMultaResidua());
+				lPenaResiduaNuova.setImportoAmmenda(lSospMod.getAmmendaResidua());
+				// Mancava anche data fine presunta
+				lPenaResiduaNuova.setDataFinePresunta(lPenaResiduaNuova.getDataFine());
+				// Ticket#202310110114 — FINE
 				/**
 				 * TODO perchè vengono azzerati importo e ammenda?
 				 */

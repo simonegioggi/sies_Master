@@ -11,6 +11,8 @@ package siap.siep.penacomplessiva.action;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
 import siap.sico.web.ActionSiap;
 import siap.siep.penacomplessiva.controller.IPenaComplessiva;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
@@ -18,6 +20,7 @@ import siap.siep.penacomplessiva.model.PenaComplessivaSanzioneSostitutivaModel;
 import siap.siep.sanzionesostitutiva.action.ICostantiSanzioneSostitutiva;
 import siap.siep.sanzionesostitutiva.model.SanzioneSostitutivaModel;
 import siap.siep.util.SIEPLookupRemote;
+import f3b.log.LogF3B;
 import f3b.util.DateUtils;
 import f3b.util.Utils;
 import f3b.web.IWebConstants;
@@ -25,6 +28,9 @@ import f3b.web.IWebConstants;
 public class ActModificaPenaComplessiva extends ActionSiap implements ICostantiPenaComplessiva,
                                                                       ICostantiSanzioneSostitutiva
 {
+    
+  private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);    
+    
   /**
    * Azione di Modifica del PenaComplessiva
    * @return Nome della pagina JSP da visualizzare
@@ -101,10 +107,15 @@ public class ActModificaPenaComplessiva extends ActionSiap implements ICostantiP
     //==========================================================================
     SanzioneSostitutivaModel lSanSostMod = null;
 
-    boolean flagSanzioneSostitutiva = isRequestChecked(CAMPO_FLAG_SANZIONE_SOSTITUTIVA);
+    boolean flagSanzioneSostitutiva = false;
+    siesLogger.debug("flagSanzioneSostitutiva = "+flagSanzioneSostitutiva);
+    siesLogger.debug("isRequestChecked(CAMPO_FLAG_PENA_SOSTITUTIVA) = "+isRequestChecked(CAMPO_FLAG_PENA_SOSTITUTIVA));
     
-    if(flagSanzioneSostitutiva)
+    
+    if(isRequestChecked(CAMPO_FLAG_SANZIONE_SOSTITUTIVA))
     {
+      flagSanzioneSostitutiva = true;
+      siesLogger.debug("sono in SS");
       lSanSostMod = new SanzioneSostitutivaModel();
 
       String lIdSanSosString = getRequestStringParameter(CAMPO_ID_SANZIONE_SOSTITUTIVA);
@@ -163,8 +174,61 @@ public class ActModificaPenaComplessiva extends ActionSiap implements ICostantiP
       lSanSostMod.setCodUfficioAggiornamento(getCodUfficioUtenteConnesso());
       lSanSostMod.setDataAggiornamento(DateUtils.getSysDate());
     }
+    else if (isRequestChecked(CAMPO_FLAG_PENA_SOSTITUTIVA)) {
+        flagSanzioneSostitutiva = true;
+        siesLogger.debug("sono in PS");
+
+        // MEV_2023-13 - Si aggiungono le pene sostitutive delle pene detentive brevi che son altrenative 
+        //               alle precedenti Sanzioni Sostitutive
+        lSanSostMod = new SanzioneSostitutivaModel();
+        
+        String lIdSanSosString = getRequestStringParameter(CAMPO_ID_SANZIONE_SOSTITUTIVA);
+        BigDecimal lIdSanSos = null;
+        if(lIdSanSosString != null && !lIdSanSosString.equals(""))
+        {
+          lIdSanSos = new BigDecimal(lIdSanSosString);
+        }
+
+        lSanSostMod.setIdSanzioneSostitutiva(lIdSanSos);
+
+        lSanSostMod.setCodTipoSanzione(getRequestStringParameter(CAMPO_COD_TIPO_PENA_SOSTITUTIVA));
+        
+        // DURATA
+        if (!this.isRequestParameterNullObj(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA))
+            lSanSostMod.setNumAnni(getRequestBigDecimalParameter(CAMPO_NUM_ANNI_PENA_SOSTITUTIVA));
+
+        if (!this.isRequestParameterNullObj(CAMPO_NUM_MESI_PENA_SOSTITUTIVA))
+            lSanSostMod.setNumMesi(getRequestBigDecimalParameter(CAMPO_NUM_MESI_PENA_SOSTITUTIVA));
+
+        if (!this.isRequestParameterNullObj(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA))
+            lSanSostMod.setNumGiorni(getRequestBigDecimalParameter(CAMPO_NUM_GIORNI_PENA_SOSTITUTIVA));
+
+        // IMPORTO
+        if (!this.isRequestParameterNullObj(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA)  // not disable
+            && (   !getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
+                || !getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA).equals("")
+               )
+           ) 
+        {
+          // Previsto un solo importo, si carica sulla multa
+            lSanSostMod.setSanzionePecuniariaMulta(new BigDecimal(
+                        getRequestStringParameter(CAMPO_INTERO_PENA_PECUNIARIA_SOSTITUTIVA) 
+                + "." + getRequestStringParameter(CAMPO_DECIMALE_PENA_PECUNIARIA_SOSTITUTIVA)));
+        }
+
+        lSanSostMod.setPenComIdPenaComplessiva(lIdPena);
+        
+        lSanSostMod.setCodOperatoreInserimento (getCodUtenteConnesso());
+        lSanSostMod.setCodUfficioInserimento   (getCodUfficioUtenteConnesso());
+        lSanSostMod.setDataInserimento         (DateUtils.getSysDate());    
+        
+        lSanSostMod.setCodOperatoreAggiornamento (getCodUtenteConnesso());
+        lSanSostMod.setCodUfficioAggiornamento   (getCodUfficioUtenteConnesso());
+        lSanSostMod.setDataAggiornamento         (DateUtils.getSysDate());
+    }
     else
     {
+      siesLogger.debug("Ne SS ne PS");
       // Il check SS non è selezionato, verifico se era presente una SS, in questo
       // recupero l'id per cancellarla
       lSanSostMod = new SanzioneSostitutivaModel();
@@ -179,6 +243,7 @@ public class ActModificaPenaComplessiva extends ActionSiap implements ICostantiP
       lSanSostMod.setIdSanzioneSostitutiva(lIdSanSos);
 
     }
+
 
       PenaComplessivaSanzioneSostitutivaModel lPenComSanzSostMod = null;
 

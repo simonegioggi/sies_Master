@@ -83,6 +83,7 @@ import siap.siep.notiziareato.dao.NotiziaReatoSqlDAO;
 import siap.siep.notiziareato.model.NotiziaReatoModel;
 import siap.siep.nuovaistanza.dao.NuovaIstanzaSqlDAO;
 import siap.siep.nuovaistanza.model.NuovaIstanzaModel;
+import siap.siep.pagoPA.dao.CivilmenteObbligatoSqlDAO;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaSqlDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.siep.penacomplessiva.dao.PenaComplessivaSqlDAO;
@@ -98,6 +99,8 @@ import siap.siep.penaresidua.util.PenaResiduaUtil;
 import siap.siep.penasospesa.controller.IPenaSospesa;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
+import siap.siep.rateizzazionepp.model.RateizzazionePPModel;
 import siap.siep.reato.controller.IReato;
 import siap.siep.reato.dao.ReatoSqlDAO;
 import siap.siep.reato.model.ReatoCircostanzaModel;
@@ -685,6 +688,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 		SanzioneSostResiduaSqlDAO lSSSqlDAO = null;
 		NuovaIstanzaSqlDAO lIstSqlDao = null;
 		SollecitoEsitoTrasmissioneSqlDAO lSollecitoEsitoSqlDao = null;
+		
+		// MEV_2023-13 
+		RateizzazionePPSqlDAO lRateSqlDao = null;
+		CivilmenteObbligatoSqlDAO lCivilmenteObblSqlDao = null;
 
 		SospensioneModel lSospMod = null;
 		TreeModel lSospTree = null;
@@ -956,6 +963,15 @@ public class StampaController extends SIAPStampaController implements IStampa {
 				this.prelevaDatiCampoNota(lTreeEveMod, aEveModel.getEvento().getIdEvento(), lConn);
 			}
 
+			// MEV_2023-13 - Si aggiungono anche le rate puntate dall'evento 
+			lRateSqlDao = new RateizzazionePPSqlDAO (lConn);
+			lRateSqlDao.ricercaRateizzazionePPByEveIdEvento (aEveModel.getEvento().getIdEvento());
+			Vector <RateizzazionePPModel> listaRate = new Vector <RateizzazionePPModel> (lRateSqlDao.getModels());
+			for (RateizzazionePPModel rata: listaRate) {
+			    lTreeEveMod.add(new TreeModel(rata));
+			}   
+			// MEV_2023-13 - FINE 
+			
 			lTreeRoot.add(lTreeEveMod);
 
 			// Competenza
@@ -1287,6 +1303,10 @@ public class StampaController extends SIAPStampaController implements IStampa {
 			cleanup(lIstSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lSollecitoEsitoSqlDao);
+			
+			cleanup(lRateSqlDao); // MEV_2023-13 
+			cleanup(lCivilmenteObblSqlDao); // MEV_2023-13 			
+			
 			cleanup(lConn);
 		}
 

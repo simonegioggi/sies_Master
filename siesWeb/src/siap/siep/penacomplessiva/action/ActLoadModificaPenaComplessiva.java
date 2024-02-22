@@ -81,13 +81,38 @@ public class ActLoadModificaPenaComplessiva extends ActionSiap implements ICosta
 	    lOption = new Option( DecodificheManager.getInstance().getTipoUfficioS(), lPenSanMod.getPenaComplessiva().getCodTipoAutoritaCont());
 	    setRequestAttribute("autoritaSentenza", ""+lOption );
 	*/
-	    if(lPenSanMod.getSanzioneSostitutiva() != null)
-	      lOption = new Option( DecodificheManager.getInstance().getTipoSanzioneSostitutiva(), lPenSanMod.getSanzioneSostitutiva().getCodTipoSanzione());
-	    else
-	      lOption = new Option( DecodificheManager.getInstance().getTipoSanzioneSostitutiva(), "-");
+	    
 
-	    setRequestAttribute("tipoSanzioneSostitutiva", ""+lOption );
-
+	    if(lPenSanMod.getSanzioneSostitutiva() != null) {
+	      if (lPenSanMod.getSanzioneSostitutiva().isPenaSostitutiva()) {
+	          // Preseleziono la Pena Sostitutiva
+	          lOption = new Option( DecodificheManager.getInstance().getTipoPenaSostitutiva(), lPenSanMod.getSanzioneSostitutiva().getCodTipoSanzione());
+	          setRequestAttribute("tipoPenaSostitutiva", ""+lOption );
+	          
+	          // Sanzione sostitutiva a trattino
+	          lOption = new Option( DecodificheManager.getInstance().getTipoSanzioneSostitutiva(), "-"); 
+	          setRequestAttribute("tipoSanzioneSostitutiva", ""+lOption );
+	      }
+	      else {
+	          // Preseleziono la Sanzione sostitutiva
+	          lOption = new Option( DecodificheManager.getInstance().getTipoSanzioneSostitutiva(), lPenSanMod.getSanzioneSostitutiva().getCodTipoSanzione());
+              setRequestAttribute("tipoSanzioneSostitutiva", ""+lOption );
+	        
+              // Pena Sostitutiva a trattino
+              lOption = new Option( DecodificheManager.getInstance().getTipoPenaSostitutiva(), "-"); 
+              setRequestAttribute("tipoPenaSostitutiva", ""+lOption );
+	      }
+	    }
+	    else {
+            // Sanzione sostitutiva a trattino
+            lOption = new Option( DecodificheManager.getInstance().getTipoSanzioneSostitutiva(), "-"); 
+            setRequestAttribute("tipoSanzioneSostitutiva", ""+lOption );
+            
+            // Pena Sostitutiva a trattino
+            lOption = new Option( DecodificheManager.getInstance().getTipoPenaSostitutiva(), "-"); 
+            setRequestAttribute("tipoPenaSostitutiva", ""+lOption );
+	    }
+	    
 	    // Imposta Modalità.
 	    setRequestAttribute("modalita", "M");
 

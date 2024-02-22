@@ -354,8 +354,11 @@
     <!-- Sono nel Dettaglio Foglio Complementare -->
     <tr>
       <td class="l">Data Compilazione/Trasmissione </td>
-      <td class="L">
+      <td class="L"> 
+		  <%-- Ticket20230202011 Sige - anomalie foglio complementare. Si preleva da date emissione. Data trasmissione mai valorizzata
           <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(documentoAllegato.getDataTrasmissione(),"dd-MM-yyyy"))%></font>&nbsp;
+		  --%>
+          <font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(documentoAllegato.getDataEmissione(),"dd-MM-yyyy"))%></font>&nbsp;
       </td>
     </tr>
 

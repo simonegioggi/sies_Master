@@ -29,7 +29,7 @@ import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
  * <p>
  * Company:
  * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -38,7 +38,7 @@ public class ActLoadDettaglioSoggetto extends ActionSiap implements ICostantiSog
 	/**
 	 * Azione di caricamento del Dettaglio del Soggetto
 	 * <p>
-	 * 
+	 *
 	 * @return Nome della pagina JSP su cui posizionarsi al termine dell'elaborazione
 	 * @throws Exception
 	 */
@@ -102,7 +102,9 @@ public class ActLoadDettaglioSoggetto extends ActionSiap implements ICostantiSog
 		String soggUffIns = lSoggetto.getCodUfficioInserimento();
 		String codUfficioUtente = getCodUfficioUtenteConnesso();
 
-		if (soggUffIns.equals(codUfficioUtente)) {
+		// [SG]: per il soggetto IGNOTO IGNOTO il valore di soggUffIns è NULL
+		// inverto la condizione sia nell'if che nell'else
+		if (codUfficioUtente.equals(soggUffIns)) {
 			abilitaUtente = "SI";
 		} else {
 			IUfficio lUACon = SICOLookupRemote.getUfficioRemote();
@@ -110,7 +112,7 @@ public class ActLoadDettaglioSoggetto extends ActionSiap implements ICostantiSog
 			Iterator itr = lUffAccUtente.iterator();
 			while (itr.hasNext()) {
 				UfficioAccorpatoModel lUAMod = (UfficioAccorpatoModel) itr.next();
-				if (soggUffIns.equals(lUAMod.getCodUfficio())) {
+				if (lUAMod.getCodUfficio().equals(soggUffIns)) {
 					abilitaUtente = "SI";
 				}
 			}

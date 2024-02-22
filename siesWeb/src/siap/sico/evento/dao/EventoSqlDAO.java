@@ -26,18 +26,7 @@ import siap.sius.depositodecreto.model.DepositoDecretoModel;
 import siap.sius.depositoordinanzapc.model.DepositoOrdinanzaPcModel;
 
 /**
- * <p>
- * Title: EventoSqlDAO
- * </p>
- * <p>
- * Description: Classe SqlDAO che rappresenta la tabella Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
+ * Classe SqlDAO che rappresenta la tabella Evento
  *
  * @version 1.0
  */
@@ -632,6 +621,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	public void ricercaEventoByFascicoloTipEveTipProvSiepDescPerEventoDaAnnullareCancellare(BigDecimal aKey,
 			String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo, String aOrdinamento)
 			throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
@@ -669,9 +659,8 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	}
 
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
-			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws DAOException
+			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws DAOException {
 
-	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
 
 		// Nel caso non sia stato passato l'Id del fascicolo
@@ -706,11 +695,13 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	}
 
 	// 26/03/2019 MEV70 - Esclusione dei CodMotivo nella lista.
+	// Ticket#202101270113 - si adeguano le condizioni della count alle condizioni della select
+	// impostando il filtro sull'ufficio + accorpati
 	public void getCountEventoByFascicoloSiepTipEventoNOTTipProv(BigDecimal aFascKey,
-			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo)
-			throws DAOException
+			// String aCodUfficioUtenteConnesso
+			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
+			String[] aCodMotivo) throws DAOException {
 
-	{
 		String lStatement = "SELECT COUNT(*) HowManyRecords FROM EVENTO";
 
 		// Nel caso non sia stato passato l'Id del fascicolo
@@ -718,9 +709,15 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		// NON VALIDATI
 		if (aFascKey != null) {
 			lStatement += " WHERE FAS_SIE_ID_FASCICOLO_SIEP = " + aFascKey;
+			// Ticket#202101270113 - Si agiunge la condizione utilizzata nella select eventi
+			lStatement += " AND (COD_UFFICIO_INSERIMENTO "
+					+ condizioneUfficiCompetenti(aUfficioUtenteConnesso) + "";
+			lStatement += " OR FLAG_DOCUMENTO_REGISTRATO = 'S')";
+			// Fine Ticket#202101270113
 		} else {
 			lStatement += ", FASCICOLO_SIEP fasc";
-			lStatement += " WHERE CHIAVE_UFFICIO ='" + aCodUfficioUtenteConnesso + "'";
+			// lStatement += " WHERE CHIAVE_UFFICIO ='" + aCodUfficioUtenteConnesso + "'";
+			lStatement += " WHERE CHIAVE_UFFICIO ='" + aUfficioUtenteConnesso.getCodUfficio() + "'";
 			lStatement += " AND EVENTO.FAS_SIE_ID_FASCICOLO_SIEP = fasc.ID_FASCICOLO_SIEP";
 			lStatement += " AND (FLAG_DOCUMENTO_REGISTRATO = 'N' OR FLAG_DOCUMENTO_REGISTRATO IS NULL) ";
 		}
@@ -755,6 +752,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 	public void ricercaEventoByFascicoloSiepTipEventoNOTTipProvNONAnnullati(BigDecimal aKey,
 			String[] aTipoEvento, String[] aTipoProv) throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
@@ -989,7 +987,9 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 
 		lStatement += " AND (EVENTO.COD_TIPO_EVENTO = '01')";
 		// Ticket#20220712011 si aggiungono alla ricerca anche i codice delle sospensini in cumulo
-		//lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
+		// lStatement += " AND (EVENTO.COD_MOTIVO IN ('0061','0062','0117','0105','0104','0063', '0364',
+		// '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531',
+		// '5532'))";
 		// Si aggiungono i codici '0661','0635','0642','0637'
 		lStatement += " AND (EVENTO.COD_MOTIVO IN ('0661','0635','0642','0637','0061','0062','0117','0105','0104','0063', '0364', '5509', '5510', '5511', '5512', '5513', '5506', '5507', '5508', '5525', '5526', '5530', '5531', '5532'))";
 		// Ticket#20220712011 - FINE
@@ -2272,19 +2272,19 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		aModel.setKeyEsecNsc(getBigDecimal("KEY_ESEC_NSC"));
 
 		// MEV26-Cumulo
-		try {
-			aModel.setIstruidIstruttoriaCumulo(getBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO"));
-		} catch (Exception sqex) {
-		}
-		try {
-			aModel.setEstremiSoggRichIstr(getString("ESTREMI_SOGG_RICH_ISTR"));
-		} catch (Exception sqex) {
-		}
-		// 20200129 [SG]: TICKET#20200128019 quanto sopra scrive eccezione in server.log
-		// if (findColumn("ISTR_ID_ISTRUTTORIA_CUMULO"))
+		// try {
 		// aModel.setIstruidIstruttoriaCumulo(getBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO"));
-		// if (findColumn("ESTREMI_SOGG_RICH_ISTR"))
+		// } catch (Exception sqex) {
+		// }
+		// try {
 		// aModel.setEstremiSoggRichIstr(getString("ESTREMI_SOGG_RICH_ISTR"));
+		// } catch (Exception sqex) {
+		// }
+		// 20200129 [SG]: TICKET#20200128019 quanto sopra scrive eccezione in server.log
+		if (findColumn("ISTR_ID_ISTRUTTORIA_CUMULO"))
+			aModel.setIstruidIstruttoriaCumulo(getBigDecimal("ISTR_ID_ISTRUTTORIA_CUMULO"));
+		if (findColumn("ESTREMI_SOGG_RICH_ISTR"))
+			aModel.setEstremiSoggRichIstr(getString("ESTREMI_SOGG_RICH_ISTR"));
 
 		if (findColumn("TIPOLOGIA_INVIO_ATTI"))
 			aModel.setCodTipologiaInvioAtti(getString("TIPOLOGIA_INVIO_ATTI"));
@@ -2606,7 +2606,7 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 		if (aModel.getFasSieIdFascicoloSiep() != null) {
 			lCondizioni += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aModel.getFasSieIdFascicoloSiep();
 		}
-		
+
 		// Ticket#20200708017: ripristinata condizione del ticket sottostante
 		// 12/12/2019 - Ticket 201911260116 - Impostazione della condizione per EVE_ID_EVENTO.
 		if (aModel.getEveIdEvento() != null) {
@@ -3478,26 +3478,22 @@ public class EventoSqlDAO extends SIAPSqlDAO {
 	// Vengono estratti dalla tabella Evento, tutti gli eventi legati al Fascicolo Siep,
 	// che hanno COD_MOTIVO legati al cumulo
 	public void ricercaEventoCumulo(BigDecimal aIdFascicoloSiep) throws DAOException {
+
 		String lStatement = getSqlQuery();
 
 		lStatement += " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aIdFascicoloSiep;
-
 		lStatement += " AND COD_MOTIVO IN ('0277','0222','0223','0224','0225','0630','0635','0636','0637','0638','0639','0640','0641','0642','0643','0644','0645','0646','0647','0648','0649','0650','0651','0652','0661')";
-
 		lStatement += " ORDER BY DATA_INSERIMENTO ASC ";
-
-		// lStatement += " " + setCondizioneEventoCumulo(aIdFascicoloSiep);
 
 		setStatement(lStatement);
 	}
 
 	public String setCondizioneEventoCumulo(BigDecimal aIdFascicoloSiep) {
+
 		String lCondizioni = new String();
 
 		lCondizioni = " AND FAS_SIE_ID_FASCICOLO_SIEP=" + aIdFascicoloSiep;
-
 		lCondizioni += " AND COD_MOTIVO IN ('0277','0222','0223','0224','0225','0630','0635','0636','0637','0638','0639','0640','0641','0642','0643','0644','0645','0646','0647','0648','0649','0650','0651','0652','0661')";
-
 		lCondizioni += " ORDER BY DATA_INSERIMENTO ASC ";
 
 		return lCondizioni;

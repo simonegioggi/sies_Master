@@ -32,18 +32,8 @@ import siap.sius.stampa.controller.IStampaSius;
 import siap.sius.util.SIUSLookupRemote;
 
 /**
- * <p>
- * Title: DocumentoAllegatoController
- * </p>
- * <p>
+ * Title: DocumentoAllegatoController 
  * Description: Classe Controller per DocumentoAllegato
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -203,15 +193,17 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 			lDocAllDao.setDataEmissione(aDocumentoAllegato.getDataEmissione());
 			lDocAllDao.setDataTrasmissione(aDocumentoAllegato.getDataTrasmissione());
 			lDocAllDao.setComuneSedeGiudiziaria(aDocumentoAllegato.getComuneSedeGiudiziaria());
-			lDocAllDao.setDataAggiornamento(aDocumentoAllegato.getDataAggiornamento());
-			lDocAllDao.setCodOperatoreAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
-			lDocAllDao.setCodUfficioAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
-			lDocAllDao.setCondizioneUpdate(aDocumentoAllegato.getIdDocumentoAllegato());
 			lDocAllDao.setCodMotivazioneNonInvio(aDocumentoAllegato.getCodMotivazioneNonInvio());
 			lDocAllDao.setDescrizioneNonInvio(aDocumentoAllegato.getDescrizioneNonInvio());
 			lDocAllDao.setDataUltInvio(aDocumentoAllegato.getDataUltInvio());
 			lDocAllDao.setDataInsMan(aDocumentoAllegato.getDataInsMan());
+			lDocAllDao.setDataAggiornamento(aDocumentoAllegato.getDataAggiornamento());
+			// Ticket#20230202011 Sige - anomalie foglio complementare
+			lDocAllDao.setCodOperatoreAggiornamento(aDocumentoAllegato.getCodOperatoreAggiornamento());
+			// Ticket#20230202011 - FINE
+			lDocAllDao.setCodUfficioAggiornamento(aDocumentoAllegato.getCodUfficioAggiornamento());
 
+			lDocAllDao.setCondizioneUpdate(aDocumentoAllegato.getIdDocumentoAllegato());
 			lDocAllDao.update();
 
 			// Aggiorna Decreto / Ordinanza
@@ -1088,6 +1080,10 @@ public class DocumentoAllegatoController extends SiapController implements IDocu
 					if (!ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_ORDINANZA
 							.equals(avvisoAvvocato.getTestoAvviso())
 							&& !ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_DECRETO
+									.equals(avvisoAvvocato.getTestoAvviso())
+							// Ticket#20230201017 - Anomalia Sies: Ordinanza Rinvio Udienza va trattata come
+							// Ordinanza classica '03'
+							&& !ICostantiAvvisiAvvocato.CONTENUTO_ORDINANZA_RINVIO_UDIENZA
 									.equals(avvisoAvvocato.getTestoAvviso())) {
 						lAvvisiAvvocatoDao.setDAOFromModel(avvisoAvvocato);
 						lAvvisiAvvocatoDao.insert();

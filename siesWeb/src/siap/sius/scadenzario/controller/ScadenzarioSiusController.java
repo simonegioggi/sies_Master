@@ -271,7 +271,9 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 	 * date.
 	 *
 	 */
-	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2)
+	public Vector ExRicercaScadenzarioSius(String aTipoScadenzario, Date aData1, Date aData2
+			// Ticket#202305250112 - aggiunto filtro per codice ufficio 
+			, String aCodUfficio)
 			throws F3BException {
 
 		Connection lConn = null;
@@ -288,7 +290,12 @@ public class ScadenzarioSiusController extends SiapController implements IScaden
 			lSoggDao = new SoggettoSqlDAO(lConn);
 			lEveDao = new EventoSqlDAO(lConn);
 
-			lScaDao.ricercaScadenzarioSiusPerTipoDate(aTipoScadenzario, aData1, aData2);
+			// Ticket#202305250112 - aggiunto filtro per codice ufficio 
+			// lScaDao.ricercaScadenzarioSiusPerTipoDate(aTipoScadenzario, aData1, aData2);
+			lScaDao.ricercaScadenzarioSiusPerTipoDate (aTipoScadenzario, aData1, aData2, aCodUfficio);
+			// Ticket#202305250112 - FINE
+			
+			
 			lScadenzariSius = new Vector(lScaDao.getModels());
 			if (lScadenzariSius.size() == 0) {
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Elemento trovato");

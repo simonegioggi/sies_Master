@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.Collection" %>
+<%@ page import="java.math.BigDecimal" %>
 
 <%@ page import="f3b.web.IWebConstants" %>
 <%@ page import="f3b.security.model.FunctionModel" %>
@@ -116,7 +117,16 @@
     while(lIterCombo.hasNext())
     {
       lFun = (FunctionModel)lIterCombo.next();
-      if( lFun.getFunctionType().equals(ICostantiFunzioni.TIPO_INSERIMENTO) && lFlagValidato && inseribile )
+      
+      // MEV_2023-13 
+      if (   lFun.getNameAction().equals("siap.siep.rateizzazionepp.action.ActLoadInserisciRateizzazione")
+          || lFun.getNameAction().equals("siap.siep.pagoPA.action.ActLoadInserisciCivilmenteObbligato")
+         )
+      {
+        // non elimino dalla combo le funzioni della MEV_2023-13 (civilmente obbliogato e rateizzazione)
+        // che devono essere disponibili anche a fasciolo validato
+      }      
+      else if( lFun.getFunctionType().equals(ICostantiFunzioni.TIPO_INSERIMENTO) && lFlagValidato && inseribile )
       {
         lIterCombo.remove();
       }

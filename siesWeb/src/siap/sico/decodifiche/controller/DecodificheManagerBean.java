@@ -416,6 +416,14 @@ public class DecodificheManagerBean {
 
 	private Collection mSoggettoImpugnanteSige;
 
+	// MEV_2023-13: aggiunta collezione per il tipo tutore
+	private Collection mTipoTutore;
+	// MEV_2023-13: aggiunta collezione per la ragione sociale
+	private Collection mRagioneSocialeCO;
+	
+	// MEV_2023-13
+    private Collection mTipoPenaSostitutiva;
+
 	/**
 	 * Inizializzazione degli attributi del Singleton
 	 */
@@ -778,7 +786,7 @@ public class DecodificheManagerBean {
 			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
 			lModel.setContesto("POSIZIONE_GIURIDICA");
 			lModel.setFiltro("PRIMA");
-			lModel.setCode("90");			
+			lModel.setCode("90");
 			lListPrima.addAll(lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel));
 			mPosizioneGiuridicaIscrizione = lListPrima;
 
@@ -1043,7 +1051,17 @@ public class DecodificheManagerBean {
 					.add(new DecodificheModel("63", "Decreto di Archiviazione", "", "", "", "", "", "", ""));
 
 			lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
-			mTipoSanzioneSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+            // MEV_2023-13 aggiunto filtro sul dominio per l'aggiunta dei codici della "Pena Sostitutiva"
+            lModel.setFiltro("Sanzione Sostitutiva");
+            mTipoSanzioneSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+            lModel.setFiltro(""); // ripulisco il filtro
+            
+            // MEV_2023-13
+            lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
+            lModel.setFiltro("Pena Sostitutiva");
+            mTipoPenaSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+            lModel.setFiltro(""); // ripulisco il filtro
+            // MEV_2023-13 - FINE
 
 			lModel.setContesto("TIPO_SANZIONE_CONVERTITA");
 			mTipoSanzioneConvertita = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
@@ -1856,6 +1874,16 @@ public class DecodificheManagerBean {
 			lModel.setContesto("TIPO_UFFICIO");
 			mTipoUfficioSige = lDecodifiche.ExRicercaDecodifiche(lModel);
 
+			// MEV_2023-13: aggiunta collezione per il tipo tutore
+			lModel.setContesto("TIPO_TUTORE");
+			mTipoTutore = lDecodifiche.ExRicercaDecodifiche(lModel);
+
+			// MEV_2023-13: aggiunta collezione per la ragione sociale
+			mRagioneSocialeCO = new Vector();
+			mRagioneSocialeCO.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
+			mRagioneSocialeCO.add(new DecodificheModel("Ente", "Ente", "RAGIONE_SOCIALE", "", "", "", "", "",
+					""));
+
 			// FIXME MEV26 solo per sviluppo da sostituire con la versione ufficiale LPU
 			DecodificheModel lTipoLPUModel = new DecodificheModel();
 			lTipoLPUModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA_LPU");
@@ -2144,6 +2172,11 @@ public class DecodificheManagerBean {
 	public Collection getTipoSanzioneSostitutiva() {
 		return mTipoSanzioneSostitutiva;
 	}
+	
+	// MEV_2023-13
+    public Collection getTipoPenaSostitutiva() {
+        return mTipoPenaSostitutiva;
+    }
 
 	public Collection getTipoAtto() {
 		return mTipoAtto;
@@ -3078,6 +3111,16 @@ public class DecodificheManagerBean {
 
 	public Collection getTipoUfficioSige() {
 		return mTipoUfficioSige;
+	}
+
+	// MEV_2023-13: aggiunta collezione per il tipo tutore
+	public Collection getTipoTutore() {
+		return mTipoTutore;
+	}
+
+	// MEV_2023-13: aggiunta collezione per la ragione sociale
+	public Collection getRagioneSocialeCO() {
+		return mRagioneSocialeCO;
 	}
 
 }

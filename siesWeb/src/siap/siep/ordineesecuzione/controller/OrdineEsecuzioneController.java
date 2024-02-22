@@ -91,6 +91,7 @@ import siap.siep.ordineesecuzione.dao.OrdineEsecuzioneSqlDao;
 import siap.siep.parametro.controller.IParametro;
 import siap.siep.parametro.dao.ParametroSqlDAO;
 import siap.siep.parametro.model.ParametroModel;
+import siap.siep.penacomplessiva.dao.PenaComplessivaDAO;
 import siap.siep.penacumulo.dao.PenaCumuloDAO;
 import siap.siep.penacumulo.dao.PenaCumuloSqlDAO;
 import siap.siep.penacumulo.model.PenaCumuloModel;
@@ -98,12 +99,21 @@ import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.dao.PenaResiduaDAO;
 import siap.siep.penaresidua.dao.PenaResiduaSqlDAO;
 import siap.siep.penaresidua.model.PenaResiduaModel;
+import siap.siep.penasospesa.dao.AnnmanPenacomplDAO;
+import siap.siep.penasospesa.dao.AnnmanPenacomplSqlDAO;
+import siap.siep.penasospesa.dao.AnnmanReatoDAO;
+import siap.siep.penasospesa.dao.AnnmanReatoSqlDAO;
+import siap.siep.penasospesa.model.AnnmanPenacomplModel;
+import siap.siep.penasospesa.model.AnnmanReatoModel;
 import siap.siep.posizione.dao.PosizioneGiuridicaDAO;
 import siap.siep.posizione.dao.PosizioneGiuridicaSqlDAO;
 import siap.siep.posizione.model.PosizioneGiuridicaModel;
+import siap.siep.rateizzazionepp.dao.RateizzazionePPDAO;
+import siap.siep.reato.dao.ReatoDAO;
 import siap.siep.rinnovo.dao.RinnovoSqlDAO;
 import siap.siep.rinnovo.model.RinnovoModel;
 import siap.siep.sanzionesostitutiva.dao.SanzioneSostResiduaDAO;
+import siap.siep.sanzionesostitutiva.dao.SanzioneSostitutivaDAO;
 import siap.siep.scadenzario.dao.ScadenzarioDAO;
 import siap.siep.scadenzario.dao.ScadenzarioSqlDAO;
 import siap.siep.scadenzario.model.ScadenzarioModel;
@@ -724,7 +734,23 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 		// 15-12-2014 Misure Sicurezza
 		MisuraSicurezzaSqlDAO lMisSicSqlDao = null;
 		MisuraSicurezzaDAO lMisSicDao = null;
-
+		
+		// Ticket#202301250123 
+		AnnmanReatoDAO annmanReatoDAO = null;
+		AnnmanReatoSqlDAO annmanReatoSqlDAO = null;
+		
+		AnnmanPenacomplDAO annmanPenacomplDAO = null;
+		AnnmanPenacomplSqlDAO annmanPenacomplSqlDAO	= null;
+		
+		ReatoDAO reatoDAO = null;
+		PenaComplessivaDAO penaComplessivaDAO = null;
+		
+		SanzioneSostitutivaDAO sanzioneSostDAO = null;
+		// Ticket#202301250123 - FINE
+		
+		//MEV_2023-13
+		RateizzazionePPDAO rateizzazioneDAO = null;
+		
 		Vector lAnnVect = null;
 		Vector eventi = null;
 		Vector lPosizioni = null;
@@ -815,19 +841,25 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 						lPosSql.ricercaPosGiuCorrenteByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 						lPosizioni = new Vector(lPosSql.getModels());
-						PosizioneGiuridicaModel lPosPrec = (PosizioneGiuridicaModel) lPosizioni.get(0);
-
-						// ---------------------------------------------------------
-						// ripristino posizione giuridica pecedente
-						// ---------------------------------------------------------
-						lPosPrec.setDataFine(null);
-						lPosPrec.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-						lPosPrec.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-						lPosPrec.setDataAggiornamento(aCampoNota.getDataInserimento());
-
-						lPosDAO.setDAOFromModelForUpdate(lPosPrec);
-						lPosDAO.update();
-						lPosDAO.stop();
+						
+						// Ticket#20231003017 - Non è detto che esista una PG precendente per cui in alcuni casi
+						// lPosizioni.get(0) genera un arrayIndexOutOfBoundException
+						if (lPosizioni.size()>0) 
+						{
+							PosizioneGiuridicaModel lPosPrec = (PosizioneGiuridicaModel) lPosizioni.get(0);
+	
+							// ---------------------------------------------------------
+							// ripristino posizione giuridica pecedente
+							// ---------------------------------------------------------
+							lPosPrec.setDataFine(null);
+							lPosPrec.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+							lPosPrec.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+							lPosPrec.setDataAggiornamento(aCampoNota.getDataInserimento());
+	
+							lPosDAO.setDAOFromModelForUpdate(lPosPrec);
+							lPosDAO.update();
+							lPosDAO.stop();
+						}
 					}
 
 					// ---------------------------------------------------------
@@ -988,36 +1020,43 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 
 					lPosSql.ricercaPosGiuCorrenteByIdFascicolo(aEvento.getFasSieIdFascicoloSiep());
 					lPosizioni = new Vector(lPosSql.getModels());
-					PosizioneGiuridicaModel lPosPrec = (PosizioneGiuridicaModel) lPosizioni.get(0);
-
-					// ---------------------------------------------------------
-					// ripristino posizione giuridica pecedente
-					// ---------------------------------------------------------
-					lPosPrec.setDataFine(null);
-					lPosPrec.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-					lPosPrec.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-					lPosPrec.setDataAggiornamento(aCampoNota.getDataInserimento());
-
-					lPosDAO.setDAOFromModelForUpdate(lPosPrec);
-					lPosDAO.update();
-					lPosDAO.stop();
-
-					// Elenco Provvedimenti PM
-					// azione: cancella Provvedimento
-					// aggiornamento FLAG_ALTRA_CAUSA nella tabella FASCICOLO_SIEP='S' se
-					// POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA!=null
-					FascicoloSiepDAO lFasDao = null;
-					lFasDao = new FascicoloSiepDAO(lConn);
-					if (lPosPrec != null && lPosPrec.getAltCauIdAltraCausa() != null && aEvento != null
-							&& aEvento.getFasSieIdFascicoloSiep() != null) {
-						lFasDao.setFlagAltraCausa("S");
-						lFasDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
-						lFasDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
-						lFasDao.setDataAggiornamento(aCampoNota.getDataInserimento());
-						lFasDao.selCondizioneUpdate(aEvento.getFasSieIdFascicoloSiep());
-						lFasDao.update();
-						lFasDao.stop();
+					
+					// Ticket#20231003017 - Non è detto che esista una PG precendente per cui in alcuni casi
+					// lPosizioni.get(0) genera un arryIndexoutOfBoundException
+					if (lPosizioni.size()>0) 
+					{
+						PosizioneGiuridicaModel lPosPrec = (PosizioneGiuridicaModel) lPosizioni.get(0);
+	
+						// ---------------------------------------------------------
+						// ripristino posizione giuridica pecedente
+						// ---------------------------------------------------------
+						lPosPrec.setDataFine(null);
+						lPosPrec.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+						lPosPrec.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+						lPosPrec.setDataAggiornamento(aCampoNota.getDataInserimento());
+	
+						lPosDAO.setDAOFromModelForUpdate(lPosPrec);
+						lPosDAO.update();
+						lPosDAO.stop();
+	
+						// Elenco Provvedimenti PM
+						// azione: cancella Provvedimento
+						// aggiornamento FLAG_ALTRA_CAUSA nella tabella FASCICOLO_SIEP='S' se
+						// POSIZIONE_GIURIDICA.ALT_CAU_ID_ALTRA_CAUSA!=null
+						FascicoloSiepDAO lFasDao = null;
+						lFasDao = new FascicoloSiepDAO(lConn);
+						if (lPosPrec != null && lPosPrec.getAltCauIdAltraCausa() != null && aEvento != null
+								&& aEvento.getFasSieIdFascicoloSiep() != null) {
+							lFasDao.setFlagAltraCausa("S");
+							lFasDao.setCodUfficioAggiornamento(aCampoNota.getCodUfficioInserimento());
+							lFasDao.setCodOperatoreAggiornamento(aCampoNota.getCodOperatoreInserimento());
+							lFasDao.setDataAggiornamento(aCampoNota.getDataInserimento());
+							lFasDao.selCondizioneUpdate(aEvento.getFasSieIdFascicoloSiep());
+							lFasDao.update();
+							lFasDao.stop();
+						}
 					}
+					// Ticket#20231003017 - FINE
 				}
 
 			}
@@ -1275,6 +1314,14 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			lScaDAO.delete();
 			lScaDAO.stop();
 
+			// MEV_2023-13 - Sgancio le rate dall'evento
+			rateizzazioneDAO = new RateizzazionePPDAO(lConn);
+			rateizzazioneDAO.setEveIdEvento(null);
+			rateizzazioneDAO.selCondizioneByIdEvento (lEveRet.getIdEvento());
+			rateizzazioneDAO.update();
+			rateizzazioneDAO.stop();
+			// MEV_2023-13 - FINE
+			
 			// ========================================================================
 			// Annullo l'evento
 			// ========================================================================
@@ -1554,6 +1601,60 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 					lAnnDAO.update();
 					lAnnDAO.stop();
 
+					
+					// Ticket#202301250123 - Prima di eliminare le annotazoni vanno eliminati eventuali record 
+					// - ANNMAN_PENACOMPL, PENA_COMPLESSIVA
+					// - ANNMAN_REATO, REATO
+					siesLogger.debug("Procedo alla cancellazione eventuali ANNMAN_REATO collegati all'annotazione con id = "+lAnnMod.getIdAnnotazioneManuale());
+					annmanReatoSqlDAO = new AnnmanReatoSqlDAO (lConn);
+					annmanReatoDAO = new AnnmanReatoDAO(lConn);	
+					reatoDAO = new ReatoDAO (lConn);
+					
+					AnnmanReatoModel annReatoModel = new AnnmanReatoModel (null,lAnnMod.getIdAnnotazioneManuale(),null);
+					annmanReatoSqlDAO.ricercaAnnmanReato (annReatoModel);
+					Vector <AnnmanReatoModel>listaAnnReati = new Vector<AnnmanReatoModel>(annmanReatoSqlDAO.getModels());
+					for (AnnmanReatoModel annRea : listaAnnReati) {
+						siesLogger.debug("AnnmanReatoModel id = "+annRea.getIdAnnmanReato());
+
+						siesLogger.debug("AnnmanReatoModel Cancello annmareato = "+annRea.getIdAnnmanReato());
+						annmanReatoDAO.setCondizioneUpdate(annRea.getIdAnnmanReato());
+						annmanReatoDAO.delete();						
+
+						siesLogger.debug("AnnmanReatoModel Cancello il reato con id = "+annRea.getReatoId());
+						reatoDAO.setCondizioneUpdate(annRea.getReatoId());
+						reatoDAO.delete();
+					}
+						
+					//annmanReatoDAO.setCondizioneUpdateByIdAnn(lAnnMod.getIdAnnotazioneManuale());
+					//annmanReatoDAO.delete();
+					annmanPenacomplSqlDAO = new AnnmanPenacomplSqlDAO (lConn);
+					annmanPenacomplDAO = new AnnmanPenacomplDAO (lConn);		
+					penaComplessivaDAO = new PenaComplessivaDAO (lConn);
+					sanzioneSostDAO = new SanzioneSostitutivaDAO (lConn);
+					AnnmanPenacomplModel annmaPenMod = new AnnmanPenacomplModel (null,lAnnMod.getIdAnnotazioneManuale(),null);
+					annmanPenacomplSqlDAO.ricercaAnnmanPenacompl (annmaPenMod);
+					Vector <AnnmanPenacomplModel> listaAnnPenaComp = new Vector<AnnmanPenacomplModel>(annmanPenacomplSqlDAO.getModels());
+					for (AnnmanPenacomplModel annPena : listaAnnPenaComp) {
+						siesLogger.debug("AnnmanPenacomplModel = "+annPena.getIdAnnmanPenacompl());
+						
+						// cancello prima eventuale SANZIONE_SOSTITUTIVA che punta la pena complessiva
+						sanzioneSostDAO.setCondizioneByIdPenaComplessiva(annPena.getPenacomplessivaId());
+						sanzioneSostDAO.delete();
+						
+						siesLogger.debug("AnnmanReatoModel Cancello annmaPenacomp = "+annPena.getIdAnnmanPenacompl());
+						annmanPenacomplDAO.setCondizioneUpdate(annPena.getIdAnnmanPenacompl());
+						annmanPenacomplDAO.delete();						
+
+						siesLogger.debug("AnnmanPenacomplModel Cancello la pena complessiva collegata con id = "+annPena.getPenacomplessivaId());
+						penaComplessivaDAO.setCondizioneUpdate(annPena.getPenacomplessivaId());
+						penaComplessivaDAO.delete();
+					}
+									
+					//annmanPenacomplDAO.setCondizioneUpdateByIdAnn(lAnnMod.getIdAnnotazioneManuale());
+					//annmanReatoDAO.delete();					
+					// Ticket#202301250123 - FINE
+
+					
 					// Cancello l'annotazione corrente
 					lAnnDAO = new AnnotazioneManualeDAO(lConn);
 					lAnnDAO.setDAOFromModelForUpdate(lAnnMod);
@@ -1952,6 +2053,21 @@ public class OrdineEsecuzioneController extends SiapController implements IOrdin
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lEventoProc03);
 			cleanup(lDatiFinaliCumSqlDao);
+			
+			// Ticket#202301250123 -
+			cleanup (annmanReatoDAO);
+			cleanup (annmanPenacomplDAO);
+			
+			cleanup (annmanReatoSqlDAO);
+			cleanup (annmanPenacomplSqlDAO);
+			
+			cleanup (reatoDAO);
+			cleanup (penaComplessivaDAO);
+			
+			cleanup (sanzioneSostDAO);
+			
+			// Ticket#202301250123 - FINE
+			
 
 			cleanup(lConn);
 		}

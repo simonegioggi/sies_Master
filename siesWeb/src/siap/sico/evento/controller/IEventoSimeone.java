@@ -4,27 +4,17 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.ufficio.model.UfficioModel;
 import siap.siep.cumulo.model.CumuloModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
  * Title: EventoController
- * </p>
- * <p>
  * Description: Classe Controller per Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 
@@ -51,8 +41,8 @@ public interface IEventoSimeone {
 	public EventoModel ExRicercaEventoByFascicoloSiepTipEventoTipProvCodMotivo(BigDecimal aFascKey,
 			String aTipoEvento, String aTipoProv, String aMotivo) throws F3BException;
 
-  public Vector ExRicercaEventiByFascicoloSiepTipEventoTipProvCodMotivo(BigDecimal aFascKey, String aTipoEvento, String aTipoProv, String aMotivo) 
-	throws F3BException;
+	public Vector ExRicercaEventiByFascicoloSiepTipEventoTipProvCodMotivo(BigDecimal aFascKey,
+			String aTipoEvento, String aTipoProv, String aMotivo) throws F3BException;
 
 	public Vector ExRicercaUltimoEventoByIdFascicolo(BigDecimal aKeyFasc) throws F3BException;
 
@@ -68,22 +58,19 @@ public interface IEventoSimeone {
 
 	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
 			String aCodUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv) throws F3BException;
-  public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey, 
-          																	String aCodUfficioUtenteConnesso,
-          																	String[] aTipoEvento, 
-          																	String[] aTipoProv,
-          																	String[] aCodMotivo)
-    throws F3BException;
 
-  public Vector ExRicercaEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
-          																UfficioModel aUfficioUtenteConnesso,
-          																String[] aTipoEvento,
-          																String[] aTipoProv,
-          																String[] aCodMotivo,
-          																int aPage,
-          																String aOrdinamento)
-   throws F3BException;
-  
+	// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
+	// impostando il filtro sull'ufficio + accorpati
+	public BigDecimal ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
+			// String aCodUfficioUtenteConnesso,
+			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
+			String[] aCodMotivo) throws F3BException;
+	// FINE Ticket#202101270113
+
+	public Vector ExRicercaEventoByFascicoloSiepTipEventoNOTTipProvPaged(BigDecimal aFascKey,
+			UfficioModel aUfficioUtenteConnesso, String[] aTipoEvento, String[] aTipoProv,
+			String[] aCodMotivo, int aPage, String aOrdinamento) throws F3BException;
+
 	public Vector ExRicercaProvvedimentiOnViewPaged(EventoModel aModel, int aPage) throws F3BException;
 
 	public BigDecimal ExGetCountProvvedimentiPerOmesseNotifiche(EventoModel aEvento,
@@ -106,8 +93,9 @@ public interface IEventoSimeone {
 			BigDecimal aFascKey, String[] aTipoEvento, String[] aTipoProv, String aOrdinamento)
 			throws F3BException;
 
-  public EventoModel ExRicercaEventoByFascicoloSiepTipEventoTipProvPerEventoDaAnnullareCancellare(BigDecimal aFascKey, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo,String aOrdinamento)
-		    throws F3BException;
+	public EventoModel ExRicercaEventoByFascicoloSiepTipEventoTipProvPerEventoDaAnnullareCancellare(
+			BigDecimal aFascKey, String[] aTipoEvento, String[] aTipoProv, String[] aCodMotivo,
+			String aOrdinamento) throws F3BException;
 
 	public Vector ExRicercaEventoByFascicoloSiepTipProv(BigDecimal aFascKey, String[] aTipoProv)
 			throws F3BException;

@@ -2,15 +2,13 @@
 <%@ page import="java.util.Iterator"%>
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="siap.sige.avvocato.action.ICostantiAvvocato"%>
-<%@ page import="f3b.util.DateUtils"%>
 <%@ page import="siap.sige.fascicolo.model.FascicoloSigeEstesoModel"%>
 <%@ page import="siap.sige.fascicolo.action.ICostantiFascicoloSige"%>
 <%@ page import="siap.sico.ufficio.model.UfficioAccorpatoModel"%>
 
-<jsp:useBean id="modalita"  scope="request" class="java.lang.String"/>
+
 <jsp:useBean id="nextAction"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="functionName"  scope="request" class="java.lang.String"/>
-<jsp:useBean id="ChiaveAnno"  scope="session" class="java.lang.String"/>
 <jsp:useBean id="idAvvocato"  scope="request" class="java.lang.String"/>
 <jsp:useBean id="elencoUfficiAccorpati" scope="request" class="java.util.Vector" />
 <jsp:useBean id="TornaQui" scope="request" class="java.lang.String" />
@@ -39,7 +37,7 @@ FascicoloSigeEstesoModel lFascicoloEsteso = (FascicoloSigeEstesoModel)session.ge
       //alert("init ");
       document.LoadRicercaFSigePuntuale.<%=ICostantiFascicoloSige.CAMPO_CHIAVE_ANNO%>.focus();
    }
-var node;
+
 function setta()
 {
 <%
@@ -57,11 +55,7 @@ function setta()
   <body class="corpo"  onLoad="Javascript:init();">
     <table>
       <tr><td class="LBG"><a href="Javascript:window.print();"><img align="middle" src="<%=IWebConstants.IMAGES_DIR%>quickprint24.gif" alt="Stampa questa videata" border=0></a></td>
-        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo"><%=functionName%></font>
-<%
-          FascicoloSigeEstesoModel lModel = new FascicoloSigeEstesoModel();
-%>
-        </td>
+        <td class="LBG"><font class="label">Funzione :</font>&nbsp;<font class="campo"><%=functionName%></font></td>
       </tr>
     </table>
   <FORM method="POST" action="<%=IWebConstants.PG_MAIN%>" name='LoadRicercaFSigePuntuale'>
@@ -78,9 +72,17 @@ function setta()
         <td class="l">Numero SIGE (Anno/Progressivo) <font class=ob>(*)</font></td>
 
         <td class="l">
-          <input Title="Anno SIGE"  type="text" name="<%= ICostantiFascicoloSige.CAMPO_CHIAVE_ANNO %>" maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-          /<input Title="Numero SIGE" type="text" name="<%= ICostantiFascicoloSige.CAMPO_CHIAVE_PROGR_ORIGIN %>" maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
-          <input type="hidden" name="<%=ICostantiFascicoloSige.CAMPO_CHIAVE_PROGR%>" value="">
+          <input Title="Anno SIGE"  type="text" name="<%= ICostantiFascicoloSige.CAMPO_CHIAVE_ANNO %>" 
+          <%-- Ticket: 20221220011: aggiunti id sui campi per la getElementById andava in errore su EDGE --%>
+                                                  id="<%= ICostantiFascicoloSige.CAMPO_CHIAVE_ANNO %>" 
+                  maxlength="4" size="4" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" onblur="javascript:value=FillYear(value)">
+          /<input Title="Numero SIGE" type="text" name="<%= ICostantiFascicoloSige.CAMPO_CHIAVE_PROGR_ORIGIN %>" 
+          <%-- Ticket: 20221220011: aggiunti id sui campi per la getElementById andava in errore su EDGE --%>
+                                                    id="<%= ICostantiFascicoloSige.CAMPO_CHIAVE_PROGR_ORIGIN %>"
+                  maxlength="6" size="6" onFocus="javascript:textboxSelect(this)" onkeypress="return TicTabNumField(this,event)" >
+          <input type="hidden" name="<%=ICostantiFascicoloSige.CAMPO_CHIAVE_PROGR%>" 
+          <%-- Ticket: 20221220011: aggiunti id sui campi per la getElementById andava in errore su EDGE --%>          
+                                 id="<%=ICostantiFascicoloSige.CAMPO_CHIAVE_PROGR%>" value="">
           <input type="hidden" name="<%=IWebConstants.LINK_RITORNO %>" value="<%=TornaQui %>">
         </td>
 <%  if (lFascicoloEsteso != null && lFascicoloEsteso.getFascicoloSige() != null)
@@ -98,7 +100,9 @@ function setta()
       <tr>
         <td class="l">Ufficio Accorpato</td>
         <td class="l">
-         	<select name="<%=ICostantiFascicoloSige.CAMPO_CHIAVE_ACCORPATO%>">
+         	<select name="<%=ICostantiFascicoloSige.CAMPO_CHIAVE_ACCORPATO%>" 
+            <%-- Ticket: 20221220011: aggiunti id sui campi per la getElementById andava in errore su EDGE --%>
+         	          id="<%=ICostantiFascicoloSige.CAMPO_CHIAVE_ACCORPATO%>">
          	<option value="0" >-</option>
   <%
   Iterator it = elencoUfficiAccorpati.iterator();

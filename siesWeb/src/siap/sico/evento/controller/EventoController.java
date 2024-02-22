@@ -60,6 +60,8 @@ import siap.siep.notifica.dao.NotificaDAO;
 import siap.siep.notifica.dao.NotificaEventoSqlDAO;
 import siap.siep.notifica.dao.NotificaSqlDAO;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.pagoPA.dao.CivilmenteObbligatoSqlDAO;
+import siap.siep.pagoPA.model.CivilmenteObbligatoModel;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneDAO;
 import siap.siep.penapecuniaria.model.RichiestaConversioneModel;
 import siap.siep.penaresidua.dao.PenaResiduaDAO;
@@ -105,18 +107,8 @@ import siap.sius.udienzaprocedimento.dao.UdienzaProcedimentoSqlDAO;
 import siap.sius.udienzaprocedimento.model.UdienzaProcedimentoUdiModel;
 
 /**
- * <p>
  * Title: EventoController
- * </p>
- * <p>
  * Description: Classe Controller per Evento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -993,6 +985,9 @@ public class EventoController extends SiapController implements IEvento {
 		IstitutoDetenzioneSqlDAO lIstDao = null;
 		MagistratoSqlDAO lMagDAO = null;
 		CampoNotaSqlDAO lCampoNotaSqlDao = null;
+		
+		// MEV_2023-13 
+		CivilmenteObbligatoSqlDAO lCivilmenteObbSqlDao = null;
 
 		try {
 			lEveDao = new EventoSqlDAO(lConn);
@@ -1000,6 +995,9 @@ public class EventoController extends SiapController implements IEvento {
 			lIstDao = new IstitutoDetenzioneSqlDAO(lConn);
 			lCampoNotaSqlDao = new CampoNotaSqlDAO(lConn);
 			lMagDAO = new MagistratoSqlDAO(lConn);
+			
+		    // MEV_2023-13 
+	        lCivilmenteObbSqlDao = new CivilmenteObbligatoSqlDAO (lConn);
 
 			lEveDao.ricercaEventoByKey(aEventoKey);
 
@@ -1104,6 +1102,28 @@ public class EventoController extends SiapController implements IEvento {
 					// Aggiunge l'AvvocatoSigeModel al model di Notifica
 					lEve.getNotifiche()[count].setAvvSige(lAvvSige);
 				}
+				
+	            // MEV_2023-13 - Preleva i Civilmente Obbligati
+				if (lEve.getNotifiche()[count].getIdCivilmenteObbligato() != null) {
+				    lCivilmenteObbSqlDao = new CivilmenteObbligatoSqlDAO (lConn);				    
+				    lCivilmenteObbSqlDao.ricercaCivilmenteObbligatoByKey (lEve.getNotifiche()[count].getIdCivilmenteObbligato());				    
+				    CivilmenteObbligatoModel lObblogatoModel = (CivilmenteObbligatoModel) lCivilmenteObbSqlDao.getModelByKey();
+				    
+				    lEve.getNotifiche()[count].setCivilmenteObbligato(lObblogatoModel);
+				}
+				
+                // Autorita Esterne Delegata
+                if (lEve.getNotifiche()[count].getAutEstIdAutoritaEstDeleg() != null) {
+                    lAutoritaSqlDao.ricercaAutoritaEsternaByKey(
+                            lEve.getNotifiche()[count].getAutEstIdAutoritaEstDeleg());
+                    AutoritaEsternaModel lAutorita = (AutoritaEsternaModel) lAutoritaSqlDao.getModelByKey();
+                    // Inserisce l'occorenza nel model delle notifiche.
+                    lEve.getNotifiche()[count].setAutoritaEsternaDelegata(lAutorita);
+                    lAutoritaSqlDao.stop();
+                }				
+				// MEV_2023-13 - FINE
+	            
+				
 				count++;
 			}
 
@@ -1142,6 +1162,8 @@ public class EventoController extends SiapController implements IEvento {
 			cleanup(lCampoNotaSqlDao);
 			// Scheda Intervento n° 6 - Ottimizzazione SIUS Avvocati
 			cleanup(lAvvSigeDao);
+			
+			cleanup(lCivilmenteObbSqlDao); //MEV_2023-13 
 		}
 		return lEve;
 	}
@@ -2544,10 +2566,7 @@ public class EventoController extends SiapController implements IEvento {
 
 			lEveDao.stop();
 
-			if (lByteArrayOut == null)
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
-
-			if (lByteArrayOut.size() == 0)
+			if ((lByteArrayOut == null) || (lByteArrayOut.size() == 0))
 				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Documento Associato");
 
 		} catch (F3BException eF3b) {
@@ -3227,7 +3246,7 @@ public class EventoController extends SiapController implements IEvento {
 	/**
 	 *
 	 * @param @return
-	 * 			@throws
+	 * @throws
 	 */
 	public EventoModel ExRicercaUltimoEventoGeneratoByCodUtente(String aCodUtente) throws F3BException {
 
@@ -4860,6 +4879,10 @@ public class EventoController extends SiapController implements IEvento {
 					if (!ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_ORDINANZA
 							.equals(avvisoAvvocato.getTestoAvviso())
 							&& !ICostantiAvvisiAvvocato.CONTENUTO_EMISSIONE_DECRETO
+									.equals(avvisoAvvocato.getTestoAvviso())
+							// Ticket#20230201017 - Anomalia Sies: Ordinanza Rinvio Udienza va trattata come
+							// Ordinanza classica '03'
+							&& !ICostantiAvvisiAvvocato.CONTENUTO_ORDINANZA_RINVIO_UDIENZA
 									.equals(avvisoAvvocato.getTestoAvviso())) {
 						lAvvisiAvvocatoDao.setDAOFromModel(avvisoAvvocato);
 						lAvvisiAvvocatoDao.insert();

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Vector;
 
+import f3b.util.F3BException;
 import siap.sico.evento.model.EventoModel;
 import siap.sico.residenza.model.ResidenzaAssociataModel;
 import siap.sico.soggetto.model.SoggettoModel;
@@ -20,21 +21,9 @@ import siap.sige.provvedimento.model.ProvvedimentoSigeModel;
 import siap.sige.richiesta.model.RichiestaSigeModel;
 //import siap.sius.produzioneatti.model.ParereModel;
 import siap.sige.richiestaatti.model.ParereModel;
-import f3b.util.F3BException;
 
 /**
- * <p>
- * Title: FascicoloSigeController
- * </p>
- * <p>
- * Description: Classe Controller per FascicoloSige
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: Eutelia
- * </p>
+ * Classe Controller per FascicoloSige
  * 
  * @version 5.0
  */
@@ -74,8 +63,9 @@ public interface IFascicoloSige {
 			throws F3BException;
 
 	// MEV_57: aggiunto parametro di passaggio
-	public BigDecimal ExGetNumRicercaFascicoliBySoggetto(SoggettoModel aSogModel,
-			String lCodUfficioUtenteConnesso, String lCodDistretto, String majorOffice) throws F3BException;
+	// Ticket#202311060117 - Ricerca  soggetti per procedimento Sige: ottimizzazione query
+	// public BigDecimal ExGetNumRicercaFascicoliBySoggetto(SoggettoModel aSogModel,
+	// String lCodUfficioUtenteConnesso, String lCodDistretto, String majorOffice) throws F3BException;
 
 	public Vector ExRicercaFascSigeDelSoggetto(SoggettoModel aSogModel, String strCodUfficioUtenteConnesso,
 			String lCodDistretto) throws F3BException;

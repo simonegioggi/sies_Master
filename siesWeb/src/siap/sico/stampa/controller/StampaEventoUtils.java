@@ -739,6 +739,15 @@ public class StampaEventoUtils extends SiapController {
 				if (aEveModel.getNotifiche()[count].getCssIdCssa() != null)
 					lTreeNot.add(new TreeModel(aEveModel.getNotifiche()[count].getCSSA()));
 
+				// MEV_2023-13 - Si aggiunge il model del civilmente obbligato
+				if (aEveModel.getNotifiche()[count].getIdCivilmenteObbligato() != null) {
+				    if (aEveModel.getNotifiche()[count].getCivilmenteObbligato()!=null)
+				        lTreeNot.add(new TreeModel(aEveModel.getNotifiche()[count].getCivilmenteObbligato()));   
+				    else 
+				        siesLogger.warn("... ma manca il model ");
+				}
+				// MEV_2023-13 - FINE
+				
 				// Fine Aggiunta
 				count++;
 			}

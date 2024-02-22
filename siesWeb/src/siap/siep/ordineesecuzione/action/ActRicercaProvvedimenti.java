@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
+import f3b.log.LogF3B;
 import f3b.web.IWebConstants;
 import siap.sico.decodifiche.controller.IDecodifiche;
 import siap.sico.decodifiche.model.DecodificheModel;
@@ -18,24 +21,14 @@ import siap.siep.modulocumulo.model.DatiFinaliCumuloModel;
 import siap.siep.util.SIEPLookupRemote;
 
 /**
- * <p>
- * Title: ActRicercaProvvedimenti
- * </p>
- * <p>
  * Description: Classe Action per la ricerca dei Provvedimenti associati al fascicolo corrente
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
 public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdineEsecuzione {
+	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String processRequest() throws Exception {
 
 		FascicoloSiepModel lFascicoloModel = null;
@@ -75,7 +68,10 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 		// Modifica del 12/04/2016
 		// Dall'elenco vengono scartate le Ordinanze (cod 03),
 		// i Decreti (cod 02), e le Sentenze (cod 01).
-		String[] lTipoProv = { "03", "02", "01" };
+		// Ticket#202101270113 - aggiunto il codice 50 tra i TipoProvv da escludere tra gli eventi del PM.
+		// E' un codice prettamente SIUS
+		String[] lTipoProv = { "03", "02", "01", "50" };
+		// FINE - Ticket#202101270113
 		// 26/03/2019 MEV70 - Esclusione degli Eventi con CodMotivo = "0670".
 		String[] lCodMotivo = { "0670", "esclude" };
 		Vector lVect = lCtrl.ExRicercaEventoByFascicoloSiepTipEventoNOTTipProvPaged(
@@ -92,14 +88,18 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 		if (lEveMod == null || lEveMod.getIdEvento() == null) {
 			lEveMod = new EventoModel();
 		}
+		siesLogger.debug("eventocancellareannullare = " + lEveMod);
 		setRequestAttribute("eventocancellareannullare", lEveMod);
 
 		BigDecimal CountRisultati;
 		if (isRequestParameterNullObj("CountRisultati")) {
 			// 26/03/2019 MEV70 - Esclusione degli Eventi con CodMotivo = "0670".
+			// Ticket#202101270113 - si adeguano le condizione della count alle condizioni della select
+			// impostando il filtro sull'ufficio + accorpati
 			CountRisultati = lCtrl.ExGetCountEventoByFascicoloSiepTipEventoNOTTipProvPaged(
-					lFascicoloModel.getIdFascicoloSiep(), getCodUfficioUtenteConnesso(), lTipoEvento,
-					lTipoProv, lCodMotivo);
+					lFascicoloModel.getIdFascicoloSiep(),
+					// getCodUfficioUtenteConnesso()
+					getUfficioUtenteConnesso(), lTipoEvento, lTipoProv, lCodMotivo);
 		} else
 			CountRisultati = getRequestBigDecimalParameter("CountRisultati");
 
@@ -132,8 +132,21 @@ public class ActRicercaProvvedimenti extends ActionSiap implements ICostantiOrdi
 		IDecodifiche lDecodifiche = SICOLookupRemote.getDecodificheRemote();
 		lModel.setContesto("MOTIVO_PROVVEDIMENTO");
 		// lModel.setCodiceAlternativo("REVOCA");
-		Collection lColMotivo = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+		// 2024.01.05 - Inverce di ricaricare tutta la tabella (1500 codici) ci si limita a quelli dei 2
+		// domini REVOCA e ESTINZIONE_REATO i soli di interesse per la jsp
+		// Collection lColMotivo = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+		// setRequestAttribute("AllMotivi", lColMotivo);
+		lModel.setContesto("MOTIVO_PROVVEDIMENTO");
+		lModel.setCodiceAlternativo("REVOCA");
+		Collection lColMotivoREVOCA = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+		lModel.setContesto("MOTIVO_PROVVEDIMENTO");
+		lModel.setCodiceAlternativo("ESTINZIONE_REATO");
+		Collection lColMotivoESTINZIONE = lDecodifiche.ExRicercaDecodificheOrdinatePerCodice(lModel);
+		Collection lColMotivo = new Vector();
+		lColMotivo.addAll(lColMotivoREVOCA);
+		lColMotivo.addAll(lColMotivoESTINZIONE);
 		setRequestAttribute("AllMotivi", lColMotivo);
+		// 2024.01.05 - FINE
 
 		// MEV 15 - Revisione SIGE
 		// Aggiunto parametro per identificare la funzione che richiama la maschera

@@ -32,8 +32,6 @@
     <title>[S.I.E.S.] - Ricerca Procedimenti per estremi Foglio Complementare</title>
     <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
     <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD_NEW%>"></script>
-    <script language="JavaScript" src="/html/gestisciUploadStampa2.js"></script>
- 
  </head>
 
   <BODY class="corpo">
@@ -89,7 +87,7 @@
     	}
     	
     	if (FiltroRicerca.getDataEmissioneFinale() != null) {
-    	    lCriterio2 = "Data Compilazione dal" + DateUtils.getDateToString(FiltroRicerca.getDataEmissioneIniziale(), "dd-MM-yyyy") + " al " + DateUtils.getDateToString(FiltroRicerca.getDataEmissioneFinale(), "dd-MM-yyyy");
+    	    lCriterio2 = "Data Compilazione dal " + DateUtils.getDateToString(FiltroRicerca.getDataEmissioneIniziale(), "dd-MM-yyyy") + " al " + DateUtils.getDateToString(FiltroRicerca.getDataEmissioneFinale(), "dd-MM-yyyy");
     	}
     }
     
@@ -101,6 +99,31 @@
      <tr>
 		<td class="lVerdeNB"><%=lCriterio2%> </td>
 	 </tr>
+
+<%-- Ticket#20230202011 - Aggiunto dettaglio delle tipologie --%>
+     <tr>
+		<td class="lVerdeNB">Tipologia foglio Complementare: </td>
+	 </tr>	 
+
+     <tr>
+		<td class="lVerdeNB">
+			<ul>
+				<% if (FiltroRicerca.isFcTrasmessi()) { %>
+					<li>Provvedimenti con Fogli Complementari</li>
+				<% } %>
+				<% if (FiltroRicerca.isFcIscrittiManualmente()) { %>
+					<li>Fogli Complementari Iscritti Manulamente o con altre opzioni</li>
+				<% } %>
+				<% if (FiltroRicerca.isProvvedimentiPriviFC()) { %>
+					<li>Provvedimenti Privi di Fogli Complementari</li>
+				<% } %>
+				<% if (FiltroRicerca.isFcAnnullati()) { %>
+					<li>Fogli complementari annullati</li>
+				<% } %>
+			</ul>
+		</td> 
+ 	 </tr>	
+<%-- Ticket#20230202011 - FINE --%>
 
      <tr>
  		<td class="lNoBord"><font class="label"> <%=FiltroRicerca.getDescCalcoli() %></font></td>
@@ -121,6 +144,7 @@
     <%
     Iterator <StatisticheFogliComplementariModel>itProvv=Provvedimenti.iterator();
     BigDecimal lastIdFascSIGE = null;
+    String lastAnnoNumeroFC = null;
     while (itProvv.hasNext()) {
     	StatisticheFogliComplementariModel model=itProvv.next();
     	
@@ -142,6 +166,18 @@
     		lastIdFascSIGE = model.getIdFascicolo();
     	}
     	// Ticket#20210514016 - Fine
+    	
+    	// Ticket#20230202011 - Gestita la visualizzazione in caso di + fogli complementari sullo stesso
+    	//                      provvedimento (uno valido e N annullati. Visualizzava solo il primo annullato)
+    	if (   lastAnnoNumeroFC!=null && model.getAnnoNumeroFoglioComplementare()!=null 
+    	    && !lastAnnoNumeroFC.equals(model.getAnnoNumeroFoglioComplementare())
+    	   )
+    	{
+    		dataFoglioComplementare = model.getDataFoglioComplementare();
+    	 	esito = model.getDescrEsito();
+    	}
+    	lastAnnoNumeroFC = model.getAnnoNumeroFoglioComplementare();
+    	// Ticket#20230202011 - FINE
    %>
    
    <tr>

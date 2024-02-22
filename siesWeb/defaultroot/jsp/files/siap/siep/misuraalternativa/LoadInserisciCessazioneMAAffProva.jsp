@@ -122,6 +122,8 @@ function ListaIstitutoDetenzione(a_formname,a_fieldname,a_field2) {
 }
 
 function VisualizzaCalcoli() {
+	<%-- Ticket#202307240122 si mette in try catch --%>
+try {
 	if (document.LoadInserisciMisuraAlternativa.checkPenaRideterminata.checked == true) {
      	document.getElementById("idTR1").style.display = "block";
      	document.getElementById("idTR2").style.display = "block";
@@ -138,7 +140,8 @@ function VisualizzaCalcoli() {
 		} catch(err) {
 			
 		}
-  	}      
+  	}
+} catch(err) {}	
 }
 
 var strOggettiDecisione = "<%=strOggettiDecisione%>";
@@ -572,6 +575,23 @@ if (!lPosizione.isLibero()) {
 <%
 	}
 %>
+
+	<%-- Ticket#202307240122 - Se seconda form sul cambio radio precarico sempre la data inserita nella prima form se presente --%>
+	<% 
+		if (misuraalternativa != null && misuraalternativa.getDataIngressoIstituto() != null) {
+	%>
+		var mese   = <%=DateUtils.getDateToString(misuraalternativa.getDataIngressoIstituto(),"MM")%>;
+		var giorno = <%=DateUtils.getDateToString(misuraalternativa.getDataIngressoIstituto(),"dd")%>;
+		var anno   = <%=DateUtils.getDateToString(misuraalternativa.getDataIngressoIstituto(),"yyyy")%>;
+	   	if (mese < 10)
+			mese = '0' + mese;
+	   	if (giorno < 10)
+	    	giorno = '0' + giorno;
+	<%
+		} 
+	%>
+	<%-- Ticket#202307240122 - FINE --%>
+
 	if (document.LoadInserisciMisuraAlternativa.tipo[0].checked == true) {
 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INGRESSO_ISTITUTO%>.value = "";
 		document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INGRESSO_ISTITUTO%>.value = "";
@@ -586,6 +606,17 @@ if (!lPosizione.isLibero()) {
 <%
    	}
 %>
+<%-- Ticket#202307240122 --%>
+<%
+if (misuraalternativa != null && misuraalternativa.getDataIngressoIstituto() != null) {
+%>
+	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INGRESSO_ISTITUTO%>.value = giorno;
+	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INGRESSO_ISTITUTO%>.value = mese;
+	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INGRESSO_ISTITUTO%>.value = anno;
+<%
+	}
+%>
+<%-- Ticket#202307240122 - FINE --%>
 	}
 <%
 } // chiudo if (!lPosizione.isLibero())

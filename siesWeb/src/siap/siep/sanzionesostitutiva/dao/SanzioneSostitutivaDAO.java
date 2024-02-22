@@ -109,7 +109,9 @@ public class SanzioneSostitutivaDAO extends SIAPTableDAO
                                          getCodUfficioAggiornamento() ,
                                          "",
                                          getPenComIdPenaComplessiva() ,
-    									 getSanzionePecuniariaAmmenda() );
+    									 getSanzionePecuniariaAmmenda(),
+    									 ""
+    									 );
   }
 
   public void setDAOFromModel(SanzioneSostitutivaModel aModel) throws DAOException
