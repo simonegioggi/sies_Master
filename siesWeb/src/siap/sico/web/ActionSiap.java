@@ -14,6 +14,16 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.security.model.FunctionModel;
+import f3b.security.model.ProfileModel;
+import f3b.util.DateUtils;
+import f3b.util.F3BException;
+import f3b.web.Action;
+import f3b.web.IWebConstants;
+import f3b.web.RedirectTo;
+import f3b.web.util.MultipartContent;
+import f3b.web.util.TikaParser;
 import siap.sico.cssa.controller.ICSSA;
 import siap.sico.cssa.model.CSSAModel;
 import siap.sico.decodifiche.controller.IComune;
@@ -47,34 +57,21 @@ import siap.siepe.fascicolo.model.FascicoloSiepeEstesoModel;
 import siap.sige.fascicolo.model.FascicoloSigeEstesoModel;
 import siap.sius.fascicolo.model.FascicoloGPModel;
 import siap.web.ISIAPCostantiWeb;
-import f3b.log.LogF3B;
-import f3b.security.model.FunctionModel;
-import f3b.security.model.ProfileModel;
-import f3b.util.DateUtils;
-import f3b.util.F3BException;
-import f3b.web.Action;
-import f3b.web.IWebConstants;
-import f3b.web.RedirectTo;
-import f3b.web.util.MultipartContent;
-import f3b.web.util.TikaParser;
 
 /**
- * <p>
- * Title: Action
- * </p>
- * <p>
- * Description: Azione padre delle classi figlie ActXxxx. Questa classe mette a disposizione alle classi
- * figlie i metodi per estrarre i dati dagli oggetti <code>session</code> e <code>request</code>, inoltre cosa
- * fondamentale ha la responsabilità di caricare dinamicamente la classe azione figlia, metodo direttamente
- * invocato dalla <code>Main.jsp</code>.
- * </p>
+ * Title: ActionSiap 
+ * Description: Azione padre delle classi figlie ActXxxx. Questa classe mette a disposizione
+ * alle classi figlie i metodi per estrarre i dati dagli oggetti <code>session</code> e <code>request</code>,
+ * inoltre cosa fondamentale ha la responsabilità di caricare dinamicamente la classe azione figlia, metodo
+ * direttamente invocato dalla <code>Main.jsp</code>.
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActionSiap extends Action {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 	// [FT] - 03/08/2016 - MAC_LOG - Commento la dichiarazione di mLog in favore della variabile siesLogger
-//	static Logger mLog = LogF3B.getLogger();
+	// static Logger mLog = LogF3B.getLogger();
 
 	/**
 	 * Costruttore di classe.
@@ -85,7 +82,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Costruttore con copia
-	 * 
+	 *
 	 * @param aAct
 	 */
 	public ActionSiap(Action aAct) {
@@ -95,8 +92,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Inserisce nella request l'elenco delle fuzioni figlie della funzione indicata e filtrate in base al
 	 * profilo dell'utente connesso.
-	 * <p>
-	 * 
+	 *
 	 * @param aIdFunction
 	 *            id della funzione padre
 	 * @throws F3BException
@@ -104,12 +100,13 @@ public class ActionSiap extends Action {
 	 */
 	public void setFunctionsAvailableToRequest(BigDecimal aIdFunction) throws F3BException {
 
-		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(
+				ICostantiSecurity.SESSION_UTENTE_CONNESSO);
 
 		// SecurityController lSctrl = new SecurityController();
 		ISecurity lSctrl = SICOLookupRemote.getSecurityRemote();
-		Collection lCollFun = lSctrl.getFunFiglieByCodProfilo(
-				lUtenteConnesso.getUserProfile().getProfileId(), aIdFunction);
+		Collection lCollFun = lSctrl.getFunFiglieByCodProfilo(lUtenteConnesso.getUserProfile().getProfileId(),
+				aIdFunction);
 
 		setRequestAttribute(ICostantiSecurity.FUN_FIGLIE, lCollFun);
 	}
@@ -117,8 +114,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Inserisce nella request l'elenco delle fuzioni figlie dell'azione indicata e filtrate in base al
 	 * profilo dell'utente connesso.
-	 * <p>
-	 * 
+	 *
 	 * @param aNameAction
 	 *            nome dell'azione padre
 	 * @throws F3BException
@@ -128,16 +124,17 @@ public class ActionSiap extends Action {
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		// siesLogger.debug("Action setFunctionsAvailableToRequest");
 
-		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(
+				ICostantiSecurity.SESSION_UTENTE_CONNESSO);
 
 		// ---> Inizio Blocco per HELPONLINE
 		if (isSessionAttributeNullObj("HelpPage")) {
 			if (lUtenteConnesso.getUserProfile().getProfileId().intValue() == 90
 					|| lUtenteConnesso.getUserProfile().getProfileId().intValue() == 99) {
 				setSessionAttribute("HelpPage", "/help/AMM_Pagina_Iniziale_Titolo.htm");
-			} else if (lUtenteConnesso.getUserProfile().isSiep() == true) {
+			} else if (lUtenteConnesso.getUserProfile().isSiep()) {
 				setSessionAttribute("HelpPage", "/help/T_UNDER_CONSTRUCTION.htm");
-			} else if (lUtenteConnesso.getUserProfile().isSius() == true) {
+			} else if (lUtenteConnesso.getUserProfile().isSius()) {
 				setSessionAttribute("HelpPage", "/help/SIUS_Pagina_Iniziale_Titolo.htm");
 			} else {
 				setSessionAttribute("HelpPage", "/help/T_UNDER_CONSTRUCTION.htm");
@@ -175,8 +172,8 @@ public class ActionSiap extends Action {
 		}
 
 		ISecurity lSctrl = SICOLookupRemote.getSecurityRemote();
-		Collection lCollFun = lSctrl.getFunFiglieByCodProfilo(
-				lUtenteConnesso.getUserProfile().getProfileId(), lFun.getFunctionId());
+		Collection lCollFun = lSctrl.getFunFiglieByCodProfilo(lUtenteConnesso.getUserProfile().getProfileId(),
+				lFun.getFunctionId());
 
 		setRequestAttribute(ICostantiSecurity.FUN_FIGLIE, lCollFun);
 	}
@@ -185,8 +182,7 @@ public class ActionSiap extends Action {
 	 * Torna la funzione associata all'azione richiesta cercandola tra quelle in cui l'utente connesso è
 	 * abilitato. In questo modo è posssible verificare se chi sta chiedendo una funzione è abilitato ad
 	 * eseguirla.
-	 * <p>
-	 * 
+	 *
 	 * @param aNameAction
 	 *            nome dell'azione.
 	 * @return Il model delle funzioni.
@@ -197,23 +193,23 @@ public class ActionSiap extends Action {
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
 		// siesLogger.debug("Action getFunctionByNameAction");
 
-		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO);
+		UtenteModel lUtenteConnesso = (UtenteModel) getSessionAttribute(
+				ICostantiSecurity.SESSION_UTENTE_CONNESSO);
 
 		// SecurityController lSctrl = new SecurityController();
 		ISecurity lSctrl = SICOLookupRemote.getSecurityRemote();
-		FunctionModel lFun = lSctrl.getFunzioneByAzioneCodProfilo(aNameAction, lUtenteConnesso
-				.getUserProfile().getProfileId());
+		FunctionModel lFun = lSctrl.getFunzioneByAzioneCodProfilo(aNameAction,
+				lUtenteConnesso.getUserProfile().getProfileId());
 		if (lFun == null)
-			throw new F3BException(F3BException.USER_MESSAGE, "Funzione '" + aNameAction
-					+ "' non disponibile per il profilo abilitato!");
+			throw new F3BException(F3BException.USER_MESSAGE,
+					"Funzione '" + aNameAction + "' non disponibile per il profilo abilitato!");
 
 		return lFun;
 	}
 
 	/**
 	 * Ritorna i dati del Comune dalla descrizione, non effettua controllo omonimia.
-	 * <p>
-	 * 
+	 *
 	 * @param aDescrComune
 	 *            decrizione comune
 	 * @return istanza del ComuneModel.
@@ -251,8 +247,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna i dati del Comune dalla descrizione, effettuando controllo omonimia.
-	 * <p>
-	 * 
+	 *
 	 * @param aDescrComune
 	 *            decrizione comune
 	 * @return istanza del ComuneModel.
@@ -288,15 +283,15 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna i dati del Comune dal codice. Risolve il problema dei comuni omonimi.
-	 * <p>
-	 * 
+	 *
 	 * @param aCodComune
 	 *            codice comune
 	 * @return istanza del ComuneModel.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
 	 */
-	protected ComuneModel getDatiComuneByCodDescr(String aCodComune, String aDescrComune) throws F3BException {
+	protected ComuneModel getDatiComuneByCodDescr(String aCodComune, String aDescrComune)
+			throws F3BException {
 
 		ComuneModel lComMod = new ComuneModel();
 
@@ -326,8 +321,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna l'Ufficio dal tipo ufficio, codice comune
-	 * <p>
-	 * 
+	 *
 	 * @param aCodTipoUfficio
 	 *            codice del tipo ufficio.
 	 * @param aCodComune
@@ -345,16 +339,18 @@ public class ActionSiap extends Action {
 		return lUffMod.getCodUfficio();
 	}
 
-  protected UfficioModel getUfficioByCodTipoUfficioDescrComune(String aCodTipoUfficio, String aDescrComune) throws F3BException
-  {
-    IUfficio lUff = SICOLookupRemote.getUfficioRemote();
-    UfficioModel lUffMod = lUff.getUfficioByCodTipoUffDescrComune(aCodTipoUfficio.toUpperCase(), aDescrComune.toUpperCase());
+	protected UfficioModel getUfficioByCodTipoUfficioDescrComune(String aCodTipoUfficio, String aDescrComune)
+			throws F3BException {
+		IUfficio lUff = SICOLookupRemote.getUfficioRemote();
+		UfficioModel lUffMod = lUff.getUfficioByCodTipoUffDescrComune(aCodTipoUfficio.toUpperCase(),
+				aDescrComune.toUpperCase());
 
-    return lUffMod;
-  }
+		return lUffMod;
+	}
+
 	/**
 	 * Ritorna il model ufficio del codice ufficio passato come argomento.
-	 * 
+	 *
 	 * @param aCodUfficio
 	 *            Codice ufficio per il quale puntare al model ufficio
 	 * @return l'intero model dell'ufficio
@@ -370,51 +366,49 @@ public class ActionSiap extends Action {
 		return lUfficio;
 	}
 
-  /**
+	/**
 	 * Restituisce i dati dell'ufficio di origine di un procedimento accorpato noti l'accorpante e
 	 * l'incremento della chiave fascicolo
-	 * 
-   * @param aCodUfficioAccorpante
-   * @param aIncremento
-   * @return
-   * @throws F3BException
-   */
+	 *
+	 * @param aCodUfficioAccorpante
+	 * @param aIncremento
+	 * @return
+	 * @throws F3BException
+	 */
 	protected UfficioModel getUfficioAccorpatoByCodAccorpanteIncrement(String aCodUfficioAccorpante,
 			String aIncremento) throws F3BException {
-    UfficioModel lUfficio = new UfficioModel();
-    
-    UfficioAccorpatoUtils lUffAccUtils = new UfficioAccorpatoUtils ();
+		UfficioModel lUfficio = new UfficioModel();
+
+		UfficioAccorpatoUtils lUffAccUtils = new UfficioAccorpatoUtils();
 		lUfficio = lUffAccUtils.getUfficioAccorpatoByCodAccorpanteIncrement(aCodUfficioAccorpante,
 				aIncremento);
 
-    return lUfficio;
-  } 
-  
-  /**
+		return lUfficio;
+	}
+
+	/**
 	 * Restituisce i dati dell'ufficio Accorpato Model, noti l'accorpante e la nuova chiave fascicolo
-	 * 
-   * @param aCodUfficioAccorpante
-   * @param aChiaveProgr
-   * @return UfficioAccorpatoModel, null se il progressivo non è accorpato
-   * @throws F3BException
-   */
+	 *
+	 * @param aCodUfficioAccorpante
+	 * @param aChiaveProgr
+	 * @return UfficioAccorpatoModel, null se il progressivo non è accorpato
+	 * @throws F3BException
+	 */
 	protected UfficioAccorpatoModel getUfficioAccorpatoByCodAccorpanteProgr(String aCodUfficioAccorpante,
 			BigDecimal aChiaveProgr) throws F3BException {
-    UfficioAccorpatoModel lAccorpato = null;
+		UfficioAccorpatoModel lAccorpato = null;
 
-    UfficioAccorpatoUtils lUffAccUtils = new UfficioAccorpatoUtils ();
-    
-		lAccorpato = lUffAccUtils
-				.getUfficioAccorpatoByCodAccorpanteProgr(aCodUfficioAccorpante, aChiaveProgr);
-    
-    return lAccorpato;
-  } 
-  
-  
+		UfficioAccorpatoUtils lUffAccUtils = new UfficioAccorpatoUtils();
+
+		lAccorpato = lUffAccUtils.getUfficioAccorpatoByCodAccorpanteProgr(aCodUfficioAccorpante,
+				aChiaveProgr);
+
+		return lAccorpato;
+	}
+
 	/**
 	 * Ritorno l'Ufficio dell'utente connesso
-	 * <p>
-	 * 
+	 *
 	 * @return l'Ufficio dell'utente connesso
 	 * @throws F3BException
 	 */
@@ -427,8 +421,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna il codice ufficio dell'utente connesso
-	 * <p>
-	 * 
+	 *
 	 * @return cod ufficio
 	 * @throws F3BException
 	 */
@@ -441,8 +434,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna lo UserId dell'utente connesso
-	 * <p>
-	 * 
+	 *
 	 * @return UserId
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
@@ -456,8 +448,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna l'utente connesso
-	 * <p>
-	 * 
+	 *
 	 * @return UserId
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
@@ -471,8 +462,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna il codice comune dell'utente connesso
-	 * <p>
-	 * 
+	 *
 	 * @return cod comune
 	 * @throws F3BException
 	 *             propaga errore di eccezione.
@@ -486,8 +476,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna il codice distretto dell'utente connesso
-	 * <p>
-	 * 
+	 *
 	 * @return il codice del distretto dell'utente connesso.
 	 * @throws F3BException
 	 *             propaga eventuali errori di eccezione.
@@ -501,8 +490,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Ritorna l'Id del CSSA passandogli il Comune.
-	 * <p>
-	 * 
+	 *
 	 * @param aDescComune
 	 *            Descrizione Comune
 	 * @return Id CSSA
@@ -520,7 +508,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Metodo che scrive il log del sistema
-	 * 
+	 *
 	 * @param aNameAction
 	 * @throws F3BException
 	 */
@@ -544,7 +532,7 @@ public class ActionSiap extends Action {
 		if (!isSessionAttributeNullObj("UtenteConnesso")) {
 
 			UtenteModel lUtenteMod = (UtenteModel) getSessionAttribute("UtenteConnesso");
-			ProfileModel lProfilo = (ProfileModel) lUtenteMod.getUserProfile();
+			ProfileModel lProfilo = lUtenteMod.getUserProfile();
 			String lIdFasc = "", lIdSogg = "";
 
 			if (lProfilo.isSiep() && !this.isSessionAttributeNullObj("fascicolo")) {
@@ -572,7 +560,8 @@ public class ActionSiap extends Action {
 				}
 			}
 			if (lProfilo.isSige() && !this.isSessionAttributeNullObj("FascicoloSigeEsteso")) {
-				FascicoloSigeEstesoModel fasSigeEsteso = (FascicoloSigeEstesoModel) getSessionAttribute("FascicoloSigeEsteso");
+				FascicoloSigeEstesoModel fasSigeEsteso = (FascicoloSigeEstesoModel) getSessionAttribute(
+						"FascicoloSigeEsteso");
 				if (fasSigeEsteso.getFascicoloSige() != null
 						&& fasSigeEsteso.getFascicoloSige().getIdFascicoloSige() != null
 						&& fasSigeEsteso.getSoggetto().getIdSoggetto() != null) {
@@ -587,7 +576,8 @@ public class ActionSiap extends Action {
 			// lFasSiepeEstesoMod = (FascicoloSiepeEstesoModel)getSessionAttribute("FascicoloSiepeEsteso");
 
 			if (lProfilo.isSiepe() && !this.isSessionAttributeNullObj("FascicoloSiepeEsteso")) {
-				FascicoloSiepeEstesoModel fasSiepeEsteso = (FascicoloSiepeEstesoModel) getSessionAttribute("FascicoloSiepeEsteso");
+				FascicoloSiepeEstesoModel fasSiepeEsteso = (FascicoloSiepeEstesoModel) getSessionAttribute(
+						"FascicoloSiepeEsteso");
 				lIdFasc = fasSiepeEsteso.getFascicoloSiepe().getIdFascicoloSiepe().toString();
 				lIdSogg = fasSiepeEsteso.getSoggetto().getIdSoggetto().toString();
 				log_rec += " , [ ID_FASCICOLO_SIEPE ] = [";
@@ -716,7 +706,7 @@ public class ActionSiap extends Action {
 				if (key.toLowerCase().equals("password")) {
 					log_rec += " , [password] = [******]";
 				} else {
-					String tmp = (String) lReqMultipart.getParameter(key);
+					String tmp = lReqMultipart.getParameter(key);
 					log_rec += " , [" + key + "] = [";
 					String value = tmp;
 					log_rec += value + "]";
@@ -730,7 +720,7 @@ public class ActionSiap extends Action {
 
 		// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 		// LogF3B.getLogger()
-		// siesLogger.debug("log_rec  = "+log_rec);
+		// siesLogger.debug("log_rec = "+log_rec);
 		// 15/11/2010 Controllo Stringa Record > 4000
 		if (log_rec.length() > 4000) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -749,7 +739,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Compone la Stringa completa di una request NON multipart e NON con array di valori...
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -760,8 +750,8 @@ public class ActionSiap extends Action {
 		Iterator itx = lKeys.iterator();
 		while (itx.hasNext()) {
 			String key = (String) itx.next();
-			if (!(key.equals(IWebConstants.NUM_PAGE) || key.equals(IWebConstants.LINK_RITORNO) || key
-					.equals(IWebConstants.FLAG_RITORNO)))
+			if (!(key.equals(IWebConstants.NUM_PAGE) || key.equals(IWebConstants.LINK_RITORNO)
+					|| key.equals(IWebConstants.FLAG_RITORNO)))
 				lRequest += key + "=" + getRequestStringParameter(key) + "&";
 		}
 
@@ -771,7 +761,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Compone la Stringa completa di una request NON multipart e NON con array di valori... Vengono saltati i
 	 * 2 parametri utilizzati nella gestione del ritorno, che sono: TornaQui, StoTornando.
-	 * 
+	 *
 	 * @return String alterata
 	 * @throws F3BException
 	 */
@@ -816,8 +806,8 @@ public class ActionSiap extends Action {
 		}
 
 		if (lLinkRet != null)
-			setRequestAttribute(IWebConstants.GOTO_PAGE, "" + lLinkRet + "&" + IWebConstants.FLAG_RITORNO
-					+ "=1");
+			setRequestAttribute(IWebConstants.GOTO_PAGE,
+					"" + lLinkRet + "&" + IWebConstants.FLAG_RITORNO + "=1");
 		else if (aActDopo != null && aActDopo.trim().length() > 1) {
 			// Prepara la "pagina" di destinAction nel caso sia stata passata l'action.
 			RedirectTo lRedirigi = new RedirectTo();
@@ -833,7 +823,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Questa funzione estrae se esiste il link al ritorno e lo assegna alla pagina GOTO_PAGE oltre a
 	 * restituirla come ritorno.
-	 * 
+	 *
 	 * @return String:
 	 * @throws Exception
 	 */
@@ -979,7 +969,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Inserisce un nuovo elemento nello stack in sessione.
-	 * 
+	 *
 	 * @param aValore
 	 * @throws Exception
 	 */
@@ -1012,7 +1002,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Estrae un elemento dallo stack in sessione tramite un peek.
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -1045,14 +1035,14 @@ public class ActionSiap extends Action {
 
 	/**
 	 * VErifica che il fascicolo si adi competenza dell'ufficio
-	 * 
+	 *
 	 * @return vero se il fascicolo è di competenza
 	 * @throws F3BException
 	 */
 	public boolean isFascicoloSiepDiCompetenza() throws F3BException {
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
-		UtenteModel lUtenteMod = new UtenteModel((UtenteModel) getSession().getAttribute(
-				ICostantiSecurity.SESSION_UTENTE_CONNESSO));
+		UtenteModel lUtenteMod = new UtenteModel(
+				(UtenteModel) getSession().getAttribute(ICostantiSecurity.SESSION_UTENTE_CONNESSO));
 		String lUffUtente = lUtenteMod.getUfficioUtente().getCodUfficio();
 
 		if (lFas != null) {
@@ -1102,7 +1092,7 @@ public class ActionSiap extends Action {
 	/**
 	 * metodo per vedere se l'evento precedente sia validato o meno -- 30-03-05 -- Dario -- luciana SE
 	 * CodTipoEvento = 05(Richiesta Istruttoria) NON DEVE FARE IL CONTROLLO
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidato() throws F3BException {
@@ -1120,19 +1110,23 @@ public class ActionSiap extends Action {
 		) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
-/* 
+				/*
 				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
-				 * Numero MAC : 20200220017
-				 * Autore    : monica
-				 * Data      : 20/feb/2020
-				 * Branch    : 12.1
+				 * Numero MAC : 20200220017 Autore : monica Data : 20/feb/2020 Branch : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
-				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
-				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null
+						? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento()
+						: "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo()
+						: "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null
+						? " con data inserimento del "
+								+ DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy") + "."
+						: "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
-				//***** FINE INTERVENTO 20200220017 *****//
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione."
+								+ infoEventoNONValidato);
+				// ***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1142,7 +1136,7 @@ public class ActionSiap extends Action {
 	 * DEVE FARE IL CONTROLLO Se evento tipo 0284 (Decisioni del GE - Applicazione Amnistia / Indulto ) 0285
 	 * (Decisioni del GE - Applicazione depenalizzazione) 0286 (Decisioni del GE - Applicazione
 	 * incostituzionalita')
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidatoAnnotazioniManuali() throws F3BException {
@@ -1164,19 +1158,23 @@ public class ActionSiap extends Action {
 		) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
-/* 
+				/*
 				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
-				 * Numero MAC : 20200220017
-				 * Autore    : monica
-				 * Data      : 20/feb/2020
-				 * Branch    : 12.1
+				 * Numero MAC : 20200220017 Autore : monica Data : 20/feb/2020 Branch : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
-				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
-				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null
+						? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento()
+						: "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo()
+						: "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null
+						? " con data inserimento del "
+								+ DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy") + "."
+						: "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
-				//***** FINE INTERVENTO 20200220017 *****//
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione."
+								+ infoEventoNONValidato);
+				// ***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1185,7 +1183,7 @@ public class ActionSiap extends Action {
 	 * metodo specializzato per il cumulo vedere se l'evento precedente sia validato - 19-05-05 - Dario -
 	 * Luciana SE CodTipoEvento = 05(Richiesta Istruttoria) e CodMotivo = 0222, 0223, 0224, 0277
 	 * (Provvedimento di Esecuzione di Pene Concorrenti) NON DEVE FARE IL CONTROLLO
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidatoPerCumulo() throws F3BException {
@@ -1194,26 +1192,30 @@ public class ActionSiap extends Action {
 		EventoModel lEveMod = new EventoModel();
 		lEveMod = lCtrl.ExRicercaEventoByFascicoloSiepDescUfficioConnesso(lFas.getIdFascicoloSiep(),
 				this.getCodUfficioUtenteConnesso());
-  
+
 		if (lEveMod != null && lEveMod.getCodMotivo() != null && !lEveMod.getCodMotivo().equals("0222")
 				&& !lEveMod.getCodMotivo().equals("0223") && !lEveMod.getCodMotivo().equals("0224")
 				&& !lEveMod.getCodMotivo().equals("0277") && lEveMod.getCodTipoEvento() != null
 				&& !lEveMod.getCodTipoEvento().equals("05")) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
-/* 
+				/*
 				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
-				 * Numero MAC : 20200220017
-				 * Autore    : monica
-				 * Data      : 20/feb/2020
-				 * Branch    : 12.1
+				 * Numero MAC : 20200220017 Autore : monica Data : 20/feb/2020 Branch : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
-				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
-				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null
+						? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento()
+						: "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo()
+						: "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null
+						? " con data inserimento del "
+								+ DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy") + "."
+						: "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
-				//***** FINE INTERVENTO 20200220017 *****//
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione."
+								+ infoEventoNONValidato);
+				// ***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1222,7 +1224,7 @@ public class ActionSiap extends Action {
 	 * metodo specializzato per la pena cumulo vedere se l'evento precedente sia validato SE CodTipoEvento =
 	 * 01(Provvedimento) e CodMotivo = 0222, 0223, 0224, 0277 (Provvedimento di Esecuzione di Pene
 	 * Concorrenti) NON DEVE FARE IL CONTROLLO
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected void isEventoNonValidatoPerPenaCumulo() throws F3BException {
@@ -1238,19 +1240,23 @@ public class ActionSiap extends Action {
 				&& !lEveMod.getCodTipoEvento().equals("01")) {
 			if (lEveMod.getFlagDocumentoRegistrato() == null
 					|| "N".equals(lEveMod.getFlagDocumentoRegistrato())) {
-				/* 
+				/*
 				 * ISSUE MAC : aggiunte info del provvedimento non validato nel messaggio dell'eccezione
-				 * Numero MAC : 20200220017
-				 * Autore    : monica
-				 * Data      : 20/feb/2020
-				 * Branch    : 12.1
+				 * Numero MAC : 20200220017 Autore : monica Data : 20/feb/2020 Branch : 12.1
 				 */
-				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null ? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento() : "";
-				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo() : "";
-				infoEventoNONValidato += lEveMod.getDataEmissione() != null ? " con data inserimento del " + DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy")  + "." : "";
+				String infoEventoNONValidato = lEveMod.getDescrTipoProvvedimento() != null
+						? " L'evento non validato è il seguente: " + lEveMod.getDescrTipoProvvedimento()
+						: "";
+				infoEventoNONValidato += lEveMod.getDescrMotivo() != null ? " " + lEveMod.getDescrMotivo()
+						: "";
+				infoEventoNONValidato += lEveMod.getDataEmissione() != null
+						? " con data inserimento del "
+								+ DateUtils.getDateToString(lEveMod.getDataEmissione(), "dd-MM-yyyy") + "."
+						: "";
 				throw new F3BException(F3BException.USER_MESSAGE,
-						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione." + infoEventoNONValidato);
-				//***** FINE INTERVENTO 20200220017 *****//
+						"Esiste un evento NON validato. Validarlo o cancellarlo e rieseguire la funzione."
+								+ infoEventoNONValidato);
+				// ***** FINE INTERVENTO 20200220017 *****//
 			}
 		}
 	}
@@ -1258,7 +1264,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Verifica se l'ultimo evento inserito non è validato, ma escude dal controllo il computo in quanto
 	 * potrebbe non essere validato.
-	 * 
+	 *
 	 * @throws F3BException
 	 */
 	protected EventoModel isEventoNonValidatoRidetPenaAltro(EventoModel aEveComputo) throws F3BException {
@@ -1287,14 +1293,15 @@ public class ActionSiap extends Action {
 		// "N".equals(lEveMod.getFlagDocumentoRegistrato()))
 		// {
 		// throw new F3BException(F3BException.USER_MESSAGE,
-		// "Esiste un evento '"+lEveMod.getDescrTipoProvvedimento()+" - "+lEveMod.getDescrMotivo()+"' NON validato. Validarlo o cancellarlo e rieseguire la funzione.");
+		// "Esiste un evento '"+lEveMod.getDescrTipoProvvedimento()+" - "+lEveMod.getDescrMotivo()+"' NON
+		// validato. Validarlo o cancellarlo e rieseguire la funzione.");
 		// }
 		// }
 	}
 
 	/**
 	 * metodo per vedere se il fascicolo sia validato o meno
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -1315,7 +1322,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * metodo per vedere se il fascicolo sia archiviato/definito
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -1377,7 +1384,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * calcolaMagistrato
-	 * 
+	 *
 	 * @return
 	 */
 	protected String calcolaMagistrato() throws F3BException {
@@ -1402,8 +1409,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * OverWrite del metodo "getFile" della classe padre Action oggetto InputStream.
-	 * <p>
-	 * 
+	 *
 	 * @param aParamName
 	 *            nome chiave del parametro nella request.
 	 * @return contenuto file come classe <code>InputStream</code>
@@ -1420,8 +1426,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * Metodo che esegue il parsing del file in upload.
-	 * <p>
-	 * 
+	 *
 	 * @param aParamName
 	 *            nome del campo del file in Upload
 	 * @throws F3BException
@@ -1430,8 +1435,8 @@ public class ActionSiap extends Action {
 		byte[] mBytes = getFileBytes(aParamName);
 
 		if (mBytes != null && mBytes.length > 0) {
-			TikaParser lTikaParser = new TikaParser(mBytes, getServletContext(), getRequestMultipart()
-					.getExtName(aParamName));
+			TikaParser lTikaParser = new TikaParser(mBytes, getServletContext(),
+					getRequestMultipart().getExtName(aParamName));
 
 			try {
 				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
@@ -1450,13 +1455,14 @@ public class ActionSiap extends Action {
 	/**
 	 * Metodo che si occupa di verificare se il record va loggato o meno. Inserire in questo metodo i criteri
 	 * per scartare eventuali loggature non significative. Da implementare
-	 * 
+	 *
 	 * @param aLogModel
 	 * @return
-	 * 
+	 *
 	 */
 	private boolean isRecordDaLoggare(LogAttivitaModel aLogModel) {
-		if (aLogModel.getAzioneContestoJava().equals("siap.siep.fascicolo.action.ActLoadDettaglioFascicolo")) {
+		if (aLogModel.getAzioneContestoJava()
+				.equals("siap.siep.fascicolo.action.ActLoadDettaglioFascicolo")) {
 
 		}
 
@@ -1466,7 +1472,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Metodo che in funzione della Action decide se loggare o meno un certo parametro. Serve per mettere un
 	 * filtro per le loggature doppie.
-	 * 
+	 *
 	 * @param aKey
 	 * @param aAction
 	 * @return
@@ -1489,7 +1495,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * metodo per vedere se il fascicolo sia nello stato "ISCRITTO"
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -1511,7 +1517,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * MEV 10 - filtro sui minorenni
-	 * 
+	 *
 	 * @param idSoggetto
 	 * @return
 	 * @throws F3BException
@@ -1537,8 +1543,9 @@ public class ActionSiap extends Action {
 	}
 
 	// MEV_9 aggiunto metodo
-	protected boolean isUfficoMonorenni() throws F3BException {		
-		Set<String> ufficiMinori = new HashSet<String>();
+	protected boolean isUfficioMinorenni() throws F3BException {
+
+		Set<String> ufficiMinori = new HashSet<>();
 
 		ufficiMinori.add("PMM");
 		ufficiMinori.add("DIBM");
@@ -1547,17 +1554,17 @@ public class ActionSiap extends Action {
 		ufficiMinori.add("CAPSM");
 		ufficiMinori.add("TDSM");
 		ufficiMinori.add("UDSM");
-		
+
 		UfficioModel ufficioUtente = getUfficioUtenteConnesso();
 		if (ufficiMinori.contains(ufficioUtente.getCodTipoUfficio()))
 			return true;
 		else
-			return false;		
+			return false;
 	}
 
 	/**
 	 * MEV10-s3: aggiunto metodo di estrazione campo
-	 * 
+	 *
 	 * @return
 	 * @throws F3BException
 	 */
@@ -1568,8 +1575,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * MEV10-s3: Ritorna l'Id del CSSA passandogli il Comune ed il tipo.
-	 * <p>
-	 * 
+	 *
 	 * @param aDescComune
 	 * @param aTipo
 	 * @return Id CSSA
@@ -1584,8 +1590,7 @@ public class ActionSiap extends Action {
 
 	/**
 	 * MEV 15 - Revisione SIGE Recupero il codice della funzione chiamante (menù verticale).
-	 * <p>
-	 * 
+	 *
 	 * @return codFunzione codice della funzione chiamante.
 	 * @throws F3BException
 	 *             propaga l'errore di eccezione.
@@ -1603,7 +1608,7 @@ public class ActionSiap extends Action {
 	/**
 	 * Controllo su Tabella Sentenza, per vedere se trattasi di fascicolo di MIS SIC icritta in Sentenza,
 	 * OPPURE se trattasi di fascicolo di MIS SIC iscritto Fuori Sentenza o di Misura Provvisoria
-	 * 
+	 *
 	 * @return il cod. tipo sentenza
 	 * @throws F3BException
 	 */
@@ -1611,7 +1616,7 @@ public class ActionSiap extends Action {
 		String TipoSent = "";
 		FascicoloSiepModel lFas = (FascicoloSiepModel) getSession().getAttribute("fascicolo");
 		ISentenza lCtrlS = SIEPLookupRemote.getSentenzaRemote();
-		SentenzaModel lSenMod = (SentenzaModel) lCtrlS.ExRicercaSentenzaByKey(lFas.getSenIdSentenza());
+		SentenzaModel lSenMod = lCtrlS.ExRicercaSentenzaByKey(lFas.getSenIdSentenza());
 		if (lSenMod != null && lSenMod.getIdSentenza() != null)
 			TipoSent = lSenMod.getCodTipoProvvedimento();
 

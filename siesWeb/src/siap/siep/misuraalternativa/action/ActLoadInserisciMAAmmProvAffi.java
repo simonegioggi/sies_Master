@@ -27,33 +27,22 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * <p>
  * Title: ActLoadInserisciMAAmmProvAffi
- * </p>
- * <p>
  * Description: Classe Action per la load inserisci di MisuraAlternativa
- * </p>
  *
  * Questa Action viene richiamata in due casi: - in fase di registrazione dell'Ammissione provvisoria alla
  * misura - dopo la registrazione del Verbale di sottoscrizione agli obblighi in fase di emissione dell'OS
  * (09)
- *
  * Nel primo caso la chiamata avviene dalla 'griglia' delle funzioni
  *
- *
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
  * @version 1.0
  */
 
 public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
+
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
 		String lRitorno = this.getAmmissioneProvvisoria();
 		if (!lRitorno.equals(""))
@@ -140,14 +129,14 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 
 		// setto il campo codice motivo
 		// MEV_9
-		//Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+		// Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
 		Option lOption = null;
-		if (isUfficoMonorenni())
+		if (isUfficioMinorenni())
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
-		else 
+		else
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
 		// MEV_9 - FINE
-		
+
 		setRequestAttribute("motivoProvv", "" + lOption);
 
 		setRequestAttribute("tipomisura", "AFFIDAMENTO");
@@ -157,4 +146,5 @@ public class ActLoadInserisciMAAmmProvAffi extends ActAmmissioneProvvisoria {
 
 		return PG_LOAD_INSERISCI_MA_AMM_PROVVISORIA;
 	}
+
 }

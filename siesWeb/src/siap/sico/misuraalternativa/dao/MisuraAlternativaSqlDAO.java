@@ -3,28 +3,18 @@ package siap.sico.misuraalternativa.dao;
 import java.math.BigDecimal;
 import java.sql.Connection;
 
-import siap.sico.evento.model.EventoModel;
-import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
-import siap.siep.posizione.model.PosizioneGiuridicaModel;
 import f3b.dao.DAOException;
 import f3b.dao.SqlDAO;
 import f3b.model.GenericModel;
 import f3b.util.DateUtils;
+import siap.sico.evento.model.EventoModel;
+import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
+import siap.siep.posizione.model.PosizioneGiuridicaModel;
 
 /**
- * <p>
  * Title: MisuraAlternativaSqlDAO
- * </p>
- * <p>
  * Description: Classe SqlDAO che rappresenta la tabella MisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 public class MisuraAlternativaSqlDAO extends SqlDAO {
@@ -200,9 +190,9 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 	/*
 	 * public void ricercaMisuraAlternativaByIdFascicolo(BigDecimal aKey) throws DAOException { String lSql =
 	 * getSqlQuery();
-	 * 
+	 *
 	 * lSql += " " + setCondizioniByIdFascicolo(aKey); lSql += setOrderMisuraDesc();
-	 * 
+	 *
 	 * setStatement(lSql); }
 	 */
 	{
@@ -300,6 +290,7 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 
 	public void ricercaMisuraAlternativaByIdFascicoloNaturaTipoMisuraDecisioneOrderDescData(BigDecimal aKey,
 			String[] aDecisione, String[] aNatura, String[] aTipoMisura) throws DAOException {
+
 		String lSql = getSqlQuery();
 
 		// inserisco l'evento x scartare le misure alternative annullate cherubini 21/04/2010
@@ -411,113 +402,105 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 	}
 
 	protected String getSqlQueryOrdinanza(BigDecimal aKey) {
+
 		String lStatement = new String("");
 
-		lStatement += "  SELECT  ";
-		lStatement += "  ID_MISURA_ALTERNATIVA,   ";
-		lStatement += "  COD_TIPO_DECISIONE,  ";
-		lStatement += "  COD_NATURA_DECISIONE,  ";
-		lStatement += "  u1.RV_MEANING DESCRUFFSORV,  ";
-		lStatement += "  COD_TIPO_MISURA,  ";
-		lStatement += "  DATA_DECISIONE,   ";
-		lStatement += "  MA.COD_MAGISTRATO,   ";
-		lStatement += "  COD_UFFICIO_SORVEGLIANZA, ";
-		lStatement += "  CSS_ID_CSSA,  ";
-		lStatement += "  DESCR_LUOGO_PROVA,  ";
-		lStatement += "  NUM_ANNI_MISURA, ";
-		lStatement += "  NUM_MESI_MISURA, ";
-		lStatement += "  NUM_GIORNI_MISURA, ";
-		lStatement += "  DATA_INIZIO_MISURA, ";
-		lStatement += "  DATA_FINE_MISURA, ";
-		lStatement += "  CHIAVE_ANNO_FASCICOLO_SIUS, ";
-		lStatement += "  PROV.RV_MEANING TIPODECISIONE, ";
-		lStatement += "  NAT.RV_MEANING NATURA, ";
-		lStatement += "  MPROV.RV_ABBREVIATION MISURA, ";
-		lStatement += "  CHIAVE_UFFICIO_FASCICOLO_SIUS, ";
+		lStatement += "SELECT ";
+		lStatement += "ID_MISURA_ALTERNATIVA, ";
+		lStatement += "COD_TIPO_DECISIONE, ";
+		lStatement += "COD_NATURA_DECISIONE, ";
+		lStatement += "u1.RV_MEANING DESCRUFFSORV, ";
+		lStatement += "COD_TIPO_MISURA, ";
+		lStatement += "DATA_DECISIONE, ";
+		lStatement += "MA.COD_MAGISTRATO, ";
+		lStatement += "COD_UFFICIO_SORVEGLIANZA, ";
+		lStatement += "CSS_ID_CSSA, ";
+		lStatement += "DESCR_LUOGO_PROVA, ";
+		lStatement += "NUM_ANNI_MISURA, ";
+		lStatement += "NUM_MESI_MISURA, ";
+		lStatement += "NUM_GIORNI_MISURA, ";
+		lStatement += "DATA_INIZIO_MISURA, ";
+		lStatement += "DATA_FINE_MISURA, ";
+		lStatement += "CHIAVE_ANNO_FASCICOLO_SIUS, ";
+		lStatement += "PROV.RV_MEANING TIPODECISIONE, ";
+		lStatement += "NAT.RV_MEANING NATURA, ";
+		lStatement += "MPROV.RV_ABBREVIATION MISURA, ";
+		lStatement += "CHIAVE_UFFICIO_FASCICOLO_SIUS, ";
 		// DARIO
-		lStatement += " UFFSOR.RV_MEANING DESCUFSORV, ";
-		lStatement += " COM.DESCRIZIONE DESCCOM, ";
-
-		lStatement += " TDSCOMP.RV_MEANING DESCUFFTDS, ";
-		lStatement += " COMTDSCOMP.DESCRIZIONE DESCCOMTDS, ";
-
-		lStatement += "  CHIAVE_PROGR_FASCICOLO_SIUS,   ";
-		lStatement += "  ANNO_REGISTRO, ";
-		lStatement += "  NUMERO_REGISTRO,  ";
-		lStatement += "  MA.COD_OPERATORE_INSERIMENTO,   ";
-		lStatement += "  MA.DATA_INSERIMENTO,  ";
-		lStatement += "  MA.COD_UFFICIO_INSERIMENTO,  ";
-		lStatement += "  MA.COD_OPERATORE_AGGIORNAMENTO,   ";
-		lStatement += "  MA.DATA_AGGIORNAMENTO, ";
-		lStatement += "  MA.COD_UFFICIO_AGGIORNAMENTO,  ";
-		lStatement += "  MA.FAS_SIE_ID_FASCICOLO_SIEP, 	 ";
-		lStatement += "  MA.EVE_ID_EVENTO , ";
-		lStatement += "  MA.NOTE , ";
-		lStatement += "  MA.DATA_SCARCERAZIONE,  ";
-		lStatement += "  MA.DATA_INGRESSO_ISTITUTO,  ";
-		lStatement += "  MA.COD_TIPO_UFFICIO_SCARCERAZIONE,  ";
-
+		lStatement += "UFFSOR.RV_MEANING DESCUFSORV, ";
+		lStatement += "COM.DESCRIZIONE DESCCOM, ";
+		lStatement += "TDSCOMP.RV_MEANING DESCUFFTDS, ";
+		lStatement += "COMTDSCOMP.DESCRIZIONE DESCCOMTDS, ";
+		lStatement += "CHIAVE_PROGR_FASCICOLO_SIUS, ";
+		lStatement += "ANNO_REGISTRO, ";
+		lStatement += "NUMERO_REGISTRO, ";
+		lStatement += "MA.COD_OPERATORE_INSERIMENTO, ";
+		lStatement += "MA.DATA_INSERIMENTO, ";
+		lStatement += "MA.COD_UFFICIO_INSERIMENTO, ";
+		lStatement += "MA.COD_OPERATORE_AGGIORNAMENTO, ";
+		lStatement += "MA.DATA_AGGIORNAMENTO, ";
+		lStatement += "MA.COD_UFFICIO_AGGIORNAMENTO, ";
+		lStatement += "MA.FAS_SIE_ID_FASCICOLO_SIEP, 	 ";
+		lStatement += "MA.EVE_ID_EVENTO , ";
+		lStatement += "MA.NOTE , ";
+		lStatement += "MA.DATA_SCARCERAZIONE, ";
+		lStatement += "MA.DATA_INGRESSO_ISTITUTO, ";
+		lStatement += "MA.COD_TIPO_UFFICIO_SCARCERAZIONE, ";
 		// DARIO
-		lStatement += "  MA.DATA_INIZIO_REVOCA,  ";
-		lStatement += "  MA.NUM_ANNI_REVOCA_RECLUSIONE,  ";
-		lStatement += "  MA.NUM_MESI_REVOCA_RECLUSIONE,  ";
-		lStatement += "  MA.NUM_GIORNI_REVOCA_RECLUSIONE,  ";
-		lStatement += "  MA.NUM_ANNI_REVOCA_ARRESTO,  ";
-		lStatement += "  MA.NUM_MESI_REVOCA_ARRESTO,  ";
-		lStatement += "  MA.NUM_GIORNI_REVOCA_ARRESTO,  ";
-		lStatement += "  MA.ANNO_ALTRO_TITOLO,  ";
-		lStatement += "  MA.NUM_ALTRO_TITOLO,  ";
-		lStatement += "  MA.DATA_ALTRO_TITOLO,  ";
-		lStatement += "  MA.COD_LUOGO_ALTRO_TITOLO,  ";
-		lStatement += "  LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, ";
-
-		lStatement += "  MA.COD_AUTORITA_ALTRO_TITOLO,  ";
-		lStatement += "  TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, ";
-
-		lStatement += "  MA.FLAG_UFFICIO_INSERIMENTO, ";
-		lStatement += "  MA.DATA_SCADENZA_PROROGA,MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, ";
-		lStatement += "  MA.FLAG_SITUAZIONE, ";
-		lStatement += "  MA.DATA_ESECUTIVITA, "; // MEV_9
-		lStatement += "  MA.FLAG_PERIODO_ESPIATO ";
-		
-		lStatement += "  FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT, CG_REF_CODES UFFSCA, ";
-		lStatement += "  CG_REF_CODES MPROV, CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
+		lStatement += "MA.DATA_INIZIO_REVOCA, ";
+		lStatement += "MA.NUM_ANNI_REVOCA_RECLUSIONE, ";
+		lStatement += "MA.NUM_MESI_REVOCA_RECLUSIONE, ";
+		lStatement += "MA.NUM_GIORNI_REVOCA_RECLUSIONE, ";
+		lStatement += "MA.NUM_ANNI_REVOCA_ARRESTO, ";
+		lStatement += "MA.NUM_MESI_REVOCA_ARRESTO, ";
+		lStatement += "MA.NUM_GIORNI_REVOCA_ARRESTO, ";
+		lStatement += "MA.ANNO_ALTRO_TITOLO, ";
+		lStatement += "MA.NUM_ALTRO_TITOLO, ";
+		lStatement += "MA.DATA_ALTRO_TITOLO, ";
+		lStatement += "MA.COD_LUOGO_ALTRO_TITOLO, ";
+		lStatement += "LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, ";
+		lStatement += "MA.COD_AUTORITA_ALTRO_TITOLO, ";
+		lStatement += "TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, ";
+		lStatement += "MA.FLAG_UFFICIO_INSERIMENTO, ";
+		lStatement += "MA.DATA_SCADENZA_PROROGA,MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, ";
+		lStatement += "MA.FLAG_SITUAZIONE, ";
+		lStatement += "MA.DATA_ESECUTIVITA, EV.COD_ESITO"; // MEV_9-SIEP: aggiunti 2 campi in estrazione
+		lStatement += "MA.FLAG_PERIODO_ESPIATO ";
+		lStatement += "FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT, CG_REF_CODES UFFSCA, ";
+		lStatement += "CG_REF_CODES MPROV, CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
 		// DARIO
-		lStatement += "  CG_REF_CODES UFFSOR, UFFICIO SORU, COMUNE COM, ";
-		lStatement += "  CG_REF_CODES TDSCOMP, UFFICIO TDSCOMUFF, COMUNE COMTDSCOMP, ";
-
-		lStatement += "  (SELECT U.COD_UFFICIO,UFF.RV_MEANING FROM CG_REF_CODES UFF, UFFICIO U WHERE UFF.RV_DOMAIN = 'TIPO_UFFICIO' AND UFF.RV_LOW_VALUE = U.COD_TIPO_UFFICIO) u1, ";
-		lStatement += "  (SELECT E.ID_EVENTO,MAX(E.DATA_INSERIMENTO) FROM EVENTO E WHERE E.COD_TIPO_PROVVEDIMENTO='03' AND E.FAS_SIE_ID_FASCICOLO_SIEP = "
-				+ aKey + "  GROUP BY E.ID_EVENTO) E1 ";
-		
-		lStatement += "  WHERE PROV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO'  ";
-		lStatement += "  AND NAT.RV_DOMAIN = 'NATURA_DECISIONE'   ";
-		lStatement += "  AND MPROV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO'   ";
-		lStatement += "  AND PROV.RV_LOW_VALUE = COD_TIPO_DECISIONE   ";
-		lStatement += "  AND NAT.RV_LOW_VALUE = COD_NATURA_DECISIONE   ";
-		lStatement += "  AND MPROV.RV_LOW_VALUE = COD_TIPO_MISURA   ";
-		lStatement += "  AND u1.COD_UFFICIO(+) = MA.COD_UFFICIO_SORVEGLIANZA   ";
-
-		lStatement += "  AND TIPO_AUTORITA.RV_DOMAIN = 'TIPO_UFFICIO' AND TIPO_AUTORITA.RV_LOW_VALUE = MA.COD_AUTORITA_ALTRO_TITOLO ";
-		lStatement += "  AND LUOGO_ALTRO.COD_COMUNE = MA.COD_LUOGO_ALTRO_TITOLO ";
-
-		lStatement += "  AND UFFSCA.RV_DOMAIN = 'TIPO_UFFICIO_SCARCERAZIONE'  ";
-		lStatement += "  AND UFFSCA.RV_LOW_VALUE = COD_TIPO_UFFICIO_SCARCERAZIONE   ";
-		lStatement += "  AND MA.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey;
-		lStatement += "  AND MA.EVE_ID_EVENTO = E1.ID_EVENTO   ";
-		lStatement += "  AND MA.COD_TIPO_DECISIONE = '03'   ";
-		lStatement += "  AND MA.COD_NATURA_DECISIONE = 'CO'   ";
-
+		lStatement += "CG_REF_CODES UFFSOR, UFFICIO SORU, COMUNE COM, ";
+		lStatement += "CG_REF_CODES TDSCOMP, UFFICIO TDSCOMUFF, COMUNE COMTDSCOMP, ";
+		lStatement += "(SELECT U.COD_UFFICIO,UFF.RV_MEANING FROM CG_REF_CODES UFF, UFFICIO U WHERE "
+				+ "UFF.RV_DOMAIN = 'TIPO_UFFICIO' AND UFF.RV_LOW_VALUE = U.COD_TIPO_UFFICIO) u1, ";
+		lStatement += "(SELECT E.ID_EVENTO,MAX(E.DATA_INSERIMENTO) FROM EVENTO E WHERE "
+				+ "E.COD_TIPO_PROVVEDIMENTO = '03' AND E.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey
+				+ " GROUP BY E.ID_EVENTO) E1 ";
+		lStatement += "WHERE PROV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' ";
+		lStatement += "AND NAT.RV_DOMAIN = 'NATURA_DECISIONE' ";
+		lStatement += "AND MPROV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += "AND PROV.RV_LOW_VALUE = COD_TIPO_DECISIONE ";
+		lStatement += "AND NAT.RV_LOW_VALUE = COD_NATURA_DECISIONE ";
+		lStatement += "AND MPROV.RV_LOW_VALUE = COD_TIPO_MISURA ";
+		lStatement += "AND u1.COD_UFFICIO(+) = MA.COD_UFFICIO_SORVEGLIANZA ";
+		lStatement += "AND TIPO_AUTORITA.RV_DOMAIN = 'TIPO_UFFICIO' AND TIPO_AUTORITA.RV_LOW_VALUE = "
+				+ "MA.COD_AUTORITA_ALTRO_TITOLO ";
+		lStatement += "AND LUOGO_ALTRO.COD_COMUNE = MA.COD_LUOGO_ALTRO_TITOLO ";
+		lStatement += "AND UFFSCA.RV_DOMAIN = 'TIPO_UFFICIO_SCARCERAZIONE' ";
+		lStatement += "AND UFFSCA.RV_LOW_VALUE = COD_TIPO_UFFICIO_SCARCERAZIONE ";
+		lStatement += "AND MA.FAS_SIE_ID_FASCICOLO_SIEP = " + aKey + " ";
+		lStatement += "AND MA.EVE_ID_EVENTO = E1.ID_EVENTO ";
+		lStatement += "AND MA.COD_TIPO_DECISIONE = '03' ";
+		lStatement += "AND MA.COD_NATURA_DECISIONE = 'CO' ";
 		// DARIO
-		lStatement += " AND SORU.COD_UFFICIO = MA.CHIAVE_UFFICIO_FASCICOLO_SIUS  ";
-		lStatement += " AND COM.COD_COMUNE = SORU.COD_COMUNE ";
-		lStatement += " AND UFFSOR.RV_DOMAIN = 'TIPO_UFFICIO'   ";
-		lStatement += " AND UFFSOR.RV_LOW_VALUE = SORU.COD_TIPO_UFFICIO  ";
-
-		lStatement += " AND TDSCOMUFF.COD_UFFICIO = NVL(MA.COD_TDS_COMPETENTE, '-')";
-		lStatement += " AND COMTDSCOMP.COD_COMUNE = TDSCOMUFF.COD_COMUNE ";
-		lStatement += " AND TDSCOMP.RV_DOMAIN = 'TIPO_UFFICIO'   ";
-		lStatement += " AND TDSCOMP.RV_LOW_VALUE = TDSCOMUFF.COD_TIPO_UFFICIO  ";
+		lStatement += "AND SORU.COD_UFFICIO = MA.CHIAVE_UFFICIO_FASCICOLO_SIUS ";
+		lStatement += "AND COM.COD_COMUNE = SORU.COD_COMUNE ";
+		lStatement += "AND UFFSOR.RV_DOMAIN = 'TIPO_UFFICIO' ";
+		lStatement += "AND UFFSOR.RV_LOW_VALUE = SORU.COD_TIPO_UFFICIO ";
+		lStatement += "AND TDSCOMUFF.COD_UFFICIO = NVL(MA.COD_TDS_COMPETENTE, '-') ";
+		lStatement += "AND COMTDSCOMP.COD_COMUNE = TDSCOMUFF.COD_COMUNE ";
+		lStatement += "AND TDSCOMP.RV_DOMAIN = 'TIPO_UFFICIO' ";
+		lStatement += "AND TDSCOMP.RV_LOW_VALUE = TDSCOMUFF.COD_TIPO_UFFICIO";
 
 		return lStatement;
 	}
@@ -525,122 +508,87 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 	protected String getSqlQuery() {
 		String lStatement = new String("");
 
-		lStatement += " SELECT "
-				+ "MA.ID_MISURA_ALTERNATIVA, "
-				+ "MA.COD_TIPO_DECISIONE, "
-				+ "PROV.RV_MEANING TIPODECISIONE, "
-				+ "MA.COD_NATURA_DECISIONE, "
-				+ "NAT.RV_MEANING NATURA, "
-				+ "u1.RV_MEANING DESCRUFFSORV,"
-				+ "MA.COD_TIPO_MISURA, "
-				+ "MPROV.RV_MEANING MISURA, "
-				+
+		lStatement += "SELECT MA.ID_MISURA_ALTERNATIVA, MA.COD_TIPO_DECISIONE, "
+				+ "PROV.RV_MEANING TIPODECISIONE, MA.COD_NATURA_DECISIONE, NAT.RV_MEANING NATURA, "
+				+ "u1.RV_MEANING DESCRUFFSORV, MA.COD_TIPO_MISURA, MPROV.RV_MEANING MISURA, "
 				// gdv
-				"MPROV.RV_ABBREVIATION LEGGE_MISURA, "
-				+
-				"MA.DATA_DECISIONE, "
-				+ "MA.COD_MAGISTRATO, "
-				+ "MA.COD_UFFICIO_SORVEGLIANZA, "
-				+ "MA.CSS_ID_CSSA, "
-				+ "MA.DESCR_LUOGO_PROVA, "
-				+ "MA.NUM_ANNI_MISURA, "
-				+ "MA.NUM_MESI_MISURA, "
-				+ "MA.NUM_GIORNI_MISURA, "
-				+ "MA.DATA_INIZIO_MISURA, "
-				+ "MA.DATA_FINE_MISURA, "
-				+ "MA.CHIAVE_ANNO_FASCICOLO_SIUS, "
+				+ "MPROV.RV_ABBREVIATION LEGGE_MISURA, MA.DATA_DECISIONE, MA.COD_MAGISTRATO, "
+				+ "MA.COD_UFFICIO_SORVEGLIANZA, MA.CSS_ID_CSSA, MA.DESCR_LUOGO_PROVA, "
+				+ "MA.NUM_ANNI_MISURA, MA.NUM_MESI_MISURA, MA.NUM_GIORNI_MISURA, "
+				+ "MA.DATA_INIZIO_MISURA, MA.DATA_FINE_MISURA, MA.CHIAVE_ANNO_FASCICOLO_SIUS, "
 				+ "MA.CHIAVE_UFFICIO_FASCICOLO_SIUS, "
-				+
 				// DARIO
-				"UFFSOR.RV_MEANING DESCUFSORV, " + "COM.DESCRIZIONE DESCCOM, " +
-				"TDSCOMP.RV_MEANING DESCUFFTDS, " + "COMTDSCOMP.DESCRIZIONE DESCCOMTDS, " +
-				"MA.CHIAVE_PROGR_FASCICOLO_SIUS, " + "MA.ANNO_REGISTRO, "
-				+ "MA.NUMERO_REGISTRO, "
-				+ "MA.COD_OPERATORE_INSERIMENTO, "
-				+ "MA.DATA_INSERIMENTO, "
-				+ "MA.COD_UFFICIO_INSERIMENTO, "
-				+ "MA.COD_OPERATORE_AGGIORNAMENTO, "
-				+ "MA.DATA_AGGIORNAMENTO, "
-				+ "MA.COD_UFFICIO_AGGIORNAMENTO, "
-				+ "MA.FAS_SIE_ID_FASCICOLO_SIEP, "
-				+ "MA.EVE_ID_EVENTO, "
-				+ "MA.NOTE, "
-				+ "MA.DATA_SCARCERAZIONE, "
-				+ "MA.DATA_INGRESSO_ISTITUTO, "
+				+ "UFFSOR.RV_MEANING DESCUFSORV, COM.DESCRIZIONE DESCCOM, "
+				+ "TDSCOMP.RV_MEANING DESCUFFTDS, COMTDSCOMP.DESCRIZIONE DESCCOMTDS, "
+				+ "MA.CHIAVE_PROGR_FASCICOLO_SIUS, MA.ANNO_REGISTRO, MA.NUMERO_REGISTRO, "
+				+ "MA.COD_OPERATORE_INSERIMENTO, MA.DATA_INSERIMENTO, MA.COD_UFFICIO_INSERIMENTO, "
+				+ "MA.COD_OPERATORE_AGGIORNAMENTO, MA.DATA_AGGIORNAMENTO, "
+				+ "MA.COD_UFFICIO_AGGIORNAMENTO, MA.FAS_SIE_ID_FASCICOLO_SIEP, MA.EVE_ID_EVENTO, "
+				+ "MA.NOTE, MA.DATA_SCARCERAZIONE, MA.DATA_INGRESSO_ISTITUTO, "
 				+ "MA.COD_TIPO_UFFICIO_SCARCERAZIONE, "
-				+
 				// dario
-				" MA.DATA_INIZIO_REVOCA,  " + " MA.NUM_ANNI_REVOCA_RECLUSIONE,  "
-				+ " MA.NUM_MESI_REVOCA_RECLUSIONE,  " + " MA.NUM_GIORNI_REVOCA_RECLUSIONE,  "
-				+ " MA.NUM_ANNI_REVOCA_ARRESTO,  " + " MA.NUM_MESI_REVOCA_ARRESTO,  "
-				+ " MA.NUM_GIORNI_REVOCA_ARRESTO,  " + " MA.FLAG_PERIODO_ESPIATO, "
-				+ " MA.ANNO_ALTRO_TITOLO,  " + " MA.NUM_ALTRO_TITOLO,  " + " MA.DATA_ALTRO_TITOLO,  "
-				+ " MA.COD_LUOGO_ALTRO_TITOLO,  " + " MA.COD_AUTORITA_ALTRO_TITOLO,  "
-				+ " LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, "
-				+ " TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, "
-				+ " MA.DATA_SCADENZA_PROROGA, MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, "
-				+ " MA.FLAG_SITUAZIONE, " + " MA.FLAG_UFFICIO_INSERIMENTO ";
-
+				+ "MA.DATA_INIZIO_REVOCA, MA.NUM_ANNI_REVOCA_RECLUSIONE, "
+				+ "MA.NUM_MESI_REVOCA_RECLUSIONE, MA.NUM_GIORNI_REVOCA_RECLUSIONE, "
+				+ "MA.NUM_ANNI_REVOCA_ARRESTO, MA.NUM_MESI_REVOCA_ARRESTO, "
+				+ "MA.NUM_GIORNI_REVOCA_ARRESTO, MA.FLAG_PERIODO_ESPIATO, "
+				+ "MA.ANNO_ALTRO_TITOLO, MA.NUM_ALTRO_TITOLO, MA.DATA_ALTRO_TITOLO, "
+				+ "MA.COD_LUOGO_ALTRO_TITOLO, MA.COD_AUTORITA_ALTRO_TITOLO, "
+				+ "LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, "
+				+ "MA.DATA_SCADENZA_PROROGA, MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, "
+				+ "MA.FLAG_SITUAZIONE, MA.FLAG_UFFICIO_INSERIMENTO";
 		// DL 146/2013
-		lStatement += ", MA.COD_TIPO_DECISIONE_MA_AT, DESC_TIPO_DECISIONE_MA_AT.RV_MEANING descTipoDecisioneMaAt "
-				+ // +descrizione
-				", MA.COD_TIPO_MISURA_MA_AT, DESC_TIPO_MISURA_MA_AT.RV_MEANING descTipoMisuraMaAt "
-				+ // +descrizione
-				", MA.DATA_DECISIONE_MA_AT "
-				+ ", MA.CHIAVE_ANNO_FAS_SIUS_MA_AT "
-				+ ", MA.CHIAVE_PROGR_FAS_SIUS_MA_AT "
-				+ ", MA.CHIAVE_UFF_FAS_SIUS_MA_AT, TIPO_UFF_AT.RV_MEANING descTipoUffMaAt " + // +descrizione
-				", MA.ANNO_REGISTRO_MA_AT " + ", MA.NUMERO_REGISTRO_MA_AT ";
-		lStatement += ", MA.FL_FORMA_MISURA ";
-		lStatement += ", MA.DATA_ESECUTIVITA "; // MEV_9
+		lStatement += ", MA.COD_TIPO_DECISIONE_MA_AT, DESC_TIPO_DECISIONE_MA_AT.RV_MEANING descTipoDecisioneMaAt"
+				+ ", MA.COD_TIPO_MISURA_MA_AT, DESC_TIPO_MISURA_MA_AT.RV_MEANING descTipoMisuraMaAt"
+				+ ", MA.DATA_DECISIONE_MA_AT, MA.CHIAVE_ANNO_FAS_SIUS_MA_AT"
+				+ ", MA.CHIAVE_PROGR_FAS_SIUS_MA_AT"
+				+ ", MA.CHIAVE_UFF_FAS_SIUS_MA_AT, TIPO_UFF_AT.RV_MEANING descTipoUffMaAt"
+				+ ", MA.ANNO_REGISTRO_MA_AT " + ", MA.NUMERO_REGISTRO_MA_AT";
+		lStatement += ", MA.FL_FORMA_MISURA";
+		lStatement += ", MA.DATA_ESECUTIVITA, EV.COD_ESITO"; // MEV_9-SIEP: aggiunti 2 campi in estrazione
 		lStatement += ", MA.DESCRIZIONE_COMUNITA ";
-
-		lStatement += " FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT,CG_REF_CODES UFFSCA, ";
-		lStatement += " CG_REF_CODES MPROV,CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
-
+		lStatement += "FROM MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT,CG_REF_CODES UFFSCA, ";
+		lStatement += "CG_REF_CODES MPROV,CG_REF_CODES TIPO_AUTORITA,COMUNE LUOGO_ALTRO, ";
 		// DARIO
-		lStatement += " CG_REF_CODES UFFSOR, UFFICIO SORU, COMUNE COM, ";
-		lStatement += " CG_REF_CODES TDSCOMP, UFFICIO TDSCOMUFF, COMUNE COMTDSCOMP, ";
-
-		lStatement += " CG_REF_CODES DESC_TIPO_DECISIONE_MA_AT, "; // desc TIPO_DECISIONE_MA_AT dominio
-																	// TIPO_PROVVEDIMENTO
-		lStatement += " CG_REF_CODES DESC_TIPO_MISURA_MA_AT,  "; // desc TIPO_MISURA_MA_AT dominio
-																	// MOTIVO_PROVVEDIMENTO
-		lStatement += " CG_REF_CODES TIPO_UFF_AT, UFFICIO UFF_MA_AT, COMUNE COMUFF_MA_AT, "; // DESC
-																								// UFFICIO_MA_AT
-
-		lStatement += "    (SELECT U.COD_UFFICIO,UFF.RV_MEANING FROM CG_REF_CODES UFF, UFFICIO U WHERE UFF.RV_DOMAIN = 'TIPO_UFFICIO' AND UFF.RV_LOW_VALUE = U.COD_TIPO_UFFICIO) u1";
+		lStatement += "CG_REF_CODES UFFSOR, UFFICIO SORU, COMUNE COM, ";
+		lStatement += "CG_REF_CODES TDSCOMP, UFFICIO TDSCOMUFF, COMUNE COMTDSCOMP, ";
+		lStatement += "CG_REF_CODES DESC_TIPO_DECISIONE_MA_AT, ";
+		// desc TIPO_DECISIONE_MA_AT dominio TIPO_PROVVEDIMENTO
+		lStatement += "CG_REF_CODES DESC_TIPO_MISURA_MA_AT,  ";
+		// desc TIPO_MISURA_MA_AT dominio MOTIVO_PROVVEDIMENTO
+		lStatement += "CG_REF_CODES TIPO_UFF_AT, UFFICIO UFF_MA_AT, COMUNE COMUFF_MA_AT, ";
+		// DESC UFFICIO_MA_AT
+		lStatement += "(SELECT U.COD_UFFICIO,UFF.RV_MEANING FROM CG_REF_CODES UFF, UFFICIO U WHERE "
+				+ "UFF.RV_DOMAIN = 'TIPO_UFFICIO' AND UFF.RV_LOW_VALUE = U.COD_TIPO_UFFICIO) u1";
 		lStatement += " WHERE PROV.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' ";
 		// MEV_39: aggiunte 2 left outer join sulla natura decisione
-		lStatement += " AND NAT.RV_DOMAIN(+) = 'NATURA_DECISIONE' ";
-		lStatement += " AND MPROV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
-		lStatement += " AND PROV.RV_LOW_VALUE = MA.COD_TIPO_DECISIONE ";
-		lStatement += " AND NAT.RV_LOW_VALUE(+) = MA.COD_NATURA_DECISIONE "; // MEV_39 
-		lStatement += " AND MPROV.RV_LOW_VALUE = MA.COD_TIPO_MISURA ";
-		lStatement += " AND UFFSCA.RV_DOMAIN = 'TIPO_UFFICIO_SCARCERAZIONE'   ";
-		lStatement += " AND UFFSCA.RV_LOW_VALUE = MA.COD_TIPO_UFFICIO_SCARCERAZIONE   ";
-		lStatement += " AND u1.COD_UFFICIO(+) = MA.COD_UFFICIO_SORVEGLIANZA ";
-		lStatement += "  AND TIPO_AUTORITA.RV_DOMAIN = 'TIPO_UFFICIO' AND TIPO_AUTORITA.RV_LOW_VALUE = MA.COD_AUTORITA_ALTRO_TITOLO ";
-		lStatement += "  AND LUOGO_ALTRO.COD_COMUNE = MA.COD_LUOGO_ALTRO_TITOLO ";
+		lStatement += "AND NAT.RV_DOMAIN(+) = 'NATURA_DECISIONE' ";
+		lStatement += "AND MPROV.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' ";
+		lStatement += "AND PROV.RV_LOW_VALUE = MA.COD_TIPO_DECISIONE ";
+		lStatement += "AND NAT.RV_LOW_VALUE(+) = MA.COD_NATURA_DECISIONE "; // MEV_39
+		lStatement += "AND MPROV.RV_LOW_VALUE = MA.COD_TIPO_MISURA ";
+		lStatement += "AND UFFSCA.RV_DOMAIN = 'TIPO_UFFICIO_SCARCERAZIONE' ";
+		lStatement += "AND UFFSCA.RV_LOW_VALUE = MA.COD_TIPO_UFFICIO_SCARCERAZIONE ";
+		lStatement += "AND u1.COD_UFFICIO(+) = MA.COD_UFFICIO_SORVEGLIANZA ";
+		lStatement += "AND TIPO_AUTORITA.RV_DOMAIN = 'TIPO_UFFICIO' AND TIPO_AUTORITA.RV_LOW_VALUE = MA.COD_AUTORITA_ALTRO_TITOLO ";
+		lStatement += "AND LUOGO_ALTRO.COD_COMUNE = MA.COD_LUOGO_ALTRO_TITOLO ";
 		// DARIO
-		lStatement += " AND SORU.COD_UFFICIO = MA.CHIAVE_UFFICIO_FASCICOLO_SIUS  ";
-		lStatement += " AND COM.COD_COMUNE = SORU.COD_COMUNE ";
-		lStatement += " AND UFFSOR.RV_DOMAIN = 'TIPO_UFFICIO'   ";
-		lStatement += " AND UFFSOR.RV_LOW_VALUE = SORU.COD_TIPO_UFFICIO  ";
-
-		lStatement += " AND TDSCOMUFF.COD_UFFICIO = NVL(MA.COD_TDS_COMPETENTE, '-')";
-		lStatement += " AND COMTDSCOMP.COD_COMUNE = TDSCOMUFF.COD_COMUNE ";
-		lStatement += " AND TDSCOMP.RV_DOMAIN = 'TIPO_UFFICIO'   ";
-		lStatement += " AND TDSCOMP.RV_LOW_VALUE = TDSCOMUFF.COD_TIPO_UFFICIO  ";
-
+		lStatement += "AND SORU.COD_UFFICIO = MA.CHIAVE_UFFICIO_FASCICOLO_SIUS ";
+		lStatement += "AND COM.COD_COMUNE = SORU.COD_COMUNE ";
+		lStatement += "AND UFFSOR.RV_DOMAIN = 'TIPO_UFFICIO' ";
+		lStatement += "AND UFFSOR.RV_LOW_VALUE = SORU.COD_TIPO_UFFICIO ";
+		lStatement += "AND TDSCOMUFF.COD_UFFICIO = NVL(MA.COD_TDS_COMPETENTE, '-') ";
+		lStatement += "AND COMTDSCOMP.COD_COMUNE = TDSCOMUFF.COD_COMUNE ";
+		lStatement += "AND TDSCOMP.RV_DOMAIN = 'TIPO_UFFICIO' ";
+		lStatement += "AND TDSCOMP.RV_LOW_VALUE = TDSCOMUFF.COD_TIPO_UFFICIO ";
 		// join x ufficio SIUS MA_AT (misura alternativa altro titolo)
-		lStatement += " AND UFF_MA_AT.COD_UFFICIO = NVL(MA.CHIAVE_UFF_FAS_SIUS_MA_AT, '-')";
-		lStatement += " AND COMUFF_MA_AT.COD_COMUNE = UFF_MA_AT.COD_COMUNE ";
-		lStatement += " AND TIPO_UFF_AT.RV_DOMAIN = 'TIPO_UFFICIO'   ";
-		lStatement += " AND TIPO_UFF_AT.RV_LOW_VALUE = UFF_MA_AT.COD_TIPO_UFFICIO  ";
-
-		lStatement += " AND DESC_TIPO_DECISIONE_MA_AT.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' AND DESC_TIPO_DECISIONE_MA_AT.RV_LOW_VALUE = NVL(MA.COD_TIPO_DECISIONE_MA_AT,'-')  ";
-		lStatement += " AND DESC_TIPO_MISURA_MA_AT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' AND DESC_TIPO_MISURA_MA_AT.RV_LOW_VALUE = NVL(MA.COD_TIPO_MISURA_MA_AT,'-')  ";
+		lStatement += "AND UFF_MA_AT.COD_UFFICIO = NVL(MA.CHIAVE_UFF_FAS_SIUS_MA_AT, '-') ";
+		lStatement += "AND COMUFF_MA_AT.COD_COMUNE = UFF_MA_AT.COD_COMUNE ";
+		lStatement += "AND TIPO_UFF_AT.RV_DOMAIN = 'TIPO_UFFICIO' ";
+		lStatement += "AND TIPO_UFF_AT.RV_LOW_VALUE = UFF_MA_AT.COD_TIPO_UFFICIO ";
+		lStatement += "AND DESC_TIPO_DECISIONE_MA_AT.RV_DOMAIN = 'TIPO_PROVVEDIMENTO' "
+				+ "AND DESC_TIPO_DECISIONE_MA_AT.RV_LOW_VALUE = NVL(MA.COD_TIPO_DECISIONE_MA_AT,'-') ";
+		lStatement += "AND DESC_TIPO_MISURA_MA_AT.RV_DOMAIN = 'MOTIVO_PROVVEDIMENTO' "
+				+ "AND DESC_TIPO_MISURA_MA_AT.RV_LOW_VALUE = NVL(MA.COD_TIPO_MISURA_MA_AT,'-')";
 
 		return lStatement;
 	}
@@ -649,53 +597,28 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 	// invece va caricata sul dettaglio siep solo quando è legata ad un evento non annullato
 	protected String getSqlQueryEventoValidato() {
 		String lStatement = new String("");
-		lStatement += " SELECT "
-				+ "MA.ID_MISURA_ALTERNATIVA, "
-				+ "MA.COD_TIPO_DECISIONE, "
-				+ "PROV.RV_MEANING TIPODECISIONE, "
-				+ "MA.COD_NATURA_DECISIONE, "
-				+ "NAT.RV_MEANING NATURA, "
-				+ "u1.RV_MEANING DESCRUFFSORV,"
-				+ "MA.COD_TIPO_MISURA, "
-				+ "MPROV.RV_MEANING MISURA, "
-				+
+		lStatement += " SELECT " + "MA.ID_MISURA_ALTERNATIVA, " + "MA.COD_TIPO_DECISIONE, "
+				+ "PROV.RV_MEANING TIPODECISIONE, " + "MA.COD_NATURA_DECISIONE, " + "NAT.RV_MEANING NATURA, "
+				+ "u1.RV_MEANING DESCRUFFSORV," + "MA.COD_TIPO_MISURA, " + "MPROV.RV_MEANING MISURA, " +
 				// gdv
-				"MPROV.RV_ABBREVIATION LEGGE_MISURA, "
-				+
+				"MPROV.RV_ABBREVIATION LEGGE_MISURA, " +
 
-				"MA.DATA_DECISIONE, "
-				+ "MA.COD_MAGISTRATO, "
-				+ "MA.COD_UFFICIO_SORVEGLIANZA, "
-				+ "MA.CSS_ID_CSSA, "
-				+ "MA.DESCR_LUOGO_PROVA, "
-				+ "MA.NUM_ANNI_MISURA, "
-				+ "MA.NUM_MESI_MISURA, "
-				+ "MA.NUM_GIORNI_MISURA, "
-				+ "MA.DATA_INIZIO_MISURA, "
-				+ "MA.DATA_FINE_MISURA, "
-				+ "MA.CHIAVE_ANNO_FASCICOLO_SIUS, "
-				+ "MA.CHIAVE_UFFICIO_FASCICOLO_SIUS, "
-				+
+				"MA.DATA_DECISIONE, " + "MA.COD_MAGISTRATO, " + "MA.COD_UFFICIO_SORVEGLIANZA, "
+				+ "MA.CSS_ID_CSSA, " + "MA.DESCR_LUOGO_PROVA, " + "MA.NUM_ANNI_MISURA, "
+				+ "MA.NUM_MESI_MISURA, " + "MA.NUM_GIORNI_MISURA, " + "MA.DATA_INIZIO_MISURA, "
+				+ "MA.DATA_FINE_MISURA, " + "MA.CHIAVE_ANNO_FASCICOLO_SIUS, "
+				+ "MA.CHIAVE_UFFICIO_FASCICOLO_SIUS, " +
 				// DARIO
 				"UFFSOR.RV_MEANING DESCUFSORV, " + "COM.DESCRIZIONE DESCCOM, " +
 
 				"TDSCOMP.RV_MEANING DESCUFFTDS, " + "COMTDSCOMP.DESCRIZIONE DESCCOMTDS, " +
 
-				"MA.CHIAVE_PROGR_FASCICOLO_SIUS, " + "MA.ANNO_REGISTRO, "
-				+ "MA.NUMERO_REGISTRO, "
-				+ "MA.COD_OPERATORE_INSERIMENTO, "
-				+ "MA.DATA_INSERIMENTO, "
-				+ "MA.COD_UFFICIO_INSERIMENTO, "
-				+ "MA.COD_OPERATORE_AGGIORNAMENTO, "
-				+ "MA.DATA_AGGIORNAMENTO, "
-				+ "MA.COD_UFFICIO_AGGIORNAMENTO, "
-				+ "MA.FAS_SIE_ID_FASCICOLO_SIEP, "
-				+ "MA.EVE_ID_EVENTO, "
-				+ "MA.NOTE, "
-				+ "MA.DATA_SCARCERAZIONE, "
-				+ "MA.DATA_INGRESSO_ISTITUTO, "
-				+ "MA.COD_TIPO_UFFICIO_SCARCERAZIONE, "
-				+
+				"MA.CHIAVE_PROGR_FASCICOLO_SIUS, " + "MA.ANNO_REGISTRO, " + "MA.NUMERO_REGISTRO, "
+				+ "MA.COD_OPERATORE_INSERIMENTO, " + "MA.DATA_INSERIMENTO, " + "MA.COD_UFFICIO_INSERIMENTO, "
+				+ "MA.COD_OPERATORE_AGGIORNAMENTO, " + "MA.DATA_AGGIORNAMENTO, "
+				+ "MA.COD_UFFICIO_AGGIORNAMENTO, " + "MA.FAS_SIE_ID_FASCICOLO_SIEP, " + "MA.EVE_ID_EVENTO, "
+				+ "MA.NOTE, " + "MA.DATA_SCARCERAZIONE, " + "MA.DATA_INGRESSO_ISTITUTO, "
+				+ "MA.COD_TIPO_UFFICIO_SCARCERAZIONE, " +
 				// dario
 				" MA.DATA_INIZIO_REVOCA,  " + " MA.NUM_ANNI_REVOCA_RECLUSIONE,  "
 				+ " MA.NUM_MESI_REVOCA_RECLUSIONE,  " + " MA.NUM_GIORNI_REVOCA_RECLUSIONE,  "
@@ -703,9 +626,8 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 				+ " MA.NUM_GIORNI_REVOCA_ARRESTO,  " + " MA.FLAG_PERIODO_ESPIATO, "
 				+ " MA.ANNO_ALTRO_TITOLO,  " + " MA.NUM_ALTRO_TITOLO,  " + " MA.DATA_ALTRO_TITOLO,  "
 				+ " MA.COD_LUOGO_ALTRO_TITOLO,  " + " MA.COD_AUTORITA_ALTRO_TITOLO,  "
-				+ " LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, "
-				+ " TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, "
-				+ " MA.DATA_ESECUTIVITA, "  // MEV_9
+				+ " LUOGO_ALTRO.DESCRIZIONE DESCR_LUOGO, " + " TIPO_AUTORITA.RV_MEANING DESCR_TIPO_AUTORITA, "
+				+ " MA.DATA_ESECUTIVITA, " // MEV_9
 				+ " MA.DATA_SCADENZA_PROROGA, MA.FLAG_DECISIONE_TRIBUNALE,MA.COD_TDS_COMPETENTE, "
 				+ " MA.FLAG_SITUAZIONE, " + " MA.FLAG_UFFICIO_INSERIMENTO ";
 		lStatement += " FROM EVENTO EV,EVENTO EVESUCCESSIVO,MISURA_ALTERNATIVA MA, CG_REF_CODES PROV, CG_REF_CODES NAT,CG_REF_CODES UFFSCA, ";
@@ -793,29 +715,25 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		aModel.setNumMesiRevocaArresto(getBigDecimal("NUM_MESI_REVOCA_ARRESTO"));
 		aModel.setNumGiorniRevocaArresto(getBigDecimal("NUM_GIORNI_REVOCA_ARRESTO"));
 		aModel.setFlagPeriodoEspiato(getString("FLAG_PERIODO_ESPIATO"));
-
 		aModel.setAnnoAltroTitolo(getBigDecimal("ANNO_ALTRO_TITOLO"));
 		aModel.setNumAltroTitolo(getString("NUM_ALTRO_TITOLO"));
 		aModel.setDataAltroTitolo(getDate("DATA_ALTRO_TITOLO"));
 		aModel.setCodLuogoAltroTitolo(getString("COD_LUOGO_ALTRO_TITOLO"));
 		aModel.setCodAutoritaAltroTitolo(getString("COD_AUTORITA_ALTRO_TITOLO"));
-
 		aModel.setDescAutoritaAltroTitolo(getString("DESCR_TIPO_AUTORITA"));
 		aModel.setDescLuogoAltroTitolo(getString("DESCR_LUOGO"));
 		// DARIO
 		aModel.setDescrChiaveUfficioFascicoloSius(getString("DESCUFSORV") + " di " + getString("DESCCOM"));
 		aModel.setLegge(getString("LEGGE_MISURA"));
-
 		aModel.setDataScadenzaProroga(getDate("DATA_SCADENZA_PROROGA"));
 		aModel.setFlagDecisioneTribunale(getString("FLAG_DECISIONE_TRIBUNALE"));
 		aModel.setCodTdsCompetente(getString("COD_TDS_COMPETENTE"));
 		aModel.setFlagSituazione(getString("FLAG_SITUAZIONE"));
-
 		aModel.setDescTdsCompetente(getString("DESCUFFTDS"));
 		aModel.setDescSedeTdsCompetente(getString("DESCCOMTDS"));
-		
-		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA")); // MEV_9
-		
+		aModel.setDataEsecutivita(getDate("DATA_ESECUTIVITA")); // MEV_9-SIEP
+		if (findColumn("COD_ESITO"))
+			aModel.setCodEsito(getString("COD_ESITO")); // MEV_9-SIEP
 		// DL146/2013
 		if (findColumn("COD_TIPO_DECISIONE_MA_AT")) {
 			aModel.setCodTipoDecisioneMaAt(getString("COD_TIPO_DECISIONE_MA_AT"));
@@ -890,7 +808,7 @@ public class MisuraAlternativaSqlDAO extends SqlDAO {
 		aModel.setFlagStampaSius(getString("FLAG_STAMPA_SIUS"));
 		aModel.setFlagVideoSiep(getString("FLAG_VIDEO_SIEP"));
 		aModel.setFlagVideoSius(getString("FLAG_VIDEO_SIUS"));
-		
+
 		return aModel;
 	}
 

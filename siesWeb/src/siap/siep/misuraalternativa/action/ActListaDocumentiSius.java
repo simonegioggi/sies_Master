@@ -9,6 +9,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.decodifiche.model.DecodificheModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
@@ -20,17 +22,17 @@ import siap.siep.fascicolo.action.ICostantiFascicoloSiep;
 import siap.siep.fascicolo.controller.IFascicoloSiep;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.util.SIEPLookupRemote;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisuraAlternativa {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
 
 	public String processRequest() throws Exception {
 
-		BigDecimal lIdFascicoloSiep = getRequestBigDecimalParameter(ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP);
+		BigDecimal lIdFascicoloSiep = getRequestBigDecimalParameter(
+				ICostantiFascicoloSiep.CAMPO_ID_FASCICOLO_SIEP);
 		String lNaturaMA = getRequestStringParameter(CAMPO_NATURA_MA);
 
 		String lTipoMA = "";
@@ -59,14 +61,17 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			// i dati dell'ordinanza/decreto di concessione della MA che si intende
 			// proseguire in genere concessa su altro titolo per cui la ricerca viene
 			// effettuata sull'intera BDI
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lNaturaMA = " + lNaturaMA);
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lTipoMA   = " + lTipoMA);
 
 			// Recupero l'elenco dei fascicoli legati a soggetti con stesso Nome e cognome
 			SoggettoModel lSoggCorrente = (SoggettoModel) getSessionAttribute("soggetto");
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("lSoggCorrente = " + lSoggCorrente);
 
 			SoggettoModel lSoggetto = new SoggettoModel();
@@ -77,27 +82,29 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			IFascicoloSiep lCtrlFascicolo = SIEPLookupRemote.getFascicoloSiepRemote();
 			lListaFascicoli = lCtrlFascicolo.ExRicercaFascicoliPerSoggetto(lSoggetto);
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Fascioli trovati: " + lListaFascicoli.size());
 
 			// Per ogni fascicolo recupero le MA
-			List<MisuraAlternativaEventoModel> lListaEventiOrdinanze = new ArrayList<MisuraAlternativaEventoModel>();
+			List<MisuraAlternativaEventoModel> lListaEventiOrdinanze = new ArrayList<>();
 
 			for (int i = 0; i < lListaFascicoli.size(); i++) {
 				FascicoloSiepModel lFascicolo = lListaFascicoli.elementAt(i);
 
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
-				siesLogger.debug(
-						"lFascicolo = [" + lFascicolo.getIdFascicoloSiep() + "], " + "[ "
-								+ lFascicolo.getChiaveAnno() + "/" + lFascicolo.getChiaveProgr() + "] "
-								+ "[ " + lFascicolo.getDescrTipoUfficio() + " di "
-								+ lFascicolo.getDescrComuneUfficio() + "]");
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
+				siesLogger.debug("lFascicolo = [" + lFascicolo.getIdFascicoloSiep() + "], " + "[ "
+						+ lFascicolo.getChiaveAnno() + "/" + lFascicolo.getChiaveProgr() + "] " + "[ "
+						+ lFascicolo.getDescrTipoUfficio() + " di " + lFascicolo.getDescrComuneUfficio()
+						+ "]");
 
 				IMisuraAlternativa lCtrlMisura = SICOLookupRemote.getMisuraAlternativaRemote();
 				List<MisuraAlternativaEventoModel> lListaPerFasciolo = lCtrlMisura
 						.ExRicercaMisureAlternativeEventiOrderDesc(lFascicolo.getIdFascicoloSiep(),
 								lTipoDecisone, lNaturaDecisione, lTipoMisura);
-				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+				// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+				// LogF3B.getLogger()
 				siesLogger.debug("Misure trovate = " + lListaPerFasciolo.size());
 				for (int j = 0; j < lListaPerFasciolo.size(); j++) {
 					lListaPerFasciolo.get(j).setFascicoloSiep(lFascicolo);
@@ -107,18 +114,18 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 			}
 
-			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+			// LogF3B.getLogger()
 			siesLogger.debug("Totale Misure Trovate = " + lListaEventiOrdinanze.size());
 			setRequestAttribute("documentiFascicoliSius", lListaEventiOrdinanze);
 
 			return PG_LISTA_DOCUMENTI_SIUS_PER_SOGGETTO;
 		}
-
 	}
 
 	/**
 	 * Ritorna la lista dei codici motivo
-	 * 
+	 *
 	 * @param aNaturaMA
 	 * @param aTipoMA
 	 * @return
@@ -129,69 +136,65 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 		if (aTipoMA.equals(AFFIDAMENTO_IN_PROVA)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAffP());
+				// MEV_9-SIEP: si differenzia per PM e PMM
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMAffPMinor());
+				else
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoMAffP());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoSospProvvMAffP());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMAffP());
 			} else if (aNaturaMA.equals(PERDITA_EFFICACIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAPreEffAffPro());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAPreEffAffPro());
 			} else if (aNaturaMA.equals(RIPRISTINO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRipristinoMAffP());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRipristinoMAffP());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMAAffPro());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAAffPro());
 			} else if (aNaturaMA.equals(ESTENSIONE_DEFINITIVA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEstDefMAffP());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEstDefMAffP());
 			} else if (aNaturaMA.equals(ESTENSIONE_DEFINITIVA_CUMULO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEstDefMAffP());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEstDefMAffP());
 			} else if (aNaturaMA.equals(REVOCA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRevocaMAffP());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaMAffP());
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMAffP();
-				// Collection <DecodificheModel> lOggettoMDS51bis =
-				// DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffPMDS51bis();
-				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
-						.getInstance().getMotivoProvvedimentoCessazioneMAffPTDS51bis());
+				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffPTDS51bis());
 
 				Collection lOggetti = new Vector(lOggettoTDS);
-				// lOggetti.addAll(lOggettoMDS51bis);
 				lOggetti.addAll(lOggettoTDS51BisSuReclamo);
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
-				// lCodMotivi =
-				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAffP());
-
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMAffPMDS51bis();
 
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMAAffPro());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAAffPro());
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMAAffPro());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAAffPro());
 			} else if (aNaturaMA.equals(AMMISSIONE_PROVVISORIA)) {
 				// MEV_9 si differenzia per PM e PMM
-				//lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
-				if (isUfficoMonorenni())				
-					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffiPmm());
 				else
-					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
 				// MEV_9 - FINE
-			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) { // Prosecuzione
-																												// MDS+TDS
-																												// lCodMotivi
-																												// =
-																												// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMAAffProMDS51Bis());
-
+			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
+				// Prosecuzione MDS+TDS
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoProsecMAAffProMDS51Bis();
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
@@ -203,28 +206,28 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(DETENZIONE_DOMICILIARE)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMADDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMADDom());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoSospProvvMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMADetDom());
 			} else if (aNaturaMA.equals(PERDITA_EFFICACIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAPreEffDetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAPreEffDetDom());
 			} else if (aNaturaMA.equals(RIPRISTINO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRipristinoDetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRipristinoDetDom());
 			} else if (aNaturaMA.equals(REVOCA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRevocaMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaMADetDom());
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDom());
 
-				Collection<DecodificheModel> lOggettoTDS = new Vector(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoCessazioneMADetDom());
-				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
-						.getInstance().getMotivoProvvedimentoCessazioneMADetDomTDS51bis());
+				Collection<DecodificheModel> lOggettoTDS = new Vector(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDom());
+				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDomTDS51bis());
 				// Collection <DecodificheModel> lOggettoMDS51bis = new
 				// Vector(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDomMDS51bis());
 
@@ -239,29 +242,33 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMADetDom());
 			} else if (aNaturaMA.equals(ESTENSIONE_DEFINITIVA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEstDefMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEstDefMADetDom());
 			} else if (aNaturaMA.equals(ESTENSIONE_DEFINITIVA_CUMULO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEstDefMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEstDefMADetDom());
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMADetDom());
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMADetDom());
 			} else if (aNaturaMA.equals(AMMISSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
 				// MEV_9 si differenzia per PM e PMM
-				//lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
-				if (isUfficoMonorenni())				
-					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
+				// lCodMotivi =
+				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvAffi());
+				if (isUfficioMinorenni())
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
 				else
-					lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
-				// MEV_9 - FINE				
+					lCodMotivi = estraiCodiciDecodifiche(
+							DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+				// MEV_9 - FINE
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMADetDomMDS51Bis());
@@ -277,28 +284,28 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(SEMILIBERTA)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMASemiL());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMASemiL());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoSospProvvMASemiL());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvMASemiL());
 			} else if (aNaturaMA.equals(PERDITA_EFFICACIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAPreEffSemli());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAPreEffSemli());
 			} else if (aNaturaMA.equals(RIPRISTINO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRipristinoSemi());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRipristinoSemi());
 			} else if (aNaturaMA.equals(REVOCA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRevocaMASemiL());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaMASemiL());
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMASemiL());
 
 				Collection<DecodificheModel> lOggettoTDS = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMASemiL();
-				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
-						.getInstance().getMotivoProvvedimentoCessazioneMASemiLTDS51bis());
+				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMASemiLTDS51bis());
 				// Collection <DecodificheModel> lOggettoMDS51bis =
 				// DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMASemiLMDS51bis();
 
@@ -314,20 +321,20 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMASem());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMASem());
 			} else if (aNaturaMA.equals(ESTENSIONE_DEFINITIVA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEstDefMASem());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEstDefMASem());
 			} else if (aNaturaMA.equals(ESTENSIONE_DEFINITIVA_CUMULO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEstDefMASem());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEstDefMASem());
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMASem());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMASem());
 			} else if (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMASem());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMASem());
 			} else if (aNaturaMA.equals(PROSECUZIONE_51BIS) || aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMASemMDS51Bis());
@@ -344,26 +351,26 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			}
 		} else if (aTipoMA.equals(INDULTINO)) {
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAConIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAConIndultino());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMASospIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMASospIndultino());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMAIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAIndultino());
 			} else if (aNaturaMA.equals(PERDITA_EFFICACIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAPerEfficIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAPerEfficIndultino());
 			} else if (aNaturaMA.equals(RIPRISTINO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMARipristinoIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMARipristinoIndultino());
 			} else if (aNaturaMA.equals(REVOCA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRevocaMAIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaMAIndultino());
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoCessazioneMAIndultino());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAIndultino());
 			} else if (aNaturaMA.equals(CESSAZIONE_51BIS_MDS)) {
 				Collection<DecodificheModel> lOggettoMDS51bis = DecodificheManager.getInstance()
 						.getMotivoProvvedimentoCessazioneMAIndultinoMDS51bis();
@@ -376,36 +383,36 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 			if (aNaturaMA.equals(CONCESSIONE)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoMAConIndultino());
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAEspPressoDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAEspPressoDom());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoMASospIndultino());
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMASospEspPressoDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMASospEspPressoDom());
 			} else if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMAIndultino());
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoProsecProvvMADetDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoProsecProvvMADetDom());
 			} else if (aNaturaMA.equals(PERDITA_EFFICACIA)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoMAPerEfficIndultino());
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMAPerEfficEspPressoDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMAPerEfficEspPressoDom());
 			} else if (aNaturaMA.equals(RIPRISTINO)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoMARipristinoIndultino());
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMARipristinoEspPressoDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMARipristinoEspPressoDom());
 			} else if (aNaturaMA.equals(REVOCA)) {
 				// lCodMotivi =
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoRevocaMAIndultino());
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRevocaMAEspPressoDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaMAEspPressoDom());
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
-				Collection<DecodificheModel> lOggettoTDS = new Vector(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoCessazioneMAEspPressoDom());
+				Collection<DecodificheModel> lOggettoTDS = new Vector(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMAEspPressoDom());
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
 						.getInstance().getMotivoProvvedimentoCessazioneMAEspPressoDomTDS51bis());
 
@@ -431,15 +438,15 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				// estraiCodiciDecodifiche(DecodificheManager.getInstance().getMotivoProvvedimentoProsecMAEsecPreDomMDS51Bis());
 			}
 		} else if (aTipoMA.equals(RIGETTO)) {
-			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-					.getMotivoProvvedimentoRigettoMA());
+			lCodMotivi = estraiCodiciDecodifiche(
+					DecodificheManager.getInstance().getMotivoProvvedimentoRigettoMA());
 		} else if (aTipoMA.equals(DETENZIONE_DOMICILIARE_TERMINE)) {
 			if (aNaturaMA.equals(DIFFERIMENTO_PENA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMADetDomTemp());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMADetDomTemp());
 			} else if (aNaturaMA.equals(PROROGA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoMADetDomTempProroga());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoMADetDomTempProroga());
 			} else if (aNaturaMA.equals(PROROGA_PROVVISORIA)) {
 				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
 						.getMotivoProvvedimentoMADetDomTempProrogaProvvisoria());
@@ -457,8 +464,8 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				lCodMotivi = estraiCodiciDecodifiche(lOggetti);
 
 			} else if (aNaturaMA.equals(CESSAZIONE)) {
-				Collection<DecodificheModel> lOggettoTDS = new Vector(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoCessazioneMADetDomTerm());
+				Collection<DecodificheModel> lOggettoTDS = new Vector(
+						DecodificheManager.getInstance().getMotivoProvvedimentoCessazioneMADetDomTerm());
 				Collection<DecodificheModel> lOggettoTDS51BisSuReclamo = new Vector(DecodificheManager
 						.getInstance().getMotivoProvvedimentoCessazioneMADetDomTermTDS51bis());
 
@@ -472,34 +479,34 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				lCodMotivi = estraiCodiciDecodifiche(lOggettoMDS51bis);
 			}
 		} else if (aTipoMA.equals(DIFFERIMENTO_PENA_PROV)) { // Sempre concessione
-			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-					.getTipologiaDecisioneSospensioneDiffProvv());
+			lCodMotivi = estraiCodiciDecodifiche(
+					DecodificheManager.getInstance().getTipologiaDecisioneSospensioneDiffProvv());
 		} else if (aTipoMA.equals(DIFFERIMENTO_PENA_DEF)) { // Sempre concessione
-			lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-					.getTipologiaDecisioneSospensioneDiffDef());
+			lCodMotivi = estraiCodiciDecodifiche(
+					DecodificheManager.getInstance().getTipologiaDecisioneSospensioneDiffDef());
 		} else if (aTipoMA.equals(ESPULSIONE)) { // concessione
 			if (aNaturaMA.equals(CONCESSIONE)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoEspulsione());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoEspulsione());
 			} else if (aNaturaMA.equals(ACCOGLIMENTO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoAccoglieOpEspulsione());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoAccoglieOpEspulsione());
 			} else if (aNaturaMA.equals(RIGETTO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRigettoOpEspulsione());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRigettoOpEspulsione());
 			}
 		}
 		// MERGE v10 COLLAUDO: aggiunta casistica per gestire gli arresti domiciliari
 		else if (aTipoMA.equals(ARRESTI_DOMICILIARI)) {
 			if (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoSospProvvArrestiDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoSospProvvArrestiDom());
 			} else if (aNaturaMA.equals(RIPRISTINO)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRipristinoArrestiDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRipristinoArrestiDom());
 			} else if (aNaturaMA.equals(REVOCA)) {
-				lCodMotivi = estraiCodiciDecodifiche(DecodificheManager.getInstance()
-						.getMotivoProvvedimentoRevocaArrestiDom());
+				lCodMotivi = estraiCodiciDecodifiche(
+						DecodificheManager.getInstance().getMotivoProvvedimentoRevocaArrestiDom());
 			}
 		}
 
@@ -511,7 +518,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 	}
 
 	/**
-	 * 
+	 *
 	 * @param aNaturaMA
 	 * @param aTipoMA
 	 * @return
@@ -560,9 +567,10 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				// MERGE v10 COLLAUDO: aggiunte casistiche per gestire gli arresti domiciliari
 				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA) && aTipoMA.equals(ARRESTI_DOMICILIARI))
 				|| (aNaturaMA.equals(PERDITA_EFFICACIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
-				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS) && aTipoMA
-						.equals(DETENZIONE_DOMICILIARE))
-				// MEV_09|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
+				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA_51_BIS)
+						&& aTipoMA.equals(DETENZIONE_DOMICILIARE))
+				// MEV_09|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) &&
+				// aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				// || (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
 				|| (aNaturaMA.equals(SOSPENSIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(PERDITA_EFFICACIA) && aTipoMA.equals(SEMILIBERTA))
@@ -573,20 +581,22 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
 				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
 				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
-				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO) && aTipoMA
-						.equals(DETENZIONE_DOMICILIARE))
+				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO)
+						&& aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(PROSECUZIONE_PROVVISORIA_CUMULO) && aTipoMA.equals(SEMILIBERTA))
 				|| (aNaturaMA.equals(PROROGA_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE_TERMINE))
 				|| (aNaturaMA.equals(CONCESSIONE) && aTipoMA.equals(DIFFERIMENTO_PENA_PROV)) // Aggiunto da
-																								// diego 30/08/2006
+																								// diego
+																								// 30/08/2006
 				|| (aNaturaMA.equals(CONCESSIONE) && aTipoMA.equals(ESPULSIONE))) {
 			lCodTipoDecisione = new String[1];
 			lCodTipoDecisione[0] = "02";
 		} else if (aNaturaMA.equals(CONCESSIONE_SOSPENSIONE)
-			  // 22/01/2014 DL 146 Può essere concessa anche con ordinanza
-				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA)) 
-				// MEV_9 anche per la deetenzione domiciliare - ammissione provvisoria si prevedono sia decreti che ordinanze
+				// 22/01/2014 DL 146 Può essere concessa anche con ordinanza
+				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(AFFIDAMENTO_IN_PROVA))
+				// MEV_9 anche per la deetenzione domiciliare - ammissione provvisoria si prevedono sia
+				// decreti che ordinanze
 				|| (aNaturaMA.equals(AMMISSIONE_PROVVISORIA) && aTipoMA.equals(DETENZIONE_DOMICILIARE))
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS)) // DL 146/20113
 				|| (aNaturaMA.equals(PROSECUZIONE_51BIS_CUMULO)) // DL 146/20113
@@ -607,7 +617,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 	/**
 	 * In funzione della natura decisione indicate, restituisce l'insieme dei codici Natura decisione previsti
 	 * sulla tabella MISURA_ALTERNATIVA.
-	 * 
+	 *
 	 * @param lNaturaMA
 	 * @return
 	 */

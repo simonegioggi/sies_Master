@@ -743,7 +743,8 @@ public class DecodificheController extends SiapController implements IDecodifich
 		return lContenuti;
 	}
 
-	public Collection ExListaMotivoProvvMA(String aMisAlt) throws F3BException {
+	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	public Collection ExListaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws F3BException {
 
 		Connection lConn = null;
 		DecodificheSqlDAO lDecSqlDao = null;
@@ -753,7 +754,7 @@ public class DecodificheController extends SiapController implements IDecodifich
 			lConn = getDBConnection();
 			lDecSqlDao = new DecodificheSqlDAO(lConn);
 
-			lDecSqlDao.listaMotivoProvvMA(aMisAlt);
+			lDecSqlDao.listaMotivoProvvMA(aMisAlt, aCodTipoUfficio);
 
 			lDecSqlDao.start();
 

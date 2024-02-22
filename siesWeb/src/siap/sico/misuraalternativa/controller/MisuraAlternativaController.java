@@ -66,18 +66,8 @@ import siap.sius.tenore.dao.TenoreDAO;
 import siap.sius.tenore.model.TenoreModel;
 
 /**
- * <p>
  * Title: MisuraAlternativaController
- * </p>
- * <p>
  * Description: Classe Controller per MisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  *
  * @version 1.0
  */
@@ -1759,10 +1749,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						&& lPosMod.getCodPosizioneGiuridica().equals("13") // Attuale in Affidamento
 						&& lMisModelOrder.getDataInizioMisura() != null)
 						|| ("PROC".equals(lMisModelOrder.getCodTipoUfficioScarcerazione())
-								&& !lPosMod.getCodPosizioneGiuridica().equals("29") // FIXME 04/09/2015 TEST
-																					// MEVxx -
-																					// Gestione Misure
-																					// Provvisorie
+								&& !lPosMod.getCodPosizioneGiuridica().equals("29")
+						// FIXME 04/09/2015 TEST MEVxx - Gestione Misure Provvisorie
 						)) {
 					lStatoProcMod = "0024"; // Espiazione Pena in Regime di Affidamento in Prova - Emesso
 											// Decreto con Decorrenza/Scadenza
@@ -1897,7 +1885,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// TDS
 			// FIXME da correggere: se sto concedendo Detenzione Domiciliare da Affidamento Porvvisorio
 			// lo stato 0022 non e' corretto (0026)
-
 			if (lStatoProcMod != null) {
 				InserimentoCancellazioneStatoProcedimento(lConn, aFascicolo.getIdFascicoloSiep(), lModel,
 						lStatoProcMod);
@@ -2041,14 +2028,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 
 			// ** Aggiorna SCADENZARIO FINE PENA**
 			ScadenzarioModel lScaMod = null;
-			// Ticket#202007070114 - Il test sul flagValidato è inutile e faceva fallire la condizione non 
+			// Ticket#202007070114 - Il test sul flagValidato è inutile e faceva fallire la condizione non
 			// inserendo lo scadenzario fine pena. La lPenResMod è la pena appena inserita e collegata
 			// al provvedimento che si sta validando ed è quindi sicuramente validata.
 			// Come intervento: commentato && lPenResMod.getFlagValidato().equals("S")
 			if (lPenResMod != null && lPenResMod.getDataInizio() != null && lPenResMod.getDataFine() != null
-				//	&& lPenResMod.getFlagValidato().equals("S")
-			) 
-			{
+			// && lPenResMod.getFlagValidato().equals("S")
+			) {
 				InserimentoAggiornamentoScadenzarioFinePena(lConn, lPenResMod, lEveModel,
 						lPenResMod.getDataFine(), aFascicolo.getIdFascicoloSiep());
 			}
@@ -2154,9 +2140,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 								&& "SORV".equals(lMisModelOrder.getCodTipoUfficioScarcerazione())) {
 							lPosizione.setDataInizio(lMisModelOrder.getDataScarcerazione());
 						} else if (lPosMod.getCodPosizioneGiuridica().equals("29")
-								|| lPosMod.getCodPosizioneGiuridica().equals("54") // FIXME 04/09/2015 TEST
-																					// MEVxx - Gestione Misure
-																					// Provvisorie
+								|| lPosMod.getCodPosizioneGiuridica().equals("54")
+						// FIXME 04/09/2015 TEST MEVxx - Gestione Misure Provvisorie
 						) {
 							lPosizione.setDataInizio(lMisModelOrder.getDataInizioMisura());
 						} else {
@@ -3984,19 +3969,16 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// Michele: se in misura la Posizione Giuridica deve passare sempre in 03
 					// indipendentemente se esegue PROC o SORV
 					lPosizione = "03";
-				} else if (lCodPosizione.equals("27")) // 27 - Sospensione Pena ex L. 207/03 (indultino)
-				{
+				} else if (lCodPosizione.equals("27")) {
+					// 27 - Sospensione Pena ex L. 207/03 (indultino)
 					lPosizione = "10";
 					// FIXME perche' libero ?? Se eseguito contro soggetto detenuto (SORV) andrebbe messo 03 -
 					// Detenuto
 				} else if (lCodPosizione.equals("51") || lCodPosizione.equals("52")
-						|| lCodPosizione.equals("53")) { // 51, 52,53 Esecuzione presso il domicilio IN
-															// SOSPENSIONE
-					if (lMisMDS.getCodTipoUfficioScarcerazione().compareTo("SORV") == 0) // selezionato flag
-																							// detenuto in
-																							// fase di
-																							// inserimento
-																							// revoca
+						|| lCodPosizione.equals("53")) {
+					// 51, 52,53 Esecuzione presso il domicilio IN SOSPENSIONE
+					if (lMisMDS.getCodTipoUfficioScarcerazione().compareTo("SORV") == 0)
+						// selezionato flag detenuto in fase di inserimento revoca
 						lPosizione = "03";
 					else
 						lPosizione = "10"; // FIXME perche' se in sospensione passa libero?
@@ -4006,10 +3988,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// 14 - Espiazione Pena in Regime di Semiliberta'
 					// 50 - Esecuzione presso domicilio della pena detentiva
 					lPosizione = "03";
-				} else if (lCodPosizione.equals("31") || lCodPosizione.equals("36")) { // Detenzione
-																						// domiciliare: in
-																						// sospensione di
-																						// misura
+				} else if (lCodPosizione.equals("31") || lCodPosizione.equals("36")) {
+					// Detenzione domiciliare: in sospensione di misura
 					// 31 - Sosp Cautelativa Det Dom
 					// 36 - Sosp. Provvisoria Det Dom
 					lPosizione = "03";
@@ -5137,10 +5117,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			} else {
 				if (lPosMod.isLibero() && lMisModelOrder.getDataInizioMisura() == null) // libero
 					lNomProvvDAO.setCodNomeProvvedimento("NP064");
-				else if (lPoModelPrec != null && lPoModelPrec.isLibero() && lCodPosizione.equals("12") // libero
-																										// con
-																										// inizio
-																										// misura
+				else if (lPoModelPrec != null && lPoModelPrec.isLibero() && lCodPosizione.equals("12")
+				// libero con inizio misura
 						&& (lMisModelOrder != null && lMisModelOrder.getDataInizioMisura() != null)) {
 					lNomProvvDAO.setCodNomeProvvedimento("NP065");
 				} else if (lCodPosizione.equals("03") || lCodPosizione.equals("14")
@@ -5206,9 +5184,7 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			// siesLogger.error("SQLException: " + sqe);
 			// rollback(lConn);
 			// // rollback(lConnBlob);
-			//
 			// sqe.printStackTrace();
-			//
 			// throw new F3BException("MisuraAternativaController.ExUpdateValidaMADetDomTemp : " + sqe);
 		} catch (Exception ex) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di mLog
@@ -5492,12 +5468,21 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			while (lItx.hasNext()) {
 				MisuraAlternativaModel lMisMod = (MisuraAlternativaModel) lItx.next();
 
-				// MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo DATA_ESECUTIVITA
-				Set<String> mySet = new HashSet<String>(Arrays.asList(new String[]{"0680","0681","0690","0691","0692","0682","0693"}));
-				if (lMisMod.getDataEsecutivita() == null && mySet.contains(lMisMod.getCodTipoMisura()))
-					continue;
-			  // MEV_9 - FINE
-				
+				// MEV_9-SIEP: scarto solo se esito NON è "Concede" (0001) oppure "Conferma Decisione del
+				// Magistrato Relatore" (0271)
+				boolean testEsito = "0001".equals(lMisMod.getCodEsito())
+						|| "0271".equals(lMisMod.getCodEsito());
+				if (!testEsito) {
+					// MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo
+					// DATA_ESECUTIVITA
+					Set<String> mySet = new HashSet<>(Arrays
+							.asList(new String[] { "0680", "0681", "0690", "0691", "0692", "0682", "0693" }));
+					if (lMisMod.getDataEsecutivita() == null && mySet.contains(lMisMod.getCodTipoMisura()))
+						continue;
+					// MEV_9 - FINE
+				}
+				// MEV_9-SIEP - FINE
+
 				lEveDao.ricercaEventoByKey(lMisMod.getEveIdEvento());
 				EventoModel lEvento = (EventoModel) lEveDao.getModelByKey();
 
@@ -5505,18 +5490,15 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 						&& !"A".equals(lEvento.getFlagDocumentoRegistrato())
 						&& !"N".equals(lEvento.getFlagDocumentoRegistrato())) {
 					MisuraAlternativaEventoModel lMisEve = new MisuraAlternativaEventoModel();
-
 					lMisEve.setEvento(lEvento);
 					lMisEve.setMisuraAlternativa(lMisMod);
 					lListaMisureEventi.add(lMisEve);
 				}
 			}
-
 		} catch (DAOException daoEx) {
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 			// LogF3B.getLogger()
 			siesLogger.error("DAOException: " + daoEx);
-
 			throw new F3BException(
 					"MisuraAlternativaController.ExRicercaMisureAlternativeEventiOrderDesc: " + daoEx);
 			// } catch (SQLException sqe) {
@@ -5563,47 +5545,48 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
 			// Ticket#202310100111 ed altri
-			// Questa istruzione forza il codice a sganciare la PR dall'evento puntato ed agganciarlo all'evento corrente.
-			// !!Non andrebbe MAI fatto!!. Non si può sottrarre la PR ad un evento. Si deve andare sempre in copia. 
-			// Se l'evento corrente viene annullato o cancellato verrà cancellata anche la PR per cui si perde traccia
+			// Questa istruzione forza il codice a sganciare la PR dall'evento puntato ed agganciarlo
+			// all'evento corrente.
+			// !!Non andrebbe MAI fatto!!. Non si può sottrarre la PR ad un evento. Si deve andare sempre in
+			// copia.
+			// Se l'evento corrente viene annullato o cancellato verrà cancellata anche la PR per cui si perde
+			// traccia
 			// di tale Pena che era quella dell'evento originario che non ha più la PR e nemmeno il fascicolo.
 			// Si commenta il codice e si effettua una verifica esplicita su EveIdEvent
-//			if ("S".equals(lRevocaCalcolo)) {
-//				lPenResMod.setEveIdEvento(null);
-//			}			
-			if (lPenResMod.getEveIdEvento()!=null) {
+			// if ("S".equals(lRevocaCalcolo)) {
+			// lPenResMod.setEveIdEvento(null);
+			// }
+			if (lPenResMod.getEveIdEvento() != null) {
 				// La pena già punta un evento. Potrebbe essere l'evento corrente
-				if (lPenResMod.getEveIdEvento().compareTo(lEveModel.getIdEvento())==0) {
+				if (lPenResMod.getEveIdEvento().compareTo(lEveModel.getIdEvento()) == 0) {
 					// Punta proprio l'evento corrente forzo l'id a null per andare in update (lo riaggancia)
 					lPenResMod.setEveIdEvento(null);
-				}
-				else {
+				} else {
 					// Punta un altro evento. Devo andare per forza in copia
-				} 
-			}
-			else {
+				}
+			} else {
 				// non punta alcun evento vado un update e la aggancio
 			}
 			// Ticket#202310100111 - FINE
-			
 
-			
 			// ticket#202012020116 [D.F.] A seguito dei test ci si è accorti che questa parte di codice
-			// va spostata dopo la insert/updeta altrimenti l'istruzione lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
+			// va spostata dopo la insert/updeta altrimenti l'istruzione
+			// lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
 			// altera il test if (lPenResMod.getEveIdEvento() == null){...} che diventa sempre false
 			// La PR viene sempre duplicata anche quaindo non necessario.
-			// Comunqeu anche in assenza dell'errore il semplice test if (lPenResMod.getEveIdEvento() == null) {...}
-			// è ERRATO. la PR recuperata potrebbe già puntare l'evento corrente e in questo caso non 
+			// Comunqeu anche in assenza dell'errore il semplice test if (lPenResMod.getEveIdEvento() == null)
+			// {...}
+			// è ERRATO. la PR recuperata potrebbe già puntare l'evento corrente e in questo caso non
 			// andrebbe recuperara.
 			// ticket#202007070114 [D.F.]- Aggiorno i dati del model da restituire alla chiamante
-			//lPenResMod.setFlagValidato("S");
-			//lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
-			// end ticket#202007070114 
-			
+			// lPenResMod.setFlagValidato("S");
+			// lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
+			// end ticket#202007070114
+
 			// siesLogger.debug("lPenResMod: " + lPenResMod.toString());
-			
+
 			if (lPenResMod.getEveIdEvento() == null) {
-				siesLogger.debug("lPenResMod eveIdevento null vado in update "+lPenResMod.getEveIdEvento());
+				siesLogger.debug("lPenResMod eveIdevento null vado in update " + lPenResMod.getEveIdEvento());
 				lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
 				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
 				lPenResDao.setFlagValidato("S");
@@ -5616,7 +5599,8 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPenResDao.update();
 				lPenResDao.stop();
 			} else {
-				siesLogger.debug("lPenResMod eveIdevento not null vado in duplicazione "+lPenResMod.getEveIdEvento());
+				siesLogger.debug("lPenResMod eveIdevento not null vado in duplicazione "
+						+ lPenResMod.getEveIdEvento());
 				lPenResDao.setDAOFromModel(lPenResMod);
 				lPenResDao.setFlagValidato("S");
 				lPenResDao.setEveIdEvento(lEveModel.getIdEvento());
@@ -5628,13 +5612,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 				lPenResDao.insert();
 				lPenResDao.stop();
 			}
-			
+
 			// ticket#202012020116 [D.F.] Codice spostato dopo l'inserimento
 			// ticket#202007070114 [D.F.]- Aggiorno i dati del model da restituire alla chiamante
 			lPenResMod.setFlagValidato("S");
 			lPenResMod.setEveIdEvento(lEveModel.getIdEvento());
-			// end ticket#202007070114 
-			
+			// end ticket#202007070114
+
 		} finally {
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);

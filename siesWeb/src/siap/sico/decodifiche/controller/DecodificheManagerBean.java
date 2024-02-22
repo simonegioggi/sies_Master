@@ -235,11 +235,12 @@ public class DecodificheManagerBean {
 	private Collection mMotivoProvvedimentoRipristinoDetDomSpec;
 	private Collection mMotivoProvvedimentoAmmProvDetDom;
 	private Collection mMotivoProvvedimentoAmmProvAffi;
-	// MEV_9
+	// MEV_9-SIEP
 	private Collection mMotivoProvvedimentoAmmProvDetDomPmm;
 	private Collection mMotivoProvvedimentoAmmProvAffiPmm;
-  // MEV_9 - FINE
-	
+	private Collection mMotivoProvvedimentoMAAffPMinor;
+	// MEV_9-SIEP - FINE
+
 	private Collection mMotivoProvvedimentoMADetDomTemp;
 	private Collection mMotivoProvvedimentoMADetDomTempProroga;
 	private Collection mMotivoProvvedimentoMADetDomTempProrogaProvvisoria;
@@ -425,9 +426,9 @@ public class DecodificheManagerBean {
 	private Collection mTipoTutore;
 	// MEV_2023-13: aggiunta collezione per la ragione sociale
 	private Collection mRagioneSocialeCO;
-	
+
 	// MEV_2023-13
-    private Collection mTipoPenaSostitutiva;
+	private Collection mTipoPenaSostitutiva;
 
 	/**
 	 * Inizializzazione degli attributi del Singleton
@@ -1056,17 +1057,17 @@ public class DecodificheManagerBean {
 					.add(new DecodificheModel("63", "Decreto di Archiviazione", "", "", "", "", "", "", ""));
 
 			lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
-            // MEV_2023-13 aggiunto filtro sul dominio per l'aggiunta dei codici della "Pena Sostitutiva"
-            lModel.setFiltro("Sanzione Sostitutiva");
-            mTipoSanzioneSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
-            lModel.setFiltro(""); // ripulisco il filtro
-            
-            // MEV_2023-13
-            lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
-            lModel.setFiltro("Pena Sostitutiva");
-            mTipoPenaSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
-            lModel.setFiltro(""); // ripulisco il filtro
-            // MEV_2023-13 - FINE
+			// MEV_2023-13 aggiunto filtro sul dominio per l'aggiunta dei codici della "Pena Sostitutiva"
+			lModel.setFiltro("Sanzione Sostitutiva");
+			mTipoSanzioneSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+			lModel.setFiltro(""); // ripulisco il filtro
+
+			// MEV_2023-13
+			lModel.setContesto("TIPO_SANZIONE_SOSTITUTIVA");
+			lModel.setFiltro("Pena Sostitutiva");
+			mTipoPenaSostitutiva = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
+			lModel.setFiltro(""); // ripulisco il filtro
+			// MEV_2023-13 - FINE
 
 			lModel.setContesto("TIPO_SANZIONE_CONVERTITA");
 			mTipoSanzioneConvertita = lDecodifiche.ExRicercaDecodificheOrdinatePerCodiceAlternativo(lModel);
@@ -1333,12 +1334,13 @@ public class DecodificheManagerBean {
 			mOggettoProcedimentoUDSM = lDecodifiche.ExListaContenuti("UDSM");
 			mOggettoProcedimento = lDecodifiche.ExListaContenuti("");
 
+			// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM (x3)
 			// Gestione motivo provvedimento MA
-			mMotivoProvvedimentoMADDom = lDecodifiche.ExListaMotivoProvvMA("DETENZIONE");
+			mMotivoProvvedimentoMADDom = lDecodifiche.ExListaMotivoProvvMA("DETENZIONE", "PM");
 
-			mMotivoProvvedimentoMAAffP = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO");
+			mMotivoProvvedimentoMAAffP = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO", "PM");
 
-			mMotivoProvvedimentoMASemiL = lDecodifiche.ExListaMotivoProvvMA("SEMILIBERTA");
+			mMotivoProvvedimentoMASemiL = lDecodifiche.ExListaMotivoProvvMA("SEMILIBERTA", "PM");
 
 			mMotivoProvvedimentoOS = lDecodifiche.ExListaMotivoOS("OS_LIBERAZIONE_ANTICIPATA");
 
@@ -1417,25 +1419,23 @@ public class DecodificheManagerBean {
 
 			mMotivoProvvedimentoRipristinoDetDomSpec = lDecodifiche
 					.ExListaMotivoProvvRipristinoDetDomSpeciale("RIPRISTINO_DET_DOM_SPEC");
-			
-			// MEV_9
-//			mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
-//					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
-//
-//			mMotivoProvvedimentoAmmProvAffi = lDecodifiche
-//					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI");
-			
+
+			// MEV_9-SIEP
+			// mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
+			// .ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM");
+			// mMotivoProvvedimentoAmmProvAffi = lDecodifiche
+			// .ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI");
 			mMotivoProvvedimentoAmmProvDetDom = lDecodifiche
 					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM_PM");
 			mMotivoProvvedimentoAmmProvDetDomPmm = lDecodifiche
 					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_DET_DOM_PMM");
-			
 			mMotivoProvvedimentoAmmProvAffi = lDecodifiche
-					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PM");		
+					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PM");
 			mMotivoProvvedimentoAmmProvAffiPmm = lDecodifiche
 					.ExListaMotivoProvvAmmProvvisoria("AMMISSIONE_PROV_AFFI_PMM");
-			// MEV_9 - FINE
-			
+			mMotivoProvvedimentoMAAffPMinor = lDecodifiche.ExListaMotivoProvvMA("AFFIDAMENTO", "PMM");
+			// MEV_9-SIEP - FINE
+
 			mMotivoProvvedimentoMADetDomTemp = lDecodifiche
 					.ExListaMotivoProvvMADetDomTemp("AMMISSIONE_PROV_DET_DOM_TEMP");
 
@@ -1460,8 +1460,6 @@ public class DecodificheManagerBean {
 
 			mMotivoProvvedimentoMAPreEffSemli = lDecodifiche.ExListaMotivoMAPreEff("SEMILIBERTA");
 
-			mMotivoProvvedimentoMAConIndultino = lDecodifiche.ExListaMotivoProvvMA("INDULTINO");
-
 			mMotivoProvvedimentoMARipristinoIndultino = lDecodifiche.ExListaMotivoRipristinoMA("INDULTINO");
 
 			mMotivoProvvedimentoSospProvvMAIndultino = lDecodifiche
@@ -1471,8 +1469,11 @@ public class DecodificheManagerBean {
 
 			mMotivoProvvedimentoRevocaIndultino = lDecodifiche.ExListaMotivoRevocaProvvMA("INDULTINO");
 
+			// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM (x2)
+			mMotivoProvvedimentoMAConIndultino = lDecodifiche.ExListaMotivoProvvMA("INDULTINO", "PM");
 			// 27/09/2010 Espiazione Presso Domicilio
-			mMotivoProvvedimentoMAEspPressoDom = lDecodifiche.ExListaMotivoProvvMA("ESP_PRESSO_DOM");
+			mMotivoProvvedimentoMAEspPressoDom = lDecodifiche.ExListaMotivoProvvMA("ESP_PRESSO_DOM", "PM");
+
 			mMotivoProvvedimentoMASospEspPressoDom = lDecodifiche
 					.ExListaMotivoProvvSospProvvMA("ESP_PRESSO_DOM");
 			mMotivoProvvedimentoMAPerEfficEspPressoDom = lDecodifiche.ExListaMotivoMAPreEff("ESP_PRESSO_DOM");
@@ -1898,8 +1899,8 @@ public class DecodificheManagerBean {
 			// MEV_2023-13: aggiunta collezione per la ragione sociale
 			mRagioneSocialeCO = new Vector();
 			mRagioneSocialeCO.add(new DecodificheModel("-", "-", "-", "-", "-", "-", "-", "-", "-"));
-			mRagioneSocialeCO.add(new DecodificheModel("Ente", "Ente", "RAGIONE_SOCIALE", "", "", "", "", "",
-					""));
+			mRagioneSocialeCO
+					.add(new DecodificheModel("Ente", "Ente", "RAGIONE_SOCIALE", "", "", "", "", "", ""));
 
 			// FIXME MEV26 solo per sviluppo da sostituire con la versione ufficiale LPU
 			DecodificheModel lTipoLPUModel = new DecodificheModel();
@@ -2189,11 +2190,11 @@ public class DecodificheManagerBean {
 	public Collection getTipoSanzioneSostitutiva() {
 		return mTipoSanzioneSostitutiva;
 	}
-	
+
 	// MEV_2023-13
-    public Collection getTipoPenaSostitutiva() {
-        return mTipoPenaSostitutiva;
-    }
+	public Collection getTipoPenaSostitutiva() {
+		return mTipoPenaSostitutiva;
+	}
 
 	public Collection getTipoAtto() {
 		return mTipoAtto;
@@ -2683,8 +2684,8 @@ public class DecodificheManagerBean {
 	public Collection getMotivoProvvedimentoAmmProvAffi() {
 		return mMotivoProvvedimentoAmmProvAffi;
 	}
-	
-	// MEV_9
+
+	// MEV_9-SIEP
 	public Collection getMotivoProvvedimentoAmmProvDetDomPmm() {
 		return mMotivoProvvedimentoAmmProvDetDomPmm;
 	}
@@ -2692,8 +2693,12 @@ public class DecodificheManagerBean {
 	public Collection getMotivoProvvedimentoAmmProvAffiPmm() {
 		return mMotivoProvvedimentoAmmProvAffiPmm;
 	}
-  //MEV_9 - FINE
-	
+
+	public Collection getMotivoProvvedimentoMAffPMinor() {
+		return mMotivoProvvedimentoMAAffPMinor;
+	}
+	// MEV_9-SIEP - FINE
+
 	public Collection getMotivoProvvedimentoMADetDomTemp() {
 		return mMotivoProvvedimentoMADetDomTemp;
 	}

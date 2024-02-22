@@ -25,25 +25,16 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * <p>
  * Title: ActLoadInserisciMAAmmProvDetDom
- * </p>
- * <p>
  * Description: Classe Action per la load inserisci di MisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
-
 public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
+
 	@SuppressWarnings("rawtypes")
 	public String processRequest() throws F3BException {
+
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
 		String lRitorno = this.getAmmissioneProvvisoria();
 		if (!lRitorno.equals(""))
@@ -109,18 +100,19 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 		lOptionTipoProvvSorv.setSelected("-");
 		setRequestAttribute("comboTipoProvvSorv", "" + lOptionTipoProvvSorv);
 		// MEV_9 - FINE
-		
+
 		// setto il campo codice motivo
 		// MEV_9
-		//Option lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
+		// Option lOption = new
+		// Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
 		Option lOption = null;
-		if (isUfficoMonorenni())
+		if (isUfficioMinorenni())
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDomPmm());
-		else 
+		else
 			lOption = new Option(DecodificheManager.getInstance().getMotivoProvvedimentoAmmProvDetDom());
-		// MEV_9 - FINE		
+		// MEV_9 - FINE
 		setRequestAttribute("motivoProvv", "" + lOption);
-		
+
 		// Riempimento ComboBoX
 		Option lOptionAvv = new Option(DecodificheManager.getInstance().getTipoAutorita(), "22");
 		setRequestAttribute("autoritaEsternaAvv", "" + lOptionAvv);
@@ -133,4 +125,5 @@ public class ActLoadInserisciMAAmmProvDetDom extends ActAmmissioneProvvisoria {
 
 		return PG_LOAD_INSERISCI_MA_AMM_PROVVISORIA;
 	}
+
 }

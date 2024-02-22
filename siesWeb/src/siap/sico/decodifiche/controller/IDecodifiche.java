@@ -38,7 +38,8 @@ public interface IDecodifiche {
 
 	public Collection ExListaContenuti(String aCodTipoUfficio) throws F3BException;
 
-	public Collection ExListaMotivoProvvMA(String aMisAlt) throws F3BException;
+	// MEV_9-SIEP: cambiata firma del metodo per distinguere PM da PMM
+	public Collection ExListaMotivoProvvMA(String aMisAlt, String aCodTipoUfficio) throws F3BException;
 
 	public Collection ExListaMotivoOS(String aOSLibAnt) throws F3BException;
 
