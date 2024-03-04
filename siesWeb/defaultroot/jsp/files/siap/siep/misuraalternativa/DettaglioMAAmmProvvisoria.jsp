@@ -74,6 +74,12 @@
   <script language="JavaScript" src="<%=IWebConstants.JS_CONFIRM%>"></script>
   <script language="JavaScript" src="<%=ISIAPCostantiWeb.JS_CONTROL_UPLOAD%>"></script>
 
+	<script language="JavaScript">
+	<%-- MEV_9 si aggiunge il tasto di modifica --%>
+    function modifica() {
+      document.modifica.submit();
+    }
+  </script>
 </head>
 <body class="corpo">
 
@@ -95,17 +101,20 @@
    String flagMis = new String();
 
 %>
-<%if (eventonotifica.getEvento().getFlagDocumentoRegistrato()!=null)
- if (eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N")==0) {%>
 
+<%
+if (   "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())
+    || eventonotifica.getEvento().getFlagDocumentoRegistrato()==null
+   )
+{
+%>	
+	<%-- MEV_9 si aggiunge il tasto di modifica --%>
+  <td class="LBG">
+    <a href="Javascript:modifica()">
+      <img  align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica Nota di Trasmissione" width="24" height="24" border="0">
+    </a>
+  </td>
  <!-- BOTTONE DI STAMPA -->
-   <jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-     <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaMAAmmProvvisoria&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura%>"/>
-   </jsp:include>
-<%}%>
-
-<%if (eventonotifica.getEvento().getFlagDocumentoRegistrato()==null) {%>
-  <!-- BOTTONE DI STAMPA -->
    <jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
      <jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaMAAmmProvvisoria&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura%>"/>
    </jsp:include>
@@ -127,6 +136,28 @@
 </table>
  <br>
    <jsp:include page="/jsp/files/siap/siep/fascicolo/DettaglioSoggettoSentenza.jsp"/>
+
+<%
+// MEV_9 si aggiunge il tasto di modifica
+if (   eventonotifica.getEvento().getFlagDocumentoRegistrato() == null
+    || "N".equals(eventonotifica.getEvento().getFlagDocumentoRegistrato())
+   )
+{
+%>  
+<form method="POST" action="<%=IWebConstants.PG_MAIN%>" name="modifica">
+  <input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento() %>">
+
+	<% if(tipoMisura.equals("AFFIDAMENTO")) {%>
+	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.misuraalternativa.action.ActLoadModificaMAAmmProvAffi">
+	<% } else if(tipoMisura.equals("DETENZIONE")) {%>
+	<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.misuraalternativa.action.ActLoadModificaMAAmmProvDetDom">
+	<% } %>
+
+</form>
+<% } %>   
+
+
+
 <table>
 <%if(flagmisura.equals("N"))
 {%>

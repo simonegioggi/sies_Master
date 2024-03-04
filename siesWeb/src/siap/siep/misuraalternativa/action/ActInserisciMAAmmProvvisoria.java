@@ -24,6 +24,8 @@ import f3b.web.IWebConstants;
 import siap.sico.cssa.action.ICostantiCSSA;
 import siap.sico.decodifiche.model.ComuneModel;
 import siap.sico.evento.action.ICostantiEvento;
+import siap.sico.evento.controller.IEvento;
+import siap.sico.evento.model.EventoModel;
 import siap.sico.evento.model.EventoNotificaModel;
 import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
@@ -32,6 +34,7 @@ import siap.siep.calcolopena.action.ActCalcoloPenaMain;
 import siap.siep.calcolopena.model.CalcoloPenaModel;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
 import siap.siep.notifica.model.NotificaModel;
+import siap.siep.ordineesecuzione.controller.IOrdineEsecuzione;
 import siap.siep.penaresidua.controller.IPenaResidua;
 import siap.siep.penaresidua.model.PenaResiduaModel;
 import siap.siep.posizione.action.ICostantiPosizioneGiuridica;
@@ -62,6 +65,24 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 
 		FascicoloSiepModel lFascicoloModel = (FascicoloSiepModel) getSessionAttribute("fascicolo");
 
+		
+		// MEV_9
+		String tipoOperazione = null;
+		if (!isRequestParameterNullObj("tipoOperazione"))
+			tipoOperazione = getRequestStringParameter("tipoOperazione");
+		if ("MODIFICA".equals(tipoOperazione)){
+			BigDecimal idEventoOld = getRequestBigDecimalParameter(ICostantiEvento.CAMPO_ID_EVENTO);
+			
+			siesLogger.debug("Sono in modifica procedo alla cancellazione dell'evento con id = "+idEventoOld);
+			IEvento lCtrlEvento = SICOLookupRemote.getEventoRemote();
+			EventoModel lEveModRic = lCtrlEvento.ExRicercaEventoByKey(idEventoOld);
+			
+			IOrdineEsecuzione lCtrl = SIEPLookupRemote.getOrdineEsecuzioneRemote();
+			lCtrl.ExCancellaEventoConStoreProcedure(lEveModRic);
+			siesLogger.debug("Evento cancellato proseguo con un nuovo inserimento");
+		}
+	  // MEV_9 - FINE
+		
 		IPenaResidua lPenResCtrl = SIEPLookupRemote.getPenaResiduaRemote();
 		lPenaResiduaModel = lPenResCtrl
 				.ExRicercaPenaResiduaCorrenteByFascicoloSiep(lFascicoloModel.getIdFascicoloSiep());
@@ -135,6 +156,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 		// SIEP e non provengo dal verbale sottoscrizione
 		// ==========================================================================
 		if (lMisAlModAMM == null) {
+			siesLogger.debug("Primo giro: lMisAlModAMM is null");
 			// INSERISCO EVENTO E NOTIFICA DEL MDS
 			EventoNotificaModel lEveMod = new EventoNotificaModel();
 			lEveMod.getEvento().setCodMotivo(getRequestStringParameter(ICostantiEvento.CAMPO_COD_MOTIVO));
@@ -150,7 +172,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 					ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE,
 					ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE);
 
-			// new! DL 146 L'AFFIDAMENTO uò essere concesso anche con Ordinanza per cui
+			// new! DL 146 L'AFFIDAMENTO può essere concesso anche con Ordinanza per cui
 			// devo recuperare il tipo Provvedimento dalla FORM
 			String lTipoProvvedimento = "";
 			// MEV_9 anche per la DET DOM sui può emettere una ordinanza
@@ -307,6 +329,8 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 
 		} // fine dell'inserimento della misura alternativa simulata da SIEP
 		else {
+			siesLogger.debug("Secondo giro");
+		
 			// passo qui per 2 ipotesi diverse
 			// 1) la misura alternativa era stata già stata inserita da SIUS (seleziona dalla lista)
 			// 2) la misura alternativa è gia presente perchè è la seconda volta che accedo
@@ -334,12 +358,29 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			lMisAlModAMM.setCodUfficioAggiornamento(lCodiceUfficio);
 			lMisAlModAMM.setCodOperatoreAggiornamento(lCodiceOperatore);
 			lMisAlModAMM.setDataAggiornamento(DateUtils.getSysDate());
-
+			
+			//MEV_9 - Non salvava/aggiornava i dati delle NOTE editabili in form
+			siesLogger.debug("Carico le note");
+			siesLogger.debug("Prima lMisAlModAMM.getNote() = "+lMisAlModAMM.getNote());
+			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE)) {
+				siesLogger.debug("note da request = "+getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
+				lMisAlModAMM.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
+				siesLogger.debug("Dopo lMisAlModAMM.getNote() = "+lMisAlModAMM.getNote());
+			}		
+			
+			
 			if (flagverbale.equals("N")) {
 				// Sto inserendo il provvedimento di esecuzione dell'ordinanza e quindi
 				// non sto registrando la data inizio misura dal verbale.
 				// Entro quì perchè ho selezionato l'ordinanza dalla lista
 
+				// MEV_9: la modifica del luogo della prova è sempre consentita e non determina la duplicazione del
+				//        provvedimento SIUS ma devo aggiornare il campo su MA
+				if (!this.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
+					lMisAlModAMM.setDescrLuogoProva(
+							getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
+				// MEV_9 - FINE
+				
 				// prendo la data scarcerazione o inizio misura dalla maschera se è stata digitata
 				if (!this
 						.isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE)
