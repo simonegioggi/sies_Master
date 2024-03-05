@@ -1,7 +1,20 @@
-BRANCH SIES VERSIONE 12.5.7.0
-Nasce dal branch 12.5.6.0 in data 22/12/2023
-Questa release verrà rilasciata il 23/02/2024 (Patch mese di Gennaio e Febbraio 2024)
+Ticket#20240228011 — SIEP Fascicolo non validato
 
-Comprende i seguenti Ticket MAC:
+Il fase di iscrizione di una richiesta conversione PP sul classe VII il ctrl
+sganciava la PR dell'evento precedente ed inoltre inseriva una pena complessiva
+inutile.
 
-1)	Ticket#
+Classi modificate
+
+siap.siep.penapecuniaria.controller.ExInserisciRichiestaConversione
+
+
+
+
+
+
+
+
+
+
+
