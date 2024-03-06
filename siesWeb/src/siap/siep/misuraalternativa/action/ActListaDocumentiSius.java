@@ -42,7 +42,7 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 		String[] lTipoDecisone = getCodTipoDecisione(lNaturaMA, lTipoMA); // Decreto/Ordinanza
 		String[] lNaturaDecisione = getCodNaturaDecisione(lNaturaMA);
 		String[] lTipoMisura = getCodTipoMisura(lNaturaMA, lTipoMA);
-
+		
 		if (isRequestParameterNullObj("RICERCA_PER_SOGGETTO")) { // Ricerca MA per Fascicolo corrente
 			IMisuraAlternativa lCtrlMisura = SICOLookupRemote.getMisuraAlternativaRemote();
 
@@ -111,7 +111,6 @@ public class ActListaDocumentiSius extends ActionSiap implements ICostantiMisura
 				}
 
 				lListaEventiOrdinanze.addAll(lListaPerFasciolo);
-
 			}
 
 			// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di

@@ -99,9 +99,8 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setField("FL_FORMA_MISURA", BIG_DECIMAL);
 		setField("DESCRIZIONE_COMUNITA", STRING);
 
-		// MEV_9-SIEP: aggiunte due impostazioni
+		// MEV_9
 		setField("DATA_ESECUTIVITA", DATE);
-		setField("COD_ESITO", STRING);
 	}
 
 	//
@@ -343,13 +342,9 @@ public class MisuraAlternativaDAO extends TableDAO {
 		return getString("DESCRIZIONE_COMUNITA");
 	}
 
-	// MEV_9-SIEP: aggiunti 2 metodi get
+	// MEV_9
 	public Date getDataEsecutivita() throws DAOException {
 		return getDate("DATA_ESECUTIVITA");
-	}
-
-	public String getCodEsito() throws DAOException {
-		return getString("COD_ESITO");
 	}
 
 	//
@@ -591,13 +586,9 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setString("DESCRIZIONE_COMUNITA", aValore);
 	}
 
-	// MEV_9-SIEP: aggiunti 2 metodi set
+	// MEV_9
 	public void setDataEsecutivita(Date aValore) {
 		setDate("DATA_ESECUTIVITA", aValore);
-	}
-
-	public void setCodEsito(String aValore) {
-		setString("COD_ESITO", aValore);
 	}
 
 	public GenericModel getModel() throws DAOException {
@@ -621,8 +612,8 @@ public class MisuraAlternativaDAO extends TableDAO {
 				getChiaveProgrFascicoloSiusMaAt(), getChiaveUfficioFascicoloSiusMaAt(), "",
 				getAnnoRegistroMaAt(), getNumeroRegistroMaAt(), getFlFormaMisura(),
 				getDescrizioneComunita(),
-				// MEV_9-SIEP: aggiunti 2 parametri
-				getDataEsecutivita(), getCodEsito());
+				// MEV_9
+				getDataEsecutivita());
 	}
 
 	public void setDAOFromModel(MisuraAlternativaModel aModel) throws DAOException {
@@ -686,9 +677,8 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setNumeroRegistroMaAt(aModel.getNumeroRegistroMaAt());
 		setFlFormaMisura(aModel.getFlFormaMisura());
 		setDescrizioneComunita(aModel.getDescrizioneComunita());
-		// MEV_9-SIEP: aggiunte 2 impostazioni
+		// MEV_9
 		setDataEsecutivita(aModel.getDataEsecutivita());
-		setCodEsito(aModel.getCodEsito());
 	}
 
 	public void setDAOFromModelForUpdate(MisuraAlternativaModel aModel) throws DAOException {
@@ -748,9 +738,8 @@ public class MisuraAlternativaDAO extends TableDAO {
 		setChiaveUfficioFascicoloSiusMaAt(aModel.getChiaveUfficioFascicoloSiusMaAt());
 		setAnnoRegistroMaAt(aModel.getAnnoRegistroMaAt());
 		setNumeroRegistroMaAt(aModel.getNumeroRegistroMaAt());
-		// MEV_9-SIEP: aggiunte 2 impostazioni
+		// MEV_9
 		setDataEsecutivita(aModel.getDataEsecutivita());
-		setCodEsito(aModel.getCodEsito());
 	}
 
 	public void setCondizione(MisuraAlternativaModel aModel) {

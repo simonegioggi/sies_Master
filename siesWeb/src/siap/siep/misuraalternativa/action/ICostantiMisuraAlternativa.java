@@ -3,22 +3,11 @@ package siap.siep.misuraalternativa.action;
 import f3b.web.IWebConstants;
 
 /**
- * <p>
  * Title: ICostantiMisuraAlternativa
- * </p>
- * <p>
  * Description: Classe di costanti di MisuraAlternativa
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
  * 
  * @version 1.0
  */
-
 public interface ICostantiMisuraAlternativa {
 
 	public static final String CAMPO_ID_MISURA_ALTERNATIVA = "IdMisuraAlternativa";
@@ -169,7 +158,6 @@ public interface ICostantiMisuraAlternativa {
 	public static final String CAMPO_GIORNO_DATA_ESECUTIVITA = "GiornoDataEsecutivita";
 	public static final String CAMPO_MESE_DATA_ESECUTIVITA = "MeseDataEsecutivita";
 	public static final String CAMPO_ANNO_DATA_ESECUTIVITA = "AnnoDataEsecutivita";
-	//
 
 	public static final String PG_LOAD_INSERISCI_MA_CONCESSIONE = IWebConstants.ROOT_DIR
 			+ "files/siap/siep/misuraalternativa/LoadInserisciConcessione.jsp";

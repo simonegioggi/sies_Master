@@ -5468,10 +5468,13 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 			while (lItx.hasNext()) {
 				MisuraAlternativaModel lMisMod = (MisuraAlternativaModel) lItx.next();
 
+				lEveDao.ricercaEventoByKey(lMisMod.getEveIdEvento());
+				EventoModel lEvento = (EventoModel) lEveDao.getModelByKey();
+
 				// MEV_9-SIEP: scarto solo se esito NON è "Concede" (0001) oppure "Conferma Decisione del
 				// Magistrato Relatore" (0271)
-				boolean testEsito = "0001".equals(lMisMod.getCodEsito())
-						|| "0271".equals(lMisMod.getCodEsito());
+				boolean testEsito = "0001".equals(lEvento.getCodEsito())
+						|| "0271".equals(lEvento.getCodEsito());
 				if (!testEsito) {
 					// MEV_9 scarto le ammissioni provvisorie se non valorizzato il nuovo campo
 					// DATA_ESECUTIVITA
@@ -5482,9 +5485,6 @@ public class MisuraAlternativaController extends SiapController implements IMisu
 					// MEV_9 - FINE
 				}
 				// MEV_9-SIEP - FINE
-
-				lEveDao.ricercaEventoByKey(lMisMod.getEveIdEvento());
-				EventoModel lEvento = (EventoModel) lEveDao.getModelByKey();
 
 				if (lEvento != null && lEvento.getFlagDocumentoRegistrato() != null
 						&& !"A".equals(lEvento.getFlagDocumentoRegistrato())

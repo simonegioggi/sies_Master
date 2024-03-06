@@ -144,7 +144,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Oggetti per parametro Contenuto
-	 * <p>
 	 *
 	 * @param aContenuto
 	 *            per cui filtrare.
@@ -366,7 +365,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Contenuti per parametro CodTipoUfficio
-	 * <p>
 	 *
 	 * @param aCodTipoUfficio
 	 *            per cui filtrare.
@@ -1206,7 +1204,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 * Query per recupero dei tipi ufficio cumulo per : - RV_DOMAIN = 'TIPO_UFFICIO_CUMULO' - E (
 	 * RV_HIGH_VALUE = 'T' OR RV_HIGH_VALUE = 'S' OR RV_HIGH_VALUE = 'C' ). Le occorrenze sono ordinate per il
 	 * campo RV_MEANING
-	 * <p>
 	 *
 	 * @throws DAOException
 	 */
@@ -1227,7 +1224,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 * Query per recupero dei tipi ufficio cumulo per : - RV_DOMAIN = 'TIPO_UFFICIO_CUMULO' e RV_DOMAIN =
 	 * 'UFFICIO_LOGIN' - E ( RV_HIGH_VALUE = 'T' OR RV_HIGH_VALUE = 'S' OR RV_HIGH_VALUE = 'C' ). - E
 	 * RV_ABBREVIATION pari ='V' Le occorrenze sono ordinate per il campo RV_MEANING
-	 * <p>
 	 *
 	 * @throws DAOException
 	 */
@@ -1256,7 +1252,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 * Query per recupero dei tipi ufficio cumulo per : - RV_DOMAIN = 'TIPO_UFFICIO_CUMULO' - E (
 	 * RV_HIGH_VALUE = 'T' OR RV_HIGH_VALUE = 'S' OR RV_HIGH_VALUE = 'C' OR RV_HIGH_VALUE = 'D'). Le
 	 * occorrenze sono ordinate per il campo RV_MEANING
-	 * <p>
 	 *
 	 * @throws DAOException
 	 */
@@ -1295,7 +1290,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Oggetti con parametro Contenuto diverso da quello di input.
-	 * <p>
 	 *
 	 * @param aContenuto
 	 *            per cui filtrare.
@@ -1433,7 +1427,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Lista Oggetti-Contenuti SIGE. La funzione restituisce l'elenco di tutti gli Oggetti SIGE ed i loro
 	 * Contenuti
-	 * <p>
 	 *
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
@@ -1500,8 +1493,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	public void ricercaDecodificheTipoMisureMinorenni() {
 		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND "
-		// + " rv_low_value in ('02','08','13','14','17','18') ORDER BY RV_MEANING ";
-		// Per gli utenti UDSM devono essere selezionabili solo i seguenti Tipo Misura
+				// + " rv_low_value in ('02','08','13','14','17','18') ORDER BY RV_MEANING ";
+				// Per gli utenti UDSM devono essere selezionabili solo i seguenti Tipo Misura
 				+ " rv_low_value in ('02','08','17','18') ORDER BY RV_MEANING ";
 
 		setStatement(lStatement);
@@ -1514,8 +1507,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	 */
 	public void ricercaDecodificheTipoMSMinorenniByNatura(String codice) {
 		String lStatement = " SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'TIPO_MISURA_SICUREZZA' AND "
-		// + " rv_low_value in ('02','08','13','14','17','18') AND RV_ABBREVIATION = '" + codice
-		// Per gli utenti UDSM devono essere selezionabili solo i seguenti Tipo Misura
+				// + " rv_low_value in ('02','08','13','14','17','18') AND RV_ABBREVIATION = '" + codice
+				// Per gli utenti UDSM devono essere selezionabili solo i seguenti Tipo Misura
 				+ " rv_low_value in ('02','08','17','18') AND RV_ABBREVIATION = '" + codice
 				+ "' ORDER BY RV_MEANING ";
 		setStatement(lStatement);
@@ -1523,7 +1516,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 
 	/**
 	 * Lista Contenuti SIGE. La funzione restituisce l'elenco di tutti i Contenuti SIGE
-	 * <p>
 	 *
 	 * @throws DAOException
 	 *             propaga errore di eccezione.
@@ -1543,7 +1535,6 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 	/**
 	 * Lista Oggetti SIGE per Contenuto. La funzione restituisce l'elenco di tutti gli Oggetti SIGE per
 	 * Contenuto
-	 * <p>
 	 *
 	 * @throws DAOException
 	 *             propaga errore di eccezione.

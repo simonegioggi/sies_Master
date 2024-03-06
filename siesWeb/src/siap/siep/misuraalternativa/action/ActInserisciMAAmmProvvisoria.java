@@ -188,7 +188,7 @@ public class ActInserisciMAAmmProvvisoria extends ActMisuraAlternativa implement
 			//}
 
 			// Popola l'EVENTO SIUS (decreto / ordinanza)
-			lEveMod.setEvento(setEventoOrdinazaDecretoMisuraAlternativa(lEveMod.getEvento(),
+			lEveMod.setEvento(setEventoOrdinanzaDecretoMisuraAlternativa(lEveMod.getEvento(),
 					lTipoProvvedimento, lCodiceUffEmi, lComModAutEmi, lDataEmisTras));
 
 			// DepositoDecretoModel lDepDecMod = null;

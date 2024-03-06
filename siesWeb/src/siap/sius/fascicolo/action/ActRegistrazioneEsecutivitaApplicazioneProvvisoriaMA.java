@@ -113,11 +113,13 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 		IDepositoOrdinanzaPc idopc = SIUSLookupRemote.getDepositoOrdinanzaPcRemote();
 		DepositoOrdinanzaPcModel dopm = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
 				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "AM");
-		DepositoOrdinanzaPcModel dopcmMA = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
-				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "MA");
+		// MEV_9-SIEP: nella ricerca sostituisco "MA" (Ordinanza di Misura Alternativa) con
+		// "CM" (Ordinanza Conferma Applicazione Provvisoria Misura D.Lgs. 123/2018)
+		DepositoOrdinanzaPcModel dopcmCM = idopc.ExRicercaDepositoOrdinanzaPcByGenProcTipoOrd(
+				fgpm.getGeneraleProcedimentoModel().getIdGeneraleProcedimento(), "CM");
 		boolean existConfermaDecisioneMR = false;
-		if (!Utils.isNullObj(dopcmMA)) {
-			BigDecimal idEventoMA = dopcmMA.getIdEventoGenerato();
+		if (!Utils.isNullObj(dopcmCM)) {
+			BigDecimal idEventoMA = dopcmCM.getIdEventoGenerato();
 			EventoModel emMA = ie.ExRicercaEventoByKey(idEventoMA);
 			if (!"A".equals(emMA.getFlagDocumentoRegistrato()))
 				existConfermaDecisioneMR = true;
@@ -158,12 +160,12 @@ public class ActRegistrazioneEsecutivitaApplicazioneProvvisoriaMA extends Action
 					dopm.setNoteDataEsecutivita(getRequestStringParameter(CAMPO_NOTE));
 				dopm.setDataEsecutivita(getRequestDateParameter(CAMPO_ANNO_DATA_ESECUTIVITA,
 						CAMPO_MESE_DATA_ESECUTIVITA, CAMPO_GIORNO_DATA_ESECUTIVITA));
-				
+
 				// MEV9 si aggiorna anche Misura Alternativa
-				//idopc.ExModificaDepositoOrdinanzaPc(dopm);				
+				// idopc.ExModificaDepositoOrdinanzaPc(dopm);
 				idopc.ExAggiornaDataEsecutivitaDepositoOrdinanzaPc(dopm);
 				// MEV9 - FINE
-				
+
 				INotifica in = SIEPLookupRemote.getNotificaRemote();
 				if ("modifica".equals(getRequestStringParameter("provenienza"))) {
 					Vector<NotificaModel> notifiche = leggiNotifiche(em);

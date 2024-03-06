@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import f3b.util.F3BException;
+import f3b.web.IWebConstants;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.action.ICostantiEvento;
 import siap.sico.evento.controller.IEvento;
@@ -33,38 +36,27 @@ import siap.siep.sanzionesostitutiva.model.SanzioneSostResiduaModel;
 import siap.siep.util.SIEPLookupRemote;
 import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
-import f3b.util.F3BException;
-import f3b.web.IWebConstants;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActConcessione
- * </p>
- * <p>
+ * Title: ActConcessione 
  * Description: Classe Action per il padre della concessione
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ *
  * @version 1.0
  */
 @SuppressWarnings("rawtypes")
 public class ActConcessione extends ActMisuraAlternativa implements ICostantiMisuraAlternativa {
+
 	public String getConcessione(String aPosizione) throws F3BException {
+
 		if (this.isSessionAttributeNullObj("fascicolo"))
 			return ICostantiFascicoloSiep.REDIRECT_FASCICOLO_RICERCATO + getClass().getName();
 
 		FascicoloSiepModel lFascMod = (FascicoloSiepModel) getSessionAttribute("fascicolo");
-		
-		// Ricarico info del Fascicolo SIEP perchè potrebbero essere cambiate per via della modifica della posizioen giuridica
+
+		// Ricarico info del Fascicolo SIEP perchè potrebbero essere cambiate per via della modifica della
+		// posizioen giuridica
 		IFascicoloSiep lFascCtrl = SIEPLookupRemote.getFascicoloSiepRemote();
-		lFascMod = lFascCtrl.ExRicercaFascicoloByKey(lFascMod
-				.getIdFascicoloSiep());
+		lFascMod = lFascCtrl.ExRicercaFascicoloByKey(lFascMod.getIdFascicoloSiep());
 		setSessionAttribute("fascicolo", lFascMod);
 		if (isFascicoloNonValidato())
 			return IWebConstants.PG_MESSAGE;
@@ -77,8 +69,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		// Posizione giuridica
 		PosizioneGiuridicaLuogoDetenzioneAltraCausaModel lPos = new PosizioneGiuridicaLuogoDetenzioneAltraCausaModel();
 		IPosizioneGiuridica lPosCtrl = SIEPLookupRemote.getPosizioneGiuridicaRemote();
-		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(lFascMod
-				.getIdFascicoloSiep());
+		lPos = lPosCtrl.ExRicercaPosizioneGiuridicaLuogoDetenzioneAltraCausaCorrentiByIdFascicolo(
+				lFascMod.getIdFascicoloSiep());
 
 		if (notEsistePosizioneGiuridica(lPos))
 			return IWebConstants.PG_MESSAGE;
@@ -139,10 +131,10 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 				// ricerca per il provvedimento e le notifiche relative
 				if (!(lMisAlModConcessa.getCodTipoMisura().equals("0001")
-						|| lMisAlModConcessa.getCodTipoMisura().equals("0002") || lMisAlModConcessa
-						.getCodTipoMisura().equals("0003"))) {
-					lEveMod = lCtrlEvento.ExRicercaEventoNotificaByEveIdEvento(lMisAlModConcessa
-							.getEveIdEvento());
+						|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
+						|| lMisAlModConcessa.getCodTipoMisura().equals("0003"))) {
+					lEveMod = lCtrlEvento
+							.ExRicercaEventoNotificaByEveIdEvento(lMisAlModConcessa.getEveIdEvento());
 					setRequestAttribute("eventonotifica", lEveMod);
 				}
 
@@ -285,6 +277,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 	protected EventoNotificaModel getProvvedimentoMotivoAffidamento(String aFlagSan, String aPosizione,
 			String aFlagAffi, String aTipo, String aMotivo, String IdEventoAmmProvvAff) throws F3BException {
+
 		EventoNotificaModel lEve = new EventoNotificaModel();
 
 		switch (Integer.parseInt(aPosizione)) {
@@ -305,7 +298,6 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEve.getEvento().setCodMotivo("0244");
 			else if ("0003".equals(aMotivo))
 				lEve.getEvento().setCodMotivo("0245");
-
 			break;
 		}
 		case 3: // Espiazione Pena in Regime Carcerario
@@ -351,10 +343,12 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 
 		if ((aFlagAffi != null && aFlagAffi.equals("S"))
-				|| (aPosizione.equals("13") && (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff
-						.equals(""))) // vecchio affidamento in prova provvisorio
-				|| (aPosizione.equals("54"))) // affidamento in prova provvisorio
-		{
+				|| (aPosizione.equals("13")
+						&& (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff.equals(""))) // vecchio
+																								// affidamento
+																								// in prova
+																								// provvisorio
+				|| (aPosizione.equals("54"))) { // affidamento in prova provvisorio
 			lEve.getEvento().setCodTipoProvvedimento("12");
 			if ("0001".equals(aMotivo))
 				lEve.getEvento().setCodMotivo("0371");
@@ -378,11 +372,35 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEve.getEvento().setCodTipoProvvedimento("12");
 		}
 
+		// MEV_9-SIEP: aggiunte casistiche
+		if ("0720".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5460");
+		else if ("0721".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5461");
+		else if ("0730".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5462");
+		else if ("0731".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5463");
+		else if ("0732".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5464");
+		else if ("0680".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5443");
+		else if ("0681".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5444");
+		else if ("0690".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5445");
+		else if ("0691".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5446");
+		else if ("0692".equals(aMotivo))
+			lEve.getEvento().setCodMotivo("5447");
+		// FINE MEV_9-SIEP
+
 		return lEve;
 	}
 
 	protected EventoNotificaModel getProvvedimentoMotivoDetDom(String aPosizione, String aFlagAffi,
 			String aTipo, String aMotivo) {
+
 		EventoNotificaModel lEveNot = new EventoNotificaModel();
 
 		if ("0013".equals(aMotivo))
@@ -415,7 +433,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEveNot.getEvento().setCodTipoProvvedimento("12");
 			else {
 				lEveNot.getEvento().setCodTipoProvvedimento("04");
-				if(lEveNot.getEvento().getCodMotivo() == null)
+				if (lEveNot.getEvento().getCodMotivo() == null)
 					lEveNot.getEvento().setCodMotivo("0000");
 			}
 
@@ -436,15 +454,15 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEveNot.getEvento().setCodTipoProvvedimento("12");
 			else {
 				lEveNot.getEvento().setCodTipoProvvedimento("04");
-				if(lEveNot.getEvento().getCodMotivo() == null)
+				if (lEveNot.getEvento().getCodMotivo() == null)
 					lEveNot.getEvento().setCodMotivo("0000");
 			}
 
 			break;
 		}
 		case 29: // Detenzione Domiciliare Provvisoria
-			// case 54: // Affidamento in Prova Provvisorio 04/09/2015 TEST MEVxx - Gestione Misure
-			// Provvisorie per ora non richiesto e non rilasciato
+		// case 54: // Affidamento in Prova Provvisorio 04/09/2015 TEST MEVxx - Gestione Misure
+		// Provvisorie per ora non richiesto e non rilasciato
 		{
 			lEveNot.getEvento().setCodTipoProvvedimento("12");
 			break;
@@ -456,7 +474,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		default: {
 			lEveNot.getEvento().setCodTipoProvvedimento("04");
-			if(lEveNot.getEvento().getCodMotivo() == null)
+			if (lEveNot.getEvento().getCodMotivo() == null)
 				lEveNot.getEvento().setCodMotivo("0000");
 			break;
 		}
@@ -473,12 +491,13 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				lEveNot.getEvento().setCodMotivo("0229");
 		}
 		// mev 62
-		if (aTipo!=null && aTipo.equals("PROC")) // da scarcerare
+		if (aTipo != null && aTipo.equals("PROC")) // da scarcerare
 			lEveNot.getEvento().setCodTipoProvvedimento("06");
 		return lEveNot;
 	}
 
 	protected EventoNotificaModel getProvvedimentoMotivoSemiliberta(String aPosizione, String aFlagAffi) {
+
 		EventoNotificaModel lEve = new EventoNotificaModel();
 		switch (Integer.parseInt(aPosizione)) {
 		case 7: // LIBERO
@@ -516,8 +535,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 		default: {
 			lEve.getEvento().setCodTipoProvvedimento("04");
-			if(lEve.getEvento().getCodMotivo() == null)
-				lEve.getEvento().setCodMotivo("0000");			
+			if (lEve.getEvento().getCodMotivo() == null)
+				lEve.getEvento().setCodMotivo("0000");
 			break;
 		}
 		}
@@ -603,6 +622,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 	// selezione flag template nella stampa
 	protected String getFlagTemplateAffidamento(PosizioneGiuridicaModel aPosPrec, String aPosizioneGiu,
 			MisuraAlternativaModel aMisMod, String IdEveAPF) {
+
 		String flagTemplate = null;
 
 		if (aPosizioneGiu.equals("13") && (IdEveAPF != null && !IdEveAPF.equals(""))
@@ -701,6 +721,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 	protected String getFlagTemplateDetDom(PosizioneGiuridicaModel aPosPrec, String aPosizioneGiu,
 			MisuraAlternativaModel aMisMod) {
+
 		String lFlagTemplate = null;
 		// libero
 		if (aPosPrec != null && aPosPrec.getCodPosizioneGiuridica() != null && aPosPrec.isLibero()
@@ -780,11 +801,14 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 			}
 		}
 		// mev 62
-		if (lFlagTemplate == null && aMisMod != null && aMisMod.getCodTipoUfficioScarcerazione()!= null && aMisMod.getCodTipoUfficioScarcerazione().equals("PROC")) // da scarcerare, quindi il soggetto è detenuto
+		if (lFlagTemplate == null && aMisMod != null && aMisMod.getCodTipoUfficioScarcerazione() != null
+				&& aMisMod.getCodTipoUfficioScarcerazione().equals("PROC")) // da scarcerare, quindi il
+																			// soggetto è detenuto
 		{
 			lFlagTemplate = "2";
-		}
-		else if(lFlagTemplate == null && aMisMod != null && aMisMod.getCodTipoUfficioScarcerazione()!= null && aMisMod.getCodTipoUfficioScarcerazione().equals("SORV")){
+		} else if (lFlagTemplate == null && aMisMod != null
+				&& aMisMod.getCodTipoUfficioScarcerazione() != null
+				&& aMisMod.getCodTipoUfficioScarcerazione().equals("SORV")) {
 			lFlagTemplate = "5";
 		}
 		return lFlagTemplate;
@@ -792,6 +816,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 	protected String getFlagTemplateSemiliberta(PosizioneGiuridicaModel aPosPrec, String aPosizioneGiu,
 			MisuraAlternativaModel aMisMod) {
+
 		String FlagTemplate = null;
 
 		// libero
@@ -837,6 +862,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 	protected String getFlagTemplateIndultino(PosizioneGiuridicaModel aPosPrec, String aPosizioneGiu,
 			MisuraAlternativaModel aMisMod) {
+
 		String flagTemplate = null;
 		if (aPosPrec != null && aPosPrec.getCodPosizioneGiuridica() != null && (aPosPrec.isLibero())
 				&& aMisMod.getDataInizioMisura() != null && aPosizioneGiu.equals("27")) {
@@ -846,34 +872,33 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				|| aPosizioneGiu.equals("20") || aPosizioneGiu.equals("26") || aPosizioneGiu.equals("30")))
 				&& aMisMod.getDataInizioMisura() == null) {
 			flagTemplate = "1";
-		} else if ((aPosizioneGiu.equals("03")
-				|| aPosizioneGiu.equals("12")
-				// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
-				// arresti domiciliari art. 656
-				// 50 Esecuzione presso domicilio della pena detentiva
-				// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
+		} else if ((aPosizioneGiu.equals("03") || aPosizioneGiu.equals("12")
+		// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
+		// arresti domiciliari art. 656
+		// 50 Esecuzione presso domicilio della pena detentiva
+		// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 				|| aPosizioneGiu.equals("04") || aPosizioneGiu.equals("50") || aPosizioneGiu.equals("53")
 				|| aPosizioneGiu.equals("14") || aPosizioneGiu.equals("82") || aPosizioneGiu.equals("83")
-				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86") || aPosizioneGiu
-					.equals("87")) && aMisMod.getCodTipoUfficioScarcerazione().equals("PROC")) {
+				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86")
+				|| aPosizioneGiu.equals("87")) && aMisMod.getCodTipoUfficioScarcerazione().equals("PROC")) {
 			flagTemplate = "2";
-		} else if ((aPosizioneGiu.equals("03")
-				|| aPosizioneGiu.equals("12")
-				// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
-				// arresti domiciliari art. 656
-				// 50 Esecuzione presso domicilio della pena detentiva
-				// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
+		} else if ((aPosizioneGiu.equals("03") || aPosizioneGiu.equals("12")
+		// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
+		// arresti domiciliari art. 656
+		// 50 Esecuzione presso domicilio della pena detentiva
+		// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 				|| aPosizioneGiu.equals("04") || aPosizioneGiu.equals("50") || aPosizioneGiu.equals("53")
 				|| aPosizioneGiu.equals("14") || aPosizioneGiu.equals("82") || aPosizioneGiu.equals("83")
-				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86") || aPosizioneGiu
-					.equals("87")) && aMisMod.getCodTipoUfficioScarcerazione().equals("SORV")) {
+				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86")
+				|| aPosizioneGiu.equals("87")) && aMisMod.getCodTipoUfficioScarcerazione().equals("SORV")) {
 			flagTemplate = "3";
 		}
 		return flagTemplate;
 	}
 
-	protected String getFlagTemplateEspPressoDomicilio(PosizioneGiuridicaModel aPosPrec,
-			String aPosizioneGiu, MisuraAlternativaModel aMisMod) {
+	protected String getFlagTemplateEspPressoDomicilio(PosizioneGiuridicaModel aPosPrec, String aPosizioneGiu,
+			MisuraAlternativaModel aMisMod) {
+
 		String flagTemplate = null;
 		if (aPosPrec != null && aPosPrec.getCodPosizioneGiuridica() != null && aPosPrec.isLibero()
 				&& aMisMod.getDataInizioMisura() != null && aPosizioneGiu.equals("50")) {
@@ -891,28 +916,26 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 				|| aPosizioneGiu.equals("20") || aPosizioneGiu.equals("26") || aPosizioneGiu.equals("30"))
 				&& aMisMod.getDataInizioMisura() == null) {
 			flagTemplate = "1";
-		} else if ((aPosizioneGiu.equals("03")
-				|| aPosizioneGiu.equals("12")
-				// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
-				// arresti domiciliari art. 656
-				// 50 Esecuzione presso domicilio della pena detentiva
-				// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
+		} else if ((aPosizioneGiu.equals("03") || aPosizioneGiu.equals("12")
+		// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
+		// arresti domiciliari art. 656
+		// 50 Esecuzione presso domicilio della pena detentiva
+		// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 				|| aPosizioneGiu.equals("04") || aPosizioneGiu.equals("50") || aPosizioneGiu.equals("14")
 				|| aPosizioneGiu.equals("53") || aPosizioneGiu.equals("82") || aPosizioneGiu.equals("83")
-				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86") || aPosizioneGiu
-					.equals("87")) // 17/12/2010
+				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86")
+				|| aPosizioneGiu.equals("87")) // 17/12/2010
 				&& aMisMod.getCodTipoUfficioScarcerazione().equals("PROC")) {
 			flagTemplate = "2";
-		} else if ((aPosizioneGiu.equals("03")
-				|| aPosizioneGiu.equals("12")
-				// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
-				// arresti domiciliari art. 656
-				// 50 Esecuzione presso domicilio della pena detentiva
-				// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
+		} else if ((aPosizioneGiu.equals("03") || aPosizioneGiu.equals("12")
+		// paolo cherubini 15/02/2011 su indicazione ti testa/alfieri 50, 53 sono equiparabili a 04
+		// arresti domiciliari art. 656
+		// 50 Esecuzione presso domicilio della pena detentiva
+		// 53 Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 				|| aPosizioneGiu.equals("04") || aPosizioneGiu.equals("50") || aPosizioneGiu.equals("14")
 				|| aPosizioneGiu.equals("53") || aPosizioneGiu.equals("82") || aPosizioneGiu.equals("83")
-				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86") || aPosizioneGiu
-					.equals("87")) // 17/12/2010
+				|| aPosizioneGiu.equals("84") || aPosizioneGiu.equals("85") || aPosizioneGiu.equals("86")
+				|| aPosizioneGiu.equals("87")) // 17/12/2010
 				&& aMisMod.getCodTipoUfficioScarcerazione().equals("SORV")) {
 			flagTemplate = "3";
 		} else if (aPosizioneGiu.equals("29") || aPosizioneGiu.equals("54")) {
@@ -925,6 +948,7 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 
 	protected String getFlagTemplateSospensioneEspPressoDomicilio(PosizioneGiuridicaModel aPosPrec,
 			MisuraAlternativaModel aMisMod) {
+
 		String flagTemplate = null;
 		if (aPosPrec != null && aPosPrec.getCodPosizioneGiuridica() != null
 				&& aMisMod.getDataInizioMisura() != null) {

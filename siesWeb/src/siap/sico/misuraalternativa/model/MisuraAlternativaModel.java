@@ -105,9 +105,8 @@ public class MisuraAlternativaModel extends GenericModel {
 	private String mIs51Bis;
 	private BigDecimal mFlFormaMisura;
 	private String mDescrizioneComunita;
-	// MEV_9-SIEP: aggiunte 2 variabili
+	// MEV_9
 	private Date mDataEsecutivita;
-	private String mCodEsito;
 
 	// COSTRUTTORE DI DEFAULT
 	public MisuraAlternativaModel() {
@@ -188,9 +187,8 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mDescrChiaveUfficioFascicoloSiusMaAt = "";
 		this.mAnnoRegistroMaAt = null;
 		this.mNumeroRegistroMaAt = null;
-		// MEV_9-SIEP (x2)
+		// MEV_9
 		this.mDataEsecutivita = null;
-		this.mCodEsito = null;
 	}
 
 	// COSTRUTTORE DI COPIA
@@ -274,9 +272,8 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mNumeroRegistroMaAt = aModel.mNumeroRegistroMaAt;
 		this.mFlFormaMisura = aModel.mFlFormaMisura;
 		this.mDescrizioneComunita = aModel.mDescrizioneComunita;
-		// MEV_9-SIEP (x2)
+		// MEV_9
 		this.mDataEsecutivita = aModel.mDataEsecutivita;
-		this.mCodEsito = aModel.mCodEsito;
 	}
 
 	// COSTRUTTORE MODEL
@@ -305,8 +302,8 @@ public class MisuraAlternativaModel extends GenericModel {
 			BigDecimal aChiaveProgrFascicoloSiusMaAt, String aChiaveUfficioFascicoloSiusMaAt,
 			String aDescrChiaveUfficioFascicoloSiusMaAt, BigDecimal aAnnoRegistroMaAt,
 			BigDecimal aNumeroRegistroMaAt, BigDecimal flFormaMisura, String descrizioneComunita,
-			// MEV_9-SIEP (x2)
-			Date aDataEsecutivita, String aCodEsito) {
+			// MEV_9
+			Date aDataEsecutivita) {
 
 		this.mIdMisuraAlternativa = aIdMisuraAlternativa;
 		this.mCodTipoDecisione = aCodTipoDecisione;
@@ -378,9 +375,8 @@ public class MisuraAlternativaModel extends GenericModel {
 		this.mDescrChiaveUfficioFascicoloSiusMaAt = aDescrChiaveUfficioFascicoloSiusMaAt;
 		this.mAnnoRegistroMaAt = aAnnoRegistroMaAt;
 		this.mNumeroRegistroMaAt = aNumeroRegistroMaAt;
-		// MEV_9-SIEP (x2)
+		// MEV_9
 		this.mDataEsecutivita = aDataEsecutivita;
-		this.mCodEsito = aCodEsito;
 	}
 
 	//
@@ -711,13 +707,17 @@ public class MisuraAlternativaModel extends GenericModel {
 		return mIs51Bis;
 	}
 
-	// MEV_9-SIEP (x2)
-	public Date getDataEsecutivita() {
-		return mDataEsecutivita;
+	public String getDescrizioneComunita() {
+		return mDescrizioneComunita;
 	}
 
-	public String getCodEsito() {
-		return mCodEsito;
+	public BigDecimal getFlFormaMisura() {
+		return mFlFormaMisura;
+	}
+
+	// MEV_9
+	public Date getDataEsecutivita() {
+		return mDataEsecutivita;
 	}
 
 	//
@@ -1047,13 +1047,17 @@ public class MisuraAlternativaModel extends GenericModel {
 		mIs51Bis = aValore;
 	}
 
-	// MEV_9-SIEP (x2)
-	public void setDataEsecutivita(Date aValore) {
-		mDataEsecutivita = aValore;
+	public void setDescrizioneComunita(String mDescizioneComunita) {
+		this.mDescrizioneComunita = mDescizioneComunita;
 	}
 
-	public void setCodEsito(String aValore) {
-		mCodEsito = aValore;
+	public void setFlFormaMisura(BigDecimal mFlFormaMisura) {
+		this.mFlFormaMisura = mFlFormaMisura;
+	}
+
+	// MEV_9
+	public void setDataEsecutivita(Date aValore) {
+		mDataEsecutivita = aValore;
 	}
 
 	/**
@@ -1062,6 +1066,7 @@ public class MisuraAlternativaModel extends GenericModel {
 	 * @return
 	 */
 	public void calcolaStringaReclusione() {
+
 		String lStringReclusione = "";
 		if (this.getNumAnniMisura() != null) {
 			if (this.getNumAnniMisura().intValue() != 0)
@@ -1091,6 +1096,7 @@ public class MisuraAlternativaModel extends GenericModel {
 	 * Metodo toString() che restituisce il contenuto del Model opportunamente formattato. Utile per il debug.
 	 ****************************************************************************/
 	public String toString() {
+
 		String lStr = new String();
 
 		lStr = "MisuraAlternativaModel:\n" + "[ mIdMisuraAlternativa         = " + mIdMisuraAlternativa
@@ -1171,6 +1177,7 @@ public class MisuraAlternativaModel extends GenericModel {
 	}
 
 	public String toString2() {
+
 		String lStr = new String();
 
 		lStr = "" + mIdMisuraAlternativa + " - " + mCodTipoDecisione + " - " + mDescrTipoDecisione + " - "
@@ -1204,8 +1211,8 @@ public class MisuraAlternativaModel extends GenericModel {
 	 *
 	 * @return
 	 */
-
 	public void calcolaStringaMisura() {
+
 		String lStringMisura = "";
 		if (this.mNumAnniMisura != null) {
 			if (this.mNumAnniMisura.intValue() != 0)
@@ -1232,6 +1239,7 @@ public class MisuraAlternativaModel extends GenericModel {
 	 * @return
 	 */
 	public void calcolaStringaRevocaArresto() {
+
 		String lStringArresto = "";
 		if (this.mNumAnniRevocaArresto != null) {
 			if (this.mNumAnniRevocaArresto.intValue() != 0)
@@ -1258,6 +1266,7 @@ public class MisuraAlternativaModel extends GenericModel {
 	 * @return
 	 */
 	public void calcolaStringaRevocaReclusione() {
+
 		String lStringReclusione = "";
 		if (this.mNumAnniRevocaReclusione != null) {
 			if (this.mNumAnniRevocaReclusione.intValue() != 0)
@@ -1276,22 +1285,6 @@ public class MisuraAlternativaModel extends GenericModel {
 			this.mStringaRevocaReclusione = lStringReclusione;
 		else
 			this.mStringaRevocaReclusione = null;
-	}
-
-	public String getDescrizioneComunita() {
-		return mDescrizioneComunita;
-	}
-
-	public void setDescrizioneComunita(String mDescizioneComunita) {
-		this.mDescrizioneComunita = mDescizioneComunita;
-	}
-
-	public BigDecimal getFlFormaMisura() {
-		return mFlFormaMisura;
-	}
-
-	public void setFlFormaMisura(BigDecimal mFlFormaMisura) {
-		this.mFlFormaMisura = mFlFormaMisura;
 	}
 
 }

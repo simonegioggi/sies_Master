@@ -5,6 +5,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.cssa.action.ICostantiCSSA"%>
@@ -183,7 +184,7 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 	    alert('Data di Trasmissione non valida');
 	    return false;
   	}
-	var campo = document.LoadInserisciMisuraAlternativa.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA %>.value;
+	var campo = document.LoadInserisciMisuraAlternativa.<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>.value;
 	// Controllo sui campi dell'ordinanza
 	if (document.LoadInserisciMisuraAlternativa.flagmisura.value == "N") {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>.value.length == 1)
@@ -199,11 +200,31 @@ if (!lPosizione.isLibero() || ("S".equals(lFascicoloAssociato.getFlagAltraCausa(
 			alert('Data di emissione Ordinanza non valida');
 			return false;
 		}
-		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>.value == "") {
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>.value == "") {
 			alert("La Sede dell'Ufficio Emittente e' obbligatoria");
-			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT %>.focus();
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_TDS_EMITT%>.focus();
 			return false;
   		}
+		// MEV_9-SIEP
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value != ""
+			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value != ""
+			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value != "") {
+			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value.length == 1)
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value = '0' +
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value;
+			if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value.length == 1)
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value = '0' +
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value;
+			var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.value + '-' +
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>.value + '-' +
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>.value;
+			if (!ControllaData(data_to_verify)) {
+				alert('Data Emissione Provvedimento non valida');
+				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>.focus();
+				return false;
+			}
+		}
+		// FINE MEV_9-SIEP
 	}
 <%
 // AMBROSINO   - 23-12-2010
@@ -246,7 +267,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Domiciliare Provvisoria (29)
 %>
 	if (document.LoadInserisciMisuraAlternativa.tipomisura.value == 'DETENZIONE'
-			&& document.LoadInserisciMisuraAlternativa.posizionegiuridica.value == '29') {
+			|| document.LoadInserisciMisuraAlternativa.tipomisura.value == 'AFFIDAMENTO') {
   		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value.length == 1)
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = '0' +
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value;
@@ -256,20 +277,48 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Dom
 		var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value
 			+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value
 			+ '-' +	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value;
-  		if (!ControllaData(data_to_verify)) {
+		if (!ControllaData(data_to_verify)) {
 		    alert('Data Ammissione Provvisoria a Detenzione Domiciliare non valida');
-		    return false;
-  		}
+	    	return false;
+		}
 	}
 <%
-} else if (lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null) {
-	
-}
-// AMBROSINO - Cambio 51 con 54 dopo perche' 51 già usato
-else if (lPosizione.getCodPosizioneGiuridica().equals("54")) { // && lEventoAmmProvvAff.getIdEvento() != null)
-
+// MEV_9-SIEP: aggiunto controllo
+} else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
+				|| lPosizione.getCodPosizioneGiuridica().equals("54")) {
+%>
+	if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value.length > 0
+			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value.length > 0
+			|| document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value.length > 0) {
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value.length == 1)
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = '0' +
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value;
+		if (document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value.length == 1)
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value = '0' +
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value;
+		var data_to_verify = document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value
+			+ '-' + document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>.value
+			+ '-' +	document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value;
+		if (!ControllaData(data_to_verify)) {
+			<%
+				if (tipoMisura.equals("AFFIDAMENTO")) {
+			%>
+					    alert('Data Applicazione Provvisoria non valida');
+			<%
+				} else {
+			%>
+						alert('Data Ammissione Provvisoria a Detenzione Domiciliare non valida');
+			<%
+				}
+			%>
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.focus();
+		    return false;
+		}
+	}
+<%
+// FINE MEV_9-SIEP
 } else if (lPosizione.isMisuraAlternativa() || lPosizione.getCodPosizioneGiuridica().equals("27")) { // L.207/03 indultino
-
+	// nulla
 } else { // per le altre posizioni giuridiche
 %>
 	if (document.LoadInserisciMisuraAlternativa.tipo[1].checked == true) {
@@ -691,11 +740,11 @@ else {
 			nodeavvocati.style.visibility = 'hidden';
 			nodesor.style.visibility = 'hidden';
 			nodecssa.style.top = '-105px';
-			if (pos == "07")
+			if (pos == "07" || pos == "54") <%-- MEV_9-SIEP: aggiunto 54 --%>
 				nodebottone.style.top = '-460px';
 	      	else
 				nodebottone.style.top = '-340px';
-				document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = true;
+			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_E%>.disabled = true;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_SEDE_POL_E%>.disabled = true;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiMisuraAlternativa.CAMPO_NOTE_POL_E%>.disabled = true;
 			document.LoadInserisciMisuraAlternativa.<%=ICostantiCSSA.CAMPO_ID_CSSA%>.disabled = false;
@@ -1128,7 +1177,7 @@ if (tipoMisura.equals("ESP_PRESSO_DOM")) {
 <br>
 <FORM method="POST" action="<%= IWebConstants.PG_MAIN%>" name="LoadInserisciMisuraAlternativa">
 <input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.misuraalternativa.action.ActInserisciConcessione">
-<INPUT type="HIDDEN" name="posizionegiuridica" value="<%=posizioneluogoaltra.getPosizioneGiuridica().getCodPosizioneGiuridica()%>">
+<INPUT type="HIDDEN" name="posizionegiuridica" value="<%=lPosizione.getCodPosizioneGiuridica()%>">
 <INPUT type="HIDDEN" name="lFlagAffi" value="<%=lFlagAffi%>">
 <INPUT type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_DOCUMENTO_SIUS%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 <INPUT type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>">
@@ -1155,9 +1204,6 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 <input type="HIDDEN" name="tipomisura" value="INDULTINO">
 <%
 }
-%>
-<input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>">
-<%
 // inizio if per semilibertà
 String scarceratodisabilita = null;
 String dascarceraredisabilita = null;
@@ -1201,10 +1247,12 @@ if (!tipoMisura.equals("SEMILIBERTA")) {
 	}
 } //fine if per semilibertà %>
 
-<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>" value="<%=idmisuraalternativa%>">
-<table>
+<input type="HIDDEN" value="<%=idmisuraalternativa%>" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>">
+<input type="HIDDEN" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>">
+<input type="HIDDEN" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>">
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
-		<td class="l">Posizione Giuridica </td>
+		<td class="l">Posizione Giuridica</td>
       	<td class="L" colspan=5>
 			<font class="campo">
 <%
@@ -1252,9 +1300,6 @@ if (lFascicoloAssociato.getFlagAltraCausa() != null && lFascicoloAssociato.getFl
 	</tr>
 <%
 }
-%>
-	<input type="HIDDEN" title="Codice Posizione" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>" type="text" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>" maxlength="6" size="6">
-<%
 // Nel Caso di Posizione Giuridica ARRESTI DOMICILIARI ( 02, 04)
 if (lPosizione.getCodPosizioneGiuridica() != null && (lPosizione.getCodPosizioneGiuridica().equals("02")
 		|| lPosizione.getCodPosizioneGiuridica().equals("04"))) {
@@ -1383,7 +1428,6 @@ if ((!lPosizione.isLibero())
 	}
 }
 %>
-		<input type="HIDDEN" title="Id Pena Residua" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>" type="text" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>">
 	</tr>
 <%       
 //==============================================================================      
@@ -1428,28 +1472,28 @@ if ("S".equals(lFlagSanzione) && penaresidua != null && penaresidua.getFlagSanzi
 %>       
 	<tr>
 		<td class="l">Data Emissione</td>
-        <td class="L" >
+        <td class="L">
 			<input title="Giorno Data Emissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_GIORNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Emissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiEvento.CAMPO_MESE_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Emissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
         <td class="l">Data Trasmissione</td>
-        <td class="L">
+        <td class="L" colspan="2">
 			<input title="Giorno Data Trasmissione" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Trasmissione" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" name="<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Trasmissione" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" name="<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
         </td>
 	</tr>
 </table>
-<table style="width: 90%;">
+<table cellspacing="0" cellpadding="0" width="90%">
 	<tr>
-		<td class="Titolo" colspan='8'> Dati Ordinanza Tribunale di Sorveglianza </td>
+		<td class="Titolo" colspan="4"> Dati Ordinanza Tribunale di Sorveglianza </td>
    	</tr>
 <%
 if (misuraalternativa.getIdMisuraAlternativa() != null) {
 %>
 	<tr>
-		<td class="l">Anno/Numero SIUS</td>
+		<td class="l" width="20%">Anno/Numero SIUS</td>
 	  	<td class="l">
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>/</font>
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
@@ -1490,21 +1534,22 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte due nuove sezioni --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni - SIAMO IN MODIFICA --%>
 	<tr>
-		<td class="l">Anno/Numero Ordinanza Provvisoria</td>
-		<td class="l">
-	 		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>/</font>
-			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
+		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" colspan="3">
+	 		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 	 	</td>
 	</tr>
 	<tr>
 	  	<td class="l">Data Emissione Provvedimento</td>
 	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
-			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisione()))%>">
-			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisione()))%>">
-			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisione()))%>">
+	    	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
+			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>">
+			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>">
+			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1512,7 +1557,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	} else if (tipoMisura.equals("DETENZIONE")) {
 %>
 	<tr>
-	  	<td class="l">Luogo della Detenzione Domiciliare</td>
+	  	<td class="l" width="20%">Luogo della Detenzione Domiciliare</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
 	  	</td>
@@ -1521,7 +1566,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	} else if (tipoMisura.equals("INDULTINO") || tipoMisura.equals("ESP_PRESSO_DOM")) {
 %>
 	<tr>
-	  	<td class="l">Domicilio Imposto</td>
+	  	<td class="l" width="20%">Domicilio Imposto</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
 	  	</td>
@@ -1531,7 +1576,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	if (verbale.getDataEmissione() != null) {
 %>
 	<tr>
-		<td class="l">Data Sottoscrizione Verbale Obblighi</td>
+		<td class="l" width="20%">Data Sottoscrizione Verbale Obblighi</td>
 	   	<td class="l" colspan="3">
 	     	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(verbale.getDataEmissione(),"dd-MM-yyyy"))%></font>
 	   	</td>
@@ -1541,7 +1586,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	if (misuraalternativa.getDataInizioMisura() != null) {
 %>
 	<tr>
-	  	<td class="l">Data Inizio Misura</td>
+	  	<td class="l" width="20%">Data Inizio Misura</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd-MM-yyyy"))%></font>
 	  	</td>
@@ -1551,7 +1596,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	if (misuraalternativa.getDataFineMisura() != null) {
 %>
 	<tr>
-	  	<td class="l">Data Fine Misura</td>
+	  	<td class="l" width="20%">Data Fine Misura</td>
 	  	<td class="l" colspan="3">
 	  		<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataFineMisura(),"dd-MM-yyyy"))%></font>
 	  	</td>
@@ -1560,13 +1605,13 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	}
 %>
 	<tr>
-		<td class="l">Note</td>
+		<td class="l" width="20%">Note</td>
 		<td class="L" colspan="3">
 		  	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>" cols=80 rows=2><%=StringUtils.toStringJSP(misuraalternativa.getNote())%></textarea>
 		</td>
 	</tr>
 </table>
-<table>
+<table cellspacing="0" cellpadding="0" width="90%">
 <%
 } // if (misuraalternativa.getIdMisuraAlternativa() != null)
 else { // misuraalternativa.getIdMisuraAlternativa() == null
@@ -1579,7 +1624,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 		</td>
 	</tr>
 	<tr>
-	   	<td class="l">Anno/Numero SIUS</td>
+	   	<td class="l" width="20%">Anno/Numero SIUS</td>
 	   	<td class="l">
 	     	<input Title="Anno Fascicolo Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>" type="text" size="4" maxlength="4" 
 				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();">
@@ -1663,41 +1708,48 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	    <td class="l">Luogo della Prova</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo">
-	      		<input Title="Luogo svolgimento della prova" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA %>" size=35 type="text" onChange="pulisciId();">
+	      		<input Title="Luogo svolgimento della prova" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>" size=35 type="text" onChange="pulisciId();">
 	    	</font>
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte due nuove sezioni --%>
+<%-- MEV_9-SIEP: aggiunte due nuove sezioni - SIAMO IN INSERIMENTO --%>
+<!-- </table> -->
+<!-- <div id="divOrdinanzaProvvisoria" style="width: 100%; visibility: visible; position: relative;"> -->
+<!-- <table cellspacing="0" cellpadding="0" width="90%"> -->
 	<tr>
-		<td class="l">Anno/Numero Ordinanza Provvisoria</td>
-		<td class="l">
-			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>" type="text" size="4" maxlength="4" 
-				onkeypress="return TicTabNumField(this,event)"  onBlur="javascript:value=FillYear(value)" onChange="pulisciId();">
+		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
+		<td class="l" colspan="3">
+			<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4" 
+				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" onChange="pulisciId();" disabled>
 			/
-			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>" type="text" size="6" maxlength="6"
-				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();">
+			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6"
+				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" disabled>
+		<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="">
 		</td>
 	</tr>
 	<tr>
 	  	<td class="l">Data Emissione Provvedimento</td>
 	  	<td class="l" colspan="3">
-	    	<input title="Giorno Data Emissione Provvedimento" value="<%=DateUtils.getSysDate("dd")%>" type="text" size="2" maxlength="2" 
-	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
-			<input title="Mese Data Emissione Provvedimento" value="<%=DateUtils.getSysDate("MM")%>" type="text" size="2" maxlength="2" 
-				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();"> -
-			<input title="Anno Data Emissione Provvedimento" value="<%=DateUtils.getSysDate("yyyy")%>" type="text" size="4" maxlength="4" 
-				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();">
+	    	<input title="Giorno Data Emissione Provvedimento" type="text" size="2" maxlength="2" 
+	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" disabled> -
+			<input title="Mese Data Emissione Provvedimento" type="text" size="2" maxlength="2" 
+				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> onChange="pulisciId();" disabled> -
+			<input title="Anno Data Emissione Provvedimento" type="text" size="4" maxlength="4" 
+				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> onChange="pulisciId();" disabled>
 	  	</td>
 	</tr>
-	<%-- FINE MEV_9-SIEP --%>
+<!-- </table> -->
+<!-- </div> -->
+<!-- <table cellspacing="0" cellpadding="0" width="90%"> -->
+<%-- FINE MEV_9-SIEP --%>
 <%
 	} else if (tipoMisura.equals("DETENZIONE"))	{
 %>
 	<tr>
-   		<td class="l">Luogo della Detenzione Domiciliare</td>
+   		<td class="l" width="20%">Luogo della Detenzione Domiciliare</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo">
-	      		<input Title="Luogo della Detenzione Domiciliare" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA %>" value="<%=StringUtils.toStringJSP(lMAAmmProvv.getDescrLuogoProva())%>" size=35 type="text" onChange="pulisciId();">
+	      		<input Title="Luogo della Detenzione Domiciliare" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>" value="<%=StringUtils.toStringJSP(lMAAmmProvv.getDescrLuogoProva())%>" size=35 type="text" onChange="pulisciId();">
 	    	</font>
 	  	</td>
 	</tr>
@@ -1705,10 +1757,10 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	} else if (tipoMisura.equals("INDULTINO") || tipoMisura.equals("ESP_PRESSO_DOM")) {
 %>
 	<tr>
-	    <td class="l">Domicilio Imposto</td>
+	    <td class="l" width="20%">Domicilio Imposto</td>
 	  	<td class="l" colspan="3">
 	    	<font class="campo">
-	      		<input Title="Domicilio Imposto" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA %>" size=35 type="text" onChange="pulisciId();">
+	      		<input Title="Domicilio Imposto" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>" size=35 type="text" onChange="pulisciId();">
 	    	</font>
 	  	</td>
 	</tr>
@@ -1716,7 +1768,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	}
 %>
 	<tr>
-	  	<td class="l">Note</td>
+	  	<td class="l" width="20%">Note</td>
 	  	<td class="L" colspan="3">
 	    	<TEXTAREA title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE %>" cols=80 rows=2></textarea>
 	  	</td>
@@ -1725,7 +1777,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 } // AMBROSINO 12-2010 Chiude la else della if (MisAlt != null)
 %>
 </table>
-<table>
+<table cellspacing="0" cellpadding="0" width="90%">
 <%
 // AMBROSINO 12-2010
 // if (!lPosizione.isLibero() && lFlagAffi.equals("N") && !tipoMisura.equals("SEMILIBERTA"))
@@ -1757,7 +1809,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 		// faccio vedere la data da scarcerare solo se la misura concessa e' diversa dalla sua posizione giuridica,
 		// poiche' se la misura concessa e' uguale alla sua posizione giuridica significa che e' il II giro dopo il verbale provengo da libero
 		// eccezione la posizione giuridica 53 poiche' non viene da misura alternativa quindi non ce' pericolo che sia la II volta
-		|| lPosizione.getCodPosizioneGiuridica().equals("12") && !tipoMisura.equals("DETENZIONE")       // Espiazione Pena in Regime di Detenzione Domiciliare
+		|| lPosizione.getCodPosizioneGiuridica().equals("12") && !tipoMisura.equals("DETENZIONE") // Espiazione Pena in Regime di Detenzione Domiciliare
 		// || lPosizione.getCodPosizioneGiuridica().equals("50") 
       	&& !tipoMisura.equals("ESP_PRESSO_DOM") // Esecuzione presso domicilio della pena detentiva
       	// Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
@@ -1767,7 +1819,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 	// vogliono sempre vedere la dicitura seguente quando vengo da arresti domiciliari (04)
 %>
 	<tr>
-		<td class="l">
+		<td class="l" width="20%">
 			Da eseguire&nbsp;
 			<input type="radio" name="tipo" value="scarcerare" checked onclick="radio();">
 			&nbsp;Gia' eseguito &nbsp;
@@ -1790,7 +1842,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 		// || lPosizione.getCodPosizioneGiuridica().equals("53") //  Arresti domiciliari - Esecuzione presso domicilio della pena detentiva
 %>
 	<tr>
-        <td class="l">
+        <td class="l" width="20%">
             Da scarcerare&nbsp;
             <input type="radio" name="tipo" value="scarcerare" checked onclick="radio();">
 			&nbsp;Scarcerato&nbsp;
@@ -1807,7 +1859,7 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 } else if (lPosizione.getCodPosizioneGiuridica().equals("29")) { // Detenzione Domiciliare Provvisoria (29)
 %>
 	<tr>
-		<td class="l">Data Ammissione Provvisoria e Detenzione Domiciliare</td>
+		<td class="l" width="20%">Data Ammissione Provvisoria e Detenzione Domiciliare</td>
 		<td class="l">&nbsp;
 			<input title="Giorno Data Ammissione Provvisoria e Detenzione Domiciliare" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Ammissione Provvisoria e Detenzione Domiciliare" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
@@ -1818,42 +1870,55 @@ if (lPosizione.isLibero() || tipoMisura.equals("SEMILIBERTA")) {
 }
 // CONTROLLO PER POSIZIONE GIURIDICA "13"  = Espiazione Pena in Regime di Affidamento in Prova
 // con Evento validato motivo 2006 e tipo provvedimento 4 o 9 o 12
-else if (lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null) {
+// CONTROLLO PER POSIZIONE GIURIDICA "54"  = Affidamento in Prova, Provvisorio
+else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
+		|| lPosizione.getCodPosizioneGiuridica().equals("54")) {
 %>
 	<tr>
-		<td class="l">Data Ammissione Provvisoria ad Affidamento in Prova</td>
+<%
+	// MEV_9-SIEP: aggiunta diversificazione
+	if (tipoMisura.equals("AFFIDAMENTO")) {
+%>
+		<td class="l" width="20%">Data Applicazione Provvisoria</td>
+		<td class="l">
+<%
+		if (Utils.isNullObj(lMAAmmProvv.getDataInizioMisura())) {
+%>
+			<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%
+		} else {
+%>
+			<font class="campo">
+				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>-
+				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>-
+				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>
+			</font>
+			<input title="Giorno Data Applicazione Provvisoria" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>>
+			<input title="Mese Data Applicazione Provvisoria" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>>
+			<input title="Anno Data Applicazione Provvisoria" type="HIDDEN" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+		</td>
+<%
+		}
+	} else {
+%>
+		<td class="l" width="20%">Data Ammissione Provvisoria ad Affidamento in Prova</td>
 		<td class="l">
 			<font class="campo">
 				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>-
 				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>-
 				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>
 			</font>
-			<!-- campi Data nascosti  Commentato perche' il campo "Data Ammissione Provvisoria ad Affidamento in Prova"
-				non e' piu' modificabile sono state inserite le label per visulizzare i valori-->
+			<%-- campi Data nascosti - Commentato perche' il campo "Data Ammissione Provvisoria ad Affidamento in Prova"
+				non e' piu' modificabile sono state inserite le label per visulizzare i valori --%>
 			<input title="Giorno Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>>
 			<input title="Mese Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>>
 			<input title="Anno Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
 		</td>
-	</tr>
 <%
-}
-// CONTROLLO PER POSIZIONE GIURIDICA "54"  = Affidamento in Prova, Provvisorio
-else if (lPosizione.getCodPosizioneGiuridica().equals("54")) {
+	}
 %>
-	<tr>
-  		<td class="l">Data Ammissione Provvisoria ad Affidamento in Prova</td>
-  		<td class="l">
-			<font class="campo">
-				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>-
-				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>-
-				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>
-			</font>
-			<!-- campi Data nascosti  Commentato perche' il campo "Data Ammissione Provvisoria ad Affidamento in Prova"
-     			non e' piu' modificabile sono state inserite le label per visulizzare i valori-->
-			<input title="Giorno Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>>
-			<input title="Mese Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%> >
-			<input title="Anno Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%> >
-		</td>
 	</tr>
 <%
 } else if (lPosizione.isMisuraAlternativa() || lPosizione.getCodPosizioneGiuridica().equals("27")) { // L.207/03 indultino
@@ -1861,7 +1926,7 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("54")) {
 } else { // per le altre posizioni giuridiche
 %>
 	<tr>
-		<td class="l">
+		<td class="l" width="20%">
 			Da scarcerare&nbsp;
 			<input type="radio" name="tipo" value="scarcerare" checked onclick="radio();">
 			&nbsp;Scarcerato&nbsp;
@@ -1883,7 +1948,7 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("54")) {
 // Magistrato Firmatario  
 //==============================================================================
 %>
-<table style="width: 100%;">
+<table cellspacing="0" cellpadding="0" width="95%">
 	<tr>
     	<td class="Titolo" style="width: 100%;" colspan=6> Magistrato Firmatario </td>
    	</tr>
@@ -1910,7 +1975,7 @@ else if (lPosizione.getCodPosizioneGiuridica().equals("54")) {
 // Autorità di polizia  
 //==============================================================================
 %>
-<div id="divautoritacompetenteE" style="width: 100%; visibility:hidden; position:relative;">
+<div id="divautoritacompetenteE" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
 	<!--autorità di polizia-->
@@ -1961,7 +2026,7 @@ if (autoritaEsternaE != null && autoritaEsternaE.getDescrSede() != null) {
 // Istituto di Detenzione 
 //==============================================================================
 %>
-<div id="divIstituto" style="width: 100%; visibility:hidden; position:relative;">
+<div id="divIstituto" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
      	<td class="l" width=30%>Istituto di Detenzione <font class=ob>(*)</font></td>
@@ -1971,7 +2036,7 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 		&& posizioneluogoaltra .getLuogoDetenzione().getIstitutoDetenzione() != null) {
 %>
 			<input readonly Title="Istituto" name="Comune" value="<%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrTipoIstituto())%> di <%=StringUtils.toStringJSP(posizioneluogoaltra.getLuogoDetenzione().getIstitutoDetenzione().getDescrComune())%>" size=50>
-			<input type="hidden"  Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>" size=50>
+			<input type="hidden" Title="Istituto" name="<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE%>" value="<%=posizioneluogoaltra.getLuogoDetenzione().getIstDetIdIstitutoDetenzione()%>" size=50>
 			<a href="Javascript:ListaIstitutoDetenzione('LoadInserisciMisuraAlternativa','<%=ICostantiLuogoDetenzione.CAMPO_IST_DET_ID_ISTITUTO_DETENZIONE %>','Comune');">
 				<img src="/images/filefolder.gif" border=0>
 			</a>
@@ -1991,7 +2056,7 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 </table>
 </div>
 <%-- MEV10-s3: modificato layout con aggiunta etichette --%>
-<div id="divcssa" style="width: 100%; visibility: hidden; position: relative;">
+<div id="divcssa" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
 		<td class="Titolo" colspan="4">UEPE/USSM</td>
@@ -2020,7 +2085,7 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 // Uffici di Sorveglianza: Magistrato e Tribunale
 //==============================================================================
 %>
-<div id="divsor" style="width: 100%; visibility:hidden; position:relative; " >
+<div id="divsor" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
  	<tr>
 		<td class="Titolo" colspan="4">Ufficio / Magistrato di Sorveglianza</td>
@@ -2070,7 +2135,7 @@ if (!tipoMisura.equals("INDULTINO") && !tipoMisura.equals("ESP_PRESSO_DOM")) {
 // Autorità Competente per territorio
 //==============================================================================
 %>
-<div id="divautoritacompetenteC" style="width: 100%; visibility:hidden; position:relative; " >
+<div id="divautoritacompetenteC" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
 	<tr>
 		<!--autorità di polizia-->
@@ -2111,9 +2176,8 @@ if (autoritaEsternaC != null && autoritaEsternaC.getDescrSede() != null) {
 // AVVOCATI
 //==============================================================================
 %>
-<div id="divavocati" style="width: 100%; visibility:hidden; position:relative; " >
+<div id="divavocati" style="width: 95%; visibility: hidden; position: relative;">
 <table style="width: 100%;">
-	<tr>
     <tr>
       	<td class="Titolo" colspan=6>Destinatario per Notifica</td>
 	</tr>
@@ -2123,50 +2187,50 @@ Iterator lItxAvv = avvocati.iterator();
 while(lItxAvv.hasNext()) {
 	AvvocatoSiepModel lAvv = (AvvocatoSiepModel) lItxAvv.next();
 %>
-	<table>
-  		<tr>
-    		<td class="l" style="width: 100%;">Per Avvocato&nbsp;
-				<font class="campo">
-  					<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
-				</font>
-				&nbsp;Foro di&nbsp;
-				<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%></font>
-				&nbsp;Difensore di&nbsp;
-				<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%></font>
- 				<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
-    		</td>
-  		</tr>
-	</table>
- 	<table>
-		<tr>
-			<td class="l" width="35%">Autorita' Destinazione</td>
-  			<td class="L" colspan="3">
-     			<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
-					<%=autoritaEsternaAvv%>
-        		</select>
-    		</td>
-		</tr>
-		<tr>
- 			<td class="l">Sede</td>
- 			<td class="L">
-   				<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
-				<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
-    				<img src="/images/filefolder.gif" border=0>
-  				</a>
-			</td>
-  			<td class="l">Note</td>
- 			<td class="L">
-    			<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>" cols=30 ></textarea>
-   			</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
+<!-- <table> -->
+	<tr>
+   		<td class="l" style="width: 100%;">Per Avvocato&nbsp;
+			<font class="campo">
+				<%=StringUtils.toStringJSP(lAvv.getAvvocato().getCognome())%>&nbsp;<%=StringUtils.toStringJSP(lAvv.getAvvocato().getNome())%>
+			</font>
+			&nbsp;Foro di&nbsp;
+			<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%></font>
+			&nbsp;Difensore di&nbsp;
+			<font class="campo"><%=StringUtils.toStringJSP(lAvv.getAvvocato().getDescrTipo())%></font>
+			<input type="HIDDEN" title="Codice Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocatoFascicoloSiepModel().getIdAvvocatoFascicoloSiep())%>" type="text" name="<%=ICostantiAvvocato.CAMPO_ID_AVVOCATO %>"  maxlength="35" size="35">
+   		</td>
+	</tr>
+<!-- </table> -->
+<!-- <table> -->
+	<tr>
+		<td class="l" width="35%">Autorita' Destinazione</td>
+		<td class="L" colspan="3">
+   			<select Title="Autorita Esterna" class="small" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_TIPO_AUTORITA%>" >
+				<%=autoritaEsternaAvv%>
+       		</select>
+   		</td>
+	</tr>
+	<tr>
+		<td class="l">Sede</td>
+		<td class="L">
+			<input title="Sede Foro Avvocato" value="<%=StringUtils.toStringJSP(lAvv.getAvvocato().getForo())%>" type="text" name="<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE%>" maxlength="35" size="35">
+			<a href="Javascript:ListaComuni('LoadInserisciMisuraAlternativa','<%=ICostantiAutoritaEsterna.CAMPO_COD_SEDE %>[<%=lIdxAvv%>]');">
+  				<img src="/images/filefolder.gif" border=0>
+			</a>
+		</td>
+		<td class="l">Note</td>
+		<td class="L">
+   			<textarea title="Note" name="<%=ICostantiMisuraAlternativa.CAMPO_NOTE_AVVOCATI%>" cols=30 ></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
 <%
 	lIdxAvv++;
 }
 %>
-  		</tr>
-	</table>
+	</tr>
+<!-- </table> -->
 </table>
 </div>
 <div id="divbottone" style="width: 100%; visibility:visible; position:relative; " >
@@ -2200,98 +2264,115 @@ frmvalidator.addValidation("<%=ICostantiEvento.CAMPO_ANNO_DATA_EMISSIONE%>","lt=
 
 if (document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>')
 		// 20190726 [SG]: aggiunto controllo sbloccante per inserimento evento di Concessione L.207/2003
-		&& !"54".equals(lPosizione.getCodPosizioneGiuridica())) {
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","req","Il campo Giorno Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","lt=31");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","req","Il campo Mese Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","lt=12");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","req","Il campo Anno Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","lt=2099");
+		&& <%=!"54".equals(lPosizione.getCodPosizioneGiuridica())%>) {
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","req","Il campo Giorno Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>","lt=31");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","req","Il campo Mese Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>","lt=12");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","req","Il campo Anno Data Ammissione Provvisoria e Detenzione Domiciliare e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>","lt=2099");
 }
+
 if (document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>')) {
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","lt=2099");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>","lt=2099");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>","numeric");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>","lt=2099");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>","numeric");
+	
+	// Controlli Data Emissione Ordinanza
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","req","Il campo Giorno Data Emissione Ordinanza e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","lt=31");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","req","Il campo Mese Data Emissione Ordinanza e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","lt=12");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","req","Il campo Anno Data Emissione Ordinanza e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","lt=2099");
+	
+	// Controlli Data Trasmissione
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","lt=31");
+	
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>","lt=12");
+	
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","lt=2099");
 
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>","numeric");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>","lt=2099");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>","numeric");
-
-// Controlli Data Emissione Ordinanza
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","req","Il campo Giorno Data Emissione Ordinanza e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>","lt=31");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","req","Il campo Mese Data Emissione Ordinanza e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>","lt=12");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","req","Il campo Anno Data Emissione Ordinanza e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>","lt=2099");
-
-// Controlli Data Trasmissione
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","numeric");
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_GIORNO_DATA_INVIO%>","lt=31");
-
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>","numeric");
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_MESE_DATA_INVIO%>","lt=12");
-
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","numeric");
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiNotifica.CAMPO_ANNO_DATA_INVIO%>","lt=2099");
+	// MEV_9-SIEP: aggiunti controlli
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>","lt=2099");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>","lt=31");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>","lt=12");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>","lt=2099");
+	// FINE MEV_9-SIEP
 }
 
-if (document.getElementById('<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>')) {
 // Controlli Data Fine Pena
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","req","Il campo Giorno Data Fine Pena e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","lt=31");
-
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","req","Il campo Mese Data Fine Pena e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","lt=12");
-
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","req","Il campo Anno Data Fine Pena e' obbligatorio");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","lt=2099");
+if (document.getElementById('<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>')) {
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","req","Il campo Giorno Data Fine Pena e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_GIORNO_DATA_FINE%>","lt=31");
+	
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","req","Il campo Mese Data Fine Pena e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_MESE_DATA_FINE%>","lt=12");
+	
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","req","Il campo Anno Data Fine Pena e' obbligatorio");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiPenaResidua.CAMPO_ANNO_DATA_FINE%>","lt=2099");
 }
 
-//Controlli Data Scarcerazione
+// Controlli Data Scarcerazione
 if (document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>')
 		&& document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>')
 		&& document.getElementById('<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>')) {
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>","lt=31");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>","gt=1");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>","lt=12");
-
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>","numeric");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>","gt=1900");
-frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>","lt=2099");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_SCARCERAZIONE%>","lt=31");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>","gt=1");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_SCARCERAZIONE%>","lt=12");
+	
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>","numeric");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>","gt=1900");
+	frmvalidator.addValidation("<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_SCARCERAZIONE%>","lt=2099");
 }
 
 frmvalidator.setAddnlValidationFunction("Verify");
