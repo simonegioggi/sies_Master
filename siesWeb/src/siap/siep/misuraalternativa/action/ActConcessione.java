@@ -343,11 +343,8 @@ public class ActConcessione extends ActMisuraAlternativa implements ICostantiMis
 		}
 
 		if ((aFlagAffi != null && aFlagAffi.equals("S"))
-				|| (aPosizione.equals("13")
-						&& (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff.equals(""))) // vecchio
-																								// affidamento
-																								// in prova
-																								// provvisorio
+				|| (aPosizione.equals("13") // vecchio affidamento in prova provvisorio
+						&& (IdEventoAmmProvvAff != null && !IdEventoAmmProvvAff.equals("")))
 				|| (aPosizione.equals("54"))) { // affidamento in prova provvisorio
 			lEve.getEvento().setCodTipoProvvedimento("12");
 			if ("0001".equals(aMotivo))

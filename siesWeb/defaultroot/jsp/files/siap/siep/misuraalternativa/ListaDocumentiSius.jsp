@@ -533,6 +533,15 @@ if (!documentiSius.isEmpty()) {
         // Il codice precedente ribalta in modo non corretto l'Autorità Emittente,
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
+     	// MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
+        if (("TDS".equals(lUfficio)
+				&& ("0680".equals(misuraModel.getCodTipoMisura())
+						|| "0681".equals(misuraModel.getCodTipoMisura())))
+				|| ("TDSM".equals(lUfficio)
+						&& ("0690".equals(misuraModel.getCodTipoMisura())
+								|| "0691".equals(misuraModel.getCodTipoMisura())
+								|| "0692".equals(misuraModel.getCodTipoMisura()))))
+        	continue;
 %>
 	<tr>
 		<td class="c">

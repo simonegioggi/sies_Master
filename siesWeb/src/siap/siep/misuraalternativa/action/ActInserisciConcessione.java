@@ -238,7 +238,7 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (!lPosMod.isLibero())
 				lMisMod = SettaReclusioneArresto(lPenaResMod, lMisMod);
 
-			// MEV_9-SIEP: aggiunte impostazioni di variabili
+			// MEV_9-SIEP: aggiunto metodo
 			settaDatiOrdinanzaProvvisoria(lMisMod);
 
 			// MEV10-s3: anticipo questo metodo per prevenire errore inserimento dati ufficio UDS / TDS
@@ -326,6 +326,12 @@ public class ActInserisciConcessione extends ActConcessione {
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_NOTE))
 				lMisAlModConcessa.setNote(getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_NOTE));
 
+			// MEV_9-SIEP: aggiunta impostazione di variabile
+			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA))
+				lMisAlModConcessa.setDescrLuogoProva(
+						getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA));
+
+			// MEV_9-SIEP: aggiunto metodo
 			settaDatiOrdinanzaProvvisoria(lMisAlModConcessa);
 
 			lRetModel = lMisAltCtrl.ExInserisciOModificaMANotifica(lEveNot, lPenaRes, lMisAlModConcessa,
@@ -337,13 +343,12 @@ public class ActInserisciConcessione extends ActConcessione {
 		return lPage;
 	}
 
+	// MEV_9-SIEP: aggiunto metodo
 	private void settaDatiOrdinanzaProvvisoria(MisuraAlternativaModel mam) throws F3BException {
 
-		// MEV_9-SIEP: aggiunte impostazioni di variabili
-		if (("TDS".equals(mam.getCodUfficioSorveglianza())
-				&& ("0720".equals(mam.getCodTipoMisura()) || "0721".equals(mam.getCodTipoMisura())))
-				|| ("TDSM".equals(mam.getCodUfficioSorveglianza()) && ("0730".equals(mam.getCodTipoMisura())
-						|| "0731".equals(mam.getCodTipoMisura()) || "0732".equals(mam.getCodTipoMisura())))) {
+		if ("0720".equals(mam.getCodTipoMisura()) || "0721".equals(mam.getCodTipoMisura())
+				|| "0730".equals(mam.getCodTipoMisura()) || "0731".equals(mam.getCodTipoMisura())
+				|| "0732".equals(mam.getCodTipoMisura())) {
 			if (!isRequestParameterNullObj(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT))
 				mam.setAnnoRegistroMaAt(
 						getRequestBigDecimalParameter(ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT));
@@ -361,6 +366,7 @@ public class ActInserisciConcessione extends ActConcessione {
 	}
 
 	/**
+	 * SettaReclusioneArresto
 	 *
 	 * @param aPenaResMod
 	 * @param aMisMod
@@ -397,6 +403,7 @@ public class ActInserisciConcessione extends ActConcessione {
 	}
 
 	/**
+	 * SettaProvvedimento
 	 *
 	 * @param aFlagSan
 	 * @param atipoMisura
@@ -433,6 +440,7 @@ public class ActInserisciConcessione extends ActConcessione {
 	}
 
 	/**
+	 * SettaDataInizioMisura
 	 *
 	 * @param aPosMod
 	 * @param aFlagAffi
@@ -457,7 +465,6 @@ public class ActInserisciConcessione extends ActConcessione {
 						ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA,
 						ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA);
 		}
-
 		// Controlla che la posizione giuridica sia "13" o "54"
 		// premessa: inizialmente affidamento in prova provvisorio è stato registrato come posizione giuridica
 		// 13 per distinguerla quindi
@@ -466,8 +473,11 @@ public class ActInserisciConcessione extends ActConcessione {
 		// affidamento in prova
 		// mantengo la stessa data inizio misura affidamento in prova provvisorio (precedentemente caricata in
 		// maschera)
-		else if ((getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO) != null
+		else if (((getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO) != null
 				&& !getRequestStringParameter(ICostantiEvento.CAMPO_ID_EVENTO).equals(""))
+				// MEV_9-SIEP: aggiunta or condition per gestione ordinanza applicazione provvisoria
+				|| (getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO) != null
+						&& !getRequestStringParameter(ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO).equals("")))
 				&& (aPosMod.getCodPosizioneGiuridica().equals("13") // Affidamento in prova
 						|| aPosMod.getCodPosizioneGiuridica().equals("54") // Affidamento Provvisorio
 				) && atipoMisura.equals("AFFIDAMENTO")) {

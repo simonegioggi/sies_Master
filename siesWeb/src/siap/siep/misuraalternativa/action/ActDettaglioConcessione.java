@@ -31,10 +31,7 @@ import siap.siep.verbale.controller.IVerbale;
 import siap.siep.verbale.model.VerbaleModel;
 
 /**
- * <p>
- * Title: ActDettaglioConcessione
- * <p>
- * Description: Classe Action per la load dettaglio Concessione
+ * ActDettaglioConcessione - Classe Action per la load dettaglio Concessione
  *
  * @version 1.0
  */
@@ -113,7 +110,13 @@ public class ActDettaglioConcessione extends ActMisuraAlternativa implements ICo
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0001")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0002")
 					|| lMisAlModConcessa.getCodTipoMisura().equals("0003")
-					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")) {
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0030")
+					// MEV_9-SIEP: aggiunti codici tipo misura
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0720")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0721")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0730")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0731")
+					|| lMisAlModConcessa.getCodTipoMisura().equals("0732")) {
 				setRequestAttribute("tipoMisura", "AFFIDAMENTO");
 				lTipoProvvVerbale = "18";
 			} else if (lMisAlModConcessa.getCodTipoMisura().equals("0004")) {

@@ -570,13 +570,10 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 		String lStatement = new String();
 
 		// 09/10/2009 lStatement =
-		// " SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE
-		// "
-		// +
-		lStatement = " SELECT * FROM CG_REF_CODES WHERE "
-				+ " RV_DOMAIN = 'ESITO_TENORE'  AND RV_HIGH_VALUE = 'C014' ";
-		lStatement += " AND (RV_ABBREVIATION IN ('0002','0003','0004','0005','0115')) ";
-		lStatement += " ORDER BY RV_ABBREVIATION ";
+		// "SELECT RV_DOMAIN, RV_LOW_VALUE, RV_MEANING, RV_HIGH_VALUE,RV_ABBREVIATION FROM CG_REF_CODES WHERE"
+		lStatement = "SELECT * FROM CG_REF_CODES WHERE RV_DOMAIN = 'ESITO_TENORE' AND RV_HIGH_VALUE = 'C014' ";
+		lStatement += "AND (RV_ABBREVIATION IN ('0002','0003','0004','0005','0115')) ";
+		lStatement += "ORDER BY RV_ABBREVIATION ";
 
 		setStatement(lStatement);
 	}
@@ -597,8 +594,8 @@ public class DecodificheSqlDAO extends SIAPSqlDAO {
 						+ "or RV_LOW_VALUE = '0730' or RV_LOW_VALUE = '0731' or RV_LOW_VALUE = '0732') ";
 			else
 				lStatement += "AND (RV_LOW_VALUE = '0001' OR RV_LOW_VALUE = '0002' OR RV_LOW_VALUE = '0003' "
-						+ "or RV_LOW_VALUE = '0680' or RV_LOW_VALUE = '0681' or RV_LOW_VALUE = '0720' "
-						+ "or RV_LOW_VALUE = '0721') ";
+						+ "or RV_LOW_VALUE = '0680' or RV_LOW_VALUE = '0681' "
+						+ "or RV_LOW_VALUE = '0720' or RV_LOW_VALUE = '0721') ";
 		} else if (aMisAlt.equals("SEMILIBERTA"))
 			lStatement += "AND (RV_LOW_VALUE = '0004') ";
 		else if (aMisAlt.equals("INDULTINO"))
