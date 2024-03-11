@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 
 import f3b.log.LogF3B;
+import f3b.util.F3BException;
 import f3b.web.IWebConstants;
 import siap.sico.web.ActionSiap;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
@@ -33,6 +34,9 @@ public class ActLoadAvvisoPagoPA extends ActionSiap {
 
 		IBollettinoPagopa ibp = SIEPLookupRemote.getBollettinoPagopaRemote();
 		ByteArrayOutputStream baos = ibp.ExGetBollettino(idBollettinoPagopa);
+		// [SG]: MEV_2023-33 aggiunto controllo consistenza blob
+		if ((baos == null) || (baos.size() == 0))
+			throw new F3BException(F3BException.USER_MESSAGE, "Nessun Bollettino Associato");
 
 		// Prepara la pagina di destinazione
 		setRequestAttribute("report", baos);

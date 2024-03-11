@@ -2,6 +2,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.math.BigDecimal"%>
@@ -10,6 +11,7 @@
 <%@ page import="siap.sico.evento.model.EventoModel"%>
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.siep.fascicolo.action.ICostantiFascicoloSiep"%>
+<%@ page import="siap.siep.pagoPA.model.BollettinoPagopaModel"%>
 <%@ page import="siap.siep.rateizzazionepp.model.RateizzazionePPModel"%>
 <%@ page import="siap.siep.rateizzazionepp.action.ICostantiRateizzazionePP"%>
 <%@ page import="siap.siep.penacomplessiva.model.PenaComplessivaModel"%>
@@ -195,9 +197,13 @@ while (itx.hasNext()) {
 	int conta = 0;
 	while (IteRate.hasNext()) {
 		conta++;
+		// [SG]: MEV_2023-33 solo se emesso IUV metto la spunta verde "V"
+		BollettinoPagopaModel bpm = new BollettinoPagopaModel();
 		RateizzazionePPModel rata = (RateizzazionePPModel) IteRate.next();
+		if (!Utils.isNullObj(rata.getListaBollettini()) && !rata.getListaBollettini().isEmpty())
+			bpm = rata.getListaBollettini().get(0);
 		String spunta = "V";
-		if ("A".equals(em.getFlagDocumentoRegistrato())) {
+		if ("A".equals(em.getFlagDocumentoRegistrato()) || Utils.isNullObj(bpm.getIuv())) {
 			spunta = "TickRed";
 		}
   		String actDettaglio = "";
@@ -352,7 +358,10 @@ if (listaRateizzazioniLibere.size() > 0) {
 		<td class="R"><font class="campo"><%=StringUtils.toStringJSP(rata.getScadenzaGiorni(),"&nbsp;")%></font></td>
 		<td class="L" colspan="3"><font class="label">giorni dalla notifica dell'avviso di pagamento</font></td>
 <%
-			if (rata.getListaBollettini() != null && rata.getListaBollettini().size() > 0) {
+			// [SG]: MEV_2023-33 solo se emesso IUV metto la spunta verde "V"
+			if (rata.getListaBollettini() != null && rata.getListaBollettini().size() > 0
+					&& !Utils.isNullObj(rata.getListaBollettini().get(0))
+					&& Utils.isPresent(rata.getListaBollettini().get(0).getIuv())) {
 %>   
 		<td class="C" nowrap><img src="<%=IWebConstants.IMAGES_DIR%><%=spunta%>.gif"></td>
 <%

@@ -73,8 +73,9 @@ function tornaIndietro(action) {
           <% } %>
 		</td>
 		<!-- BOTTONE DI STAMPA -->
+		<%-- [SG]: MEV_2023-33 aggiunto parametro di passaggio = IdEvento --%>
 		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-       		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini"%>"/>
+       		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.sanzionesostitutiva.action.ActStampaMassivaBollettini&"+ICostantiEvento.CAMPO_ID_EVENTO+"="+evento.getIdEvento()%>"/>
       	</jsp:include>
 	</tr>
 </table>

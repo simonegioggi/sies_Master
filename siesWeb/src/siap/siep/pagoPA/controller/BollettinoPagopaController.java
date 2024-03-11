@@ -19,7 +19,8 @@ import siap.siep.pagoPA.model.BollettinoPagopaModel;
 import siap.siep.rateizzazionepp.dao.RateizzazionePPSqlDAO;
 
 /**
- * Title: BollettinoPagopaController Description: Classe Controller per la gestione del Bollettino PagoPA
+ * Title: BollettinoPagopaController
+ * Description: Classe Controller per la gestione del Bollettino PagoPA
  *
  * @author sgioggi
  * @since MEV_2023-13
@@ -210,8 +211,9 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 				baos = bpsdao.getBlob("DOC_BOLL_BLOB");
 				bpsdao.stop();
 			}
-			if ((baos == null) || (baos.size() == 0))
-				throw new F3BException(F3BException.USER_MESSAGE, "Nessun Bollettino Associato");
+			// [SG]: MEV_2023-33 controllo spostato nella action
+			// if ((baos == null) || (baos.size() == 0))
+			// throw new F3BException(F3BException.USER_MESSAGE, "Nessun Bollettino Associato");
 		} catch (F3BException eF3b) {
 			throw eF3b;
 		} catch (Exception e) {
@@ -573,7 +575,7 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 
 	/**
 	 * Aggiunto metodo di ricerca bollettini per IdRateizzazione
-	 * 
+	 *
 	 * @author d.fiorletta
 	 * @since MEV_2023-33
 	 */
@@ -618,9 +620,8 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 	 * @return
 	 * @throws F3BException
 	 */
-	public Vector<BollettinoPagopaModel> ExRicercaBollettiniSenzaCFConPosizioniAperte (
-			int inScadenzaTraGiorni, int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni)
-			throws F3BException {
+	public Vector<BollettinoPagopaModel> ExRicercaBollettiniSenzaCFConPosizioniAperte(int inScadenzaTraGiorni,
+			int controllateDaGiorni, int generatiDaGiorni, int controllarePerGiorni) throws F3BException {
 		Connection c = null;
 		Vector<BollettinoPagopaModel> coms = new Vector<>();
 
@@ -641,13 +642,15 @@ public class BollettinoPagopaController extends SiapController implements IBolle
 			}
 			bppaSqldao.stop();
 		} catch (DAOException daoEx) {
-			siesLogger.error("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte:", daoEx);
+			siesLogger.error("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte:",
+					daoEx);
 			throw new F3BException(
 					"BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte: Non posso leggere : "
 							+ daoEx);
 		} catch (Exception e) {
 			siesLogger.error("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte:", e);
-			throw new F3BException("BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte: " + e);
+			throw new F3BException(
+					"BollettinoPagopaController.ExRicercaBollettiniSenzaCFConPosizioniAperte: " + e);
 		} finally {
 			cleanup(bppaSqldao);
 			cleanup(c);
