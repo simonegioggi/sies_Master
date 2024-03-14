@@ -48,7 +48,6 @@
 <jsp:useBean id="descrTipoUfficioTDS" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="descrTipoUfficioUDS" 	scope="request" class="java.lang.String"/>
 <jsp:useBean id="codTipoUfficioUDS" 	scope="request" class="java.lang.String"/>
-
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel) session.getAttribute("fascicolo");
 
@@ -111,25 +110,43 @@ if (tipoMisura.equals("AFFIDAMENTO")) {
 %>
 		</td>
 <%
-if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) {
-	if (eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0) {
+if ((eventonotifica.getEvento().getFlagDocumentoRegistrato() != null
+		&& eventonotifica.getEvento().getFlagDocumentoRegistrato().compareTo("N") == 0)
+		|| eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
+	// MEV_9-SIEP: aggiunto pulsante di modifica
+	if (misuraalternativa.getCodTipoMisura().equals("0720")
+			|| misuraalternativa.getCodTipoMisura().equals("0721")
+			|| misuraalternativa.getCodTipoMisura().equals("0730")
+			|| misuraalternativa.getCodTipoMisura().equals("0731")
+			|| misuraalternativa.getCodTipoMisura().equals("0732")) {
 %>
-		<!-- BOTTONE DI STAMPA -->
-   		<jsp:include page="<%= ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
-     		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
-		</jsp:include>
+     	<!-- BOTTONE DI MODIFICA -->
+     	<td class="LBG">
+			<a href="<%=IWebConstants.PG_MAIN%>?<%=IWebConstants.ACTION_FIELD%>=siap.siep.misuraalternativa.action.ActLoadInserisciMAAffidamentoInProva
+			&<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>=<%=misuraalternativa.getIdMisuraAlternativa()%>&tipoOperazione=MODIFICA
+			&<%=ICostantiEvento.CAMPO_ID_EVENTO%>=<%=eventonotifica.getEvento().getIdEvento()%>">
+				<img align="middle" src="<%=IWebConstants.IMAGES_DIR%>modifica24.gif" alt="Modifica" width="24" height="24" border="0">
+			</a>
+		</td>
 <%
 	}
-	if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null) {
 %>
 		<!-- BOTTONE DI STAMPA -->
    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>">
      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/>
-   		</jsp:include>
+		</jsp:include>
 <%
-	}
-}
+// MEV_9-SIEP: stava dentro if (eventonotifica.getEvento().getFlagDocumentoRegistrato() != null) quindi era dead code
+// if (eventonotifica.getEvento().getFlagDocumentoRegistrato() == null)
+} 
 %>
+<%-- 		<!-- BOTTONE DI STAMPA --> --%>
+<%--    		<jsp:include page="<%=ISIAPCostantiWeb.PG_BUTTONS_STAMPA_SIEP%>"> --%>
+<%--      		<jsp:param name="ActionLink" value="<%="/jsp/Main.jsp?Action=siap.siep.misuraalternativa.action.ActStampaConcessione&IdEvento="+eventonotifica.getEvento().getIdEvento()+"&tipoMisura="+tipoMisura+"&IdEventoAmmProvvAff="+StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>"/> --%>
+<%--    		</jsp:include> --%>
+<%-- <% --%>
+<%-- } --%>
+<%-- %> --%>
 	</tr>
 </table>
 <br>
@@ -150,7 +167,7 @@ if (flagmisura.equals("N")) {
 %>
 			<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ID_MISURA_ALTERNATIVA%>" value="<%=misuraalternativa.getIdMisuraAlternativa()%>">
 			<input type="HIDDEN" name="<%=ICostantiPosizioneGiuridica.CAMPO_COD_POSIZIONE_GIURIDICA%>" value="<%=StringUtils.toStringJSP(lPosizione.getCodPosizioneGiuridica())%>">
-			<input type="HIDDEN" name="<%= ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA %>" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>">
+			<input type="HIDDEN" name="<%=ICostantiPenaResidua.CAMPO_ID_PENA_RESIDUA%>" value="<%=StringUtils.toStringJSP(penaresidua.getIdPenaResidua())%>">
 		</td>
 	</tr>
     <tr>
@@ -828,7 +845,7 @@ if (verbale.getDataEmissione() != null) {
 			<input class="bottone" type="submit" value="Conferma">
 			<input type="HIDDEN" name="<%=IWebConstants.ACTION_FIELD%>" value="siap.siep.misuraalternativa.action.ActUploadMA">
 			<input type="HIDDEN" name="tipoMisura" value="<%=tipoMisura%>">
-			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%= eventonotifica.getEvento().getIdEvento() %>">
+			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_ID_EVENTO%>" value="<%=eventonotifica.getEvento().getIdEvento()%>">
 			<input type="HIDDEN" name="IdPosizioneGiuridica" value="<%=lPosizione.getIdPosizioneGiuridica()%>">
 			<input type="HIDDEN" name="<%=ICostantiEvento.CAMPO_AZIONE_DETTAGLIO%>" value="siap.siep.misuraalternativa.action.ActDettaglioConcessione">
 			<input type="HIDDEN" name="IdEventoAmmProvvAff" value="<%=StringUtils.toStringJSP(lEventoAmmProvvAff.getIdEvento())%>">

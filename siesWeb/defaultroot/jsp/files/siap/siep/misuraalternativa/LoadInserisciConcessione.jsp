@@ -65,6 +65,9 @@
 <jsp:useBean id="tipoUfficioSIUS" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="lFlagSanzione" 		scope="request" class="java.lang.String"/>
 <jsp:useBean id="filtroMinorenni" 		scope="request" class="java.lang.String"/>
+<%-- MEV_9-SIEP: aggiunti useBean --%>
+<jsp:useBean id="tipoOperazione" 			scope="request" class="java.lang.String"/>
+<jsp:useBean id="comboCSSATrattinoModif"	scope="request" class="java.lang.String"/>
 
 <%
 FascicoloSiepModel lFascicoloAssociato = (FascicoloSiepModel)session.getAttribute("fascicolo");
@@ -1490,39 +1493,92 @@ if ("S".equals(lFlagSanzione) && penaresidua != null && penaresidua.getFlagSanzi
 		<td class="Titolo" colspan="4"> Dati Ordinanza Tribunale di Sorveglianza </td>
    	</tr>
 <%
+// MEV_9-SIEP: aggiunta gestione modifica
+boolean isModifica = "MODIFICA".equals(tipoOperazione);
 if (misuraalternativa.getIdMisuraAlternativa() != null) {
 %>
 	<tr>
 		<td class="l" width="20%">Anno/Numero SIUS</td>
 	  	<td class="l">
+<%if (isModifica) {%>
+			<input Title="Anno Fascicolo Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_ANNO_FASCICOLO_SIUS%>" type="text" size="4" maxlength="4" 
+				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>">
+			/
+			<input Title="Numero Sius" name="<%=ICostantiMisuraAlternativa.CAMPO_CHIAVE_PROGR_FASCICOLO_SIUS%>" type="text" size="6" maxlength="6"
+				onkeypress="return TicTabNumField(this,event)"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%>">
+<%} else {%>
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveAnnoFascicoloSius())%>/</font>
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getChiaveProgrFascicoloSius())%></font>
+<%}%>
 		</td>
 		<td class="l">Anno/Numero Ordinanza</td>
 		<td class="l">
-	 		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>/</font>
+<%if (isModifica) {%>
+	 		<input Title="Anno Ordinanza" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO%>" type="text" size="4" maxlength="4" 
+				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>">
+			/
+			<input Title="Numero Ordinanza" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO%>" type="text" size="6" maxlength="6"
+				onkeypress="return TicTabNumField(this,event)"
+				value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%>">
+<%} else {%>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistro())%>/</font>
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistro())%></font>
+<%}%>
 	 	</td>
 	</tr>
 	<tr>
 		<td class="l">Ufficio Emittente</td>
 	 	<td class="l" colspan="3">
-	 		<font class="campo"><%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrTipoUfficio())%> DI <%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrComune())%></font>
+<%if (isModifica) {%>
+<%
+	String listaComuniScript = "";	
+	if (tipoMisura != null && (tipoMisura.equals("INDULTINO") || tipoMisura.equals("ESP_PRESSO_DOM"))) {
+		listaComuniScript = "ListaComuniEmitUTMinor";
+%>
+			<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteAutoritaUff, "", ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA, tipoUfficioSIUS)%>
+<%
+	} else {
+		listaComuniScript = "ListaComuniEmitTdsMinor";
+%>
+			<%=MinorMask.comboEmittente(filtroMinorenni, MinorMask.EmittenteTribunale, "", ICostantiMisuraAlternativa.CAMPO_COD_UFFICIO_SORVEGLIANZA, tipoUfficioSIUS)%>
+<%
+	}
+%>
+<%} else {%>
+			<font class="campo"><%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrTipoUfficio())%> DI <%=StringUtils.toStringJSP(sedeUfficioEmittente.getDescrComune())%></font>
+<%}%>
 	 	</td>
 	</tr>
 	<tr>
 	  	<td class="l">Oggetto Ordinanza</td>
 	  	<td class="l" colspan="3">
+<%if (isModifica) {%>
+	  		<select Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>">
+          		<%=motivoProvv%>
+        	</select>
+<%} else {%>
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrTipoMisura())%></font>
+<%}%>
 	  	</td>
 	</tr>
 	<tr>
 	  	<td class="l">Data Emissione Ordinanza</td>
 	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
+<%if (isModifica) {%>
+			<font class="campo">
+				<input title="Giorno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisione()))%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+				<input title="Mese Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisione()))%>" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA%>> -
+				<input title="Anno Data Emissione Ordinanza" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisione()))%>" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			</font>
+<%} else {%>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisione(), "dd-MM-yyyy"))%></font>
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisione()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisione()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisione()))%>">
+<%}%>
 	  	</td>
 	</tr>
 <%
@@ -1531,25 +1587,48 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	<tr>
 	  	<td class="l">Luogo della Prova</td>
 	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>
+<%if (isModifica) {%>
+	 		<font class="campo">
+	      		<input Title="Luogo svolgimento della prova" value="<%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%>" name="<%=ICostantiMisuraAlternativa.CAMPO_DESCR_LUOGO_PROVA%>" size=35 type="text">
+	    	</font>
+<%} else {%>
+	    	<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getDescrLuogoProva())%></font>	
+<%}%>
 	  	</td>
 	</tr>
-	<%-- MEV_9-SIEP: aggiunte due nuove sezioni - SIAMO IN MODIFICA --%>
+	<%-- MEV_9-SIEP: aggiunte due nuove sezioni - SIAMO IN PRESENZA MISURA ALTERNATIVA --%>
 	<tr>
 		<td class="l" width="20%">Anno/Numero Ordinanza Provvisoria</td>
 		<td class="l" colspan="3">
-	 		<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
+<%if (isModifica) {%>
+	 		<input Title="Anno Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_REGISTRO_MA_AT%>" type="text" size="4" maxlength="4" 
+				onkeypress="return TicTabNumField(this,event)" onBlur="javascript:value=FillYear(value)" value="<%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>">
+			/
+			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6"
+				onkeypress="return TicTabNumField(this,event)" value="<%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%>">
+<%} else {%>
+			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getAnnoRegistroMaAt())%>/</font>
 			<font class="campo"><%=StringUtils.toStringJSP(misuraalternativa.getNumeroRegistroMaAt())%></font>
+<%}%>
 			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="<%=StringUtils.toStringJSP(misuraalternativa.getEveIdEvento())%>">
 	 	</td>
 	</tr>
 	<tr>
 	  	<td class="l">Data Emissione Provvedimento</td>
 	  	<td class="l" colspan="3">
-	    	<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
+<%if (isModifica) {%>
+	 		<input title="Giorno Data Emissione Provvedimento" type="text" size="2" maxlength="2" 
+	    		name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>"> -
+			<input title="Mese Data Emissione Provvedimento" type="text" size="2" maxlength="2" 
+				name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA%> value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>"> -
+			<input title="Anno Data Emissione Provvedimento" type="text" size="4" maxlength="4" 
+				name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE_MA_AT%>" <%=IWebConstants.UTIL_DATA_ANNO%> value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
+<%} else {%>
+			<font class="campo"><%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataDecisioneMaAt(), "dd-MM-yyyy"))%></font>
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getDayToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getMonthToString(misuraalternativa.getDataDecisioneMaAt()))%>">
 			<INPUT type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_DECISIONE%>" value="<%=StringUtils.toStringJSP(DateUtils.getYearToString(misuraalternativa.getDataDecisioneMaAt()))%>">
+<%}%>
 	  	</td>
 	</tr>
 	<%-- FINE MEV_9-SIEP --%>
@@ -1583,7 +1662,10 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	</tr>
 <%
 	}
-	if (misuraalternativa.getDataInizioMisura() != null) {
+	// MEV_9-SIEP: aggiunto controllo
+	if (!((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvAff.getIdEvento() != null)
+			|| lPosizione.getCodPosizioneGiuridica().equals("54"))) {
+		if (misuraalternativa.getDataInizioMisura() != null) {
 %>
 	<tr>
 	  	<td class="l" width="20%">Data Inizio Misura</td>
@@ -1592,6 +1674,7 @@ if (misuraalternativa.getIdMisuraAlternativa() != null) {
 	  	</td>
 	</tr>
 <%
+		}
 	}
 	if (misuraalternativa.getDataFineMisura() != null) {
 %>
@@ -1682,7 +1765,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 <%
 	} else {
 %>
-        	<select  Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" onChange="pulisciId();">
+        	<select Title="Codice Motivo" name="<%=ICostantiEvento.CAMPO_COD_MOTIVO%>" onChange="pulisciId();">
           		<%=motivoProvv%>
         	</select>
 <%
@@ -1712,7 +1795,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 	    	</font>
 	  	</td>
 	</tr>
-<%-- MEV_9-SIEP: aggiunte due nuove sezioni - SIAMO IN INSERIMENTO --%>
+<%-- MEV_9-SIEP: aggiunte due nuove sezioni - SIAMO IN ASSENZA MISURA ALTERNATIVA --%>
 <!-- </table> -->
 <!-- <div id="divOrdinanzaProvvisoria" style="width: 100%; visibility: visible; position: relative;"> -->
 <!-- <table cellspacing="0" cellpadding="0" width="90%"> -->
@@ -1724,7 +1807,7 @@ else { // misuraalternativa.getIdMisuraAlternativa() == null
 			/
 			<input Title="Numero Ordinanza Provvisoria" name="<%=ICostantiMisuraAlternativa.CAMPO_NUMERO_REGISTRO_MA_AT%>" type="text" size="6" maxlength="6"
 				onkeypress="return TicTabNumField(this,event)" onChange="pulisciId();" disabled>
-		<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="">
+			<input type="hidden" name="<%=ICostantiMisuraAlternativa.CAMPO_EVE_ID_EVENTO%>" value="">
 		</td>
 	</tr>
 	<tr>
@@ -1881,26 +1964,17 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 %>
 		<td class="l" width="20%">Data Applicazione Provvisoria</td>
 		<td class="l">
-<%
-		if (Utils.isNullObj(lMAAmmProvv.getDataInizioMisura())) {
-%>
+<%if (isModifica) {%>
+	 		<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
+			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(misuraalternativa.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%} else {%>
 			<input title="Giorno Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Mese Data Applicazione Provvisoria" type="text" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>> -
 			<input title="Anno Data Applicazione Provvisoria" type="text" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
-<%
-		} else {
-%>
-			<font class="campo">
-				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>-
-				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>-
-				<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>
-			</font>
-			<input title="Giorno Data Applicazione Provvisoria" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>>
-			<input title="Mese Data Applicazione Provvisoria" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>>
-			<input title="Anno Data Applicazione Provvisoria" type="HIDDEN" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+<%}%>
 		</td>
 <%
-		}
 	} else {
 %>
 		<td class="l" width="20%">Data Ammissione Provvisoria ad Affidamento in Prova</td>
@@ -1912,9 +1986,9 @@ else if ((lPosizione.getCodPosizioneGiuridica().equals("13") && lEventoAmmProvvA
 			</font>
 			<%-- campi Data nascosti - Commentato perche' il campo "Data Ammissione Provvisoria ad Affidamento in Prova"
 				non e' piu' modificabile sono state inserite le label per visulizzare i valori --%>
-			<input title="Giorno Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>" <%=IWebConstants.UTIL_DATA%>>
-			<input title="Mese Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="2" maxlength="2" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>" <%=IWebConstants.UTIL_DATA%>>
-			<input title="Anno Data Ammissione Provvisoria ad Affidamento in Prova" type="HIDDEN" size="4" maxlength="4" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>" <%=IWebConstants.UTIL_DATA_ANNO%>>
+			<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "dd"))%>">
+			<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "MM"))%>">
+			<input type="HIDDEN" name="<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>" value="<%=StringUtils.toStringJSP(DateUtils.getDateToString(lMAAmmProvv.getDataInizioMisura(), "yyyy"))%>">
 		</td>
 <%
 	}
@@ -2063,15 +2137,20 @@ if (posizioneluogoaltra != null &&  posizioneluogoaltra .getLuogoDetenzione()!= 
 	</tr>
 	<tr>
 		<td class="l" width="30%">Destinatario <font class=ob>(*)</font></td>
-		<td class="l"><%=MinorMask.comboCSSATrattino(MinorMask.ComboCSSAId)%></td>
+		<td class="l">
+<%if (isModifica) {%>
+	 		<%=comboCSSATrattinoModif%>
+<%} else {%>
+			<%=MinorMask.comboCSSATrattino(MinorMask.ComboCSSAId)%>
+<%}%>
+		</td>
 	</tr>
 	<tr>
 		<td class="l">Sede</td>
 		<td class="l">
 			<input readonly title="Sede UEPE Competente" name="Indirizzo" size="60"
 					value="<%=StringUtils.toStringJSP(daticssa.getComune())%>-<%=StringUtils.toStringJSP(daticssa.getIndirizzo())%>">
-			<input type="hidden" name="<%=ICostantiCSSA.CAMPO_ID_CSSA%>"
-					value="<%=StringUtils.toStringJSP(daticssa.getIdCSSA())%>" size=35>
+			<input type="hidden" name="<%=ICostantiCSSA.CAMPO_ID_CSSA%>" value="<%=StringUtils.toStringJSP(daticssa.getIdCSSA())%>">
 			<input type="hidden" name="cssaE" value="S">
 				<a href="Javascript:ListaCSSAMinor('LoadInserisciMisuraAlternativa','<%=ICostantiCSSA.CAMPO_ID_CSSA%>','Indirizzo');">
 					<img src="/images/filefolder.gif" border=0>
@@ -2141,7 +2220,7 @@ if (!tipoMisura.equals("INDULTINO") && !tipoMisura.equals("ESP_PRESSO_DOM")) {
 		<!--autorità di polizia-->
     	<td class="l" width=30%>Autorita' Competente per territorio <font class=ob>(*)</font></td>
     	<td class="L" colspan="3">
-      		<select  Title="Autorita Esterna"  class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>">
+      		<select Title="Autorita Esterna" class="small" name="<%=ICostantiMisuraAlternativa.CAMPO_COD_POLIZIA_C%>">
         		<%=codiceAutoritaC%>
       		</select>
       	<input type="hidden" Title="notificaSemiliberta" name="notificaSemiliberta" value="S">

@@ -6,6 +6,7 @@
 <%@ page import="f3b.web.IWebConstants"%>
 <%@ page import="f3b.util.DateUtils"%>
 <%@ page import="f3b.util.StringUtils"%>
+<%@ page import="f3b.util.Utils"%>
 
 <%@ page import="siap.sico.evento.action.ICostantiEvento"%>
 <%@ page import="siap.sico.evento.model.EventoModel"%>
@@ -307,7 +308,7 @@ function insertIT(
   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NOTE%>.value = "";
 
 	// CO = concessione SOSPENSIONE ESECUZIONE PENA
-	if (natura != '-' && natura == 'CO'&& (oggetto == '2000' || oggetto == '2001' || oggetto == '2480')) {
+	if (natura != '-' && natura == 'CO' && (oggetto == '2000' || oggetto == '2001' || oggetto == '2480')) {
 		if (tipodecisione != '-')
 		  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_DECISIONE%>.value = tipodecisione;
 		else
@@ -323,28 +324,32 @@ function insertIT(
 	}
 
 	//===============================================================
-	// CO = concessione DIFFERIMENTO PROVVISORIO/DEFINITIVO -- oggetto 2140-->concessione espulsione
+	// CO = concessione DIFFERIMENTO PROVVISORIO/DEFINITIVO -- oggetto 2140 --> concessione espulsione
 	//===============================================================
-	if (natura != '-' && natura == 'CO'&& (oggetto == '2010'
-			|| oggetto == '2011' || oggetto == '0030' || oggetto == '0031' || oggetto == '0032'
-			|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202'|| oggetto == '2140')) {
-  		//== Quantum di differimento ==
-  		if (anniMisura != '-')
-    		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_ANNI_MISURA%>.value = anniMisura;
-		else
-  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_ANNI_MISURA%>.value = "";
+	if (natura != '-' && natura == 'CO'
+			&& (oggetto == '2010' || oggetto == '2011' || oggetto == '0030' || oggetto == '0031' || oggetto == '0032'
+					|| oggetto == '0033' || oggetto == '0201' || oggetto == '0202' || oggetto == '2140'
+					<%-- MEV_9-SIEP: aggiunti nuovi oggetti ed aggiunto try..catch --%>
+					|| oggetto == '0720' || oggetto == '0721' || oggetto == '0730' || oggetto == '0731' || oggetto == '0732')) {
+		try {
+	  		// Quantum di differimento
+	  		if (anniMisura != '-')
+	    		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_ANNI_MISURA%>.value = anniMisura;
+			else
+	  			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_ANNI_MISURA%>.value = "";
+	
+			if (mesiMisura != '-')
+			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_MESI_MISURA%>.value = mesiMisura;
+			else
+			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_MESI_MISURA%>.value = "";
+	
+			if (giorniMisura != '-')
+			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_GIORNI_MISURA%>.value = giorniMisura;
+			else
+			 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_GIORNI_MISURA%>.value = "";
+		} catch (err) { }
 
-		if (mesiMisura != '-')
-		  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_MESI_MISURA%>.value = mesiMisura;
-		else
-		  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_MESI_MISURA%>.value = "";
-
-		if (giorniMisura != '-')
-		  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_GIORNI_MISURA%>.value = giorniMisura;
-		else
-		 	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_NUM_GIORNI_MISURA%>.value = "";
-
-		if (oggetto != '2140') {
+	 	if (oggetto != '2140') {
   			if (giornoInizioMisura != '-')
     			window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_INIZIO_MISURA%>.value = giornoInizioMisura;
 			else
@@ -359,8 +364,8 @@ function insertIT(
 			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = annoInizioMisura;
 			else
 			  	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_INIZIO_MISURA%>.value = "";
-			
-			//== Da scarcerare/già scarcerato ==
+
+		  	// Da scarcerare/già scarcerato
 			try {
 				if (flagScarcerato=='SORV') {
 			     	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TIPO_UFFICIO_SCARCERAZIONE%>[1].checked = true;
@@ -371,18 +376,20 @@ function insertIT(
 			   	}
 			} catch (err) { }
 
-			//== Data fine differimento ==
-			if (giornoFineMisura != "" && giornoFineMisura != "-") {
-				window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_FINE_MISURA%>.value = giornoFineMisura;
-				window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_FINE_MISURA%>.value = meseFineMisura;
-				window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_FINE_MISURA%>.value = annoFineMisura;
-			} else {
-				window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_FINE_MISURA%>.value = "";
-				window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_FINE_MISURA%>.value = "";
-				window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_FINE_MISURA%>.value = "";
-			}
+			try {
+				// Data fine differimento
+				if (giornoFineMisura != "" && giornoFineMisura != "-") {
+					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_FINE_MISURA%>.value = giornoFineMisura;
+					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_FINE_MISURA%>.value = meseFineMisura;
+					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_FINE_MISURA%>.value = annoFineMisura;
+				} else {
+					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_GIORNO_DATA_FINE_MISURA%>.value = "";
+					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_MESE_DATA_FINE_MISURA%>.value = "";
+					window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_ANNO_DATA_FINE_MISURA%>.value = "";
+				}
+			} catch (err) { }
 
-			//== Fino alla decisione del TDS ==
+			// Fino alla decisione del TDS
 			try {
 			  	if (flagDecisioneTribunale=='S') {
 			    	window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_FLAG_DECISIONE_TRIBUNALE%>.checked = true;
@@ -391,7 +398,7 @@ function insertIT(
 			  	}
 			} catch (err) { }
 
-			//== TDS Competente ==
+			// TDS Competente
 			try {
 			  	if (sedeTdsCompetente != '-')
 			   		window.parent.opener.document.<%=request.getParameter("formname")%>.<%=ICostantiMisuraAlternativa.CAMPO_COD_TDS_COMPETENTE%>.value = sedeTdsCompetente;
@@ -406,7 +413,7 @@ function insertIT(
 	// nel caso di Differimento nelle forme della Detenzione domiciliare 
 	//======================================================================
 	if (oggetto == '1204') {
-  		if (flagScarcerato=='SORV') {
+  		if (flagScarcerato == 'SORV') {
 			window.parent.opener.document.<%=request.getParameter("formname")%>.tipo[1].checked = true;
 			window.parent.opener.document.<%=request.getParameter("formname")%>.tipo[0].checked = false;
 			try {
@@ -533,14 +540,15 @@ if (!documentiSius.isEmpty()) {
         // Il codice precedente ribalta in modo non corretto l'Autorità Emittente,
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
-     	// MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if (("TDS".equals(lUfficio)
-				&& ("0680".equals(misuraModel.getCodTipoMisura())
-						|| "0681".equals(misuraModel.getCodTipoMisura())))
-				|| ("TDSM".equals(lUfficio)
-						&& ("0690".equals(misuraModel.getCodTipoMisura())
-								|| "0691".equals(misuraModel.getCodTipoMisura())
-								|| "0692".equals(misuraModel.getCodTipoMisura()))))
+        // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
+        if ((("TDS".equals(lUfficio)
+        		&& ("0680".equals(misuraModel.getCodTipoMisura())
+        				|| "0681".equals(misuraModel.getCodTipoMisura())))
+        		|| ("TDSM".equals(lUfficio)
+        				&& ("0690".equals(misuraModel.getCodTipoMisura())
+        						|| "0691".equals(misuraModel.getCodTipoMisura())
+        						|| "0692".equals(misuraModel.getCodTipoMisura()))))
+        		&& !Utils.isNullObj(misuraModel.getDataEsecutivita()))
         	continue;
 %>
 	<tr>

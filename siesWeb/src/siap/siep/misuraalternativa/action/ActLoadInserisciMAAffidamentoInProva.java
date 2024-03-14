@@ -2,6 +2,9 @@ package siap.siep.misuraalternativa.action;
 
 import org.apache.log4j.Logger;
 
+import f3b.log.LogF3B;
+import f3b.util.F3BException;
+import f3b.web.html.Option;
 import siap.sico.decodifiche.controller.DecodificheManager;
 import siap.sico.evento.controller.IEvento;
 import siap.sico.evento.model.EventoModel;
@@ -9,33 +12,22 @@ import siap.sico.misuraalternativa.controller.IMisuraAlternativa;
 import siap.sico.misuraalternativa.model.MisuraAlternativaModel;
 import siap.sico.util.SICOLookupRemote;
 import siap.siep.fascicolo.model.FascicoloSiepModel;
-import f3b.log.LogF3B;
-import f3b.util.F3BException;
-import f3b.web.html.Option;
 
 /**
- * <p>
- * Title: ActLoadInserisciMAAffidamentoInProva
- * </p>
- * <p>
- * Description: Classe Action per la load inserisci di Concessione Affidamento
- * </p>
- * <p>
- * Copyright: Copyright (c) 2002
- * </p>
- * <p>
- * Company: Bull
- * </p>
- * 
+ * ActLoadInserisciMAAffidamentoInProva - Classe Action per la load inserisci di Concessione Affidamento
+ *
  * @version 1.0
  */
 public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
+
 	// [FT] - 03/08/2016 - MAC_LOG - Dichiaro un'istanza di Logger per SIESLog
 	private static Logger siesLogger = Logger.getLogger(LogF3B.SIES_LOG);
+
 	public String processRequest() throws F3BException {
+
 		// tutti i controlli e la maggior parte delle request si trovano nel padre
 		// passo la posizione attuale per vedere se esiste il verbale o no
-		String lRitorno = this.getConcessione("13");
+		String lRitorno = getConcessione("13");
 		if (!lRitorno.equals(""))
 			return lRitorno;
 
@@ -43,7 +35,7 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		 * paolo cherubini 17/01/2011 provo a commentare probabilmente nons serve // AMBROSINO 21/10/2010 :
 		 * Ammissione Provvisoria ad Affidamento in Prova (54) // Dal 01/2011 è cambiato il codice della
 		 * PosGiu da 51 a 54 // Eseguo gli stessi controlli effettuati per PosGiu = 13 lRitorno =
-		 * this.getConcessione("54"); if(!lRitorno.equals("")) return lRitorno; fine paolo
+		 * getConcessione("54"); if(!lRitorno.equals("")) return lRitorno; fine paolo
 		 */
 
 		// setto il campo codice motivo
@@ -57,7 +49,8 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		EventoModel lEvent = new EventoModel();
 
 		String lCodPosizione = (String) getRequestAttribute("lcodicePosizione");
-		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di LogF3B.getLogger()
+		// [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
+		// LogF3B.getLogger()
 		siesLogger.debug("lCodPosizione = " + lCodPosizione);
 
 		// ==========================================================================
@@ -69,8 +62,8 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		// ==========================================================================
 
 		// prende dalla Session l'ID del procedimento e lo carica nel model
-		lEvent.setFasSieIdFascicoloSiep(((FascicoloSiepModel) getSessionAttribute("fascicolo"))
-				.getIdFascicoloSiep());
+		lEvent.setFasSieIdFascicoloSiep(
+				((FascicoloSiepModel) getSessionAttribute("fascicolo")).getIdFascicoloSiep());
 		// carica nel model il Tipo evento
 		lEvent.setCodTipoEvento("01");
 		// carica nel model il flag documento registrato
@@ -96,8 +89,8 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 
 		// solo se provengo da annotazione affidamento in prova delle sanzioni sostitutive
 		String lFlagSanzione = "N";
-		if (!this.isRequestParameterNullObj("lFlagSanzione")
-				&& "S".equals(this.getRequestStringParameter("lFlagSanzione"))) {
+		if (!isRequestParameterNullObj("lFlagSanzione")
+				&& "S".equals(getRequestStringParameter("lFlagSanzione"))) {
 			lFlagSanzione = "S";
 		}
 		setRequestAttribute("lFlagSanzione", lFlagSanzione);
@@ -112,7 +105,7 @@ public class ActLoadInserisciMAAffidamentoInProva extends ActConcessione {
 		}
 
 		// MEV 10 - filtro sui minorenni
-		setRequestAttribute("filtroMinorenni", this.getFiltroMinorenni());
+		setRequestAttribute("filtroMinorenni", getFiltroMinorenni());
 
 		return PG_LOAD_INSERISCI_MA_CONCESSIONE;
 	}
