@@ -8,4 +8,5 @@ Questa release verrà rilasciata il 22/03/2024 (Patch mese di Gennaio, Febbraio e
 	sganciava la pena residua dell'evento precedente ed inoltre inseriva una pena
 	complessiva inutile.
 	Classe modificata:
-	-	siap.siep.penapecuniaria.controller.ExInserisciRichiestaConversione.java
+	-	siap.siep.penapecuniaria.controller.RichiestaConversioneController.java
+	(metodo ExInserisciRichiestaConversione)
