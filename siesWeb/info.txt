@@ -2,11 +2,10 @@ BRANCH SIES VERSIONE 12.5.7.0
 Nasce dal branch 12.5.6.0 in data 22/12/2023
 Questa release verrà rilasciata il 22/03/2024 (Patch mese di Gennaio, Febbraio e Marzo 2024)
 
-Comprende i seguenti Ticket MAC:
-
-1)	Ticket#202402120123 — Siep - Minorenni - Validazione ammissione detenzione domiciliare
-	In fase di validazione del cumulo, se il fascicolo cumulante era inizialmente marcato AC,
-	il cumulo NON eliminava il fs.flag_altra_causa che restava a S.
+1)	Ticket#20240228011 - SIEP Fascicolo non validato
+	Corretta gestione pena residua in fase di inserimento cumulo.
+	In fase di iscrizione di una richiesta conversione PP sul classe VII il controller
+	sganciava la pena residua dell'evento precedente ed inoltre inseriva una pena
+	complessiva inutile.
 	Classe modificata:
-	-	siap.siep.modulocumulo.controller.DatiFinaliCumuloController.java
-		(metodo ExUpdateValidaProvvedimentoCumulo)
+	-	siap.siep.penapecuniaria.controller.ExInserisciRichiestaConversione.java

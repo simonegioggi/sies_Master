@@ -11,6 +11,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import com.sun.org.apache.bcel.internal.generic.GETFIELD;
+
 import f3b.dao.DAOException;
 import f3b.log.LogF3B;
 import f3b.util.DateUtils;
@@ -61,6 +63,7 @@ import siap.siep.parametro.model.ParametroModel;
 import siap.siep.penaaccessoria.dao.PenaAccessoriaDAO;
 import siap.siep.penaaccessoria.model.PenaAccessoriaModel;
 import siap.siep.penacomplessiva.dao.PenaComplessivaDAO;
+import siap.siep.penacomplessiva.dao.PenaComplessivaSqlDAO;
 import siap.siep.penacomplessiva.model.PenaComplessivaModel;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneDAO;
 import siap.siep.penapecuniaria.dao.RichiestaConversioneSqlDAO;
@@ -174,6 +177,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 	 *            Model con i dati da inserire
 	 * @return il model con i dati inseriti e l'aggiunta dell'id del record inserito
 	 * @throws F3BException
+	 * Ticket#20240228011 - Il metodo è utilizzato SOLO per i classe VII
 	 */
 	public RichiestaConversioneModel ExInserisciRichiestaConversione(
 			RichiestaConversioneModel aRichiestaConversione, EventoModel aEvento,
@@ -188,6 +192,8 @@ public class RichiestaConversioneController extends SiapController implements IR
 		PenaResiduaSqlDAO lPenResSqlDao = null;
 
 		RichiestaConversioneModel lRicMod = null;
+		
+	  PenaComplessivaSqlDAO lPenComSqlDao = null;
 
 		try {
 			lConn = getDBConnection();
@@ -195,6 +201,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 			lEveDao = new EventoDAO(lConn);
 			lEveDao.setDAOFromModel(aEvento);
 			BigDecimal lIdEvento = lEveDao.insert();
+			aEvento.setIdEvento(lIdEvento); // Ticket#20240228011 - non veniva valorizzato e la PR risultava sganciata dall'evento
 
 			lRicDao = new RichiestaConversioneDAO(lConn);
 			lRicDao.setDAOFromModel(aRichiestaConversione);
@@ -202,6 +209,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 			BigDecimal lSequence = lRicDao.insert();
 
 			// Se iscrive SIUS viene inserito lo Scadenzario.
+			// Ticket#20240228011 - ?? metodo richiamato solo dalla ActInserisciRichiestaConversione abiolitata solo a SIEP (4,40,50)
 			inserimentoScadenzario(aRichiestaConversione, lConn);
 
 			// 05/02/2015 Abolizione aggiornamento della pena residua.
@@ -347,39 +355,66 @@ public class RichiestaConversioneController extends SiapController implements IR
 
 			// 20/02/2015 Inserimento della pena complessiva per il fascicolo di classe VII.
 			if (lFascProg > 70000 && lFascProg < 80000) {
+			  // Ticket#20240228011 - La pena complessiva sul classe 7 è obbligatoria in fase di iscrizione, 
+			  // e comunque se già presente non ne va inserita una nuova me eventualmente aggironata quella presente
+			  // inoltre sulla pena complessiva non venivano valorizzati COD_TIPO_PENA_DETENTIVA e COD_TIPO_RITO
+			  // che vanno inseriti a trattino altrimenti falliscono le join delle selecy della PC
+			  // Inoltre La pena residua se present6e sul fascicolo NON può essere agganciata all'evento corrente se già agganciata ad
+			  // altro evento
 				lPenResDao = new PenaResiduaDAO(lConn);
 				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
 				lPenComDao = new PenaComplessivaDAO(lConn);
-				PenaResiduaModel lPenResMod = new PenaResiduaModel();
+				
+				
 				PenaComplessivaModel lPenComMod = new PenaComplessivaModel();
 
-				BigDecimal lkeyFasI = aDettaglioFascicolo.getFascicoloSiep().getFasSieIdFascicoloSiep();
-				int aAmmenda = 0;
-				int aMulta = 0;
-				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lkeyFasI);
-				if (lPenResSqlDao.next()) {
-					lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
-
-					if (lPenResMod != null && lPenResMod.getEveIdEvento() != null) {
-						// esiste la pena residua del Fascicolo di Classe I, la imposto come Pena Complessiva
-						// del classe VII.
-						if (lPenResMod.getImportoAmmenda() != null)
-							aAmmenda = lPenResMod.getImportoAmmenda().intValue();
-
-						if (lPenResMod.getImportoMulta() != null)
-							aMulta = lPenResMod.getImportoMulta().intValue();
-					}
-				}
-				lPenComMod.setImportoAmmenda(new BigDecimal(aAmmenda));
-				lPenComMod.setImportoMulta(new BigDecimal(aMulta));
-				lPenComMod.setFasSieIdFascicoloSiep(
-						aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep());
-				lPenComMod.setDataInserimento(DateUtils.getSysDate());
-				lPenComMod.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
-				lPenComMod.setCodUfficioInserimento(aEvento.getCodUfficioInserimento());
-				lPenComDao.setDAOFromModel(lPenComMod);
-				lPenComDao.insert();
-
+			  // Ticket#20240228011 - Solo in assenza della PC sul fascicolo provo a inserirla
+				lPenComSqlDao = new  PenaComplessivaSqlDAO(lConn);
+				lPenComSqlDao.ricercaPenaComplessivaByIdFascicolo(aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep());
+				lPenComMod = (PenaComplessivaModel) lPenComSqlDao.getModelByKey();
+				
+				if (lPenComMod==null || lPenComMod.getIdPenaComplessiva()==null)
+				{
+  				// Provo a recuyperare la pena del fascicolo collegato se esiste (sia il fascicolo che la pena)
+  				BigDecimal lkeyFasI = aDettaglioFascicolo.getFascicoloSiep().getFasSieIdFascicoloSiep();
+  				//int aAmmenda = 0; //  INT???????? e i decimali????
+  				//int aMulta = 0;
+          BigDecimal lAmmenda = null; 
+          BigDecimal lMulta = null;
+  				if (lkeyFasI!=null) //// Ticket#20240228011 - 
+  				{
+  				  PenaResiduaModel lPenResMod = new PenaResiduaModel();
+    				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lkeyFasI);
+    				if (lPenResSqlDao.next()) {
+    					lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+    
+    					if (lPenResMod != null /*&& lPenResMod.getEveIdEvento() != null*/) {
+    						// esiste la pena residua del Fascicolo di Classe I, la imposto come Pena Complessiva
+    						// del classe VII.
+    						if (lPenResMod.getImportoAmmenda() != null)
+    						  lAmmenda = lPenResMod.getImportoAmmenda(); // aAmmenda = lPenResMod.getImportoAmmenda().intValue();
+    
+    						if (lPenResMod.getImportoMulta() != null)
+    						  lMulta = lPenResMod.getImportoMulta(); //aMulta = lPenResMod.getImportoMulta().intValue();
+    					}
+    				}
+  				}
+  				// Ticket#20240228011 - Inizio
+  				//lPenComMod.setImportoAmmenda(new BigDecimal(aAmmenda));
+  				//lPenComMod.setImportoMulta(new BigDecimal(aMulta));
+          lPenComMod.setImportoAmmenda(lAmmenda);
+          lPenComMod.setImportoMulta(lMulta);
+          lPenComMod.setCodTipoPenaDetentiva("-");
+          lPenComMod.setCodTipoRito("-");
+          // Ticket#20240228011 - FINE
+  				lPenComMod.setFasSieIdFascicoloSiep(aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep());
+  				lPenComMod.setDataInserimento(DateUtils.getSysDate());
+  				lPenComMod.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
+  				lPenComMod.setCodUfficioInserimento(aEvento.getCodUfficioInserimento());
+  				
+  				lPenComDao.setDAOFromModel(lPenComMod);
+  				lPenComDao.insert();
+				} // Ticket#20240228011 
 				// // [FT] - 03/08/2016 - MAC_LOG - Utilizzo la variabile di istanza siesLogger al posto di
 				// LogF3B.getLogger()
 				// siesLogger.debug(" ---- > pena complessiva scritta = "+lkeyFasI);
@@ -402,30 +437,47 @@ public class RichiestaConversioneController extends SiapController implements IR
 				// VII.
 				lPenResDao = new PenaResiduaDAO(lConn);
 				lPenResSqlDao = new PenaResiduaSqlDAO(lConn);
-				lPenResMod = new PenaResiduaModel();
 
-				lkeyFasI = aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep();
-				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lkeyFasI);
-				lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
+				BigDecimal lkeyFasVII = aDettaglioFascicolo.getFascicoloSiep().getIdFascicoloSiep();
+				lPenResSqlDao.ricercaPenaResiduaCorrenteByFascicoloSiep(lkeyFasVII);
+				PenaResiduaModel lPenResMod = (PenaResiduaModel) lPenResSqlDao.getModelByKey();
 
 				if (lPenResMod != null && lPenResMod.getIdPenaResidua() != null) {
-					lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
-					lPenResDao.setEveIdEvento(aEvento.getIdEvento());
-					lPenResDao.setFlagValidato("S");
-
-					lPenResDao.setCodOperatoreAggiornamento(aEvento.getCodOperatoreInserimento());
-					lPenResDao.setCodUfficioAggiornamento(aEvento.getCodUfficioInserimento());
-					lPenResDao.setDataAggiornamento(DateUtils.getSysDate());
-
-					lPenResDao.selByKey();
-					lPenResDao.update();
-					lPenResDao.stop();
+				  // Ticket#20240228011 - si aggancia la PR alla richiesta SOLO se non agganciata ad altro evento altrimenti si duplica
+				  if (lPenResMod.getEveIdEvento()==null) {
+  					lPenResDao.setIdPenaResidua(lPenResMod.getIdPenaResidua());
+  					lPenResDao.setEveIdEvento(aEvento.getIdEvento()); 
+  					lPenResDao.setFlagValidato("S");
+  
+  					lPenResDao.setCodOperatoreAggiornamento(aEvento.getCodOperatoreInserimento());
+  					lPenResDao.setCodUfficioAggiornamento(aEvento.getCodUfficioInserimento());
+  					lPenResDao.setDataAggiornamento(DateUtils.getSysDate());
+  
+  					lPenResDao.selByKey();
+  					lPenResDao.update();
+  					lPenResDao.stop();
+				  } else {
+				    // Duplico la PR
+				    lPenResMod = new PenaResiduaModel(lPenResMod);
+				    
+				    lPenResMod.setEveIdEvento(aEvento.getIdEvento());
+				    lPenResMod.setFlagValidato("S");
+  
+				    lPenResMod.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
+				    lPenResMod.setCodUfficioInserimento(aEvento.getCodUfficioInserimento());
+				    lPenResMod.setDataInserimento(DateUtils.getSysDate());
+            
+				    lPenResDao.setDAOFromModel(lPenResMod);
+	          lPenResDao.insert();
+	          lPenResDao.stop();
+				  }
+				  // Ticket#20240228011 - FINE
 				} else {
 					lPenResDao.setFlagValidato("S");
 					lPenResDao.setEveIdEvento(aEvento.getIdEvento());
 
-					lPenResDao.setCodOperatoreInserimento(aEvento.getCodOperatoreAggiornamento());
-					lPenResDao.setCodUfficioInserimento(aEvento.getCodUfficioAggiornamento());
+					lPenResDao.setCodOperatoreInserimento(aEvento.getCodOperatoreInserimento());
+					lPenResDao.setCodUfficioInserimento(aEvento.getCodUfficioInserimento());
 					lPenResDao.setDataInserimento(DateUtils.getSysDate());
 
 					lPenResDao.insert();
@@ -455,6 +507,7 @@ public class RichiestaConversioneController extends SiapController implements IR
 			cleanup(lPenResDao);
 			cleanup(lPenResSqlDao);
 			cleanup(lPenComDao);
+			cleanup(lPenComSqlDao);
 
 			cleanup(lConn);
 		}
