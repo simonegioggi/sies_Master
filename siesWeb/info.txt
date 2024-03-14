@@ -15,3 +15,5 @@ Gli interventi sono relativi ai sottosistemi SIEP e SIUS.
 3)	in data 07/11/2023 eseguito merge con "RELEASE_12.5.4.0"
 
 4)	in data 16/01/2024 eseguito merge con "RELEASE_12.5.6.0"
+
+5)	in data 14/03/2024 eseguito merge con "RELEASE_12.5.7.0"
