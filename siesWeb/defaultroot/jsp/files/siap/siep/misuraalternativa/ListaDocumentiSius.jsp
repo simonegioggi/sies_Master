@@ -17,6 +17,11 @@
 
 <jsp:useBean id="documentiSius" scope="request" class="java.util.ArrayList" />
 
+<%-- MEV_9 --%>
+<jsp:useBean id="TipoMA"   scope="request" class="java.lang.String" />
+<jsp:useBean id="NaturaMA" scope="request" class="java.lang.String" />
+<%-- MEV_9 - FINE --%>
+
 <html>
 <head>
 <link rel="STYLESHEET" type="text/css" href="<%=IWebConstants.PG_STYLE%>">
@@ -540,16 +545,24 @@ if (!documentiSius.isEmpty()) {
         // Il codice precedente ribalta in modo non corretto l'Autorità Emittente,
         // poichè non individua i codici TDSM e UDSM
         String lUfficio = StringUtils.toStringJSP(eventoModel.getCodTipoUfficioEmittente(), "-");
-        // MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
-        if ((("TDS".equals(lUfficio)
-        		&& ("0680".equals(misuraModel.getCodTipoMisura())
-        				|| "0681".equals(misuraModel.getCodTipoMisura())))
-        		|| ("TDSM".equals(lUfficio)
-        				&& ("0690".equals(misuraModel.getCodTipoMisura())
-        						|| "0691".equals(misuraModel.getCodTipoMisura())
-        						|| "0692".equals(misuraModel.getCodTipoMisura()))))
-        		&& !Utils.isNullObj(misuraModel.getDataEsecutivita()))
-        	continue;
+     	// MEV_9-SIEP: aggiunto controllo per escludere dalla visualizzazione
+        if (!"AMMISSIONE_PROVVISORIA".equals(NaturaMA)){
+          if (   (   "TDS".equals(lUfficio)
+                  && (   "0680".equals(misuraModel.getCodTipoMisura())
+                      || "0681".equals(misuraModel.getCodTipoMisura())
+                     )
+                  )
+              || (   "TDSM".equals(lUfficio)
+                  && (   "0690".equals(misuraModel.getCodTipoMisura())
+                      || "0691".equals(misuraModel.getCodTipoMisura())
+                      || "0692".equals(misuraModel.getCodTipoMisura())
+                     )
+                  )
+              )
+          continue;
+        }
+        
+       
 %>
 	<tr>
 		<td class="c">
@@ -583,6 +596,21 @@ if (!documentiSius.isEmpty()) {
 <%
 		}
 %>
+
+<% 
+if (   "0680".equals(misuraModel.getCodTipoMisura())
+	  || "0681".equals(misuraModel.getCodTipoMisura())
+	  || "0690".equals(misuraModel.getCodTipoMisura())
+	  || "0691".equals(misuraModel.getCodTipoMisura())
+	  || "0692".equals(misuraModel.getCodTipoMisura())
+	  || "0682".equals(misuraModel.getCodTipoMisura())
+	  || "0693".equals(misuraModel.getCodTipoMisura())
+		) 
+{ %>
+	Applicazione Provvisoria 
+<% } %>
+
+
 			<%=StringUtils.toStringJSP(eventoModel.getDescrMotivo(), "-")%>
 		</td>
 <%
